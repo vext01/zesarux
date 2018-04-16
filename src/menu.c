@@ -6827,7 +6827,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
 				}
 
-				if (tecla=='p') {
+				if (tecla=='t') {
                                         cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_registers_change_ptr();
