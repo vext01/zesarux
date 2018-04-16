@@ -6079,14 +6079,17 @@ int menu_debug_registers_print_registers(void)
 		}
 	}
 
+	menu_z80_moto_int menu_debug_memory_pointer_copia;
+
+	//Conservamos valor original y usamos uno de copia
+	menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
+
 
 
 
 		if (menu_debug_registers_mostrando==0) {
 
-			//debugger_disassemble(dumpassembler,32,&longitud_opcode,get_pc_register() );
-
-			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer );
+			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
 
 			menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 
@@ -6229,10 +6232,10 @@ int menu_debug_registers_print_registers(void)
 				if (menu_debug_registers_mostrando==1) limite=9;
 
 				for (i=0;i<limite;i++) {
-					//debugger_disassemble(dumpassembler,32,&longitud_opcode,menu_debug_memory_pointer);
-					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer,&longitud_op);
+					//debugger_disassemble(dumpassembler,32,&longitud_opcode,menu_debug_memory_pointer_copia);
+					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-					menu_debug_memory_pointer +=longitud_op;
+					menu_debug_memory_pointer_copia +=longitud_op;
 				}
 
 
@@ -6248,10 +6251,10 @@ int menu_debug_registers_print_registers(void)
 			if (menu_debug_registers_mostrando==3) limite=9;
 
 			for (i=0;i<limite;i++) {
-					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer,longitud_linea);
-					//menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer,longitud_linea);
+					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
+					//menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-					menu_debug_memory_pointer +=longitud_linea;
+					menu_debug_memory_pointer_copia +=longitud_linea;
 			}
 
 			//Restaurar comportamiento texto ventana
@@ -6865,7 +6868,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
-				menu_escribe_linea_opcion(linea++,-1,1,"ESC:Exit Step~~over ~~Contstep");
+				menu_escribe_linea_opcion(linea++,-1,1,"Enter:Step Step~~over ~~Contstep");
 				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp ~~Watch ~~V.Scr");
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
 			}
@@ -6991,7 +6994,14 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 if (tecla=='r') {
                                         cls_menu_overlay();
+
+					//Detener multitarea, porque si no, ese input habilita la multitarea
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
                                         menu_debug_change_registers();
+
+					menu_multitarea=antes_menu_multitarea;
 
         clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
@@ -7025,6 +7035,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					si_ejecuta_una_instruccion=0;
 				}
 
+				//Cualquier tecla no enter, no ejecuta instruccion
+				if (tecla!=13) si_ejecuta_una_instruccion=0;
 
 
 			}
