@@ -6085,6 +6085,10 @@ int menu_debug_registers_print_registers(void)
 	menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
 
 
+	//Por defecto
+	menu_debug_registers_print_registers_longitud_opcode=8; //Esto se hace para que en las vistas de solo hexadecimal, se mueva arriba/abajo de 8 en 8
+
+
 
 
 		if (menu_debug_registers_mostrando==0) {
@@ -6236,6 +6240,8 @@ int menu_debug_registers_print_registers(void)
 					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_op;
+
+					if (i==0) menu_debug_registers_print_registers_longitud_opcode=longitud_op;
 				}
 
 
