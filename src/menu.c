@@ -6605,17 +6605,26 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				linea=menu_debug_registers_print_registers();
 
                         	menu_escribe_linea_opcion(linea++,-1,1,"");
-                        	menu_escribe_linea_opcion(linea++,-1,1,"S: Step mode D: Disassemble");
+
+                //Forzar a mostrar atajos
+                z80_bit antes_menu_writing_inverse_color;
+                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+                menu_writing_inverse_color.v=1;
+
+
+                        	menu_escribe_linea_opcion(linea++,-1,1,"~~Step mode ~~Disassemble");
 
 			        char mensaje_esc_back[32];
-				//sprintf (mensaje_esc_back,"B: Breakpoints %s Back",esc_key_message);
 																// 012345678901234567890123456789
-				sprintf (mensaje_esc_back,"B: Brkp. W: Watch Z: MZone %d",menu_debug_memory_zone);
+				sprintf (mensaje_esc_back,"~~Brkp. ~~Watch M~~Zone %d",menu_debug_memory_zone);
 
 
                         	menu_escribe_linea_opcion(linea++,-1,1,mensaje_esc_back);
 
-				menu_escribe_linea_opcion(linea++,-1,1,"P: Clr tstatesp G: Chg View");
+				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
+
+//Restaurar estado mostrar atajos
+menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
                         	if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
@@ -6740,17 +6749,24 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                        	menu_escribe_linea_opcion(linea++,-1,1,"");
 
+                //Forzar a mostrar atajos
+                z80_bit antes_menu_writing_inverse_color;
+                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+                menu_writing_inverse_color.v=1;
+
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
-				menu_escribe_linea_opcion(linea++,-1,1,"ESC:Exit O:Stepover C:Contstep");
-				menu_escribe_linea_opcion(linea++,-1,1,"B: Breakp W: Watch V: V.Scr");
-				menu_escribe_linea_opcion(linea++,-1,1,"P: Clr tstatesp G: Chg View");
+				menu_escribe_linea_opcion(linea++,-1,1,"ESC:Exit Step~~over ~~Contstep");
+				menu_escribe_linea_opcion(linea++,-1,1,"~~Breakp ~~Watch ~~V.Scr");
+				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
 			}
 			else {
 				menu_escribe_linea_opcion(linea++,-1,1,"Any key: Stop cont step");
 			}
 
 
+//Restaurar estado mostrar atajos
+menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			//Actualizamos pantalla
 			all_interlace_scr_refresca_pantalla();
