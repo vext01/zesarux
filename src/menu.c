@@ -6142,6 +6142,17 @@ menu_z80_moto_int menu_debug_memory_pointer_last=0;
 //Direcciones de cada linea en la vista numero 3
 menu_z80_moto_int menu_debug_lines_addresses[24];
 
+
+
+menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
+{
+	int i;
+	for (i=0;i<menu_debug_lineas_assembler/2;i++) {
+		posicion=menu_debug_disassemble_subir(posicion);
+	}
+	return posicion;
+}
+
 int menu_debug_registers_print_registers(int linea)
 {
 	char textoregistros[33];
@@ -6155,6 +6166,8 @@ int menu_debug_registers_print_registers(int linea)
 	//menu_z80_moto_int copia_reg_pc;
 	int i;
 
+	menu_z80_moto_int menu_debug_memory_pointer_copia;
+
 
 	if (menu_debug_follow_pc.v) {
 		menu_debug_memory_pointer=get_pc_register();
@@ -6162,12 +6175,19 @@ int menu_debug_registers_print_registers(int linea)
 	        if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
 			menu_debug_memory_pointer=tbblue_copper_pc;
 		}
+
+		//Y ahora hay que situar el cursor la mitad por arriba
+		menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
+
+		//Y el cursor ahora...
+		menu_debug_line_cursor=menu_debug_lineas_assembler/2;
 	}
 
-	menu_z80_moto_int menu_debug_memory_pointer_copia;
+	else {
 
-	//Conservamos valor original y usamos uno de copia
-	menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
+		//Conservamos valor original y usamos uno de copia
+		menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
+	}
 
 
 	//Por defecto
@@ -6341,12 +6361,15 @@ int menu_debug_registers_print_registers(int linea)
                                 int limite=menu_debug_lineas_assembler;
                                 if (menu_debug_registers_mostrando==1) limite=9;
 
+					linea++;
+
 					char buffer_registros[33];
 
         //Comportamiento de 1 caracter de margen a la izquierda en ventana 
         int antes_menu_escribe_linea_startx=menu_escribe_linea_startx;
 
         menu_escribe_linea_startx=0;
+					
 
                                 for (i=0;i<limite;i++) {
 
@@ -6392,7 +6415,7 @@ int menu_debug_registers_print_registers(int linea)
 					//Muestra el registro que le corresponde para esta linea
 					menu_debug_show_register_line(i,buffer_registros);
 					//Agregar registro que le corresponda. Columna 19
-					sprintf(&buffer_linea[19],"%s",buffer_registros);
+					sprintf(&buffer_linea[20],"%s",buffer_registros);
 
                                         menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
 										linea++;
@@ -6861,6 +6884,38 @@ void menu_debug_toggle_breakpoint(void)
 	printf ("Address on cursor: %X\n",direccion_cursor);
 }
 
+int menu_debug_registers_show_ptr_text(int linea)
+{
+
+	char buffer_mensaje[64];
+                //Forzar a mostrar atajos
+                z80_bit antes_menu_writing_inverse_color;
+                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+                menu_writing_inverse_color.v=1;
+
+
+                                //Mostrar puntero direccion
+                                menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
+
+                                char string_direccion[10];
+                                menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
+
+                                sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
+                                        string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
+                                menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+
+	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+	return linea;
+}
+
+void menu_debug_switch_follow_pc(void)
+{
+	menu_debug_follow_pc.v ^=1;
+	
+	//if (follow_pc.v==0) menu_debug_memory_pointer=menu_debug_register_decrement_half(menu_debug_memory_pointer);
+}
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -6898,6 +6953,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	do {
 
 		linea=0;
+		linea=menu_debug_registers_show_ptr_text(linea);
 
 
 		//Si no esta el modo step de la cpu
@@ -6918,19 +6974,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 menu_writing_inverse_color.v=1;
 
 
-                                //Mostrar puntero direccion
-                                menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
-
-                                char string_direccion[10];
-                                menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
-
-                                sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
-                                        string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
-                                menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-
-
-
-
+                        
 				linea=menu_debug_registers_print_registers(linea);
 
                         	menu_escribe_linea_opcion(linea++,-1,1,"");
@@ -7061,7 +7105,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				if (tecla=='f') {
                                         cls_menu_overlay();
-					menu_debug_follow_pc.v ^=1;
+										menu_debug_switch_follow_pc();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
@@ -7161,9 +7205,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 		//En modo Step mode
 		else {
 
-			//Dejar primera linea en blanco para que coincida con vista sin modo step donde aparecer arriba el puntero
-
-			linea++;
+		
 
 			int si_ejecuta_una_instruccion=1;
 
@@ -7315,10 +7357,31 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         si_ejecuta_una_instruccion=0;
 				}
 
-			       if (tecla=='t') {
+					if (tecla=='f') {
+                                        cls_menu_overlay();
+										menu_debug_switch_follow_pc();
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+				}
+
+
+					
+
+                  if (tecla=='t') {
                                         cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+				//Detener multitarea, porque si no, ese input habilita la multitarea
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
                                         menu_debug_registers_change_ptr();
+
+										menu_multitarea=antes_menu_multitarea;
 
         clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
