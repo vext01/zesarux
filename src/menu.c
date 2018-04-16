@@ -6234,7 +6234,7 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==3) {
+		if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==2) {
 
 
 				int longitud_op;
@@ -6242,7 +6242,6 @@ int menu_debug_registers_print_registers(int linea)
 				if (menu_debug_registers_mostrando==1) limite=9;
 
 				for (i=0;i<limite;i++) {
-					//debugger_disassemble(dumpassembler,32,&longitud_opcode,menu_debug_memory_pointer_copia);
 					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_op;
@@ -6254,6 +6253,36 @@ int menu_debug_registers_print_registers(int linea)
 
 
 		}
+
+                if (menu_debug_registers_mostrando==3) {
+
+
+                                size_t longitud_op;
+                                int limite=15;
+                                if (menu_debug_registers_mostrando==1) limite=9;
+
+
+                                for (i=0;i<limite;i++) {
+
+					char buffer_linea[64];
+                       			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
+
+					//debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia )
+
+					//4 para direccion, fijo
+					sprintf(buffer_linea,"%04XH %s",menu_debug_memory_pointer_copia,dumpassembler);
+
+                                        //menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
+                                        menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+                                        menu_debug_memory_pointer_copia +=longitud_op;
+
+                                        //Almacenar longitud del primer opcode mostrado
+                                        if (i==0) menu_debug_registers_print_registers_longitud_opcode=longitud_op;
+                                }
+                                        menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
+
+
+                }
 
 		if (menu_debug_registers_mostrando==4 || menu_debug_registers_mostrando==5) {
 
