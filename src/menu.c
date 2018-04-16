@@ -6056,6 +6056,9 @@ void menu_debug_registers_change_ptr(void)
 //Longitud que ocupa el ultimo opcode desensamblado
 size_t menu_debug_registers_print_registers_longitud_opcode=0;
 
+//Ultima direccion en desemsamblado/vista hexa, para poder hacer pgup/pgdn
+menu_z80_moto_int menu_debug_memory_pointer_last=0;
+
 int menu_debug_registers_print_registers(void)
 {
 	int linea=0;
@@ -6094,6 +6097,7 @@ int menu_debug_registers_print_registers(void)
 		if (menu_debug_registers_mostrando==0) {
 
 			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
+			menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
 
 			menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 
@@ -6244,6 +6248,7 @@ int menu_debug_registers_print_registers(void)
 					//Almacenar longitud del primer opcode mostrado
 					if (i==0) menu_debug_registers_print_registers_longitud_opcode=longitud_op;
 				}
+					menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
 
 
 		}
@@ -6263,6 +6268,9 @@ int menu_debug_registers_print_registers(void)
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_linea;
 			}
+
+			menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
+
 
 			//Restaurar comportamiento texto ventana
 			menu_escribe_linea_startx=1;
@@ -6858,6 +6866,18 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
                                 }
+
+				//24 pgup
+				//25 pgwn
+				if (tecla==25) {
+					//PgDn
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+					menu_debug_memory_pointer=menu_debug_memory_pointer_last;
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+				}
 
 
 
