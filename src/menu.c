@@ -6868,6 +6868,35 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 				//24 pgup
+                                if (tecla==24) {
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+					int lineas=1;
+/*
+//0=linea assembler, registros cpu, otros registros internos
+//1=9 lineas assembler, otros registros internos
+//2=15 lineas assembler
+//3=9 lineas hexdump, otros registros internos
+//4=15 lineas hexdump
+*/
+					if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==3) lineas=9;
+					if (menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==4) lineas=15;
+
+					int i;
+					for (i=0;i<lineas;i++) {
+	                                        if (menu_debug_registers_mostrando<3) { //Si vista con desensamblado
+        	                                        menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
+                	                        }
+                        	                else {  //Vista solo hexa
+                                	                menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
+	                                        }
+					}
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }
 				//25 pgwn
 				if (tecla==25) {
 					//PgDn
