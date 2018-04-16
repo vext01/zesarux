@@ -6006,6 +6006,9 @@ void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *line
 
 }
 
+z80_bit menu_debug_follow_pc={1}; //Si puntero de direccion sigue al registro pc
+menu_z80_moto_int menu_debug_memory_pointer=0; //Puntero de direccion
+
 int menu_debug_registers_print_registers(void)
 {
 	int linea=0;
@@ -6017,8 +6020,17 @@ int menu_debug_registers_print_registers(void)
 
 	size_t longitud_opcode;
 
-	menu_z80_moto_int copia_reg_pc;
+	//menu_z80_moto_int copia_reg_pc;
 	int i;
+
+
+	if (menu_debug_follow_pc.v) {
+		menu_debug_memory_pointer=get_pc_register();
+		//Si se esta mirando zona copper
+	        if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
+			menu_debug_memory_pointer=tbblue_copper_pc;
+		}
+	}
 
 
 
@@ -6027,13 +6039,7 @@ int menu_debug_registers_print_registers(void)
 
 			//debugger_disassemble(dumpassembler,32,&longitud_opcode,get_pc_register() );
 
-				copia_reg_pc=get_pc_register();
-
-				//Si se esta mirando zona copper
-				if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
-					copia_reg_pc=tbblue_copper_pc;
-				}
-			debugger_disassemble(dumpassembler,32,&longitud_opcode,copia_reg_pc );
+			debugger_disassemble(dumpassembler,32,&longitud_opcode,menu_debug_memory_pointer );
 
 			menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 
@@ -6174,18 +6180,12 @@ int menu_debug_registers_print_registers(void)
 				int longitud_op;
 				int limite=15;
 				if (menu_debug_registers_mostrando==1) limite=9;
-				copia_reg_pc=get_pc_register();
-
-				//Si se esta mirando zona copper
-				if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
-					copia_reg_pc=tbblue_copper_pc;
-				}
 
 				for (i=0;i<limite;i++) {
-					//debugger_disassemble(dumpassembler,32,&longitud_opcode,copia_reg_pc);
-					menu_debug_dissassemble_una_instruccion(dumpassembler,copia_reg_pc,&longitud_op);
+					//debugger_disassemble(dumpassembler,32,&longitud_opcode,menu_debug_memory_pointer);
+					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer,&longitud_op);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-					copia_reg_pc +=longitud_op;
+					menu_debug_memory_pointer +=longitud_op;
 				}
 
 
@@ -6199,17 +6199,12 @@ int menu_debug_registers_print_registers(void)
 			int limite=15;
 			int longitud_linea=8;
 			if (menu_debug_registers_mostrando==3) limite=9;
-			copia_reg_pc=get_pc_register();
-				//Si se esta mirando zona copper
-				if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
-					copia_reg_pc=tbblue_copper_pc;
-				}
 
 			for (i=0;i<limite;i++) {
-					menu_debug_hexdump_with_ascii(dumpassembler,copia_reg_pc,longitud_linea);
-					//menu_debug_registers_dump_hex(dumpassembler,copia_reg_pc,longitud_linea);
+					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer,longitud_linea);
+					//menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer,longitud_linea);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-					copia_reg_pc +=longitud_linea;
+					menu_debug_memory_pointer +=longitud_linea;
 			}
 
 			//Restaurar comportamiento texto ventana
@@ -6380,6 +6375,8 @@ if (menu_debug_registers_mostrando==0 || menu_debug_registers_mostrando==1 || me
 }
 
 z80_bit menu_breakpoint_exception_pending_show={0};
+int continuous_step=0;
+
 
 void menu_debug_registers_ventana(void)
 {
@@ -6393,12 +6390,11 @@ void menu_debug_registers_ventana(void)
 		if (cpu_step_mode.v) sprintf (titulo,"%s","Debug CPU & ULA (step)");
 	}
 
-	menu_dibuja_ventana(0,0,32,23,titulo);
+	menu_dibuja_ventana(0,0,32,24,titulo);
 	menu_breakpoint_exception_pending_show.v=0;
 }
 
 
-int continuous_step=0;
 
 void menu_debug_registers_gestiona_breakpoint(void)
 {
