@@ -6014,18 +6014,19 @@ void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *line
 z80_bit menu_debug_follow_pc={1}; //Si puntero de direccion sigue al registro pc
 menu_z80_moto_int menu_debug_memory_pointer=0; //Puntero de direccion
 
+char menu_debug_change_registers_last_reg[30]="";
+char menu_debug_change_registers_last_val[30]="";
+
 
 void menu_debug_change_registers(void)
 {
-	char string_register[30];
-	char string_value[30];
-
 	char string_registervalue[61]; //REG=VALUE
 
-	menu_ventana_scanf("Register?",string_register,30);
-	menu_ventana_scanf("Value?",string_value,30);
+	menu_ventana_scanf("Register?",menu_debug_change_registers_last_reg,30);
 
-	sprintf (string_registervalue,"%s=%s",string_register,string_value);
+	menu_ventana_scanf("Value?",menu_debug_change_registers_last_val,30);
+
+	sprintf (string_registervalue,"%s=%s",menu_debug_change_registers_last_reg,menu_debug_change_registers_last_val);
 
 	if (debug_change_register(string_registervalue)) {
 		debug_printf(VERBOSE_ERR,"Error changing register");
@@ -6662,12 +6663,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                         	menu_escribe_linea_opcion(linea++,-1,1,"~~Step mode ~~Disassemble");
 
-			        char mensaje_esc_back[32];
 																// 012345678901234567890123456789
-				sprintf (mensaje_esc_back,"~~Brkp. ~~Watch M~~Zone %d",menu_debug_memory_zone);
-
-
-                        	menu_escribe_linea_opcion(linea++,-1,1,mensaje_esc_back);
+				sprintf (buffer_mensaje,"ch~~Reg ~~Brkp. ~~Watch M~~Zone %d",menu_debug_memory_zone);
+                        	menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
 
@@ -6818,6 +6816,21 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
 				}
 
+                                if (tecla=='r') {
+                                        cls_menu_overlay();
+					menu_debug_change_registers();
+
+        clear_putpixel_cache();
+        //TODO: Si no se pone clear_putpixel_cache,
+        //el texto se fusiona con el fondo de manera casi transparente,
+        //como si no borrase el putpixel cache
+        //esto también sucede en otras partes del código del menú pero no se por que es
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }
+
 				if (tecla==11) {
                                         //arriba
 					cls_menu_overlay();
@@ -6866,7 +6879,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
 				menu_escribe_linea_opcion(linea++,-1,1,"ESC:Exit Step~~over ~~Contstep");
-				menu_escribe_linea_opcion(linea++,-1,1,"~~Breakp ~~Watch ~~V.Scr");
+				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp ~~Watch ~~V.Scr");
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
 			}
 			else {
@@ -6988,7 +7001,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 
-																if (tecla=='g') {
+						if (tecla=='g') {
                                         cls_menu_overlay();
 																				menu_debug_registers_next_view();
 
@@ -6998,7 +7011,22 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 																				//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
-																}
+						}
+
+                                if (tecla=='r') {
+                                        cls_menu_overlay();
+                                        menu_debug_change_registers();
+
+        clear_putpixel_cache();
+        //TODO: Si no se pone clear_putpixel_cache,
+        //el texto se fusiona con el fondo de manera casi transparente,
+        //como si no borrase el putpixel cache
+        //esto también sucede en otras partes del código del menú pero no se por que es
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }
 
 
 
