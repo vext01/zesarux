@@ -6095,6 +6095,35 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 		case 2:
 			sprintf (textoregistros,"AF %02X%02X'%02X%02X",reg_a,Z80_FLAGS,reg_a_shadow,Z80_FLAGS_SHADOW);
 		break;
+
+		case 3:
+			sprintf (textoregistros,"HL %04X'%02X%02X",HL,reg_h_shadow,reg_l_shadow);
+		break;
+
+		case 4:
+			sprintf (textoregistros,"DE %04X'%02X%02X",DE,reg_d_shadow,reg_e_shadow);
+		break;
+
+		case 5:
+			sprintf (textoregistros,"BC %04X'%02X%02X",BC,reg_b_shadow,reg_c_shadow);
+		break;
+
+		case 6:
+			sprintf (textoregistros,"IX %04X",reg_ix);
+		break;
+
+		case 7:
+			sprintf (textoregistros,"IY %04X",reg_iy);
+		break;
+
+		case 8:
+			sprintf (textoregistros,"IR %02X%02X",reg_i,(reg_r&127)|(reg_r_bit7&128) );
+		break;
+
+		case 10:
+			sprintf (textoregistros,"%c%c%c%c%c%c%c%c",DEBUG_STRING_FLAGS);
+		break;
+
 	}
 }
 
@@ -6313,7 +6342,7 @@ int menu_debug_registers_print_registers(int linea)
 					//Inicializamos linea a mostrar primero con espacios
 					char buffer_linea[64];
 					int j; 
-					for (j=0;j<64;j++) buffer_linea[j]=0;
+					for (j=0;j<64;j++) buffer_linea[j]=32;
 					
 
                        			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
