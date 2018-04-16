@@ -789,6 +789,14 @@ Mark Hutchings
 --- menu - fallos ---
 
 
+-en algunas partes del menu:
+        clear_putpixel_cache();
+        //TODO: Si no se pone clear_putpixel_cache,
+        //al aparecer desde maquina zx80/81 desde menu, el texto se fusiona con el fondo de manera casi transparente,
+        //como si no borrase el putpixel cache
+        //esto también sucede en otras partes del código del menú pero no se por que es
+
+
 -------------
 
 --- menu - mejoras ---
