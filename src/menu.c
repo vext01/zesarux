@@ -5997,6 +5997,10 @@ void menu_debug_get_memory_pages(char *s)
 int menu_debug_registers_mostrando=0;
 
 
+//Ultima direccion mostrada en menu_disassemble
+menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
+
+
 void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
 {
 
@@ -6008,6 +6012,26 @@ void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *line
 
 z80_bit menu_debug_follow_pc={1}; //Si puntero de direccion sigue al registro pc
 menu_z80_moto_int menu_debug_memory_pointer=0; //Puntero de direccion
+
+
+
+void menu_debug_registers_change_ptr(void)
+{
+
+
+
+        char string_address[10];
+
+
+                                        util_sprintf_address_hex(menu_debug_memory_pointer,string_address);
+                menu_ventana_scanf("Address?",string_address,10);
+
+        menu_debug_memory_pointer=parse_string_to_number(string_address);
+
+
+        return;
+
+}
 
 int menu_debug_registers_print_registers(void)
 {
@@ -6685,7 +6709,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 //printf ("tecla: %d\n",tecla);
 
-                                if (tecla=='s') cpu_step_mode.v=1;
+                                if (tecla=='s') {
+					cpu_step_mode.v=1;
+					menu_debug_follow_pc.v=1; //se sigue pc
+				}
 
 																if (tecla=='z') {
 																	menu_debug_registers_change_memory_zone();
@@ -6697,6 +6724,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				if (tecla=='d') {
 					cls_menu_overlay();
+					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
 					menu_debug_disassemble(0);
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -6735,16 +6763,33 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
                                 }
 
-																if (tecla=='g') {
+				if (tecla=='g') {
                                         cls_menu_overlay();
-																				menu_debug_registers_next_view();
+					menu_debug_registers_next_view();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
-																}
+				}
 
-																//Si tecla no es ESC, no salir
-																if (tecla!=2) acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+				if (tecla=='f') {
+                                        cls_menu_overlay();
+					menu_debug_follow_pc.v ^=1;
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+				}
+
+				if (tecla=='m') {
+                                        cls_menu_overlay();
+					menu_debug_registers_change_ptr();
+					menu_debug_follow_pc.v=0; //se deja de seguir pc
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+				}
+
+				//Si tecla no es ESC, no salir
+				if (tecla!=2) acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 
 
 			}
@@ -8495,6 +8540,7 @@ void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_i
 
 }
 
+
 void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
@@ -8508,7 +8554,8 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
         z80_byte tecla=0;
 
-        menu_z80_moto_int direccion=get_pc_register();
+        //menu_z80_moto_int direccion=get_pc_register();
+        menu_z80_moto_int direccion=menu_debug_disassemble_last_ptr;
 		
 
         int salir=0;
