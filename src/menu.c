@@ -6806,7 +6806,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //abajo
                                         cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
-                                        menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
 					menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
