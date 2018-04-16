@@ -6661,20 +6661,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 menu_writing_inverse_color.v=1;
 
 
-                        	menu_escribe_linea_opcion(linea++,-1,1,"~~Step mode ~~Disassemble");
+                        	menu_escribe_linea_opcion(linea++,-1,1,"~~Stepmode ~~Disassemble");
 
 																// 012345678901234567890123456789
 				sprintf (buffer_mensaje,"ch~~Reg ~~Brkp. ~~Watch M~~Zone %d",menu_debug_memory_zone);
                         	menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
-				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
+				menu_escribe_linea_opcion(linea++,-1,1,"Clr.tstates~~part. Ch~~g View");
 
-/*
-        if (menu_debug_follow_pc.v) {
-                menu_debug_memory_pointer=get_pc_register();
-*/
-
-				sprintf(buffer_mensaje,"~~Memptr: %06XH ~~FollowPC: %s",
+				sprintf(buffer_mensaje,"Poi~~nter: %06XH ~~FollowPC: %s",
 					menu_debug_memory_pointer,(menu_debug_follow_pc.v ? "Yes" : "No") );
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 				
@@ -6767,14 +6762,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
                                 }
 
-                              /*  if (tecla=='t') {
-                                        cls_menu_overlay();
-                                        menu_debug_configuration(0);
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
-                                }*/
-
                                 if (tecla=='p') {
                                         cls_menu_overlay();
 					debug_t_estados_parcial=0;
@@ -6799,7 +6786,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
 				}
 
-				if (tecla=='m') {
+				if (tecla=='n') {
                                         cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_registers_change_ptr();
@@ -6976,22 +6963,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         si_ejecuta_una_instruccion=0;
                                 }
 
-                              /*  if (tecla=='t') {
-                                        cls_menu_overlay();
-                                        menu_debug_configuration(0);
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }*/
-
-
 
                                 if (tecla=='p') {
                                         cls_menu_overlay();
-																				debug_t_estados_parcial=0;
+					debug_t_estados_parcial=0;
+
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
@@ -7001,17 +6977,17 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 
-						if (tecla=='g') {
+				if (tecla=='g') {
                                         cls_menu_overlay();
-																				menu_debug_registers_next_view();
+					menu_debug_registers_next_view();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
 
-																				//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
-						}
+				}
 
                                 if (tecla=='r') {
                                         cls_menu_overlay();
@@ -7026,6 +7002,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
+
+                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
                                 }
 
 
