@@ -24,9 +24,9 @@
 
 #include "cpu.h"
 
-#define DEBUG_STRING_FLAGS         ( Z80_FLAGS & FLAG_S ? 'S' : ' '), ( Z80_FLAGS & FLAG_Z ? 'Z' : ' '), ( Z80_FLAGS & FLAG_5 ? '5' : ' '), ( Z80_FLAGS & FLAG_PV ? 'P' : ' '), ( Z80_FLAGS & FLAG_3 ? '3' : ' '), ( Z80_FLAGS & FLAG_H ? 'H' : ' '), ( Z80_FLAGS & FLAG_N ? 'N' : ' '), ( Z80_FLAGS & FLAG_C ? 'C' : ' ')
+#define DEBUG_STRING_FLAGS         ( Z80_FLAGS & FLAG_S ? 'S' : '-'), ( Z80_FLAGS & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS & FLAG_5 ? '5' : '-'), ( Z80_FLAGS & FLAG_PV ? 'P' : '-'), ( Z80_FLAGS & FLAG_3 ? '3' : '-'), ( Z80_FLAGS & FLAG_H ? 'H' : '-'), ( Z80_FLAGS & FLAG_N ? 'N' : '-'), ( Z80_FLAGS & FLAG_C ? 'C' : '-')
 
-#define DEBUG_STRING_FLAGS_SHADOW         ( Z80_FLAGS_SHADOW & FLAG_S ? 'S' : ' '), ( Z80_FLAGS_SHADOW & FLAG_Z ? 'Z' : ' '), ( Z80_FLAGS_SHADOW & FLAG_5 ? '5' : ' '), ( Z80_FLAGS_SHADOW & FLAG_PV ? 'P' : ' '), ( Z80_FLAGS_SHADOW & FLAG_3 ? '3' : ' '), ( Z80_FLAGS_SHADOW & FLAG_H ? 'H' : ' '), ( Z80_FLAGS_SHADOW & FLAG_N ? 'N' : ' '), ( Z80_FLAGS_SHADOW & FLAG_C ? 'C' : ' ')
+#define DEBUG_STRING_FLAGS_SHADOW         ( Z80_FLAGS_SHADOW & FLAG_S ? 'S' : '-'), ( Z80_FLAGS_SHADOW & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS_SHADOW & FLAG_5 ? '5' : '-'), ( Z80_FLAGS_SHADOW & FLAG_PV ? 'P' : '-'), ( Z80_FLAGS_SHADOW & FLAG_3 ? '3' : '-'), ( Z80_FLAGS_SHADOW & FLAG_H ? 'H' : '-'), ( Z80_FLAGS_SHADOW & FLAG_N ? 'N' : '-'), ( Z80_FLAGS_SHADOW & FLAG_C ? 'C' : '-')
 
 
 extern void print_registers(char *buffer);

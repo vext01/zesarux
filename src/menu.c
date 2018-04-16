@@ -6069,18 +6069,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
 
-                        menu_debug_registers_dump_hex(dumpmemoria,reg_sp,8);
-                        sprintf (textoregistros,"SP: %04X : %s",reg_sp,dumpmemoria);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-
-                        sprintf (textoregistros,"A: %02X F: %c%c%c%c%c%c%c%c",reg_a,DEBUG_STRING_FLAGS);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-
-                        sprintf (textoregistros,"A':%02X F':%c%c%c%c%c%c%c%c",reg_a_shadow,DEBUG_STRING_FLAGS_SHADOW);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-
-                        sprintf (textoregistros,"HL: %04X DE: %04X BC: %04X",HL,DE,BC);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        
 
                         sprintf (textoregistros,"HL':%04X DE':%04X BC':%04X",(reg_h_shadow<<8)|reg_l_shadow,(reg_d_shadow<<8)|reg_e_shadow,(reg_b_shadow<<8)|reg_c_shadow);
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
@@ -6412,7 +6401,7 @@ int menu_debug_registers_print_registers(int linea)
 
 					//4 para direccion, fijo
 					
-					sprintf(&buffer_linea[1],"%04XH %s",puntero_dir,dumpassembler);
+					sprintf(&buffer_linea[1],"%04X %s",puntero_dir,dumpassembler);
 
 					//Guardar las direcciones de cada linea
 					menu_debug_lines_addresses[i]=puntero_dir;
@@ -6424,7 +6413,7 @@ int menu_debug_registers_print_registers(int linea)
 					//Muestra el registro que le corresponde para esta linea
 					menu_debug_show_register_line(i,buffer_registros);
 					//Agregar registro que le corresponda. Columna 19
-					sprintf(&buffer_linea[20],"%s",buffer_registros);
+					sprintf(&buffer_linea[19],"%s",buffer_registros);
 
                                         menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
 										linea++;
