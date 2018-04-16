@@ -6004,6 +6004,8 @@ int menu_debug_registers_mostrando=0;
 //Ultima direccion mostrada en menu_disassemble
 menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
+const int menu_debug_lineas_assembler=15;
+
 
 void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
 {
@@ -6016,6 +6018,9 @@ void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *line
 
 z80_bit menu_debug_follow_pc={1}; //Si puntero de direccion sigue al registro pc
 menu_z80_moto_int menu_debug_memory_pointer=0; //Puntero de direccion
+
+//linea en menu debug que tiene el cursor (indicado por >), desde 0 hasta 23 como mucho
+int menu_debug_line_cursor=0;
 
 char menu_debug_change_registers_last_reg[30]="";
 char menu_debug_change_registers_last_val[30]="";
@@ -6309,7 +6314,7 @@ int menu_debug_registers_print_registers(int linea)
 
 
 				int longitud_op;
-				int limite=15;
+				int limite=menu_debug_lineas_assembler;
 				if (menu_debug_registers_mostrando==1) limite=9;
 
 				for (i=0;i<limite;i++) {
@@ -6329,10 +6334,15 @@ int menu_debug_registers_print_registers(int linea)
 
 
                                 size_t longitud_op;
-                                int limite=15;
+                                int limite=menu_debug_lineas_assembler;
                                 if (menu_debug_registers_mostrando==1) limite=9;
 
 					char buffer_registros[33];
+
+        //Comportamiento de 1 caracter de margen a la izquierda en ventana 
+        int antes_menu_escribe_linea_startx=menu_escribe_linea_startx;
+
+        menu_escribe_linea_startx=0;
 
                                 for (i=0;i<limite;i++) {
 
@@ -6343,13 +6353,16 @@ int menu_debug_registers_print_registers(int linea)
 					char buffer_linea[64];
 					int j; 
 					for (j=0;j<64;j++) buffer_linea[j]=32;
+
+					//Si esta linea tiene el cursor
+					if (i==menu_debug_line_cursor) buffer_linea[0]='>';
 					
 
                        			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
 
 
 					//4 para direccion, fijo
-					sprintf(buffer_linea,"%04XH %s",menu_debug_memory_pointer_copia,dumpassembler);
+					sprintf(&buffer_linea[1],"%04XH %s",menu_debug_memory_pointer_copia,dumpassembler);
 					//Quitar el 0 del final
 					int longitud=strlen(buffer_linea);
 					buffer_linea[longitud]=32;
@@ -6367,6 +6380,8 @@ int menu_debug_registers_print_registers(int linea)
                                 }
                                         menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
 
+				menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
+
 
                 }
 
@@ -6375,7 +6390,7 @@ int menu_debug_registers_print_registers(int linea)
 			//Hacer que texto ventana empiece pegado a la izquierda
 			menu_escribe_linea_startx=0;
 
-			int limite=15;
+			int limite=menu_debug_lineas_assembler;
 			int longitud_linea=8;
 			if (menu_debug_registers_mostrando==4) limite=9;
 
@@ -6739,6 +6754,47 @@ void menu_debug_cpu_step_over(void)
 }
 
 
+void menu_debug_cursor_up(void)
+{
+
+	//Si vista completa (2)
+	if (menu_debug_registers_mostrando==2) {
+/*
++const int menu_debug_lineas_assembler=15;
++
+
++int menu_debug_line_cursor=0;
+*/
+		if (menu_debug_line_cursor>0) {
+			menu_debug_line_cursor--;
+			return;
+		}
+	}
+
+                                        if (menu_debug_registers_mostrando<4) { //Si vista con desensamblado
+                                                menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
+                                        }
+                                        else {  //Vista solo hexa
+                                                menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
+                                        }
+}
+
+
+void menu_debug_cursor_down(void)
+{
+	//Si vista completa (2)
+	if (menu_debug_registers_mostrando==2) {
+		if (menu_debug_line_cursor<menu_debug_lineas_assembler-1) {
+			menu_debug_line_cursor++;
+			return;	
+		}
+	}
+
+
+                                        menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
+}
+
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -6972,12 +7028,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //arriba
 					cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
-					if (menu_debug_registers_mostrando<4) { //Si vista con desensamblado
-						menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
-					}
-					else {	//Vista solo hexa
-						menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
-					}
+
+					menu_debug_cursor_up();
+			
 					//Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
@@ -6987,7 +7040,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //abajo
                                         cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
+
+					menu_debug_cursor_down();
+
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
