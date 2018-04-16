@@ -6034,6 +6034,9 @@ void menu_debug_registers_change_ptr(void)
 
 }
 
+//Longitud que ocupa el ultimo opcode desensamblado
+size_t menu_debug_registers_print_registers_longitud_opcode=0;
+
 int menu_debug_registers_print_registers(void)
 {
 	int linea=0;
@@ -6043,7 +6046,7 @@ int menu_debug_registers_print_registers(void)
 
 	char dumpassembler[33];
 
-	size_t longitud_opcode;
+	//size_t longitud_opcode;
 
 	//menu_z80_moto_int copia_reg_pc;
 	int i;
@@ -6064,7 +6067,7 @@ int menu_debug_registers_print_registers(void)
 
 			//debugger_disassemble(dumpassembler,32,&longitud_opcode,get_pc_register() );
 
-			debugger_disassemble(dumpassembler,32,&longitud_opcode,menu_debug_memory_pointer );
+			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer );
 
 			menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 
@@ -6799,12 +6802,17 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
                                 }
 
-                                 /*       case 10:
-                                                //abajo
-                                                direccion +=longitud_opcode_primera_linea;
-                                        break;*/
+				if (tecla==10) {
+                                        //abajo
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+                                        menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
+					menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }
 
-				
 
 
 				//Si tecla no es ESC, no salir
