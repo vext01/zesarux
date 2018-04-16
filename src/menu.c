@@ -6892,10 +6892,28 @@ void menu_debug_toggle_breakpoint(void)
 
 	printf ("Address on cursor: %X\n",direccion_cursor);
 
-	char condicion[30];
-	sprintf (condicion,"PC=%XH",direccion_cursor);
+	//Si hay breakpoint ahi, quitarlo
+	int posicion=debug_return_brk_pc_dir_condition(direccion_cursor);
+	if (posicion>=0) {
+		printf ("Clearing breakpoint at index %d\n",posicion);
+		debug_set_breakpoint(posicion,"");
+	}
 
-	debug_add_breakpoint_free(condicion,""); 
+	//Si no, ponerlo
+	else {
+
+		char condicion[30];
+		sprintf (condicion,"PC=%XH",direccion_cursor);
+
+        if (debug_breakpoints_enabled.v==0) {
+                debug_breakpoints_enabled.v=1;
+
+                breakpoints_enable();
+    	}
+		printf ("Putting breakpoint [%s] at next free slot\n",condicion);
+
+		debug_add_breakpoint_free(condicion,""); 
+	}
 }
 
 int menu_debug_registers_show_ptr_text(int linea)
