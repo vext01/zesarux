@@ -6056,6 +6056,48 @@ void menu_debug_registers_change_ptr(void)
 
 }
 
+                                         //Muestra el registro que le corresponde para esta linea
+void menu_debug_show_register_line(int linea,char *textoregistros)
+{
+/*
+                        sprintf (textoregistros,"PC: %04X : %s",get_pc_register(),dumpmemoria);
+                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+
+                        menu_debug_registers_dump_hex(dumpmemoria,reg_sp,8);
+                        sprintf (textoregistros,"SP: %04X : %s",reg_sp,dumpmemoria);
+                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+                        sprintf (textoregistros,"A: %02X F: %c%c%c%c%c%c%c%c",reg_a,DEBUG_STRING_FLAGS);
+                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+                        sprintf (textoregistros,"A':%02X F':%c%c%c%c%c%c%c%c",reg_a_shadow,DEBUG_STRING_FLAGS_SHADOW);
+                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+                        sprintf (textoregistros,"HL: %04X DE: %04X BC: %04X",HL,DE,BC);
+                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+                        sprintf (textoregistros,"HL':%04X DE':%04X BC':%04X",(reg_h_shadow<<8)|reg_l_shadow,(reg_d_shadow<<8)|reg_e_shadow,(reg_b_shadow<<8)|reg_c_shadow);
+                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+                                sprintf (textoregistros,"IX: %04X IY: %04X",reg_ix,reg_iy);
+                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+*/
+	switch (linea) {
+		case 0:
+			sprintf (textoregistros,"PC %04X",get_pc_register() );
+		break;
+
+		case 1:
+			sprintf (textoregistros,"SP %04X",reg_sp);
+		break;
+
+		case 2:
+			sprintf (textoregistros,"AF %02X%02X'%02X%02X",reg_a,Z80_FLAGS,reg_a_shadow,Z80_FLAGS_SHADOW);
+		break;
+	}
+}
+
 //Longitud que ocupa el ultimo opcode desensamblado
 size_t menu_debug_registers_print_registers_longitud_opcode=0;
 
@@ -6261,18 +6303,33 @@ int menu_debug_registers_print_registers(int linea)
                                 int limite=15;
                                 if (menu_debug_registers_mostrando==1) limite=9;
 
+					char buffer_registros[33];
 
                                 for (i=0;i<limite;i++) {
 
+					//Por si acaso
+					buffer_registros[0]=0;
+
+					//Inicializamos linea a mostrar primero con espacios
 					char buffer_linea[64];
+					int j; 
+					for (j=0;j<64;j++) buffer_linea[j]=0;
+					
+
                        			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
 
-					//debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia )
 
 					//4 para direccion, fijo
 					sprintf(buffer_linea,"%04XH %s",menu_debug_memory_pointer_copia,dumpassembler);
+					//Quitar el 0 del final
+					int longitud=strlen(buffer_linea);
+					buffer_linea[longitud]=32;
 
-                                        //menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
+					//Muestra el registro que le corresponde para esta linea
+					menu_debug_show_register_line(i,buffer_registros);
+					//Agregar registro que le corresponda. Columna 19
+					sprintf(&buffer_linea[19],"%s",buffer_registros);
+
                                         menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
                                         menu_debug_memory_pointer_copia +=longitud_op;
 
