@@ -323,6 +323,7 @@ void menu_file_viewer_read_file(char *title,char *file_name);
 void menu_file_viewer_read_text_file(char *title,char *file_name);
 void menu_file_dsk_browser_show(char *filename);
 
+menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial);
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
 
@@ -6781,12 +6782,30 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				if (tecla=='m') {
                                         cls_menu_overlay();
-					menu_debug_registers_change_ptr();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
+					menu_debug_registers_change_ptr();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
 				}
+
+				if (tecla==11) {
+                                        //arriba
+					cls_menu_overlay();
+					menu_debug_follow_pc.v=0; //se deja de seguir pc
+					menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
+					//Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }
+
+                                 /*       case 10:
+                                                //abajo
+                                                direccion +=longitud_opcode_primera_linea;
+                                        break;*/
+
+				
+
 
 				//Si tecla no es ESC, no salir
 				if (tecla!=2) acumulado=MENU_PUERTO_TECLADO_NINGUNA;
