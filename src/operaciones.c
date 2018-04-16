@@ -5863,6 +5863,11 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		return zxuno_read_port(puerto);
         }
 
+	//Kempston en zxuno, cuando no esta seleccionado kempston devolver 0 en vez de FF o si no, la bios no funciona
+	if (MACHINE_IS_ZXUNO && (puerto_l & (1+32+64+128)) == 1 ) {
+		return 0;
+	}
+
 	if (MACHINE_IS_TBBLUE) {
 		//Puertos divmmc sin tener que habilitar divmmc paging.
 		//if (divmmc_mmc_ports_enabled.v && mmc_enabled.v==1 && puerto_l == 0xEB) return mmc_read();

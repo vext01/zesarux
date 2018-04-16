@@ -83,7 +83,9 @@ Improved rendering on text mode drivers: now realvideo mode can render directly 
 Improved Linux library dependencies: libssl is not enabled by default on compilation
 
 Fixed TBBlue MMU when using segment 0000-3FFFH
-Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
+Fixed ZX-Uno emulation: 
+*128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
+*Kempston port returns 0 when no kempston selected. New BIOS can be used now
 Fixed Raster interrupts on ZX-Uno and TBBlue. Horizontal raster position was wrong
 Fixed window footer when running Pentagon
 Fixed panic screen: now it is shown on all machines. New design. I hope you never see it ;)
