@@ -6585,6 +6585,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	menu_debug_registers_ventana();
 
+	char buffer_mensaje[64];
+
 	do {
 
 
@@ -6622,6 +6624,16 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                         	menu_escribe_linea_opcion(linea++,-1,1,mensaje_esc_back);
 
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
+
+/*
+        if (menu_debug_follow_pc.v) {
+                menu_debug_memory_pointer=get_pc_register();
+*/
+
+				sprintf(buffer_mensaje,"~~Memptr: %06XH ~~FollowPC: %s",
+					menu_debug_memory_pointer,(menu_debug_follow_pc.v ? "Yes" : "No") );
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				
 
 //Restaurar estado mostrar atajos
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
