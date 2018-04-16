@@ -4476,7 +4476,7 @@ int debug_get_opcode_length(unsigned int direccion)
 }
 
 
-//Retorna si hay breakpoint tipo PC=XXXX donde XXXX sera direccion
+//Retorna si hay breakpoint tipo PC=XXXX donde XXXX sera direccion y action=""
 //Teniendo en cuenta que breakpoints tiene que estar enable, y ese breakpoint tambien tiene que estar activado
 //Retorna -1 si no
 //Retorna indice a breakpoint si coincide
@@ -4493,9 +4493,11 @@ int debug_return_brk_pc_dir_condition(menu_z80_moto_int direccion)
 			if (cond[0]=='P' || cond[0]=='p') {
 				if (cond[1]=='C' || cond[1]=='c') {
 					if (cond[2]=='=') {
-						//Evaluar valor
-						menu_z80_moto_int valor=parse_string_to_number(&cond[3]);
-						if (valor==direccion) return i;
+						if (debug_breakpoints_actions_array[i][0]==0) {
+							//Evaluar valor
+							menu_z80_moto_int valor=parse_string_to_number(&cond[3]);
+							if (valor==direccion) return i;
+						}
 					}
 				}
 			}
@@ -4528,4 +4530,12 @@ int debug_add_breakpoint_free(char *breakpoint, char *action)
 
 	return posicion;
 
+}
+
+void debug_clear_breakpoint(int indice)
+{
+	//Elimina una linea de breakpoint. Pone condicion vacia y enabled a 0
+	debug_set_breakpoint(indice,"");
+	debug_set_breakpoint_action(indice,"");
+	debug_breakpoints_conditions_enabled[indice]=0;
 }

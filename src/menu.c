@@ -6896,7 +6896,9 @@ void menu_debug_toggle_breakpoint(void)
 	int posicion=debug_return_brk_pc_dir_condition(direccion_cursor);
 	if (posicion>=0) {
 		printf ("Clearing breakpoint at index %d\n",posicion);
-		debug_set_breakpoint(posicion,"");
+		debug_clear_breakpoint(posicion);
+		//debug_set_breakpoint(posicion,"");
+		//debug_breakpoints_conditions_enabled[posicion]=0;
 	}
 
 	//Si no, ponerlo

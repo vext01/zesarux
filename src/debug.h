@@ -283,4 +283,6 @@ extern int debug_find_free_breakpoint(void);
 
 extern int debug_add_breakpoint_free(char *breakpoint, char *action);
 
+extern void debug_clear_breakpoint(int indice);
+
 #endif
