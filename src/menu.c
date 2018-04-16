@@ -6385,10 +6385,19 @@ int menu_debug_registers_print_registers(int linea)
 
 					menu_z80_moto_int puntero_dir=adjust_address_memory_size(menu_debug_memory_pointer_copia);
 
+					int tiene_brk=0;
+					int tiene_pc=0;
+
 					//Si linea tiene breakpoint
+					if (debug_return_brk_pc_dir_condition(puntero_dir)>=0) tiene_brk=1;
 
 					//Si linea es donde esta el PC
-					if (puntero_dir==get_pc_register() ) buffer_linea[0]='>';
+					if (puntero_dir==get_pc_register() ) tiene_pc=1;
+
+					if (tiene_pc) buffer_linea[0]='>';
+					if (tiene_brk) buffer_linea[0]='*';
+
+					if (tiene_pc && tiene_brk) buffer_linea[0]='+';
 
 					//Si esta linea tiene el cursor
 					if (i==menu_debug_line_cursor) opcion_actual=linea;			
@@ -6882,6 +6891,11 @@ void menu_debug_toggle_breakpoint(void)
 	direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
 
 	printf ("Address on cursor: %X\n",direccion_cursor);
+
+	char condicion[30];
+	sprintf (condicion,"PC=%XH",direccion_cursor);
+
+	debug_add_breakpoint_free(condicion,""); 
 }
 
 int menu_debug_registers_show_ptr_text(int linea)

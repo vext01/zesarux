@@ -4474,3 +4474,58 @@ int debug_get_opcode_length(unsigned int direccion)
   return longitud_opcode;
 
 }
+
+
+//Retorna si hay breakpoint tipo PC=XXXX donde XXXX sera direccion
+//Teniendo en cuenta que breakpoints tiene que estar enable, y ese breakpoint tambien tiene que estar activado
+//Retorna -1 si no
+//Retorna indice a breakpoint si coincide
+int debug_return_brk_pc_dir_condition(menu_z80_moto_int direccion)
+{
+	if (debug_breakpoints_enabled.v==0) return -1;
+
+	char *cond;
+
+	int i;
+	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+		if (debug_breakpoints_conditions_enabled[i]) {
+			cond=debug_breakpoints_conditions_array[i];
+			if (cond[0]=='P' || cond[0]=='p') {
+				if (cond[1]=='C' || cond[1]=='c') {
+					if (cond[2]=='=') {
+						//Evaluar valor
+						menu_z80_moto_int valor=parse_string_to_number(&cond[3]);
+						if (valor==direccion) return i;
+					}
+				}
+			}
+		}
+	}
+	return -1;
+}
+
+//Retorna primera posicion en array de breakpoint libres. -1 si no hay
+int debug_find_free_breakpoint(void)
+{
+	int i;
+	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+		if (debug_breakpoints_conditions_array[i][0]==0) return i;
+	}
+
+	return -1;
+}
+
+//Agrega un breakpoint, con action en la siguiente posicion libre. -1 si no hay
+//Retorna indice posicion si hay libre
+
+int debug_add_breakpoint_free(char *breakpoint, char *action)
+{
+	int posicion=debug_find_free_breakpoint();
+	if (posicion<0) return -1;
+
+	debug_set_breakpoint(posicion,breakpoint);
+	debug_set_breakpoint_action(posicion,action);
+
+	return posicion;
+
+}
