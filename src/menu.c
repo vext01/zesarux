@@ -6361,8 +6361,12 @@ int menu_debug_registers_print_registers(int linea)
                        			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
 
 
+//menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
+
+
+
 					//4 para direccion, fijo
-					sprintf(&buffer_linea[1],"%04XH %s",menu_debug_memory_pointer_copia,dumpassembler);
+					sprintf(&buffer_linea[1],"%04XH %s",adjust_address_memory_size(menu_debug_memory_pointer_copia),dumpassembler);
 					//Quitar el 0 del final
 					int longitud=strlen(buffer_linea);
 					buffer_linea[longitud]=32;
@@ -6757,8 +6761,8 @@ void menu_debug_cpu_step_over(void)
 void menu_debug_cursor_up(void)
 {
 
-	//Si vista completa (2)
-	if (menu_debug_registers_mostrando==2) {
+	//Si vista completa (3)
+	if (menu_debug_registers_mostrando==3) {
 /*
 +const int menu_debug_lineas_assembler=15;
 +
@@ -6782,8 +6786,8 @@ void menu_debug_cursor_up(void)
 
 void menu_debug_cursor_down(void)
 {
-	//Si vista completa (2)
-	if (menu_debug_registers_mostrando==2) {
+	//Si vista completa (3)
+	if (menu_debug_registers_mostrando==3) {
 		if (menu_debug_line_cursor<menu_debug_lineas_assembler-1) {
 			menu_debug_line_cursor++;
 			return;	
