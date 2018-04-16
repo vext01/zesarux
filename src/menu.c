@@ -6059,9 +6059,8 @@ size_t menu_debug_registers_print_registers_longitud_opcode=0;
 //Ultima direccion en desemsamblado/vista hexa, para poder hacer pgup/pgdn
 menu_z80_moto_int menu_debug_memory_pointer_last=0;
 
-int menu_debug_registers_print_registers(void)
+int menu_debug_registers_print_registers(int linea)
 {
-	int linea=0;
 	char textoregistros[33];
 
 	char dumpmemoria[33];
@@ -6630,7 +6629,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	//ninguna tecla pulsada inicialmente
 	acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 
-	int linea;
+	int linea=0;
 
 	z80_byte tecla;
 
@@ -6648,18 +6647,26 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	else menu_espera_no_tecla();
 
-	menu_debug_registers_ventana();
+                //Forzar a mostrar atajos
+                z80_bit antes_menu_writing_inverse_color;
+                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+                menu_writing_inverse_color.v=1;
 
 	char buffer_mensaje[64];
 
+
+
+	menu_debug_registers_ventana();
+
+
 	do {
+
+		linea=0;
 
 
 		//Si no esta el modo step de la cpu
 		if (cpu_step_mode.v==0) {
 
-	                //esto hara ejecutar esto 2 veces por segundo
-        	        //if ( (contador_segundo%25) == 0 || menu_multitarea==0) {
 
 			//Cuadrarlo cada 1/16 de segundo, justo lo mismo que el flash, asi
 			//el valor de flash se ve coordinado
@@ -6668,15 +6675,22 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 										//printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
 										valor_contador_segundo_anterior=contador_segundo;
 
+                                //Mostrar puntero direccion
+                                menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
 
-				linea=menu_debug_registers_print_registers();
+                                char string_direccion[10];
+                                menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
+
+                                sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
+                                        string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
+                                menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+
+
+
+
+				linea=menu_debug_registers_print_registers(linea);
 
                         	menu_escribe_linea_opcion(linea++,-1,1,"");
-
-                //Forzar a mostrar atajos
-                z80_bit antes_menu_writing_inverse_color;
-                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-                menu_writing_inverse_color.v=1;
 
 
                         	menu_escribe_linea_opcion(linea++,-1,1,"~~Stepmode ~~Disassemble");
@@ -6688,6 +6702,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr.tstates~~part. Ch~~g View");
 
 
+/*
+				//Mostrar puntero direccion
 				menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
 
 				char string_direccion[10];
@@ -6696,6 +6712,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				sprintf(buffer_mensaje,"Poi~~nter: %sH ~~FollowPC: %s",
 					string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+*/
 				
 
 //Restaurar estado mostrar atajos
@@ -6810,7 +6827,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
 				}
 
-				if (tecla=='n') {
+				if (tecla=='p') {
                                         cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_registers_change_ptr();
@@ -6921,10 +6938,13 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 		//En modo Step mode
 		else {
 
+			//Dejar primera linea en blanco para que coincida con vista sin modo step donde aparecer arriba el puntero
+
+			linea++;
 
 			int si_ejecuta_una_instruccion=1;
 
-                        linea=menu_debug_registers_print_registers();
+                        linea=menu_debug_registers_print_registers(linea);
 
                        	menu_escribe_linea_opcion(linea++,-1,1,"");
 
