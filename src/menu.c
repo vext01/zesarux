@@ -6647,10 +6647,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	else menu_espera_no_tecla();
 
-                //Forzar a mostrar atajos
-                z80_bit antes_menu_writing_inverse_color;
-                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-                menu_writing_inverse_color.v=1;
 
 	char buffer_mensaje[64];
 
@@ -6674,6 +6670,13 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 									if ( ((contador_segundo%(16*20)) == 0 && valor_contador_segundo_anterior!=contador_segundo ) || menu_multitarea==0) {
 										//printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
 										valor_contador_segundo_anterior=contador_segundo;
+
+
+                //Forzar a mostrar atajos
+                z80_bit antes_menu_writing_inverse_color;
+                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+                menu_writing_inverse_color.v=1;
+
 
                                 //Mostrar puntero direccion
                                 menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
@@ -6702,18 +6705,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr.tstates~~part. Ch~~g View");
 
 
-/*
-				//Mostrar puntero direccion
-				menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
-
-				char string_direccion[10];
-				menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
-
-				sprintf(buffer_mensaje,"Poi~~nter: %sH ~~FollowPC: %s",
-					string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-*/
-				
 
 //Restaurar estado mostrar atajos
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
