@@ -6799,6 +6799,39 @@ void menu_debug_cursor_down(void)
 }
 
 
+void menu_debug_cursor_pgup(void)
+{
+
+                                        int lineas=1;
+/*
+//0=linea assembler, registros cpu, otros registros internos
+//1=9 lineas assembler, otros registros internos
+//2=15 lineas assembler
+//3=15 lineas assembler con registros a la derecha
+//4=9 lineas hexdump, otros registros internos
+//5=15 lineas hexdump
+*/
+                                        if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==4) lineas=9;
+                                        if (menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==5) lineas=15;
+
+                                        int i;
+                                        for (i=0;i<lineas;i++) {
+                                                if (menu_debug_registers_mostrando<4) { //Si vista con desensamblado
+                                                        menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
+                                                }
+                                                else {  //Vista solo hexa
+                                                        menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
+                                                }
+                                        }
+}
+
+
+void menu_debug_cursor_pgdn(void)
+{
+
+                                        menu_debug_memory_pointer=menu_debug_memory_pointer_last;
+}
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -7057,27 +7090,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
-					int lineas=1;
-/*
-//0=linea assembler, registros cpu, otros registros internos
-//1=9 lineas assembler, otros registros internos
-//2=15 lineas assembler
-//3=15 lineas assembler con registros a la derecha
-//4=9 lineas hexdump, otros registros internos
-//5=15 lineas hexdump
-*/
-					if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==4) lineas=9;
-					if (menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==5) lineas=15;
+					menu_debug_cursor_pgup();
 
-					int i;
-					for (i=0;i<lineas;i++) {
-	                                        if (menu_debug_registers_mostrando<4) { //Si vista con desensamblado
-        	                                        menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
-                	                        }
-                        	                else {  //Vista solo hexa
-                                	                menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
-	                                        }
-					}
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7088,7 +7102,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					//PgDn
                                         cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_memory_pointer=menu_debug_memory_pointer_last;
+
+					menu_debug_cursor_pgdn();
+
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
@@ -7248,6 +7264,26 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         si_ejecuta_una_instruccion=0;
 				}
 
+			       if (tecla=='t') {
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+                                        menu_debug_registers_change_ptr();
+
+        clear_putpixel_cache();
+        //TODO: Si no se pone clear_putpixel_cache,
+        //el texto se fusiona con el fondo de manera casi transparente,
+        //como si no borrase el putpixel cache
+        //esto también sucede en otras partes del código del menú pero no se por que es
+
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
+
                                 if (tecla=='r') {
                                         cls_menu_overlay();
 
@@ -7264,6 +7300,68 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
         //el texto se fusiona con el fondo de manera casi transparente,
         //como si no borrase el putpixel cache
         //esto también sucede en otras partes del código del menú pero no se por que es
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
+
+
+			       if (tecla==11) {
+                                        //arriba
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+                                        menu_debug_cursor_up();
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
+
+                                if (tecla==10) {
+                                        //abajo
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+                                        menu_debug_cursor_down();
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
+
+                                //24 pgup
+                                if (tecla==24) {
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+                                        menu_debug_cursor_pgup();
+
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
+                                //25 pgwn
+                                if (tecla==25) {
+                                        //PgDn
+                                        cls_menu_overlay();
+                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+                                        menu_debug_cursor_pgdn();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
