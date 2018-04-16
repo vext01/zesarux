@@ -6679,8 +6679,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr.tstates~~part. Ch~~g View");
 
-				sprintf(buffer_mensaje,"Poi~~nter: %06XH ~~FollowPC: %s",
-					menu_debug_memory_pointer,(menu_debug_follow_pc.v ? "Yes" : "No") );
+
+				menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
+
+				char string_direccion[10];
+				menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
+
+				sprintf(buffer_mensaje,"Poi~~nter: %sH ~~FollowPC: %s",
+					string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 				
 
