@@ -6358,8 +6358,17 @@ int menu_debug_registers_print_registers(int linea)
 					int j; 
 					for (j=0;j<64;j++) buffer_linea[j]=32;
 
+					int opcion_actual=-1;
+
+					menu_z80_moto_int puntero_dir=adjust_address_memory_size(menu_debug_memory_pointer_copia);
+
+					//Si linea tiene breakpoint
+
+					//Si linea es donde esta el PC
+					if (puntero_dir==get_pc_register() ) buffer_linea[0]='>';
+
 					//Si esta linea tiene el cursor
-					if (i==menu_debug_line_cursor) buffer_linea[0]='>';
+					if (i==menu_debug_line_cursor) opcion_actual=linea;			
 					
 
                        			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
@@ -6370,10 +6379,11 @@ int menu_debug_registers_print_registers(int linea)
 
 
 					//4 para direccion, fijo
-					sprintf(&buffer_linea[1],"%04XH %s",adjust_address_memory_size(menu_debug_memory_pointer_copia),dumpassembler);
+					
+					sprintf(&buffer_linea[1],"%04XH %s",puntero_dir,dumpassembler);
 
 					//Guardar las direcciones de cada linea
-					menu_debug_lines_addresses[i]=adjust_address_memory_size(menu_debug_memory_pointer_copia);
+					menu_debug_lines_addresses[i]=puntero_dir;
 
 					//Quitar el 0 del final
 					int longitud=strlen(buffer_linea);
@@ -6384,7 +6394,8 @@ int menu_debug_registers_print_registers(int linea)
 					//Agregar registro que le corresponda. Columna 19
 					sprintf(&buffer_linea[19],"%s",buffer_registros);
 
-                                        menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+                                        menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
+										linea++;
                                         menu_debug_memory_pointer_copia +=longitud_op;
 
                                         //Almacenar longitud del primer opcode mostrado
