@@ -6015,6 +6015,24 @@ z80_bit menu_debug_follow_pc={1}; //Si puntero de direccion sigue al registro pc
 menu_z80_moto_int menu_debug_memory_pointer=0; //Puntero de direccion
 
 
+void menu_debug_change_registers(void)
+{
+	char string_register[30];
+	char string_value[30];
+
+	char string_registervalue[61]; //REG=VALUE
+
+	menu_ventana_scanf("Register?",string_register,30);
+	menu_ventana_scanf("Value?",string_value,30);
+
+	sprintf (string_registervalue,"%s=%s",string_register,string_value);
+
+	if (debug_change_register(string_registervalue)) {
+		debug_printf(VERBOSE_ERR,"Error changing register");
+        }
+}
+
+
 
 void menu_debug_registers_change_ptr(void)
 {
