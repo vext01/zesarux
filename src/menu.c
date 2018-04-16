@@ -5993,8 +5993,11 @@ void menu_debug_get_memory_pages(char *s)
 //0=linea assembler, registros cpu, otros registros internos
 //1=9 lineas assembler, otros registros internos
 //2=15 lineas assembler
-//3=9 lineas hexdump, otros registros internos
-//4=15 lineas hexdump
+//3=15 lineas assembler con registros a la derecha
+
+
+//4=9 lineas hexdump, otros registros internos  (old 3)
+//5=15 lineas hexdump   (old 4)
 int menu_debug_registers_mostrando=0;
 
 
@@ -6231,7 +6234,7 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==2) {
+		if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==3) {
 
 
 				int longitud_op;
@@ -6252,14 +6255,14 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==4) {
+		if (menu_debug_registers_mostrando==4 || menu_debug_registers_mostrando==5) {
 
 			//Hacer que texto ventana empiece pegado a la izquierda
 			menu_escribe_linea_startx=0;
 
 			int limite=15;
 			int longitud_linea=8;
-			if (menu_debug_registers_mostrando==3) limite=9;
+			if (menu_debug_registers_mostrando==4) limite=9;
 
 			for (i=0;i<limite;i++) {
 					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
@@ -6276,7 +6279,7 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==0 || menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==3) {
+		if (menu_debug_registers_mostrando==0 || menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==4) {
                         //Separador
                         sprintf (textoregistros," ");
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
@@ -6572,7 +6575,7 @@ void menu_debug_configuration_stepover(MENU_ITEM_PARAMETERS)
 void menu_debug_registers_next_view(void)
 {
 	menu_debug_registers_mostrando++;
-	if (menu_debug_registers_mostrando==5) menu_debug_registers_mostrando=0;
+	if (menu_debug_registers_mostrando==6) menu_debug_registers_mostrando=0;
 }
 
 void menu_debug_registers_splash_memory_zone(void)
@@ -6854,7 +6857,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //arriba
 					cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
-					if (menu_debug_registers_mostrando<3) { //Si vista con desensamblado
+					if (menu_debug_registers_mostrando<4) { //Si vista con desensamblado
 						menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
 					}
 					else {	//Vista solo hexa
@@ -6885,15 +6888,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 //0=linea assembler, registros cpu, otros registros internos
 //1=9 lineas assembler, otros registros internos
 //2=15 lineas assembler
-//3=9 lineas hexdump, otros registros internos
-//4=15 lineas hexdump
+//3=15 lineas assembler con registros a la derecha
+//4=9 lineas hexdump, otros registros internos
+//5=15 lineas hexdump
 */
-					if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==3) lineas=9;
-					if (menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==4) lineas=15;
+					if (menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==4) lineas=9;
+					if (menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==5) lineas=15;
 
 					int i;
 					for (i=0;i<lineas;i++) {
-	                                        if (menu_debug_registers_mostrando<3) { //Si vista con desensamblado
+	                                        if (menu_debug_registers_mostrando<4) { //Si vista con desensamblado
         	                                        menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
                 	                        }
                         	                else {  //Vista solo hexa
