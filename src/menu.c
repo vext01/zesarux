@@ -6241,6 +6241,7 @@ int menu_debug_registers_print_registers(void)
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_op;
 
+					//Almacenar longitud del primer opcode mostrado
 					if (i==0) menu_debug_registers_print_registers_longitud_opcode=longitud_op;
 				}
 
@@ -6268,7 +6269,7 @@ int menu_debug_registers_print_registers(void)
 
 		}
 
-if (menu_debug_registers_mostrando==0 || menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==3) {
+		if (menu_debug_registers_mostrando==0 || menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==3) {
                         //Separador
                         sprintf (textoregistros," ");
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
@@ -6831,7 +6832,12 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //arriba
 					cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
+					if (menu_debug_registers_mostrando<3) { //Si vista con desensamblado
+						menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
+					}
+					else {	//Vista solo hexa
+						menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
+					}
 					//Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
