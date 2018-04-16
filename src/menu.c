@@ -6138,6 +6138,10 @@ size_t menu_debug_registers_print_registers_longitud_opcode=0;
 //Ultima direccion en desemsamblado/vista hexa, para poder hacer pgup/pgdn
 menu_z80_moto_int menu_debug_memory_pointer_last=0;
 
+
+//Direcciones de cada linea en la vista numero 3
+menu_z80_moto_int menu_debug_lines_addresses[24];
+
 int menu_debug_registers_print_registers(int linea)
 {
 	char textoregistros[33];
@@ -6367,6 +6371,10 @@ int menu_debug_registers_print_registers(int linea)
 
 					//4 para direccion, fijo
 					sprintf(&buffer_linea[1],"%04XH %s",adjust_address_memory_size(menu_debug_memory_pointer_copia),dumpassembler);
+
+					//Guardar las direcciones de cada linea
+					menu_debug_lines_addresses[i]=adjust_address_memory_size(menu_debug_memory_pointer_copia);
+
 					//Quitar el 0 del final
 					int longitud=strlen(buffer_linea);
 					buffer_linea[longitud]=32;
@@ -6832,6 +6840,16 @@ void menu_debug_cursor_pgdn(void)
                                         menu_debug_memory_pointer=menu_debug_memory_pointer_last;
 }
 
+void menu_debug_toggle_breakpoint(void)
+{
+	//Buscar primero direccion que indica el cursor
+	menu_z80_moto_int direccion_cursor;
+
+	direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
+
+	printf ("Address on cursor: %X\n",direccion_cursor);
+}
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -6909,11 +6927,12 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                         	menu_escribe_linea_opcion(linea++,-1,1,"~~Stepmode ~~Disassemble");
 
-																// 012345678901234567890123456789
-				sprintf (buffer_mensaje,"ch~~Reg ~~Brkp. ~~Watch M~~Zone %d",menu_debug_memory_zone);
-                        	menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+					    	 	 // 012345678901234567890123456789
+                        	menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le ~~Watch");
 
-				menu_escribe_linea_opcion(linea++,-1,1,"Clr.tstates~~part. Ch~~g View");
+				sprintf (buffer_mensaje,"Clr.tst~~part. Ch~~gView M~~Zone %d",menu_debug_memory_zone);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+
 
 
 
@@ -6996,6 +7015,14 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 					menu_debug_registers_ventana();
 				}
+
+				if (tecla=='l') {
+		                           cls_menu_overlay();
+                                        menu_debug_toggle_breakpoint();
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }
 
 				if (tecla=='w') {
                                         cls_menu_overlay();
@@ -7138,11 +7165,13 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                 antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
                 menu_writing_inverse_color.v=1;
 
+
+
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
 				menu_escribe_linea_opcion(linea++,-1,1,"Enter:Step Step~~over ~~Contstep");
-				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp ~~Watch ~~V.Scr");
-				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View");
+				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp Togg~~le ~~Watch");
+				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View ~~V.Scr");
 			}
 			else {
 				menu_escribe_linea_opcion(linea++,-1,1,"Any key: Stop cont step");
@@ -7235,6 +7264,17 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
+
+		                    if (tecla=='l') {
+                                           cls_menu_overlay();
+                                        menu_debug_toggle_breakpoint();
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
                                 }
 
