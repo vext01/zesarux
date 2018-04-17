@@ -5990,14 +5990,7 @@ void menu_debug_get_memory_pages(char *s)
 
 //Si muestra:
 //
-//4=linea assembler, registros cpu, otros registros internos
-//2=9 lineas assembler, otros registros internos
-//3=15 lineas assembler
-//1=15 lineas assembler con registros a la derecha
-
-
-//5=9 lineas hexdump, otros registros internos  (old 3)
-//6=15 lineas hexdump   (old 4)
+// lineas hexdump   
 int menu_debug_registers_mostrando=1;
 
 
@@ -6194,7 +6187,7 @@ int menu_debug_registers_print_registers(int linea)
 
 
 
-		if (menu_debug_registers_mostrando==4) {
+		if (menu_debug_registers_mostrando==2) {
 
 			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
 			menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
@@ -6331,12 +6324,12 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==3) {
+		if (menu_debug_registers_mostrando==4 || menu_debug_registers_mostrando==3) {
 
 
 				int longitud_op;
 				int limite=menu_debug_lineas_assembler;
-				if (menu_debug_registers_mostrando==2) limite=9;
+				if (menu_debug_registers_mostrando==3) limite=9;
 
 				for (i=0;i<limite;i++) {
 					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
@@ -6465,7 +6458,7 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==4 || menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==5) {
+		if (menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==5) {
                         //Separador
                         sprintf (textoregistros," ");
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
@@ -6856,15 +6849,15 @@ void menu_debug_cursor_pgup(void)
 
                                         int lineas=1;
 /*
-//0=linea assembler, registros cpu, otros registros internos
-//1=9 lineas assembler, otros registros internos
-//2=15 lineas assembler
-//3=15 lineas assembler con registros a la derecha
-//4=9 lineas hexdump, otros registros internos
-//5=15 lineas hexdump
+//1=14 lineas assembler con registros a la derecha
+//2=linea assembler, registros cpu, otros registros internos
+//3=9 lineas assembler, otros registros internos
+//4=14 lineas assembler
+//5=9 lineas hexdump, otros registros internos  
+//6=14 lineas hexdump   
 */
-                                        if (menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==5) lineas=9;
-                                        if (menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==6) lineas=15;
+                                        if (menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==5) lineas=9;
+                                        if (menu_debug_registers_mostrando==4 || menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==6) lineas=14;
 
                                         int i;
                                         for (i=0;i<lineas;i++) {
