@@ -965,8 +965,12 @@ int esxdos_aux_readdir(int file_handler)
 	esxdos_fopen_files[file_handler].esxdos_handler_dp = readdir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 
 	if (esxdos_fopen_files[file_handler].esxdos_handler_dp == NULL) {
+
+
 		closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 		esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
+
+
 		//no hay mas archivos
 		reg_a=0;
 		esxdos_handler_no_error_uncarry();
@@ -1189,8 +1193,8 @@ void esxdos_handler_call_f_seekdir(void)
 
 	int file_handler=reg_a;
 
-	printf ("Saltamos %d en seekdir file handle %d\n",posicion,file_handler);
-	sleep(2);
+	debug_printf (VERBOSE_DEBUG,"Skipping %d files on seekdir file handler %d",posicion,file_handler);
+	//sleep(2);
 
 if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
 		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d out of range",file_handler);
@@ -1216,6 +1220,8 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 	//Reabrimos el directorio
 	rewinddir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 
+	esxdos_fopen_files[file_handler].contador_directorio=0;
+
 		//sprintf (esxdos_fopen_files[file_handler].esxdos_handler_last_dir_open,"%s",directorio_final);
 	//esxdos_fopen_files[file_handler].esxdos_handler_dfd = opendir(directorio_final);
 
@@ -1234,14 +1240,21 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 			return;
 		}
 
+		//temporal sacar nombre
+		char nombre_final[PATH_MAX];
+		util_get_complete_path(esxdos_fopen_files[file_handler].esxdos_handler_last_dir_open,esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name,nombre_final);
+		debug_printf(VERBOSE_DEBUG,"Current name: %s",nombre_final);
+
 		esxdos_fopen_files[file_handler].contador_directorio +=32;
 
 		posicion--;
 	}
 
+	debug_printf (VERBOSE_DEBUG,"End skipping");
+
 	//Ya nos hemos posicionado
-				esxdos_handler_no_error_uncarry();
-			esxdos_handler_return_call();
+	esxdos_handler_no_error_uncarry();
+	esxdos_handler_return_call();
 
 }		
 
