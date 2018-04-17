@@ -1641,8 +1641,7 @@ no gestiona bien nombres con espacios
 
 Menu debugger:
 1) imposibilidad de abrir el debugger y usar el teclado para spectrum
-2) ventana de debug con poca información (y no cabe mas en 32x24)
-3) poder meter un breakpoint donde apunte cursor
+2) Doble ptr, uno para codigo y otro para memoria
 
 -Agregar cambiar valor registros en menú debug 
 
