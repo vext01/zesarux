@@ -6782,10 +6782,17 @@ void menu_debug_configuration_stepover(MENU_ITEM_PARAMETERS)
 
 
 
-void menu_debug_registers_next_view(void)
+/*void menu_debug_registers_next_view(void)
 {
 	menu_debug_registers_current_view++;
 	if (menu_debug_registers_current_view==7) menu_debug_registers_current_view=1;
+}*/
+
+void menu_debug_registers_set_view(int vista)
+{
+	if (vista<1 || vista>6) vista=1;
+
+	menu_debug_registers_current_view=vista;
 }
 
 void menu_debug_registers_splash_memory_zone(void)
@@ -7024,7 +7031,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                         
 				linea=menu_debug_registers_print_registers(linea);
 
-                        	menu_escribe_linea_opcion(linea++,-1,1,"");
+                        	//menu_escribe_linea_opcion(linea++,-1,1,"");
+
+							linea=19;
 
 
                         	menu_escribe_linea_opcion(linea++,-1,1,"~~Stepmode ~~Disassemble");
@@ -7032,7 +7041,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					    	 	 // 012345678901234567890123456789
                         	menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le ~~Watch");
 
-				sprintf (buffer_mensaje,"Clr.tst~~part. Ch~~gView M~~Zone %d",menu_debug_memory_zone);
+				sprintf (buffer_mensaje,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 
@@ -7142,9 +7151,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
                                 }
 
-				if (tecla=='g') {
+						//Vista. Entre 1 y 6
+						if (tecla>='1' && tecla<='6') {
                                         cls_menu_overlay();
-					menu_debug_registers_next_view();
+					menu_debug_registers_set_view(tecla-'0');
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
@@ -7258,7 +7268,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                         linea=menu_debug_registers_print_registers(linea);
 
-                       	menu_escribe_linea_opcion(linea++,-1,1,"");
+						linea=19;
+                       	//menu_escribe_linea_opcion(linea++,-1,1,"");
 
                 //Forzar a mostrar atajos
                 z80_bit antes_menu_writing_inverse_color;
@@ -7271,7 +7282,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 								//      01234567890123456789012345678901
 				menu_escribe_linea_opcion(linea++,-1,1,"Enter:Step Step~~over ~~Contstep");
 				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp Togg~~le ~~Watch");
-				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p Ch~~g View ~~V.Scr");
+				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p ~~1-~~5 View ~~V.Scr");
+																	// ~~1-~~5 View
 			}
 			else {
 				menu_escribe_linea_opcion(linea++,-1,1,"Any key: Stop cont step");
@@ -7391,10 +7403,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         si_ejecuta_una_instruccion=0;
                                 }
 
-
-				if (tecla=='g') {
+	//Vista. Entre 1 y 6
+						if (tecla>='1' && tecla<='6') {
                                         cls_menu_overlay();
-					menu_debug_registers_next_view();
+					menu_debug_registers_set_view(tecla-'0');
+				
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
