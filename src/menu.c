@@ -7207,6 +7207,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				if (tecla=='b') {
 					cls_menu_overlay();
+
+
+					
 					menu_breakpoints(0);
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7467,7 +7470,14 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 if (tecla=='b') {
                                         cls_menu_overlay();
+
+				//Detener multitarea, porque si no, ese input habilita la multitarea
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
                                         menu_breakpoints(0);
+										menu_multitarea=antes_menu_multitarea;
+
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 					menu_debug_registers_ventana();
@@ -7478,7 +7488,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 if (tecla=='w') {
                                         cls_menu_overlay();
+
+				//Detener multitarea, porque si no, ese input habilita la multitarea
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+									
+
                                         menu_watches(0);
+
+										menu_multitarea=antes_menu_multitarea;
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
