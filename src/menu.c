@@ -5989,9 +5989,17 @@ void menu_debug_get_memory_pages(char *s)
 
 
 //Si muestra:
+/*
+//1=14 lineas assembler con registros a la derecha
+//2=linea assembler, registros cpu, otros registros internos
+//3=9 lineas assembler, otros registros internos
+//4=14 lineas assembler
+//5=9 lineas hexdump, otros registros internos  
+//6=14 lineas hexdump   
+*/
 //
-// lineas hexdump   
-int menu_debug_registers_mostrando=1;
+  
+int menu_debug_registers_current_view=1;
 
 
 //Ultima direccion mostrada en menu_disassemble
@@ -6161,7 +6169,7 @@ int menu_debug_registers_print_registers(int linea)
 		}
 
 		//Y ahora hay que situar el cursor la mitad por arriba, solo cuando la vista activa es la 3
-		if (menu_debug_registers_mostrando==1) {
+		if (menu_debug_registers_current_view==1) {
 			menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 
 			//Y el cursor ahora...
@@ -6187,7 +6195,7 @@ int menu_debug_registers_print_registers(int linea)
 
 
 
-		if (menu_debug_registers_mostrando==2) {
+		if (menu_debug_registers_current_view==2) {
 
 			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
 			menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
@@ -6324,12 +6332,12 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==4 || menu_debug_registers_mostrando==3) {
+		if (menu_debug_registers_current_view==4 || menu_debug_registers_current_view==3) {
 
 
 				int longitud_op;
 				int limite=menu_debug_lineas_assembler;
-				if (menu_debug_registers_mostrando==3) limite=9;
+				if (menu_debug_registers_current_view==3) limite=9;
 
 				for (i=0;i<limite;i++) {
 					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
@@ -6344,7 +6352,7 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-                if (menu_debug_registers_mostrando==1) {
+                if (menu_debug_registers_current_view==1) {
 
 
                                 size_t longitud_op;
@@ -6434,14 +6442,14 @@ int menu_debug_registers_print_registers(int linea)
 
                 }
 
-		if (menu_debug_registers_mostrando==5 || menu_debug_registers_mostrando==6) {
+		if (menu_debug_registers_current_view==5 || menu_debug_registers_current_view==6) {
 
 			//Hacer que texto ventana empiece pegado a la izquierda
 			menu_escribe_linea_startx=0;
 
 			int limite=menu_debug_lineas_assembler;
 			int longitud_linea=8;
-			if (menu_debug_registers_mostrando==5) limite=9;
+			if (menu_debug_registers_current_view==5) limite=9;
 
 			for (i=0;i<limite;i++) {
 					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
@@ -6458,7 +6466,7 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==2 || menu_debug_registers_mostrando==5) {
+		if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==2 || menu_debug_registers_current_view==5) {
                         //Separador
                         sprintf (textoregistros," ");
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
@@ -6753,8 +6761,8 @@ void menu_debug_configuration_stepover(MENU_ITEM_PARAMETERS)
 
 void menu_debug_registers_next_view(void)
 {
-	menu_debug_registers_mostrando++;
-	if (menu_debug_registers_mostrando==7) menu_debug_registers_mostrando=1;
+	menu_debug_registers_current_view++;
+	if (menu_debug_registers_current_view==7) menu_debug_registers_current_view=1;
 }
 
 void menu_debug_registers_splash_memory_zone(void)
@@ -6807,7 +6815,7 @@ void menu_debug_cursor_up(void)
 {
 
 	//Si vista completa (1)
-	if (menu_debug_registers_mostrando==1) {
+	if (menu_debug_registers_current_view==1) {
 /*
 +const int menu_debug_lineas_assembler=15;
 +
@@ -6820,7 +6828,7 @@ void menu_debug_cursor_up(void)
 		}
 	}
 
-                                        if (menu_debug_registers_mostrando<=4) { //Si vista con desensamblado
+                                        if (menu_debug_registers_current_view<=4) { //Si vista con desensamblado
                                                 menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
                                         }
                                         else {  //Vista solo hexa
@@ -6832,7 +6840,7 @@ void menu_debug_cursor_up(void)
 void menu_debug_cursor_down(void)
 {
 	//Si vista completa (1)
-	if (menu_debug_registers_mostrando==1) {
+	if (menu_debug_registers_current_view==1) {
 		if (menu_debug_line_cursor<menu_debug_lineas_assembler-1) {
 			menu_debug_line_cursor++;
 			return;	
@@ -6848,20 +6856,13 @@ void menu_debug_cursor_pgup(void)
 {
 
                                         int lineas=1;
-/*
-//1=14 lineas assembler con registros a la derecha
-//2=linea assembler, registros cpu, otros registros internos
-//3=9 lineas assembler, otros registros internos
-//4=14 lineas assembler
-//5=9 lineas hexdump, otros registros internos  
-//6=14 lineas hexdump   
-*/
-                                        if (menu_debug_registers_mostrando==3 || menu_debug_registers_mostrando==5) lineas=9;
-                                        if (menu_debug_registers_mostrando==4 || menu_debug_registers_mostrando==1 || menu_debug_registers_mostrando==6) lineas=14;
+
+                                        if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
+                                        if (menu_debug_registers_current_view==4 || menu_debug_registers_current_view==1 || menu_debug_registers_current_view==6) lineas=14;
 
                                         int i;
                                         for (i=0;i<lineas;i++) {
-                                                if (menu_debug_registers_mostrando<=4) { //Si vista con desensamblado
+                                                if (menu_debug_registers_current_view<=4) { //Si vista con desensamblado
                                                         menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
                                                 }
                                                 else {  //Vista solo hexa
