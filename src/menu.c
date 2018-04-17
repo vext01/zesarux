@@ -7030,8 +7030,8 @@ void menu_debug_registers_next_cont_speed(void)
 void menu_debug_cont_speed_progress(char *s)
 {
 
-	int max_position=20;
-	//Meter 20 caracteres con .
+	int max_position=19;
+	//Meter caracteres con .
 	int i;
 	for (i=0;i<max_position;i++) s[i]='.';
 	s[i]=0;
@@ -7388,7 +7388,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				char buffer_progreso[32];
 				menu_debug_cont_speed_progress(buffer_progreso);
-				sprintf (buffer_mensaje,"~~C: Speed %s",buffer_progreso);
+				sprintf (buffer_mensaje,"~~C: Speed %d %s",menu_debug_continuous_speed,buffer_progreso);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 				menu_escribe_linea_opcion(linea++,-1,1,"Any other key: Stop cont step");
@@ -7396,6 +7396,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				//si lento, avisar
 				if (menu_debug_continuous_speed<=1) menu_escribe_linea_opcion(linea++,-1,1,"Note: Do long key presses");
+				else menu_escribe_linea_opcion(linea++,-1,1,"                         "); 
 
 				//Pausa
 				//0= pausa de 0.5
