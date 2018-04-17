@@ -1267,6 +1267,13 @@ void cpu_help_expert(void)
 		"--remoteprotocol-port n    Set remote protocol port (default: 10000)\n"
 #endif
 
+
+
+		"--showfiredbreakpoint n    Tells to show the breakpoint condition when it is fired. Possible values: \n"
+		"                           0: always shows the condition\n"
+		"                           1: only shows conditions that are not like PC=XXXX\n"
+		"                           2: never shows conditions\n"
+
 #ifdef MINGW
 		"--nodisableconsole         Do not disable text output on this console. On Windows, text output is disabled unless you specify "
 		"at least one parameter on command line, or this parameter on command line or on configuration file. \n"
@@ -6087,6 +6094,17 @@ int parse_cmdline_options(void) {
 						 remote_protocol_port=valor;
 		 }
 
+
+		 else if (!strcmp(argv[puntero_parametro],"--showfiredbreakpoint")) {
+			 siguiente_parametro_argumento();
+            int valor=parse_string_to_number(argv[puntero_parametro]);
+			if (valor<0 || valor>2) {
+				 printf ("Invalid port value\n");
+				 exit (1);
+			 }
+
+			debug_show_fired_breakpoints_type=valor;
+		 }
 
 		 else if (!strcmp(argv[puntero_parametro],"--set-breakpoint")) {
 			 siguiente_parametro_argumento();
