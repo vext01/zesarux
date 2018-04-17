@@ -7013,7 +7013,8 @@ void menu_debug_get_key_legend_second(char *s)
 
 //0= pausa de 0.5
 //1= pausa de 0.1
-//2= sin pausa
+//2= pausa de 0.02
+//3= sin pausa
 int menu_debug_continuous_speed=0;
 
 //Posicion del indicador para dar sensacion de velocidad. De 0 a 10
@@ -7022,15 +7023,17 @@ int menu_debug_continuous_speed_step=0;
 void menu_debug_registers_next_cont_speed(void)
 {
 	menu_debug_continuous_speed++;
-	if (menu_debug_continuous_speed==3) menu_debug_continuous_speed=0;
+	if (menu_debug_continuous_speed==4) menu_debug_continuous_speed=0;
 }
 
 
 void menu_debug_cont_speed_progress(char *s)
 {
-	//Meter 10 caracteres con .
+
+	int max_position=20;
+	//Meter 20 caracteres con .
 	int i;
-	for (i=0;i<10;i++) s[i]='.';
+	for (i=0;i<max_position;i++) s[i]='.';
 	s[i]=0;
 
 	//Meter tantas franjas > como velocidad
@@ -7040,12 +7043,12 @@ void menu_debug_cont_speed_progress(char *s)
 	while (caracteres>0) {
 		s[i]='>';
 		i++;
-		if (i==10) i=0; //Si se sale por la derecha
+		if (i==max_position) i=0; //Si se sale por la derecha
 		caracteres--;
 	}
 
 	menu_debug_continuous_speed_step++;
-	if (menu_debug_continuous_speed_step==10) menu_debug_continuous_speed_step=0; //Si se sale por la derecha
+	if (menu_debug_continuous_speed_step==max_position) menu_debug_continuous_speed_step=0; //Si se sale por la derecha
 }
 
 
@@ -7381,19 +7384,28 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 																	// ~~1-~~5 View
 			}
 			else {
-				menu_escribe_linea_opcion(linea++,-1,1,"Any key: Stop cont step");
 				//Mostrar progreso
 
-				menu_debug_cont_speed_progress(buffer_mensaje);
+				char buffer_progreso[32];
+				menu_debug_cont_speed_progress(buffer_progreso);
+				sprintf (buffer_mensaje,"~~C: Speed %s",buffer_progreso);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+
+				menu_escribe_linea_opcion(linea++,-1,1,"Any other key: Stop cont step");
+													  //0123456789012345678901234567890
+
+				//si lento, avisar
+				if (menu_debug_continuous_speed<=1) menu_escribe_linea_opcion(linea++,-1,1,"Note: Do long key presses");
 
 				//Pausa
 				//0= pausa de 0.5
 //1= pausa de 0.1
-//2= sin pausa
+//2= pausa de 0.02
+//3= sin pausa
 
 				if (menu_debug_continuous_speed==0) usleep(500000); //0.5 segundo
 				else if (menu_debug_continuous_speed==1) usleep(100000); //0.1 segundo
+				else if (menu_debug_continuous_speed==2) usleep(20000); //0.02 segundo
 			}
 
 
