@@ -7011,6 +7011,45 @@ void menu_debug_get_key_legend_second(char *s)
 	}
 }
 
+//0= pausa de 0.5
+//1= pausa de 0.1
+//2= sin pausa
+int menu_debug_continuous_speed=0;
+
+//Posicion del indicador para dar sensacion de velocidad. De 0 a 10
+int menu_debug_continuous_speed_step=0;
+
+void menu_debug_registers_next_cont_speed(void)
+{
+	menu_debug_continuous_speed++;
+	if (menu_debug_continuous_speed==3) menu_debug_continuous_speed=0;
+}
+
+
+void menu_debug_cont_speed_progress(char *s)
+{
+	//Meter 10 caracteres con .
+	int i;
+	for (i=0;i<10;i++) s[i]='.';
+	s[i]=0;
+
+	//Meter tantas franjas > como velocidad
+	i=menu_debug_continuous_speed_step;
+	int caracteres=menu_debug_continuous_speed+1;
+
+	while (caracteres>0) {
+		s[i]='>';
+		i++;
+		if (i==10) i=0; //Si se sale por la derecha
+		caracteres--;
+	}
+
+	menu_debug_continuous_speed_step++;
+	if (menu_debug_continuous_speed_step==10) menu_debug_continuous_speed_step=0; //Si se sale por la derecha
+}
+
+
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -7343,6 +7382,18 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			}
 			else {
 				menu_escribe_linea_opcion(linea++,-1,1,"Any key: Stop cont step");
+				//Mostrar progreso
+
+				menu_debug_cont_speed_progress(buffer_mensaje);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+
+				//Pausa
+				//0= pausa de 0.5
+//1= pausa de 0.1
+//2= sin pausa
+
+				if (menu_debug_continuous_speed==0) usleep(500000); //0.5 segundo
+				else if (menu_debug_continuous_speed==1) usleep(100000); //0.1 segundo
 			}
 
 
@@ -7644,12 +7695,18 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			}
 
 			else {
-				//Cualquier tecla Detiene el continuous loop
+				//Cualquier tecla Detiene el continuous loop excepto C
 				//printf ("continuos loop\n");
 				acumulado=menu_da_todas_teclas();
 				if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) != MENU_PUERTO_TECLADO_NINGUNA) {
 
 					tecla=menu_get_pressed_key();
+
+					if (tecla=='c') {
+						menu_debug_registers_next_cont_speed();
+						tecla=0;
+						menu_espera_no_tecla_no_cpu_loop();
+					}
 
 					//Si tecla no es 0->0 se suele producir al mover el raton.
 					if (tecla!=0) {
