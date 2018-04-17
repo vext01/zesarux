@@ -3381,7 +3381,7 @@ int util_write_configfile(void)
   if (do_no_show_changelog_when_update.v)     ADD_STRING_CONFIG,"--no-show-changelog");
 
 
-  if (parameter_disablebetawarning[0])        ADD_STRING_CONFIG,"—-disablebetawarning \"%s\"",parameter_disablebetawarning);
+  if (parameter_disablebetawarning[0])        ADD_STRING_CONFIG,"--disablebetawarning \"%s\"",parameter_disablebetawarning);
 
 
   for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {

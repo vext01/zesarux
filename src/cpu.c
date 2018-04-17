@@ -1783,7 +1783,7 @@ printf (
 		"--exit-after n             Exit emulator after n seconds\n"
 		"--last-version s           String which identifies last version run. Usually doesnt need to change it, used to show the start popup of the new version changes\n"
 		"--no-show-changelog        Do not show changelog when updating version\n"
-		"—-disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
+		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
 		"--codetests                Run develoment code tests\n"
 
 
@@ -6271,7 +6271,7 @@ int parse_cmdline_options(void) {
 				do_no_show_changelog_when_update.v=1;
 			}
 
-			else if (!strcmp(argv[puntero_parametro],"—-disablebetawarning")) {
+			else if (!strcmp(argv[puntero_parametro],"--disablebetawarning")) {
 				siguiente_parametro_argumento();
 				strcpy(parameter_disablebetawarning,argv[puntero_parametro]);
 			}	
