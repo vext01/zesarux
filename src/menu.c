@@ -6004,7 +6004,7 @@ int menu_debug_registers_mostrando=0;
 //Ultima direccion mostrada en menu_disassemble
 menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
-const int menu_debug_lineas_assembler=15;
+const int menu_debug_lineas_assembler=14;
 
 
 void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
@@ -6091,32 +6091,34 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 		break;
 
 		case 3:
+			sprintf (textoregistros,"%c%c%c%c%c%c%c%c",DEBUG_STRING_FLAGS);
+		break;		
+
+		case 4:
 			sprintf (textoregistros,"HL %04X'%02X%02X",HL,reg_h_shadow,reg_l_shadow);
 		break;
 
-		case 4:
+		case 5:
 			sprintf (textoregistros,"DE %04X'%02X%02X",DE,reg_d_shadow,reg_e_shadow);
 		break;
 
-		case 5:
+		case 6:
 			sprintf (textoregistros,"BC %04X'%02X%02X",BC,reg_b_shadow,reg_c_shadow);
 		break;
 
-		case 6:
+		case 7:
 			sprintf (textoregistros,"IX %04X",reg_ix);
 		break;
 
-		case 7:
+		case 8:
 			sprintf (textoregistros,"IY %04X",reg_iy);
 		break;
 
-		case 8:
+		case 9:
 			sprintf (textoregistros,"IR %02X%02X IFF%c%c",reg_i,(reg_r&127)|(reg_r_bit7&128),DEBUG_STRING_IFF12 );
 		break;
 
-		case 10:
-			sprintf (textoregistros,"%c%c%c%c%c%c%c%c",DEBUG_STRING_FLAGS);
-		break;
+
 
 	}
 }
@@ -6171,6 +6173,11 @@ int menu_debug_registers_print_registers(int linea)
 
 			//Y el cursor ahora...
 			menu_debug_line_cursor=menu_debug_lineas_assembler/2;
+		}
+
+		else {
+			menu_debug_line_cursor=0;
+			menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
 		}
 	}
 
@@ -6360,14 +6367,14 @@ int menu_debug_registers_print_registers(int linea)
 
         menu_escribe_linea_startx=0;
 					
-
+				char buffer_linea[64];
                                 for (i=0;i<limite;i++) {
 
 					//Por si acaso
 					buffer_registros[0]=0;
 
 					//Inicializamos linea a mostrar primero con espacios
-					char buffer_linea[64];
+					
 					int j; 
 					for (j=0;j<64;j++) buffer_linea[j]=32;
 
@@ -6426,6 +6433,10 @@ int menu_debug_registers_print_registers(int linea)
                                         menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
 
 				menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
+					//Linea de stack
+					linea++;
+					sprintf(buffer_linea,"(SP) AAAA BBBB CCCC DDDD EEEE");
+					menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
                 }
