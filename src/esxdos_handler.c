@@ -956,6 +956,30 @@ int esxdos_handler_string_to_msdos(char *fullname,z80_int puntero)
 
 }
 
+//Retorna 0 si no hay mas archivos
+//Retorna 1 si ok
+int esxdos_aux_readdir(int file_handler)
+{
+	do {
+
+	esxdos_fopen_files[file_handler].esxdos_handler_dp = readdir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
+
+	if (esxdos_fopen_files[file_handler].esxdos_handler_dp == NULL) {
+		closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
+		esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
+		//no hay mas archivos
+		reg_a=0;
+		esxdos_handler_no_error_uncarry();
+		esxdos_handler_return_call();
+		return 0;
+	}
+
+
+	} while(!esxdos_handler_readdir_no_valido(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name));
+
+	return 1;
+}
+
 void esxdos_handler_call_f_readdir(void)
 {
 
@@ -1001,7 +1025,15 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 	return;
 }
 
-do {
+	if (!esxdos_aux_readdir(file_handler)) {
+		//no hay mas archivos
+		reg_a=0;
+		esxdos_handler_no_error_uncarry();
+		esxdos_handler_return_call();
+		return;
+	}
+
+/*do {
 
 	esxdos_fopen_files[file_handler].esxdos_handler_dp = readdir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 
@@ -1016,7 +1048,7 @@ do {
 	}
 
 
-} while(!esxdos_handler_readdir_no_valido(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name));
+} while(!esxdos_handler_readdir_no_valido(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name));*/
 
 
 //if (esxdos_handler_isValidFN(esxdos_handler_globaldata)
@@ -1101,13 +1133,13 @@ puntero+=retornado_nombre;
 24-25   Date (7/4/5 bits, for year-since-1980/month/day)
 */
 
-int hora=11;
-int minutos=15;
-int doblesegundos=20*2;
+int hora;
+int minutos;
+int doblesegundos;
 
-int anyo=37;
-int mes=9;
-int dia=18;
+int anyo;
+int mes;
+int dia;
 
 
 get_file_date_from_name(nombre_final,&hora,&minutos,&doblesegundos,&dia,&mes,&anyo);
@@ -1141,6 +1173,77 @@ esxdos_handler_return_call();
 
 }
 
+/*
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Incomplete ESXDOS_RST8_F_SEEKDIR. Offset: %04X%04XH . Return ok",reg_bc,reg_de);
+			printf ("dir handle: %02XH Offset %04X%04X\n",reg_a,BC,DE);
+		//temporal. SEEKDIR. F_SEEKDIR: Sets offset of directory. A=dir handle, BCDE=offset
+			esxdos_handler_call_f_seekdir();
+			esxdos_handler_no_error_uncarry();
+			esxdos_handler_return_call();
+			*/
+
+void esxdos_handler_call_f_seekdir(void)
+{
+	int posicion=(BC*65536)+DE;
+	posicion /=32;
+
+	int file_handler=reg_a;
+
+	printf ("Saltamos %d en seekdir file handle %d\n",posicion,file_handler);
+	sleep(2);
+
+if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d out of range",file_handler);
+		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+		esxdos_handler_return_call();
+		return;
+	}
+
+
+if (esxdos_fopen_files[file_handler].open_file.v==0) {
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d not found",file_handler);
+	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+	esxdos_handler_return_call();
+	return;
+}
+
+if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
+	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+	esxdos_handler_return_call();
+	return;
+}
+
+	//Reabrimos el directorio
+	rewinddir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
+
+		//sprintf (esxdos_fopen_files[file_handler].esxdos_handler_last_dir_open,"%s",directorio_final);
+	//esxdos_fopen_files[file_handler].esxdos_handler_dfd = opendir(directorio_final);
+
+	//Y leemos tantos como se indique la pisicion
+	
+
+
+	while (posicion>0)
+	{
+		printf ("quedan: %d\n",posicion);
+		if (!esxdos_aux_readdir(file_handler)) {
+			//no hay mas archivos
+			reg_a=0;
+			esxdos_handler_no_error_uncarry();
+			esxdos_handler_return_call();
+			return;
+		}
+
+		esxdos_fopen_files[file_handler].contador_directorio +=32;
+
+		posicion--;
+	}
+
+	//Ya nos hemos posicionado
+				esxdos_handler_no_error_uncarry();
+			esxdos_handler_return_call();
+
+}		
 
 void esxdos_handler_call_f_telldir(void)
 {
@@ -1350,10 +1453,10 @@ void esxdos_handler_begin_handling_commands(void)
 		break;
 
 		case ESXDOS_RST8_F_SEEKDIR:
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Incomplete ESXDOS_RST8_F_SEEKDIR. Offset: %04X%04XH . Return ok",reg_bc,reg_de);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_SEEKDIR. Offset: %04X%04XH",reg_bc,reg_de);
+			//printf ("dir handle: %02XH Offset %04X%04X\n",reg_a,BC,DE);
 		//temporal. SEEKDIR. F_SEEKDIR: Sets offset of directory. A=dir handle, BCDE=offset
-			esxdos_handler_no_error_uncarry();
-			esxdos_handler_return_call();
+			esxdos_handler_call_f_seekdir();
 		break;
 
 		case ESXDOS_RST8_F_FSTAT:
