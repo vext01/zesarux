@@ -4475,34 +4475,61 @@ int debug_get_opcode_length(unsigned int direccion)
 
 }
 
+//Retorna si el breakpoint indicado es de tipo PC=XXXX y action=""
+//Retorna 0 si no
+//Retorna 1 si es
+int debug_return_brk_pc_condition(int indice)
+{
+	if (debug_breakpoints_enabled.v==0) return -1;
 
-//Retorna si hay breakpoint tipo PC=XXXX donde XXXX sera direccion y action=""
+	char *cond;
+
+	int i=indice;
+	
+		if (debug_breakpoints_conditions_enabled[i]) {
+			cond=debug_breakpoints_conditions_array[i];
+			if (cond[0]=='P' || cond[0]=='p') {
+				if (cond[1]=='C' || cond[1]=='c') {
+					if (cond[2]=='=') {
+						if (debug_breakpoints_actions_array[i][0]!=0) return 0;
+						//Ahora a partir de aqui ver que no haya ningun espacio
+						int j;
+
+						for (j=3;cond[j];j++) {
+							if (cond[j]==' ') return 0;
+						}
+						return 1;
+					}
+				}
+			}
+		}
+	
+
+	return 0;
+}
+
+//Retorna si hay breakpoint tipo PC=XXXX donde XXXX coincide con direccion y action=""
 //Teniendo en cuenta que breakpoints tiene que estar enable, y ese breakpoint tambien tiene que estar activado
 //Retorna -1 si no
 //Retorna indice a breakpoint si coincide
 int debug_return_brk_pc_dir_condition(menu_z80_moto_int direccion)
 {
+
 	if (debug_breakpoints_enabled.v==0) return -1;
 
 	char *cond;
 
 	int i;
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
-		if (debug_breakpoints_conditions_enabled[i]) {
-			cond=debug_breakpoints_conditions_array[i];
-			if (cond[0]=='P' || cond[0]=='p') {
-				if (cond[1]=='C' || cond[1]=='c') {
-					if (cond[2]=='=') {
-						if (debug_breakpoints_actions_array[i][0]==0) {
-							//Evaluar valor
-							menu_z80_moto_int valor=parse_string_to_number(&cond[3]);
-							if (valor==direccion) return i;
-						}
-					}
-				}
+			if (debug_return_brk_pc_condition(i)) {
+
+				cond=debug_breakpoints_conditions_array[i];
+
+				menu_z80_moto_int valor=parse_string_to_number(&cond[3]);
+				if (valor==direccion) return i;
 			}
-		}
 	}
+						
 	return -1;
 }
 

@@ -6116,9 +6116,12 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 		break;
 
 		case 9:
-			sprintf (textoregistros,"IR %02X%02X IFF%c%c",reg_i,(reg_r&127)|(reg_r_bit7&128),DEBUG_STRING_IFF12 );
+			sprintf (textoregistros,"IR %02X%02X",reg_i,(reg_r&127)|(reg_r_bit7&128) );
 		break;
 
+		case 10:
+			sprintf (textoregistros,"IM%d IFF%c%c",im_mode,DEBUG_STRING_IFF12 );
+		break;
 
 
 	}
@@ -6909,12 +6912,12 @@ void menu_debug_toggle_breakpoint(void)
 
 	direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
 
-	printf ("Address on cursor: %X\n",direccion_cursor);
+	debug_printf (VERBOSE_DEBUG,"Address on cursor: %X",direccion_cursor);
 
 	//Si hay breakpoint ahi, quitarlo
 	int posicion=debug_return_brk_pc_dir_condition(direccion_cursor);
 	if (posicion>=0) {
-		printf ("Clearing breakpoint at index %d\n",posicion);
+		debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
 		debug_clear_breakpoint(posicion);
 		//debug_set_breakpoint(posicion,"");
 		//debug_breakpoints_conditions_enabled[posicion]=0;
@@ -6931,10 +6934,39 @@ void menu_debug_toggle_breakpoint(void)
 
                 breakpoints_enable();
     	}
-		printf ("Putting breakpoint [%s] at next free slot\n",condicion);
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",condicion);
 
 		debug_add_breakpoint_free(condicion,""); 
 	}
+}
+
+void menu_debug_runto(void)
+{
+	//Buscar primero direccion que indica el cursor
+	menu_z80_moto_int direccion_cursor;
+
+	direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
+
+	debug_printf (VERBOSE_DEBUG,"Address on cursor: %X",direccion_cursor);
+
+	//Si no hay breakpoint ahi, ponerlo
+	int posicion=debug_return_brk_pc_dir_condition(direccion_cursor);
+	if (posicion<0) {
+
+		char condicion[30];
+		sprintf (condicion,"PC=%XH",direccion_cursor);
+
+        if (debug_breakpoints_enabled.v==0) {
+                debug_breakpoints_enabled.v=1;
+
+                breakpoints_enable();
+    	}
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",condicion);
+
+		debug_add_breakpoint_free(condicion,""); 
+	}
+
+	//Y salir
 }
 
 int menu_debug_registers_show_ptr_text(int linea)
@@ -7039,7 +7071,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                         	menu_escribe_linea_opcion(linea++,-1,1,"~~Stepmode ~~Disassemble");
 
 					    	 	 // 012345678901234567890123456789
-                        	menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le ~~Watch");
+                        	menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le ~~Watch R~~unto");
 
 				sprintf (buffer_mensaje,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
@@ -7134,6 +7166,14 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
                                 }
+
+				if (tecla=='u') {
+		                           cls_menu_overlay();
+                                        menu_debug_runto();
+                                        tecla=2; //Simular ESC
+
+										salir_todos_menus=1;
+                                }								
 
 				if (tecla=='w') {
                                         cls_menu_overlay();
@@ -7281,7 +7321,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
 				menu_escribe_linea_opcion(linea++,-1,1,"~~E~~n~~t~~e~~r:Step Step~~over ~~Contstep");
-				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp Togg~~le ~~Watch");
+				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp Togg~~le ~~Watch R~~unto");
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p ~~1-~~5 View ~~V.Scr");
 																	// ~~1-~~5 View
 			}
@@ -7327,20 +7367,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				menu_debug_registers_ventana();
 
-        			//if (tecla=='s') {
-        			if (tecla==2) { //ESC
-					cpu_step_mode.v=0;
-
-					//Decimos que no hay tecla pulsada
-					acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-
-					menu_debug_registers_ventana();
-
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-					si_ejecuta_una_instruccion=0;
-
-
-				}
+        		
+        	
 
 				if (tecla=='c') {
 					continuous_step=1;
@@ -7389,6 +7417,22 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
                                 }
+								
+								if (tecla=='u') {
+		                           cls_menu_overlay();
+                                        menu_debug_runto();
+                                        //tecla=2; //Simular ESC
+
+										//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+
+										salir_todos_menus=1;
+
+										cpu_step_mode.v=0;
+										acumulado=0; //teclas pulsadas
+
+										//Con esto saldremos
+                                }	
 
 
                                 if (tecla=='p') {
@@ -7563,6 +7607,20 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					si_ejecuta_una_instruccion=0;
 				}
 
+				if (tecla==2) { //ESC
+					cpu_step_mode.v=0;
+
+					//Decimos que no hay tecla pulsada
+					acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+					menu_debug_registers_ventana();
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+					si_ejecuta_una_instruccion=0;
+
+
+				}
+
 				//Cualquier tecla no enter, no ejecuta instruccion
 				if (tecla!=13) si_ejecuta_una_instruccion=0;
 
@@ -7634,6 +7692,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 		}
 
 	//Hacer mientras step mode este activo o no haya tecla pulsada
+	printf ("acumulado %d cpu_ste_mode: %d\n",acumulado,cpu_step_mode.v);
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1);
 
         cls_menu_overlay();
@@ -31328,6 +31387,9 @@ void menu_inicio_bucle(void)
 		if (retorno_menu==MENU_RETORNO_ESC) salir_menu=1;
 
 	} while (!salir_menu && !salir_todos_menus);
+
+
+	        //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
 
