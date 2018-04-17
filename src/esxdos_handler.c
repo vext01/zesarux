@@ -1038,32 +1038,7 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 		return;
 	}
 
-/*do {
 
-	esxdos_fopen_files[file_handler].esxdos_handler_dp = readdir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
-
-	if (esxdos_fopen_files[file_handler].esxdos_handler_dp == NULL) {
-		closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
-		esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
-		//no hay mas archivos
-		reg_a=0;
-		esxdos_handler_no_error_uncarry();
-		esxdos_handler_return_call();
-		return;
-	}
-
-
-} while(!esxdos_handler_readdir_no_valido(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name));*/
-
-
-//if (esxdos_handler_isValidFN(esxdos_handler_globaldata)
-
-//meter flags
-//esxdos_handler_filinfo_fattrib=0;
-
-
-
-//int longitud_nombre=strlen(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name);
 
 //obtener nombre con directorio. obtener combinando directorio root, actual y inicio listado
 char nombre_final[PATH_MAX];
@@ -1078,9 +1053,7 @@ Attribute - a bitvector. Bit 0: read only. Bit 1: hidden.
 
 */
 
-//sprintf (nombre_final,"%s/%s",esxdos_handler_last_dir_open,esxdos_handler_dp->d_name);
 
-//if (get_file_type(esxdos_handler_dp->d_type,esxdos_handler_dp->d_name)==2) {
 if (get_file_type(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_type,nombre_final)==2) {
 	//meter flags directorio y nombre entre <>
 	//esxdos_handler_filinfo_fattrib |=16;
@@ -1097,12 +1070,7 @@ else {
 //Meter nombre. Saltamos primer byte.
 //poke_byte_no_time((*registro_parametros_hl_ix)++,0);
 
-/*
-esxdos_handler_copy_string_to_hl(esxdos_handler_dp->d_name);
 
-z80_int puntero=(*registro_parametros_hl_ix)+longitud_nombre+1; //saltar nombre+0 del final
-
-*/
 
 z80_int puntero=(*registro_parametros_hl_ix);
 //Atributos
@@ -1110,20 +1078,6 @@ poke_byte_no_time(puntero++,atributo_archivo);
 
 int retornado_nombre=esxdos_handler_string_to_msdos(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name,puntero);
 
-/*oke_byte_no_time(puntero++,'H');
-poke_byte_no_time(puntero++,'O');
-poke_byte_no_time(puntero++,'L');
-poke_byte_no_time(puntero++,'A');
-poke_byte_no_time(puntero++,' ');
-poke_byte_no_time(puntero++,' ');
-poke_byte_no_time(puntero++,' ');
-poke_byte_no_time(puntero++,' ');
-
-poke_byte_no_time(puntero++,'T');
-poke_byte_no_time(puntero++,'X');
-poke_byte_no_time(puntero++,'T');*/
-
-//z80_int puntero=(*registro_parametros_hl_ix)+11;
 
 puntero+=retornado_nombre;
 
@@ -1178,14 +1132,6 @@ esxdos_handler_return_call();
 
 }
 
-/*
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Incomplete ESXDOS_RST8_F_SEEKDIR. Offset: %04X%04XH . Return ok",reg_bc,reg_de);
-			printf ("dir handle: %02XH Offset %04X%04X\n",reg_a,BC,DE);
-		//temporal. SEEKDIR. F_SEEKDIR: Sets offset of directory. A=dir handle, BCDE=offset
-			esxdos_handler_call_f_seekdir();
-			esxdos_handler_no_error_uncarry();
-			esxdos_handler_return_call();
-			*/
 
 void esxdos_handler_call_f_seekdir(void)
 {
@@ -1195,9 +1141,9 @@ void esxdos_handler_call_f_seekdir(void)
 	int file_handler=reg_a;
 
 	debug_printf (VERBOSE_DEBUG,"Skipping %d files on seekdir file handler %d",posicion,file_handler);
-	//sleep(2);
 
-if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
+
+	if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
 		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d out of range",file_handler);
 		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
 		esxdos_handler_return_call();
@@ -1205,26 +1151,23 @@ if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
 	}
 
 
-if (esxdos_fopen_files[file_handler].open_file.v==0) {
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d not found",file_handler);
-	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
-	esxdos_handler_return_call();
-	return;
-}
+	if (esxdos_fopen_files[file_handler].open_file.v==0) {
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d not found",file_handler);
+		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+		esxdos_handler_return_call();
+		return;
+	}
 
-if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
-	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
-	esxdos_handler_return_call();
-	return;
-}
+	if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
+		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+		esxdos_handler_return_call();
+		return;
+	}
 
 	//Reabrimos el directorio
 	rewinddir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 
 	esxdos_fopen_files[file_handler].contador_directorio=0;
-
-		//sprintf (esxdos_fopen_files[file_handler].esxdos_handler_last_dir_open,"%s",directorio_final);
-	//esxdos_fopen_files[file_handler].esxdos_handler_dfd = opendir(directorio_final);
 
 	//Y leemos tantos como se indique la pisicion
 	
@@ -1232,7 +1175,7 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 
 	while (posicion>0)
 	{
-		printf ("quedan: %d\n",posicion);
+		//printf ("quedan: %d\n",posicion);
 		if (!esxdos_aux_readdir(file_handler)) {
 			//no hay mas archivos
 			reg_a=0;
@@ -1266,7 +1209,7 @@ void esxdos_handler_call_f_rewinddir(void)
 
 
 if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
-		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d out of range",file_handler);
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_rewinddir. Handler %d out of range",file_handler);
 		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
 		esxdos_handler_return_call();
 		return;
@@ -1274,7 +1217,7 @@ if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
 
 
 if (esxdos_fopen_files[file_handler].open_file.v==0) {
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d not found",file_handler);
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_rewinddir. Handler %d not found",file_handler);
 	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
 	esxdos_handler_return_call();
 	return;
@@ -1289,7 +1232,6 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 	//Reabrimos el directorio
 	rewinddir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 
-	
 	
 	esxdos_handler_no_error_uncarry();
 	esxdos_handler_return_call();
