@@ -6851,18 +6851,35 @@ void menu_debug_cursor_down(void)
                                         menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
 }
 
+//Numero de lineas del listado principal de la vista
+int menu_debug_get_main_list_view(void)
+{
+	int lineas=1;
+
+    if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
+    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=14;
+
+	return lineas;
+}
+
+//Si vista actual tiene desensamblado u otros datos. En el primer de los casos, los movimientos de cursor se gestionan mediante saltos de opcodes
+int menu_debug_view_has_disassemly(void)
+{
+	if (menu_debug_registers_current_view<=4) return 1;
+
+	return 0;
+}
+
 
 void menu_debug_cursor_pgup(void)
 {
 
-                                        int lineas=1;
+                                        int lineas=menu_debug_get_main_list_view();
 
-                                        if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
-                                        if (menu_debug_registers_current_view==4 || menu_debug_registers_current_view==1 || menu_debug_registers_current_view==6) lineas=14;
 
                                         int i;
                                         for (i=0;i<lineas;i++) {
-                                                if (menu_debug_registers_current_view<=4) { //Si vista con desensamblado
+                                                if (menu_debug_view_has_disassemly() ) { //Si vista con desensamblado
                                                         menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
                                                 }
                                                 else {  //Vista solo hexa
