@@ -4539,3 +4539,23 @@ void debug_clear_breakpoint(int indice)
 	debug_set_breakpoint_action(indice,"");
 	debug_breakpoints_conditions_enabled[indice]=0;
 }
+
+//Retorna valores en el stack separados por espacios
+//Para Z80: retorna 16 bits
+//Para motorola, scmp: no implementado aun
+void debug_get_stack_values(int items, char *texto)
+{
+	if (CPU_IS_Z80) {
+		int i;
+  		for (i=0;i<items;i++) {
+			z80_int valor=peek_byte_z80_moto(reg_sp+i*2)+256*peek_byte_z80_moto(reg_sp+1+i*2);
+			sprintf(&texto[i*5],"%04X ",valor);
+		  }
+		  
+	}
+
+	else {
+		texto[0]=0;
+	}
+
+}

@@ -6377,9 +6377,7 @@ int menu_debug_registers_print_registers(int linea)
 
                                 size_t longitud_op;
                                 int limite=menu_debug_num_lineas_full;
-                                
-
-					linea++;
+         
 
 					char buffer_registros[33];
 
@@ -6456,7 +6454,8 @@ int menu_debug_registers_print_registers(int linea)
 				menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 					//Linea de stack
 					linea++;
-					sprintf(buffer_linea,"(SP) AAAA BBBB CCCC DDDD EEEE");
+					sprintf(buffer_linea,"(SP) ");
+					debug_get_stack_values(5,&buffer_linea[5]);
 					menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
@@ -7009,6 +7008,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		linea=0;
 		linea=menu_debug_registers_show_ptr_text(linea);
 
+		linea++;
 
 		//Si no esta el modo step de la cpu
 		if (cpu_step_mode.v==0) {
@@ -7280,7 +7280,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
-				menu_escribe_linea_opcion(linea++,-1,1,"Enter:Step Step~~over ~~Contstep");
+				menu_escribe_linea_opcion(linea++,-1,1,"~~E~~n~~t~~e~~r:Step Step~~over ~~Contstep");
 				menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Breakp Togg~~le ~~Watch");
 				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p ~~1-~~5 View ~~V.Scr");
 																	// ~~1-~~5 View

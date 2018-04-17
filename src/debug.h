@@ -286,4 +286,6 @@ extern int debug_add_breakpoint_free(char *breakpoint, char *action);
 
 extern void debug_clear_breakpoint(int indice);
 
+extern void debug_get_stack_values(int items, char *texto);
+
 #endif
