@@ -7029,7 +7029,7 @@ void menu_debug_switch_follow_pc(void)
 }
 
 
-void menu_debug_get_key_legend_first(char *s)
+void menu_debug_get_key_legend_first_step(char *s)
 {
 	if (menu_debug_registers_current_view==1) {
 		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mem");
@@ -7038,6 +7038,18 @@ void menu_debug_get_key_legend_first(char *s)
 		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt");
 	}
 }
+
+void menu_debug_get_key_legend_first_nostep(char *s)
+{
+	if (menu_debug_registers_current_view==1) {
+		sprintf(s,"~~Stepmode ~~Disassemble ~~Mem");
+	}
+	else {
+		sprintf(s,"~~Stepmode ~~Disassemble");
+	}
+}
+
+
 
 
 
@@ -7164,7 +7176,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 
-				menu_debug_get_key_legend_first(buffer_mensaje);
+				menu_debug_get_key_legend_first_nostep(buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 				// 012345678901234567890123456789
@@ -7434,7 +7446,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 								//      01234567890123456789012345678901
 				//menu_escribe_linea_opcion(linea++,-1,1,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mem");
 
-				menu_debug_get_key_legend_first(buffer_mensaje);
+				menu_debug_get_key_legend_first_step(buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 				menu_debug_get_key_legend_second(buffer_mensaje);
