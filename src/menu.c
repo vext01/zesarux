@@ -6168,6 +6168,22 @@ menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
 	return posicion;
 }
 
+//Si desensamblado en menu view registers muestra:
+//0: lo normal. opcodes
+//1: hexa
+//2: ascii
+int menu_debug_registers_dis_show_hexa=0;
+
+//Modo ascii. 0 spectrum , 1 zx80, 2 zx81
+int menu_debug_hexdump_with_ascii_modo_ascii=0;
+
+void menu_debug_next_dis_show_hexa(void)
+{
+	menu_debug_registers_dis_show_hexa++;
+
+	if (menu_debug_registers_dis_show_hexa==3) menu_debug_registers_dis_show_hexa=0;
+}
+
 int menu_debug_registers_print_registers(int linea)
 {
 	char textoregistros[33];
@@ -6425,11 +6441,20 @@ int menu_debug_registers_print_registers(int linea)
 
                        			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
 
+/*
+//Si desensamblado en menu view registers muestra:
+//0: lo normal. opcodes
+//1: hexa
+//2: ascii
+int menu_debug_registers_dis_show_hexa=0;
 
+*/
 //menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
 
 
-
+					//Si mostramos en vez de desensamblado, volcado hexa o ascii
+					if (menu_debug_registers_dis_show_hexa==1)	menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_op);
+					if (menu_debug_registers_dis_show_hexa==2)  menu_debug_registers_dump_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii);
 					//4 para direccion, fijo
 					
 					sprintf(&buffer_linea[1],"%04X %s",puntero_dir,dumpassembler);
@@ -6656,6 +6681,7 @@ int menu_debug_registers_print_registers(int linea)
 
 z80_bit menu_breakpoint_exception_pending_show={0};
 int continuous_step=0;
+
 
 
 void menu_debug_registers_ventana(void)
@@ -7002,6 +7028,19 @@ void menu_debug_switch_follow_pc(void)
 	//if (follow_pc.v==0) menu_debug_memory_pointer=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 }
 
+
+void menu_debug_get_key_legend_first(char *s)
+{
+	if (menu_debug_registers_current_view==1) {
+		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mem");
+	}
+	else {
+		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt");
+	}
+}
+
+
+
 void menu_debug_get_key_legend_second(char *s)
 {
 	if (menu_debug_registers_current_view==1) {
@@ -7121,7 +7160,12 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 							linea=19;
 
 
-                        	menu_escribe_linea_opcion(linea++,-1,1,"~~Stepmode ~~Disassemble");
+
+
+
+
+				menu_debug_get_key_legend_first(buffer_mensaje);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 				// 012345678901234567890123456789
 				menu_debug_get_key_legend_second(buffer_mensaje);
@@ -7216,6 +7260,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 					menu_debug_registers_ventana();
 				}
+
+				
+
+								if (tecla=='m' && menu_debug_registers_current_view==1) {
+		                           cls_menu_overlay();
+                                        menu_debug_next_dis_show_hexa();
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }
 
 				if (tecla=='l' && menu_debug_registers_current_view==1) {
 		                           cls_menu_overlay();
@@ -7378,7 +7432,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
-				menu_escribe_linea_opcion(linea++,-1,1,"~~E~~n~~t~~e~~r:Step Step~~over ~~Contstep");
+				//menu_escribe_linea_opcion(linea++,-1,1,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mem");
+
+				menu_debug_get_key_legend_first(buffer_mensaje);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 				menu_debug_get_key_legend_second(buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
@@ -7504,6 +7561,17 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
+
+									if (tecla=='m' && menu_debug_registers_current_view==1) {
+		                           cls_menu_overlay();
+                                        menu_debug_next_dis_show_hexa();
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+											//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
                                 }
 
@@ -7842,7 +7910,9 @@ void menu_debug_hexdump_ventana(void)
         menu_dibuja_ventana(0,1,32,22,"Hex Dump");
 }
 
-int menu_debug_hexdump_with_ascii_modo_ascii=0;
+
+
+
 
 void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea)
 {
