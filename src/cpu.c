@@ -588,6 +588,9 @@ int cpu_turbo_speed_antes=1;
 
 z80_bit set_machine_empties_audio_buffer={1};
 
+//Texto indicado en el parametro
+char parameter_disablebetawarning[100]="";
+
 
 //Si se muestra por verbose debug los opcodes incorrectos
 z80_bit debug_shows_invalid_opcode={0};
@@ -1773,6 +1776,7 @@ printf (
 		"--exit-after n             Exit emulator after n seconds\n"
 		"--last-version s           String which identifies last version run. Usually doesnt need to change it, used to show the start popup of the new version changes\n"
 		"--no-show-changelog        Do not show changelog when updating version\n"
+		"—-disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
 		"--codetests                Run develoment code tests\n"
 
 
@@ -6249,6 +6253,10 @@ int parse_cmdline_options(void) {
 				do_no_show_changelog_when_update.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"—-disablebetawarning")) {
+				siguiente_parametro_argumento();
+				strcpy(parameter_disablebetawarning,argv[puntero_parametro]);
+			}	
 
 
 
@@ -6389,13 +6397,7 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 
 
 
-#ifdef SNAPSHOT_VERSION
-	printf ("Build number: " BUILDNUMBER "\n");
 
-	printf ("WARNING. This is a Snapshot version and not a stable one\n"
-			 "Some features may not work, can suffer random crashes, abnormal CPU use, or lots of debug messages on console\n\n");
-	sleep (3);
-#endif
 
 
 
@@ -6628,6 +6630,19 @@ tooltip_enabled.v=1;
 
 	//Init random value. Usado en AY Chip y Random ram y mensajes "kidding"
 init_randomize_noise_value();
+
+#ifdef SNAPSHOT_VERSION
+	printf ("Build number: " BUILDNUMBER "\n");
+
+	printf ("WARNING. This is a Snapshot version and not a stable one\n"
+			 "Some features may not work, can suffer random crashes, abnormal CPU use, or lots of debug messages on console\n\n");
+
+	//Si no coincide ese parametro, hacer pausa
+	if (strcmp(parameter_disablebetawarning,EMULATOR_VERSION)) {
+		sleep (3);
+	}
+#endif
+
 
 	print_funny_message();
 
