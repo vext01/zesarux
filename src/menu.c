@@ -6111,7 +6111,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 		break;
 
 		case 8:
-			sprintf (textoregistros,"IR %02X%02X",reg_i,(reg_r&127)|(reg_r_bit7&128) );
+			sprintf (textoregistros,"IR %02X%02X IFF%c%c",reg_i,(reg_r&127)|(reg_r_bit7&128),DEBUG_STRING_IFF12 );
 		break;
 
 		case 10:
@@ -6165,11 +6165,13 @@ int menu_debug_registers_print_registers(int linea)
 			menu_debug_memory_pointer=tbblue_copper_pc;
 		}
 
-		//Y ahora hay que situar el cursor la mitad por arriba
-		menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
+		//Y ahora hay que situar el cursor la mitad por arriba, solo cuando la vista activa es la 3
+		if (menu_debug_registers_mostrando==3) {
+			menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 
-		//Y el cursor ahora...
-		menu_debug_line_cursor=menu_debug_lineas_assembler/2;
+			//Y el cursor ahora...
+			menu_debug_line_cursor=menu_debug_lineas_assembler/2;
+		}
 	}
 
 	else {
@@ -6302,12 +6304,11 @@ int menu_debug_registers_print_registers(int linea)
 				texto_nmi[0]=0;
 			}
 
-                        sprintf (textoregistros,"R:%02X I:%02X IM%d %s %s %s",
+                        sprintf (textoregistros,"R:%02X I:%02X IM%d IFF%c%c %s",
 				(reg_r&127)|(reg_r_bit7&128),
 				reg_i,
 				im_mode,
-				( iff1.v ? "IFF1" : "    "),
-				( iff2.v ? "IFF2" : "    "),
+				DEBUG_STRING_IFF12,
 				
 				texto_nmi);
 

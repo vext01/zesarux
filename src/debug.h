@@ -28,6 +28,7 @@
 
 #define DEBUG_STRING_FLAGS_SHADOW         ( Z80_FLAGS_SHADOW & FLAG_S ? 'S' : '-'), ( Z80_FLAGS_SHADOW & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS_SHADOW & FLAG_5 ? '5' : '-'), ( Z80_FLAGS_SHADOW & FLAG_PV ? 'P' : '-'), ( Z80_FLAGS_SHADOW & FLAG_3 ? '3' : '-'), ( Z80_FLAGS_SHADOW & FLAG_H ? 'H' : '-'), ( Z80_FLAGS_SHADOW & FLAG_N ? 'N' : '-'), ( Z80_FLAGS_SHADOW & FLAG_C ? 'C' : '-')
 
+#define DEBUG_STRING_IFF12 ( iff1.v ? '1' : '-') , ( iff2.v ? '2' : '-')
 
 extern void print_registers(char *buffer);
 
