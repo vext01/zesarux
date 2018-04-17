@@ -82,6 +82,8 @@ FA_USE_HEADER   equ             %01000000                       ; Use +3DOS head
 #define ESXDOS_RST8_F_TELLDIR 0xa5
 #define ESXDOS_RST8_F_SEEKDIR 0xa6
 
+#define ESXDOS_RST8_F_REWINDDIR 0xa7
+
 #define ESXDOS_RST8_F_GETCWD 0xa8
 #define ESXDOS_RST8_F_CHDIR 0xa9
 

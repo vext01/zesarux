@@ -680,6 +680,7 @@ void esxdos_handler_call_f_close(void)
 
 		else {
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Closing a directory");
+			closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 		}
 
 		esxdos_fopen_files[file_handler].open_file.v=0;
@@ -967,8 +968,8 @@ int esxdos_aux_readdir(int file_handler)
 	if (esxdos_fopen_files[file_handler].esxdos_handler_dp == NULL) {
 
 
-		closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
-		esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
+		//temp closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
+		//temp esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
 
 
 		//no hay mas archivos
@@ -1258,6 +1259,44 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 
 }		
 
+void esxdos_handler_call_f_rewinddir(void)
+{
+	
+	int file_handler=reg_a;
+
+
+if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d out of range",file_handler);
+		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+		esxdos_handler_return_call();
+		return;
+	}
+
+
+if (esxdos_fopen_files[file_handler].open_file.v==0) {
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_telldir. Handler %d not found",file_handler);
+	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+	esxdos_handler_return_call();
+	return;
+}
+
+if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
+	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+	esxdos_handler_return_call();
+	return;
+}
+
+	//Reabrimos el directorio
+	rewinddir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
+
+	
+	
+	esxdos_handler_no_error_uncarry();
+	esxdos_handler_return_call();
+
+}		
+
+
 void esxdos_handler_call_f_telldir(void)
 {
 
@@ -1470,6 +1509,11 @@ void esxdos_handler_begin_handling_commands(void)
 			//printf ("dir handle: %02XH Offset %04X%04X\n",reg_a,BC,DE);
 		//temporal. SEEKDIR. F_SEEKDIR: Sets offset of directory. A=dir handle, BCDE=offset
 			esxdos_handler_call_f_seekdir();
+		break;
+
+		case ESXDOS_RST8_F_REWINDDIR:
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_REWINDDIR");
+			esxdos_handler_call_f_rewinddir();
 		break;
 
 		case ESXDOS_RST8_F_FSTAT:
