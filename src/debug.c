@@ -158,6 +158,13 @@ int debug_enterrom=0;
 int debug_exitrom=0;
 
 
+//Si mostrar aviso cuando se cumple un breakpoint
+int debug_show_fired_breakpoints_type=0;
+//0: siempre
+//1: solo cuando condicion no es tipo "PC=XXXX"
+//2: nunca
+
+
 //Mensaje que ha hecho saltar el breakpoint
 char catch_breakpoint_message[MAX_MESSAGE_CATCH_BREAKPOINT];
 
@@ -1632,7 +1639,7 @@ void cpu_core_loop_debug_check_breakpoints(void)
 					if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
 						debug_breakpoints_conditions_saltado[i]=1;
 	                                        char buffer_mensaje[MAX_BREAKPOINT_CONDITION_LENGTH+64];
-        	                                sprintf(buffer_mensaje,"Condition: %s",&debug_breakpoints_conditions_array[i][0]);
+        	                                sprintf(buffer_mensaje,"%s",&debug_breakpoints_conditions_array[i][0]);
 
                                           //Ejecutar accion, por defecto es abrir menu
 						catch_breakpoint_index=i;
@@ -4475,6 +4482,27 @@ int debug_get_opcode_length(unsigned int direccion)
 
 }
 
+//Retorna si el texto indicado es de tipo PC=XXXX
+//Retorna 0 si no
+//Retorna 1 si es
+int debug_text_is_pc_condition(char *cond)
+{
+	if (cond[0]=='P' || cond[0]=='p') {
+				if (cond[1]=='C' || cond[1]=='c') {
+					if (cond[2]=='=') {
+						//Ahora a partir de aqui ver que no haya ningun espacio
+						int j;
+
+						for (j=3;cond[j];j++) {
+							if (cond[j]==' ') return 0;
+						}
+						return 1;
+					}
+				}
+	}
+	return 0;
+}
+
 //Retorna si el breakpoint indicado es de tipo PC=XXXX y action=""
 //Retorna 0 si no
 //Retorna 1 si es
@@ -4487,21 +4515,10 @@ int debug_return_brk_pc_condition(int indice)
 	int i=indice;
 	
 		if (debug_breakpoints_conditions_enabled[i]) {
-			cond=debug_breakpoints_conditions_array[i];
-			if (cond[0]=='P' || cond[0]=='p') {
-				if (cond[1]=='C' || cond[1]=='c') {
-					if (cond[2]=='=') {
-						if (debug_breakpoints_actions_array[i][0]!=0) return 0;
-						//Ahora a partir de aqui ver que no haya ningun espacio
-						int j;
+			if (debug_breakpoints_actions_array[i][0]!=0) return 0;
 
-						for (j=3;cond[j];j++) {
-							if (cond[j]==' ') return 0;
-						}
-						return 1;
-					}
-				}
-			}
+			cond=debug_breakpoints_conditions_array[i];
+			return debug_text_is_pc_condition(cond);
 		}
 	
 

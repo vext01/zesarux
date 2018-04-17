@@ -5697,6 +5697,7 @@ void menu_breakpoints_condition_behaviour(MENU_ITEM_PARAMETERS)
 }
 
 
+
 /*
 Esto ya no tiene sentido. Se puede hacer con variable mra
 void menu_breakpoints_peek_set(MENU_ITEM_PARAMETERS)
@@ -31042,6 +31043,12 @@ void menu_debug_shows_invalid_opcode(MENU_ITEM_PARAMETERS)
 	debug_shows_invalid_opcode.v ^=1;
 }
 
+void menu_debug_settings_show_fired_breakpoint(MENU_ITEM_PARAMETERS)
+{
+	debug_show_fired_breakpoints_type++;
+	if (debug_show_fired_breakpoints_type==3) debug_show_fired_breakpoints_type=0;
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -31078,6 +31085,21 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
+
+		char show_fired_breakpoint_type[30];
+		if (debug_show_fired_breakpoints_type==0) strcpy(show_fired_breakpoint_type,"Always");
+		else if (debug_show_fired_breakpoints_type==1) strcpy(show_fired_breakpoint_type,"NoPC");
+		else strcpy(show_fired_breakpoint_type,"Never");																	//						   OnlyNonPC
+																															//  01234567890123456789012345678901
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint: %s",show_fired_breakpoint_type);
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired. "
+								"Possible values:\n"
+								"Always: always shows the condition\n"
+								"NoPC: only shows conditions that are not like PC=XXXX\n"
+								"Never: never shows conditions\n" );
+
+		
 
 
 #ifdef USE_PTHREADS
@@ -31628,6 +31650,28 @@ void menu_process_f_functions(void)
 
 }
 
+void menu_breakpoint_fired(char *s)
+{
+/*
+//Si mostrar aviso cuando se cumple un breakpoint
+int debug_show_fired_breakpoints_type=0;
+//0: siempre
+//1: solo cuando condicion no es tipo "PC=XXXX"
+//2: nunca
+*/
+	int mostrar=0;
+
+	int es_pc_cond=debug_text_is_pc_condition(s);
+
+	//printf ("es_pc_cond: %d\n",es_pc_cond);
+
+	if (debug_show_fired_breakpoints_type==0) mostrar=1;
+	if (debug_show_fired_breakpoints_type==1 && !es_pc_cond) mostrar=1;
+
+	if (mostrar) menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);
+
+}
+
 //menu principal
 void menu_inicio(void)
 {
@@ -31783,7 +31827,9 @@ void menu_inicio(void)
       			menu_multitarea=0;
       			audio_playing.v=0;
 			//printf ("pc: %d\n",reg_pc);
-			menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);
+
+			menu_breakpoint_fired(catch_breakpoint_message);
+
 
 			menu_debug_registers(0);
 
