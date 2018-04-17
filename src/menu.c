@@ -6005,7 +6005,7 @@ int menu_debug_registers_current_view=1;
 //Ultima direccion mostrada en menu_disassemble
 menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
-const int menu_debug_lineas_assembler=14;
+const int menu_debug_num_lineas_full=14;
 
 
 void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
@@ -6140,7 +6140,7 @@ int menu_debug_get_main_list_view(void)
 	int lineas=1;
 
     if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
-    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=menu_debug_lineas_assembler;
+    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=menu_debug_num_lineas_full;
 
 	return lineas;
 }
@@ -6158,7 +6158,7 @@ int menu_debug_view_has_disassemly(void)
 menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
 {
 	int i;
-	for (i=0;i<menu_debug_lineas_assembler/2;i++) {
+	for (i=0;i<menu_debug_num_lineas_full/2;i++) {
 		posicion=menu_debug_disassemble_subir(posicion);
 	}
 	return posicion;
@@ -6192,7 +6192,7 @@ int menu_debug_registers_print_registers(int linea)
 			menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 
 			//Y el cursor ahora...
-			menu_debug_line_cursor=menu_debug_lineas_assembler/2;
+			menu_debug_line_cursor=menu_debug_num_lineas_full/2;
 		}
 
 		else {
@@ -6355,8 +6355,7 @@ int menu_debug_registers_print_registers(int linea)
 
 
 				int longitud_op;
-				//int limite=menu_debug_lineas_assembler;
-				//if (menu_debug_registers_current_view==3) limite=9;
+				
 
 				int limite=menu_debug_get_main_list_view();
 
@@ -6377,7 +6376,7 @@ int menu_debug_registers_print_registers(int linea)
 
 
                                 size_t longitud_op;
-                                int limite=menu_debug_lineas_assembler;
+                                int limite=menu_debug_num_lineas_full;
                                 
 
 					linea++;
@@ -6468,9 +6467,9 @@ int menu_debug_registers_print_registers(int linea)
 			//Hacer que texto ventana empiece pegado a la izquierda
 			menu_escribe_linea_startx=0;
 
-			//int limite=menu_debug_lineas_assembler;
+		
 			int longitud_linea=8;
-			//if (menu_debug_registers_current_view==5) limite=9;
+			
 
 			int limite=menu_debug_get_main_list_view();
 
@@ -6840,12 +6839,7 @@ void menu_debug_cursor_up(void)
 
 	//Si vista completa (1)
 	if (menu_debug_registers_current_view==1) {
-/*
-+const int menu_debug_lineas_assembler=15;
-+
 
-+int menu_debug_line_cursor=0;
-*/
 		if (menu_debug_line_cursor>0) {
 			menu_debug_line_cursor--;
 			return;
@@ -6865,7 +6859,7 @@ void menu_debug_cursor_down(void)
 {
 	//Si vista completa (1)
 	if (menu_debug_registers_current_view==1) {
-		if (menu_debug_line_cursor<menu_debug_lineas_assembler-1) {
+		if (menu_debug_line_cursor<menu_debug_num_lineas_full-1) {
 			menu_debug_line_cursor++;
 			return;	
 		}
