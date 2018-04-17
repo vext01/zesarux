@@ -20,7 +20,7 @@ Added second Easter Egg ;)
 
 
 Improved debugging:
-* added memory pointer cursor so you can move independently of PC register, new view, toggle breakpoints
+* New enahnced debugger cpu menu: cursor, toggle breakpoints, run to cursor, change registers and a lot more...
 * added cpu-step-over function on debug menu (was already available from ZRCP)
 * added function to write byte to file on ZEsarUX hardware debug ports
 
