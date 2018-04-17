@@ -6134,6 +6134,25 @@ menu_z80_moto_int menu_debug_memory_pointer_last=0;
 //Direcciones de cada linea en la vista numero 3
 menu_z80_moto_int menu_debug_lines_addresses[24];
 
+//Numero de lineas del listado principal de la vista
+int menu_debug_get_main_list_view(void)
+{
+	int lineas=1;
+
+    if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
+    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=menu_debug_lineas_assembler;
+
+	return lineas;
+}
+
+//Si vista actual tiene desensamblado u otros datos. En el primer de los casos, los movimientos de cursor se gestionan mediante saltos de opcodes
+int menu_debug_view_has_disassemly(void)
+{
+	if (menu_debug_registers_current_view<=4) return 1;
+
+	return 0;
+}
+
 
 
 menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
@@ -6336,8 +6355,10 @@ int menu_debug_registers_print_registers(int linea)
 
 
 				int longitud_op;
-				int limite=menu_debug_lineas_assembler;
-				if (menu_debug_registers_current_view==3) limite=9;
+				//int limite=menu_debug_lineas_assembler;
+				//if (menu_debug_registers_current_view==3) limite=9;
+
+				int limite=menu_debug_get_main_list_view();
 
 				for (i=0;i<limite;i++) {
 					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
@@ -6447,9 +6468,11 @@ int menu_debug_registers_print_registers(int linea)
 			//Hacer que texto ventana empiece pegado a la izquierda
 			menu_escribe_linea_startx=0;
 
-			int limite=menu_debug_lineas_assembler;
+			//int limite=menu_debug_lineas_assembler;
 			int longitud_linea=8;
-			if (menu_debug_registers_current_view==5) limite=9;
+			//if (menu_debug_registers_current_view==5) limite=9;
+
+			int limite=menu_debug_get_main_list_view();
 
 			for (i=0;i<limite;i++) {
 					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
@@ -6466,7 +6489,8 @@ int menu_debug_registers_print_registers(int linea)
 
 		}
 
-		if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==2 || menu_debug_registers_current_view==5) {
+		//Aparecen otros registros y valores complementarios
+		if (menu_debug_registers_current_view==2 || menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) {
                         //Separador
                         sprintf (textoregistros," ");
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
@@ -6828,7 +6852,7 @@ void menu_debug_cursor_up(void)
 		}
 	}
 
-                                        if (menu_debug_registers_current_view<=4) { //Si vista con desensamblado
+                                        if (menu_debug_view_has_disassemly() ) { //Si vista con desensamblado
                                                 menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
                                         }
                                         else {  //Vista solo hexa
@@ -6848,27 +6872,10 @@ void menu_debug_cursor_down(void)
 	}
 
 
-                                        menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
+    menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
 }
 
-//Numero de lineas del listado principal de la vista
-int menu_debug_get_main_list_view(void)
-{
-	int lineas=1;
 
-    if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
-    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=14;
-
-	return lineas;
-}
-
-//Si vista actual tiene desensamblado u otros datos. En el primer de los casos, los movimientos de cursor se gestionan mediante saltos de opcodes
-int menu_debug_view_has_disassemly(void)
-{
-	if (menu_debug_registers_current_view<=4) return 1;
-
-	return 0;
-}
 
 
 void menu_debug_cursor_pgup(void)
