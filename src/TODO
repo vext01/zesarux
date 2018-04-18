@@ -2,7 +2,7 @@
   
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 -watches no funcionan
--cuando hay breakpoint pc en otras vistas, tambien mostrarlo
+
 
 TBBLUE:
 
@@ -1655,19 +1655,16 @@ Menu debugger:
 1) imposibilidad de abrir el debugger y usar el teclado para spectrum
 2) Doble ptr, uno para codigo y otro para memoria
 
--Agregar cambiar valor registros en menú debug 
+-cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
 -Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una 
 representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso
 
 -registros ' no se pueden usar como breakpoints o watches
 -Registro af como tal (no solo como a y f separados) usable en breakpoint y en watches
--debug:
-Ejecutar hasta que se vuelve a la función que llama en debug....
-O bien poder saltar ejecución de call, metiendo breakpoint justo a después del call
+
 -en menu debug, poder ver sprites del chip de sprites ZGX
 
--debug exit and disable breakpoint
 
 -Desensamblador, que permita copiar código assembler a texto
 ->desensamblador, pero de momento no puede copiar a texto

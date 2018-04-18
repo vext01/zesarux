@@ -4584,6 +4584,16 @@ void debug_clear_breakpoint(int indice)
 	debug_breakpoints_conditions_enabled[indice]=0;
 }
 
+void debug_get_stack_moto(menu_z80_moto_int p,int items, char *texto)
+{
+	int i;
+  	for (i=0;i<items;i++) {
+		//menu_z80_moto_int valor=16777216*peek_byte_z80_moto(p)+65536*peek_byte_z80_moto(p+1)+256*peek_byte_z80_moto(p+2)+256*peek_byte_z80_moto(p+3);
+		sprintf(&texto[i*9],"%02X%02X%02X%02X ",peek_byte_z80_moto(p),peek_byte_z80_moto(p+1),peek_byte_z80_moto(p+2),peek_byte_z80_moto(p+3) );
+		p +=4;
+	}
+}
+
 //Retorna valores en el stack separados por espacios
 //Para Z80: retorna 16 bits
 //Para motorola, scmp: no implementado aun
@@ -4596,6 +4606,38 @@ void debug_get_stack_values(int items, char *texto)
 			sprintf(&texto[i*5],"%04X ",valor);
 		  }
 		  
+	}
+
+	if (CPU_IS_MOTOROLA) {
+		//int i;
+		menu_z80_moto_int p=m68k_get_reg(NULL, M68K_REG_SP);
+		debug_get_stack_moto(p,items,texto);
+  		/*for (i=0;i<items;i++) {
+			menu_z80_moto_int valor=16777216*peek_byte_z80_moto(p)+65536*peek_byte_z80_moto(p+1)+256*peek_byte_z80_moto(p+2)+256*peek_byte_z80_moto(p+3);
+			sprintf(&texto[i*9],"%08X ",valor);
+			p +=4;
+		}*/
+	}
+
+	else {
+		texto[0]=0;
+	}
+
+}
+
+//Retornar el user stack de motorola
+void debug_get_user_stack_values(int items, char *texto)
+{
+	
+	if (CPU_IS_MOTOROLA) {
+		//int i;
+		menu_z80_moto_int p=m68k_get_reg(NULL, M68K_REG_USP);
+		debug_get_stack_moto(p,items,texto);
+  		/*for (i=0;i<items;i++) {
+			menu_z80_moto_int valor=16777216*peek_byte_z80_moto(p)+65536*peek_byte_z80_moto(p+1)+256*peek_byte_z80_moto(p+2)+256*peek_byte_z80_moto(p+3);
+			sprintf(&texto[i*9],"%08X ",valor);
+			p +=4;
+		}*/
 	}
 
 	else {

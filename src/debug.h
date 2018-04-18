@@ -288,6 +288,8 @@ extern void debug_clear_breakpoint(int indice);
 
 extern void debug_get_stack_values(int items, char *texto);
 
+extern void debug_get_user_stack_values(int items, char *texto);
+
 extern int debug_text_is_pc_condition(char *cond);
 
 extern int debug_show_fired_breakpoints_type;

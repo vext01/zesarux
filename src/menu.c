@@ -3142,9 +3142,9 @@ void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_acti
 	menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
 
 
-	//Obtenemos colores de una opcion sin seleccion, para poder tener texto en ventana con linea en dos colores
+	//Obtenemos colores de una opcion sin seleccion y activada, para poder tener texto en ventana con linea en dos colores
 	z80_byte papel_normal,tinta_normal;
-	menu_retorna_colores_linea_opcion(0,-1,opcion_activada,&papel_normal,&tinta_normal);
+	menu_retorna_colores_linea_opcion(0,-1,1,&papel_normal,&tinta_normal);
 
 	//Buscamos a ver si en el texto hay el caracter "||" y en ese caso lo eliminamos del texto final
 	int encontrado=-1;
@@ -6303,16 +6303,16 @@ menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
 //0: lo normal. opcodes
 //1: hexa
 //2: ascii
-int menu_debug_registers_dis_show_hexa=0;
+int menu_debug_registers_subview_type=0;
 
 //Modo ascii. 0 spectrum , 1 zx80, 2 zx81
 int menu_debug_hexdump_with_ascii_modo_ascii=0;
 
 void menu_debug_next_dis_show_hexa(void)
 {
-	menu_debug_registers_dis_show_hexa++;
+	menu_debug_registers_subview_type++;
 
-	if (menu_debug_registers_dis_show_hexa==4) menu_debug_registers_dis_show_hexa=0;
+	if (menu_debug_registers_subview_type==4) menu_debug_registers_subview_type=0;
 }
 
 int menu_debug_registers_print_registers(int linea)
@@ -6544,6 +6544,10 @@ int menu_debug_registers_print_registers(int linea)
 
 					int opcion_actual=-1;
 
+					int opcion_activada=1;  
+					//Esto no lo usamos aunque hubo un intento de mostrar linea de breakpoint como desactivada (en rojo), 
+					//
+
 					menu_z80_moto_int puntero_dir=adjust_address_memory_size(menu_debug_memory_pointer_copia);
 
 					int tiene_brk=0;
@@ -6556,9 +6560,12 @@ int menu_debug_registers_print_registers(int linea)
 					if (puntero_dir==get_pc_register() ) tiene_pc=1;
 
 					if (tiene_pc) buffer_linea[0]='>';
-					if (tiene_brk) buffer_linea[0]='*';
+					if (tiene_brk) {
+						buffer_linea[0]='*';
+						opcion_activada=0;
+					}
 
-					if (tiene_pc && tiene_brk) buffer_linea[0]='+';
+					if (tiene_pc && tiene_brk) buffer_linea[0]='+'; //Cuando coinciden breakpoint y cursor
 
 					//Si esta linea tiene el cursor
 					if (i==menu_debug_line_cursor) opcion_actual=linea;			
@@ -6572,15 +6579,15 @@ int menu_debug_registers_print_registers(int linea)
 //1: hexa
 //2: ascii
 //3: lo normal pero sin mostrar registros a la derecha
-int menu_debug_registers_dis_show_hexa=0;
+int menu_debug_registers_subview_type=0;
 
 */
 //menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
 
 
 					//Si mostramos en vez de desensamblado, volcado hexa o ascii
-					if (menu_debug_registers_dis_show_hexa==1)	menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_op);
-					if (menu_debug_registers_dis_show_hexa==2)  menu_debug_registers_dump_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii);
+					if (menu_debug_registers_subview_type==1)	menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_op);
+					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii);
 					//4 para direccion, fijo
 					
 					sprintf(&buffer_linea[1],"%04X %s",puntero_dir,dumpassembler);
@@ -6589,31 +6596,27 @@ int menu_debug_registers_dis_show_hexa=0;
 					menu_debug_lines_addresses[i]=puntero_dir;
 
 
-					if (menu_debug_registers_dis_show_hexa==3) {
-						
-					}
+					if (menu_debug_registers_subview_type!=3) {
 
-					else {
+						//Quitar el 0 del final
+						int longitud=strlen(buffer_linea);
+						buffer_linea[longitud]=32;
 
-					//Quitar el 0 del final
-					int longitud=strlen(buffer_linea);
-					buffer_linea[longitud]=32;
-
-					//Muestra el registro que le corresponde para esta linea
-					menu_debug_show_register_line(i,buffer_registros);
+						//Muestra el registro que le corresponde para esta linea
+						menu_debug_show_register_line(i,buffer_registros);
 
 
-					//En QL se pega siempre el opcode con los registros. meter espacio
-					if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
+						//En QL se pega siempre el opcode con los registros. meter espacio
+						if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
 
-					//Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador
-					sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
+						//Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador para quitar el color seleccionado
+						sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
 					}
 
 
 
 
-                                        menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
+                                        menu_escribe_linea_opcion(linea,opcion_actual,opcion_activada,buffer_linea);
 										linea++;
                                         menu_debug_memory_pointer_copia +=longitud_op;
 
@@ -6630,7 +6633,18 @@ int menu_debug_registers_dis_show_hexa=0;
 					//No mostrar stack en caso de scmp
 					if (CPU_IS_Z80 || CPU_IS_MOTOROLA) {
 						sprintf(buffer_linea,"(SP) ");
-						debug_get_stack_values(5,&buffer_linea[5]);
+
+						int valores=5;
+						if (CPU_IS_MOTOROLA) valores=3;
+						debug_get_stack_values(valores,&buffer_linea[5]);
+						menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+					}
+
+					if (CPU_IS_MOTOROLA) {
+						int valores=5;
+						sprintf(buffer_linea,"(USP) ");
+
+						debug_get_user_stack_values(valores,&buffer_linea[5]);
 						menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 					}
 
