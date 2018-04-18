@@ -53,7 +53,6 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 que sea un "if" tipo "if pulsado tecla openmenu"
 
--tecla para accessibilidad, para poder escuchar contenido de una ventana de menu: quiza misma tecla asociada a OCR
 
 -mayusculas + tecla de menu file utils, cuando esta en zx80/81 no va 
 
@@ -830,6 +829,19 @@ Mark Hutchings
 
 
 ------------------
+
+
+
+--- Accesibilidad ---
+
+-tecla para accessibilidad, para poder escuchar contenido de una ventana de menu: quiza misma tecla asociada a OCR. que ademas envie ese texto al portapapeles o algun archivo
+para poderlo inspeccionar despues
+
+
+------------------
+
+
+
 
 --- Mac OS X ---
 
