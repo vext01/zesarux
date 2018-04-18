@@ -6383,7 +6383,7 @@ void menu_debug_next_dis_show_hexa(void)
 {
 	menu_debug_registers_dis_show_hexa++;
 
-	if (menu_debug_registers_dis_show_hexa==3) menu_debug_registers_dis_show_hexa=0;
+	if (menu_debug_registers_dis_show_hexa==4) menu_debug_registers_dis_show_hexa=0;
 }
 
 int menu_debug_registers_print_registers(int linea)
@@ -6642,6 +6642,7 @@ int menu_debug_registers_print_registers(int linea)
 //0: lo normal. opcodes
 //1: hexa
 //2: ascii
+//3: lo normal pero sin mostrar registros a la derecha
 int menu_debug_registers_dis_show_hexa=0;
 
 */
@@ -6658,6 +6659,13 @@ int menu_debug_registers_dis_show_hexa=0;
 					//Guardar las direcciones de cada linea
 					menu_debug_lines_addresses[i]=puntero_dir;
 
+
+					if (menu_debug_registers_dis_show_hexa==3) {
+						
+					}
+
+					else {
+
 					//Quitar el 0 del final
 					int longitud=strlen(buffer_linea);
 					buffer_linea[longitud]=32;
@@ -6671,6 +6679,9 @@ int menu_debug_registers_dis_show_hexa=0;
 
 					//Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador
 					sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
+					}
+
+
 
 
                                         menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
