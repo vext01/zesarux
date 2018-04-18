@@ -5764,48 +5764,7 @@ void menu_breakpoints_condition_behaviour(MENU_ITEM_PARAMETERS)
 
 
 
-/*
-Esto ya no tiene sentido. Se puede hacer con variable mra
-void menu_breakpoints_peek_set(MENU_ITEM_PARAMETERS)
-{
-        //printf ("linea: %d\n",breakpoints_opcion_seleccionada);
 
-	//saltamos los breakpoints de registro pc y de condicion y la primera linea
-        //int breakpoint_index=breakpoints_opcion_seleccionada-MAX_BREAKPOINTS-MAX_BREAKPOINTS_CONDITIONS-1;
-
-	//saltamos los breakpoints de condicion y las primeras 2 lineas
-        int breakpoint_index=breakpoints_opcion_seleccionada-MAX_BREAKPOINTS_CONDITIONS-2;
-
-
-	//printf ("%d\n",breakpoint_index);
-
-        int dir;
-
-        char string_dir[6];
-
-        dir=debug_breakpoints_peek_array[breakpoint_index];
-        if (dir==-1) sprintf (string_dir,"0");
-        else  sprintf (string_dir,"%d",dir);
-
-        menu_ventana_scanf("Address",string_dir,6);
-
-	if (string_dir[0]==0) dir=-1;
-
-	else {
-	        dir=parse_string_to_number(string_dir);
-
-        	if (dir<0 || dir>65535) {
-	                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
-        	        return;
-	        }
-	}
-
-
-        debug_breakpoints_peek_array[breakpoint_index]=dir;
-
-
-}
-*/
 
 void menu_breakpoints_enable_disable(MENU_ITEM_PARAMETERS)
 {
@@ -6287,25 +6246,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 	}
 /*
    else if (CPU_IS_MOTOROLA) {
-                                sprintf (textoregistros,"PC: %05X SP: %05X USP: %05X",get_pc_register(),m68k_get_reg(NULL, M68K_REG_SP),m68k_get_reg(NULL, M68K_REG_USP));
-
-                                case M68K_REG_A7:       return cpu->dar[15];
-                                case M68K_REG_SP:       return cpu->dar[15];
-                                case M68K_REG_USP:      return cpu->s_flag ? cpu->sp[0] : cpu->dar[15];
-
-                                SP siempre muestra A7
-                                USP muestra: en modo supervisor, SSP. En modo no supervisor, SP/A7
-
-                                menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-
-                                unsigned int registro_sr=m68k_get_reg(NULL, M68K_REG_SR);
-
-                                char buffer_flags[32];
-                                motorola_get_flags_string(buffer_flags);
-                                sprintf (textoregistros,"SR: %04X : %s",registro_sr,buffer_flags);
-
-                                menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-
+                             
                                 menu_debug_registers_print_register_aux_moto(textoregistros,&linea,0,M68K_REG_A0,M68K_REG_D0);
                                 menu_debug_registers_print_register_aux_moto(textoregistros,&linea,1,M68K_REG_A1,M68K_REG_D1);
                                 menu_debug_registers_print_register_aux_moto(textoregistros,&linea,2,M68K_REG_A2,M68K_REG_D2);
@@ -6315,18 +6256,6 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
                                 menu_debug_registers_print_register_aux_moto(textoregistros,&linea,6,M68K_REG_A6,M68K_REG_D6);
                                 menu_debug_registers_print_register_aux_moto(textoregistros,&linea,7,M68K_REG_A7,M68K_REG_D7);
 
-void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
-{
-
-        sprintf (textoregistros,"A%d: %08X D%d: %08X",numero,m68k_get_reg(NULL, registro_direccion),numero,m68k_get_reg(NULL, registro_dato) );
-        menu_escribe_linea_opcion(*linea,-1,1,textoregistros);
-        (*linea)++;
-
-}
-
-
-
-                        }
 */
 }
 
@@ -6909,17 +6838,22 @@ void menu_debug_registers_ventana(void)
 	//menu_debug_registers_current_view
 
 	//Por defecto
-	sprintf (titulo,"Debug CPU. V%d",menu_debug_registers_current_view);
+				   //0123456789012345678901
+	sprintf (titulo,"Debug CPU             V");
 
 	if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) {
-		sprintf (titulo,"Debug CPU (brk cond). V%d",menu_debug_registers_current_view);
+					   //0123456789012345678901
+		sprintf (titulo,"Debug CPU (brk cond)  V");
 		//printf ("breakpoint pending show\n");
 	}
 	else {
-		if (cpu_step_mode.v) sprintf (titulo,"Debug CPU (step). V%d",menu_debug_registers_current_view);
+											//0123456789012345678901
+		if (cpu_step_mode.v) sprintf (titulo,"Debug CPU (step)      V");
 		//printf ("no breakpoint pending show\n");
 	}
 
+	//Poner numero de vista siempre en posicion 23
+	sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
 
 	menu_dibuja_ventana(0,0,32,24,titulo);
 	//menu_breakpoint_exception_pending_show.v=0;
@@ -7300,7 +7234,7 @@ void menu_debug_get_legend(int linea,char *s)
 			if (cpu_step_mode.v) {
 				if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
-							// Stpm Ent:Step Stovr ContSt Mode
+							// StpM Ent:Step StOvr ContSt Mode
 					sprintf(s,"~~StpM ~~E~~n~~t:Step St~~Ovr ~~ContSt ~~Mode");
 				}
 				else {
@@ -7329,25 +7263,25 @@ void menu_debug_get_legend(int linea,char *s)
 			if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
 							// chReg Brkp. Toggle Runto Watch		
-				sprintf(s,"Ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
+				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch Togg~~le R~~unto ");
 			}
 			else {
 							//01234567890123456789012345678901
 							// chReg Brkp. Watch					
-				sprintf(s,"Ch~~Reg ~~Brkp. ~~Watch");
+				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch");
 			}
 		break;
 
 		case 2:
 			if (cpu_step_mode.v) {
 							//01234567890123456789012345678901
-							// Clr.tstpart. 1-5 View V.Scr			
-				sprintf (s,"Clr.Tst~~Part. ~~1-~~5 View ~~V.Scr");
+							// ClrTstPart 1-5:View ViewScr	
+				sprintf (s,"ClrTst~~Part ~~1-~~5:View ~~ViewScr");
 			}
 			else {
 							//01234567890123456789012345678901
 							// Clr.tstpart. 1-5 View MZone 99
-				sprintf (s,"Clr.Tst~~Part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
+				sprintf (s,"ClrTst~~Part ~~1-~~5:View M~~Zone %d",menu_debug_memory_zone);
 			}
 		break;
 	}
