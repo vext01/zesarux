@@ -7259,10 +7259,10 @@ void menu_debug_switch_follow_pc(void)
 void menu_debug_get_key_legend_first_step(char *s)
 {
 	if (menu_debug_registers_current_view==1) {
-		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mode");
+		sprintf(s,"~~Stpm ~~E~~n~~t:Step St~~ovr ~~ContSt ~~Mode");
 	}
 	else {
-		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt");
+		sprintf(s,"~~Stepmode ~~E~~n~~t:Step St~~ovr ~~ContSt");
 	}
 }
 
