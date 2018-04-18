@@ -3149,9 +3149,10 @@ void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_acti
 	//Buscamos a ver si en el texto hay el caracter "||" y en ese caso lo eliminamos del texto final
 	int encontrado=-1;
 	int destino=0;
-	for (i=0;texto_entrada[i] && encontrado==-1;i++) {
+	for (i=0;texto_entrada[i];i++) {
 		if (texto_entrada[i]=='|' && texto_entrada[i+1]=='|') {
 			encontrado=i;
+			i ++;
 		}
 		else {
 			texto[destino++]=texto_entrada[i];
