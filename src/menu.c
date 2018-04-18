@@ -6999,6 +6999,8 @@ void menu_debug_runto(void)
 int menu_debug_registers_show_ptr_text(int linea)
 {
 
+	debug_printf (VERBOSE_DEBUG,"Refreshing ptr");
+
 	char buffer_mensaje[64];
                 //Forzar a mostrar atajos
                 z80_bit antes_menu_writing_inverse_color;
@@ -7144,12 +7146,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	do {
 
-		linea=0;
-		linea=menu_debug_registers_show_ptr_text(linea);
+		//linea=0;
+		//linea=menu_debug_registers_show_ptr_text(linea);
 
-		linea++;
+		//linea++;
 
+		//
 		//Si no esta el modo step de la cpu
+		//
 		if (cpu_step_mode.v==0) {
 
 
@@ -7159,6 +7163,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 									if ( ((contador_segundo%(16*20)) == 0 && valor_contador_segundo_anterior!=contador_segundo ) || menu_multitarea==0) {
 										//printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
 										valor_contador_segundo_anterior=contador_segundo;
+
+
+		menu_debug_registers_ventana();
+
+                linea=0;
+                linea=menu_debug_registers_show_ptr_text(linea);
+
+                linea++;
 
 
                 //Forzar a mostrar atajos
@@ -7426,10 +7438,22 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 		}
 
+
+		//
 		//En modo Step mode
+		//
 		else {
 
-		
+
+	                menu_debug_registers_ventana();
+	
+        	        linea=0;
+	                linea=menu_debug_registers_show_ptr_text(linea);
+
+        	        linea++;
+
+
+			//menu_debug_registers_ventana();		
 
 			int si_ejecuta_una_instruccion=1;
 
@@ -7438,10 +7462,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						linea=19;
                        	//menu_escribe_linea_opcion(linea++,-1,1,"");
 
-                //Forzar a mostrar atajos
-                z80_bit antes_menu_writing_inverse_color;
-                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-                menu_writing_inverse_color.v=1;
+                	//Forzar a mostrar atajos
+	                z80_bit antes_menu_writing_inverse_color;
+	                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+        	        menu_writing_inverse_color.v=1;
 
 
 
@@ -7486,8 +7510,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			}
 
 
-//Restaurar estado mostrar atajos
-menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+			//Restaurar estado mostrar atajos
+			menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			//Actualizamos pantalla
 			all_interlace_scr_refresca_pantalla();
