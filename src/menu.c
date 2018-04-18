@@ -7313,18 +7313,13 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
                                 tecla=menu_get_pressed_key();
 
-				//menu_espera_no_tecla_no_cpu_loop();
-
-                                printf ("tecla: %d\n",tecla);
-
-
-                              //Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
+                                //Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
                                 if (tecla==0) {
-                                                        //printf ("tecla: %d\n",tecla);
                                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                 }
 
                                 else {
+                                        printf ("tecla: %d\n",tecla);
                                         //A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
                                         menu_debug_registers_if_cls();
 
@@ -7601,22 +7596,20 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			if (continuous_step==0)
 			{
 				menu_espera_tecla_no_cpu_loop();
-        tecla=menu_get_pressed_key();
+			        tecla=menu_get_pressed_key();
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
 				if (tecla==0) {
-							//printf ("tecla: %d\n",tecla);
 							acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 							//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 							si_ejecuta_una_instruccion=0;
 				}
 
 				else {
+					//printf ("tecla: %d\n",tecla);
+
 					//A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
 					menu_debug_registers_if_cls();
-
-					//cls_menu_overlay();
-					//all_interlace_scr_refresca_pantalla();
 
 					menu_espera_no_tecla_no_cpu_loop();
 				}
