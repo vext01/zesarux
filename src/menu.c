@@ -7309,8 +7309,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				
 
-								if (tecla=='m' && menu_debug_registers_current_view==1) {
-		                           cls_menu_overlay();
+				if (tecla=='m' && menu_debug_registers_current_view==1) {
+		                           //cls_menu_overlay();
                                         menu_debug_next_dis_show_hexa();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7318,7 +7318,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 				if (tecla=='l' && menu_debug_registers_current_view==1) {
-		                           cls_menu_overlay();
+		                           //cls_menu_overlay();
                                         menu_debug_toggle_breakpoint();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7342,15 +7342,15 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
                                 if (tecla=='p') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
 					debug_t_estados_parcial=0;
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
                                 }
 
-						//Vista. Entre 1 y 6
-						if (tecla>='1' && tecla<='6') {
+				//Vista. Entre 1 y 6
+				if (tecla>='1' && tecla<='6') {
                                         cls_menu_overlay();
 					menu_debug_registers_set_view(tecla-'0');
                                         //Decimos que no hay tecla pulsada
@@ -7359,19 +7359,19 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				}
 
 				if (tecla=='f') {
-                                        cls_menu_overlay();
-										menu_debug_switch_follow_pc();
+                                        //cls_menu_overlay();
+					menu_debug_switch_follow_pc();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
 				}
 
 				if (tecla=='t') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_registers_change_ptr();
 
-        clear_putpixel_cache();
+        //clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
         //el texto se fusiona con el fondo de manera casi transparente,
         //como si no borrase el putpixel cache
@@ -7400,7 +7400,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				if (tecla==11) {
                                         //arriba
-					cls_menu_overlay();
+					//cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 
 					menu_debug_cursor_up();
@@ -7412,7 +7412,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				if (tecla==10) {
                                         //abajo
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
 					menu_debug_cursor_down();
@@ -7424,7 +7424,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				//24 pgup
                                 if (tecla==24) {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
 					menu_debug_cursor_pgup();
@@ -7437,7 +7437,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				//25 pgwn
 				if (tecla==25) {
 					//PgDn
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
 					menu_debug_cursor_pgdn();
@@ -7578,7 +7578,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				}
 
                                 if (tecla=='o') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_cpu_step_over();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7626,8 +7626,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         si_ejecuta_una_instruccion=0;
                                 }
 
-									if (tecla=='m' && menu_debug_registers_current_view==1) {
-		                           cls_menu_overlay();
+				if (tecla=='m' && menu_debug_registers_current_view==1) {
+		                           //cls_menu_overlay();
                                         menu_debug_next_dis_show_hexa();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7638,7 +7638,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 		                    if (tecla=='l' && menu_debug_registers_current_view==1) {
-                                           cls_menu_overlay();
+                                           //cls_menu_overlay();
                                         menu_debug_toggle_breakpoint();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7648,7 +7648,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         si_ejecuta_una_instruccion=0;
                                 }
 								
-								if (tecla=='u' && menu_debug_registers_current_view==1) {
+				if (tecla=='u' && menu_debug_registers_current_view==1) {
 		                           cls_menu_overlay();
                                         menu_debug_runto();
                                         //tecla=2; //Simular ESC
@@ -7666,7 +7666,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
                                 if (tecla=='p') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
 					debug_t_estados_parcial=0;
 
                                         //Decimos que no hay tecla pulsada
@@ -7678,7 +7678,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 	//Vista. Entre 1 y 6
-						if (tecla>='1' && tecla<='6') {
+				if (tecla>='1' && tecla<='6') {
                                         cls_menu_overlay();
 					menu_debug_registers_set_view(tecla-'0');
 				
@@ -7691,8 +7691,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         si_ejecuta_una_instruccion=0;
 				}
 
-					if (tecla=='f') {
-                                        cls_menu_overlay();
+				if (tecla=='f') {
+                                        //cls_menu_overlay();
 										menu_debug_switch_follow_pc();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7705,8 +7705,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					
 
-                  if (tecla=='t') {
-                                        cls_menu_overlay();
+		                  if (tecla=='t') {
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
 				//Detener multitarea, porque si no, ese input habilita la multitarea
@@ -7715,7 +7715,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         menu_debug_registers_change_ptr();
 
-										menu_multitarea=antes_menu_multitarea;
+					menu_multitarea=antes_menu_multitarea;
 
         clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
@@ -7760,7 +7760,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			       if (tecla==11) {
                                         //arriba
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
                                         menu_debug_cursor_up();
@@ -7775,7 +7775,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 if (tecla==10) {
                                         //abajo
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
                                         menu_debug_cursor_down();
@@ -7790,7 +7790,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 //24 pgup
                                 if (tecla==24) {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
                                         menu_debug_cursor_pgup();
@@ -7806,7 +7806,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 //25 pgwn
                                 if (tecla==25) {
                                         //PgDn
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
                                         menu_debug_cursor_pgdn();
@@ -7831,6 +7831,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				        menu_espera_tecla_no_cpu_loop();
 				        menu_abierto=1;
 					menu_espera_no_tecla_no_cpu_loop();
+					all_interlace_scr_refresca_pantalla();
 					menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
