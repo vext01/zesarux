@@ -7255,7 +7255,7 @@ void menu_debug_switch_follow_pc(void)
 	//if (follow_pc.v==0) menu_debug_memory_pointer=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 }
 
-
+/*
 void menu_debug_get_key_legend_first_step(char *s)
 {
 	if (menu_debug_registers_current_view==1) {
@@ -7275,11 +7275,14 @@ void menu_debug_get_key_legend_first_nostep(char *s)
 		sprintf(s,"~~Stepmode ~~Disassemble");
 	}
 }
+*/
+
+//menu_escribe_linea_opcion(linea++,-1,1,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
+
+//sprintf (buffer_mensaje,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
 
 
-
-
-
+/*
 void menu_debug_get_key_legend_second(char *s)
 {
 	if (menu_debug_registers_current_view==1) {
@@ -7287,6 +7290,48 @@ void menu_debug_get_key_legend_second(char *s)
 	}
 	else {
 		sprintf(s,"ch~~Reg ~~Brkp. ~~Watch");
+	}
+}
+*/
+void menu_debug_get_legend(int linea,char *s)
+{
+	switch (linea) {
+		case 0:
+			if (cpu_step_mode.v) {
+				if (menu_debug_registers_current_view==1) {
+					sprintf(s,"~~Stpm ~~E~~n~~t:Step St~~ovr ~~ContSt ~~Mode");
+				}
+				else {
+					sprintf(s,"~~Stepmode ~~E~~n~~t:Step St~~ovr ~~ContSt");
+				}
+			}
+			else {
+				if (menu_debug_registers_current_view==1) {
+					sprintf(s,"~~Stepmode ~~Disassemble ~~Mode");
+				}
+				else {
+					sprintf(s,"~~Stepmode ~~Disassemble");
+				}
+			}
+		break;
+
+		case 1:
+			if (menu_debug_registers_current_view==1) {
+				sprintf(s,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
+			}
+			else {
+				sprintf(s,"ch~~Reg ~~Brkp. ~~Watch");
+			}
+		break;
+
+		case 2:
+			if (cpu_step_mode.v) {
+				sprintf (s,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
+			}
+			else {
+				sprintf (s,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
+			}
+		break;
 	}
 }
 
@@ -7444,15 +7489,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 
-				menu_debug_get_key_legend_first_nostep(buffer_mensaje);
+				//menu_debug_get_key_legend_first_nostep(buffer_mensaje);
+				menu_debug_get_legend(0,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
-				// 012345678901234567890123456789
-				menu_debug_get_key_legend_second(buffer_mensaje);
+				//menu_debug_get_key_legend_second(buffer_mensaje);
+				menu_debug_get_legend(1,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
                 //menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
 
-				sprintf (buffer_mensaje,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
+				//sprintf (buffer_mensaje,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
+				menu_debug_get_legend(2,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
 
@@ -7740,14 +7787,18 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 								//      01234567890123456789012345678901
 				//menu_escribe_linea_opcion(linea++,-1,1,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mem");
 
-				menu_debug_get_key_legend_first_step(buffer_mensaje);
+				//menu_debug_get_key_legend_first_step(buffer_mensaje);
+				menu_debug_get_legend(0,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
-				menu_debug_get_key_legend_second(buffer_mensaje);
+				//menu_debug_get_key_legend_second(buffer_mensaje);
+				menu_debug_get_legend(1,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
                 //menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
 
-				menu_escribe_linea_opcion(linea++,-1,1,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
+				menu_debug_get_legend(2,buffer_mensaje);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				//menu_escribe_linea_opcion(linea++,-1,1,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
 
 
 
