@@ -6664,11 +6664,14 @@ int menu_debug_registers_dis_show_hexa=0;
 
 					//Muestra el registro que le corresponde para esta linea
 					menu_debug_show_register_line(i,buffer_registros);
-					//Agregar registro que le corresponda. Columna 19 normalmente
-					sprintf(&buffer_linea[columna_registros],"%s",buffer_registros);
+
 
 					//En QL se pega siempre el opcode con los registros. meter espacio
-					if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]='|';
+					if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
+
+					//Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador
+					sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
+
 
                                         menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
 										linea++;
