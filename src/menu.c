@@ -6344,6 +6344,7 @@ int menu_debug_registers_print_registers(int linea)
 
 			else if (CPU_IS_MOTOROLA) {
 				sprintf (textoregistros,"PC: %05X SP: %05X USP: %05X",get_pc_register(),m68k_get_reg(NULL, M68K_REG_SP),m68k_get_reg(NULL, M68K_REG_USP));
+
 				/*
 				case M68K_REG_A7:       return cpu->dar[15];
 				case M68K_REG_SP:       return cpu->dar[15];
@@ -6352,23 +6353,15 @@ int menu_debug_registers_print_registers(int linea)
 				SP siempre muestra A7
 				USP muestra: en modo supervisor, SSP. En modo no supervisor, SP/A7
 				*/
+
 				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
 				unsigned int registro_sr=m68k_get_reg(NULL, M68K_REG_SR);
 
-				sprintf (textoregistros,"SR: %04X : %c%c%c%c%c%c%c%c%c%c",registro_sr,
-				(registro_sr&32768 ? 'T' : ' '),
-				(registro_sr&8192  ? 'S' : ' '),
-				(registro_sr&1024  ? '2' : ' '),
-				(registro_sr&512   ? '1' : ' '),
-				(registro_sr&256   ? '0' : ' '),
-						(registro_sr&16 ? 'X' : ' '),
-						(registro_sr&8  ? 'N' : ' '),
-						(registro_sr&4  ? 'Z' : ' '),
-						(registro_sr&2  ? 'V' : ' '),
-						(registro_sr&1  ? 'C' : ' ')
+				char buffer_flags[32];
+				motorola_get_flags_string(buffer_flags);
+				sprintf (textoregistros,"SR: %04X : %s",registro_sr,buffer_flags);
 
-			);
 				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
 				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,0,M68K_REG_A0,M68K_REG_D0);
@@ -6381,8 +6374,6 @@ int menu_debug_registers_print_registers(int linea)
 				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,7,M68K_REG_A7,M68K_REG_D7);
 
 
-				//sprintf (textoregistros,"A0: %08X D0: %08X",m68k_get_reg(NULL, M68K_REG_A0),m68k_get_reg(NULL, M68K_REG_D0) );
-				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
 			}
 
@@ -6554,9 +6545,14 @@ int menu_debug_registers_dis_show_hexa=0;
 				menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 					//Linea de stack
 					linea++;
-					sprintf(buffer_linea,"(SP) ");
-					debug_get_stack_values(5,&buffer_linea[5]);
-					menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+
+
+					//No mostrar stack en caso de scmp
+					if (CPU_IS_Z80 || CPU_IS_MOTOROLA) {
+						sprintf(buffer_linea,"(SP) ");
+						debug_get_stack_values(5,&buffer_linea[5]);
+						menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+					}
 
 
                 }
@@ -7243,7 +7239,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	do {
 
 		//Si la vista es la 1 y maquina QL, saltar a la 2
-		if (CPU_IS_MOTOROLA && menu_debug_registers_current_view==1) menu_debug_registers_current_view=2;
+		//if (CPU_IS_MOTOROLA && menu_debug_registers_current_view==1) menu_debug_registers_current_view=2;
 
 		//linea=0;
 		//linea=menu_debug_registers_show_ptr_text(linea);

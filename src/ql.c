@@ -2885,3 +2885,22 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
 }
+
+
+void motorola_get_flags_string(char *texto)
+{
+
+unsigned int registro_sr=m68k_get_reg(NULL, M68K_REG_SR);
+
+                                sprintf (texto,"%c%c%c%c%c%c%c%c%c%c",
+                                (registro_sr&32768 ? 'T' : '-'),
+                                (registro_sr&8192  ? 'S' : '-'),
+                                (registro_sr&1024  ? '2' : '-'),
+                                (registro_sr&512   ? '1' : '-'),
+                                (registro_sr&256   ? '0' : '-'),
+                                                (registro_sr&16 ? 'X' : '-'),
+                                                (registro_sr&8  ? 'N' : '-'),
+                                                (registro_sr&4  ? 'Z' : '-'),
+                                                (registro_sr&2  ? 'V' : '-'),
+                                                (registro_sr&1  ? 'C' : '-')  );
+}

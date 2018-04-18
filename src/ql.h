@@ -95,6 +95,8 @@ extern void ql_rom_traps(void);
 
 extern void qltraps_init_fopen_files_array(void);
 
+extern void motorola_get_flags_string(char *texto);
+
 
 #define QLTRAPS_MAX_OPEN_FILES 3
 #define QLTRAPS_START_FILE_NUMBER 32
