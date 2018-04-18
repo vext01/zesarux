@@ -7134,6 +7134,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	char buffer_mensaje[64];
 
+	//Si no esta multitarea activa, modo por defecto es step to step
+	if (menu_multitarea==0) cpu_step_mode.v=0;
+
 
 
 	menu_debug_registers_ventana();
@@ -7787,7 +7790,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					si_ejecuta_una_instruccion=0;
 				}
 
-				if (tecla==2) { //ESC
+				//if (tecla==2) { //ESC
+				if (tecla=='s') { 
 					cpu_step_mode.v=0;
 
 					//Decimos que no hay tecla pulsada
@@ -7798,6 +7802,20 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
 
+
+				}
+
+				if (tecla==2) { //ESC
+
+					cpu_step_mode.v=0;
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+
+                                                                                cpu_step_mode.v=0;
+                                                                                acumulado=0; //teclas pulsadas
+
+                                                                                //Con esto saldremos
 
 				}
 
