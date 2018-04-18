@@ -6911,13 +6911,18 @@ void menu_debug_registers_ventana(void)
 	//Por defecto
 	sprintf (titulo,"Debug CPU. V%d",menu_debug_registers_current_view);
 
-	if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) sprintf (titulo,"Debug CPU (brk cond). V%d",menu_debug_registers_current_view);
+	if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) {
+		sprintf (titulo,"Debug CPU (brk cond). V%d",menu_debug_registers_current_view);
+		//printf ("breakpoint pending show\n");
+	}
 	else {
 		if (cpu_step_mode.v) sprintf (titulo,"Debug CPU (step). V%d",menu_debug_registers_current_view);
+		//printf ("no breakpoint pending show\n");
 	}
 
+
 	menu_dibuja_ventana(0,0,32,24,titulo);
-	menu_breakpoint_exception_pending_show.v=0;
+	//menu_breakpoint_exception_pending_show.v=0;
 }
 
 
@@ -7254,7 +7259,7 @@ void menu_debug_switch_follow_pc(void)
 void menu_debug_get_key_legend_first_step(char *s)
 {
 	if (menu_debug_registers_current_view==1) {
-		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mem");
+		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mode");
 	}
 	else {
 		sprintf(s,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt");
@@ -7264,7 +7269,7 @@ void menu_debug_get_key_legend_first_step(char *s)
 void menu_debug_get_key_legend_first_nostep(char *s)
 {
 	if (menu_debug_registers_current_view==1) {
-		sprintf(s,"~~Stepmode ~~Disassemble ~~Mem");
+		sprintf(s,"~~Stepmode ~~Disassemble ~~Mode");
 	}
 	else {
 		sprintf(s,"~~Stepmode ~~Disassemble");
@@ -7707,6 +7712,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
 	                menu_debug_registers_ventana();
+			menu_breakpoint_exception_pending_show.v=0;
 	
         	        linea=0;
 	                linea=menu_debug_registers_show_ptr_text(linea);
