@@ -6226,6 +6226,36 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 				 sprintf (textoregistros,"A0 %08X",m68k_get_reg(NULL, M68K_REG_A0) );
 			break;
 
+			case 6:
+				 sprintf (textoregistros,"A1 %08X",m68k_get_reg(NULL, M68K_REG_A1) );
+			break;
+
+			case 7:
+				 sprintf (textoregistros,"A2 %08X",m68k_get_reg(NULL, M68K_REG_A2) );
+			break;
+
+			case 8:
+				 sprintf (textoregistros,"A3 %08X",m68k_get_reg(NULL, M68K_REG_A3) );
+			break;
+
+			//No me caben tantos registros en esta vista... meto 4 de A y 4 de D
+
+			case 9:
+				sprintf (textoregistros,"D0 %08X",m68k_get_reg(NULL, M68K_REG_D0) );
+                        break;
+
+			case 10:
+				sprintf (textoregistros,"D1 %08X",m68k_get_reg(NULL, M68K_REG_D1) );
+                        break;
+
+			case 11:
+				sprintf (textoregistros,"D2 %08X",m68k_get_reg(NULL, M68K_REG_D2) );
+                        break;
+
+			case 12:
+				sprintf (textoregistros,"D3 %08X",m68k_get_reg(NULL, M68K_REG_D3) );
+                        break;
+
 		}
 	}
 /*
