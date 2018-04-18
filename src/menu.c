@@ -7206,7 +7206,12 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	menu_debug_registers_ventana();
 
 
+
+
 	do {
+
+		//Si la vista es la 1 y maquina QL, saltar a la 2
+		if (MACHINE_IS_QL && menu_debug_registers_current_view==1) menu_debug_registers_current_view=2;
 
 		//linea=0;
 		//linea=menu_debug_registers_show_ptr_text(linea);
