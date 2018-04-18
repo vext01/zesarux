@@ -3121,12 +3121,14 @@ void menu_retorna_colores_linea_opcion(z80_byte indice,int opcion_actual,int opc
 //coordenadas "indice" relativa al interior de la ventana (0=inicio)
 //opcion_actual indica que numero de linea es la seleccionada
 //opcion activada indica a 1 que esa opcion es seleccionable
-void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_activada,char *texto)
+void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_activada,char *texto_entrada)
 {
 
+	char texto[64];
+
         if (!strcmp(scr_driver_name,"stdout")) {
-		printf ("%s\n",texto);
-		scrstdout_menu_print_speech_macro (texto);
+		printf ("%s\n",texto_entrada);
+		scrstdout_menu_print_speech_macro (texto_entrada);
 		return;
 	}
 
@@ -3140,12 +3142,36 @@ void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_acti
 	menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
 
 
+	//Obtenemos colores de una opcion sin seleccion, para poder tener texto en ventana con linea en dos colores
+	z80_byte papel_normal,tinta_normal;
+	menu_retorna_colores_linea_opcion(0,-1,opcion_activada,&papel_normal,&tinta_normal);
+
+	//Buscamos a ver si en el texto hay el caracter "||" y en ese caso lo eliminamos del texto final
+	int encontrado=-1;
+	int destino=0;
+	for (i=0;texto_entrada[i] && encontrado==-1;i++) {
+		if (texto_entrada[i]=='|' && texto_entrada[i+1]=='|') {
+			encontrado=i;
+		}
+		else {
+			texto[destino++]=texto_entrada[i];
+		}
+	}
+
+	texto[destino]=0;
+
+
 	//linea entera con espacios
 	for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
 
 	//y texto propiamente
-				int startx=menu_escribe_linea_startx;
+	int startx=menu_escribe_linea_startx;
         menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
+
+	//Si tiene dos colores
+	if (encontrado>=0) {
+		menu_escribe_texto_ventana(startx+encontrado,indice,tinta_normal,papel_normal,&texto[encontrado]);
+	}
 
 	//si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor
 	if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
@@ -6641,7 +6667,7 @@ int menu_debug_registers_dis_show_hexa=0;
 					sprintf(&buffer_linea[columna_registros],"%s",buffer_registros);
 
 					//En QL se pega siempre el opcode con los registros. meter espacio
-					if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
+					if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]='|';
 
                                         menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
 										linea++;
