@@ -304,7 +304,7 @@ int menu_confirm_yesno(char *texto_ventana);
 int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior);
 int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior);
 
-
+void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2);
 
 void menu_espera_tecla(void);
 void menu_espera_tecla_timeout_tooltip(void);
@@ -6093,6 +6093,11 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 {
 	char buffer_flags[32];
 
+	char textopaginasmem[100];
+
+	char textopaginasmem_linea1[100];
+	char textopaginasmem_linea2[100];
+
 	if (CPU_IS_Z80) {
 
 	switch (linea) {
@@ -6140,6 +6145,16 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 			sprintf (textoregistros,"IM%d IFF%c%c",im_mode,DEBUG_STRING_IFF12 );
 		break;
 
+		/*case 12:
+		case 13:
+			menu_debug_get_memory_pages(textopaginasmem);
+			menu_util_cut_line_at_spaces(12,textopaginasmem,textopaginasmem_linea1,textopaginasmem_linea2);
+			if (linea==12) sprintf (textoregistros,"%s",textopaginasmem_linea1 );
+			if (linea==13) sprintf (textoregistros,"%s",textopaginasmem_linea2 );
+		break;*/
+
+                
+		
 
 	}
 
@@ -28669,6 +28684,47 @@ void menu_paste_clipboard_to_file(char *destination_file)
 
 
 
+//Cortar linea en dos, pero teniendo en cuenta que solo puede cortar por los espacios
+void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2)
+{
+
+	int indice_texto=0;
+	int ultimo_indice_texto=0;
+	int longitud=strlen(texto);
+
+	indice_texto+=posicion_corte;
+
+
+		//Si longitud es menor
+		if (indice_texto>=longitud) {
+			strcpy(linea1,texto);
+			linea2[0]=0;
+			return;
+		}
+
+
+		//Si no, miramos si hay que separar por espacios
+		else indice_texto=menu_generic_message_aux_wordwrap(texto,ultimo_indice_texto,indice_texto);
+
+		//Separamos por salto de linea, filtramos caracteres extranyos
+		//indice_texto=menu_generic_message_aux_filter(texto,ultimo_indice_texto,indice_texto);
+
+
+		//snprintf(buffer_lineas[indice_linea],longitud_texto,&texto[ultimo_indice_texto]);
+		//printf ("indice texto: %d\n",indice_texto);
+
+		menu_generic_message_aux_copia(texto,linea1,indice_texto);
+		linea1[indice_texto]=0;
+
+		//copiar texto
+		int longitud_texto=longitud-indice_texto;
+
+		//printf ("indice texto: %d longitud: %d\n",indice_texto,longitud_texto);
+
+		menu_generic_message_aux_copia(&texto[indice_texto],linea2,longitud_texto);
+		linea2[longitud_texto]=0;
+
+}
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto de maximo 25 caracteres
 void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)

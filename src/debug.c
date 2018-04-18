@@ -4599,6 +4599,10 @@ void debug_get_stack_moto(menu_z80_moto_int p,int items, char *texto)
 //Para motorola, scmp: no implementado aun
 void debug_get_stack_values(int items, char *texto)
 {
+
+	//Por si acaso, por defecto
+	texto[0]=0;
+
 	if (CPU_IS_Z80) {
 		int i;
   		for (i=0;i<items;i++) {
@@ -4619,9 +4623,6 @@ void debug_get_stack_values(int items, char *texto)
 		}*/
 	}
 
-	else {
-		texto[0]=0;
-	}
 
 }
 
@@ -4629,6 +4630,9 @@ void debug_get_stack_values(int items, char *texto)
 void debug_get_user_stack_values(int items, char *texto)
 {
 	
+	//Por si acaso, por defecto
+	texto[0]=0;	
+
 	if (CPU_IS_MOTOROLA) {
 		//int i;
 		menu_z80_moto_int p=m68k_get_reg(NULL, M68K_REG_USP);
@@ -4640,8 +4644,5 @@ void debug_get_user_stack_values(int items, char *texto)
 		}*/
 	}
 
-	else {
-		texto[0]=0;
-	}
 
 }

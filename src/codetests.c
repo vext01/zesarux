@@ -324,8 +324,26 @@ void codetests_tbblue_get_horizontal_raster(void)
 	}
 }
 
+
+extern void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2);
+
+
 void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
 {
+
+	char linea1[200];
+	char linea2[200];
+
+	char *entrada="Hola como estas yo bien y tu";
+
+	int corte;
+
+	for (corte=0;corte<30;corte++) {
+		menu_util_cut_line_at_spaces(corte,entrada,linea1,linea2);
+		printf ("\nEntrada: [%s]\nCorte en %d\nLinea 1: [%s]\nLinea 2: [%s]\n",entrada,corte,linea1,linea2);
+	}
+
+	exit(0);
 
 	//de momento main_argc no se usa, de ahi que indique GCC_UNUSED, pero quiza en un futuro
 
