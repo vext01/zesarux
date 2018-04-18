@@ -324,12 +324,10 @@ void codetests_tbblue_get_horizontal_raster(void)
 	}
 }
 
-
-extern void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2);
-
-
-void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
+/*void codetests_cut_line(void)
 {
+
+	//	extern void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2);
 
 	char linea1[200];
 	char linea2[200];
@@ -344,6 +342,17 @@ void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
 	}
 
 	exit(0);
+
+
+}*/
+
+
+
+
+void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
+{
+
+
 
 	//de momento main_argc no se usa, de ahi que indique GCC_UNUSED, pero quiza en un futuro
 
