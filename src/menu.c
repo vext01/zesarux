@@ -7080,6 +7080,25 @@ void menu_debug_registers_next_cont_speed(void)
 	if (menu_debug_continuous_speed==4) menu_debug_continuous_speed=0;
 }
 
+z80_bit debug_settings_show_screen={0};
+
+//Si borra el menu a cada pulsacion y muestra la pantalla de la maquina emulada debajo
+void menu_debug_registers_if_cls(void)
+{
+                                 
+	//A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
+	if (debug_settings_show_screen.v) {
+		cls_menu_overlay();
+
+		all_interlace_scr_refresca_pantalla();
+
+		//NOTA: Si no se hace esto, en modos zx80/81, se queda en color oscuro el texto de la ventana
+		//porque? no estoy seguro, pero es necesario esto
+		clear_putpixel_cache();
+	}
+
+}
+
 
 void menu_debug_cont_speed_progress(char *s)
 {
@@ -7525,25 +7544,29 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
 				if (tecla==0) {
-														//printf ("tecla: %d\n",tecla);
-														acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-														//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-														si_ejecuta_una_instruccion=0;
+							//printf ("tecla: %d\n",tecla);
+							acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+							//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+							si_ejecuta_una_instruccion=0;
 				}
 
 				else {
-				//A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
-				cls_menu_overlay();
-				all_interlace_scr_refresca_pantalla();
+					//A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
+					menu_debug_registers_if_cls();
 
-				menu_espera_no_tecla_no_cpu_loop();
+					//cls_menu_overlay();
+					//all_interlace_scr_refresca_pantalla();
+
+					menu_espera_no_tecla_no_cpu_loop();
 				}
 
 
 				//y mostramos ventana de nuevo
 				//NOTA: Si no se hace este cls_menu_overlay, en modos zx80/81, se queda en color oscuro el texto de la ventana
 				//porque? no estoy seguro, pero es necesario este cls_menu_overlay
-				cls_menu_overlay();
+
+				//printf ("clear putpixel cache\n");
+				//cls_menu_overlay();
 
 				menu_debug_registers_ventana();
 
@@ -31173,6 +31196,12 @@ void menu_debug_settings_show_fired_breakpoint(MENU_ITEM_PARAMETERS)
 	if (debug_show_fired_breakpoints_type==3) debug_show_fired_breakpoints_type=0;
 }
 
+void menu_debug_settings_show_screen(MENU_ITEM_PARAMETERS)
+{
+	debug_settings_show_screen.v ^=1;
+}
+
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -31223,7 +31252,10 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 								"NoPC: only shows conditions that are not like PC=XXXX\n"
 								"Never: never shows conditions\n" );
 
-		
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_screen,NULL,"Show display on debug: %s",
+			( debug_settings_show_screen.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
 
 
 #ifdef USE_PTHREADS
