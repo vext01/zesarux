@@ -6906,12 +6906,14 @@ void menu_debug_registers_ventana(void)
 {
 	char titulo[33];
 
-	//Por defecto
-	sprintf (titulo,"%s","Debug CPU & ULA");
+	//menu_debug_registers_current_view
 
-	if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) sprintf (titulo,"%s","Debug CPU & ULA (brk cond)");
+	//Por defecto
+	sprintf (titulo,"Debug CPU. V%d",menu_debug_registers_current_view);
+
+	if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) sprintf (titulo,"Debug CPU (brk cond). V%d",menu_debug_registers_current_view);
 	else {
-		if (cpu_step_mode.v) sprintf (titulo,"%s","Debug CPU & ULA (step)");
+		if (cpu_step_mode.v) sprintf (titulo,"Debug CPU (step). V%d",menu_debug_registers_current_view);
 	}
 
 	menu_dibuja_ventana(0,0,32,24,titulo);
@@ -24730,7 +24732,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 	                menu_add_item_menu(array_menu_debug_settings,"Generate Special NMI",MENU_OPCION_NORMAL,menu_debug_special_nmi,NULL);
 		}
 
-		menu_add_item_menu(array_menu_debug_settings,"~~Debug CPU & ULA",MENU_OPCION_NORMAL,menu_debug_registers,NULL);
+		menu_add_item_menu(array_menu_debug_settings,"~~Debug CPU",MENU_OPCION_NORMAL,menu_debug_registers,NULL);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'d');
 		menu_add_item_menu_tooltip(array_menu_debug_settings,"Open debug window");
 		menu_add_item_menu_ayuda(array_menu_debug_settings,"This window opens the debugger. You can see there some Z80 registers "
