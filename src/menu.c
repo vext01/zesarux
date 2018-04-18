@@ -2124,6 +2124,42 @@ void disable_second_layer(void)
 }
 */
 
+
+void menu_set_menu_abierto(int valor)
+{
+
+        menu_abierto=valor;
+        //dado que al cambiar esto hay cambio de color oscuro/normal, hay que vaciar putpixel cache
+        //Si no, al refrescar pantalla previamente, si estaba sin modo color oscuro,
+                //se refresca con color normal, pero luego, si se llama aqui con color oscuro,
+                //en el putpixel cache habran muchos colores que coinciden (a nivel de color indexado es el mismo)
+                //solo que antes estaba un color normal y ahora es oscuro, y entonces el sistema de putpixel
+                //no volvera a hacer putpixel de esos colores
+
+        clear_putpixel_cache();
+}
+
+
+//Borra la pantalla del menu, refresca la pantalla de spectrum
+void menu_cls_refresh_emulated_screen()
+{
+
+                cls_menu_overlay();
+
+                modificado_border.v=1;
+                all_interlace_scr_refresca_pantalla();
+
+                //Nota: clear putpixel cache se hace pues, al refrescar pantalla previamente, si estaba sin modo color oscuro,
+                //se refresca con color normal, pero luego, si se llama aqui con color oscuro,
+                //en el putpixel cache habran muchos colores que coinciden (a nivel de color indexado es el mismo)
+                //solo que antes estaba un color normal y ahora es oscuro, y entonces el sistema de putpixel
+                //no volvera a hacer putpixel de esos colores
+
+                //La solucion perfecta seria que, siempre que se cambie entre color oscuro y normal, se haga clear_putpixel_cache();
+
+                clear_putpixel_cache();
+}
+
 void enable_footer(void)
 {
 
@@ -4045,11 +4081,14 @@ void menu_view_screen(MENU_ITEM_PARAMETERS)
         menu_espera_no_tecla();
 
 	//para que no se vea oscuro
-	menu_abierto=0;
-	modificado_border.v=1;
-	all_interlace_scr_refresca_pantalla();
+	menu_set_menu_abierto(0);
+	//modificado_border.v=1;
+
+	menu_cls_refresh_emulated_screen();
+
+	//all_interlace_scr_refresca_pantalla();
         menu_espera_tecla();
-	menu_abierto=1;
+	menu_set_menu_abierto(1);
 	menu_espera_no_tecla();
 	modificado_border.v=1;
 }
@@ -7126,6 +7165,10 @@ void menu_debug_cont_speed_progress(char *s)
 
 
 
+
+
+
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -7826,12 +7869,23 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				        menu_espera_no_tecla_no_cpu_loop();
 
 				        //para que no se vea oscuro
-				        menu_abierto=0;
-				        all_interlace_scr_refresca_pantalla();
+				        menu_set_menu_abierto(0);
+					//modificado_border.v=1;
+				        //all_interlace_scr_refresca_pantalla();
+
+					menu_cls_refresh_emulated_screen();
+
 				        menu_espera_tecla_no_cpu_loop();
-				        menu_abierto=1;
 					menu_espera_no_tecla_no_cpu_loop();
-					all_interlace_scr_refresca_pantalla();
+
+					//vuelta a oscuro
+				        menu_set_menu_abierto(1);
+					//clear_putpixel_cache();
+					//all_interlace_scr_refresca_pantalla();
+
+
+					menu_cls_refresh_emulated_screen();
+
 					menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
@@ -31689,7 +31743,7 @@ void menu_inicio_pre_retorno(void)
     menu_button_f_function.v=0;
 
     reset_menu_overlay_function();
-    menu_abierto=0;
+    menu_set_menu_abierto(0);
 
 
     //Para refrescar border en caso de tsconf por ejemplo, en que el menu sobreescribe el border
