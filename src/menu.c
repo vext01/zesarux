@@ -6105,19 +6105,9 @@ void menu_debug_registers_change_ptr(void)
                                          //Muestra el registro que le corresponde para esta linea
 void menu_debug_show_register_line(int linea,char *textoregistros)
 {
-/*
-                        sprintf (textoregistros,"PC: %04X : %s",get_pc_register(),dumpmemoria);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
+	if (CPU_IS_Z80) {
 
-                        
-
-                        sprintf (textoregistros,"HL':%04X DE':%04X BC':%04X",(reg_h_shadow<<8)|reg_l_shadow,(reg_d_shadow<<8)|reg_e_shadow,(reg_b_shadow<<8)|reg_c_shadow);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-
-                                sprintf (textoregistros,"IX: %04X IY: %04X",reg_ix,reg_iy);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-*/
 	switch (linea) {
 		case 0:
 			sprintf (textoregistros,"PC %04X",get_pc_register() );
@@ -6163,6 +6153,48 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 			sprintf (textoregistros,"IM%d IFF%c%c",im_mode,DEBUG_STRING_IFF12 );
 		break;
 
+
+	}
+
+	}
+
+	if (CPU_IS_SCMP) {
+		char buffer_flags[9];
+	        switch (linea) {
+        	        case 0:
+                	        sprintf (textoregistros,"PC %04X",get_pc_register() );
+	                break;
+
+        	        case 1:
+                	        sprintf (textoregistros,"AC %02X",scmp_m_AC);
+	                break;
+
+        	        case 2:
+                	        sprintf (textoregistros,"ER %02X",scmp_m_ER);
+	                break;
+
+			case 3:
+				sprintf (textoregistros,"SR %02X",scmp_m_SR);
+			break;
+
+			case 4:
+                                scmp_get_flags_letters(scmp_m_SR,buffer_flags);
+				sprintf (textoregistros,"%s",buffer_flags);
+			break;
+
+			case 5:
+				sprintf (textoregistros,"P1 %04X",scmp_m_P1.w.l);
+			break;
+
+			case 6:
+				sprintf (textoregistros,"P2 %04X",scmp_m_P2.w.l);
+			break;
+
+			case 7:
+				sprintf (textoregistros,"P3 %04X",scmp_m_P3.w.l);
+			break;
+
+		}
 
 	}
 }
@@ -7211,7 +7243,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	do {
 
 		//Si la vista es la 1 y maquina QL, saltar a la 2
-		if (MACHINE_IS_QL && menu_debug_registers_current_view==1) menu_debug_registers_current_view=2;
+		if (CPU_IS_MOTOROLA && menu_debug_registers_current_view==1) menu_debug_registers_current_view=2;
 
 		//linea=0;
 		//linea=menu_debug_registers_show_ptr_text(linea);
