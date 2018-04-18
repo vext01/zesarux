@@ -7315,11 +7315,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 //Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
                                 if (tecla==0) {
-                                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                 }
 
                                 else {
-                                        printf ("tecla: %d\n",tecla);
+                                        //printf ("tecla: %d\n",tecla);
                                         //A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
                                         menu_debug_registers_if_cls();
 
