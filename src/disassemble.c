@@ -182,6 +182,49 @@ void debugger_handle_extended_tbblue_opcodes(char *buffer, unsigned int address,
 	}
 }
 
+
+void debugger_disassemble_crear_rep_spaces(char *origen)
+{
+	//Quita espacios repetidos de la cadena de texto
+	char *destino;
+
+	destino=origen;
+
+	int repetido=0;
+	char caracter;
+	while (*origen) {
+		caracter=*origen;
+
+		if (caracter!=' ') {
+			repetido=0;
+			*destino=caracter;
+			destino++;
+		}
+
+		else {
+			//No Habia otro?
+			if (repetido==0) {	
+				repetido=1;
+				*destino=caracter;
+                 	       destino++;
+	                }	
+
+			else {
+				//Habia otro
+				//No hacemos nada
+			}
+
+		}
+
+		origen++;
+
+	}
+
+	*destino=0;
+}
+		
+	
+
 /* A very thin wrapper to avoid exposing the USE_HL constant */
 void
 debugger_disassemble( char *buffer, size_t buflen, size_t *length,
@@ -206,6 +249,10 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 		//address=adjust_address_space_cpu(address);
 		int longitud=m68k_disassemble(buffer_temporal, address, M68K_CPU_TYPE_68000);
 		buffer_temporal[buflen-1]=0; //forzar maximo longitud
+
+		//Quitamos espacios de mas
+		debugger_disassemble_crear_rep_spaces(buffer_temporal);
+
 		strcpy(buffer,buffer_temporal);
 		*length=longitud;
 		return;
