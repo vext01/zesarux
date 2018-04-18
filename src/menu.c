@@ -6105,6 +6105,7 @@ void menu_debug_registers_change_ptr(void)
                                          //Muestra el registro que le corresponde para esta linea
 void menu_debug_show_register_line(int linea,char *textoregistros)
 {
+	char buffer_flags[32];
 
 	if (CPU_IS_Z80) {
 
@@ -6159,7 +6160,6 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 	}
 
 	if (CPU_IS_SCMP) {
-		char buffer_flags[9];
 	        switch (linea) {
         	        case 0:
                 	        sprintf (textoregistros,"PC %04X",get_pc_register() );
@@ -6197,6 +6197,80 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 		}
 
 	}
+
+	if (CPU_IS_MOTOROLA) {
+		switch (linea) {
+
+			case 0:
+				 sprintf (textoregistros,"PC %05X",get_pc_register() );
+			break;
+
+			case 1:
+				 sprintf (textoregistros,"SP %05X",m68k_get_reg(NULL, M68K_REG_SP) );
+			break;
+
+			case 2:
+				 sprintf (textoregistros,"USP %05X",m68k_get_reg(NULL, M68K_REG_USP) );
+			break;
+
+			case 3:
+				 sprintf (textoregistros,"SR %04X",m68k_get_reg(NULL, M68K_REG_SR) );
+			break;
+
+			case 4:
+				motorola_get_flags_string(buffer_flags);
+				sprintf (textoregistros,"%s",buffer_flags );
+			break;
+
+			case 5:
+				 sprintf (textoregistros,"A0 %08X",m68k_get_reg(NULL, M68K_REG_A0) );
+			break;
+
+		}
+	}
+/*
+   else if (CPU_IS_MOTOROLA) {
+                                sprintf (textoregistros,"PC: %05X SP: %05X USP: %05X",get_pc_register(),m68k_get_reg(NULL, M68K_REG_SP),m68k_get_reg(NULL, M68K_REG_USP));
+
+                                case M68K_REG_A7:       return cpu->dar[15];
+                                case M68K_REG_SP:       return cpu->dar[15];
+                                case M68K_REG_USP:      return cpu->s_flag ? cpu->sp[0] : cpu->dar[15];
+
+                                SP siempre muestra A7
+                                USP muestra: en modo supervisor, SSP. En modo no supervisor, SP/A7
+
+                                menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+                                unsigned int registro_sr=m68k_get_reg(NULL, M68K_REG_SR);
+
+                                char buffer_flags[32];
+                                motorola_get_flags_string(buffer_flags);
+                                sprintf (textoregistros,"SR: %04X : %s",registro_sr,buffer_flags);
+
+                                menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,0,M68K_REG_A0,M68K_REG_D0);
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,1,M68K_REG_A1,M68K_REG_D1);
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,2,M68K_REG_A2,M68K_REG_D2);
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,3,M68K_REG_A3,M68K_REG_D3);
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,4,M68K_REG_A4,M68K_REG_D4);
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,5,M68K_REG_A5,M68K_REG_D5);
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,6,M68K_REG_A6,M68K_REG_D6);
+                                menu_debug_registers_print_register_aux_moto(textoregistros,&linea,7,M68K_REG_A7,M68K_REG_D7);
+
+void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
+{
+
+        sprintf (textoregistros,"A%d: %08X D%d: %08X",numero,m68k_get_reg(NULL, registro_direccion),numero,m68k_get_reg(NULL, registro_dato) );
+        menu_escribe_linea_opcion(*linea,-1,1,textoregistros);
+        (*linea)++;
+
+}
+
+
+
+                        }
+*/
 }
 
 //Longitud que ocupa el ultimo opcode desensamblado
@@ -6459,6 +6533,9 @@ int menu_debug_registers_print_registers(int linea)
 
                                 size_t longitud_op;
                                 int limite=menu_debug_num_lineas_full;
+
+				int columna_registros=19;
+				if (CPU_IS_MOTOROLA) columna_registros=20;
          
 
 					char buffer_registros[33];
@@ -6530,8 +6607,11 @@ int menu_debug_registers_dis_show_hexa=0;
 
 					//Muestra el registro que le corresponde para esta linea
 					menu_debug_show_register_line(i,buffer_registros);
-					//Agregar registro que le corresponda. Columna 19
-					sprintf(&buffer_linea[19],"%s",buffer_registros);
+					//Agregar registro que le corresponda. Columna 19 normalmente
+					sprintf(&buffer_linea[columna_registros],"%s",buffer_registros);
+
+					//En QL se pega siempre el opcode con los registros. meter espacio
+					if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
 
                                         menu_escribe_linea_opcion(linea,opcion_actual,1,buffer_linea);
 										linea++;
