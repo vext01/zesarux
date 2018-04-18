@@ -7199,7 +7199,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	char buffer_mensaje[64];
 
 	//Si no esta multitarea activa, modo por defecto es step to step
-	if (menu_multitarea==0) cpu_step_mode.v=0;
+	if (menu_multitarea==0) cpu_step_mode.v=1;
 
 
 
@@ -7555,7 +7555,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
                 //menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
 
-				menu_escribe_linea_opcion(linea++,-1,1,"Clr tstates~~p ~~1-~~5 View ~~V.Scr");
+				menu_escribe_linea_opcion(linea++,-1,1,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
+
+
+
+
 																	// ~~1-~~5 View
 			}
 			else {
