@@ -7299,37 +7299,55 @@ void menu_debug_get_legend(int linea,char *s)
 		case 0:
 			if (cpu_step_mode.v) {
 				if (menu_debug_registers_current_view==1) {
-					sprintf(s,"~~Stpm ~~E~~n~~t:Step St~~ovr ~~ContSt ~~Mode");
+							//01234567890123456789012345678901
+							// Stpm Ent:Step Stovr ContSt Mode
+					sprintf(s,"~~StpM ~~E~~n~~t:Step St~~Ovr ~~ContSt ~~Mode");
 				}
 				else {
-					sprintf(s,"~~Stepmode ~~E~~n~~t:Step St~~ovr ~~ContSt");
+							//01234567890123456789012345678901
+							// Stepmode Ent:Step Stovr ContSt
+					sprintf(s,"~~StepMode ~~E~~n~~t:Step St~~Ovr ~~ContSt");
 				}
 			}
 			else {
 				if (menu_debug_registers_current_view==1) {
-					sprintf(s,"~~Stepmode ~~Disassemble ~~Mode");
+							//01234567890123456789012345678901
+							// Stepmode Disassemble Mode
+					sprintf(s,"~~StepMode ~~Disassemble ~~Mode");
 				}
 				else {
-					sprintf(s,"~~Stepmode ~~Disassemble");
+							//01234567890123456789012345678901
+							// Stepmode Disassemble 					
+					sprintf(s,"~~StepMode ~~Disassemble");
 				}
 			}
 		break;
 
+
+
 		case 1:
 			if (menu_debug_registers_current_view==1) {
-				sprintf(s,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
+							//01234567890123456789012345678901
+							// chReg Brkp. Toggle Runto Watch		
+				sprintf(s,"Ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
 			}
 			else {
-				sprintf(s,"ch~~Reg ~~Brkp. ~~Watch");
+							//01234567890123456789012345678901
+							// chReg Brkp. Watch					
+				sprintf(s,"Ch~~Reg ~~Brkp. ~~Watch");
 			}
 		break;
 
 		case 2:
 			if (cpu_step_mode.v) {
-				sprintf (s,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
+							//01234567890123456789012345678901
+							// Clr.tstpart. 1-5 View V.Scr			
+				sprintf (s,"Clr.Tst~~Part. ~~1-~~5 View ~~V.Scr");
 			}
 			else {
-				sprintf (s,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
+							//01234567890123456789012345678901
+							// Clr.tstpart. 1-5 View MZone 99
+				sprintf (s,"Clr.Tst~~Part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
 			}
 		break;
 	}
