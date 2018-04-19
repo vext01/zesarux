@@ -6339,6 +6339,18 @@ void menu_debug_next_dis_show_hexa(void)
 	if (menu_debug_registers_subview_type==4) menu_debug_registers_subview_type=0;
 }
 
+void menu_debug_registers_adjust_ptr_on_follow(void)
+{
+	if (menu_debug_follow_pc.v) {
+                menu_debug_memory_pointer=get_pc_register();
+                //Si se esta mirando zona copper
+                if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
+                        menu_debug_memory_pointer=tbblue_copper_pc;
+                }
+
+        }
+}
+
 int menu_debug_registers_print_registers(int linea)
 {
 	char textoregistros[33];
@@ -6354,35 +6366,11 @@ int menu_debug_registers_print_registers(int linea)
 
 	menu_z80_moto_int menu_debug_memory_pointer_copia;
 
+	menu_debug_registers_adjust_ptr_on_follow();
 
-	if (menu_debug_follow_pc.v) {
-		menu_debug_memory_pointer=get_pc_register();
-		//Si se esta mirando zona copper
-	        if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
-			menu_debug_memory_pointer=tbblue_copper_pc;
-		}
 
-		//Y ahora hay que situar el cursor la mitad por arriba, solo cuando la vista activa es la 3
-		if (menu_debug_registers_current_view==1) {
-			//menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
-
-			//Y el cursor ahora...
-			//menu_debug_line_cursor=menu_debug_num_lineas_full/2;
-
-			menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
-		}
-
-		else {
-			menu_debug_line_cursor=0;
-			menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
-		}
-	}
-
-	else {
-
-		//Conservamos valor original y usamos uno de copia
-		menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
-	}
+	//Conservamos valor original y usamos uno de copia
+	menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
 
 
 	//Por defecto
