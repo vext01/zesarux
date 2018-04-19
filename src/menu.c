@@ -9653,10 +9653,12 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 	if (CPU_IS_MOTOROLA) decremento=30; //En el caso de motorola mejor empezar antes
 
+	int traspasado_negativo=0;
+
 	//Controlamos caso en que al restar, nuestra direccion es mayor que la actual (hemos dado la vuelta)
 	if (dir_inicial<decremento) {
-		printf ("We are near to the start addresses. Decrement less\n");
-		decremento=dir_inicial+1; //Para que saltemos siempre la rom
+		printf ("We are near to the start addresses.\n");
+		traspasado_negativo=1;
 	}
 
 	dir=dir_inicial-decremento;
@@ -9664,14 +9666,29 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 	dir=menu_debug_hexdump_adjusta_en_negativo(dir,1);
 
+	menu_z80_moto_int dir_orig=dir;
+
 
 	do {
 		//printf ("dir: %X\n",dir);
 		//dir=adjust_address_space_cpu(dir);
 		debugger_disassemble(buffer,30,&longitud_opcode,dir);
-		if (dir+longitud_opcode>=dir_inicial) return dir;
+		
+		//dir=adjust_address_memory_size(dir);	
 
-		dir +=longitud_opcode;
+		menu_z80_moto_int sumado=dir+longitud_opcode;
+		sumado=adjust_address_memory_size(sumado);
+
+		if (traspasado_negativo==1) {
+			if (sumado<dir_orig) traspasado_negativo=0;
+		}
+		
+		if (sumado>=dir_inicial && traspasado_negativo==0) {
+			return dir;
+		}
+
+		//dir +=longitud_opcode;
+		dir=sumado;
 	} while (1);
 
 
