@@ -7426,7 +7426,7 @@ void menu_debug_cont_speed_progress(char *s)
 }
 
 
-z80_bit menu_debug_registers_if_showscan={1};
+z80_bit menu_debug_registers_if_showscan={0};
 
 void menu_debug_registers_show_scan_position(void)
 {
@@ -7451,20 +7451,20 @@ void menu_debug_registers_show_scan_position(void)
                 ancho=get_total_ancho_rainbow();
                 alto=get_total_alto_rainbow();
 
-    //rojo, amarillo, verde, azul,negro
-    int colores_rainbow[]={2+8,6+8,4+8,1+8,0};
+    //rojo, amarillo, verde, azul
+    int colores_rainbow[]={2+8,6+8,4+8,1+8};
 
 					int y=t_scanline_draw-screen_invisible_borde_superior;
 					if (y>=0 && y<alto) {
 						int x;
 						int indice_color=0;
-						for (x=0;x<32;x++) {
+						for (x=0;x<4*8;x++) {
 							screen_generic_putpixel_indexcolour(rainbow_buffer,x,y,ancho,colores_rainbow[indice_color]);
 							//screen_generic_putpixel_indexcolour(rainbow_buffer,x,y,ancho,2);
 							//Trozos de colores de 4 pixeles de ancho
-							if (x>0 && (x%4)==0) {
+							if (x>0 && (x%8)==0) {
 								indice_color++;
-								if (indice_color==5) indice_color=0;
+								if (indice_color==4) indice_color=0;
 							}
 
 							//Y quitar lo de antes
@@ -31680,6 +31680,10 @@ void menu_debug_settings_show_screen(MENU_ITEM_PARAMETERS)
 {
 	debug_settings_show_screen.v ^=1;
 }
+void menu_debug_settings_show_scanline(MENU_ITEM_PARAMETERS)
+{
+	menu_debug_registers_if_showscan.v ^=1;
+}
 
 
 //menu debug settings
@@ -31737,6 +31741,8 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
 
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"Show scanline on debug: %s",
+			( menu_debug_registers_if_showscan.v ? "Yes" : "No") );
 
 #ifdef USE_PTHREADS
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"~~Remote protocol: %s",(remote_protocol_enabled.v ? "Enabled" : "Disabled") );
