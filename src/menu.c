@@ -6640,8 +6640,6 @@ int menu_debug_registers_print_registers(int linea)
 					int opcion_actual=-1;
 
 					int opcion_activada=1;  
-					//Esto no lo usamos aunque hubo un intento de mostrar linea de breakpoint como desactivada (en rojo), 
-					//
 
 					//Si esta linea tiene el cursor
 					if (i==menu_debug_line_cursor) {
