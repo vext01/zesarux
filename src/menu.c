@@ -8257,13 +8257,15 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
 				//Prueba a refrescar pantalla a cada instruccion, con modo scanline
-				/*if (MACHINE_IS_SPECTRUM) {
+				/*
+				if (MACHINE_IS_SPECTRUM) {
 					//copiamos contenido linea y border a buffer rainbow
 					if (rainbow_enabled.v==1) {
 						screen_store_scanline_rainbow_solo_border();
 						screen_store_scanline_rainbow_solo_display();
 					}
-				}*/
+				}
+				*/
 			}
 
 			if (menu_breakpoint_exception.v) {
