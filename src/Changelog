@@ -1,4 +1,4 @@
-Version 6.1. 13 April 2018 - Xeno edition
+Version 7.0. 19 April 2018 - Xeno edition
 
 Added ZX-Evolution BaseConf emulation
 Added BetaDisk and TR-DOS emulation
@@ -18,13 +18,10 @@ Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run 
 Added setting to exit emulator after a number of seconds (--exit-after)
 Added second Easter Egg ;)
 
-
 Improved debugging:
-* New enahnced debugger cpu menu: new default view, cursor, toggle breakpoints, run to cursor, change registers and a lot more...
+* new enhanced debug cpu menu: new default view, cursor, toggle breakpoints, run to cursor, change registers, and a lot more...
 * added cpu-step-over function on debug menu (was already available from ZRCP)
 * added function to write byte to file on ZEsarUX hardware debug ports
-
-Improved frameskip: now realvideo buffer is not updated when frameskip
 
 Improved ZRCP: 
 * run command is stopped by default when pressing a key (or sending data to the socket)
@@ -53,9 +50,6 @@ Improved TSConf emulation:
 * TSConf debugging: debug for DMA, Video registers, Video layers, Sprites, Tiles
 * added TR-DOS emulation support
 
-Improved text mode drivers (aalib, stdout, simpletext, curses): text settings are in different submenu, setting to set stdout/simpletext fps
-Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
-
 Improved menu interface:
 * a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 * Character width can be reduced to 7,6 or 5 pixels width
@@ -69,29 +63,33 @@ Improved sprite viewer:
 * you can view sprites up to 512x192 
 * you can see tsconf sprites
 
-Improved sound: Silence detector activated by default but can be disabled
-Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
-Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
-
 Improved TBBlue emulation: 
 * Added clip window registers
 * Added Copper
 * Added almost all next extended opcodes
 * Added a setting to start TBBlue directly to a 48 rom but with all the Next features enabled, useful for fast snapshot loading
 
+Improved text mode drivers (aalib, stdout, simpletext, curses): text settings are in different submenu, setting to set stdout/simpletext fps
+Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
+Improved frameskip: better performance, because realvideo buffer is not updated when frameskip
+Improved sound: Silence detector activated by default but can be disabled
+Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
+Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
 Improved rendering on text mode drivers: now realvideo mode can render directly to black&white text. Try TSConf with --vo stdout --realvideo --autoredrawstdout
 Improved Linux library dependencies: libssl is not enabled by default on compilation
 
-Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed ZX-Uno emulation: 
-*128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
-*Kempston port returns 0 when no kempston selected. New BIOS can be used now
+* 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
+* Kempston port returns 0 when no kempston selected. New BIOS can be used now
+
+Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed Raster interrupts on ZX-Uno and TBBlue. Horizontal raster position was wrong
 Fixed window footer when running Pentagon
 Fixed panic screen: now it is shown on all machines. New design. I hope you never see it ;)
 Fixed some crashes with speech enabled and opening some menus: AY Registers, AY Player, etc...
 Fixed annoying sound on Dandanator rom menu
 Fixed bug on Z80 cpu core, iff2 was not being reset to 0 when firing an interrupt, so reading it by using LD A,R and LD A,I affected many demos
+
 
 
 Version 6.0. 27 November 2017 - Gunfright edition

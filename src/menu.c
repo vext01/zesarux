@@ -6714,6 +6714,7 @@ int menu_debug_registers_subview_type=0;
 
 
 					//Vamos a ver si metemos una linea mas de la parte de la derecha extra, siempre que tenga contenido (primer caracter no espacio)
+					//Esto sucede por ejemplo en tbblue, pues tiene 8 segmentos de memoria
                                         //Inicializamos a espacios
                                         int j;
                                         for (j=0;j<64;j++) buffer_linea[j]=32;
