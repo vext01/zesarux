@@ -6400,6 +6400,29 @@ void menu_debug_registers_adjust_ptr_on_follow(void)
         }
 }
 
+
+void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna_registros)
+{
+
+char buffer_registros[33];
+                                        if (menu_debug_registers_subview_type!=3) {
+
+                                                //Quitar el 0 del final
+                                                int longitud=strlen(buffer_linea);
+                                                buffer_linea[longitud]=32;
+
+                                                //Muestra el registro que le corresponde para esta linea
+                                                menu_debug_show_register_line(linea,buffer_registros);
+
+
+                                                //En QL se pega siempre el opcode con los registros. meter espacio
+                                                if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
+
+                                                //Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador para quitar el color seleccionado
+                                                sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
+                                        }
+}
+
 int menu_debug_registers_print_registers(int linea)
 {
 	//printf("linea: %d\n",linea);
@@ -6673,6 +6696,11 @@ int menu_debug_registers_subview_type=0;
 					//menu_debug_lines_addresses[i]=puntero_dir;
 
 
+					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
+
+
+
+					/*
 					if (menu_debug_registers_subview_type!=3) {
 
 						//Quitar el 0 del final
@@ -6689,6 +6717,7 @@ int menu_debug_registers_subview_type=0;
 						//Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador para quitar el color seleccionado
 						sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
 					}
+					*/
 
 
 
