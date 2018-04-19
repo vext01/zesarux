@@ -6366,7 +6366,7 @@ int menu_debug_registers_print_registers(int linea)
 
 	menu_z80_moto_int menu_debug_memory_pointer_copia;
 
-	menu_debug_registers_adjust_ptr_on_follow();
+	//menu_debug_registers_adjust_ptr_on_follow();
 
 
 	//Conservamos valor original y usamos uno de copia
@@ -7201,6 +7201,7 @@ int menu_debug_registers_show_ptr_text(int linea)
 
 	debug_printf (VERBOSE_DEBUG,"Refreshing ptr");
 
+
 	char buffer_mensaje[64];
                 //Forzar a mostrar atajos
                 z80_bit antes_menu_writing_inverse_color;
@@ -7419,6 +7420,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 		menu_debug_registers_ventana();
+
+		menu_debug_registers_adjust_ptr_on_follow();
 
                 linea=0;
                 linea=menu_debug_registers_show_ptr_text(linea);
@@ -7715,6 +7718,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 	                menu_debug_registers_ventana();
 			menu_breakpoint_exception_pending_show.v=0;
+
+			menu_debug_registers_adjust_ptr_on_follow();
 	
         	        linea=0;
 	                linea=menu_debug_registers_show_ptr_text(linea);
