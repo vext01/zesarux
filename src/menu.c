@@ -6303,6 +6303,14 @@ int menu_debug_view_has_disassemly(void)
 	return 0;
 }
 
+menu_z80_moto_int menu_debug_disassemble_subir_veces(menu_z80_moto_int posicion,int veces)
+{
+        int i;
+        for (i=0;i<veces;i++) {
+                posicion=menu_debug_disassemble_subir(posicion);
+        }
+        return posicion;
+}
 
 
 menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
@@ -6355,10 +6363,12 @@ int menu_debug_registers_print_registers(int linea)
 
 		//Y ahora hay que situar el cursor la mitad por arriba, solo cuando la vista activa es la 3
 		if (menu_debug_registers_current_view==1) {
-			menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
+			//menu_debug_memory_pointer_copia=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 
 			//Y el cursor ahora...
-			menu_debug_line_cursor=menu_debug_num_lineas_full/2;
+			//menu_debug_line_cursor=menu_debug_num_lineas_full/2;
+
+			menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
 		}
 
 		else {
@@ -6537,6 +6547,14 @@ int menu_debug_registers_print_registers(int linea)
 
 				int columna_registros=19;
 				if (CPU_IS_MOTOROLA) columna_registros=20;
+
+
+
+				//Mi valor ptr
+				menu_z80_moto_int puntero_ptr_inicial=menu_debug_memory_pointer_copia;
+
+				//Donde empieza la vista
+				menu_debug_memory_pointer_copia=menu_debug_disassemble_subir_veces(puntero_ptr_inicial,menu_debug_line_cursor);
          
 
 					char buffer_registros[33];
@@ -6563,6 +6581,12 @@ int menu_debug_registers_print_registers(int linea)
 					//Esto no lo usamos aunque hubo un intento de mostrar linea de breakpoint como desactivada (en rojo), 
 					//
 
+					//Si esta linea tiene el cursor
+					if (i==menu_debug_line_cursor) {
+						opcion_actual=linea;			
+						menu_debug_memory_pointer_copia=puntero_ptr_inicial;
+					}
+
 					menu_z80_moto_int puntero_dir=adjust_address_memory_size(menu_debug_memory_pointer_copia);
 
 					int tiene_brk=0;
@@ -6582,8 +6606,6 @@ int menu_debug_registers_print_registers(int linea)
 
 					if (tiene_pc && tiene_brk) buffer_linea[0]='+'; //Cuando coinciden breakpoint y cursor
 
-					//Si esta linea tiene el cursor
-					if (i==menu_debug_line_cursor) opcion_actual=linea;			
 					
 
                        			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
@@ -6601,8 +6623,8 @@ int menu_debug_registers_subview_type=0;
 
 
 					//Si mostramos en vez de desensamblado, volcado hexa o ascii
-					if (menu_debug_registers_subview_type==1)	menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_op);
-					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii);
+					if (menu_debug_registers_subview_type==1)	menu_debug_registers_dump_hex(dumpassembler,puntero_dir,longitud_op);
+					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii);
 					//4 para direccion, fijo
 					
 					sprintf(&buffer_linea[1],"%04X %s",puntero_dir,dumpassembler);
