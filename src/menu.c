@@ -9653,20 +9653,23 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 	if (CPU_IS_MOTOROLA) decremento=30; //En el caso de motorola mejor empezar antes
 
+
+	//Normalmente vale 0. Pero se activa cuando al restar, el valor ha pasado de ser las primeras posiciones de la memoria, a "dar la vuelta"
 	int traspasado_negativo=0;
 
 	//Controlamos caso en que al restar, nuestra direccion es mayor que la actual (hemos dado la vuelta)
 	if (dir_inicial<decremento) {
-		printf ("We are near to the start addresses.\n");
+		debug_printf (VERBOSE_DEBUG,"We are near to the start addresses. Applying workaround");
 		traspasado_negativo=1;
 	}
 
 	dir=dir_inicial-decremento;
 
-
 	dir=menu_debug_hexdump_adjusta_en_negativo(dir,1);
 
 	menu_z80_moto_int dir_orig=dir;
+
+	int opcodes_saltados=0;
 
 
 	do {
@@ -9679,8 +9682,16 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 		menu_z80_moto_int sumado=dir+longitud_opcode;
 		sumado=adjust_address_memory_size(sumado);
 
+
+		//Si habiamos dado la vuelta por debajo y aun no hemos vuelto a posiciones bajas
 		if (traspasado_negativo==1) {
-			if (sumado<dir_orig) traspasado_negativo=0;
+			if (sumado<dir_orig) traspasado_negativo=0;  //valor actual ya es menor que la inicial. Ya hemos vuelto a posiciones bajas
+
+			//Por si acaso, no me fio que siempre se vaya a cumplir esto, tener manera de salir cuando se hayan saltado, por ejemplo, 50 opcodes
+			if (opcodes_saltados>50) {
+				traspasado_negativo=0;
+				debug_printf (VERBOSE_DEBUG,"Applying workaround after 50 opcodes");
+			}
 		}
 		
 		if (sumado>=dir_inicial && traspasado_negativo==0) {
@@ -9689,6 +9700,8 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 		//dir +=longitud_opcode;
 		dir=sumado;
+
+		opcodes_saltados++;
 	} while (1);
 
 
