@@ -7427,8 +7427,38 @@ void menu_debug_cont_speed_progress(char *s)
 
 
 
+void menu_debug_registers_show_scan_position(void)
+{
+
+	//desactivado
+	return;
+                                //Prueba a refrescar pantalla a cada instruccion, con modo scanline
+                                
+                                if (MACHINE_IS_SPECTRUM) {
+                                        //copiamos contenido linea y border a buffer rainbow
+                                        if (rainbow_enabled.v==1) {
+                                                screen_store_scanline_rainbow_solo_border();
+                                                screen_store_scanline_rainbow_solo_display();
 
 
+						//Agregar unos pixeles para indicar posicion
+
+
+
+                int ancho,alto;
+
+                ancho=get_total_ancho_rainbow();
+                alto=get_total_alto_rainbow();
+						screen_generic_putpixel_indexcolour(rainbow_buffer,10,10,ancho,2);
+					
+
+                //screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
+//void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color)
+
+                                        }
+                                }
+                                
+}
 
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
@@ -8256,16 +8286,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				}
 
 
-				//Prueba a refrescar pantalla a cada instruccion, con modo scanline
-				/*
-				if (MACHINE_IS_SPECTRUM) {
-					//copiamos contenido linea y border a buffer rainbow
-					if (rainbow_enabled.v==1) {
-						screen_store_scanline_rainbow_solo_border();
-						screen_store_scanline_rainbow_solo_display();
-					}
-				}
-				*/
+				menu_debug_registers_show_scan_position();
 			}
 
 			if (menu_breakpoint_exception.v) {

@@ -719,4 +719,6 @@ extern void screen_text_set_ansi_color_bg(z80_byte paper);
 
 extern void screen_text_set_ansi_color_fg(z80_byte ink);
 
+extern void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color);
+
 #endif
