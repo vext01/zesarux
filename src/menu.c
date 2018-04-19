@@ -6700,27 +6700,6 @@ int menu_debug_registers_subview_type=0;
 
 
 
-					/*
-					if (menu_debug_registers_subview_type!=3) {
-
-						//Quitar el 0 del final
-						int longitud=strlen(buffer_linea);
-						buffer_linea[longitud]=32;
-
-						//Muestra el registro que le corresponde para esta linea
-						menu_debug_show_register_line(i,buffer_registros);
-
-
-						//En QL se pega siempre el opcode con los registros. meter espacio
-						if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
-
-						//Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador para quitar el color seleccionado
-						sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
-					}
-					*/
-
-
-
 
                                         menu_escribe_linea_opcion(linea,opcion_actual,opcion_activada,buffer_linea);
 										linea++;
@@ -6729,13 +6708,30 @@ int menu_debug_registers_subview_type=0;
                                         //Almacenar longitud del primer opcode mostrado
                                         if (i==0) menu_debug_registers_print_registers_longitud_opcode=longitud_op;
                                 }
-                                        menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
 
-				menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
-					//Linea de stack
+
+                                 menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
+
+					menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
+
+					//Vamos a ver si metemos una linea mas de la parte de la derecha extra, siempre que tenga contenido (primer caracter no espacio)
+                                        //Inicializamos a espacios
+                                        int j;
+                                        for (j=0;j<64;j++) buffer_linea[j]=32;
+
+                                        menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
+
+                                        //Si tiene contenido
+                                        if (buffer_linea[columna_registros]!=' ' && buffer_linea[columna_registros]!=0) {
+                                                //Agregamos linea
+						menu_escribe_linea_opcion(linea,-1,1,buffer_linea);
+
+					}
+
 					linea++;
 
 
+					//Linea de stack
 					//No mostrar stack en caso de scmp
 					if (CPU_IS_Z80 || CPU_IS_MOTOROLA) {
 						sprintf(buffer_linea,"(SP) ");
