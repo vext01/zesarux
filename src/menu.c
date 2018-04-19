@@ -31744,6 +31744,9 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"Show scanline on debug: %s",
 			( menu_debug_registers_if_showscan.v ? "Yes" : "No") );
 
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows scanline position when debugging, using a coloured line. Requires real video");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows scanline position when debugging, using a coloured line. Requires real video");
+
 #ifdef USE_PTHREADS
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"~~Remote protocol: %s",(remote_protocol_enabled.v ? "Enabled" : "Disabled") );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
