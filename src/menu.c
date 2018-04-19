@@ -6283,7 +6283,7 @@ menu_z80_moto_int menu_debug_memory_pointer_last=0;
 
 
 //Direcciones de cada linea en la vista numero 3
-menu_z80_moto_int menu_debug_lines_addresses[24];
+//menu_z80_moto_int menu_debug_lines_addresses[24];
 
 //Numero de lineas del listado principal de la vista
 int menu_debug_get_main_list_view(void)
@@ -6631,7 +6631,7 @@ int menu_debug_registers_subview_type=0;
 					sprintf(&buffer_linea[1],"%04X %s",puntero_dir,dumpassembler);
 
 					//Guardar las direcciones de cada linea
-					menu_debug_lines_addresses[i]=puntero_dir;
+					//menu_debug_lines_addresses[i]=puntero_dir;
 
 
 					if (menu_debug_registers_subview_type!=3) {
@@ -7158,7 +7158,8 @@ void menu_debug_toggle_breakpoint(void)
 	//Buscar primero direccion que indica el cursor
 	menu_z80_moto_int direccion_cursor;
 
-	direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
+	//direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
+	direccion_cursor=menu_debug_memory_pointer;
 
 	debug_printf (VERBOSE_DEBUG,"Address on cursor: %X",direccion_cursor);
 
@@ -7193,7 +7194,8 @@ void menu_debug_runto(void)
 	//Buscar primero direccion que indica el cursor
 	menu_z80_moto_int direccion_cursor;
 
-	direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
+	//direccion_cursor=menu_debug_lines_addresses[menu_debug_line_cursor];
+	direccion_cursor=menu_debug_memory_pointer;
 
 	debug_printf (VERBOSE_DEBUG,"Address on cursor: %X",direccion_cursor);
 
