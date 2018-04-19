@@ -6099,6 +6099,14 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 	char textopaginasmem_linea1[100];
 	char textopaginasmem_linea2[100];
 
+        debug_memory_segment segmentos[MAX_DEBUG_MEMORY_SEGMENTS];
+        int total_segmentos=debug_get_memory_pages_extended(segmentos);
+
+	int offset_bloque;
+
+	//Por defecto, cadena vacia
+	textoregistros[0]=0;
+
 	if (CPU_IS_Z80) {
 
 	switch (linea) {
@@ -6153,6 +6161,45 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 			if (linea==12) sprintf (textoregistros,"%s",textopaginasmem_linea1 );
 			if (linea==13) sprintf (textoregistros,"%s",textopaginasmem_linea2 );
 		break;*/
+
+		case 12:
+		case 13:
+			//Por defecto, cad
+			//Mostrar en una linea, dos bloques de memoria mapeadas
+			offset_bloque=linea-12;
+			
+			offset_bloque *=2; //2 bloques por cada linea
+			//primer bloque
+			if (total_segmentos<offset_bloque) {
+				sprintf (textoregistros,"%s ",segmentos[offset_bloque].shortname);
+				offset_bloque++;
+
+				//Segundo bloque
+				if (total_segmentos<offset_bloque) {
+					int longitud=strlen(textoregistros);
+					sprintf (&textoregistros[longitud],"%s ",segmentos[offset_bloque].shortname);
+				}
+			}
+		break;
+/*
+//Retorna paginas mapeadas (nombres cortos)
+void menu_debug_get_memory_pages(char *s)
+{
+
+        int i;
+        int longitud;
+        int indice=0;
+
+        for (i=0;i<total_segmentos;i++) {
+                longitud=strlen(segmentos[i].shortname)+1;
+                sprintf(&s[indice],"%s ",segmentos[i].shortname);
+
+                indice +=longitud;
+
+        }
+
+}
+*/
 
                 
 		
