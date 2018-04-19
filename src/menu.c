@@ -6032,7 +6032,7 @@ int menu_debug_registers_current_view=1;
 //Ultima direccion mostrada en menu_disassemble
 menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
-const int menu_debug_num_lineas_full=14;
+const int menu_debug_num_lineas_full=15;
 
 
 void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
@@ -6162,22 +6162,24 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 			if (linea==13) sprintf (textoregistros,"%s",textopaginasmem_linea2 );
 		break;*/
 
+		case 11:
 		case 12:
 		case 13:
+		case 14:
 			//Por defecto, cad
 			//Mostrar en una linea, dos bloques de memoria mapeadas
-			offset_bloque=linea-12;
+			offset_bloque=linea-11;
 			
 			offset_bloque *=2; //2 bloques por cada linea
 			//primer bloque
 			if (offset_bloque<total_segmentos) {
-				sprintf (textoregistros,"%s ",segmentos[offset_bloque].shortname);
+				sprintf (textoregistros,"[%s]",segmentos[offset_bloque].shortname);
 				offset_bloque++;
 
 				//Segundo bloque
 				if (offset_bloque<total_segmentos) {
 					int longitud=strlen(textoregistros);
-					sprintf (&textoregistros[longitud],"%s ",segmentos[offset_bloque].shortname);
+					sprintf (&textoregistros[longitud],"[%s]",segmentos[offset_bloque].shortname);
 				}
 			}
 		break;
