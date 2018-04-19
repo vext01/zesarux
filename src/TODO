@@ -1656,8 +1656,6 @@ Menu debugger:
 
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
--Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una 
-representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso
 
 -registros ' no se pueden usar como breakpoints o watches
 -Registro af como tal (no solo como a y f separados) usable en breakpoint y en watches
