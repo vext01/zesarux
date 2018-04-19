@@ -7426,12 +7426,12 @@ void menu_debug_cont_speed_progress(char *s)
 }
 
 
+z80_bit menu_debug_registers_if_showscan={1};
 
 void menu_debug_registers_show_scan_position(void)
 {
 
-	//desactivado
-	return;
+	if (menu_debug_registers_if_showscan.v==0) return;
                                 //Prueba a refrescar pantalla a cada instruccion, con modo scanline
                                 
                                 if (MACHINE_IS_SPECTRUM) {
@@ -7450,11 +7450,23 @@ void menu_debug_registers_show_scan_position(void)
                 ancho=get_total_ancho_rainbow();
                 alto=get_total_alto_rainbow();
 
+    //rojo, amarillo, verde, azul,negro
+    int colores_rainbow[]={2+8,6+8,4+8,1+8,0};
+
 					int y=t_scanline_draw-screen_invisible_borde_superior;
-					if (y<alto) {
+					if (y>=0 && y<alto) {
 						int x;
+						int indice_color=0;
 						for (x=0;x<32;x++) {
-							screen_generic_putpixel_indexcolour(rainbow_buffer,x,y,ancho,2);
+							screen_generic_putpixel_indexcolour(rainbow_buffer,x,y,ancho,colores_rainbow[indice_color]);
+							//Trozos de colores de 4 pixeles de ancho
+							if (x>0 && (x%4)==0) {
+								indice_color++;
+								if (indice_color==5) indice_color=0;
+							}
+
+							//Y quitar lo de antes
+							//if (y>=1) screen_generic_putpixel_indexcolour(rainbow_buffer,x,y-1,ancho,7);	
 						}
 					}
 
