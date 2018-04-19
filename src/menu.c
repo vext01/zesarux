@@ -324,6 +324,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name);
 void menu_file_dsk_browser_show(char *filename);
 
 menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial);
+menu_z80_moto_int menu_debug_disassemble_bajar(menu_z80_moto_int dir_inicial);
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
 
@@ -7088,7 +7089,7 @@ void menu_debug_cursor_up(void)
 
 		if (menu_debug_line_cursor>0) {
 			menu_debug_line_cursor--;
-			return;
+			//return;
 		}
 	}
 
@@ -7107,12 +7108,13 @@ void menu_debug_cursor_down(void)
 	if (menu_debug_registers_current_view==1) {
 		if (menu_debug_line_cursor<menu_debug_num_lineas_full-1) {
 			menu_debug_line_cursor++;
-			return;	
+			//return;	
 		}
 	}
 
 
-    menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
+    //menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
+	menu_debug_memory_pointer=menu_debug_disassemble_bajar(menu_debug_memory_pointer);
 }
 
 
@@ -7126,12 +7128,14 @@ void menu_debug_cursor_pgup(void)
 
                                         int i;
                                         for (i=0;i<lineas;i++) {
-                                                if (menu_debug_view_has_disassemly() ) { //Si vista con desensamblado
+                                                /*if (menu_debug_view_has_disassemly() ) { //Si vista con desensamblado
                                                         menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
                                                 }
                                                 else {  //Vista solo hexa
                                                         menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
                                                 }
+						*/
+						menu_debug_cursor_up();
                                         }
 }
 
@@ -7139,7 +7143,14 @@ void menu_debug_cursor_pgup(void)
 void menu_debug_cursor_pgdn(void)
 {
 
-                                        menu_debug_memory_pointer=menu_debug_memory_pointer_last;
+                                        int lineas=menu_debug_get_main_list_view();
+
+
+                                        int i;
+                                        for (i=0;i<lineas;i++) {
+                                                menu_debug_cursor_down();
+                                        }
+
 }
 
 void menu_debug_toggle_breakpoint(void)
@@ -9660,6 +9671,19 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 void menu_debug_disassemble_ventana(void)
 {
         menu_dibuja_ventana(0,1,32,20,"Disassemble");
+}
+
+menu_z80_moto_int menu_debug_disassemble_bajar(menu_z80_moto_int dir_inicial)
+{
+	//Bajar 1 opcode en el listado
+	        char buffer[32];
+        size_t longitud_opcode;
+
+	debugger_disassemble(buffer,30,&longitud_opcode,dir_inicial);
+
+	dir_inicial +=longitud_opcode;
+
+	return dir_inicial;
 }
 
 menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
