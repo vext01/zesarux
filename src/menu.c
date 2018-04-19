@@ -6712,7 +6712,6 @@ int menu_debug_registers_subview_type=0;
 
                                  menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
 
-					menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 
 					//Vamos a ver si metemos una linea mas de la parte de la derecha extra, siempre que tenga contenido (primer caracter no espacio)
                                         //Inicializamos a espacios
@@ -6723,13 +6722,14 @@ int menu_debug_registers_subview_type=0;
 
                                         //Si tiene contenido
                                         if (buffer_linea[columna_registros]!=' ' && buffer_linea[columna_registros]!=0) {
-                                                //Agregamos linea
+                                                //Agregamos linea perdiendo la linea en blanco de margen
 						menu_escribe_linea_opcion(linea,-1,1,buffer_linea);
 
 					}
 
 					linea++;
 
+					menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 
 					//Linea de stack
 					//No mostrar stack en caso de scmp
