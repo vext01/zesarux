@@ -6542,7 +6542,7 @@ int menu_debug_registers_print_registers(int linea)
 				//Mi valor ptr
 				menu_z80_moto_int puntero_ptr_inicial=menu_debug_memory_pointer_copia;
 
-				//Donde empieza la vista
+				//Donde empieza la vista. Subir desde direccion actual, desensamblando "hacia atras" , tantas veces como posicion cursor actual
 				menu_debug_memory_pointer_copia=menu_debug_disassemble_subir_veces(puntero_ptr_inicial,menu_debug_line_cursor);
          
 
@@ -6574,6 +6574,7 @@ int menu_debug_registers_print_registers(int linea)
 					if (i==menu_debug_line_cursor) {
 						opcion_actual=linea;			
 						menu_debug_memory_pointer_copia=puntero_ptr_inicial;
+						//printf ("draw line is the current. pointer=%04XH\n",menu_debug_memory_pointer_copia);
 					}
 
 					menu_z80_moto_int puntero_dir=adjust_address_memory_size(menu_debug_memory_pointer_copia);
@@ -9648,8 +9649,18 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 	menu_z80_moto_int dir;
 
-	if (CPU_IS_MOTOROLA) dir=dir_inicial-30; //En el caso de motorola mejor empezar antes
-	else dir=dir_inicial-10;
+	menu_z80_moto_int decremento=10;
+
+	if (CPU_IS_MOTOROLA) decremento=30; //En el caso de motorola mejor empezar antes
+
+	//Controlamos caso en que al restar, nuestra direccion es mayor que la actual (hemos dado la vuelta)
+	if (dir_inicial<decremento) {
+		printf ("We are near to the start addresses. Decrement less\n");
+		decremento=dir_inicial+1; //Para que saltemos siempre la rom
+	}
+
+	dir=dir_inicial-decremento;
+
 
 	dir=menu_debug_hexdump_adjusta_en_negativo(dir,1);
 
