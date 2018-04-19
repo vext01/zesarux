@@ -6032,7 +6032,7 @@ int menu_debug_registers_current_view=1;
 //Ultima direccion mostrada en menu_disassemble
 menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
-const int menu_debug_num_lineas_full=15;
+const int menu_debug_num_lineas_full=14;
 
 
 void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
@@ -6402,6 +6402,7 @@ void menu_debug_registers_adjust_ptr_on_follow(void)
 
 int menu_debug_registers_print_registers(int linea)
 {
+	//printf("linea: %d\n",linea);
 	char textoregistros[33];
 
 	char dumpmemoria[33];
@@ -7447,13 +7448,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	do {
 
-		//Si la vista es la 1 y maquina QL, saltar a la 2
-		//if (CPU_IS_MOTOROLA && menu_debug_registers_current_view==1) menu_debug_registers_current_view=2;
-
-		//linea=0;
-		//linea=menu_debug_registers_show_ptr_text(linea);
-
-		//linea++;
 
 		//
 		//Si no esta el modo step de la cpu
