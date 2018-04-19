@@ -32194,6 +32194,9 @@ int debug_show_fired_breakpoints_type=0;
 
 	if (mostrar) menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);
 
+	//Forzar follow pc
+	menu_debug_follow_pc.v=1;
+
 }
 
 //menu principal
