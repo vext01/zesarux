@@ -7449,7 +7449,15 @@ void menu_debug_registers_show_scan_position(void)
 
                 ancho=get_total_ancho_rainbow();
                 alto=get_total_alto_rainbow();
-						screen_generic_putpixel_indexcolour(rainbow_buffer,10,10,ancho,2);
+
+					int y=t_scanline_draw-screen_invisible_borde_superior;
+					if (y<alto) {
+						int x;
+						for (x=0;x<32;x++) {
+							screen_generic_putpixel_indexcolour(rainbow_buffer,x,y,ancho,2);
+						}
+					}
+
 					
 
                 //screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
