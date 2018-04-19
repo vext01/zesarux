@@ -6170,12 +6170,12 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 			
 			offset_bloque *=2; //2 bloques por cada linea
 			//primer bloque
-			if (total_segmentos<offset_bloque) {
+			if (offset_bloque<total_segmentos) {
 				sprintf (textoregistros,"%s ",segmentos[offset_bloque].shortname);
 				offset_bloque++;
 
 				//Segundo bloque
-				if (total_segmentos<offset_bloque) {
+				if (offset_bloque<total_segmentos) {
 					int longitud=strlen(textoregistros);
 					sprintf (&textoregistros[longitud],"%s ",segmentos[offset_bloque].shortname);
 				}
