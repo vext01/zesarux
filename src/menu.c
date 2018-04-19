@@ -7084,14 +7084,10 @@ void menu_debug_cpu_step_over(void)
 void menu_debug_cursor_up(void)
 {
 
-	//Si vista completa (1)
-	if (menu_debug_registers_current_view==1) {
 
 		if (menu_debug_line_cursor>0) {
 			menu_debug_line_cursor--;
-			//return;
 		}
-	}
 
                                         if (menu_debug_view_has_disassemly() ) { //Si vista con desensamblado
                                                 menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
@@ -7104,17 +7100,17 @@ void menu_debug_cursor_up(void)
 
 void menu_debug_cursor_down(void)
 {
-	//Si vista completa (1)
-	if (menu_debug_registers_current_view==1) {
 		if (menu_debug_line_cursor<menu_debug_num_lineas_full-1) {
 			menu_debug_line_cursor++;
-			//return;	
 		}
-	}
 
+                                        if (menu_debug_view_has_disassemly() ) { //Si vista con desensamblado
+                                                menu_debug_memory_pointer=menu_debug_disassemble_bajar(menu_debug_memory_pointer);
+                                        }
+                                        else {  //Vista solo hexa
+                                                menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
+                                        }
 
-    //menu_debug_memory_pointer +=menu_debug_registers_print_registers_longitud_opcode;
-	menu_debug_memory_pointer=menu_debug_disassemble_bajar(menu_debug_memory_pointer);
 }
 
 
@@ -7128,13 +7124,6 @@ void menu_debug_cursor_pgup(void)
 
                                         int i;
                                         for (i=0;i<lineas;i++) {
-                                                /*if (menu_debug_view_has_disassemly() ) { //Si vista con desensamblado
-                                                        menu_debug_memory_pointer=menu_debug_disassemble_subir(menu_debug_memory_pointer);
-                                                }
-                                                else {  //Vista solo hexa
-                                                        menu_debug_memory_pointer -=menu_debug_registers_print_registers_longitud_opcode;
-                                                }
-						*/
 						menu_debug_cursor_up();
                                         }
 }
@@ -7253,44 +7242,6 @@ void menu_debug_switch_follow_pc(void)
 	//if (follow_pc.v==0) menu_debug_memory_pointer=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 }
 
-/*
-void menu_debug_get_key_legend_first_step(char *s)
-{
-	if (menu_debug_registers_current_view==1) {
-		sprintf(s,"~~Stpm ~~E~~n~~t:Step St~~ovr ~~ContSt ~~Mode");
-	}
-	else {
-		sprintf(s,"~~Stepmode ~~E~~n~~t:Step St~~ovr ~~ContSt");
-	}
-}
-
-void menu_debug_get_key_legend_first_nostep(char *s)
-{
-	if (menu_debug_registers_current_view==1) {
-		sprintf(s,"~~Stepmode ~~Disassemble ~~Mode");
-	}
-	else {
-		sprintf(s,"~~Stepmode ~~Disassemble");
-	}
-}
-*/
-
-//menu_escribe_linea_opcion(linea++,-1,1,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
-
-//sprintf (buffer_mensaje,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
-
-
-/*
-void menu_debug_get_key_legend_second(char *s)
-{
-	if (menu_debug_registers_current_view==1) {
-		sprintf(s,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
-	}
-	else {
-		sprintf(s,"ch~~Reg ~~Brkp. ~~Watch");
-	}
-}
-*/
 void menu_debug_get_legend(int linea,char *s)
 {
 	switch (linea) {
