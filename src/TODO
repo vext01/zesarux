@@ -1656,6 +1656,11 @@ Menu debugger:
 1) imposibilidad de abrir el debugger y usar el teclado para spectrum
 2) Doble ptr, uno para codigo y otro para memoria
 
+-que al indicar visualmente el scanline en menu debug, no solo se dibuje una linea en la parte izquierda, sino que se vaya moviendo (en coordenada X).
+Esto es mas complejo, dado que no tengo correspondencia de cada maquina y segun timings y t-estados de pantalla, en donde está dibujando el haz de electrones exactamente
+Aparte que habría que guardar los pixeles anteriores para restaurarlos (cosa no complicada)
+Quiza tener una funcion, que se defina para cada maquina, que diga, en base a unos t-estados de linea, en que posicion x está (y además la y también, para cuando pasa de la zona derecha). Complejo si, aunque no imposible
+
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
 
