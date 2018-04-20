@@ -7859,11 +7859,18 @@ void scr_fadeout(void)
 }
 
 
-
+int screen_force_refresh=0;
 
 //Retorna 1 si se tiene que refrescar pantalla. Aplica frameskip y autoframeskip
 int screen_if_refresh(void)
 {
+
+	//Forzado puntual de refresco de pantalla, para que no haga frameskip. Usado por ejemplo en debug cpu
+	//Cuando se hace una vez, luego se resetea a 0
+	if (screen_force_refresh) {
+		screen_force_refresh=0;
+		return 1;
+	}
 
 	//Si esta en top speed, solo 1 frame
 	if (timer_condicion_top_speed() ) {
@@ -7881,6 +7888,7 @@ int screen_if_refresh(void)
 	if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
 		return 1;
 	}
+
 
 	return 0;
 }
