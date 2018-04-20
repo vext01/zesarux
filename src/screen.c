@@ -13473,7 +13473,7 @@ int screen_get_x_coordinate_tstates(int *si_salta_linea)
         int estados_en_linea=t_estados % screen_testados_linea;
 
         //Dividir por turbo
-        estados_en_linea /=cpu_turbo_speed;
+        //estados_en_linea /=cpu_turbo_speed;
 
 	//Ahora considerar el border
 

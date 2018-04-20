@@ -1656,6 +1656,8 @@ Menu debugger:
 1) imposibilidad de abrir el debugger y usar el teclado para spectrum
 2) Doble ptr, uno para codigo y otro para memoria
 
+-posicion electron no va bien en: zx81, tsconf. Revisar otras maquinas. En 48k funciona bien
+
 
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
