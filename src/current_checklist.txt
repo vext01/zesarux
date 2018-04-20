@@ -164,7 +164,7 @@ nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
 -probar buscador vidas infinitas
 -probar debug i/o ports: spectrum zx80/81, z88, zx-uno, etc
--probar debugger, step over interrupt
+-probar debugger, step over interrupt, electron position, cursores, toggle, runto, etc
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor)  
 -probar desactivar breakpoints con espacio
 -probar watches
