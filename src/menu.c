@@ -7494,6 +7494,10 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 		}
 	}
 
+
+	if (x<0) return;
+
+
 	menu_debug_registers_buffer_pre_x=x_inicial;
 	menu_debug_registers_buffer_pre_y=y;
 
@@ -7556,7 +7560,6 @@ x=screen_get_x_coordinate_tstates(&si_salta_linea);
 
 					int y=t_scanline_draw-screen_invisible_borde_superior;
 						//menu_debug_registers_show_scan_pos_putcursor(0,y);
-						if (x>=0)
 						menu_debug_registers_show_scan_pos_putcursor(x,y+si_salta_linea);
 
 					
