@@ -6023,6 +6023,7 @@ void menu_debug_get_memory_pages(char *s)
 //4=14 lineas assembler
 //5=9 lineas hexdump, otros registros internos  
 //6=14 lineas hexdump   
+//7=vista minima con ventana pequeña
 */
 //
   
@@ -6970,8 +6971,10 @@ void menu_debug_registers_ventana(void)
 	//Poner numero de vista siempre en posicion 23
 	sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
 
-	menu_dibuja_ventana(0,0,32,24,titulo);
-	//menu_breakpoint_exception_pending_show.v=0;
+
+	if (menu_debug_registers_current_view==7) menu_dibuja_ventana(0,0,32,5,titulo);
+
+	else menu_dibuja_ventana(0,0,32,24,titulo);
 }
 
 
@@ -7093,7 +7096,7 @@ void menu_debug_configuration_stepover(MENU_ITEM_PARAMETERS)
 
 void menu_debug_registers_set_view(int vista)
 {
-	if (vista<1 || vista>6) vista=1;
+	if (vista<1 || vista>7) vista=1;
 
 	menu_debug_registers_current_view=vista;
 }
@@ -7565,20 +7568,18 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 
+				if (menu_debug_registers_current_view!=7) {
 
-
-				//menu_debug_get_key_legend_first_nostep(buffer_mensaje);
 				menu_debug_get_legend(0,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
-				//menu_debug_get_key_legend_second(buffer_mensaje);
 				menu_debug_get_legend(1,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-                //menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
 
-				//sprintf (buffer_mensaje,"Clr.tst~~part. ~~1-~~5 View M~~Zone %d",menu_debug_memory_zone);
 				menu_debug_get_legend(2,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+
+				}
 
 
 
@@ -7721,7 +7722,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 				//Vista. Entre 1 y 6
-				if (tecla>='1' && tecla<='6') {
+				if (tecla>='1' && tecla<='7') {
                                         cls_menu_overlay();
 					menu_debug_registers_set_view(tecla-'0');
                                         //Decimos que no hay tecla pulsada
@@ -7865,29 +7866,29 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
-				//menu_escribe_linea_opcion(linea++,-1,1,"~~E~~n~~t~~e~~r:Step St~~over ~~ContSt ~~Mem");
 
-				//menu_debug_get_key_legend_first_step(buffer_mensaje);
+				if (menu_debug_registers_current_view!=7) {
+
 				menu_debug_get_legend(0,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
-				//menu_debug_get_key_legend_second(buffer_mensaje);
 				menu_debug_get_legend(1,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-                //menu_escribe_linea_opcion(linea++,-1,1,"ch~~Reg ~~Brkp. Togg~~le R~~unto ~~Watch");
 
 				menu_debug_get_legend(2,buffer_mensaje);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-				//menu_escribe_linea_opcion(linea++,-1,1,"Clr.tst~~part. ~~1-~~5 View ~~V.Scr");
 
 
-
+				}
 
 																	// ~~1-~~5 View
 			}
 			else {
 				//Mostrar progreso
 
+
+
+				if (menu_debug_registers_current_view!=7) {
 				char buffer_progreso[32];
 				menu_debug_cont_speed_progress(buffer_progreso);
 				sprintf (buffer_mensaje,"~~C: Speed %d %s",menu_debug_continuous_speed,buffer_progreso);
@@ -7899,6 +7900,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				//si lento, avisar
 				if (menu_debug_continuous_speed<=1) menu_escribe_linea_opcion(linea++,-1,1,"Note: Do long key presses");
 				else menu_escribe_linea_opcion(linea++,-1,1,"                         "); 
+
+				}
+
 
 				//Pausa
 				//0= pausa de 0.5
@@ -8059,7 +8063,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
 	//Vista. Entre 1 y 6
-				if (tecla>='1' && tecla<='6') {
+				if (tecla>='1' && tecla<='7') {
                                         cls_menu_overlay();
 					menu_debug_registers_set_view(tecla-'0');
 				
