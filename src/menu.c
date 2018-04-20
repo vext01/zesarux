@@ -7541,9 +7541,8 @@ void menu_debug_registers_show_scan_position(void)
 
                                 //Prueba a refrescar pantalla a cada instruccion, con modo scanline
                                 
-                                if (MACHINE_IS_SPECTRUM) {
+                                if (rainbow_enabled.v) {
                                         //copiamos contenido linea y border a buffer rainbow
-                                        if (rainbow_enabled.v==1) {
 /*
 //temp mostrar contenido buffer pixeles y atributos
 printf ("pixeles y atributos:\n");
@@ -7552,8 +7551,11 @@ for (i=0;i<224*2/4;i++) printf ("%02X ",scanline_buffer[i]);
 printf ("\n");
 */
 
+					if (MACHINE_IS_SPECTRUM) {
+
                                                 screen_store_scanline_rainbow_solo_border();
                                                 screen_store_scanline_rainbow_solo_display();
+					}
 
 
 int si_salta_linea;
@@ -7574,8 +7576,7 @@ x=screen_get_x_coordinate_tstates(&si_salta_linea);
                 //screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
 //void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color)
 
-                                        }
-                                }
+                               }
                                 
 }
 
