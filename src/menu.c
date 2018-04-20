@@ -8337,7 +8337,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			if (si_ejecuta_una_instruccion) {
 				//printf ("ejecutando instruccion en step-to-step o continuous\n");
 				debug_core_lanzado_inter.v=0;
+
+				screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
 				cpu_core_loop();
+
 				//Ver si se ha disparado interrupcion (nmi o maskable)
 				//if (debug_core_lanzado_inter.v && debug_core_evitamos_inter.v) {
 				if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
