@@ -13538,7 +13538,7 @@ int screen_invisible_borde_derecho;
 
 	//Zona display o de border derecho
 	x=estados_en_linea*2;
-	x +=screen_total_borde_izquierdo/2; //Sumarle el ancho de pixeles de borde izquierdo
+	x +=screen_total_borde_izquierdo; //Sumarle el ancho de pixeles de borde izquierdo
 	return x;
 }
 
