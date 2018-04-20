@@ -7489,8 +7489,10 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 	                 int x_final=menu_debug_registers_buffer_pre_x+x;
 
 
-			int color_antes=menu_debug_registers_buffer_precursor[x];
-			screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,color_antes);
+			if (x_final<ancho) {
+				int color_antes=menu_debug_registers_buffer_precursor[x];
+				screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,color_antes);
+			}
 		}
 	}
 
@@ -7506,12 +7508,17 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 
 
 							//Guardamos lo que habia antes de poner el cursor
-							int color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
-							menu_debug_registers_buffer_precursor[x]=color_anterior;
+							if (x_final<ancho) {
+								int color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
+								menu_debug_registers_buffer_precursor[x]=color_anterior;
 
-							if (y>=0 && y<alto && x>=0 && x<ancho) {
-	                                                        screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,colores_rainbow[indice_color]);
+								//Y ponemos pixel
+								if (y>=0 && y<alto && x>=0 && x<ancho) {
+	                        	                                screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,colores_rainbow[indice_color]);
+								}
 							}
+
+
 
                                                         //Trozos de colores de 4 pixeles de ancho
                                                         if (x>0 && (x%8)==0) {
