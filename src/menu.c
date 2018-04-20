@@ -6468,6 +6468,9 @@ int menu_debug_registers_print_registers(int linea)
                         menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
 
                         menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+
+			sprintf (textoregistros,"TSTATES: %05d SCANL: %03dX%03d",t_estados,(t_estados % screen_testados_linea),t_scanline_draw);
+			menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 		}
 
 
@@ -6990,7 +6993,7 @@ void menu_debug_registers_ventana(void)
 	sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
 
 
-	if (menu_debug_registers_current_view==7) menu_dibuja_ventana(0,0,32,4,titulo);
+	if (menu_debug_registers_current_view==7) menu_dibuja_ventana(0,0,32,5,titulo);
 
 	else menu_dibuja_ventana(0,0,32,24,titulo);
 }
@@ -7464,15 +7467,13 @@ void menu_debug_registers_show_scan_position(void)
                                 if (MACHINE_IS_SPECTRUM) {
                                         //copiamos contenido linea y border a buffer rainbow
                                         if (rainbow_enabled.v==1) {
-
-//temp mostrar contenido buffer pixeles y atributos
 /*
+//temp mostrar contenido buffer pixeles y atributos
 printf ("pixeles y atributos:\n");
 int i;
 for (i=0;i<224*2/4;i++) printf ("%02X ",scanline_buffer[i]);
 printf ("\n");
 */
-
 
                                                 screen_store_scanline_rainbow_solo_border();
                                                 screen_store_scanline_rainbow_solo_display();
