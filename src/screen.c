@@ -13456,3 +13456,58 @@ void scr_set_fps_stdout_simpletext(int fps)
 
 }
 
+
+//Retorna en posicion de pixeles para un scanline determinado
+//Dice si salta linea siguiente
+//Si x es negativo quiere decir que no esta visible (en zona de hsync por ejemplo)
+int screen_get_x_coordinate_tstates(int *si_salta_linea)
+{
+        int estados_en_linea=t_estados % screen_testados_linea;
+
+        //Dividir por turbo
+        estados_en_linea /=cpu_turbo_speed;
+
+	//Ahora considerar el border
+
+/*
+//normalmente a 48
+int screen_total_borde_izquierdo;
+//lo mismo en t_estados
+int screen_testados_total_borde_izquierdo;
+
+//normalmente a 48
+int screen_total_borde_derecho;
+
+//normalmente a 96
+int screen_invisible_borde_derecho;
+
+                screen_total_borde_izquierdo=48;
+                screen_total_borde_derecho=48;
+                screen_invisible_borde_derecho=96;
+                screen_testados_linea=224;
+
+Estos en pixeles
+//normalmente a 48
+int screen_total_borde_izquierdo;
+//lo mismo en t_estados
+int screen_testados_total_borde_izquierdo;
+
+//normalmente a 48
+int screen_total_borde_derecho;
+
+//normalmente a 96
+int screen_invisible_borde_derecho;
+
+
+
+
+
+*/
+
+	//Lo siguiente en t-estados
+	int inicio_borde_derecho=128;
+	int inicio_borde_derecho_invisible=inicio_borde_derecho+screen_invisible_borde_derecho/2;
+	int inicio_borde_izquierdo=inicio_borde_derecho_invisible+screen_total_borde_izquierdo/2;
+}
+
+
