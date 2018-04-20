@@ -13503,11 +13503,35 @@ int screen_invisible_borde_derecho;
 
 
 */
+	*si_salta_linea=0; //por defecto
+	int x;
 
 	//Lo siguiente en t-estados
 	int inicio_borde_derecho=128;
 	int inicio_borde_derecho_invisible=inicio_borde_derecho+screen_invisible_borde_derecho/2;
 	int inicio_borde_izquierdo=inicio_borde_derecho_invisible+screen_total_borde_izquierdo/2;
+
+	//Si estoy mas alla del border izquierdo, avisar de salto de coordenada
+	if (estados_en_linea>=inicio_borde_izquierdo) {
+		*si_salta_linea=1;
+		//Ajustar a la izquierda
+		estados_en_linea -=inicio_borde_izquierdo;
+
+		//coordenada final
+		int x=estados_en_linea*2;
+		return x;
+	}
+
+	//Si estoy en la zona de parte derecha invisible
+	if (estados_en_linea>=inicio_borde_derecho_invisible && estados_en_linea<inicio_borde_izquierdo) {
+		//Zona invisible
+		return -1;
+	}
+
+	//Zona display o de border derecho
+	x=estados_en_linea*2;
+	x +=screen_total_borde_izquierdo/2; //Sumarle el ancho de pixeles de borde izquierdo
+	return x;
 }
 
 
