@@ -19,7 +19,7 @@ Added setting to exit emulator after a number of seconds (--exit-after)
 Added second Easter Egg ;)
 
 Improved debugging:
-* new enhanced debug cpu menu: new default view, cursor, toggle breakpoints, run to cursor, change registers, view current scanline, and a lot more...
+* new enhanced debug cpu menu: view TV electron position on screen, new default view, cursor, toggle breakpoints, run to cursor, change registers, and a lot more...
 * added cpu-step-over function on debug menu (was already available from ZRCP)
 * added function to write byte to file on ZEsarUX hardware debug ports
 
