@@ -2,8 +2,6 @@
   
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
--parece que el mostrar scanline en menu debug, solo muestra colores. y pixeles parece que siempre muestra 0
-
 TBBLUE:
 
 
