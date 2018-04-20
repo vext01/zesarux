@@ -6451,6 +6451,12 @@ int menu_debug_registers_print_registers(int linea)
 	menu_debug_registers_print_registers_longitud_opcode=8; //Esto se hace para que en las vistas de solo hexadecimal, se mueva arriba/abajo de 8 en 8
 
 
+		if (menu_debug_registers_current_view==7) {
+			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
+                        menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
+
+                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+		}
 
 
 		if (menu_debug_registers_current_view==2) {
@@ -7290,12 +7296,17 @@ int menu_debug_registers_show_ptr_text(int linea)
                                 //Mostrar puntero direccion
                                 menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
 
+
+				if (menu_debug_registers_current_view!=7) {
+
                                 char string_direccion[10];
                                 menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
 
                                 sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
                                         string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
                                 menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+
+				}
 
 	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
