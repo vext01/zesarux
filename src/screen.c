@@ -13472,33 +13472,12 @@ int screen_get_x_coordinate_tstates(int *si_salta_linea)
 {
         int estados_en_linea=t_estados % screen_testados_linea;
 
-        //Dividir por turbo
-        //estados_en_linea /=cpu_turbo_speed;
-
-	//Ahora considerar el border
-
 /*
-//normalmente a 48
-int screen_total_borde_izquierdo;
-//lo mismo en t_estados
-int screen_testados_total_borde_izquierdo;
 
-//normalmente a 48
-int screen_total_borde_derecho;
-
-//normalmente a 96
-int screen_invisible_borde_derecho;
-
-                screen_total_borde_izquierdo=48;
-                screen_total_borde_derecho=48;
-                screen_invisible_borde_derecho=96;
-                screen_testados_linea=224;
 
 Estos en pixeles
 //normalmente a 48
 int screen_total_borde_izquierdo;
-//lo mismo en t_estados
-int screen_testados_total_borde_izquierdo;
 
 //normalmente a 48
 int screen_total_borde_derecho;
@@ -13507,12 +13486,20 @@ int screen_total_borde_derecho;
 int screen_invisible_borde_derecho;
 
 
-
-
-
 */
+
+//printf ("screen_total_borde_derecho: %d\n",screen_total_borde_derecho);
+//printf ("screen_total_borde_izquierdo: %d\n",screen_total_borde_izquierdo);
+//printf ("screen_invisible_borde_derecho: %d\n",screen_invisible_borde_derecho);
+//printf ("\n");
+
 	*si_salta_linea=0; //por defecto
 	int x;
+
+	//Las variables que usamos, estas screen_X son valores en pixeles
+
+	//Por tanto pasamos los t-estados actuales a turbo x1
+	estados_en_linea /=cpu_turbo_speed;
 
 	//Lo siguiente en t-estados
 	int inicio_borde_derecho=128;

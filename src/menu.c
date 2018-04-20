@@ -6802,12 +6802,21 @@ int menu_debug_registers_subview_type=0;
 
 		//Aparecen otros registros y valores complementarios
 		if (menu_debug_registers_current_view==2 || menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) {
-                        //Separador
-                        sprintf (textoregistros," ");
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+            //Separador
+        	sprintf (textoregistros," ");
+            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
-                        sprintf (textoregistros,"MEMPTR: %04X TSTATES: %05d",memptr,t_estados);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+			//
+			// MEMPTR y T-Estados
+			//
+            sprintf (textoregistros,"MEMPTR: %04X TSTATES: %05d",memptr,t_estados);
+            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+
+			//
+			// Mas T-Estados y parcial
+			//
 
 			int estadosparcial=debug_t_estados_parcial;
 			char buffer_estadosparcial[32];
@@ -6815,10 +6824,27 @@ int menu_debug_registers_subview_type=0;
 			if (estadosparcial>999999999) sprintf (buffer_estadosparcial,"%s","OVERFLOW");
 			else sprintf (buffer_estadosparcial,"%09u",estadosparcial);
 
-                        sprintf (textoregistros,"TSTATL: %03d TSTATP: %s",(t_estados % screen_testados_linea),buffer_estadosparcial );
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
-                        //ULA:
+            sprintf (textoregistros,"TSTATL: %03d TSTATP: %s",(t_estados % screen_testados_linea),buffer_estadosparcial );
+            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+			//
+			// FPS y Scanline
+			//
+
+			if (MACHINE_IS_ZX8081) {
+	        	sprintf (textoregistros,"SCANLIN: %03d FPS: %03d VPS: %03d",ultimo_fps,last_vsync_per_second,t_scanline_draw);
+			}
+			else {
+	            sprintf (textoregistros,"SCANLINE: %03d FPS: %03d",ultimo_fps,t_scanline_draw);
+			}
+            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+
+
+			//
+    	    // ULA
+			//
 
 			//no hacer autodeteccion de idle bus port, para que no se active por si solo
 			z80_bit copia_autodetect_rainbow;
@@ -6828,57 +6854,64 @@ int menu_debug_registers_subview_type=0;
 
 
 
+			//
 			//Puerto FE, Idle port y flash. cada uno para la maquina que lo soporte
-			char feporttext[20];
-			if (MACHINE_IS_SPECTRUM) {
-				 sprintf (feporttext,"FE: %02X ",out_254_original_value);
+			//Solo para Spectrum O Z88
+			//
+			if (MACHINE_IS_SPECTRUM || MACHINE_IS_Z88) {
+				char feporttext[20];
+				if (MACHINE_IS_SPECTRUM) {
+					sprintf (feporttext,"FE: %02X ",out_254_original_value);
+				}
+				else feporttext[0]=0;
+
+            	char flashtext[40];
+            	if (MACHINE_IS_SPECTRUM) {
+	            	sprintf (flashtext,"FLASH: %d ",estado_parpadeo.v);
+    	       	}
+
+        	    else if (MACHINE_IS_Z88) {
+            		sprintf (flashtext,"FLASH: %d ",estado_parpadeo.v);
+            	}
+	
+	            else flashtext[0]=0;
+
+
+
+				char idleporttext[20];
+				if (MACHINE_IS_SPECTRUM) {
+					sprintf (idleporttext,"IDLEPORT: %02X",idle_bus_port(255) );
+				}
+				else idleporttext[0]=0;
+
+	            sprintf (textoregistros,"%s%s%s",feporttext,flashtext,idleporttext );
+
+				autodetect_rainbow.v=copia_autodetect_rainbow.v;
+    	        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+
 			}
-			else feporttext[0]=0;
-
-                        char flashtext[40];
-                        if (MACHINE_IS_SPECTRUM) {
-                                sprintf (flashtext,"FLASH: %d ",estado_parpadeo.v);
-                        }
-
-                        else if (MACHINE_IS_Z88) {
-                                sprintf (flashtext,"FLASH: %d ",estado_parpadeo.v);
-                        }
 
 
-                        else flashtext[0]=0;
-
-
-
-			char idleporttext[20];
-			if (MACHINE_IS_SPECTRUM) {
-				sprintf (idleporttext,"IDLEPORT: %02X",idle_bus_port(255) );
-			}
-			else idleporttext[0]=0;
-
-
-
-                        sprintf (textoregistros,"%s%s%s",feporttext,flashtext,idleporttext );
-
-
-
-
-			autodetect_rainbow.v=copia_autodetect_rainbow.v;
-
+			//
+			// Linea audio 
+			//
+			if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
+                        sprintf (textoregistros,"AUDIO: BEEPER: %03d AY: %03d", (MACHINE_IS_ZX8081 ? da_amplitud_speaker_zx8081() :  value_beeper),da_output_ay() );
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			}						
 
 
 
 
-
+			//
     		//Paginas memoria
-		//debug_get_memory_pages(textoregistros);
-                char textopaginasmem[100];
-		menu_debug_get_memory_pages(textopaginasmem);
+			//
+            char textopaginasmem[100];
+			menu_debug_get_memory_pages(textopaginasmem);
 
-		int max_longitud=31;
-		//limitar a 31 por si acaso
-
-
+			int max_longitud=31;
+			//limitar a 31 por si acaso
 
     		//Si paging enabled o no, scr
     		char buffer_paging_state[32];
@@ -6886,20 +6919,19 @@ int menu_debug_registers_subview_type=0;
 
     		//Si cabe, se escribe
     		int longitud_texto1=strlen(textopaginasmem);
-    		//int longitud_texto2=strlen(buffer_paging_state);
 
-    		//int longitud_total=longitud_texto1+longitud_texto2+1; //Con un espacio adicional
-		//if (longitud_total<=max_longitud) {
     		//Lo escribo y ya lo limitará debajo a 31
 			sprintf(&textopaginasmem[longitud_texto1]," %s",buffer_paging_state);
-		//}
 
 
-		textopaginasmem[max_longitud]=0;
+			textopaginasmem[max_longitud]=0;
     		menu_escribe_linea_opcion(linea++,-1,1,textopaginasmem);
-    		//Fin paginas memoria
 
 
+
+			//
+			// Linea solo de Prism
+			//
 			if (MACHINE_IS_PRISM) {
 				//SI vram aperture prism
 				if (prism_ula2_registers[1] & 1) sprintf (textoregistros,"VRAM0 VRAM1 aperture");
@@ -6912,6 +6944,11 @@ int menu_debug_registers_subview_type=0;
 				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 			}
 
+
+			//
+			// Cosas de Z88
+			//
+
 			if (MACHINE_IS_Z88) {
 				z80_byte srunsbit=blink_com >> 6;
 				sprintf (textoregistros,"SRUN: %01d SBIT: %01d SNZ: %01d COM: %01d",(srunsbit>>1)&1,srunsbit&1,z88_snooze.v,z88_coma.v);
@@ -6920,20 +6957,9 @@ int menu_debug_registers_subview_type=0;
 
 
 
-			if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
-                        sprintf (textoregistros,"AUDIO: BEEPER: %03d AY: %03d", (MACHINE_IS_ZX8081 ? da_amplitud_speaker_zx8081() :  value_beeper),da_output_ay() );
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
-			}
-
-
-
-			if (MACHINE_IS_ZX8081) {
-	                        sprintf (textoregistros,"FPS: %03d VPS: %03d SCANLIN: %03d",ultimo_fps,last_vsync_per_second,t_scanline_draw);
-			}
-			else {
-	                        sprintf (textoregistros,"FPS: %03d SCANLINE: %03d",ultimo_fps,t_scanline_draw);
-			}
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			//
+			// Copper de TBBlue
+			//
 
 			if (MACHINE_IS_TBBLUE) {
 				sprintf (textoregistros,"COPPER PC: %04XH CTRL: %02XH",tbblue_copper_pc,tbblue_copper_get_control_bits() );
@@ -6941,17 +6967,15 @@ int menu_debug_registers_subview_type=0;
 			}
 
 
-			//Video zx80/81
+			//
+			// Video zx80/81
+			//
 			if (MACHINE_IS_ZX8081) {
 				sprintf (textoregistros,"LNCTR: %x LCNTR %s ULAV: %s",(video_zx8081_linecntr &7),(video_zx8081_linecntr_enabled.v ? "On" : "Off"),
 					(video_zx8081_ula_video_output == 0 ? "+5V" : "0V"));
 				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 			}
 
-
-			//Detectores de silencio. Lo quito pues no lo considero muy util y necesito lineas
-			//sprintf (textoregistros,"Silence: %s Silence BEEP: %s",(silence_detection_counter==SILENCE_DETECTION_MAX ? "Yes" : "No"),(beeper_silence_detection_counter==SILENCE_DETECTION_MAX ? "Yes" : "No") );
-			//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
 
 		}
@@ -7384,12 +7408,12 @@ void menu_debug_get_legend(int linea,char *s)
 			if (cpu_step_mode.v) {
 							//01234567890123456789012345678901
 							// ClrTstPart 1-5:View ViewScr	
-				sprintf (s,"ClrTst~~Part ~~1-~~5:View ~~ViewScr");
+				sprintf (s,"ClrTst~~Part ~~1-~~7:View ~~ViewScr");
 			}
 			else {
 							//01234567890123456789012345678901
 							// Clr.tstpart. 1-5 View MZone 99
-				sprintf (s,"ClrTst~~Part ~~1-~~5:View M~~Zone %d",menu_debug_memory_zone);
+				sprintf (s,"ClrTst~~Part ~~1-~~7:View M~~Zone %d",menu_debug_memory_zone);
 			}
 		break;
 	}
