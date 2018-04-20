@@ -13465,7 +13465,21 @@ void scr_set_fps_stdout_simpletext(int fps)
 }
 
 
-//Retorna en posicion de pixeles para un scanline determinado
+//Retorna Y posicion de pixeles para un scanline determinado
+//Dice si salta linea siguiente
+//Si y es negativo quiere decir que no esta visible (en zona de vsync por ejemplo)
+int screen_get_y_coordinate_tstates(void)
+{
+	int y;
+	
+	y=t_scanline_draw-screen_invisible_borde_superior;
+
+	if (MACHINE_IS_ZX8081) y=t_scanline_draw-LINEAS_SUP_NO_USABLES;
+
+	return y;
+
+}
+//Retorna X posicion de pixeles para un scanline determinado
 //Dice si salta linea siguiente
 //Si x es negativo quiere decir que no esta visible (en zona de hsync por ejemplo)
 int screen_get_x_coordinate_tstates(int *si_salta_linea)

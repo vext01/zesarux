@@ -123,31 +123,6 @@ init_zx8081_scanline_y(y);
 
 }
 
-/*
-void init_zx8081_scanline_borde_izquierdo(void)
-{
-
-int y=t_scanline_draw-LINEAS_SUP_NO_USABLES;
-//para evitar las lineas superiores
-//TODO. cuadrar esto con valores de borde invisible superior
-
-init_zx8081_scanline_y_x(y,0,48);
-}
-*/
-
-
-/*
-void init_zx8081_scanline_borde_derecho(void)
-{
-
-int y=t_scanline_draw-LINEAS_SUP_NO_USABLES;
-//para evitar las lineas superiores
-//TODO. cuadrar esto con valores de borde invisible superior
-
-init_zx8081_scanline_y_x(y,48+256,48);
-}
-*/
-
 
 z80_byte byte_leido_core_zx8081;
 
@@ -161,13 +136,7 @@ void cpu_core_loop_zx8081(void)
 
 		timer_check_interrupt();
 
-//#ifdef COMPILE_STDOUT
-//              if (screen_stdout_driver) scr_stdout_printchar();
-//#endif
-//
-//#ifdef COMPILE_SIMPLETEXT
-//                if (screen_simpletext_driver) scr_simpletext_printchar();
-//#endif
+
                 if (chardetect_detect_char_enabled.v) chardetect_detect_char();
                 if (chardetect_printchar_enabled.v) chardetect_printchar();
 

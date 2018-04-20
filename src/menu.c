@@ -6904,29 +6904,6 @@ int menu_debug_registers_subview_type=0;
 
 
 
-			//
-    		//Paginas memoria
-			//
-            char textopaginasmem[100];
-			menu_debug_get_memory_pages(textopaginasmem);
-
-			int max_longitud=31;
-			//limitar a 31 por si acaso
-
-    		//Si paging enabled o no, scr
-    		char buffer_paging_state[32];
-    		debug_get_paging_screen_state(buffer_paging_state);
-
-    		//Si cabe, se escribe
-    		int longitud_texto1=strlen(textopaginasmem);
-
-    		//Lo escribo y ya lo limitará debajo a 31
-			sprintf(&textopaginasmem[longitud_texto1]," %s",buffer_paging_state);
-
-
-			textopaginasmem[max_longitud]=0;
-    		menu_escribe_linea_opcion(linea++,-1,1,textopaginasmem);
-
 
 
 			//
@@ -6956,7 +6933,6 @@ int menu_debug_registers_subview_type=0;
 			}
 
 
-
 			//
 			// Copper de TBBlue
 			//
@@ -6975,6 +6951,32 @@ int menu_debug_registers_subview_type=0;
 					(video_zx8081_ula_video_output == 0 ? "+5V" : "0V"));
 				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 			}
+
+
+
+			//
+    		//Paginas memoria
+			//
+            char textopaginasmem[100];
+			menu_debug_get_memory_pages(textopaginasmem);
+
+			int max_longitud=31;
+			//limitar a 31 por si acaso
+
+    		//Si paging enabled o no, scr
+    		char buffer_paging_state[32];
+    		debug_get_paging_screen_state(buffer_paging_state);
+
+    		//Si cabe, se escribe
+    		int longitud_texto1=strlen(textopaginasmem);
+
+    		//Lo escribo y ya lo limitará debajo a 31
+			sprintf(&textopaginasmem[longitud_texto1]," %s",buffer_paging_state);
+
+
+			textopaginasmem[max_longitud]=0;
+    		menu_escribe_linea_opcion(linea++,-1,1,textopaginasmem);
+
 
 
 
@@ -7563,10 +7565,8 @@ void menu_debug_registers_show_scan_position(void)
 
 	if (menu_debug_registers_if_showscan.v==0) return;
 
-                                //Prueba a refrescar pantalla a cada instruccion, con modo scanline
-                                
-                                if (rainbow_enabled.v) {
-                                        //copiamos contenido linea y border a buffer rainbow
+	if (rainbow_enabled.v) {
+		//copiamos contenido linea y border a buffer rainbow
 /*
 //temp mostrar contenido buffer pixeles y atributos
 printf ("pixeles y atributos:\n");
@@ -7575,32 +7575,24 @@ for (i=0;i<224*2/4;i++) printf ("%02X ",scanline_buffer[i]);
 printf ("\n");
 */
 
-					if (MACHINE_IS_SPECTRUM) {
+		if (MACHINE_IS_SPECTRUM) {
+			screen_store_scanline_rainbow_solo_border();
+			screen_store_scanline_rainbow_solo_display();
+		}
 
-                                                screen_store_scanline_rainbow_solo_border();
-                                                screen_store_scanline_rainbow_solo_display();
-					}
+		//Obtener posicion x e y e indicar posicion visualmente
 
+		int si_salta_linea;
+		int x,y;
+		x=screen_get_x_coordinate_tstates(&si_salta_linea);
 
-int si_salta_linea;
-int x;
-x=screen_get_x_coordinate_tstates(&si_salta_linea);
-//printf ("x: %d\n",x);
+		y=screen_get_y_coordinate_tstates();
 
+		menu_debug_registers_show_scan_pos_putcursor(x,y+si_salta_linea);
 
-						//Agregar unos pixeles para indicar posicion
+				
 
-
-					int y=t_scanline_draw-screen_invisible_borde_superior;
-						//menu_debug_registers_show_scan_pos_putcursor(0,y);
-						menu_debug_registers_show_scan_pos_putcursor(x,y+si_salta_linea);
-
-					
-
-                //screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
-//void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color)
-
-                               }
+	}
                                 
 }
 
