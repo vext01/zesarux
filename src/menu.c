@@ -6452,7 +6452,19 @@ int menu_debug_registers_print_registers(int linea)
 
 
 		if (menu_debug_registers_current_view==7) {
-			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
+		        menu_debug_print_address_memory_zone(dumpassembler,menu_debug_memory_pointer_copia);
+
+		        int longitud_direccion=MAX_LENGTH_ADDRESS_MEMORY_ZONE;
+
+		        //metemos espacio en 0 final
+		        dumpassembler[longitud_direccion]=' ';
+
+
+		        //Assembler
+		        debugger_disassemble(&dumpassembler[longitud_direccion+8+2],17,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia);
+
+
+			//debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
                         menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
 
                         menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
