@@ -171,6 +171,8 @@ tiempo de proceso en 10 segundos: user	0m1.239s
 */
                                 if (!screen_if_refresh()) {
                                         //if ((t_estados/screen_testados_linea)>310) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
+
+					//printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
 					return;
                                 }
 

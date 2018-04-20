@@ -7464,6 +7464,16 @@ void menu_debug_registers_show_scan_position(void)
                                 if (MACHINE_IS_SPECTRUM) {
                                         //copiamos contenido linea y border a buffer rainbow
                                         if (rainbow_enabled.v==1) {
+
+//temp mostrar contenido buffer pixeles y atributos
+/*
+printf ("pixeles y atributos:\n");
+int i;
+for (i=0;i<224*2/4;i++) printf ("%02X ",scanline_buffer[i]);
+printf ("\n");
+*/
+
+
                                                 screen_store_scanline_rainbow_solo_border();
                                                 screen_store_scanline_rainbow_solo_display();
 
