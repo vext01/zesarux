@@ -7455,6 +7455,38 @@ void menu_debug_cont_speed_progress(char *s)
 }
 
 
+
+void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
+{
+
+                int ancho,alto;
+
+                ancho=get_total_ancho_rainbow();
+                alto=get_total_alto_rainbow();
+
+    //rojo, amarillo, verde, azul
+    int colores_rainbow[]={2+8,6+8,4+8,1+8};
+
+                                                int x;
+                                                int indice_color=0;
+                                                for (x=0;x<4*8;x++) {
+							int x_final=x_inicial+x;
+							if (y>=0 && y<alto && x>=0 && x<ancho) {
+	                                                        screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,colores_rainbow[indice_color]);
+							}
+
+                                                        //Trozos de colores de 4 pixeles de ancho
+                                                        if (x>0 && (x%8)==0) {
+                                                                indice_color++;
+                                                                if (indice_color==4) indice_color=0;
+                                                        }
+
+                                                        //Y quitar lo de antes
+                                                        if (y>=1) screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y-1,ancho,7);
+                                                }
+}
+
+
 z80_bit menu_debug_registers_if_showscan={0};
 
 void menu_debug_registers_show_scan_position(void)
@@ -7482,32 +7514,8 @@ printf ("\n");
 						//Agregar unos pixeles para indicar posicion
 
 
-
-                int ancho,alto;
-
-                ancho=get_total_ancho_rainbow();
-                alto=get_total_alto_rainbow();
-
-    //rojo, amarillo, verde, azul
-    int colores_rainbow[]={2+8,6+8,4+8,1+8};
-
 					int y=t_scanline_draw-screen_invisible_borde_superior;
-					if (y>=0 && y<alto) {
-						int x;
-						int indice_color=0;
-						for (x=0;x<4*8;x++) {
-							screen_generic_putpixel_indexcolour(rainbow_buffer,x,y,ancho,colores_rainbow[indice_color]);
-							//screen_generic_putpixel_indexcolour(rainbow_buffer,x,y,ancho,2);
-							//Trozos de colores de 4 pixeles de ancho
-							if (x>0 && (x%8)==0) {
-								indice_color++;
-								if (indice_color==4) indice_color=0;
-							}
-
-							//Y quitar lo de antes
-							if (y>=1) screen_generic_putpixel_indexcolour(rainbow_buffer,x,y-1,ancho,7);	
-						}
-					}
+						menu_debug_registers_show_scan_pos_putcursor(0,y);
 
 					
 
