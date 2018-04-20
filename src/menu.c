@@ -7456,6 +7456,19 @@ void menu_debug_cont_speed_progress(char *s)
 
 
 
+/*
+int screen_generic_getpixel_indexcolour(z80_int *destino,int x,int y,int ancho);
+*/
+
+#define ANCHO_SCANLINE_CURSOR 32
+
+//Buffer donde guardamos el contenido anterior del cursor de scanline, antes de meter el cursor
+int menu_debug_registers_buffer_precursor[ANCHO_SCANLINE_CURSOR];
+int menu_debug_registers_buffer_pre_x=-1; //posicion anterior del cursor
+int menu_debug_registers_buffer_pre_y=-1;
+
+
+
 void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 {
 
@@ -7469,8 +7482,29 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 
                                                 int x;
                                                 int indice_color=0;
-                                                for (x=0;x<4*8;x++) {
+
+	//Restauramos lo que habia en la posicion anterior del cursor
+	if (menu_debug_registers_buffer_pre_x>=0 && menu_debug_registers_buffer_pre_y>=0) {
+	        for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
+	                 int x_final=menu_debug_registers_buffer_pre_x+x;
+
+
+			int color_antes=menu_debug_registers_buffer_precursor[x];
+			screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,color_antes);
+		}
+	}
+
+	menu_debug_registers_buffer_pre_x=x_inicial;
+	menu_debug_registers_buffer_pre_y=y;
+
+                                                for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
 							int x_final=x_inicial+x;
+
+
+							//Guardamos lo que habia antes de poner el cursor
+							int color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
+							menu_debug_registers_buffer_precursor[x]=color_anterior;
+
 							if (y>=0 && y<alto && x>=0 && x<ancho) {
 	                                                        screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,colores_rainbow[indice_color]);
 							}
@@ -7482,7 +7516,7 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
                                                         }
 
                                                         //Y quitar lo de antes
-                                                        if (y>=1) screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y-1,ancho,7);
+                                                        //if (y>=1) screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y-1,ancho,7);
                                                 }
 }
 
@@ -7511,11 +7545,19 @@ printf ("\n");
                                                 screen_store_scanline_rainbow_solo_display();
 
 
+int si_salta_linea;
+int x;
+x=screen_get_x_coordinate_tstates(&si_salta_linea);
+//printf ("x: %d\n",x);
+
+
 						//Agregar unos pixeles para indicar posicion
 
 
 					int y=t_scanline_draw-screen_invisible_borde_superior;
-						menu_debug_registers_show_scan_pos_putcursor(0,y);
+						//menu_debug_registers_show_scan_pos_putcursor(0,y);
+						if (x>=0)
+						menu_debug_registers_show_scan_pos_putcursor(x,y+si_salta_linea);
 
 					
 

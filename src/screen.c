@@ -2972,6 +2972,14 @@ void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,
 	destino[offset]=color;
 }
 
+//Obtiene pixel de un buffer rainbow de color indexado 16 bits. Usado en watermark y se podria usar en mas cosas. Justo lo contrario de screen_generic_putpixel_indexcolour
+int screen_generic_getpixel_indexcolour(z80_int *destino,int x,int y,int ancho)
+{
+        int offset=y*ancho+x;
+
+        return destino[offset];
+}
+
 //Hacer putpixel en pantalla de color indexado 16 bits. Usado en watermark para no rainbow
 void screen_generic_putpixel_no_rainbow_watermark(z80_int *destino GCC_UNUSED,int x,int y,int ancho GCC_UNUSED,int color)
 {
