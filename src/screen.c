@@ -13516,7 +13516,7 @@ int screen_invisible_borde_derecho;
 
 	//Lo siguiente en t-estados
 	int inicio_borde_derecho=128;
-	int inicio_borde_derecho_invisible=inicio_borde_derecho+screen_invisible_borde_derecho/2;
+	int inicio_borde_derecho_invisible=inicio_borde_derecho+screen_total_borde_derecho/2;
 	int inicio_borde_izquierdo=inicio_borde_derecho_invisible+screen_total_borde_izquierdo/2;
 
 	//Si estoy mas alla del border izquierdo, avisar de salto de coordenada

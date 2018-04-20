@@ -7495,7 +7495,7 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 	}
 
 
-	if (x<0) return;
+	if (x_inicial<0) return;
 
 
 	menu_debug_registers_buffer_pre_x=x_inicial;
