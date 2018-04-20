@@ -6828,10 +6828,10 @@ int menu_debug_registers_subview_type=0;
 			//
 
 			if (MACHINE_IS_ZX8081) {
-	        	sprintf (textoregistros,"SCANLIN: %03d FPS: %03d VPS: %03d",ultimo_fps,last_vsync_per_second,t_scanline_draw);
+	        	sprintf (textoregistros,"SCANLIN: %03d FPS: %03d VPS: %03d",t_scanline_draw,ultimo_fps,last_vsync_per_second);
 			}
 			else {
-	            sprintf (textoregistros,"SCANLINE: %03d FPS: %03d",ultimo_fps,t_scanline_draw);
+	            sprintf (textoregistros,"SCANLINE: %03d FPS: %03d",t_scanline_draw,ultimo_fps);
 			}
             menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 

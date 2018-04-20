@@ -1,6 +1,8 @@
 --- Cosas para la version 6.1
   
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
+-opcion para decir si colores en blanco y negro cuando multitask off en menu. Por defecto activada
+
 
 TBBLUE:
 
