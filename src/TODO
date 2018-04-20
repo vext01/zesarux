@@ -1,7 +1,6 @@
 --- Cosas para la version 6.1
   
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
--watches no funcionan
 
 -parece que el mostrar scanline en menu debug, solo muestra colores. y pixeles parece que siempre muestra 0
 

@@ -7054,6 +7054,9 @@ void menu_watches_conditions_set(MENU_ITEM_PARAMETERS)
 		//esto tiene que activar los breakpoints, sino no se evalúa
       if (debug_breakpoints_enabled.v==0) menu_breakpoints_enable_disable(0);
 
+	//Si no esta screen_show_splash_texts.v avisar de que no se vera
+	if (screen_show_splash_texts.v==0) menu_warn_message("Splash texts are disabled. You won't see Watches until you enable them");
+
 
 }
 
@@ -7498,8 +7501,8 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
                 ancho=get_total_ancho_rainbow();
                 alto=get_total_alto_rainbow();
 
-    //rojo, amarillo, verde, azul
-    int colores_rainbow[]={2+8,6+8,4+8,1+8};
+    //rojo, amarillo, verde, cyan
+    int colores_rainbow[]={2+8,6+8,4+8,5+8};
 
                                                 int x;
                                                 int indice_color=0;
@@ -7516,7 +7519,6 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 			}
 		}
 	}
-
 
 	if (x_inicial<0) return;
 
@@ -26235,8 +26237,8 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
 
 		menu_add_item_menu_inicial_format(&array_menu_osd_settings,MENU_OPCION_NORMAL,menu_interface_show_splash_texts,NULL,"Show splash texts: %s",(screen_show_splash_texts.v ? "Yes" : "No") );
-		menu_add_item_menu_tooltip(array_menu_osd_settings,"Show on display some splash texts, like display mode change");
-		menu_add_item_menu_ayuda(array_menu_osd_settings,"Show on display some splash texts, like display mode change");
+		menu_add_item_menu_tooltip(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
+		menu_add_item_menu_ayuda(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
 
 
 		//Teclado en pantalla

@@ -331,8 +331,8 @@ void init_breakpoints_table(void)
 //Dibuja la pantalla de panico
 void screen_show_panic_screen(int xmax, int ymax)
 {
-    //rojo, amarillo, verde, azul,negro
-    int colores_rainbow[]={2+8,6+8,4+8,1+8,0};
+    //rojo, amarillo, verde, cyan,negro
+    int colores_rainbow[]={2+8,6+8,4+8,5+8,0};
 
 	int x,y;
 
