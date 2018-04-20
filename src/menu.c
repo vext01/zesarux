@@ -6461,7 +6461,7 @@ int menu_debug_registers_print_registers(int linea)
 
 
 		        //Assembler
-		        debugger_disassemble(&dumpassembler[longitud_direccion+8+2],17,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia);
+		        debugger_disassemble(&dumpassembler[longitud_direccion+1],17,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia);
 
 
 			//debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
@@ -6990,7 +6990,7 @@ void menu_debug_registers_ventana(void)
 	sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
 
 
-	if (menu_debug_registers_current_view==7) menu_dibuja_ventana(0,0,32,5,titulo);
+	if (menu_debug_registers_current_view==7) menu_dibuja_ventana(0,0,32,4,titulo);
 
 	else menu_dibuja_ventana(0,0,32,24,titulo);
 }
