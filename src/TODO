@@ -1221,6 +1221,9 @@ Quizá demo raster zxuno falla porque la interrupción tarda demasiado...
 --- Fallos especificos de zx80/81: ---
 
 
+-timings de display seguramente incorrectos. Esta suponiendo inicio scanline en zona izquierda. es normal? aplica a funciones de repintado y 
+tambien a screen_get_x_coordinate_tstates
+
 -nuevo core segun http://www.sinclairzxworld.com/viewtopic.php?f=7&t=1780&sid=4a25aa27ef1c6d926f2d9c78f92052c9
 nuevo_core_zx8081/core_zx8081.c
 Andy is right. Horizontal syncs in a ZX81 are generated at a constant 207-cycle interval (63.7 usec / scanline), and this only gets reset by an interrupt acknowledge (Z80 /IORQ and /M1 both active). Unlike vertical syncs which are software-generated (the same way as in a ZX80, in fact) and don't affect hsync generator in any way.

@@ -884,6 +884,12 @@ z80_byte peek_byte_zx80_no_time(z80_int dir)
 #ifdef EMULATE_VISUALMEM
 	set_visualmemreadbuffer(dir);
 #endif
+
+	//Si se pide por VRAM (c000-c3ffh)
+	/*if (dir>0xc000 && dir<0xc3ff) {
+		printf ("pidiendo por %04XH retornando %02XH\n",dir,memoria_spectrum[dir-32768]);
+	}*/
+
 	//Modulo RAM en 49152
 	if (ram_in_49152.v==1 && dir>49151) {
 		return memoria_spectrum[dir];
@@ -894,6 +900,11 @@ z80_byte peek_byte_zx80_no_time(z80_int dir)
                 return memoria_spectrum[dir];
         }
 
+	//Si se pide por VRAM (c000-c3ffh)
+	/*if (dir>0xc000 && dir<0xc3ff) {
+		printf ("pidiendo por %04XH retornando %02XH\n",dir,memoria_spectrum[dir-32768]);
+		return memoria_spectrum[dir-32768];
+	}*/
 
         if (dir>ramtop_zx8081) {
                 dir = (dir&(ramtop_zx8081));
@@ -1033,7 +1044,7 @@ z80_byte fetch_opcode_zx81(void)
 				int y=t_scanline_draw;
 
                                 //TODO
-                                y -=LINEAS_SUP_NO_USABLES;
+                                y -=ZX8081_LINEAS_SUP_NO_USABLES;
                                 //para evitar las lineas superiores
                                 //TODO. cuadrar esto con valores de borde invisible superior
 

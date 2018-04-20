@@ -114,7 +114,7 @@ void init_zx8081_scanline(void)
 {
 
 
-int y=t_scanline_draw-LINEAS_SUP_NO_USABLES;
+int y=t_scanline_draw-ZX8081_LINEAS_SUP_NO_USABLES;
 //para evitar las lineas superiores
 //TODO. cuadrar esto con valores de borde invisible superior
 

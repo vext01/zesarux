@@ -13474,7 +13474,7 @@ int screen_get_y_coordinate_tstates(void)
 	
 	y=t_scanline_draw-screen_invisible_borde_superior;
 
-	if (MACHINE_IS_ZX8081) y=t_scanline_draw-LINEAS_SUP_NO_USABLES;
+	if (MACHINE_IS_ZX8081) y=t_scanline_draw-ZX8081_LINEAS_SUP_NO_USABLES;
 
 	return y;
 
@@ -13509,6 +13509,15 @@ int screen_invisible_borde_derecho;
 
 	*si_salta_linea=0; //por defecto
 	int x;
+
+	//En zx8081
+	if (MACHINE_IS_ZX8081) {
+		int inicio_hsync=24+128+24;
+		if (estados_en_linea>=inicio_hsync) return -1;
+
+		return estados_en_linea*2;
+	}
+
 
 	//Las variables que usamos, estas screen_X son valores en pixeles
 

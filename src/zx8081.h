@@ -100,7 +100,7 @@ A true VSync basically has a pulse of 2.5 scan lines (2.5 * 64us = 160us = 517.5
 
 
 //TODO en teoria esto son 7.5 lineas
-#define LINEAS_SUP_NO_USABLES 8
+#define ZX8081_LINEAS_SUP_NO_USABLES 8
 
 extern void generar_zx8081_vsync(void);
 extern void generar_zx8081_horiz_sync(void);

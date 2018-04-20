@@ -837,10 +837,9 @@ void menu_debug_set_memory_zone_attr(void)
 z80_byte menu_debug_get_mapped_byte(int direccion)
 {
 
-
-
 	//Mostrar memoria normal
 	if (menu_debug_show_memory_zones==0) {
+		//printf ("menu_debug_get_mapped_byte dir %04XH result %02XH\n",direccion,peek_byte_z80_moto(direccion));
 		return peek_byte_z80_moto(direccion);
 	}
 
@@ -5926,11 +5925,7 @@ void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int l
 	for (;longitud>0;longitud--) {
 		//direccion=adjust_address_space_cpu(direccion);
 		direccion=adjust_address_memory_size(direccion);
-		//Si mostramos RAM oculta de Inves
-		//if (MACHINE_IS_INVES && menu_debug_hex_shows_inves_low_ram.v) {
-		//	byte_leido=memoria_spectrum[direccion++];
-		//}
-		//else {
+
 			//byte_leido=peek_byte_z80_moto(direccion);
 			byte_leido=menu_debug_get_mapped_byte(direccion);
 			//printf ("dump hex: %X\n",direccion);
@@ -8506,24 +8501,7 @@ void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida
 
 	menu_debug_print_address_memory_zone(dumpmemoria,dir_leida);
 
-	/*
-	sprintf (dumpmemoria,"      ");
-
-	dir_leida=adjust_address_memory_size(dir_leida);
-	int longitud_direccion=6;
-
-	//Obtener cuantos digitos hexa se necesitan
-	char temp_digitos[20];
-	sprintf (temp_digitos,"%X",menu_debug_memory_zone_size-1);
-	int digitos=strlen(temp_digitos);
-
-	//Obtener posicion inicial a escribir direccion. Suponemos maximo 6
-	int posicion_inicial_digitos=6-digitos;
-
-
-	//Escribimos direccion
-	sprintf (&dumpmemoria[posicion_inicial_digitos],"%0*X",digitos,dir_leida);
-	*/
+	
 
 	//cambiamos el 0 final por un espacio
 	dumpmemoria[longitud_direccion]=' ';
