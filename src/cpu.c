@@ -1282,10 +1282,10 @@ void cpu_help_expert(void)
 
 
 
-	  "--brkp-on-change             Only fire a breakpoint when the condition changes from false to true\n"
+	    "--brkp-always              Fire a breakpoint when it is fired always, not only when the condition changes from false to true\n"
 
 
-	  "--show-invalid-opcode      If running invalid cpu opcodes will generate a warning message\n"
+	    "--show-invalid-opcode      If running invalid cpu opcodes will generate a warning message\n"
 
 
 );
@@ -6164,7 +6164,7 @@ int parse_cmdline_options(void) {
 	  				debug_shows_invalid_opcode.v=1;
 		}
 
-		else if (!strcmp(argv[puntero_parametro],"--brkp-on-change")) {
+		else if (!strcmp(argv[puntero_parametro],"--brkp-always")) {
 	  				debug_breakpoints_cond_behaviour.v=0;
 		}
 
