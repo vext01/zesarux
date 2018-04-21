@@ -3307,6 +3307,11 @@ int util_write_configfile(void)
 
   if (debug_breakpoints_enabled.v)            ADD_STRING_CONFIG,"--enable-breakpoints");
 
+  if (debug_shows_invalid_opcode.v)           ADD_STRING_CONFIG,"--show-invalid-opcode");
+
+
+  if (debug_breakpoints_cond_behaviour.v==0)  ADD_STRING_CONFIG,"--brkp-on-change");
+
 
   for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 		if (debug_breakpoints_conditions_array[i][0]!=0)

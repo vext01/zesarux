@@ -1278,7 +1278,15 @@ void cpu_help_expert(void)
 		"at least one parameter on command line, or this parameter on command line or on configuration file. \n"
 #endif
 
-	  "--enable-breakpoints       Enable breakpoints handling.\n"
+	    "--enable-breakpoints       Enable breakpoints handling.\n"
+
+
+
+	  "--brkp-on-change             Only fire a breakpoint when the condition changes from false to true\n"
+
+
+	  "--show-invalid-opcode      If running invalid cpu opcodes will generate a warning message\n"
+
 
 );
 
@@ -6151,6 +6159,15 @@ int parse_cmdline_options(void) {
 		 else if (!strcmp(argv[puntero_parametro],"--enable-breakpoints")) {
 		 			 command_line_set_breakpoints.v=1;
 		 }
+
+		else if (!strcmp(argv[puntero_parametro],"--show-invalid-opcode")) {
+	  				debug_shows_invalid_opcode.v=1;
+		}
+
+		else if (!strcmp(argv[puntero_parametro],"--brkp-on-change")) {
+	  				debug_breakpoints_cond_behaviour.v=0;
+		}
+
 
 		 else if (!strcmp(argv[puntero_parametro],"--hardware-debug-ports")) {
 			 hardware_debug_port.v=1;
