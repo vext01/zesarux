@@ -53,6 +53,8 @@ extern void open_sharedfile(char *archivo,FILE **f);
 
 #define MAX_COMPILE_INFO_LENGTH 4096
 
+#define MAX_SIZE_CONFIG_FILE 65535
+
 extern void get_compile_info(char *s);
 
 extern void show_compile_info(void);

@@ -2850,6 +2850,8 @@ int get_rom_size(int machine)
 	return 0;
 }
 
+
+
 //1 si ok
 //0 si error
 int configfile_read_aux(char *configfile,char *mem)
@@ -2858,12 +2860,15 @@ int configfile_read_aux(char *configfile,char *mem)
 	FILE *ptr_configfile;
         ptr_configfile=fopen(configfile,"rb");
 
+        //Avisar si tamanyo grande
+        if (get_file_size>(long int)MAX_SIZE_CONFIG_FILE) cpu_panic("Configuration file is larger than maximum allowed (64kb)");
+
         if (!ptr_configfile) {
                 printf("Unable to open configuration file %s\n",configfile);
                 return 0;
         }
 
-        int leidos=fread(mem,1,65535,ptr_configfile);
+        int leidos=fread(mem,1,MAX_SIZE_CONFIG_FILE,ptr_configfile);
 
         //Poner un codigo 0 al final
         mem[leidos]=0;
@@ -3627,7 +3632,7 @@ int configfile_argc=0;
 //Cada final de parametro tendra codigo 0
 void configfile_parse(void)
 {
-	char *mem_config=malloc(65536);
+	char *mem_config=malloc(MAX_SIZE_CONFIG_FILE+1);
 
         if (mem_config==NULL) {
 		cpu_panic("Unable to allocate memory for configuration file");
@@ -3664,7 +3669,7 @@ void configfile_parse_custom_file(char *archivo)
 	//Debe quedar esta memoria asignada al salir de este procedimiento, pues lo usa en parse_customfile_options
 	if (custom_config_mem_pointer==NULL) {
 		debug_printf (VERBOSE_DEBUG,"Allocating memory to read custom config file");
-		custom_config_mem_pointer=malloc(65536);
+		custom_config_mem_pointer=malloc(MAX_SIZE_CONFIG_FILE+1);
 	}
 
 	else {
