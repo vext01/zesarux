@@ -1285,6 +1285,9 @@ void cpu_help_expert(void)
 	    "--brkp-always              Fire a breakpoint when it is fired always, not only when the condition changes from false to true\n"
 
 
+		"--show-display-debug       Shows emulated screen on every key action on debug registers menu\n"
+
+
 	    "--show-invalid-opcode      If running invalid cpu opcodes will generate a warning message\n"
 
 
@@ -6166,6 +6169,11 @@ int parse_cmdline_options(void) {
 
 		else if (!strcmp(argv[puntero_parametro],"--brkp-always")) {
 	  				debug_breakpoints_cond_behaviour.v=0;
+		}
+
+		else if (!strcmp(argv[puntero_parametro],"--show-display-debug")) {
+	  				debug_settings_show_screen.v=1;
+
 		}
 
 

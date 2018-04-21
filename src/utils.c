@@ -3313,6 +3313,10 @@ int util_write_configfile(void)
   if (debug_breakpoints_cond_behaviour.v==0)  ADD_STRING_CONFIG,"--brkp-always");
 
 
+  if (debug_settings_show_screen.v)           ADD_STRING_CONFIG,"--show-display-debug");
+
+
+
   for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 		if (debug_breakpoints_conditions_array[i][0]!=0)
                                               ADD_STRING_CONFIG,"--set-breakpoint %d \"%s\"",i+1,debug_breakpoints_conditions_array[i]);
