@@ -19,14 +19,14 @@
 
 */
 
-#ifndef MENU_ITEMS_H
-#define MENU_ITEMS_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include "cpu.h"
 
+extern z80_bit menu_debug_registers_if_showscan;
 
-extern void menu_poke(MENU_ITEM_PARAMETERS);
-extern void menu_settings_debug(MENU_ITEM_PARAMETERS);
+extern z80_bit debug_settings_show_screen;
 
 #endif
 

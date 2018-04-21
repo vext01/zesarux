@@ -282,10 +282,13 @@ extern void menu_generic_message_tooltip(char *titulo, int volver_timeout, int t
 
 extern void menu_add_ESC_item(menu_item *array_menu_item);
 extern int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item *m,char *titulo);
+extern void menu_tape_settings_trunc_name(char *orig,char *dest,int max);
 
+extern int menu_confirm_yesno(char *texto_ventana);
+extern int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior);
+extern int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior);
 
-
-
+//Fin funciones basicas que se suelen usar desde menu_items.c
 
 
 

@@ -34,6 +34,7 @@
 
 
 #include "menu.h"
+#include "menu_items.h"
 #include "screen.h"
 #include "cpu.h"
 #include "debug.h"
@@ -93,8 +94,9 @@
 #include "tape_tzx.h" 
 #include "snap_zsf.h"
 #include "compileoptions.h"
+#include "settings.h"
 
-
+ 
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>
 
@@ -129,11 +131,17 @@
 
 //
 // Archivo para entradas de menu, excluyendo funciones auxiliares de soporte de menu
+// Las funciones auxiliares de menu estan en menu.c
+// Aunque aun falta mucho por mover, la mayoria de entradas de menu siguen en menu.c y habria que moverlas aqui
 //
 
 
+//Opciones seleccionadas para cada menu
 int debug_pok_file_opcion_seleccionada=0;
 int poke_opcion_seleccionada=0; 
+int settings_debug_opcion_seleccionada=0;
+
+//Fin opciones seleccionadas para cada menu
 
 
 //Ultima direccion pokeada
@@ -409,4 +417,230 @@ void menu_poke(MENU_ITEM_PARAMETERS)
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
+
+void menu_debug_registers_console(MENU_ITEM_PARAMETERS) {
+	debug_registers ^=1;
+}
+
+void menu_debug_configuration_stepover(MENU_ITEM_PARAMETERS)
+{
+	//debug_core_evitamos_inter.v ^=1;
+	remote_debug_settings ^=32;
+}
+
+
+void menu_breakpoints_condition_behaviour(MENU_ITEM_PARAMETERS)
+{
+	debug_breakpoints_cond_behaviour.v ^=1;
+}
+
+void menu_debug_configuration_remoteproto_port(MENU_ITEM_PARAMETERS)
+{
+	char string_port[6];
+	int port;
+
+	sprintf (string_port,"%d",remote_protocol_port);
+
+	menu_ventana_scanf("Port",string_port,6);
+
+	if (string_port[0]==0) return;
+
+	else {
+			port=parse_string_to_number(string_port);
+
+			if (port<1 || port>65535) {
+								debug_printf (VERBOSE_ERR,"Invalid port %d",port);
+								return;
+			}
+
+
+			end_remote_protocol();
+			remote_protocol_port=port;
+			init_remote_protocol();
+	}
+
+}
+
+void menu_debug_shows_invalid_opcode(MENU_ITEM_PARAMETERS)
+{
+	debug_shows_invalid_opcode.v ^=1;
+}
+
+void menu_debug_settings_show_fired_breakpoint(MENU_ITEM_PARAMETERS)
+{
+	debug_show_fired_breakpoints_type++;
+	if (debug_show_fired_breakpoints_type==3) debug_show_fired_breakpoints_type=0;
+}
+
+void menu_debug_settings_show_screen(MENU_ITEM_PARAMETERS)
+{
+	debug_settings_show_screen.v ^=1;
+}
+void menu_debug_settings_show_scanline(MENU_ITEM_PARAMETERS)
+{
+	menu_debug_registers_if_showscan.v ^=1;
+}
+
+void menu_debug_configuration_remoteproto(MENU_ITEM_PARAMETERS)
+{
+	if (remote_protocol_enabled.v) {
+		end_remote_protocol();
+		remote_protocol_enabled.v=0;
+	}
+
+	else {
+		remote_protocol_enabled.v=1;
+		init_remote_protocol();
+	}
+}
+
+
+void menu_debug_verbose(MENU_ITEM_PARAMETERS)
+{
+	verbose_level++;
+	if (verbose_level>4) verbose_level=0;
+}
+
+void menu_zesarux_zxi_hardware_debug_file(MENU_ITEM_PARAMETERS)
+{
+
+	char *filtros[2];
+
+    filtros[0]="";
+    filtros[1]=0;
+
+
+    if (menu_filesel("Select Debug File",filtros,zesarux_zxi_hardware_debug_file)==1) {
+    	//Ver si archivo existe y preguntar
+		if (si_existe_archivo(zesarux_zxi_hardware_debug_file)) {
+            if (menu_confirm_yesno_texto("File exists","Append?")==0) {
+				zesarux_zxi_hardware_debug_file[0]=0;
+				return;
+			}
+        }
+
+    }
+
+	else zesarux_zxi_hardware_debug_file[0]=0;
+
+}
+
+void menu_hardware_debug_port(MENU_ITEM_PARAMETERS)
+{
+	hardware_debug_port.v ^=1;
+}
+
+//menu debug settings
+void menu_settings_debug(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_settings_debug;
+        menu_item item_seleccionado;
+	int retorno_menu;
+        do {
+
+
+      char string_zesarux_zxi_hardware_debug_file_shown[18];
+      
+
+
+		menu_add_item_menu_inicial_format(&array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'e');
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_shows_invalid_opcode,NULL,"Show ~~invalid opcode: %s",
+			(debug_shows_invalid_opcode.v ? "Yes" : "No") );
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'i');
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes)");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes). "
+								"A message will be shown on console, when verbose level is 2 or higher");
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"Verbose ~~level: %d",verbose_level);
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"Step ~~over interrupt: %s",(remote_debug_settings&32 ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'o');
+
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour: %s",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
+
+		char show_fired_breakpoint_type[30];
+		if (debug_show_fired_breakpoints_type==0) strcpy(show_fired_breakpoint_type,"Always");
+		else if (debug_show_fired_breakpoints_type==1) strcpy(show_fired_breakpoint_type,"NoPC");
+		else strcpy(show_fired_breakpoint_type,"Never");																	//						   OnlyNonPC
+																															//  01234567890123456789012345678901
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint: %s",show_fired_breakpoint_type);
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired. "
+								"Possible values:\n"
+								"Always: always shows the condition\n"
+								"NoPC: only shows conditions that are not like PC=XXXX\n"
+								"Never: never shows conditions\n" );
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_screen,NULL,"Show display on debug: %s",
+			( debug_settings_show_screen.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"Show TV electron on debug: %s",
+			( menu_debug_registers_if_showscan.v ? "Yes" : "No") );
+
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
+
+#ifdef USE_PTHREADS
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"~~Remote protocol: %s",(remote_protocol_enabled.v ? "Enabled" : "Disabled") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'r');
+
+		if (remote_protocol_enabled.v) {
+			menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto_port,NULL,"Remote protocol ~~port: %d",remote_protocol_port );
+			menu_add_item_menu_tooltip(array_menu_settings_debug,"Changes remote command protocol port");
+			menu_add_item_menu_ayuda(array_menu_settings_debug,"Changes remote command protocol port");
+			menu_add_item_menu_shortcut(array_menu_settings_debug,'p');
+		}
+
+#endif
+
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_hardware_debug_port,NULL,"Hardware ~~debug ports: %s",(hardware_debug_port.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"If hardware debug ports are enabled");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"It shows a ASCII character or a number on console sending some OUT sequence to ports. "
+														"Read file docs/zesarux_zxi_registers.txt for more information");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'d');
+
+
+		if (hardware_debug_port.v) {
+			menu_tape_settings_trunc_name(zesarux_zxi_hardware_debug_file,string_zesarux_zxi_hardware_debug_file_shown,18);
+        	menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_zesarux_zxi_hardware_debug_file,NULL,"Byte ~~file: %s",string_zesarux_zxi_hardware_debug_file_shown);
+			menu_add_item_menu_tooltip(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");		
+			menu_add_item_menu_ayuda(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");	
+			menu_add_item_menu_shortcut(array_menu_settings_debug,'f');							
+		}
+
+
+                menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_settings_debug,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_settings_debug);
+
+                retorno_menu=menu_dibuja_menu(&settings_debug_opcion_seleccionada,&item_seleccionado,array_menu_settings_debug,"Debug Settings" );
+
+                cls_menu_overlay();
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+				cls_menu_overlay();
+                        }
+                }
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
 
