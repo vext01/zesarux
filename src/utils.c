@@ -2857,11 +2857,12 @@ int get_rom_size(int machine)
 int configfile_read_aux(char *configfile,char *mem)
 {
 
+        //Avisar si tamanyo grande
+        if (get_file_size(configfile) > (long int)MAX_SIZE_CONFIG_FILE) cpu_panic("Configuration file is larger than maximum allowed (64kb)");
+
 	FILE *ptr_configfile;
         ptr_configfile=fopen(configfile,"rb");
 
-        //Avisar si tamanyo grande
-        if (get_file_size>(long int)MAX_SIZE_CONFIG_FILE) cpu_panic("Configuration file is larger than maximum allowed (64kb)");
 
         if (!ptr_configfile) {
                 printf("Unable to open configuration file %s\n",configfile);
