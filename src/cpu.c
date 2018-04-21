@@ -1288,6 +1288,9 @@ void cpu_help_expert(void)
 		"--show-display-debug       Shows emulated screen on every key action on debug registers menu\n"
 
 
+		"--show-electron-debug      Shows TV electron position when debugging, using a coloured line\n"
+
+
 	    "--show-invalid-opcode      If running invalid cpu opcodes will generate a warning message\n"
 
 
@@ -6175,6 +6178,13 @@ int parse_cmdline_options(void) {
 	  				debug_settings_show_screen.v=1;
 
 		}
+
+
+		else if (!strcmp(argv[puntero_parametro],"--show-electron-debug")) {
+	  				menu_debug_registers_if_showscan.v=1;
+		}
+
+
 
 
 		 else if (!strcmp(argv[puntero_parametro],"--hardware-debug-ports")) {

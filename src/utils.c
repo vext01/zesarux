@@ -3316,6 +3316,10 @@ int util_write_configfile(void)
   if (debug_settings_show_screen.v)           ADD_STRING_CONFIG,"--show-display-debug");
 
 
+  if (menu_debug_registers_if_showscan.v)     ADD_STRING_CONFIG,"--show-electron-debug");
+ 
+
+
 
   for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 		if (debug_breakpoints_conditions_array[i][0]!=0)
