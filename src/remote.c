@@ -52,8 +52,7 @@
 
 
 
-int remote_protocol_port=DEFAULT_REMOTE_PROTOCOL_PORT;
-z80_bit remote_protocol_enabled={0};
+
 z80_bit remote_ack_enter_cpu_step={0};
 
 

@@ -40,5 +40,12 @@ extern int debug_show_fired_breakpoints_type;
 
 extern int verbose_level;
 
+extern z80_bit remote_protocol_enabled;
+extern int remote_protocol_port;
+
+extern z80_bit hardware_debug_port;
+
+extern char zesarux_zxi_hardware_debug_file[];
+
 #endif
 

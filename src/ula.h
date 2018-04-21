@@ -51,9 +51,7 @@ extern z80_bit ula_im2_slow;
 extern void ula_enable_pentagon_timing_no_common(void);
 
 
-//#define HARDWARE_DEBUG_PORT_ASCII 12291
-//#define HARDWARE_DEBUG_PORT_NUMBER 12295
-extern z80_bit hardware_debug_port;
+
 
 //Usamos puertos que estaban reservados para Spectrastik pero ese dispositivo no existe ya
 #define ZESARUX_ZXI_PORT_REGISTER 0xCF3B
@@ -66,7 +64,7 @@ extern z80_byte zesarux_zxi_last_register;
 
 extern z80_byte zesarux_zxi_registers_array[];
 
-extern char zesarux_zxi_hardware_debug_file[];
+
 
 extern z80_byte zesarux_zxi_read_last_register(void);
 extern void zesarux_zxi_write_last_register(z80_byte value);

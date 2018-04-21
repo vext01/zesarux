@@ -31,12 +31,8 @@
 #include "menu.h"
 #include "multiface.h"
 #include "betadisk.h"
+#include "settings.h"
 
-//¿Como? Pues creando un puerto de debug, que todo lo que se escriba vaya a parar a la consola, así de sencillo, haces OUT 55555, 65 y aparece una A en la consola
-//que ha lanzado ZesarUX. Alternativamente se podría poner algun puerto más, que lo escrito se interprete como un número,
-//por ejemplo que si haces OUT 55556,65 no escriba una A, sino 65.
-//http://www.zxuno.com/forum/viewtopic.php?f=39&t=611
-z80_bit hardware_debug_port={0};
 
 //#define ZESARUX_ZXI_PORT_REGISTER 0xCF3B
 //#define ZESARIX_ZXI_PORT_DATA     0xDF3B
@@ -45,7 +41,7 @@ z80_byte zesarux_zxi_last_register=0;
 
 z80_byte zesarux_zxi_registers_array[256];
 
-char zesarux_zxi_hardware_debug_file[PATH_MAX]="";
+
 
 //ultimo valor enviado al border, tal cual
 z80_byte out_254_original_value;

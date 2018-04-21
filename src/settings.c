@@ -143,3 +143,12 @@ int debug_show_fired_breakpoints_type=0;
 
 
 int verbose_level=0;
+
+
+int remote_protocol_port=DEFAULT_REMOTE_PROTOCOL_PORT;
+z80_bit remote_protocol_enabled={0};
+
+//Puerto de debug ZEsarUX activo o no
+z80_bit hardware_debug_port={0};
+
+char zesarux_zxi_hardware_debug_file[PATH_MAX]="";

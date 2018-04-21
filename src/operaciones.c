@@ -70,6 +70,7 @@
 #include "betadisk.h"
 #include "baseconf.h"
 #include "zxevo.h"
+#include "settings.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
