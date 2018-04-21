@@ -28,5 +28,7 @@ extern z80_bit menu_debug_registers_if_showscan;
 
 extern z80_bit debug_settings_show_screen;
 
+extern int debug_registers;
+
 #endif
 

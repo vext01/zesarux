@@ -46,6 +46,7 @@
 #include "realjoystick.h"
 #include "ula.h"
 #include "tape.h"
+#include "settings.h"
 
 
 

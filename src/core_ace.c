@@ -44,6 +44,7 @@
 #include "realjoystick.h"
 #include "chardetect.h"
 #include "ula.h"
+#include "settings.h"
 
 
 

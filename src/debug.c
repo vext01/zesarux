@@ -82,6 +82,7 @@
 
 #include "remote.h"
 #include "charset.h"
+#include "settings.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;

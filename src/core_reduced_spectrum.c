@@ -55,6 +55,7 @@
 #include "tsconf.h"
 
 #include "scrstdout.h"
+#include "settings.h"
 
 
 

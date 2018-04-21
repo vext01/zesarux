@@ -105,6 +105,7 @@
 #include "pd765.h"
 #include "core_reduced_spectrum.h"
 #include "baseconf.h"
+#include "settings.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -266,7 +267,7 @@ int argc;
 char **argv;
 int puntero_parametro;
 
-int debug_registers=0;
+
 
 z80_bit border_enabled;
 
@@ -1266,7 +1267,6 @@ void cpu_help_expert(void)
 		"--enable-remoteprotocol    Enable remote protocol\n"
 		"--remoteprotocol-port n    Set remote protocol port (default: 10000)\n"
 #endif
-
 
 
 		"--showfiredbreakpoint n    Tells to show the breakpoint condition when it is fired. Possible values: \n"

@@ -45,6 +45,7 @@
 #include "realjoystick.h"
 #include "chardetect.h"
 #include "ula.h"
+#include "settings.h"
 
 void init_zx8081_scanline_y_x(int y,int x,int ancho)
 {

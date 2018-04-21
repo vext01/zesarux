@@ -251,7 +251,7 @@ extern struct timeval zesarux_start_time;
 extern z80_bit interrupcion_timer_generada;
 extern int contador_frames_veces_buffer_audio;
 extern z80_bit esperando_tiempo_final_t_estados;
-extern int debug_registers;
+
 extern z80_bit interrupcion_maskable_generada;
 extern z80_bit interrupcion_non_maskable_generada;
 extern z80_bit interrupcion_timer_generada;

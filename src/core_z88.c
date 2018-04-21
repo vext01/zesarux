@@ -46,6 +46,7 @@
 #include "chardetect.h"
 
 #include "scrstdout.h"
+#include "settings.h"
 
 z80_byte byte_leido_core_z88;
 

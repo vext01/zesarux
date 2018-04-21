@@ -47,6 +47,7 @@
 #include "chardetect.h"
 #include "m68k.h"
 #include "ula.h"
+#include "settings.h"
 
 
 
