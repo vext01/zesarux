@@ -502,6 +502,8 @@ extern int osd_kb_no_mostrar_desde_menu;
 
 extern int menu_button_f_function_action;
 
+extern z80_bit screen_bw_no_multitask_menu;
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \

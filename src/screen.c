@@ -13554,7 +13554,7 @@ void screen_change_bw_menu_multitask(void)
 {
 
 	if (menu_multitarea==0 && menu_abierto) {
-		spectrum_colortable=spectrum_colortable_new_blanco_y_negro;
+		if (screen_bw_no_multitask_menu.v) spectrum_colortable=spectrum_colortable_new_blanco_y_negro;
 	}
 
 }
