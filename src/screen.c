@@ -222,7 +222,7 @@ int *spectrum_colortable;
 int spectrum_colortable_normal[EMULATOR_TOTAL_PALETTE_COLOURS];
 
 //Colores solo en blanco y negro para cuando se abre el menu y el emulador esta con multitask off
-int spectrum_colortable_blanco_y_negro[EMULATOR_TOTAL_PALETTE_COLOURS];
+int spectrum_colortable_new_blanco_y_negro[EMULATOR_TOTAL_PALETTE_COLOURS];
 
 //Tabla con los colores reales del Spectrum. Formato RGB
 int spectrum_colortable_original_new[16] =
@@ -7732,10 +7732,7 @@ void screen_init_colour_table(void)
 	screen_gray_mode=7;
 	screen_init_colour_table_siguiente();
 
-/*
-int spectrum_colortable_blanco_y_negro[EMULATOR_TOTAL_PALETTE_COLOURS];
-_normal
-*/
+
 
 	//Copiamos de tabla normal, que seran grises, a tabla grises y ademas oscuros
 	int i,r,g,b;
@@ -7749,9 +7746,8 @@ _normal
                         g=g/2;
                         b=b/2;
 
-                        spectrum_colortable_blanco_y_negro[i]=(r<<16)|(g<<8)|b;
+                        spectrum_colortable_new_blanco_y_negro[i]=(r<<16)|(g<<8)|b;
 
-		//spectrum_colortable_blanco_y_negro[i]=spectrum_colortable_normal[i];
 	}
 
 
@@ -13553,3 +13549,12 @@ int screen_invisible_borde_derecho;
 }
 
 
+//Cambia la paleta de color a Modo blanco y negro cuando se abre menu y multitarea esta a off
+void screen_change_bw_menu_multitask(void)
+{
+
+	if (menu_multitarea==0 && menu_abierto) {
+		spectrum_colortable=spectrum_colortable_new_blanco_y_negro;
+	}
+
+}

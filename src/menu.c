@@ -34,6 +34,7 @@
 
 
 #include "menu.h"
+#include "menu_items.h"
 #include "screen.h"
 #include "cpu.h"
 #include "debug.h"
@@ -121,12 +122,21 @@
 	#define scrstdout_menu_print_speech_macro(x)
 #endif
 
-//si se pulsa tecla mientras se lee el menu
-int menu_speech_tecla_pulsada=0;
 
 #ifdef COMPILE_XWINDOWS
 	#include "scrxwindows.h"
 #endif
+
+
+
+//
+// Archivo para funciones auxiliares de soporte de menu, excluyendo entradas de menu,
+//
+
+
+
+//si se pulsa tecla mientras se lee el menu
+int menu_speech_tecla_pulsada=0;
 
 //indica que hay funcion activa de overlay o no
 int menu_overlay_activo=0;
@@ -472,77 +482,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
  
 z80_byte ventana_x,ventana_y,ventana_ancho,ventana_alto;
 
-#define MENU_OPCION_SEPARADOR 0
-#define MENU_OPCION_NORMAL 1
-#define MENU_OPCION_ESC 2
 
-
-//item de menu con memoria asignada pero item vacio
-//si se va a agregar un item, se agrega en el primero con este tipo de opcion
-#define MENU_OPCION_UNASSIGNED 254
-
-
-
-//valores de retorno de seleccion de menu
-//#define MENU_SELECCION_ESC -1
-
-//funcion a la que salta al darle al enter. valor_opcion es un valor que quien crea el menu puede haber establecido,
-//para cada item de menu, un valor diferente
-//al darle enter se envia el valor de ese item seleccionado a la opcion de menu
-typedef void (*t_menu_funcion)(MENU_ITEM_PARAMETERS);
-
-//funcion que retorna 1 o 0 segun si opcion activa
-typedef int (*t_menu_funcion_activo)(void);
-
-
-
-//Aunque en driver xwindows no cabe mas de 30 caracteres, en stdout, por ejemplo, cabe mucho mas.
-#define MAX_TEXTO_OPCION 60
-
-struct s_menu_item {
-	//texto de la opcion
-	//char *texto;
-
-	//Aunque en driver xwindows no cabe mas de 30 caracteres, en stdout, por ejemplo, cabe mucho mas
-	char texto_opcion[MAX_TEXTO_OPCION];
-
-	//texto de ayuda
-	char *texto_ayuda;
-
-	//texto de tooltip
-	char *texto_tooltip;
-
-	//atajo de teclado
-	z80_byte atajo_tecla;
-
-	//un valor enviado a la opcion, que puede establecer la funcion que agrega el item
-	int valor_opcion;
-
-	//Para tipos de menus "tabulados", aquellos en que:
-	//-no se crea ventana al abrir
-	//-las opciones tienen coordenadas X e Y relativas a la ventana activa
-	//-se puede mover tambien usando teclas izquierda, derecha
-	//-el texto de las opciones no se rellena con espacios por la derecha, se muestra tal cual en las coordenadas X e Y indicadas
-
-	int es_menu_tabulado;
-	int menu_tabulado_x;
-	int menu_tabulado_y;
-
-	//tipo de la opcion
-	int tipo_opcion;
-	//funcion a la que debe saltar
-	t_menu_funcion menu_funcion;
-	//funcion que retorna 1 o 0 segun si opcion activa
-	t_menu_funcion_activo menu_funcion_activo;
-
-	//funcion a la que debe saltar al pulsar espacio
-	t_menu_funcion menu_funcion_espacio;
-
-	//siguiente item
-	struct s_menu_item *next;
-};
-
-typedef struct s_menu_item menu_item;
 
 
 //Elemento que identifica a un archivo en funcion de seleccion
@@ -580,30 +520,21 @@ char filesel_nombre_archivo_seleccionado[PATH_MAX];
 z80_bit menu_filesel_show_utils={0};
 
 
-void menu_add_item_menu_inicial(menu_item **m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo);
-void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...);
-void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo);
-void menu_add_item_menu_format(menu_item *m,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...);
-void menu_add_item_menu_ayuda(menu_item *m,char *texto_ayuda);
-void menu_add_item_menu_tooltip(menu_item *m,char *texto_tooltip);
-void menu_add_item_menu_shortcut(menu_item *m,z80_byte tecla);
-void menu_add_item_menu_valor_opcion(menu_item *m,int valor_opcion);
-void menu_add_item_menu_tabulado(menu_item *m,int x,int y);
+
 
 int menu_tooltip_counter;
-#define TOOLTIP_SECONDS 4
+
+
 
 int menu_window_splash_counter;
 int menu_window_splash_counter_ms;
-#define WINDOW_SPLASH_SECONDS 3
 
 z80_bit tooltip_enabled;
 
 
-void menu_add_ESC_item(menu_item *array_menu_item);
 
 
-void menu_ventana_scanf(char *titulo,char *texto,int max_length);
+
 int menu_display_cursesstdout_cond(void);
 
 void menu_tape_settings_trunc_name(char *orig,char *dest,int max);
@@ -664,8 +595,8 @@ int find_lives_opcion_seleccionada=0;
 int cpu_transaction_log_opcion_seleccionada=0;
 int storage_settings_opcion_seleccionada=0;
 int external_tools_config_opcion_seleccionada=0;
-int debug_pok_file_opcion_seleccionada=0;
-int poke_opcion_seleccionada=0;
+
+
 int timexcart_opcion_seleccionada=0;
 int mmc_divmmc_opcion_seleccionada=0;
 int ide_divide_opcion_seleccionada=0;
@@ -722,7 +653,7 @@ void menu_simple_ventana(char *titulo,char *texto);
 //filtros activos
 char **filesel_filtros;
 
-int menu_filesel(char *titulo,char *filtros[],char *archivo);
+
 
 int menu_avisa_si_extension_no_habitual(char *filtros[],char *archivo);
 
@@ -784,23 +715,6 @@ void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_i
 //directorio inicial al entrar
 char filesel_directorio_inicial[PATH_MAX];
 
-void menu_warn_message(char *texto);
-void menu_error_message(char *texto);
-
-void menu_generic_message(char *titulo, const char * texto);
-void menu_generic_message_format(char *titulo, const char * format , ...);
-void menu_generic_message_splash(char *titulo, const char * texto);
-
-
-struct s_generic_message_tooltip_return {
-	char texto_seleccionado[40];
-	int linea_seleccionada;
-	int estado_retorno; //Retorna 1 si sale con enter. Retorna 0 si sale con ESC
-};
-
-typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
-
-void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
 
 
 int menu_calcular_ancho_string_item(char *texto);
@@ -4147,11 +4061,7 @@ void menu_dibuja_menu_stdout_texto_sin_atajo(char *origen, char *destino)
 }
 
 
-#define MENU_RETORNO_NORMAL 0
-#define MENU_RETORNO_ESC -1
-#define MENU_RETORNO_F1 -2
-#define MENU_RETORNO_F2 -3
-#define MENU_RETORNO_F10 -4
+
 
 
 int menu_dibuja_menu_stdout(int *opcion_inicial,menu_item *item_seleccionado,menu_item *m,char *titulo)
@@ -4634,7 +4544,7 @@ z80_int menu_mouse_frame_counter_anterior=0;
 //asigna en item_seleccionado valores de: tipo_opcion, menu_funcion (debe ser una estructura ya asignada)
 
 
-
+ 
 
 int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item *m,char *titulo)
 {
@@ -10125,355 +10035,6 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 }
 
 
-
-//No tiene mucho sentido esta funcion pues se puede hacer con las memory zones
-/*
-void menu_debug_poke_128k(MENU_ITEM_PARAMETERS)
-{
-
-        int valor_poke,dir,veces;
-	int bank;
-
-        char string_poke[4];
-        char string_dir[6];
-	char string_bank[2];
-	char string_veces[6];
-
-
-	sprintf (string_bank,"0");
-	menu_ventana_scanf("Bank",string_bank,2);
-	bank=parse_string_to_number(string_bank);
-	if (bank<0 || bank>7) {
-		debug_printf (VERBOSE_ERR,"Invalid bank %d",bank);
-		return;
-	}
-
-
-        sprintf (string_dir,"0");
-
-        menu_ventana_scanf("Address",string_dir,6);
-
-        dir=parse_string_to_number(string_dir);
-
-        if (dir<0 || dir>65535) {
-                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
-                return;
-        }
-
-
-
-        sprintf (string_poke,"0");
-
-        menu_ventana_scanf("Poke Value",string_poke,4);
-
-        valor_poke=parse_string_to_number(string_poke);
-
-        if (valor_poke<0 || valor_poke>255) {
-                debug_printf (VERBOSE_ERR,"Invalid value %d",valor_poke);
-                return;
-        }
-
-
-        sprintf (string_veces,"1");
-
-        menu_ventana_scanf("How many bytes?",string_veces,6);
-
-        veces=parse_string_to_number(string_veces);
-
-        if (veces<1 || veces>65536) {
-                debug_printf (VERBOSE_ERR,"Invalid quantity %d",veces);
-                return;
-        }
-
-
-        for (;veces;veces--,dir++) {
-
-					util_poke(bank,dir,valor_poke);
-
-				}
-
-}
-*/
-
-//Ultima direccion pokeada
-int last_debug_poke_dir=16384;
-
-void menu_debug_poke(MENU_ITEM_PARAMETERS)
-{
-
-        int valor_poke,dir,veces;
-
-        char string_poke[4];
-        char string_dir[10];
-	char string_veces[6];
-
-        sprintf (string_dir,"%XH",last_debug_poke_dir);
-
-        menu_ventana_scanf("Address",string_dir,10);
-
-        dir=parse_string_to_number(string_dir);
-
-        /*if ( (dir<0 || dir>65535) && MACHINE_IS_SPECTRUM) {
-                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
-                return;
-        }*/
-
-				last_debug_poke_dir=dir;
-
-        sprintf (string_poke,"0");
-
-        menu_ventana_scanf("Poke Value",string_poke,4);
-
-        valor_poke=parse_string_to_number(string_poke);
-
-        if (valor_poke<0 || valor_poke>255) {
-                debug_printf (VERBOSE_ERR,"Invalid value %d",valor_poke);
-                return;
-        }
-
-
-	sprintf (string_veces,"1");
-
-	menu_ventana_scanf("How many bytes?",string_veces,6);
-
-	veces=parse_string_to_number(string_veces);
-
-	if (veces<1 || veces>65536) {
-                debug_printf (VERBOSE_ERR,"Invalid quantity %d",veces);
-		return;
-	}
-
-
-	for (;veces;veces--,dir++) {
-
-	        //poke_byte_no_time(dir,valor_poke);
-		//poke_byte_z80_moto(dir,valor_poke);
-		menu_debug_write_mapped_byte(dir,valor_poke);
-
-	}
-
-}
-
-
-
-void menu_debug_poke_pok_file(MENU_ITEM_PARAMETERS)
-{
-
-        char *filtros[2];
-
-        filtros[0]="pok";
-        filtros[1]=0;
-
-	char pokfile[PATH_MAX];
-
-        int ret;
-
-        ret=menu_filesel("Select POK File",filtros,pokfile);
-
-	//contenido
-	//MAX_LINEAS_POK_FILE es maximo de lineas de pok file
-	//normalmente la tabla de pokes sera menor que el numero de lineas en el archivo .pok
-	struct s_pokfile tabla_pokes[MAX_LINEAS_POK_FILE];
-
-	//punteros
-	struct s_pokfile *punteros_pokes[MAX_LINEAS_POK_FILE];
-
-	int i;
-	for (i=0;i<MAX_LINEAS_POK_FILE;i++) punteros_pokes[i]=&tabla_pokes[i];
-
-
-        if (ret==1) {
-
-                cls_menu_overlay();
-		int total=util_parse_pok_file(pokfile,punteros_pokes);
-
-		if (total<1) {
-			debug_printf (VERBOSE_ERR,"Error parsing POK file");
-			return;
-		}
-
-		int j;
-		for (j=0;j<total;j++) {
-			debug_printf (VERBOSE_DEBUG,"menu poke index %d text %s bank %d address %d value %d value_orig %d",
-				punteros_pokes[j]->indice_accion,
-				punteros_pokes[j]->texto,
-				punteros_pokes[j]->banco,
-				punteros_pokes[j]->direccion,
-				punteros_pokes[j]->valor,
-				punteros_pokes[j]->valor_orig);
-		}
-
-
-		//Meter cada poke en un menu
-
-
-
-
-        menu_item *array_menu_debug_pok_file;
-        menu_item item_seleccionado;
-        int retorno_menu;
-	//Resetear siempre ultima linea = 0
-	debug_pok_file_opcion_seleccionada=0;
-
-	//temporal para mostrar todos los caracteres 0-255
-	//int temp_conta=1;
-
-        do {
-
-
-
-		//Meter primer item de menu
-		//truncar texto a 28 caracteres si excede de eso
-		if (strlen(punteros_pokes[0]->texto)>28) punteros_pokes[0]->texto[28]=0;
-                menu_add_item_menu_inicial_format(&array_menu_debug_pok_file,MENU_OPCION_NORMAL,NULL,NULL,"%s", punteros_pokes[0]->texto);
-
-
-		//Luego recorrer array de pokes y cuando el numero de poke se incrementa, agregar
-		int poke_anterior=0;
-
-		int total_elementos=1;
-
-		for (j=1;j<total;j++) {
-			if (punteros_pokes[j]->indice_accion!=poke_anterior) {
-
-				//temp para mostrar todos los caracteres 0-255
-				//int kk;
-				//for (kk=0;kk<strlen(punteros_pokes[j]->texto);kk++) {
-				//	punteros_pokes[j]->texto[kk]=temp_conta++;
-				//	if (temp_conta==256) temp_conta=1;
-				//}
-
-				poke_anterior=punteros_pokes[j]->indice_accion;
-				//truncar texto a 28 caracteres si excede de eso
-				if (strlen(punteros_pokes[j]->texto)>28) punteros_pokes[j]->texto[28]=0;
-				menu_add_item_menu_format(array_menu_debug_pok_file,MENU_OPCION_NORMAL,NULL,NULL,"%s", punteros_pokes[j]->texto);
-
-				total_elementos++;
-				if (total_elementos==20) {
-					debug_printf (VERBOSE_DEBUG,"Too many pokes to show on Window. Showing only first 20");
-					menu_warn_message("Too many pokes to show on Window. Showing only first 20");
-					break;
-				}
-
-
-			}
-		}
-
-
-
-                menu_add_item_menu(array_menu_debug_pok_file,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-                //menu_add_item_menu(array_menu_debug_pok_file,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_debug_pok_file);
-
-                retorno_menu=menu_dibuja_menu(&debug_pok_file_opcion_seleccionada,&item_seleccionado,array_menu_debug_pok_file,"Select Poke" );
-
-                cls_menu_overlay();
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-
-			//Hacer poke sabiendo la linea seleccionada. Desde ahi, ejecutar todos los pokes de dicha accion
-			debug_printf (VERBOSE_DEBUG,"Doing poke/s from line %d",debug_pok_file_opcion_seleccionada);
-
-			z80_byte banco;
-			z80_int direccion;
-			z80_byte valor;
-
-			//buscar indice_accion
-			int result_poke=0;
-			for (j=0;j<total && result_poke==0;j++) {
-
-				debug_printf (VERBOSE_DEBUG,"index %d looking %d current %d",j,debug_pok_file_opcion_seleccionada,punteros_pokes[j]->indice_accion);
-
-				if (punteros_pokes[j]->indice_accion==debug_pok_file_opcion_seleccionada) {
-					banco=punteros_pokes[j]->banco;
-					direccion=punteros_pokes[j]->direccion;
-					valor=punteros_pokes[j]->valor;
-					debug_printf (VERBOSE_DEBUG,"Doing poke bank %d address %d value %d",banco,direccion,valor);
-					result_poke=util_poke(banco,direccion,valor);
-				}
-
-
-                        //        cls_menu_overlay();
-
-			}
-			if (result_poke==0) menu_generic_message("Poke","OK. Poke applied");
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-
-
-
-        }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-void menu_poke(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_poke;
-        menu_item item_seleccionado;
-        int retorno_menu;
-
-        do {
-
-
-                menu_add_item_menu_inicial_format(&array_menu_poke,MENU_OPCION_NORMAL,menu_debug_poke,NULL,"~~Poke");
-                menu_add_item_menu_shortcut(array_menu_poke,'p');
-                menu_add_item_menu_tooltip(array_menu_poke,"Poke address");
-                menu_add_item_menu_ayuda(array_menu_poke,"Poke address for infinite lives, etc... This item follows active memory zone. "
-					"You can also poke on read-only memory, depending on the current memory zone");
-
-		//No tiene sentido pues se puede usar las memory zones para esto
-		/*if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_ZXUNO_BOOTM_DISABLED) {
-			menu_add_item_menu(array_menu_poke,"Poke 128~~k mode",MENU_OPCION_NORMAL,menu_debug_poke_128k,NULL);
-			menu_add_item_menu_shortcut(array_menu_poke,'k');
-			menu_add_item_menu_tooltip(array_menu_poke,"Poke bank & address");
-			menu_add_item_menu_ayuda(array_menu_poke,"Poke bank & address");
-		}*/
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu(array_menu_poke,"Poke from .POK ~~file",MENU_OPCION_NORMAL,menu_debug_poke_pok_file,NULL);
-			menu_add_item_menu_shortcut(array_menu_poke,'f');
-			menu_add_item_menu_tooltip(array_menu_poke,"Poke reading .POK file");
-			menu_add_item_menu_ayuda(array_menu_poke,"Poke reading .POK file");
-		}
-
-
-                menu_add_item_menu(array_menu_poke,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-                //menu_add_item_menu(array_menu_poke,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_poke);
-
-                retorno_menu=menu_dibuja_menu(&poke_opcion_seleccionada,&item_seleccionado,array_menu_poke,"Poke" );
-
-                cls_menu_overlay();
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-}
 
 
 

@@ -45,11 +45,9 @@ extern void pruebas_texto_menu(void);
 extern void cls_menu_overlay(void);
 extern void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
 extern void normal_overlay_texto_menu(void);
-//extern int menu_second_layer;
+
 extern int menu_footer;
-//extern int menu_second_layer_counter;
-//extern void enable_second_layer(void);
-//extern void disable_second_layer(void);
+
 extern void enable_footer(void);
 extern void disable_footer(void);
 extern void menu_init_footer(void);
@@ -166,6 +164,131 @@ Como quedan los textos:
 	   MMC
           -ZXPAND-
 */
+
+
+#define MENU_OPCION_SEPARADOR 0
+#define MENU_OPCION_NORMAL 1
+#define MENU_OPCION_ESC 2
+
+
+//item de menu con memoria asignada pero item vacio
+//si se va a agregar un item, se agrega en el primero con este tipo de opcion
+#define MENU_OPCION_UNASSIGNED 254
+
+
+
+
+#define MENU_RETORNO_NORMAL 0
+#define MENU_RETORNO_ESC -1
+#define MENU_RETORNO_F1 -2
+#define MENU_RETORNO_F2 -3
+#define MENU_RETORNO_F10 -4
+
+
+//funcion a la que salta al darle al enter. valor_opcion es un valor que quien crea el menu puede haber establecido,
+//para cada item de menu, un valor diferente
+//al darle enter se envia el valor de ese item seleccionado a la opcion de menu
+typedef void (*t_menu_funcion)(MENU_ITEM_PARAMETERS);
+
+//funcion que retorna 1 o 0 segun si opcion activa
+typedef int (*t_menu_funcion_activo)(void);
+
+
+
+//Aunque en driver xwindows no cabe mas de 30 caracteres, en stdout, por ejemplo, cabe mucho mas.
+#define MAX_TEXTO_OPCION 60
+
+struct s_menu_item {
+	//texto de la opcion
+	//char *texto;
+
+	//Aunque en driver xwindows no cabe mas de 30 caracteres, en stdout, por ejemplo, cabe mucho mas
+	char texto_opcion[MAX_TEXTO_OPCION];
+
+	//texto de ayuda
+	char *texto_ayuda;
+
+	//texto de tooltip
+	char *texto_tooltip;
+
+	//atajo de teclado
+	z80_byte atajo_tecla;
+
+	//un valor enviado a la opcion, que puede establecer la funcion que agrega el item
+	int valor_opcion;
+
+	//Para tipos de menus "tabulados", aquellos en que:
+	//-no se crea ventana al abrir
+	//-las opciones tienen coordenadas X e Y relativas a la ventana activa
+	//-se puede mover tambien usando teclas izquierda, derecha
+	//-el texto de las opciones no se rellena con espacios por la derecha, se muestra tal cual en las coordenadas X e Y indicadas
+
+	int es_menu_tabulado;
+	int menu_tabulado_x;
+	int menu_tabulado_y;
+
+	//tipo de la opcion
+	int tipo_opcion;
+	//funcion a la que debe saltar
+	t_menu_funcion menu_funcion;
+	//funcion que retorna 1 o 0 segun si opcion activa
+	t_menu_funcion_activo menu_funcion_activo;
+
+	//funcion a la que debe saltar al pulsar espacio
+	t_menu_funcion menu_funcion_espacio;
+
+	//siguiente item
+	struct s_menu_item *next;
+};
+
+typedef struct s_menu_item menu_item;
+
+
+
+extern void menu_ventana_scanf(char *titulo,char *texto,int max_length);
+extern int menu_filesel(char *titulo,char *filtros[],char *archivo);
+
+extern void menu_add_item_menu_inicial(menu_item **m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo);
+extern void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...);
+extern void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo);
+extern void menu_add_item_menu_format(menu_item *m,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...);
+extern void menu_add_item_menu_ayuda(menu_item *m,char *texto_ayuda);
+extern void menu_add_item_menu_tooltip(menu_item *m,char *texto_tooltip);
+extern void menu_add_item_menu_shortcut(menu_item *m,z80_byte tecla);
+extern void menu_add_item_menu_valor_opcion(menu_item *m,int valor_opcion);
+extern void menu_add_item_menu_tabulado(menu_item *m,int x,int y);
+
+
+extern void menu_warn_message(char *texto);
+extern void menu_error_message(char *texto);
+
+extern void menu_generic_message(char *titulo, const char * texto);
+extern void menu_generic_message_format(char *titulo, const char * format , ...);
+extern void menu_generic_message_splash(char *titulo, const char * texto);
+
+
+struct s_generic_message_tooltip_return {
+	char texto_seleccionado[40];
+	int linea_seleccionada;
+	int estado_retorno; //Retorna 1 si sale con enter. Retorna 0 si sale con ESC
+};
+
+typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
+
+extern void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
+
+#define TOOLTIP_SECONDS 4
+#define WINDOW_SPLASH_SECONDS 3
+
+extern void menu_add_ESC_item(menu_item *array_menu_item);
+extern int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item *m,char *titulo);
+
+
+
+
+
+
+
 
 
 

@@ -269,9 +269,9 @@ void scrsdl_refresca_pantalla(void)
                 //esto invalida la cache y por tanto ralentizando el refresco de pantalla
                 //clear_putpixel_cache();
 
-                if (menu_multitarea==0 && menu_abierto) {
-                  spectrum_colortable=spectrum_colortable_blanco_y_negro;
-                }
+                screen_change_bw_menu_multitask();
+
+
         }
 
 
