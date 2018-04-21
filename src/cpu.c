@@ -605,7 +605,7 @@ void cpu_set_turbo_speed(void)
 
 	int t_estados_en_linea=t_estados % screen_testados_linea;
 
-	int t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
+	//int t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
 
 	//printf ("Before changing turbo, t-scanline: %d, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_scanline,t_estados,t_estados_en_linea,t_estados_percx);
 
@@ -655,7 +655,7 @@ void cpu_set_turbo_speed(void)
 
 	t_estados_en_linea=t_estados % screen_testados_linea;
 
-	t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
+	//t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
 
 	//printf ("After changing turbo, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_estados,t_estados_en_linea,t_estados_percx);
 	//printf ("Calculated t-scanline according to t-states: %d\n",t_estados / screen_testados_linea);

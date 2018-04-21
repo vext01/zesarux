@@ -1456,10 +1456,10 @@ void tsconf_store_scanline_border_supinf_izqder(int tipo)
 
   if (visible_scanline<0) return;
 
-	int ancho_linea,alto;
+	int ancho_linea;
 
         ancho_linea=get_total_ancho_rainbow();
-        alto=get_total_alto_rainbow();
+        //alto=get_total_alto_rainbow();
 
   z80_int *destino;
   destino=&rainbow_buffer[visible_scanline*2*ancho_linea]; //doble pixel en altura

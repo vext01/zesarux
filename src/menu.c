@@ -6542,7 +6542,7 @@ int menu_debug_registers_print_registers(int linea)
 				menu_debug_memory_pointer_copia=menu_debug_disassemble_subir_veces(puntero_ptr_inicial,menu_debug_line_cursor);
          
 
-					char buffer_registros[33];
+					//char buffer_registros[33];
 
         //Comportamiento de 1 caracter de margen a la izquierda en ventana 
         int antes_menu_escribe_linea_startx=menu_escribe_linea_startx;
@@ -6553,7 +6553,7 @@ int menu_debug_registers_print_registers(int linea)
                                 for (i=0;i<limite;i++) {
 
 					//Por si acaso
-					buffer_registros[0]=0;
+					//buffer_registros[0]=0;
 
 					//Inicializamos linea a mostrar primero con espacios
 					
@@ -11864,18 +11864,18 @@ char textoplayer[40];
 				
 
 
-				int valor_contador_segundo_anterior;
+				//int valor_contador_segundo_anterior;
 
-				valor_contador_segundo_anterior=contador_segundo;
+				//valor_contador_segundo_anterior=contador_segundo;
 
 int mostrar_player;
 
-int mostrar_antes_player=-1;
+//int mostrar_antes_player=-1;
 
 	mostrar_player=menu_audio_new_ayplayer_si_mostrar();
 
 
-				mostrar_antes_player=mostrar_player;
+				//mostrar_antes_player=mostrar_player;
 
 
 

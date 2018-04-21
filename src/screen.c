@@ -13360,10 +13360,10 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
 	int columna=0;
 	int fila=0;
 
-        z80_byte font_page=tsconf_get_text_font_page();
+        //z80_byte font_page=tsconf_get_text_font_page();
 
-        z80_byte *puntero_fuente;
-        puntero_fuente=tsconf_ram_mem_table[font_page];
+        //z80_byte *puntero_fuente;
+        //puntero_fuente=tsconf_ram_mem_table[font_page];
 
         z80_int puntero_orig=puntero;
 
@@ -13373,11 +13373,11 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
 
 
 
-        z80_bit inverse;
+        //z80_bit inverse;
 
-        inverse.v=0;
+        //inverse.v=0;
 
-        z80_int offset_caracter;
+        //z80_int offset_caracter;
 
         z80_byte tinta,papel;
 
@@ -13393,7 +13393,7 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
                 puntero++;
 
 
-		offset_caracter=caracter*8;
+		//offset_caracter=caracter*8;
 
                 //No tengo ni idea de si se leen los atributos asi, pero parece similar al real
                 //tinta=atributo&15;
