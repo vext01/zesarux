@@ -5996,10 +5996,10 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 {
 	char buffer_flags[32];
 
-	char textopaginasmem[100];
+	//char textopaginasmem[100];
 
-	char textopaginasmem_linea1[100];
-	char textopaginasmem_linea2[100];
+	//char textopaginasmem_linea1[100];
+	//char textopaginasmem_linea2[100];
 
         debug_memory_segment segmentos[MAX_DEBUG_MEMORY_SEGMENTS];
         int total_segmentos=debug_get_memory_pages_extended(segmentos);

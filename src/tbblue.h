@@ -187,4 +187,10 @@ extern z80_int tbblue_copper_pc;
 
 #define TBBLUE_COPPER_MEMORY_ZONE_NUM 17
 
+extern int tbblue_get_current_raster_horiz_position(void);
+extern int tbblue_get_current_raster_position(void);
+extern int tbblue_copper_wait_cond_fired(void);
+extern void tbblue_copper_handle_next_opcode(void);
+extern void tbblue_copper_handle_vsync(void);
+
 #endif

@@ -1400,7 +1400,7 @@ dandanator.o: dandanator.c dandanator.h cpu.h debug.h utils.h operaciones.h ula.
 betadisk.o: betadisk.c betadisk.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h tsconf.h tape.h
 	\$(CC) \$(CFLAGS) -c betadisk.c
 
-codetests.o: codetests.c codetests.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h
+codetests.o: codetests.c codetests.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h tbblue.h
 	\$(CC) \$(CFLAGS) -c codetests.c
 
 kartusho.o: kartusho.c kartusho.h cpu.h debug.h utils.h operaciones.h ula.h

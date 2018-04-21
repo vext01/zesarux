@@ -69,4 +69,6 @@ extern int baseconf_sd_enabled;
 
 extern int baseconf_sd_cs;
 
+extern int baseconf_shadow_ports_available(void);
+
 #endif

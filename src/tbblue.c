@@ -226,7 +226,7 @@ void tbblue_copper_run_opcodes(void)
 		else {
 			//Es un wait
 			//Si se cumple, saltar siguiente posicion
-			z80_int linea, horiz;
+			//z80_int linea, horiz;
 			//tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
 			if (tbblue_copper_wait_cond_fired () ) {
                                                         //printf ("Wait condition positive at copper_pc %02XH scanline %d raster %d\n",tbblue_copper_pc,t_scanline,tbblue_get_current_raster_position() );
