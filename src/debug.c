@@ -87,7 +87,7 @@
 
 struct timeval debug_timer_antes, debug_timer_ahora;
 
-int verbose_level=0;
+
 
 
 z80_bit menu_breakpoint_exception={0};
@@ -109,10 +109,7 @@ int debug_breakpoints_conditions_saltado[MAX_BREAKPOINTS_CONDITIONS];
 //A 1 si ese breakpoint esta activado. A 0 si no
 int debug_breakpoints_conditions_enabled[MAX_BREAKPOINTS_CONDITIONS];
 
-//Comportamiento al saltar un breakpoint:
-//0: salta el breakpoint siempre que se cumpla condicion
-//1: salta el breakpoint cuando la condicion pasa de false a true
-z80_bit debug_breakpoints_cond_behaviour={1};
+
 
 
 
@@ -159,11 +156,7 @@ int debug_enterrom=0;
 int debug_exitrom=0;
 
 
-//Si mostrar aviso cuando se cumple un breakpoint
-int debug_show_fired_breakpoints_type=0;
-//0: siempre
-//1: solo cuando condicion no es tipo "PC=XXXX"
-//2: nunca
+
 
 
 //Mensaje que ha hecho saltar el breakpoint

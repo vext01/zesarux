@@ -115,6 +115,7 @@ The scancodes in translated scancode set 2 are given in hex. Between parentheses
 #include "prism.h"
 #include "sam.h"
 #include "ql.h"
+#include "settings.h"
 
 z80_byte *fbdev_pointer = 0;
   long int fbdev_screensize = 0;

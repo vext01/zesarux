@@ -26,6 +26,7 @@
 #include "cpu.h"
 #include "debug.h"
 #include "audio.h"
+#include "settings.h"
 
 
 

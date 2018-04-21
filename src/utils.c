@@ -93,6 +93,7 @@
 #include "multiface.h"
 #include "pd765.h"
 #include "baseconf.h"
+#include "settings.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;

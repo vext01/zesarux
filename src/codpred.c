@@ -27,6 +27,7 @@
 #include "zxuno.h"
 #include "tbblue.h"
 #include "screen.h"
+#include "settings.h"
 
 void invalid_opcode_ed(char *s)
 {

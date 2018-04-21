@@ -41,6 +41,7 @@ videoname with the video driver name in lowercase letters, like "xwindows"
 #include "debug.h"
 #include "menu.h"
 #include "cpc.h"
+#include "settings.h"
 
 #include <string.h>
 #include <stdio.h>

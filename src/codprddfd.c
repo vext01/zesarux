@@ -26,6 +26,7 @@
 #include "contend.h"
 #include "compileoptions.h"
 #include "utils.h"
+#include "settings.h"
 
  
 

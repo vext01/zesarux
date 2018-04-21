@@ -43,6 +43,7 @@
 #include "prism.h"
 #include "sam.h"
 #include "ql.h"
+#include "settings.h"
 
 
 SDL_Window *window=NULL;

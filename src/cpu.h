@@ -486,7 +486,6 @@ extern z80_bit sdl_raw_keyboard_read;
 
 extern z80_bit core_spectrum_uses_reduced;
 
-extern z80_bit debug_shows_invalid_opcode;
 
 extern char parameter_disablebetawarning[];
 

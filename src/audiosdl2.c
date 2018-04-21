@@ -36,6 +36,7 @@
 #include "cpu.h"
 #include "debug.h"
 #include "utils.h"
+#include "settings.h"
 
 
 //char *buffer_actual;

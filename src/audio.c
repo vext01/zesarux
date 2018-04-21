@@ -33,6 +33,7 @@
 #include "autoselectoptions.h"
 #include "operaciones.h"
 #include "cpc.h"
+#include "settings.h"
 
 #include "audionull.h"
 

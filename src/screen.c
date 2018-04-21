@@ -50,6 +50,7 @@
 #include "tbblue.h"
 #include "tsconf.h"
 #include "mk14.h"
+#include "settings.h"
 
 //Incluimos estos dos para la funcion de fade out
 #ifdef COMPILE_XWINDOWS

@@ -27,6 +27,8 @@
 #include "screen.h"
 #include "cpu.h"
 
+#include "settings.h"
+
 
 void scrnull_z88_cpc_load_keymap(void)
 {

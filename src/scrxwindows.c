@@ -41,6 +41,7 @@
 #include "prism.h"
 #include "sam.h"
 #include "ql.h"
+#include "settings.h"
 
 
 #include <X11/Xlib.h> // Every Xlib program must include this

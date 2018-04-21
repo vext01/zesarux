@@ -30,5 +30,15 @@ extern z80_bit debug_settings_show_screen;
 
 extern int debug_registers;
 
+extern z80_bit debug_shows_invalid_opcode;
+
+extern z80_bit debug_breakpoints_cond_behaviour;
+
+extern int remote_debug_settings;
+
+extern int debug_show_fired_breakpoints_type;
+
+extern int verbose_level;
+
 #endif
 

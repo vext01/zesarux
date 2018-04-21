@@ -36,7 +36,7 @@ extern void cpu_panic(char *mensaje);
 
 extern void debug_tiempo_inicial(void);
 extern void debug_tiempo_final(void);
-extern int verbose_level;
+
 extern void debug_printf (int debuglevel,__const char *__restrict __format, ...);
 
 extern z80_bit menu_breakpoint_exception;
@@ -61,7 +61,7 @@ extern int debug_breakpoints_conditions_saltado[MAX_BREAKPOINTS_CONDITIONS];
 
 extern int debug_breakpoints_conditions_enabled[MAX_BREAKPOINTS_CONDITIONS];
 
-extern z80_bit debug_breakpoints_cond_behaviour;
+
 
 //#define MAX_BREAKPOINTS_PEEK 4
 //extern int debug_breakpoints_peek_array[];
@@ -292,6 +292,6 @@ extern void debug_get_user_stack_values(int items, char *texto);
 
 extern int debug_text_is_pc_condition(char *cond);
 
-extern int debug_show_fired_breakpoints_type;
+
 
 #endif

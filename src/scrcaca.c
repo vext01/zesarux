@@ -35,6 +35,7 @@
 #include "utils.h"
 #include "joystick.h"
 #include "z88.h"
+#include "settings.h"
 
 int imgwidth,imgheight;
 

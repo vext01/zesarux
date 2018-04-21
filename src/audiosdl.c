@@ -34,6 +34,7 @@
 #include "audio.h"
 #include "cpu.h"
 #include "debug.h"
+#include "settings.h"
 
 
 //char *buffer_actual;

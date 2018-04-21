@@ -36,6 +36,7 @@
 #include "audio.h"
 #include "compileoptions.h"
 #include "debug.h"
+#include "settings.h"
 
 
 

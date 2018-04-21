@@ -35,7 +35,7 @@ extern int remote_salir_conexion;
 //extern int towindows_remote_cpu_run_limite;
 //extern int towindows_remote_cpu_run_loop;
 
-extern int remote_debug_settings;
+
 
 #define DEFAULT_REMOTE_PROTOCOL_PORT 10000
 

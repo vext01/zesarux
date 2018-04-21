@@ -39,6 +39,7 @@
 #include "ula.h"
 #include "z88.h"
 #include "textspeech.h"
+#include "settings.h"
 
 
 aa_context *context;

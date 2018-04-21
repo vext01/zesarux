@@ -48,6 +48,7 @@
 #include "snap.h"
 #include "kartusho.h"
 #include "zxevo.h"
+#include "settings.h"
 
 
 
@@ -59,9 +60,7 @@ z80_bit remote_ack_enter_cpu_step={0};
 //Si se llama a end_emulator desde aqui
 z80_bit remote_calling_end_emulator={0};
 
-//Opciones al hacer debug, en este caso, al ejecutar comandos paso a paso
-//Ver ayuda de comando set-debug-settings para entender significado
-int remote_debug_settings=1;
+
 
 #ifdef USE_PTHREADS
 

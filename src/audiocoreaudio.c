@@ -31,6 +31,7 @@
 #include "audiocoreaudio.h"
 #include "cpu.h"
 #include "debug.h"
+#include "settings.h"
 
 
 //saudiocoreaudio_fifo_t sound_fifo;

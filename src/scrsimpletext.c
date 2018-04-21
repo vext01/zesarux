@@ -38,6 +38,7 @@
 #include "timer.h"
 #include "chardetect.h"
 #include "tsconf.h"
+#include "settings.h"
 
 void scrsimpletext_repinta_pantalla(void);
 

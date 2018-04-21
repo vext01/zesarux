@@ -39,6 +39,7 @@
 #include "menu.h"
 #include "snap_zx8081.h"
 #include "utils.h"
+#include "settings.h"
 
 FILE *ptr_mycinta_smp;
 

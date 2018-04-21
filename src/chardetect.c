@@ -28,9 +28,11 @@
 #include "menu.h"
 #include "textspeech.h"
 #include "disassemble.h"
+#include "settings.h"
 
 #include <string.h>
 #include <stdio.h>
+
 
 
 

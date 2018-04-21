@@ -31,6 +31,7 @@
 #include "audio.h"
 #include "compileoptions.h"
 #include "utils.h"
+#include "settings.h"
 
 #ifdef USE_PTHREADS
 #include <pthread.h>

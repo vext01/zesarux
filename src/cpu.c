@@ -593,8 +593,7 @@ z80_bit set_machine_empties_audio_buffer={1};
 char parameter_disablebetawarning[100]="";
 
 
-//Si se muestra por verbose debug los opcodes incorrectos
-z80_bit debug_shows_invalid_opcode={0};
+
 
 void cpu_set_turbo_speed(void)
 {

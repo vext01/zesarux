@@ -45,6 +45,7 @@
 #include "prism.h"
 #include "sam.h"
 #include "ql.h"
+#include "settings.h"
 
 
 

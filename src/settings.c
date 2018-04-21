@@ -121,3 +121,25 @@ z80_bit menu_debug_registers_if_showscan={0};
 z80_bit debug_settings_show_screen={0};
 
 int debug_registers=0;
+
+//Si se muestra por verbose debug los opcodes incorrectos
+z80_bit debug_shows_invalid_opcode={0};
+
+//Comportamiento al saltar un breakpoint:
+//0: salta el breakpoint siempre que se cumpla condicion
+//1: salta el breakpoint cuando la condicion pasa de false a true
+z80_bit debug_breakpoints_cond_behaviour={1};
+
+//Opciones al hacer debug, en este caso, al ejecutar comandos paso a paso
+//Ver ayuda de comando set-debug-settings para entender significado
+int remote_debug_settings=1;
+
+
+//Si mostrar aviso cuando se cumple un breakpoint
+int debug_show_fired_breakpoints_type=0;
+//0: siempre
+//1: solo cuando condicion no es tipo "PC=XXXX"
+//2: nunca
+
+
+int verbose_level=0;
