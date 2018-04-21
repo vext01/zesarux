@@ -1517,6 +1517,7 @@ printf (
 
 		"--disablefooter            Disable window footer\n"
 		"--disablemultitaskmenu     Disable multitasking menu\n"
+		"--disablebw-no-multitask   Disable changing to black & white colours on the emulator machine when menu open and multitask is off\n"
 		"--nosplash                 Disable all splash texts\n"
 #ifndef MINGW
 		"--cpu-usage                Show host CPU usage on footer\n"
@@ -4931,7 +4932,11 @@ int parse_cmdline_options(void) {
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--disablemultitaskmenu")) {
-                                menu_multitarea=0;
+                menu_multitarea=0;
+			}
+		
+			else if (!strcmp(argv[puntero_parametro],"--disablebw-no-multitask")) {
+            	screen_bw_no_multitask_menu.v=0;
 			}
 
 

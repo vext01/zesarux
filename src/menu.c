@@ -25937,6 +25937,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Emulated machine display will change to black & white colours when menu open and multitask is off");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Emulated machine display will change to black & white colours when menu open and multitask is off");
+		
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~Window settings");
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'w');
