@@ -10635,6 +10635,8 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
 
+		menu_espera_no_tecla(); //Si no, se va al menu anterior.
+		//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
