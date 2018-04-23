@@ -1709,6 +1709,7 @@ void temp_tsconf_render_sprites(void)
 //Rutina rapida para renderizar tiles y sprites al final de cada frame
 //No es como lo hace la maquina real, la maquina real renderiza a cada scanline. Esta se mantiene para tener un metodo rapido de renderizacion
 //Requiere realvideo
+//Esta funcion y sus derivadas ya no se usan. Se guardan solo a nivel de historico
 void tsconf_fast_tilesprite_render(void)
 {
 

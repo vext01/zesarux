@@ -193,7 +193,7 @@ z80_bit tsconf_force_disable_layer_border={0};
 
 
 //Si se hace render de sprites y tiles usando funcion rapida de renderizado
-z80_bit tsconf_si_render_spritetile_rapido={0};
+//z80_bit tsconf_si_render_spritetile_rapido={0};
 
 z80_byte tsconf_get_video_mode_display(void)
 {
@@ -2410,7 +2410,8 @@ int spritestiles=1;
 
   if (spritestiles) {
 
-  if (tsconf_si_render_spritetile_rapido.v==0) {
+  //if (tsconf_si_render_spritetile_rapido.v==0) {
+  if (1) {
 	  //z80_byte tsconfig=tsconf_af_ports[6];
 	  //if (tsconfig&128) {
 	  if (tsconf_if_sprites_enabled() ) {
@@ -2954,7 +2955,7 @@ void screen_tsconf_refresca_pantalla(void)
 
 	else {
 	//modo rainbow - real video
-        if (tsconf_si_render_spritetile_rapido.v) tsconf_fast_tilesprite_render();
+        //if (tsconf_si_render_spritetile_rapido.v) tsconf_fast_tilesprite_render();
 
         screen_tsconf_refresca_rainbow();
 	}
