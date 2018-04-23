@@ -813,13 +813,6 @@ Mark Hutchings
 --- menu - fallos ---
 
 
--en algunas partes del menu:
-        clear_putpixel_cache();
-        //TODO: Si no se pone clear_putpixel_cache,
-        //al aparecer desde maquina zx80/81 desde menu, el texto se fusiona con el fondo de manera casi transparente,
-        //como si no borrase el putpixel cache
-        //esto también sucede en otras partes del código del menú pero no se por que es
-
 
 -------------
 
@@ -1580,7 +1573,7 @@ Maneras de solventarlo:
 *usar indices de colores distintos para todo el menu, para texto y pixeles (waveform, etc) Asi nunca coincidira con los colores de la cache putpixel de la maquina emulada
 ->no tiene mucho lio aunque hay que revisar todas las funciones de escribir texto en menu (todos drivers graficos) para que usen otros indices de colores
 
-*que cada vez que refresque pantalla con menu abierto, vacie la cache putpixel
+*que cada vez que refresque pantalla con menu abierto, vacie la cache putpixel llamando a clear_putpixel_cache
 ->esta es la solución que he hecho en ZEsarUX 7.0. las funciones deben llamar a menu_refresca_pantalla para refrescar pantalla
 (o a menu_cls_refresh_emulated_screen si tambien quieren borrar menu)
 
