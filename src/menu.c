@@ -1548,7 +1548,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	ventana_ancho=antes_ventana_ancho;
 	ventana_alto=antes_ventana_alto;
 
-	all_interlace_scr_refresca_pantalla();	
+	menu_refresca_pantalla();	
 
 
 	
@@ -1613,7 +1613,7 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 	do {
 		menu_scanf_print_string(string,offset_string,max_length_shown,x,y);
 
-		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+		if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
 		tecla=menu_get_pressed_key();
@@ -2055,6 +2055,24 @@ void menu_set_menu_abierto(int valor)
         clear_putpixel_cache();
 }
 
+//refresco de pantalla, limpiando cache putpixel al final, y avisando cambio de border, 
+//para que no haya problemas de colores oscuros que aparecen en el menu
+void menu_refresca_pantalla(void)
+{
+
+	modificado_border.v=1;
+    all_interlace_scr_refresca_pantalla();
+
+    //Nota: clear putpixel cache se hace pues, al refrescar pantalla previamente, si estaba sin modo color oscuro,
+    //se refresca con color normal, pero luego, si se llama aqui con color oscuro,
+    //en el putpixel cache habran muchos colores que coinciden (a nivel de color indexado es el mismo)
+    //solo que antes estaba un color normal y ahora es oscuro, y entonces el sistema de putpixel
+    //no volvera a hacer putpixel de esos colores
+
+   	//La solucion perfecta seria que, siempre que se cambie entre color oscuro y normal, se haga clear_putpixel_cache();
+
+     clear_putpixel_cache();
+}
 
 //Borra la pantalla del menu, refresca la pantalla de spectrum
 void menu_cls_refresh_emulated_screen()
@@ -2062,18 +2080,8 @@ void menu_cls_refresh_emulated_screen()
 
                 cls_menu_overlay();
 
-                modificado_border.v=1;
-                all_interlace_scr_refresca_pantalla();
+				menu_refresca_pantalla();
 
-                //Nota: clear putpixel cache se hace pues, al refrescar pantalla previamente, si estaba sin modo color oscuro,
-                //se refresca con color normal, pero luego, si se llama aqui con color oscuro,
-                //en el putpixel cache habran muchos colores que coinciden (a nivel de color indexado es el mismo)
-                //solo que antes estaba un color normal y ahora es oscuro, y entonces el sistema de putpixel
-                //no volvera a hacer putpixel de esos colores
-
-                //La solucion perfecta seria que, siempre que se cambie entre color oscuro y normal, se haga clear_putpixel_cache();
-
-                clear_putpixel_cache();
 }
 
 void enable_footer(void)
@@ -2944,7 +2952,7 @@ void menu_textspeech_send_text(char *texto)
 		//si no de que la maquina es muy lenta y tarda en refrescar la pantalla mientras esta
 		//esperando una tecla y reproduciendo speech. Si quito esto, sucede que
 		//si se pulsa el cursor rapido y hay speech, dicho cursor va "con retraso" una posicion
-	all_interlace_scr_refresca_pantalla();
+	menu_refresca_pantalla();
 
         do {
                 if (textspeech_finalizado_hijo_speech() ) scrtextspeech_filter_run_pending();
@@ -2982,7 +2990,7 @@ void menu_textspeech_send_text(char *texto)
 		if (contador_refresco==max_contador_refresco) {
 			printf ("refrescar\n");
 			contador_refresco=0;
-			all_interlace_scr_refresca_pantalla();
+			menu_refresca_pantalla();
 		}
 		*/
 
@@ -4029,7 +4037,7 @@ void menu_view_screen(MENU_ITEM_PARAMETERS)
 
 	menu_cls_refresh_emulated_screen();
 
-	//all_interlace_scr_refresca_pantalla();
+	//menu_refresca_pantalla();
         menu_espera_tecla();
 	menu_set_menu_abierto(1);
 	menu_espera_no_tecla();
@@ -4502,7 +4510,7 @@ menu_restore_overlay_text_contents(copia_overlay);
         ventana_ancho=antes_ventana_ancho;
         ventana_alto=antes_ventana_alto;
 
-        all_interlace_scr_refresca_pantalla();
+        menu_refresca_pantalla();
 
 
 
@@ -4687,7 +4695,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
 
-        	all_interlace_scr_refresca_pantalla();
+        	menu_refresca_pantalla();
 
 		tecla=0;
 
@@ -4978,7 +4986,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//Mostrar por un momento opciones y letras
 				menu_writing_inverse_color.v=1;
 				menu_escribe_opciones(m,entrada_atajo,max_opciones);
-				all_interlace_scr_refresca_pantalla();
+				menu_refresca_pantalla();
 				//menu_espera_no_tecla();
 				menu_dibuja_menu_espera_no_tecla();
 
@@ -5045,7 +5053,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			        //Desde los cambios de speech en menu, hace falta esto
 				//Sino, lo que se vea en el fondo del spectrum y se este modificando,
 				//se sobreescribe en el menu
-			        clear_putpixel_cache();
+			        //clear_putpixel_cache();
 
 				//Y volver a decir "active item"
 				menu_active_item_primera_vez=1;
@@ -7349,11 +7357,11 @@ void menu_debug_registers_if_cls(void)
 	if (debug_settings_show_screen.v) {
 		cls_menu_overlay();
 
-		all_interlace_scr_refresca_pantalla();
+		menu_refresca_pantalla();
 
 		//NOTA: Si no se hace esto, en modos zx80/81, se queda en color oscuro el texto de la ventana
 		//porque? no estoy seguro, pero es necesario esto
-		clear_putpixel_cache();
+		//clear_putpixel_cache();
 	}
 
 }
@@ -7601,7 +7609,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
-                        	if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                        	if (menu_multitarea==0) menu_refresca_pantalla();
 
 				//tecla=menu_get_pressed_key();
 
@@ -7772,7 +7780,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         cls_menu_overlay();
 					menu_debug_change_registers();
 
-        clear_putpixel_cache();
+        //clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
         //el texto se fusiona con el fondo de manera casi transparente,
         //como si no borrase el putpixel cache
@@ -7933,7 +7941,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			//Actualizamos pantalla
-			all_interlace_scr_refresca_pantalla();
+			menu_refresca_pantalla();
 
 
 			//Esperamos tecla
@@ -8115,7 +8123,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					menu_multitarea=antes_menu_multitarea;
 
-        clear_putpixel_cache();
+        //clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
         //el texto se fusiona con el fondo de manera casi transparente,
         //como si no borrase el putpixel cache
@@ -8141,7 +8149,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					menu_multitarea=antes_menu_multitarea;
 
-        clear_putpixel_cache();
+        //clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
         //el texto se fusiona con el fondo de manera casi transparente,
         //como si no borrase el putpixel cache
@@ -8565,7 +8573,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 				menu_escribe_linea_opcion(linea++,-1,1,textoshow);
 
-				if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+				if (menu_multitarea==0) menu_refresca_pantalla();
 
 
                                 menu_espera_tecla();
@@ -9574,7 +9582,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 //Restaurar comportamiento atajos
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
-		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+		if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
 
@@ -9976,7 +9984,7 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
                                 menu_escribe_linea_opcion(linea++,-1,1,"");
                                 menu_escribe_linea_opcion(linea++,-1,1,"M: Change pointer");
 
-                                if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                                if (menu_multitarea==0) menu_refresca_pantalla();
 
 
                                 menu_espera_tecla();
@@ -10310,7 +10318,7 @@ void menu_audio_espectro_sonido(MENU_ITEM_PARAMETERS)
 								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 									valor_contador_segundo_anterior=contador_segundo;
 									//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                       if (menu_multitarea==0) menu_refresca_pantalla();
 
 			char buffer_texto_medio[40];
 			sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
@@ -10609,7 +10617,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		valor_contador_segundo_anterior=contador_segundo;
 
 										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                       if (menu_multitarea==0) menu_refresca_pantalla();
 
 
                 }
@@ -11202,7 +11210,7 @@ valor_contador_segundo_anterior=contador_segundo;
 
 										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                       if (menu_multitarea==0) menu_refresca_pantalla();
 
 
                 }
@@ -11639,7 +11647,7 @@ menu_escribe_linea_opcion(linea++,-1,1,"~~Load");
 			//ay_player_file_song_name[1024];
 
 
-        	if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+        	if (menu_multitarea==0) menu_refresca_pantalla();
 
     	}
 
@@ -14149,7 +14157,7 @@ int menu_hardware_autofire_cond(void)
 void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
 {
         menu_simple_ventana("Redefine event","Please press the button/axis");
-	all_interlace_scr_refresca_pantalla();
+	menu_refresca_pantalla();
 
 	//Para xwindows hace falta esto, sino no refresca
 	 scr_actualiza_tablas_teclado();
@@ -14250,7 +14258,7 @@ void menu_hardware_realjoystick_keys_button(MENU_ITEM_PARAMETERS)
 
 
         	menu_simple_ventana("Redefine key","Please press the button/axis");
-        	all_interlace_scr_refresca_pantalla();
+        	menu_refresca_pantalla();
 
         	//Para xwindows hace falta esto, sino no refresca
         	scr_actualiza_tablas_teclado();
@@ -14533,7 +14541,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
                                                                 if ( ((contador_segundo%100) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0 || salir_por_boton) {
                                                                         valor_contador_segundo_anterior=contador_segundo;
                                                                         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                       if (menu_multitarea==0) menu_refresca_pantalla();
 
 
 
@@ -14613,7 +14621,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 				//Si ha salido por boton de joystick, esperar evento
 				if (salir_por_boton) {
-                       			if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                       			if (menu_multitarea==0) menu_refresca_pantalla();
 					menu_espera_no_tecla();
 				}
 				
@@ -17309,7 +17317,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 		menu_onscreen_keyboard_dibuja_cursor();
 
-       		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+       		if (menu_multitarea==0) menu_refresca_pantalla();
 		menu_espera_tecla();
 
 		tecla=menu_get_pressed_key();
@@ -22114,7 +22122,7 @@ void menu_debug_visualmem(MENU_ITEM_PARAMETERS)
 								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 											valor_contador_segundo_anterior=contador_segundo;
 											//printf ("Refrescando contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                       if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
@@ -22694,7 +22702,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 
 
-                        if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                        if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
@@ -23875,7 +23883,7 @@ void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
 
 
 
-                        if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                        if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
@@ -24044,7 +24052,7 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
-		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+		if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
 
@@ -24385,7 +24393,7 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
-		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+		if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
 
@@ -27038,7 +27046,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 
 
-				if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+				if (menu_multitarea==0) menu_refresca_pantalla();
 
 
                                 menu_espera_tecla();
@@ -28699,10 +28707,10 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
 		//Importante que este el clear_putpixel_cache
 		//sino con modo zx8081 la ventana se ve oscuro
-		clear_putpixel_cache();
+		//clear_putpixel_cache();
 	}
 
-	if (tooltip_enabled==0) cls_menu_overlay();
+	//if (tooltip_enabled==0) cls_menu_overlay();
 
         menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
 
@@ -28798,7 +28806,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 	*/
 
 
-        all_interlace_scr_refresca_pantalla();
+        menu_refresca_pantalla();
 
 
 							if (volver_timeout) {
@@ -29586,7 +29594,7 @@ Calculando ese tiempo: 12% cpu
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
 
-                        if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+                        if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
@@ -33547,7 +33555,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		//El menu_print_dir aqui no hace falta porque ya entrara en el switch (filesel_zona_pantalla) inicialmente cuando filesel_zona_pantalla vale 1
 		//menu_print_dir(filesel_archivo_seleccionado);
 
-		all_interlace_scr_refresca_pantalla();
+		menu_refresca_pantalla();
 
 
 		if (menu_filesel_posicionar_archivo.v) {
@@ -33656,7 +33664,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//Para no releer todas las entradas
 				menu_speech_tecla_pulsada=1;
 
-		                all_interlace_scr_refresca_pantalla();
+		                menu_refresca_pantalla();
 				menu_espera_tecla();
 				tecla=menu_get_pressed_key();
 
@@ -34053,7 +34061,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 menu_speech_tecla_pulsada=0;
 
 				menu_filesel_print_filters(filesel_filtros);
-		                all_interlace_scr_refresca_pantalla();
+		                menu_refresca_pantalla();
 
 				menu_espera_tecla();
 				tecla=menu_get_pressed_key();

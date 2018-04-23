@@ -288,6 +288,8 @@ extern int menu_confirm_yesno(char *texto_ventana);
 extern int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior);
 extern int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior);
 
+extern void menu_refresca_pantalla(void);
+
 //Fin funciones basicas que se suelen usar desde menu_items.c
 
 
