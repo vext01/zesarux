@@ -45,6 +45,9 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+-Buscar bytes en memory zone
+En ql llega a buscar?
+
 -Si hay error en config file no hace experthelp
 
 -Modo solo recreated en menú
