@@ -122,13 +122,13 @@ void coretests_compress_repetitions(void)
 
 	int max_array=MAX_COMP_REP_ARRAY; //siempre menor o igual que MAX_COMP_REP_ARRAY. tamanyo de los datos a analizar
 
-        int i;
+    int i;
 
 	int max_veces=MAX_COMP_REP_ARRAY; //Siempre menor o igual que MAX_COMP_REP_ARRAY. cuantos bytes repetimos
 
 	z80_byte magic_byte=0xDD;
 
-        for (i=0;i<=max_veces;i++) {
+    for (i=0;i<=max_veces;i++) {
 
 		int j;
 
@@ -185,7 +185,8 @@ void coretests_compress_repetitions(void)
 		}
 
 		printf ("\n");
-        }
+    }
+
 
 }
 

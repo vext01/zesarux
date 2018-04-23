@@ -15,7 +15,6 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
-* update a ultima version nextos rom, sd, etc
 
 
 Speech:
