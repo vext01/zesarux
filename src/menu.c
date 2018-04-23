@@ -4427,6 +4427,8 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 {
 
 	//Para guardar estado ventana al abrir tooltips y menu ayuda-> util en menus tabulados
+	//Tiene el inconveniente que cualquier accion de cls_menu_overlay desde menu_generic_message_tooltip no tendra efecto, pues esta funcion restaura el contenido
+	//antes de llamar aqui. Tiene que ser la funcion que llama aqui quien haga un cls despues si conviene
 	overlay_screen copia_overlay[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
         int antes_cuadrado_activo;
         z80_byte antes_cuadrado_x1,antes_cuadrado_y1,antes_cuadrado_x2,antes_cuadrado_y2,antes_cuadrado_color;
@@ -4831,6 +4833,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 					menu_dibuja_menu_help_tooltip(texto_ayuda,0);
+					cls_menu_overlay(); 
 
 					//menu_generic_message("Help",texto_ayuda);
 
@@ -5033,7 +5036,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 					menu_dibuja_menu_help_tooltip(texto_tooltip,1);
-				//menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto_tooltip);
+					cls_menu_overlay();
 
 
 				//Esperar no tecla
