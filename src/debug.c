@@ -4561,7 +4561,10 @@ int debug_find_free_breakpoint(void)
 int debug_add_breakpoint_free(char *breakpoint, char *action)
 {
 	int posicion=debug_find_free_breakpoint();
-	if (posicion<0) return -1;
+	if (posicion<0) {
+		debug_printf (VERBOSE_ERR,"No free breakpoint entry");
+		return -1;
+	}
 
 	debug_set_breakpoint(posicion,breakpoint);
 	debug_set_breakpoint_action(posicion,action);
