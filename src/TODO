@@ -315,7 +315,7 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 
 
 
--get-stack-backtrace para motorola
+-get-stack-backtrace para motorola. hay que tener uno para el user stack (usp) y el otro para el stack de (sp)
 
 -sonido y otros comandos parece que a veces dejan el ipc en estado inconsistente. Quiza tambien por eso algunos juegos, como el spacepods, se cuelga despues de una partida
 
