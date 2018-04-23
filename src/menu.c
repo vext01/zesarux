@@ -31027,8 +31027,8 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"Autoload on start: %s",
 			(autoload_snapshot_on_start.v ? "Yes" : "No") );
 
-                char string_autosnap_path[12];
-                menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,12);
+                char string_autosnap_path[14];
+                menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,14);
 
 
 		if (autosave_snapshot_on_exit.v || autoload_snapshot_on_start.v) {

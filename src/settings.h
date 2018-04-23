@@ -50,6 +50,7 @@ extern char zesarux_zxi_hardware_debug_file[];
 
 extern z80_bit autosave_snapshot_on_exit;
 extern z80_bit autoload_snapshot_on_start;
+extern char autosave_snapshot_path_buffer[];
 
 #endif
 

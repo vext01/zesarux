@@ -38,7 +38,6 @@ extern z80_byte snap_zx_version_save;
 extern void snap_simulate_load_espera_no_tecla(void);
 
 
-extern char autosave_snapshot_path_buffer[];
 
 extern void autosave_snapshot(void);
 

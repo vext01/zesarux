@@ -164,3 +164,6 @@ z80_bit autosave_snapshot_on_exit;
 
 //Autocargar snapshot al iniciar
 z80_bit autoload_snapshot_on_start;
+
+//ruta de autoguardado
+char autosave_snapshot_path_buffer[PATH_MAX];

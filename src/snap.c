@@ -109,8 +109,6 @@ void set_snap_file_options(char *filename)
 
 
 
-//ruta de autoguardado
-char autosave_snapshot_path_buffer[PATH_MAX];
 
 
 char *zxfile_machines_id[]={
