@@ -64,6 +64,7 @@
 #include "snap_rzx.h"
 #include "snap_zsf.h"
 #include "snap_spg.h"
+#include "settings.h"
 
 
 #include "autoselectoptions.h"
@@ -106,11 +107,6 @@ void set_snap_file_options(char *filename)
 	set_snaptape_fileoptions(filename);
 }
 
-//Autograbar snapshot al salir
-z80_bit autosave_snapshot_on_exit;
-
-//Autocargar snapshot al iniciar
-z80_bit autoload_snapshot_on_start;
 
 
 //ruta de autoguardado

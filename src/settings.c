@@ -152,3 +152,15 @@ z80_bit remote_protocol_enabled={0};
 z80_bit hardware_debug_port={0};
 
 char zesarux_zxi_hardware_debug_file[PATH_MAX]="";
+
+
+//
+// Snapshot Settings
+//
+
+
+//Autograbar snapshot al salir
+z80_bit autosave_snapshot_on_exit;
+
+//Autocargar snapshot al iniciar
+z80_bit autoload_snapshot_on_start;

@@ -47,5 +47,9 @@ extern z80_bit hardware_debug_port;
 
 extern char zesarux_zxi_hardware_debug_file[];
 
+
+extern z80_bit autosave_snapshot_on_exit;
+extern z80_bit autoload_snapshot_on_start;
+
 #endif
 
