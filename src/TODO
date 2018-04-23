@@ -2,10 +2,8 @@
   
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 -agregar en menu opciones de autosave, autoload y autosnappath. Revisar sobre todo esta ultima que no meta / adicional al final al grabar
--Comando ZRCP para volcar buffer pixeles y atributos de scanline buffer
 -Avisar si al hacer toggle breakpoint se llega al límite
 -Update imagen tbblue
--Agregar más Soft de tsconf
 -Out(c), f en cmos tsconf
 
 

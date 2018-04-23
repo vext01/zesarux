@@ -706,6 +706,8 @@ struct s_items_ayuda items_ayuda[]={
   {"disassemble","|d","[address] [lines]","Disassemble at address. If no address specified, "
                                         "disassemble from PC register. If no lines specified, disassembles one line"},
 	{"dump-nested-functions",NULL,NULL,"Shows internal nested core functions"},
+	{"dump-scanline-buffer",NULL,NULL,"Shows internal scanline rainbow buffer, pixel and atribute byte pairs"},
+
   {"enable-breakpoint","|eb","index","Enable specific breakpoint"},
   {"enable-breakpoints",NULL,NULL,"Enable breakpoints"},
   {"enter-cpu-step",NULL,NULL,"Enter cpu step to step mode"},
@@ -3228,6 +3230,16 @@ char buffer_retorno[2048];
 
 	else if (!strcmp(comando_sin_parametros,"dump-nested-functions")) {
 		remote_dump_nested_core_functions(misocket);
+	}
+
+	else if (!strcmp(comando_sin_parametros,"dump-scanline-buffer")) {
+
+		int limite=screen_testados_linea*2;
+
+		int i;
+		for (i=0;i<limite;i++) escribir_socket_format (misocket,"%02X ",scanline_buffer[i]);
+
+
 	}
 
   else if (!strcmp(comando_sin_parametros,"easter-egg")) {
