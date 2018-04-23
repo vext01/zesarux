@@ -7764,6 +7764,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_registers_change_ptr();
 
+					//menu_refresca_pantalla();
+
         //clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
         //el texto se fusiona con el fondo de manera casi transparente,
@@ -29364,6 +29366,10 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
         menu_dibuja_ventana(2,10,28,3,titulo);
 
 	menu_scanf(texto,max_length,20,3,11);
+
+	//Al salir
+	//menu_refresca_pantalla();
+	menu_cls_refresh_emulated_screen();
 
 }
 

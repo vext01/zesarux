@@ -1899,6 +1899,8 @@ void clear_putpixel_cache(void)
 {
 
 #ifdef PUTPIXELCACHE
+
+	debug_printf (VERBOSE_DEBUG,"Clearing putpixel cache");
 	int x,y;
 	int indice=0;
 
