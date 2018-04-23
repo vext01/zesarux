@@ -65,5 +65,7 @@ extern char *zxfile_machines_id[];
 
 extern char *z80file_machines_id[];
 
+#define AUTOSAVE_NAME "zesarux_autosave.zsf"
+
 
 #endif

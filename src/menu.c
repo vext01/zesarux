@@ -31021,19 +31021,29 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
+
 		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_exit,NULL,"Autosave on exit: %s",
 			(autosave_snapshot_on_exit.v ? "Yes" : "No") );
+		 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Saves a snapshot with the machine state when exiting ZEsarUX. Saved file is " AUTOSAVE_NAME);
+		 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Saves a snapshot with the machine state when exiting ZEsarUX. Saved file is " AUTOSAVE_NAME);
+
+
 
 		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"Autoload on start: %s",
 			(autoload_snapshot_on_start.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Loads the snapshot saved when starting ZEsarUX (previous menu item)");
+		menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Loads the snapshot saved when starting ZEsarUX (previous menu item)");
 
-                char string_autosnap_path[14];
-                menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,14);
 
 
 		if (autosave_snapshot_on_exit.v || autoload_snapshot_on_start.v) {
+                	char string_autosnap_path[14];
+	                menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,14);
 			menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap path: %s",string_autosnap_path);
+			menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Where to save/load automatic snapshot. If not set, uses current directory");
+			menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Where to save/load automatic snapshot. If not set, uses current directory");
 		}
+
 		
 
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
