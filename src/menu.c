@@ -31030,7 +31030,10 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
                 char string_autosnap_path[12];
                 menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,12);
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap path: %s",string_autosnap_path);
+
+		if (autosave_snapshot_on_exit.v || autoload_snapshot_on_start.v) {
+			menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap path: %s",string_autosnap_path);
+		}
 		
 
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
