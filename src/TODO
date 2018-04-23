@@ -1079,6 +1079,8 @@ en pruebas: -timer audio en raspberry, quiza pausa deberia ser menor en el caso 
 
 --- Genericos - mejoras ---
 
+-Lock sdl al refrescar hace printf?
+
 -Opción para indicar otro archivo de configuración 
 
 
@@ -1917,6 +1919,14 @@ esta haciendo bien el timing
 -Tzx de varias partes en zx81? De web de Kelly murta
 
 - Cabecera tzx que incluya versión emulador
+
+
+-Rutina cargar cualquier flag en copion
+Usa
+CP A
+SCF
+Quizá usa otro flag diferente del Z?
+Eso explicaría que el rocman no me cargue cuando permito el any flag loading
 
 
 -tzx:
