@@ -109,6 +109,15 @@ void coretests_dumphex_inicio_fin(z80_byte *ptr,int longitud,int max_mostrar)
 
 }
 
+void coretests_compress_repetitions_write_arr(z80_byte *variable,int indice,z80_byte valor,int size_array)
+{
+	//El bucle que llama aqui se sale de array, tanto por arriba como por abajo, por eso lo controlo y no escribo en ese caso
+	if (indice<0 || indice>=size_array) {
+		//printf ("Out of array: %d\n",indice);
+		return;
+	}
+	variable[indice]=valor;
+}
 
 void coretests_compress_repetitions(void)
 {
@@ -116,7 +125,7 @@ void coretests_compress_repetitions(void)
 
 #define MAX_COMP_REP_ARRAY 2048
 
-	z80_byte repetitions[MAX_COMP_REP_ARRAY];
+	z80_byte repetitions[MAX_COMP_REP_ARRAY]; 
 
 	z80_byte compressed_data[MAX_COMP_REP_ARRAY*2];
 
@@ -133,18 +142,24 @@ void coretests_compress_repetitions(void)
 		int j;
 
 		//Inicializar con valores consecutivos
+		printf ("Initializing with consecutive values\n");
 		for (j=0;j<max_array;j++) {
-			repetitions[j]=j&255;
+			//repetitions[j]=j&255;
+			coretests_compress_repetitions_write_arr(repetitions,j,j&255,MAX_COMP_REP_ARRAY);
 		}
 
+		printf ("Initializing with 0 from the left\n");
 		//Meter valores "0" al principio
 		for (j=0;j<=i;j++) {
-			repetitions[j]=0;
+			//repetitions[j]=0;
+			coretests_compress_repetitions_write_arr(repetitions,j,0,MAX_COMP_REP_ARRAY);
 		}
 
+		printf ("Initializing with 1 from the right\n");
 		//Meter valores "1" al final 
 		for (j=0;j<=i;j++) {
-			repetitions[max_array-1-j]=1;
+			coretests_compress_repetitions_write_arr(repetitions,max_array-1-j,1,MAX_COMP_REP_ARRAY);
+			//repetitions[max_array-1-j]=1;
 		}
 
                 //repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
@@ -351,23 +366,20 @@ void codetests_tbblue_get_horizontal_raster(void)
 
 
 
-void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
+void codetests_main(int main_argc,char *main_argv[])
 {
 
-
-
-	//de momento main_argc no se usa, de ahi que indique GCC_UNUSED, pero quiza en un futuro
+	if (main_argc>2) {
+		printf ("\nRunning compress/uncompress repetitions code\n");
+		coretests_compress_uncompress_repetitions(main_argv[2]);
+		exit(0);
+	}
 
 	printf ("\nRunning repetitions code\n");
 	codetests_repetitions();
 
 	printf ("\nRunning compress repetitions code\n");
 	coretests_compress_repetitions();
-
-	if (main_argc>2) {
-		printf ("\nRunning compress/uncompress repetitions code\n");
-		coretests_compress_uncompress_repetitions(main_argv[2]);
-	}
 
 	printf ("\nRunning get raster tbblue horizontal\n");
 	codetests_tbblue_get_horizontal_raster();
