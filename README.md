@@ -158,7 +158,7 @@ __FEATURES__
 
 * Simulates real tape loading on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81
 
-* Handles snapshot format: ZX, Z80, SP, SNA (loading only), P, O, Z81 (loading only), ACE
+* Handles snapshot format: ZSF, ZX, Z80, SP, SPG, SNA (loading only), P, O, Z81 (loading only), ACE
 
 * Handles RZX playback 
 
@@ -224,7 +224,7 @@ __FEATURES__
 
 * Can use a reduced Spectrum core, with some features disables, useful on slow devices, like Raspberry Pi 1/Zero
 
-* Powerful debug features: Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Load source code, Hexadecimal Dump, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
+* Powerful debug features: Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Dump, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
 
 * Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character rutines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can be also read by a text-to-speech program.
 
