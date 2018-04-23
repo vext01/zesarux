@@ -3234,7 +3234,11 @@ char buffer_retorno[2048];
 
 	else if (!strcmp(comando_sin_parametros,"dump-scanline-buffer")) {
 
-		int limite=screen_testados_linea*2;
+		int limite=screen_testados_linea*2; //2 pixeles por cada t-estado
+
+		limite /=8; //array es de bloques de 8 pixeles (espacio de atributo)
+
+		limite *=2; //y son pares de 8-pixel (byte) y atributo
 
 		int i;
 		for (i=0;i<limite;i++) escribir_socket_format (misocket,"%02X ",scanline_buffer[i]);
