@@ -133,7 +133,7 @@ void interrupcion_si_despues_lda_ir(void)
 {
 
 	//Esto es diferente en NMOS y en CMOS
-    if (MACHINE_IS_Z88) return;                //CMOS
+    if (MACHINE_IS_TSCONF) return;                //CMOS
 
 	//NMOS
 	//printf ("leido %d en interrupt\n",byte_leido_core_spectrum);

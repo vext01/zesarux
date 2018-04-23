@@ -1147,7 +1147,7 @@ void instruccion_ed_113 ()
 #endif
 
 	//Esto es diferente en NMOS y en CMOS
-	if (MACHINE_IS_Z88) {
+	if (MACHINE_IS_Z88 || MACHINE_IS_TSCONF) {
 		//CMOS
 		out_port(BC, 255);
 	}

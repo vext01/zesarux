@@ -4,7 +4,6 @@
 -agregar en menu opciones de autosave, autoload y autosnappath. Revisar sobre todo esta ultima que no meta / adicional al final al grabar
 -Avisar si al hacer toggle breakpoint se llega al límite
 -Update imagen tbblue
--Out(c), f en cmos tsconf
 
 
 TBBLUE:
