@@ -6,6 +6,8 @@
 -Comando ZRCP para volcar buffer pixeles y atributos de scanline buffer
 -Avisar si al hacer toggle breakpoint se llega al límite
 -Update imagen tbblue
+-Agregar más Soft de tsconf
+-Out(c), f en cmos tsconf
 
 
 TBBLUE:
@@ -42,6 +44,9 @@ Creo que ya esta
 
 
 --- Cosas para la siguiente version
+
+-Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
+Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
 -audio salida stereo. acb, abc, etc. Salida 16 bits?
 
@@ -763,6 +768,9 @@ ver que hace zxpand aqui....
 
 
 --- ZRCP remote command ---
+
+Macros o lenguaje en ZEsarUX
+Que permita integrar con ZRCP y acciones...
 
 -Protocolo remoto:
 Ver si la simulación de pulsado de escape desde smartload de remote protocol no se detecta como space-break en zxuno
