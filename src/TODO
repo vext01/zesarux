@@ -45,6 +45,10 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+-Si hay error en config file no hace experthelp
+
+-Modo solo recreated en menú
+
 -Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
 Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
@@ -401,6 +405,8 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 
 --- TSConf ---
+
+-Tsconf render modo spectrum compatible debería leer de buffer atributos y pixeles ; para que demos como overscan se vean bien
 
 -tsconf y tr-dos no deberia hacer nested_core, solo detectar cuando se esta en core trdos
 
