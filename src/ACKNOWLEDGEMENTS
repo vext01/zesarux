@@ -9,7 +9,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Samir Ribic, for helping me with the uploading of ZXSpectr, and for all the information included in his Warajevo emulator.
 -Martijn van der Heide, for uploading ZXSpectr on http://worldofspectrum.org/
 -Phillip Kendall, for telling me a bug with the BIT instruction on ZXSpectr. I also use some code from his Fuse emulator (opcode timings & disassemble function)
--Pedro Gimeno, for the timings of some instructions.
+-Pedro Gimeno, for the timings of some opcodes and contended memory information
 -Rodolfo Edison Guerra, for including ZXSpectr in his SpecBase and for all the information about TK90X and TK95
 -Paul Farrow, for the information and games for the ZX80 and ZX81 and Spectra Video modes. See http://www.fruitcake.plus.com/
 -Martin Korth, for the information about video signals on the ZX80 & ZX81. See http://nocash.emubase.de/zxdocs.htm
@@ -64,9 +64,9 @@ I want to thank the help and the collaboration of the following people (date sor
 -Roberto (zenvoid), for reporting me the bug with the IFF2 behaviour when firing an interrupt
 -Hacker VBI (Burenko Vladimir, Ukraine), for granting permission to include some demos and games for TSConf
 
--Everyone at Speccy, ZX80, ZX81, Z88 and Raspberry Pi forums with all the suggestions to my emulator
+-Everyone at several forums about Spectrum, ZX80, ZX81, Z88, Raspberry Pi, etc for all the suggestions to my emulator
 -Everyone who test the beta and stable versions of the emulator and report bugs
 -The following people who donated to ZEsarUX: Peter Jones, Daniel Leon Gonzalez, Jose Luis Fernandez Mayoralas, Francisco Gaytan Muñoz
--Anyone who makes demos for the Spectrum; they are a good field of testing for my emulator.
+-Anyone who makes demos for the Spectrum, they are a good field of testing for my emulator.
 
 And mainly to this big genius, Clive Sinclair.
