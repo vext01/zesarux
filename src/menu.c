@@ -30928,6 +30928,16 @@ void menu_snapshot_settings_compressed_zsf(MENU_ITEM_PARAMETERS)
 	zsf_force_uncompressed ^=1;
 }
 
+void menu_snapshot_autosave_exit(MENU_ITEM_PARAMETERS)
+{
+	autosave_snapshot_on_exit.v ^=1;
+}
+
+void menu_snapshot_autoload_start(MENU_ITEM_PARAMETERS)
+{
+        autoload_snapshot_on_start.v ^=1;
+}
+
 
 void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 {
@@ -30965,6 +30975,14 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 					"If current machine is not a Spectrum, loading a .sna snapshot will always switch to 48k/128k.\n"
 					"This setting only applies to .sna snapshots, but not to .z80, .zx, or any other snapshot type."
 				);
+
+
+
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_exit,NULL,"Autosave on exit: %s",
+			(autosave_snapshot_on_exit.v ? "Yes" : "No") );
+
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"Autoload on start: %s",
+			(autoload_snapshot_on_start.v ? "Yes" : "No") );
 
 
 
