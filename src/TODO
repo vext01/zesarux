@@ -1,8 +1,11 @@
---- Cosas para la version 6.1
+--- Cosas para la version 7.0
   
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 -quitar opcion fast render de tsconf. quiza dejar funciones sin usar por si en un futuro se quieren revisar
 -agregar en menu opciones de autosave, autoload y autosnappath. Revisar sobre todo esta ultima que no meta / adicional al final al grabar
+-Comando ZRCP para volcar buffer pixeles y atributos de scanline buffer
+-Avisar si al hacer toggle breakpoint se llega al límite
+-Update imagen tbblue
 
 
 TBBLUE:
@@ -33,7 +36,7 @@ O quizá setting configurable
 teclas F en general en fbdev driver no raw
 Creo que ya esta
 
---- Fin cosas para version 6.1
+--- Fin cosas para version 7.0
 
 
 
@@ -41,6 +44,8 @@ Creo que ya esta
 --- Cosas para la siguiente version
 
 -audio salida stereo. acb, abc, etc. Salida 16 bits?
+
+-Carga tspeeed que de un tono de carga acelerado para saber que lo está haciendo
 
 -quiza layout de teclado en menu deberia ser siempre el de Spectrum
 
