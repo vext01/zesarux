@@ -30939,6 +30939,48 @@ void menu_snapshot_autoload_start(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_snapshot_autosnap_path(MENU_ITEM_PARAMETERS)
+{
+
+        char *filtros[2];
+
+        filtros[0]="";
+        filtros[1]=0;
+
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+        int ret;
+
+
+        char nada[PATH_MAX];
+
+        //Obtenemos ultimo directorio visitado
+        menu_filesel_chdir(autosave_snapshot_path_buffer);
+
+
+        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+
+
+        //Si sale con ESC
+        if (ret==0) {
+                //Directorio root
+                sprintf (autosave_snapshot_path_buffer,"%s",menu_filesel_last_directory_seen);
+                debug_printf (VERBOSE_DEBUG,"Selected directory: %s",autosave_snapshot_path_buffer);
+
+
+        }
+
+
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
+
+}
+
+
 void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 {
 
@@ -30977,6 +31019,7 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 				);
 
 
+                menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_exit,NULL,"Autosave on exit: %s",
 			(autosave_snapshot_on_exit.v ? "Yes" : "No") );
@@ -30984,7 +31027,11 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"Autoload on start: %s",
 			(autoload_snapshot_on_start.v ? "Yes" : "No") );
 
+                char string_autosnap_path[12];
+                menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,12);
 
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap path: %s",string_autosnap_path);
+		
 
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 		menu_add_ESC_item(array_menu_settings_snapshot);
