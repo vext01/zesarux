@@ -1,9 +1,9 @@
 #!/bin/bash
 
+#probar a comprimir y descomprimir en memoria unos cuantos diferentes tipos de archivos, a ver si la rutina de ZSF funciona bien
 mkdir /tmp/pruebas
 cp *.c /tmp/pruebas
 cp *.rom /tmp/pruebas
-
 
 for i in /tmp/pruebas/*; do
 	echo "Running compress/uncompress test for $i"
