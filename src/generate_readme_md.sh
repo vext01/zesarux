@@ -14,7 +14,8 @@ Available versions for download here:
 * Raspberry pi (raspbian)
 
 Other by 3rd party:
-* Arch Linux:
+* Arch Linux
+* Slackware
 * Retropie/EmulationStation
 * Open Pandora
 * PocketCHIP
