@@ -144,7 +144,7 @@ paginacion, se pone pantalla en negro
 -probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
 -probar paleta gris, roja, verde, azul, inverso, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
--probar ClckFreq.p de zx81
+-probar ClckFreq.p de zx81 -> migrado a manual_tests
 -probar expansiones de ram de zx80/81
 -probar a generar algun error y que aparezca en menu
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
