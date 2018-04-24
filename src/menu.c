@@ -1550,6 +1550,30 @@ void menu_call_onscreen_keyboard_from_menu(void)
 
 	menu_refresca_pantalla();	
 
+	if (menu_overlay_activo && previous_function!=NULL) {
+			debug_printf (VERBOSE_INFO,"Refreshing text menu");
+
+			//Llamamos a refrescar texto del menu. Si no hicera eso, y por ejemplo pulso F1 y luego mantengo tecla ESC,
+			//mientras está ESC pulsado, el menu se ve oscuro hasta que suelto tecla, pues antes ha refrescado
+			//pero mezclando texto pues esta la putpixel cache
+			//esto se observa con estilo de gui Clean y maquina spectrum , por ejemplo
+			//sleep(4);
+			/*
+			Realmente lo que tendria que haber es un clear_putpixel_cache en cada scr_refresca_pantalla de cada driver asi como:
+			        if (menu_overlay_activo) {
+		      clear_putpixel_cache();
+         	menu_overlay_function();
+     }
+
+			Porque cuando hace ahi el menu_overlay_function, se ha escrito cosas en la putpixel cache y se ha cambiado de color oscuro a normal
+			Pero eso bajaria mucho el rendimiento cuando hay menu activo o hay un texto splash activo
+			
+			Realmente el clear_putpixel_cache aqui lo acabo haciendo al final de menu_refresca_pantalla, por lo que lo que viene a continuacion
+			es la misma llamada de menu_overlay_function pero ya con la cache limpia
+			*/
+			previous_function();
+	}
+
 
 	
 }
@@ -4521,6 +4545,20 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 			//mientras está ESC pulsado, el menu se ve oscuro hasta que suelto tecla, pues antes ha refrescado
 			//pero mezclando texto pues esta la putpixel cache
 			//esto se observa con estilo de gui Clean y maquina spectrum , por ejemplo
+			//sleep(4);
+			/*
+			Realmente lo que tendria que haber es un clear_putpixel_cache en cada scr_refresca_pantalla de cada driver asi como:
+			        if (menu_overlay_activo) {
+		      clear_putpixel_cache();
+         	menu_overlay_function();
+     }
+
+			Porque cuando hace ahi el menu_overlay_function, se ha escrito cosas en la putpixel cache y se ha cambiado de color oscuro a normal
+			Pero eso bajaria mucho el rendimiento cuando hay menu activo o hay un texto splash activo
+			
+			Realmente el clear_putpixel_cache aqui lo acabo haciendo al final de menu_refresca_pantalla, por lo que lo que viene a continuacion
+			es la misma llamada de menu_overlay_function pero ya con la cache limpia
+			*/
 			previous_function();
 		}
 
