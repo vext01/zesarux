@@ -27556,14 +27556,10 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 			if (MACHINE_IS_ZX8081) {
 				hotswap_machine_opcion_seleccionada=current_machine_type-120;
 				menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX-80",MENU_OPCION_NORMAL,NULL,NULL);
-	                        menu_add_item_menu(array_menu_machine_selection,"ZX-81",MENU_OPCION_NORMAL,NULL,NULL);
+	            menu_add_item_menu(array_menu_machine_selection,"ZX-81",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
-                        //maquinas z88
-                        if (MACHINE_IS_Z88) {
-                                hotswap_machine_opcion_seleccionada=current_machine_type-130;
-                                menu_add_item_menu_inicial(&array_menu_machine_selection,"Z88",MENU_OPCION_NORMAL,NULL,NULL);
-                        }
+                 
 
 			//maquinas chloe
 			if (MACHINE_IS_CHLOE) {
@@ -27577,33 +27573,14 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 
 			}
 
-			//maquina Prism
-			if (MACHINE_IS_PRISM) {
-				hotswap_machine_opcion_seleccionada=0;
-				menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
+			//Diferentes maquinas que solo pueden saltar a spectrum 48k
+			if (MACHINE_IS_PRISM || MACHINE_IS_TIMEX_TS2068 || MACHINE_IS_TBBLUE || MACHINE_IS_CHROME || MACHINE_IS_ZXEVO) {
+								hotswap_machine_opcion_seleccionada=0;
+								menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
-			//Timex ts 2068
-			if  (MACHINE_IS_TIMEX_TS2068) {
-                                hotswap_machine_opcion_seleccionada=0;
-                                menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
-                        }
+			
 
-			if (MACHINE_IS_TBBLUE) {
-                                hotswap_machine_opcion_seleccionada=0;
-                                menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
-                        }
-
-
-			if (MACHINE_IS_CHROME) {
-									                                hotswap_machine_opcion_seleccionada=0;
-									                                menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
-						}
-
-						if (MACHINE_IS_TSCONF) {
-												                                hotswap_machine_opcion_seleccionada=0;
-												                                menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
-									}
 
                         menu_add_item_menu(array_menu_machine_selection,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                         //menu_add_item_menu(array_menu_machine_selection,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -27779,11 +27756,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 					return; //Para evitar saltar a otro if
 				}
 
-				if (MACHINE_IS_Z88) {
-					//no hacer nada
-					salir_todos_menus=1;
-					return; //Para evitar saltar a otro if
-				}
+
 
 				if (MACHINE_IS_CHLOE) {
                                         if (hotswap_machine_opcion_seleccionada==2) {
@@ -27796,41 +27769,21 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
                 	                        post_set_machine(NULL);
 
 					}
-                                        //Y salimos de todos los menus
-                                        salir_todos_menus=1;
+                    //Y salimos de todos los menus
+                    salir_todos_menus=1;
 					return; //Para evitar saltar a otro if
 				}
 
-				if (MACHINE_IS_PRISM) {
+				if (MACHINE_IS_PRISM || MACHINE_IS_TIMEX_TS2068 || MACHINE_IS_TBBLUE || MACHINE_IS_CHROME || MACHINE_IS_ZXEVO) {
 					hotswap_any_machine_to_spec48();
-                                        salir_todos_menus=1;
+                    salir_todos_menus=1;
 					return; //Para evitar saltar a otro if
-                                }
+                }
 
-				if (MACHINE_IS_TIMEX_TS2068) {
-                                        hotswap_any_machine_to_spec48();
-                                        salir_todos_menus=1;
-					return; //Para evitar saltar a otro if
-                                }
-
-				if (MACHINE_IS_TBBLUE) {
-                                        hotswap_any_machine_to_spec48();
-                                        salir_todos_menus=1;
-                                        return; //Para evitar saltar a otro if
-                                }
-																if (MACHINE_IS_CHROME) {
-																																hotswap_any_machine_to_spec48();
-																																salir_todos_menus=1;
-																																return; //Para evitar saltar a otro if
-																												}
-																												if (MACHINE_IS_TSCONF) {
-																																												hotswap_any_machine_to_spec48();
-																																												salir_todos_menus=1;
-																																												return; //Para evitar saltar a otro if
-																																								}
+				
 
 
-                        }
+            }
 
 		} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
@@ -28082,15 +28035,21 @@ void menu_custom_machine(MENU_ITEM_PARAMETERS)
 
 int menu_hotswap_machine_cond(void) {
 
-	if (MACHINE_IS_Z88) return 0;
-	if (MACHINE_IS_ACE) return 0;
-	if (MACHINE_IS_CPC) return 0;
-	if (MACHINE_IS_SAM) return 0;
-	if (MACHINE_IS_QL) return 0;
-	if (MACHINE_IS_MK14) return 0;
+	//Retornar ok solo para determinadas maquinas
+	if (MACHINE_IS_SPECTRUM_16_48)  return 1;
+	if (MACHINE_IS_SPECTRUM_128_P2)  return 1;
+	if (MACHINE_IS_SPECTRUM_P2A_P3)  return 1;
+    if (MACHINE_IS_ZXUNO)  return 1;
+	if (MACHINE_IS_ZX8081)  return 1;
+	if (MACHINE_IS_CHLOE)  return 1;
+	if (MACHINE_IS_PRISM)  return 1;
+	if (MACHINE_IS_TIMEX_TS2068)  return 1;
+	if (MACHINE_IS_TBBLUE)  return 1;
+	if (MACHINE_IS_CHROME)  return 1;
+	if (MACHINE_IS_ZXEVO)  return 1;
 
 
-	return 1;
+	return 0;
 }
 
 void menu_machine_selection_for_manufacturer(int fabricante)
@@ -28197,10 +28156,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
                                 }
 
 
-            //if (machine_selection_por_fabricante_opcion_seleccionada==17) {
-                                        //hotswap machine
-                                        //menu_hotswap_machine();
-                                //}
+         
                         }
 
                 //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
@@ -28289,10 +28245,7 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
                                 }
 
 
-                                //if (machine_selection_opcion_seleccionada==17) {
-                                        //hotswap machine
-                                        //menu_hotswap_machine();
-                                //}
+                             
                         }
 
                 //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
