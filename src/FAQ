@@ -382,6 +382,9 @@ the user easier access to the video memory when working with higher resolutions 
 Take a look at http://zxprism.blogspot.com.es for more information and demos
 
 
+Q: I'm stuck at the Prism boot menu. I select "Boot" but it resets and return to the boot menu
+A: You have to change the Flash Page, the default is 0, the boot rom. Change to value 2 or higher and then select "Boot"
+See files on extras/docs/prism/ to know which roms are included in the Flash
 
 ----------------------------------------------------------------------------
 

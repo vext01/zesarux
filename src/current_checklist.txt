@@ -56,7 +56,6 @@ Drivers audio:
 -probar juegos varios de zx80,zx81, spectrum, aquellos que hacen efectos especiales hi-res, etc
 -probar juegos zx81 multipart: wrx/voyage , wrx/blockbuster
 -probar particularidades Inves: 64 kb ram, OUT ula AND RAM (border color, snow in border, no sound), no contended memory, colour ula delay, interrupt starts at video display (not at the top of the border), interrupt escribe en direccion I*256+R valor 255. Puerto ficticio para hacer visible RAM baja, requiere hardware debug ports , se puede probar con inves-switch-lowram.tap. Ver RAM baja con view hexdump. Probar con musica Lemmings
--probar hotswap maquina
 -probar custom rom desde menu y desde linea de comandos. probar todas roms
 -probar realvideo spectrum
 -probar realvideo zx80/81
@@ -68,7 +67,6 @@ Drivers audio:
 -probar autodetect WRX mode on ZX80/81
 -probar chroma81 en zx81
 -probar chip sonido AY, en spectrum (ay y fuller) y zx81 (quicksilva(asteroids, defenda zx80)  y bi-pak (aydemo, pink panther...))
--probar turbosound, 3 chips ay
 -probar specdrum, covox
 -probar opcion ay speech on/off con chase hq por ejemplo
 -probar view ay keyboard con extras/media/spectrum/tests/testpiano.tap  y demos turbosound
@@ -101,7 +99,6 @@ Probar delete, rename, etc y resto de acciones con CMDR, con archivos en minuscu
 -probar dandanator
 -probar superupgrade. Básico, programa de modificación de rom. Programa en basic extras/media/spectrum/tests/superupgrade-test.tap y usando 512kb de rom que sean siempre la misma rom de spectrum 48k. Probar con rman.tap
 -probar kartusho
--probar betadisk
 -probar file browser
 
 -probar spectra. Test modos. Comparar con ZXSP. X128 NO es correcto del todo, falla la implementacion del flash
@@ -144,11 +141,9 @@ paginacion, se pone pantalla en negro
 -ver paletas de colores
 -probar ClckFreq.p de zx81 ->migrado a manual_tests
 -probar expansiones de ram de zx80/81
--probar a generar algun error y que aparezca en menu
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
 -probar tooltip y ayuda de opciones en menu
 -probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
--probar shortcuts en menu
 -probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
 -probar opcion desactivar contended memory en menu
 -probar fuller audio box emulation
@@ -191,7 +186,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 ** FSCAPES.P, que no da tiempo a mostrar todo el segundo mensaje porque carga partes
 * Con y sin border enabled
 -probar smartload. probar deteccion de tipo tzx (standard o turbo) en quickload
--probar autoload & autosave
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. autofire
 -probar on screen keyboard, con F8 y con joystick
 -probar --limitopenmenu
@@ -229,7 +223,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar accelerate loaders
 -probar mantransferv3
 -probar multiface
--probar betadisk
 -probar recreated
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
