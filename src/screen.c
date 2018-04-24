@@ -1109,6 +1109,7 @@ void init_screen_addr_table(void)
 
 int scr_si_color_oscuro(void)
 {
+
 	if (menu_overlay_activo) {
 
 		//si esta modo ulaplus activo, no gris

@@ -4494,7 +4494,7 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
         //menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 
         //Restaurar texto ventana
-menu_restore_overlay_text_contents(copia_overlay);
+		menu_restore_overlay_text_contents(copia_overlay);
 
         //Restaurar linea cuadrado ventana
         cuadrado_activo=antes_cuadrado_activo;
@@ -4510,9 +4510,19 @@ menu_restore_overlay_text_contents(copia_overlay);
         ventana_ancho=antes_ventana_ancho;
         ventana_alto=antes_ventana_alto;
 
+
         menu_refresca_pantalla();
 
+		
+		if (menu_overlay_activo && previous_function!=NULL) {
+			debug_printf (VERBOSE_INFO,"Refreshing text menu");
 
+			//Llamamos a refrescar texto del menu. Si no hicera eso, y por ejemplo pulso F1 y luego mantengo tecla ESC,
+			//mientras está ESC pulsado, el menu se ve oscuro hasta que suelto tecla, pues antes ha refrescado
+			//pero mezclando texto pues esta la putpixel cache
+			//esto se observa con estilo de gui Clean y maquina spectrum , por ejemplo
+			previous_function();
+		}
 
 }
 
@@ -4829,7 +4839,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			//En principio ya no volvemos mas con F1, dado que este se usa para ayuda contextual de cada funcion
 
 			//F1 (ayuda) o h en drivers que no soportan F
-                        else if ((puerto_especial2 & 1)==0 || (tecla_leida=='h' && f_functions==0) ) {
+            else if ((puerto_especial2 & 1)==0 || (tecla_leida=='h' && f_functions==0) ) {
                                 //F1
 				char *texto_ayuda;
 				texto_ayuda=menu_retorna_item(m,linea_seleccionada)->texto_ayuda;
@@ -4841,7 +4851,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 					menu_dibuja_menu_help_tooltip(texto_ayuda,0);
-					cls_menu_overlay(); 
+					//printf ("despues de menu_dibuja_menu_help_tooltip\n");
+					//No borrar pantalla, pues si el tipo de menu es menu_tabulado, hay que dejarlo como estaba pues 
+					//es la propia funcion que llama la que se encarga (al principio) de dibujar la ventana
+
+					//cls_menu_overlay(); 
+					//clear_putpixel_cache();
 
 					//menu_generic_message("Help",texto_ayuda);
 
@@ -5044,7 +5059,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 					menu_dibuja_menu_help_tooltip(texto_tooltip,1);
-					cls_menu_overlay();
+					//No borrar pantalla, pues si el tipo de menu es menu_tabulado, hay que dejarlo como estaba pues 
+					//es la propia funcion que llama la que se encarga (al principio) de dibujar la ventana
+					//cls_menu_overlay();
 
 
 				//Esperar no tecla
@@ -10359,11 +10376,6 @@ void menu_audio_espectro_sonido(MENU_ITEM_PARAMETERS)
 																}
 
 												}
-
-
-
-
-
 
 
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);

@@ -1983,7 +1983,10 @@ ok-formato .sna
 -incluir en snapshot nombre de ultimo juego cargado, para saber de que snapshot se trata?
 ->rutinas ssl deben establecer nombre para juegos conocidos. quiza tambien una informacion del juego, teclas, descripcion del juego, etc?
 
-
+-autoload snapshot: al cargar un autosnapshot, hay parametros que se desactivan, por ejemplo dsk enabled.
+En ese caso, si por ejemplo estabamos con una maquina +3, con dsk activo, se guarda bien la config y el snapshot
+Pero el "--enable-dsk", al iniciar el emulador, se parsea antes de cargar el snapshot. Al cargar el snapshot, en set_machine, se pone
+dskplusthree_emulation.v=0 , con lo que arranca con dsk desactivado. Hay varios parametros como ese
 
 -agregar a formato .zx algunos parametros/flags extra, para version nueva del formato:
 *t_stados... viene del viejo formato SP?
