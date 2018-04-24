@@ -44,3 +44,5 @@ echo ' Write j"" +ENTER   after a few seconds'
 run_test ./zesarux --noconfigfile --tbblue-fast-boot-mode --hardware-debug-ports --exit-after 60 --machine tbblue --vo stdout extras/media/spectrum/tbblue/test_mmu_low/testing-mmu-low.tap
 
 #RESULT: OK
+
+
