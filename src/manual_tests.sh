@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "z80 tests. errores de flags normalmente en: BIT n,(HL). errores de memptr en ninguno"
+./zesarux --noconfigfile extras/media/spectrum/tests/z80tests.tap
 
 echo "Probar ClckFreq.p"
 ./zesarux --noconfigfile --machine zx81 extras/media/zx81/tests/ClckFreq.p
