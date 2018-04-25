@@ -89,7 +89,6 @@ config "O=X" donde X es 0, 1 o 2 y probar a sobreescribir archivos, dragons lair
 Probar delete, rename, etc y resto de acciones con CMDR, con archivos en minusculas y mayusculas
 -probar dandanator
 -probar superupgrade. Básico, programa de modificación de rom. Programa en basic extras/media/spectrum/tests/superupgrade-test.tap y usando 512kb de rom que sean siempre la misma rom de spectrum 48k. Probar con rman.tap
--probar kartusho
 -probar file browser
 
 -probar spectra. Test modos. Comparar con ZXSP. X128 NO es correcto del todo, falla la implementacion del flash
