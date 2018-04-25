@@ -1,7 +1,6 @@
 --- Cosas para la version 7.0
   
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
--sacando osd menu desde menu, y luego manteniendo ESC, tambien acaba haciendo color oscuro
 
 
 TBBLUE:
