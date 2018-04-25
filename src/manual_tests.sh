@@ -16,7 +16,6 @@ echo "Timing_Tests-48k_v1.0.sna. errores normalmente en test 4 add etc, test 25 
 
 echo "Probar ClckFreq.p"
 ./zesarux --noconfigfile --machine zx81 extras/media/zx81/tests/ClckFreq.p
-ClckFreq.p
 
 echo "Probar chroma81"
 ./zesarux --noconfigfile --machine zx81 --realvideo --chroma81 extras/media/zx81/Chroma_81/ALMINCOL.P

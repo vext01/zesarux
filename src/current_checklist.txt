@@ -4,7 +4,6 @@
 
 -ejecutar tests automatic_tests.sh
 
--ejecutar manual_tests.sh
 
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
 
@@ -65,7 +64,6 @@ Drivers audio:
 -probar desactivar colores pantalla spectrum
 -probar modos hi-res zx81: hrg, chr$128, udg, wrx, otros hi-res. probar xtricator, pacman 
 -probar autodetect WRX mode on ZX80/81
--probar chroma81 en zx81
 -probar chip sonido AY, en spectrum (ay y fuller) y zx81 (quicksilva(asteroids, defenda zx80)  y bi-pak (aydemo, pink panther...))
 -probar dac covox
 -probar opcion ay speech on/off con chase hq por ejemplo
@@ -125,12 +123,7 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar azerty. se puede probar pulsando guion o cedilla
 -probar redefinir teclas, en menu y linea comandos
 -probar desactivando contended memory en compilacion
--probar z80tests.tap de spectrum. errores de flags normalmente en: BIT n,(HL). errores de memptr en ninguno -> migrado a manual_tests
--probar z80doc.tap. van todos  -> migrado a manual_tests
--probar fusetest.tap. en 48k, 128k. falla Floating bus. skipped read 3ffd, 7ffd. en +2a falla ademas LDIR, Floating bus skipped, bffd read failed. en 128k dado que lee puerto
-paginacion, se pone pantalla en negro -> migrado a manual_tests
 
--probar Timing_Tests-48k_v1.0.sna. errores normalmente en test 4 add etc, test 25 add etc, test 36 in a etc, test 37 in a etc -> migrado a manual tests
 -probar desactivando memptr i pasar z80tests.tap de spectrum. probar activando memptr i pasar z80tests.tap
 -probar cpustats
 -probar visualmem, tambien en drivers no graficos como curses, aa, etc
@@ -140,7 +133,6 @@ paginacion, se pone pantalla en negro -> migrado a manual_tests
 -probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
 -probar paleta gris, roja, verde, azul, inverso, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
--probar ClckFreq.p de zx81 -> migrado a manual_tests
 -probar expansiones de ram de zx80/81
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
 -probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
