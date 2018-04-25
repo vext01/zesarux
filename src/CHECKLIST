@@ -1,5 +1,14 @@
 *Bateria de pruebas
 
+
+(ver que tanto progreso de checklist esta ejecutado:
+LINEASTOTAL=`wc -l CHECKLIST|awk '{printf $1}'`
+LINEASPARCIAL=`wc -l current_checklist.txt|awk '{printf $1}'`
+PERC=$(($LINEASPARCIAL*100))
+PERC=$(($PERC/$LINEASTOTAL))
+echo "Porcentaje=$PERC %"
+)
+
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
 
 -ejecutar tests automatic_tests.sh
