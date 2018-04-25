@@ -1,3 +1,6 @@
+;listado extraido del codigo fuente contenido en cinta mantransfer2.tzx
+
+
 *C-
 *D+
 *L+
