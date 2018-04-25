@@ -1110,6 +1110,9 @@ void init_screen_addr_table(void)
 int scr_si_color_oscuro(void)
 {
 
+	//desactivamos por completo el cambio a color oscuro. Y como consecuencia tambien, el cambio a blanco y negro cuando esta menu abierto y multitask off
+	return 0;
+
 	if (menu_overlay_activo) {
 
 		//si esta modo ulaplus activo, no gris
