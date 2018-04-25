@@ -25664,7 +25664,7 @@ void menu_interface_real_1648_palette(MENU_ITEM_PARAMETERS)
 {
 	spectrum_1648_use_real_palette.v ^=1;
 	//screen_set_spectrum_palette_offset();
-	screen_init_colour_table();
+	menu_interface_rgb_inverse_common();
 }
 
 void menu_colour_settings(MENU_ITEM_PARAMETERS)
