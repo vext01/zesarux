@@ -25100,6 +25100,10 @@ void menu_interface_rgb_inverse_common(void)
 {
 	modificado_border.v=1;
 	screen_init_colour_table();
+
+        //Dado que se han cambiado la paleta de colores, hay que vaciar la putpixel cache
+        clear_putpixel_cache();
+
 	menu_init_footer();
 }
 

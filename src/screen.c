@@ -7766,8 +7766,6 @@ void screen_init_colour_table(void)
 	screen_gray_mode=antes_screen_gray_mode;
 	screen_init_colour_table_siguiente();
 
-	//Dado que se han cambiado la paleta de colores, hay que vaciar la putpixel cache
-	clear_putpixel_cache();
 }
 
 
