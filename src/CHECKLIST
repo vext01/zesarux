@@ -89,7 +89,7 @@ Drivers audio:
 *probar carga binaria (tape) smp,wav,rwa en zx81: con audio real, con save desde basic y aofile (wav y rwa), con rutina de conversion de .p a rwa en real tape
 *probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
 
--probar osd, watermark, reduce 
+-probar watermark, reduce 
 
 -probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 -probar fallback de cinta standard a real tape, juegos: dracula tzx, Death Wish 3 (Erbe - Serie Leyenda).tzx  (DeathWish3(IBSA).tzx.zip), mortadelo y filemon II, Rambo. Parece que silent service si se mete como standard tape no detecta como cargador
@@ -143,7 +143,7 @@ paginacion, se pone pantalla en negro
 -probar desactivando visualmem
 -probar waveform, tambien en drivers no graficos como curses, aa, etc
 -probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
--probar paleta gris, roja, verde, azul, inverso, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
+-probar paleta gris, roja, verde, azul, inverso, real, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
 -probar ClckFreq.p de zx81 -> migrado a manual_tests
 -probar expansiones de ram de zx80/81
@@ -197,6 +197,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar autoload & autosave
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. autofire
 -probar on screen keyboard, con F8 y con joystick
+-probar asignar teclas f a funciones
 -probar --limitopenmenu
 -probar idle bus. con Arkanoid por ejemplo
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
@@ -204,7 +205,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar desactivar putpixel cache en compilacion
 -probar Setting putpixel functions to zoom 1, variable, interlace
 -probar frameskip
--probar easter egg
+-probar easter eggs
 -probar repeticion de teclas en selector de archivos, ayuda, etc (en opciones de menu no hace repeticion)
 -probar zx recreated, ghosting
 -probar teclas en menu especiales, en spectrum, zx8081 , z88, cpc y sam :  .  , : / - + < > = ' ( ) "   ( ',' y "'" en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB). en driver xwindow y curses, para cada maquina (total: 6 pruebas)

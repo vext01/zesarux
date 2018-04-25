@@ -86,6 +86,7 @@ Drivers audio:
 *probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
 
 -probar osd, watermark, reduce 
+-probar asignar teclas f a funciones
 
 -probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 -probar fallback de cinta standard a real tape, juegos: dracula tzx, Death Wish 3 (Erbe - Serie Leyenda).tzx  (DeathWish3(IBSA).tzx.zip), mortadelo y filemon II, Rambo. Parece que silent service si se mete como standard tape no detecta como cargador
@@ -142,7 +143,6 @@ paginacion, se pone pantalla en negro
 -probar ClckFreq.p de zx81 ->migrado a manual_tests
 -probar expansiones de ram de zx80/81
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
--probar tooltip y ayuda de opciones en menu
 -probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
 -probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
 -probar opcion desactivar contended memory en menu
@@ -195,7 +195,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar desactivar putpixel cache en compilacion
 -probar Setting putpixel functions to zoom 1, variable, interlace
 -probar frameskip
--probar easter egg
+-probar easter eggs
 -probar repeticion de teclas en selector de archivos, ayuda, etc (en opciones de menu no hace repeticion)
 -probar zx recreated, ghosting
 -probar teclas en menu especiales, en spectrum, zx8081 , z88, cpc y sam :  .  , : / - + < > = ' ( ) "   ( ',' y "'" en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB). en driver xwindow y curses, para cada maquina (total: 6 pruebas)
@@ -242,7 +242,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -Probar MK14
 
 -probar Sprite chip con demo
--probar textos splash en cambio de modo de video por ejemplo
 -probar usar extension de archivo no conocida y ver que avisa
 -probar activando funciones de captura de segmentation fault y forzando fallo
 -probar cpu_panic. desde dentro del emulador y antes de entrar (por ejemplo cuando no encuentra una rom)
