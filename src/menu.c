@@ -26579,9 +26579,8 @@ void menu_display_rainbow(MENU_ITEM_PARAMETERS)
 {
 	if (rainbow_enabled.v==0) enable_rainbow();
 	else disable_rainbow();
-//		rainbow_enabled.v=0;
-//		modificado_border.v=1;
-//	}
+
+
 }
 
 /*

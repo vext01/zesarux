@@ -583,7 +583,7 @@ z80_int *rainbow_buffer=NULL;
 z80_int *rainbow_buffer_one=NULL;
 z80_int *rainbow_buffer_two=NULL;
 
-//cache de putpixel
+//cache de putpixel. Solo usado en modos rainbow (segun recuerdo)
 z80_int *putpixel_cache=NULL;
 
 
@@ -8062,6 +8062,18 @@ void enable_rainbow(void) {
         video_zx8081_estabilizador_imagen.v=1;
 
 
+	if (putpixel_cache!=NULL) {
+		/*Modos rainbow usan putpixel cache. Vaciarla por lo que pudiera haber antes
+		//Si no se vaciase, si por ejemplo estamos con un programa en basic tipo:
+		// 1 border 2: border 3: border 4: pause 1: cls
+		//Si cambiamos de realvideo on , a off, y luego a on, al hacer on, que pasara:
+		1: vemos franjas de border bien, con realvideo on, y usando putpixel cache
+		2: no vemos colores, real video esta a off, y probablemente border 7 entero (lo normal). En modo no real video no usa putpixel cache
+		3: volvemos a modo realvideo. Border estaba todo blanco. Como putpixel cache estaba antes con las franjas de colores,
+		ahora las franjas estan mas o menos en el mismo sitio, y la cache dice que no hay que redibujarlas. Total: se ve todo el border 7
+		*/
+		clear_putpixel_cache();
+	}
 
 }
 
