@@ -32,13 +32,13 @@
 extern z80_int devuelve_direccion_pantalla(z80_byte x,z80_byte y);
 extern void init_screen_addr_table(void);
 extern z80_int *screen_addr_table;
-extern int spectrum_colortable_oscuro[];
+//extern int spectrum_colortable_oscuro[];
 //extern int spectrum_colortable_grises[];
 
 extern int *spectrum_colortable;
 extern int spectrum_colortable_normal[];
 
-extern int spectrum_colortable_new_blanco_y_negro[];
+//extern int spectrum_colortable_new_blanco_y_negro[];
 
 extern int screen_gray_mode;
 
@@ -729,6 +729,5 @@ extern int screen_get_x_coordinate_tstates(int *si_salta_linea);
 
 extern int screen_get_y_coordinate_tstates(void);
 
-extern void screen_change_bw_menu_multitask(void);
 
 #endif

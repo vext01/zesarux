@@ -51,6 +51,7 @@ Improved TSConf emulation:
 * added TR-DOS emulation support
 
 Improved menu interface:
+* emulated machine display is no longer faded or switched to black & white when opening menu. There were different visual glitches due to this feature
 * a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 * Character width can be reduced to 7,6 or 5 pixels width
 * added a setting to limit menu event: enabling it you should press the menu key 3 times in a second to open the menu

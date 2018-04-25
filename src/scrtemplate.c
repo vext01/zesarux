@@ -154,13 +154,6 @@ void scrvideoname_refresca_border(void)
 void scrvideoname_refresca_pantalla(void)
 {
 
-        if (scr_si_color_oscuro() ) {
-                //printf ("color oscuro\n");
-                spectrum_colortable=spectrum_colortable_oscuro;
-
-                //esto invalida la cache y por tanto ralentizando el refresco de pantalla
-                //clear_putpixel_cache();
-        }
 
 
 
@@ -213,9 +206,6 @@ void scrvideoname_refresca_pantalla(void)
         //printf ("%d\n",spectrum_colortable[1]);
 
         if (menu_overlay_activo) {
-                //printf ("color claro\n");
-                spectrum_colortable=spectrum_colortable_normal;
-                //clear_putpixel_cache();
                 menu_overlay_function();
         }
 

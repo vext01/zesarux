@@ -206,7 +206,7 @@ z80_byte umbral_simulate_screen_zx8081=4;
 z80_bit no_fadeout_exit={0};
 
 //colores usados para el fondo cuando hay menu/overlay activo
-int spectrum_colortable_oscuro[EMULATOR_TOTAL_PALETTE_COLOURS];
+//int spectrum_colortable_oscuro[EMULATOR_TOTAL_PALETTE_COLOURS];
 
 //colores usados para grises, red, green, etc
 //int spectrum_colortable_grises[EMULATOR_TOTAL_PALETTE_COLOURS];
@@ -223,7 +223,7 @@ int *spectrum_colortable;
 int spectrum_colortable_normal[EMULATOR_TOTAL_PALETTE_COLOURS];
 
 //Colores solo en blanco y negro para cuando se abre el menu y el emulador esta con multitask off
-int spectrum_colortable_new_blanco_y_negro[EMULATOR_TOTAL_PALETTE_COLOURS];
+//int spectrum_colortable_new_blanco_y_negro[EMULATOR_TOTAL_PALETTE_COLOURS];
 
 //Tabla con los colores reales del Spectrum. Formato RGB
 int spectrum_colortable_original_new[16] =
@@ -7698,6 +7698,7 @@ Bit 6 GRN1 most  significant bit of green.
 
 
                 //inicializar tabla de colores oscuro
+		/*
                 for (i=0;i<EMULATOR_TOTAL_PALETTE_COLOURS;i++) {
                         b=spectrum_colortable_normal[i] & 0xFF;
                         g=(spectrum_colortable_normal[i] >> 8 ) & 0xFF;
@@ -7709,6 +7710,7 @@ Bit 6 GRN1 most  significant bit of green.
 
                         spectrum_colortable_oscuro[i]=(r<<16)|(g<<8)|b;
                 }
+		*/
 
 		//Establecemos tabla actual
                 spectrum_colortable=spectrum_colortable_normal;
@@ -7743,6 +7745,7 @@ void screen_init_colour_table(void)
 
 
 	//Copiamos de tabla normal, que seran grises, a tabla grises y ademas oscuros
+	/*
 	int i,r,g,b;
 	for (i=0;i<EMULATOR_TOTAL_PALETTE_COLOURS;i++) {
 
@@ -7757,6 +7760,7 @@ void screen_init_colour_table(void)
                         spectrum_colortable_new_blanco_y_negro[i]=(r<<16)|(g<<8)|b;
 
 	}
+	*/
 
 
 	screen_gray_mode=antes_screen_gray_mode;
@@ -13558,6 +13562,7 @@ int screen_invisible_borde_derecho;
 
 
 //Cambia la paleta de color a Modo blanco y negro cuando se abre menu y multitarea esta a off
+/*
 void screen_change_bw_menu_multitask(void)
 {
 
@@ -13566,3 +13571,4 @@ void screen_change_bw_menu_multitask(void)
 	}
 
 }
+*/

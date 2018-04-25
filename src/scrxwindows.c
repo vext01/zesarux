@@ -795,20 +795,6 @@ void scrxwindows_refresca_pantalla_solo_driver(void)
 void scrxwindows_refresca_pantalla(void)
 {
 
-	if (scr_si_color_oscuro() ) {
-
-		spectrum_colortable=spectrum_colortable_oscuro;
-
-		//esto invalida la cache y por tanto ralentizando el refresco de pantalla
-		//clear_putpixel_cache();
-
-		screen_change_bw_menu_multitask();
-
-                                            
-
-	}
-
-
 
 	if (MACHINE_IS_ZX8081) {
 
@@ -882,7 +868,6 @@ void scrxwindows_refresca_pantalla(void)
 
 	//printf ("%d\n",spectrum_colortable[1]);
 
-        spectrum_colortable=spectrum_colortable_normal;
         if (menu_overlay_activo) {
                 menu_overlay_function();
         }
