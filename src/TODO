@@ -248,8 +248,6 @@ no cierra la ventana sdl. si en cambio el driver audio no es sdl, al cambiar de 
 
 -Revisar xwindow con 16 bpp
 
--y si hacemos clear putpixel cache cada vez que se cambie de oscuro a claro o al reves?
-
 -sdl: de momento xwindows tiene mas prioridad que sdl
 
 -footer para stdout y simpletext (cuando esta autoredraw activo)
@@ -1568,7 +1566,7 @@ Se ve evidente con zx81 y estilo ZEsarUX de menu, o con spectrum y estilo de men
 Maneras de solventarlo:
 
 *no cambiar color a grises u oscuros nunca mas
-->eso quitaria todos los problemas de un plumazo. 
+->eso quitaria todos los problemas de un plumazo. Hecho esto
 
 *eliminar la cache putpixel para siempre
 -> No recomendable, perdemos rendimiento
@@ -1577,8 +1575,6 @@ Maneras de solventarlo:
 ->no tiene mucho lio aunque hay que revisar todas las funciones de escribir texto en menu (todos drivers graficos) para que usen otros indices de colores
 
 *que cada vez que refresque pantalla con menu abierto, vacie la cache putpixel llamando a clear_putpixel_cache
-->esta es la solución que he hecho en ZEsarUX 7.0. las funciones deben llamar a menu_refresca_pantalla para refrescar pantalla
-(o a menu_cls_refresh_emulated_screen si tambien quieren borrar menu)
 
 
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
