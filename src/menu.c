@@ -380,7 +380,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8		//Color para opcion marcada
 		},
 	{"ZXSpectr",1,6,
-		1,0,0,0,		//Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
+		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
 		1+8,6,		//Colores para opcion seleccionada
 		1,6,1,6,	//Colores para opcion no disponible, iguales que para opcion disponible
 		6,1,		//Colores para el titulo y linea recuadro ventana
@@ -390,7 +390,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		},
 
         {"ZX80/81",7+8,0,
-                1,0,0,1,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
+                1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 0,7+8,          //Colores para opcion seleccionada
                 7+8,0,0,7+8,      //Colores para opcion no disponible
                 0,7+8,          //Colores para el titulo y linea recuadro ventana
@@ -455,7 +455,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 								},
 
         {"Clean",7,0,
-                0,0,0,0,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
+                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 0,7,          //Colores para opcion seleccionada
 		7,2,0,2, 	//Colores para opcion no disponible
                 0,7,          //Colores para el titulo y linea recuadro ventana
@@ -465,7 +465,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 },
 
         {"CleanInverse",0,7,
-                0,0,0,0,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
+                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 7,0,          //Colores para opcion seleccionada
 		0,2,7,2, 	//Colores para opcion no disponible
                 7,0,          //Colores para el titulo y linea recuadro ventana
