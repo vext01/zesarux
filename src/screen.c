@@ -8062,6 +8062,7 @@ void enable_rainbow(void) {
         video_zx8081_estabilizador_imagen.v=1;
 
 
+
 }
 
 //Desactivar rainbow

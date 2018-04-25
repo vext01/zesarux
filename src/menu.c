@@ -31520,8 +31520,8 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_settings,"Storage settings");
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ula_settings,NULL,"~~ULA");
-			menu_add_item_menu_shortcut(array_menu_settings,'u');
+			menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ula_settings,NULL,"U~~LA");
+			menu_add_item_menu_shortcut(array_menu_settings,'l');
 	                menu_add_item_menu_tooltip(array_menu_settings,"Change some ULA settings");
 	                menu_add_item_menu_ayuda(array_menu_settings,"Change some ULA settings");
 

@@ -16,7 +16,7 @@ Drivers video:
 **probar todas maquinas. probar teclas mayus, ctrl, alt. en z88 mayus izq, der, ctrl, alt, f1, f2, f3
 **probar ocultar raton
 **probar F6, F7 en curses, caca, aa en Z88 y en Spectrum
-**probar drag&drop en cocoa, sdl2 (a partir 2.0.5)
+**probar drag&drop en sdl2 (a partir 2.0.5)
 **probar desactivando border
 **probar desactivando footer
 **en curses, aa, caca, stdout, simpletext probar juegos para ver que tal "emula" los graficos
@@ -56,7 +56,6 @@ Drivers audio:
 -probar juegos zx81 multipart: wrx/voyage , wrx/blockbuster
 -probar particularidades Inves: 64 kb ram, OUT ula AND RAM (border color, snow in border, no sound), no contended memory, colour ula delay, interrupt starts at video display (not at the top of the border), interrupt escribe en direccion I*256+R valor 255. Puerto ficticio para hacer visible RAM baja, requiere hardware debug ports , se puede probar con inves-switch-lowram.tap. Ver RAM baja con view hexdump. Probar con musica Lemmings
 -probar custom rom desde menu y desde linea de comandos. probar todas roms
--probar realvideo spectrum
 -probar realvideo zx80/81
 -probar realvideo z88
 -probar snoweffect de 48k, 128k, con juegos y con extras/media/spectrum/tests/snow_effect.tap. Las que son de pentagon, hacer hotswap a 128 y activar contended memory
