@@ -126,11 +126,11 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar redefinir teclas, en menu y linea comandos
 -probar desactivando contended memory en compilacion
 -probar z80tests.tap de spectrum. errores de flags normalmente en: BIT n,(HL). errores de memptr en ninguno -> migrado a manual_tests
--probar z80doc.tap. van todos
+-probar z80doc.tap. van todos  -> migrado a manual_tests
 -probar fusetest.tap. en 48k, 128k. falla Floating bus. skipped read 3ffd, 7ffd. en +2a falla ademas LDIR, Floating bus skipped, bffd read failed. en 128k dado que lee puerto
-paginacion, se pone pantalla en negro
+paginacion, se pone pantalla en negro -> migrado a manual_tests
 
--probar Timing_Tests-48k_v1.0.sna. errores normalmente en test 4 add etc, test 25 add etc, test 36 in a etc, test 37 in a etc
+-probar Timing_Tests-48k_v1.0.sna. errores normalmente en test 4 add etc, test 25 add etc, test 36 in a etc, test 37 in a etc -> migrado a manual tests
 -probar desactivando memptr i pasar z80tests.tap de spectrum. probar activando memptr i pasar z80tests.tap
 -probar cpustats
 -probar visualmem, tambien en drivers no graficos como curses, aa, etc
@@ -140,7 +140,7 @@ paginacion, se pone pantalla en negro
 -probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
 -probar paleta gris, roja, verde, azul, inverso, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
--probar ClckFreq.p de zx81 ->migrado a manual_tests
+-probar ClckFreq.p de zx81 -> migrado a manual_tests
 -probar expansiones de ram de zx80/81
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
 -probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
