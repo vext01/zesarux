@@ -1571,7 +1571,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 			Realmente el clear_putpixel_cache aqui lo acabo haciendo al final de menu_refresca_pantalla, por lo que lo que viene a continuacion
 			es la misma llamada de menu_overlay_function pero ya con la cache limpia
 			*/
-			previous_function();
+			//previous_function();
 	}
 
 
@@ -2007,7 +2007,7 @@ void menu_init_footer(void)
 //funcion para limpiar el buffer de overlay y si hay cuadrado activo
 void cls_menu_overlay(void)
 {
-	clear_putpixel_cache();
+	//clear_putpixel_cache();
 
 	int i;
 	for (i=0;i<32*24;i++) {
@@ -2076,7 +2076,7 @@ void menu_set_menu_abierto(int valor)
                 //solo que antes estaba un color normal y ahora es oscuro, y entonces el sistema de putpixel
                 //no volvera a hacer putpixel de esos colores
 
-        clear_putpixel_cache();
+        //clear_putpixel_cache();
 }
 
 //refresco de pantalla, limpiando cache putpixel al final, y avisando cambio de border, 
@@ -2095,7 +2095,7 @@ void menu_refresca_pantalla(void)
 
    	//La solucion perfecta seria que, siempre que se cambie entre color oscuro y normal, se haga clear_putpixel_cache();
 
-     clear_putpixel_cache();
+     //clear_putpixel_cache();
 }
 
 //Borra la pantalla del menu, refresca la pantalla de spectrum
@@ -4559,7 +4559,7 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 			Realmente el clear_putpixel_cache aqui lo acabo haciendo al final de menu_refresca_pantalla, por lo que lo que viene a continuacion
 			es la misma llamada de menu_overlay_function pero ya con la cache limpia
 			*/
-			previous_function();
+			//previous_function();
 		}
 
 }
@@ -17276,7 +17276,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 	int antes_osd_kb_no_mostrar_desde_menu=osd_kb_no_mostrar_desde_menu;
 	osd_kb_no_mostrar_desde_menu=1;
 
-	clear_putpixel_cache();
+	//clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
         //al aparecer desde maquina zx80/81 desde menu, el texto se fusiona con el fondo de manera casi transparente,
         //como si no borrase el putpixel cache
