@@ -4994,7 +4994,7 @@ void snapshot_quick_save(char *nombre)
 
   if (snapshot_autosave_interval_quicksave_directory[0]==0) sprintf (final_name,"%s-%s.zx",snapshot_autosave_interval_quicksave_name,time_string);
 
-  else sprintf (final_name,"%s/%s-%s.zx",snapshot_autosave_interval_quicksave_directory,snapshot_autosave_interval_quicksave_name,time_string);
+  else sprintf (final_name,"%s/%s-%s.zsf",snapshot_autosave_interval_quicksave_directory,snapshot_autosave_interval_quicksave_name,time_string);
 
   snapshot_save(final_name);
 
