@@ -11949,7 +11949,7 @@ void menu_audio_new_ayplayer_overlay(void)
 	//Vigilar que no pase de 15
 	if (valor_escalado>15) valor_escalado=15;
 
-	printf ("audiomin: %d audiomax: %d maximo: %d valor_escalado: %d\n",audiomin,audiomax,mayor,valor_escalado);
+	//printf ("audiomin: %d audiomax: %d maximo: %d valor_escalado: %d\n",audiomin,audiomax,mayor,valor_escalado);
 
 	//Y mostramos indicador volumen
 
@@ -12206,7 +12206,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 						
 			
 
-			int lin=11;
+			int lin=12;
 
 			menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+5);
 
