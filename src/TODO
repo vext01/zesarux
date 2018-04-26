@@ -1557,23 +1557,10 @@ reducir fifo por defecto de alsa? de 4 a 2?
 *** Menu  ***
 
 
--Efecto que produce que el menu se vea "oscuro" o mezclado con la pantalla de la maquina emulada:
-Sucede por tener la putpixel cache , y cuando se cambia la paleta de colores a grises u oscuros. Pasa que, cuando se refresca
-la pantalla de spectrum con menu abierto, se cambia a paleta oscura, se llena la putpixel cache y luego el menu, coincide el color de items de menu 
-con los pixeles de pantalla emulada, y no se hace putpixel, aunque claro, las paletas son distintas y por eso se ve mal
-Se ve evidente con zx81 y estilo ZEsarUX de menu, o con spectrum y estilo de menu Clean, por ejemplo.
-Maneras de solventarlo:
-
-*no cambiar color a grises u oscuros nunca mas
-->eso quitaria todos los problemas de un plumazo. Hecho esto
-
-*eliminar la cache putpixel para siempre
--> No recomendable, perdemos rendimiento
-
-*usar indices de colores distintos para todo el menu, para texto y pixeles (waveform, etc) Asi nunca coincidira con los colores de la cache putpixel de la maquina emulada
-->no tiene mucho lio aunque hay que revisar todas las funciones de escribir texto en menu (todos drivers graficos) para que usen otros indices de colores
-
-*que cada vez que refresque pantalla con menu abierto, vacie la cache putpixel llamando a clear_putpixel_cache
+-Algunos items de menu, por ejemplo dentro del buscador de vidas, son lineas no seleccionables,
+aunque se definen de tipo normal. Tendrian que ser de tipo separador. Pero en ese caso, habria que hacer que cuando se abra el menu,
+si el cursor esta en un separador, que haga bajar el cursor -> esto parece que ya se intento, buscar comentario que dice:
+//Nota: el separador no puede ser final de menu
 
 
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
