@@ -10222,6 +10222,7 @@ void menu_audio_draw_sound_wave(void)
 	z80_byte valor_sonido_sin_signo;
 	z80_byte valor_anterior_sin_signo=0;
 
+	//En AY Player tambien se usa una funcion similar. Se deberia estandarizar
 	int i;
 	for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
 		valor_sonido=audio_buffer[i];
@@ -11847,7 +11848,7 @@ menu_escribe_linea_opcion(linea++,-1,1,"~~Load");
 
 void menu_audio_new_ayplayer_dibuja_ventana(void)
 {
-	menu_dibuja_ventana(0,2,32,19,"AY Player");
+	menu_dibuja_ventana(0,1,32,20,"AY Player");
 }
 
 int menu_audio_new_ayplayer_si_mostrar(void)
@@ -11902,6 +11903,61 @@ void menu_audio_new_ayplayer_overlay(void)
 			menu_string_volumen(volumen,ay_3_8912_registros[0][10]);
 			sprintf (textovolumen,"Volume C: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+
+
+
+	//Obtenemos antes valor medio total y tambien maximo y minimo
+	//Esto solo es necesario para dibujar onda llena
+
+	//Obtenemos tambien cuantas veces cambia de signo (y por tanto, obtendremos frecuencia aproximada)
+	//int cambiossigno=0;
+	//int signoanterior=0;
+	//int signoactual=0;
+
+	int audiomin=127,audiomax=-128;
+
+	char valor_sonido;
+
+
+	//En AY Waveform tambien se usa una funcion similar. Se deberia estandarizar
+	int i;
+	for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
+		valor_sonido=audio_buffer[i];
+
+		if (valor_sonido>audiomax) audiomax=valor_sonido;
+		if (valor_sonido<audiomin) audiomin=valor_sonido;
+
+	}
+
+
+	
+	//Mostramos "volumen" de waveform desde 0 a 15. Realmente podria mostrar mas amplitud, pero para que quede misma escala que 
+	//Volumenes del chip AY
+
+	//Obtenemos valores absolutos
+	audiomax=util_get_absolute(audiomax);
+	audiomin=util_get_absolute(audiomin);
+
+	//Nos quedamos con el valor mayor
+	int mayor=audiomax; //Suponemos este pero no tiene por que ser asi
+
+	if (audiomin>audiomax) mayor=audiomin;
+
+	//Ahora tenemos valor entre 0 y 128. Pasar a entre 0 y 15 
+	int valor_escalado=(mayor*16)/128;
+
+	//Vigilar que no pase de 15
+	if (valor_escalado>15) valor_escalado=15;
+
+	printf ("audiomin: %d audiomax: %d maximo: %d valor_escalado: %d\n",audiomin,audiomax,mayor,valor_escalado);
+
+	//Y mostramos indicador volumen
+
+			menu_string_volumen(volumen,valor_escalado);
+								//"Volume C: %s"
+			sprintf (textovolumen,"Waveform: %s",volumen);
+			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+
 	}
 
 
@@ -12107,6 +12163,10 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
         //z80_byte acumulado;
 
 
+				if (!menu_multitarea) {
+					menu_warn_message("This menu item needs multitask enabled");
+					return;
+				}
 
 
 

@@ -70,6 +70,7 @@ Improved TBBlue emulation:
 * Added almost all next extended opcodes
 * Added a setting to start TBBlue directly to a 48 rom but with all the Next features enabled, useful for fast snapshot loading
 
+Improved AY Player: now shows Waveform volume meter
 Improved text mode drivers (aalib, stdout, simpletext, curses): text settings are in different submenu, setting to set stdout/simpletext fps
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 Improved frameskip: better performance, because realvideo buffer is not updated when frameskip

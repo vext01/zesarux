@@ -10346,3 +10346,11 @@ void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino)
 		}
 	}
 }
+
+//Devolver valor sin signo
+int util_get_absolute(int valor)
+{
+        if (valor<0) valor=-valor;
+
+        return valor;
+}
