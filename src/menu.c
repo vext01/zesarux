@@ -23561,7 +23561,8 @@ void menu_find_lives_initial(MENU_ITEM_PARAMETERS)
 
 	int total_items_found;
 
-	total_items_found=menu_find_bytes_process(lives_to_find);
+	//Empezar a buscar desde la 16384. No tiene sentido buscar desde la rom
+	total_items_found=menu_find_bytes_process_from(lives_to_find,16384);
 
 	//menu_generic_message_format("Find","Total addresses found: %d",total_items_found);
 
