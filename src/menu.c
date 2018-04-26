@@ -22978,8 +22978,8 @@ void menu_find_bytes_view_results(MENU_ITEM_PARAMETERS)
         menu_generic_message("View Results",results_buffer);
 }
 
-
-int menu_find_bytes_process(z80_byte byte_to_find)
+//Busqueda desde direccion indicada
+int menu_find_bytes_process_from(z80_byte byte_to_find,int inicio)
 {
 	int dir;
 	int total_items_found=0;
@@ -22994,7 +22994,7 @@ int menu_find_bytes_process(z80_byte byte_to_find)
 					//asumimos que no va a encontrar nada
 					menu_find_bytes_empty=1;
 
-					for (dir=0;dir<final_find;dir++) {
+					for (dir=inicio;dir<final_find;dir++) {
 									if (peek_byte_z80_moto(dir)==byte_to_find) {
 													menu_find_bytes_mem_pointer[dir]=1;
 
@@ -23037,6 +23037,12 @@ int menu_find_bytes_process(z80_byte byte_to_find)
 
 	return total_items_found;
 
+}
+
+//Busqueda desde direccion 0
+int menu_find_bytes_process(z80_byte byte_to_find)
+{
+	return menu_find_bytes_process_from(byte_to_find,0);
 }
 
 void menu_find_bytes_find(MENU_ITEM_PARAMETERS)
