@@ -11952,10 +11952,16 @@ void menu_audio_new_ayplayer_overlay(void)
 	//printf ("audiomin: %d audiomax: %d maximo: %d valor_escalado: %d\n",audiomin,audiomax,mayor,valor_escalado);
 
 	//Y mostramos indicador volumen
+	/*
+	Nota: realmente este calculo de volumen no es del todo cierto, estoy viendo el valor maximo de la onda, aunque se puede generar
+	sonido muy bajo, por ejemplo, oscilando valores entre 100 y 120 (considerando signed 8 bits), es mas, hay juegos que, al usar beeper,
+	"mueven" esa onda hacia arriba, y aunque el indicador de volumen diga que esta muy alto, realmente se oye a volumen normal
+	Pero bueno, la mayoria de las veces si que coincide bien el valor de volumen
+	*/
 
 			menu_string_volumen(volumen,valor_escalado);
 								//"Volume C: %s"
-			sprintf (textovolumen,"Waveform: %s",volumen);
+			sprintf (textovolumen,"Output:   %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
 	}
