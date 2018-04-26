@@ -23572,7 +23572,11 @@ void menu_find_lives_initial(MENU_ITEM_PARAMETERS)
 
 	//Si estamos en estado 1
 	else if (menu_find_lives_state==1) {
-		if (total_items_found!=1) {
+		if (total_items_found==0) {
+			menu_generic_message("Find lives","Sorry, I haven't found any addresses. The process has been restarted");
+			menu_find_lives_state=0;
+		}
+		else if (total_items_found!=1) {
 			 menu_generic_message("Find lives","Sorry, no unique address found. You may want to try again losing another live or maybe manually find it on the Find bytes menu");
 		}
 		else {
