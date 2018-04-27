@@ -10148,6 +10148,8 @@ int menu_audio_draw_sound_wave_volumen_escalado=0;
 //Usado dentro del overlay de waveform, para mostrar dos veces por segundo el texto que average, etc
 int menu_waveform_valor_contador_segundo_anterior;
 
+int menu_waveform_previous_volume=0;
+
 void menu_audio_draw_sound_wave(void)
 {
 
@@ -10171,12 +10173,19 @@ void menu_audio_draw_sound_wave(void)
 
 
 
+			if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
+
 			char texto_volumen[32];
-                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,-1);
+                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
                                                                 //"Volume C: %s"
 
 			sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
 			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
+
+
+			//Hacer decaer el volumen
+			if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
+
 
 			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
 				menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
@@ -10705,7 +10714,7 @@ void menu_ay_registers_overlay(void)
                         if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 
                                  menu_ayregisters_valor_contador_segundo_anterior=contador_segundo;
-                                printf ("Refrescando. contador_segundo=%d. chip: %d\n",contador_segundo,chip);
+                                //printf ("Refrescando. contador_segundo=%d. chip: %d\n",contador_segundo,chip);
 
 				for (chip=0;chip<total_chips;chip++) {
 
