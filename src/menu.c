@@ -10205,7 +10205,7 @@ void menu_audio_draw_sound_wave(void)
 	}
 
 
-
+	/*
 	//Obtenemos antes valor medio total y tambien maximo y minimo
 	//Esto solo es necesario para dibujar onda llena
 
@@ -10266,8 +10266,31 @@ void menu_audio_draw_sound_wave(void)
 	//printf ("valor medio en y: %d\n",audiomedio);
 	//Fin Obtenemos antes valor medio
 
+	*/
 
+	audiobuffer_stats audiostats;
+	audio_get_audiobuffer_stats(&audiostats);
+/*
+struct s_audiobuffer_stats
+{
+        int maximo;
+        int minimo;
+        int medio;
+        int frecuencia;
+        int volumen;
+};
+*/
 
+	menu_audio_draw_sound_wave_valor_max=audiostats.maximo;
+	menu_audio_draw_sound_wave_valor_min=audiostats.minimo;
+	menu_audio_draw_sound_wave_frecuencia_aproximada=audiostats.frecuencia;
+
+	int audiomedio=audiostats.medio;
+	menu_audio_draw_sound_wave_valor_medio=audiomedio;
+        audiomedio=audiomedio*alto/256;
+
+        //Lo situamos en el centro. Negativo hacia abajo (Y positiva)
+        audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
 
 	int puntero_audio=0;
 	char valor_audio;

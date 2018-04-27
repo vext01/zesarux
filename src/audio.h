@@ -233,5 +233,7 @@ struct s_audiobuffer_stats
 
 typedef struct s_audiobuffer_stats audiobuffer_stats;
 
+extern void audio_get_audiobuffer_stats(audiobuffer_stats *audiostats);
+
 
 #endif
