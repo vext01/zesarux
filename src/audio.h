@@ -220,4 +220,18 @@ extern int audiodac_set_type(char *texto);
 
 extern void audiodac_set_custom_port(z80_byte valor);
 
+
+
+struct s_audiobuffer_stats
+{
+	int maximo;
+	int minimo;
+	int medio;
+	int frecuencia;
+	int volumen;
+};
+
+typedef struct s_audiobuffer_stats audiobuffer_stats;
+
+
 #endif
