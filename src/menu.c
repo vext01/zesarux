@@ -10586,15 +10586,21 @@ void menu_ay_registers_overlay(void)
 
 	for (chip=0;chip<total_chips;chip++) {
 
-	int vol_A,vol_B,vol_C;
+		int vol_A,vol_B,vol_C;
 
-        vol_A=ay_3_8912_registros[chip][8] & 15;
-        vol_B=ay_3_8912_registros[chip][9] & 15;
-        vol_C=ay_3_8912_registros[chip][10] & 15;
+        	vol_A=ay_3_8912_registros[chip][8] & 15;
+        	vol_B=ay_3_8912_registros[chip][9] & 15;
+        	vol_C=ay_3_8912_registros[chip][10] & 15;
 
-        if (ayregisters_previo_valor_volume_A[chip]<vol_A) ayregisters_previo_valor_volume_A[chip]=vol_A;
-        if (ayregisters_previo_valor_volume_B[chip]<vol_B) ayregisters_previo_valor_volume_B[chip]=vol_B;
-        if (ayregisters_previo_valor_volume_C[chip]<vol_C) ayregisters_previo_valor_volume_C[chip]=vol_C;
+			//Controlar limites, dado que las variables entran sin inicializar
+			if (ayregisters_previo_valor_volume_A[chip]>16) ayregisters_previo_valor_volume_A[chip]=16;
+			if (ayregisters_previo_valor_volume_B[chip]>16) ayregisters_previo_valor_volume_B[chip]=16;
+			if (ayregisters_previo_valor_volume_C[chip]>16) ayregisters_previo_valor_volume_C[chip]=16;
+			
+
+        		if (ayregisters_previo_valor_volume_A[chip]<vol_A) ayregisters_previo_valor_volume_A[chip]=vol_A;
+        		if (ayregisters_previo_valor_volume_B[chip]<vol_B) ayregisters_previo_valor_volume_B[chip]=vol_B;
+        		if (ayregisters_previo_valor_volume_C[chip]<vol_C) ayregisters_previo_valor_volume_C[chip]=vol_C;
 
 
 			menu_string_volumen(volumen,ay_3_8912_registros[chip][8],ayregisters_previo_valor_volume_A[chip]);
@@ -10610,17 +10616,17 @@ void menu_ay_registers_overlay(void)
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
 			//Decrementar volumenes que caen, pero hacerlo no siempre, sino 2 veces por segundo
-    //esto hara ejecutar esto 2 veces por segundo
-    if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+		    //esto hara ejecutar esto 2 veces por segundo
+			if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 
-			        menu_ayregisters_valor_contador_segundo_anterior=contador_segundo;
-        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+				 menu_ayregisters_valor_contador_segundo_anterior=contador_segundo;
+			        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 
 
-        if (ayregisters_previo_valor_volume_A[chip]>vol_A) ayregisters_previo_valor_volume_A[chip]--;
-        if (ayregisters_previo_valor_volume_B[chip]>vol_B) ayregisters_previo_valor_volume_B[chip]--;
-        if (ayregisters_previo_valor_volume_C[chip]>vol_C) ayregisters_previo_valor_volume_C[chip]--;
+        			if (ayregisters_previo_valor_volume_A[chip]>vol_A) ayregisters_previo_valor_volume_A[chip]--;
+        			if (ayregisters_previo_valor_volume_B[chip]>vol_B) ayregisters_previo_valor_volume_B[chip]--;
+        			if (ayregisters_previo_valor_volume_C[chip]>vol_C) ayregisters_previo_valor_volume_C[chip]--;
 
 
 			}
