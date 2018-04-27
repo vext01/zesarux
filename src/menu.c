@@ -5617,12 +5617,27 @@ void menu_audio_ay_chip_autoenable(MENU_ITEM_PARAMETERS)
 
 //Funcion usada por los vu-meters para hacer el efecto de "decae" del maximo
 //Retorna valor de variable de decae, segun el ultimo valor del volumen
-int menu_decae_valor_volumen(int valor_decae,int valor_volumen)
+int menu_decae_dec_valor_volumen(int valor_decae,int valor_volumen)
 {
 	//Hacer decaer el volumen
 	if (valor_decae>valor_volumen) valor_decae--;	
 
 	return valor_decae;
+}
+
+
+//	//Volume. Mostrarlo siempre, no solo dos veces por segundo, para que se actualice mas frecuentemente
+//	if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
+
+//Funcion usada por los vu-meters cada vez que se quieren mostrar, ver si valor de variable decae es menor que volumen, 
+//entonces modificarla
+
+int menu_decae_ajusta_valor_volumen(int valor_decae,int valor_volumen)
+{
+	if (valor_decae<valor_volumen) valor_decae=valor_volumen;
+
+	return valor_decae;
+
 }
 
 //llena el string con el valor del volumen - para chip de sonido
@@ -10201,7 +10216,7 @@ void menu_audio_draw_sound_wave(void)
 
 			//Hacer decaer el volumen
 			//if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
-			menu_waveform_previous_volume=menu_decae_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
+			menu_waveform_previous_volume=menu_decae_dec_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
 
 
 			//Frecuency
@@ -10345,15 +10360,16 @@ struct s_audiobuffer_stats
 	//printf ("%d ",puntero_audio);
 
 
-			//Volume. Mostrarlo siempre, no solo dos veces por segundo, para que se actualice mas frecuentemente
-			if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
+	//Volume. Mostrarlo siempre, no solo dos veces por segundo, para que se actualice mas frecuentemente
+	//if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
+	menu_waveform_previous_volume=menu_decae_ajusta_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
 
-			char texto_volumen[32];
-                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
+	char texto_volumen[32];
+    menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
                                                                 //"Volume C: %s"
 
-			sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
-			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
+	sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
+	menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
 
 
 
@@ -10577,9 +10593,14 @@ void menu_ay_registers_overlay(void)
 			if (ayregisters_previo_valor_volume_C[chip]>16) ayregisters_previo_valor_volume_C[chip]=16;
 			
 
-        		if (ayregisters_previo_valor_volume_A[chip]<vol_A[chip]) ayregisters_previo_valor_volume_A[chip]=vol_A[chip];
-        		if (ayregisters_previo_valor_volume_B[chip]<vol_B[chip]) ayregisters_previo_valor_volume_B[chip]=vol_B[chip];
-        		if (ayregisters_previo_valor_volume_C[chip]<vol_C[chip]) ayregisters_previo_valor_volume_C[chip]=vol_C[chip];
+			ayregisters_previo_valor_volume_A[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_A[chip],vol_A[chip]);
+			ayregisters_previo_valor_volume_B[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
+			ayregisters_previo_valor_volume_C[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
+
+
+        		//if (ayregisters_previo_valor_volume_A[chip]<vol_A[chip]) ayregisters_previo_valor_volume_A[chip]=vol_A[chip];
+        		//if (ayregisters_previo_valor_volume_B[chip]<vol_B[chip]) ayregisters_previo_valor_volume_B[chip]=vol_B[chip];
+        		//if (ayregisters_previo_valor_volume_C[chip]<vol_C[chip]) ayregisters_previo_valor_volume_C[chip]=vol_C[chip];
 
 
 			menu_string_volumen(volumen,ay_3_8912_registros[chip][8],ayregisters_previo_valor_volume_A[chip]);
@@ -10687,9 +10708,9 @@ void menu_ay_registers_overlay(void)
 
 				for (chip=0;chip<total_chips;chip++) {
 
-					ayregisters_previo_valor_volume_A[chip]=menu_decae_valor_volumen(ayregisters_previo_valor_volume_A[chip],vol_A[chip]);
-					ayregisters_previo_valor_volume_B[chip]=menu_decae_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
-					ayregisters_previo_valor_volume_C[chip]=menu_decae_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
+					ayregisters_previo_valor_volume_A[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_A[chip],vol_A[chip]);
+					ayregisters_previo_valor_volume_B[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
+					ayregisters_previo_valor_volume_C[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
 
                                 //if (ayregisters_previo_valor_volume_A[chip]>vol_A[chip]) ayregisters_previo_valor_volume_A[chip]--;
                                 //if (ayregisters_previo_valor_volume_B[chip]>vol_B[chip]) ayregisters_previo_valor_volume_B[chip]--;
@@ -12004,9 +12025,13 @@ void menu_audio_new_ayplayer_overlay(void)
 	vol_B=ay_3_8912_registros[0][9] & 15;
 	vol_C=ay_3_8912_registros[0][10] & 15;
 
-	if (ayplayer_previo_valor_volume_A<vol_A) ayplayer_previo_valor_volume_A=vol_A;
-	if (ayplayer_previo_valor_volume_B<vol_B) ayplayer_previo_valor_volume_B=vol_B;
-	if (ayplayer_previo_valor_volume_C<vol_C) ayplayer_previo_valor_volume_C=vol_C;
+	ayplayer_previo_valor_volume_A=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_volume_A,vol_A);
+	ayplayer_previo_valor_volume_B=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_volume_B,vol_B);
+	ayplayer_previo_valor_volume_C=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_volume_C,vol_C);
+
+	//if (ayplayer_previo_valor_volume_A<vol_A) ayplayer_previo_valor_volume_A=vol_A;
+	//if (ayplayer_previo_valor_volume_B<vol_B) ayplayer_previo_valor_volume_B=vol_B;
+	//if (ayplayer_previo_valor_volume_C<vol_C) ayplayer_previo_valor_volume_C=vol_C;
 
 
 
@@ -12091,7 +12116,9 @@ void menu_audio_new_ayplayer_overlay(void)
 	Pero bueno, la mayoria de las veces si que coincide bien el valor de volumen
 	*/
 	
-	if (ayplayer_previo_valor_escalado<valor_escalado) ayplayer_previo_valor_escalado=valor_escalado;
+
+	ayplayer_previo_valor_escalado=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_escalado,valor_escalado);
+	//if (ayplayer_previo_valor_escalado<valor_escalado) ayplayer_previo_valor_escalado=valor_escalado;
 
 			menu_string_volumen(volumen,valor_escalado,ayplayer_previo_valor_escalado);
 
@@ -12147,12 +12174,12 @@ int mostrar_player;
 			linea=0;
 
 	//Indicadores de volumen que decaen
-	ayplayer_previo_valor_escalado=menu_decae_valor_volumen(ayplayer_previo_valor_escalado,valor_escalado);
+	ayplayer_previo_valor_escalado=menu_decae_dec_valor_volumen(ayplayer_previo_valor_escalado,valor_escalado);
 	//if (ayplayer_previo_valor_escalado>valor_escalado) ayplayer_previo_valor_escalado--;
 
-	ayplayer_previo_valor_volume_A=menu_decae_valor_volumen(ayplayer_previo_valor_volume_A,vol_A);
-	ayplayer_previo_valor_volume_B=menu_decae_valor_volumen(ayplayer_previo_valor_volume_B,vol_B);
-	ayplayer_previo_valor_volume_C=menu_decae_valor_volumen(ayplayer_previo_valor_volume_C,vol_C);
+	ayplayer_previo_valor_volume_A=menu_decae_dec_valor_volumen(ayplayer_previo_valor_volume_A,vol_A);
+	ayplayer_previo_valor_volume_B=menu_decae_dec_valor_volumen(ayplayer_previo_valor_volume_B,vol_B);
+	ayplayer_previo_valor_volume_C=menu_decae_dec_valor_volumen(ayplayer_previo_valor_volume_C,vol_C);
 
 	//if (ayplayer_previo_valor_volume_A>vol_A) ayplayer_previo_valor_volume_A--;
 	//if (ayplayer_previo_valor_volume_B>vol_B) ayplayer_previo_valor_volume_B--;
