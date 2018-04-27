@@ -1799,6 +1799,7 @@ printf (
 		"--no-show-changelog        Do not show changelog when updating version\n"
 		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
 		"--codetests                Run develoment code tests\n"
+		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n"
 
 
 		"\n\n"
@@ -6315,7 +6316,15 @@ int parse_cmdline_options(void) {
 				strcpy(parameter_disablebetawarning,argv[puntero_parametro]);
 			}	
 
-
+			else if (!strcmp(argv[puntero_parametro],"--tonegenerator")) {
+				siguiente_parametro_argumento();
+                                 int valor=atoi(argv[puntero_parametro]);
+                                if (valor<1 || valor>3) {
+                                        printf ("Invalid value %d for setting --tonegenerator\n",valor);
+                                        exit(1);
+                                }
+				audio_tone_generator=valor;
+			}
 
 
 
