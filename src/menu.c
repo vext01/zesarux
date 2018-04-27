@@ -10560,14 +10560,18 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 }
 
 
+int ayregisters_previo_valor_volume_A[MAX_AY_CHIPS];
+int ayregisters_previo_valor_volume_B[MAX_AY_CHIPS];
+int ayregisters_previo_valor_volume_C[MAX_AY_CHIPS];
 
-
+	int menu_ayregisters_valor_contador_segundo_anterior;
 
 void menu_ay_registers_overlay(void)
 {
         normal_overlay_texto_menu();
 
 	char volumen[16],textovolumen[32],textotono[32];
+
 
 	int total_chips=ay_retorna_numero_chips();
 
@@ -10582,17 +10586,44 @@ void menu_ay_registers_overlay(void)
 
 	for (chip=0;chip<total_chips;chip++) {
 
-			menu_string_volumen(volumen,ay_3_8912_registros[chip][8],-1);
+	int vol_A,vol_B,vol_C;
+
+        vol_A=ay_3_8912_registros[chip][8] & 15;
+        vol_B=ay_3_8912_registros[chip][9] & 15;
+        vol_C=ay_3_8912_registros[chip][10] & 15;
+
+        if (ayregisters_previo_valor_volume_A[chip]<vol_A) ayregisters_previo_valor_volume_A[chip]=vol_A;
+        if (ayregisters_previo_valor_volume_B[chip]<vol_B) ayregisters_previo_valor_volume_B[chip]=vol_B;
+        if (ayregisters_previo_valor_volume_C[chip]<vol_C) ayregisters_previo_valor_volume_C[chip]=vol_C;
+
+
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][8],ayregisters_previo_valor_volume_A[chip]);
 			sprintf (textovolumen,"Volume A: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[chip][9],-1);
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][9],ayregisters_previo_valor_volume_B[chip]);
 			sprintf (textovolumen,"Volume B: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[chip][10],-1);
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][10],ayregisters_previo_valor_volume_C[chip]);
 			sprintf (textovolumen,"Volume C: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+
+			//Decrementar volumenes que caen, pero hacerlo no siempre, sino 2 veces por segundo
+    //esto hara ejecutar esto 2 veces por segundo
+    if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+			        menu_ayregisters_valor_contador_segundo_anterior=contador_segundo;
+        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+
+
+        if (ayregisters_previo_valor_volume_A[chip]>vol_A) ayregisters_previo_valor_volume_A[chip]--;
+        if (ayregisters_previo_valor_volume_B[chip]>vol_B) ayregisters_previo_valor_volume_B[chip]--;
+        if (ayregisters_previo_valor_volume_C[chip]>vol_C) ayregisters_previo_valor_volume_C[chip]--;
+
+
+			}
 
 
 			int freq_a=retorna_frecuencia(0,chip);
