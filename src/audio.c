@@ -1777,22 +1777,23 @@ typedef struct s_audiobuffer_stats audiobuffer_stats;
         }
 
        //Calculo frecuencia aproximada
-        menu_audio_draw_sound_wave_frecuencia_aproximada=((FRECUENCIA_SONIDO/AUDIO_BUFFER_SIZE)*cambiossigno)/2;
+        //menu_audio_draw_sound_wave_frecuencia_aproximada=((FRECUENCIA_SONIDO/AUDIO_BUFFER_SIZE)*cambiossigno)/2;
+        int frecuencia=((FRECUENCIA_SONIDO/AUDIO_BUFFER_SIZE)*cambiossigno)/2;
 
         //printf ("%d %d %d %d\n",FRECUENCIA_SONIDO,AUDIO_BUFFER_SIZE,cambiossigno,menu_audio_draw_sound_wave_frecuencia_aproximada);
 
 
         audiomedio /=AUDIO_BUFFER_SIZE;
         //printf ("valor medio: %d\n",audiomedio);
-        menu_audio_draw_sound_wave_valor_medio=audiomedio;
+        //menu_audio_draw_sound_wave_valor_medio=audiomedio;
 
-        menu_audio_draw_sound_wave_valor_min=audiomin;
-        menu_audio_draw_sound_wave_valor_max=audiomax;
+        //menu_audio_draw_sound_wave_valor_min=audiomin;
+        //menu_audio_draw_sound_wave_valor_max=audiomax;
 
-        audiomedio=audiomedio*alto/256;
+        //audiomedio=(audiomedio*alto)/256;
 
         //Lo situamos en el centro. Negativo hacia abajo (Y positiva)
-        audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
+        //audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
 
         //printf ("valor medio en y: %d\n",audiomedio);
         //Fin Obtenemos antes valor medio
@@ -1807,6 +1808,12 @@ struct s_audiobuffer_stats
         int volumen;
 };
 */
+
+	audiostats->maximo=audiomax;
+	audiostats->minimo=audiomin;
+	audiostats->medio=audiomedio;
+	audiostats->frecuencia=frecuencia;
+	audiostats->volumen=0; //TODO
 
 
 }
