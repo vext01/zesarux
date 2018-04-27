@@ -7223,13 +7223,13 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		if (puerto_l==0xBF || puerto_l==0x77 || (puerto&0x0FFF)==0xff7 || (puerto&0x0FFF)==0x7f7 || puerto==0x7ffd || puerto==0xeff7
 			|| puerto==0xEFF7 || puerto==0xDFF7 || puerto==0xDEF7 || puerto==0xBFF7 || puerto==0xBEF7)
 		{
-			printf ("Out port baseconf port %04XH value %02XH. PC=%04XH\n",puerto,value,reg_pc);
+			//printf ("Out port baseconf port %04XH value %02XH. PC=%04XH\n",puerto,value,reg_pc);
 			baseconf_out_port(puerto,value);
 		}
 
 		else {
 			if (puerto_l!=0xFE) {
-				printf ("Unhandled Out port baseconf port %04XH value %02XH. PC=%04XH\n",puerto,value,reg_pc);
+				//printf ("Unhandled Out port baseconf port %04XH value %02XH. PC=%04XH\n",puerto,value,reg_pc);
 			}
 		}
 	}

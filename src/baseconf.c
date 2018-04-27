@@ -159,7 +159,7 @@ void baseconf_set_memory_pages(void)
                         debug_paginas_memoria_mapeadas[i]=DEBUG_PAGINA_MAP_ES_ROM+pagina;
                 }
 
-                printf ("segmento %d pagina %d\n",i,pagina);
+                //printf ("segmento %d pagina %d\n",i,pagina);
         }
 	
 
@@ -279,7 +279,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
         }
 
         else if (puerto==0xEFF7) {
-                printf ("setting port EFF7 value\n");
+                //printf ("setting port EFF7 value\n");
                 baseconf_last_port_eff7=valor;
                 baseconf_set_memory_pages();
         }
