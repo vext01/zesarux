@@ -5631,8 +5631,8 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 
 		texto[i]=0;
 
-		//Si volumen es 0 por ejemplo, no se muestra ningun =, y entonces el indicador sera "*"
-		if (indice_decae>=0 && indice_decae<=14) texto[indice_decae]='*';
+		//Si volumen es 0 por ejemplo, no se muestra ningun =, y entonces el indicador sera "|"
+		if (indice_decae>=0 && indice_decae<=14) texto[indice_decae]='|';
 	}
 }
 
