@@ -93,6 +93,36 @@ z80_bit audiodac_enabled={0};
 
 int audiodac_selected_type=0;
 
+/*
+Para el generador de tonos, usado en testeo. Posibles valores:
+0: desactivado
+1: generamos valor maximo (127)
+2: generamos valor minimo (-128)
+3: conmutamos entre valor maximo y minimo cada 50 Hz
+*/
+int audio_tone_generator=0;
+char audio_tone_generator_last=-127;
+
+char audio_tone_generator_get(void)
+{
+	switch (audio_tone_generator) {
+		case 1:
+			return 127;
+		break;
+
+		case 2:
+			return -128;
+		break;
+
+		case 3:
+			return audio_tone_generator_last;
+		break;
+	}
+
+	//no se deberia llegar aqui
+	return 0;
+}
+
 
 audiodac_type audiodac_types[MAX_AUDIODAC_TYPES]={
 	{"Specdrum",0xDF},

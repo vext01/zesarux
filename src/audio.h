@@ -235,5 +235,9 @@ typedef struct s_audiobuffer_stats audiobuffer_stats;
 
 extern void audio_get_audiobuffer_stats(audiobuffer_stats *audiostats);
 
+extern int audio_tone_generator;
+extern char audio_tone_generator_last;
+extern char audio_tone_generator_get(void);
+
 
 #endif

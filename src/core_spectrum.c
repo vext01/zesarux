@@ -441,6 +441,8 @@ void cpu_core_loop_spectrum(void)
 
 				audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
 
+				if (audio_tone_generator) audio_buffer[audio_buffer_indice]=audio_tone_generator_get();
+
 
 				//temporal
 				//printf ("%02X ",audio_valor_enviar_sonido);
@@ -547,6 +549,8 @@ void cpu_core_loop_spectrum(void)
 				//Para paperboy, thelosttapesofalbion0 y otros que hacen letras en el border, para que no se desplacen en diagonal
 				//t_estados=0;
 				//->paperboy queda fijo. thelosttapesofalbion0 no se desplaza, sino que tiembla si no forzamos esto
+
+				audio_tone_generator_last=-audio_tone_generator_last;
 
 
 				//Final de instrucciones ejecutadas en un frame de pantalla
