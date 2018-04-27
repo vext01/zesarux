@@ -5612,6 +5612,19 @@ void menu_audio_ay_chip_autoenable(MENU_ITEM_PARAMETERS)
 
 
 
+//			//Hacer decaer el volumen
+//			if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
+
+//Funcion usada por los vu-meters para hacer el efecto de "decae" del maximo
+//Retorna valor de variable de decae, segun el ultimo valor del volumen
+int menu_decae_valor_volumen(int valor_decae,int valor_volumen)
+{
+	//Hacer decaer el volumen
+	if (valor_decae>valor_volumen) valor_decae--;	
+
+	return valor_decae;
+}
+
 //llena el string con el valor del volumen - para chip de sonido
 //mete tambien caracter de "decae" si conviene (si >=0 y <=15)
 void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
@@ -5631,8 +5644,10 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 
 		texto[i]=0;
 
-		//Si volumen es 0 por ejemplo, no se muestra ningun =, y entonces el indicador sera "|"
-		if (indice_decae>=0 && indice_decae<=14 && indice_decae>=registro_volumen) texto[indice_decae]='|';
+		//Si indice es menor que volumen, forzar a valor que volumen
+		if (indice_decae<registro_volumen) indice_decae=registro_volumen;
+
+		if (indice_decae>=0 && indice_decae<=14 && indice_decae>=registro_volumen) texto[indice_decae]='>';
 	}
 }
 
@@ -10155,7 +10170,7 @@ void menu_audio_draw_sound_wave(void)
 
 	normal_overlay_texto_menu();
 
-
+				char buffer_texto_medio[40];
 
 
 	//esto hara ejecutar esto 2 veces por segundo
@@ -10165,33 +10180,35 @@ void menu_audio_draw_sound_wave(void)
 		//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 		menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
-                     
-			char buffer_texto_medio[40];
+
+			//Average, min, max    
+
 			sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
 				menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_min,menu_audio_draw_sound_wave_valor_max);
 			menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
 
 
-
-			if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
+			//Volume
+			/*if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
 
 			char texto_volumen[32];
                         menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
                                                                 //"Volume C: %s"
 
 			sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
-			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
+			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);*/
 
 
 			//Hacer decaer el volumen
-			if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
+			//if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
+			menu_waveform_previous_volume=menu_decae_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
 
 
+			//Frecuency
 			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
 				menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
 			menu_escribe_linea_opcion(3,-1,1,buffer_texto_medio);
 	}
-
 
 
 
@@ -10231,68 +10248,7 @@ void menu_audio_draw_sound_wave(void)
 	}
 
 
-	/*
-	//Obtenemos antes valor medio total y tambien maximo y minimo
-	//Esto solo es necesario para dibujar onda llena
-
-	//Obtenemos tambien cuantas veces cambia de signo (y por tanto, obtendremos frecuencia aproximada)
-	int cambiossigno=0;
-	int signoanterior=0;
-	int signoactual=0;
-
-	int audiomedio=0,audiomin=127,audiomax=-128;
-
-	char valor_sonido;
-
-
-	z80_byte valor_sonido_sin_signo;
-	z80_byte valor_anterior_sin_signo=0;
-
-	//En AY Player tambien se usa una funcion similar. Se deberia estandarizar
-	int i;
-	for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
-		valor_sonido=audio_buffer[i];
-		audiomedio +=valor_sonido;
-
-		if (valor_sonido>audiomax) audiomax=valor_sonido;
-		if (valor_sonido<audiomin) audiomin=valor_sonido;
-
-		valor_sonido_sin_signo=valor_sonido;
-
-		if (valor_sonido_sin_signo>valor_anterior_sin_signo) signoactual=+1;
-		if (valor_sonido_sin_signo<valor_anterior_sin_signo) signoactual=-1;
-
-		valor_anterior_sin_signo=valor_sonido_sin_signo;
-
-		if (signoactual!=signoanterior) {
-			cambiossigno++;
-			signoanterior=signoactual;
-		}
-
-	}
-
-	//Calculo frecuencia aproximada
-	menu_audio_draw_sound_wave_frecuencia_aproximada=((FRECUENCIA_SONIDO/AUDIO_BUFFER_SIZE)*cambiossigno)/2;
-
-	//printf ("%d %d %d %d\n",FRECUENCIA_SONIDO,AUDIO_BUFFER_SIZE,cambiossigno,menu_audio_draw_sound_wave_frecuencia_aproximada);
-
-
-	audiomedio /=AUDIO_BUFFER_SIZE;
-	//printf ("valor medio: %d\n",audiomedio);
-	menu_audio_draw_sound_wave_valor_medio=audiomedio;
-
-	menu_audio_draw_sound_wave_valor_min=audiomin;
-	menu_audio_draw_sound_wave_valor_max=audiomax;
-
-	audiomedio=audiomedio*alto/256;
-
-        //Lo situamos en el centro. Negativo hacia abajo (Y positiva)
-        audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
-
-	//printf ("valor medio en y: %d\n",audiomedio);
-	//Fin Obtenemos antes valor medio
-
-	*/
+	
 
 	audiobuffer_stats audiostats;
 	audio_get_audiobuffer_stats(&audiostats);
@@ -10387,6 +10343,19 @@ struct s_audiobuffer_stats
 	}
 
 	//printf ("%d ",puntero_audio);
+
+
+			//Volume. Mostrarlo siempre, no solo dos veces por segundo, para que se actualice mas frecuentemente
+			if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
+
+			char texto_volumen[32];
+                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
+                                                                //"Volume C: %s"
+
+			sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
+			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
+
+
 
 }
 
@@ -10718,15 +10687,18 @@ void menu_ay_registers_overlay(void)
 
 				for (chip=0;chip<total_chips;chip++) {
 
+					ayregisters_previo_valor_volume_A[chip]=menu_decae_valor_volumen(ayregisters_previo_valor_volume_A[chip],vol_A[chip]);
+					ayregisters_previo_valor_volume_B[chip]=menu_decae_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
+					ayregisters_previo_valor_volume_C[chip]=menu_decae_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
 
-                                if (ayregisters_previo_valor_volume_A[chip]>vol_A[chip]) ayregisters_previo_valor_volume_A[chip]--;
-                                if (ayregisters_previo_valor_volume_B[chip]>vol_B[chip]) ayregisters_previo_valor_volume_B[chip]--;
-                                if (ayregisters_previo_valor_volume_C[chip]>vol_C[chip]) ayregisters_previo_valor_volume_C[chip]--;
+                                //if (ayregisters_previo_valor_volume_A[chip]>vol_A[chip]) ayregisters_previo_valor_volume_A[chip]--;
+                                //if (ayregisters_previo_valor_volume_B[chip]>vol_B[chip]) ayregisters_previo_valor_volume_B[chip]--;
+                                //if (ayregisters_previo_valor_volume_C[chip]>vol_C[chip]) ayregisters_previo_valor_volume_C[chip]--;
 
 				}
 
 
-                        }
+        }
 
 
 }
@@ -12175,13 +12147,16 @@ int mostrar_player;
 			linea=0;
 
 	//Indicadores de volumen que decaen
-	if (ayplayer_previo_valor_escalado>valor_escalado) ayplayer_previo_valor_escalado--;
+	ayplayer_previo_valor_escalado=menu_decae_valor_volumen(ayplayer_previo_valor_escalado,valor_escalado);
+	//if (ayplayer_previo_valor_escalado>valor_escalado) ayplayer_previo_valor_escalado--;
 
+	ayplayer_previo_valor_volume_A=menu_decae_valor_volumen(ayplayer_previo_valor_volume_A,vol_A);
+	ayplayer_previo_valor_volume_B=menu_decae_valor_volumen(ayplayer_previo_valor_volume_B,vol_B);
+	ayplayer_previo_valor_volume_C=menu_decae_valor_volumen(ayplayer_previo_valor_volume_C,vol_C);
 
-
-	if (ayplayer_previo_valor_volume_A>vol_A) ayplayer_previo_valor_volume_A--;
-	if (ayplayer_previo_valor_volume_B>vol_B) ayplayer_previo_valor_volume_B--;
-	if (ayplayer_previo_valor_volume_C>vol_C) ayplayer_previo_valor_volume_C--;
+	//if (ayplayer_previo_valor_volume_A>vol_A) ayplayer_previo_valor_volume_A--;
+	//if (ayplayer_previo_valor_volume_B>vol_B) ayplayer_previo_valor_volume_B--;
+	//if (ayplayer_previo_valor_volume_C>vol_C) ayplayer_previo_valor_volume_C--;
 
 
 			//printf ("Dibujando player\n");
