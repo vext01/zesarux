@@ -5613,7 +5613,8 @@ void menu_audio_ay_chip_autoenable(MENU_ITEM_PARAMETERS)
 
 
 //llena el string con el valor del volumen - para chip de sonido
-void menu_string_volumen(char *texto,z80_byte registro_volumen)
+//mete tambien caracter de "decae" si conviene (si >=0 y <=15)
+void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 {
 	if ( (registro_volumen & 16)!=0) sprintf (texto,"ENV");
 	else {
@@ -5629,6 +5630,8 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen)
                 }
 
 		texto[i]=0;
+
+		if (indice_decae>=0 && indice_decae<=15 && indice_decae>registro_volumen) texto[indice_decae]='*';
 	}
 }
 
@@ -10168,7 +10171,7 @@ void menu_audio_draw_sound_wave(void)
 
 
 			char texto_volumen[32];
-                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado);
+                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,-1);
                                                                 //"Volume C: %s"
 
 			sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
@@ -10578,15 +10581,15 @@ void menu_ay_registers_overlay(void)
 
 	for (chip=0;chip<total_chips;chip++) {
 
-			menu_string_volumen(volumen,ay_3_8912_registros[chip][8]);
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][8],-1);
 			sprintf (textovolumen,"Volume A: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[chip][9]);
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][9],-1);
 			sprintf (textovolumen,"Volume B: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[chip][10]);
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][10],-1);
 			sprintf (textovolumen,"Volume C: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
@@ -11917,6 +11920,7 @@ int ayplayer_new_retardo_misc=0;
 int ayplayer_previo_valor_escalado=0;
 
 //Funcion para escribir un caracter que "decae" con el volumen
+/*
 void ayplayer_add_caracter_decae(char *texto,int valor_previo)
 {
 	char buffer_temporal[32];
@@ -11930,7 +11934,7 @@ void ayplayer_add_caracter_decae(char *texto,int valor_previo)
 
 	//quitar 0 final
 	if (valor_previo>longitud_orig && valor_previo<15) {
-		//printf ("longitud_orig: %d\n",longitud_orig);
+		printf ("longitud_orig: %d\n",longitud_orig);
 		buffer_temporal[longitud_orig]=' ';
 
 		buffer_temporal[valor_previo]='*';
@@ -11941,7 +11945,7 @@ void ayplayer_add_caracter_decae(char *texto,int valor_previo)
 
 	//printf ("f\n");
 }	
-	
+*/	
 
 void menu_audio_new_ayplayer_overlay(void)
 {
@@ -11952,22 +11956,22 @@ void menu_audio_new_ayplayer_overlay(void)
 
 
     linea=7;
-
+	int valor_escalado; 
     	if (menu_audio_new_ayplayer_si_mostrar()) {
     	//Los volumenes mostrarlos siempre a cada refresco
 	char volumen[16],textovolumen[32];
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
-	menu_string_volumen(volumen,ay_3_8912_registros[0][8]);
+	menu_string_volumen(volumen,ay_3_8912_registros[0][8],-1);
 			sprintf (textovolumen,"Volume A: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[0][9]);
+			menu_string_volumen(volumen,ay_3_8912_registros[0][9],-1);
 			sprintf (textovolumen,"Volume B: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[0][10]);
+			menu_string_volumen(volumen,ay_3_8912_registros[0][10],-1);
 			sprintf (textovolumen,"Volume C: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
@@ -12020,7 +12024,7 @@ void menu_audio_new_ayplayer_overlay(void)
 	//Ahora tenemos valor entre 0 y 128. Pasar a entre 0 y 15 
 	//int valor_escalado=(mayor*16)/128;
 
-	int valor_escalado=audiostats.volumen_escalado;
+	valor_escalado=audiostats.volumen_escalado;
 
 	/*
 
@@ -12040,14 +12044,14 @@ void menu_audio_new_ayplayer_overlay(void)
 	Pero bueno, la mayoria de las veces si que coincide bien el valor de volumen
 	*/
 
-			menu_string_volumen(volumen,valor_escalado);
+			menu_string_volumen(volumen,valor_escalado,ayplayer_previo_valor_escalado);
 
 
 	//temp
-	ayplayer_previo_valor_escalado=valor_escalado;
+	//ayplayer_previo_valor_escalado=valor_escalado;
 
 		//ayplayer_add_caracter_decae(volumen,ayplayer_previo_valor_escalado+1);
-		ayplayer_add_caracter_decae(volumen,14);
+		//ayplayer_add_caracter_decae(volumen,14);
 
 								//"Volume C: %s"
 			sprintf (textovolumen,"Output:   %s",volumen);
@@ -12068,17 +12072,6 @@ void menu_audio_new_ayplayer_overlay(void)
 char textoplayer[40];
 
        
-	//Indicadores de volumen que decaen
-	//ayplayer_previo_valor_escalado=valor_escalado;
-
-        //z80_byte acumulado;
-
-        //char dumpassembler[32];
-
-        //Empezar con espacio
-        //dumpassembler[0]=' ';
-
-				
 
 
 				//int valor_contador_segundo_anterior;
@@ -12103,6 +12096,11 @@ int mostrar_player;
 		if (mostrar_player) {
 
 			linea=0;
+
+	//Indicadores de volumen que decaen
+	if (ayplayer_previo_valor_escalado>valor_escalado+1) ayplayer_previo_valor_escalado--;
+	else ayplayer_previo_valor_escalado=valor_escalado+1;
+
 
 			//printf ("Dibujando player\n");
 
