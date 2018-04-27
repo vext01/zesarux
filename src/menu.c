@@ -12387,16 +12387,7 @@ void menu_z88_slot_insert(MENU_ITEM_PARAMETERS)
 
 			if (menu_insert_slot_type==1) {
 				cpu_panic("ROM cards do not exist on Z88");
-				/*
-				//ROM
-				menu_add_item_menu_format(array_menu_z88_slot_insert,MENU_OPCION_NORMAL,menu_z88_slot_insert_rom,NULL,"Name: %s",string_slot_name_shown);
-		                menu_add_item_menu_tooltip(array_menu_z88_slot_insert,"Rom file to load");
-        		        menu_add_item_menu_ayuda(array_menu_z88_slot_insert,"Rom file to load. Valid formats are .epr and .63\n"
-					"Note the emulator include some programs repeated in both formats");
-
-
-				//printf ("en add item rom: %s trunc: %s\n",menu_insert_slot_rom_name,string_slot_name_shown);
-				*/
+				
 			}
 
 			if (menu_insert_slot_type==2) {
@@ -13060,13 +13051,6 @@ void menu_z88_slots(MENU_ITEM_PARAMETERS)
 
 
 
-
-
-
-
-
-
-
 //Retorna 0 si ok
 //Retorna -1 si fuera de rango
 //Modifica valor de variable
@@ -13705,25 +13689,8 @@ void menu_display_zx8081_wrx(MENU_ITEM_PARAMETERS)
 }
 
 
-/*
-void menu_display_zx8081_hrg(void)
-{
-        hrg_enabled.v ^=1;
-
-	if (hrg_enabled.v) {
-		menu_warn_message("Remember enable AFTER","loading hrg driver.","Setting RAMTOP to 22959","Follow next game with LOAD");
-	}
-}
-*/
 
 
-/*
-void menu_display_t_offset_wrx(void)
-{
-	offset_zx8081_t_estados ++;
-	if (offset_zx8081_t_estados>=25) offset_zx8081_t_estados=-16;
-}
-*/
 
 void menu_display_x_offset(MENU_ITEM_PARAMETERS)
 {
@@ -13731,14 +13698,7 @@ void menu_display_x_offset(MENU_ITEM_PARAMETERS)
         if (offset_zx8081_t_coordx>=30*8) offset_zx8081_t_coordx=-30*8;
 }
 
-/*
-void menu_hardware_inves_delay_factor(MENU_ITEM_PARAMETERS)
-{
 
-	inves_ula_delay_factor++;
-	if (inves_ula_delay_factor==5) inves_ula_delay_factor=1;
-}
-*/
 
 //OLD: Solo permitimos autofire para Kempston, Fuller ,Zebra y mikrogen, para evitar que con cursor o con sinclair se este mandando una tecla y dificulte moverse por el menu
 int menu_hardware_autofire_cond(void)
@@ -20516,35 +20476,7 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
                 sprintf (string_tape_save_inserted,"Output tape inserted: %s",((tape_loadsave_inserted & TAPE_SAVE_INSERTED)!=0 ? "Yes" : "No"));
                 menu_add_item_menu(array_menu_tape_settings,string_tape_save_inserted,MENU_OPCION_NORMAL,menu_tape_output_insert,menu_tape_output_insert_cond);
 
-/*
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_standard_to_real_tape_fallback,NULL,"Fa~~llback to real tape: %s",(standard_to_real_tape_fallback.v ? "Yes" : "No") );
-		menu_add_item_menu_shortcut(array_menu_tape_settings,'l');
-		menu_add_item_menu_tooltip(array_menu_tape_settings,"If this standard tape is detected as real tape, reinsert tape as real tape");
-		menu_add_item_menu_ayuda(array_menu_tape_settings,"While loading the standard tape, if a custom loading routine is detected, "
-					"the tape will be ejected from standard tape and inserted it as real tape. If autoload tape is enabled, "
-					"the machine will be resetted and loaded the tape from the beginning");
 
-
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_any_flag,NULL,"A~~ny flag loading: %s", (tape_any_flag_loading.v==1 ? "On" : "Off"));
-		menu_add_item_menu_shortcut(array_menu_tape_settings,'n');
-		menu_add_item_menu_tooltip(array_menu_tape_settings,"Enables tape load routine to load without knowing block flag");
-		menu_add_item_menu_ayuda(array_menu_tape_settings,"Enables tape load routine to load without knowing block flag. You must enable it on Tape Copy programs");
-
-
-
-                //menu_add_item_menu(array_menu_tape_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-			menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_simulate_real_load,NULL,"~~Simulate real load: %s", (tape_loading_simulate.v==1 ? "On" : "Off"));
-			menu_add_item_menu_shortcut(array_menu_tape_settings,'s');
-			menu_add_item_menu_tooltip(array_menu_tape_settings,"Simulate sound and loading stripes");
-			menu_add_item_menu_ayuda(array_menu_tape_settings,"Simulate sound and loading stripes. You can skip simulation pressing any key (and the data is loaded)");
-
-			menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_simulate_real_load_fast,menu_tape_simulate_real_load_cond,"Fast Simulate real load: %s", (tape_loading_simulate_fast.v==1 ? "On" : "Off"));
-                        menu_add_item_menu_tooltip(array_menu_tape_settings,"Simulate sound and loading stripes at faster speed");
-                        menu_add_item_menu_ayuda(array_menu_tape_settings,"Simulate sound and loading stripes at faster speed");
-
-*/
         	        menu_add_item_menu(array_menu_tape_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
@@ -25095,27 +25027,7 @@ int menu_change_video_driver_cond(void)
 }
 
 
-/*
-void menu_interface_second_layer(MENU_ITEM_PARAMETERS)
-{
 
-        debug_printf(VERBOSE_INFO,"End Screen");
-        scr_end_pantalla();
-
-
-	if (menu_second_layer==0) enable_second_layer();
-	else {
-		disable_second_layer();
-		cls_menu_overlay();
-	}
-
-
-	modificado_border.v=1;
-        debug_printf(VERBOSE_INFO,"Creating Screen");
-        scr_init_pantalla();
-
-}
-*/
 
 void menu_interface_footer(MENU_ITEM_PARAMETERS)
 {
@@ -25581,26 +25493,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		/*
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_chardetection_settings,NULL,"~~Print char traps");
-			menu_add_item_menu_shortcut(array_menu_interface_settings,'p');
-			menu_add_item_menu_tooltip(array_menu_interface_settings,"Settings on capture print character routines");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"Settings on capture print character routines");
-
-
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_textspeech,NULL,"~~Text to speech");
-			menu_add_item_menu_shortcut(array_menu_interface_settings,'t');
-			menu_add_item_menu_tooltip(array_menu_interface_settings,"Specify a script or program to send all text generated, "
-						"from Spectrum display or emulator menu, "
-						"usually used on text to speech");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"Specify a script or program to send all text generated, "
-						"from Spectrum display or emulator menu, "
-						"usually used on text to speech. "
-						"When running the script: \n"
-						"ESC means abort next executions on queue.\n"
-						"Enter means run pending execution.\n");
-
-		*/
+		
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
 
@@ -30426,53 +30319,13 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
-/*
-		if (menu_display_cursesstdout_cond() ) {
-	                //solo en caso de curses o stdout
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Write different artistic characters for unknown 4x4 rectangles, "
-					"on stdout and curses drivers");
 
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Write different artistic characters for unknown 4x4 rectangles, "
-					"on curses, stdout and simpletext drivers. "
-					"If disabled, unknown characters are written with ?");
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"Pixel threshold: %d",umbral_arttext);
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
-
-			if (rainbow_enabled.v) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"Text brightness: %d",screen_text_brightness);
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Text brightness used on some machines and text drivers, like tsconf");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Text brightness used on some machines and text drivers, like tsconf");
-			}
-
-		}
-*/
 
 		if (menu_display_cursesstdoutsimpletext_cond() || menu_display_aa_cond() ) {
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_textdrivers_settings,NULL,"Text driver settings");
 		}
 
-		/*
-
-		if (menu_display_aa_cond() ) {
-
-#ifdef COMPILE_AA
-			sprintf (buffer_string,"Slow AAlib emulation: %s", (scraa_fast==0 ? "On" : "Off"));
-#else
-			sprintf (buffer_string,"Slow AAlib emulation: Off");
-#endif
-			menu_add_item_menu(array_menu_settings_display,buffer_string,MENU_OPCION_NORMAL,menu_display_slowaa,menu_display_aa_cond);
-
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enable slow aalib emulation; slow is a little better");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Enable slow aalib emulation; slow is a little better");
-
-		}
-		*/
+		
 
 
                 menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
