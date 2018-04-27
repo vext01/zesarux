@@ -1836,8 +1836,11 @@ struct s_audiobuffer_stats
 
         //Ahora tenemos valor entre 0 y 128.
 
-	//Le restamos el valor medio (en valor absoluto)
+	//Le restamos el valor medio (en valor absoluto), para "centrar" el valor en la linea del 0
 	volumen -=util_get_absolute(audiomedio);
+
+	//Por si acaso, aunque no deberia pasar
+	if (volumen<0) volumen=0;
 
 	audiostats->volumen=volumen;
 
