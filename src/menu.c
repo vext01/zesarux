@@ -11913,6 +11913,35 @@ int ayplayer_new_retardo_author=0;
 int ayplayer_new_retardo_misc=0;
 
 
+//Para hacer las barras de volumen con "caracter" que decae
+int ayplayer_previo_valor_escalado=0;
+
+//Funcion para escribir un caracter que "decae" con el volumen
+void ayplayer_add_caracter_decae(char *texto,int valor_previo)
+{
+	char buffer_temporal[32];
+
+	//Meter espacios en buffer
+	int i;
+	for (i=0;i<15;i++) buffer_temporal[i]=' ';
+
+	int longitud_orig=strlen(texto);
+	strcpy(buffer_temporal,texto);
+
+	//quitar 0 final
+	if (valor_previo>longitud_orig && valor_previo<15) {
+		//printf ("longitud_orig: %d\n",longitud_orig);
+		buffer_temporal[longitud_orig]=' ';
+
+		buffer_temporal[valor_previo]='*';
+		buffer_temporal[valor_previo+1]=0;
+	}
+
+	strcpy(texto,buffer_temporal);
+
+	//printf ("f\n");
+}	
+	
 
 void menu_audio_new_ayplayer_overlay(void)
 {
@@ -12012,6 +12041,14 @@ void menu_audio_new_ayplayer_overlay(void)
 	*/
 
 			menu_string_volumen(volumen,valor_escalado);
+
+
+	//temp
+	ayplayer_previo_valor_escalado=valor_escalado;
+
+		//ayplayer_add_caracter_decae(volumen,ayplayer_previo_valor_escalado+1);
+		ayplayer_add_caracter_decae(volumen,14);
+
 								//"Volume C: %s"
 			sprintf (textovolumen,"Output:   %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
@@ -12031,7 +12068,8 @@ void menu_audio_new_ayplayer_overlay(void)
 char textoplayer[40];
 
        
-
+	//Indicadores de volumen que decaen
+	//ayplayer_previo_valor_escalado=valor_escalado;
 
         //z80_byte acumulado;
 
