@@ -1550,29 +1550,10 @@ void menu_call_onscreen_keyboard_from_menu(void)
 
 	menu_refresca_pantalla();	
 
-	if (menu_overlay_activo && previous_function!=NULL) {
-			debug_printf (VERBOSE_INFO,"Refreshing text menu");
+	
 
-			//Llamamos a refrescar texto del menu. Si no hicera eso, y por ejemplo pulso F1 y luego mantengo tecla ESC,
-			//mientras está ESC pulsado, el menu se ve oscuro hasta que suelto tecla, pues antes ha refrescado
-			//pero mezclando texto pues esta la putpixel cache
-			//esto se observa con estilo de gui Clean y maquina spectrum , por ejemplo
-			//sleep(4);
-			/*
-			Realmente lo que tendria que haber es un clear_putpixel_cache en cada scr_refresca_pantalla de cada driver asi como:
-			        if (menu_overlay_activo) {
-		      clear_putpixel_cache();
-         	menu_overlay_function();
-     }
-
-			Porque cuando hace ahi el menu_overlay_function, se ha escrito cosas en la putpixel cache y se ha cambiado de color oscuro a normal
-			Pero eso bajaria mucho el rendimiento cuando hay menu activo o hay un texto splash activo
 			
-			Realmente el clear_putpixel_cache aqui lo acabo haciendo al final de menu_refresca_pantalla, por lo que lo que viene a continuacion
-			es la misma llamada de menu_overlay_function pero ya con la cache limpia
-			*/
-			//previous_function();
-	}
+	
 
 
 	
@@ -1721,10 +1702,7 @@ void reset_menu_overlay_function(void)
 	//para que al oscurecer la pantalla tambien refresque el border
 	modificado_border.v=1;
 
-	//si hay segunda capa, no desactivar
-	//if (menu_second_layer==0) {
-	//	menu_overlay_activo=0;
-	//}
+
 
 	menu_overlay_activo=0;
 }
@@ -2031,38 +2009,9 @@ void cls_menu_overlay(void)
 
 }
 
-/*
-void menu_clear_pixels(int xorigen,int yorigen,int ancho,int alto)
-{
-	int x,y;
-                for (x=xorigen;x<xorigen+ancho;x++) {
-                        for (y=yorigen;y<yorigen+alto;y++) {
-                                scr_putpixel_zoom(x,y,15);
-                        }
-                }
-}
-*/
 
-/*
-void enable_second_layer(void)
-{
 
-	menu_second_layer=1;
 
-	//forzar redibujar algunos contadores
-	draw_bateria_contador=0;
-
-}
-
-void disable_second_layer(void)
-{
-
-	menu_second_layer=0;
-
-	//cls_menu_overlay();
-
-}
-*/
 
 
 void menu_set_menu_abierto(int valor)
@@ -2128,20 +2077,7 @@ void disable_footer(void)
 }
 
 
-/*void pruebas_texto_menu(void)
-{
 
-        scr_putchar_menu(0,0,'Z',6+8,1);
-        scr_putchar_menu(1,0,'E',6,1);
-        scr_putchar_menu(2,0,'s',6+8,1);
-        scr_putchar_menu(3,0,'a',6,1);
-        scr_putchar_menu(4,0,'r',6+8,1);
-        scr_putchar_menu(5,0,'U',6,1);
-        scr_putchar_menu(6,0,'X',6+8,1);
-        scr_putchar_menu(7,0,' ',6,1);
-        scr_putchar_menu(8,0,' ',6,1+8);
-
-}*/
 
 
 //retornar puntero a campo desde texto, separado por espacios. se permiten multiples espacios entre campos
@@ -2600,33 +2536,7 @@ void menu_draw_bateria(void)
 
 }
 
-//Muestra en pantalla los caracteres de la segunda capa e indicadores de cinta, etc
-/*
-void draw_second_layer_overlay(void)
-{
 
-
-#ifdef EMULATE_RASPBERRY
-                menu_draw_cpu_temp();
-#endif
-
-	menu_draw_cpu_use();
-	menu_draw_fps();
-
-
-	//Escribir cualquier otra cosa que no sea texto, como dibujos o puntos, lineas, indicador de bateria, por ejemplo
-	if (si_complete_video_driver() ) {
-#ifdef EMULATE_RASPBERRY
-
-		//De momento bateria solo en pruebas
-		//menu_draw_bateria();
-#endif
-	}
-
-	//copy_second_first_overlay();
-
-}
-*/
 
 
 //Aqui se llama desde cada driver de video al refrescar la pantalla
@@ -4538,29 +4448,6 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
         menu_refresca_pantalla();
 
 		
-		if (menu_overlay_activo && previous_function!=NULL) {
-			debug_printf (VERBOSE_INFO,"Refreshing text menu");
-
-			//Llamamos a refrescar texto del menu. Si no hicera eso, y por ejemplo pulso F1 y luego mantengo tecla ESC,
-			//mientras está ESC pulsado, el menu se ve oscuro hasta que suelto tecla, pues antes ha refrescado
-			//pero mezclando texto pues esta la putpixel cache
-			//esto se observa con estilo de gui Clean y maquina spectrum , por ejemplo
-			//sleep(4);
-			/*
-			Realmente lo que tendria que haber es un clear_putpixel_cache en cada scr_refresca_pantalla de cada driver asi como:
-			        if (menu_overlay_activo) {
-		      clear_putpixel_cache();
-         	menu_overlay_function();
-     }
-
-			Porque cuando hace ahi el menu_overlay_function, se ha escrito cosas en la putpixel cache y se ha cambiado de color oscuro a normal
-			Pero eso bajaria mucho el rendimiento cuando hay menu activo o hay un texto splash activo
-			
-			Realmente el clear_putpixel_cache aqui lo acabo haciendo al final de menu_refresca_pantalla, por lo que lo que viene a continuacion
-			es la misma llamada de menu_overlay_function pero ya con la cache limpia
-			*/
-			//previous_function();
-		}
 
 }
 
@@ -5689,43 +5576,7 @@ int menu_breakpoints_cond(void)
 }
 
 
-//breakpoint de pc no tiene sentido porque se puede hacer con condicion pc=
-/*
-void menu_breakpoints_set(void)
-{
-	//printf ("linea: %d\n",breakpoints_opcion_seleccionada);
 
-	int breakpoint_index=breakpoints_opcion_seleccionada-1;
-
-        int dir;
-
-        char string_dir[6];
-
-	dir=debug_breakpoints_array[breakpoint_index];
-	if (dir==-1) sprintf (string_dir,"0");
-	else  sprintf (string_dir,"%d",dir);
-
-        menu_ventana_scanf("Address",string_dir,6);
-
-	if (string_dir[0]==0) dir=-1;
-
-	else  {
-
-		dir=parse_string_to_number(string_dir);
-
-        	if (dir<0 || dir>65535) {
-                	debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
-	                return;
-        	}
-	}
-
-
-	debug_breakpoints_array[breakpoint_index]=dir;
-
-
-}
-
-*/
 void menu_breakpoints_conditions_set(MENU_ITEM_PARAMETERS)
 {
         //printf ("linea: %d\n",breakpoints_opcion_seleccionada);
@@ -5872,23 +5723,7 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
                 }
 
-		/*
-
-                for (i=0;i<MAX_BREAKPOINTS_PEEK;i++) {
-
-
-                        if (debug_breakpoints_peek_array[i]==-1) sprintf (buffer_texto,"None");
-                        else sprintf (buffer_texto,"%d",debug_breakpoints_peek_array[i]);
-
-                        menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_peek_set,menu_breakpoints_cond,"Breakpoint Peek %d: %s",i+1,buffer_texto);
-
-                        menu_add_item_menu_tooltip(array_menu_breakpoints,"Set a PEEK breakpoint");
-                        menu_add_item_menu_ayuda(array_menu_breakpoints,"Set a PEEK (read address) breakpoint"
-						"\nNote: Any condition in the whole list can trigger a breakpoint");
-
-
-                }
-		*/
+		
 
 
 
@@ -8214,11 +8049,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					menu_multitarea=antes_menu_multitarea;
 
-        //clear_putpixel_cache();
-        //TODO: Si no se pone clear_putpixel_cache,
-        //el texto se fusiona con el fondo de manera casi transparente,
-        //como si no borrase el putpixel cache
-        //esto también sucede en otras partes del código del menú pero no se por que es
+
 
 
                                         //Decimos que no hay tecla pulsada
@@ -8240,11 +8071,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					menu_multitarea=antes_menu_multitarea;
 
-        //clear_putpixel_cache();
-        //TODO: Si no se pone clear_putpixel_cache,
-        //el texto se fusiona con el fondo de manera casi transparente,
-        //como si no borrase el putpixel cache
-        //esto también sucede en otras partes del código del menú pero no se por que es
+
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -10375,7 +10202,7 @@ struct s_audiobuffer_stats
 
 }
 
-void menu_audio_espectro_sonido(MENU_ITEM_PARAMETERS)
+void xxx_menu_audio_espectro_sonido(MENU_ITEM_PARAMETERS)
 {
 
 	//Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
