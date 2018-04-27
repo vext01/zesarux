@@ -10380,7 +10380,7 @@ void menu_audio_espectro_sonido(MENU_ITEM_PARAMETERS)
 	disable_interlace();
 
         menu_espera_no_tecla();
-        menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-1,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+3,"Waveform");
+        menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
 
 	//Damos un margen para escribir texto de tecla y valores average
 	if (si_complete_video_driver() )
@@ -10498,7 +10498,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 
 	  //Hay que redibujar la ventana desde este bucle
-	menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-1,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+3,"Waveform");
+	menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
 
 
                         menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
