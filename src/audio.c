@@ -1814,12 +1814,17 @@ struct s_audiobuffer_stats
 	audiostats->medio=audiomedio;
 	audiostats->frecuencia=frecuencia;
 
-	//Falta obtener volumen. Lo sacamos como la diferencia entre los valores maximo y minimo
+	//Falta obtener volumen
+
+/*
+	//Sacamos volumen como la diferencia entre los valores maximo y minimo
 	int volumen=util_get_absolute(audiomax-audiomin);
 
 	audiostats->volumen=volumen;
+*/
 
-/*
+
+	//Sacamos volumen como el mayor valor de los dos, maximo o minimo
         //Obtenemos valores absolutos
         audiomax=util_get_absolute(audiomax);
         audiomin=util_get_absolute(audiomin);
@@ -1832,7 +1837,6 @@ struct s_audiobuffer_stats
         //Ahora tenemos valor entre 0 y 128.
 
 	audiostats->volumen=volumen;
-*/
 
 
 }
