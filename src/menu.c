@@ -5631,6 +5631,7 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 
 		texto[i]=0;
 
+		//Si volumen es 0 por ejemplo, no se muestra ningun =, y entonces el indicador sera "*"
 		if (indice_decae>=0 && indice_decae<=15 && indice_decae>registro_volumen) texto[indice_decae]='*';
 	}
 }
@@ -12043,6 +12044,8 @@ void menu_audio_new_ayplayer_overlay(void)
 	"mueven" esa onda hacia arriba, y aunque el indicador de volumen diga que esta muy alto, realmente se oye a volumen normal
 	Pero bueno, la mayoria de las veces si que coincide bien el valor de volumen
 	*/
+	
+	if (ayplayer_previo_valor_escalado<valor_escalado) ayplayer_previo_valor_escalado=valor_escalado;
 
 			menu_string_volumen(volumen,valor_escalado,ayplayer_previo_valor_escalado);
 
@@ -12098,8 +12101,7 @@ int mostrar_player;
 			linea=0;
 
 	//Indicadores de volumen que decaen
-	if (ayplayer_previo_valor_escalado>valor_escalado+1) ayplayer_previo_valor_escalado--;
-	else ayplayer_previo_valor_escalado=valor_escalado+1;
+	if (ayplayer_previo_valor_escalado>valor_escalado) ayplayer_previo_valor_escalado--;
 
 
 			//printf ("Dibujando player\n");
