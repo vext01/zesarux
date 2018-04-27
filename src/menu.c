@@ -11920,6 +11920,10 @@ int ayplayer_new_retardo_misc=0;
 //Para hacer las barras de volumen con "caracter" que decae
 int ayplayer_previo_valor_escalado=0;
 
+int ayplayer_previo_valor_volume_A=0;
+int ayplayer_previo_valor_volume_B=0;
+int ayplayer_previo_valor_volume_C=0;
+
 //Funcion para escribir un caracter que "decae" con el volumen
 /*
 void ayplayer_add_caracter_decae(char *texto,int valor_previo)
@@ -11958,21 +11962,35 @@ void menu_audio_new_ayplayer_overlay(void)
 
     linea=7;
 	int valor_escalado; 
+
+	int vol_A,vol_B,vol_C;
+
+
     	if (menu_audio_new_ayplayer_si_mostrar()) {
     	//Los volumenes mostrarlos siempre a cada refresco
 	char volumen[16],textovolumen[32];
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
-	menu_string_volumen(volumen,ay_3_8912_registros[0][8],-1);
+	vol_A=ay_3_8912_registros[0][8] & 15;
+	vol_B=ay_3_8912_registros[0][9] & 15;
+	vol_C=ay_3_8912_registros[0][10] & 15;
+
+	if (ayplayer_previo_valor_volume_A<vol_A) ayplayer_previo_valor_volume_A=vol_A;
+	if (ayplayer_previo_valor_volume_B<vol_B) ayplayer_previo_valor_volume_B=vol_B;
+	if (ayplayer_previo_valor_volume_C<vol_C) ayplayer_previo_valor_volume_C=vol_C;
+
+
+
+	menu_string_volumen(volumen,ay_3_8912_registros[0][8],ayplayer_previo_valor_volume_A);
 			sprintf (textovolumen,"Volume A: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[0][9],-1);
+			menu_string_volumen(volumen,ay_3_8912_registros[0][9],ayplayer_previo_valor_volume_B);
 			sprintf (textovolumen,"Volume B: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
-			menu_string_volumen(volumen,ay_3_8912_registros[0][10],-1);
+			menu_string_volumen(volumen,ay_3_8912_registros[0][10],ayplayer_previo_valor_volume_C);
 			sprintf (textovolumen,"Volume C: %s",volumen);
 			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 
@@ -12102,6 +12120,12 @@ int mostrar_player;
 
 	//Indicadores de volumen que decaen
 	if (ayplayer_previo_valor_escalado>valor_escalado) ayplayer_previo_valor_escalado--;
+
+
+
+	if (ayplayer_previo_valor_volume_A>vol_A) ayplayer_previo_valor_volume_A--;
+	if (ayplayer_previo_valor_volume_B>vol_B) ayplayer_previo_valor_volume_B--;
+	if (ayplayer_previo_valor_volume_C>vol_C) ayplayer_previo_valor_volume_C--;
 
 
 			//printf ("Dibujando player\n");
