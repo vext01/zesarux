@@ -10202,96 +10202,7 @@ struct s_audiobuffer_stats
 
 }
 
-void xxx_menu_audio_espectro_sonido(MENU_ITEM_PARAMETERS)
-{
 
-	//Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        z80_bit copia_video_interlaced_mode;
-        copia_video_interlaced_mode.v=video_interlaced_mode.v;
-
-	disable_interlace();
-
-        menu_espera_no_tecla();
-        menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
-
-	//Damos un margen para escribir texto de tecla y valores average
-	if (si_complete_video_driver() )
-        	menu_escribe_linea_opcion(0,-1,1,"S: Change wave Shape");
-
-
-        z80_byte acumulado;
-
-
-
-        //Cambiamos funcion overlay de texto de menu
-	//Se establece a la de funcion de onda + texto
-        set_menu_overlay_function(menu_audio_draw_sound_wave);
-
-				int valor_contador_segundo_anterior;
-
-				valor_contador_segundo_anterior=contador_segundo;
-
-
-        do {
-
-          	//esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-									valor_contador_segundo_anterior=contador_segundo;
-									//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) menu_refresca_pantalla();
-
-			char buffer_texto_medio[40];
-			sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
-				menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_min,menu_audio_draw_sound_wave_valor_max);
-			menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
-			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
-				menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
-			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
-
-                }
-
-                menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
-
-								//si no hay multitarea, esperar tecla y salir
-								if (menu_multitarea==0) {
-												menu_espera_tecla();
-
-												acumulado=0;
-								}
-
-
-                        //Hay tecla pulsada
-                        if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
-                                int tecla=menu_get_pressed_key();
-																//printf ("tecla: %c\n",tecla);
-																if (tecla=='s') {
-																	menu_sound_wave_llena ^=1;
-																	menu_espera_no_tecla();
-																	acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-																}
-
-																//Si tecla no es ESC, no salir
-																if (tecla!=2) {
-																	acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-																}
-
-												}
-
-
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
-
-	//Restauramos modo interlace
-	if (copia_video_interlaced_mode.v) enable_interlace();
-
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
-
-
-        cls_menu_overlay();
-
-}
 
 
 void menu_audio_new_waveform_shape(MENU_ITEM_PARAMETERS)
@@ -11380,22 +11291,7 @@ void menu_audio_beep_volume(MENU_ITEM_PARAMETERS)
         output_beep_filter_volume=v;
 }
 
-/*void menu_audio_turbosound(MENU_ITEM_PARAMETERS)
-{
-	if (turbosound_enabled.v) turbosound_disable();
-	else turbosound_enable();
-}
-*/
 
-/*
-
-void menu_ay_player_next_track(MENU_ITEM_PARAMETERS)
-{
-
-	ay_player_next_track();
-
-}
-*/
 
 void menu_ay_player_load(MENU_ITEM_PARAMETERS)
 {
@@ -11469,299 +11365,7 @@ int menu_ay_player_get_continuous_string(int indice_actual,int max_length,char *
 	return indice_actual;
 }
 
-void menu_ay_player_player_dibuja_ventana(void)
-{
-	menu_dibuja_ventana(0,4,32,16,"AY Player");
-}
 
-void menu_ay_player_player(MENU_ITEM_PARAMETERS)
-{
-
-
-
-        char textoplayer[40];
-
-        menu_espera_no_tecla();
-
-				if (!menu_multitarea) {
-					menu_warn_message("This menu item needs multitask enabled");
-					return;
-				}
-
-        menu_ay_player_player_dibuja_ventana();
-
-        z80_byte acumulado;
-
-        //char dumpassembler[32];
-
-        //Empezar con espacio
-        //dumpassembler[0]=' ';
-
-				int contador_string_author=0;
-				int contador_string_track_name=0;
-				int contador_string_misc=0;
-
- 				int retardo_song_name=0;
-				int retardo_author=0;
-				int retardo_misc=0;
-
-
-
-				int valor_contador_segundo_anterior;
-
-				valor_contador_segundo_anterior=contador_segundo;
-
-int mostrar_player;
-
-int mostrar_antes_player=-1;
-
-//Forzar a mostrar atajos
-z80_bit antes_menu_writing_inverse_color;
-antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-
-menu_writing_inverse_color.v=1;
-
-        do {
-
-
-                //esto hara ejecutar esto 2 veces por segundo
-                if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-												valor_contador_segundo_anterior=contador_segundo;
-                        //contador_segundo_anterior=contador_segundo;
-/*
-29 ancho
-
-Track: 255/255  (01:00/03:50)
-[Track name]
-Author
-[author]
-Misc
-[misc]
-
-[P]rev [S]top [N]ext
-[L]oad
-*/
-
-
-mostrar_player=1;
-if (audio_ay_player_mem==NULL) mostrar_player=0;
-if (ay_player_playing.v==0) mostrar_player=0;
-
-				//Si hay cambio
-				if (mostrar_player!=mostrar_antes_player) menu_ay_player_player_dibuja_ventana();
-
-				mostrar_antes_player=mostrar_player;
-
-
-                        int linea=0;
-
-         
-
-
-		if (mostrar_player) {
-
-			z80_byte minutos,segundos,minutos_total,segundos_total;
-			minutos=ay_song_length_counter/60/50;
-			segundos=(ay_song_length_counter/50)%60;
-			minutos_total=ay_song_length/60/50;
-			segundos_total=(ay_song_length/50)%60;
-
-//printf ("segundo. contador segundo: %d\n",contador_segundo);
-
-			sprintf (textoplayer,"Track: %03d/%03d  (%02d:%02d/%02d:%02d)",ay_player_pista_actual,ay_player_total_songs(),minutos,segundos,minutos_total,segundos_total);
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-
-
-			strncpy(textoplayer,&ay_player_file_song_name[contador_string_track_name],28);
-			textoplayer[28]=0;
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-			contador_string_track_name=menu_ay_player_get_continuous_string(contador_string_track_name,28,ay_player_file_song_name,&retardo_song_name);
-
-			menu_escribe_linea_opcion(linea++,-1,1,"Author");
-			strncpy(textoplayer,&ay_player_file_author[contador_string_author],28);
-			textoplayer[28]=0;
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-			contador_string_author=menu_ay_player_get_continuous_string(contador_string_author,28,ay_player_file_author,&retardo_author);
-
-			menu_escribe_linea_opcion(linea++,-1,1,"Misc");
-			strncpy(textoplayer,&ay_player_file_misc[contador_string_misc],28);
-			textoplayer[28]=0;
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-			contador_string_misc=menu_ay_player_get_continuous_string(contador_string_misc,28,ay_player_file_misc,&retardo_misc);
-
-			linea++;
-
-			menu_escribe_linea_opcion(linea++,-1,1,"~~Prev ~~Stop ~~Next");
-
-			sprintf(textoplayer,"~~Repeat: %s  ~~Exit end: %s",
-				(ay_player_repeat_file.v ? "Yes" : "No"),(ay_player_exit_emulator_when_finish.v ? "Yes" : "No") );
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-
-			if (ay_player_limit_infinite_tracks==0) sprintf(textoplayer,"Length ~~infinite tracks: inf");
-			else sprintf(textoplayer,"Length ~~infinite tracks: %d s",ay_player_limit_infinite_tracks/50);
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-
-			if (ay_player_limit_any_track==0) sprintf(textoplayer,"Length ~~any track: No limit");
-			else sprintf(textoplayer,"Length ~~any track: %d s",ay_player_limit_any_track/50);
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-
-			sprintf(textoplayer,"~~CPC mode: %s",(ay_player_cpc_mode.v ? "Yes" : "No"));
-			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
-
-			linea++;
-
-}
-
-menu_escribe_linea_opcion(linea++,-1,1,"~~Load");
-
-			//ay_player_file_author_misc[1024];
-			//ay_player_file_song_name[1024];
-
-
-        	if (menu_multitarea==0) menu_refresca_pantalla();
-
-    	}
-
-                menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
-
-								//si no hay multitarea, esperar tecla y salir
-								if (menu_multitarea==0) {
-												menu_espera_tecla();
-
-												acumulado=0;
-								}
-
-
-								//Hay tecla pulsada
-								if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
-												int tecla=menu_get_pressed_key();
-												//printf ("tecla: %c\n",tecla);
-
-												if (mostrar_player) {
-												if (tecla=='n') {
-													ay_player_next_track();
-													contador_string_author=contador_string_track_name=contador_string_misc=retardo_song_name=retardo_author=retardo_misc=0;
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-
-												}
-
-												if (tecla=='p') {
-													ay_player_previous_track();
-													contador_string_author=contador_string_track_name=contador_string_misc=retardo_song_name=retardo_author=retardo_misc=0;
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-
-												}
-
-												if (tecla=='s') {
-													ay_player_stop_player();
-													contador_string_author=contador_string_track_name=contador_string_misc=retardo_song_name=retardo_author=retardo_misc=0;
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-												}
-
-												if (tecla=='r') {
-													ay_player_repeat_file.v ^=1;
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-												}
-
-												if (tecla=='e') {
-													ay_player_exit_emulator_when_finish.v ^=1;
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-												}
-
-												if (tecla=='c') {
-													ay_player_cpc_mode.v ^=1;
-													audio_ay_player_play_song(ay_player_pista_actual);
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-												}
-
-												if (tecla=='i') {
-													menu_espera_no_tecla(); //Si no pongo esto, luego al borrar pantalla, no borra bien del todo
-													//por ejemplo, si estamos en maquina 128k, se superpone el menu de la rom del 128k... quiza porque no limpia el putpixel cache??
-													cls_menu_overlay();
-
-													char string_length[5];
-													sprintf(string_length,"%d",ay_player_limit_infinite_tracks/50);
-
-									        menu_ventana_scanf("Length (0-1310)",string_length,5);
-													int l=parse_string_to_number(string_length);
-
-													if (l<0 || l>1310) {
-														menu_error_message("Invalid length value");
-													}
-
-													else ay_player_limit_infinite_tracks=l*50;
-
-													menu_espera_no_tecla();
-													cls_menu_overlay();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-													menu_ay_player_player_dibuja_ventana();
-												}
-
-
-												if (tecla=='a') {
-													menu_espera_no_tecla(); //Si no pongo esto, luego al borrar pantalla, no borra bien del todo
-													//por ejemplo, si estamos en maquina 128k, se superpone el menu de la rom del 128k... quiza porque no limpia el putpixel cache??
-													cls_menu_overlay();
-
-													char string_length[5];
-													sprintf(string_length,"%d",ay_player_limit_any_track/50);
-
-													menu_ventana_scanf("Length (0-1310)",string_length,5);
-													int l=parse_string_to_number(string_length);
-
-													if (l<0 || l>1310) {
-														menu_error_message("Invalid length value");
-													}
-
-													else ay_player_limit_any_track=l*50;
-
-													menu_espera_no_tecla();
-													cls_menu_overlay();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-													menu_ay_player_player_dibuja_ventana();
-												}
-
-											}
-
-											if (tecla=='l') {
-												menu_espera_no_tecla(); //Si no pongo esto, luego al borrar pantalla, no borra bien del todo
-												//por ejemplo, si estamos en maquina 128k, se superpone el menu de la rom del 128k... quiza porque no limpia el putpixel cache??
-												cls_menu_overlay();
-												menu_ay_player_load(0);
-												contador_string_author=contador_string_track_name=contador_string_misc=retardo_song_name=retardo_author=retardo_misc=0;
-												menu_espera_no_tecla();
-												cls_menu_overlay();
-												acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-												menu_ay_player_player_dibuja_ventana();
-											}
-
-											//Si tecla no es ESC, no salir
-											if (tecla!=2) {
- 												acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-											}
-
-
-								}
-
-
-
-
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
-
-        cls_menu_overlay();
-				menu_espera_no_tecla();
-
-
-				menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
-
-}
 
 
 void menu_audio_new_ayplayer_dibuja_ventana(void)
@@ -11800,33 +11404,7 @@ int ayplayer_previo_valor_volume_A=0;
 int ayplayer_previo_valor_volume_B=0;
 int ayplayer_previo_valor_volume_C=0;
 
-//Funcion para escribir un caracter que "decae" con el volumen
-/*
-void ayplayer_add_caracter_decae(char *texto,int valor_previo)
-{
-	char buffer_temporal[32];
-
-	//Meter espacios en buffer
-	int i;
-	for (i=0;i<15;i++) buffer_temporal[i]=' ';
-
-	int longitud_orig=strlen(texto);
-	strcpy(buffer_temporal,texto);
-
-	//quitar 0 final
-	if (valor_previo>longitud_orig && valor_previo<15) {
-		printf ("longitud_orig: %d\n",longitud_orig);
-		buffer_temporal[longitud_orig]=' ';
-
-		buffer_temporal[valor_previo]='*';
-		buffer_temporal[valor_previo+1]=0;
-	}
-
-	strcpy(texto,buffer_temporal);
-
-	//printf ("f\n");
-}	
-*/	
+	
 
 void menu_audio_new_ayplayer_overlay(void)
 {
@@ -11856,9 +11434,7 @@ void menu_audio_new_ayplayer_overlay(void)
 	ayplayer_previo_valor_volume_B=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_volume_B,vol_B);
 	ayplayer_previo_valor_volume_C=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_volume_C,vol_C);
 
-	//if (ayplayer_previo_valor_volume_A<vol_A) ayplayer_previo_valor_volume_A=vol_A;
-	//if (ayplayer_previo_valor_volume_B<vol_B) ayplayer_previo_valor_volume_B=vol_B;
-	//if (ayplayer_previo_valor_volume_C<vol_C) ayplayer_previo_valor_volume_C=vol_C;
+
 
 
 
@@ -11879,41 +11455,7 @@ void menu_audio_new_ayplayer_overlay(void)
 	//Obtenemos antes valor medio total y tambien maximo y minimo
 	//Esto solo es necesario para dibujar onda llena
 
-	//Obtenemos tambien cuantas veces cambia de signo (y por tanto, obtendremos frecuencia aproximada)
-	//int cambiossigno=0;
-	//int signoanterior=0;
-	//int signoactual=0;
-	/*
 
-	int audiomin=127,audiomax=-128;
-
-	char valor_sonido;
-
-
-	//En AY Waveform tambien se usa una funcion similar. Se deberia estandarizar
-	int i;
-	for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
-		valor_sonido=audio_buffer[i];
-
-		if (valor_sonido>audiomax) audiomax=valor_sonido;
-		if (valor_sonido<audiomin) audiomin=valor_sonido;
-
-	}
-
-
-	
-	//Mostramos "volumen" de waveform desde 0 a 15. Realmente podria mostrar mas amplitud, pero para que quede misma escala que 
-	//Volumenes del chip AY
-
-	//Obtenemos valores absolutos
-	audiomax=util_get_absolute(audiomax);
-	audiomin=util_get_absolute(audiomin);
-
-	//Nos quedamos con el valor mayor
-	int mayor=audiomax; //Suponemos este pero no tiene por que ser asi
-
-	if (audiomin>audiomax) mayor=audiomin;
-	*/
 
         audiobuffer_stats audiostats;
         audio_get_audiobuffer_stats(&audiostats);
@@ -11950,11 +11492,7 @@ void menu_audio_new_ayplayer_overlay(void)
 			menu_string_volumen(volumen,valor_escalado,ayplayer_previo_valor_escalado);
 
 
-	//temp
-	//ayplayer_previo_valor_escalado=valor_escalado;
 
-		//ayplayer_add_caracter_decae(volumen,ayplayer_previo_valor_escalado+1);
-		//ayplayer_add_caracter_decae(volumen,14);
 
 								//"Volume C: %s"
 			sprintf (textovolumen,"Output:   %s",volumen);
@@ -11977,20 +11515,11 @@ char textoplayer[40];
        
 
 
-				//int valor_contador_segundo_anterior;
-
-				//valor_contador_segundo_anterior=contador_segundo;
-
 int mostrar_player;
 
-//int mostrar_antes_player=-1;
+
 
 	mostrar_player=menu_audio_new_ayplayer_si_mostrar();
-
-
-				//mostrar_antes_player=mostrar_player;
-
-
 
 
          
@@ -12002,15 +11531,13 @@ int mostrar_player;
 
 	//Indicadores de volumen que decaen
 	ayplayer_previo_valor_escalado=menu_decae_dec_valor_volumen(ayplayer_previo_valor_escalado,valor_escalado);
-	//if (ayplayer_previo_valor_escalado>valor_escalado) ayplayer_previo_valor_escalado--;
+
 
 	ayplayer_previo_valor_volume_A=menu_decae_dec_valor_volumen(ayplayer_previo_valor_volume_A,vol_A);
 	ayplayer_previo_valor_volume_B=menu_decae_dec_valor_volumen(ayplayer_previo_valor_volume_B,vol_B);
 	ayplayer_previo_valor_volume_C=menu_decae_dec_valor_volumen(ayplayer_previo_valor_volume_C,vol_C);
 
-	//if (ayplayer_previo_valor_volume_A>vol_A) ayplayer_previo_valor_volume_A--;
-	//if (ayplayer_previo_valor_volume_B>vol_B) ayplayer_previo_valor_volume_B--;
-	//if (ayplayer_previo_valor_volume_C>vol_C) ayplayer_previo_valor_volume_C--;
+
 
 
 			//printf ("Dibujando player\n");
@@ -12165,7 +11692,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
         //menu_espera_no_tecla();
 
-        //z80_byte acumulado;
+
 
 
 				if (!menu_multitarea) {
@@ -12204,10 +11731,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_inicial_format(&array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_load,NULL,"~~Load");
             menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'l');
             menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Load AY file");
-            //menu_add_item_menu_tooltip(array_menu_audio_new_ayplayer,"Load AY file");
-            //menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Load AY file");
-						//0123456789
-						// Change wave Shape
+
 						
 			
 
@@ -12393,52 +11917,7 @@ void menu_z88_slot_insert_ram(MENU_ITEM_PARAMETERS)
 	else menu_insert_slot_ram_size *=2;
 }
 
-/*
-void old_menu_z88_slot_insert_rom(void)
-{
-        char *filtros[3];
 
-        filtros[0]="epr";
-        filtros[1]="63";
-        filtros[2]=0;
-
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
-
-        //Obtenemos directorio de rom
-        //si no hay directorio, vamos a rutas predefinidas
-
-
-	//printf ("menu_insert_slot_rom_name: %s\n",menu_insert_slot_rom_name);
-
-        if (menu_insert_slot_rom_name[0]==0) menu_chdir_sharedfiles();
-        else {
-                char directorio[PATH_MAX];
-                util_get_dir(menu_insert_slot_rom_name,directorio);
-                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
-
-                //cambiamos a ese directorio, siempre que no sea nulo
-                if (directorio[0]!=0) {
-                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
-                }
-        }
-
-
-        int ret;
-
-        ret=menu_filesel("Select Rom File",filtros,menu_insert_slot_rom_name);
-	menu_filesel_chdir(directorio_actual);
-
-        if (ret==1) {
-		//z88_load_rom_card(menu_insert_slot_rom_name,slot);
-        }
-
-	else menu_insert_slot_rom_name[0]=0;
-
-}
-*/
 
 
 
