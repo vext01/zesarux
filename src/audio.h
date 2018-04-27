@@ -228,7 +228,9 @@ struct s_audiobuffer_stats
 	int minimo;
 	int medio;
 	int frecuencia;
-	int volumen;
+	int volumen;  //entre 0 y 127
+
+	int volumen_escalado;  //escalado entre 0 y 15, como los volumenes del chip AY
 };
 
 typedef struct s_audiobuffer_stats audiobuffer_stats;

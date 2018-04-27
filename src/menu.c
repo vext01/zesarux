@@ -10137,7 +10137,8 @@ int menu_sound_wave_llena=1;
 char menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_max,menu_audio_draw_sound_wave_valor_min;
 int menu_audio_draw_sound_wave_frecuencia_aproximada;
 
-int menu_audio_draw_sound_wave_volumen;
+int menu_audio_draw_sound_wave_volumen=0;
+int menu_audio_draw_sound_wave_volumen_escalado=0;
 
 
 //Usado dentro del overlay de waveform, para mostrar dos veces por segundo el texto que average, etc
@@ -10165,7 +10166,12 @@ void menu_audio_draw_sound_wave(void)
 			menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
 
 
-			sprintf (buffer_texto_medio,"Volume: %d",menu_audio_draw_sound_wave_volumen);
+
+			char texto_volumen[32];
+                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado);
+                                                                //"Volume C: %s"
+
+			sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
 			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
 
 			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
@@ -10292,6 +10298,7 @@ struct s_audiobuffer_stats
 	menu_audio_draw_sound_wave_valor_min=audiostats.minimo;
 	menu_audio_draw_sound_wave_frecuencia_aproximada=audiostats.frecuencia;
 	menu_audio_draw_sound_wave_volumen=audiostats.volumen;
+	menu_audio_draw_sound_wave_volumen_escalado=audiostats.volumen_escalado;
 
 	int audiomedio=audiostats.medio;
 	menu_audio_draw_sound_wave_valor_medio=audiomedio;

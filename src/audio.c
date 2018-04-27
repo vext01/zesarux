@@ -1876,4 +1876,20 @@ struct s_audiobuffer_stats
 	audiostats->volumen=volumen;
 
 
+
+
+
+        int volumen_escalado=volumen;
+
+        //Ahora tenemos valor entre 0 y 128. Pasar a entre 0 y 15
+        //int valor_escalado=(mayor*16)/128;
+        volumen_escalado=(volumen_escalado*16)/128;
+
+        //Vigilar que no pase de 15
+        if (volumen_escalado>15) volumen_escalado=15;
+
+	audiostats->volumen_escalado=volumen_escalado;
+
+
+
 }
