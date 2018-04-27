@@ -11936,6 +11936,7 @@ void menu_audio_new_ayplayer_overlay(void)
 	//int cambiossigno=0;
 	//int signoanterior=0;
 	//int signoactual=0;
+	/*
 
 	int audiomin=127,audiomax=-128;
 
@@ -11965,9 +11966,16 @@ void menu_audio_new_ayplayer_overlay(void)
 	int mayor=audiomax; //Suponemos este pero no tiene por que ser asi
 
 	if (audiomin>audiomax) mayor=audiomin;
+	*/
+
+        audiobuffer_stats audiostats;
+        audio_get_audiobuffer_stats(&audiostats);
+
+	int volumen_buffer=audiostats.volumen;
 
 	//Ahora tenemos valor entre 0 y 128. Pasar a entre 0 y 15 
-	int valor_escalado=(mayor*16)/128;
+	//int valor_escalado=(mayor*16)/128;
+	int valor_escalado=(volumen_buffer*16)/128;
 
 	//Vigilar que no pase de 15
 	if (valor_escalado>15) valor_escalado=15;
