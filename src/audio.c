@@ -1841,6 +1841,7 @@ struct s_audiobuffer_stats
 
 	//Por si acaso, aunque no deberia pasar
 	if (volumen<0) volumen=0;
+	if (volumen>127) volumen=127;
 
 	audiostats->volumen=volumen;
 
