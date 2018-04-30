@@ -7688,14 +7688,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_registers_change_ptr();
 
-					//menu_refresca_pantalla();
-
-        //clear_putpixel_cache();
-        //TODO: Si no se pone clear_putpixel_cache,
-        //el texto se fusiona con el fondo de manera casi transparente,
-        //como si no borrase el putpixel cache
-        //esto también sucede en otras partes del código del menú pero no se por que es
-
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7706,11 +7698,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //cls_menu_overlay();
 					menu_debug_change_registers();
 
-        //clear_putpixel_cache();
-        //TODO: Si no se pone clear_putpixel_cache,
-        //el texto se fusiona con el fondo de manera casi transparente,
-        //como si no borrase el putpixel cache
-        //esto también sucede en otras partes del código del menú pero no se por que es
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
