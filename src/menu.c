@@ -7915,7 +7915,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					menu_multitarea=0;
 
                                         menu_breakpoints(0);
-										menu_multitarea=antes_menu_multitarea;
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -7923,6 +7922,12 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
+
+
+                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+					
                                 }
 
                                 if (tecla=='w') {
@@ -7936,13 +7941,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         menu_watches(0);
 
-										menu_multitarea=antes_menu_multitarea;
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                                         menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
+
+                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
                                 }
 
 				if (tecla=='m' && menu_debug_registers_current_view==1) {
@@ -8034,7 +8042,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         menu_debug_registers_change_ptr();
 
-					menu_multitarea=antes_menu_multitarea;
 
 
 
@@ -8045,6 +8052,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
+
+                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
                                 }
 
                                 if (tecla=='r') {
@@ -8056,9 +8067,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         menu_debug_change_registers();
 
-					menu_multitarea=antes_menu_multitarea;
-
-
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -8066,6 +8074,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
+
+					//Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+					//de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
                                 }
 
 
