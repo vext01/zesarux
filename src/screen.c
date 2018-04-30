@@ -10634,6 +10634,8 @@ void enable_interlace(void)
 
 	interlaced_numero_frame=0;
 
+	clear_putpixel_cache();
+
 
 }
 
