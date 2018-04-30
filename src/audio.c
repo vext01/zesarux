@@ -1902,25 +1902,64 @@ char audio_change_top_speed_sound(char sonido)
 	int valor_sonido=sonido;
 	char dividir=audio_sine_table[audio_change_top_speed_index];
 
+	int signo=util_get_sign(valor_sonido);
 
+
+	/*	
+	//
+	//Dividir
 
 	//Evitar division por 0
+	
 	if (dividir==0) {
-		int signo=util_get_sign(valor_sonido);
 		valor_sonido=127;
 		valor_sonido=valor_sonido * signo;
 	}
 	else {
-		valor_sonido=valor_sonido*127;
+		valor_sonido=valor_sonido*100;
 		valor_sonido=valor_sonido/dividir;
+
+		if (valor_sonido>127) valor_sonido=127;
+		if (valor_sonido<-127) valor_sonido=-127;
+
+		printf ("indice: %d sonido: %d valor_sonido: %d dividir: %d\n",audio_change_top_speed_index,sonido,valor_sonido,dividir);
 	}
+
+	*/
+	
+	
+
+	
+	 
+	//
+	// Multiplicar
+	valor_sonido=valor_sonido*dividir;
+	valor_sonido=valor_sonido/100;
+
+	//Y bajamos un poco el volumen para que no sea tan molesto
+	valor_sonido /=2;
+	
+	
+
+	/*
+	//
+	// Mezclar
+	valor_sonido=valor_sonido+dividir;
+	valor_sonido /=2;
+	*/
+
+	
+
+	//printf ("sonido: %d valor_sonido: %d dividir: %d\n",sonido,valor_sonido,dividir);
 
 	sonido=valor_sonido;
 
 
 
-	audio_change_top_speed_index++;
-	if (audio_change_top_speed_index>=FREQ_TOP_SPEED_CHANGE) audio_change_top_speed_index=0;
+	//Mover el indice el incremento correspondiente
+	audio_change_top_speed_index+=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO-FREQ_TOP_SPEED_CHANGE);
+
+	if (audio_change_top_speed_index>=FREQ_TOP_SPEED_CHANGE) audio_change_top_speed_index -=FREQ_TOP_SPEED_CHANGE;
 
 	return sonido;
 }

@@ -48,7 +48,7 @@ int cols=0;
 
                 radians=radians/((float)(freq));
                 sineval=sin(radians);
-                char sinevalue_int=127*sineval;
+                char sinevalue_int=100*sineval;  //de 0 a 100 en porcentaje
 
                 //printf ("i=%d radians=%f sine=%f value=%d\n",i,radians,sineval,sinevalue_int);
 		printf ("%d,",sinevalue_int);

@@ -440,7 +440,8 @@ void cpu_core_loop_spectrum(void)
 				//if (audio_valor_enviar_sonido>127 || audio_valor_enviar_sonido<-128) printf ("Error audio value: %d\n",audio_valor_enviar_sonido);
 
 				//Sonido alterado cuando top speed
-				if (top_speed_timer.v) audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
+				if (top_speed_timer.v) 
+					audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
 
 
 				audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
