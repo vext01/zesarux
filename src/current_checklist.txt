@@ -57,7 +57,6 @@ Drivers audio:
 -probar particularidades Inves: 64 kb ram, OUT ula AND RAM (border color, snow in border, no sound), no contended memory, colour ula delay, interrupt starts at video display (not at the top of the border), interrupt escribe en direccion I*256+R valor 255. Puerto ficticio para hacer visible RAM baja, requiere hardware debug ports , se puede probar con inves-switch-lowram.tap. Ver RAM baja con view hexdump. Probar con musica Lemmings
 -probar custom rom desde menu y desde linea de comandos. probar todas roms
 -probar realvideo zx80/81
--probar realvideo z88
 -probar modos hi-res zx81: hrg, chr$128, udg, wrx, otros hi-res. probar xtricator, pacman 
 -probar autodetect WRX mode on ZX80/81
 -probar chip sonido AY, zx81 (quicksilva(asteroids, defenda zx80)  y bi-pak (aydemo, pink panther...))
@@ -104,7 +103,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar desactivando ssl
 -probar activando ssl
 -probar azerty. se puede probar pulsando guion o cedilla
--probar desactivando contended memory en compilacion
 
 -probar visualmem, tambien en drivers no graficos como curses, aa, etc
 -probar waveform, tambien en drivers no graficos como curses, aa, etc
@@ -112,7 +110,7 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -ver paletas de colores
 -probar expansiones de ram de zx80/81
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
--probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
+-probar menus ayudas. 
 -probar advanced timing settings 
 -probar menu de stdout
 -probar cargar/grabar pantalla en spectrum 48, 128, +2a, zxuno
