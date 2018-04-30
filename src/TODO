@@ -1,6 +1,7 @@
 --- Cosas para la version 7.0
      
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
+-con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se pulsa tecla OSD, se ejecutaran opcodes mientras dure el OSD
  
 TBBLUE:
 
