@@ -2,10 +2,10 @@
 
 
 (ver que tanto progreso de checklist esta ejecutado:
-LINEASTOTAL=`wc -l CHECKLIST|awk '{printf $1}'`
-LINEASPARCIAL=`wc -l current_checklist.txt|awk '{printf $1}'`
-PERC=$(($LINEASPARCIAL*100))
-PERC=$(($PERC/$LINEASTOTAL))
+BYTESTOTAL=`wc -c CHECKLIST|awk '{printf $1}'`
+BYTESPARCIAL=`wc -c current_checklist.txt|awk '{printf $1}'`
+PERC=$(($BYTESPARCIAL*100))
+PERC=$(($PERC/$BYTESTOTAL))
 PERCCOMPLETADO=$((100-$PERC))
 echo "Porcentaje=$PERCCOMPLETADO %"
 )

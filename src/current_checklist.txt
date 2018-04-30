@@ -78,7 +78,6 @@ Drivers audio:
 
 -probar osd,  reduce 
 
--probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 -probar fallback de cinta standard a real tape, juegos: dracula tzx, Death Wish 3 (Erbe - Serie Leyenda).tzx  (DeathWish3(IBSA).tzx.zip), mortadelo y filemon II, Rambo. Parece que silent service si se mete como standard tape no detecta como cargador
 -probar ZXMMC menor de 1 GB y mayor de 1 GB. Probar snap_tests/pruebasplus3e.mmc. cat tab, load, format to 0,4, etc
 -probar divmmc con zxuno y sin zxuno. tambien en instalado en /Applications en Mac y en /usr/ de Linux. Probar reload mmc
@@ -88,7 +87,6 @@ Drivers audio:
 config "O=X" donde X es 0, 1 o 2 y probar a sobreescribir archivos, dragons lair version lenta y rapida (optimizada). zxpand linea comandos --enable-zxpand y --zxpand-root-dir (y este probando con path completo, relativo, y con y sin / al final)
 Probar delete, rename, etc y resto de acciones con CMDR, con archivos en minusculas y mayusculas
 -probar superupgrade. Básico, programa de modificación de rom. Programa en basic extras/media/spectrum/tests/superupgrade-test.tap y usando 512kb de rom que sean siempre la misma rom de spectrum 48k. Probar con rman.tap
--probar file browser
 
 -probar spectra. Test modos. Comparar con ZXSP. X128 NO es correcto del todo, falla la implementacion del flash
 Comparar test 128 pantalla con tabla docs/spectra/SPECTRA 128 Test.txt
@@ -170,7 +168,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar speech en stdout
 -probar F4 (pantalla a speech) en Spectrum (con texto normal y graficos), Z88, ZX81 (con y sin rainbow, y con texto normal y con graficos->4 combinaciones). ZX80
 -probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
--probar opcion para desactivar paging en ram/rom
 -probar cpu transaction log
 -probar menu file utilities
 -probar demos beeper
@@ -213,8 +210,8 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 pruebas Z88:
 -cambio ram interna
 -agregar ram externa
--eprom (formatos .eprom, .epr y .63): crear eprom, agregar eprom (eprom, epr y .63), borrado eprom, copia de eprom (desde menu emulador y desde Filer), copia a eprom (desde menu emulador (y llenando la eprom hasta que no quepa mas)  y desde filer), reclaim free space eprom, undelete eprom, insertar eprom desde linea de comandos. insertar en slot 1 o 2 (no escritura)
--flash: crear flash, agregar flash, borrar flash, copia de flash (desde menu emulador y desde Filer), copia a flash (desde menu emulador (y llenando la flash hasta que no quepa mas)  y desde filer), inicializar flash desde flashstore (y ver que la funcion de erase lo graba con FF), reclaim free space flash, undelete flash, insertar flash desde linea de comandos. insertar en slot 1 o 2 (no escritura)
+-eprom (formatos .eprom, .epr y .63): crear eprom, agregar eprom (eprom, epr y .63), borrado eprom, copia de eprom (desde menu emulador y desde Filer), copia a eprom (desde menu emulador (y llenando la eprom hasta que no quepa mas)  y desde filer), reclaim free space eprom, undelete eprom. insertar en slot 1 o 2 (no escritura)
+-flash: crear flash, agregar flash, borrar flash, copia de flash (desde menu emulador y desde Filer), copia a flash (desde menu emulador (y llenando la flash hasta que no quepa mas)  y desde filer), inicializar flash desde flashstore (y ver que la funcion de erase lo graba con FF), reclaim free space flash, undelete flash  insertar en slot 1 o 2 (no escritura)
 -probar card browser con flash y eprom.
 -tarjeta hibrida ram+eprom: insertar la de actualizacion a oz 4.7 a ver si la reconoce y si reconoce RAM
 -grabar snaps con eproms y flash en diferentes slots
