@@ -124,17 +124,15 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
 -probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
--probar debug i/o ports: spectrum zx80/81, z88, zx-uno, etc
 -probar debugger, step over interrupt, electron position, cursores, toggle, runto, etc
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor)  
--probar remote command protocol ZRCP, en linux, mac y windows
+-probar remote command protocol ZRCP, en linux, y windows
 -probar zxi ports con extras/media/spectrum/tests/zesarux-zxi-ports.tap , extras/media/spectrum/tests/hardwaredebugport.tap
 -probar todas opciones de menu en general
 -probar fallback de drivers graficos y de sonido
 -probar impresora: en zx spectrum, zx81
 -probar COPY to printer
 -probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
--probar custom configuration file, con snap_tests/test_autoconfig.tap  (y hay snap_tests/test_autoconfig.tap.config) y snap_tests/test_autoconfig.p (y hay snap_tests/test_autoconfig.p.config)
 -probar footer cuando se carga cinta/snap detectado por autoselectoptions o custom configuration file:
 * cuando el juego es generico y no se indica nombre (por ejemplo, aydemo)
 * juego que solo pone nombre pero no info, por ejemplo Dancing Demon y Pink Panther
@@ -148,11 +146,9 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 ** FSCAPES.P, que no da tiempo a mostrar todo el segundo mensaje porque carga partes
 * Con y sin border enabled
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. 
--probar on screen keyboard, con F8 y con joystick
--probar --limitopenmenu
+-probar on screen keyboard, con joystick
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
 -probar desactivar putpixel cache en compilacion
--probar Setting putpixel functions to zoom 1, variable, interlace
 -probar easter eggs
 -probar teclas en menu especiales, en spectrum, zx8081 , z88, cpc y sam :  .  , : / - + < > = ' ( ) "   ( ',' y "'" en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB). en driver xwindow y curses, para cada maquina (total: 6 pruebas)
 -probar rutinas autodeteccion caracteres: algunos de sslfunctions, otro no listado (como Spiderman o masters of the universe), hobbit (usa dos rutinas de caracteres). probar con stdout y xwindows, sdl, etc. probar --enableprintchartrap y --disableprintchartrap en stdout y xwindows

@@ -1904,6 +1904,8 @@ void clear_putpixel_cache(void)
 
 #ifdef PUTPIXELCACHE
 
+        if (putpixel_cache==NULL) return;
+
 	debug_printf (VERBOSE_INFO,"Clearing putpixel cache");
 	int x,y;
 	int indice=0;
@@ -8062,7 +8064,6 @@ void enable_rainbow(void) {
         video_zx8081_estabilizador_imagen.v=1;
 
 
-	if (putpixel_cache!=NULL) {
 		/*Modos rainbow usan putpixel cache. Vaciarla por lo que pudiera haber antes
 		//Si no se vaciase, si por ejemplo estamos con un programa en basic tipo:
 		// 1 border 2: border 3: border 4: pause 1: cls
@@ -8073,7 +8074,6 @@ void enable_rainbow(void) {
 		ahora las franjas estan mas o menos en el mismo sitio, y la cache dice que no hay que redibujarlas. Total: se ve todo el border 7
 		*/
 		clear_putpixel_cache();
-	}
 
 }
 
@@ -10595,6 +10595,7 @@ void disable_interlace(void)
 	debug_printf (VERBOSE_INFO,"Disable interlace");
 	video_interlaced_mode.v=0;
 	set_putpixel_zoom();
+	clear_putpixel_cache();
 }
 
 void enable_interlace(void)
