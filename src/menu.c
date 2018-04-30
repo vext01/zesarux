@@ -7703,8 +7703,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				}
 
                                 if (tecla=='r') {
-                                        cls_menu_overlay();
-					menu_debug_change_registers();
+                                        //cls_menu_overlay();
+					//menu_debug_change_registers();
 
         //clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
@@ -7900,7 +7900,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				//printf ("clear putpixel cache\n");
 				//cls_menu_overlay();
 
-				menu_debug_registers_ventana();
+				//menu_debug_registers_ventana();
 
         		
         	
@@ -8061,7 +8061,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }
 
                                 if (tecla=='r') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
 
 					//Detener multitarea, porque si no, ese input habilita la multitarea
 					int antes_menu_multitarea=menu_multitarea;
