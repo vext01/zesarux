@@ -34,6 +34,7 @@
 #include "operaciones.h"
 #include "cpc.h"
 #include "settings.h"
+#include "audio_sine_table.h"
 
 #include "audionull.h"
 
@@ -1894,13 +1895,17 @@ struct s_audiobuffer_stats
 
 }
 
-
-//cambio audio cuando top speed
-int audio_change_top_speed_signo=+1;
+int audio_change_top_speed_index=0;
 
 char audio_change_top_speed_sound(char sonido)
 {
-	audio_change_top_speed_signo=-audio_change_top_speed_signo;
-	return sonido * audio_change_top_speed_signo;
+	int valor_sonido=sonido;
+	sonido=sonido*audio_sine_table[audio_change_top_speed_index];
+	sonido=sonido/127;
+
+	audio_change_top_speed_index++;
+	if (audio_change_top_speed_index>=FREQ_TOP_SPEED_CHANGE) audio_change_top_speed_index=0;
+
+	return sonido;
 }
 
