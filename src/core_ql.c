@@ -179,6 +179,8 @@ void cpu_core_loop_ql(void)
 				if (realtape_loading_sound.v) {
 				audio_valor_enviar_sonido /=2;
                                 audio_valor_enviar_sonido += realtape_last_value/2;
+                                //Sonido alterado cuando top speed
+                                if (top_speed_timer.v) audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
 				}
                         }
 

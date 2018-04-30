@@ -1896,14 +1896,36 @@ struct s_audiobuffer_stats
 
 }
 
-int audio_change_top_speed_index=0;
-
 char audio_change_top_speed_sound(char sonido)
+{
+	int valor_sonido=sonido;
+
+        //
+        //Valor random
+        ay_randomize(0);
+
+        //randomize_noise es valor de 16 bits
+        int aleatorio=randomize_noise[0] % 100;
+        valor_sonido=valor_sonido*aleatorio;
+        valor_sonido=valor_sonido/100;
+
+
+        //printf ("sonido: %d valor_sonido: %d dividir: %d\n",sonido,valor_sonido,dividir);
+
+        sonido=valor_sonido;
+
+	return sonido;
+}
+
+
+int audio_change_top_speed_index=0;
+//Esta no la utilizo, era un intento de distorsionar el sonido de carga mediante onda senoidal
+
+char old_audio_change_top_speed_sound(char sonido)
 {
 	int valor_sonido=sonido;
 	char dividir=audio_sine_table[audio_change_top_speed_index];
 
-	int signo=util_get_sign(valor_sonido);
 
 
 	/*	
@@ -1913,6 +1935,7 @@ char audio_change_top_speed_sound(char sonido)
 	//Evitar division por 0
 	
 	if (dividir==0) {
+		int signo=util_get_sign(valor_sonido);
 		valor_sonido=127;
 		valor_sonido=valor_sonido * signo;
 	}
@@ -1932,7 +1955,6 @@ char audio_change_top_speed_sound(char sonido)
 
 	
 	 
-	/*
 	//
 	// Multiplicar
 	valor_sonido=valor_sonido*dividir;
@@ -1940,7 +1962,6 @@ char audio_change_top_speed_sound(char sonido)
 
 	//Y bajamos un poco el volumen para que no sea tan molesto
 	valor_sonido /=2;
-	*/
 	
 	
 
@@ -1952,18 +1973,6 @@ char audio_change_top_speed_sound(char sonido)
 	*/
 
 
-	//
-	//Valor random
-  	ay_randomize(0);
-
-  	//randomize_noise es valor de 16 bits
-  	int aleatorio=randomize_noise[0] % 100;
-        valor_sonido=valor_sonido*aleatorio;
-        valor_sonido=valor_sonido/100;
-
-
-
-	
 
 	//printf ("sonido: %d valor_sonido: %d dividir: %d\n",sonido,valor_sonido,dividir);
 
@@ -1978,4 +1987,3 @@ char audio_change_top_speed_sound(char sonido)
 
 	return sonido;
 }
-

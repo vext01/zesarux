@@ -25,6 +25,7 @@
 #include "audio.h"
 
 //Values got from gen_audio_sine_table.c
+//Ahora esto no lo estoy usando, era un intento de deformar el sonido de carga cuando top speed
 char audio_sine_table[FREQ_TOP_SPEED_CHANGE]=
 {
 

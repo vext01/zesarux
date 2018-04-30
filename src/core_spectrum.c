@@ -427,8 +427,11 @@ void cpu_core_loop_spectrum(void)
 				if (realtape_inserted.v && realtape_playing.v) {
 					realtape_get_byte();
 					if (realtape_loading_sound.v) {
-                        	        audio_valor_enviar_sonido /=2;
-                                	audio_valor_enviar_sonido += realtape_last_value/2;
+                        	        	audio_valor_enviar_sonido /=2;
+	                                	audio_valor_enviar_sonido += realtape_last_value/2;
+
+						//Sonido alterado cuando top speed
+						if (top_speed_timer.v) audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
 					}
 				}
 
@@ -439,9 +442,6 @@ void cpu_core_loop_spectrum(void)
 
 				//if (audio_valor_enviar_sonido>127 || audio_valor_enviar_sonido<-128) printf ("Error audio value: %d\n",audio_valor_enviar_sonido);
 
-				//Sonido alterado cuando top speed
-				if (top_speed_timer.v) 
-					audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
 
 
 				audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
