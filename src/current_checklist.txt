@@ -104,7 +104,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar desactivando ssl
 -probar activando ssl
 -probar azerty. se puede probar pulsando guion o cedilla
--probar redefinir teclas, en menu y linea comandos
 -probar desactivando contended memory en compilacion
 
 -probar visualmem, tambien en drivers no graficos como curses, aa, etc
@@ -132,7 +131,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar fallback de drivers graficos y de sonido
 -probar impresora: en zx spectrum, zx81
 -probar COPY to printer
--probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
+-probar footer printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
 -probar footer cuando se carga cinta/snap detectado por autoselectoptions o custom configuration file:
 * cuando el juego es generico y no se indica nombre (por ejemplo, aydemo)
 * juego que solo pone nombre pero no info, por ejemplo Dancing Demon y Pink Panther
@@ -146,7 +145,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 ** FSCAPES.P, que no da tiempo a mostrar todo el segundo mensaje porque carga partes
 * Con y sin border enabled
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. 
--probar on screen keyboard, con joystick
+-probar on screen keyboard con joystick
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
 -probar easter eggs
 -probar teclas en menu especiales, en spectrum, zx8081 , z88, cpc y sam :  .  , : / - + < > = ' ( ) "   ( ',' y "'" en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB). en driver xwindow y curses, para cada maquina (total: 6 pruebas)
@@ -164,7 +163,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar emulator speed
 -probar turbo mode. manual y en zxuno, prism, chloe y tbblue
 -probar top speed, con threads y sin threads
--probar mantransferv3
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
 
