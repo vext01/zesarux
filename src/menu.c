@@ -7910,7 +7910,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 if (tecla=='b') {
                                         cls_menu_overlay();
 
-				//Detener multitarea, porque si no, ese input habilita la multitarea
+				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
@@ -7928,7 +7928,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 if (tecla=='w') {
                                         cls_menu_overlay();
 
-				//Detener multitarea, porque si no, ese input habilita la multitarea
+				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
@@ -8028,7 +8028,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //cls_menu_overlay();
                                         menu_debug_follow_pc.v=0; //se deja de seguir pc
 
-				//Detener multitarea, porque si no, ese input habilita la multitarea
+				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
@@ -8050,7 +8050,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 if (tecla=='r') {
                                         //cls_menu_overlay();
 
-					//Detener multitarea, porque si no, ese input habilita la multitarea
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
