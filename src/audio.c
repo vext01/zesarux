@@ -35,6 +35,7 @@
 #include "cpc.h"
 #include "settings.h"
 #include "audio_sine_table.h"
+#include "ay38912.h"
 
 #include "audionull.h"
 
@@ -1931,6 +1932,7 @@ char audio_change_top_speed_sound(char sonido)
 
 	
 	 
+	/*
 	//
 	// Multiplicar
 	valor_sonido=valor_sonido*dividir;
@@ -1938,6 +1940,7 @@ char audio_change_top_speed_sound(char sonido)
 
 	//Y bajamos un poco el volumen para que no sea tan molesto
 	valor_sonido /=2;
+	*/
 	
 	
 
@@ -1947,6 +1950,18 @@ char audio_change_top_speed_sound(char sonido)
 	valor_sonido=valor_sonido+dividir;
 	valor_sonido /=2;
 	*/
+
+
+	//
+	//Valor random
+  	ay_randomize(0);
+
+  	//randomize_noise es valor de 16 bits
+  	int aleatorio=randomize_noise[0] % 100;
+        valor_sonido=valor_sonido*aleatorio;
+        valor_sonido=valor_sonido/100;
+
+
 
 	
 
