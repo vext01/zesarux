@@ -1893,3 +1893,14 @@ struct s_audiobuffer_stats
 
 
 }
+
+
+//cambio audio cuando top speed
+int audio_change_top_speed_signo=+1;
+
+char audio_change_top_speed_sound(char sonido)
+{
+	audio_change_top_speed_signo=-audio_change_top_speed_signo;
+	return sonido * audio_change_top_speed_signo;
+}
+

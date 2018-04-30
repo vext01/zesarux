@@ -76,6 +76,7 @@ Improved text mode drivers (aalib, stdout, simpletext, curses): text settings ar
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 Improved frameskip: better performance, because realvideo buffer is not updated when frameskip
 Improved sound: Silence detector activated by default but can be disabled
+Improved top speed: audio is distorted when setting top speed
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
 Improved rendering on text mode drivers: now realvideo mode can render directly to black&white text. Try TSConf with --vo stdout --realvideo --autoredrawstdout

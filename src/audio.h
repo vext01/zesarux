@@ -241,5 +241,7 @@ extern int audio_tone_generator;
 extern char audio_tone_generator_last;
 extern char audio_tone_generator_get(void);
 
+extern char audio_change_top_speed_sound(char sonido);
+
 
 #endif
