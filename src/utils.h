@@ -644,4 +644,6 @@ extern void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino);
 
 extern int util_get_absolute(int valor);
 
+extern int util_get_sign(int valor);
+
 #endif

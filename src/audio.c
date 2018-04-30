@@ -1900,8 +1900,24 @@ int audio_change_top_speed_index=0;
 char audio_change_top_speed_sound(char sonido)
 {
 	int valor_sonido=sonido;
-	sonido=sonido*audio_sine_table[audio_change_top_speed_index];
-	sonido=sonido/127;
+	char dividir=audio_sine_table[audio_change_top_speed_index];
+
+
+
+	//Evitar division por 0
+	if (dividir==0) {
+		int signo=util_get_sign(valor_sonido);
+		valor_sonido=127;
+		valor_sonido=valor_sonido * signo;
+	}
+	else {
+		valor_sonido=valor_sonido*127;
+		valor_sonido=valor_sonido/dividir;
+	}
+
+	sonido=valor_sonido;
+
+
 
 	audio_change_top_speed_index++;
 	if (audio_change_top_speed_index>=FREQ_TOP_SPEED_CHANGE) audio_change_top_speed_index=0;

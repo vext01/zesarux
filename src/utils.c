@@ -10354,3 +10354,12 @@ int util_get_absolute(int valor)
 
         return valor;
 }
+
+
+//Devolver signo de valor
+int util_get_sign(int valor)
+{
+	if (valor<0) return -1;
+
+	return +1;
+}
