@@ -25336,7 +25336,7 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark,NULL,"Watermark: %s",(screen_watermark_enabled.v ? "Yes" : "No" ) );
 		menu_add_item_menu_tooltip(array_menu_osd_settings,"Adds a watermark to the display");
-		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. May produce flickering if not enabled realvideo");
+		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. May produce flickering if not enabled realvideo. If using reduce window setting, it will be forced enabled");
 
 		//Esta posicion afecta tanto al watermark normal como al forzado de 0.75
 		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"Watermark position: %d",screen_watermark_position);

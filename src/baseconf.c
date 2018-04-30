@@ -218,7 +218,7 @@ baseconf_last_port_eff7;
 2: off for a 1 - mode ZX Spectrum 128k, otherwise - mode pentagon 1024k.
 Value after reset - 0.
 */
-        printf ("adjusting ram to bits port 7ffdh\n");
+        //printf ("adjusting ram to bits port 7ffdh\n");
 
         if (baseconf_last_port_eff7&4) {
                 //paginacion 128k

@@ -6064,7 +6064,7 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 	}
 
 	if (MACHINE_IS_BASECONF) {
-		printf ("Baseconf reading port %04XH\n",puerto);
+		//printf ("Baseconf reading port %04XH\n",puerto);
 
 		//Puertos nvram. TODO gestion puertos shadow
 		if (puerto==0xeff7 && !baseconf_shadow_ports_available() ) return zxevo_last_port_eff7;
@@ -6073,11 +6073,11 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		if (puerto==0xdef7 && baseconf_shadow_ports_available() ) return zxevo_last_port_dff7;
 
 		if (puerto==0xbff7 && !baseconf_shadow_ports_available() ) {
-			printf ("baseconf reading nvram register %02XH\n",zxevo_last_port_dff7);
+			//printf ("baseconf reading nvram register %02XH\n",zxevo_last_port_dff7);
 			return zxevo_nvram[zxevo_last_port_dff7];
 		}
 		if (puerto==0xbef7 && baseconf_shadow_ports_available() ) {
-			printf ("baseconf reading nvram register %02XH\n",zxevo_last_port_dff7);
+			//printf ("baseconf reading nvram register %02XH\n",zxevo_last_port_dff7);
 
 			//prueba chorra
 			/*if (zxevo_last_port_dff7==0xef) {
