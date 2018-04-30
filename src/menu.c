@@ -7704,7 +7704,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 if (tecla=='r') {
                                         //cls_menu_overlay();
-					//menu_debug_change_registers();
+					menu_debug_change_registers();
 
         //clear_putpixel_cache();
         //TODO: Si no se pone clear_putpixel_cache,
