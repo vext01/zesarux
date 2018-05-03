@@ -891,7 +891,7 @@ mis opciones:
 
         */
 
-        if (tsconf_vdac_with_pwm.v) return 7;
+        if (tsconf_vdac_with_pwm.v==0) return 7;
         else return 0;
 
       break;
