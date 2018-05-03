@@ -1,15 +1,13 @@
-* Numeros de version
-
-en cpu.h, comentar SNAPSHOT_VERSION, borrar -SN o -RC sufijo de EMULATOR_VERSION,
-cambiar fechas en EMULATOR_DATE, EMULATOR_SHORT_DATE
-cambiar nombre edicion en EMULATOR_EDITION_NAME 
-en Changelog cambiar nombre edicion y fechas
-activar capture segmentation fault en cpu.c
-activar capture floating point exception en cpu.c
-Cambiar EMULATOR_VERSION en archivo configure 
-Cambiar version en macos/apptemplate/Contents/Info.plist, tag CFBundleVersion
-Ajustar juego editionnamegame.tap, si juego no permitido distribucion, eliminar. Ajustar EMULATOR_GAME_EDITION
-En changelog, decir qué comandos nuevos de ZRCP, haciendo diff con version anterior
+* en cpu.h, actualizar numero de version, comentar SNAPSHOT_VERSION, borrar -SN o -RC sufijo de EMULATOR_VERSION
+* cambiar fechas en EMULATOR_DATE, EMULATOR_SHORT_DATE
+* cambiar nombre edicion en EMULATOR_EDITION_NAME 
+* en Changelog cambiar nombre edicion y fechas
+* activar capture segmentation fault en cpu.c
+* activar capture floating point exception en cpu.c
+* Cambiar EMULATOR_VERSION en archivo configure 
+* Cambiar version en macos/apptemplate/Contents/Info.plist, tag CFBundleVersion
+* Ajustar juego editionnamegame.tap, si juego no permitido distribucion, eliminar. Ajustar EMULATOR_GAME_EDITION
+* En changelog, decir qué comandos nuevos de ZRCP, haciendo diff con version anterior
 
 * desactivar simulador joystick
 * Actualizar features, segun lo agregado a Changelog
