@@ -64,13 +64,6 @@ Drivers audio:
 *probar carga binaria (tape) smp,wav,rwa en zx81: con audio real, con save desde basic y aofile (wav y rwa), con rutina de conversion de .p a rwa en real tape
 *probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
 
--probar zxpand: config "V", config "D=", CAT, CAT "+DIR", DELETE, load "NOMBRE", SAVE "NOMBRE" etc. En zx80, zx81
-config "O=X" donde X es 0, 1 o 2 y probar a sobreescribir archivos, dragons lair version lenta y rapida (optimizada). zxpand linea comandos --enable-zxpand y --zxpand-root-dir (y este probando con path completo, relativo, y con y sin / al final)
-Probar delete, rename, etc y resto de acciones con CMDR, con archivos en minusculas y mayusculas
--probar superupgrade. Básico, programa de modificación de rom. Programa en basic extras/media/spectrum/tests/superupgrade-test.tap y usando 512kb de rom que sean siempre la misma rom de spectrum 48k. Probar con rman.tap
-
--probar spectra. Test modos. Comparar con ZXSP. X128 NO es correcto del todo, falla la implementacion del flash
-Comparar test 128 pantalla con tabla docs/spectra/SPECTRA 128 Test.txt
 
 -probar modos video timex. Mode 0 standard, 1 dual screen, 2 hires colour 8x1), timex+ulaplus. Mode 6 (512x192 monochrome)
 Modo 0 con solo habilitarlo

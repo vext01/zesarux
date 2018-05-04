@@ -26284,6 +26284,7 @@ void menu_display_timex_video_512192(MENU_ITEM_PARAMETERS)
 {
 
 	timex_mode_512192_real.v ^=1;
+	clear_putpixel_cache();
 }
 
 void menu_display_cpc_force_mode(MENU_ITEM_PARAMETERS)
