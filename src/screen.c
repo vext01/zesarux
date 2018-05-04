@@ -3934,9 +3934,9 @@ void scr_refresca_pantalla_zx8081(void)
 	//este medio funciona: Space\ Invaders\ 1K\ \(Macronics\ 1981\)\ Reconstruction.o  --zx8081mem 3
 
 	while (video_pointer>ramtop_zx8081) {
-		debug_printf (VERBOSE_DEBUG,"invalid video_pointer: %d",video_pointer);
+		//debug_printf (VERBOSE_DEBUG,"invalid video_pointer: %d",video_pointer);
 		video_pointer -=0x4000;
-                debug_printf (VERBOSE_DEBUG,"new video_pointer: %d",video_pointer);
+                //debug_printf (VERBOSE_DEBUG,"new video_pointer: %d",video_pointer);
 
 	}
 

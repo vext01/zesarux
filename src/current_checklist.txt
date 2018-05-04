@@ -65,29 +65,20 @@ Drivers audio:
 *probar carga realtape : spectrum: smp,wav,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa
 
 
--probar desactivando border, con y sin realvideo, en spectrum y zx8081
--probar efectos border: btime, overscan, vectron, BorderTrix, Hercules, dark star (cuando te matan), aqua plane, paperboy, super wonder boy (pausa), thelosttapesofalbion0 (pausa), rotatrix, shock megademo, KnightsDemonsDX. en modos 128, 48k e inves.
--probar color border en ULAPlus
 -probar activando ssl
 -probar azerty. se puede probar pulsando guion o cedilla
 
--probar visualmem, tambien en drivers no graficos como curses, aa, etc
--probar waveform, tambien en drivers no graficos como curses, aa, etc
--probar paleta gris, roja, verde, azul, inverso, etc ok . falta tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
+-probar visualmem, en drivers no graficos como curses, aa, etc
+-probar waveform, en drivers no graficos como curses, aa, etc
 -ver paletas de colores
--probar a sobreescribir algun archivo y que pida confirmacion en menu
 -probar menus ayudas. 
--probar advanced timing settings 
 -probar menu de stdout
--probar cargar/grabar pantalla en spectrum 48, 128, +2a, zxuno
--probar cargar/grabar archivo binario. probar cargar binario desde linea comandos
 -probar spool file: en spectrum 48k, 128k, zx80, zx81, z88, con modo turbo y sin. usar script txt_to_basic_lines.sh
 -probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
 -probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
 -probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
--probar debugger, step over interrupt, electron position, cursores, toggle, runto, etc
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor)  
 -probar remote command protocol ZRCP, en linux, y windows
 -probar zxi ports con extras/media/spectrum/tests/zesarux-zxi-ports.tap , extras/media/spectrum/tests/hardwaredebugport.tap
