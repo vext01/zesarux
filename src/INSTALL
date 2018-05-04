@@ -79,7 +79,7 @@ The following is a list of complete features, all of which are optional.
 
 # Video Drivers
 
-- x11 (on Linux/Raspberry): needs x11libs, x11extlibs, xf86vidmode, xxf86vm
+- x11 (on Linux/Raspberry): needs x11libs, x11extlibs, xf86vidmode, xxf86vm. Probably with the command "apt-get install xorg-dev" will be enough
 - x11 (on Mac OS X): needs XQuartz
 - cocoa (on Mac OS X): Compiling supported using XCode.
 - SDL 1.2 (on Linux/Raspberry): needs sdllib-1.2. SDL2 is experimental
