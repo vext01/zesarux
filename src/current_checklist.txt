@@ -59,21 +59,12 @@ Drivers audio:
 -probar cambiando rutas a sox, unzip, etc...
 
 -probar diferentes cargas, a continuacion, hay ejemplos en carpeta snap_tests y tambien alguno suelto, como canciones.smp y orquesta.smp
-*probar carga binaria (tape) smp,wav,rwa en spectrum
+*probar carga binaria (tape) smp,wav en spectrum
 *probar carga binaria (tape) smp,wav,rwa en zx80
 *probar carga binaria (tape) smp,wav,rwa en zx81: con audio real, con save desde basic y aofile (wav y rwa), con rutina de conversion de .p a rwa en real tape
-*probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
+*probar carga realtape : spectrum: smp,wav,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa
 
 
--probar modos video timex. Mode 0 standard, 1 dual screen, 2 hires colour 8x1), timex+ulaplus. Mode 6 (512x192 monochrome)
-Modo 0 con solo habilitarlo
-Modo 1 con testtimexmode1.tap
-Modo 2 con demos
-Modo 2 con timex+ulaplus demo slideshow_timex_64.tap, DemoHAM8, DemoHAM8x1.tzx
-Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y testtimexmode6-ulaplus.tap y alternaterom_sebasic4_rom01.rom(mode 1)
-
--probar simulacion de carga en spectrum, zx80, zx81
--probar audio filter on rom save
 -probar desactivando border, con y sin realvideo, en spectrum y zx8081
 -probar efectos border: btime, overscan, vectron, BorderTrix, Hercules, dark star (cuando te matan), aqua plane, paperboy, super wonder boy (pausa), thelosttapesofalbion0 (pausa), rotatrix, shock megademo, KnightsDemonsDX. en modos 128, 48k e inves.
 -probar color border en ULAPlus

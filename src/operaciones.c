@@ -7459,6 +7459,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		//Color del border en modo timex hi-res sale de aqui
 		//Aunque con esto avisamos que el color del border en modo 512x192 se puede haber modificado
 		modificado_border.v=1;
+		clear_putpixel_cache(); //porque se puede cambiar de modo, borrar la putpixel cache
 
 		if (MACHINE_IS_CHLOE_280SE) chloe_set_memory_pages();
 		if (MACHINE_IS_PRISM) prism_set_memory_pages();

@@ -2036,14 +2036,6 @@ void menu_refresca_pantalla(void)
 	modificado_border.v=1;
     all_interlace_scr_refresca_pantalla();
 
-    //Nota: clear putpixel cache se hace pues, al refrescar pantalla previamente, si estaba sin modo color oscuro,
-    //se refresca con color normal, pero luego, si se llama aqui con color oscuro,
-    //en el putpixel cache habran muchos colores que coinciden (a nivel de color indexado es el mismo)
-    //solo que antes estaba un color normal y ahora es oscuro, y entonces el sistema de putpixel
-    //no volvera a hacer putpixel de esos colores
-
-   	//La solucion perfecta seria que, siempre que se cambie entre color oscuro y normal, se haga clear_putpixel_cache();
-
      //clear_putpixel_cache();
 }
 
@@ -8150,8 +8142,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				        //para que no se vea oscuro
 				        menu_set_menu_abierto(0);
-					//modificado_border.v=1;
-				        //all_interlace_scr_refresca_pantalla();
+
 
 					menu_cls_refresh_emulated_screen();
 
@@ -8160,8 +8151,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					//vuelta a oscuro
 				        menu_set_menu_abierto(1);
-					//clear_putpixel_cache();
-					//all_interlace_scr_refresca_pantalla();
+
 
 
 					menu_cls_refresh_emulated_screen();
@@ -26284,7 +26274,6 @@ void menu_display_timex_video_512192(MENU_ITEM_PARAMETERS)
 {
 
 	timex_mode_512192_real.v ^=1;
-	clear_putpixel_cache();
 }
 
 void menu_display_cpc_force_mode(MENU_ITEM_PARAMETERS)

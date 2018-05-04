@@ -3966,8 +3966,9 @@ void scr_refresca_pantalla_zx8081(void)
                         x++;
 
                         if (x==32) {
-                                if (memoria_spectrum[video_pointer]!=118)
-					debug_printf (VERBOSE_DEBUG,"End of line %d is not 118 opcode. Is: 0x%x",y,memoria_spectrum[video_pointer]);
+                                if (memoria_spectrum[video_pointer]!=118) {
+									//debug_printf (VERBOSE_DEBUG,"End of line %d is not 118 opcode. Is: 0x%x",y,memoria_spectrum[video_pointer]);
+								}
                                 //saltamos el HALT que debe haber en el caso de linea con 32 caracteres
                                 video_pointer++;
                                 x=0;
@@ -10648,6 +10649,10 @@ void all_interlace_scr_refresca_pantalla(void)
 			screen_switch_rainbow_buffer();
       scr_refresca_pantalla();
     }
+
+	//Modo timex real necesita esto
+	if (timex_video_emulation.v && (timex_mode_512192_real.v || timex_ugly_hack_enabled)) clear_putpixel_cache();
+
 }
 
 
@@ -11060,8 +11065,9 @@ void screen_text_repinta_pantalla_zx81_no_rainbow_comun(int si_border,void (*pun
                         x++;
 
                         if (x==32) {
-                                if (memoria_spectrum[video_pointer]!=118)
-                                        debug_printf (VERBOSE_DEBUG,"End of line %d is not 118 opcode. Is: 0x%x",y,memoria_spectrum[video_pointer]);
+                                if (memoria_spectrum[video_pointer]!=118) {
+                                        //debug_printf (VERBOSE_DEBUG,"End of line %d is not 118 opcode. Is: 0x%x",y,memoria_spectrum[video_pointer]);
+								}
                                 //saltamos el HALT que debe haber en el caso de linea con 32 caracteres
                                 video_pointer++;
                                 x=0;

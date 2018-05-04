@@ -38,6 +38,8 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+-quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
+
 -Buscar bytes en memory zone
 En ql llega a buscar?
 
