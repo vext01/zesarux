@@ -87,8 +87,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar impresora: en zx spectrum, zx81
 -probar COPY to printer
 -probar footer printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
--probar footer cuando se carga cinta/snap detectado por autoselectoptions o custom configuration file:
-* Con y sin border enabled
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. 
 -probar on screen keyboard con joystick
 -probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
@@ -100,8 +98,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar F4 (pantalla a speech) en Spectrum (con texto normal y graficos), Z88, ZX81 (con y sin rainbow, y con texto normal y con graficos->4 combinaciones). ZX80
 -probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
 -probar menu file utilities
--probar demos beeper
--probar real beeper activo/desactivado
 -probar modo gigascreen. demos e imagenes
 -probar modos ULA Plus: rgb estandard, modo 3 radastan, modos ZEsarUX. modos ham (cambio rapido de paleta por interrupciones) multicolor demo, etc. hardware scroll radastan+zxuno
 -probar View Basic: ZX80, ZX81, Spectrum
