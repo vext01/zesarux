@@ -3186,6 +3186,11 @@ char buffer_retorno[2048];
 		escribir_socket (misocket,"ZEsarUX remote command protocol");
 	}
 
+  //ATDT easter egg
+	else if (comando_sin_parametros[0]=='A' && comando_sin_parametros[1]=='T' && comando_sin_parametros[2]=='D' && comando_sin_parametros[3]=='T') {
+		escribir_socket (misocket,"NO CARRIER");
+	}
+
   else if (!strcmp(comando_sin_parametros,"cpu-step") || !strcmp(comando_sin_parametros,"cs")) {
     remote_cpu_step(misocket);
   }

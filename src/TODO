@@ -38,6 +38,10 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+-Conversor tzx a tap para tzx de tipo solo binario
+También de tap a tzx
+En menú file útils
+
 -quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
 
 -Buscar bytes en memory zone
