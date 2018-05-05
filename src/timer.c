@@ -507,7 +507,7 @@ void timer_check_interrupt(void)
 			}
 
 			//Input file keyboard
-			if (input_file_keyboard_inserted.v==1) {
+			if (input_file_keyboard_is_playing() ) {
 				input_file_keyboard_delay_counter++;
 				if (input_file_keyboard_delay_counter>=input_file_keyboard_delay) {
 					input_file_keyboard_delay_counter=0;

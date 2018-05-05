@@ -5272,7 +5272,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
 
 		//Si esta spool file activo, generar siguiente tecla
-		if (input_file_keyboard_inserted.v==1) {
+		if (input_file_keyboard_is_playing() ) {
 			if (input_file_keyboard_turbo.v==0) {
 				input_file_keyboard_get_key();
 			}

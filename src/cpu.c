@@ -1262,6 +1262,7 @@ void cpu_help_expert(void)
 		"--loadbinarypath path      Select initial Load Binary path\n"
 		"--savebinarypath path      Select initial Save Binary path\n"
 		"--keyboardspoolfile file   Insert spool file for keyboard presses\n"
+		"--keyboardspoolfile-play   Play spool file right after starting the emulated machine\n"
 #ifdef USE_PTHREADS
 		"--enable-remoteprotocol    Enable remote protocol\n"
 		"--remoteprotocol-port n    Set remote protocol port (default: 10000)\n"
@@ -6095,6 +6096,10 @@ int parse_cmdline_options(void) {
 			        input_file_keyboard_init();
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--keyboardspoolfile-play")) {
+                input_file_keyboard_playing.v=1;
+			}			
+
 //Si no hay soporte de pthreads, estas opciones las permitimos pero luego no hace nada
 
 			else if (!strcmp(argv[puntero_parametro],"--enable-remoteprotocol")) {
@@ -6493,6 +6498,7 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	vofilename=NULL;
 	vofile_inserted.v=0;
 	input_file_keyboard_inserted.v=0;
+	input_file_keyboard_playing.v=0;
 	input_file_keyboard_send_pause.v=1;
 
 /*

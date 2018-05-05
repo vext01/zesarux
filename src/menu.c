@@ -21962,6 +21962,7 @@ void menu_input_file_keyboard(MENU_ITEM_PARAMETERS)
 {
 
         input_file_keyboard_inserted.v=0;
+		input_file_keyboard_playing.v=0;
 
 
         char *filtros[2];
@@ -22625,7 +22626,10 @@ void menu_find_bytes(MENU_ITEM_PARAMETERS)
 
 
 
-
+void menu_input_file_keyboard_play(MENU_ITEM_PARAMETERS)
+{
+	input_file_keyboard_playing.v ^=1;
+}
 
 
 
@@ -22644,6 +22648,8 @@ void menu_debug_input_file_keyboard(MENU_ITEM_PARAMETERS)
 
                 menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_insert,menu_input_file_keyboard_cond,"Spool file inserted: %s",(input_file_keyboard_inserted.v ? "Yes" : "No" ));
                 if (input_file_keyboard_inserted.v) {
+
+					menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_play,NULL,"Spool file playing: %s",(input_file_keyboard_playing.v ? "Yes" : "No" ));	
 
 
 			menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_turbo,menu_input_file_keyboard_turbo_cond,"Turbo mode: %s",(input_file_keyboard_turbo.v ? "Yes" : "No") );

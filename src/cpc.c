@@ -416,7 +416,7 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 			                if (menu_abierto==1) return 255;
 
            //Si esta spool file activo, generar siguiente tecla
-                if (input_file_keyboard_inserted.v==1) {
+                if (input_file_keyboard_is_playing() ) {
                                 input_file_keyboard_get_key();
                 }
 

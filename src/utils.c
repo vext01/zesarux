@@ -103,6 +103,9 @@ char input_file_keyboard_name_buffer[PATH_MAX];
 char *input_file_keyboard_name=NULL;
 //Si esta insertado
 z80_bit input_file_keyboard_inserted;
+//Si esta en play (y no pausado)
+z80_bit input_file_keyboard_playing;
+
 //Pausa en valores de 1/50 segundos
 int input_file_keyboard_delay=5;
 //Contador actual
@@ -2675,15 +2678,22 @@ void ascii_to_keyboard_port(unsigned tecla)
 	ascii_to_keyboard_port_set_clear(tecla,1);
 }
 
+int input_file_keyboard_is_playing(void)
+{
+        if (input_file_keyboard_inserted.v && input_file_keyboard_playing.v) return 1;
+        else return 0;
+}
 
 void insert_input_file_keyboard(void)
 {
 	input_file_keyboard_inserted.v=1;
+        input_file_keyboard_playing.v=0;
 }
 
 void eject_input_file_keyboard(void)
 {
         input_file_keyboard_inserted.v=0;
+        input_file_keyboard_playing.v=0;
 
         //Si modo turbo, quitar
         if (input_file_keyboard_turbo.v) {
@@ -3416,6 +3426,10 @@ int util_write_configfile(void)
 
 
   if (input_file_keyboard_name!=NULL && input_file_keyboard_inserted.v)         ADD_STRING_CONFIG,"--keyboardspoolfile \"%s\"",input_file_keyboard_name);
+
+  if (input_file_keyboard_playing.v)           ADD_STRING_CONFIG,"--keyboardspoolfile-play");
+
+
                                               ADD_STRING_CONFIG,"--joystickemulated \"%s\"",joystick_texto[joystick_emulation]);
 
   if (remote_protocol_enabled.v)              ADD_STRING_CONFIG,"--enable-remoteprotocol");
@@ -8754,7 +8768,7 @@ void peek_byte_spoolturbo_check_key(z80_int dir)
 	//si dir=23560, enviar tecla de spool file
 	z80_int lastk=23560;
 
-        if (input_file_keyboard_inserted.v && dir==lastk) {
+        if (input_file_keyboard_is_playing() && dir==lastk) {
 	                        z80_byte input_file_keyboard_last_key;
 
                                 int leidos=fread(&input_file_keyboard_last_key,1,1,ptr_input_file_keyboard);

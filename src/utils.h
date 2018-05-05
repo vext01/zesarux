@@ -646,4 +646,8 @@ extern int util_get_absolute(int valor);
 
 extern int util_get_sign(int valor);
 
+extern int input_file_keyboard_is_playing(void);
+
+extern z80_bit input_file_keyboard_playing;
+
 #endif

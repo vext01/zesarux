@@ -60,7 +60,7 @@ NUM=1
 		;;
 
 		3)
-			echo -n "rem"
+			echo -n "rem "
 		;;
 	esac
    fi
