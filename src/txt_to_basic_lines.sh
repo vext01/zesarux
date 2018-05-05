@@ -16,6 +16,7 @@
 
 if [ $# != 5 ]; then
 	echo "$0 archivo tipo si_numlinea si_rem si_delayline"
+	echo " tipo puede ser: 1: 48k, zx81. 2: zx80. 3: 128k, z88, o cualquier otro sistema que use 'REM' con caracteres y no tokens"
 	exit 1
 fi
 
