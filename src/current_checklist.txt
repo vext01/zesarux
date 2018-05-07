@@ -107,11 +107,9 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -Probar Amstrad cpc. Todas teclas
 -Probar Sam Coupe. Todas teclas. Probar atomlite
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
--Probar demos Pentagon. Nota: confusio.tap requiere usr0
 -Probar Chrome
 -Probar MK14
 
--probar Sprite chip con demo
 -probar usar extension de archivo no conocida y ver que avisa
 -probar activando funciones de captura de segmentation fault y forzando fallo
 -probar cpu_panic. desde dentro del emulador y antes de entrar (por ejemplo cuando no encuentra una rom)
