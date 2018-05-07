@@ -29564,6 +29564,10 @@ void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_tape_settings_fast_autoload(MENU_ITEM_PARAMETERS)
+{
+	fast_autoload.v ^=1;
+}
 
 //menu storage settings
 void menu_settings_storage(MENU_ITEM_PARAMETERS)
@@ -29584,6 +29588,15 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
                             menu_add_item_menu_ayuda(array_menu_settings_storage,"This option first change to the machine that handles the medium file type selected (tape, cartridge, etc), resets it, set some default machine values, and then, it sends "
                                                             "a LOAD sentence to load the medium\n"
                                                             "Note: The machine is changed only using smartload. Inserting a medium only resets the machine but does not change it");
+
+
+			if (noautoload.v==0) {
+				menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_settings_fast_autoload,NULL,"~~Fast autoload: %s",
+					(fast_autoload.v ? "Yes" : "No" ) );
+				menu_add_item_menu_shortcut(array_menu_settings_storage,'f');
+				menu_add_item_menu_tooltip(array_menu_settings_storage,"Do the autoload process at top speed");
+				menu_add_item_menu_ayuda(array_menu_settings_storage,"Do the autoload process at top speed");
+			}
 
 
                             menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_autoselectfileopt,NULL,"A~~utoselect medium opts: %s", (autoselect_snaptape_options.v==1 ? "On" : "Off"));
