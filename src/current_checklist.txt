@@ -107,7 +107,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -Probar Amstrad cpc. Todas teclas
 -Probar Sam Coupe. Todas teclas. Probar atomlite
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
--Probar Chrome
 -Probar MK14
 
 -probar usar extension de archivo no conocida y ver que avisa
@@ -126,7 +125,6 @@ pruebas Z88:
 -tarjeta hibrida ram+eprom: insertar la de actualizacion a oz 4.7 a ver si la reconoce y si reconoce RAM
 -grabar snaps con eproms y flash en diferentes slots
 -probar en menus tarjetas de aplicaciones, archivos, desconocidas
--probar sonido normal beeper (teclas, juegos, etc) y 3200 hz snap_tests/test3200z88.zx
 
 pruebas QL
 -teclado:
