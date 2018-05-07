@@ -3121,6 +3121,10 @@ int util_write_configfile(void)
                                               ADD_STRING_CONFIG,"--ao %s",audio_driver_name);
                                               ADD_STRING_CONFIG,"--vo %s",scr_driver_name);
   if (noautoload.v)                           ADD_STRING_CONFIG,"--noautoload");
+
+  if (fast_autoload.v)			      ADD_STRING_CONFIG,"--fastautoload");
+
+
   if (ay_speech_enabled.v==0)                 ADD_STRING_CONFIG,"--disableayspeech");
   if (ay_envelopes_enabled.v==0)              ADD_STRING_CONFIG,"--disableenvelopes");
   if (audio_noreset_audiobuffer_full.v)       ADD_STRING_CONFIG,"--noreset-audiobuffer-full");

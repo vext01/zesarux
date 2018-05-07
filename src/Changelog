@@ -77,6 +77,7 @@ Improved messages windows. You can now have an internal clipboard, press key c t
 Improved frameskip: better performance, because realvideo buffer is not updated when frameskip
 Improved sound: Silence detector activated by default but can be disabled
 Improved top speed: loading sound is distorted when setting top speed
+Improved autoload: new setting to run at top speed the reset+load"" process
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
 Improved rendering on text mode drivers: now realvideo mode can render directly to black&white text. Try TSConf with --vo stdout --realvideo --autoredrawstdout
