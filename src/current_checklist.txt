@@ -120,8 +120,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar versiones finales: binario->bajar y ejecutar, instalar. source->bajar, compilar y ejecutar, instalar.
 
 pruebas Z88:
--cambio ram interna
--agregar ram externa
 -eprom (formatos .eprom, .epr y .63): crear eprom, agregar eprom (eprom, epr y .63), borrado eprom, copia de eprom (desde menu emulador y desde Filer), copia a eprom (desde menu emulador (y llenando la eprom hasta que no quepa mas)  y desde filer), reclaim free space eprom, undelete eprom. insertar en slot 1 o 2 (no escritura)
 -flash: crear flash, agregar flash, borrar flash, copia de flash (desde menu emulador y desde Filer), copia a flash (desde menu emulador (y llenando la flash hasta que no quepa mas)  y desde filer), inicializar flash desde flashstore (y ver que la funcion de erase lo graba con FF), reclaim free space flash, undelete flash  insertar en slot 1 o 2 (no escritura)
 -probar card browser con flash y eprom.
