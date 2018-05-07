@@ -31178,9 +31178,31 @@ void menu_inicio_pre_retorno(void)
 
 }
 
+void menu_process_f_function_pause(void)
+{
+
+	int antes_multitarea;
+
+	//Guardar valor anterior multitarea
+	antes_multitarea=menu_multitarea;
+	menu_multitarea=0;
+	audio_playing.v=0;
+	z80_byte tecla=0;
+
+	while (tecla==0) {
+		menu_espera_tecla();
+		tecla=menu_get_pressed_key();
+	}
+
+	menu_espera_no_tecla();
+
+	//restaurar
+	menu_multitarea=antes_multitarea;
+}
+
 void menu_process_f_functions_by_action(int accion)
 {
-	int antes_multitarea;
+
 
 	char final_name[PATH_MAX];
 
@@ -31252,13 +31274,7 @@ void menu_process_f_functions_by_action(int accion)
 		break;
 
 		case F_FUNCION_PAUSE:
-			//Guardar valor anterior multitarea
-			antes_multitarea=menu_multitarea;
-			menu_multitarea=0;
-			audio_playing.v=0;
-			menu_espera_tecla();
-			//restaurar
-			menu_multitarea=antes_multitarea;
+			menu_process_f_function_pause();
 		break;
 
 		case F_FUNCION_EXITEMULATOR:
