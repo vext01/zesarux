@@ -4408,6 +4408,15 @@ z80_byte lee_puerto_zx80(z80_byte puerto_h,z80_byte puerto_l)
 
 }
 
+void envia_jload_desactivar(void)
+{
+	initial_tap_load.v=0;
+
+	//Si estaba autoload en top speed, desactivar
+
+	if (fast_autoload.v) top_speed_timer.v=0;
+}
+
 z80_byte envia_load_pp_spectrum(z80_byte puerto_h);
 
 z80_byte envia_jload_pp_spectrum(z80_byte puerto_h)
@@ -4450,7 +4459,7 @@ z80_byte envia_jload_pp_spectrum(z80_byte puerto_h)
 
 			//Si es modo 128k (solo enter) no enviar todo el load pp, solo el primer enter
 			if (initial_tap_sequence>SEQUENCE_J_MIN && autoload_spectrum_loadpp_mode==0) {
-				initial_tap_load.v=0;
+				envia_jload_desactivar();
 				return 255;
 			}
 
@@ -4477,7 +4486,7 @@ z80_byte envia_jload_pp_spectrum(z80_byte puerto_h)
 
 
                         if (initial_tap_sequence<SEQUENCE_ENTER2_MAX) initial_tap_sequence++;
-			else initial_tap_load.v=0;
+			else envia_jload_desactivar();
 
 			return 255;
 /*
@@ -4577,7 +4586,7 @@ z80_byte envia_load_pp_spectrum(z80_byte puerto_h)
 
 
                         if (initial_tap_sequence<SEQUENCE2_ENTER2_MAX) initial_tap_sequence++;
-                        else initial_tap_load.v=0;
+                        else envia_jload_desactivar();
 
                         return 255;
 /*
@@ -4629,7 +4638,7 @@ z80_byte envia_load_pp_zx80(z80_byte puerto_h)
 
 
                         if (initial_tap_sequence<SEQUENCE_ZX80_ENTER2_MAX) initial_tap_sequence++;
-                        else initial_tap_load.v=0;
+                        else envia_jload_desactivar();
 
                         return 255;
 /*
@@ -4700,7 +4709,7 @@ z80_byte envia_load_pp_zx81(z80_byte puerto_h)
 
 
                         if (initial_tap_sequence<SEQUENCE_ZX81_ENTER2_MAX) initial_tap_sequence++;
-                        else initial_tap_load.v=0;
+                        else envia_jload_desactivar();
 
                         return 255;
 /*
@@ -4750,7 +4759,7 @@ z80_byte envia_load_ctrlenter_cpc(z80_byte index_keyboard_table)
 
                         if (initial_tap_sequence<SEQUENCE_CPC_ENTER2_MAX) initial_tap_sequence++;
                         else {
-				initial_tap_load.v=0;
+				envia_jload_desactivar();
 				debug_printf (VERBOSE_INFO,"End sending CTRL+Enter. Releasing all keys");
 			}
 
@@ -4808,7 +4817,7 @@ z80_byte envia_load_f8_sam(z80_byte puerto_h,z80_byte puerto_l)
 
                         if (initial_tap_sequence<SEQUENCE_SAM_F8_MAX) initial_tap_sequence++;
                         else {
-                                initial_tap_load.v=0;
+                                envia_jload_desactivar();
 
 
 
@@ -4898,7 +4907,7 @@ z80_byte envia_load_comillas_sam(z80_byte puerto_h,z80_byte puerto_l)
                                 return 255-1; //ENTER
                         }
 			 if (initial_tap_sequence<SEQUENCE_SAM_ENTER2_MAX) initial_tap_sequence++;
-                        else initial_tap_load.v=0;
+                        else envia_jload_desactivar();
 
                         return 255;
 /*

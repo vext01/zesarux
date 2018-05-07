@@ -167,3 +167,11 @@ z80_bit autoload_snapshot_on_start;
 
 //ruta de autoguardado
 char autosave_snapshot_path_buffer[PATH_MAX];
+
+
+//
+// Tape Settings
+//
+
+//Si el autoload (reset machine, load"") se lanza con top speed
+z80_bit fast_autoload={0};

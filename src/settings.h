@@ -52,5 +52,7 @@ extern z80_bit autosave_snapshot_on_exit;
 extern z80_bit autoload_snapshot_on_start;
 extern char autosave_snapshot_path_buffer[];
 
+extern z80_bit fast_autoload;
+
 #endif
 

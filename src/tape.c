@@ -51,6 +51,7 @@
 #include "superupgrade.h"
 #include "multiface.h"
 #include "tbblue.h"
+#include "settings.h"
 
 #include "autoselectoptions.h"
 
@@ -375,6 +376,9 @@ int tap_open(void)
 
 		debug_printf (VERBOSE_INFO,"Reset cpu due to autoload");
 		reset_cpu();
+
+		//Activamos top speed si conviene
+		if (fast_autoload.v) top_speed_timer.v=1;
 
 	}
 
