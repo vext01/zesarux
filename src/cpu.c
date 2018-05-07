@@ -1326,6 +1326,7 @@ printf (
 		"----------------\n"
 		"\n"
 		"--noautoload               No autoload tape file on Spectrum, ZX80 or ZX81\n"
+		"--fastautoload             Do the autoload process at top speed\n"
 		"--noautoselectfileopt      Do not autoselect emulation options for known snap and tape files\n"
 		"--simulaterealload         Simulate real tape loading\n"
 		"--simulaterealloadfast     Enable fast real tape loading\n"
@@ -4743,6 +4744,10 @@ int parse_cmdline_options(void) {
                         else if (!strcmp(argv[puntero_parametro],"--noautoload")) {
 				noautoload.v=1;
                         }
+
+			else if (!strcmp(argv[puntero_parametro],"--fastautoload")) {
+                                fast_autoload.v=1;
+			}
 
 
 			//eprom y flash cards de z88 hacen lo mismo que quickload
