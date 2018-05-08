@@ -2816,7 +2816,49 @@ z80_byte lee_puerto_sam(z80_byte puerto_h,z80_byte puerto_l)
 
 }
 
+z80_byte sam_saa_chip[32];
+z80_byte sam_saa_chip_last_selected;
 
+int saa_calcular_frecuencia(int freq, int octava)
+{
+	//frecuencia entre 30 y 60. O sea, 31 posibles valores
+	freq=freq/9;
+	freq=30+freq;
+
+	int multiplicador_octava;
+	if (octava==0) multiplicador_octava=1;
+	if (octava==1) multiplicador_octava=2;
+	if (octava==2) multiplicador_octava=4;
+	if (octava==3) multiplicador_octava=8;
+	if (octava==4) multiplicador_octava=16;
+	if (octava==5) multiplicador_octava=32;
+	if (octava==6) multiplicador_octava=64;
+	if (octava==7) multiplicador_octava=128;
+
+	int frecuencia_final=freq*multiplicador_octava;
+
+	return frecuencia_final;
+}
+
+void saa_establece_frecuencia(z80_byte canal)
+{
+	int freq=sam_saa_chip[8+canal];
+	int octava;
+	if (canal==0) octava=sam_saa_chip[16]&7;
+	if (canal==1) octava=(sam_saa_chip[16]>>4)&7;
+	if (canal==2) octava=sam_saa_chip[17]&7;
+
+	int frecuencia_final=saa_calcular_frecuencia(freq,octava); //max 7810
+	int frecuencia_ay=frecuencia_final; //temp ajuste tonto  // max 110.000 hz.
+
+	//enviamos los dos valores.
+	int registro_ay=canal*2;
+
+	out_port_ay(65533,registro_ay+1);
+	out_port_ay(49149,frecuencia_ay&65535);
+
+	
+}
 
 void out_port_sam_no_time(z80_int puerto,z80_byte value)
 {
@@ -2888,72 +2930,16 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 		//Seleccion registro chip sonido
 		//printf ("SAA1099 address port. Value: %02XH\n",value);
 
-		//Chapucilla. Enviarlo al chip ay
-		z80_byte reg_selection=15; //Por defecto al ultimo, que no hace nada
-
-		/* Para iniciar chip sonido, volumen 15 en todos canales:
-		out 511,255. out 255,15
-		out 511,254. out 255,15
-		out 511,253. out 255,15
-
-		tono en los 3 canales:
-		out 511,252. out 255,248   
-		tono en 1 canal:
-		out 511,252. out 255,254
-		*/
-
-		switch (value) {
-
-			case 0:
-				//Volumen tono 0. RRRRLLLL
-				reg_selection=8;
-			break;
-
-			case 1:
-				//Volumen tono 1. RRRRLLLL
-				reg_selection=9;
-			break;
-
-			case 2:
-				//Volumen tono 2. RRRRLLLL
-				reg_selection=10;
-			break;
-
-			case 8:  //Registro tono 1
-				reg_selection=1;
-			break;
-
-
-			case 9:  //Registro tono 2
-				reg_selection=3;
-			break;
-
-
-			case 10:  //Registro tono 3
-				reg_selection=5;
-			break;	
-
-
-			//Registros inventados para probar
-			case 252:
-				//Mixer
-				reg_selection=7;
-			break;		
-
-			case 255: //Volumen canal A. inventado
-				reg_selection=8;
-			break;
-
-			case 254: //Volumen canal B. inventado
-				reg_selection=9;
-			break;
-
-			case 253: //Volumen canal B. inventado
-				reg_selection=10;
-			break;			
+		if (value==252) {
+				//Mixer. chapuza
+				out_port_ay(65533,7);
+				out_port_ay(49149,248);
+			return;
 		}
 
-		out_port_ay(65533,reg_selection);
+		sam_saa_chip_last_selected=value;
+
+		
 
 	}
 
@@ -2961,15 +2947,41 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 		//Valor registro chip sonido
 		//printf ("SAA1099 data port. Value: %02XH\n",value);
 
-		//Si son volumenes, tratarlos diferente
-		if (ay_3_8912_registro_sel[0]>=8 && ay_3_8912_registro_sel[0]<=10) {
+		sam_saa_chip[sam_saa_chip_last_selected&31]=value;
+
+		//Si son volumenes
+		if (sam_saa_chip_last_selected<3) {
 			//Hacemos out de parte baja y parte alta
 			z80_byte highnibble=value>>4;
 			value=value | highnibble;
 			value=value & 15; //max volumen 15, para no activar envolventes
+
+			out_port_ay(65533,8+sam_saa_chip_last_selected);
+			out_port_ay(49149,value);
 		}
 
-		out_port_ay(49149,value);
+		//Si son frecuencias o octavas
+		if ( 
+		(sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=11)
+		||
+		(sam_saa_chip_last_selected>=16 && sam_saa_chip_last_selected<=18)
+		)
+		{
+			//Si son frecuencias
+			if (sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=11) {
+				saa_establece_frecuencia(sam_saa_chip_last_selected-8);
+
+			}
+
+			//Si son cambios de octavas
+			if (sam_saa_chip_last_selected>=16 && sam_saa_chip_last_selected<=18) {
+				saa_establece_frecuencia(0); //Canal 0
+				saa_establece_frecuencia(1); //Canal 1
+				saa_establece_frecuencia(2); //Canal 2
+			}
+		}
+
+		
 	}
 
 
