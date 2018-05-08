@@ -1469,6 +1469,7 @@ void scrcurses_actualiza_tablas_teclado(void)
 
 
         if (c!=ERR) {
+        //printf ("Tecla: %d  \r",c);
                 scrcurses_contador_notecla=0;
 
 
@@ -1560,6 +1561,8 @@ void scrcurses_actualiza_tablas_teclado(void)
                                 break;
 
                                 case KEY_BACKSPACE:
+				//En algunos terminales, como Mac, genera 127
+				case 127:
                                         puerto_65278 &=255-1;
                                         puerto_61438 &=255-1;
 					blink_kbd_a8 &= (255-128);
