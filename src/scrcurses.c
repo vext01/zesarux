@@ -1562,6 +1562,7 @@ void scrcurses_actualiza_tablas_teclado(void)
 
                                 case KEY_BACKSPACE:
 				//En algunos terminales, como Mac, genera 127
+				//Se puede tambien simular mediante CTRL-H
 				case 127:
                                         puerto_65278 &=255-1;
                                         puerto_61438 &=255-1;
