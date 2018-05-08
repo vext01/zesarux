@@ -2842,6 +2842,9 @@ int saa_calcular_frecuencia(int freq, int octava)
 
 void saa_establece_frecuencia(z80_byte canal)
 {
+
+	if (canal>2) return;
+
 	int freq=sam_saa_chip[8+canal];
 	int octava;
 	if (canal==0) octava=sam_saa_chip[16]&7;
@@ -2930,6 +2933,7 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 		//Seleccion registro chip sonido
 		//printf ("SAA1099 address port. Value: %02XH\n",value);
 
+		//out 511,252
 		if (value==252) {
 				//Mixer. chapuza
 				out_port_ay(65533,7);
