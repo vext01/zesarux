@@ -2884,17 +2884,97 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
         	}
 	}
 
+	if (puerto==0x01ff) {
+		//Seleccion registro chip sonido
+		//printf ("SAA1099 address port. Value: %02XH\n",value);
+
+		//Chapucilla. Enviarlo al chip ay
+		z80_byte reg_selection=15; //Por defecto al ultimo, que no hace nada
+
+		/* Para iniciar chip sonido, volumen 15 en todos canales:
+		out 511,255. out 255,15
+		out 511,254. out 255,15
+		out 511,253. out 255,15
+
+		tono en los 3 canales:
+		out 511,252. out 255,248   
+		tono en 1 canal:
+		out 511,252. out 255,254
+		*/
+
+		switch (value) {
+
+			case 0:
+				//Volumen tono 0. RRRRLLLL
+				reg_selection=8;
+			break;
+
+			case 1:
+				//Volumen tono 1. RRRRLLLL
+				reg_selection=9;
+			break;
+
+			case 2:
+				//Volumen tono 2. RRRRLLLL
+				reg_selection=10;
+			break;
+
+			case 8:  //Registro tono 1
+				reg_selection=1;
+			break;
 
 
-/*
-if (
-!(
-	(puerto_l>=224 && puerto_l<=231) || (puerto_l>=240 && puerto_l<=255)
- )
-) {
-printf ("Unknown port OUT: %02X%02XH value: %02XH\n",puerto_h,puerto_l,value);
-}
-*/
+			case 9:  //Registro tono 2
+				reg_selection=3;
+			break;
+
+
+			case 10:  //Registro tono 3
+				reg_selection=5;
+			break;	
+
+
+			//Registros inventados para probar
+			case 252:
+				//Mixer
+				reg_selection=7;
+			break;		
+
+			case 255: //Volumen canal A. inventado
+				reg_selection=8;
+			break;
+
+			case 254: //Volumen canal B. inventado
+				reg_selection=9;
+			break;
+
+			case 253: //Volumen canal B. inventado
+				reg_selection=10;
+			break;			
+		}
+
+		out_port_ay(65533,reg_selection);
+
+	}
+
+	if (puerto==0x00ff) {
+		//Valor registro chip sonido
+		//printf ("SAA1099 data port. Value: %02XH\n",value);
+
+		//Si son volumenes, tratarlos diferente
+		if (ay_3_8912_registro_sel[0]>=8 && ay_3_8912_registro_sel[0]<=10) {
+			//Hacemos out de parte baja y parte alta
+			z80_byte highnibble=value>>4;
+			value=value | highnibble;
+			value=value & 15; //max volumen 15, para no activar envolventes
+		}
+
+		out_port_ay(49149,value);
+	}
+
+
+
+
 
 
 }

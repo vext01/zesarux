@@ -170,9 +170,9 @@ void cpu_core_loop_sam(void)
 
 				audio_valor_enviar_sonido=0;
 
-				/*
+				
 				audio_valor_enviar_sonido +=da_output_ay();
-				*/
+				
 
 
 				if (beeper_enabled.v) {
@@ -217,7 +217,7 @@ void cpu_core_loop_sam(void)
 				//else printf ("Overflow audio buffer: %d \n",audio_buffer_indice);
 
 
-				//ay_chip_siguiente_ciclo();
+				ay_chip_siguiente_ciclo();
 
 			}
 
