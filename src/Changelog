@@ -16,8 +16,9 @@ Added setting to reduce display to a factor of 0.75. Used on RunZX event
 Added setting to save spectrum screen to pbm file (black&white)
 Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run automatic tests
 Added setting to exit emulator after a number of seconds (--exit-after)
-Added beta simulation of the SAA audio chip from the Sam Coupe
+Added experimental simulation of the SAA1099 audio chip from the Sam Coupe
 Added second Easter Egg ;)
+Added third Easter Egg ;)
 
 Improved debugging:
 * new enhanced debug cpu menu: view TV electron position on screen, new default view, cursor, toggle breakpoints, run to cursor, change registers, and a lot more...

@@ -194,6 +194,8 @@ __FEATURES__
 
 * Supports Speaker and Soundbox sound on Jupiter Ace
 
+* Experimental simulation of the Sam Coupe Audio Chip (SAA1099)
+
 * Supports RAM packs on ZX80/81 up to 56 KB
 
 * Supports RAM packs on Jupiter Ace up to 35 KB
@@ -234,7 +236,7 @@ __FEATURES__
 
 * Other features: Visualmem menu, CPU Statistics
 
-* Includes two easter eggs: Can you find them? :)
+* Includes three easter eggs: Can you find them? :)
 
 
 

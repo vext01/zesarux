@@ -40,6 +40,8 @@ Creo que ya esta
 También de tap a tzx
 En menú file útils
 
+-que indique % progreso de carga real tape. Simplemente viendo el tamaño total y lo que lleva leido. que lo indique en footer
+
 -quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
 
 -Buscar bytes en memory zone
