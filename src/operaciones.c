@@ -2862,7 +2862,10 @@ void saa_establece_frecuencia(z80_byte canal)
 	frecuencia_ay &=0xFFF; //Entre 0 y 4095
 
 	//Justo al reves
-	frecuencia_ay=0xFFF-frecuencia_ay;
+	if (frecuencia_ay==0) frecuencia_ay=0xFFF;
+
+	else frecuencia_ay=0xFFF/frecuencia_ay;
+
 
 	//enviamos los dos valores.
 	int registro_ay=canal*2;
