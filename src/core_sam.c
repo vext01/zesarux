@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "tape.h"
 #include "audio.h"
+#include "ay38912.h"
 #include "screen.h"
 #include "operaciones.h"
 #include "snap.h"

@@ -1212,7 +1212,7 @@ core_cpc.o: core_cpc.c core_cpc.h cpu.h debug.h tape.h audio.h screen.h operacio
 	\$(CC) \$(CFLAGS) -c core_cpc.c
 
 
-core_sam.o: core_sam.c core_sam.h cpu.h debug.h tape.h audio.h screen.h operaciones.h snap.h timer.h menu.h chardetect.h compileoptions.h contend.h ula.h utils.h audio.h utils.h tape.h cpc.h realjoystick.h settings.h
+core_sam.o: core_sam.c core_sam.h cpu.h debug.h tape.h audio.h screen.h operaciones.h snap.h timer.h menu.h chardetect.h compileoptions.h contend.h ula.h utils.h audio.h utils.h tape.h cpc.h realjoystick.h settings.h ay38912.h
 	\$(CC) \$(CFLAGS) -c core_sam.c
 
 scmp.o: scmp.c scmp.h cpu.h operaciones.h
