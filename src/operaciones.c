@@ -2845,7 +2845,6 @@ int saa_calcular_frecuencia(int freq, int octava)
 void saa_establece_frecuencia(z80_byte canal)
 {
 
-	if (canal>2) return;
 
 	int freq=sam_saa_chip[8+canal];
 	int octava;
@@ -2869,9 +2868,17 @@ void saa_establece_frecuencia(z80_byte canal)
 
 
 	//enviamos los dos valores.
+	ay_chip_selected=0;
+
+	if (canal>2) {
+		canal -=3;
+		ay_chip_selected++;
+	}		
+
 	int registro_ay=canal*2;
 
 	printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
+
 
 	out_port_ay(65533,registro_ay);
 	out_port_ay(49149,frecuencia_registro & 0xFF);
@@ -2964,11 +2971,19 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 		sam_saa_chip[sam_saa_chip_last_selected&31]=value;
 
 		//Si son volumenes
-		if (sam_saa_chip_last_selected<3) {
+		if (sam_saa_chip_last_selected<6) {
 			//Hacemos out de parte baja y parte alta
 			z80_byte highnibble=value>>4;
 			value=value | highnibble;
 			value=value & 15; //max volumen 15, para no activar envolventes
+
+			ay_chip_selected=0;
+
+			//Siguientes 3 canales en el otro chip de sonido
+			if (sam_saa_chip_last_selected>=3) {
+				sam_saa_chip_last_selected -=3;
+				ay_chip_selected++;
+			}
 
 			out_port_ay(65533,8+sam_saa_chip_last_selected);
 			out_port_ay(49149,value);
@@ -2976,13 +2991,13 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 
 		//Si son frecuencias o octavas
 		if ( 
-		(sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=11)
+		(sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=13)
 		||
 		(sam_saa_chip_last_selected>=16 && sam_saa_chip_last_selected<=18)
 		)
 		{
 			//Si son frecuencias
-			if (sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=10) {
+			if (sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=13) {
 				saa_establece_frecuencia(sam_saa_chip_last_selected-8);
 
 			}
@@ -2992,6 +3007,9 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 				saa_establece_frecuencia(0); //Canal 0
 				saa_establece_frecuencia(1); //Canal 1
 				saa_establece_frecuencia(2); //Canal 2
+				saa_establece_frecuencia(3); //Canal 3
+				saa_establece_frecuencia(4); //Canal 4
+				saa_establece_frecuencia(5); //Canal 5
 			}
 		}
 
@@ -3022,11 +3040,27 @@ DO Tono en el canal A
 			if (mixer_ruido&2) valor_mixer &=(255-16); //Canal 1 ruido
 			if (mixer_ruido&4) valor_mixer &=(255-32); //Canal 2 ruido
 
-			printf ("set mixer. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
+			printf ("set mixer chip ay 0. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
 
-
+			ay_chip_selected=0;
 			out_port_ay(65533,7);
 			out_port_ay(49149,valor_mixer);
+
+			valor_mixer=255;
+                        if (mixer_tonos&8) valor_mixer &=(255-1); //Canal 0 tono
+                        if (mixer_tonos&16) valor_mixer &=(255-2); //Canal 1 tono
+                        if (mixer_tonos&32) valor_mixer &=(255-4); //Canal 2 tono
+
+                        if (mixer_ruido&8) valor_mixer &=(255-8); //Canal 0 ruido
+                        if (mixer_ruido&16) valor_mixer &=(255-16); //Canal 1 ruido
+                        if (mixer_ruido&32) valor_mixer &=(255-32); //Canal 2 ruido
+
+                        printf ("set mixer chip ay 1. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
+
+                        ay_chip_selected=1;
+                        out_port_ay(65533,7);
+                        out_port_ay(49149,valor_mixer);
+
 		}
 
 
