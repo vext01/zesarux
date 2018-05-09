@@ -2906,6 +2906,8 @@ int saa_calcular_frecuencia_ruido(z80_byte freq,int generador)
 		bits_bajos=(freq>>4)&3;
 	}
 
+	int frecuencia_de_tono;
+
 
 	switch (bits_bajos) {
 		case 0:
@@ -2924,6 +2926,7 @@ int saa_calcular_frecuencia_ruido(z80_byte freq,int generador)
 			//La frecuencia viene por la frecuencia que indica el canal asociado al generador:
 			//Generador 0: tono del canal 0
 			//Generador 1: tono del canal 3
+			frecuencia=retorna_frecuencia(0,generador);
 		break;
 	}
 
@@ -2953,11 +2956,13 @@ void saa_establece_frecuencia_ruido(void)
 
 	frecuencia_final=saa_calcular_frecuencia_ruido(freq,0);
 	int frecuencia_registro_gen0=saa_convert_frec_ruido_saa_ay(frecuencia_final);
+	printf ("frecuencia ruido gen0 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen0);
+
 
 	frecuencia_final=saa_calcular_frecuencia_ruido(freq,1);
 	int frecuencia_registro_gen1=saa_convert_frec_ruido_saa_ay(frecuencia_final);
+	printf ("frecuencia ruido gen1 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen1);
 
-	printf ("frecuencia ruido final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
 
 	ay_chip_selected=0;
 	out_port_ay(65533,6);
