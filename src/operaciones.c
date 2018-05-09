@@ -2889,6 +2889,38 @@ void saa_establece_frecuencia(z80_byte canal)
 	
 }
 
+int saa_calcular_frecuencia_ruido(z80_byte freq)
+{
+	//temporal
+	return 15000;
+}
+
+void saa_establece_frecuencia_ruido(void)
+{
+	z80_byte freq=sam_saa_chip[0x17];
+
+	int frecuencia_final=saa_calcular_frecuencia_ruido(freq);
+
+	//int F=FRECUENCIA_NOISE/(r*16)
+	//R= FRECUENCIA_NOISE/(F*16)
+	//rango del chip AY 1787 hz - 886700 hz. 5 bits (0..31)
+
+	int frecuencia_registro;
+
+	if (frecuencia_final==0) frecuencia_registro=31;
+	else frecuencia_registro=FRECUENCIA_NOISE/(frecuencia_final*16);
+
+	printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
+
+	ay_chip_selected=0;
+	out_port_ay(65533,6);
+	out_port_ay(49149,frecuencia_registro & 31);
+
+	ay_chip_selected=1;
+        out_port_ay(65533,6);
+        out_port_ay(49149,frecuencia_registro & 31);
+}
+
 void out_port_sam_no_time(z80_int puerto,z80_byte value)
 {
 
@@ -2987,6 +3019,11 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 
 			out_port_ay(65533,8+sam_saa_chip_last_selected);
 			out_port_ay(49149,value);
+		}
+
+		//Si es frecuencia de ruido
+		if (sam_saa_chip_last_selected==0x16) {
+			saa_establece_frecuencia_ruido();
 		}
 
 		//Si son frecuencias o octavas

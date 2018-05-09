@@ -684,6 +684,7 @@ http://velesoft.speccy.cz/sam_zx128.htm
 -velocidad es correcta? t-estados por linea, mhz...
 
 -rutina ascii_to_keyboard_port. la que permite enviar texto por spool o leer texto de drivers curses, stdout. Agregar simbolos?
+-emulacion real del chip de sonido (no simulacion contra el AY como hay ahora)
 
 
 -------------
