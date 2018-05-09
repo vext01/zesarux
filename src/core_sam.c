@@ -169,6 +169,10 @@ void cpu_core_loop_sam(void)
 
 			if (1==1) {
 
+				//TODO. detector de sonido en beeper provoca, que cuando salta, el output de sonido es extraño,
+				//cuando se combina con chip AY. forzar a no desactivarlo nunca
+				beeper_silence_detection_counter=0;
+
 				audio_valor_enviar_sonido=0;
 
 				

@@ -2851,6 +2851,9 @@ void saa_establece_frecuencia(z80_byte canal)
 	if (canal==0) octava=sam_saa_chip[16]&7;
 	if (canal==1) octava=(sam_saa_chip[16]>>4)&7;
 	if (canal==2) octava=sam_saa_chip[17]&7;
+	if (canal==3) octava=(sam_saa_chip[17]>>4)&7;
+	if (canal==4) octava=sam_saa_chip[18]&7;
+	if (canal==5) octava=(sam_saa_chip[18]>>4)&7;
 
 	int frecuencia_final=saa_calcular_frecuencia(freq,octava); //max 7810 
 
