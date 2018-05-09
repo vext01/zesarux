@@ -1,6 +1,5 @@
 --- Cosas para la version 7.0
 
--simular frecuencia ruido chip saa sam coupe     
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 -con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
 En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
