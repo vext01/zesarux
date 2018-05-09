@@ -2889,16 +2889,23 @@ void saa_establece_frecuencia(z80_byte canal)
 	
 }
 
-int saa_calcular_frecuencia_ruido(z80_byte freq)
+int saa_calcular_frecuencia_ruido(z80_byte freq,int generador)
 {
 
 	//Suponemos:
 
 	int frecuencia=0;
- 
-	z80_byte bits_bajos=freq&3;
 
-	z80_byte bits_altos=(freq>>4)&3;
+	z80_byte bits_bajos;
+
+	if (generador==0) {
+		bits_bajos=freq&3;
+	}
+
+	else {
+		bits_bajos=(freq>>4)&3;
+	}
+
 
 	switch (bits_bajos) {
 		case 0:
@@ -2914,53 +2921,51 @@ int saa_calcular_frecuencia_ruido(z80_byte freq)
 		break;
 
 		case 3:
-			switch (bits_altos) {
-				case 0:
-					frecuencia=61;
-				break;
-
-				case 1:
-					frecuencia=5240;
-				break;
-
-				case 2:
-					frecuencia=10419;
-				break;
-
-				case 3:
-					frecuencia=15600;
-				break;
-			}
+			//La frecuencia viene por la frecuencia que indica el canal asociado al generador:
+			//Generador 0: tono del canal 0
+			//Generador 1: tono del canal 3
 		break;
 	}
 
 	return frecuencia;
 }
 
-void saa_establece_frecuencia_ruido(void)
+int saa_convert_frec_ruido_saa_ay(int frecuencia)
 {
-	z80_byte freq=sam_saa_chip[0x16];
-
-	int frecuencia_final=saa_calcular_frecuencia_ruido(freq);
-
 	//int F=FRECUENCIA_NOISE/(r*16)
 	//R= FRECUENCIA_NOISE/(F*16)
 	//rango del chip AY 1787 hz - 886700 hz. 5 bits (0..31)
 
-	int frecuencia_registro;
+        int frecuencia_registro;
 
-	if (frecuencia_final==0) frecuencia_registro=31;
-	else frecuencia_registro=FRECUENCIA_NOISE/(frecuencia_final*16);
+        if (frecuencia==0) frecuencia_registro=31;
+        else frecuencia_registro=FRECUENCIA_NOISE/(frecuencia*16);
+
+	return frecuencia_registro;
+}
+
+
+void saa_establece_frecuencia_ruido(void)
+{
+	z80_byte freq=sam_saa_chip[0x16];
+
+	int frecuencia_final=saa_calcular_frecuencia_ruido(freq,0);
+
+	frecuencia_final=saa_calcular_frecuencia_ruido(freq,0);
+	int frecuencia_registro_gen0=saa_convert_frec_ruido_saa_ay(frecuencia_final);
+
+	frecuencia_final=saa_calcular_frecuencia_ruido(freq,1);
+	int frecuencia_registro_gen1=saa_convert_frec_ruido_saa_ay(frecuencia_final);
 
 	printf ("frecuencia ruido final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
 
 	ay_chip_selected=0;
 	out_port_ay(65533,6);
-	out_port_ay(49149,frecuencia_registro & 31);
+	out_port_ay(49149,frecuencia_registro_gen0 & 31);
 
 	ay_chip_selected=1;
         out_port_ay(65533,6);
-        out_port_ay(49149,frecuencia_registro & 31);
+        out_port_ay(49149,frecuencia_registro_gen1 & 31);
 }
 
 void out_port_sam_no_time(z80_int puerto,z80_byte value)
@@ -3115,7 +3120,11 @@ DO Tono en el canal A
 			if (mixer_tonos&2) valor_mixer &=(255-2); //Canal 1 tono
 			if (mixer_tonos&4) valor_mixer &=(255-4); //Canal 2 tono
 
-			if (mixer_ruido&1) valor_mixer &=(255-8); //Canal 0 ruido
+			if (mixer_ruido&1) {
+				valor_mixer &=(255-8); //Canal 0 ruido
+				//Si canal 0 ruido, canal 0 tono desactivado
+				valor_mixer |=1;
+			}
 			if (mixer_ruido&2) valor_mixer &=(255-16); //Canal 1 ruido
 			if (mixer_ruido&4) valor_mixer &=(255-32); //Canal 2 ruido
 
@@ -3130,7 +3139,11 @@ DO Tono en el canal A
                         if (mixer_tonos&16) valor_mixer &=(255-2); //Canal 1 tono
                         if (mixer_tonos&32) valor_mixer &=(255-4); //Canal 2 tono
 
-                        if (mixer_ruido&8) valor_mixer &=(255-8); //Canal 0 ruido
+                        if (mixer_ruido&8) {
+				valor_mixer &=(255-8); //Canal 0 ruido
+				//Si canal 3 ruido, canal 0 tono desactivado
+                                valor_mixer |=1;
+			}
                         if (mixer_ruido&16) valor_mixer &=(255-16); //Canal 1 ruido
                         if (mixer_ruido&32) valor_mixer &=(255-32); //Canal 2 ruido
 
