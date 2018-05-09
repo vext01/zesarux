@@ -2933,17 +2933,8 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 		//Seleccion registro chip sonido
 		//printf ("SAA1099 address port. Value: %02XH\n",value);
 
-		//out 511,252
-		if (value==252) {
-				//Mixer. chapuza
-				out_port_ay(65533,7);
-				out_port_ay(49149,248);
-			return;
-		}
-
 		sam_saa_chip_last_selected=value;
 
-		
 
 	}
 
@@ -2984,6 +2975,40 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 				saa_establece_frecuencia(2); //Canal 2
 			}
 		}
+
+		//Activacion tono o ruido
+		if (sam_saa_chip_last_selected==14 || sam_saa_chip_last_selected==15) {
+/*
+R7 � Control del mezclador y de E/S
+D7 No utilizado
+D6 1=puerta de entrada, 0=puerta de salida
+D5 Ruido en el canal C
+D4 Ruido en el canal B
+D3 Ruido en el canal A
+D2 Tono en el canal C
+D1 Tono en el canal B
+DO Tono en el canal A
+*/
+			//de momento solo tonos
+			z80_byte valor_mixer=255;
+
+			z80_byte mixer_tonos=sam_saa_chip[14];
+			z80_byte mixer_ruido=sam_saa_chip[15];
+
+			if (mixer_tonos&1) valor_mixer &=(255-1); //Canal 0 tono
+			if (mixer_tonos&2) valor_mixer &=(255-2); //Canal 1 tono
+			if (mixer_tonos&4) valor_mixer &=(255-4); //Canal 2 tono
+
+			if (mixer_ruido&1) valor_mixer &=(255-8); //Canal 0 ruido
+			if (mixer_ruido&2) valor_mixer &=(255-16); //Canal 1 ruido
+			if (mixer_ruido&4) valor_mixer &=(255-32); //Canal 2 ruido
+
+
+			out_port_ay(65533,7);
+			out_port_ay(49149,valor_mixer);
+		}
+
+
 
 		
 	}
