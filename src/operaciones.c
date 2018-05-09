@@ -2992,7 +2992,7 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 		}
 
 		//Activacion tono o ruido
-		if (sam_saa_chip_last_selected==14 || sam_saa_chip_last_selected==15) {
+		if (sam_saa_chip_last_selected==20 || sam_saa_chip_last_selected==21) {
 /*
 R7 � Control del mezclador y de E/S
 D7 No utilizado
@@ -3007,8 +3007,8 @@ DO Tono en el canal A
 			//de momento solo tonos
 			z80_byte valor_mixer=255;
 
-			z80_byte mixer_tonos=sam_saa_chip[14];
-			z80_byte mixer_ruido=sam_saa_chip[15];
+			z80_byte mixer_tonos=sam_saa_chip[20];
+			z80_byte mixer_ruido=sam_saa_chip[21];
 
 			if (mixer_tonos&1) valor_mixer &=(255-1); //Canal 0 tono
 			if (mixer_tonos&2) valor_mixer &=(255-2); //Canal 1 tono
