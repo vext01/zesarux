@@ -2821,9 +2821,12 @@ z80_byte sam_saa_chip_last_selected;
 
 int saa_calcular_frecuencia(int freq, int octava)
 {
-	//frecuencia entre 30 y 60. O sea, 31 posibles valores
-	freq=freq/9;
-	freq=30+freq;
+	//frecuencia entre 31 y 61. O sea, 31 posibles valores
+
+	//pasamos de 0...255 a 0...31. Dividir entre 8.22-> x/8.22 = x*100/822
+	freq=freq*100;
+	freq=freq/822;
+	freq=31+freq;
 
 	int multiplicador_octava;
 	if (octava==0) multiplicador_octava=1;

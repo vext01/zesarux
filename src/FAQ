@@ -470,6 +470,14 @@ A: Key mapping is:
 Q: How can I load from Sam Coupe disk?
 A: Disk emulation is not finished yet. You can only load from tape
 
+Q: Why the sound is so ugly?
+A: I'm not emulating the Sam Coupe audio chip (SAA1099), but simulating the audio by the audio chip from the Spectrum (AY-3-8912).
+This is why it does not sound real. In the future I will emulate the SAA1099 perfectly ;)
+
+Q: How can I load some turbo tapes (tzx)?
+A: Seems to be a timing bug on the Sam Coupe emulation and the ROM does not detect the right load speed. But you can change manually
+the cpu speed (from menu->settings->cpu) to 2x or 4x, most of these demos use these loading speeds
+
 ----------------------------------------------------------------------------
 
 
