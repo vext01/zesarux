@@ -2952,7 +2952,7 @@ void saa_establece_frecuencia_ruido(void)
 	if (frecuencia_final==0) frecuencia_registro=31;
 	else frecuencia_registro=FRECUENCIA_NOISE/(frecuencia_final*16);
 
-	printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
+	printf ("frecuencia ruido final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
 
 	ay_chip_selected=0;
 	out_port_ay(65533,6);
