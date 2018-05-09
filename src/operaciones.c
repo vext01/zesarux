@@ -2854,29 +2854,30 @@ void saa_establece_frecuencia(z80_byte canal)
 	if (canal==2) octava=sam_saa_chip[17]&7;
 
 	int frecuencia_final=saa_calcular_frecuencia(freq,octava); //max 7810 
-	int frecuencia_ay=frecuencia_final; //temp ajuste tonto  // max 110.000 hz. valor de 12 bits = 4095 = 0xFFF
 
-	//Pasamos de 7810 a 4095. aproximado: dividir entre dos
-	frecuencia_ay=frecuencia_ay/2;
+	//en chip ay, frecuencia =
+	// f=FRECUENCIA_AY/(r*16). siendo r el contenido de los registros de tono del chip ay
 
-	frecuencia_ay &=0xFFF; //Entre 0 y 4095
+	//deseamos obtener r
+	//  r=FRECUENCIA_AY/(f*16)
 
-	//Justo al reves
-	if (frecuencia_ay==0) frecuencia_ay=0xFFF;
+	int frecuencia_registro;
 
-	else frecuencia_ay=0xFFF/frecuencia_ay;
+
+	if (frecuencia_final==0) frecuencia_registro=0xFFF;
+	else frecuencia_registro=FRECUENCIA_AY/(frecuencia_final*16);
 
 
 	//enviamos los dos valores.
 	int registro_ay=canal*2;
 
-	printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_ay);
+	printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
 
 	out_port_ay(65533,registro_ay);
-	out_port_ay(49149,frecuencia_ay & 0xFF);
+	out_port_ay(49149,frecuencia_registro & 0xFF);
 
 	out_port_ay(65533,registro_ay+1);
-	out_port_ay(49149,(frecuencia_ay>>8) & 0xF );
+	out_port_ay(49149,(frecuencia_registro>>8) & 0xF );
 
 	
 }
