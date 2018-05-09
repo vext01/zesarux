@@ -2837,6 +2837,8 @@ int saa_calcular_frecuencia(int freq, int octava)
 
 	int frecuencia_final=freq*multiplicador_octava;
 
+	printf ("frecuencia final: %d Hz\n",frecuencia_final);
+
 	return frecuencia_final;
 }
 
@@ -2860,9 +2862,12 @@ void saa_establece_frecuencia(z80_byte canal)
 	//enviamos los dos valores.
 	int registro_ay=canal*2;
 
+	printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_ay);
+
 	out_port_ay(65533,registro_ay);
 	out_port_ay(49149,frecuencia_ay & 0xFF);
 
+	out_port_ay(65533,registro_ay+1);
 	out_port_ay(49149,(frecuencia_ay>>8) & 0xF );
 
 	
