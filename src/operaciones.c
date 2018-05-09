@@ -2851,14 +2851,19 @@ void saa_establece_frecuencia(z80_byte canal)
 	if (canal==1) octava=(sam_saa_chip[16]>>4)&7;
 	if (canal==2) octava=sam_saa_chip[17]&7;
 
-	int frecuencia_final=saa_calcular_frecuencia(freq,octava); //max 7810
-	int frecuencia_ay=frecuencia_final; //temp ajuste tonto  // max 110.000 hz.
+	int frecuencia_final=saa_calcular_frecuencia(freq,octava); //max 7810 
+	int frecuencia_ay=frecuencia_final; //temp ajuste tonto  // max 110.000 hz. valor de 12 bits = 4095 = 0xFFF
+
+	//Pasamos de 7810 a 4095. aproximado: dividir entre dos
+	frecuencia_ay=frecuencia_ay/2;
 
 	//enviamos los dos valores.
 	int registro_ay=canal*2;
 
-	out_port_ay(65533,registro_ay+1);
-	out_port_ay(49149,frecuencia_ay&65535);
+	out_port_ay(65533,registro_ay);
+	out_port_ay(49149,frecuencia_ay & 0xFF);
+
+	out_port_ay(49149,(frecuencia_ay>>8) & 0xF );
 
 	
 }
