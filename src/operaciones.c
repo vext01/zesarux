@@ -2837,7 +2837,7 @@ int saa_calcular_frecuencia(int freq, int octava)
 
 	int frecuencia_final=freq*multiplicador_octava;
 
-	printf ("frecuencia final: %d Hz\n",frecuencia_final);
+	printf ("freq: %d octava: %d frecuencia final: %d Hz\n",freq,octava,frecuencia_final);
 
 	return frecuencia_final;
 }
@@ -2978,7 +2978,7 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 		)
 		{
 			//Si son frecuencias
-			if (sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=11) {
+			if (sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=10) {
 				saa_establece_frecuencia(sam_saa_chip_last_selected-8);
 
 			}
