@@ -2891,8 +2891,50 @@ void saa_establece_frecuencia(z80_byte canal)
 
 int saa_calcular_frecuencia_ruido(z80_byte freq)
 {
-	//temporal
-	return 15000;
+
+	//Suponemos:
+
+	int frecuencia=0;
+ 
+	z80_byte bits_bajos=freq&3;
+
+	z80_byte bits_altos=(freq>>4)&3;
+
+	switch (bits_bajos) {
+		case 0:
+			frecuencia=31300;
+		break;
+
+		case 1:
+			frecuencia=15600;
+		break;
+
+		case 2:
+			frecuencia=7600;
+		break;
+
+		case 3:
+			switch (bits_altos) {
+				case 0:
+					frecuencia=61;
+				break;
+
+				case 1:
+					frecuencia=5240;
+				break;
+
+				case 2:
+					frecuencia=10419;
+				break;
+
+				case 3:
+					frecuencia=15600;
+				break;
+			}
+		break;
+	}
+
+	return frecuencia;
 }
 
 void saa_establece_frecuencia_ruido(void)
