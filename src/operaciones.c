@@ -3018,6 +3018,8 @@ DO Tono en el canal A
 			if (mixer_ruido&2) valor_mixer &=(255-16); //Canal 1 ruido
 			if (mixer_ruido&4) valor_mixer &=(255-32); //Canal 2 ruido
 
+			printf ("set mixer. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
+
 
 			out_port_ay(65533,7);
 			out_port_ay(49149,valor_mixer);
