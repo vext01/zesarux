@@ -2859,6 +2859,11 @@ void saa_establece_frecuencia(z80_byte canal)
 	//Pasamos de 7810 a 4095. aproximado: dividir entre dos
 	frecuencia_ay=frecuencia_ay/2;
 
+	frecuencia_ay &=0xFFF; //Entre 0 y 4095
+
+	//Justo al reves
+	frecuencia_ay=0xFFF-frecuencia_ay;
+
 	//enviamos los dos valores.
 	int registro_ay=canal*2;
 
