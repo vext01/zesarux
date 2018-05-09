@@ -3421,6 +3421,7 @@ You don't need timings for H/V sync =)
                 out_port=out_port_sam;
                 fetch_opcode=fetch_opcode_sam;
 		screen_testados_linea=384; //6 MHZ aprox
+		ay_chip_present.v=1; //Simulacion del chip SAA mediante el AY
                 break;
 
 		case MACHINE_ID_QL_STANDARD: //QL 160
