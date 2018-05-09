@@ -2939,7 +2939,7 @@ int saa_calcular_frecuencia_ruido(z80_byte freq)
 
 void saa_establece_frecuencia_ruido(void)
 {
-	z80_byte freq=sam_saa_chip[0x17];
+	z80_byte freq=sam_saa_chip[0x16];
 
 	int frecuencia_final=saa_calcular_frecuencia_ruido(freq);
 
