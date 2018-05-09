@@ -2946,7 +2946,7 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 
 	if (puerto==0x01ff) {
 		//Seleccion registro chip sonido
-		//printf ("SAA1099 address port. Value: %02XH\n",value);
+		printf ("SAA1099 address port. Value: %02XH\n",value);
 
 		sam_saa_chip_last_selected=value;
 
@@ -2955,7 +2955,7 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 
 	if (puerto==0x00ff) {
 		//Valor registro chip sonido
-		//printf ("SAA1099 data port. Value: %02XH\n",value);
+		printf ("SAA1099 data port. Value: %02XH\n",value);
 
 		sam_saa_chip[sam_saa_chip_last_selected&31]=value;
 
