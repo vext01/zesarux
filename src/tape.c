@@ -1835,13 +1835,26 @@ void realtape_print_footer(void)
 
         if (progreso>100) progreso=100;
 
-        printf ("progreso %d %%\n",progreso);
+        debug_printf (VERBOSE_DEBUG,"RealTape loading progress: %d %%",progreso);
 
-
+        char buffer_texto_playing[33];
+        char buffer_texto_progreso[33];
         char buffer_texto[33];
 
-                             //01234567890123456789012345678901
-        sprintf (buffer_texto,"RealTape Playing %d%%           ",progreso);
+                                     //01234567890123456789012345678901
+        sprintf (buffer_texto_playing,"RealTape Playing %d%%",progreso);
+        //Con indicador de progreso. 10 posiciones
+        int posicion_progreso=progreso%10;
+
+        int i;
+        for (i=0;i<10;i++) {
+               buffer_texto_progreso[i]='.';
+               if (i==posicion_progreso) buffer_texto_progreso[i]='>';
+        }
+        buffer_texto_progreso[i]=0;
+
+        sprintf (buffer_texto,"%s %s",buffer_texto_playing,buffer_texto_progreso);
+
 	//color inverso
 	menu_putstring_footer(0,2,buffer_texto,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
 }
