@@ -1733,6 +1733,10 @@ char realtape_adjust_offset_sign(unsigned char value)
 	return value16;
 }
 
+//Para mostrar indicador de progreso cargado
+long int realtape_file_size=0;
+long int realtape_file_size_counter=0;
+
 void realtape_get_byte_rwa(void)
 {
 
@@ -1749,6 +1753,7 @@ void realtape_get_byte_rwa(void)
 
 	fread(&valor_leido_audio, 1,1 , ptr_realtape);
 	realtape_last_value=realtape_adjust_offset_sign(valor_leido_audio);
+        realtape_file_size_counter++;
 }
 
 void realtape_get_byte_cont(void)
@@ -1770,6 +1775,7 @@ void realtape_get_byte_cont(void)
 		realtape_last_value=realtape_adjust_offset_sign(valor_leido_audio);
 
 		//printf ("%d ",realtape_last_value);
+                realtape_file_size_counter++;
 
 		return;
 	}
@@ -1813,9 +1819,32 @@ void realtape_get_byte_cont(void)
 
 }
 
+
+
+void realtape_show_progress_counter(void)
+{
+        //Si ha pasado 1 segundo
+        //TODO
+
+
+        long int total=realtape_file_size;
+        long int transcurrido=realtape_file_size_counter;
+
+        int progreso;
+
+        if (total==0) progreso=100;
+        else progreso=(transcurrido*100)/total;
+
+        if (progreso>100) progreso=100;
+
+        printf ("progreso %d %%\n",progreso);
+}
+
 void realtape_get_byte(void)
 {
 
+        //Mostrar porcentaje de progreso de lectura
+        realtape_show_progress_counter();
 
 	realtape_get_byte_cont();
 	return;
@@ -1825,25 +1854,29 @@ void realtape_get_byte(void)
 
 	//intento de ajustar esto a la velocidad de la cpu. de momento solo controlar cuando mas rapido (100,200, 300 % cpu)
 
-	int i;
+	/*int i;
 	int limite=porcentaje_velocidad_emulador/100;
 	if (limite<1) limite=1;
 
 	for (i=0;i<limite;i++) {
 		realtape_get_byte_cont();
-	}
+	}*/
 }
+
+
 
 void realtape_insert(void)
 {
 
 	debug_printf (VERBOSE_INFO,"Inserting real tape: %s",realtape_name);
+        realtape_file_size_counter=0;
 
 	if (!util_compare_file_extension(realtape_name,"rwa")) {
 		debug_printf (VERBOSE_INFO,"Detected raw file RWA");
 		realtape_tipo=0;
 		debug_printf (VERBOSE_INFO,"Opening File %s",realtape_name);
         	ptr_realtape=fopen(realtape_name,"rb");
+                realtape_file_size=get_file_size(realtape_name);
 	}
 	else if (!util_compare_file_extension(realtape_name,"smp")) {
 		debug_printf (VERBOSE_INFO,"Detected raw file SMP");
@@ -1860,6 +1893,7 @@ void realtape_insert(void)
 
 		debug_printf (VERBOSE_INFO,"Opening File %s",realtape_name_rwa);
         	ptr_realtape=fopen(realtape_name_rwa,"rb");
+                realtape_file_size=get_file_size(realtape_name_rwa);
 	}
 
         else if (!util_compare_file_extension(realtape_name,"wav")) {
@@ -1876,6 +1910,7 @@ void realtape_insert(void)
 		}
 		debug_printf (VERBOSE_INFO,"Opening File %s",realtape_name_rwa);
                 ptr_realtape=fopen(realtape_name_rwa,"rb");
+                realtape_file_size=get_file_size(realtape_name_rwa);
         }
 
         else if (!util_compare_file_extension(realtape_name,"tzx") ||
@@ -1896,6 +1931,7 @@ void realtape_insert(void)
 
 		debug_printf (VERBOSE_INFO,"Opening File %s",realtape_name_rwa);
                 ptr_realtape=fopen(realtape_name_rwa,"rb");
+                realtape_file_size=get_file_size(realtape_name_rwa);
         }
 
         else if (!util_compare_file_extension(realtape_name,"p")) {
@@ -1913,6 +1949,7 @@ void realtape_insert(void)
 
 		debug_printf (VERBOSE_INFO,"Opening File %s",realtape_name_rwa);
                 ptr_realtape=fopen(realtape_name_rwa,"rb");
+                realtape_file_size=get_file_size(realtape_name_rwa);
         }
 
         else if (!util_compare_file_extension(realtape_name,"o")) {
@@ -1929,6 +1966,7 @@ void realtape_insert(void)
                 }
 
                 ptr_realtape=fopen(realtape_name_rwa,"rb");
+                realtape_file_size=get_file_size(realtape_name_rwa);
         }
 
         else if (!util_compare_file_extension(realtape_name,"tap")) {
@@ -1946,6 +1984,7 @@ void realtape_insert(void)
 
 		debug_printf (VERBOSE_INFO,"Opening File %s",realtape_name_rwa);
                 ptr_realtape=fopen(realtape_name_rwa,"rb");
+                realtape_file_size=get_file_size(realtape_name_rwa);
         }
 
 
