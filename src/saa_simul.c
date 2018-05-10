@@ -34,10 +34,10 @@ Simulacion del chip de sonido SAA del Sam Coupe mediante conversion al chip AY d
 #include "saa_simul.h"
 
 
-z80_byte sam_saa_chip[32];
-z80_byte sam_saa_chip_last_selected;
+z80_byte sam_saa_simul_chip[32];
+z80_byte sam_saa_simul_chip_last_selected;
 
-int saa_calcular_frecuencia(int freq, int octava)
+int saa_simul_calcular_frecuencia(int freq, int octava)
 {
 	//frecuencia entre 31 y 61. O sea, 31 posibles valores
 
@@ -63,20 +63,20 @@ int saa_calcular_frecuencia(int freq, int octava)
 	return frecuencia_final;
 }
 
-void saa_establece_frecuencia(z80_byte canal)
+void saa_simul_establece_frecuencia(z80_byte canal)
 {
 
 
-	int freq=sam_saa_chip[8+canal];
+	int freq=sam_saa_simul_chip[8+canal];
 	int octava;
-	if (canal==0) octava=sam_saa_chip[16]&7;
-	if (canal==1) octava=(sam_saa_chip[16]>>4)&7;
-	if (canal==2) octava=sam_saa_chip[17]&7;
-	if (canal==3) octava=(sam_saa_chip[17]>>4)&7;
-	if (canal==4) octava=sam_saa_chip[18]&7;
-	if (canal==5) octava=(sam_saa_chip[18]>>4)&7;
+	if (canal==0) octava=sam_saa_simul_chip[16]&7;
+	if (canal==1) octava=(sam_saa_simul_chip[16]>>4)&7;
+	if (canal==2) octava=sam_saa_simul_chip[17]&7;
+	if (canal==3) octava=(sam_saa_simul_chip[17]>>4)&7;
+	if (canal==4) octava=sam_saa_simul_chip[18]&7;
+	if (canal==5) octava=(sam_saa_simul_chip[18]>>4)&7;
 
-	int frecuencia_final=saa_calcular_frecuencia(freq,octava); //max 7810 
+	int frecuencia_final=saa_simul_calcular_frecuencia(freq,octava); //max 7810 
 
 	//en chip ay, frecuencia =
 	// f=FRECUENCIA_AY/(r*16). siendo r el contenido de los registros de tono del chip ay
@@ -113,7 +113,7 @@ void saa_establece_frecuencia(z80_byte canal)
 	
 }
 
-int saa_calcular_frecuencia_ruido(z80_byte freq,int generador)
+int saa_simul_calcular_frecuencia_ruido(z80_byte freq,int generador)
 {
 
 	//Suponemos:
@@ -154,7 +154,7 @@ int saa_calcular_frecuencia_ruido(z80_byte freq,int generador)
 	return frecuencia;
 }
 
-int saa_convert_frec_ruido_saa_ay(int frecuencia)
+int saa_simul_convert_frec_ruido_saa_ay(int frecuencia)
 {
 	//int F=FRECUENCIA_NOISE/(r*16)
 	//R= FRECUENCIA_NOISE/(F*16)
@@ -169,19 +169,19 @@ int saa_convert_frec_ruido_saa_ay(int frecuencia)
 }
 
 
-void saa_establece_frecuencia_ruido(void)
+void saa_simul_establece_frecuencia_ruido(void)
 {
-	z80_byte freq=sam_saa_chip[0x16];
+	z80_byte freq=sam_saa_simul_chip[0x16];
 
-	int frecuencia_final=saa_calcular_frecuencia_ruido(freq,0);
+	int frecuencia_final=saa_simul_calcular_frecuencia_ruido(freq,0);
 
-	frecuencia_final=saa_calcular_frecuencia_ruido(freq,0);
-	int frecuencia_registro_gen0=saa_convert_frec_ruido_saa_ay(frecuencia_final);
+	frecuencia_final=saa_simul_calcular_frecuencia_ruido(freq,0);
+	int frecuencia_registro_gen0=saa_simul_convert_frec_ruido_saa_ay(frecuencia_final);
 	printf ("frecuencia ruido gen0 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen0);
 
 
-	frecuencia_final=saa_calcular_frecuencia_ruido(freq,1);
-	int frecuencia_registro_gen1=saa_convert_frec_ruido_saa_ay(frecuencia_final);
+	frecuencia_final=saa_simul_calcular_frecuencia_ruido(freq,1);
+	int frecuencia_registro_gen1=saa_simul_convert_frec_ruido_saa_ay(frecuencia_final);
 	printf ("frecuencia ruido gen1 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen1);
 
 
@@ -199,21 +199,21 @@ void saa_establece_frecuencia_ruido(void)
 void saa_simul_write_address(z80_byte value)
 {
 		//Seleccion registro chip sonido
-		printf ("SAA1099 address port. Value: %02XH\n",value);
+		printf ("saa_simul1099 address port. Value: %02XH\n",value);
 
-		sam_saa_chip_last_selected=value;
+		sam_saa_simul_chip_last_selected=value;
 }
 
 
 void saa_simul_write_data(z80_byte value)
 {
 		//Valor registro chip sonido
-		printf ("SAA1099 data port. Value: %02XH\n",value);
+		printf ("saa_simul1099 data port. Value: %02XH\n",value);
 
-		sam_saa_chip[sam_saa_chip_last_selected&31]=value;
+		sam_saa_simul_chip[sam_saa_simul_chip_last_selected&31]=value;
 
 		//Si son volumenes
-		if (sam_saa_chip_last_selected<6) {
+		if (sam_saa_simul_chip_last_selected<6) {
 			//Hacemos out de parte baja y parte alta
 			z80_byte highnibble=value>>4;
 			value=value | highnibble;
@@ -222,46 +222,50 @@ void saa_simul_write_data(z80_byte value)
 			ay_chip_selected=0;
 
 			//Siguientes 3 canales en el otro chip de sonido
-			if (sam_saa_chip_last_selected>=3) {
-				sam_saa_chip_last_selected -=3;
+			if (sam_saa_simul_chip_last_selected>=3) {
+				sam_saa_simul_chip_last_selected -=3;
 				ay_chip_selected++;
 			}
 
-			out_port_ay(65533,8+sam_saa_chip_last_selected);
+			out_port_ay(65533,8+sam_saa_simul_chip_last_selected);
 			out_port_ay(49149,value);
 		}
 
 		//Si es frecuencia de ruido
-		if (sam_saa_chip_last_selected==0x16) {
-			saa_establece_frecuencia_ruido();
+		if (sam_saa_simul_chip_last_selected==0x16) {
+			saa_simul_establece_frecuencia_ruido();
 		}
 
 		//Si son frecuencias o octavas
 		if ( 
-		(sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=13)
+		(sam_saa_simul_chip_last_selected>=8 && sam_saa_simul_chip_last_selected<=13)
 		||
-		(sam_saa_chip_last_selected>=16 && sam_saa_chip_last_selected<=18)
+		(sam_saa_simul_chip_last_selected>=16 && sam_saa_simul_chip_last_selected<=18)
 		)
 		{
 			//Si son frecuencias
-			if (sam_saa_chip_last_selected>=8 && sam_saa_chip_last_selected<=13) {
-				saa_establece_frecuencia(sam_saa_chip_last_selected-8);
+			if (sam_saa_simul_chip_last_selected>=8 && sam_saa_simul_chip_last_selected<=13) {
+				saa_simul_establece_frecuencia(sam_saa_simul_chip_last_selected-8);
 
 			}
 
 			//Si son cambios de octavas
-			if (sam_saa_chip_last_selected>=16 && sam_saa_chip_last_selected<=18) {
-				saa_establece_frecuencia(0); //Canal 0
-				saa_establece_frecuencia(1); //Canal 1
-				saa_establece_frecuencia(2); //Canal 2
-				saa_establece_frecuencia(3); //Canal 3
-				saa_establece_frecuencia(4); //Canal 4
-				saa_establece_frecuencia(5); //Canal 5
+			if (sam_saa_simul_chip_last_selected==16) {
+				saa_simul_establece_frecuencia(0); //Canal 0. Registro 16
+				saa_simul_establece_frecuencia(1); //Canal 1. Registro 16
+			}
+			if (sam_saa_simul_chip_last_selected==17) {
+				saa_simul_establece_frecuencia(2); //Canal 2. Registro 17
+				saa_simul_establece_frecuencia(3); //Canal 3. Registro 17
+			}
+			if (sam_saa_simul_chip_last_selected==18) {
+				saa_simul_establece_frecuencia(4); //Canal 4. Registro 18
+				saa_simul_establece_frecuencia(5); //Canal 5. Registro 18
 			}
 		}
 
 		//Activacion tono o ruido
-		if (sam_saa_chip_last_selected==20 || sam_saa_chip_last_selected==21) {
+		if (sam_saa_simul_chip_last_selected==20 || sam_saa_simul_chip_last_selected==21) {
 /*
 R7 � Control del mezclador y de E/S
 D7 No utilizado
@@ -276,8 +280,8 @@ DO Tono en el canal A
 			//de momento solo tonos
 			z80_byte valor_mixer=255;
 
-			z80_byte mixer_tonos=sam_saa_chip[20];
-			z80_byte mixer_ruido=sam_saa_chip[21];
+			z80_byte mixer_tonos=sam_saa_simul_chip[20];
+			z80_byte mixer_ruido=sam_saa_simul_chip[21];
 
 			if (mixer_tonos&1) valor_mixer &=(255-1); //Canal 0 tono
 			if (mixer_tonos&2) valor_mixer &=(255-2); //Canal 1 tono

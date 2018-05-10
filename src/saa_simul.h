@@ -24,5 +24,8 @@
 
 #include "cpu.h"
 
+extern void saa_simul_write_address(z80_byte value);
+extern void saa_simul_write_data(z80_byte value);
+
 
 #endif

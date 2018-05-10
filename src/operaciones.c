@@ -71,6 +71,7 @@
 #include "baseconf.h"
 #include "zxevo.h"
 #include "settings.h"
+#include "saa_simul.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -2888,7 +2889,7 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 	}
 
 	if (puerto==0x00ff) {
-		saa_simul_write_data(value);
+		saa_simul_write_data(value); 
 	}
 
 }
