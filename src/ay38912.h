@@ -87,4 +87,6 @@ extern void set_total_ay_chips(int total);
 
 extern int ay_chip_selected;
 
+extern int ay_retorna_frecuencia(int registro,int chip);
+
 #endif

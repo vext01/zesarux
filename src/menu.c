@@ -5545,22 +5545,7 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 	}
 }
 
-int retorna_frecuencia(int registro,int chip)
-{
-        int freq_temp;
-	int freq_tono;
-        freq_temp=ay_3_8912_registros[chip][registro*2]+256*(ay_3_8912_registros[chip][registro*2+1] & 0x0F);
-        //printf ("Valor freq_temp : %d\n",freq_temp);
-        freq_temp=freq_temp*16;
 
-
-        //controlamos divisiones por cero
-        if (!freq_temp) freq_temp++;
-
-        freq_tono=FRECUENCIA_AY/freq_temp;
-
-	return freq_tono;
-}
 
 int menu_breakpoints_cond(void)
 {
@@ -10344,9 +10329,9 @@ void menu_ay_registers_overlay(void)
 
 
 
-			int freq_a=retorna_frecuencia(0,chip);
-			int freq_b=retorna_frecuencia(1,chip);
-			int freq_c=retorna_frecuencia(2,chip);
+			int freq_a=ay_retorna_frecuencia(0,chip);
+			int freq_b=ay_retorna_frecuencia(1,chip);
+			int freq_c=ay_retorna_frecuencia(2,chip);
 			sprintf (textotono,"Channel A:  %3s %7d Hz",get_note_name(freq_a),freq_a);
 			menu_escribe_linea_opcion(linea++,-1,1,textotono);
 
@@ -10977,9 +10962,9 @@ void menu_ay_pianokeyboard_overlay(void)
 	for (chip=0;chip<total_chips;chip++) {
 
 
-			int freq_a=retorna_frecuencia(0,chip);
-			int freq_b=retorna_frecuencia(1,chip);
-			int freq_c=retorna_frecuencia(2,chip);
+			int freq_a=ay_retorna_frecuencia(0,chip);
+			int freq_b=ay_retorna_frecuencia(1,chip);
+			int freq_c=ay_retorna_frecuencia(2,chip);
 
 			char nota_a[4];
 			sprintf(nota_a,"%s",get_note_name(freq_a) );

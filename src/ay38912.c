@@ -110,7 +110,7 @@ procedente de la impresora puede ser leido en el bit 0 de la direccion OFFDh (40
 */
 
 #include <stdio.h>
-#include <math.h>
+//#include <math.h>
 
 
 #include "ay38912.h"
@@ -1059,4 +1059,23 @@ void activa_ay_chip_si_conviene(void)
 			ay_chip_present.v=1;
 		}
 	}
+}
+
+
+//Retorna la frecuencia de un registro concreto del chip AY de sonido
+int ay_retorna_frecuencia(int registro,int chip)
+{
+        int freq_temp;
+	int freq_tono;
+        freq_temp=ay_3_8912_registros[chip][registro*2]+256*(ay_3_8912_registros[chip][registro*2+1] & 0x0F);
+        //printf ("Valor freq_temp : %d\n",freq_temp);
+        freq_temp=freq_temp*16;
+
+
+        //controlamos divisiones por cero
+        if (!freq_temp) freq_temp++;
+
+        freq_tono=FRECUENCIA_AY/freq_temp;
+
+	return freq_tono;
 }
