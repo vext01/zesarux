@@ -58,7 +58,7 @@ int saa_simul_calcular_frecuencia(int freq, int octava)
 
 	int frecuencia_final=freq*multiplicador_octava;
 
-	printf ("freq: %d octava: %d frecuencia final: %d Hz\n",freq,octava,frecuencia_final);
+	//printf ("freq: %d octava: %d frecuencia final: %d Hz\n",freq,octava,frecuencia_final);
 
 	return frecuencia_final;
 }
@@ -101,7 +101,7 @@ void saa_simul_establece_frecuencia(z80_byte canal)
 
 	int registro_ay=canal*2;
 
-	printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
+	//printf ("frecuencia final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro);
 
 
 	out_port_ay(65533,registro_ay);
@@ -177,12 +177,12 @@ void saa_simul_establece_frecuencia_ruido(void)
 
 	frecuencia_final=saa_simul_calcular_frecuencia_ruido(freq,0);
 	int frecuencia_registro_gen0=saa_simul_convert_frec_ruido_saa_ay(frecuencia_final);
-	printf ("frecuencia ruido gen0 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen0);
+	//printf ("frecuencia ruido gen0 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen0);
 
 
 	frecuencia_final=saa_simul_calcular_frecuencia_ruido(freq,1);
 	int frecuencia_registro_gen1=saa_simul_convert_frec_ruido_saa_ay(frecuencia_final);
-	printf ("frecuencia ruido gen1 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen1);
+	//printf ("frecuencia ruido gen1 final: %d Hz Registro frecuencia ay: %d\n",frecuencia_final,frecuencia_registro_gen1);
 
 
 	ay_chip_selected=0;
@@ -199,7 +199,7 @@ void saa_simul_establece_frecuencia_ruido(void)
 void saa_simul_write_address(z80_byte value)
 {
 		//Seleccion registro chip sonido
-		printf ("saa_simul1099 address port. Value: %02XH\n",value);
+		//printf ("saa_simul1099 address port. Value: %02XH\n",value);
 
 		sam_saa_simul_chip_last_selected=value;
 }
@@ -208,7 +208,7 @@ void saa_simul_write_address(z80_byte value)
 void saa_simul_write_data(z80_byte value)
 {
 		//Valor registro chip sonido
-		printf ("saa_simul1099 data port. Value: %02XH\n",value);
+		//printf ("saa_simul1099 data port. Value: %02XH\n",value);
 
 		sam_saa_simul_chip[sam_saa_simul_chip_last_selected&31]=value;
 
@@ -295,7 +295,7 @@ DO Tono en el canal A
 			if (mixer_ruido&2) valor_mixer &=(255-16); //Canal 1 ruido
 			if (mixer_ruido&4) valor_mixer &=(255-32); //Canal 2 ruido
 
-			printf ("set mixer chip ay 0. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
+			//printf ("set mixer chip ay 0. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
 
 			ay_chip_selected=0;
 			out_port_ay(65533,7);
@@ -314,7 +314,7 @@ DO Tono en el canal A
                         if (mixer_ruido&16) valor_mixer &=(255-16); //Canal 1 ruido
                         if (mixer_ruido&32) valor_mixer &=(255-32); //Canal 2 ruido
 
-                        printf ("set mixer chip ay 1. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
+                        //printf ("set mixer chip ay 1. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
 
                         ay_chip_selected=1;
                         out_port_ay(65533,7);
