@@ -1821,12 +1821,10 @@ void realtape_get_byte_cont(void)
 
 
 
-void realtape_show_progress_counter(void)
+void realtape_print_footer(void)
 {
-        //Si ha pasado 1 segundo
-        //TODO
-
-
+        if (realtape_inserted.v==0 || realtape_playing.v==0) return;
+        
         long int total=realtape_file_size;
         long int transcurrido=realtape_file_size_counter;
 
@@ -1838,13 +1836,28 @@ void realtape_show_progress_counter(void)
         if (progreso>100) progreso=100;
 
         printf ("progreso %d %%\n",progreso);
+
+
+        char buffer_texto[33];
+
+                             //01234567890123456789012345678901
+        sprintf (buffer_texto,"RealTape Playing %d%%           ",progreso);
+	//color inverso
+	menu_putstring_footer(0,2,buffer_texto,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+}
+
+void realtape_delete_footer(void)
+{
+                           //01234567890123456789012345678901
+  menu_putstring_footer(0,2,"                                ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+  menu_footer_bottom_line();
 }
 
 void realtape_get_byte(void)
 {
 
         //Mostrar porcentaje de progreso de lectura
-        realtape_show_progress_counter();
+        //realtape_show_progress_counter();
 
 	realtape_get_byte_cont();
 	return;
@@ -2036,6 +2049,7 @@ void realtape_eject(void)
 			fclose (ptr_realtape);
 			ptr_realtape=NULL;
 		}
+                realtape_delete_footer();
 	}
 }
 

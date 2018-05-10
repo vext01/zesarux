@@ -730,6 +730,8 @@ void timer_check_interrupt(void)
 
 				rzx_print_footer();
 
+				realtape_print_footer();
+
 
 				//escritura de contenido de flash de superupgrade a disco
 				superupgrade_flush_flash_to_disk();
