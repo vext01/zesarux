@@ -133,4 +133,6 @@ extern void tape_check_known_loaders(void);
 
 extern void draw_tape_text_top_speed(void);
 
+extern void realtape_print_footer(void);
+
 #endif
