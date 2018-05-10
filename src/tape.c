@@ -1819,7 +1819,8 @@ void realtape_get_byte_cont(void)
 
 }
 
-
+//Para animar el caracter que se mueve
+int realtape_print_footer_last_char=0;
 
 void realtape_print_footer(void)
 {
@@ -1842,14 +1843,21 @@ void realtape_print_footer(void)
         char buffer_texto[33];
 
                                      //01234567890123456789012345678901
-        sprintf (buffer_texto_playing,"RealTape Playing %d%%",progreso);
+        sprintf (buffer_texto_playing,"RealTape Playing %3d%%",progreso);
         //Con indicador de progreso. 10 posiciones
         int posicion_progreso=progreso%10;
+
+        char loading_character;
+
+        if (realtape_print_footer_last_char==0) loading_character='o';
+        else loading_character='O';
+
+        realtape_print_footer_last_char ^=1;
 
         int i;
         for (i=0;i<10;i++) {
                buffer_texto_progreso[i]='.';
-               if (i==posicion_progreso) buffer_texto_progreso[i]='>';
+               if (i==posicion_progreso) buffer_texto_progreso[i]=loading_character;
         }
         buffer_texto_progreso[i]=0;
 
