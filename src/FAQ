@@ -476,7 +476,8 @@ This is why it does not sound real. In the future I will emulate the SAA1099 per
 
 Q: How can I load some turbo tapes (tzx)?
 A: Seems to be a timing bug on the Sam Coupe emulation and the ROM does not detect the right load speed. But you can change manually
-the cpu speed (from menu->settings->cpu) to 2x or 4x, most of these demos use these loading speeds
+the cpu speed (from menu->settings->cpu) to 2x or 4x, most of these demos use these loading speeds. But keep also in mind that some loading tapes recorded, for example,
+at 400% speed, need 2X turbo setting (not 4X)
 
 ----------------------------------------------------------------------------
 
