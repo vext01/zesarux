@@ -55,15 +55,6 @@ Drivers audio:
 -probar snaps de spectrum, zx80, zx81, z88. Cargar y grabar. .zx, .o, .p, .z80, solo carga: .z81, .sna. En grabar, generar los mismos p** que hay en snap_tests/ en una carpeta temporal y luego probar a cargarlos (desde zesarux, fuse y eightyone). Probar snaps grabados en otros emuladores: Fuse, Eightyone, etc. 
 -probar cintas. Cargar cinta con formato tap, tzx. Grabar cinta con comando save en tap, tzx, p, o
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
--probar archivos zip, tar, rar, gz
--probar cambiando rutas a sox, unzip, etc...
-
--probar diferentes cargas, a continuacion, hay ejemplos en carpeta snap_tests y tambien alguno suelto, como canciones.smp y orquesta.smp
-*probar carga binaria (tape) smp,wav en spectrum
-*probar carga binaria (tape) smp,wav,rwa en zx80
-*probar carga binaria (tape) smp,wav,rwa en zx81: con audio real, con save desde basic y aofile (wav y rwa), con rutina de conversion de .p a rwa en real tape
-*probar carga realtape : spectrum: smp,wav. zx80: smp,wav,rwa,o. zx81: smp,wav,rwa
-
 
 -probar activando ssl
 -probar azerty. se puede probar pulsando guion o cedilla
@@ -103,7 +94,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
 -probar Timex. Tests, carga trap, grabar tap
 -Probar Prism: extras/media/spectrum/prism/allvideotests.tap. Tests de chloe. Failsafe mode. Modos lineales de video extras/media/spectrum/prism/linear_modes/
--Probar TBBlue. Copper
+-Probar TBBlue. Copper ok
 -Probar Amstrad cpc. Todas teclas
 -Probar Sam Coupe. Todas teclas. Probar atomlite
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS

@@ -650,4 +650,6 @@ extern int input_file_keyboard_is_playing(void);
 
 extern z80_bit input_file_keyboard_playing;
 
+extern void convert_to_rwa_common_tmp(char *origen, char *destino);
+
 #endif

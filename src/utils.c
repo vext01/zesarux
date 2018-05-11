@@ -6943,7 +6943,7 @@ int convert_smp_to_rwa(char *origen, char *destino)
         FILE *ptr_destino;
         ptr_destino=fopen(destino,"wb");
         if (ptr_destino==NULL) {
-		debug_printf (VERBOSE_ERR,"Error creating target file");
+		debug_printf (VERBOSE_ERR,"Error creating target file: %s",destino);
 		return 1;
 	}
 
@@ -7165,7 +7165,7 @@ Each pulse is split into a 150us High period, and 150us Low period. The duration
         FILE *ptr_destino;
         ptr_destino=fopen(destino,"wb");
         if (ptr_destino==NULL) {
-                debug_printf (VERBOSE_ERR,"Error creating target file");
+                debug_printf (VERBOSE_ERR,"Error creating target file: %s",destino);
                 return 1;
         }
 
@@ -7371,7 +7371,7 @@ int convert_tap_to_rwa(char *origen, char *destino)
         FILE *ptr_destino;
         ptr_destino=fopen(destino,"wb");
         if (ptr_destino==NULL) {
-                debug_printf (VERBOSE_ERR,"Error creating target file");
+                debug_printf (VERBOSE_ERR,"Error creating target file: %s",destino);
                 return 1;
         }
 
