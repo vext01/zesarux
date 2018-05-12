@@ -369,7 +369,7 @@ int tap_open(void)
 	tape_block_open();
 
 
-	if (noautoload.v==0) {
+	if (noautoload.v==0 && !MACHINE_IS_TBBLUE) { //TODO: desactivamos autoload en TBBLUE
 		debug_printf (VERBOSE_INFO,"Restarting autoload");
 		initial_tap_load.v=1;
 		initial_tap_sequence=0;
@@ -2044,7 +2044,7 @@ void realtape_insert(void)
 	if (autodetect_rainbow.v) enable_rainbow();
 
 
-        if (noautoload.v==0) {
+        if (noautoload.v==0 && !MACHINE_IS_TBBLUE) { //TODO: desactivamos autoload en TBBLUE
                 debug_printf (VERBOSE_INFO,"Restarting autoload");
                 initial_tap_load.v=1;
                 initial_tap_sequence=0;

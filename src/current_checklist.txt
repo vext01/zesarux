@@ -57,12 +57,9 @@ Drivers audio:
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
 
 -probar activando ssl
--probar azerty. se puede probar pulsando guion o cedilla
 
 -probar visualmem, en drivers no graficos como curses, aa, etc
 -probar waveform, en drivers no graficos como curses, aa, etc
--ver paletas de colores
--probar menus ayudas. 
 -probar menu de stdout
 -probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
 -probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx
@@ -75,18 +72,14 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar footer en xwindows, sdl, fbdev,curses. con y sin border. en spectrum, zx80/81 y z88
 -probar on screen keyboard con joystick
 -probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
--probar teclas en menu especiales, en spectrum, zx8081 , z88, cpc y sam :  .  , : / - + < > = ' ( ) "   ( ',' y "'" en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB). en driver xwindow y curses, para cada maquina (total: 6 pruebas)
 -probar rutinas autodeteccion caracteres: algunos de sslfunctions, otro no listado (como Spiderman o masters of the universe), hobbit (usa dos rutinas de caracteres). probar con stdout y xwindows, sdl, etc. probar --enableprintchartrap y --disableprintchartrap en stdout y xwindows
 -probar speech: texto a speech linux, mac os, windows. ruta a --textspeechprogram relativa y absoluta
 -probar speech en stdout
 -probar F4 (pantalla a speech) en Spectrum (con texto normal y graficos), Z88, ZX81 (con y sin rainbow, y con texto normal y con graficos->4 combinaciones). ZX80
 -probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
 -probar menu file utilities
--probar modos ULA Plus: rgb estandard, modo 3 radastan, modos ZEsarUX. modos ham (cambio rapido de paleta por interrupciones) multicolor demo, etc. hardware scroll radastan+zxuno
--probar View Basic: ZX80, ZX81, Spectrum
--probar emulator speed
--probar turbo mode. manual y en zxuno, prism, chloe y tbblue
--probar top speed, con threads y sin threads
+-probar turbo mode. y en prism, chloe y tbblue
+-probar top speed, con threads y sin threads. Probado en Mac
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
 
@@ -94,9 +87,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
 -probar Timex. Tests, carga trap, grabar tap
 -Probar Prism: extras/media/spectrum/prism/allvideotests.tap. Tests de chloe. Failsafe mode. Modos lineales de video extras/media/spectrum/prism/linear_modes/
--Probar TBBlue. Copper ok
 -Probar Amstrad cpc. Todas teclas
--Probar Sam Coupe. Todas teclas. Probar atomlite
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
 -Probar MK14
 

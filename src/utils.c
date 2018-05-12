@@ -4090,7 +4090,7 @@ z80_bit quickload_guessing_tzx_type={0};
 
 void quickload_standard_tape(char *nombre)
 {
-                if (noautoload.v==0) {
+                if (noautoload.v==0 && !MACHINE_IS_TBBLUE) { //TODO: desactivamos autoload en TBBLUE
 
 			//De momento sam coupe solo carga en real tape
 			if (MACHINE_IS_SAM) {

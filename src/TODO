@@ -36,6 +36,12 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+
+-TBBlue: autoload.  Se desactivo en la 7.0 porque al hacer autoload, hace reset, y luego suele fallar el arranque con error: Bad nextmmc.rom
+Ademas, el envio de enter para ir al cargador , tiene que ser mejor: flecha arriba 2 veces, luego enter, pues cambiaron el orden de dicho menu
+
+-fast load "" deberia tambien hacerlo cuando se inserta real tape
+
 -Conversor tzx a tap para tzx de tipo solo binario
 También de tap a tzx
 En menú file útils
