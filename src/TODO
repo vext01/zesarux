@@ -42,6 +42,8 @@ Ademas, el envio de enter para ir al cargador , tiene que ser mejor: flecha arri
 
 -fast load "" deberia tambien hacerlo cuando se inserta real tape
 
+-Prism: opcion de timex real 512x192 no tiene sentido, ya que siempre lo hace real al ser la pantalla siempre de 512 de ancho..?
+
 -Conversor tzx a tap para tzx de tipo solo binario
 También de tap a tzx
 En menú file útils

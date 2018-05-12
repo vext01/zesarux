@@ -78,7 +78,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar F4 (pantalla a speech) en Spectrum (con texto normal y graficos), Z88, ZX81 (con y sin rainbow, y con texto normal y con graficos->4 combinaciones). ZX80
 -probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
 -probar menu file utilities
--probar turbo mode. y en prism, chloe y tbblue
+-probar turbo mode. chloe 
 -probar top speed, con threads y sin threads. Probado en Mac
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
@@ -86,7 +86,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
 -probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
 -probar Timex. Tests, carga trap, grabar tap
--Probar Prism: extras/media/spectrum/prism/allvideotests.tap. Tests de chloe. Failsafe mode. Modos lineales de video extras/media/spectrum/prism/linear_modes/
 -Probar Amstrad cpc. Todas teclas
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
 -Probar MK14
