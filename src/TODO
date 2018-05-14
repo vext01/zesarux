@@ -36,6 +36,7 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+-esc en curses parece que no va ni en mac ni en linux
 
 -TBBlue: autoload.  Se desactivo en la 7.0 porque al hacer autoload, hace reset, y luego suele fallar el arranque con error: Bad nextmmc.rom
 Ademas, el envio de enter para ir al cargador , tiene que ser mejor: flecha arriba 2 veces, luego enter, pues cambiaron el orden de dicho menu
