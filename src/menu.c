@@ -24559,6 +24559,7 @@ void menu_interface_fullscreen(MENU_ITEM_PARAMETERS)
 		scr_reset_fullscreen();
 	}
 
+	clear_putpixel_cache();
 	menu_init_footer();
 
 }
