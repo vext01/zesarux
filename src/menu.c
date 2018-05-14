@@ -25077,6 +25077,7 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
 
 
 	screen_set_window_zoom(temp_zoom);
+	clear_putpixel_cache();
 
 }
 
