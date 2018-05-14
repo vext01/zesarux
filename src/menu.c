@@ -24610,7 +24610,9 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
         scr_init_pantalla();
         debug_printf(VERBOSE_INFO,"Creating Screen");
 
+	clear_putpixel_cache();
 	menu_init_footer();
+	
 }
 
 
@@ -25031,8 +25033,9 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
         scr_init_pantalla();
 
 
-	if (menu_footer) menu_init_footer();
 	clear_putpixel_cache();
+	if (menu_footer) menu_init_footer();
+
 
 }
 
