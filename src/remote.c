@@ -699,6 +699,7 @@ struct s_items_ayuda
 struct s_items_ayuda items_ayuda[]={
 
   {"about",NULL,NULL,"Shows about message"},
+  {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
   {"disable-breakpoint","|db","index","Disable specific breakpoint"},
@@ -3190,6 +3191,10 @@ char buffer_retorno[2048];
 	else if (comando_sin_parametros[0]=='A' && comando_sin_parametros[1]=='T' && comando_sin_parametros[2]=='D' && comando_sin_parametros[3]=='T') {
 		escribir_socket (misocket,"NO CARRIER");
 	}
+
+  else if (!strcmp(comando_sin_parametros,"cpu-panic")) {
+    cpu_panic(parametros);
+  }
 
   else if (!strcmp(comando_sin_parametros,"cpu-step") || !strcmp(comando_sin_parametros,"cs")) {
     remote_cpu_step(misocket);
