@@ -26,7 +26,7 @@ Drivers video:
 **en fbdev, probar tambien con --no-use-ttyfbdev y --no-use-ttyrawfbdev y --decimal-full-scale-fbdev
 **probar recreated. ok cocoa,sdl
 
-ok xwindows, sdl
+ok xwindows, sdl1
 
 -probar desactivando xextensions en configure con --disable-xext
 -probar desactivando algun driver de video en compilacion, como x11, y ver que funcionan los otros
@@ -60,17 +60,15 @@ Drivers audio:
 
 -probar activando ssl
 
--probar visualmem, en drivers no graficos como curses, aa, etc
--probar waveform, en drivers no graficos como curses, aa, etc
 -probar menu de stdout
 -probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
 -probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
 -probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
--probar remote command protocol ZRCP, en windows
+-probar remote command protocol ZRCP en windows
 -probar todas opciones de menu en general
--probar fallback de drivers graficos y de sonido
+-probar fallback de drivers de sonido
 -probar footer en fbdev,curses
 -probar on screen keyboard con joystick
 -probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
