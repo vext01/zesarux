@@ -25032,6 +25032,7 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 
 
 	if (menu_footer) menu_init_footer();
+	clear_putpixel_cache();
 
 }
 
