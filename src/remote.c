@@ -699,7 +699,7 @@ struct s_items_ayuda
 struct s_items_ayuda items_ayuda[]={
 
   {"about",NULL,NULL,"Shows about message"},
-  {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text"},
+  {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
   {"disable-breakpoint","|db","index","Disable specific breakpoint"},
@@ -3193,7 +3193,11 @@ char buffer_retorno[2048];
 	}
 
   else if (!strcmp(comando_sin_parametros,"cpu-panic")) {
-    cpu_panic(parametros);
+	//Entramos en el mismo modo que cpu-step para poder congelar la emulacion
+	remote_cpu_enter_step(misocket);
+	if (menu_event_remote_protocol_enterstep.v==0) return;
+
+	cpu_panic(parametros);
   }
 
   else if (!strcmp(comando_sin_parametros,"cpu-step") || !strcmp(comando_sin_parametros,"cs")) {
