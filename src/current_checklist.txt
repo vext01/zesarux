@@ -24,9 +24,9 @@ Drivers video:
 **en aa, caca probar mensajes debug
 **en stdout, probar con modo traprst16 y modo autoredraw
 **en fbdev, probar tambien con --no-use-ttyfbdev y --no-use-ttyrawfbdev y --decimal-full-scale-fbdev
-**probar recreated. ok cocoa
+**probar recreated. ok cocoa,sdl
 
-ok xwindows
+ok xwindows, sdl
 
 -probar desactivando xextensions en configure con --disable-xext
 -probar desactivando algun driver de video en compilacion, como x11, y ver que funcionan los otros
@@ -43,10 +43,10 @@ Drivers audio:
 ***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
 
 -probar targets:
-* linux 32 bits
+* linux 32 bits ok
 * linux 64 bits
 * raspberry. y activando extensiones raspberry
-* mac os x, con opengl y sin
+* mac os x, con opengl ok y sin
 * windows mingw, con y sin pthreads
 * windows cygwin
 
@@ -68,10 +68,10 @@ Drivers audio:
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
 -probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
--probar remote command protocol ZRCP, en linux, y windows
+-probar remote command protocol ZRCP, en windows
 -probar todas opciones de menu en general
 -probar fallback de drivers graficos y de sonido
--probar footer en xwindows, sdl, fbdev,curses. con y sin border. en spectrum, zx80/81 y z88
+-probar footer en fbdev,curses
 -probar on screen keyboard con joystick
 -probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
 -probar rutinas autodeteccion caracteres: algunos de sslfunctions, otro no listado (como Spiderman o masters of the universe), hobbit (usa dos rutinas de caracteres). probar con stdout y xwindows, sdl, etc. probar --enableprintchartrap y --disableprintchartrap en stdout y xwindows
@@ -81,8 +81,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
 -probar menu file utilities
 -probar top speed, con threads y sin threads. Probado en Mac
-
--keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
 
 -probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
 -probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
