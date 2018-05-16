@@ -738,6 +738,9 @@ struct s_items_ayuda items_ayuda[]={
   {"get-registers","|gr",NULL,"Get CPU registers"},
 	{"get-stack-backtrace",NULL,"[items]","Get last 16-bit values from the stack. If no items parameter, it shows 5 by default"},
 	  {"get-version",NULL,NULL,"Shows emulator version"},
+
+	{"get-video-driver",NULL,NULL,"Shows current video driver"},
+
 #ifdef EMULATE_VISUALMEM
   {"get-visualmem-written-dump","|gvmwd","[compact]","Dumps all the visual memory written positions and values. Then, clear its contents. If parameter compact, will compress non zero values on the same line, for a maximum of 16"},
   {"get-visualmem-read-dump","|gvmrd","[compact]","Dumps all the visual memory read positions and values. Then, clear its contents. If parameter compact, will compress non zero values on the same line, for a maximum of 16"},
@@ -3577,6 +3580,11 @@ char buffer_retorno[2048];
 
 	else if (!strcmp(comando_sin_parametros,"get-version")) {
 		escribir_socket (misocket,EMULATOR_VERSION);
+	}
+
+
+	else if (!strcmp(comando_sin_parametros,"get-video-driver")) {
+                escribir_socket (misocket,scr_driver_name);
 	}
 
 #ifdef EMULATE_VISUALMEM
