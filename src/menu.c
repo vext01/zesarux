@@ -1985,7 +1985,6 @@ void menu_init_footer(void)
 //funcion para limpiar el buffer de overlay y si hay cuadrado activo
 void cls_menu_overlay(void)
 {
-	//clear_putpixel_cache();
 
 	int i;
 	for (i=0;i<32*24;i++) {
@@ -2018,25 +2017,15 @@ void menu_set_menu_abierto(int valor)
 {
 
         menu_abierto=valor;
-        //dado que al cambiar esto hay cambio de color oscuro/normal, hay que vaciar putpixel cache
-        //Si no, al refrescar pantalla previamente, si estaba sin modo color oscuro,
-                //se refresca con color normal, pero luego, si se llama aqui con color oscuro,
-                //en el putpixel cache habran muchos colores que coinciden (a nivel de color indexado es el mismo)
-                //solo que antes estaba un color normal y ahora es oscuro, y entonces el sistema de putpixel
-                //no volvera a hacer putpixel de esos colores
-
-        //clear_putpixel_cache();
 }
 
-//refresco de pantalla, limpiando cache putpixel al final, y avisando cambio de border, 
-//para que no haya problemas de colores oscuros que aparecen en el menu
+//refresco de pantalla, avisando cambio de border, 
 void menu_refresca_pantalla(void)
 {
 
 	modificado_border.v=1;
     all_interlace_scr_refresca_pantalla();
 
-     //clear_putpixel_cache();
 }
 
 //Borra la pantalla del menu, refresca la pantalla de spectrum
@@ -4773,7 +4762,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 					//es la propia funcion que llama la que se encarga (al principio) de dibujar la ventana
 
 					//cls_menu_overlay(); 
-					//clear_putpixel_cache();
 
 					//menu_generic_message("Help",texto_ayuda);
 
@@ -4984,10 +4972,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//Esperar no tecla
 				menu_espera_no_tecla();
 
-			        //Desde los cambios de speech en menu, hace falta esto
-				//Sino, lo que se vea en el fondo del spectrum y se este modificando,
-				//se sobreescribe en el menu
-			        //clear_putpixel_cache();
 
 				//Y volver a decir "active item"
 				menu_active_item_primera_vez=1;
@@ -7260,9 +7244,6 @@ void menu_debug_registers_if_cls(void)
 
 		menu_refresca_pantalla();
 
-		//NOTA: Si no se hace esto, en modos zx80/81, se queda en color oscuro el texto de la ventana
-		//porque? no estoy seguro, pero es necesario esto
-		//clear_putpixel_cache();
 	}
 
 }
@@ -16753,13 +16734,6 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 	//Evitar que se pueda llamar al mismo osd desde aqui dentro
 	int antes_osd_kb_no_mostrar_desde_menu=osd_kb_no_mostrar_desde_menu;
 	osd_kb_no_mostrar_desde_menu=1;
-
-	//clear_putpixel_cache();
-        //TODO: Si no se pone clear_putpixel_cache,
-        //al aparecer desde maquina zx80/81 desde menu, el texto se fusiona con el fondo de manera casi transparente,
-        //como si no borrase el putpixel cache
-        //esto también sucede en otras partes del código del menú pero no se por que es
-
 
 
 	if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
@@ -28152,12 +28126,6 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 		cls_menu_overlay();
 	}
 
-	else {
-
-		//Importante que este el clear_putpixel_cache
-		//sino con modo zx8081 la ventana se ve oscuro
-		//clear_putpixel_cache();
-	}
 
 	//if (tooltip_enabled==0) cls_menu_overlay();
 

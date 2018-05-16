@@ -13611,6 +13611,14 @@ Al cambiar por ejemplo footer, se cierra y se abre driver de video. Si no hay re
 al abrir la ventana se genera una ventana con fondo negro. Dado que la putpixel cache no habria cambiado, no se refresca,
 y por tanto se queda en negro. Esto pasa al cambiar otros parametros tambien de la ventana, como al cambiar zoom por ejemplo
 */
+
+/*
+Nota: antes de usar esta funcion, sucedia por ejemplo que, al desactivar/activar footer, se hacia scr_end_pantalla y scr_init_pantalla,
+generalmente el driver xwindows, genera un evento de scrxwindows_resize, que a su vez, generaba un clear_putpixel_cache, por lo que todo iba bien
+Pero a veces, en concreto en mi pc (quiza dependa de la version de Xorg) no genera dicho evento, con lo que no se hacia clear_putpixel_cache,
+dejando la ventana en negro como se comenta antes
+*/
+
 int screen_init_pantalla_and_others(void)
 {
 	int retorno=scr_init_pantalla();
