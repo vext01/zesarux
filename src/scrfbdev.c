@@ -467,7 +467,7 @@ void scrfbdev_refresca_pantalla(void)
 
 void scrfbdev_set_fullscreen(void)
 {
-	//debug_printf (VERBOSE_ERR,"Full screen mode not supported on this video driver");
+	//debug_printf (VERBOSE_ERR,"fbdev: Full screen mode not supported on this video driver");
 
 	scrfbdev_end();
 	ventana_fullscreen=1;
@@ -479,7 +479,7 @@ void scrfbdev_set_fullscreen(void)
 
 void scrfbdev_reset_fullscreen(void)
 {
-	//debug_printf (VERBOSE_ERR,"Full screen mode not supported on this video driver");
+	//debug_printf (VERBOSE_ERR,"fbdev: Full screen mode not supported on this video driver");
 
 	scrfbdev_end();
 	ventana_fullscreen=0;
@@ -501,7 +501,7 @@ int fbdev_setvt(int vtno)
 
 	if (vtno < 0) {
 		if (-1 == ioctl(fbdev_tty,VT_OPENQRY, &vtno) || vtno == -1) {
-			debug_printf(VERBOSE_ERR,"ioctl VT_OPENQRY");
+			debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_OPENQRY");
 			return 1;
 		}
 	}
@@ -510,21 +510,21 @@ int fbdev_setvt(int vtno)
 	sprintf(vtname, devices->ttynr, vtno);
 	chown(vtname, getuid(), getgid());
 	if (-1 == access(vtname, R_OK | W_OK)) {
-		debug_printf(VERBOSE_ERR,"access %s: %s\n",vtname,strerror(errno));
+		debug_printf(VERBOSE_ERR,"fbdev: access %s: %s\n",vtname,strerror(errno));
 		return 1;
 	}
 
 	if (-1 == ioctl(fbdev_tty,VT_GETSTATE, &vts)) {
-		debug_printf(VERBOSE_ERR,"ioctl VT_GETSTATE");
+		debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_GETSTATE");
 		return 1;
 	}
 	//orig_vt_no = vts.v_active;
 	if (-1 == ioctl(fbdev_tty,VT_ACTIVATE, vtno)) {
-		debug_printf(VERBOSE_ERR,"ioctl VT_ACTIVATE");
+		debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_ACTIVATE");
 		return 1;
 	}
 	if (-1 == ioctl(fbdev_tty,VT_WAITACTIVE, vtno)) {
-		debug_printf(VERBOSE_ERR,"ioctl VT_WAITACTIVE");
+		debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_WAITACTIVE");
 		return 1;
 	}
 
@@ -537,15 +537,15 @@ static int fbdev_activate_current(int tty)
 	struct vt_stat vts;
 
 	if (-1 == ioctl(tty,VT_GETSTATE, &vts)) {
-		debug_printf(VERBOSE_ERR,"ioctl VT_GETSTATE");
+		debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_GETSTATE");
 		return 1;
 	}
 	if (-1 == ioctl(tty,VT_ACTIVATE, vts.v_active)) {
-		debug_printf(VERBOSE_ERR,"ioctl VT_ACTIVATE");
+		debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_ACTIVATE");
 		return 1;
 	}
 	if (-1 == ioctl(tty,VT_WAITACTIVE, vts.v_active)) {
-		debug_printf(VERBOSE_ERR,"ioctl VT_WAITACTIVE");
+		debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_WAITACTIVE");
 		return 1;
 	}
 	return 0;
@@ -580,7 +580,7 @@ void scrfbdev_end(void)
 
 		if (fbdev_sends_release.v) {
 			if (ioctl(0, KDSKBMODE, fbdev_initial_tty_mode)) {
-				debug_printf(VERBOSE_ERR,"Couldn't restore tty original mode");
+				debug_printf(VERBOSE_ERR,"fbdev: Couldn't restore tty original mode");
 			}
 		}
 
@@ -592,7 +592,7 @@ void scrfbdev_end(void)
 	 * struct termios termios_valores;
 	 * if (tcgetattr(fbdev_tty,&termios_valores)==-1)
 	 * {
-	 * debug_printf(VERBOSE_ERR,"couldn't set tty raw mode");
+	 * debug_printf(VERBOSE_ERR,"fbdev: couldn't set tty raw mode");
 	 * //return 1;
 }
 
@@ -600,7 +600,7 @@ fbdev_tty_makecooked(&termios_valores);
 
 
 if (tcsetattr(fbdev_tty, TCSANOW, &termios_valores)==-1) {
-	debug_printf(VERBOSE_ERR,"couldn't set tty raw mode");
+	debug_printf(VERBOSE_ERR,"fbdev: couldn't set tty raw mode");
 	//return 1;
 }
 */
@@ -1626,7 +1626,7 @@ int fbdev_init_tty(void)
 	struct vt_stat vts;
 
 	if (-1 == ioctl(fbdev_tty,VT_GETSTATE, &vts)) {
-		debug_printf(VERBOSE_ERR,"ioctl VT_GETSTATE: %s (not a linux console?)",strerror(errno));
+		debug_printf(VERBOSE_ERR,"fbdev: ioctl VT_GETSTATE: %s (not a linux console?)",strerror(errno));
 		return 1;
 	}
 
@@ -1638,7 +1638,7 @@ int fbdev_init_tty(void)
 	int flags;
 	if((flags=fcntl(fbdev_tty,F_GETFL))==-1)
 	{
-		debug_printf(VERBOSE_ERR,"couldn't get flags from tty device: %s",strerror(errno));
+		debug_printf(VERBOSE_ERR,"fbdev: couldn't get flags from tty device: %s",strerror(errno));
 		return 1;
 	}
 
@@ -1652,7 +1652,7 @@ int fbdev_init_tty(void)
 
 	if(fcntl(fbdev_tty,F_SETFL,flags)==-1)
 	{
-		debug_printf(VERBOSE_ERR,"couldn't set tty device non-blocking: %s",strerror(errno));
+		debug_printf(VERBOSE_ERR,"fbdev: couldn't set tty device non-blocking: %s",strerror(errno));
 		return 1;
 	}
 
@@ -1661,7 +1661,7 @@ int fbdev_init_tty(void)
 
 	if (tcgetattr(fbdev_tty,&termios_valores)==-1)
 	{
-		debug_printf(VERBOSE_ERR,"couldn't set tty raw mode");
+		debug_printf(VERBOSE_ERR,"fbdev: couldn't set tty raw mode");
 		return 1;
 	}
 
@@ -1672,7 +1672,7 @@ int fbdev_init_tty(void)
 
 
 	if (tcsetattr(fbdev_tty, TCSANOW, &termios_valores)==-1) {
-		debug_printf(VERBOSE_ERR,"couldn't set tty raw mode");
+		debug_printf(VERBOSE_ERR,"fbdev: couldn't set tty raw mode");
 		return 1;
 	}
 
@@ -1685,14 +1685,14 @@ int fbdev_init_tty(void)
 		//printf ("poniendo terminal en modo teclado raw\n");
 
 		if (ioctl(0, KDGKBMODE, &fbdev_initial_tty_mode)) {
-			debug_printf(VERBOSE_ERR,"Couldn't get tty mode");
+			debug_printf(VERBOSE_ERR,"fbdev: Couldn't get tty mode");
 		}
 
 		else {
 
 			//establecer
 			if (ioctl(0, KDSKBMODE, K_RAW)) {
-				debug_printf(VERBOSE_ERR,"Couldn't set tty raw mode");
+				debug_printf(VERBOSE_ERR,"fbdev: Couldn't set tty raw mode");
 			}
 
 			else {
@@ -1767,7 +1767,7 @@ int scrfbdev_init (void){
 	// Open the file for reading and writing
 	fbdev_filedescriptor = open("/dev/fb0", O_RDWR);
 	if (!fbdev_filedescriptor) {
-		debug_printf(VERBOSE_ERR,"Error: cannot open framebuffer device.\n");
+		debug_printf(VERBOSE_ERR,"fbdev: Error: cannot open framebuffer device.\n");
 		return 1;
 	}
 
@@ -1775,13 +1775,13 @@ int scrfbdev_init (void){
 
 	// Get fixed screen information
 	if (ioctl(fbdev_filedescriptor, FBIOGET_FSCREENINFO, &fixinfo)) {
-		debug_printf(VERBOSE_ERR,"Error reading fixed information.");
+		debug_printf(VERBOSE_ERR,"fbdev: Error reading fixed information.");
 		return 1;
 	}
 
 	// Get variable screen information
 	if (ioctl(fbdev_filedescriptor, FBIOGET_VSCREENINFO, &varinfo)) {
-		debug_printf(VERBOSE_ERR,"Error reading variable information.");
+		debug_printf(VERBOSE_ERR,"fbdev: Error reading variable information.");
 		return 1;
 	}
 
@@ -1805,14 +1805,14 @@ int scrfbdev_init (void){
 
 		// Set variable screen information
 		if (ioctl(fbdev_filedescriptor, FBIOPUT_VSCREENINFO, &varinfo)) {
-			debug_printf(VERBOSE_ERR,"Error Setting variable information.");
+			debug_printf(VERBOSE_ERR,"fbdev: Error Setting variable information.");
 			return 1;
 		}
 
 
 		// Get fixed screen information
 		if (ioctl(fbdev_filedescriptor, FBIOGET_FSCREENINFO, &fixinfo)) {
-			debug_printf(VERBOSE_ERR,"Error reading fixed information.");
+			debug_printf(VERBOSE_ERR,"fbdev: Error reading fixed information.");
 			return 1;
 		}
 
@@ -1908,7 +1908,7 @@ int scrfbdev_init (void){
 	//Inicializar tty
 	if (!fbdev_no_uses_tty) {
 		if (fbdev_init_tty()) {
-			//debug_printf (VERBOSE_ERR,"Error initializing tty
+			//debug_printf (VERBOSE_ERR,"fbdev: Error initializing tty
 			return 1;
 		}
 	}
@@ -1924,12 +1924,12 @@ int scrfbdev_init (void){
 	//printf ("zoom_max_x: %d zoom_max_y: %d \n",zoom_max_x,zoom_max_y);
 
 	if (zoom_max_x==0 || zoom_max_y==0) {
-		debug_printf (VERBOSE_ERR,"No minimum size found");
+		debug_printf (VERBOSE_ERR,"fbdev: No minimum size found");
 		return 1;
 	}
 
 	if (zoom_x>zoom_max_x || zoom_y>zoom_max_y) {
-		debug_printf (VERBOSE_ERR,"zoom to big");
+		debug_printf (VERBOSE_ERR,"fbdev: zoom to big");
 		zoom_x=zoom_y=1;
 		set_putpixel_zoom();
 	}
@@ -1969,7 +1969,7 @@ int scrfbdev_init (void){
 			break;
 
 		default:
-			debug_printf(VERBOSE_ERR,"Bpp %d not supported\n",bpp);
+			debug_printf(VERBOSE_ERR,"fbdev: Bpp %d not supported\n",bpp);
 			return 1;
 			break;
 	}
@@ -1983,7 +1983,7 @@ int scrfbdev_init (void){
 			     fbdev_filedescriptor, 0);
 
 	if (fbdev_pointer == -1) {
-		debug_printf(VERBOSE_ERR,"Failed to mmap.\n");
+		debug_printf(VERBOSE_ERR,"fbdev: Failed to mmap.\n");
 		return 1;
 	}
 
