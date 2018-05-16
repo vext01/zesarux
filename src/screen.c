@@ -10636,7 +10636,7 @@ void enable_interlace(void)
 
         video_interlaced_mode.v=1;
 
-        if (reinicia_ventana) scr_init_pantalla();
+        if (reinicia_ventana) screen_init_pantalla_and_others();
 
         set_putpixel_zoom();
 
@@ -12893,7 +12893,7 @@ void screen_set_window_zoom(int z)
 	zoom_x=zoom_y=z;
 	modificado_border.v=1;
 
-	scr_init_pantalla();
+	screen_init_pantalla_and_others();
 	set_putpixel_zoom();
 
 
