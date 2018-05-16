@@ -13607,7 +13607,7 @@ void screen_change_bw_menu_multitask(void)
 Nadie deberia llamar a scr_init_pantalla() directamente. Hay que usar esta funcion, por la razon de que:
 Al cambiar por ejemplo footer, se cierra y se abre driver de video. Si no hay resize/removimiento de ventana , lo que sucede es que
 al abrir la ventana se genera una ventana con fondo negro. Dado que la putpixel cache no habria cambiado, no se refresca,
-y por tanto se queda en negro. Esto pasa al cambiar otros parametros tambien de la ventana
+y por tanto se queda en negro. Esto pasa al cambiar otros parametros tambien de la ventana, como al cambiar zoom por ejemplo
 */
 int screen_init_pantalla_and_others(void)
 {
