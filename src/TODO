@@ -36,6 +36,9 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+-probando el test testtimexmode6.tap, sin real timex 512x192, y luego cargar un spg (digger.spg por ejemplo), da segmentation fault en mac. quiza porque esta continuamente haciendo
+clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 255,0) y ya va
+
 -esc en curses parece que no va ni en mac ni en linux
 
 -TBBlue: autoload.  Se desactivo en la 7.0 porque al hacer autoload, hace reset, y luego suele fallar el arranque con error: Bad nextmmc.rom
