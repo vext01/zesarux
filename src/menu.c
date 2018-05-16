@@ -25088,6 +25088,7 @@ void menu_interface_autoframeskip(MENU_ITEM_PARAMETERS)
 void menu_interface_show_cpu_usage(MENU_ITEM_PARAMETERS)
 {
 	screen_show_cpu_usage.v ^=1;
+	clear_putpixel_cache();
 	if (!screen_show_cpu_usage.v) menu_init_footer();
 }
 
