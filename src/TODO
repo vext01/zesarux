@@ -5,7 +5,7 @@
 En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
  
 TBBLUE:
-
+ 
 
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
