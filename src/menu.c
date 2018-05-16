@@ -24931,6 +24931,7 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 
 	modificado_border.v=1;
 
+	clear_putpixel_cache();
 	menu_init_footer();
 
 
