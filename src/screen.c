@@ -785,6 +785,8 @@ void init_cache_putpixel(void)
         alto=screen_get_window_size_height_no_zoom();
 
 
+	//El tamanyo depende del footer. Pero no del border (siempre se incluye con border)
+
 
         tamanyo=ancho*alto;
 	//para poder hacer putpixel cache con zoom y*2 y interlaced, doble de tamanyo
