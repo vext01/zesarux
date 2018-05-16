@@ -24903,6 +24903,7 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 
 	int resultado=funcion_init();
 	set_menu_gui_zoom();
+	clear_putpixel_cache();
 
                 if ( resultado == 0 ) {
                         funcion_set();
@@ -24924,6 +24925,7 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 		        funcion_set=scr_driver_array[num_previo_menu_scr_driver].funcion_set;
 
 			funcion_init();
+			clear_putpixel_cache();
 			funcion_set();
 		}
 
@@ -24931,7 +24933,6 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 
 	modificado_border.v=1;
 
-	clear_putpixel_cache();
 	menu_init_footer();
 
 
