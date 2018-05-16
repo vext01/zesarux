@@ -24608,10 +24608,11 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 	if (border_enabled.v) disable_border();
 	else enable_border();
 
-        scr_init_pantalla();
+        //scr_init_pantalla();
+	screen_init_pantalla_and_others();
+
         debug_printf(VERBOSE_INFO,"Creating Screen");
 
-	clear_putpixel_cache();
 	menu_init_footer();
 	
 }
@@ -25031,10 +25032,10 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 
         modificado_border.v=1;
         debug_printf(VERBOSE_INFO,"Creating Screen");
-        scr_init_pantalla();
+        //scr_init_pantalla();
+	screen_init_pantalla_and_others();
 
 
-	clear_putpixel_cache();
 	if (menu_footer) menu_init_footer();
 
 
@@ -25082,7 +25083,6 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
 
 
 	screen_set_window_zoom(temp_zoom);
-	clear_putpixel_cache();
 
 }
 
@@ -29151,7 +29151,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
                         funcion_set();
 		}
 
-        scr_init_pantalla();
+	screen_init_pantalla_and_others();
 	*/
 
 }

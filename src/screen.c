@@ -767,6 +767,7 @@ void init_cache_putpixel(void)
 {
 
 #ifdef PUTPIXELCACHE
+	debug_printf (VERBOSE_INFO,"Initializing putpixel_cache");
 	if (putpixel_cache!=NULL) {
 		debug_printf (VERBOSE_INFO,"Freeing previous putpixel_cache");
 		free(putpixel_cache);
@@ -8113,6 +8114,9 @@ void enable_border(void)
 	//Recalcular algunos valores cacheados
     recalcular_get_total_ancho_rainbow();
     recalcular_get_total_alto_rainbow();
+
+	//Siempre que se redimensiona tamanyo ventana (sin contar zoom) o se reinicia driver video hay que reiniciar cache putpixel
+	init_cache_putpixel();
 }
 
 void disable_border(void)
@@ -8123,6 +8127,9 @@ void disable_border(void)
 	//Recalcular algunos valores cacheados
     recalcular_get_total_ancho_rainbow();
     recalcular_get_total_alto_rainbow();
+
+	//Siempre que se redimensiona tamanyo ventana (sin contar zoom) o se reinicia driver video hay que reiniciar cache putpixel
+	init_cache_putpixel();
 }
 
 
@@ -13595,3 +13602,18 @@ void screen_change_bw_menu_multitask(void)
 
 }
 */
+
+/*
+Nadie deberia llamar a scr_init_pantalla() directamente. Hay que usar esta funcion, por la razon de que:
+Al cambiar por ejemplo footer, se cierra y se abre driver de video. Si no hay resize/removimiento de ventana , lo que sucede es que
+al abrir la ventana se genera una ventana con fondo negro. Dado que la putpixel cache no habria cambiado, no se refresca,
+y por tanto se queda en negro. Esto pasa al cambiar otros parametros tambien de la ventana
+*/
+int screen_init_pantalla_and_others(void)
+{
+	int retorno=scr_init_pantalla();
+        //Siempre que se redimensiona tamanyo ventana (sin contar zoom) o se reinicia driver video hay que reiniciar cache putpixel
+        init_cache_putpixel();
+
+	return retorno;
+}

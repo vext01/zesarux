@@ -729,5 +729,7 @@ extern int screen_get_x_coordinate_tstates(int *si_salta_linea);
 
 extern int screen_get_y_coordinate_tstates(void);
 
+extern int screen_init_pantalla_and_others(void);
+
 
 #endif

@@ -3521,7 +3521,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 			debug_printf(VERBOSE_INFO,"End Screen");
 			scr_end_pantalla();
 			debug_printf(VERBOSE_INFO,"Creating Screen");
-			scr_init_pantalla();
+			screen_init_pantalla_and_others();
+			//scr_init_pantalla();
 			return;
 		}
 	}
@@ -3537,7 +3538,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 															debug_printf(VERBOSE_INFO,"End Screen");
 															scr_end_pantalla();
 															debug_printf(VERBOSE_INFO,"Creating Screen");
-															scr_init_pantalla();
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
 															return;
 											}
 							}
@@ -3552,7 +3554,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 															debug_printf(VERBOSE_INFO,"End Screen");
 															scr_end_pantalla();
 															debug_printf(VERBOSE_INFO,"Creating Screen");
-															scr_init_pantalla();
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
 															return;
 											}
 							}
@@ -3567,7 +3570,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 															debug_printf(VERBOSE_INFO,"End Screen");
 															scr_end_pantalla();
 															debug_printf(VERBOSE_INFO,"Creating Screen");
-															scr_init_pantalla();
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
 															return;
 											}
 							}
@@ -3584,7 +3588,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 															debug_printf(VERBOSE_INFO,"End Screen");
 															scr_end_pantalla();
 															debug_printf(VERBOSE_INFO,"Creating Screen");
-															scr_init_pantalla();
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
 															return;
 											}
 							}
@@ -3600,7 +3605,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 															debug_printf(VERBOSE_INFO,"End Screen");
 															scr_end_pantalla();
 															debug_printf(VERBOSE_INFO,"Creating Screen");
-															scr_init_pantalla();
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
 															return;
 											}
 							}
@@ -3616,7 +3622,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 															debug_printf(VERBOSE_INFO,"End Screen");
 															scr_end_pantalla();
 															debug_printf(VERBOSE_INFO,"Creating Screen");
-															scr_init_pantalla();
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
 															return;
 											}
 							}
@@ -3629,7 +3636,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 															debug_printf(VERBOSE_INFO,"End Screen");
 															scr_end_pantalla();
 															debug_printf(VERBOSE_INFO,"Creating Screen");
-															scr_init_pantalla();
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
 															return;
 											}
 							}
@@ -4333,10 +4341,10 @@ void main_init_video(void)
 
                 //no probar. Inicializar driver indicado. Si falla, fallback a null
                 else {
-                        if (scr_init_pantalla()) {
+                        if (screen_init_pantalla_and_others() ) {
                                 debug_printf (VERBOSE_ERR,"Error using video output driver %s. Fallback to null",driver_screen);
 				set_scrdriver_null();
-				scr_init_pantalla();
+				screen_init_pantalla_and_others();
                         }
                 }
 

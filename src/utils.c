@@ -7645,7 +7645,7 @@ void parse_customfile_options(void)
 			debug_printf(VERBOSE_INFO,"End Screen");
 			scr_end_pantalla();
 			disable_border();
-			scr_init_pantalla();
+			screen_init_pantalla_and_others();
 			debug_printf(VERBOSE_INFO,"Creating Screen");
 		}
 
@@ -7653,7 +7653,7 @@ void parse_customfile_options(void)
                         debug_printf(VERBOSE_INFO,"End Screen");
                         scr_end_pantalla();
                         enable_border();
-                        scr_init_pantalla();
+			screen_init_pantalla_and_others();
                         debug_printf(VERBOSE_INFO,"Creating Screen");
                 }
 
