@@ -1167,12 +1167,14 @@ turbo modo 8 en pc=312
 	else t=8;
 
 	debug_printf (VERBOSE_INFO,"Set zxuno turbo mode %d with pc=%d",t,reg_pc);
+	//printf ("Set zxuno turbo mode %d with pc=%d\n",t,reg_pc);
 
 	if (zxuno_deny_turbo_bios_boot.v) {
 
 		if (t>1) {
-			if (reg_pc==50 || reg_pc==312) {
+			if (reg_pc==50 || reg_pc==347) {
 				debug_printf (VERBOSE_INFO,"Not changing cpu speed on zxuno bios. We dont want to use too much real cpu for this!");
+				//printf ("Not changing cpu speed on zxuno bios. We dont want to use too much real cpu for this!\n");
 				return;
 			}
 		}

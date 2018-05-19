@@ -7,27 +7,13 @@
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
 
 Drivers video:
--probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
 *por cada driver (incluido null) y con y sin pthreads:
-**probar redimensionar ventana
 **probar cambio zoom desde menu
-**probar fullscreen en aquellos que lo soportan: xwindows, fbdev, sdl, cocoa
 **probar todas maquinas. probar teclas mayus, ctrl, alt. en z88 mayus izq, der, ctrl, alt, f1, f2, f3
-**probar ocultar raton
-**probar F6, F7 en curses, caca, aa en Z88 y en Spectrum
 **probar desactivando border
-**probar desactivando footer
-**en curses, aa, caca, stdout, simpletext probar juegos para ver que tal "emula" los graficos
-**en curses, aa, caca, stdout, simpletext probar realvideo
-**en aa, caca probar mensajes debug
 **en stdout, probar con modo traprst16 y modo autoredraw
-**en fbdev, probar tambien con --no-use-ttyfbdev y --no-use-ttyrawfbdev y --decimal-full-scale-fbdev
-**probar recreated. ok cocoa,sdl,fbdev
 
 faltan stdout , simpletext, null
-
--probar desactivando xextensions en configure con --disable-xext
--probar desactivando algun driver de video en compilacion, como x11, y ver que funcionan los otros
 
 Drivers audio:
 -probar drivers sonido pulse, alsa, dsp, sdl, coreaudio, null. con y sin pthreads
@@ -63,7 +49,6 @@ Drivers audio:
 -probar remote command protocol ZRCP en windows
 -probar todas opciones de menu en general
 -probar fallback de drivers de sonido
--probar footer en fbdev,curses
 -probar on screen keyboard con joystick
 -probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
 -probar rutinas autodeteccion caracteres: algunos de sslfunctions, otro no listado (como Spiderman o masters of the universe), hobbit (usa dos rutinas de caracteres). probar con stdout y xwindows, sdl, etc. probar --enableprintchartrap y --disableprintchartrap en stdout y xwindows
@@ -72,7 +57,6 @@ Drivers audio:
 -probar F4 (pantalla a speech) en Spectrum (con texto normal y graficos), Z88, ZX81 (con y sin rainbow, y con texto normal y con graficos->4 combinaciones). ZX80
 -probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
 -probar menu file utilities
--probar top speed, con threads y sin threads. Probado en Mac
 
 -probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
 -probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
