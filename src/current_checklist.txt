@@ -13,18 +13,8 @@ Drivers video:
 **probar desactivando border
 **en stdout, probar con modo traprst16 y modo autoredraw
 
-faltan stdout , simpletext, null
+faltan stdout , simpletext, null, cocoa
 
-Drivers audio:
--probar drivers sonido pulse, alsa, dsp, sdl, coreaudio, null. con y sin pthreads
-*por cada driver (incluido null) y con y sin pthreads:
-**quitar multitask de menu
-**esperar a silencio
-**ver en todos casos usos de cpu
-**probar sonido Z88, Spectrum (beep y ay), ZX80/81 (vsync sound y ay)
-**aumentar/bajar velocidad cpu
-***usar testsound.sh
-***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
 
 -probar targets:
 * linux 32 bits ok
