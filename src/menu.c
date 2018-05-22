@@ -9994,6 +9994,7 @@ void menu_audio_draw_sound_wave(void)
 
 				char buffer_texto_medio[40];
 
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 	//esto hara ejecutar esto 2 veces por segundo
 	if ( ((contador_segundo%500) == 0 && menu_waveform_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
@@ -10001,7 +10002,7 @@ void menu_audio_draw_sound_wave(void)
 		menu_waveform_valor_contador_segundo_anterior=contador_segundo;
 		//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-		menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+		//menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 			//Average, min, max    
 
@@ -10010,16 +10011,7 @@ void menu_audio_draw_sound_wave(void)
 			menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
 
 
-			//Volume
-			/*if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
-
-			char texto_volumen[32];
-                        menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
-                                                                //"Volume C: %s"
-
-			sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
-			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);*/
-
+	
 
 			//Hacer decaer el volumen
 			//if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
@@ -10074,16 +10066,7 @@ void menu_audio_draw_sound_wave(void)
 
 	audiobuffer_stats audiostats;
 	audio_get_audiobuffer_stats(&audiostats);
-/*
-struct s_audiobuffer_stats
-{
-        int maximo;
-        int minimo;
-        int medio;
-        int frecuencia;
-        int volumen;
-};
-*/
+
 
 	menu_audio_draw_sound_wave_valor_max=audiostats.maximo;
 	menu_audio_draw_sound_wave_valor_min=audiostats.minimo;
