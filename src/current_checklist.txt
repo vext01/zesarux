@@ -23,7 +23,6 @@
 -probar on screen keyboard con joystick
 -probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
 -probar speech: texto a speech  windows. ruta a --textspeechprogram relativa y absoluta
--probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
 -probar menu file utilities
 
 -probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
