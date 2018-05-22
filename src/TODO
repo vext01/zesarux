@@ -18,12 +18,7 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 *Desactivar puertos viejos de establecer paleta sprites get/set
 
 
-Speech:
--enter le envia siempre speech pending. normal?
--probar speech, stdout driver con menu tabulado
--en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
--Tecla escape debería hacer break cuando se está escuchando speech
-O quizá setting configurable 
+
 
 -teclas F11-F15 para fbdev
 teclas F en general en fbdev driver no raw
@@ -47,6 +42,14 @@ clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 
 
 -TBBlue: autoload.  Se desactivo en la 7.0 porque al hacer autoload, hace reset, y luego suele fallar el arranque con error: Bad nextmmc.rom
 Ademas, el envio de enter para ir al cargador , tiene que ser mejor: flecha arriba 2 veces, luego enter, pues cambiaron el orden de dicho menu
+
+-menus de debug tsconf en stdout no se ven bien del todo. y en lista de sprites y tiles no se puede salir. en menu debug cpu tampoco se puede salir
+
+-Speech:
+-enter le envia siempre speech pending. normal?
+-en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
+-Tecla escape debería hacer break cuando se está escuchando speech
+O quizá setting configurable 
 
 -fast load "" deberia tambien hacerlo cuando se inserta real tape
 
