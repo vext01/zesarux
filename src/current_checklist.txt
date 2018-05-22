@@ -20,7 +20,7 @@ faltan stdout , simpletext, null, cocoa
 * linux 32 bits ok
 * linux 64 bits
 * raspberry. y activando extensiones raspberry
-* mac os x, con opengl ok y sin
+* mac os x, con opengl ok y sin ok
 * windows mingw, con y sin pthreads
 * windows cygwin
 
