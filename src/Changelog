@@ -65,6 +65,7 @@ Improved sprite viewer:
 * now can see sprites with speccy screen format
 * you can view sprites up to 512x192 
 * you can see tsconf sprites
+* you can see pseudo hires zx81 screens
 
 Improved TBBlue emulation: 
 * Added clip window registers

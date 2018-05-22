@@ -8980,6 +8980,8 @@ int view_sprites_bytes_por_linea=1;
 int view_sprites_bytes_por_ventana=1;
 int view_sprites_increment_cursor_vertical=1;
 
+z80_bit view_sprites_zx81_pseudohires={0}; //Si utiliza puntero a tabla de la rom, como los usados en juegos hires de zx81 (ejemplo rocketman)
+
 void menu_debug_draw_sprites(void)
 {
 
@@ -9036,6 +9038,20 @@ void menu_debug_draw_sprites(void)
 				//byte_leido=peek_byte_z80_moto(puntero);
 				puntero=adjust_address_memory_size(puntero);
 				byte_leido=menu_debug_get_mapped_byte(puntero);
+
+				
+
+				//Si hay puntero a valores en rom como algunos juegos pseudo hires de zx81
+				if (view_sprites_zx81_pseudohires.v) {
+					int temp_inverse=0; //si se hace inverse derivado de juegos pseudo hires de zx81
+					if (byte_leido&128) temp_inverse=1;
+
+					z80_int temp_dir=reg_i*256+(8*(byte_leido&63));
+					byte_leido=peek_byte_no_time(temp_dir);
+
+					if (temp_inverse) byte_leido ^=255;
+				}
+
 
 								//printf ("x: %d puntero: %d \n",x,puntero);
 				puntero +=view_sprite_incremento;
@@ -9204,14 +9220,6 @@ void menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alt
 }
 
 
-
-
-
-
-
-
-
-
 void menu_debug_sprites_get_parameters_hardware(void)
 {
 	if (view_sprites_hardware) {
@@ -9310,6 +9318,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
 	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
+
+		if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
 
         disable_interlace();
 
@@ -9412,9 +9422,20 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 			sprintf(mensaje_texto_hardware,"~~Hardware: %s",(view_sprites_hardware ? "Yes" : "No") );
 		}
 
+		char mensaje_texto_zx81_pseudohires[33];
+		//por defecto
+		mensaje_texto_zx81_pseudohires[0]=0;
+
+		if (MACHINE_IS_ZX8081) {
+			sprintf(mensaje_texto_zx81_pseudohires,"Ps~~eudohires: %s",(view_sprites_zx81_pseudohires.v ? "Yes" : "No") );
+		}
 		
 		sprintf(buffer_primera_linea,"~~Memptr In~~c+%d %s ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
-		sprintf(buffer_segunda_linea, "~~Inverse %s%s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save " : ""),mensaje_texto_hardware);
+		sprintf(buffer_segunda_linea, "~~Inverse %s%s%s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save " : ""),
+					mensaje_texto_hardware,mensaje_texto_zx81_pseudohires);
+
+			//0123456789012345678901234567890
+			//Inverse Save Pseudohires: Yes
 		
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_primera_linea);
@@ -9519,6 +9540,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 'h':
 									if (MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) view_sprites_hardware ^=1;
 									
+					break;
+
+					case 'e':
+						if (MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v ^=1;
 					break;
 
 					case 'i':
