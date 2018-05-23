@@ -505,8 +505,12 @@ A: Try CTRL+Space
 
 
 Q: How can I load a program from microdrive or floppy?
-A: Microdrive or floppy emulation does not work. But you can simulate the load command from ZEsarUX menu "Debug->Load binary block".
+A: Microdrive or floppy emulation it's beta. You can try by opening the Storage menu and select root folder for game/program (usually where the boot file is located) on mdv1/mdv2/flp1 settings. Some games require to use flp1, you may also select mdv1 and flp1 both to the same folder
+You can also load a game "manually", by loading the binary file from ZEsarUX menu "Debug->Load binary block".
 You must inspect the basic loader program and execute all the sentences except lbytes. lbytes must be simulated manually from that menu
+
+Q: I loaded Spook (Pacman clone) but does not seem to work. When the game appears, pressing a cursor key, restarts the game in a loop
+A: Seems to fail if sound on game is enable (by default). Disable sound on that game by pressing F3
 
 
 
