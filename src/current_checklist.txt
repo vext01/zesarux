@@ -30,7 +30,6 @@
 -probar Timex. Tests, carga trap, grabar tap
 -Probar Amstrad cpc. Todas teclas
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
--Probar MK14
 
 -probar usar extension de archivo no conocida y ver que avisa
 -probar activando funciones de captura de segmentation fault y forzando fallo
@@ -39,14 +38,6 @@
 -probar generando archivo binario y probar a ejecutar, e instalar. 
 -probar generando archivo source y probar a compilar e instalar cambiando prefix
 -probar versiones finales: binario->bajar y ejecutar, instalar. source->bajar, compilar y ejecutar, instalar.
-
-pruebas Z88:
--eprom (formatos .eprom, .epr y .63): crear eprom, agregar eprom (eprom, epr y .63), borrado eprom, copia de eprom (desde menu emulador y desde Filer), copia a eprom (desde menu emulador (y llenando la eprom hasta que no quepa mas)  y desde filer), reclaim free space eprom, undelete eprom. insertar en slot 1 o 2 (no escritura)
--flash: crear flash, agregar flash, borrar flash, copia de flash (desde menu emulador y desde Filer), copia a flash (desde menu emulador (y llenando la flash hasta que no quepa mas)  y desde filer), inicializar flash desde flashstore (y ver que la funcion de erase lo graba con FF), reclaim free space flash, undelete flash  insertar en slot 1 o 2 (no escritura)
--probar card browser con flash y eprom.
--tarjeta hibrida ram+eprom: insertar la de actualizacion a oz 4.7 a ver si la reconoce y si reconoce RAM
--grabar snaps con eproms y flash en diferentes slots
--probar en menus tarjetas de aplicaciones, archivos, desconocidas
 
 pruebas QL
 -teclado:
