@@ -4279,7 +4279,7 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 
 	else if (!strcmp(comando_sin_parametros,"tbblue-set-palette")) {
 		z80_byte index;
-		z80_byte valor;
+		z80_int valor;
 		if (parametros[0]==0) {
 			escribir_socket(misocket,"ERROR. No parameters set");
 		}
@@ -4321,7 +4321,7 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 			while (*s) {
 				valor=parse_string_to_number(s);
 
-        paleta[index++]=valor; 
+        paleta[index++]=valor & 0x1FF; 
 
 				s=find_space_or_end(s);
 			}
