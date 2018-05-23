@@ -33,6 +33,8 @@ Creo que ya esta
 
 --- Cosas para la siguiente version
 
+-con cpc464 , si redimensionando la ventana con footer desactivado, falla con segmentation fault. Probado en mac con driver COCOA(OpenGL)
+
 --fix en compilacion en mac para sistemas antiguos
 
 --machine cpc464 en aa,caca en consola de texto real da segmentation fault
