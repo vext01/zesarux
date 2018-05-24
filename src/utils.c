@@ -5378,6 +5378,29 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 
 }
 
+
+void util_set_reset_key_handle_chloe_ascii(enum util_teclas tecla,int pressrelease)
+{
+        
+                //printf ("teclado es chloe. tecla=%d\n",tecla);
+                //tecla ascii
+       //Tecla no es shift. comentario absurdo???
+                        //Ver si se pulsa o se libera
+                        if (pressrelease==0) {
+                                //Se libera
+				chloe_keyboard_pressed_tecla_ascii=0;
+                                //Liberar todas teclas de puertos
+                                reset_keyboard_ports();
+                        }
+                        else {
+                                //Se pulsa
+                                //Si solo pulsado shift pero no una tecla diferente, no hacer nada, solo activar modificador
+                                chloe_keyboard_pressed_tecla_ascii=tecla;
+                                util_set_reset_key_chloe();
+                        }
+
+}
+
 void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int pressrelease,int convertrecreated)
 {
 
@@ -5556,39 +5579,32 @@ void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int press
 
 void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 {
+        if (chloe_keyboard.v && tecla>=32 && tecla<=127) {
+                util_set_reset_key_handle_chloe_ascii(tecla,pressrelease);
+                return;
+        }
+        else {
         //printf ("util_set_reset_key tecla: %d pressrelease: %d\n",tecla,pressrelease);
-	util_set_reset_key_convert_recreated_yesno(tecla,pressrelease,1);
+       util_set_reset_key_convert_recreated_yesno(tecla,pressrelease,1);
+        }
 }
 
 void convert_numeros_letras_puerto_teclado(z80_byte tecla,int pressrelease)
 {
 
-	if (chloe_keyboard.v) {
-       //Tecla no es shift
-                        //Ver si se pulsa o se libera
-                        if (pressrelease==0) {
-                                //Se libera
-				chloe_keyboard_pressed_tecla_ascii=0;
-                                //Liberar todas teclas de puertos
-                                reset_keyboard_ports();
-                                return;
-                        }
-                        else {
-                                //Se pulsa
-                                //Si solo pulsado shift pero no una tecla diferente, no hacer nada, solo activar modificador
-                                chloe_keyboard_pressed_tecla_ascii=tecla;
-                                util_set_reset_key_chloe();
-				return;
-                        }
 
-        }
 
-	else {
+	//else {
 	        convert_numeros_letras_puerto_teclado_continue(tecla,pressrelease);
-	}
+	//}
 
 
 }
+
+
+
+
+
 
 //Retorna no 0 si hay redefinicion de tecla F (no es default)
 int util_set_reset_key_continue_f_functions(enum util_teclas tecla,int pressrelease)
