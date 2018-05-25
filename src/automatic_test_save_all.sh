@@ -12,11 +12,11 @@ fi
 for i in $SNAPTESTDIR/*.zx $SNAPTESTDIR/*.z80 $SNAPTESTDIR/*.sna $SNAPTESTDIR/*.o $SNAPTESTDIR/*.p $SNAPTESTDIR/*.sp $SNAPTESTDIR/*.zsf; do
 	echo $i
 	NOMBRE=`basename $i`
-	./zesarux --noconfigfile --enable-remoteprotocol --verbose 0 $i &
+	./zesarux --noconfigfile --enable-remoteprotocol --verbose 2 --quickexit $i &
 	PIDNUM=$!
+	sleep 3
 
-	( sleep 2 ; echo "snapshot-save /tmp/$NOMBRE" ; sleep 1 ; echo "exit-emulator" ) | telnet localhost 10000
-	sleep 1
+	( sleep 1 ; echo "snapshot-save /tmp/$NOMBRE" ; sleep 2 ; echo "exit-emulator" ) | telnet localhost 10000
 	kill $PIDNUM
 
 done

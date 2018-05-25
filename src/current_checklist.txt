@@ -7,14 +7,9 @@
 * windows mingw, con y sin pthreads
 * windows cygwin
 
--probar snaps de spectrum, zx80, zx81, z88. Cargar y grabar. .zx, .o, .p, .z80, solo carga: .z81, .sna. En grabar, generar los mismos p** que hay en snap_tests/ en una carpeta temporal y luego probar a cargarlos (desde zesarux, fuse y eightyone). Probar snaps grabados en otros emuladores: Fuse, Eightyone, etc. 
-
--probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
-
 -probar remote command protocol ZRCP en windows
 -probar fallback de drivers de sonido
 -probar on screen keyboard con joystick
--probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
 -probar speech: texto a speech  windows. ruta a --textspeechprogram relativa y absoluta
 
 -probar instalando en ruta concreta y ejecutando desde alli
