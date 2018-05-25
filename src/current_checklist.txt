@@ -2,16 +2,6 @@
 
 -probar rendimiento cpu (benchmark_raspberry.txt)
 
--probar targets:
-* linux 64 bits
-* windows mingw, con y sin pthreads
-* windows cygwin
-
--probar remote command protocol ZRCP en windows
--probar fallback de drivers de sonido
--probar on screen keyboard con joystick
--probar speech: texto a speech  windows. ruta a --textspeechprogram relativa y absoluta
-
 -probar instalando en ruta concreta y ejecutando desde alli
 -probar generando archivo binario y probar a ejecutar, e instalar. 
 -probar generando archivo source y probar a compilar e instalar cambiando prefix
