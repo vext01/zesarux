@@ -1701,7 +1701,7 @@ void instruccion_ed_163 ()
 void instruccion_ed_164 ()
 {
         if (MACHINE_IS_TBBLUE) {
-                //ED A4 As LDI, if byte == A then skips byte.
+                //LDIX    ED A4 As LDI, if byte == A then skips byte.
         //LDI
 
 /*
@@ -1868,7 +1868,7 @@ void instruccion_ed_171 ()
 void instruccion_ed_172 ()
 {
         if (MACHINE_IS_TBBLUE) {
-                //ED AC   As LDD, except DE++ and if byte == A then skips byte.
+                //LDDX    ED AC   As LDD, except DE++ and if byte == A then skips byte.
 	z80_byte byte_leido;
 
 	byte_leido=peek_byte(HL);
@@ -2248,8 +2248,8 @@ void instruccion_ed_187 ()
 void instruccion_ed_188 ()
 {
         if (MACHINE_IS_TBBLUE) {
-                //ED BC    As LDDR, except DE++ and if byte == A then skips byte.
-//LDDR
+                //LDDRX   ED BC    As LDDR, except DE++ and if byte == A then skips byte.
+
 #ifdef EMULATE_MEMPTR
         if (reg_b!=0 || reg_c!=1) set_memptr(reg_pc-1);
 #endif

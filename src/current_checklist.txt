@@ -8,22 +8,15 @@
 * windows cygwin
 
 -probar snaps de spectrum, zx80, zx81, z88. Cargar y grabar. .zx, .o, .p, .z80, solo carga: .z81, .sna. En grabar, generar los mismos p** que hay en snap_tests/ en una carpeta temporal y luego probar a cargarlos (desde zesarux, fuse y eightyone). Probar snaps grabados en otros emuladores: Fuse, Eightyone, etc. 
--probar cintas. Cargar cinta con formato tap, tzx. Grabar cinta con comando save en tap, tzx, p, o
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
 
 -probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
 
 -probar remote command protocol ZRCP en windows
--probar todas opciones de menu en general
 -probar fallback de drivers de sonido
 -probar on screen keyboard con joystick
 -probar realjoystick: probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick
 -probar speech: texto a speech  windows. ruta a --textspeechprogram relativa y absoluta
--probar menu file utilities. practicamente ya. volver a mirar
-
--probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
--probar Timex. Tests, carga trap, grabar tap
--probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
 
 -probar en general mayoria de cintas, snaps y eproms incluidas
 -probar instalando en ruta concreta y ejecutando desde alli

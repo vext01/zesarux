@@ -1,26 +1,11 @@
 --- Cosas para la version 7.0
 
--reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
+
     
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 -con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
 En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
   
-TBBLUE: 
- 
-
--tbblue extended opcodes
-https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
-revisar los que hayan cambiado.
-Faltan 2 solo, creo , y habría que eliminar los que ya no están. tanto en codpred como en disassemble
-Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar en grupo desarrollo
-
-*eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
-*y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
-*Desactivar puertos viejos de establecer paleta sprites get/set
-
-
-
 
 -teclas F11-F15 para fbdev
 teclas F en general en fbdev driver no raw
@@ -32,6 +17,22 @@ Creo que ya esta
 
 
 --- Cosas para la siguiente version
+
+-reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
+
+-memory zone para Timex
+
+TBBLUE: 
+ 
+
+-tbblue extended opcodes
+https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
+revisar los que hayan cambiado.
+Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar en grupo desarrollo
+
+*eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
+*y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
+*Desactivar puertos viejos de establecer paleta sprites get/set
 
 -con cpc464 , si redimensionando la ventana con footer desactivado, falla con segmentation fault. Probado en mac con driver COCOA(OpenGL)
 
