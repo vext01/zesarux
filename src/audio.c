@@ -1987,3 +1987,11 @@ char old_audio_change_top_speed_sound(char sonido)
 
 	return sonido;
 }
+
+
+void audio_send_mono_sample(char valor_sonido)
+{
+	audio_buffer[audio_buffer_indice]=valor_sonido;
+	if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
+}
+
