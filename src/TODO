@@ -1,7 +1,12 @@
 soporte stereo en resto de drivers. De momento esta:
+-null
 -coreaudio
 -sdl2
 -sdl1
+
+faltara en alsa, pulse, dsp
+
+revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y que no se hayan corregido, como en drivers de audio, etc
 
 
 --- Cosas para la siguiente version
