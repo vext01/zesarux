@@ -401,18 +401,23 @@ void cpu_core_loop_spectrum(void)
 
 			if (si_siguiente_sonido() ) {
 
-				audio_valor_enviar_sonido=0;
+				//audio_valor_enviar_sonido=0;
 
-				audio_valor_enviar_sonido +=da_output_ay();
+				audio_valor_enviar_sonido_izquierdo=audio_valor_enviar_sonido_derecho=0;
+
+				audio_valor_enviar_sonido_izquierdo +=da_output_ay_izquierdo();
+				audio_valor_enviar_sonido_derecho +=da_output_ay_derecho();
 
 
 				if (beeper_enabled.v) {
 					if (beeper_real_enabled==0) {
-						audio_valor_enviar_sonido += value_beeper;
+						audio_valor_enviar_sonido_izquierdo += value_beeper;
+						audio_valor_enviar_sonido_derecho += value_beeper;
 					}
 
 					else {
-						audio_valor_enviar_sonido += get_value_beeper_sum_array();
+						audio_valor_enviar_sonido_izquierdo += get_value_beeper_sum_array();
+						audio_valor_enviar_sonido_derecho += get_value_beeper_sum_array();
 						beeper_new_line();
 					}
 
@@ -427,17 +432,24 @@ void cpu_core_loop_spectrum(void)
 				if (realtape_inserted.v && realtape_playing.v) {
 					realtape_get_byte();
 					if (realtape_loading_sound.v) {
-                        	        	audio_valor_enviar_sonido /=2;
-	                                	audio_valor_enviar_sonido += realtape_last_value/2;
+                        audio_valor_enviar_sonido_izquierdo /=2;
+	                    audio_valor_enviar_sonido_izquierdo += realtape_last_value/2;
+
+						audio_valor_enviar_sonido_derecho /=2;
+	                    audio_valor_enviar_sonido_derecho += realtape_last_value/2;
 
 						//Sonido alterado cuando top speed
-						if (timer_condicion_top_speed() ) audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
+						if (timer_condicion_top_speed() ) {
+							audio_valor_enviar_sonido_izquierdo=audio_change_top_speed_sound(audio_valor_enviar_sonido_izquierdo);
+							audio_valor_enviar_sonido_derecho=audio_change_top_speed_sound(audio_valor_enviar_sonido_derecho);
+						}
 					}
 				}
 
 				//Ajustar volumen
 				if (audiovolume!=100) {
-					audio_valor_enviar_sonido=audio_adjust_volume(audio_valor_enviar_sonido);
+					audio_valor_enviar_sonido_izquierdo=audio_adjust_volume(audio_valor_enviar_sonido_izquierdo);
+					audio_valor_enviar_sonido_derecho=audio_adjust_volume(audio_valor_enviar_sonido_derecho);
 				}
 
 				//if (audio_valor_enviar_sonido>127 || audio_valor_enviar_sonido<-128) printf ("Error audio value: %d\n",audio_valor_enviar_sonido);
@@ -447,7 +459,8 @@ void cpu_core_loop_spectrum(void)
 				}
 
 				else {
-        	        audio_send_mono_sample(audio_valor_enviar_sonido);
+        	        //audio_send_mono_sample(audio_valor_enviar_sonido);
+					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
 				}
 
 
@@ -535,7 +548,7 @@ void cpu_core_loop_spectrum(void)
                                 int linea_estados=t_estados/screen_testados_linea;
 
                                 while (linea_estados<312) {
-										audio_send_mono_sample(audio_valor_enviar_sonido);
+										audio_send_mono_sample(audio_valor_enviar_sonido_izquierdo);
                                         linea_estados++;
                                 }
 

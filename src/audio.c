@@ -93,6 +93,9 @@ char output_beep_filter_volume=122;
 char audio_valor_enviar_sonido;
 //int audio_valor_enviar_sonido;
 
+char audio_valor_enviar_sonido_izquierdo;
+char audio_valor_enviar_sonido_derecho;
+
 
 z80_byte audiodac_last_value_data;
 
@@ -1742,10 +1745,14 @@ void audiodac_mix(void)
 
 	//Mezclar con el valor de salida
 	int v;
-	v=audio_valor_enviar_sonido+valor_signed_audiodac;
+	v=audio_valor_enviar_sonido_izquierdo+valor_signed_audiodac;
 	v /=2;
+	audio_valor_enviar_sonido_izquierdo=v;
 
-	audio_valor_enviar_sonido=v;
+	v=audio_valor_enviar_sonido_derecho+valor_signed_audiodac;
+	v /=2;
+	audio_valor_enviar_sonido_derecho=v;
+
 }
 
 
@@ -2010,8 +2017,40 @@ void audio_send_mono_sample(char valor_sonido)
 
 	else {
 		limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
+
+		
+
 		audio_buffer[audio_buffer_indice]=valor_sonido;
 		audio_buffer[audio_buffer_indice+1]=valor_sonido;
+
+		if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
+	}
+
+}
+
+
+void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_derecho)
+{
+
+	int limite_buffer_audio;
+
+	if (audio_driver_accepts_stereo.v==0) {
+		limite_buffer_audio=AUDIO_BUFFER_SIZE;
+
+		//Mezclar los dos canales en uno
+		int suma=valor_sonido_izquierdo+valor_sonido_derecho;
+		suma /=2;
+
+		audio_buffer[audio_buffer_indice]=suma;
+		if (audio_buffer_indice<limite_buffer_audio-1) audio_buffer_indice++;
+	}
+
+
+	else {
+		limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
+
+		audio_buffer[audio_buffer_indice]=valor_sonido_izquierdo;
+		audio_buffer[audio_buffer_indice+1]=valor_sonido_derecho;
 
 		if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
 	}

@@ -53,17 +53,16 @@ static int audio_output_started;
 
 void audiocoreaudio_fifo_write(char *origen,int longitud);
 
-
 //Tamanyo de fifo. Es un multiplicador de AUDIO_BUFFER_SIZE
 int audiocoreaudio_fifo_buffer_size_multiplier=2;
 int audiocoreaudio_return_fifo_buffer_size(void)
 {
-  return AUDIO_BUFFER_SIZE*audiocoreaudio_fifo_buffer_size_multiplier;
+  return AUDIO_BUFFER_SIZE*audiocoreaudio_fifo_buffer_size_multiplier*2; //*2 porque es stereo
 }
 
 
 //nuestra FIFO. De tamayo maximo. Por defecto es x2 y llega hasta xMAX_AUDIOCOREAUDIO_FIFO_MULTIPLIER
-char audiocoreaudio_fifo_buffer[AUDIO_BUFFER_SIZE*MAX_AUDIOCOREAUDIO_FIFO_MULTIPLIER];
+char audiocoreaudio_fifo_buffer[AUDIO_BUFFER_SIZE*MAX_AUDIOCOREAUDIO_FIFO_MULTIPLIER*2]; //*2 porque es stereo
 
 static
 OSStatus coreaudiowrite( void *inRefCon,
@@ -133,7 +132,7 @@ get_default_sample_rate( AudioDeviceID device, Float64 *rate )
 int audiocoreaudio_init(void)
 {
 
-	audio_driver_accepts_stereo.v=0;
+	audio_driver_accepts_stereo.v=1;
 
 
 	debug_printf (VERBOSE_INFO,"Init CoreAudio Driver, %d Hz",FRECUENCIA_SONIDO);
@@ -175,16 +174,18 @@ stereoptr=&pepe;
 *stereoptr=0x0;
 
   deviceFormat.mBytesPerPacket = *stereoptr ? 4 : 2;
-deviceFormat.mBytesPerPacket=1;
+  deviceFormat.mBytesPerPacket=2;  //1=mono, 2=stereo
 
   deviceFormat.mFramesPerPacket = 1;
+
   deviceFormat.mBytesPerFrame = *stereoptr ? 4 : 2;
-  deviceFormat.mBytesPerFrame = 1;
+  deviceFormat.mBytesPerFrame = 2; //1=mono, 2=stereo
 
   //deviceFormat.mBitsPerChannel = 16;
   deviceFormat.mBitsPerChannel = 8;
+
   deviceFormat.mChannelsPerFrame = *stereoptr ? 2 : 1;
-  deviceFormat.mChannelsPerFrame = 1;
+  deviceFormat.mChannelsPerFrame = 2; //1=mono, 2=stereo
 
   /* Open the default output unit */
   AudioComponentDescription desc;
@@ -348,10 +349,6 @@ void audiocoreaudio_empty_buffer(void)
 
 
 
-
-
-
-
 //retorna numero de elementos en la fifo
 int audiocoreaudio_fifo_return_size(void)
 {
@@ -392,8 +389,13 @@ void audiocoreaudio_fifo_write(char *origen,int longitud)
 			return;
 		}
 
+    //Canal izquierdo
 		audiocoreaudio_fifo_buffer[audiocoreaudio_fifo_write_position]=*origen++;
 		audiocoreaudio_fifo_write_position=audiocoreaudio_fifo_next_index(audiocoreaudio_fifo_write_position);
+
+    //Canal derecho
+		audiocoreaudio_fifo_buffer[audiocoreaudio_fifo_write_position]=*origen++;
+		audiocoreaudio_fifo_write_position=audiocoreaudio_fifo_next_index(audiocoreaudio_fifo_write_position);    
 	}
 }
 
@@ -412,18 +414,21 @@ void audiocoreaudio_fifo_read(uint8_t *destino,int longitud)
                 }
 
 
-
-
                 //ver si la lectura alcanza la escritura. en ese caso, error
                 //if (audiocoreaudio_fifo_next_index(audiocoreaudio_fifo_read_position)==audiocoreaudio_fifo_write_position) {
                 //        debug_printf (VERBOSE_DEBUG,"FIFO vacia");
                 //        return;
                 //}
 
+                //Canal izquierdo
 
-
+                //La lectura nos viene del driver coreaudio, nos pregunta por bytes, independientemente del canal izquierdo o derecho
                 *destino++=audiocoreaudio_fifo_buffer[audiocoreaudio_fifo_read_position];
                 audiocoreaudio_fifo_read_position=audiocoreaudio_fifo_next_index(audiocoreaudio_fifo_read_position);
+
+                //Canal derecho
+                //*destino++=audiocoreaudio_fifo_buffer[audiocoreaudio_fifo_read_position];
+                //audiocoreaudio_fifo_read_position=audiocoreaudio_fifo_next_index(audiocoreaudio_fifo_read_position);
         }
 }
 

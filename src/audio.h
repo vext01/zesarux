@@ -154,7 +154,9 @@ extern void fallback_audio_null(void);
 extern void audio_empty_buffer(void);
 
 extern char audio_valor_enviar_sonido;
-//extern int audio_valor_enviar_sonido;
+
+extern char audio_valor_enviar_sonido_izquierdo;
+extern char audio_valor_enviar_sonido_derecho;
 
 extern int audio_ay_player_load(char *filename);
 extern z80_byte *audio_ay_player_mem;
@@ -247,6 +249,7 @@ extern char audio_tone_generator_get(void);
 extern char audio_change_top_speed_sound(char sonido);
 
 extern void audio_send_mono_sample(char valor_sonido);
+extern void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_derecho);
 
 extern z80_bit audio_driver_accepts_stereo;
 

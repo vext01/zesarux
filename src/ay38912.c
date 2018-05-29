@@ -520,6 +520,111 @@ char da_output_ay(void)
 
 }
 
+int ay3_stereo_mode=0;
+/*
+          0=Mono
+          1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
+          2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
+*/
+
+void da_output_ay_3_canales(char *canal_A,char *canal_B, char *canal_C)
+{
+    //char valor_enviar_ay=0;
+    int valor_enviar_ay_canal_A=0;
+	int valor_enviar_ay_canal_B=0;
+	int valor_enviar_ay_canal_C=0;
+	if (ay_chip_present.v==1) {
+
+		//Hacerlo para cada chip
+		int chips=ay_retorna_numero_chips();
+
+		int i;
+
+		for (i=0;i<chips;i++) {
+
+			valor_enviar_ay_canal_A +=da_output_canal(1+8,ultimo_valor_tono_A[i],ay_3_8912_registros[i][8],i);
+			valor_enviar_ay_canal_B +=da_output_canal(2+16,ultimo_valor_tono_B[i],ay_3_8912_registros[i][9],i);
+			valor_enviar_ay_canal_C +=da_output_canal(4+32,ultimo_valor_tono_C[i],ay_3_8912_registros[i][10],i);
+
+
+		}
+
+		//Dividir valor restante entre numero de chips
+		valor_enviar_ay_canal_A /=chips;
+		valor_enviar_ay_canal_B /=chips;
+		valor_enviar_ay_canal_C /=chips;
+	}
+
+
+	/*
+	if (valor_enviar_ay==0x10) {
+		printf ("A %d B %d C %d\n",da_output_canal(1+8,ultimo_valor_tono_A,ay_3_8912_registros[8]),da_output_canal(2+16,ultimo_valor_tono_B,ay_3_8912_registros[9]),da_output_canal(4+32,ultimo_valor_tono_C,ay_3_8912_registros[10]) );
+	}
+	*/
+
+	*canal_A=valor_enviar_ay_canal_A;
+	*canal_B=valor_enviar_ay_canal_B;
+	*canal_C=valor_enviar_ay_canal_C;
+}
+
+void da_output_ay_izquierdo_derecho(char *iz, char *de)
+{
+	char canal_A,canal_B,canal_C;
+
+	da_output_ay_3_canales(&canal_A,&canal_B,&canal_C);
+
+	int altavoz_izquierdo, altavoz_derecho;
+
+	//Aplicar modo stereo AY
+//int ay3_stereo_mode=0;
+/*
+          0=Mono
+          1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
+          2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
+*/
+	switch (ay3_stereo_mode) {
+
+		case 1:
+			altavoz_izquierdo=(canal_A+canal_C)/2;
+			altavoz_derecho=(canal_B+canal_C)/2;
+		break;
+
+		case 2:
+			altavoz_izquierdo=(canal_A+canal_B)/2;
+			altavoz_derecho=(canal_C+canal_B)/2;
+		break;
+
+		default:
+			//Mono
+			altavoz_izquierdo=(canal_A+canal_B+canal_C)/3;
+			altavoz_derecho=altavoz_izquierdo;
+		break;
+
+	}	
+
+	*iz=altavoz_izquierdo;
+	*de=altavoz_derecho;
+
+}
+
+char da_output_ay_izquierdo(void)
+{
+	char iz;
+	char de;
+	da_output_ay_izquierdo_derecho(&iz,&de);
+
+	return iz;
+}
+
+char da_output_ay_derecho(void)
+{
+	char iz;
+	char de;
+	da_output_ay_izquierdo_derecho(&iz,&de);
+
+	return de;
+}
+
 char devuelve_volumen_ciclo_envolvente()
 {
 
