@@ -75,7 +75,10 @@ extern char *audio_driver_name;
 
 extern char *audio_buffer_one;
 extern char *audio_buffer_two;
-extern char audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE*2];
+//extern char audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE*2];
+
+extern char audio_buffer_one_assigned[];
+extern char audio_buffer_two_assigned[];
 
 
 extern int audio_buffer_indice;

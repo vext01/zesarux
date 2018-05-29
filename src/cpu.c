@@ -4361,8 +4361,8 @@ void main_init_audio(void)
                 interrupt_finish_sound.v=0;
                 audio_playing.v=1;
 
-                audio_buffer_one=audio_buffer_oneandtwo;
-                audio_buffer_two=&audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE];
+                audio_buffer_one=audio_buffer_one_assigned;
+                audio_buffer_two=audio_buffer_two_assigned;
 
                 set_active_audio_buffer();
 

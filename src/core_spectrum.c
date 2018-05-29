@@ -448,8 +448,8 @@ void cpu_core_loop_spectrum(void)
 				}
 
 				else {
-	                                //audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
-        	                        audio_send_mono_sample(audio_valor_enviar_sonido);
+	                //audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
+        	        audio_send_mono_sample(audio_valor_enviar_sonido);
 				}
 
 

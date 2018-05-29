@@ -215,14 +215,14 @@ void cpu_core_loop_reduced_spectrum(void)
 
 				//if (audio_valor_enviar_sonido>127 || audio_valor_enviar_sonido<-128) printf ("Error audio value: %d\n",audio_valor_enviar_sonido);
 
-				audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
-
+				//audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
+				audio_send_mono_sample(audio_valor_enviar_sonido);
 
 				//temporal
 				//printf ("%02X ",audio_valor_enviar_sonido);
 
 
-				if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
+				//if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
 				//else printf ("Overflow audio buffer: %d \n",audio_buffer_indice);
 
 
@@ -292,8 +292,9 @@ void cpu_core_loop_reduced_spectrum(void)
 
                                 while (linea_estados<312) {
 
-                                        audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
-                                        if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
+                                        //audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
+                                        //if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
+										audio_send_mono_sample(audio_valor_enviar_sonido);
                                         linea_estados++;
                                 }
 

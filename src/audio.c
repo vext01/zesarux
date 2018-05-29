@@ -51,7 +51,10 @@ int audio_using_sdl2=0;
 
 char *audio_buffer_one;
 char *audio_buffer_two;
-char audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE*2];
+//char audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE*2];
+
+char audio_buffer_one_assigned[AUDIO_BUFFER_SIZE];
+char audio_buffer_two_assigned[AUDIO_BUFFER_SIZE];
 
 char *audio_driver_name;
 
@@ -1993,5 +1996,7 @@ void audio_send_mono_sample(char valor_sonido)
 {
 	audio_buffer[audio_buffer_indice]=valor_sonido;
 	if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
+
+
 }
 
