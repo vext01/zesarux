@@ -1,4 +1,6 @@
-soporte stereo en resto de drivers. De momento solo en coreaudio
+soporte stereo en resto de drivers. De momento esta:
+-coreaudio
+-sdl2
 
 
 --- Cosas para la siguiente version
