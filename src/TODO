@@ -1,6 +1,7 @@
 soporte stereo en resto de drivers. De momento esta:
 -coreaudio
 -sdl2
+-sdl1
 
 
 --- Cosas para la siguiente version
