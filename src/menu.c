@@ -30558,7 +30558,7 @@ void menu_audio_ay_stereo(MENU_ITEM_PARAMETERS)
 {
 	ay3_stereo_mode++;
 
-	if (ay3_stereo_mode==3) ay3_stereo_mode=0;
+	if (ay3_stereo_mode==4) ay3_stereo_mode=0;
 }
 
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
@@ -30611,11 +30611,13 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
           0=Mono
           1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
           2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
+		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
 */
 
 		char ay3_stereo_string[10];
 		if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
 		else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
+		else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
 		else strcpy(ay3_stereo_string,"Mono");
 
 		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"AY Stereo mode: %s",

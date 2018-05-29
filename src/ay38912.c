@@ -525,6 +525,7 @@ int ay3_stereo_mode=0;
           0=Mono
           1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
           2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
+		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
 */
 
 void da_output_ay_3_canales(char *canal_A,char *canal_B, char *canal_C)
@@ -581,6 +582,7 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
           0=Mono
           1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
           2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
+		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
 */
 	switch (ay3_stereo_mode) {
 
@@ -592,6 +594,11 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
 		case 2:
 			altavoz_izquierdo=canal_A+canal_B;
 			altavoz_derecho=canal_C+canal_B;
+		break;
+
+		case 3:
+			altavoz_izquierdo=canal_B+canal_A;
+			altavoz_derecho=canal_C+canal_A;
 		break;
 
 		default:

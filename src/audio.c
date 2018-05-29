@@ -1811,7 +1811,7 @@ typedef struct s_audiobuffer_stats audiobuffer_stats;
 				}
 
 				else valor_sonido=audio_buffer[i];
-				
+
                 audiomedio +=valor_sonido;
 
                 if (valor_sonido>audiomax) audiomax=valor_sonido;
@@ -1839,30 +1839,9 @@ typedef struct s_audiobuffer_stats audiobuffer_stats;
 
 
         audiomedio /=AUDIO_BUFFER_SIZE;
-        //printf ("valor medio: %d\n",audiomedio);
-        //menu_audio_draw_sound_wave_valor_medio=audiomedio;
+      
 
-        //menu_audio_draw_sound_wave_valor_min=audiomin;
-        //menu_audio_draw_sound_wave_valor_max=audiomax;
 
-        //audiomedio=(audiomedio*alto)/256;
-
-        //Lo situamos en el centro. Negativo hacia abajo (Y positiva)
-        //audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
-
-        //printf ("valor medio en y: %d\n",audiomedio);
-        //Fin Obtenemos antes valor medio
-
-/*
-struct s_audiobuffer_stats
-{
-        int maximo;
-        int minimo;
-        int medio;
-        int frecuencia;
-        int volumen;
-};
-*/
 
 	audiostats->maximo=audiomax;
 	audiostats->minimo=audiomin;
@@ -1871,12 +1850,7 @@ struct s_audiobuffer_stats
 
 	//Falta obtener volumen
 
-/*
-	//Sacamos volumen como la diferencia entre los valores maximo y minimo
-	int volumen=util_get_absolute(audiomax-audiomin);
 
-	audiostats->volumen=volumen;
-*/
 
 
 	//Sacamos volumen como el mayor valor de los dos, maximo o minimo
