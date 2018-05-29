@@ -145,15 +145,7 @@ else printf ("   ");
                                 audio_valor_enviar_sonido=audio_adjust_volume(audio_valor_enviar_sonido);
                         }
 
-
-			//printf ("sonido: %d\n",audio_valor_enviar_sonido);
-
-                        //audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
                         audio_send_mono_sample(audio_valor_enviar_sonido);
-
-
-                        //if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
-                        //else printf ("Overflow audio buffer: %d \n",audio_buffer_indice);
 
 
                         ay_chip_siguiente_ciclo();
@@ -175,9 +167,6 @@ else printf ("   ");
                                 int linea_estados=t_estados/screen_testados_linea;
 
                                 while (linea_estados<312) {
-
-                                        //audio_buffer[audio_buffer_indice]=audio_valor_enviar_sonido;
-                                        //if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
                                         audio_send_mono_sample(audio_valor_enviar_sonido);
                                         linea_estados++;
                                 }

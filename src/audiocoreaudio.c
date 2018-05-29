@@ -133,6 +133,9 @@ get_default_sample_rate( AudioDeviceID device, Float64 *rate )
 int audiocoreaudio_init(void)
 {
 
+	audio_driver_accepts_stereo.v=0;
+
+
 	debug_printf (VERBOSE_INFO,"Init CoreAudio Driver, %d Hz",FRECUENCIA_SONIDO);
 
 	buffer_actual=audio_buffer_one;

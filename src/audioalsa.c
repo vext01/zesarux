@@ -188,6 +188,7 @@ void fifo_alsa_read(char *destino,int longitud)
 int audioalsa_init(void)
 {
 
+	audio_driver_accepts_stereo.v=0;
 
 #ifdef USE_PTHREADS
 	debug_printf (VERBOSE_INFO,"Init Alsa Audio Driver - using pthreads. Using alsaperiodsize=%d bytes, fifoalsabuffersize=%d bytes, MAX_FIFO_ALSA_BUFFER_SIZE=%d bytes, %d Hz",alsa_periodsize,fifo_alsa_buffer_size,MAX_FIFO_ALSA_BUFFER_SIZE,FRECUENCIA_SONIDO);

@@ -53,11 +53,15 @@ char *audio_buffer_one;
 char *audio_buffer_two;
 //char audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE*2];
 
-char audio_buffer_one_assigned[AUDIO_BUFFER_SIZE];
-char audio_buffer_two_assigned[AUDIO_BUFFER_SIZE];
+//con stereo, cada posicion par, contiene canal izquierdo. Posicion impar, canal derecho
+char audio_buffer_one_assigned[AUDIO_BUFFER_SIZE*2];  //Doble porque es estereo
+char audio_buffer_two_assigned[AUDIO_BUFFER_SIZE*2];  //Doble porque es estereo
 
 char *audio_driver_name;
 
+//Si el driver de audio soporta stereo. En teoria lo soportan todos, se pone de momento como transicion 
+//del sistema mono a stereo, hasta que no esten todos los drivers
+z80_bit audio_driver_accepts_stereo={0};
 
 z80_bit silence_detector_setting={0};
 
@@ -1994,9 +1998,23 @@ char old_audio_change_top_speed_sound(char sonido)
 
 void audio_send_mono_sample(char valor_sonido)
 {
-	audio_buffer[audio_buffer_indice]=valor_sonido;
-	if (audio_buffer_indice<AUDIO_BUFFER_SIZE-1) audio_buffer_indice++;
 
+	int limite_buffer_audio;
+
+	if (audio_driver_accepts_stereo.v==0) {
+		limite_buffer_audio=AUDIO_BUFFER_SIZE;
+		audio_buffer[audio_buffer_indice]=valor_sonido;
+		if (audio_buffer_indice<limite_buffer_audio-1) audio_buffer_indice++;
+	}
+
+
+	else {
+		limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
+		audio_buffer[audio_buffer_indice]=valor_sonido;
+		audio_buffer[audio_buffer_indice+1]=valor_sonido;
+
+		if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
+	}
 
 }
 

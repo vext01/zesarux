@@ -57,6 +57,9 @@ unsigned int requested, ioctl_format, ioctl_channels, ioctl_rate;
 int audiodsp_init(void)
 {
 
+	audio_driver_accepts_stereo.v=0;
+
+
 #ifdef USE_PTHREADS
         debug_printf (VERBOSE_INFO,"Init DSP Audio Driver - using phtreads, %d Hz",FRECUENCIA_SONIDO);
 #else
