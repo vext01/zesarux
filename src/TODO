@@ -7,7 +7,10 @@ soporte stereo en resto de drivers. De momento esta:
 faltara en alsa, pulse, dsp
 
 revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y que no se hayan corregido, como en drivers de audio, etc
-
+->audio out a wave quiza use audio_valor_enviar_sonido. habria que eliminar dicha variable para ver donde se usa. Corregir leyenda de generacion audio a wave/raw
+->ver si realtape loading depende de stereo. Creo que no
+->cores sin stereo quiza puedan seguir usando el envio de sonido mono. Pero para ello usarian audio_valor_enviar_sonido. Quiza en vez de eliminar la variable,
+renombrarla
 
 --- Cosas para la siguiente version
 
