@@ -585,18 +585,18 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
 	switch (ay3_stereo_mode) {
 
 		case 1:
-			altavoz_izquierdo=(canal_A+canal_C)/2;
-			altavoz_derecho=(canal_B+canal_C)/2;
+			altavoz_izquierdo=canal_A+canal_C;
+			altavoz_derecho=canal_B+canal_C;
 		break;
 
 		case 2:
-			altavoz_izquierdo=(canal_A+canal_B)/2;
-			altavoz_derecho=(canal_C+canal_B)/2;
+			altavoz_izquierdo=canal_A+canal_B;
+			altavoz_derecho=canal_C+canal_B;
 		break;
 
 		default:
 			//Mono
-			altavoz_izquierdo=(canal_A+canal_B+canal_C)/3;
+			altavoz_izquierdo=canal_A+canal_B+canal_C;
 			altavoz_derecho=altavoz_izquierdo;
 		break;
 

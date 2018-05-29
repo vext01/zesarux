@@ -10098,7 +10098,16 @@ void menu_audio_draw_sound_wave(void)
 				//esto no deberia suceder ya que el calculo de max_valores se hace en base al maximo
 				cpu_panic("menu_audio_draw_sound_wave: pointer beyond AUDIO_BUFFER_SIZE");
 			}
-			valor_medio=valor_medio+audio_buffer[puntero_audio];
+
+			//stereo 
+			if (audio_driver_accepts_stereo.v) {
+				int suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
+				suma_canales /=2;
+				valor_medio=valor_medio+suma_canales;
+			}
+
+			else valor_medio=valor_medio+audio_buffer[puntero_audio];
+
 
 		}
 

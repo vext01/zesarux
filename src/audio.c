@@ -1795,6 +1795,8 @@ typedef struct s_audiobuffer_stats audiobuffer_stats;
 
         char valor_sonido;
 
+		int valor_sonido_mezcla_stereo;
+
 
         z80_byte valor_sonido_sin_signo;
         z80_byte valor_anterior_sin_signo=0;
@@ -1802,7 +1804,14 @@ typedef struct s_audiobuffer_stats audiobuffer_stats;
         //En AY Player tambien se usa una funcion similar. Se deberia estandarizar
         int i;
         for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
-                valor_sonido=audio_buffer[i];
+
+				if (audio_driver_accepts_stereo.v) {
+					valor_sonido_mezcla_stereo=(audio_buffer[i*2]+audio_buffer[(i*2)+1])/2;
+					valor_sonido=valor_sonido_mezcla_stereo;
+				}
+
+				else valor_sonido=audio_buffer[i];
+				
                 audiomedio +=valor_sonido;
 
                 if (valor_sonido>audiomax) audiomax=valor_sonido;
