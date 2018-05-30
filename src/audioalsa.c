@@ -263,6 +263,7 @@ int audioalsa_init(void)
 	periodsize = AUDIO_BUFFER_SIZE*2;
 #endif
 
+	//periodsize *=2; //*2 porque es stereo
 
 
 /* Set access type. This can be either    */
