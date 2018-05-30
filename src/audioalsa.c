@@ -192,9 +192,9 @@ int audioalsa_init(void)
 
 
 #ifdef USE_PTHREADS
-	debug_printf (VERBOSE_INFO,"Init Alsa Audio Driver - using pthreads. Using alsaperiodsize=%d bytes, fifoalsabuffersize=%d bytes, MAX_FIFO_ALSA_BUFFER_SIZE=%d bytes, %d Hz",alsa_periodsize,fifo_alsa_buffer_size,MAX_FIFO_ALSA_BUFFER_SIZE,FRECUENCIA_SONIDO);
+	debug_printf (VERBOSE_INFO,"Init Alsa Audio Driver (mono) - using pthreads. Using alsaperiodsize=%d bytes, fifoalsabuffersize=%d bytes, MAX_FIFO_ALSA_BUFFER_SIZE=%d bytes, %d Hz",alsa_periodsize,fifo_alsa_buffer_size,MAX_FIFO_ALSA_BUFFER_SIZE,FRECUENCIA_SONIDO);
 #else
-	debug_printf (VERBOSE_INFO,"Init Alsa Audio Driver - not using pthreads. Using alsaperiodsize=%d bytes, %d Hz",AUDIO_BUFFER_SIZE*2, FRECUENCIA_SONIDO);
+	debug_printf (VERBOSE_INFO,"Init Alsa Audio Driver (mono) - not using pthreads. Using alsaperiodsize=%d bytes, %d Hz",AUDIO_BUFFER_SIZE*2, FRECUENCIA_SONIDO);
 #endif
 
 
