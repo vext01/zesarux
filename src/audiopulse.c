@@ -146,7 +146,7 @@ pa_sample_spec audiopulse_ss;
 int audiopulse_init(void)
 {
 
-	audio_driver_accepts_stereo.v=0;
+	audio_driver_accepts_stereo.v=1;
 
 
 	//Esto ocurre cuando los dos valen 4 y entonces la fifo siempre dice que esta llena
