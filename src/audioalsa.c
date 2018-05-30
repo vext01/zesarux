@@ -279,7 +279,6 @@ int audioalsa_init(void)
 
     /* Set sample format */
     if (snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S8) < 0) {
-    //if (snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S16_LE) < 0) {
       debug_printf(VERBOSE_ERR, "Error setting format.");
       snd_pcm_close( pcm_handle );
       return 1;
