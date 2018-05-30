@@ -87,6 +87,10 @@ int alsa_periodsize=AUDIO_BUFFER_SIZE*2;
 char fifo_alsa_buffer[MAX_FIFO_ALSA_BUFFER_SIZE*2]; //*2 porque es estereo
 
 
+int audioalsa_return_fifo_buffer_size(void)
+{
+  return fifo_alsa_buffer_size*2; //*2 porque es stereo
+}
 
 //retorna numero de elementos en la fifo_alsa
 int fifo_alsa_return_size(void)
@@ -100,13 +104,13 @@ int fifo_alsa_return_size(void)
 
         else {
                 //write es menor, cosa que quiere decir que hemos dado la vuelta
-                return (fifo_alsa_buffer_size-fifo_alsa_read_position)+fifo_alsa_write_position;
+                return (audioalsa_return_fifo_buffer_size()-fifo_alsa_read_position)+fifo_alsa_write_position;
         }
 }
 
 void audioalsa_get_buffer_info (int *buffer_size,int *current_size)
 {
-  *buffer_size=fifo_alsa_buffer_size;
+  *buffer_size=audioalsa_return_fifo_buffer_size();
   *current_size=fifo_alsa_return_size();
 }
 
