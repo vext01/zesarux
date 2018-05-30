@@ -290,7 +290,7 @@ SNDFILE *output_wavfile;
 void aofile_send_frame_wav(char *buffer)
 {
 
-        sf_write_raw(output_wavfile,(const short *)buffer,AUDIO_BUFFER_SIZE);
+        sf_write_raw(output_wavfile,(const short *)buffer,AUDIO_BUFFER_SIZE*2); //*2 porque es stereo
 }
 
 void init_aofile_wav(void)
@@ -299,7 +299,7 @@ void init_aofile_wav(void)
 
 	info.format=SF_FORMAT_WAV | SF_FORMAT_PCM_U8;
 	info.samplerate=FRECUENCIA_SONIDO;
-	info.channels=1;
+	info.channels=2;
 	info.frames= 123456789 ; /* Wrong length. Library should correct this on sf_close. */
 
 
@@ -336,7 +336,7 @@ void init_aofile(void)
 			aofile_type=AOFILE_TYPE_WAV;
 			init_aofile_wav();
 
-			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format wav, %dHz, 8 bit, unsigned, 1 channel",FRECUENCIA_SONIDO);
+			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format wav, %dHz, 8 bit, unsigned, 2 channel",FRECUENCIA_SONIDO);
 			debug_printf(VERBOSE_INFO,"%s",last_message_helper_aofile_vofile_file_format);
 #else
 			debug_printf (VERBOSE_ERR,"Output file is wav file but sndfile support is not compiled");
@@ -362,7 +362,7 @@ void init_aofile(void)
 				return;
                 	}
 
-			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format raw, %dHz, 8 bit, unsigned, 1 channel",FRECUENCIA_SONIDO);
+			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format raw, %dHz, 8 bit, unsigned, 2 channel",FRECUENCIA_SONIDO);
 			debug_printf(VERBOSE_INFO,"%s",last_message_helper_aofile_vofile_file_format);
 
 		}
@@ -433,7 +433,7 @@ void aofile_send_frame(char *buffer)
         unsigned char valor_unsigned;
 
         int i;
-        for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
+        for (i=0;i<AUDIO_BUFFER_SIZE*2;i++) { //*2 porque es stereo
                 valor_unsigned=*buffer;
                 valor_unsigned=128+valor_unsigned;
                 *aofile_buffer=valor_unsigned;
@@ -448,9 +448,9 @@ void aofile_send_frame(char *buffer)
 	//Envio de audio a raw file
 	if (aofile_type==AOFILE_TYPE_RAW) {
 
-		escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE, ptr_aofile);
+		escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE*2, ptr_aofile);  //*2 porque es stereo
 
-		if (escritos!=AUDIO_BUFFER_SIZE) {
+		if (escritos!=AUDIO_BUFFER_SIZE*2) {
                 	        debug_printf(VERBOSE_ERR,"Unable to write to aofile %s",aofilename);
 	                        aofilename=NULL;
         	                aofile_inserted.v=0;
@@ -491,7 +491,7 @@ void audio_empty_buffer(void)
 	debug_printf (VERBOSE_DEBUG,"Emptying audio buffer");
 
 	int i=0;
-	while (i<AUDIO_BUFFER_SIZE) {
+	while (i<AUDIO_BUFFER_SIZE*2) { //*2 porque es stereo
 		audio_buffer[i++]=0;
 	}
 
