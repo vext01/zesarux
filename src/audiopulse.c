@@ -205,8 +205,10 @@ void audiopulse_empty_buffer(void)
 //Desde 4 hasta 10
 int fifo_pulse_buffer_size=AUDIO_BUFFER_SIZE*10;
 
-//1-4
-int pulse_periodsize=AUDIO_BUFFER_SIZE*1;
+//1-4.
+//Cuando habia sonido mono,por defecto estaba a 1
+//Con stereo, esta a 2
+int pulse_periodsize=AUDIO_BUFFER_SIZE*2;
 
 
 char fifo_pulse_buffer[MAX_FIFO_PULSE_BUFFER_SIZE*2]; //*2 porque es estereo

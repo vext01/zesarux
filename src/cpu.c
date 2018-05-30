@@ -1405,7 +1405,7 @@ printf (
 
 #ifdef COMPILE_PULSE
 #ifdef USE_PTHREADS
-                "--pulseperiodsize n        Pulse audio periodsize multiplier (1 to 4). Default 1. Lower values reduce latency but can increase cpu usage\n"
+                "--pulseperiodsize n        Pulse audio periodsize multiplier (1 to 4). Default 2. Lower values reduce latency but can increase cpu usage\n"
                 "--fifopulsebuffersize n    Pulse fifo buffer size multiplier (4 to 10). Default 10. Lower values reduce latency but can increase cpu usage\n"
 #endif
 #endif

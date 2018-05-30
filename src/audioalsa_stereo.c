@@ -56,7 +56,7 @@ void audioalsa_send_frame(char *buffer);
 
 
 //buffer temporal de envio. suficiente para que quepa
-char buf_enviar[AUDIO_BUFFER_SIZE*10];
+char buf_enviar[AUDIO_BUFFER_SIZE*10*2]; //*2 porque es estereo
 
 
 void audioalsa_callback(snd_async_handler_t *pcm_callback);
@@ -84,9 +84,13 @@ int fifo_alsa_buffer_size=AUDIO_BUFFER_SIZE*4;
 int alsa_periodsize=AUDIO_BUFFER_SIZE*2;
 
 
-char fifo_alsa_buffer[MAX_FIFO_ALSA_BUFFER_SIZE];
+char fifo_alsa_buffer[MAX_FIFO_ALSA_BUFFER_SIZE*2]; //*2 porque es estereo
 
 
+int audioalsa_return_fifo_buffer_size(void)
+{
+  return fifo_alsa_buffer_size*2; //*2 porque es stereo
+}
 
 //retorna numero de elementos en la fifo_alsa
 int fifo_alsa_return_size(void)
@@ -100,13 +104,13 @@ int fifo_alsa_return_size(void)
 
         else {
                 //write es menor, cosa que quiere decir que hemos dado la vuelta
-                return (fifo_alsa_buffer_size-fifo_alsa_read_position)+fifo_alsa_write_position;
+                return (audioalsa_return_fifo_buffer_size()-fifo_alsa_read_position)+fifo_alsa_write_position;
         }
 }
 
 void audioalsa_get_buffer_info (int *buffer_size,int *current_size)
 {
-  *buffer_size=fifo_alsa_buffer_size;
+  *buffer_size=audioalsa_return_fifo_buffer_size();
   *current_size=fifo_alsa_return_size();
 }
 
@@ -114,7 +118,7 @@ void audioalsa_get_buffer_info (int *buffer_size,int *current_size)
 int fifo_alsa_next_index(int v)
 {
         v=v+1;
-        if (v==fifo_alsa_buffer_size) v=0;
+        if (v==audioalsa_return_fifo_buffer_size()) v=0;
 
         return v;
 }
@@ -134,8 +138,14 @@ void fifo_alsa_write(char *origen,int longitud)
                         return;
                 }
 
+		//Canal izquierdo
                 fifo_alsa_buffer[fifo_alsa_write_position]=*origen++;
                 fifo_alsa_write_position=fifo_alsa_next_index(fifo_alsa_write_position);
+
+		//Canal derecho
+                fifo_alsa_buffer[fifo_alsa_write_position]=*origen++;
+                fifo_alsa_write_position=fifo_alsa_next_index(fifo_alsa_write_position);
+
 	}
 }
 
@@ -189,7 +199,6 @@ int audioalsa_init(void)
 {
 
 	audio_driver_accepts_stereo.v=1;
-
 
 #ifdef USE_PTHREADS
 	debug_printf (VERBOSE_INFO,"Init Alsa Audio Driver - using pthreads. Using alsaperiodsize=%d bytes, fifoalsabuffersize=%d bytes, MAX_FIFO_ALSA_BUFFER_SIZE=%d bytes, %d Hz",alsa_periodsize,fifo_alsa_buffer_size,MAX_FIFO_ALSA_BUFFER_SIZE,FRECUENCIA_SONIDO);
@@ -254,6 +263,7 @@ int audioalsa_init(void)
 	periodsize = AUDIO_BUFFER_SIZE*2;
 #endif
 
+	//periodsize *=2; //*2 porque es stereo
 
 
 /* Set access type. This can be either    */
@@ -270,7 +280,6 @@ int audioalsa_init(void)
 
     /* Set sample format */
     if (snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S8) < 0) {
-    //if (snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S16_LE) < 0) {
       debug_printf(VERBOSE_ERR, "Error setting format.");
       snd_pcm_close( pcm_handle );
       return 1;
@@ -289,7 +298,7 @@ int audioalsa_init(void)
     }
 
     /* Set number of channels */
-    if (snd_pcm_hw_params_set_channels(pcm_handle, hwparams, 1) < 0) {
+    if (snd_pcm_hw_params_set_channels(pcm_handle, hwparams, 2) < 0) {
       debug_printf(VERBOSE_ERR, "Error setting channels.");
       snd_pcm_close( pcm_handle );
       return 1;
@@ -352,8 +361,6 @@ snd_pcm_uframes_t buffer_size_max;
         unsigned int bufsize=(periodsize * periods)>>2;
         debug_printf(VERBOSE_DEBUG,"Intended buffer size %d",bufsize);
 
-	//temp cambio
-	//bufsize=0;
 
 
 	//Si el bufsize que pretendemos es muy pequenyo, lo cambiamos
@@ -390,11 +397,6 @@ snd_pcm_uframes_t buffer_size_max;
 
 
         debug_printf(VERBOSE_INFO,"Trying buffer size %d",bufsize);
-
-
-	//temp error
-	//printf ("temp error alsa\n");
-	//return 1;
 
 
 
@@ -472,6 +474,8 @@ void new_audioalsa_enviar_audio_envio(void)
 
 		len=frames;
 
+		//len *=2; //porque es stereo
+
 
 		if (fifo_alsa_return_size()>=len) {
 
@@ -480,14 +484,14 @@ void new_audioalsa_enviar_audio_envio(void)
 			//printf ("temp envio sonido\n");
 
 			//manera normal usando funciones de fifo
-			fifo_alsa_read(buf_enviar,len);
+			fifo_alsa_read(buf_enviar,len); 
 			ret = snd_pcm_writei( pcm_handle, buf_enviar, len );
 
 			//Siguiente fragmento de audio. Es mejor hacerlo aqui que no esperar
 			//Esto da sonido correcto. Porque? No estoy seguro del todo...
 
 			if (ret==len) {
-				fifo_alsa_read(buf_enviar,len);
+				fifo_alsa_read(buf_enviar,len); 
 				//printf ("enviar audio alsa len: %d\n",len);
 				ret = snd_pcm_writei( pcm_handle, buf_enviar, len );
 			}
@@ -540,19 +544,7 @@ void *new_audioalsa_enviar_audio(void *nada)
 
 	while (1) {
 
-			//tamanyo antes
-			//printf ("enviar. antes. tamanyo fifo: %d read %d write %d\n",fifo_alsa_return_size(),fifo_alsa_read_position,fifo_alsa_write_position);
-		//if (fifo_alsa_return_size()>=AUDIO_BUFFER_SIZE) {
 			new_audioalsa_enviar_audio_envio();
-
-
-		//No enviar sonido si audio no activo
-                /*while (audio_playing.v==0) {
-                        //1 ms
-                        usleep(1000);
-                }
-		*/
-
 
 	}
 
@@ -621,6 +613,8 @@ void new_audioalsa_send_frame(char *buffer)
 	int len=frames;
 	int ret;
 
+	//len *=2; //porque es stereo
+
 	//printf ("temp envio sonido\n");
 
 	while( ( ret = snd_pcm_writei( pcm_handle, buffer_playback_alsa, len ) ) != len ) {
@@ -659,42 +653,7 @@ void *audioalsa_enviar_audio(void *nada)
 }
 #endif
 
-char audioalsa_buffer_mono[AUDIO_BUFFER_SIZE];
-
-void audioalsa_convert_mono(char *origen)
-{
-	int valor_sonido_int;
-	char canal_izquierdo, canal_derecho;
-	char canal_mezclado;
-
-	char *destino;
-	destino=audioalsa_buffer_mono;
-
-	int i;
-
-	for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
-		canal_izquierdo=*origen;
-		origen++;
-		
-		canal_derecho=*origen;
-		origen++;
-
-		valor_sonido_int=canal_izquierdo+canal_derecho;
-		valor_sonido_int/=2;
-
-		canal_mezclado=valor_sonido_int;
-
-		*destino=canal_mezclado;
-		destino++;
-	}
-}
-		
-
 void audioalsa_send_frame(char *buffer)
 {
-	//Convertimos a buffer mono
-        audioalsa_convert_mono(buffer);
-	return new_audioalsa_send_frame(audioalsa_buffer_mono);
-
-	//return new_audioalsa_send_frame(buffer);
+        return new_audioalsa_send_frame(buffer);
 }

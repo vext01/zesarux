@@ -3,10 +3,12 @@ soporte stereo. De momento esta:
 -coreaudio ok
 -sdl2
 -sdl1 ok, con pthreads y sin pthreads
+
 -pulse:
-pthreads: se oyen chasquidos
+pthreads: ok
 sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de chasquidos. OK
--alsa no va bien
+
+-alsa no va bien. dejamos de momento driver en mono
 -dsp:
 pthreads:
 sin pthreads: chasquidos, pero igual que version anterior. OK
