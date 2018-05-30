@@ -57,7 +57,7 @@ unsigned int requested, ioctl_format, ioctl_channels, ioctl_rate;
 int audiodsp_init(void)
 {
 
-	audio_driver_accepts_stereo.v=0;
+	audio_driver_accepts_stereo.v=1;
 
 
 #ifdef USE_PTHREADS
@@ -100,7 +100,7 @@ if(fcntl(ptr_audiodsp,F_SETFL,flags)==-1)
 #endif
 
 		ioctl_format=AFMT_S8;
-		ioctl_channels=1;
+		ioctl_channels=2; //2 porque es stereo
 		//312 lineas(AUDIO_BUFFER_SIZE) por 50 Hz
 		ioctl_rate=FRECUENCIA_SONIDO;
 
@@ -235,6 +235,8 @@ void *audiodsp_enviar_audio(void *nada)
 		audiodsp_pthread_tiempo_inicial();
 		int len=AUDIO_BUFFER_SIZE;
 
+		len *=2; //*2 porque es stereo
+
 		int ret;
 		int ofs=0;
 		while(len)
@@ -311,7 +313,7 @@ void audiodsp_send_frame(char *buffer)
 {
 		//printf ("temp envio sonido\n");
 
-                write(ptr_audiodsp,buffer,AUDIO_BUFFER_SIZE);
+                write(ptr_audiodsp,buffer,AUDIO_BUFFER_SIZE*2); //*2 porque es stereo
 
 
 }
@@ -322,7 +324,7 @@ void audiodsp_send_frame(char *buffer)
 
 void audiodsp_get_buffer_info (int *buffer_size,int *current_size)
 {
-  *buffer_size=AUDIO_BUFFER_SIZE;
+  *buffer_size=AUDIO_BUFFER_SIZE*2; //*2 porque es stereo
   *current_size=0;
 }
 
