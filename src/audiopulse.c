@@ -42,26 +42,7 @@
 #endif
 
 //buffer de destino para pulse audio debe ser unsigned
-unsigned char unsigned_audio_buffer[AUDIO_BUFFER_SIZE];
-
-//convertir buffer de sonido signed en unsigned
-/*void convert_signed_unsigned(char *origen, unsigned char *destino)
-{
-        int i;
-        z80_byte leido;
-
-        for (i=0;i<AUDIO_BUFFER_SIZE;i++) {
-                leido=*origen;
-                leido=128+leido;
-
-                *destino=leido;
-                destino++;
-
-                origen++;
-        }
-
-}
-*/
+unsigned char unsigned_audio_buffer[AUDIO_BUFFER_SIZE*2]; //*2 porque es estereo
 
 
 #ifndef USE_PTHREADS
@@ -79,7 +60,7 @@ int audiopulse_init(void)
 
         debug_printf (VERBOSE_INFO,"Init Pulse Audio Driver - not using pthreads, %d Hz",FRECUENCIA_SONIDO);
 
-	audio_driver_accepts_stereo.v=0;
+	audio_driver_accepts_stereo.v=1;
 
 
         audiopulse_ss.format = PA_SAMPLE_U8;
