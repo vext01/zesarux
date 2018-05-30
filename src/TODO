@@ -1,11 +1,15 @@
 soporte stereo. De momento esta:
 -null
--coreaudio
+-coreaudio ok
 -sdl2
--sdl1
--pulse
+-sdl1 ok, con pthreads y sin pthreads
+-pulse:
+pthreads: se oyen chasquidos
+sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de chasquidos. OK
 -alsa no va bien
--dsp hay que probarlo
+-dsp:
+pthreads:
+sin pthreads: chasquidos, pero igual que version anterior. OK
 
 
 revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y que no se hayan corregido, como en drivers de audio, etc
