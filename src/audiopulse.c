@@ -60,7 +60,7 @@ int audiopulse_init(void)
 
         debug_printf (VERBOSE_INFO,"Init Pulse Audio Driver - not using pthreads, %d Hz",FRECUENCIA_SONIDO);
 
-	audio_driver_accepts_stereo.v=1;
+	//audio_driver_accepts_stereo.v=1;
 
 
         audiopulse_ss.format = PA_SAMPLE_U8;
@@ -146,7 +146,7 @@ pa_sample_spec audiopulse_ss;
 int audiopulse_init(void)
 {
 
-	audio_driver_accepts_stereo.v=1;
+	//audio_driver_accepts_stereo.v=1;
 
 
 	//Esto ocurre cuando los dos valen 4 y entonces la fifo siempre dice que esta llena

@@ -33,7 +33,7 @@
 int audionull_init(void)
 {
 
-	audio_driver_accepts_stereo.v=1;
+	//audio_driver_accepts_stereo.v=1;
 
 	debug_printf (VERBOSE_INFO,"Init Null Audio Driver");
 

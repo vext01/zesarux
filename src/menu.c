@@ -10100,13 +10100,13 @@ void menu_audio_draw_sound_wave(void)
 			}
 
 			//stereo 
-			if (audio_driver_accepts_stereo.v) {
+			//if (audio_driver_accepts_stereo.v) {
 				int suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
 				suma_canales /=2;
 				valor_medio=valor_medio+suma_canales;
-			}
+			//}
 
-			else valor_medio=valor_medio+audio_buffer[puntero_audio];
+			//else valor_medio=valor_medio+audio_buffer[puntero_audio];
 
 
 		}

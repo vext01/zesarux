@@ -51,7 +51,7 @@ int audiosdl_init(void)
 {
 
 
-	audio_driver_accepts_stereo.v=1;
+	//audio_driver_accepts_stereo.v=1;
 
 	//buffer_actual=audio_buffer_one;
 

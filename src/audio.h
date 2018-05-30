@@ -251,7 +251,7 @@ extern char audio_change_top_speed_sound(char sonido);
 extern void audio_send_mono_sample(char valor_sonido);
 extern void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_derecho);
 
-extern z80_bit audio_driver_accepts_stereo;
+//extern z80_bit audio_driver_accepts_stereo;
 
 #define FREQ_TOP_SPEED_CHANGE 12800
 

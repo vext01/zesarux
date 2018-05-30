@@ -188,7 +188,7 @@ void fifo_alsa_read(char *destino,int longitud)
 int audioalsa_init(void)
 {
 
-	audio_driver_accepts_stereo.v=1;
+	//audio_driver_accepts_stereo.v=1;
 
 
 #ifdef USE_PTHREADS

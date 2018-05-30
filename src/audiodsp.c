@@ -57,7 +57,7 @@ unsigned int requested, ioctl_format, ioctl_channels, ioctl_rate;
 int audiodsp_init(void)
 {
 
-	audio_driver_accepts_stereo.v=1;
+	//audio_driver_accepts_stereo.v=1;
 
 
 #ifdef USE_PTHREADS
