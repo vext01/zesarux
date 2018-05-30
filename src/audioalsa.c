@@ -491,7 +491,7 @@ void new_audioalsa_enviar_audio_envio(void)
 			//Esto da sonido correcto. Porque? No estoy seguro del todo...
 
 			if (ret==len) {
-				fifo_alsa_read(buf_enviar,len); //*2 porque es stereo
+				fifo_alsa_read(buf_enviar,len*2); //*2 porque es stereo
 				//printf ("enviar audio alsa len: %d\n",len);
 				ret = snd_pcm_writei( pcm_handle, buf_enviar, len );
 			}
