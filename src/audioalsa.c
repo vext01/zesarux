@@ -610,6 +610,8 @@ void new_audioalsa_send_frame(char *buffer)
 	int len=frames;
 	int ret;
 
+	len *=2; //porque es stereo
+
 	//printf ("temp envio sonido\n");
 
 	while( ( ret = snd_pcm_writei( pcm_handle, buffer_playback_alsa, len ) ) != len ) {
