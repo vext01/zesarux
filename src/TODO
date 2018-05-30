@@ -11,6 +11,7 @@ sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de
 -alsa no va bien. dejamos de momento driver en mono
 -dsp: ok
 
+-audio out to file rwa, wav ok
 
 revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y que no se hayan corregido, como en drivers de audio, etc
 ->audio out a wave quiza use audio_valor_enviar_sonido. habria que eliminar dicha variable para ver donde se usa. Corregir leyenda de generacion audio a wave/raw

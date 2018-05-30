@@ -336,7 +336,7 @@ void init_aofile(void)
 			aofile_type=AOFILE_TYPE_WAV;
 			init_aofile_wav();
 
-			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format wav, %dHz, 8 bit, unsigned, 2 channel",FRECUENCIA_SONIDO);
+			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format wav, %dHz, 8 bit, unsigned, 2 channels",FRECUENCIA_SONIDO);
 			debug_printf(VERBOSE_INFO,"%s",last_message_helper_aofile_vofile_file_format);
 #else
 			debug_printf (VERBOSE_ERR,"Output file is wav file but sndfile support is not compiled");
@@ -362,7 +362,7 @@ void init_aofile(void)
 				return;
                 	}
 
-			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format raw, %dHz, 8 bit, unsigned, 2 channel",FRECUENCIA_SONIDO);
+			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format raw, %dHz, 8 bit, unsigned, 2 channels",FRECUENCIA_SONIDO);
 			debug_printf(VERBOSE_INFO,"%s",last_message_helper_aofile_vofile_file_format);
 
 		}
@@ -381,7 +381,7 @@ void init_aofile(void)
 	print_helper_aofile_vofile();
 
 
-	//se puede convertir con sox mediante: sox  -t .raw -r 15600 -b 8 -e unsigned -c 1 archivo.raw archivo.wav
+	//se puede convertir con sox mediante: sox  -t .raw -r 15600 -b 8 -e unsigned -c 2 archivo.raw archivo.wav
 
 }
 
@@ -498,7 +498,7 @@ void audio_empty_buffer(void)
 }
 
 //esto se puede borrar
-int temp_borrarrrr=0;
+//int temp_borrarrrr=0;
 
 void envio_audio(void)
 {
