@@ -367,7 +367,7 @@ void init_aofile(void)
 
 		}
 
-        aofile_buffer=malloc(AUDIO_BUFFER_SIZE);
+        aofile_buffer=malloc(AUDIO_BUFFER_SIZE*2); //*2 porque es stereo
         if (aofile_buffer==NULL) {
                 cpu_panic("Error allocating audio output buffer");
         }

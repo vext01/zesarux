@@ -6870,7 +6870,7 @@ void print_helper_aofile_vofile(void)
 
 				int audio_bytes_per_second,video_bytes_per_second; //bytes por segundo
 
-				audio_bytes_per_second=FRECUENCIA_SONIDO;
+				audio_bytes_per_second=FRECUENCIA_SONIDO*2; //*2 porque es stereo
 				video_bytes_per_second=ancho*3*alto*(50/vofile_fps);//*3 porque son 24 bits
 
         sprintf(buffer_texto_video,"-demuxer rawvideo -rawvideo fps=%d:w=%d:h=%d:format=bgr24",50/vofile_fps,ancho,alto);
