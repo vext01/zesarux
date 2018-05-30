@@ -118,7 +118,7 @@ void audioalsa_get_buffer_info (int *buffer_size,int *current_size)
 int fifo_alsa_next_index(int v)
 {
         v=v+1;
-        if (v==fifo_alsa_buffer_size) v=0;
+        if (v==audioalsa_return_fifo_buffer_size()) v=0;
 
         return v;
 }
