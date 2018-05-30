@@ -56,7 +56,7 @@ void audioalsa_send_frame(char *buffer);
 
 
 //buffer temporal de envio. suficiente para que quepa
-char buf_enviar[AUDIO_BUFFER_SIZE*10];
+char buf_enviar[AUDIO_BUFFER_SIZE*10*2]; //*2 porque es estereo
 
 
 void audioalsa_callback(snd_async_handler_t *pcm_callback);
@@ -84,7 +84,7 @@ int fifo_alsa_buffer_size=AUDIO_BUFFER_SIZE*4;
 int alsa_periodsize=AUDIO_BUFFER_SIZE*2;
 
 
-char fifo_alsa_buffer[MAX_FIFO_ALSA_BUFFER_SIZE];
+char fifo_alsa_buffer[MAX_FIFO_ALSA_BUFFER_SIZE*2]; //*2 porque es estereo
 
 
 
@@ -134,8 +134,14 @@ void fifo_alsa_write(char *origen,int longitud)
                         return;
                 }
 
+		//Canal izquierdo
                 fifo_alsa_buffer[fifo_alsa_write_position]=*origen++;
                 fifo_alsa_write_position=fifo_alsa_next_index(fifo_alsa_write_position);
+
+		//Canal derecho
+                fifo_alsa_buffer[fifo_alsa_write_position]=*origen++;
+                fifo_alsa_write_position=fifo_alsa_next_index(fifo_alsa_write_position);
+
 	}
 }
 
@@ -288,7 +294,7 @@ int audioalsa_init(void)
     }
 
     /* Set number of channels */
-    if (snd_pcm_hw_params_set_channels(pcm_handle, hwparams, 1) < 0) {
+    if (snd_pcm_hw_params_set_channels(pcm_handle, hwparams, 2) < 0) {
       debug_printf(VERBOSE_ERR, "Error setting channels.");
       snd_pcm_close( pcm_handle );
       return 1;
@@ -351,8 +357,6 @@ snd_pcm_uframes_t buffer_size_max;
         unsigned int bufsize=(periodsize * periods)>>2;
         debug_printf(VERBOSE_DEBUG,"Intended buffer size %d",bufsize);
 
-	//temp cambio
-	//bufsize=0;
 
 
 	//Si el bufsize que pretendemos es muy pequenyo, lo cambiamos
@@ -389,11 +393,6 @@ snd_pcm_uframes_t buffer_size_max;
 
 
         debug_printf(VERBOSE_INFO,"Trying buffer size %d",bufsize);
-
-
-	//temp error
-	//printf ("temp error alsa\n");
-	//return 1;
 
 
 
@@ -539,19 +538,7 @@ void *new_audioalsa_enviar_audio(void *nada)
 
 	while (1) {
 
-			//tamanyo antes
-			//printf ("enviar. antes. tamanyo fifo: %d read %d write %d\n",fifo_alsa_return_size(),fifo_alsa_read_position,fifo_alsa_write_position);
-		//if (fifo_alsa_return_size()>=AUDIO_BUFFER_SIZE) {
 			new_audioalsa_enviar_audio_envio();
-
-
-		//No enviar sonido si audio no activo
-                /*while (audio_playing.v==0) {
-                        //1 ms
-                        usleep(1000);
-                }
-		*/
-
 
 	}
 
