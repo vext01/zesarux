@@ -3,6 +3,7 @@ soporte stereo en resto de drivers. De momento esta:
 -coreaudio
 -sdl2
 -sdl1
+-pulse
 
 faltara en alsa, pulse, dsp
 
