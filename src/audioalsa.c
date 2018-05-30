@@ -474,7 +474,7 @@ void new_audioalsa_enviar_audio_envio(void)
 
 		len=frames;
 
-		len *=2; //porque es stereo
+		//len *=2; //porque es stereo
 
 
 		if (fifo_alsa_return_size()>=len) {
@@ -613,7 +613,7 @@ void new_audioalsa_send_frame(char *buffer)
 	int len=frames;
 	int ret;
 
-	len *=2; //porque es stereo
+	//len *=2; //porque es stereo
 
 	//printf ("temp envio sonido\n");
 
