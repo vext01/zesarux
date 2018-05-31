@@ -4289,7 +4289,12 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 				y_destino-=scroll;
 				linea_seleccionada_destino-=scroll;
 
-				if (y_destino>=0) menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
+				if (y_destino>=0) {
+					//Controlar si ultima linea. Es la 22,
+					//considerando una ventana de maximo de alto
+					if (y_destino==22) menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,1,"...");
+					else menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
+				}
 				
 				
 				//menu_escribe_linea_opcion(i,linea_seleccionada,opcion_activa,aux->texto_opcion);
@@ -4641,6 +4646,16 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 	while (tecla!=13 && tecla!=32 && tecla!=MENU_RETORNO_ESC && tecla!=MENU_RETORNO_F1 && tecla!=MENU_RETORNO_F2 && tecla!=MENU_RETORNO_F10 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
+
+		//Ajustar scroll
+		scroll_opciones=0;
+
+		int limite_scroll=alto-2;
+		if (linea_seleccionada>limite_scroll) {
+			printf ("beyond limit\n");
+			scroll_opciones=linea_seleccionada-limite_scroll;
+		}
+
 		//escribir todas opciones
 		menu_escribe_opciones(m,linea_seleccionada,max_opciones,scroll_opciones);
 
