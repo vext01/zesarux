@@ -4650,9 +4650,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Ajustar scroll
 		scroll_opciones=0;
 
-		int limite_scroll=alto-2;
+		int limite_scroll=alto-3;
 		if (linea_seleccionada>limite_scroll) {
-			printf ("beyond limit\n");
+			//printf ("beyond limit\n");
 			scroll_opciones=linea_seleccionada-limite_scroll;
 		}
 
