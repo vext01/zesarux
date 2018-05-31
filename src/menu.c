@@ -4239,6 +4239,8 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 		//Asumimos por si acaso que no hay ninguna activa
 		texto_opcion_activa[0]=0;
 
+		int se_ha_llegado_limite=0; //Si se llega a escribir puntos suspensivos
+
 
         for (i=0;i<max_opciones;i++) {
 
@@ -4294,7 +4296,7 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 					//considerando una ventana de maximo de alto
 					if (y_destino==22) {
 						menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,1,"...");
-						//se_ha_llegado_limite=1;
+						se_ha_llegado_limite=1;
 					}
 					else menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
 				}
@@ -4308,6 +4310,12 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 			aux=aux->next;
 
         }
+
+		//Si hay mas opciones de las permitidas, pero no se han escrito ..., borrarlos por una posible impresion anterior
+		if (max_opciones>22 && !se_ha_llegado_limite) {
+			debug_printf (VERBOSE_DEBUG,"Erase possible ... written before");
+			menu_escribe_linea_opcion(22,-1,1,"   ");
+		}
 
 		if (texto_opcion_activa[0]!=0) {
 			//Active item siempre quiero que se escuche
