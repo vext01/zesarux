@@ -4317,6 +4317,12 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 			menu_escribe_linea_opcion(22,-1,1,"   ");
 		}
 
+		//Si hay scroll, primera linea mostrara ...
+		if (scroll) {
+			debug_printf (VERBOSE_DEBUG,"Showing ... on first line");
+			menu_escribe_linea_opcion(0,-1,1,"...");			
+		}
+
 		if (texto_opcion_activa[0]!=0) {
 			//Active item siempre quiero que se escuche
 
