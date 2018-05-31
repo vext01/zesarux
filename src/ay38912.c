@@ -521,11 +521,20 @@ char da_output_ay(void)
 }
 
 int ay3_stereo_mode=0;
+
+int ay3_custom_stereo_A=0;
+int ay3_custom_stereo_B=1;
+int ay3_custom_stereo_C=2;
 /*
           0=Mono
           1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
           2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
 		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
+		  4=Custom. Depende de variables 
+		  	ay3_custom_stereo_A 
+			ay3_custom_stereo_B
+			ay3_custom_stereo_C
+			En cada una de esas 3, si vale 0=Left. Si 1=Center, Si 2=Right		  
 */
 
 void da_output_ay_3_canales(char *canal_A,char *canal_B, char *canal_C)
@@ -574,7 +583,7 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
 
 	da_output_ay_3_canales(&canal_A,&canal_B,&canal_C);
 
-	int altavoz_izquierdo, altavoz_derecho;
+	int altavoz_izquierdo=0, altavoz_derecho=0;
 
 	//Aplicar modo stereo AY
 //int ay3_stereo_mode=0;
@@ -583,6 +592,11 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
           1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
           2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
 		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
+		  4=Custom. Depende de variables 
+		  	ay3_custom_stereo_A 
+			ay3_custom_stereo_B
+			ay3_custom_stereo_C
+			En cada una de esas 3, si vale 0=Left. Si 1=Center, Si 2=Right
 */
 	switch (ay3_stereo_mode) {
 
@@ -599,6 +613,33 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
 		case 3:
 			altavoz_izquierdo=canal_B+canal_A;
 			altavoz_derecho=canal_C+canal_A;
+		break;
+
+		case 4:
+			//Left
+			if (ay3_custom_stereo_A==0) altavoz_izquierdo +=canal_A;
+			if (ay3_custom_stereo_B==0) altavoz_izquierdo +=canal_B;
+			if (ay3_custom_stereo_C==0) altavoz_izquierdo +=canal_C;
+
+			//Center
+			if (ay3_custom_stereo_A==1) {
+				altavoz_izquierdo +=canal_A;
+				altavoz_derecho +=canal_A;
+			}
+			if (ay3_custom_stereo_B==1) {
+				altavoz_izquierdo +=canal_B;
+				altavoz_derecho +=canal_B;
+			}
+			if (ay3_custom_stereo_C==1) {
+				altavoz_izquierdo +=canal_C;
+				altavoz_derecho +=canal_C;
+			}
+
+			//Right
+			if (ay3_custom_stereo_A==2) altavoz_derecho +=canal_A;
+			if (ay3_custom_stereo_B==2) altavoz_derecho +=canal_B;
+			if (ay3_custom_stereo_C==2) altavoz_derecho +=canal_C;
+						
 		break;
 
 		default:

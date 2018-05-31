@@ -30558,7 +30558,28 @@ void menu_audio_ay_stereo(MENU_ITEM_PARAMETERS)
 {
 	ay3_stereo_mode++;
 
-	if (ay3_stereo_mode==4) ay3_stereo_mode=0;
+	if (ay3_stereo_mode==5) ay3_stereo_mode=0;
+}
+
+
+void menu_audio_ay_stereo_custom(MENU_ITEM_PARAMETERS)
+{
+	ay3_custom_stereo_A++;
+	if (ay3_custom_stereo_A==3) {
+		ay3_custom_stereo_A=2;
+
+		ay3_custom_stereo_B++;
+		if (ay3_custom_stereo_B==3) {
+			ay3_custom_stereo_B=2;
+
+			ay3_custom_stereo_C++;
+			if (ay3_custom_stereo_C==3) {
+				ay3_custom_stereo_A=0;
+				ay3_custom_stereo_B=0;
+				ay3_custom_stereo_C=0;
+			}
+		}
+	}	
 }
 
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
@@ -30614,14 +30635,20 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
 */
 
-		char ay3_stereo_string[10];
+		char ay3_stereo_string[16];
 		if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
 		else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
 		else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
+		else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
 		else strcpy(ay3_stereo_string,"Mono");
 
 		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"AY Stereo mode: %s",
 			ay3_stereo_string);
+
+		if (ay3_stereo_mode==4) {	
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
+			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);
+		}
 
 
 		if (si_complete_video_driver() ) {

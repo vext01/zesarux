@@ -94,4 +94,8 @@ extern char da_output_ay_derecho(void);
 
 extern int ay3_stereo_mode;
 
+extern int ay3_custom_stereo_A;
+extern int ay3_custom_stereo_B;
+extern int ay3_custom_stereo_C;
+
 #endif
