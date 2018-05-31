@@ -779,7 +779,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"set-breakpoint","|sb","index [condition]","Sets a breakpoint at desired index entry with condition. If no condition set, breakpoint will be handled as disabled\n"
 	HELP_MESSAGE_CONDITION_BREAKPOINT
 	},
-	{"set-breakpointaction","|sba","index [condition]","Sets a breakpoint action at desired index entry. The condition to fire the action is the one that matches the same index as on the breakpoints table\n"
+	{"set-breakpointaction","|sba","index [action]","Sets a breakpoint action at desired index entry. The condition to fire the action is the one that matches the same index as on the breakpoints table\n"
 	HELP_MESSAGE_BREAKPOINT_ACTION
 	},
 	{"set-cr",NULL,NULL,"Sends carriage return to every command output received, useful on Windows environments"},
