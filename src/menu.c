@@ -4292,7 +4292,10 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 				if (y_destino>=0) {
 					//Controlar si ultima linea. Es la 22,
 					//considerando una ventana de maximo de alto
-					if (y_destino==22) menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,1,"...");
+					if (y_destino==22) {
+						menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,1,"...");
+						//se_ha_llegado_limite=1;
+					}
 					else menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
 				}
 				
@@ -30668,6 +30671,11 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"Audio Output ~~Volume: %d %%", audiovolume);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
 
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"Autoenable AY Chip: %s",(autoenable_ay_chip.v==1 ? "On" : "Off"));
+		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
+		menu_add_item_menu_ayuda(array_menu_settings_audio,"This option is usefor for example on Spectrum 48k games that uses AY Chip "
+					"and for some ZX80/81 games that also uses it (Bi-Pak ZON-X81, but not Quicksilva QS Sound board)");		
+
 		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip,NULL,"~~AY Chip: %s", (ay_chip_present.v==1 ? "On" : "Off"));
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'a');
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip on this machine");
@@ -30683,12 +30691,6 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,NULL,"Total AY Chips: %d%s",total_ay_chips,
 				(total_ay_chips==2 ? ". Turbosound" : "") );
 
-
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"Autoenable AY Chip: %s",(autoenable_ay_chip.v==1 ? "On" : "Off"));
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"This option is usefor for example on Spectrum 48k games that uses AY Chip "
-					"and for some ZX80/81 games that also uses it (Bi-Pak ZON-X81, but not Quicksilva QS Sound board)");
 
 
 		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_envelopes,menu_cond_ay_chip,"AY ~~Envelopes: %s", (ay_envelopes_enabled.v==1 ? "On" : "Off"));
@@ -30710,6 +30712,12 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
 */
 
+		/*if (ay3_stereo_mode==4) {
+			//Metemos separador, que queda mas bonito
+			menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		}*/
+
 		char ay3_stereo_string[16];
 		if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
 		else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
@@ -30730,6 +30738,8 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,NULL,
 				"Channel C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
+
+			menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		}
 
