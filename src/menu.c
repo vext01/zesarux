@@ -30633,6 +30633,30 @@ void menu_audio_ay_stereo_custom(MENU_ITEM_PARAMETERS)
 	}	
 }
 
+void menu_audio_ay_stereo_custom_A(MENU_ITEM_PARAMETERS)
+{
+	ay3_custom_stereo_A++;
+	if (ay3_custom_stereo_A==3) ay3_custom_stereo_A=0;
+}
+
+void menu_audio_ay_stereo_custom_B(MENU_ITEM_PARAMETERS)
+{
+	ay3_custom_stereo_B++;
+	if (ay3_custom_stereo_B==3) ay3_custom_stereo_B=0;
+}
+
+void menu_audio_ay_stereo_custom_C(MENU_ITEM_PARAMETERS)
+{
+	ay3_custom_stereo_C++;
+	if (ay3_custom_stereo_C==3) ay3_custom_stereo_C=0;
+}
+
+char *menu_stereo_positions[]={
+	"Left",
+	"    Center",
+	"          Right"
+};
+
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_settings_audio;
@@ -30697,23 +30721,16 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			ay3_stereo_string);
 
 		if (ay3_stereo_mode==4) {	
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
-			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
-			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,NULL,
+				"Channel A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
-			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);	
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,NULL,
+				"Channel B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
-			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);	
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,NULL,
+				"Channel C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
-			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);	
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,
-				"123456789012345678901234567890ABCDEFGHIJKMNO");		
 		}
 
 

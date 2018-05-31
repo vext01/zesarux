@@ -1,6 +1,7 @@
 Version 7.1. 29 May 2018 - XXX edition
 
-Added ACB/ABC/BAC Stereo emulation
+Added ACB/ABC/BAC/Custom Stereo emulation
+Improved menu windows: now can have more lines than 22, doing scroll
 
 Some other minor bugfixes and improvements
 
