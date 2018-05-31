@@ -1720,6 +1720,12 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 
 	//int xfinal=((x*menu_char_width)+menu_char_width-1)/8;
 
+	//Controlar limite
+	if (x<0 || y<0 || x>=32 || y>=24) {
+		//printf ("Out of range. X: %d Y: %d Character: %c\n",x,y,caracter);
+		return;
+	}
+
 	int pos_array=y*32+x;
 	overlay_screen_array[pos_array].tinta=tinta;
 	overlay_screen_array[pos_array].papel=papel;
@@ -2709,8 +2715,8 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 
 	int parpadeo=0;
 
-        //y luego el texto
-        for (i=0;i<strlen(texto);i++) {
+    //y luego el texto
+    for (i=0;i<strlen(texto);i++) {
 		letra=texto[i];
 
 		//Si dos ^ seguidas, invertir estado parpadeo
@@ -4224,7 +4230,7 @@ int menu_retorna_atajo(menu_item *m,z80_byte tecla)
 
 int menu_active_item_primera_vez=1;
 
-void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opciones)
+void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opciones,int scroll)
 {
                 int i;
                 int opcion_activa;
@@ -4234,7 +4240,7 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 		texto_opcion_activa[0]=0;
 
 
-                for (i=0;i<max_opciones;i++) {
+        for (i=0;i<max_opciones;i++) {
 
                         //si la opcion seleccionada es un separador, el cursor saltara a la siguiente
                         //Nota: el separador no puede ser final de menu
@@ -4268,11 +4274,32 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 			if (aux->es_menu_tabulado) {
 				menu_escribe_linea_opcion_tabulado(i,linea_seleccionada,opcion_activa,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
 			}
-                        else menu_escribe_linea_opcion(i,linea_seleccionada,opcion_activa,aux->texto_opcion);
+            
+			
+			else {
+				int y_destino=i;
+				int linea_seleccionada_destino=linea_seleccionada;
 
-                        aux=aux->next;
+				//y_destino++; //temp
+				//linea_seleccionada_destino++;
 
-                }
+				//Restar el scroll
+				//int scroll=1;
+
+				y_destino-=scroll;
+				linea_seleccionada_destino-=scroll;
+
+				if (y_destino>=0) menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
+				
+				
+				//menu_escribe_linea_opcion(i,linea_seleccionada,opcion_activa,aux->texto_opcion);
+			}
+
+            
+			
+			aux=aux->next;
+
+        }
 
 		if (texto_opcion_activa[0]!=0) {
 			//Active item siempre quiero que se escuche
@@ -4530,6 +4557,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//calcular ancho maximo de la ventana
 	int ancho_calculado=0;
 
+	//Para permitir menus mas grandes verticalmente de lo que cabe en ventana.
+	int scroll_opciones=0;
+
 	//como minimo, lo que ocupa el titulo: texto + franjas de colores + margen
 	ancho=strlen(titulo)+7;
 
@@ -4562,8 +4592,14 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	if (x<0 || y<0 || x+ancho>32 || y+alto>24) {
 		char window_error_message[100];
-		sprintf(window_error_message,"Window out of bounds: x: %d y: %d ancho: %d alto: %d",x,y,ancho,alto);
-		cpu_panic(window_error_message);
+		//sprintf(window_error_message,"Window out of bounds: x: %d y: %d ancho: %d alto: %d",x,y,ancho,alto);
+		//cpu_panic(window_error_message);
+
+		//Ajustar limites
+		if (x<0) x=0;
+		if (y<0) y=0;
+		if (x+ancho>32) ancho=32-x;
+		if (y+alto>24) alto=24-y;
 	}
 
 	int redibuja_ventana;
@@ -4606,7 +4642,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	while (tecla!=13 && tecla!=32 && tecla!=MENU_RETORNO_ESC && tecla!=MENU_RETORNO_F1 && tecla!=MENU_RETORNO_F2 && tecla!=MENU_RETORNO_F10 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
 		//escribir todas opciones
-		menu_escribe_opciones(m,linea_seleccionada,max_opciones);
+		menu_escribe_opciones(m,linea_seleccionada,max_opciones,scroll_opciones);
 
 
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
@@ -4905,7 +4941,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 				//Mostrar por un momento opciones y letras
 				menu_writing_inverse_color.v=1;
-				menu_escribe_opciones(m,entrada_atajo,max_opciones);
+				menu_escribe_opciones(m,entrada_atajo,max_opciones,scroll_opciones);
 				menu_refresca_pantalla();
 				//menu_espera_no_tecla();
 				menu_dibuja_menu_espera_no_tecla();
@@ -30648,6 +30684,21 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		if (ay3_stereo_mode==4) {	
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
 			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);
+
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
+			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);
+
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
+			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);	
+
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
+			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);	
+
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,"Pad: %d %d %d",
+			ay3_custom_stereo_A,ay3_custom_stereo_B,ay3_custom_stereo_C);	
+
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom,NULL,
+				"123456789012345678901234567890ABCDEFGHIJKMNO");		
 		}
 
 
