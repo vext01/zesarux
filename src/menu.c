@@ -30705,6 +30705,14 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,NULL,"Total AY Chips: %d%s",total_ay_chips,
 				(total_ay_chips==2 ? ". Turbosound" : "") );
 
+		if (si_complete_video_driver() ) {
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"Show AY ~~Piano: %s",
+					(setting_mostrar_ay_piano_grafico.v ? "Graphic" : "Text") );
+			menu_add_item_menu_shortcut(array_menu_settings_audio,'p');
+			menu_add_item_menu_tooltip(array_menu_settings_audio,"Shows AY Piano menu with graphic or with text");
+			menu_add_item_menu_ayuda(array_menu_settings_audio,"Shows AY Piano menu with graphic or with text");
+
+		}
 
 
 		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_envelopes,menu_cond_ay_chip,"AY ~~Envelopes: %s", (ay_envelopes_enabled.v==1 ? "On" : "Off"));
@@ -30744,31 +30752,27 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 		if (ay3_stereo_mode==4) {	
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,NULL,
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
 				"Channel A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,NULL,
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
 				"Channel B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,NULL,
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
 				"Channel C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
 
-			menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			//menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		}
 
 
-		if (si_complete_video_driver() ) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"Show AY ~~Piano: %s",
-					(setting_mostrar_ay_piano_grafico.v ? "Graphic" : "Text") );
-			menu_add_item_menu_shortcut(array_menu_settings_audio,'p');
-			menu_add_item_menu_tooltip(array_menu_settings_audio,"Shows AY Piano menu with graphic or with text");
-			menu_add_item_menu_ayuda(array_menu_settings_audio,"Shows AY Piano menu with graphic or with text");
 
-		}
 
 
 		if (MACHINE_IS_SPECTRUM) {
+
+			menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 			char string_audiodac[32];
 
 				if (audiodac_enabled.v) {
@@ -30783,6 +30787,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 				if (audiodac_enabled.v) {
 					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_set_port,NULL,"Port: %02XH",audiodac_types[audiodac_selected_type].port);
 				}
+
 
 
 		}
