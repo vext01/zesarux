@@ -21,6 +21,13 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
+
+  //test meter un NOOP
+  zsf_write_block(ptr_zsf_file, NULL,0, 0);
+
+
+
 -poder grabar configuración stereo y también indicar por linea de comandos
 
 
