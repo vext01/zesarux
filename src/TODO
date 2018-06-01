@@ -21,8 +21,7 @@ renombrarla
 
 --- Cosas para la siguiente version
 
--menus que puedan tener mas opciones que las lineas visibles en pantalla -> scroll vertical
--menus que puedan tener mas ancho que lo visible en pantalla ->sin scroll
+-poder grabar configuración stereo y también indicar por linea de comandos
 
 
 -poder indicar mas de una accion en misma breakpoint condition, ejemplo
