@@ -2700,11 +2700,33 @@ void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 
 }
 
+int menu_es_prefijo_utf(z80_byte caracter)
+{
+	if (caracter==0xD0 || caracter==0xD1) return 1;
+	else return 0;
+}
+
 char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter)
 {
-	if (prefijo_utf==0xD0 && caracter==0x9C) return 'M'; //cyrillic capital letter em (U+041C)
+	if (prefijo_utf==0xD0) {
+		if (caracter==0x9C) return 'M'; //cyrillic capital letter em (U+041C)
+		if (caracter==0xB0) return 'a';
+		if (caracter==0xBC) return 'm';
+		if (caracter==0xB5) return 'e';
+		if (caracter==0xBE) return 'e';
+		if (caracter==0xB2) return 'B';
+		if (caracter==0x90) return 'A';
+		if (caracter==0xBC) return 'M';
+		if (caracter==0xB8) return 'N';
+	}
 
-	else return '?';
+	if (prefijo_utf==0xD1) {
+                if (caracter==0x82) return 'T';
+                if (caracter==0x83) return 'y';
+                if (caracter==0x85) return 'x';
+        }
+
+	return '?';
 
 
 	//Nota: caracteres que generan texto fuera de la tabla normal, considerar si es un driver de texto o grafico, con if (si_complete_video_driver() ) {
@@ -2763,9 +2785,11 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 
 			//Si no, ver si entra un prefijo utf
 			else {
+				printf ("letra: %02XH\n",letra);
 				//Prefijo utf
-                	        if (letra==0xD0) {
+                	        if (menu_es_prefijo_utf(letra)) {
         	                        era_utf=letra;
+					printf ("activado utf\n");
 	                        }
 
 				else {
@@ -27876,6 +27900,8 @@ int menu_generic_message_aux_filter(char *texto,int inicio, int final)
 
 	unsigned char caracter;
 
+	int prefijo_utf=0;
+
         while (inicio!=final) {
 		caracter=texto[inicio];
 
@@ -27888,6 +27914,16 @@ int menu_generic_message_aux_filter(char *texto,int inicio, int final)
 		//TAB. Lo cambiamos por espacio
 		else if (caracter==9) {
 			texto[inicio]=' ';
+		}
+
+		else if (menu_es_prefijo_utf(caracter)) {
+			//Si era prefijo utf, saltar
+			prefijo_utf=1;
+		}
+
+		//Y si venia de prefijo utf, saltar ese caracter
+		else if (prefijo_utf) {
+			prefijo_utf=0;
 		}
 
 		else if ( !(si_valid_char(caracter)) ) {
