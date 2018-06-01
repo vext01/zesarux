@@ -2,6 +2,7 @@ Version 7.1. 29 May 2018 - XXX edition
 
 Added ACB/ABC/BAC/Custom Stereo emulation
 Improved menu windows: now can have more lines than 22, doing scroll
+Added joystick action to change emulated joystick type: Sinclair, Kempston, etc
 
 Some other minor bugfixes and improvements
 
