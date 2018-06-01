@@ -448,6 +448,7 @@ char *realjoystick_event_names[]={
 	"Osdkeyboard",
 	"NumSelect",
 	"NumAction",
+	"JoySelect",
 	"Aux1",
 	"Aux2",
 	"Aux3",
@@ -845,6 +846,15 @@ void realjoystick_print_char(z80_byte caracter)
 
 }
 
+void realjoystick_print_joyselect(void)
+{
+	char buffer_mensaje[64];
+	sprintf (buffer_mensaje,"Set joystick type: %s",joystick_texto[joystick_emulation]);
+	screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+
+
+}
+
 //si value=0, es reset
 //si value != no, es set
 void realjoystick_set_reset_key(int index,int value)
@@ -975,6 +985,13 @@ void realjoystick_set_reset_action(int index,int value)
 
 			else {
 				ascii_to_keyboard_port_set_clear(realjoystick_numselect,0);
+			}
+		break;
+
+
+		case REALJOYSTICK_EVENT_JOYSELECT:
+			if (value) {
+				realjoystick_print_joyselect();
 			}
 		break;
 
