@@ -991,6 +991,7 @@ void realjoystick_set_reset_action(int index,int value)
 
 		case REALJOYSTICK_EVENT_JOYSELECT:
 			if (value) {
+				joystick_cycle_next_type();
 				realjoystick_print_joyselect();
 			}
 		break;
