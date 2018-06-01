@@ -2702,12 +2702,26 @@ void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 
 int menu_es_prefijo_utf(z80_byte caracter)
 {
-	if (caracter==0xD0 || caracter==0xD1) return 1;
+	if (caracter==0xD0 || caracter==0xD1 || caracter==0xC3) return 1;
 	else return 0;
 }
 
 unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter)
 {
+
+	if (prefijo_utf==0xC3) {
+		if (caracter==0xB1) {
+			//Eñe
+			if (si_complete_video_driver()) {
+                                return 129; //Eñe
+                        }
+                        else {
+                                return 'n';
+                        }
+                }
+
+	}
+
 	if (prefijo_utf==0xD0) {
 		if (caracter==0x90) return 'A';
 		if (caracter==0x9C) return 'M'; //cyrillic capital letter em (U+041C)
