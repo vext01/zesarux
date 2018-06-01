@@ -2749,18 +2749,32 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 		}
 
 		else {
-			//Soporte de algunos caracteres utf
-			if (letra==0xD0) {
-				era_utf=letra;
-			}
+
+			//Si estaba prefijo utf activo
 
 			if (era_utf) {
 				letra=menu_escribe_texto_convert_utf(era_utf,letra);
 				era_utf=0;
+
+				//Caracter final utf
+				putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
 			}
 
 
-			if (!era_utf) putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
+			//Si no, ver si entra un prefijo utf
+			else {
+				//Prefijo utf
+                	        if (letra==0xD0) {
+        	                        era_utf=letra;
+	                        }
+
+				else {
+					//Caracter normal
+					putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
+				}
+			}
+
+
 		}
 
 
