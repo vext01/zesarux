@@ -509,6 +509,8 @@ extern int menu_button_f_function_action;
 
 extern z80_bit screen_bw_no_multitask_menu;
 
+extern int menu_hardware_autofire_cond(void);
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
