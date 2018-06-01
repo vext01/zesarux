@@ -14285,15 +14285,7 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 
 void menu_hardware_joystick(MENU_ITEM_PARAMETERS)
 {
-	if (joystick_emulation==JOYSTICK_TOTAL) joystick_emulation=0;
-	else joystick_emulation++;
-
-	if (menu_hardware_autofire_cond()==0) {
-		//desactivamos autofire
-		joystick_autofire_frequency=0;
-		//y ponemos tecla fire a 0, por si se habia quedado activa
-		puerto_especial_joystick=0;
-	}
+	joystick_cycle_next_type();
 }
 
 void menu_hardware_gunstick(MENU_ITEM_PARAMETERS)

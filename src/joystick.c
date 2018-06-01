@@ -112,6 +112,21 @@ char *gunstick_texto[]={
 };
 
 
+void joystick_cycle_next_type(void)
+{
+        if (joystick_emulation==JOYSTICK_TOTAL) joystick_emulation=0;
+        else joystick_emulation++;
+
+	//Si no esta autofire
+        if (menu_hardware_autofire_cond()==0) {
+                //desactivamos autofire
+                joystick_autofire_frequency=0;
+                //y ponemos tecla fire a 0, por si se habia quedado activa
+                puerto_especial_joystick=0;
+        }
+}
+
+
 void joystick_set_right(void)
 {
         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
