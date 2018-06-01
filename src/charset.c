@@ -816,6 +816,8 @@ unsigned char char_set_spectrum[]={		0
 	,0x00
 
 
+//CYRILLIC SMALL LETTER I и
+,0x00 ,0x42  ,0x46 ,0x4a ,0x52 ,0x62 ,0x42 ,0x00
 
 
 
@@ -1199,5 +1201,6 @@ unsigned char char_set_ql[]={
         ,0x44
         ,0x44
         ,0x00
+
 
 };

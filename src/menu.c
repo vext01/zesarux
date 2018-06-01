@@ -2706,18 +2706,25 @@ int menu_es_prefijo_utf(z80_byte caracter)
 	else return 0;
 }
 
-char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter)
+unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter)
 {
 	if (prefijo_utf==0xD0) {
+		if (caracter==0x90) return 'A';
 		if (caracter==0x9C) return 'M'; //cyrillic capital letter em (U+041C)
 		if (caracter==0xB0) return 'a';
-		if (caracter==0xBC) return 'm';
-		if (caracter==0xB5) return 'e';
-		if (caracter==0xBE) return 'e';
 		if (caracter==0xB2) return 'B';
-		if (caracter==0x90) return 'A';
+		if (caracter==0xB5) return 'e';
+		if (caracter==0xB8) {
+			if (si_complete_video_driver()) {
+				return 130; //CYRILLIC SMALL LETTER I и
+			}
+			else {
+				return 'N';
+			}
+		}
 		if (caracter==0xBC) return 'M';
-		if (caracter==0xB8) return 'N';
+		if (caracter==0xBD) return 'H';
+		if (caracter==0xBE) return 'o';
 	}
 
 	if (prefijo_utf==0xD1) {
@@ -2785,11 +2792,11 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 
 			//Si no, ver si entra un prefijo utf
 			else {
-				printf ("letra: %02XH\n",letra);
+				//printf ("letra: %02XH\n",letra);
 				//Prefijo utf
                 	        if (menu_es_prefijo_utf(letra)) {
         	                        era_utf=letra;
-					printf ("activado utf\n");
+					//printf ("activado utf\n");
 	                        }
 
 				else {
