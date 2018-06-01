@@ -2700,7 +2700,15 @@ void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 
 }
 
+char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter)
+{
+	if (prefijo_utf==0xD0 && caracter==0x9C) return 'M'; //cyrillic capital letter em (U+041C)
 
+	else return '?';
+
+
+	//Nota: caracteres que generan texto fuera de la tabla normal, considerar si es un driver de texto o grafico, con if (si_complete_video_driver() ) {
+}
 
 
 //escribe una linea de texto
@@ -2714,6 +2722,8 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 	z80_byte letra;
 
 	int parpadeo=0;
+
+	int era_utf=0;
 
     //y luego el texto
     for (i=0;i<strlen(texto);i++) {
@@ -2738,8 +2748,24 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 			else putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
 		}
 
-		else putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
-		x++;
+		else {
+			//Soporte de algunos caracteres utf
+			if (letra==0xD0) {
+				era_utf=letra;
+			}
+
+			if (era_utf) {
+				letra=menu_escribe_texto_convert_utf(era_utf,letra);
+				era_utf=0;
+			}
+
+
+			if (!era_utf) putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
+		}
+
+
+
+		if (!era_utf) x++;
 	}
 
 }
