@@ -21,6 +21,8 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-probar accion de cambio de joystick seleccionado, mediante boton de joystick real
+
 -parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
 
   //test meter un NOOP
