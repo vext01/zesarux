@@ -1426,6 +1426,17 @@ z80_byte menu_get_pressed_key(void)
 				return '>';
 			break;
 
+			case 'y':
+				return '[';
+			break;
+
+			case 'u':
+				return ']';
+			break;	
+
+			//Faltaria el (C) del ext+sym+p. Se podria mapear a sym+I, pero esto genera el codigo 127,
+			//Y dicho código en ascii no es imprimible y puede dar problemas en drivers texto, como curses		
+
 			case 'o':
 				return ';';
 			break;
@@ -29496,7 +29507,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"\n"
 			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or \"\")\n\n"
 			"Symbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "
-			"ctrl(symbol shift)+r. You should use ctrl/alt (no need to Spectrum extended mode) to write any of the following: ~|\\[], located on letters asdfg\n\n"
+			"ctrl(symbol shift)+r. You should use ctrl/alt (no need to Spectrum extended mode) to write any of the following: ~|\\{}[], located on letters asdfgyu\n\n"
 
 			"Inside a machine, the keys are mapped this way:\n"
 			"ESC: If text to speech is not enabled, sends Shift+Space (break) on Spectrum. If enabled, stops playing text to speech\n"
