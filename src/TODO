@@ -47,7 +47,7 @@ En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no v
 
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 
--Screen shot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
+-Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 
 -memory zone para Timex
 
@@ -107,9 +107,6 @@ Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
 -Salida 16 bits?
 
--poder parsear numeros en binario. Quiza el problema es el ancho de texto reservado para ello, que tiene que ser mucho mas grande
-Aunque para casos como breakpoints, el limite del campo de texto es mucho mas grande
-Funcion parse_string_to_number. Que prefijo/sufijo asignamos para numeros binarios? En Hisoft devpac assembler, se usaba % como sufijo
 
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
@@ -125,8 +122,6 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 que sea un "if" tipo "if pulsado tecla openmenu"
 
-
--mayusculas + tecla de menu file utils, cuando esta en zx80/81 no va 
 
 -al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
 Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
