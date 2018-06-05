@@ -6507,7 +6507,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 						);
 			printf ("ZEsarUX includes National Semiconductor SC/MP CPU Emulator.\n"
 						"Copyright 2017 Miodrag Milanovic.\n"
-						"You should have received a copy of the license on the LICENSE_SCMP_CORE file\n\n"
+						"You should have received a copy of the license on the LICENSE_SCMP_CORE file\n\n\n"
 						);
 
 			printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
@@ -7263,6 +7263,9 @@ void end_emulator(void)
 	audio_end();
 
 	//printf ("footer: %d\n",menu_footer);
+
+	//Desactivo footer para que no se actualice, sino a veces aparece el footer (cpu, fps, etc) en color grisaceo mientras hace el fade
+	menu_footer=0;
 
 	//Parece ser que el fadeout y en particular el refresco de pantalla no sienta muy bien
 	//cuando se ejecuta desde remote protocol y con el driver cocoa gl. No se muy bien porque,
