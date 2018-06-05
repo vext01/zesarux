@@ -4,6 +4,7 @@ Added ACB/ABC/BAC/Custom Stereo emulation
 Improved menu windows: now can have more lines than 22, doing scroll
 Added joystick action to change emulated joystick type: Sinclair, Kempston, etc
 Added support to show some unicode (utf8) characters on menu
+Improved menu: now all ascii symbols can be written
 
 Some other minor bugfixes and improvements
 

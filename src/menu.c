@@ -1351,21 +1351,54 @@ z80_byte menu_get_pressed_key(void)
 	else if (menu_symshift.v) {
 		//ver casos concretos
 		switch (tecla) {
-			case 'm':
-				return '.';
-			break;
-
-			case 'n':
-				return ',';
-			break;
 
 			case 'z':
 				return ':';
 			break;
 
+			case 'x':
+				return 96; //Libra
+			break;
+
+			case 'c':
+				return '?';
+			break;
+
 			case 'v':
 				return '/';
+			break;			
+
+			case 'b':
+				return '*';
+			break;	
+
+			case 'n':
+				return ',';
+			break;			
+
+			case 'm':
+				return '.';
+			break;	
+
+			case 'a':
+				return '~'; //Aunque esta sale con ext+symbol
 			break;
+
+			case 's':
+				return '|'; //Aunque esta sale con ext+symbol
+			break;			
+
+			case 'd':
+				return '\\'; //Aunque esta sale con ext+symbol
+			break;
+
+			case 'f':
+				return '{'; //Aunque esta sale con ext+symbol
+			break;
+
+			case 'g':
+				return '}'; //Aunque esta sale con ext+symbol
+			break;			
 
 			case 'j':
 				return '-';
@@ -1375,6 +1408,12 @@ z80_byte menu_get_pressed_key(void)
 				return '+';
 			break;
 
+			case 'l':
+				return '=';
+			break;			
+
+
+
 			case 'r':
 				return '<';
 			break;
@@ -1383,8 +1422,38 @@ z80_byte menu_get_pressed_key(void)
 				return '>';
 			break;
 
-			case 'l':
-				return '=';
+			case 'o':
+				return ';';
+			break;
+
+			case 'p':
+				return '"';
+			break;	
+
+
+
+			case '1':
+				return '!';
+			break;
+
+			case '2':
+				return '@';
+			break;
+
+			case '3':
+				return '#';
+			break;
+
+			case '4':
+				return '$';
+			break;
+
+			case '5':
+				return '%';
+			break;
+
+			case '6':
+				return '&';
 			break;
 
 			case '7':
@@ -1399,9 +1468,11 @@ z80_byte menu_get_pressed_key(void)
 				return ')';
 			break;
 
-			case 'p':
-				return '"';
+			case '0':
+				return '_';
 			break;
+
+
 
 
 			//no hace falta esta tecla. asi tambien evitamos que alguien la use en nombre de
