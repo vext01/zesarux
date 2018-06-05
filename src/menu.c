@@ -1171,6 +1171,11 @@ int menu_if_sam_shift(void)
 }*/
 
 
+z80_bit menu_symshift={0};
+z80_bit menu_capshift={0};
+z80_bit menu_backspace={0};
+z80_bit menu_tab={0};
+
 //devuelve tecla pulsada teniendo en cuenta mayus, sym shift
 z80_byte menu_get_pressed_key(void)
 {
@@ -1220,6 +1225,13 @@ z80_byte menu_get_pressed_key(void)
 
 	}*/
 
+	if (menu_tab.v) {
+		//printf ("Pulsado TAB\n");
+		return 15;
+	}
+
+	if (menu_backspace.v) return 12;
+
 
 	tecla=menu_get_pressed_key_no_modifier();
 
@@ -1268,17 +1280,21 @@ z80_byte menu_get_pressed_key(void)
 	*/
 
 	//cuando es symbol + shift juntos, TAB->codigo 15
-	if ( (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) return 15;
+	//if ( (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) return 15;
+
+
 
 	if (tecla==0) return 0;
 
+	//if (menu_backspace.v) return 12;
 
 	//ver si hay algun modificador
 
 	//mayus
 
 //z80_byte puerto_65278=255; //    db              255  ; V    C    X    Z    Sh    ;0
-	if ( (puerto_65278&1)==0) {
+	//if ( (puerto_65278&1)==0) {
+	if (menu_capshift.v) {
 
 		//En modo zx80/81, teclas con shift
 		/*if (MACHINE_IS_ZX8081) {
@@ -1331,7 +1347,8 @@ z80_byte menu_get_pressed_key(void)
 	}
 
 	//sym shift
-	else if ( (puerto_32766&2)==0) {
+	//else if ( (puerto_32766&2)==0) {
+	else if (menu_symshift.v) {
 		//ver casos concretos
 		switch (tecla) {
 			case 'm':
@@ -3705,7 +3722,9 @@ z80_byte menu_da_todas_teclas(void)
 		acumulado=acumulado & valor_botones_mouse;
 	}
 
-
+	//Contar también algunas teclas solo menu:
+	z80_byte valor_teclas_menus=(menu_backspace.v|menu_tab.v)^255;
+	acumulado=acumulado & valor_teclas_menus;
 
 
         //Modo Z88
@@ -3724,10 +3743,10 @@ z80_byte menu_da_todas_teclas(void)
 	if ( (acumulado&MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) return acumulado;
 
 	//pero si que cuentan juntas (TAB)
-	if ( (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) {
+	/*if ( (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) {
 		//printf ("TAB\n");
 		acumulado=acumulado & puerto_65278 & puerto_32766;
-	}
+	}*/
 
 	/*if (MACHINE_IS_SAM) {
 		//Contar los 3 bits superiores de los puertos de teclas extendidas del sam
@@ -29401,8 +29420,8 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"- Use c to copy to ZEsarUX clipboard\n"
 			"\n"
 			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H) or as a character (with quotes '' or \"\")\n\n"
-			"Symbols on menu must be written according to the current machine keyboard mapping, so for example, to write the symbol minus (<), you have to press "
-			"ctrl(symbol shift)+r on Spectrum, shift+n on ZX80/81 or shift+, on Z88.\n\n"
+			"Symbols on menu must be written according to a Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "
+			"ctrl(symbol shift)+r.\n\n"
 
 			"Inside a machine, the keys are mapped this way:\n"
 			"ESC: If text to speech is not enabled, sends Shift+Space (break) on Spectrum. If enabled, stops playing text to speech\n"

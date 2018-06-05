@@ -105,11 +105,9 @@ En ql llega a buscar?
 -Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
 Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
--audio salida stereo. acb, abc, etc. Salida 16 bits?
+-Salida 16 bits?
 
--Carga tspeeed que de un tono de carga acelerado para saber que lo está haciendo
 
--quiza layout de teclado en menu deberia ser siempre el de Spectrum
 
 -poder parsear numeros en binario
 

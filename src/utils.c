@@ -925,6 +925,11 @@ void util_get_complete_path(char *dir,char *name,char *fullpath)
 	}
 }
 
+void util_press_menu_symshift(int pressrelease)
+{
+        if (pressrelease) menu_symshift.v=1;
+        else menu_symshift.v=0;
+}
 
 
 //En spectrum, desactiva symbol shift. En zx80/81, desactiva mayusculas
@@ -932,6 +937,9 @@ void clear_symshift(void)
 {
         if (MACHINE_IS_ZX8081) puerto_65278 |=1;
         else puerto_32766 |=2;
+
+        //Desactivamos tecla symshift para menu
+        menu_symshift.v=0;        
 
 }
 
@@ -944,6 +952,9 @@ void set_symshift(void)
 
         if (MACHINE_IS_ZX8081) puerto_65278  &=255-1;
         else puerto_32766 &=255-2;
+
+        //Activamos tecla symshift para menu
+        menu_symshift.v=1;
 
 }
 
@@ -2759,6 +2770,11 @@ void reset_keyboard_ports(void)
 
 	//De QL
 	for (i=0;i<8;i++) ql_keyboard_table[i]=255;
+
+        menu_symshift.v=0;
+        menu_capshift.v=0;
+        menu_backspace.v=0;
+        menu_tab.v=0;
 
 
 }
@@ -4792,6 +4808,8 @@ void util_set_reset_key_cpc_keymap(enum util_teclas_cpc_keymap tecla,int pressre
                         break;
 
 			case UTIL_KEY_CPC_PERIOD:
+
+
                                 if (pressrelease) {
                                         cpc_keyboard_table[3] &=255-128;
                                 }
@@ -5955,6 +5973,9 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         case UTIL_KEY_SHIFT_L:
                         case UTIL_KEY_CAPS_SHIFT:
 
+                                if (pressrelease) menu_capshift.v=1;
+                                else menu_capshift.v=0;
+
                                 if (pressrelease) {
                                         puerto_65278  &=255-1;
                                         blink_kbd_a14 &= (255-64);
@@ -5970,6 +5991,9 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         break;
 
                         case UTIL_KEY_SHIFT_R:
+                                if (pressrelease) menu_capshift.v=1;
+                                else menu_capshift.v=0;
+
                                 if (pressrelease) {
                                         puerto_65278  &=255-1;
                                         blink_kbd_a15 &= (255-128);
@@ -5985,6 +6009,9 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         break;
 
                         case UTIL_KEY_ALT_L:
+
+                                util_press_menu_symshift(pressrelease);
+
                                 //printf ("Pulsado ctrl o Alt");
                                 if (MACHINE_IS_ZX8081) {
                                        //para zx80/81
@@ -6020,6 +6047,8 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         break;
 
                         case UTIL_KEY_ALT_R:
+                                util_press_menu_symshift(pressrelease);
+
                                 //printf ("Pulsado ctrl o Alt");
                                 if (MACHINE_IS_ZX8081) {
                                        //para zx80/81
@@ -6065,7 +6094,10 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
 
                         case UTIL_KEY_CONTROL_R:
-                        case UTIL_KEY_CONTROL_L:
+                        case UTIL_KEY_CONTROL_L:                
+
+                                util_press_menu_symshift(pressrelease);
+
                                 //printf ("Pulsado ctrl");
                                 if (MACHINE_IS_ZX8081) {
                                        //para zx80/81
@@ -6110,6 +6142,9 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
                         //Teclas que generan doble pulsacion
                         case UTIL_KEY_BACKSPACE:
+                                if (pressrelease) menu_backspace.v=1;
+                                else menu_backspace.v=0;
+
                                 if (MACHINE_IS_SAM) {
                                         if (pressrelease) puerto_teclado_sam_eff9 &= (255-128);
                                         else              puerto_teclado_sam_eff9 |= 128;
@@ -6231,7 +6266,14 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         break;
 
                         case UTIL_KEY_TAB:
-
+                                if (pressrelease) {
+                                        menu_tab.v=1; 
+                                        //printf ("Pulsado TAB\n");
+                                }
+                                else {
+                                        menu_tab.v=0;
+                                        //printf ("Liberado TAB\n");
+                                }
 
 				if (MACHINE_IS_SAM) {
 					if (pressrelease) puerto_teclado_sam_f7f9 &= (255-64);
@@ -6288,6 +6330,10 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
                         case UTIL_KEY_COMMA:
                         case ',':
+                                util_press_menu_symshift(pressrelease);
+                                //Nota: para tanto , como . hay un problema en zx80/81 con la tecla en el menu,
+                                //pues no genera sym +m y n como cabria esperar
+                                //en ese caso, hay que pulsar ctrl/alt + m o n          
 				if (MACHINE_IS_ZX8081) {
 					if (pressrelease) {
 						puerto_32766 &=255-2;
@@ -6327,7 +6373,10 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         //Punto
                         case UTIL_KEY_PERIOD:
                         case '.':
-
+                                util_press_menu_symshift(pressrelease);
+                                //Nota: para tanto , como . hay un problema en zx80/81 con la tecla en el menu,
+                                //pues no genera sym +m y n como cabria esperar
+                                //en ese caso, hay que pulsar ctrl/alt + m o n                                
                                 if (MACHINE_IS_ZX8081) {
                                         //para zx80/81
                                                 if (pressrelease) puerto_32766  &=255-2;
@@ -6347,6 +6396,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         break;
 
                         case UTIL_KEY_MINUS:
+
                                 if (pressrelease) {
                                         set_symshift();
                                         puerto_49150 &=255-8;

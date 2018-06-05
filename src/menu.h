@@ -46,6 +46,11 @@ extern void cls_menu_overlay(void);
 extern void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
 extern void normal_overlay_texto_menu(void);
 
+extern z80_bit menu_symshift;
+extern z80_bit menu_capshift;
+extern z80_bit menu_backspace;
+extern z80_bit menu_tab;
+
 extern int menu_footer;
 
 extern void enable_footer(void);
