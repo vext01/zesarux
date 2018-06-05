@@ -996,15 +996,15 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	z80_byte tecla;
 
         //Y tecla "." en modo zx80/81, que sale con tecla symbol shift
-        if (MACHINE_IS_ZX8081) {
+        /*if (MACHINE_IS_ZX8081) {
                 if ((puerto_32766&2)==0) {
                         return 'm';
                 }
-        }
+        }*/
 
 	//Teclas para Z88. Esto hace falta para drivers de texto, tipo curses, que usan funcion ascii_to_keyboard_port_set_clear para todas teclas
 	//Y que en caso de z88, por ejemplo con el '.', solo ponen el puerto de teclado de Z88 y no el symbol+m cuando estan en modo z88
-        if (MACHINE_IS_Z88) {
+        /*if (MACHINE_IS_Z88) {
                 if ((blink_kbd_a15&4)==0) {
                         return '.';
                 }
@@ -1043,9 +1043,9 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 		//}
 
 
-        }
+        }*/
 
-	if (MACHINE_IS_CPC) {
+	/*if (MACHINE_IS_CPC) {
 	        if ((cpc_keyboard_table[3]&128)==0) {
                         return '.';
                 }
@@ -1071,9 +1071,9 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 			return ';';
 		}
 
-	}
+	}*/
 
-	if (MACHINE_IS_SAM) {
+	/*if (MACHINE_IS_SAM) {
 		if ((puerto_teclado_sam_7ff9&64)==0) {
 			return '.';
 		}
@@ -1102,7 +1102,7 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 			return '"';
 		}
 
-	}
+	}*/
 
 
 	//ESC significa Shift+Space en ZX-Uno y tambien ESC puerto_especial para menu.
@@ -1149,7 +1149,7 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 
 
 //Retorna si left shift o right shift de z88 pulsado
-int menu_if_z88_shift(void)
+/*int menu_if_z88_shift(void)
 {
 	if ( (blink_kbd_a14&64)==0 || (blink_kbd_a15&128)==0 ) return 1;
 	return 0;
@@ -1168,7 +1168,7 @@ int menu_if_sam_shift(void)
 {
         if ( (puerto_65278 & 1)==0 ) return 1;
         return 0;
-}
+}*/
 
 
 //devuelve tecla pulsada teniendo en cuenta mayus, sym shift
@@ -1202,7 +1202,7 @@ z80_byte menu_get_pressed_key(void)
 	//Quiza estas dos teclas se podrian gestionar desde menu_get_pressed_key_no_modifier??
 	//No estoy seguro , quiza esta aqui para que se interpreten antes que cualquier otra cosa de dentro de esa funcion
 	//Mejor no mover ya que funciona....
-	if (MACHINE_IS_SAM) {
+	/*if (MACHINE_IS_SAM) {
 		//TAB en sam coupe
 		if ( (puerto_teclado_sam_f7f9 & 64)==0 ) {
 			return 15;
@@ -1218,7 +1218,7 @@ z80_byte menu_get_pressed_key(void)
 		//	return '.';
 		//}
 
-	}
+	}*/
 
 
 	tecla=menu_get_pressed_key_no_modifier();
@@ -1228,7 +1228,7 @@ z80_byte menu_get_pressed_key(void)
 	//if (MACHINE_IS_Z88 && (blink_kbd_a14&64)==0 ) {
 
 	//Z88 y shift
-	if (MACHINE_IS_Z88 && menu_if_z88_shift() ) {
+	/*if (MACHINE_IS_Z88 && menu_if_z88_shift() ) {
 		if (tecla==',') return '<';
 		if (tecla=='.') return '>';
 		if (tecla=='=') return '+';
@@ -1265,7 +1265,7 @@ z80_byte menu_get_pressed_key(void)
 		if (tecla=='q') return '<';
 		if (tecla=='w') return '>';
 	}
-
+	*/
 
 	//cuando es symbol + shift juntos, TAB->codigo 15
 	if ( (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) return 15;
@@ -1281,7 +1281,7 @@ z80_byte menu_get_pressed_key(void)
 	if ( (puerto_65278&1)==0) {
 
 		//En modo zx80/81, teclas con shift
-		if (MACHINE_IS_ZX8081) {
+		/*if (MACHINE_IS_ZX8081) {
 			if (tecla=='z') return ':';
 			if (tecla=='v') return '/';
 			if (tecla=='j') return '-';
@@ -1292,7 +1292,7 @@ z80_byte menu_get_pressed_key(void)
 			if (tecla=='i') return '(';
 			if (tecla=='o') return ')';
 			if (tecla=='p') return '"';
-		}
+		}*/
 
 		//si son letras, ponerlas en mayusculas
 		if (tecla>='a' && tecla<='z') {
@@ -3709,7 +3709,7 @@ z80_byte menu_da_todas_teclas(void)
 
 
         //Modo Z88
-        if (MACHINE_IS_Z88) {
+        /*if (MACHINE_IS_Z88) {
 		//no contar mayusculas
                 acumulado = acumulado & blink_kbd_a8 & blink_kbd_a9 & blink_kbd_a10 & blink_kbd_a11 & blink_kbd_a12 & blink_kbd_a13 & (blink_kbd_a14 | 64) & (blink_kbd_a15 | 128);
 
@@ -3718,7 +3718,7 @@ z80_byte menu_da_todas_teclas(void)
         else {
                 //Poner los 3 bits superiores no usados a 1
                 acumulado |=(128+64+32);
-        }
+        }*/
 
 
 	if ( (acumulado&MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) return acumulado;
@@ -3729,7 +3729,7 @@ z80_byte menu_da_todas_teclas(void)
 		acumulado=acumulado & puerto_65278 & puerto_32766;
 	}
 
-	if (MACHINE_IS_SAM) {
+	/*if (MACHINE_IS_SAM) {
 		//Contar los 3 bits superiores de los puertos de teclas extendidas del sam
 		z80_byte acum_sam=puerto_teclado_sam_fef9 & puerto_teclado_sam_fdf9 & puerto_teclado_sam_fbf9 & puerto_teclado_sam_f7f9 & puerto_teclado_sam_eff9 & puerto_teclado_sam_dff9 & puerto_teclado_sam_bff9 & puerto_teclado_sam_7ff9;
 
@@ -3744,23 +3744,23 @@ z80_byte menu_da_todas_teclas(void)
 
 		//printf ("acumulado: %d acum_sam: %d\n",acumulado,acum_sam);
 
-		/*
+		
 		//TAB en SAM
-		if ( (puerto_teclado_sam_f7f9 & 64)==0) {
-			acumulado=acumulado & (255-3);
-		}
+		//if ( (puerto_teclado_sam_f7f9 & 64)==0) {
+		//	acumulado=acumulado & (255-3);
+		//}
 
 		//DEL en SAM
-		if (  (puerto_teclado_sam_eff9 & 128)==0) {
-			//da igual el valor de acumulado, simplemente con cambiar un bit nos vale
-			acumulado=acumulado & (255-1);
-		}
-		*/
+		//if (  (puerto_teclado_sam_eff9 & 128)==0) {
+		//	//da igual el valor de acumulado, simplemente con cambiar un bit nos vale
+		//	acumulado=acumulado & (255-1);
+		//}
+		
 
-	}
+	}*/
 
 	//o si en modo zx80/81, cuenta el '.'
-	if (MACHINE_IS_ZX8081) {
+	/*if (MACHINE_IS_ZX8081) {
 		if ((puerto_32766&2)==0) acumulado=acumulado & puerto_32766;
 	}
 
@@ -3771,7 +3771,7 @@ z80_byte menu_da_todas_teclas(void)
 			if (j==2) acumulado = acumulado & (cpc_keyboard_table[j] | 32);
 			else acumulado = acumulado & cpc_keyboard_table[j];
 		}
-	}
+	}*/
 
 	return acumulado;
 
