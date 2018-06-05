@@ -107,9 +107,9 @@ Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
 -Salida 16 bits?
 
-
-
--poder parsear numeros en binario
+-poder parsear numeros en binario. Quiza el problema es el ancho de texto reservado para ello, que tiene que ser mucho mas grande
+Aunque para casos como breakpoints, el limite del campo de texto es mucho mas grande
+Funcion parse_string_to_number. Que prefijo/sufijo asignamos para numeros binarios? En Hisoft devpac assembler, se usaba % como sufijo
 
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.

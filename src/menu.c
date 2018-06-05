@@ -1398,7 +1398,11 @@ z80_byte menu_get_pressed_key(void)
 
 			case 'g':
 				return '}'; //Aunque esta sale con ext+symbol
-			break;			
+			break;		
+
+			case 'h':
+				return 94; //Símbolo exponente/circunflejo
+			break;						
 
 			case 'j':
 				return '-';
@@ -29490,9 +29494,9 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"- Use f and n to find text\n"
 			"- Use c to copy to ZEsarUX clipboard\n"
 			"\n"
-			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H) or as a character (with quotes '' or \"\")\n\n"
-			"Symbols on menu must be written according to a Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "
-			"ctrl(symbol shift)+r.\n\n"
+			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or \"\")\n\n"
+			"Symbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "
+			"ctrl(symbol shift)+r. You should use only ctrl/alt to write any of the following: ~|\\[], located on letters asdfg\n\n"
 
 			"Inside a machine, the keys are mapped this way:\n"
 			"ESC: If text to speech is not enabled, sends Shift+Space (break) on Spectrum. If enabled, stops playing text to speech\n"

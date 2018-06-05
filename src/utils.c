@@ -6851,6 +6851,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
 
 //Retorna numero parseado. Si acaba en H, se supone que es hexadecimal
+//Si acaba en 
 //Si empieza por ' o "" es un caracter (1 solo caracter, no un string)
 //Valor de retorno unsigned de 32 bits
 unsigned int parse_string_to_number(char *texto)
@@ -6865,9 +6866,9 @@ unsigned int parse_string_to_number(char *texto)
 	if (texto[0]=='\'' || texto[0]=='"') return texto[1];
 
 	//sufijo. Buscar ultimo caracter antes de final de cadena o espacio. Asi podemos parsear cosas como "20H 32 34", y se interpretara solo el 20H
-int posicion_sufijo=0;
-  for (;texto[posicion_sufijo]!=0 && texto[posicion_sufijo]!=' ';posicion_sufijo++);
-  posicion_sufijo--;
+        int posicion_sufijo=0;
+        for (;texto[posicion_sufijo]!=0 && texto[posicion_sufijo]!=' ';posicion_sufijo++);
+        posicion_sufijo--;
 
   //int posicion_sufijo=l-1;
 
@@ -6883,6 +6884,15 @@ int posicion_sufijo=0;
 		return value;
 	}
 
+        if (sufijo=='%') {
+		//binario
+		//quitamos sufijo y parseamos
+		texto[posicion_sufijo]=0;
+		value=strtol(texto, NULL, 2);
+		//volvemos a dejar sufijo tal cual
+		texto[posicion_sufijo]=sufijo;
+		return value;
+	}
 
 	//decimal
         return atoi(texto);
