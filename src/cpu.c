@@ -6473,23 +6473,49 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	//de momento ponemos esto a null y los mensajes siempre saldran por un printf normal
 	scr_messages_debug=NULL;
 
+/*
+Note for developers: If you are doing modifications to ZEsarUX, you should follow the rules from GPL license, as well as 
+the licenses that cover the MK14 and Motorola cores engines. 
+Also, you should keep the following copyright message, beginning with "Begin Copyright message" and ending with "End Copyright message"
+*/
 
+//Begin Copyright message
 
 	printf ("ZEsarUX - ZX Second-Emulator And Released for UniX\n"
-			"Copyright (C) 2013 Cesar Hernandez Bano\n\n"
-			"This program comes with ABSOLUTELY NO WARRANTY\n"
-			"This is free software, and you are welcome to redistribute it under certain conditions\n\n");
-			printf ("Includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.\n"
-						"Copyright 1998-2002 Karl Stenerud. All rights reserved.\n");
-			printf ("Includes National Semiconductor SC/MP CPU Emulator.\n"
-						"Copyright 2017 Miodrag Milanovic.\n\n");
+	"https://github.com/chernandezba/zesarux\n\n"
+    "Copyright (C) 2013 Cesar Hernandez Bano\n"
+	"\n"
+    "ZEsarUX is free software: you can redistribute it and/or modify\n"
+    "it under the terms of the GNU General Public License as published by\n"
+    "the Free Software Foundation, either version 3 of the License, or\n"
+    "(at your option) any later version.\n"
+	"\n"
+    "This program is distributed in the hope that it will be useful,\n"
+    "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+    "GNU General Public License for more details.\n"
+	"\n"
+    "You should have received a copy of the GNU General Public License\n"
+    "along with this program.  If not, see <https://www.gnu.org/licenses/>.\n"
+	"\n"
+	"\n"
+	);
 
-			printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n\n");
+			printf ("ZEsarUX includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.\n"
+						"Copyright 1998-2002 Karl Stenerud. All rights reserved.\n"
+						"You should have received a copy of the license on the LICENSE_MOTOROLA_CORE file\n\n"
+						);
+			printf ("ZEsarUX includes National Semiconductor SC/MP CPU Emulator.\n"
+						"Copyright 2017 Miodrag Milanovic.\n"
+						"You should have received a copy of the license on the LICENSE_SCMP_CORE file\n\n"
+						);
+
+			printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
+			
+					"\n");
 
 
-
-
-
+//End Copyright message
 
 
 
