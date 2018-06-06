@@ -175,3 +175,12 @@ char autosave_snapshot_path_buffer[PATH_MAX];
 
 //Si el autoload (reset machine, load"") se lanza con top speed
 z80_bit fast_autoload={0};
+
+
+
+//
+// Audio Settings
+//
+
+//Si se muestra piano grafico en drivers grafico. Si no, muestra piano de texto en drivers graficos
+z80_bit setting_mostrar_ay_piano_grafico={1};

@@ -51,6 +51,7 @@ extern z80_bit menu_capshift;
 extern z80_bit menu_backspace;
 extern z80_bit menu_tab;
 
+extern int menu_cond_zx8081(void);
 extern int menu_footer;
 
 extern void enable_footer(void);

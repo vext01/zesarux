@@ -581,7 +581,7 @@ int hardware_printers_opcion_seleccionada=0;
 int cpu_stats_opcion_seleccionada=0;
 int input_file_keyboard_opcion_seleccionada=0;
 int change_video_driver_opcion_seleccionada=0;
-int change_audio_driver_opcion_seleccionada=0;
+
 int hardware_realjoystick_opcion_seleccionada=0;
 int hardware_realjoystick_event_opcion_seleccionada=0;
 int hardware_realjoystick_keys_opcion_seleccionada=0;
@@ -615,7 +615,7 @@ int multiface_opcion_seleccionada=0;
 int betadisk_opcion_seleccionada=0;
 
 int settings_opcion_seleccionada=0;
-int settings_audio_opcion_seleccionada=0;
+
 int settings_snapshot_opcion_seleccionada=0;
 
 int settings_display_opcion_seleccionada=0;
@@ -680,8 +680,7 @@ char menu_buffer_textspeech_stop_filter_program[PATH_MAX];
 //cinta real seleccionada. realtape_name apuntara aqui
 char menu_realtape_name[PATH_MAX];
 
-//aofile. aofilename apuntara aqui
-char aofilename_file[PATH_MAX];
+
 
 //vofile. vofilename apuntara aqui
 char vofilename_file[PATH_MAX];
@@ -5555,26 +5554,6 @@ int menu_display_arttext_cond(void)
 }
 
 
-void menu_audio_envelopes(MENU_ITEM_PARAMETERS)
-{
-	ay_envelopes_enabled.v^=1;
-}
-
-void menu_audio_speech(MENU_ITEM_PARAMETERS)
-{
-        ay_speech_enabled.v^=1;
-}
-
-void menu_audio_sound_zx8081(MENU_ITEM_PARAMETERS)
-{
-	zx8081_vsync_sound.v^=1;
-}
-
-void menu_audio_zx8081_detect_vsync_sound(MENU_ITEM_PARAMETERS)
-{
-	zx8081_detect_vsync_sound.v ^=1;
-}
-
 int menu_cond_zx81(void)
 {
         if (MACHINE_IS_ZX81) return 1;
@@ -5716,20 +5695,9 @@ int menu_cond_spectrum(void)
 	//return !menu_cond_zx8081();
 }
 
-int menu_cond_ay_chip(void)
-{
-	return ay_chip_present.v;
-}
 
-void menu_audio_ay_chip(MENU_ITEM_PARAMETERS)
-{
-	ay_chip_present.v^=1;
-}
 
-void menu_audio_ay_chip_autoenable(MENU_ITEM_PARAMETERS)
-{
-	autoenable_ay_chip.v^=1;
-}
+
 
 
 
@@ -11166,8 +11134,7 @@ void menu_ay_pianokeyboard_draw_text_piano(int linea,int canal GCC_UNUSED,char *
 }
 
 
-//Si se muestra piano grafico en drivers grafico. Si no, muestra piano de texto en drivers graficos
-z80_bit setting_mostrar_ay_piano_grafico={1};
+
 
 
 //Dice si se muestra piano grafico o de texto.
@@ -11363,98 +11330,6 @@ valor_contador_segundo_anterior=contador_segundo;
 
 
 
-void menu_aofile_insert(MENU_ITEM_PARAMETERS)
-{
-
-	if (aofile_inserted.v==0) {
-		init_aofile();
-
-		//Si todo ha ido bien
-		if (aofile_inserted.v) {
-			menu_generic_message_format("File information","%s\n%s\n\n%s",
-			last_message_helper_aofile_vofile_file_format,last_message_helper_aofile_vofile_bytes_minute_audio,last_message_helper_aofile_vofile_util);
-		}
-
-	}
-
-        else if (aofile_inserted.v==1) {
-                close_aofile();
-        }
-
-}
-
-int menu_aofile_cond(void)
-{
-	if (aofilename!=NULL) return 1;
-	else return 0;
-}
-
-void menu_aofile(MENU_ITEM_PARAMETERS)
-{
-
-	aofile_inserted.v=0;
-
-
-        char *filtros[3];
-
-#ifdef USE_SNDFILE
-        filtros[0]="rwa";
-        filtros[1]="wav";
-        filtros[2]=0;
-#else
-        filtros[0]="rwa";
-        filtros[1]=0;
-#endif
-
-
-        if (menu_filesel("Select Audio File",filtros,aofilename_file)==1) {
-
-       	        if (si_existe_archivo(aofilename_file)) {
-
-               	        if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) {
-				aofilename=NULL;
-				return;
-			}
-
-       	        }
-
-                aofilename=aofilename_file;
-
-
-        }
-
-	else {
-		aofilename=NULL;
-	}
-
-
-}
-
-void menu_audio_beeper_real (MENU_ITEM_PARAMETERS)
-{
-	beeper_real_enabled ^=1;
-}
-
-void menu_audio_volume(MENU_ITEM_PARAMETERS)
-{
-        char string_perc[4];
-
-        sprintf (string_perc,"%d",audiovolume);
-
-
-        menu_ventana_scanf("Volume in %",string_perc,4);
-
-        int v=parse_string_to_number(string_perc);
-
-	if (v>100 || v<0) {
-		debug_printf (VERBOSE_ERR,"Invalid volume value");
-		return;
-	}
-
-	audiovolume=v;
-}
-
-
 int menu_cond_allow_write_rom(void)
 {
 
@@ -11487,39 +11362,6 @@ void menu_hardware_allow_write_rom(MENU_ITEM_PARAMETERS)
 	}
 }
 
-
-
-void menu_audio_beep_filter_on_rom_save(MENU_ITEM_PARAMETERS)
-{
-	output_beep_filter_on_rom_save.v ^=1;
-}
-
-
-void menu_audio_beep_alter_volume(MENU_ITEM_PARAMETERS)
-{
-	output_beep_filter_alter_volume.v ^=1;
-}
-
-
-void menu_audio_beep_volume(MENU_ITEM_PARAMETERS)
-{
-
-        char string_vol[4];
-
-        sprintf (string_vol,"%d",output_beep_filter_volume);
-
-
-        menu_ventana_scanf("Volume (0-127)",string_vol,4);
-
-        int v=parse_string_to_number(string_vol);
-
-        if (v>127 || v<0) {
-                debug_printf (VERBOSE_ERR,"Invalid volume value");
-                return;
-        }
-
-        output_beep_filter_volume=v;
-}
 
 
 
@@ -24873,101 +24715,6 @@ int menu_interface_zoom_cond(void)
 }
 
 
-int num_menu_audio_driver;
-int num_previo_menu_audio_driver;
-
-
-//Determina cual es el audio driver actual
-void menu_change_audio_driver_get(void)
-{
-        int i;
-        for (i=0;i<num_audio_driver_array;i++) {
-		//printf ("actual: %s buscado: %s indice: %d\n",audio_driver_name,audio_driver_array[i].driver_name,i);
-                if (!strcmp(audio_driver_name,audio_driver_array[i].driver_name)) {
-                        num_menu_audio_driver=i;
-                        num_previo_menu_audio_driver=i;
-			return;
-                }
-
-        }
-
-}
-
-
-void menu_change_audio_driver_change(MENU_ITEM_PARAMETERS)
-{
-        num_menu_audio_driver++;
-        if (num_menu_audio_driver==num_audio_driver_array) num_menu_audio_driver=0;
-}
-
-void menu_change_audio_driver_apply(MENU_ITEM_PARAMETERS)
-{
-
-	audio_end();
-
-        int (*funcion_init) ();
-        int (*funcion_set) ();
-
-        funcion_init=audio_driver_array[num_menu_audio_driver].funcion_init;
-        funcion_set=audio_driver_array[num_menu_audio_driver].funcion_set;
-                if ( (funcion_init()) ==0) {
-                        funcion_set();
-			menu_generic_message("Apply Driver","OK. Driver applied");
-			salir_todos_menus=1;
-                }
-
-                else {
-                        debug_printf(VERBOSE_ERR,"Can not set audio driver. Restoring to previous driver %s",audio_driver_name);
-			menu_change_audio_driver_get();
-
-                        //Restaurar audio driver
-                        funcion_init=audio_driver_array[num_previo_menu_audio_driver].funcion_init;
-                        funcion_set=audio_driver_array[num_previo_menu_audio_driver].funcion_set;
-
-                        funcion_init();
-                        funcion_set();
-                }
-
-
-
-}
-
-
-void menu_change_audio_driver(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_change_audio_driver;
-        menu_item item_seleccionado;
-        int retorno_menu;
-
-       	menu_change_audio_driver_get();
-
-        do {
-
-                menu_add_item_menu_inicial_format(&array_menu_change_audio_driver,MENU_OPCION_NORMAL,menu_change_audio_driver_change,NULL,"Audio Driver: %s",audio_driver_array[num_menu_audio_driver].driver_name );
-
-                menu_add_item_menu_format(array_menu_change_audio_driver,MENU_OPCION_NORMAL,menu_change_audio_driver_apply,NULL,"Apply Driver" );
-
-                menu_add_item_menu(array_menu_change_audio_driver,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_change_audio_driver,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_change_audio_driver);
-
-                retorno_menu=menu_dibuja_menu(&change_audio_driver_opcion_seleccionada,&item_seleccionado,array_menu_change_audio_driver,"Change Audio Driver" );
-
-                cls_menu_overlay();
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-}
-
-
 void menu_tool_path(char *tool_path,char *name)
 {
 
@@ -30755,363 +30502,6 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
 
 }
-
-void menu_setting_ay_piano_grafico(MENU_ITEM_PARAMETERS)
-{
-	setting_mostrar_ay_piano_grafico.v ^=1;
-}
-
-/*void menu_audio_audiodac(MENU_ITEM_PARAMETERS)
-{
-	audiodac_enabled.v ^=1;
-}*/
-
-void menu_audio_audiodac_type(MENU_ITEM_PARAMETERS)
-{
-	if (audiodac_enabled.v==0) {
-		audiodac_enabled.v=1;
-		audiodac_selected_type=0;
-	}
-
-	else {
-		audiodac_selected_type++;
-		if (audiodac_selected_type==MAX_AUDIODAC_TYPES) {
-			audiodac_selected_type=0;
-			audiodac_enabled.v=0;
-		}
-	}
-}
-
-void menu_audio_audiodac_set_port(MENU_ITEM_PARAMETERS)
-{
-	char string_port[4];
-
-	sprintf (string_port,"%02XH",audiodac_types[MAX_AUDIODAC_TYPES-1].port);
-
-	menu_ventana_scanf("Port Value",string_port,4);
-
-	int valor_port=parse_string_to_number(string_port);
-
-	if (valor_port<0 || valor_port>255) {
-					debug_printf (VERBOSE_ERR,"Invalid value %d",valor_port);
-					return;
-	}
-
-	audiodac_set_custom_port(valor_port);
-	//audiodac_types[MAX_AUDIODAC_TYPES-1].port=valor_port;
-	//audiodac_selected_type=MAX_AUDIODAC_TYPES-1;
-
-}
-
-void menu_audio_beeper(MENU_ITEM_PARAMETERS)
-{
-	beeper_enabled.v ^=1;
-}
-
-void menu_audio_change_ay_chips(MENU_ITEM_PARAMETERS)
-{
-	if (total_ay_chips==MAX_AY_CHIPS) total_ay_chips=1;
-	else total_ay_chips++;
-
-	ay_chip_selected=0;
-}
-
-void menu_audio_ay_stereo(MENU_ITEM_PARAMETERS)
-{
-	ay3_stereo_mode++;
-
-	if (ay3_stereo_mode==5) ay3_stereo_mode=0;
-}
-
-
-void menu_audio_ay_stereo_custom(MENU_ITEM_PARAMETERS)
-{
-	ay3_custom_stereo_A++;
-	if (ay3_custom_stereo_A==3) {
-		ay3_custom_stereo_A=2;
-
-		ay3_custom_stereo_B++;
-		if (ay3_custom_stereo_B==3) {
-			ay3_custom_stereo_B=2;
-
-			ay3_custom_stereo_C++;
-			if (ay3_custom_stereo_C==3) {
-				ay3_custom_stereo_A=0;
-				ay3_custom_stereo_B=0;
-				ay3_custom_stereo_C=0;
-			}
-		}
-	}	
-}
-
-void menu_audio_ay_stereo_custom_A(MENU_ITEM_PARAMETERS)
-{
-	ay3_custom_stereo_A++;
-	if (ay3_custom_stereo_A==3) ay3_custom_stereo_A=0;
-}
-
-void menu_audio_ay_stereo_custom_B(MENU_ITEM_PARAMETERS)
-{
-	ay3_custom_stereo_B++;
-	if (ay3_custom_stereo_B==3) ay3_custom_stereo_B=0;
-}
-
-void menu_audio_ay_stereo_custom_C(MENU_ITEM_PARAMETERS)
-{
-	ay3_custom_stereo_C++;
-	if (ay3_custom_stereo_C==3) ay3_custom_stereo_C=0;
-}
-
-char *menu_stereo_positions[]={
-	"Left",
-	"    Center",
-	"          Right"
-};
-
-void menu_settings_audio(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_settings_audio;
-	menu_item item_seleccionado;
-	int retorno_menu;
-
-        do {
-
-		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"Audio Output ~~Volume: %d %%", audiovolume);
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"Autoenable AY Chip: %s",(autoenable_ay_chip.v==1 ? "On" : "Off"));
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"This option is usefor for example on Spectrum 48k games that uses AY Chip "
-					"and for some ZX80/81 games that also uses it (Bi-Pak ZON-X81, but not Quicksilva QS Sound board)");		
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip,NULL,"~~AY Chip: %s", (ay_chip_present.v==1 ? "On" : "Off"));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'a');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip on this machine");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"It enables the AY Chip for the machine, by activating the following hardware:\n"
-					"-Normal AY Chip for Spectrum\n"
-					"-Fuller audio box for Spectrum\n"
-					"-Quicksilva QS Sound board on ZX80/81\n"
-					"-Bi-Pak ZON-X81 Sound on ZX80/81\n"
-			);
-
-
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,menu_cond_ay_chip,"Total AY Chips: %d%s",total_ay_chips,
-				(total_ay_chips==2 ? ". Turbosound" : "") );
-
-		if (si_complete_video_driver() ) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,menu_cond_ay_chip,"Show AY ~~Piano: %s",
-					(setting_mostrar_ay_piano_grafico.v ? "Graphic" : "Text") );
-			menu_add_item_menu_shortcut(array_menu_settings_audio,'p');
-			menu_add_item_menu_tooltip(array_menu_settings_audio,"Shows AY Piano menu with graphic or with text");
-			menu_add_item_menu_ayuda(array_menu_settings_audio,"Shows AY Piano menu with graphic or with text");
-
-		}
-
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_envelopes,menu_cond_ay_chip,"AY ~~Envelopes: %s", (ay_envelopes_enabled.v==1 ? "On" : "Off"));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'e');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable volume envelopes for the AY Chip");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"Enable or disable volume envelopes for the AY Chip");
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_speech,menu_cond_ay_chip,"AY ~~Speech: %s", (ay_speech_enabled.v==1 ? "On" : "Off"));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'s');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable AY Speech effects");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"These effects are used, for example, in Chase H.Q.");
-
-
-//		int ay3_stereo_mode=0;
-/*
-          0=Mono
-          1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
-          2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
-		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
-*/
-
-		/*if (ay3_stereo_mode==4) {
-			//Metemos separador, que queda mas bonito
-			menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		}*/
-
-		char ay3_stereo_string[16];
-		if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
-		else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
-		else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
-		else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
-		else strcpy(ay3_stereo_string,"Mono");
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"AY Stereo mode: %s",
-			ay3_stereo_string);
-
-		if (ay3_stereo_mode==4) {	
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
-				"Channel A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
-				"Channel B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
-				"Channel C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
-
-			//menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		}
-
-
-
-
-
-		if (MACHINE_IS_SPECTRUM) {
-
-			menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-			char string_audiodac[32];
-
-				if (audiodac_enabled.v) {
-					sprintf (string_audiodac,". %s",audiodac_types[audiodac_selected_type].name);
-				}
-				else {
-					strcpy(string_audiodac,"");
-				}
-
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_type,NULL,"DAC: %s%s",(audiodac_enabled.v ? "On" : "Off" ),
-						string_audiodac);
-				if (audiodac_enabled.v) {
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_set_port,NULL,"Port: %02XH",audiodac_types[audiodac_selected_type].port);
-				}
-
-
-
-		}
-
-
-    menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-		if (!MACHINE_IS_ZX8081) {
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"Beeper: %s",(beeper_enabled.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable beeper output");
-			menu_add_item_menu_ayuda(array_menu_settings_audio,"Enable or disable beeper output");
-
-		}
-
-
-
-		if (MACHINE_IS_ZX8081) {
-			//sound on zx80/81
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_zx8081_detect_vsync_sound,menu_cond_zx8081,"Detect VSYNC Sound: %s",(zx8081_detect_vsync_sound.v ? "Yes" : "No"));
-			menu_add_item_menu_tooltip(array_menu_settings_audio,"Tries to detect when vsync sound is played. This feature is experimental");
-			menu_add_item_menu_ayuda(array_menu_settings_audio,"Tries to detect when vsync sound is played. This feature is experimental");
-
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_sound_zx8081,menu_cond_zx8081,"VSYNC Sound on zx80/81: %s", (zx8081_vsync_sound.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enables or disables VSYNC sound on ZX80 and ZX81");
-			menu_add_item_menu_ayuda(array_menu_settings_audio,"This method uses the VSYNC signal on the TV to make sound");
-
-
-		}
-
-
-
-
-		int mostrar_real_beeper=0;
-
-		if (MACHINE_IS_ZX8081) {
-			if (zx8081_vsync_sound.v) mostrar_real_beeper=1;
-		}
-
-		else {
-			if (beeper_enabled.v) mostrar_real_beeper=1;
-		}
-
-		if (mostrar_real_beeper) {
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper_real,NULL,"Real ~~Beeper: %s",(beeper_real_enabled==1 ? "On" : "Off"));
-			menu_add_item_menu_shortcut(array_menu_settings_audio,'b');
-			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable Real Beeper enhanced sound. ");
-			menu_add_item_menu_ayuda(array_menu_settings_audio,"Real beeper produces beeper sound more realistic but uses a bit more cpu. Needs beeper enabled (or vsync sound on zx80/81)");
-		}
-
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"Audio filter on ROM SAVE: %s",(output_beep_filter_on_rom_save.v ? "Yes" : "No"));
-			menu_add_item_menu_tooltip(array_menu_settings_audio,"Apply filter on ROM save routines");
-			menu_add_item_menu_ayuda(array_menu_settings_audio,"It detects when on ROM save routines and alter audio output to use only "
-					"the MIC bit of the FEH port");
-
-//extern z80_bit output_beep_filter_alter_volume;
-//extern char output_beep_filter_volume;
-
-			if (output_beep_filter_on_rom_save.v) {
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_alter_volume,NULL,"Alter beeper volume: %s",
-				(output_beep_filter_alter_volume.v ? "Yes" : "No") );
-
-				menu_add_item_menu_tooltip(array_menu_settings_audio,"Alter output beeper volume");
-				menu_add_item_menu_ayuda(array_menu_settings_audio,"Alter output beeper volume. You can set to a maximum to "
-							"send the audio to a real spectrum to load it");
-
-
-				if (output_beep_filter_alter_volume.v) {
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_volume,NULL,"Volume: %d",output_beep_filter_volume);
-				}
-			}
-
-		}
-
-		//if (si_complete_video_driver() ) {
-			//menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_espectro_sonido,NULL,"View ~~Waveform");
-			//menu_add_item_menu_shortcut(array_menu_settings_audio,'w');
-        //	        menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-		//}
-
-
-
-		menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-		char string_aofile_shown[10];
-		menu_tape_settings_trunc_name(aofilename,string_aofile_shown,10);
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_aofile,NULL,"Audio ~~out to file: %s",string_aofile_shown);
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'o');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Saves the generated sound to a file");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"You can save .raw format and if compiled with sndfile, to .wav format. "
-					"You can see the file parameters on the console enabling verbose debug level to 2 minimum");
-
-
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_aofile_insert,menu_aofile_cond,"Audio file ~~inserted: %s",(aofile_inserted.v ? "Yes" : "No" ));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'i');
-
-
-                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"Change Audio Driver");
-
-
-                menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-                //menu_add_item_menu(array_menu_settings_audio,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_settings_audio);
-
-                retorno_menu=menu_dibuja_menu(&settings_audio_opcion_seleccionada,&item_seleccionado,array_menu_settings_audio,"Audio Settings" );
-
-                cls_menu_overlay();
-
-		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-	                //llamamos por valor de funcion
-        	        if (item_seleccionado.menu_funcion!=NULL) {
-                	        //printf ("actuamos por funcion\n");
-	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
-        	        }
-		}
-
-	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-}
-
 
 
 

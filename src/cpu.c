@@ -1350,7 +1350,7 @@ printf (
 		"--disablebeeper            Disable Beeper\n"
     "--disablerealbeeper        Disable real Beeper sound\n"
 		"--totalaychips  n          Number of ay chips. Default 1\n"
-		"--ay-stereo-mode n			Mode of AY stereo emulated: 0=Mono, 1=ACB, 2=ABC, 3=BAC, 4=Custom. Default Mono\n"
+		"--ay-stereo-mode n         Mode of AY stereo emulated: 0=Mono, 1=ACB, 2=ABC, 3=BAC, 4=Custom. Default Mono\n"
 		"--ay-stereo-channel X n    Position of AY channel X (A, B or C) in case of Custom Stereo Mode. 0=Left, 1=Center, 2=Right\n"
 
 		"--enableaudiodac           Enable DAC emulation. By default Specdrum\n"

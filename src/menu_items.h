@@ -27,6 +27,8 @@
 
 extern void menu_poke(MENU_ITEM_PARAMETERS);
 extern void menu_settings_debug(MENU_ITEM_PARAMETERS);
+extern void menu_settings_audio(MENU_ITEM_PARAMETERS);
+extern int menu_cond_ay_chip(void);
 
 #endif
 

@@ -27,6 +27,7 @@
 #include "cpu.h"
 #include "debug.h"
 #include "screen.h"
+#include "menu.h"
 
 #ifdef COMPILE_CURSES
         #include "scrcurses.h"

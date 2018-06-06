@@ -29,9 +29,6 @@ renombrarla
   zsf_write_block(ptr_zsf_file, NULL,0, 0);
 
 
--poder grabar configuración stereo y también indicar por linea de comandos
-
-
 -Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
 
 -con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
