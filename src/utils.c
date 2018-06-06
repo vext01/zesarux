@@ -3396,6 +3396,10 @@ int util_write_configfile(void)
 
   if (ay3_stereo_mode>0)                      ADD_STRING_CONFIG,"--ay-stereo-mode %d",ay3_stereo_mode);
 
+                                              ADD_STRING_CONFIG,"--ay-stereo-channel A %d",ay3_custom_stereo_A);
+                                              ADD_STRING_CONFIG,"--ay-stereo-channel B %d",ay3_custom_stereo_B);
+                                              ADD_STRING_CONFIG,"--ay-stereo-channel C %d",ay3_custom_stereo_C);
+
   if (audiodac_enabled.v)                     ADD_STRING_CONFIG,"--enableaudiodac");
                                               ADD_STRING_CONFIG,"--audiodactype \"%s\"",audiodac_types[audiodac_selected_type].name);
 

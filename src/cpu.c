@@ -1350,7 +1350,8 @@ printf (
 		"--disablebeeper            Disable Beeper\n"
     "--disablerealbeeper        Disable real Beeper sound\n"
 		"--totalaychips  n          Number of ay chips. Default 1\n"
-		"--ay-stereo-mode n			Mode of stereo emulated: 0=Mono, 1=ACB, 2=ABC, 3=BAC, 4=Custom. Default Mono\n"
+		"--ay-stereo-mode n			Mode of AY stereo emulated: 0=Mono, 1=ACB, 2=ABC, 3=BAC, 4=Custom. Default Mono\n"
+		"--ay-stereo-channel X n    Position of AY channel X (A, B or C) in case of Custom Stereo Mode. 0=Left, 1=Center, 2=Right\n"
 
 		"--enableaudiodac           Enable DAC emulation. By default Specdrum\n"
 		"--audiodactype type        Select one of audiodac types: "
@@ -5877,6 +5878,33 @@ int parse_cmdline_options(void) {
 					}
 				ay3_stereo_mode=valor;
 			}			
+
+			else if (!strcmp(argv[puntero_parametro],"--ay-stereo-channel")) {
+				char canal;
+				siguiente_parametro_argumento();
+
+				canal=argv[puntero_parametro][0];
+				canal=letra_mayuscula(canal);
+
+				if (canal!='A' && canal!='B' && canal!='C') {
+					printf ("Invalid ay stereo channel\n");
+					exit(1);
+				}
+
+				int valor;
+				siguiente_parametro_argumento();
+				valor=atoi(argv[puntero_parametro]);
+
+				if (valor<0 || valor>2) {
+					printf ("Invalid ay stereo channel position value\n");
+					exit(1);
+				}
+
+				if (canal=='A') ay3_custom_stereo_A=valor;
+				if (canal=='B') ay3_custom_stereo_B=valor;
+				if (canal=='C') ay3_custom_stereo_C=valor;
+
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--enablespecdrum")) {
 				//TODO. No aparece en el menu el error
