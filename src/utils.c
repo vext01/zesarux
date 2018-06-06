@@ -3394,6 +3394,8 @@ int util_write_configfile(void)
   if (beeper_real_enabled==0)                 ADD_STRING_CONFIG,"--disablerealbeeper");
   if (ay_retorna_numero_chips()>1)            ADD_STRING_CONFIG,"--totalaychips %d",ay_retorna_numero_chips() );
 
+  if (ay3_stereo_mode>0)                      ADD_STRING_CONFIG,"--ay-stereo-mode %d",ay3_stereo_mode);
+
   if (audiodac_enabled.v)                     ADD_STRING_CONFIG,"--enableaudiodac");
                                               ADD_STRING_CONFIG,"--audiodactype \"%s\"",audiodac_types[audiodac_selected_type].name);
 

@@ -30896,11 +30896,11 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,NULL,"Total AY Chips: %d%s",total_ay_chips,
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,menu_cond_ay_chip,"Total AY Chips: %d%s",total_ay_chips,
 				(total_ay_chips==2 ? ". Turbosound" : "") );
 
 		if (si_complete_video_driver() ) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"Show AY ~~Piano: %s",
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,menu_cond_ay_chip,"Show AY ~~Piano: %s",
 					(setting_mostrar_ay_piano_grafico.v ? "Graphic" : "Text") );
 			menu_add_item_menu_shortcut(array_menu_settings_audio,'p');
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Shows AY Piano menu with graphic or with text");

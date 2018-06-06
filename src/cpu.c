@@ -1350,6 +1350,8 @@ printf (
 		"--disablebeeper            Disable Beeper\n"
     "--disablerealbeeper        Disable real Beeper sound\n"
 		"--totalaychips  n          Number of ay chips. Default 1\n"
+		"--ay-stereo-mode n			Mode of stereo emulated: 0=Mono, 1=ACB, 2=ABC, 3=BAC, 4=Custom. Default Mono\n"
+
 		"--enableaudiodac           Enable DAC emulation. By default Specdrum\n"
 		"--audiodactype type        Select one of audiodac types: "
 );
@@ -5862,6 +5864,19 @@ int parse_cmdline_options(void) {
         set_total_ay_chips(valor);
 
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--ay-stereo-mode")) {
+				int valor;
+
+					siguiente_parametro_argumento();
+					valor=atoi(argv[puntero_parametro]);
+
+					if (valor>4 || valor<0) {
+						printf ("Invalid ay stereo mode value\n");
+						exit (1);
+					}
+				ay3_stereo_mode=valor;
+			}			
 
 			else if (!strcmp(argv[puntero_parametro],"--enablespecdrum")) {
 				//TODO. No aparece en el menu el error

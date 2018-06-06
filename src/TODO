@@ -14,7 +14,7 @@ sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de
 -audio out to file rwa, wav ok
 
 revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y que no se hayan corregido, como en drivers de audio, etc
-->audio out a wave quiza use audio_valor_enviar_sonido. habria que eliminar dicha variable para ver donde se usa. Corregir leyenda de generacion audio a wave/raw
+->habria que eliminar dicha variable audio_valor_enviar_sonido para ver donde se usa. Corregir leyenda de generacion audio a wave/raw
 ->ver si realtape loading depende de stereo. Creo que no
 renombrarla
 ->core reduced usara mono?
@@ -29,14 +29,8 @@ renombrarla
   zsf_write_block(ptr_zsf_file, NULL,0, 0);
 
 
-
 -poder grabar configuración stereo y también indicar por linea de comandos
 
-
--poder indicar mas de una accion en misma breakpoint condition, ejemplo
-condition: pc=4000h
-
-action: prints hello ; menu
 
 -Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
 
@@ -105,7 +99,7 @@ En ql llega a buscar?
 -Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
 Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
--Salida 16 bits?
+-Salida 16 bits sonido?
 
 
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
@@ -1739,6 +1733,10 @@ Menu debugger:
 
 -posicion electron no va bien en: zx81, tsconf. Revisar otras maquinas. En 48k funciona bien
 
+-poder indicar mas de una accion en misma breakpoint condition, ejemplo
+condition: pc=4000h
+
+action: prints hello ; menu
 
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
