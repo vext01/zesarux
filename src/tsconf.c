@@ -2954,7 +2954,7 @@ void screen_tsconf_refresca_pantalla(void)
 
 	else {
 	//modo rainbow - real video
-        //if (tsconf_si_render_spritetile_rapido.v) tsconf_fast_tilesprite_render();
+       
 
         screen_tsconf_refresca_rainbow();
 	}
