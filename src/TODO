@@ -21,6 +21,8 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
+
 -probar accion de cambio de joystick seleccionado, mediante boton de joystick real
 
 -parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
@@ -1421,7 +1423,6 @@ eliminar warnings de funciones sin definir como extern
 -s TOTAL_MEMORY=167772160 -o zesarux.html  --embed-file roms
 
 
--dividir menu.c en varios archivos para que no sea tan grande
 
 * -Agregar todas desensamblado roms en txt
   http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
@@ -1498,8 +1499,6 @@ para lightgun la mayoria de puertos son teclado o kempston, en que ya se control
 
 -Imagen estereoscopica. Tanto anaglifo (azul + rojo) como imagen separada en dos ventanas para dos ojos
 
--tabla para acelerar colores rgb. tener 3 tablas separadas para todos los colores separados en componentes r,g y b
-
 -En video init debe establecer a 1 o 0 cualquier variable de parámetro de video, como tiene-colores
 
 -hilo interlaced http://foro.speccy.org/viewtopic.php?f=8&t=1508
@@ -1512,7 +1511,9 @@ ahora sale por consola del sistema operativo, quiza se podria tener una ventana 
 
 -salida a html
 
--salida a gif animado (con video out), png
+-salida a gif animado (con video out)
+
+-salida a png con colores
 
 -archivo de video de salida en formato alternativo a raw, alguno mas compatible: mpg, mov, ogg, mkv, etc
 
@@ -1586,8 +1587,6 @@ ver de momento workaround audio_using_sdl2
 
 -aumentar frecuencia 15600 para mejor sonido
 
--ay stereo
-
 -lectura de sonido desde line-in, para poder cargar directo desde casette
 
 -reducir fifo por defecto de pulse? de 10 a 2?
@@ -1643,8 +1642,6 @@ Para ello, las rutinas que escriben texto en menu, deben usar otro destino desti
 que son comunes para zx8081 (y modo simulado zx81 de spectrum) y menu
 ->drivers de texto usaran texto sobre pantalla como hasta ahora
 
--unificar funciones de debug y visores de archivo, etc. Para diferentes fuentes de datos (archivo, memoria emulada) que se pueda ver sprites, ver hexa, ver pantalla, etc....
-
 -AY piano pero que vaya mostrando las notas en scroll, y quiza guardando notas en archivo de texto?
 
 -AY piano notas en pentagrama. maximo canales en pantalla? quiza 1 solo e ir conmutando con una tecla
@@ -1667,8 +1664,6 @@ opcion tambien para bajar bit 7 final
 -items recientemente abiertos en quickload . Y en otros menus de carga tambien?
 
 -poder redefinir las teclas que emulan el joystick, en especial la tecla de disparo (como por ejemplo ponerla a TAB)
-
--poder asignar botones joystick a teclas como symbol o shift
 
 -poder hacer hotswap de una maquina a zx-uno
 
@@ -1736,12 +1731,7 @@ action: prints hello ; menu
 
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
-
--registros ' no se pueden usar como breakpoints o watches
--Registro af como tal (no solo como a y f separados) usable en breakpoint y en watches
-
 -en menu debug, poder ver sprites del chip de sprites ZGX
-
 
 -Desensamblador, que permita copiar código assembler a texto
 ->desensamblador, pero de momento no puede copiar a texto
@@ -1770,7 +1760,7 @@ breakpoint y vuelve a entrar. Es normal->opcion para poder salir de ahi aun con 
 
 -Disassemble a txt
 
--Set breakpoint en dirección vista (en la que se esta viendo en pantalla y en ZRCP)
+-Set breakpoint en dirección vista en ZRCP
 
 
 ->Esto siguiente de debug_dump_nested_functions ya está corregido en principio
@@ -1835,8 +1825,6 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 
 -Puerto debug ascii hace salto de línea con código 10 o 13
 
--Puerto debug ascii agregarlo tambien para zx80 y zx81
-
 -Próxima canción AY en remote port protocol
 
 -remote command info: ultimo uso cpu, últimos fps, velocidad relativa cpu
@@ -1849,8 +1837,6 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 
 -top speed spectrum con threads es el doble mas rapido que sin threads
 
--breakpoint en menu debug cpu/registers, que sea un breakpoint justo despues de la instruccion actual. Tiene sentido cuando estamos en un CALL. 
-Pero da problemas pues entonces ventana de desensamblaje muestra instruccion justo despues y no la que genera el breakpoint
 
 -quiza tambien poder poner breakpoint y que vuelva a rutina que ha llamado (es decir, buscar en la pila la direccion de retorno y esperar a que vuelva ahi)
 
@@ -1994,10 +1980,6 @@ Los de SPIN parece que si que van. No siempre: abu simbel falla
 Quiza el fallo no es al leer el RZX sino en la emulacion del spectrum... quiza hay algun momento en que se genera una interrupcion de mas? o de menos?
 algo que descuadra la lectura de puertos (alguna de mas o de menos) y ya por eso deja de funcionar bien la secuencia de INs del archivo RZX
 
-->quiza hacer que al cargar un snapshot .zx salta texto indicativo del snapshot: fecha, etc
--probado en second overlay, que ya no existe. no queda muy bien
--quiza probarlo en footer? Pero y si se mete en footer, si hay algun .config o autodeteccion ssl, sobreescribira la info que hayamos metido antes de fecha? quien tiene preferencia?
-
 -Opción para generar un .config con opciones en curso, opciones basicas
 
 -soporte de carga szx? Y quizá grabación también? Problema con compresion de datos, hay que usar libreria externa
@@ -2020,9 +2002,6 @@ En ese caso, si por ejemplo estabamos con una maquina +3, con dsk activo, se gua
 Pero el "--enable-dsk", al iniciar el emulador, se parsea antes de cargar el snapshot. Al cargar el snapshot, en set_machine, se pone
 dskplusthree_emulation.v=0 , con lo que arranca con dsk desactivado. Hay varios parametros como ese
 
--agregar a formato .zx algunos parametros/flags extra, para version nueva del formato:
-*t_stados... viene del viejo formato SP?
-
 
 *asignacion de eventos a botones de realjoystick ->no, porque depende del tipo de joystick
 *asignacion de teclas a botones de realjoystick ->en teoria no, porque tambien depende del tipo de joystick,
@@ -2032,9 +2011,6 @@ pero se podria intentar hacer que se guardase de alguna manera... como intentand
 pero con esto solo podriamos tener facilmente las teclas de direcciones (son los ejes normales) (-0/+0 izq-der, -1/+1 arr-aba),
 pero no otras teclas alternativas: enter, espacio, etc
 
-
-*campo comentarios?
-*mas...?
 
 
 ************
@@ -2109,9 +2085,6 @@ Si es botón está también mapeado a un evento, entonces esa letra no se ve
 
 -hotswap de 48k a 48k spanish
 
--update roms +3e. Falla también por usar cmd8. como generamos el error de illegal command???. mismo pasa en roms +3e de Spectrum Next
-
-
 -Spectra: dos ventanas, una muestra pantalla principal (salida normal de spectrum) y la otra muestra la pantalla que genera la salida del spectra
 quizá modo dual de spectra se puede hacer en misma ventana pero haciéndola el doble de ancho para que se vean las dos pantallas
 
@@ -2124,7 +2097,6 @@ http://velesoft.speccy.cz/data-gear.htm
 ver carpeta docs
 
 -currah microspeech
-
 
 -Scorpion emulation
 
@@ -2171,14 +2143,12 @@ Segun MESS:
 
 **
 
+
 -soporte joystick para mac os x
 
 -Emular chips de memoria con fallos
 
 
--agregar mas registros a breakpoint condicional: R, ....
-http://www.worldofspectrum.org/forums/showthread.php?t=49966
-cursores para poder subir/bajar instruccion mostrada en vista inicial debug
 * Breakpoint on NMI/INT
 
 -Inves. Ver que juegos se corrompe la memoria debido a interrupción. Quizá ver aquellos que no usan tabla entera de 257
@@ -2188,8 +2158,6 @@ cursores para poder subir/bajar instruccion mostrada en vista inicial debug
 -Probar dispositivo depuración puerto ffh mad mix game
 
 -Emular mejor issue 2 y 3 y bit tape cuando cinta cargando o no cargando
-
--probar demos de http://zxdemo.org/
 
 -Método para crear hardware nuevo definible por el usuario
 
@@ -2210,7 +2178,6 @@ al final se reduce a enviar la tecla cada 20 ms por ejemplo, por tanto, es pract
 
 - Rasp en carcasa de spectrum
 
-- Resto parámetros en Quickload también para spectrum: real video off, etc ???
 
 - lightgun. magnum light phaser no va bien
 -magnum, con sinclair pack 2 (el primero) hay que dejar pulsado boton para que funcione
