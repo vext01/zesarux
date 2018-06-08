@@ -690,7 +690,7 @@ char temp_index_buffer_teclas=0;
 //Nota: estos valores de teclado son identicos a los leidos desde assembler,
 //e incluso a los que se leerian en un msdos
 //por ejemplo, en mi emulador ZXSpectr, la rutina es equivalente
-//http://sourceforge.net/projects/zxspectr/
+//https://github.com/chernandezba/zxspectr
 void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 
 	int pressrelease;

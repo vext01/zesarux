@@ -1,6 +1,6 @@
 A brief description about how this started...
 
-In 1996 I started my first Spectrum emulator, the ZXSpectr (http://sourceforge.net/projects/zxspectr/)
+In 1996 I started my first Spectrum emulator, the ZXSpectr (https://github.com/chernandezba/zxspectr)
 It was written entirely on Assembler for PC x86.
 
 While I was working on ZXSpectr, I thought many times on porting ZXSpectr to Linux. 

@@ -553,7 +553,7 @@ ZX Second-Emulator And Released for UniX.
 I write second-emulator with a hyphen because I changed the order of the two words to have the final name... If not, name would be:
 ZsEarUX :P
 Second because it's my second emulator. The first was ZXSpectr:
-http://sourceforge.net/projects/zxspectr/
+https://github.com/chernandezba/zxspectr
 Why the capital letters? Because one of the first names I thought was ZEUX, but there's another emulator called zeus... 
 Then I thought some name like mine (Cesar) and adding letters zx (for zx spectrum) and also UX for UNIX/Linux, so Linux was the first supported platform. Then I simply joined all these letters and have a translation for every letter to a word, on a phrase with sense: 
 ZX Second-Emulator And Released for UniX.
@@ -563,7 +563,7 @@ And lowercase letters refer to the less important part : "second", "and", "relea
 
 Q: Can this emulator run on MS-DOS?
 A: No, it can not, you can only run it on Windows, Mac, Linux, Raspberry pi and other Unix compatible systems. But you can try my old ZXSpectr emulator:
-https://sourceforge.net/projects/zxspectr/
+https://github.com/chernandezba/zxspectr
 It does run on MS-DOS. It was created on June 1996, so it's more than 20 years old!
 
 

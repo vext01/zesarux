@@ -1,4 +1,5 @@
 ZEsarUX - ZX Second-Emulator And Released for UniX 
+https://github.com/chernandezba/zesarux
 
 
 It's a ZX Machines Emulator for Unix, including all the Sinclair computers:
@@ -29,7 +30,7 @@ ZEsarUX source code and binaries are distributed under GNU GPL license.
 ZEsarUX also includes third-party roms, media, programs and games NOT covered by this license.
 
 This is my second ZX Spectrum emulator after ZXSpectr
-http://sourceforge.net/projects/zxspectr/
+https://github.com/chernandezba/zxspectr
 
 I recommend you to read FEATURES, INSTALL and HISTORY files, as well as other documents in this emulator.
 You can open them from the help menu or from an external viewer.
@@ -37,10 +38,10 @@ You can open them from the help menu or from an external viewer.
 
 ZEsarUX distributed under GNU GENERAL PUBLIC LICENSE v3. You may read it on the LICENSE file.
 
-Includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.
+ZEsarUX includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.
 Copyright 1998-2002 Karl Stenerud. All rights reserved. Distributed under MIT License, you may read it on the LICENSE_MOTOROLA_CORE file
 
-Includes National Semiconductor SC/MP CPU Emulator
+ZEsarUX includes National Semiconductor SC/MP CPU Emulator
 Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read it on the LICENSE_SCMP_CORE
 
 
@@ -188,7 +189,7 @@ __FEATURES__
 
 * Handles compressed formats zip, tar, rar, gz through external utilities
 
-* Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, different DAC: Specdrum, Covox
+* Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
 
 * Supports Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
 
