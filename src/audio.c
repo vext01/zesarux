@@ -434,12 +434,30 @@ void aofile_send_frame(char *buffer)
 
         int i;
         for (i=0;i<AUDIO_BUFFER_SIZE*2;i++) { //*2 porque es stereo
-                valor_unsigned=*buffer;
-                valor_unsigned=128+valor_unsigned;
-                *aofile_buffer=valor_unsigned;
+
+		//Pero si genera rwa, el archivo de salida es mono
+		//sumar los dos canales en 1
+		if (aofile_type==AOFILE_TYPE_RAW) {
+			int canal_izq;
+			int canal_der;
+			canal_izq=*buffer;
+			buffer++;
+			canal_der=*buffer;
+			
+			int suma=(canal_izq+canal_der)/2;
+			valor_unsigned=suma;
+		}
+
+		else {
+	                valor_unsigned=*buffer;
+		}
+        	valor_unsigned=128+valor_unsigned;
+
+               	*aofile_buffer=valor_unsigned;
 
                 buffer++;
 		aofile_buffer++;
+
         }
 
 
@@ -448,9 +466,11 @@ void aofile_send_frame(char *buffer)
 	//Envio de audio a raw file
 	if (aofile_type==AOFILE_TYPE_RAW) {
 
-		escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE*2, ptr_aofile);  //*2 porque es stereo
+		//escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE*2, ptr_aofile);  //*2 porque es stereo
+		escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE, ptr_aofile); 
 
-		if (escritos!=AUDIO_BUFFER_SIZE*2) {
+		//if (escritos!=AUDIO_BUFFER_SIZE*2) {
+		if (escritos!=AUDIO_BUFFER_SIZE) {
                 	        debug_printf(VERBOSE_ERR,"Unable to write to aofile %s",aofilename);
 	                        aofilename=NULL;
         	                aofile_inserted.v=0;
