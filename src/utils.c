@@ -9070,6 +9070,12 @@ void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,
 			}
 		}
 
+		else if (flag==0 && first_byte<=3 && longitud==36) { 
+			//Bloque de codigo fuente SPED
+			util_tape_get_name_header(&tape[1],buffer_nombre);
+
+		}
+
 		else sprintf(texto,"Flag: %d Length: %d",flag,longitud-2); //Saltar los 2 bytes de flag y checksum
 }
 
