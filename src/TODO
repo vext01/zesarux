@@ -21,6 +21,14 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-Para cursor draw:
+*iconos con mas de una opcion, que se les indique de alguna manera. con un punto??? Con 3 pixeles en arriba derecha asi:
+  ##
+   #
+*que pregunte si hay soporte mouse el programa basic. Si no, activar algun flag en alguna dirección baja (ejemplo 30000)
+y al inicio de cursor draw lo lea de ahi y lo guarde en un setting suyo
+*control de raton en todos sitios. Por ejemplo en aplicar sprites no se mueve
+
 -al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
 visor sprites tambien se ve mal
 
