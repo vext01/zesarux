@@ -445,7 +445,9 @@ void aofile_send_frame(char *buffer)
 			canal_der=*buffer;
 			
 			int suma=(canal_izq+canal_der)/2;
-			valor_unsigned=suma;
+			char suma_byte=suma; //necesario???
+	
+			valor_unsigned=suma_byte;
 		}
 
 		else {
