@@ -6457,13 +6457,14 @@ void print_helper_aofile_vofile(void)
 
 				int audio_bytes_per_second,video_bytes_per_second; //bytes por segundo
 
-				audio_bytes_per_second=FRECUENCIA_SONIDO*2; //*2 porque es stereo
+				audio_bytes_per_second=FRECUENCIA_SONIDO*2; //*2 porque es stereo en wav
 				video_bytes_per_second=ancho*3*alto*(50/vofile_fps);//*3 porque son 24 bits
 
         sprintf(buffer_texto_video,"-demuxer rawvideo -rawvideo fps=%d:w=%d:h=%d:format=bgr24",50/vofile_fps,ancho,alto);
 
 	if (aofile_type==AOFILE_TYPE_RAW) {
-        	sprintf(buffer_texto_audio,"-audiofile %s -audio-demuxer rawaudio -rawaudio channels=2:rate=%d:samplesize=1",aofilename,FRECUENCIA_SONIDO);
+		audio_bytes_per_second /=2; //porque es mono en rwa
+        	sprintf(buffer_texto_audio,"-audiofile %s -audio-demuxer rawaudio -rawaudio channels=1:rate=%d:samplesize=1",aofilename,FRECUENCIA_SONIDO);
 	}
 
 	if (aofile_type==AOFILE_TYPE_WAV) {
@@ -6476,7 +6477,7 @@ void print_helper_aofile_vofile(void)
 	if (aofile_inserted.v==1 && vofile_inserted.v==0) {
 
 		if (aofile_type==AOFILE_TYPE_RAW) {
-			sprintf(last_message_helper_aofile_vofile_util,"You can convert it with: sox  -t .raw -r %d -b 8 -e unsigned -c 2 %s outputfile.wav",FRECUENCIA_SONIDO,aofilename);
+			sprintf(last_message_helper_aofile_vofile_util,"You can convert it with: sox  -t .raw -r %d -b 8 -e unsigned -c 1 %s outputfile.wav",FRECUENCIA_SONIDO,aofilename);
 		}
 
 		//Si es wav, texto de conversion vacio
