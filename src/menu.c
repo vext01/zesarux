@@ -20527,8 +20527,11 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser,menu_tape_input_insert_cond,"Tape ~~Browser");
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'b');
-		menu_add_item_menu_tooltip(array_menu_tape_settings,"Browse tape");
-		menu_add_item_menu_ayuda(array_menu_tape_settings,"Browse tape");
+		menu_add_item_menu_tooltip(array_menu_tape_settings,"Browse Input tape");
+		menu_add_item_menu_ayuda(array_menu_tape_settings,"Browse Input tape");
+
+
+		menu_add_item_menu(array_menu_tape_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
                 menu_tape_settings_trunc_name(tape_out_file,string_tape_save_shown,20);
@@ -20538,10 +20541,10 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
                 sprintf (string_tape_save_inserted,"Output tape inserted: %s",((tape_loadsave_inserted & TAPE_SAVE_INSERTED)!=0 ? "Yes" : "No"));
                 menu_add_item_menu(array_menu_tape_settings,string_tape_save_inserted,MENU_OPCION_NORMAL,menu_tape_output_insert,menu_tape_output_insert_cond);
 
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser_output,menu_tape_output_insert_cond,"Tape ~~Browser");
-		menu_add_item_menu_shortcut(array_menu_tape_settings,'b');
-		menu_add_item_menu_tooltip(array_menu_tape_settings,"Browse tape");
-		menu_add_item_menu_ayuda(array_menu_tape_settings,"Browse tape");				
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser_output,menu_tape_output_insert_cond,"Tape B~~rowser");
+		menu_add_item_menu_shortcut(array_menu_tape_settings,'r');
+		menu_add_item_menu_tooltip(array_menu_tape_settings,"Browse Output tape");
+		menu_add_item_menu_ayuda(array_menu_tape_settings,"Browse Output tape");				
 
 
         	        menu_add_item_menu(array_menu_tape_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

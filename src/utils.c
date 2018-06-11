@@ -9049,6 +9049,13 @@ void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,
 			//Posible cabecera
 			util_tape_get_name_header(&tape[1],buffer_nombre);
 
+                        z80_int cabecera_longitud;
+                        z80_int cabecera_inicio;
+
+                        cabecera_longitud=value_8_to_16(tape[12],tape[11]);
+                        cabecera_inicio=value_8_to_16(tape[14],tape[13]);
+                        
+
 
 			switch (first_byte) {
 				case 0:
@@ -9064,7 +9071,10 @@ void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,
 				break;
 
 				case 3:
-					sprintf(texto,"Code: %s",buffer_nombre);
+                                        if (cabecera_longitud==6912 && cabecera_inicio==16384) sprintf(texto,"Screen$: %s",buffer_nombre);
+                                                          //01234567890123456789012345678901
+                                                          //Code: 1234567890 [16384,49152]
+					else sprintf(texto,"Code: %s [%d,%d]",buffer_nombre,cabecera_inicio,cabecera_longitud);
 				break;
 
 			}
