@@ -362,12 +362,12 @@ void init_aofile(void)
 				return;
                 	}
 
-			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format raw, %dHz, 8 bit, unsigned, 2 channels",FRECUENCIA_SONIDO);
+			sprintf(last_message_helper_aofile_vofile_file_format,"Writing audio output file, format raw, %dHz, 8 bit, unsigned, 1 channel",FRECUENCIA_SONIDO);
 			debug_printf(VERBOSE_INFO,"%s",last_message_helper_aofile_vofile_file_format);
 
 		}
 
-        aofile_buffer=malloc(AUDIO_BUFFER_SIZE*2); //*2 porque es stereo
+        aofile_buffer=malloc(AUDIO_BUFFER_SIZE*2); //*2 porque es stereo en wav. en rwa, es mono (usara la mitad del buffer)
         if (aofile_buffer==NULL) {
                 cpu_panic("Error allocating audio output buffer");
         }
@@ -467,7 +467,7 @@ void aofile_send_frame(char *buffer)
 	if (aofile_type==AOFILE_TYPE_RAW) {
 
 		//escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE*2, ptr_aofile);  //*2 porque es stereo
-		escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE, ptr_aofile); 
+		escritos=fwrite(aofile_buffer, 1, AUDIO_BUFFER_SIZE, ptr_aofile);  //es mono el rwa
 
 		//if (escritos!=AUDIO_BUFFER_SIZE*2) {
 		if (escritos!=AUDIO_BUFFER_SIZE) {
