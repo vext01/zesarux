@@ -21,6 +21,9 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-en visor hexadecimal de file utils, si hay archivo con caracter 7E (~~~) como orquesta.rwa, se acaba viendo texto inverso.
+dicho visor no tendria que entender los tags especiales de texto...
+
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
 -Para cursor draw:
