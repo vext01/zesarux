@@ -10201,6 +10201,49 @@ int util_extract_hdf(char *hdfname, char *dest_dir)
 		}
 	} while (leidos>0);
 
+        //Y luego rellenar archivo a siguiente valor valido de archivo .ide
+        int valid_ide_sizes[]={
+		 8*1024*1024,   //0
+		 16*1024*1024,
+		 32*1024*1024,
+		 64*1024*1024,
+		 128*1024*1024,
+		 256*1024*1024, //5
+		 512*1024*1024,
+		 1024*1024*1024, //7
+        };
+
+        int total_sizes=8;
+        //Ver si coincide con alguno exactamente
+        int i;
+        int coincide=0;
+        for (i=0;i<total_sizes && !coincide;i++) {
+                if (escritos==valid_ide_sizes[i]) coincide=1;
+        }
+
+        if (!coincide) {
+                //No coincide. Ver en que tramo esta
+                for (i=0;i<total_sizes;i++) {
+                        if (escritos<valid_ide_sizes[i]) break;
+                }
+
+                if (i==total_sizes) {
+                        debug_printf(VERBOSE_ERR,"Final IDE image too big");
+                }
+
+                else {
+                        int final_size=valid_ide_sizes[i];
+                        int rellenar=final_size-escritos;
+                        debug_printf (VERBOSE_DEBUG,"Adding %d bytes until normal image size (%dKB)",rellenar,final_size/1024);
+                        z80_byte byte_relleno=0xFF;
+                        while (rellenar) {
+                            fwrite(&byte_relleno,1,1,ptr_outputfile);  
+                            rellenar--;
+                        }
+                }
+        }
+
+
 	fclose (ptr_inputfile);
 
         fclose(ptr_outputfile);

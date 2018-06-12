@@ -31799,7 +31799,7 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
                 buffer[i-3]='.';
         }
 
-        //y si es un directorio (sin nombre nulo ni espacio), escribir "<dir>
+    //y si es un directorio (sin nombre nulo ni espacio), escribir "<dir>
 	//nota: se envia nombre " " (un espacio) cuando se lista el directorio y sobran lineas en blanco al final
 
 	int test_dir=1;

@@ -7,7 +7,7 @@ Added support to show some unicode (utf8) characters on menu
 Improved menu: 
 * now you can write any ascii character on the menu
 * now you can use binary numbers on expressions
-Added support for uncompressing hdf files
+Added support for extracting hdf files
 
 Some other minor bugfixes and improvements
 
