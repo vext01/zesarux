@@ -23,8 +23,6 @@ renombrarla
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
--Archivos que se expanden desde menu (como zip, rar, mdv, hdf) que diga algo como <dir>, pero diferente: <exp>, <uncomp>, <ext> (de extract), algo asi...
-
 -Para cursor draw:
 *iconos con mas de una opcion, que se les indique de alguna manera. con un punto??? Con 3 pixeles en arriba derecha asi:
   ##
