@@ -8,6 +8,7 @@ Improved menu:
 * now you can write any ascii character on the menu
 * now you can use binary numbers on expressions
 Added support for extracting hdf files
+Now compressed/packed files (like mdv or hdf) show <exp> (for "expand") on file selector
 
 Some other minor bugfixes and improvements
 

@@ -31774,6 +31774,26 @@ filesel_item *menu_get_filesel_item(int index)
 
 }
 
+//Dice si archivo es de tipo comprimido/empaquetado. filename tiene que ser sin directorio
+int menu_util_file_is_packed(char *filename)
+{
+		//Si seleccion es archivo comprimido
+							if (
+							    //strstr(item_seleccionado->d_name,".zip")!=NULL ||
+							    !util_compare_file_extension(filename,"zip") ||
+                                                            !util_compare_file_extension(filename,"gz")  ||
+                                                            !util_compare_file_extension(filename,"tar") ||
+                                                            !util_compare_file_extension(filename,"rar") ||
+                                                            !util_compare_file_extension(filename,"mdv") ||
+															!util_compare_file_extension(filename,"hdf")
+
+
+							) {
+								return 1;
+							}
+	else return 0;
+}
+
 //obtiene linea a escribir con nombre de archivo + carpeta
 void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,unsigned int max_length_shown)
 {
@@ -31815,6 +31835,15 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
         	        buffer[i-4]='d';
                 	buffer[i-5]='<';
 	        }
+
+			//O si es empaquetado
+			else if (menu_util_file_is_packed(s)) {
+				    buffer[i-1]='>';
+                	buffer[i-2]='p';
+	                buffer[i-3]='x';
+        	        buffer[i-4]='e';
+                	buffer[i-5]='<';
+			}
 	}
 
 
@@ -32666,6 +32695,8 @@ void menu_filesel_print_text_contents(void)
 }
 
 
+
+
 //Si hay que iniciar el filesel pero mover el cursor a un archivo concreto
 z80_bit menu_filesel_posicionar_archivo={0};
 char menu_filesel_posicionar_archivo_nombre[PATH_MAX]="";
@@ -33035,17 +33066,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						else {
 
 							//Si seleccion es archivo comprimido
-							if (
-							    //strstr(item_seleccionado->d_name,".zip")!=NULL ||
-							    !util_compare_file_extension(item_seleccionado->d_name,"zip") ||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"gz")  ||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"tar") ||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"rar") ||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"mdv") ||
-															!util_compare_file_extension(item_seleccionado->d_name,"hdf")
-
-
-							) {
+							if (menu_util_file_is_packed(item_seleccionado->d_name) ) {
 								debug_printf (VERBOSE_DEBUG,"Is a compressed/packed file");
 
 								char tmpdir[PATH_MAX];
