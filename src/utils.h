@@ -610,6 +610,7 @@ extern int find_sharedfile(char *archivo,char *ruta_final);
 extern int si_existe_editionnamegame(char *nombre_final);
 
 extern int util_extract_mdv(char *mdvname, char *dest_dir);
+extern int util_extract_hdf(char *hdfname, char *dest_dir);
 
 extern void util_string_replace_char(char *s,char orig,char dest);
 

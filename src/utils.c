@@ -10126,6 +10126,93 @@ int util_extract_mdv(char *mdvname, char *dest_dir)
 	return main_mdvtool(4,argumentos);
 }
 
+int util_extract_hdf(char *hdfname, char *dest_dir)
+{
+
+	int leidos;
+
+	//unsigned char buffer_lectura[1024];
+        //Asignamos bloque de 64kb de lectura
+        z80_byte *buffer_lectura;
+
+        buffer_lectura=malloc(65536);
+        if (buffer_lectura==NULL) {
+                cpu_panic("Unable to assign read buffer");
+        }
+
+        //Obtener archivo
+        char archivo[PATH_MAX];
+        char archivo_sin_extension[PATH_MAX];
+        char archivo_destino[PATH_MAX];
+
+        //Solo nombre sin directorio
+        util_get_file_no_directory(hdfname,archivo);
+
+        //Solo nombre sin extension
+        util_get_file_without_extension(archivo,archivo_sin_extension);
+
+        sprintf (archivo_destino,"%s/%s.ide",dest_dir,archivo_sin_extension);
+
+        FILE *ptr_inputfile;
+        ptr_inputfile=fopen(hdfname,"rb");
+
+        if (ptr_inputfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error opening input file %s",hdfname);
+                return 1;
+        }
+
+	FILE *ptr_outputfile;
+	ptr_outputfile=fopen(archivo_destino,"wb");
+
+        if (ptr_outputfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error opening output file %s",archivo_destino);
+                return 1;
+        }
+
+        //printf ("Input: %s output: %s\n",hdfname,archivo_destino);
+
+	// Leer offset a datos raw del byte de cabecera:
+	//0x09 DOFS WORD Image data offset This is the absolute offset in the HDF file where the actual hard-disk data dump starts.
+	//In HDF version 1.1 this is 0x216.
+
+	//Leemos 11 bytes de la cabecera
+        fread(buffer_lectura,1,11,ptr_inputfile);
+
+	int offset_raw=buffer_lectura[9]+256*buffer_lectura[10];
+
+	debug_printf (VERBOSE_DEBUG,"HDF Offset to raw data: %d",offset_raw);
+
+
+	//Ya hemos leido 11 bytes del principio
+	int saltar_bytes=offset_raw-11;
+
+	//Saltar esos bytes
+	fread(buffer_lectura,1,saltar_bytes,ptr_inputfile);
+
+	//Y vamos leyendo bloques de 1024
+	int escritos=0;
+
+	do {
+	        leidos=fread(buffer_lectura,1,65536,ptr_inputfile);
+		if (leidos>0) {
+			fwrite(buffer_lectura,1,leidos,ptr_outputfile);
+			escritos +=leidos;
+			debug_printf (VERBOSE_DEBUG,"Writing temporary data %dKB",escritos/1024);
+		}
+	} while (leidos>0);
+
+	fclose (ptr_inputfile);
+
+        fclose(ptr_outputfile);
+
+        free(buffer_lectura);
+
+	return 0;
+
+
+
+
+}
 
 //Cambiar en cadena s, caracter orig por dest
 void util_string_replace_char(char *s,char orig,char dest)

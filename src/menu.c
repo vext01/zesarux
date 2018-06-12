@@ -18025,6 +18025,8 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si es mdv, tambien lo soportamos
 	if (!strcasecmp(extension,"mdv")) return 1;
 
+	//Si es hdf, tambien lo soportamos
+	if (!strcasecmp(extension,"hdf")) return 1;
 
 	return 0;
 
@@ -32507,6 +32509,12 @@ int menu_filesel_uncompress (char *archivo,char *tmpdir)
                 return util_extract_mdv(archivo,tmpdir);
         }
 
+        //hdf no se gestiona con utilidad aparte
+        else if ( !util_compare_file_extension(archivo,"hdf") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a hdf file");
+                return util_extract_hdf(archivo,tmpdir);
+        }
+
 
 
 //descomprimir
@@ -33030,10 +33038,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							if (
 							    //strstr(item_seleccionado->d_name,".zip")!=NULL ||
 							    !util_compare_file_extension(item_seleccionado->d_name,"zip") ||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"gz") ||
+                                                            !util_compare_file_extension(item_seleccionado->d_name,"gz")  ||
                                                             !util_compare_file_extension(item_seleccionado->d_name,"tar") ||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"rar")||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"mdv")
+                                                            !util_compare_file_extension(item_seleccionado->d_name,"rar") ||
+                                                            !util_compare_file_extension(item_seleccionado->d_name,"mdv") ||
+															!util_compare_file_extension(item_seleccionado->d_name,"hdf")
 
 
 							) {
