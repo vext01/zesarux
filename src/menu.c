@@ -18028,6 +18028,9 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si es hdf, tambien lo soportamos
 	if (!strcasecmp(extension,"hdf")) return 1;
 
+	//Si es hdf, tambien lo soportamos
+	if (!strcasecmp(extension,"temptap")) return 1;	
+
 	return 0;
 
 }
@@ -20483,6 +20486,98 @@ void menu_tape_browser_show(char *filename)
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
 	free(taperead);
+
+}
+
+
+int temp_tape_tap_browser_expand(char *filename,char *tempdir)
+{
+
+	
+	//tapefile
+	if (util_compare_file_extension(filename,"tap")!=0) {
+		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
+		return 1;
+	}
+
+	//Leemos cinta en memoria
+	int total_mem=get_file_size(filename);
+
+	z80_byte *taperead;
+
+
+
+        FILE *ptr_tapebrowser;
+        ptr_tapebrowser=fopen(filename,"rb");
+
+        if (!ptr_tapebrowser) {
+		debug_printf(VERBOSE_ERR,"Unable to open tape");
+		return 1; 
+	}
+
+	taperead=malloc(total_mem);
+	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser");
+
+	z80_byte *puntero_lectura;
+	puntero_lectura=taperead;
+
+
+        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading tape");
+		free(taperead);
+                return 1;
+        }
+
+
+        fclose(ptr_tapebrowser);
+
+	char buffer_texto[40];
+
+	int longitud_bloque;
+
+	int longitud_texto;
+
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	int filenumber=0;
+
+	while(total_mem>0) {
+		z80_byte *copia_puntero=puntero_lectura;
+		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
+		total_mem-=longitud_bloque;
+		puntero_lectura +=longitud_bloque;
+		debug_printf (VERBOSE_DEBUG,"Tape browser. Block: %s",buffer_texto);
+
+
+     //printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
+                        longitud_texto=strlen(buffer_texto)+1; //Agregar salto de linea
+                        if (indice_buffer+longitud_texto>MAX_TEXTO_BROWSER-1) {
+				debug_printf (VERBOSE_ERR,"Too much headers. Showing only the allowed in memory");
+				total_mem=0; //Finalizar bloque
+			}
+
+                        else {
+                                sprintf (&texto_browser[indice_buffer],"%s\n",buffer_texto);
+                                indice_buffer +=longitud_texto;
+                        }
+		char buffer_temp_file[PATH_MAX];
+		sprintf (buffer_temp_file,"%s/file%d",tempdir,filenumber++);
+		//Generar bloque con datos
+		util_save_file(copia_puntero,longitud_bloque,buffer_temp_file);
+
+	}
+
+	texto_browser[indice_buffer]=0;
+	//menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+	free(taperead);
+
+	return 0;
 
 }
 
@@ -31787,6 +31882,7 @@ int menu_util_file_is_packed(char *filename)
                                                             !util_compare_file_extension(filename,"tar") ||
                                                             !util_compare_file_extension(filename,"rar") ||
                                                             !util_compare_file_extension(filename,"mdv") ||
+															!util_compare_file_extension(filename,"temptap") ||
 															!util_compare_file_extension(filename,"hdf")
 
 
@@ -32546,6 +32642,12 @@ int menu_filesel_uncompress (char *archivo,char *tmpdir)
                 return util_extract_hdf(archivo,tmpdir);
         }
 
+        //temptap no se gestiona con utilidad aparte
+        else if ( !util_compare_file_extension(archivo,"temptap") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a temptap file");
+				return temp_tape_tap_browser_expand(archivo,tmpdir);
+                //return util_extract_hdf(archivo,tmpdir);
+        }
 
 
 //descomprimir

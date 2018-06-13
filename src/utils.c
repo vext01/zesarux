@@ -10044,6 +10044,30 @@ void util_byte_to_binary(z80_byte value,char *texto)
 	*texto=0; //fin cadena
 }
 
+void util_save_file(z80_byte *origin, long int tamanyo_origen, char *destination_file)
+{
+
+
+        FILE *ptr_destination_file;
+        ptr_destination_file=fopen(destination_file,"wb");
+
+                if (!ptr_destination_file) {
+                        debug_printf (VERBOSE_ERR,"Can not open %s",destination_file);
+                        return;
+        }
+
+        z80_byte byte_buffer;
+
+        //Leer byte a byte... Si, es poco eficiente
+        while (tamanyo_origen) {
+        	fwrite(origin,1,1,ptr_destination_file);
+                origin++;
+        	tamanyo_origen--;
+	}
+        fclose(ptr_destination_file);
+
+}
+
 
 void util_copy_file(char *source_file, char *destination_file)
 {
