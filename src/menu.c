@@ -29255,8 +29255,10 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"\n\n"
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
+			"- Use Enter or Left Button mouse to select item\n"
+			"- Use Space to expand files\n"
 			"- Use TAB to change section\n"
-			"- Use Space/cursor on filter\n"
+			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
 			"  for faster searching\n"
 			"When using fileselector from file utilities menu:\n"
@@ -32989,6 +32991,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					break;
 
 					case 13:
+					case 32: //Tambien se entra aqui al pulsar espacio para expandir un archivo
 						//Si se ha pulsado boton de raton
 						if (mouse_left){
 							//printf ("Boton pulsado\n");
@@ -33096,11 +33099,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 							else {
 								//Enter. No es directorio ni archivo comprimido
+								//Y tecla no es espacio
 								//Si estan las file utils, enter no hace nada
-								if (menu_filesel_show_utils.v==0) { 
+								if (menu_filesel_show_utils.v==0 && tecla!=32) { 
 
-					                        	cls_menu_overlay();
-        	                                        		menu_espera_no_tecla();
+					                cls_menu_overlay();
+        	                        menu_espera_no_tecla();
 
 									//unimos directorio y nombre archivo
 									getcwd(archivo,PATH_MAX);
