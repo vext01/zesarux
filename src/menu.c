@@ -20495,7 +20495,7 @@ int temp_tape_tap_browser_expand(char *filename,char *tempdir)
 
 	
 	//tapefile
-	if (util_compare_file_extension(filename,"tap")!=0) {
+	if (util_compare_file_extension(filename,"temptap")!=0) {
 		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
 		return 1;
 	}
