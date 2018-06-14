@@ -26,7 +26,7 @@ dicho visor no tendria que entender los tags especiales de texto...
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
--visor basic pueda hacerlo con archivos. Quiza es opcion de file utils->view
+-visor basic de archivos para zx81 y zx80
 
 
 -Para cursor draw:
