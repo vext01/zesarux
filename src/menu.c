@@ -32827,6 +32827,22 @@ void menu_filesel_print_text_contents(void)
 z80_bit menu_filesel_posicionar_archivo={0};
 char menu_filesel_posicionar_archivo_nombre[PATH_MAX]="";
 
+void menu_filesel_change_to_tmp(char *tmpdir)
+{
+                                                                        //cambiar a tmp dir.
+
+                                                                        //Dejar antes un archivo temporal en ese directorio que indique directorio anterior
+                                                                        char directorio_actual[PATH_MAX];
+                                                                        getcwd(directorio_actual,PATH_MAX);
+
+                                                                        menu_filesel_chdir(tmpdir);
+
+                                                                        //escribir archivo que indique directorio anterior
+                                                                        menu_filesel_write_file_last_dir(directorio_actual);
+
+                                                                        menu_filesel_free_mem();
+}
+
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -33204,18 +33220,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								}
 
 								else {
-	                                                                //cambiar a tmp dir.
-
-									//TODO. Dejar antes un archivo temporal en ese directorio que indique directorio anterior
-									char directorio_actual[PATH_MAX];
-									getcwd(directorio_actual,PATH_MAX);
-
-        	                                                        menu_filesel_chdir(tmpdir);
-
-									//escribir archivo que indique directorio anterior
-									menu_filesel_write_file_last_dir(directorio_actual);
-
-                	                                                menu_filesel_free_mem();
+									menu_filesel_change_to_tmp(tmpdir);
                         	                                        releer_directorio=1;
 								}
 
