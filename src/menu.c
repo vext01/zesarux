@@ -33030,7 +33030,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                                 char tmpdir[PATH_MAX];
 
                                                                 if (menu_filesel_expand(item_seleccionado->d_name,tmpdir) ) {
-									menu_warn_message("Don't know how to expand that file");
+									//TODO: Si lanzo este warning se descuadra el dibujado de ventana
+									//menu_warn_message("Don't know how to expand that file");
+									debug_printf(VERBOSE_INFO,"Don't know how to expand that file");
                                                                 }
 
                                                                 else {
