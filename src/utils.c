@@ -10176,7 +10176,8 @@ int util_extract_hdf(char *hdfname, char *dest_dir)
         //Solo nombre sin extension
         util_get_file_without_extension(archivo,archivo_sin_extension);
 
-        sprintf (archivo_destino,"%s/%s.ide",dest_dir,archivo_sin_extension);
+        //De un hdf puede salir un mmc o un ide
+        sprintf (archivo_destino,"%s/%s.mmcide",dest_dir,archivo_sin_extension);
 
         FILE *ptr_inputfile;
         ptr_inputfile=fopen(hdfname,"rb");

@@ -14559,10 +14559,11 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
 
 	mmc_disable();
 
-        char *filtros[2];
+        char *filtros[3];
 
         filtros[0]="mmc";
-        filtros[1]=0;
+		filtros[1]="mmcide";
+        filtros[2]=0;
 
 
         if (menu_filesel("Select MMC File",filtros,mmc_file_name)==1) {
@@ -15609,10 +15610,11 @@ void menu_storage_ide_file(MENU_ITEM_PARAMETERS)
 
         ide_disable();
 
-        char *filtros[2];
+        char *filtros[3];
 
         filtros[0]="ide";
-        filtros[1]=0;
+		filtros[1]="mmcide";
+        filtros[2]=0;
 
 
         if (menu_filesel("Select IDE File",filtros,ide_file_name)==1) {
@@ -22987,6 +22989,9 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"o")) menu_file_o_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"mmc")) menu_file_mmc_browser_show(file_name,"MMC");
+
+	//Suponemos que un mmcide (que sale de un hdf) es un mmc
+	else if (!util_compare_file_extension(file_name,"mmcide")) menu_file_mmc_browser_show(file_name,"MMC");
 
 	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
 
