@@ -20570,9 +20570,10 @@ int temp_tape_tap_browser_expand(char *filename,char *tempdir)
 		z80_byte flag=copia_puntero[2];
 		if (flag==0 && longitud_final==17) {
 			//Obtener nombre
-			char nombre_cabecera[11];
-			util_tape_get_name_header(&copia_puntero[4],nombre_cabecera);
-			sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,nombre_cabecera);
+			//char nombre_cabecera[11];
+			//util_tape_get_name_header(&copia_puntero[4],nombre_cabecera);
+			//sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,nombre_cabecera);
+			sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
 		
 		}
 		else sprintf (buffer_temp_file,"%s/%02d-data-%d",tempdir,filenumber,longitud_final);

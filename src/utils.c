@@ -9057,24 +9057,25 @@ void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,
                         
 
 
+			//Evitar el uso del caracter ":" para evitar generar nombres (en el expansor de archivos) con ":" que pueden dar problemas en windows
 			switch (first_byte) {
 				case 0:
-					sprintf(texto,"Program: %s",buffer_nombre);
+					sprintf(texto,"Program %s",buffer_nombre);
 				break;
 
 				case 1:
-					sprintf(texto,"Num array: %s",buffer_nombre);
+					sprintf(texto,"Num array %s",buffer_nombre);
 				break;
 
 				case 2:
-					sprintf(texto,"Char array: %s",buffer_nombre);
+					sprintf(texto,"Char array %s",buffer_nombre);
 				break;
 
 				case 3:
-                                        if (cabecera_longitud==6912 && cabecera_inicio==16384) sprintf(texto,"Screen$: %s",buffer_nombre);
+                                        if (cabecera_longitud==6912 && cabecera_inicio==16384) sprintf(texto,"Screen$ %s",buffer_nombre);
                                                           //01234567890123456789012345678901
                                                           //Code: 1234567890 [16384,49152]
-					else sprintf(texto,"Code: %s [%d,%d]",buffer_nombre,cabecera_inicio,cabecera_longitud);
+					else sprintf(texto,"Code %s [%d,%d]",buffer_nombre,cabecera_inicio,cabecera_longitud);
 				break;
 
 			}
@@ -9090,7 +9091,7 @@ void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,
                         z80_byte sped_month=tape[19];
                         z80_byte sped_year=tape[20];
 
-			sprintf(texto,"SPED: %s (%d/%d/%d)",buffer_nombre,sped_day,sped_month,sped_year+1980);
+			sprintf(texto,"SPED %s (%d/%d/%d)",buffer_nombre,sped_day,sped_month,sped_year+1980);
 
 		}
 
