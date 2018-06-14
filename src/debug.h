@@ -40,6 +40,8 @@ extern void print_registers(char *buffer);
 
 extern void cpu_panic(char *mensaje);
 
+extern void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir) );
+
 extern void debug_tiempo_inicial(void);
 extern void debug_tiempo_final(void);
 

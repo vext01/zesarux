@@ -19911,6 +19911,61 @@ void menu_file_sna_browser_show(char *filename)
 
 }
 
+z80_byte *last_bas_browser_memory;
+
+z80_byte menu_file_bas_browser_show_peek(z80_int dir)
+{
+	return last_bas_browser_memory[dir];
+}
+
+void menu_file_basic_browser_show(char *filename)
+{
+	
+	//Leemos archivo .bas
+        FILE *ptr_file_bas_browser;
+        ptr_file_bas_browser=fopen(filename,"rb");
+
+        if (!ptr_file_bas_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	int tamanyo=get_file_size(filename);
+	z80_byte *memoria;
+	memoria=malloc(tamanyo);
+	if (memoria==NULL) cpu_panic ("Can not allocate memory for bas read");
+
+	last_bas_browser_memory=memoria;
+
+	//Leer  bytes de la cabecera
+
+
+    int leidos=fread(memoria,1,tamanyo,ptr_file_bas_browser);
+
+	if (leidos!=tamanyo) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+    }
+
+    fclose(ptr_file_bas_browser);
+
+
+	        char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+//de momento asumir basic spectrum
+  	char **dir_tokens;
+  	int inicio_tokens;
+
+  		dir_tokens=spectrum_rom_tokens;
+
+  		inicio_tokens=163;
+
+
+	debug_view_basic_from_memory(results_buffer,0,tamanyo,dir_tokens,inicio_tokens,menu_file_bas_browser_show_peek);
+
+  menu_generic_message_format("View Basic","%s",results_buffer);
+
+}
+
 
 void menu_file_spg_browser_show(char *filename)
 {
@@ -22983,6 +23038,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"sna")) menu_file_sna_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"bas")) menu_file_basic_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
 
