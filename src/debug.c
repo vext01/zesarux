@@ -3055,75 +3055,12 @@ void debug_set_breakpoint_action(int breakpoint_index,char *accion)
 
 }
 
-void debug_view_basic(char *results_buffer)
+
+
+void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir) )
 {
 
-  	char **dir_tokens;
-  	int inicio_tokens;
-  /*
-                  dir_tokens=zx80_rom_tokens;
-
-                  inicio_tokens=213;
-
-  	int i=inicio_tokens;
-
-  	while (i<256) {
-  		printf ("%s\n",dir_tokens[i-inicio_tokens]);
-  		i++;
-  	}
-  	return;
-
-  */
-
-
-
-  	z80_int dir;
-
-  	int dir_inicio_linea;
-  	int final_basic;
-
-
-
-  	if (MACHINE_IS_SPECTRUM) {
-  		//Spectrum
-
-  		//PROG
-  		dir_inicio_linea=peek_byte_no_time(23635)+256*peek_byte_no_time(23636);
-
-  		//VARS
-  		final_basic=peek_byte_no_time(23627)+256*peek_byte_no_time(23628);
-
-  		dir_tokens=spectrum_rom_tokens;
-
-  		inicio_tokens=163;
-
-  	}
-
-  	else if (MACHINE_IS_ZX81) {
-  		//ZX81
-  		dir_inicio_linea=16509;
-
-  		//D_FILE
-  		final_basic=peek_byte_no_time(0x400C)+256*peek_byte_no_time(0x400D);
-
-  		dir_tokens=zx81_rom_tokens;
-
-  		inicio_tokens=192;
-  	}
-
-          //else if (MACHINE_IS_ZX80) {
-          else  {
-  		//ZX80
-                  dir_inicio_linea=16424;
-
-                  //VARS
-                  final_basic=peek_byte_no_time(0x4008)+256*peek_byte_no_time(0x4009);
-
-                  dir_tokens=zx80_rom_tokens;
-
-                  inicio_tokens=213;
-          }
-
+	  	z80_int dir;
 
   	debug_printf (VERBOSE_INFO,"Start Basic: %d. End Basic: %d",dir_inicio_linea,final_basic);
 
@@ -3150,8 +3087,8 @@ void debug_view_basic(char *results_buffer)
   		dir=dir_inicio_linea;
   		//obtener numero linea. orden inverso
   		//numero_linea=(peek_byte_no_time(dir++))*256 + peek_byte_no_time(dir++);
-  		numero_linea=(peek_byte_no_time(dir++))*256;
-  		numero_linea +=peek_byte_no_time(dir++);
+  		numero_linea=(lee_byte_function(dir++))*256;
+  		numero_linea +=lee_byte_function(dir++);
 
   		//escribir numero linea
   		sprintf (&results_buffer[index_buffer],"%4d",numero_linea);
@@ -3161,8 +3098,8 @@ void debug_view_basic(char *results_buffer)
   		if (!MACHINE_IS_ZX80) {
 
   			//longitud_linea=(peek_byte_no_time(dir++))+256*peek_byte_no_time(dir++);
-  			longitud_linea=(peek_byte_no_time(dir++));
-  			longitud_linea += 256*peek_byte_no_time(dir++);
+  			longitud_linea=(lee_byte_function(dir++));
+  			longitud_linea += 256*lee_byte_function(dir++);
 
   			debug_printf (VERBOSE_DEBUG,"Line length: %d",longitud_linea);
 
@@ -3174,7 +3111,7 @@ void debug_view_basic(char *results_buffer)
   		dir_inicio_linea=dir+longitud_linea;
 
   		while (longitud_linea>0) {
-  			byte_leido=peek_byte_no_time(dir++);
+  			byte_leido=lee_byte_function(dir++);
   			longitud_linea--;
 
   			if (MACHINE_IS_ZX8081) {
@@ -3299,6 +3236,67 @@ void debug_view_basic(char *results_buffer)
           results_buffer[index_buffer]=0;
 
 }
+
+
+void debug_view_basic(char *results_buffer)
+{
+
+  	char **dir_tokens;
+  	int inicio_tokens;
+
+
+
+
+  	int dir_inicio_linea;
+  	int final_basic;
+
+
+
+  	if (MACHINE_IS_SPECTRUM) {
+  		//Spectrum
+
+  		//PROG
+  		dir_inicio_linea=peek_byte_no_time(23635)+256*peek_byte_no_time(23636);
+
+  		//VARS
+  		final_basic=peek_byte_no_time(23627)+256*peek_byte_no_time(23628);
+
+  		dir_tokens=spectrum_rom_tokens;
+
+  		inicio_tokens=163;
+
+  	}
+
+  	else if (MACHINE_IS_ZX81) {
+  		//ZX81
+  		dir_inicio_linea=16509;
+
+  		//D_FILE
+  		final_basic=peek_byte_no_time(0x400C)+256*peek_byte_no_time(0x400D);
+
+  		dir_tokens=zx81_rom_tokens;
+
+  		inicio_tokens=192;
+  	}
+
+          //else if (MACHINE_IS_ZX80) {
+    else  {
+  		//ZX80
+                  dir_inicio_linea=16424;
+
+                  //VARS
+                  final_basic=peek_byte_no_time(0x4008)+256*peek_byte_no_time(0x4009);
+
+                  dir_tokens=zx80_rom_tokens;
+
+                  inicio_tokens=213;
+    }
+
+
+	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,final_basic,dir_tokens,inicio_tokens,peek_byte_no_time);
+
+}
+
 
 void debug_get_ioports(char *stats_buffer)
 {
