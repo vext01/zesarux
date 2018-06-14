@@ -32507,12 +32507,12 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
 	menu_filesel_mkdir(tmpdir);
 
 
-        if ( !util_compare_file_extension(archivo,"hdf") ) {
+        if (!util_compare_file_extension(archivo,"hdf") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a hdf file");
                 return util_extract_hdf(archivo,tmpdir);
         }
 
-        else if ( !util_compare_file_extension(archivo,"tap") ) {
+        else if (!util_compare_file_extension(archivo,"tap") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a tap file");
         	return util_extract_tap(archivo,tmpdir);
         }
@@ -32523,7 +32523,6 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
         }
 
 
-	//debug_printf(VERBOSE_ERR,"Do not know how to expand file");
         return 1;
 
 
