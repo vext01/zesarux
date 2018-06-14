@@ -33031,14 +33031,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                                                                 if (menu_filesel_expand(item_seleccionado->d_name,tmpdir) ) {
 									menu_warn_message("Don't know how to expand that file");
-                                                                        //menu_filesel_exist_ESC();
-                                                                        //return 0;
                                                                 }
 
                                                                 else {
                                                                         menu_filesel_change_to_tmp(tmpdir);
-                                                                        releer_directorio=1;
                                                                 }
+
+								releer_directorio=1;
 
 					break;
 
