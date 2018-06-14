@@ -32523,7 +32523,7 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
         }
 
 
-	debug_printf(VERBOSE_ERR,"Do not know how to expand file");
+	//debug_printf(VERBOSE_ERR,"Do not know how to expand file");
         return 1;
 
 
@@ -33030,8 +33030,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                                 char tmpdir[PATH_MAX];
 
                                                                 if (menu_filesel_expand(item_seleccionado->d_name,tmpdir) ) {
-                                                                        menu_filesel_exist_ESC();
-                                                                        return 0;
+									menu_warn_message("Don't know how to expand that file");
+                                                                        //menu_filesel_exist_ESC();
+                                                                        //return 0;
                                                                 }
 
                                                                 else {
