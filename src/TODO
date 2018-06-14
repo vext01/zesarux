@@ -26,11 +26,8 @@ dicho visor no tendria que entender los tags especiales de texto...
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
--quiza tecla espacio en menu de filesel puede servir para seleccionar un archivo final, evitando tener que pulsar enter, 
-que en algunos archivos (como mdv, hdf) acaban expandiendo y por tanto no seleccionando el archivo.
- Esto quiza sirva por ejemplo, para un futuro, si el filesel pueda ser capaz de expandir archivos trd,
-  habra que distinguir la manera entre expandirlo y seleccionarlo
-  ->O quiza mejor: enter normalmente selecciona. Y espacio podria servir para expandir un trd por ejemplo
+-visor basic pueda hacerlo con archivos. Quiza es opcion de file utils->view
+
 
 -Para cursor draw:
 *iconos con mas de una opcion, que se les indique de alguna manera. con un punto??? Con 3 pixeles en arriba derecha asi:
