@@ -33037,9 +33037,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                                                                 else {
                                                                         menu_filesel_change_to_tmp(tmpdir);
+									releer_directorio=1;
                                                                 }
 
-								releer_directorio=1;
 
 					break;
 
