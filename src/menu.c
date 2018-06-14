@@ -20564,9 +20564,11 @@ int temp_tape_tap_browser_expand(char *filename,char *tempdir)
                                 indice_buffer +=longitud_texto;
                         }
 		char buffer_temp_file[PATH_MAX];
-		sprintf (buffer_temp_file,"%s/file%d",tempdir,filenumber++);
-		//Generar bloque con datos
-		util_save_file(copia_puntero,longitud_bloque,buffer_temp_file);
+		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
+
+		sprintf (buffer_temp_file,"%s/%02d-data-%d",tempdir,filenumber++,longitud_final);
+		//Generar bloque con datos, saltando los dos de cabecera y el flag
+		util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
 
 	}
 
