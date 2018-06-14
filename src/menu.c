@@ -20566,7 +20566,15 @@ int temp_tape_tap_browser_expand(char *filename,char *tempdir)
 		char buffer_temp_file[PATH_MAX];
 		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
 
-		sprintf (buffer_temp_file,"%s/%02d-data-%d",tempdir,filenumber++,longitud_final);
+		//Si bloque de flag 0 y longitud 17
+		z80_byte flag=copia_puntero[2];
+		if (flag==0 && longitud_final==17) {
+			sprintf (buffer_temp_file,"%s/%02d-header",tempdir,filenumber);
+		}
+		else sprintf (buffer_temp_file,"%s/%02d-data-%d",tempdir,filenumber,longitud_final);
+
+		filenumber++;
+
 		//Generar bloque con datos, saltando los dos de cabecera y el flag
 		util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
 
