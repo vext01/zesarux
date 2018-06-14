@@ -31887,7 +31887,7 @@ filesel_item *menu_get_filesel_item(int index)
 }
 
 //Dice si archivo es de tipo comprimido/empaquetado. filename tiene que ser sin directorio
-int menu_util_file_is_packed(char *filename)
+int menu_util_file_is_compressed(char *filename)
 {
 		//Si seleccion es archivo comprimido
 							if (
@@ -31947,7 +31947,7 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 	        }
 
 			//O si es empaquetado
-			/*else if (menu_util_file_is_packed(s)) {
+			/*else if (menu_util_file_is_compressed(s)) {
 				    buffer[i-1]='>';
                 	buffer[i-2]='p';
 	                buffer[i-3]='x';
@@ -33130,8 +33130,24 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 					break;
 
+					//Expandir archivos
+					case 32:
+						debug_printf(VERBOSE_DEBUG,"Expanding file %s",item_seleccionado->d_name);
+                                                                char tmpdir[PATH_MAX];
+
+                                                                if (menu_filesel_expand(item_seleccionado->d_name,tmpdir) ) {
+                                                                        menu_filesel_exist_ESC();
+                                                                        return 0;
+                                                                }
+
+                                                                else {
+                                                                        menu_filesel_change_to_tmp(tmpdir);
+                                                                        releer_directorio=1;
+                                                                }
+
+					break;
+
 					case 13:
-					case 32: //Tambien se entra aqui al pulsar espacio para expandir un archivo
 						//Si se ha pulsado boton de raton
 						if (mouse_left){
 							//printf ("Boton pulsado\n");
@@ -33209,8 +33225,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						else {
 
 							//Si seleccion es archivo comprimido
-							if (menu_util_file_is_packed(item_seleccionado->d_name) ) {
-								debug_printf (VERBOSE_DEBUG,"Is a compressed/packed file");
+							if (menu_util_file_is_compressed(item_seleccionado->d_name) ) {
+								debug_printf (VERBOSE_DEBUG,"Is a compressed file");
 
 								char tmpdir[PATH_MAX];
 
@@ -33228,9 +33244,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 							else {
 								//Enter. No es directorio ni archivo comprimido
-								//Y tecla no es espacio
 								//Si estan las file utils, enter no hace nada
-								if (menu_filesel_show_utils.v==0 && tecla!=32) { 
+								if (menu_filesel_show_utils.v==0) { 
 
 					                cls_menu_overlay();
         	                        menu_espera_no_tecla();
