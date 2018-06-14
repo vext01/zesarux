@@ -31882,7 +31882,7 @@ void menu_print_dir(int inicial)
 	//escribir en ventana directorio de archivos
 
 	//Para speech
-	char texto_opcion_activa[100];
+	char texto_opcion_activa[PATH_MAX+100]; //Dado que hay que meter aqui el nombre del archivo y un poquito mas de texto
 	//Asumimos por si acaso que no hay ninguna activa
 	texto_opcion_activa[0]=0;
 
@@ -33025,7 +33025,26 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 					//Expandir archivos
 					case 32:
-						debug_printf(VERBOSE_DEBUG,"Expanding file %s",item_seleccionado->d_name);
+
+                                                item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
+                                                menu_reset_counters_tecla_repeticion();
+
+                                                //printf ("despues de get filesel item. item_seleccionado=%p\n",item_seleccionado);
+
+                                                if (item_seleccionado==NULL) {
+                                                        //Esto pasa en las carpetas vacias, como /home en Mac OS
+                                                                        menu_filesel_exist_ESC();
+                                                                        return 0;
+
+
+                                                }
+
+						if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)==2) {
+							debug_printf(VERBOSE_INFO,"Can't expand directories");
+						}
+
+						else {
+								debug_printf(VERBOSE_DEBUG,"Expanding file %s",item_seleccionado->d_name);
                                                                 char tmpdir[PATH_MAX];
 
                                                                 if (menu_filesel_expand(item_seleccionado->d_name,tmpdir) ) {
@@ -33038,6 +33057,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                                         menu_filesel_change_to_tmp(tmpdir);
 									releer_directorio=1;
                                                                 }
+						}
 
 
 					break;
