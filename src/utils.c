@@ -9091,7 +9091,7 @@ void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,
                         z80_byte sped_month=tape[19];
                         z80_byte sped_year=tape[20];
 
-			sprintf(texto,"SPED %s (%d/%d/%d)",buffer_nombre,sped_day,sped_month,sped_year+1980);
+			sprintf(texto,"SPED %s (%d-%d-%d)",buffer_nombre,sped_day,sped_month,sped_year+1980);
 
 		}
 
