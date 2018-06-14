@@ -20566,9 +20566,9 @@ int temp_tape_tap_browser_expand(char *filename,char *tempdir)
 		char buffer_temp_file[PATH_MAX];
 		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
 
-		//Si bloque de flag 0 y longitud 17
+		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
 		z80_byte flag=copia_puntero[2];
-		if (flag==0 && longitud_final==17) {
+		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
 			//Obtener nombre
 			//char nombre_cabecera[11];
 			//util_tape_get_name_header(&copia_puntero[4],nombre_cabecera);

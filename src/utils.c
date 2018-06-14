@@ -9096,7 +9096,7 @@ void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,
 		}
 
 
-		else sprintf(texto,"Flag: %d Length: %d",flag,longitud-2); //Saltar los 2 bytes de flag y checksum
+		else sprintf(texto,"Flag %d Length %d",flag,longitud-2); //Saltar los 2 bytes de flag y checksum
 }
 
 //Retorna texto descriptivo de informacion de cinta en texto. Cinta tipo tap
