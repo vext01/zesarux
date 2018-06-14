@@ -9031,7 +9031,7 @@ void util_tape_get_name_header(z80_byte *tape,char *texto)
 
 	for (i=0;i<10;i++) {
 		caracter=*tape++;
-		if (caracter<32 || caracter>127) caracter='.';
+		if (caracter<32 || caracter>126) caracter='.';
 
 		*texto++=caracter;
 	}

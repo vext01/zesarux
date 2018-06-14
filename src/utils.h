@@ -655,4 +655,6 @@ extern z80_bit input_file_keyboard_playing;
 
 extern void convert_to_rwa_common_tmp(char *origen, char *destino);
 
+extern void util_tape_get_name_header(z80_byte *tape,char *texto);
+
 #endif
