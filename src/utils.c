@@ -10057,8 +10057,6 @@ void util_save_file(z80_byte *origin, long int tamanyo_origen, char *destination
                         return;
         }
 
-        z80_byte byte_buffer;
-
         //Leer byte a byte... Si, es poco eficiente
         while (tamanyo_origen) {
         	fwrite(origin,1,1,ptr_destination_file);
@@ -10216,7 +10214,7 @@ int util_extract_hdf(char *hdfname, char *dest_dir)
 	fread(buffer_lectura,1,saltar_bytes,ptr_inputfile);
 
 	//Y vamos leyendo bloques de 1024
-	int escritos=0;
+	unsigned long int escritos=0;
 
 	do {
 	        leidos=fread(buffer_lectura,1,65536,ptr_inputfile);
@@ -10228,7 +10226,8 @@ int util_extract_hdf(char *hdfname, char *dest_dir)
 	} while (leidos>0);
 
         //Y luego rellenar archivo a siguiente valor valido de archivo .ide
-        int valid_ide_sizes[]={
+        //Nota: para .mmc ya nos sirve, dado que .mmc necesita que sea multiple de 256 kb
+        unsigned long int valid_ide_sizes[]={
 		 8*1024*1024,   //0
 		 16*1024*1024,
 		 32*1024*1024,
@@ -10236,10 +10235,11 @@ int util_extract_hdf(char *hdfname, char *dest_dir)
 		 128*1024*1024,
 		 256*1024*1024, //5
 		 512*1024*1024,
-		 1024*1024*1024, //7
+		 1024*1024*1024,  //7. 1 GB
+                 2147483648L, //8. 2 GB
         };
 
-        int total_sizes=8;
+        int total_sizes=9;
         //Ver si coincide con alguno exactamente
         int i;
         int coincide=0;
@@ -10258,9 +10258,9 @@ int util_extract_hdf(char *hdfname, char *dest_dir)
                 }
 
                 else {
-                        int final_size=valid_ide_sizes[i];
-                        int rellenar=final_size-escritos;
-                        debug_printf (VERBOSE_DEBUG,"Adding %d bytes until normal image size (%dKB)",rellenar,final_size/1024);
+                        unsigned long int final_size=valid_ide_sizes[i];
+                        unsigned long int rellenar=final_size-escritos;
+                        debug_printf (VERBOSE_DEBUG,"Adding %d KB until normal image size (%d KB)",rellenar/1024,final_size/1024);
                         z80_byte byte_relleno=0xFF;
                         while (rellenar) {
                             fwrite(&byte_relleno,1,1,ptr_outputfile);  
