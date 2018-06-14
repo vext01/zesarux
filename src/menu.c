@@ -18029,7 +18029,7 @@ int menu_file_filter(const char *name,char *filtros[])
 	if (!strcasecmp(extension,"hdf")) return 1;
 
 	//Si es hdf, tambien lo soportamos
-	if (!strcasecmp(extension,"temptap")) return 1;	
+	if (!strcasecmp(extension,"tap")) return 1;	
 
 	return 0;
 
@@ -20495,7 +20495,7 @@ int temp_tape_tap_browser_expand(char *filename,char *tempdir)
 
 	
 	//tapefile
-	if (util_compare_file_extension(filename,"temptap")!=0) {
+	if (util_compare_file_extension(filename,"tap")!=0) {
 		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
 		return 1;
 	}
@@ -31895,10 +31895,7 @@ int menu_util_file_is_packed(char *filename)
 							    !util_compare_file_extension(filename,"zip") ||
                                                             !util_compare_file_extension(filename,"gz")  ||
                                                             !util_compare_file_extension(filename,"tar") ||
-                                                            !util_compare_file_extension(filename,"rar") ||
-                                                            !util_compare_file_extension(filename,"mdv") ||
-															!util_compare_file_extension(filename,"temptap") ||
-															!util_compare_file_extension(filename,"hdf")
+                                                            !util_compare_file_extension(filename,"rar") 
 
 
 							) {
@@ -31950,13 +31947,13 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 	        }
 
 			//O si es empaquetado
-			else if (menu_util_file_is_packed(s)) {
+			/*else if (menu_util_file_is_packed(s)) {
 				    buffer[i-1]='>';
                 	buffer[i-2]='p';
 	                buffer[i-3]='x';
         	        buffer[i-4]='e';
                 	buffer[i-5]='<';
-			}
+			}*/
 	}
 
 
@@ -32607,7 +32604,36 @@ void menu_filesel_file_no_ext(char *origen, char *destino)
 
 }
 
+//Expandir archivos (no descomprimir, sino expandir por ejemplo un tap o un hdf)
+//Devuelve 0 si ok
+int menu_filesel_expand(char *archivo,char *tmpdir)
+{
 
+	sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
+	menu_filesel_mkdir(tmpdir);
+
+
+        if ( !util_compare_file_extension(archivo,"hdf") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a hdf file");
+                return util_extract_hdf(archivo,tmpdir);
+        }
+
+        else if ( !util_compare_file_extension(archivo,"tap") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a tap file");
+        	return temp_tape_tap_browser_expand(archivo,tmpdir);
+        }
+
+        else if ( !util_compare_file_extension(archivo,"mdv") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a mdv file");
+                return util_extract_mdv(archivo,tmpdir);
+        }
+
+
+	debug_printf(VERBOSE_ERR,"Do not know how to expand file");
+        return 1;
+
+
+}
 //Devuelve 0 si ok
 
 int menu_filesel_uncompress (char *archivo,char *tmpdir)
@@ -32643,25 +32669,6 @@ int menu_filesel_uncompress (char *archivo,char *tmpdir)
         else if ( !util_compare_file_extension(archivo,"rar") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a rar file");
                 compressed_type=COMPRESSED_RAR;
-        }
-
-        //mdv no se gestiona con utilidad aparte
-        else if ( !util_compare_file_extension(archivo,"mdv") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a mdv file");
-                return util_extract_mdv(archivo,tmpdir);
-        }
-
-        //hdf no se gestiona con utilidad aparte
-        else if ( !util_compare_file_extension(archivo,"hdf") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a hdf file");
-                return util_extract_hdf(archivo,tmpdir);
-        }
-
-        //temptap no se gestiona con utilidad aparte
-        else if ( !util_compare_file_extension(archivo,"temptap") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a temptap file");
-				return temp_tape_tap_browser_expand(archivo,tmpdir);
-                //return util_extract_hdf(archivo,tmpdir);
         }
 
 
