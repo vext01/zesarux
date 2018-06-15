@@ -10696,7 +10696,7 @@ int util_extract_tap(char *filename,char *tempdir)
 
 	int filenumber=0;
 
-	int previo_longitud_final=-1; //Almacena longitud de bloque justo anterior
+	int previo_longitud_segun_cabecera=-1; //Almacena longitud de bloque justo anterior
 	z80_byte previo_flag=255; //Almacena flag de bloque justo anterior 
 	z80_byte previo_tipo_bloque=255; //Almacena previo tipo bloque anterior (0, program, 3 bytes etc)
 
@@ -10717,14 +10717,20 @@ int util_extract_tap(char *filename,char *tempdir)
 
 		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
 		z80_byte flag=copia_puntero[2];
+
+		printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+
+		int longitud_segun_cabecera=-1;
+
 		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
-			//Obtener nombre
-			//char nombre_cabecera[11];
-			//util_tape_get_name_header(&copia_puntero[4],nombre_cabecera);
-			//sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,nombre_cabecera);
 			sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
 
 			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
+
+			printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
+
+			//Longitud segun cabecera
+			longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
 		
 		}
 		else {
@@ -10732,7 +10738,7 @@ int util_extract_tap(char *filename,char *tempdir)
 			extension_agregar[0]=0; //Por defecto
 
 			//Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0	
-			if (flag==255 && previo_flag==0 && previo_longitud_final==longitud_final) {
+			if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
 				//Corresponde. Agregar extensiones bas o scr segun el caso
 				if (previo_tipo_bloque==0) {
 					//Basic
@@ -10755,7 +10761,7 @@ int util_extract_tap(char *filename,char *tempdir)
 		filenumber++;
 
 		previo_flag=flag;
-		previo_longitud_final=longitud_final;
+		previo_longitud_segun_cabecera=longitud_segun_cabecera;
 		previo_tipo_bloque=tipo_bloque;
 	}
 
