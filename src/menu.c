@@ -19912,10 +19912,11 @@ void menu_file_sna_browser_show(char *filename)
 }
 
 z80_byte *last_bas_browser_memory;
+int last_bas_browser_memory_size=1;
 
 z80_byte menu_file_bas_browser_show_peek(z80_int dir)
 {
-	return last_bas_browser_memory[dir];
+	return last_bas_browser_memory[dir % last_bas_browser_memory_size]; //con % para no salirnos de la memoria
 }
 
 void menu_file_basic_browser_show(char *filename)
@@ -19934,6 +19935,8 @@ void menu_file_basic_browser_show(char *filename)
 	z80_byte *memoria;
 	memoria=malloc(tamanyo);
 	if (memoria==NULL) cpu_panic ("Can not allocate memory for bas read");
+
+	last_bas_browser_memory_size=tamanyo;
 
 	last_bas_browser_memory=memoria;
 
