@@ -10718,7 +10718,7 @@ int util_extract_tap(char *filename,char *tempdir)
 		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
 		z80_byte flag=copia_puntero[2];
 
-		printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+		//printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
 
 		int longitud_segun_cabecera=-1;
 
@@ -10727,7 +10727,7 @@ int util_extract_tap(char *filename,char *tempdir)
 
 			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
 
-			printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
+			//printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
 
 			//Longitud segun cabecera
 			longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);

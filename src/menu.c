@@ -19949,6 +19949,23 @@ void menu_file_basic_browser_show(char *filename)
 
     fclose(ptr_file_bas_browser);
 
+	//Deducimos si es un simple .bas de texto normal, o es de basic spectrum/zx80/zx81 con tokens
+	//Comprobacion facil, primeros dos bytes contiene numero de linea. Asumimos que si los dos son caracteres ascii imprimibles, son de texto
+	if (leidos>2) {
+		z80_byte caracter1=memoria[0];
+		z80_byte caracter2=memoria[1]; 
+		if (caracter1>=32 && caracter1<=127 && caracter2>=32 && caracter2<=127) {
+			//Es ascii. abrir visor ascii
+			debug_printf(VERBOSE_INFO,".bas file type is guessed as simple text");
+			free(memoria);
+			menu_file_viewer_read_text_file("Basic file",filename);
+			return;
+		}
+		else {
+			debug_printf(VERBOSE_INFO,".bas file type is guessed as Spectrum/ZX80/ZX81");
+		}
+	}
+
 
 	        char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
 //de momento asumir basic spectrum
@@ -19963,6 +19980,7 @@ void menu_file_basic_browser_show(char *filename)
 	debug_view_basic_from_memory(results_buffer,0,tamanyo,dir_tokens,inicio_tokens,menu_file_bas_browser_show_peek);
 
   menu_generic_message_format("View Basic","%s",results_buffer);
+	free(memoria);
 
 }
 
