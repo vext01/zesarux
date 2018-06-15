@@ -10696,6 +10696,10 @@ int util_extract_tap(char *filename,char *tempdir)
 
 	int filenumber=0;
 
+	int previo_longitud_final=-1; //Almacena longitud de bloque justo anterior
+	z80_byte previo_flag=255; //Almacena flag de bloque justo anterior 
+	z80_byte previo_tipo_bloque=255; //Almacena previo tipo bloque anterior (0, program, 3 bytes etc)
+
 	while(total_mem>0) {
 		z80_byte *copia_puntero=puntero_lectura;
 		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
@@ -10709,6 +10713,8 @@ int util_extract_tap(char *filename,char *tempdir)
 		char buffer_temp_file[PATH_MAX];
 		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
 
+		z80_byte tipo_bloque=255;
+
 		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
 		z80_byte flag=copia_puntero[2];
 		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
@@ -10717,15 +10723,40 @@ int util_extract_tap(char *filename,char *tempdir)
 			//util_tape_get_name_header(&copia_puntero[4],nombre_cabecera);
 			//sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,nombre_cabecera);
 			sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
+
+			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
 		
 		}
-		else sprintf (buffer_temp_file,"%s/%02d-data-%d",tempdir,filenumber,longitud_final);
+		else {
+			char extension_agregar[10];
+			extension_agregar[0]=0; //Por defecto
+
+			//Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0	
+			if (flag==255 && previo_flag==0 && previo_longitud_final==longitud_final) {
+				//Corresponde. Agregar extensiones bas o scr segun el caso
+				if (previo_tipo_bloque==0) {
+					//Basic
+					strcpy(extension_agregar,".bas");
+				}
+
+				if (previo_tipo_bloque==3 && longitud_final==6912) {
+					//Screen
+                                        strcpy(extension_agregar,".scr");
+                                }
+			}
+
+			sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
+		}
 
 
 		//Generar bloque con datos, saltando los dos de cabecera y el flag
 		util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
 
 		filenumber++;
+
+		previo_flag=flag;
+		previo_longitud_final=longitud_final;
+		previo_tipo_bloque=tipo_bloque;
 	}
 
 
