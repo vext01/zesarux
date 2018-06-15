@@ -19940,7 +19940,7 @@ void menu_file_basic_browser_show(char *filename)
 
 	last_bas_browser_memory=memoria;
 
-	//Leer  bytes de la cabecera
+	//Leer archivo
 
 
     int leidos=fread(memoria,1,tamanyo,ptr_file_bas_browser);
