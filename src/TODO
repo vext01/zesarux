@@ -28,6 +28,8 @@ dicho visor no tendria que entender los tags especiales de texto...
 
 -visor basic de archivos para zx81 y zx80
 
+-expansor de archivos .tzx binarios, del estilo de los mismos que hace browse
+
 
 -Para cursor draw:
 *iconos con mas de una opcion, que se les indique de alguna manera. con un punto??? Con 3 pixeles en arriba derecha asi:
