@@ -12,6 +12,9 @@ sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de
 -dsp: ok
 
 -audio out to file rwa, wav ok
+Probar bien rwa de salida, wav de salida y carga rwa tanto viejos como nuevos 
+*rwa tiene que ser mono
+*wav tiene que ser stereo
 
 revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y que no se hayan corregido, como en drivers de audio, etc
 ->habria que eliminar dicha variable audio_valor_enviar_sonido para ver donde se usa. Corregir leyenda de generacion audio a wave/raw
