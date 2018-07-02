@@ -194,6 +194,8 @@ void temp_dma_operate_memory_to_io(void)
 	z80_byte dma_source_value;
 		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
 		//printf ("out port %04XH value %02XH (source %04XH, len %04XH)\n",zxuno_dma_current_dst,dma_source_value,zxuno_dma_current_src,zxuno_dma_current_len);
+		//temp
+		//out_port_spectrum_no_time(zxuno_dma_current_dst&0xFF,dma_source_value);
 		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
 
 		zxuno_dma_current_len--;
