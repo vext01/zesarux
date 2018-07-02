@@ -905,6 +905,20 @@ void reset_cpu(void)
 		zxuno_core_id_indice=0;
 
 		zxuno_set_memory_pages();
+
+		//Registros dma
+		zxuno_index_dma_write[0]=zxuno_index_dma_write[1]=zxuno_index_dma_write[2]=zxuno_index_dma_write[3]=zxuno_index_dma_write[4]=0;
+		zxuno_index_dma_read[0]=zxuno_index_dma_read[1]=zxuno_index_dma_read[2]=zxuno_index_dma_read[3]=zxuno_index_dma_read[4]=0;
+
+		zxuno_ports[0xa0]=0;
+		zxuno_ports[0xa6]=0;
+
+
+		zxuno_dmareg[0][0]=zxuno_dmareg[0][1]=0;
+		zxuno_dmareg[1][0]=zxuno_dmareg[1][1]=0;
+		zxuno_dmareg[2][0]=zxuno_dmareg[2][1]=0;
+		zxuno_dmareg[3][0]=zxuno_dmareg[3][1]=0;
+		zxuno_dmareg[4][0]=zxuno_dmareg[4][1]=0;
 	}
 
 	//Modos extendidos ulaplus desactivar, sea en maquina zxuno o no

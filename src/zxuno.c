@@ -130,6 +130,31 @@ int zxuno_core_id_indice=0;
 //char *zxuno_core_id_message="ZEsarUX Z80 Spectrum core";
 char *zxuno_core_id_message="Z22-14072016";
 
+//Registros de DMA
+/*
+DMA register number to follow.
+DMACTRL             equ 0a0h
+
+DMASRC              equ 0a1h
+DMADST              equ 0a2h
+DMAPRE              equ 0a3h
+DMALEN              equ 0a4h
+DMAPROB             equ 0a5h
+
+DMASTAT             equ 0a6h
+*/
+
+//Registros de 16 bits. Primero dmasrc, luego dmadst, etc
+z80_byte zxuno_dmareg[5][2];
+
+//dmactrl y dmastat vienen directamente de los registros zxuno tal cual
+
+//Indices de escritura a dichos registros de 16 bits. Primero el de dmasrc, luego dmadst, etc
+z80_byte zxuno_index_dma_write[5];
+
+//Indices de lectura a dichos registros de 16 bits Primero el de dmasrc, luego dmadst, etc
+z80_byte zxuno_index_dma_read[5];
+
 
 void zxuno_spi_set_write_enable(void)
 {
