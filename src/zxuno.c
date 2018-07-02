@@ -210,7 +210,7 @@ void temp_dma_operate_memory_to_io(void)
 
 
 
-int temp_last_scanline;
+int temp_last_scanline=0;
 
 void zxuno_handle_dma(void)
 {
@@ -229,7 +229,17 @@ void zxuno_handle_dma(void)
 		//for (i=0;i<80;i++) temp_dma_operate_memory_to_io();	
 
 		//Enviamos 1 cada scanline.
-		if (t_estados % 224>200) temp_dma_operate_memory_to_io();
+		int resta=t_estados-temp_last_scanline;
+		if (resta<0) resta=t_estados;
+
+		if (resta>224) {
+			temp_dma_operate_memory_to_io();
+			temp_last_scanline=t_estados;
+		}
+
+		//printf ("resta %d\n",resta);
+
+		
 	}
 
 
