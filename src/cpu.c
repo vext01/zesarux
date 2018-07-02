@@ -907,8 +907,8 @@ void reset_cpu(void)
 		zxuno_set_memory_pages();
 
 		//Registros dma
-		zxuno_index_dma_write[0]=zxuno_index_dma_write[1]=zxuno_index_dma_write[2]=zxuno_index_dma_write[3]=zxuno_index_dma_write[4]=0;
-		zxuno_index_dma_read[0]=zxuno_index_dma_read[1]=zxuno_index_dma_read[2]=zxuno_index_dma_read[3]=zxuno_index_dma_read[4]=0;
+		zxuno_index_nibble_dma_write[0]=zxuno_index_nibble_dma_write[1]=zxuno_index_nibble_dma_write[2]=zxuno_index_nibble_dma_write[3]=zxuno_index_nibble_dma_write[4]=0;
+		zxuno_index_nibble_dma_read[0]=zxuno_index_nibble_dma_read[1]=zxuno_index_nibble_dma_read[2]=zxuno_index_nibble_dma_read[3]=zxuno_index_nibble_dma_read[4]=0;
 
 		zxuno_ports[0xa0]=0;
 		zxuno_ports[0xa6]=0;

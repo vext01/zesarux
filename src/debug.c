@@ -3485,6 +3485,31 @@ void debug_get_ioports(char *stats_buffer)
   			index_buffer +=strlen(buf_linea);
   		}
 
+		//Registros DMA
+  		sprintf (buf_linea,"\nZX-Uno DMA Registers:\n");
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	
+
+  		sprintf (buf_linea,"DMASRC:  %02X%02X\n",zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"DMADST:  %02X%02X\n",zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"DMAPRE:  %02X%02X\n",zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"DMALEN:  %02X%02X\n",zxuno_dmareg[3][1],zxuno_dmareg[3][0]);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"DMAPROB: %02X%02X\n",zxuno_dmareg[4][1],zxuno_dmareg[4][0]);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	
+
+  		sprintf (buf_linea,"DMACTRL: %02X\n",zxuno_ports[0xa0]);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		  	  		  		  
+
+  		sprintf (buf_linea,"DMASTAT: %02X\n",zxuno_ports[0xa6]);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);			  
+
   	}
 
   	if (MACHINE_IS_ZX8081) {

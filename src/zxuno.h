@@ -46,26 +46,14 @@ extern void zxuno_set_memory_pages(void);
 extern void zxuno_init_memory_tables(void);
 
 extern z80_byte zxuno_dmareg[5][2];
-extern z80_byte zxuno_index_dma_write[];
-extern z80_byte zxuno_index_dma_read[];
+extern z80_byte zxuno_index_nibble_dma_write[];
+extern z80_byte zxuno_index_nibble_dma_read[];
 
-extern z80_byte zxuno_dmasrc[];
-extern z80_byte zxuno_dmadst[];
-extern z80_byte zxuno_dmalen[];
-extern z80_byte zxuno_dmapre[];
-extern z80_byte zuxno_dmaprob[];
+extern void zxuno_handle_dma(void);
 
-extern z80_byte zxuno_index_dmasrc_write;
-extern z80_byte zxuno_index_dmadst_write;
-extern z80_byte zxuno_index_dmalen_write;
-extern z80_byte zxuno_index_dmapre_write;
-extern z80_byte zxuno_index_dmaprob_write;
-
-extern z80_byte zxuno_index_dmasrc_read;
-extern z80_byte zxuno_index_dmadst_read;
-extern z80_byte zxuno_index_dmalen_read;
-extern z80_byte zxuno_index_dmapre_read;
-extern z80_byte zxuno_index_dmaprob_read;
+extern z80_int zxuno_dma_current_src;
+extern z80_int zxuno_dma_current_dst;
+extern z80_int zxuno_dma_current_len;
 
 
 extern z80_byte last_port_FC3B;

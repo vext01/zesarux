@@ -150,10 +150,59 @@ z80_byte zxuno_dmareg[5][2];
 //dmactrl y dmastat vienen directamente de los registros zxuno tal cual
 
 //Indices de escritura a dichos registros de 16 bits. Primero el de dmasrc, luego dmadst, etc
-z80_byte zxuno_index_dma_write[5];
+z80_byte zxuno_index_nibble_dma_write[5];
 
 //Indices de lectura a dichos registros de 16 bits Primero el de dmasrc, luego dmadst, etc
-z80_byte zxuno_index_dma_read[5];
+z80_byte zxuno_index_nibble_dma_read[5];
+
+//Valores en curso de la transferencia dma
+
+z80_int zxuno_dma_current_src;
+z80_int zxuno_dma_current_dst;
+z80_int zxuno_dma_current_len;
+
+void zxuno_handle_dma(void)
+{
+	//Si esta la dma activada
+	z80_byte dma_ctrl=zxuno_ports[0xa0];
+
+	if ( (dma_ctrl&3)==0) return;
+
+	//Si activamos bit prob
+	z80_int current_prob_address;
+
+	if (dma_ctrl & 16) {
+		//1 = address in DMAPROB is related to destination (write) memory address.
+		current_prob_address=zxuno_dma_current_dst;
+	}
+	else {
+		//0 = address in DMAPROB is related to source (read) memory address
+		current_prob_address=zxuno_dma_current_src;
+	}
+
+	z80_int prob_address=value_8_to_16(zxuno_dmareg[4][1],zxuno_dmareg[4][0]);
+
+	//TODO esto hay que hacerlo para cada movimiento
+	if (prob_address==current_prob_address) zxuno_ports[0xa6] |=128;
+
+	//Temp probar para dmaplay. dma_ctrl=7
+	z80_byte dma_source_value;
+	if (dma_ctrl==7) {
+		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
+		printf ("out port %04XH value %02XH\n",zxuno_dma_current_dst,dma_source_value);
+		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
+
+		zxuno_dma_current_len--;
+		if (zxuno_dma_current_len==0) {
+			//Asumimos retrigger
+		    zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+            zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+            zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);	
+		}
+	}
+
+
+}
 
 
 void zxuno_spi_set_write_enable(void)
@@ -526,6 +575,8 @@ z80_byte zxuno_read_spi(void)
 z80_byte zxuno_read_port(z80_int puerto)
 {
 
+	z80_byte dma_index_register,dma_index_nibble;
+
 	if (puerto==0xFC3B) {
 		//Leer valor indice
 		//printf ("In Port %x ZX-Uno read, value %d, PC after=%x\n",puerto,last_port_FC3B,reg_pc);
@@ -564,6 +615,35 @@ z80_byte zxuno_read_port(z80_int puerto)
 			}
 		}
 
+		else if (last_port_FC3B>=0xa1 && last_port_FC3B<=0xa5) {
+			dma_index_register=last_port_FC3B-0xa1;
+			dma_index_nibble=zxuno_index_nibble_dma_read[dma_index_register];
+				
+			//Leer de registro dma indicado
+			z80_byte valor_retorno=zxuno_dmareg[dma_index_register][dma_index_nibble];
+
+			printf ("Leyendo registro dma %d valor %02XH\n",dma_index_register,valor_retorno);
+
+
+			//Cambiar al otro nibble de 16 bits
+			zxuno_index_nibble_dma_read[dma_index_register] ^=1;
+			return valor_retorno;
+		}
+
+		else if (last_port_FC3B==0xa6) {
+			//DMASTAT
+			/*
+			DMASTAT :
+8 bit status register. Currently, it uses only bit 7.
+Bit 7: set to 1 when DMAPROB address has been reached. It automatically reset to 0 after reading this register.
+8 bit, read only.
+			*/
+			z80_byte valor_retorno=zxuno_ports[0xa6];
+			zxuno_ports[0xa6] &=127; //Resetear bit 7
+
+			return valor_retorno;
+		}
+
 		return zxuno_ports[last_port_FC3B];
 	}
 
@@ -579,6 +659,9 @@ z80_byte zxuno_read_port(z80_int puerto)
 //Escritura de puerto ZX-Uno
 void zxuno_write_port(z80_int puerto, z80_byte value)
 {
+
+	z80_byte dma_index_register,dma_index_nibble;
+
 	if (puerto==0xFC3B) {
 		//printf ("Out Port %x ZX-Uno written with value %x, PC after=%x\n",puerto,value,reg_pc);
 		last_port_FC3B=value;
@@ -785,142 +868,39 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 
 			break;
 
+			//Registros DMA de 16 bits
+			case 0xa1:
+			case 0xa2:
+			case 0xa3:
+			case 0xa4:
+			case 0xa5:
+				dma_index_register=last_port_FC3B-0xa1;
+				dma_index_nibble=zxuno_index_nibble_dma_write[dma_index_register];
+				
+				//Escribir en registro dma indicado
+				zxuno_dmareg[dma_index_register][dma_index_nibble]=value;
+
+				printf ("Escribiendo registro dma %d valor %02XH\n",dma_index_register,value);
+
+
+				//Cambiar al otro nibble de 16 bits
+				zxuno_index_nibble_dma_write[dma_index_register] ^=1;
+
+			break;
+
+			case 0xa0:
+				//DMACTRL
+				zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+				zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+				zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
+			break;
+
 		}
 	}
 
 
 }
 
-//Rutinas de puertos paginacion zxuno pero cuando bootm=0, o sea, como plus2a
-/*void old_zxuno_mem_page_rom_p2a(void)
-{
-
-	//asignar rom
-	//z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
-
-	z80_byte rom1f=(puerto_8189>>1)&2;
-	z80_byte rom7f=(puerto_32765>>4)&1;
-
-	z80_byte dirom1f=((zxuno_ports[0x0E]>>4)^255)&2; //Tiene que ir al bit 1
-	z80_byte dirom7f=((zxuno_ports[0x0E]>>4)^255)&1; //Tiene que ir al bit 0
-
-	z80_byte rom_entra=(rom1f&dirom1f)+(rom7f&dirom7f);
-
-
-	//En la tabla zxuno_sram_mem_table hay que saltar las 8 primeras, que son las 8 rams del modo 128k
-	zxuno_no_bootm_memory_paged[0]=zxuno_sram_mem_table[rom_entra+8];
-
-
-	//printf ("Entra rom: %d\n",rom_entra);
-
-	contend_pages_actual[0]=0;
-	debug_paginas_memoria_mapeadas[0]=DEBUG_PAGINA_MAP_ES_ROM+rom_entra;
-}
-
-//Rutinas de puertos paginacion zxuno pero cuando bootm=0, o sea, como plus2a
-void old_zxuno_mem_page_ram_p2a(void)
-{
-	z80_byte ramentra=puerto_32765&7;
-	//asignar ram
-	zxuno_no_bootm_memory_paged[3]=zxuno_sram_mem_table[ramentra];
-
-	contend_pages_actual[3]=contend_pages_128k_p2a[ramentra];
-	debug_paginas_memoria_mapeadas[3]=ramentra;
-}
-
-//Rutinas de puertos paginacion zxuno pero cuando bootm=0, o sea, como plus2a
-void old_zxuno_mem_page_ram_rom(void)
-{
-	z80_byte page_type;
-
-	page_type=(puerto_8189 >>1) & 3;
-
-	switch (page_type) {
-		case 0:
-			debug_printf (VERBOSE_DEBUG,"Pages 0,1,2,3");
-			zxuno_no_bootm_memory_paged[0]=zxuno_sram_mem_table[0];
-			zxuno_no_bootm_memory_paged[1]=zxuno_sram_mem_table[1];
-			zxuno_no_bootm_memory_paged[2]=zxuno_sram_mem_table[2];
-			zxuno_no_bootm_memory_paged[3]=zxuno_sram_mem_table[3];
-
-			contend_pages_actual[0]=contend_pages_128k_p2a[0];
-			contend_pages_actual[1]=contend_pages_128k_p2a[1];
-			contend_pages_actual[2]=contend_pages_128k_p2a[2];
-			contend_pages_actual[3]=contend_pages_128k_p2a[3];
-
-			debug_paginas_memoria_mapeadas[0]=0;
-			debug_paginas_memoria_mapeadas[1]=1;
-			debug_paginas_memoria_mapeadas[2]=2;
-			debug_paginas_memoria_mapeadas[3]=3;
-
-			break;
-
-		case 1:
-			debug_printf (VERBOSE_DEBUG,"Pages 4,5,6,7");
-			zxuno_no_bootm_memory_paged[0]=zxuno_sram_mem_table[4];
-			zxuno_no_bootm_memory_paged[1]=zxuno_sram_mem_table[5];
-			zxuno_no_bootm_memory_paged[2]=zxuno_sram_mem_table[6];
-			zxuno_no_bootm_memory_paged[3]=zxuno_sram_mem_table[7];
-
-
-			contend_pages_actual[0]=contend_pages_128k_p2a[4];
-			contend_pages_actual[1]=contend_pages_128k_p2a[5];
-			contend_pages_actual[2]=contend_pages_128k_p2a[6];
-			contend_pages_actual[3]=contend_pages_128k_p2a[7];
-
-			debug_paginas_memoria_mapeadas[0]=4;
-			debug_paginas_memoria_mapeadas[1]=5;
-			debug_paginas_memoria_mapeadas[2]=6;
-			debug_paginas_memoria_mapeadas[3]=7;
-
-
-
-			break;
-
-		case 2:
-			debug_printf (VERBOSE_DEBUG,"Pages 4,5,6,3");
-			zxuno_no_bootm_memory_paged[0]=zxuno_sram_mem_table[4];
-			zxuno_no_bootm_memory_paged[1]=zxuno_sram_mem_table[5];
-			zxuno_no_bootm_memory_paged[2]=zxuno_sram_mem_table[6];
-			zxuno_no_bootm_memory_paged[3]=zxuno_sram_mem_table[3];
-
-			contend_pages_actual[0]=contend_pages_128k_p2a[4];
-			contend_pages_actual[1]=contend_pages_128k_p2a[5];
-			contend_pages_actual[2]=contend_pages_128k_p2a[6];
-			contend_pages_actual[3]=contend_pages_128k_p2a[3];
-
-			debug_paginas_memoria_mapeadas[0]=4;
-			debug_paginas_memoria_mapeadas[1]=5;
-			debug_paginas_memoria_mapeadas[2]=6;
-			debug_paginas_memoria_mapeadas[3]=3;
-
-
-			break;
-
-		case 3:
-			debug_printf (VERBOSE_DEBUG,"Pages 4,7,6,3");
-			zxuno_no_bootm_memory_paged[0]=zxuno_sram_mem_table[4];
-			zxuno_no_bootm_memory_paged[1]=zxuno_sram_mem_table[7];
-			zxuno_no_bootm_memory_paged[2]=zxuno_sram_mem_table[6];
-			zxuno_no_bootm_memory_paged[3]=zxuno_sram_mem_table[3];
-
-			contend_pages_actual[0]=contend_pages_128k_p2a[4];
-			contend_pages_actual[1]=contend_pages_128k_p2a[7];
-			contend_pages_actual[2]=contend_pages_128k_p2a[6];
-			contend_pages_actual[3]=contend_pages_128k_p2a[3];
-
-			debug_paginas_memoria_mapeadas[0]=4;
-			debug_paginas_memoria_mapeadas[1]=7;
-			debug_paginas_memoria_mapeadas[2]=6;
-			debug_paginas_memoria_mapeadas[3]=3;
-
-
-			break;
-
-	}
-}
-
-*/
 
 
 //Rutinas de puertos paginacion zxuno pero cuando bootm=0, o sea, como plus2a
