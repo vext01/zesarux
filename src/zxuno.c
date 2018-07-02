@@ -161,32 +161,14 @@ z80_int zxuno_dma_current_src;
 z80_int zxuno_dma_current_dst;
 z80_int zxuno_dma_current_len;
 
-
-void temp_dma_operate_memory_to_io(void)
+void zxuno_test_if_prob(void)
 {
-	z80_byte dma_source_value;
-		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
-		//printf ("out port %04XH value %02XH (source %04XH, len %04XH)\n",zxuno_dma_current_dst,dma_source_value,zxuno_dma_current_src,zxuno_dma_current_len);
-		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
-
-		zxuno_dma_current_len--;
-		if (zxuno_dma_current_len==0) {
-			//Asumimos retrigger. TODO meter esto en funcion aparte que tambien lanza cuando se cambia dma_ctrl
-		    zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
-            zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
-            zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
-		}
-}
-
-void zxuno_handle_dma(void)
-{
-	//Si esta la dma activada
-	z80_byte dma_ctrl=zxuno_ports[0xa0];
-
-	if ( (dma_ctrl&3)==0) return;
 
 	//Si activamos bit prob
 	z80_int current_prob_address;
+
+	z80_byte dma_ctrl=zxuno_ports[0xa0];
+
 
 	if (dma_ctrl & 16) {
 		//1 = address in DMAPROB is related to destination (write) memory address.
@@ -201,6 +183,42 @@ void zxuno_handle_dma(void)
 
 	//TODO esto hay que hacerlo para cada movimiento
 	if (prob_address==current_prob_address) zxuno_ports[0xa6] |=128;
+}
+
+
+void temp_dma_operate_memory_to_io(void)
+{
+
+		zxuno_test_if_prob();
+
+	z80_byte dma_source_value;
+		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
+		//printf ("out port %04XH value %02XH (source %04XH, len %04XH)\n",zxuno_dma_current_dst,dma_source_value,zxuno_dma_current_src,zxuno_dma_current_len);
+		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
+
+		zxuno_dma_current_len--;
+		if (zxuno_dma_current_len==0) {
+			//Asumimos retrigger. TODO meter esto en funcion aparte que tambien lanza cuando se cambia dma_ctrl
+		    zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+            zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+            zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
+		}
+}
+
+
+
+
+int temp_last_scanline;
+
+void zxuno_handle_dma(void)
+{
+	//Si esta la dma activada
+	z80_byte dma_ctrl=zxuno_ports[0xa0];
+
+	if ( (dma_ctrl&3)==0) return;
+
+
+
 
 	//Temp probar para dmaplay. dma_ctrl=7
 	z80_byte dma_source_value;
