@@ -166,7 +166,7 @@ void temp_dma_operate_memory_to_io(void)
 {
 	z80_byte dma_source_value;
 		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
-		printf ("out port %04XH value %02XH (source %04XH, len %04XH)\n",zxuno_dma_current_dst,dma_source_value,zxuno_dma_current_src,zxuno_dma_current_len);
+		//printf ("out port %04XH value %02XH (source %04XH, len %04XH)\n",zxuno_dma_current_dst,dma_source_value,zxuno_dma_current_src,zxuno_dma_current_len);
 		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
 
 		zxuno_dma_current_len--;
@@ -205,14 +205,11 @@ void zxuno_handle_dma(void)
 	//Temp probar para dmaplay. dma_ctrl=7
 	z80_byte dma_source_value;
 	if (dma_ctrl==7) { 
-		temp_dma_operate_memory_to_io();
-		temp_dma_operate_memory_to_io();
-		temp_dma_operate_memory_to_io();
-		temp_dma_operate_memory_to_io();
-		temp_dma_operate_memory_to_io();
-		temp_dma_operate_memory_to_io();
-		temp_dma_operate_memory_to_io();
-		temp_dma_operate_memory_to_io();		
+		int i;
+		//for (i=0;i<80;i++) temp_dma_operate_memory_to_io();	
+
+		//Enviamos 1 cada scanline.
+		if (t_estados % 224>200) temp_dma_operate_memory_to_io();
 	}
 
 
