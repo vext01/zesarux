@@ -232,6 +232,7 @@ void zxuno_dma_operate(void)
 	if (mode_dma&1) {
 		//1 = destination address is I/O
 		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
+		//printf ("puerto: %04XH\n",zxuno_dma_current_dst);
 	}
 	else {
 		//0 = destination address is memory
@@ -279,7 +280,7 @@ void zxuno_handle_dma(void)
 	if ( (dma_ctrl&3)==0) return;
 
 
-	int dmapre=zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
+	int dmapre=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
 	if (dmapre==0) return; //No hay transferencia posible . division por cero
  
 	//Temp probar para dmaplay. dma_ctrl=7
