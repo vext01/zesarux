@@ -256,8 +256,7 @@ void zxuno_handle_dma(void)
 
 			resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
 
-			printf ("En transferencia: dmapre: %d zxuno_dma_last_testados %d t_estados %d resta %d\n",
-			dmapre,zxuno_dma_last_testados,t_estados,resta);
+			//printf ("En transferencia: dmapre: %6d zxuno_dma_last_testados %6d t_estados %6d resta %6d\n",dmapre,zxuno_dma_last_testados,t_estados,resta);
 
 		}
 
@@ -947,7 +946,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 				//Escribir en registro dma indicado
 				zxuno_dmareg[dma_index_register][dma_index_nibble]=value;
 
-				printf ("Escribiendo registro dma %d valor %02XH\n",dma_index_register,value);
+				//printf ("Escribiendo registro dma %d valor %02XH\n",dma_index_register,value);
 
 
 				//Cambiar al otro nibble de 16 bits
@@ -964,7 +963,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 				zxuno_dma_last_testados=t_estados;
 
 				printf ("Starting DMA src=%04XH dst=%02XH len=%04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
-				sleep(3);
+				sleep(1);
 			break;
 
 		}

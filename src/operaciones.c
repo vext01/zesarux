@@ -7514,8 +7514,16 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 	//DAC Audio
 	if (audiodac_enabled.v && puerto_l==audiodac_types[audiodac_selected_type].port) {
-		audiodac_last_value_data=value;
-		silence_detection_counter=0;
+		//Parche para evitar bug de envio de sonido en esxdos. que activa modo turbo en zxbadaloc y coincide con puerto DF de Specdrum
+		//printf ("PC %04XH\n",reg_pc);
+		int sonido=1;
+		
+		if (puerto_l==0xDF && reg_pc<0x2000) sonido=0;
+
+		if (sonido) {
+			audiodac_last_value_data=value;
+			silence_detection_counter=0;
+		}
 	}
 
 
