@@ -196,26 +196,44 @@ void zxuno_dma_operate(void)
 
 	z80_byte dma_ctrl=zxuno_ports[0xa0];
 
-	z80_byte mode_dma=dma_ctrl & (4+8);
+	z80_byte mode_dma=(dma_ctrl & (4+8))>>2;
 
-	if (mode_dma==4) {
-		//memory to i/o
-		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
-		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
+
+	//DMA source
+	if (mode_dma&2) {
+		//1 = source address is I/O
+		dma_source_value=lee_puerto_spectrum_no_time( (zxuno_dma_current_src>>8)&0xFF,zxuno_dma_current_src & 0xFF);
 	}
 
-	if (mode_dma==0) {
-		//memory to memory
+	else {
+		//0 = source address is memory
 		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
+	}
+
+	//DMA destination
+	if (mode_dma&1) {
+		//1 = destination address is I/O
+		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
+	}
+	else {
+		//0 = destination address is memory
 		poke_byte_no_time(zxuno_dma_current_dst++,dma_source_value);
-	}	
+	}
+
 
 	zxuno_dma_current_len--;
-	if (zxuno_dma_current_len==0 && (dma_ctrl&3)==3) {
-		//retrigger. TODO meter esto en funcion aparte que tambien lanza cuando se cambia dma_ctrl
-	    zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
-        zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
-        zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
+	if (zxuno_dma_current_len==0) {
+		if ( (dma_ctrl&3)==3) {
+			//retrigger. TODO meter esto en funcion aparte que tambien lanza cuando se cambia dma_ctrl
+	    	zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+        	zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+        	zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
+		}
+
+		else {
+			//DMA stop
+			zxuno_ports[0xa0] &=(255-1-2);
+		}
 	}
 }
 
@@ -248,13 +266,12 @@ void zxuno_handle_dma(void)
  
 	//Temp probar para dmaplay. dma_ctrl=7
 	z80_byte dma_source_value;
-	if (dma_ctrl==7) { 
+	//TODO modo timed burst dma transfer
+	if (dma_ctrl&2) { 
+		//Modo timed dma transfer
 		int i;
 		//for (i=0;i<80;i++) zxuno_dma_operate();	
 
-
-
-		//Enviamos 1 cada scanline.
 		int resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
 
 		//printf ("Antes transferencia: dmapre: %d zxuno_dma_last_testados %d t_estados %d\n",dmapre,zxuno_dma_last_testados,t_estados);
