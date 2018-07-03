@@ -55,6 +55,10 @@ extern z80_int zxuno_dma_current_src;
 extern z80_int zxuno_dma_current_dst;
 extern z80_int zxuno_dma_current_len;
 
+extern char *zxuno_dma_types[];
+extern char *zxuno_dma_modes[];
+
+extern z80_bit zxuno_dma_disabled;
 
 extern z80_byte last_port_FC3B;
 

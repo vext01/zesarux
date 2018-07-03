@@ -379,7 +379,7 @@ void cpu_core_loop_spectrum(void)
 				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) zxuno_tbblue_handle_raster_interrupts();
 
 				//Soporte DMA ZXUNO
-				if (MACHINE_IS_ZXUNO) zxuno_handle_dma();
+				if (MACHINE_IS_ZXUNO && zxuno_dma_disabled.v==0) zxuno_handle_dma();
 
 				//Soporte copper
 				if (MACHINE_IS_TBBLUE) {

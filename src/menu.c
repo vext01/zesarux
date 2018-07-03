@@ -23392,7 +23392,19 @@ void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
 
 void menu_debug_tsconf_dma_dibuja_ventana(void)
 {
-	menu_dibuja_ventana(2,6,27,11,"TSConf DMA");
+	char texto_ventana[33];
+	//por defecto por si acaso
+	strcpy(texto_ventana,"DMA");
+	int alto=11;
+
+	if (MACHINE_IS_ZXUNO) {
+		strcpy(texto_ventana,"ZXUNO DMA");
+		alto++;
+	}
+
+	if (MACHINE_IS_TSCONF) strcpy(texto_ventana,"TSConf DMA");
+	
+	menu_dibuja_ventana(2,6,27,alto,texto_ventana);
 }
 
 
@@ -23416,7 +23428,9 @@ void menu_debug_tsconf_dma_overlay(void)
     	//mostrarlos siempre a cada refresco
     menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
-		char texto_dma[33];
+	char texto_dma[33];
+
+	if (MACHINE_IS_TSCONF) {
 
 		//Construimos 16 valores posibles segun rw (bit bajo) y ddev (bits altos)
 		int dma_type=debug_tsconf_dma_ddev*2+debug_tsconf_dma_rw;
@@ -23444,16 +23458,49 @@ void menu_debug_tsconf_dma_overlay(void)
 		sprintf (texto_dma,"Align size: %d",(debug_tsconf_dma_addr_align_size+1)*256);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
+	}
 
+	if (MACHINE_IS_ZXUNO) {
+		z80_byte dma_ctrl=zxuno_ports[0xa0];
+		z80_byte dma_type=(dma_ctrl & (4+8))>>2;
+		z80_byte dma_mode=dma_ctrl & 3;
 
+		z80_int dma_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+		z80_int dma_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+		z80_int dma_pre=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
+		z80_int dma_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
+		z80_int dma_prob=value_8_to_16(zxuno_dmareg[4][1],zxuno_dmareg[4][0]);		
+		z80_byte dma_stat=zxuno_ports[0xa6];
 
+		sprintf (texto_dma,"Type: %s",zxuno_dma_types[dma_type]);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
+		sprintf (texto_dma,"Mode: %s",zxuno_dma_modes[dma_mode]);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);		
 
-	
-	
+		sprintf (texto_dma,"Source:      %04XH",dma_src);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
+		sprintf (texto_dma,"Destination: %04XH",dma_dst);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
-  
+		sprintf (texto_dma,"Lenght:      %5d",dma_len);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Preescaler:  %5d",dma_pre);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		char prob_type[10];
+		if (dma_ctrl&16) strcpy(prob_type,"dst");
+		else strcpy(prob_type,"src");
+
+		sprintf (texto_dma,"Prob: (%s)  %04XH",prob_type,dma_prob);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);		
+
+		sprintf (texto_dma,"Stat:          %02XH",dma_stat);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);			
+
+	}
 }
 
 
@@ -23463,7 +23510,8 @@ void menu_debug_tsconf_dma_overlay(void)
 
 void menu_debug_tsconf_dma_disable(MENU_ITEM_PARAMETERS)
 {
-	tsconf_dma_disabled.v ^=1;
+	if (MACHINE_IS_TSCONF) tsconf_dma_disabled.v ^=1;
+	if (MACHINE_IS_ZXUNO) zxuno_dma_disabled.v ^=1;
 }
 
 
@@ -23489,9 +23537,18 @@ void menu_debug_tsconf_dma(MENU_ITEM_PARAMETERS)
 
 			int lin=8;
 
+			
+
+			int condicion_dma_disabled=tsconf_dma_disabled.v;
+
+
+			if (MACHINE_IS_ZXUNO) {
+				lin++;	
+				condicion_dma_disabled=zxuno_dma_disabled.v;
+			}
 		
 				menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_dma,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_disable,NULL,"~~DMA: %s",
-					(tsconf_dma_disabled.v ? "Disabled" : "Enabled") );
+					(condicion_dma_disabled ? "Disabled" : "Enabled") );
 				menu_add_item_menu_shortcut(array_menu_debug_tsconf_dma,'d');
 				menu_add_item_menu_ayuda(array_menu_debug_tsconf_dma,"Disable DMA");
 				menu_add_item_menu_tabulado(array_menu_debug_tsconf_dma,1,lin);
@@ -24200,10 +24257,9 @@ void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
         do {
 
-		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_dma,NULL,"~~DMA");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'d');
 
-		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_videoregisters,NULL,"Video ~~Registers");
+
+		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_videoregisters,NULL,"Video ~~Registers");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'r');
 
 		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
@@ -24300,6 +24356,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_TSCONF) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"~~TSConf");
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
+		}
+
+		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_dma,NULL,"DMA");
+			//menu_add_item_menu_shortcut(array_menu_debug_settings,'d');
 		}
 
 		menu_add_item_menu(array_menu_debug_settings,"View He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);

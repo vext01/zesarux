@@ -161,6 +161,9 @@ z80_int zxuno_dma_current_src;
 z80_int zxuno_dma_current_dst;
 z80_int zxuno_dma_current_len;
 
+
+z80_bit zxuno_dma_disabled={0};
+
 void zxuno_test_if_prob(void)
 {
 
@@ -185,6 +188,21 @@ void zxuno_test_if_prob(void)
 	if (prob_address==current_prob_address) zxuno_ports[0xa6] |=128;
 }
 
+char *zxuno_dma_types[]={
+//   01234567890123456789
+	"RAM to RAM",
+	"RAM to I/O",
+	"I/O to RAM",
+	"I/O to I/O"
+};
+
+char *zxuno_dma_modes[]={
+//   01234567890123456789
+	"Stopped",
+	"burst DMA",
+	"timed DMA (1 shot)",
+	"timed DMA (retrig)"
+};
 
 void zxuno_dma_operate(void)
 {
