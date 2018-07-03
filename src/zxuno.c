@@ -186,25 +186,34 @@ void zxuno_test_if_prob(void)
 }
 
 
-void temp_dma_operate_memory_to_io(void)
+void zxuno_dma_operate(void)
 {
 
-		zxuno_test_if_prob();
+	zxuno_test_if_prob();
 
 	z80_byte dma_source_value;
+
+
+	z80_byte dma_ctrl=zxuno_ports[0xa0];
+
+	z80_byte mode_dma=dma_ctrl & (4+8);
+
+	if (mode_dma==4) {
+		//memory to i/o
 		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
 		//printf ("out port %04XH value %02XH (source %04XH, len %04XH)\n",zxuno_dma_current_dst,dma_source_value,zxuno_dma_current_src,zxuno_dma_current_len);
 		//temp
 		//out_port_spectrum_no_time(zxuno_dma_current_dst&0xFF,dma_source_value);
 		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
+	}
 
-		zxuno_dma_current_len--;
-		if (zxuno_dma_current_len==0) {
-			//Asumimos retrigger. TODO meter esto en funcion aparte que tambien lanza cuando se cambia dma_ctrl
-		    zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
-            zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
-            zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
-		}
+	zxuno_dma_current_len--;
+	if (zxuno_dma_current_len==0 && (dma_ctrl&3)==3) {
+		//retrigger. TODO meter esto en funcion aparte que tambien lanza cuando se cambia dma_ctrl
+	    zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+        zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+        zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
+	}
 }
 
 
@@ -238,7 +247,7 @@ void zxuno_handle_dma(void)
 	z80_byte dma_source_value;
 	if (dma_ctrl==7) { 
 		int i;
-		//for (i=0;i<80;i++) temp_dma_operate_memory_to_io();	
+		//for (i=0;i<80;i++) zxuno_dma_operate();	
 
 
 
@@ -248,11 +257,13 @@ void zxuno_handle_dma(void)
 		//printf ("Antes transferencia: dmapre: %d zxuno_dma_last_testados %d t_estados %d\n",dmapre,zxuno_dma_last_testados,t_estados);
 
 		while (resta>=dmapre) {
-			temp_dma_operate_memory_to_io();
+			zxuno_dma_operate();
 			zxuno_dma_last_testados +=dmapre;
 
 			//Ajustar a total t-estados
+			//printf ("pre ajuste %d\n",zxuno_dma_last_testados);
 			zxuno_dma_last_testados %=screen_testados_total;
+			//printf ("post ajuste %d\n",zxuno_dma_last_testados);
 
 			resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
 
