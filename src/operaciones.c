@@ -7517,7 +7517,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		//Parche para evitar bug de envio de sonido en esxdos. que activa modo turbo en zxbadaloc y coincide con puerto DF de Specdrum
 		//printf ("PC %04XH\n",reg_pc);
 		int sonido=1;
-		
+
 		if (puerto_l==0xDF && reg_pc<0x2000) sonido=0;
 
 		if (sonido) {

@@ -201,11 +201,14 @@ void zxuno_dma_operate(void)
 	if (mode_dma==4) {
 		//memory to i/o
 		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
-		//printf ("out port %04XH value %02XH (source %04XH, len %04XH)\n",zxuno_dma_current_dst,dma_source_value,zxuno_dma_current_src,zxuno_dma_current_len);
-		//temp
-		//out_port_spectrum_no_time(zxuno_dma_current_dst&0xFF,dma_source_value);
 		out_port_spectrum_no_time(zxuno_dma_current_dst,dma_source_value);
 	}
+
+	if (mode_dma==0) {
+		//memory to memory
+		dma_source_value=peek_byte_no_time(zxuno_dma_current_src++);
+		poke_byte_no_time(zxuno_dma_current_dst++,dma_source_value);
+	}	
 
 	zxuno_dma_current_len--;
 	if (zxuno_dma_current_len==0 && (dma_ctrl&3)==3) {
@@ -973,8 +976,8 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 
 				zxuno_dma_last_testados=t_estados;
 
-				printf ("Starting DMA src=%04XH dst=%02XH len=%04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
-				sleep(1);
+				//printf ("Starting DMA src=%04XH dst=%02XH len=%04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
+				//sleep(1);
 			break;
 
 		}
