@@ -284,7 +284,6 @@ void zxuno_handle_dma(void)
 	int dmapre=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
 	if (dmapre==0) return; //No hay transferencia posible . division por cero
  
-	//Temp probar para dmaplay. dma_ctrl=7
 	z80_byte dma_source_value;
 	//TODO modo timed burst dma transfer
 	if (dma_ctrl&2) { 
