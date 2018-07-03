@@ -184,7 +184,6 @@ void zxuno_test_if_prob(void)
 
 	z80_int prob_address=value_8_to_16(zxuno_dmareg[4][1],zxuno_dmareg[4][0]);
 
-	//TODO esto hay que hacerlo para cada movimiento
 	if (prob_address==current_prob_address) zxuno_ports[0xa6] |=128;
 }
 
@@ -215,6 +214,8 @@ void zxuno_dma_operate(void)
 	z80_byte dma_ctrl=zxuno_ports[0xa0];
 
 	z80_byte mode_dma=(dma_ctrl & (4+8))>>2;
+
+	//TODO: Transfers per second = 28000000 / preescaler_value (for memory to memory transfers)
 
 
 	//DMA source
@@ -265,7 +266,7 @@ int zxuno_return_resta_testados(int anterior, int actual)
 
 	if (resta<0) resta=screen_testados_total-anterior+actual;
 
-	return resta;
+	return resta; 
 }
 
 
@@ -293,10 +294,15 @@ void zxuno_handle_dma(void)
 
 		int resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
 
+		dmapre *=cpu_turbo_speed;
+
 		//printf ("Antes transferencia: dmapre: %d zxuno_dma_last_testados %d t_estados %d\n",dmapre,zxuno_dma_last_testados,t_estados);
 
 		while (resta>=dmapre) {
-			zxuno_dma_operate();
+			//for (i=0;i<cpu_turbo_speed;i++) {
+				zxuno_dma_operate();
+			//}
+
 			zxuno_dma_last_testados +=dmapre;
 
 			//Ajustar a total t-estados
