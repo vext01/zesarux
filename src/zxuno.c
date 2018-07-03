@@ -208,9 +208,20 @@ void temp_dma_operate_memory_to_io(void)
 }
 
 
+int zxuno_return_resta_testados(int anterior, int actual)
+{
+	//screen_testados_total
+
+	int resta=actual-anterior;
+
+	if (resta<0) resta=screen_testados_total-anterior+actual;
+
+	return resta;
+}
 
 
-int temp_last_scanline=0;
+
+int zxuno_dma_last_testados=0;
 
 void zxuno_handle_dma(void)
 {
@@ -220,22 +231,37 @@ void zxuno_handle_dma(void)
 	if ( (dma_ctrl&3)==0) return;
 
 
-
-
+	int dmapre=zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
+	if (dmapre==0) return; //No hay transferencia posible . division por cero
+ 
 	//Temp probar para dmaplay. dma_ctrl=7
 	z80_byte dma_source_value;
 	if (dma_ctrl==7) { 
 		int i;
 		//for (i=0;i<80;i++) temp_dma_operate_memory_to_io();	
 
-		//Enviamos 1 cada scanline.
-		int resta=t_estados-temp_last_scanline;
-		if (resta<0) resta=t_estados;
 
-		if (resta>224) {
+
+		//Enviamos 1 cada scanline.
+		int resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
+
+		//printf ("Antes transferencia: dmapre: %d zxuno_dma_last_testados %d t_estados %d\n",dmapre,zxuno_dma_last_testados,t_estados);
+
+		while (resta>=dmapre) {
 			temp_dma_operate_memory_to_io();
-			temp_last_scanline=t_estados;
+			zxuno_dma_last_testados +=dmapre;
+
+			//Ajustar a total t-estados
+			zxuno_dma_last_testados %=screen_testados_total;
+
+			resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
+
+			printf ("En transferencia: dmapre: %d zxuno_dma_last_testados %d t_estados %d resta %d\n",
+			dmapre,zxuno_dma_last_testados,t_estados,resta);
+
 		}
+
+		//printf ("Despues transferencia: dmapre: %d zxuno_dma_last_testados %d t_estados %d\n",dmapre,zxuno_dma_last_testados,t_estados);
 
 		//printf ("resta %d\n",resta);
 
@@ -934,6 +960,8 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 				zxuno_dma_current_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
 				zxuno_dma_current_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
 				zxuno_dma_current_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);
+
+				zxuno_dma_last_testados=t_estados;
 
 				printf ("Starting DMA src=%04XH dst=%02XH len=%04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
 				sleep(3);
