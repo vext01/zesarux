@@ -284,7 +284,7 @@ void zxuno_handle_dma(void)
 
 
 	int dmapre=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
-	if (dmapre==0) return; //No hay transferencia posible . division por cero
+	
 
 	//Si es ram to ram, la velocidad es 8 veces mas que otro tipo
 	/*
@@ -296,9 +296,23 @@ void zxuno_handle_dma(void)
 		dmapre /=8;
 		if (dmapre==0) dmapre=1; //Lo mas rapido que se puede
 	}
- 
-	//TODO modo timed burst dma transfer
+
+	//TODO Modo dma burst transfer de momento la hago de golpe la transferencia
+	if ((dma_ctrl&3)==1) {
+		//transferir de golpe
+		//todo cuando pre=0 
+		printf ("burst dma transfer source %04XH dest %04XH lenght %04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
+
+		do {
+			zxuno_dma_operate();
+		} while (zxuno_dma_current_len!=0);
+
+	}
+
+
 	if (dma_ctrl&2) { 
+		if (dmapre==0) return; //No hay transferencia posible . division por cero
+		//printf ("Operando dma\n");
 		//Modo timed dma transfer
 
 		int resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
