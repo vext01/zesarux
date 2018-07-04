@@ -284,6 +284,13 @@ void zxuno_handle_dma(void)
 
 
 	int dmapre=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
+
+	//Siempre es +1 el preescaler
+	//Segun dmaplayw.asm : PREESCALER          equ 223  ; la cuenta va de 0 a 223, es decir, 224 ciclos
+	dmapre++;
+
+	//Por si acaso
+	if (dmapre==65536) return;
 	
 
 	//Si es ram to ram, la velocidad es 8 veces mas que otro tipo
@@ -312,7 +319,8 @@ void zxuno_handle_dma(void)
 
 	if (dma_ctrl&2) {   //Esto incluye modos 2,3 ( 10 = timed DMA transfer. One shot. 11 = timed DMA transfer, retriggerable.)
 		if (dmapre==0) return; //No hay transferencia posible . division por cero
-		//printf ("Operando dma\n");
+		if (dmapre==1) return; //No hay transferencia posible . division por cero
+		//printf ("Operando dma. dmapre=%d\n",dmapre);
 		//Modo timed dma transfer
 
 		int resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
