@@ -127,8 +127,9 @@ tras un reset o una escritura en el registro $FC3B. Los caracteres entregados qu
 son ASCII estándar imprimibles (códigos 32-127). Cualquier otro valor es indicativo de que este registro no está operativo.
 */
 int zxuno_core_id_indice=0;
-//char *zxuno_core_id_message="ZEsarUX Z80 Spectrum core";
+
 char *zxuno_core_id_message="Z24-28022017";
+//Lo hago corresponder con el mismo ID del core zxuno que mas se parece a la emulación en ZEsarUX, cambiando la T inicial por una Z
 
 
 //Registros de DMA
@@ -284,13 +285,21 @@ void zxuno_handle_dma(void)
 
 	int dmapre=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
 	if (dmapre==0) return; //No hay transferencia posible . division por cero
+
+	//Si es ram to ram, la velocidad es 8 veces mas que otro tipo
+	/*
+	Transfers per second = 28000000 / preescaler_value (for memory to memory transfers)
+	Transfers per second = 3500000 / preescaler_value (for transfers involving some sort of I/O address)
+	*/
+
+	if ( (dma_ctrl&(4+8))==0 ) {
+		dmapre /=8;
+		if (dmapre==0) dmapre=1; //Lo mas rapido que se puede
+	}
  
-	z80_byte dma_source_value;
 	//TODO modo timed burst dma transfer
 	if (dma_ctrl&2) { 
 		//Modo timed dma transfer
-		int i;
-		//for (i=0;i<80;i++) zxuno_dma_operate();	
 
 		int resta=zxuno_return_resta_testados(zxuno_dma_last_testados,t_estados);
 
