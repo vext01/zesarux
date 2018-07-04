@@ -3020,9 +3020,26 @@ z80_byte tbblue_get_value_port_register(z80_byte registro)
 			return 8;
 		break;
 
+
+/*
+(R) 0x01 (01) => Core Version 
+  bits 7-4 = Major version number
+  bits 3-0 = Minor version number
+  (see register 0x0E for sub minor version number)
+
+
+#define TBBLUE_CORE_VERSION_MAJOR     1 
+#define TBBLUE_CORE_VERSION_MINOR     10
+#define TBBLUE_CORE_VERSION_SUBMINOR  31
+
+  */
 		case 1:
-			return 0x19;
+			return (TBBLUE_CORE_VERSION_MAJOR<<4 | TBBLUE_CORE_VERSION_MINOR);
 		break;
+
+		case 0xE:
+			return TBBLUE_CORE_VERSION_SUBMINOR;
+		break;		
 
 		/*
 
