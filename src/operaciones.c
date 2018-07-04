@@ -5904,6 +5904,10 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 		if (puerto==DS1307_PORT_CLOCK) return ds1307_get_port_clock();
 		if (puerto==DS1307_PORT_DATA) return ds1307_get_port_data();
+
+		//Puertos DIVMMC/DIVIDE. El de Paginacion
+		//Este puerto solo se puede leer en TBBLUE y es necesario para que NextOS funcione bien
+		if (puerto_l==0xe3 && diviface_enabled.v) return diviface_control_register;
 	}
 
 
