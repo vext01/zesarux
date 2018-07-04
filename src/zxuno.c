@@ -298,10 +298,10 @@ void zxuno_handle_dma(void)
 	}
 
 	//TODO Modo dma burst transfer de momento la hago de golpe la transferencia
-	if ((dma_ctrl&3)==1) {
+	if ((dma_ctrl&3)==1) { //Esto es modo  01 = burst DMA transfer. CPU is halted during the transfer. One shot.
 		//transferir de golpe
 		//todo cuando pre=0 
-		printf ("burst dma transfer source %04XH dest %04XH lenght %04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
+		//printf ("burst dma transfer source %04XH dest %04XH lenght %04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
 
 		do {
 			zxuno_dma_operate();
@@ -310,7 +310,7 @@ void zxuno_handle_dma(void)
 	}
 
 
-	if (dma_ctrl&2) { 
+	if (dma_ctrl&2) {   //Esto incluye modos 2,3 ( 10 = timed DMA transfer. One shot. 11 = timed DMA transfer, retriggerable.)
 		if (dmapre==0) return; //No hay transferencia posible . division por cero
 		//printf ("Operando dma\n");
 		//Modo timed dma transfer
