@@ -128,7 +128,8 @@ son ASCII estándar imprimibles (códigos 32-127). Cualquier otro valor es indic
 */
 int zxuno_core_id_indice=0;
 //char *zxuno_core_id_message="ZEsarUX Z80 Spectrum core";
-char *zxuno_core_id_message="Z22-14072016";
+char *zxuno_core_id_message="Z24-28022017";
+
 
 //Registros de DMA
 /*
