@@ -973,6 +973,7 @@ void z88_generar_maskable_si_top_speed(void)
 z80_byte lee_puerto_z88_no_time(z80_byte puerto_h,z80_byte puerto_l)
 {
 
+	debug_fired_in=1;
 	z80_byte acumulado;
 
 
@@ -1078,7 +1079,6 @@ z80_byte lee_puerto_z88_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_z88(z80_byte puerto_h,z80_byte puerto_l)
 {
-  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -1094,6 +1094,7 @@ z80_byte lee_puerto_z88(z80_byte puerto_h,z80_byte puerto_l)
 
 void out_port_z88_no_time(z80_int puerto,z80_byte value)
 {
+	debug_fired_out=1;
         z80_byte puerto_l=value_16_to_8l(puerto);
         z80_byte puerto_h=value_16_to_8h(puerto);
 
@@ -1232,7 +1233,6 @@ $74         SBR, screen base reg.   -
 
 void out_port_z88(z80_int puerto,z80_byte value)
 {
-  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_z88_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;

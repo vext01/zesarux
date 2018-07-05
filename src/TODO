@@ -24,6 +24,10 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-condiciones outfired e infired no se disparan cuando son operaciones i/o de dma. es debido 
+a que las variables debug_fire_in y out se resetean antes del core y se comprueban despues, 
+pero la dma va aparte 
+
 -en visor hexadecimal de file utils, si hay archivo con caracter 7E (~~~) como orquesta.rwa, se acaba viendo texto inverso.
 dicho visor no tendria que entender los tags especiales de texto...
 

@@ -2509,6 +2509,7 @@ z80_byte peek_byte_cpc(z80_int dir)
 z80_byte lee_puerto_cpc_no_time(z80_byte puerto_h,z80_byte puerto_l GCC_UNUSED)
 {
 
+	debug_fired_in=1;
 
 	//z80_int puerto=(puerto_h<<8)||puerto_l;
 	//if (puerto==0xFA7E || puerto==0xFB7E || puerto==0xFB7F) printf ("Puerto FDC\n");
@@ -2526,7 +2527,6 @@ z80_byte lee_puerto_cpc_no_time(z80_byte puerto_h,z80_byte puerto_l GCC_UNUSED)
 
 z80_byte lee_puerto_cpc(z80_byte puerto_h,z80_byte puerto_l)
 {
-  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -2542,6 +2542,7 @@ z80_byte lee_puerto_cpc(z80_byte puerto_h,z80_byte puerto_l)
 
 void out_port_cpc_no_time(z80_int puerto,z80_byte value)
 {
+	debug_fired_out=1;
 	//if (puerto==0xFA7E || puerto==0xFB7E || puerto==0xFB7F) printf ("Puerto FDC\n");
 
 	z80_byte puerto_h=(puerto>>8)&0xFF;
@@ -2584,7 +2585,6 @@ The 6845 is selected when bit 14 of the I/O port address is set to "0". Bit 9 an
 
 void out_port_cpc(z80_int puerto,z80_byte value)
 {
-  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_cpc_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -2679,6 +2679,7 @@ z80_byte peek_byte_sam(z80_int dir)
 
 z80_byte lee_puerto_sam_no_time(z80_byte puerto_h,z80_byte puerto_l)
 {
+	debug_fired_in=1;
 	//printf ("Leer puerto sam H: %d L: %d\n",puerto_h,puerto_l);
 
         //Decodificacion completa del puerto o no?
@@ -2808,7 +2809,6 @@ z80_byte lee_puerto_sam_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_sam(z80_byte puerto_h,z80_byte puerto_l)
 {
-  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -2824,6 +2824,7 @@ z80_byte lee_puerto_sam(z80_byte puerto_h,z80_byte puerto_l)
 void out_port_sam_no_time(z80_int puerto,z80_byte value)
 {
 
+	debug_fired_out=1;
 
         z80_byte puerto_h=(puerto>>8)&0xFF;
         z80_byte puerto_l=puerto&0xFF;
@@ -2902,7 +2903,6 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 
 void out_port_sam(z80_int puerto,z80_byte value)
 {
-  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_sam_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -4118,6 +4118,7 @@ void bit_bit_cb_reg(z80_byte numerobit, z80_byte *registro)
 z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
 {
 
+	debug_fired_in=1;
 	z80_byte valor;
 
 	//xx1D Zebra Joystick                          - - - F R L D U   (0=Pressed)
@@ -4313,7 +4314,7 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
 z80_byte lee_puerto_ace_no_time(z80_byte puerto_h,z80_byte puerto_l)
 {
 
-
+	debug_fired_in=1;
         //Puerto ULA, cualquier puerto par
 
         if ((puerto_l & 1)==0) {
@@ -4375,7 +4376,6 @@ Port FEh Read (or any Read with A0=0)
 
 z80_byte lee_puerto_ace(z80_byte puerto_h,z80_byte puerto_l)
 {
-  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -4390,15 +4390,12 @@ z80_byte lee_puerto_ace(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_zx81(z80_byte puerto_h,z80_byte puerto_l)
 {
-  debug_fired_in=1;
-
-	return lee_puerto_zx80(puerto_h,puerto_l);
+  return lee_puerto_zx80(puerto_h,puerto_l);
 }
 
 
 z80_byte lee_puerto_zx80(z80_byte puerto_h,z80_byte puerto_l)
 {
-  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -4929,7 +4926,6 @@ z80_byte envia_load_comillas_sam(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_spectrum(z80_byte puerto_h,z80_byte puerto_l)
 {
-  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -5583,6 +5579,7 @@ z80_byte temp_tsconf_first_sd_0=1;
 z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 {
 
+	debug_fired_in=1;
 	//extern z80_byte in_port_ay(z80_int puerto);
 	//65533 o 49149
 	//FFFDh (65533), BFFDh (49149)
@@ -6214,7 +6211,8 @@ void cpi_cpd_common(void)
 
 void out_port_ace_no_time(z80_int puerto,z80_byte value)
 {
-	//de momento nada
+	debug_fired_out=1;
+	
 
         z80_byte puerto_l=puerto&0xFF;
         //z80_byte puerto_h=(puerto>>8)&0xFF;
@@ -6258,7 +6256,6 @@ void out_port_ace_no_time(z80_int puerto,z80_byte value)
 
 void out_port_ace(z80_int puerto,z80_byte value)
 {
-  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_ace_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -6267,6 +6264,7 @@ void out_port_ace(z80_int puerto,z80_byte value)
 void out_port_zx80_no_time(z80_int puerto,z80_byte value)
 {
 
+	debug_fired_out=1;
 	//Esto solo sirve para mostrar en menu debug i/o ports
 	zx8081_last_port_write_value=value;
 
@@ -6421,6 +6419,7 @@ void out_port_zx80_no_time(z80_int puerto,z80_byte value)
 void out_port_zx81_no_time(z80_int puerto,z80_byte value)
 {
 
+	debug_fired_out=1;
 
 	if ((puerto&0xFF)==0xfd) {
 		//debug_printf (VERBOSE_DEBUG,"Disabling NMI generator\n");
@@ -6696,6 +6695,7 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
 void out_port_spectrum_no_time(z80_int puerto,z80_byte value)
 {
 
+	debug_fired_out=1;
         //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
         //uno despues de otro
 	z80_byte puerto_l=puerto&255;
@@ -7581,7 +7581,6 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 void out_port_spectrum(z80_int puerto,z80_byte value)
 {
-  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_spectrum_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -7590,7 +7589,6 @@ void out_port_spectrum(z80_int puerto,z80_byte value)
 
 void out_port_zx80(z80_int puerto,z80_byte value)
 {
-  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_zx80_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -7598,7 +7596,6 @@ void out_port_zx80(z80_int puerto,z80_byte value)
 
 void out_port_zx81(z80_int puerto,z80_byte value)
 {
-  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_zx81_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
