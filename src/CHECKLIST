@@ -181,7 +181,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar buscador vidas infinitas. tambien con cpu top speed
 -probar debug i/o ports: spectrum zx80/81, z88, zx-uno, etc
 -probar debugger, step over interrupt, electron position, cursores, toggle, runto, etc
--probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor)  
+-probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor) , operadores bitwise &|^ en variables
 -probar desactivar breakpoints con espacio
 -probar watches
 -probar remote command protocol ZRCP, en linux, mac y windows
