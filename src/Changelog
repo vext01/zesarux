@@ -12,6 +12,7 @@ Added browser for .bas spectrum basic files
 Added ZXUno DMA emulation
 
 Improved debugger:
+*Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches
 *New pseudo variables:
 **OUTFIRED: returns 1 if last Z80 opcode was an OUT operation
 **INFIRED: returns 1 if last Z80 opcode was an IN operation

@@ -29,7 +29,7 @@ PWA&FFH=FEH
 
 En este caso significa: (PWA AND logico FFH) = FEH
 
-que otros simbolos para or, xor? como en C?   OR=| XOR=^  -> dificil de escribir desde menu?? no, salen con symbol+a, symbol+s
+que otros simbolos para or, xor? como en C?   OR=| XOR=^  -> dificil de escribir desde menu?? no, salen con symbol+a, symbol+h
 
 Tanto se deberia poder aplicar a operador, como en caso anterior, como valor?
 ejemplo:

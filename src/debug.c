@@ -815,7 +815,7 @@ void cpu_core_loop_debug_breakpoint(char *message)
 //devuelve valor registro
 //devuelve 0xFFFFFFFF si no reconoce
 //activa cond_opcode si condicion es de opcode
-unsigned int cpu_core_loop_debug_registro(char *registro,int *si_cond_opcode)
+unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_cond_opcode)
 {
 
 //Lo siguiente siempre al principio!!
@@ -1054,6 +1054,73 @@ int debug_exitrom=0;
 }
 
 
+//devuelve valor registro, con operador opcional: registro[operador][valor]
+//Donde operador puede ser:
+//& and bitwise
+//| or bitwise
+//^ xor bitwise
+//valor es un valor decimal, hexa, etc
+//devuelve 0xFFFFFFFF si no reconoce
+//activa cond_opcode si condicion es de opcode
+unsigned int cpu_core_loop_debug_registro(char *registro,int *si_cond_opcode)
+{
+	//Ver si hay operador
+	char operador=0;
+
+	int i;
+	for (i=0;registro[i] && !operador;i++) {
+		char leido=registro[i];
+		if (leido=='&' || leido=='|' || leido=='^') operador=leido;
+	}
+
+	//Si no hay operador
+	if (!operador) return cpu_core_loop_debug_registro_solo_registro(registro,si_cond_opcode);
+
+	else {
+		//Con operador. Separar en dos trozos
+		char buffer_registro[MAX_BREAKPOINT_CONDITION_LENGTH];
+		char buffer_valor[MAX_BREAKPOINT_CONDITION_LENGTH];
+
+		strcpy (buffer_registro,registro);
+		buffer_registro[i-1]=0;
+
+		strcpy (buffer_valor,&registro[i]);
+
+		//printf ("Registro con operador: [%s] [%c] [%s]\n",buffer_registro,operador,buffer_valor);
+
+		//Obtener valor registro
+		unsigned int v_reg=cpu_core_loop_debug_registro(buffer_registro,si_cond_opcode);
+
+		if (v_reg==0xFFFFFFFF) {
+			return 0;
+		}
+
+
+		//Obtener valor de despues del operador & | ^
+		unsigned int valor=parse_string_to_number(buffer_valor);
+
+		unsigned int resultado=0;
+
+		switch (operador) {
+			case '&':
+				resultado=v_reg & valor;
+			break;
+
+			case '|':
+				resultado=v_reg | valor;
+			break;
+
+			case '^':
+				resultado=v_reg ^ valor;
+			break;
+
+		}
+
+		return resultado;
+
+	}
+}
+
 //con la cadena de entrada de condicion, retorna el registro a mirar (o sea, lo que hay antes del =, < o > o /
 //retorna registro en string registro. codigo de retorno es puntero a =, < , >, /. si no hay operador, retorna NULL
 char *cpu_core_loop_debug_get_registro(char *entrada, char *registro)
@@ -1179,58 +1246,6 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 	}
 
 
-	/*
-	int parentesis_inicial=0;
-
-	//Ver si hay parentesis inicial
-	if (texto[0]=='(' ) {
-		//Y lo saltamos
-		texto++;
-		parentesis_inicial=1;
-	}
-
-	//obtenemos registro
-	registro[0]=texto[0];
-
-	//si hay operador en posicion 1, fin registro
-	char c;
-	c=texto[1];
-
-	int indice_valor;
-
-	if (c=='=' || c=='<' || c=='>' || c=='/') {
-		registro[1]=0;
-		operador=c;
-
-		indice_valor=2;
-	}
-
-	else {
-		//registro tiene 2 caracteres. puede haber parentesis
-		registro[1]=c;
-		registro[2]=0;
-		int posicion_operador=2;
-		indice_valor=3;
-
-		if (parentesis_inicial) {
-			posicion_operador++;
-			indice_valor++;
-			//cambiamos string para que este dentro del parentesis
-			char registro_temp[3];
-			sprintf (registro_temp,"%s",registro);
-			sprintf (registro,"(%s)",registro_temp);
-		}
-
-
-		operador=texto[posicion_operador];
-
-	}
-
-
-	//Obtener valor de despues del operador <, > o = o /
-	valor=parse_string_to_number(&texto[indice_valor]);
-
-	*/
 
 	operador=*texto;
 	texto++;
