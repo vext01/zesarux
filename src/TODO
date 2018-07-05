@@ -24,19 +24,6 @@ renombrarla
 
 --- Cosas para la siguiente version
 
--en breakpoints Valores con operadores logicos and, or, xor, por ejemplo
-PWA&FFH=FEH
-
-En este caso significa: (PWA AND logico FFH) = FEH
-
-que otros simbolos para or, xor? como en C?   OR=| XOR=^  -> dificil de escribir desde menu?? no, salen con symbol+a, symbol+h
-
-Tanto se deberia poder aplicar a operador, como en caso anterior, como valor?
-ejemplo:
-PWA=00FEH|3
-Aunque este caso es un poco menos usado, el que lo necesite, que lo calcule antes a mano (FEH | 3)
-
-
 -en visor hexadecimal de file utils, si hay archivo con caracter 7E (~~~) como orquesta.rwa, se acaba viendo texto inverso.
 dicho visor no tendria que entender los tags especiales de texto...
 

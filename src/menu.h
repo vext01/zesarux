@@ -552,7 +552,7 @@ extern int menu_hardware_autofire_cond(void);
 "& : bitwise AND\n" \
 "| : bitwise OR\n" \
 "^ : bitwise XOR\n" \
-"Variable Value is any value you want\n" \
+"Variable Value is any value you want to apply with the operator\n" \
 "Examples of [VOP]: \n" \
 "|3 : Makes a bitwise OR with 3 to the Variable value\n" \
 "&FH : Makes a bitwise AND with FH to the Variable value\n" \
@@ -565,6 +565,8 @@ extern int menu_hardware_autofire_cond(void);
 "SP<32768 : it will match when SP register is below 32768\n" \
 "PWA&FFH=FEH : it will match when last port write address, doing an AND bitwise (&) with FFH, is equal to FEH\n" \
 "A|1=255 : it will match when register A, doing OR bitwise (|), it equal to 255\n" \
+"(32768)&0FH=3 : it will match when memory address 32768 has the low 4 bits set to value 3\n" \
+"OUTFIRED=1 AND PWA&00FFH=FEH AND PWV&7=1 : it will match when changing border color to blue\n" \
 "FS=1: it will match when flag S is set\n" \
 "A=10 and BC<33 : it will match when A register is 10 and BC is below 33\n" \
 "OPCODE=ED4AH : it will match when running opcode ADC HL,BC\n" \
