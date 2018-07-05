@@ -520,7 +520,7 @@ extern int menu_hardware_autofire_cond(void);
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
-"[VARIABLE][CONDITION][VALUE] [OPERATOR] [VARIABLE][CONDITION][VALUE] [OPERATOR] .... where: \n" \
+"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" \
 "[VARIABLE] can be a CPU register or some pseudo variables: A,B,C,D,E,F,H,L,AF,BC,DE,HL,A',B',C',D',E',F',H',L',AF',BC',DE',HL',I,R,SP,PC,IX,IY\n" \
 "FS,FZ,FP,FV,FH,FN,FC: Flags\n" \
 "(BC),(DE),(HL),(SP),(PC),(IX),(IY), (NN), IFF1, IFF2, OPCODE,\n" \
@@ -548,11 +548,23 @@ extern int menu_hardware_autofire_cond(void);
 "TSTATESP: t-states partial\n" \
 "SCANLINE: scanline counter\n" \
 "\n" \
+"[VOP] is optional is made of a Variable Operator and Variable Value, joined together with no space. Variable Operator can be:\n" \
+"& : bitwise AND\n" \
+"| : bitwise OR\n" \
+"^ : bitwise XOR\n" \
+"Variable Value is any value you want\n" \
+"Examples of [VOP]: \n" \
+"|3 : Makes a bitwise OR with 3 to the Variable value\n" \
+"&FH : Makes a bitwise AND with FH to the Variable value\n" \
+"\n" \
 "[CONDITION] must be one of: <,>,=,/  (/ means not equal)\n" \
 "[VALUE] must be a numeric value\n" \
 "[OPERATOR] must be one of the following: and, or, xor\n" \
+"\n" \
 "Examples of conditions:\n" \
 "SP<32768 : it will match when SP register is below 32768\n" \
+"PWA&FFH=FEH : it will match when last port write address, doing an AND bitwise (&) with FFH, is equal to FEH\n" \
+"A|1=255 : it will match when register A, doing OR bitwise (|), it equal to 255\n" \
 "FS=1: it will match when flag S is set\n" \
 "A=10 and BC<33 : it will match when A register is 10 and BC is below 33\n" \
 "OPCODE=ED4AH : it will match when running opcode ADC HL,BC\n" \
