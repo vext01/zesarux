@@ -11,6 +11,12 @@ Now some files can be expanded with Space key on file selector, like mdf, hdf or
 Added browser for .bas spectrum basic files
 Added ZXUno DMA emulation
 
+Improved debugger:
+*New pseudo variables:
+**OUTFIRED: returns 1 if last Z80 opcode was an OUT operation
+**INFIRED: returns 1 if last Z80 opcode was an IN operation
+
+
 Some other minor bugfixes and improvements
 
 
