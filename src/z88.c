@@ -1078,6 +1078,7 @@ z80_byte lee_puerto_z88_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_z88(z80_byte puerto_h,z80_byte puerto_l)
 {
+  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );

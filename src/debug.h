@@ -301,6 +301,7 @@ extern void debug_get_user_stack_values(int items, char *texto);
 extern int debug_text_is_pc_condition(char *cond);
 
 extern int debug_fired_out;
+extern int debug_fired_in;
 
 
 

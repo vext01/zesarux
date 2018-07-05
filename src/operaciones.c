@@ -2526,6 +2526,7 @@ z80_byte lee_puerto_cpc_no_time(z80_byte puerto_h,z80_byte puerto_l GCC_UNUSED)
 
 z80_byte lee_puerto_cpc(z80_byte puerto_h,z80_byte puerto_l)
 {
+  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -2807,6 +2808,7 @@ z80_byte lee_puerto_sam_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_sam(z80_byte puerto_h,z80_byte puerto_l)
 {
+  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -4373,6 +4375,7 @@ Port FEh Read (or any Read with A0=0)
 
 z80_byte lee_puerto_ace(z80_byte puerto_h,z80_byte puerto_l)
 {
+  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -4387,6 +4390,7 @@ z80_byte lee_puerto_ace(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_zx81(z80_byte puerto_h,z80_byte puerto_l)
 {
+  debug_fired_in=1;
 
 	return lee_puerto_zx80(puerto_h,puerto_l);
 }
@@ -4394,6 +4398,7 @@ z80_byte lee_puerto_zx81(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_zx80(z80_byte puerto_h,z80_byte puerto_l)
 {
+  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
@@ -4924,6 +4929,7 @@ z80_byte envia_load_comillas_sam(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_spectrum(z80_byte puerto_h,z80_byte puerto_l)
 {
+  debug_fired_in=1;
   z80_int port=value_8_to_16(puerto_h,puerto_l);
   ula_contend_port_early( port );
   ula_contend_port_late( port );
