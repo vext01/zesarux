@@ -536,6 +536,7 @@ extern int menu_hardware_autofire_cond(void);
 "PRA: address used on read port operation\n" \
 "PWA: address used on write port operation\n" \
 "\n" \
+"OUTFIRED: returns 1 if last Z80 opcode was an OUT operation\n" \
 "ENTERROM: returns 1 the first time PC register is on ROM space (0-16383)\n" \
 "EXITROM: returns 1 the first time PC register is out ROM space (16384-65535)\n" \
 "Note: The last two only return 1 the first time the breakpoint is fired, or a watch is shown, " \

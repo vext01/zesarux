@@ -1231,6 +1231,7 @@ $74         SBR, screen base reg.   -
 
 void out_port_z88(z80_int puerto,z80_byte value)
 {
+  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_z88_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;

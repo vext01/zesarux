@@ -2583,6 +2583,7 @@ The 6845 is selected when bit 14 of the I/O port address is set to "0". Bit 9 an
 
 void out_port_cpc(z80_int puerto,z80_byte value)
 {
+  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_cpc_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -2899,6 +2900,7 @@ void out_port_sam_no_time(z80_int puerto,z80_byte value)
 
 void out_port_sam(z80_int puerto,z80_byte value)
 {
+  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_sam_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -6250,6 +6252,7 @@ void out_port_ace_no_time(z80_int puerto,z80_byte value)
 
 void out_port_ace(z80_int puerto,z80_byte value)
 {
+  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_ace_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -7572,6 +7575,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 void out_port_spectrum(z80_int puerto,z80_byte value)
 {
+  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_spectrum_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -7580,6 +7584,7 @@ void out_port_spectrum(z80_int puerto,z80_byte value)
 
 void out_port_zx80(z80_int puerto,z80_byte value)
 {
+  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_zx80_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
@@ -7587,6 +7592,7 @@ void out_port_zx80(z80_int puerto,z80_byte value)
 
 void out_port_zx81(z80_int puerto,z80_byte value)
 {
+  debug_fired_out=1;
   ula_contend_port_early( puerto );
   out_port_zx81_no_time(puerto,value);
   ula_contend_port_late( puerto ); t_estados++;
