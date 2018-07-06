@@ -24,6 +24,11 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-Reducir el numero de breakpoints posibles (100 a menos) no mejora mucho el rendimiento
+Pasamos de un programa de ejemplo que consume 14% con breakpoints desactivados. Si habilito breakpoints, con todos sin enabled, consume 19%. 
+Si uso solo 15 breakpoints, consume 15%
+Solo hay un 4% de incremento de cpu entre tener 15 o 100. Por tanto no vale la pena reducirlo
+
 -condiciones outfired e infired no se disparan cuando son operaciones i/o de dma. es debido 
 a que las variables debug_fire_in y out se resetean antes del core y se comprueban despues, 
 pero la dma va aparte 
