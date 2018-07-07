@@ -28461,6 +28461,35 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 										if (menu_mouse_x==ancho_ventana-1 && menu_mouse_y>=1 && menu_mouse_y<alto_ventana-1) {
 											printf ("mouse en zona barra porcentaje leido\n");
 											tecla=0;
+
+											int porcentaje_actual=((primera_linea+linea_cursor)*100)/(indice_linea+1); //+1 para no hacer division por cero
+											printf ("porcentaje actual: %d\n",porcentaje_actual);
+											int porcentaje_seleccionado=(menu_mouse_y*100)/alto_ventana;
+											printf ("porcentaje seleccionado: %d\n",porcentaje_seleccionado);
+
+											int diferencia_porcentaje=porcentaje_seleccionado-porcentaje_actual;
+											if (diferencia_porcentaje>0) {
+												//Bajar cursor. cuanto?
+												//indice_linea es el total de lineas
+												int lineas_bajar=(indice_linea*diferencia_porcentaje)/100;
+												printf ("bajar %d lineas\n",lineas_bajar);
+
+												for (;lineas_bajar;lineas_bajar--) {
+													primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+												}
+											}
+
+											if (diferencia_porcentaje<0) {
+												//Subir cursor. cuanto?
+												//indice_linea es el total de lineas
+												diferencia_porcentaje=-diferencia_porcentaje;
+												int lineas_subir=(indice_linea*diferencia_porcentaje)/100;
+												printf ("subir %d lineas\n",lineas_subir);
+
+												for (;lineas_subir;lineas_subir--) {
+													primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+												}
+											}											
 										}
 								}
 
