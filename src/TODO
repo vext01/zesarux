@@ -24,6 +24,8 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-formato zsf debe guardar iff1 y iff2 por separado
+
 -Reducir el numero de breakpoints posibles (100 a menos) no mejora mucho el rendimiento
 Pasamos de un programa de ejemplo que consume 14% con breakpoints desactivados. Si habilito breakpoints, con todos sin enabled, consume 19%. 
 Si uso solo 15 breakpoints, consume 15%
@@ -62,6 +64,7 @@ visor sprites tambien se ve mal
   zsf_write_block(ptr_zsf_file, NULL,0, 0);
 
 -Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
+-Parece que si hay un breakpoint de accion (por ejemplo cuando lee puerto FEH), no deja abrir el menu
 
 -con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
 En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo

@@ -28452,6 +28452,18 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 												}
 								}
 
+								//Si se pulsa raton en la parte derecha donde indica porcentaje leido de ventana
+								if (si_menu_mouse_en_ventana() && mouse_left && texto_no_cabe) {
+										printf ("mouse en ventana y pulsado y no cabe. x: %d y: %d ancho_ventana: %d alto_ventana: %d\n",
+										menu_mouse_x,menu_mouse_y,ancho_ventana,alto_ventana);
+										//		int sumaralto=((alto_ventana-3)*porcentaje)/100;
+										//putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+										if (menu_mouse_x==ancho_ventana-1 && menu_mouse_y>=1 && menu_mouse_y<alto_ventana-1) {
+											printf ("mouse en zona barra porcentaje leido\n");
+											tecla=0;
+										}
+								}
+
 		if (tooltip_enabled==0) menu_espera_no_tecla_con_repeticion();
 
 		//Decir que no se ha pulsado tecla para que se relea esto cada vez
