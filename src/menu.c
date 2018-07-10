@@ -28387,8 +28387,8 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 	if (texto_no_cabe) {
 		// mostrar * a la derecha para indicar donde estamos en porcentaje
 		//menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
-		int ybase=yventana+1;
-		int porcentaje=((primera_linea+linea_cursor)*100)/(indice_linea+1); //+1 para no hacer division por cero
+		int ybase=yventana+2;
+		int porcentaje=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
 		//int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
 
 		//if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
@@ -28397,7 +28397,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
 		debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
 
-		int sumaralto=((alto_ventana-3)*porcentaje)/100;
+		int sumaralto=((alto_ventana-4)*porcentaje)/100;
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
 	}
@@ -28461,19 +28461,31 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 												}
 								}*/
 
+								//Si pulsado raton en parte derecha donde hay botones arriba y abajo
+								if (si_menu_mouse_en_ventana() && mouse_left && menu_mouse_x==ancho_ventana-1 && menu_mouse_y==1) {
+									printf ("Subir cursor\n");
+									primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+								}
+
+								if (si_menu_mouse_en_ventana() && mouse_left && menu_mouse_x==ancho_ventana-1 && menu_mouse_y==alto_ventana-1) {
+									printf ("Bajar cursor\n");
+									primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+								}
+
 								//Si se pulsa raton en la parte derecha donde indica porcentaje leido de ventana
 								if (si_menu_mouse_en_ventana() && mouse_left && texto_no_cabe) {
 										printf ("mouse en ventana y pulsado y no cabe. x: %d y: %d ancho_ventana: %d alto_ventana: %d\n",
 										menu_mouse_x,menu_mouse_y,ancho_ventana,alto_ventana);
 										//		int sumaralto=((alto_ventana-3)*porcentaje)/100;
 										//putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
-										if (menu_mouse_x==ancho_ventana-1 && menu_mouse_y>=1 && menu_mouse_y<alto_ventana-1) {
+										if (menu_mouse_x==ancho_ventana-1 && menu_mouse_y>=2 && menu_mouse_y<alto_ventana-1) {
 											printf ("mouse en zona barra porcentaje leido\n");
 											tecla=0;
 
-											int porcentaje_actual=((primera_linea+linea_cursor)*100)/(indice_linea+1); //+1 para no hacer division por cero
+											int porcentaje_actual=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
+											//int porcentaje_actual=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
 											printf ("porcentaje actual: %d\n",porcentaje_actual);
-											int porcentaje_seleccionado=(menu_mouse_y*100)/alto_ventana;
+											int porcentaje_seleccionado=((menu_mouse_y-2)*100)/(alto_ventana-1);
 											printf ("porcentaje seleccionado: %d\n",porcentaje_seleccionado);
 
 											int diferencia_porcentaje=porcentaje_seleccionado-porcentaje_actual;
