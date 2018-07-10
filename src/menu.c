@@ -32144,7 +32144,7 @@ void menu_print_dir(int inicial)
     if (texto_no_cabe) {
                 // mostrar * a la derecha para indicar donde estamos en porcentaje
                 //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
-                //int ybase=yventana+1;
+                int ybase=ventana_y+5;
                 int porcentaje=((inicial+filesel_linea_seleccionada)*100)/(total_archivos+1); //+1 para no hacer division por cero
                 //int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
 
@@ -32154,9 +32154,10 @@ void menu_print_dir(int inicial)
 
                 //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
 
-                //int sumaralto=((alto_ventana-3)*porcentaje)/100;
-                //putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+        int sumaralto=((FILESEL_ALTO_DIR)*porcentaje)/100;
+        
 		printf ("Porcentaje cursor: %d\n",porcentaje);
+		putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
     }
 
