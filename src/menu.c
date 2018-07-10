@@ -33165,6 +33165,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								//Ver si linea dentro de rango
 								int linea_final=menu_mouse_y-inicio_y_dir;
 
+								//Si esta en la zona derecha de selector de porcentaje no hacer nada
+								//if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+								if (menu_mouse_x==FILESEL_ANCHO-1) break;
+
 								//filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
 
 								if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
@@ -33176,7 +33180,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								}
 
 							}
-							else if (menu_mouse_y==inicio_y_dir-1) {
+
+							//Ya no tiene sentido hacer scroll al poner arriba o abajo de la zona de archivos el raton,
+							//pues ya se puede seleccionar porcentaje visible con el indicador derecho '*'
+							/*else if (menu_mouse_y==inicio_y_dir-1) {
 								//Justo en la linea superior del directorio
 								menu_filesel_cursor_arriba();
 								menu_speech_tecla_pulsada=1;
@@ -33186,6 +33193,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								menu_filesel_cursor_abajo();
 								menu_speech_tecla_pulsada=1;
 							}
+							*/
 							else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
 								//En la linea de filtros
 								//nada en especial
@@ -33361,92 +33369,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                		         }
 
 							break;
-/*
-
-   if (filesel_no_cabe_todo) {
-                // mostrar * a la derecha para indicar donde estamos en porcentaje
-                //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
-                int ybase=ventana_y+5;
-                filesel_porcentaje_visible=((inicial+filesel_linea_seleccionada)*100)/(filesel_total_archivos+1); //+1 para no hacer division por cero
-                //int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
-
-                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
-                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea)==0)
-                //        porcentaje=100;
-
-                //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
-
-        int sumaralto=((FILESEL_ALTO_DIR)*filesel_porcentaje_visible)/100;
-        
-		printf ("Porcentaje cursor: %d\n",filesel_porcentaje_visible);
-		putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
-
-    }
-
-						//PgDn
-					case 25:
-						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
-							menu_filesel_cursor_abajo();
-						//releer todas entradas
-						menu_speech_tecla_pulsada=0;
-						//y decir active item
-						menu_active_item_primera_vez=1;
-                                        break;
-
-					//PgUp
-					case 24:
-						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
-							menu_filesel_cursor_arriba();
-						//releer todas entradas
-						menu_speech_tecla_pulsada=0;
-						//y decir active item
-						menu_active_item_primera_vez=1;
-                                        break;
-
-
-
- if (si_menu_mouse_en_ventana() && mouse_left && texto_no_cabe) {
-                                                                                printf ("mouse en ventana y pulsado y no cabe. x: %d y: %d ancho_ventana: %d alto_ventana: %d\n",
-                                                                                menu_mouse_x,menu_mouse_y,ancho_ventana,alto_ventana);
-                                                                                //              int sumaralto=((alto_ventana-3)*porcentaje)/100;
-                                                                                //putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
-                                                                                if (menu_mouse_x==ancho_ventana-1 && menu_mouse_y>=1 && menu_mouse_y<alto_ventana-1) {
-                                                                                        printf ("mouse en zona barra porcentaje leido\n");
-                                                                                        tecla=0;
-
-                                                                                        int porcentaje_actual=((primera_linea+linea_cursor)*100)/(indice_linea+1); //+1 para no hacer division por cero
-                                                                                        printf ("porcentaje actual: %d\n",porcentaje_actual);
-                                                                                        int porcentaje_seleccionado=(menu_mouse_y*100)/alto_ventana;
-                                                                                        printf ("porcentaje seleccionado: %d\n",porcentaje_seleccionado);
-
-                                                                                        int diferencia_porcentaje=porcentaje_seleccionado-porcentaje_actual;
-                                                                                        if (diferencia_porcentaje>0) {
-                                                                                                //Bajar cursor. cuanto?
-                                                                                                //indice_linea es el total de lineas
-                                                                                                int lineas_bajar=(indice_linea*diferencia_porcentaje)/100;
-                                                                                                printf ("bajar %d lineas\n",lineas_bajar);
-
-                                                                                                for (;lineas_bajar;lineas_bajar--) {
-                                                                                                        primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
-                                                                                                }
-                                                                                        }
-
-                                                                                        if (diferencia_porcentaje<0) {
-                                                                                                //Subir cursor. cuanto?
-                                                                                                //indice_linea es el total de lineas
-                                                                                                diferencia_porcentaje=-diferencia_porcentaje;
-                                                                                                int lineas_subir=(indice_linea*diferencia_porcentaje)/100;
-                                                                                                printf ("subir %d lineas\n",lineas_subir);
-
-                                                                                                for (;lineas_subir;lineas_subir--) {
-                                                                                                        primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
-                                                                                                }
-                                                                                        }                                                                                       
-                                                                                }
-                                                                }
-
-*/
-
 
 						} 
 						//si seleccion es directorio
