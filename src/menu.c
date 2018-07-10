@@ -28400,7 +28400,14 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 		int sumaralto=((alto_ventana-4)*porcentaje)/100;
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
+
+		//mostrar cursores arriba y abajo
+		putchar_menu_overlay(xventana+ancho_ventana-1,ybase-1,'^',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+alto_ventana-3,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+
 	}
+
+
 
 	//arriba
 	//if (primera_linea>0) cursores[21]='U';
@@ -28465,11 +28472,13 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 								if (si_menu_mouse_en_ventana() && mouse_left && menu_mouse_x==ancho_ventana-1 && menu_mouse_y==1) {
 									printf ("Subir cursor\n");
 									primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+									tecla=0;
 								}
 
 								if (si_menu_mouse_en_ventana() && mouse_left && menu_mouse_x==ancho_ventana-1 && menu_mouse_y==alto_ventana-1) {
 									printf ("Bajar cursor\n");
 									primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+									tecla=0;
 								}
 
 								//Si se pulsa raton en la parte derecha donde indica porcentaje leido de ventana
@@ -28485,7 +28494,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 											int porcentaje_actual=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
 											//int porcentaje_actual=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
 											printf ("porcentaje actual: %d\n",porcentaje_actual);
-											int porcentaje_seleccionado=((menu_mouse_y-2)*100)/(alto_ventana-1);
+											int porcentaje_seleccionado=((menu_mouse_y-2)*100)/(alto_ventana-4);
 											printf ("porcentaje seleccionado: %d\n",porcentaje_seleccionado);
 
 											int diferencia_porcentaje=porcentaje_seleccionado-porcentaje_actual;
