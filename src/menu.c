@@ -33320,9 +33320,42 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								break;
 							}
 
+						//Si en zona derecha donde hay flechas arriba y abajo
+						if (menu_mouse_x==FILESEL_ANCHO-1 && menu_mouse_y==FILESEL_INICIO_DIR) {
+							printf ("cursor arriba\n");
+
+							menu_filesel_cursor_arriba();
+						
+							//releer todas entradas
+							menu_speech_tecla_pulsada=0;
+							//y decir active item
+							menu_active_item_primera_vez=1;
+
+							break;
+						}
+
+						//Si en zona derecha donde hay flechas arriba y abajo
+						if (menu_mouse_x==FILESEL_ANCHO-1 && menu_mouse_y==FILESEL_INICIO_DIR+FILESEL_ALTO_DIR+1) {
+							printf ("cursor abajo\n");
+
+							menu_filesel_cursor_abajo();
+						
+							//releer todas entradas
+							menu_speech_tecla_pulsada=0;
+							//y decir active item
+							menu_active_item_primera_vez=1;
+
+							break;
+						}
+
+
 							//Si se ha pulsado boton pero fuera de la zona de archivos, no hacer nada
 							if (!si_mouse_zona_archivos() ) break;
 						}
+
+
+
+						//if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) return 1;
 
 						//Si zona derecha (de indicador de porcentaje) y hay indicador de porcentaje activo
 						if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
