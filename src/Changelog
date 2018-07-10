@@ -8,6 +8,7 @@ Improved menu:
 * now you can write any ascii character on the menu
 * now you can use binary numbers on expressions
 * you can now scroll on windows with text contents and file selector menus, by clicking the right progress symbol (*)
+* now you can move cursor up/down with mouse on file selector by clicking new arrow buttons
 Now some files can be expanded with Space key on file selector, like mdf, hdf or tap
 Added browser for .bas spectrum basic files
 Added ZXUno DMA emulation

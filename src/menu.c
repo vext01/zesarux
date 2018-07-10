@@ -32215,6 +32215,9 @@ void menu_print_dir(int inicial)
                         if (menu_speech_tecla_pulsada==0) menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
                 }
 
+	//Imprimir flechar arriba y abajo para raton
+	putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4,'^',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+	putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4+FILESEL_ALTO_DIR+1,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
 
 }
