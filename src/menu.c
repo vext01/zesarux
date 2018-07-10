@@ -28435,7 +28435,9 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
 								if (volver_timeout) tecla=13;
 
-								if (mouse_movido) {
+								//Scroll poniendo raton arriba o abajo de la ventana ya no tiene sentido pues se puede usar el
+								//de movimiento cambiando el indicador de porcentaje de leido (*)
+								/*if (mouse_movido) {
 												//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
 												//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
 												if (si_menu_mouse_en_ventana() ) {
@@ -28450,7 +28452,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 															tecla=11;
 														}
 												}
-								}
+								}*/
 
 								//Si se pulsa raton en la parte derecha donde indica porcentaje leido de ventana
 								if (si_menu_mouse_en_ventana() && mouse_left && texto_no_cabe) {
@@ -32082,8 +32084,14 @@ void menu_print_dir(int inicial)
 
 	p=menu_get_filesel_item(inicial);
 
-	for (i=0;i<mostrados_en_pantalla && p!=NULL;i++) {
+	//Para calcular total de archivos de ese directorio, siguiendo el filtro. Util para mostrar indicador de porcentaje '*'
+	int total_archivos=inicial;
+
+	for (i=0;p!=NULL;i++,total_archivos++) {
 		//printf ("file: %s\n",p->d_name);
+
+		//Solo hacer esto si es visible en pantalla
+		if (i<mostrados_en_pantalla) {
 		menu_filesel_print_file(p->d_name,p->d_type,FILESEL_ANCHO-2,FILESEL_Y+3+i);
 
 		if (filesel_linea_seleccionada==i) {
@@ -32120,24 +32128,50 @@ void menu_print_dir(int inicial)
 
 
 		}
+		}
 
 		p=p->next;
 
-        }
+    }
 
+	int texto_no_cabe=0;
+
+	printf ("total archivos en el directorio y que siguen el filtro: %d\n",total_archivos);
+	if (total_archivos>mostrados_en_pantalla) {
+		texto_no_cabe=1;
+	}
+
+    if (texto_no_cabe) {
+                // mostrar * a la derecha para indicar donde estamos en porcentaje
+                //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
+                //int ybase=yventana+1;
+                int porcentaje=((inicial+filesel_linea_seleccionada)*100)/(total_archivos+1); //+1 para no hacer division por cero
+                //int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
+
+                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
+                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea)==0)
+                //        porcentaje=100;
+
+                //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
+
+                //int sumaralto=((alto_ventana-3)*porcentaje)/100;
+                //putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+		printf ("Porcentaje cursor: %d\n",porcentaje);
+
+    }
 
 
 	//espacios al final.
-        for (;i<mostrados_en_pantalla;i++) {
+    for (;i<mostrados_en_pantalla;i++) {
                 //printf ("espacios\n");
                 menu_filesel_print_file(" ",DT_REG,FILESEL_ANCHO-2,FILESEL_Y+3+i);
-        }
+    }
 
 
 	//Imprimir directorio actual
 	//primero borrar con espacios
 
-        menu_escribe_texto_ventana(14,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"               ");
+    menu_escribe_texto_ventana(14,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"               ");
 
 
 	char current_dir[PATH_MAX];
