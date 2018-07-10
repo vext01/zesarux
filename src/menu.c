@@ -33329,8 +33329,30 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							printf ("Pulsada zona de porcentaje de archivos\n");
 							printf ("Posicion: %d inicio_dir: %d\n",menu_mouse_y,FILESEL_INICIO_DIR);
 
+
 							int porcentaje_seleccionado=((menu_mouse_y-FILESEL_INICIO_DIR-1)*100)/FILESEL_ALTO_DIR;
-							printf ("Porcentaje seleccionado: %d actual: %d\n",porcentaje_seleccionado,filesel_porcentaje_visible);
+							printf ("Porcentaje seleccionado: %d actual: %d\n",porcentaje_seleccionado,filesel_porcentaje_visible);							
+
+							//Si esta arriba del todo, cambiamos directamente la posicion
+							if (menu_mouse_y==FILESEL_INICIO_DIR+1) {
+									printf ("Forzamos a primera posicion\n");
+								filesel_linea_seleccionada=0;
+								filesel_archivo_seleccionado=0;
+								break;
+							}
+
+							if (menu_mouse_y==FILESEL_INICIO_DIR+FILESEL_ALTO_DIR) {
+								printf ("Forzamos a ultima posicion. Primero visible: %d. linea seleccionada: %d total: %d\n",
+									filesel_archivo_seleccionado,filesel_linea_seleccionada,filesel_total_archivos);
+								
+								filesel_linea_seleccionada=FILESEL_ALTO_DIR-1;
+								filesel_archivo_seleccionado=filesel_total_archivos-1-filesel_linea_seleccionada;
+								printf ("Archivo seleccionado: %d. Primero visible: %d\n",filesel_archivo_seleccionado,filesel_linea_seleccionada);
+
+								break;
+							}
+
+
 
 							  int diferencia_porcentaje=porcentaje_seleccionado-filesel_porcentaje_visible;
                             if (diferencia_porcentaje>0) {
@@ -33371,6 +33393,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							break;
 
 						} 
+
+
+						//Si zona derecha (de indicador de porcentaje) aunque no hay indicador de porcentaje activo, no hacer nada
+						if (menu_mouse_x==FILESEL_ANCHO-1) break;
+
 						//si seleccion es directorio
 						item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
 						menu_reset_counters_tecla_repeticion();
