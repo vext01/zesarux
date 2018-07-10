@@ -520,7 +520,14 @@ char filesel_nombre_archivo_seleccionado[PATH_MAX];
 //Si mostrar en filesel utilidades de archivos
 z80_bit menu_filesel_show_utils={0};
 
+//Si no caben todos los archivos en pantalla y por tanto se muestra "*" a la derecha
+int filesel_no_cabe_todo;
 
+//Total de archivos en el directorio mostrado
+int filesel_total_archivos;
+
+//En que porcentaje esta el indicador
+int filesel_porcentaje_visible;
 
 
 int menu_tooltip_counter;
@@ -31869,9 +31876,9 @@ void reset_splash_text(void)
 #define FILESEL_Y 1
 #define FILESEL_ANCHO 30
 #define FILESEL_ALTO 23
-#define FILESEL_ALTO_DIR FILESEL_ALTO-10
-#define FILESEL_POS_FILTER FILESEL_ALTO-4
-#define FILESEL_POS_LEYENDA FILESEL_ALTO-3
+#define FILESEL_ALTO_DIR (FILESEL_ALTO-10)
+#define FILESEL_POS_FILTER (FILESEL_ALTO-4)
+#define FILESEL_POS_LEYENDA (FILESEL_ALTO-3)
 #define FILESEL_INICIO_DIR 4
 
 void menu_filesel_print_filters(char *filtros[])
@@ -32085,9 +32092,11 @@ void menu_print_dir(int inicial)
 	p=menu_get_filesel_item(inicial);
 
 	//Para calcular total de archivos de ese directorio, siguiendo el filtro. Util para mostrar indicador de porcentaje '*'
-	int total_archivos=inicial;
+	//int total_archivos=inicial;
 
-	for (i=0;p!=NULL;i++,total_archivos++) {
+	filesel_total_archivos=inicial;
+
+	for (i=0;p!=NULL;i++,filesel_total_archivos++) {
 		//printf ("file: %s\n",p->d_name);
 
 		//Solo hacer esto si es visible en pantalla
@@ -32134,18 +32143,19 @@ void menu_print_dir(int inicial)
 
     }
 
-	int texto_no_cabe=0;
+	//int texto_no_cabe=0;
+	filesel_no_cabe_todo=0;
 
-	printf ("total archivos en el directorio y que siguen el filtro: %d\n",total_archivos);
-	if (total_archivos>mostrados_en_pantalla) {
-		texto_no_cabe=1;
+	printf ("total archivos en el directorio y que siguen el filtro: %d\n",filesel_total_archivos);
+	if (filesel_total_archivos>mostrados_en_pantalla) {
+		filesel_no_cabe_todo=1;
 	}
 
-    if (texto_no_cabe) {
+    if (filesel_no_cabe_todo) {
                 // mostrar * a la derecha para indicar donde estamos en porcentaje
                 //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
                 int ybase=ventana_y+5;
-                int porcentaje=((inicial+filesel_linea_seleccionada)*100)/(total_archivos+1); //+1 para no hacer division por cero
+                filesel_porcentaje_visible=((inicial+filesel_linea_seleccionada)*100)/(filesel_total_archivos+1); //+1 para no hacer division por cero
                 //int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
 
                 //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
@@ -32154,9 +32164,9 @@ void menu_print_dir(int inicial)
 
                 //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
 
-        int sumaralto=((FILESEL_ALTO_DIR)*porcentaje)/100;
+        int sumaralto=((FILESEL_ALTO_DIR)*filesel_porcentaje_visible)/100;
         
-		printf ("Porcentaje cursor: %d\n",porcentaje);
+		printf ("Porcentaje cursor: %d\n",filesel_porcentaje_visible);
 		putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
     }
@@ -33305,6 +33315,140 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							//Si se ha pulsado boton pero fuera de la zona de archivos, no hacer nada
 							if (!si_mouse_zona_archivos() ) break;
 						}
+
+						//Si zona derecha (de indicador de porcentaje) y hay indicador de porcentaje activo
+						if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+							printf ("Pulsada zona de porcentaje de archivos\n");
+							printf ("Posicion: %d inicio_dir: %d\n",menu_mouse_y,FILESEL_INICIO_DIR);
+
+							int porcentaje_seleccionado=((menu_mouse_y-FILESEL_INICIO_DIR-1)*100)/FILESEL_ALTO_DIR;
+							printf ("Porcentaje seleccionado: %d actual: %d\n",porcentaje_seleccionado,filesel_porcentaje_visible);
+
+							  int diferencia_porcentaje=porcentaje_seleccionado-filesel_porcentaje_visible;
+                            if (diferencia_porcentaje>0) {
+                                //Bajar cursor. cuanto?
+                                //indice_linea es el total de lineas
+                                int lineas_bajar=(filesel_total_archivos*diferencia_porcentaje)/100;
+                            	 printf ("bajar %d lineas\n",lineas_bajar);
+
+                                for (;lineas_bajar;lineas_bajar--) {
+                                  menu_filesel_cursor_abajo();
+								}
+						//releer todas entradas
+						menu_speech_tecla_pulsada=0;
+						//y decir active item
+						menu_active_item_primera_vez=1;
+                                        
+               
+               		         }
+							
+							if (diferencia_porcentaje<0) {
+                                //Subir cursor. cuanto?
+                                //indice_linea es el total de lineas
+								diferencia_porcentaje=-diferencia_porcentaje;
+                                int lineas_subir=(filesel_total_archivos*diferencia_porcentaje)/100;
+                            	 printf ("subir %d lineas\n",lineas_subir);
+
+                                for (;lineas_subir;lineas_subir--) {
+                                  menu_filesel_cursor_arriba();
+								}
+						//releer todas entradas
+						menu_speech_tecla_pulsada=0;
+						//y decir active item
+						menu_active_item_primera_vez=1;
+                                        
+               
+               		         }
+
+							break;
+/*
+
+   if (filesel_no_cabe_todo) {
+                // mostrar * a la derecha para indicar donde estamos en porcentaje
+                //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
+                int ybase=ventana_y+5;
+                filesel_porcentaje_visible=((inicial+filesel_linea_seleccionada)*100)/(filesel_total_archivos+1); //+1 para no hacer division por cero
+                //int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
+
+                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
+                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea)==0)
+                //        porcentaje=100;
+
+                //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
+
+        int sumaralto=((FILESEL_ALTO_DIR)*filesel_porcentaje_visible)/100;
+        
+		printf ("Porcentaje cursor: %d\n",filesel_porcentaje_visible);
+		putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+
+    }
+
+						//PgDn
+					case 25:
+						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
+							menu_filesel_cursor_abajo();
+						//releer todas entradas
+						menu_speech_tecla_pulsada=0;
+						//y decir active item
+						menu_active_item_primera_vez=1;
+                                        break;
+
+					//PgUp
+					case 24:
+						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
+							menu_filesel_cursor_arriba();
+						//releer todas entradas
+						menu_speech_tecla_pulsada=0;
+						//y decir active item
+						menu_active_item_primera_vez=1;
+                                        break;
+
+
+
+ if (si_menu_mouse_en_ventana() && mouse_left && texto_no_cabe) {
+                                                                                printf ("mouse en ventana y pulsado y no cabe. x: %d y: %d ancho_ventana: %d alto_ventana: %d\n",
+                                                                                menu_mouse_x,menu_mouse_y,ancho_ventana,alto_ventana);
+                                                                                //              int sumaralto=((alto_ventana-3)*porcentaje)/100;
+                                                                                //putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+                                                                                if (menu_mouse_x==ancho_ventana-1 && menu_mouse_y>=1 && menu_mouse_y<alto_ventana-1) {
+                                                                                        printf ("mouse en zona barra porcentaje leido\n");
+                                                                                        tecla=0;
+
+                                                                                        int porcentaje_actual=((primera_linea+linea_cursor)*100)/(indice_linea+1); //+1 para no hacer division por cero
+                                                                                        printf ("porcentaje actual: %d\n",porcentaje_actual);
+                                                                                        int porcentaje_seleccionado=(menu_mouse_y*100)/alto_ventana;
+                                                                                        printf ("porcentaje seleccionado: %d\n",porcentaje_seleccionado);
+
+                                                                                        int diferencia_porcentaje=porcentaje_seleccionado-porcentaje_actual;
+                                                                                        if (diferencia_porcentaje>0) {
+                                                                                                //Bajar cursor. cuanto?
+                                                                                                //indice_linea es el total de lineas
+                                                                                                int lineas_bajar=(indice_linea*diferencia_porcentaje)/100;
+                                                                                                printf ("bajar %d lineas\n",lineas_bajar);
+
+                                                                                                for (;lineas_bajar;lineas_bajar--) {
+                                                                                                        primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+                                                                                                }
+                                                                                        }
+
+                                                                                        if (diferencia_porcentaje<0) {
+                                                                                                //Subir cursor. cuanto?
+                                                                                                //indice_linea es el total de lineas
+                                                                                                diferencia_porcentaje=-diferencia_porcentaje;
+                                                                                                int lineas_subir=(indice_linea*diferencia_porcentaje)/100;
+                                                                                                printf ("subir %d lineas\n",lineas_subir);
+
+                                                                                                for (;lineas_subir;lineas_subir--) {
+                                                                                                        primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+                                                                                                }
+                                                                                        }                                                                                       
+                                                                                }
+                                                                }
+
+*/
+
+
+						} 
 						//si seleccion es directorio
 						item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
 						menu_reset_counters_tecla_repeticion();
