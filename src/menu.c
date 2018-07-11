@@ -32179,6 +32179,12 @@ void menu_print_dir(int inicial)
 
     }
 
+	//espacios al final.
+    for (;i<mostrados_en_pantalla;i++) {
+                //printf ("espacios\n");
+                menu_filesel_print_file(" ",DT_REG,FILESEL_ANCHO-2,FILESEL_Y+3+i);
+    }	
+
 	//int texto_no_cabe=0;
 	filesel_no_cabe_todo=0;
 
@@ -32203,16 +32209,13 @@ void menu_print_dir(int inicial)
         int sumaralto=((FILESEL_ALTO_DIR)*filesel_porcentaje_visible)/100;
         
 		debug_printf (VERBOSE_DEBUG,"Percentage cursor: %d",filesel_porcentaje_visible);
+		debug_printf (VERBOSE_DEBUG,"Putting percentaje cursor at Y position: %d",ybase+sumaralto);
 		putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
     }
 
 
-	//espacios al final.
-    for (;i<mostrados_en_pantalla;i++) {
-                //printf ("espacios\n");
-                menu_filesel_print_file(" ",DT_REG,FILESEL_ANCHO-2,FILESEL_Y+3+i);
-    }
+
 
 
 	//Imprimir directorio actual
