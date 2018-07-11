@@ -33015,12 +33015,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 {
 
 	//En el caso de stdout es mucho mas simple
-        if (!strcmp(scr_driver_name,"stdout")) {
+    if (!strcmp(scr_driver_name,"stdout")) {
 		printf ("%s :\n",titulo);
 		scrstdout_menu_print_speech_macro(titulo);
 		scanf("%s",archivo);
 		return 1;
-        }
+    }
 
 
 
@@ -33034,18 +33034,18 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 	getcwd(filesel_directorio_inicial,PATH_MAX);
 
 
-        //printf ("confirm\n");
+    //printf ("confirm\n");
 
-        menu_espera_no_tecla();
-        menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
+	menu_espera_no_tecla();
+    menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
 
 	//guardamos filtros originales
 	filesel_filtros_iniciales=filtros;
 
 
 
-        filtros_todos_archivos[0]="";
-        filtros_todos_archivos[1]=0;
+    filtros_todos_archivos[0]="";
+    filtros_todos_archivos[1]=0;
 
 	//menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
 	menu_filesel_print_text_contents();
@@ -33089,12 +33089,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		do {
 			//printf ("\nReleer directorio\n");
 
-		switch (filesel_zona_pantalla) {
-			case 0:
+			switch (filesel_zona_pantalla) {
+				case 0:
 				//zona superior de nombre de archivo
-                                menu_print_dir(filesel_archivo_seleccionado);
-                                //para que haga lectura del edit box
-                                menu_speech_tecla_pulsada=0;
+                menu_print_dir(filesel_archivo_seleccionado);
+                //para que haga lectura del edit box
+                menu_speech_tecla_pulsada=0;
 
 				tecla=menu_scanf(filesel_nombre_archivo_seleccionado,PATH_MAX,22,FILESEL_X+7,FILESEL_Y+2);
 
@@ -33107,28 +33107,27 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				}
 
 				//ESC
-                                if (tecla==2) {
-                                                                        menu_filesel_exist_ESC();
-                                                                        return 0;
-
+                if (tecla==2) {
+                	menu_filesel_exist_ESC();
+                    return 0;
 				}
 
 				if (tecla==13) {
 
 					//Si es Windows y se escribe unidad: (ejemplo: "D:") hacer chdir
-				int unidadwindows=0;
+					int unidadwindows=0;
 #ifdef MINGW
 					if (filesel_nombre_archivo_seleccionado[0] &&
-					filesel_nombre_archivo_seleccionado[1]==':' &&
-					filesel_nombre_archivo_seleccionado[2]==0 )
-					{
+						filesel_nombre_archivo_seleccionado[1]==':' &&
+						filesel_nombre_archivo_seleccionado[2]==0 )
+						{
 						debug_printf (VERBOSE_INFO,"%s is a Windows drive",filesel_nombre_archivo_seleccionado);
 						unidadwindows=1;
 					}
 #endif
 
 
-				//si es directorio, cambiamos
+					//si es directorio, cambiamos
 					struct stat buf_stat;
 					int stat_valor;
 					stat_valor=stat(filesel_nombre_archivo_seleccionado, &buf_stat);
@@ -33153,30 +33152,31 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 					//sino, devolvemos nombre con path
 					else {
-                                                        cls_menu_overlay();
-                                                        menu_espera_no_tecla();
+                    	cls_menu_overlay();
+                        menu_espera_no_tecla();
 
-                                                       //unimos directorio y nombre archivo. siempre que inicio != '/'
-							if (filesel_nombre_archivo_seleccionado[0]!='/') {
-                                                          getcwd(archivo,PATH_MAX);
-                                                          sprintf(&archivo[strlen(archivo)],"/%s",filesel_nombre_archivo_seleccionado);
-							}
-							else sprintf(archivo,"%s",filesel_nombre_archivo_seleccionado);
+                        //unimos directorio y nombre archivo. siempre que inicio != '/'
+						if (filesel_nombre_archivo_seleccionado[0]!='/') {
+                        	getcwd(archivo,PATH_MAX);
+                            sprintf(&archivo[strlen(archivo)],"/%s",filesel_nombre_archivo_seleccionado);
+						}
+
+						else sprintf(archivo,"%s",filesel_nombre_archivo_seleccionado);
 
 
-                                                        menu_filesel_chdir(filesel_directorio_inicial);
-							menu_filesel_free_mem();
+                        menu_filesel_chdir(filesel_directorio_inicial);
+						menu_filesel_free_mem();
 
-							return menu_avisa_si_extension_no_habitual(filtros,archivo);
+						return menu_avisa_si_extension_no_habitual(filtros,archivo);
 
-							//Volver con OK
-                                                        //return 1;
+						//Volver con OK
+                        //return 1;
 
 					}
 				}
 
 				break;
-			break;
+			
 			case 1:
 				//zona selector de archivos
 
@@ -33185,7 +33185,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//Para no releer todas las entradas
 				menu_speech_tecla_pulsada=1;
 
-		                menu_refresca_pantalla();
+		        menu_refresca_pantalla();
 				menu_espera_tecla();
 				tecla=menu_get_pressed_key();
 
@@ -33194,35 +33194,35 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
 					//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
 					if (si_menu_mouse_en_ventana() ) {
-							//printf ("dentro ventana\n");
-							//Ver en que zona esta
-							int inicio_y_dir=1+FILESEL_INICIO_DIR;
-							if (si_mouse_zona_archivos()) {
+						//printf ("dentro ventana\n");
+						//Ver en que zona esta
+						int inicio_y_dir=1+FILESEL_INICIO_DIR;
+						if (si_mouse_zona_archivos()) {
 							//if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
-								//printf ("Dentro lista archivos\n");
+							//printf ("Dentro lista archivos\n");
 
-								//Ver si linea dentro de rango
-								int linea_final=menu_mouse_y-inicio_y_dir;
+							//Ver si linea dentro de rango
+							int linea_final=menu_mouse_y-inicio_y_dir;
 
-								//Si esta en la zona derecha de selector de porcentaje no hacer nada
-								//if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
-								if (menu_mouse_x==FILESEL_ANCHO-1) break;
+							//Si esta en la zona derecha de selector de porcentaje no hacer nada
+							//if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+							if (menu_mouse_x==FILESEL_ANCHO-1) break;
 
-								//filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
+							//filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
 
-								if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
-									filesel_linea_seleccionada=linea_final;
-									menu_speech_tecla_pulsada=1;
-								}
-								else {
-									//printf ("Cursor mas alla del ultimo item\n");
-								}
-
+							if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
+								filesel_linea_seleccionada=linea_final;
+								menu_speech_tecla_pulsada=1;
+							}
+							else {
+								//printf ("Cursor mas alla del ultimo item\n");
 							}
 
-							//Ya no tiene sentido hacer scroll al poner arriba o abajo de la zona de archivos el raton,
-							//pues ya se puede seleccionar porcentaje visible con el indicador derecho '*'
-							/*else if (menu_mouse_y==inicio_y_dir-1) {
+						}
+
+						//Ya no tiene sentido hacer scroll al poner arriba o abajo de la zona de archivos el raton,
+						//pues ya se puede seleccionar porcentaje visible con el indicador derecho '*'
+						/*else if (menu_mouse_y==inicio_y_dir-1) {
 								//Justo en la linea superior del directorio
 								menu_filesel_cursor_arriba();
 								menu_speech_tecla_pulsada=1;
@@ -33232,13 +33232,14 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								menu_filesel_cursor_abajo();
 								menu_speech_tecla_pulsada=1;
 							}
-							*/
-							else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
+						*/
+						
+						else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
 								//En la linea de filtros
 								//nada en especial
 								//printf ("En linea de filtros\n");
-							}
-				  }
+						}
+				  	}
 					else {
 						//printf ("fuera ventana\n");
 					}
@@ -33248,16 +33249,16 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				switch (tecla) {
 					//abajo
 					case 10:
-					menu_filesel_cursor_abajo();
-					//Para no releer todas las entradas
-					menu_speech_tecla_pulsada=1;
+						menu_filesel_cursor_abajo();
+						//Para no releer todas las entradas
+						menu_speech_tecla_pulsada=1;
 					break;
 
 					//arriba
 					case 11:
-					menu_filesel_cursor_arriba();
-					//Para no releer todas las entradas
-					menu_speech_tecla_pulsada=1;
+						menu_filesel_cursor_arriba();
+						//Para no releer todas las entradas
+						menu_speech_tecla_pulsada=1;
 					break;
 
 					//PgDn
@@ -33268,7 +33269,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_speech_tecla_pulsada=0;
 						//y decir active item
 						menu_active_item_primera_vez=1;
-                                        break;
+                    break;
 
 					//PgUp
 					case 24:
@@ -33278,9 +33279,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_speech_tecla_pulsada=0;
 						//y decir active item
 						menu_active_item_primera_vez=1;
-                                        break;
-
-
+                    break;
 
 
 					case 15:
@@ -33296,9 +33295,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//getcwd(archivo,PATH_MAX);
 						getcwd(menu_filesel_last_directory_seen,PATH_MAX);
 						//printf ("salimos con ESC. nombre directorio: %s\n",archivo);
-                                                                        menu_filesel_exist_ESC();
+                        menu_filesel_exist_ESC();
 
-                                                                        return 0;
+                        return 0;
 
 					break;
 
