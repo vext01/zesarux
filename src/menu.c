@@ -251,6 +251,9 @@ z80_bit menu_desactivado={0};
 //indica que el menu aparece en modo multitarea - mientras ejecuta codigo de emulacion de cpu
 int menu_multitarea=1;
 
+//Si se oculta la barra vertical en la zona de porcentaje de ventanas de texto o selector de archivos
+z80_bit menu_hide_vertical_percentaje_bar={0};
+
 //indica que se ha pulsado ESC y por tanto debe aparecer el menu
 //y tambien, la lectura de puertos de teclado (254) no devuelve nada
 int menu_abierto=0;
@@ -25362,6 +25365,11 @@ void menu_window_settings_reduce_075_ofy(MENU_ITEM_PARAMETERS)
         screen_reduce_offset_y=parse_string_to_number(string_offset);
 }
 
+void menu_interface_hide_vertical_perc_bar(MENU_ITEM_PARAMETERS)
+{
+		menu_hide_vertical_percentaje_bar.v ^=1;
+}
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -25417,6 +25425,10 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 														"Higher values mean you need a faster host machine to use ZEsarUX");
 #endif
 
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"~~Percentage bar: %s",(menu_hide_vertical_percentaje_bar.v ? "No" : "Yes") );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'p');
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
 
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -28405,8 +28417,10 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+alto_ventana-3,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
 		//mostrar linea vertical para indicar que es zona de porcentaje
-		int i;
-		for (i=0;i<alto_ventana-3;i++) 	putchar_menu_overlay(xventana+ancho_ventana-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		if (!menu_hide_vertical_percentaje_bar.v) {
+			int i;
+			for (i=0;i<alto_ventana-3;i++) 	putchar_menu_overlay(xventana+ancho_ventana-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		}
 		
 		int sumaralto=((alto_ventana-4)*porcentaje)/100;
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
@@ -29497,8 +29511,8 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"\n\n"
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
-			"- Use Enter or left mouse click to select item\n"
-			"- Use Space to expand files, like tap or hdf\n"
+			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
+			"- Use Space to expand files, currently supported: tap, mdv, hdf\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
@@ -32213,8 +32227,10 @@ void menu_print_dir(int inicial)
                 //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
 
 		//Mostrar linea de barra de progreso vertical
-		int i;
-		for (i=0;i<FILESEL_ALTO_DIR+1;i++) putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+		if (!menu_hide_vertical_percentaje_bar.v) {
+			int i;
+			for (i=0;i<FILESEL_ALTO_DIR+1;i++) putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+		}
 
         int sumaralto=((FILESEL_ALTO_DIR)*filesel_porcentaje_visible)/100;
         
@@ -32805,6 +32821,8 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
                 debug_printf (VERBOSE_DEBUG,"Is a mdv file");
                 return util_extract_mdv(archivo,tmpdir);
         }
+
+		//else debug_printf(VERBOSE_DEBUG,"Don't know how to expand that file");
 
 
         return 1;
