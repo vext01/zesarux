@@ -28397,13 +28397,19 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
 		debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
 
-		int sumaralto=((alto_ventana-4)*porcentaje)/100;
-		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+
 
 
 		//mostrar cursores arriba y abajo
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase-1,'^',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+alto_ventana-3,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+
+		//mostrar linea vertical para indicar que es zona de porcentaje
+		int i;
+		for (i=0;i<alto_ventana-3;i++) 	putchar_menu_overlay(xventana+ancho_ventana-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+
+		int sumaralto=((alto_ventana-4)*porcentaje)/100;
+		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
 	}
 
@@ -32205,6 +32211,10 @@ void menu_print_dir(int inicial)
                 //        porcentaje=100;
 
                 //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
+
+		//Mostrar linea de barra de progreso vertical
+		int i;
+		for (i=0;i<FILESEL_ALTO_DIR+1;i++) putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
         int sumaralto=((FILESEL_ALTO_DIR)*filesel_porcentaje_visible)/100;
         
