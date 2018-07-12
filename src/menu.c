@@ -33388,90 +33388,92 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 							//Si se ha pulsado boton pero fuera de la zona de archivos, no hacer nada
 							if (!si_mouse_zona_archivos() ) break;
-						}
-
-
-
-						//if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) return 1;
-
-						//Si zona derecha (de indicador de porcentaje) y hay indicador de porcentaje activo
-						if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
-							debug_printf (VERBOSE_DEBUG,"Mouse clicked percentage bar zone");
-							//printf ("Posicion: %d inicio_dir: %d\n",menu_mouse_y,FILESEL_INICIO_DIR);
-
-
-							int porcentaje_seleccionado=((menu_mouse_y-FILESEL_INICIO_DIR-1)*100)/FILESEL_ALTO_DIR;
-							//printf ("Porcentaje seleccionado: %d actual: %d\n",porcentaje_seleccionado,filesel_porcentaje_visible);	
-
-							debug_printf (VERBOSE_DEBUG,"Current percentage: %d Percentage clicked: %d",filesel_porcentaje_visible,porcentaje_seleccionado);
 						
 
-							//Si esta arriba del todo, cambiamos directamente la posicion
-							if (menu_mouse_y==FILESEL_INICIO_DIR+1) {
-								debug_printf (VERBOSE_DEBUG,"Forcing to first position");
-								filesel_linea_seleccionada=0;
-								filesel_archivo_seleccionado=0;
-								break;
-							}
 
-							if (menu_mouse_y==FILESEL_INICIO_DIR+FILESEL_ALTO_DIR) {
-								debug_printf (VERBOSE_DEBUG,"Forcing to last position");
-								//printf ("Forzamos a ultima posicion. Primero visible: %d. linea seleccionada: %d total: %d\n",filesel_archivo_seleccionado,filesel_linea_seleccionada,filesel_total_archivos);
+
+							//if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) return 1;
+
+							//Si zona derecha (de indicador de porcentaje) y hay indicador de porcentaje activo
+							if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+								debug_printf (VERBOSE_DEBUG,"Mouse clicked percentage bar zone");
+								//printf ("Posicion: %d inicio_dir: %d\n",menu_mouse_y,FILESEL_INICIO_DIR);
+
+
+								int porcentaje_seleccionado=((menu_mouse_y-FILESEL_INICIO_DIR-1)*100)/FILESEL_ALTO_DIR;
+								//printf ("Porcentaje seleccionado: %d actual: %d\n",porcentaje_seleccionado,filesel_porcentaje_visible);	
+
+								debug_printf (VERBOSE_DEBUG,"Current percentage: %d Percentage clicked: %d",filesel_porcentaje_visible,porcentaje_seleccionado);
+						
+
+								//Si esta arriba del todo, cambiamos directamente la posicion
+								if (menu_mouse_y==FILESEL_INICIO_DIR+1) {
+									debug_printf (VERBOSE_DEBUG,"Forcing to first position");
+									filesel_linea_seleccionada=0;
+									filesel_archivo_seleccionado=0;
+									break;
+								}
+
+								if (menu_mouse_y==FILESEL_INICIO_DIR+FILESEL_ALTO_DIR) {
+									debug_printf (VERBOSE_DEBUG,"Forcing to last position");
+									//printf ("Forzamos a ultima posicion. Primero visible: %d. linea seleccionada: %d total: %d\n",filesel_archivo_seleccionado,filesel_linea_seleccionada,filesel_total_archivos);
 								
-								filesel_linea_seleccionada=FILESEL_ALTO_DIR-1;
-								filesel_archivo_seleccionado=filesel_total_archivos-1-filesel_linea_seleccionada;
-								//printf ("Archivo seleccionado: %d. Primero visible: %d\n",filesel_archivo_seleccionado,filesel_linea_seleccionada);
+									filesel_linea_seleccionada=FILESEL_ALTO_DIR-1;
+									filesel_archivo_seleccionado=filesel_total_archivos-1-filesel_linea_seleccionada;
+									//printf ("Archivo seleccionado: %d. Primero visible: %d\n",filesel_archivo_seleccionado,filesel_linea_seleccionada);
+
+									break;
+								}
+
+
+
+								int diferencia_porcentaje=porcentaje_seleccionado-filesel_porcentaje_visible;
+                            	if (diferencia_porcentaje>0) {
+			                        //Bajar cursor. cuanto?
+            	                    //indice_linea es el total de lineas
+                	                int lineas_bajar=(filesel_total_archivos*diferencia_porcentaje)/100;
+									 debug_printf (VERBOSE_DEBUG,"Going down %d lines",lineas_bajar);
+
+
+                        	        for (;lineas_bajar;lineas_bajar--) {
+                            	      menu_filesel_cursor_abajo();
+									}
+								//releer todas entradas
+								menu_speech_tecla_pulsada=0;
+								//y decir active item
+								menu_active_item_primera_vez=1;
+                                        
+               
+               		         	}
+							
+								if (diferencia_porcentaje<0) {
+    	                            //Subir cursor. cuanto?
+        	                        //indice_linea es el total de lineas
+									diferencia_porcentaje=-diferencia_porcentaje;
+                	                int lineas_subir=(filesel_total_archivos*diferencia_porcentaje)/100;
+									 debug_printf (VERBOSE_DEBUG,"Going up %d lines",lineas_subir);
+
+
+                        	        for (;lineas_subir;lineas_subir--) {
+                            	      menu_filesel_cursor_arriba();
+									}
+								//releer todas entradas
+								menu_speech_tecla_pulsada=0;
+								//y decir active item
+								menu_active_item_primera_vez=1;
+                                        
+               
+	           		        	}
 
 								break;
-							}
+
+							} 
 
 
+							//Si zona derecha (de indicador de porcentaje) aunque no hay indicador de porcentaje activo, no hacer nada
+							if (menu_mouse_x==FILESEL_ANCHO-1) break;
 
-							  int diferencia_porcentaje=porcentaje_seleccionado-filesel_porcentaje_visible;
-                            if (diferencia_porcentaje>0) {
-                                //Bajar cursor. cuanto?
-                                //indice_linea es el total de lineas
-                                int lineas_bajar=(filesel_total_archivos*diferencia_porcentaje)/100;
-								 debug_printf (VERBOSE_DEBUG,"Going down %d lines",lineas_bajar);
-
-
-                                for (;lineas_bajar;lineas_bajar--) {
-                                  menu_filesel_cursor_abajo();
-								}
-						//releer todas entradas
-						menu_speech_tecla_pulsada=0;
-						//y decir active item
-						menu_active_item_primera_vez=1;
-                                        
-               
-               		         }
-							
-							if (diferencia_porcentaje<0) {
-                                //Subir cursor. cuanto?
-                                //indice_linea es el total de lineas
-								diferencia_porcentaje=-diferencia_porcentaje;
-                                int lineas_subir=(filesel_total_archivos*diferencia_porcentaje)/100;
-								 debug_printf (VERBOSE_DEBUG,"Going up %d lines",lineas_subir);
-
-
-                                for (;lineas_subir;lineas_subir--) {
-                                  menu_filesel_cursor_arriba();
-								}
-						//releer todas entradas
-						menu_speech_tecla_pulsada=0;
-						//y decir active item
-						menu_active_item_primera_vez=1;
-                                        
-               
-               		         }
-
-							break;
-
-						} 
-
-
-						//Si zona derecha (de indicador de porcentaje) aunque no hay indicador de porcentaje activo, no hacer nada
-						if (menu_mouse_x==FILESEL_ANCHO-1) break;
+						}
 
 						//si seleccion es directorio
 						item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
