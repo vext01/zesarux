@@ -312,6 +312,8 @@ extern void cls_menu_overlay(void);
 extern int menu_multitarea;
 extern int menu_abierto;
 
+extern z80_bit menu_hide_vertical_percentaje_bar;
+
 extern int if_pending_error_message;
 extern char pending_error_message[];
 

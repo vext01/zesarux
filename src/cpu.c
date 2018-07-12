@@ -1554,6 +1554,11 @@ printf (
 #ifndef MINGW
 		"--cpu-usage                Show host CPU usage on footer\n"
 #endif
+
+	
+
+		"--hide-menu-percentage-bar Hides vertical percentaje bar on the right of text windows and file selector\n"
+
 		"--nowelcomemessage         Disable welcome message\n"
 		"--red                      Force display mode with red colour\n"
 		"--green                    Force display mode with green colour\n"
@@ -5802,6 +5807,12 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--nowelcomemessage")) {
                                 opcion_no_splash.v=1;
 			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--hide-menu-percentage-bar")) {
+                                menu_hide_vertical_percentaje_bar.v=0;
+			}
+
 
 			else if (!strcmp(argv[puntero_parametro],"--realvideo")) {
 				enable_rainbow();
