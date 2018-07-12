@@ -28407,7 +28407,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 		//mostrar linea vertical para indicar que es zona de porcentaje
 		int i;
 		for (i=0;i<alto_ventana-3;i++) 	putchar_menu_overlay(xventana+ancho_ventana-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
-
+		
 		int sumaralto=((alto_ventana-4)*porcentaje)/100;
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
