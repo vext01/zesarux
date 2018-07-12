@@ -5810,7 +5810,7 @@ int parse_cmdline_options(void) {
 
 
 			else if (!strcmp(argv[puntero_parametro],"--hide-menu-percentage-bar")) {
-                                menu_hide_vertical_percentaje_bar.v=0;
+                                menu_hide_vertical_percentaje_bar.v=1;
 			}
 
 
