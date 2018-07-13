@@ -9,8 +9,8 @@ Improved menu:
 * now you can use binary numbers on expressions
 * you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
 * now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
-Now some files can be expanded with Space key on file selector, like mdf, hdf or tap
-Added browser for .bas spectrum basic files
+New file expander on file selector menu, with space keys, for the following file types : .tap, .mdf, .hdf, .P, .O
+Added browser for .bas spectrum basic files, .baszx80 (Basic ZX80), .baszx81 (Basic ZX81)
 Added ZXUno DMA emulation
 
 Improved debugger:

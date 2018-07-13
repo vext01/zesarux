@@ -19975,7 +19975,7 @@ void menu_file_basic_browser_show(char *filename)
 	if (!util_compare_file_extension(filename,"baszx81")) {
 
                 //ZX81
-                dir_inicio_linea=116;
+                dir_inicio_linea=116; //16509-0x4009
 
                 //D_FILE
                 //final_basic=peek_byte_no_time(0x400C)+256*peek_byte_no_time(0x400D);
@@ -19987,6 +19987,23 @@ void menu_file_basic_browser_show(char *filename)
 				tipo=2;
 
 	}
+
+	else if (!util_compare_file_extension(filename,"baszx80")) {
+
+                //ZX80
+            //ZX80
+                  dir_inicio_linea=40; //16424-16384
+
+                  //VARS
+                  //final_basic=peek_byte_no_time(0x4008)+256*peek_byte_no_time(0x4009);
+
+                  dir_tokens=zx80_rom_tokens;
+
+                  inicio_tokens=213;
+
+                tipo=1;
+
+	}	
 
 	else {
 		//.bas
@@ -23099,6 +23116,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"bas")) menu_file_basic_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"baszx80")) menu_file_basic_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"baszx81")) menu_file_basic_browser_show(file_name);
 
@@ -29542,7 +29561,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
-			"- Use Space to expand files, currently supported: tap, mdv, hdf\n"
+			"- Use Space to expand files, currently supported: tap, mdv, hdf, P, O\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
@@ -32850,7 +32869,12 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
         else if (!util_compare_file_extension(archivo,"p") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a P file");
         	return util_extract_p(archivo,tmpdir);
-        }		
+        }	
+
+        else if (!util_compare_file_extension(archivo,"o") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a O file");
+        	return util_extract_o(archivo,tmpdir);
+        }				
 
         else if ( !util_compare_file_extension(archivo,"mdv") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a mdv file");
