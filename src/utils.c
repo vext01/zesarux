@@ -10776,3 +10776,22 @@ int util_extract_tap(char *filename,char *tempdir)
 }
 
 
+//Realmente lo que hacemos es copiar el .p en .baszx81
+int util_extract_p(char *filename,char *tempdir)
+{
+
+	
+	//tapefile
+	if (util_compare_file_extension(filename,"p")!=0) {
+		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
+		return 1;
+	}
+
+        char buffer_temp_file[PATH_MAX];
+        sprintf (buffer_temp_file,"%s/basic-data.baszx81",tempdir);
+
+        util_copy_file(filename, buffer_temp_file);
+
+	return 0;
+
+}

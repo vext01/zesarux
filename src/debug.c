@@ -3084,8 +3084,9 @@ void debug_set_breakpoint_action(int breakpoint_index,char *accion)
 }
 
 
-
-void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir) )
+//tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
+void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,
+int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo )
 {
 
 	  	z80_int dir;
@@ -3123,7 +3124,7 @@ void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int 
   		index_buffer +=4;
 
   		//obtener longitud linea. orden normal. zx80 no tiene esto
-  		if (!MACHINE_IS_ZX80) {
+  		if (tipo!=1) {
 
   			//longitud_linea=(peek_byte_no_time(dir++))+256*peek_byte_no_time(dir++);
   			longitud_linea=(lee_byte_function(dir++));
@@ -3142,7 +3143,7 @@ void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int 
   			byte_leido=lee_byte_function(dir++);
   			longitud_linea--;
 
-  			if (MACHINE_IS_ZX8081) {
+  			if (tipo==1 || tipo==2) {
   				//numero
   				if (byte_leido==126) byte_leido=14;
 
@@ -3152,7 +3153,7 @@ void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int 
   				//Convertimos a ASCII
   				else {
 
-  					if (MACHINE_IS_ZX81) {
+  					if (tipo==2) {
   						if (byte_leido>=64 && byte_leido<=66) {
   							//tokens EN ZX81, 64=RND, 65=PI, 66=INKEY$
 
@@ -3171,7 +3172,7 @@ void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int 
 
 
   					if (byte_leido<=63) {
-  						if (MACHINE_IS_ZX81) byte_leido=da_codigo_zx81_no_artistic(byte_leido);
+  						if (tipo==2) byte_leido=da_codigo_zx81_no_artistic(byte_leido);
   						else byte_leido=da_codigo_zx80_no_artistic(byte_leido);
   					}
 
@@ -3193,7 +3194,7 @@ void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int 
 
   			else if (byte_leido>=inicio_tokens) {
 
-  				if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX80) {
+  				if (tipo==0 || tipo==1) {
   					//si lo de antes no es un token, meter espacio
   					if (lo_ultimo_es_un_token==0) {
   						results_buffer[index_buffer++]=' ';
@@ -3220,7 +3221,7 @@ void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int 
 
   			else if (byte_leido==13) {
   				//ignorar salto de linea excepto en zx80
-  				if (MACHINE_IS_ZX80) {
+  				if (tipo==1) {
   					longitud_linea=0;
   					dir_inicio_linea=dir;
   				}
@@ -3278,6 +3279,8 @@ void debug_view_basic(char *results_buffer)
   	int dir_inicio_linea;
   	int final_basic;
 
+	int tipo=0; //Asumimos spectrum
+
 
 
   	if (MACHINE_IS_SPECTRUM) {
@@ -3305,6 +3308,8 @@ void debug_view_basic(char *results_buffer)
   		dir_tokens=zx81_rom_tokens;
 
   		inicio_tokens=192;
+
+		tipo=2;
   	}
 
           //else if (MACHINE_IS_ZX80) {
@@ -3318,10 +3323,12 @@ void debug_view_basic(char *results_buffer)
                   dir_tokens=zx80_rom_tokens;
 
                   inicio_tokens=213;
+
+		tipo=1;
     }
 
 
-	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,final_basic,dir_tokens,inicio_tokens,peek_byte_no_time);
+	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,final_basic,dir_tokens,inicio_tokens,peek_byte_no_time,tipo);
 
 }
 

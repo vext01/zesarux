@@ -19962,7 +19962,36 @@ void menu_file_basic_browser_show(char *filename)
 
     fclose(ptr_file_bas_browser);
 
-	//Deducimos si es un simple .bas de texto normal, o es de basic spectrum/zx80/zx81 con tokens
+	char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+
+  	char **dir_tokens;
+  	int inicio_tokens;	
+
+	int dir_inicio_linea=0;
+
+	int tipo=0; //Asumimos spectrum
+
+	//Si es basic zx81
+	if (!util_compare_file_extension(filename,"baszx81")) {
+
+                //ZX81
+                dir_inicio_linea=116;
+
+                //D_FILE
+                //final_basic=peek_byte_no_time(0x400C)+256*peek_byte_no_time(0x400D);
+
+                dir_tokens=zx81_rom_tokens;
+
+                inicio_tokens=192;
+
+				tipo=2;
+
+	}
+
+	else {
+		//.bas
+
+	//Deducimos si es un simple .bas de texto normal, o es de basic spectrum
 	//Comprobacion facil, primeros dos bytes contiene numero de linea. Asumimos que si los dos son caracteres ascii imprimibles, son de texto
 	if (leidos>2) {
 		z80_byte caracter1=memoria[0];
@@ -19980,17 +20009,16 @@ void menu_file_basic_browser_show(char *filename)
 	}
 
 
-	        char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
-//de momento asumir basic spectrum
-  	char **dir_tokens;
-  	int inicio_tokens;
 
+
+	//basic spectrum
   		dir_tokens=spectrum_rom_tokens;
 
   		inicio_tokens=163;
+	}
 
 
-	debug_view_basic_from_memory(results_buffer,0,tamanyo,dir_tokens,inicio_tokens,menu_file_bas_browser_show_peek);
+	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,tamanyo,dir_tokens,inicio_tokens,menu_file_bas_browser_show_peek,tipo);
 
   menu_generic_message_format("View Basic","%s",results_buffer);
 	free(memoria);
@@ -23071,6 +23099,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"bas")) menu_file_basic_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"baszx81")) menu_file_basic_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
 
@@ -32816,6 +32846,11 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
                 debug_printf (VERBOSE_DEBUG,"Is a tap file");
         	return util_extract_tap(archivo,tmpdir);
         }
+
+        else if (!util_compare_file_extension(archivo,"p") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a P file");
+        	return util_extract_p(archivo,tmpdir);
+        }		
 
         else if ( !util_compare_file_extension(archivo,"mdv") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a mdv file");
