@@ -10,7 +10,7 @@ Improved menu:
 * you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
 * now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
 New file expander on file selector menu, with space keys, for the following file types : .tap, .mdf, .hdf, .P, .O
-Added browser for .bas spectrum basic files, .baszx80 (Basic ZX80), .baszx81 (Basic ZX81)
+Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens)
 Added ZXUno DMA emulation
 
 Improved debugger:
