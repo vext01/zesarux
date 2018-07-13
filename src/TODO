@@ -40,7 +40,7 @@ dicho visor no tendria que entender los tags especiales de texto...
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
--visor basic de archivos para zx81 y zx80
+-visor basic de archivos para zx81 y zx80: para .P y .O? o para que? para .bas?
 
 -expansor de archivos .tzx binarios, del estilo de los mismos que hace browse
 
@@ -73,7 +73,7 @@ En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no v
 
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 
--Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
+-en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 
 -memory zone para Timex
 
@@ -99,9 +99,6 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 255,0) y ya va
 
 -esc en curses parece que no va ni en mac ni en linux
-
--TBBlue: autoload.  Se desactivo en la 7.0 porque al hacer autoload, hace reset, y luego suele fallar el arranque con error: Bad nextmmc.rom
-Ademas, el envio de enter para ir al cargador , tiene que ser mejor: flecha arriba 2 veces, luego enter, pues cambiaron el orden de dicho menu
 
 -menus de debug tsconf en stdout no se ven bien del todo. y en lista de sprites y tiles no se puede salir. en menu debug cpu tampoco se puede salir
 

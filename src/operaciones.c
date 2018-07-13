@@ -4417,6 +4417,7 @@ void envia_jload_desactivar(void)
 }
 
 z80_byte envia_load_pp_spectrum(z80_byte puerto_h);
+z80_byte envia_load_spectrum_nextos(z80_byte puerto_h);
 
 z80_byte envia_jload_pp_spectrum(z80_byte puerto_h)
 {
@@ -4450,6 +4451,12 @@ z80_byte envia_jload_pp_spectrum(z80_byte puerto_h)
 				return envia_load_pp_spectrum(puerto_h);
 
 			}
+
+			if (autoload_spectrum_loadpp_mode==3) {
+				//Cursor arriba dos veces y enter para NextOS
+				return envia_load_spectrum_nextos(puerto_h);
+
+			}			
 
 
                         if (initial_tap_sequence>SEQUENCE_ENTER1_MIN && initial_tap_sequence<SEQUENCE_ENTER1_MAX && puerto_h==191)  {
@@ -4595,6 +4602,63 @@ z80_byte envia_load_pp_spectrum(z80_byte puerto_h)
 //puerto_65022    db              255  ; G    F    D    S    A     ;1
 //puerto_57342    db              255  ; Y    U    I    O    P     ;5
 //puerto_49150    db              255  ; H    J    K    L    Enter ;6
+
+*/
+
+
+}
+
+
+
+
+//Enviar cursor arriba dos veces y enter para nextos
+z80_byte envia_load_spectrum_nextos(z80_byte puerto_h)
+{
+
+#define DURA3_TECLA 30
+#define DURA3_SILENCIO 22
+
+#define SEQUENCE3_CURSOR1_MIN DURA3_SILENCIO
+#define SEQUENCE3_CURSOR1_MAX SEQUENCE3_CURSOR1_MIN+DURA3_TECLA
+
+//Dado que es la misma tecla dos veces, hay que dar mas pausa (*3) para que detecte dos teclas separadas, y no la misma pulsada
+#define SEQUENCE3_CURSOR2_MIN SEQUENCE3_CURSOR1_MAX+DURA3_SILENCIO*3
+#define SEQUENCE3_CURSOR2_MAX SEQUENCE3_CURSOR2_MIN+DURA3_TECLA
+
+#define SEQUENCE3_ENTER_MIN SEQUENCE3_CURSOR2_MAX+DURA3_SILENCIO
+#define SEQUENCE3_ENTER_MAX SEQUENCE3_ENTER_MIN+DURA3_TECLA
+
+
+
+                        if (initial_tap_sequence>SEQUENCE3_CURSOR1_MIN && initial_tap_sequence<SEQUENCE3_CURSOR1_MAX && puerto_h==239)  {
+                                return 255-8; //Cursor arriba
+                        }
+
+
+                        if (initial_tap_sequence>SEQUENCE3_CURSOR2_MIN && initial_tap_sequence<SEQUENCE3_CURSOR2_MAX && puerto_h==239)  {
+                                return 255-8; //Cursor arriba
+                        }			
+
+
+                        if (initial_tap_sequence>SEQUENCE3_ENTER_MIN && initial_tap_sequence<SEQUENCE3_ENTER_MAX && puerto_h==191)  {
+                                return 255-1; //ENTER
+                        }
+
+
+                        if (initial_tap_sequence<SEQUENCE3_ENTER_MAX) initial_tap_sequence++;
+                        else envia_jload_desactivar();
+
+                        return 255;
+/*
+//Tablas teclado
+z80_byte puerto_65278=255; //    db    255  ; V    C    X    Z    Sh    ;0
+z80_byte puerto_65022=255; //    db    255  ; G    F    D    S    A     ;1
+z80_byte puerto_64510=255; //    db              255  ; T    R    E    W    Q     ;2
+z80_byte puerto_63486=255; //    db              255  ; 5    4    3    2    1     ;3
+z80_byte puerto_61438=255; //    db              255  ; 6    7    8    9    0     ;4
+z80_byte puerto_57342=255; //    db              255  ; Y    U    I    O    P     ;5
+z80_byte puerto_49150=255; //    db              255  ; H                J         K      L    Enter ;6
+z80_byte puerto_32766=255; //    db              255  ; B    N    M    Simb Space ;7
 
 */
 

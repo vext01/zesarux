@@ -19,6 +19,8 @@ Improved debugger:
 **OUTFIRED: returns 1 if last Z80 opcode was an OUT operation
 **INFIRED: returns 1 if last Z80 opcode was an IN operation
 
+Fixed autoload tape on TBBlue
+
 
 Some other minor bugfixes and improvements
 
