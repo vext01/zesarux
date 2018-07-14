@@ -160,7 +160,8 @@ int debug_exitrom=0;
 int debug_fired_out=0;
 //Avisa que el ultimo opcode ha sido un in a puerto, para poder hacer breakpoints con esto
 int debug_fired_in=0;
-
+//Avisa que se ha generado interrupcion, para poder hacer breakpoints con esto
+int debug_fired_interrupt=0;
 
 //Mensaje que ha hecho saltar el breakpoint
 char catch_breakpoint_message[MAX_MESSAGE_CATCH_BREAKPOINT];
@@ -1017,6 +1018,8 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 	if (!strcasecmp(registro,"outfired")) return debug_fired_out;
 	//se acaba de lanzar un in
 	if (!strcasecmp(registro,"infired")) return debug_fired_in;
+	//se acaba de generar una interrupcion
+	if (!strcasecmp(registro,"intfired")) return debug_fired_interrupt;	
 
 	//enterrom, exitrom
 /*
@@ -1693,6 +1696,9 @@ z80_byte cpu_core_loop_debug(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 	//Si se ejecuta un out en el core (justo despues que esto) se activara dicha variable
 	debug_fired_in=0;
 	//Si se ejecuta un in en el core (justo despues que esto) se activara dicha variable
+	debug_fired_interrupt=0;
+	//Si se ejecuta un in en el core (justo despues que esto) se activara dicha variable
+
 
   	//Llamamos al core normal
 	debug_nested_core_call_previous(debug_nested_id_core);

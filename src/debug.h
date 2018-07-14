@@ -302,7 +302,7 @@ extern int debug_text_is_pc_condition(char *cond);
 
 extern int debug_fired_out;
 extern int debug_fired_in;
-
+extern int debug_fired_interrupt;
 
 
 #endif

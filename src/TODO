@@ -11,6 +11,9 @@ sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de
 -alsa no va bien. dejamos de momento driver en mono
 -dsp: ok
 
+
+
+
 -audio out to file rwa, wav ok
 Probar bien rwa de salida, wav de salida y carga rwa tanto viejos como nuevos 
 *rwa tiene que ser mono
@@ -23,6 +26,14 @@ renombrarla
 ->core reduced usara mono?
 
 --- Cosas para la siguiente version
+
+
+-expansor de dsk y trd
+
+-Opción para generar un .config con opciones en curso, opciones basicas
+
+
+* Breakpoint on NMI/INT
 
 -formato zsf debe guardar iff1 y iff2 por separado
 
@@ -1711,15 +1722,11 @@ no-thread no funcionara tampoco
 
 -Mostrar consumo de cpu solo del proceso del emulador?
 
--menus transparentes
-
 -acceso a cintas, snaps , etc de archive WOS. Hacer un browser sencillo html para poder navegar entre las cintas
 
 -Browser cintas que permita alterar la posición de la cinta
 
--spectrum .basic browser ? pero la mayoría están dentro de taps
 
--Browser completo de dsk que permita extraer archivos 
 
 -incluir pantallas de teclado spectrum, zx80,zx81, z88, etc
 
@@ -1875,8 +1882,6 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 -Nuevas variables para breakpoint:
 Modo de vídeo timex /Spectra/etc
 
--watches que retorne valor de opcode. tiene sentido???
-
 -mejorar valor que se retorna cuando se lee bus idle port. Revisar rutina
 
 -Al expulsar cinta real o insertar, meter speed a 100. Esto para cuando hay autoacelerar rutinas de carga
@@ -2011,7 +2016,6 @@ Los de SPIN parece que si que van. No siempre: abu simbel falla
 Quiza el fallo no es al leer el RZX sino en la emulacion del spectrum... quiza hay algun momento en que se genera una interrupcion de mas? o de menos?
 algo que descuadra la lectura de puertos (alguna de mas o de menos) y ya por eso deja de funcionar bien la secuencia de INs del archivo RZX
 
--Opción para generar un .config con opciones en curso, opciones basicas
 
 -soporte de carga szx? Y quizá grabación también? Problema con compresion de datos, hay que usar libreria externa
 
@@ -2175,12 +2179,10 @@ Segun MESS:
 **
 
 
--soporte joystick para mac os x
 
 -Emular chips de memoria con fallos
 
 
-* Breakpoint on NMI/INT
 
 -Inves. Ver que juegos se corrompe la memoria debido a interrupción. Quizá ver aquellos que no usan tabla entera de 257
 
