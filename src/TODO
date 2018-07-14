@@ -33,9 +33,9 @@ renombrarla
 -Opción para generar un .config con opciones en curso, opciones basicas
 
 
-* Breakpoint on NMI/INT
-
 -formato zsf debe guardar iff1 y iff2 por separado
+
+-al cambiar de core reduced o no, si habia breakpoints, aparecen como activos aunque realmente el core no esta usando el debug core (se ha perdido el nested)
 
 
 -en visor hexadecimal de file utils, si hay archivo con caracter 7E (~~~) como orquesta.rwa, se acaba viendo texto inverso.
