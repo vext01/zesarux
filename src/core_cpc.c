@@ -367,6 +367,8 @@ void cpu_core_loop_cpc(void)
 		//Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en cpc o al cambio de bit6 de R en zx80/81
 		if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
 
+			debug_fired_interrupt=1;
+
 			//if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
 
                         //if (interrupts.v==1) {   //esto ya no se mira. si se ha producido interrupcion es porque estaba en ei o es una NMI

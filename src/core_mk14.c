@@ -251,7 +251,7 @@ else printf ("   ");
 		//Interrupcion de cpu. gestion im0/1/2.
 		if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
 
-
+			debug_fired_interrupt=1;
 
                         //ver si esta en HALT
                         if (z80_ejecutando_halt.v) {

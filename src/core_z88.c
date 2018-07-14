@@ -179,6 +179,8 @@ void z88_gestionar_tim(void)
 //gestionar INT o NMI
 void z88_gestionar_interrupcion(void)
 {
+
+	debug_fired_interrupt=1;
                         //ver si esta en HALT
                         if (z80_ejecutando_halt.v) {
                                         z80_ejecutando_halt.v=0;

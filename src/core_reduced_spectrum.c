@@ -380,6 +380,8 @@ void cpu_core_loop_reduced_spectrum(void)
 		//Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en spectrum o al cambio de bit6 de R en zx80/81
 		if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
 
+			debug_fired_interrupt=1;
+
 			//printf ("Generada interrupcion Z80\n");
 
 			
