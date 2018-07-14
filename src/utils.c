@@ -10776,43 +10776,128 @@ int util_extract_tap(char *filename,char *tempdir)
 }
 
 
-//Realmente lo que hacemos es copiar el .p en .baszx81
+//Realmente lo que hacemos es copiar el .p en .baszx81 con un offset , saltando datos iniciales para situarnos en el programa basic
 int util_extract_p(char *filename,char *tempdir)
 {
 
 	
 	//tapefile
 	if (util_compare_file_extension(filename,"p")!=0) {
-		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
+		debug_printf(VERBOSE_ERR,"Expander not supported for this file type");
 		return 1;
 	}
+
+
+	//Leemos archivo en memoria
+	int total_mem=get_file_size(filename);
+
+	z80_byte *taperead;
+
+
+
+        FILE *ptr_tapebrowser;
+        ptr_tapebrowser=fopen(filename,"rb");
+
+        if (!ptr_tapebrowser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return 1; 
+	}
+
+	taperead=malloc(total_mem);
+	if (taperead==NULL) cpu_panic("Error allocating memory for expander");
+
+
+        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading tape");
+		free(taperead);
+                return 1;
+        }
+
+
+        fclose(ptr_tapebrowser);
+
+
 
         char buffer_temp_file[PATH_MAX];
         sprintf (buffer_temp_file,"%s/basic-data.baszx81",tempdir);
 
-        util_copy_file(filename, buffer_temp_file);
+        int offset=116;
+        //116 = 16509-0x4009
+
+        int longitud_final=total_mem-offset;
+
+        util_save_file(&taperead[offset],longitud_final,buffer_temp_file);
+        
+
+        free(taperead);
 
 	return 0;
 
 }
 
 
-//Realmente lo que hacemos es copiar el .o en .baszx80
+//Realmente lo que hacemos es copiar el .o en .baszx80 con un offset , saltando datos iniciales para situarnos en el programa basic
 int util_extract_o(char *filename,char *tempdir)
 {
 
 	
 	//tapefile
 	if (util_compare_file_extension(filename,"o")!=0) {
-		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
+		debug_printf(VERBOSE_ERR,"Expander not supported for this file type");
 		return 1;
 	}
+
+
+	//Leemos archivo en memoria
+	int total_mem=get_file_size(filename);
+
+	z80_byte *taperead;
+
+
+
+        FILE *ptr_tapebrowser;
+        ptr_tapebrowser=fopen(filename,"rb");
+
+        if (!ptr_tapebrowser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return 1; 
+	}
+
+	taperead=malloc(total_mem);
+	if (taperead==NULL) cpu_panic("Error allocating memory for expander");
+
+
+        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading tape");
+		free(taperead);
+                return 1;
+        }
+
+
+        fclose(ptr_tapebrowser);
+
+
 
         char buffer_temp_file[PATH_MAX];
         sprintf (buffer_temp_file,"%s/basic-data.baszx80",tempdir);
 
-        util_copy_file(filename, buffer_temp_file);
+        int offset=40;
+        //40 = 16424-16384
+
+        int longitud_final=total_mem-offset;
+
+        util_save_file(&taperead[offset],longitud_final,buffer_temp_file);
+        
+
+        free(taperead);
 
 	return 0;
 
 }
+
+
+

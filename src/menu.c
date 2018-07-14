@@ -19975,7 +19975,8 @@ void menu_file_basic_browser_show(char *filename)
 	if (!util_compare_file_extension(filename,"baszx81")) {
 
                 //ZX81
-                dir_inicio_linea=116; //16509-0x4009
+                //dir_inicio_linea=116; //16509-0x4009
+				dir_inicio_linea=0;
 
                 //D_FILE
                 //final_basic=peek_byte_no_time(0x400C)+256*peek_byte_no_time(0x400D);
@@ -19992,7 +19993,9 @@ void menu_file_basic_browser_show(char *filename)
 
                 //ZX80
             //ZX80
-                  dir_inicio_linea=40; //16424-16384
+                  //dir_inicio_linea=40; //16424-16384
+				  dir_inicio_linea=0;
+
 
                   //VARS
                   //final_basic=peek_byte_no_time(0x4008)+256*peek_byte_no_time(0x4009);
