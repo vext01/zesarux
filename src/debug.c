@@ -1694,10 +1694,12 @@ z80_byte cpu_core_loop_debug(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 
 	debug_fired_out=0;
 	//Si se ejecuta un out en el core (justo despues que esto) se activara dicha variable
+
 	debug_fired_in=0;
 	//Si se ejecuta un in en el core (justo despues que esto) se activara dicha variable
+
 	debug_fired_interrupt=0;
-	//Si se ejecuta un in en el core (justo despues que esto) se activara dicha variable
+	//Si se lanza una interrupcion en el core (justo despues que esto) se activara dicha variable
 
 
   	//Llamamos al core normal
