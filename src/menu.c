@@ -18049,6 +18049,11 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si es trd, tambien lo soportamos
 	if (!strcasecmp(extension,"trd")) return 1;		
 
+	//NOTA: Aqui agregamos todas las extensiones que en principio pueden generar muchos diferentes tipos de archivos,
+	//ya sea porque son archivos comprimidos (p.ej. zip) o porque son archivos que se pueden expandir (p.j. tap)
+	//Hay algunos que se pueden expandir y directamente los excluyo (como .P o .O) por ser su uso muy limitado 
+	//(solo generan .baszx80 y .baszx81 en este caso)
+
 	return 0;
 
 }
