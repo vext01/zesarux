@@ -23075,6 +23075,20 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	fclose(ptr_file_name);
 
+
+	//Si longitud de bloque es 17, y byte inicial es 0,1,2 o 3, visor de cabecera de bloque de spectrum
+	z80_byte byte_inicial=file_read_memory[0];
+	if (leidos==17 && byte_inicial<4) {
+		int longitud_bloque;
+		char buffer_texto[40];
+		longitud_bloque=util_tape_tap_get_info((z80_byte *)file_read_memory,buffer_texto);
+		menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", buffer_texto);
+
+		
+		return;
+	}
+
+
 	//Ahora deducir si el archivo cargado es texto o binario.
 	//Codigos mayores de 127 hacen disparar el aviso. Cuantos tiene que haber? Por porcentaje del archivo o por numero?
 	//Mejor por porcentaje. Cualquier archivo con un 10% minimo de codigos no imprimibles, se considerara binario
