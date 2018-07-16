@@ -10997,7 +10997,7 @@ int util_extract_tzx(char *filename,char *tempdir)
 		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
 		z80_byte flag=copia_puntero[2];
 
-		printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+		//printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
 
 		int longitud_segun_cabecera=-1;
 
