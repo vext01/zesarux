@@ -20022,7 +20022,8 @@ void menu_file_basic_browser_show(char *filename)
 
 	//Deducimos si es un simple .bas de texto normal, o es de basic spectrum
 	//Comprobacion facil, primeros dos bytes contiene numero de linea. Asumimos que si los dos son caracteres ascii imprimibles, son de texto
-	if (leidos>2) {
+	//Y siempre que extension no sea .B (en este caso es spectrum con tokens)
+	if (leidos>2 && util_compare_file_extension(filename,"b") ) {
 		z80_byte caracter1=memoria[0];
 		z80_byte caracter2=memoria[1]; 
 		if (caracter1>=32 && caracter1<=127 && caracter2>=32 && caracter2<=127) {
