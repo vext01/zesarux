@@ -10974,14 +10974,23 @@ int util_extract_tzx(char *filename,char *tempdir)
 //TODO ID 11 - Turbo Data Block:");
 
 		case 0x10:
-
-		puntero_lectura +=2;
-		total_mem -=2;
+                case 0x11:
 
 
+                if (tzx_id==0x11) {
+                        copia_puntero=puntero_lectura;
+                        longitud_bloque=puntero_lectura[15]+256*puntero_lectura[16]+65536*puntero_lectura[17];
+                        puntero_lectura+=18;
+                }
 
-		copia_puntero=puntero_lectura;
-		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
+                else {
+		        puntero_lectura +=2;
+		        total_mem -=2;
+                        copia_puntero=puntero_lectura;
+                        longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
+                }
+
+		
 		total_mem-=longitud_bloque;
 		puntero_lectura +=longitud_bloque;
 		//debug_printf (VERBOSE_DEBUG,"Tape browser. Block: %s",buffer_texto);
@@ -10990,7 +10999,11 @@ int util_extract_tzx(char *filename,char *tempdir)
      //printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
 
 		char buffer_temp_file[PATH_MAX];
-		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
+		int longitud_final;
+
+                if (tzx_id==0x11) longitud_final=longitud_bloque-2;
+
+                else longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
 
 		z80_byte tipo_bloque=255;
 
@@ -11103,11 +11116,11 @@ int util_extract_tzx(char *filename,char *tempdir)
 
 				total_mem -=3;
 
-				char buffer_text_id[256];
-                                char buffer_text_text[256];
+				//char buffer_text_id[256];
+                                //char buffer_text_text[256];
 
                                 for (;nstrings;nstrings--) {
-                                        z80_byte text_type=*puntero_lectura;
+                                        //z80_byte text_type=*puntero_lectura;
 					puntero_lectura++;
                                         z80_byte longitud_texto=*puntero_lectura;
 					puntero_lectura++;
@@ -11128,6 +11141,7 @@ int util_extract_tzx(char *filename,char *tempdir)
                         break;
 
 		default:
+                        debug_printf(VERBOSE_DEBUG,"Unhandled TZX id %02XH. Stopping",tzx_id);
 			salir=1;
 		break;
 
