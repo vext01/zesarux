@@ -10907,7 +10907,7 @@ int util_extract_tzx(char *filename,char *tempdir)
 
 	
 	//tapefile
-	if (util_compare_file_extension(filename,"tap")!=0) {
+	if (util_compare_file_extension(filename,"tzx")!=0) {
 		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
 		return 1;
 	}
@@ -10975,6 +10975,10 @@ int util_extract_tzx(char *filename,char *tempdir)
 
 		case 0x10:
 
+		puntero_lectura +=2;
+		total_mem -=2;
+
+
 
 		copia_puntero=puntero_lectura;
 		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
@@ -10993,7 +10997,7 @@ int util_extract_tzx(char *filename,char *tempdir)
 		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
 		z80_byte flag=copia_puntero[2];
 
-		//printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+		printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
 
 		int longitud_segun_cabecera=-1;
 
@@ -11050,6 +11054,7 @@ int util_extract_tzx(char *filename,char *tempdir)
 
 
                                 puntero_lectura+=2;
+				total_mem -=2;
 
 
 
@@ -11067,6 +11072,8 @@ int util_extract_tzx(char *filename,char *tempdir)
                                 puntero_lectura+=1;
                                 puntero_lectura+=longitud_bloque;
                                 //printf ("puntero: %d\n",puntero);
+
+				total_mem -=(longitud_bloque+1);
                         break;
 
                         case 0x31:
@@ -11079,6 +11086,8 @@ int util_extract_tzx(char *filename,char *tempdir)
 
                                 puntero_lectura+=2;
                                 puntero_lectura+=longitud_bloque;
+	
+				total_mem -=(longitud_bloque+2);
                         break;
 
                         case 0x32:
@@ -11088,9 +11097,11 @@ int util_extract_tzx(char *filename,char *tempdir)
                                 longitud_bloque=puntero_lectura[0]+256*puntero_lectura[1];
                                 puntero_lectura+=2;
 
+
                                 z80_byte nstrings=*puntero_lectura;
 				puntero_lectura++;
 
+				total_mem -=3;
 
 				char buffer_text_id[256];
                                 char buffer_text_text[256];
@@ -11100,6 +11111,9 @@ int util_extract_tzx(char *filename,char *tempdir)
 					puntero_lectura++;
                                         z80_byte longitud_texto=*puntero_lectura;
 					puntero_lectura++;
+
+					total_mem -=2;
+
                                         //tape_tzx_get_archive_info(text_type,buffer_text_id);
                                         //util_binary_to_ascii(&tzx_file_mem[puntero],buffer_text_text,longitud_texto,longitud_texto);
                                         //sprintf (buffer_texto,"%s: %s",buffer_text_id,buffer_text_text);
@@ -11107,6 +11121,8 @@ int util_extract_tzx(char *filename,char *tempdir)
                                         //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
                                         puntero_lectura +=longitud_texto;
+
+					total_mem -=longitud_texto;
                                 }
 
                         break;
