@@ -11222,7 +11222,7 @@ int util_extract_trd(char *filename,char *tempdir)
 	//int longitud_texto;
 
 	//char texto_browser[MAX_TEXTO_BROWSER];
-	int indice_buffer=0;
+	//int indice_buffer=0;
 
 	
 
@@ -11315,7 +11315,7 @@ int util_extract_trd(char *filename,char *tempdir)
 		z80_byte start_sector=trd_file_memory[puntero+14];
 		z80_byte start_track=trd_file_memory[puntero+15];
                 z80_int longitud_final=trd_file_memory[puntero+11]+256*trd_file_memory[puntero+12];
-		debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d size %d",buffer_texto,start_track,start_sector);
+		debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d size %d",buffer_texto,start_track,start_sector,longitud_final);
 
                 //calcular offset
                 int offset=16*256*start_track+256*start_sector;
