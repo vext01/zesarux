@@ -20018,7 +20018,7 @@ void menu_file_basic_browser_show(char *filename)
 	}	
 
 	else {
-		//.bas
+		//.bas , .b
 
 	//Deducimos si es un simple .bas de texto normal, o es de basic spectrum
 	//Comprobacion facil, primeros dos bytes contiene numero de linea. Asumimos que si los dos son caracteres ascii imprimibles, son de texto
@@ -23151,6 +23151,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"bas")) menu_file_basic_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"b")) menu_file_basic_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"baszx80")) menu_file_basic_browser_show(file_name);
 
