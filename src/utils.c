@@ -11240,6 +11240,21 @@ int util_extract_trd(char *filename,char *tempdir)
 	        	debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d size %d",buffer_texto,start_track,start_sector,longitud_final);
 
                         //calcular offset
+                        /*
+                        TR-DOS disk specs v1.0 - last revised on 9-28-1997
+
+- Max disk sides are 2
+- Max logical tracks per side are 80
+- Logical sectors per track are 16
+- Sector dimension is 256 bytes
+- Root directory is 8 sectors long starting from track 0, sector 1
+- Max root entries are 128
+- Root entry dimension is 16 bytes
+- Logical sector 8 (9th physical) holds disc info
+- Logical sectors from 0 to 15 are unused
+- Files are *NOT* fragmented
+
+                        */
                         int offset=16*256*start_track+256*start_sector;
 
                         //grabar archivo
