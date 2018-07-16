@@ -11157,3 +11157,196 @@ int util_extract_tzx(char *filename,char *tempdir)
 
 
 
+
+
+
+int util_extract_trd(char *filename,char *tempdir)
+{
+
+	//tapefile
+	if (util_compare_file_extension(filename,"trd")!=0) {
+		debug_printf(VERBOSE_ERR,"Expander not supported for this file type");
+		return 1;
+	}
+
+	//Leemos trd en memoria
+	int bytes_to_load=get_file_size(filename);
+
+
+	int tamanyo_trd_entry=16;
+
+	//int max_entradas_trd=16;
+
+	//Asignamos para 16 entradas
+	//int bytes_to_load=tamanyo_trd_entry*max_entradas_trd;
+
+	//Leemos 4kb. esto permite leer el directorio y el label
+	//int bytes_to_load=4096;
+
+	z80_byte *trd_file_memory;
+	trd_file_memory=malloc(bytes_to_load);
+	if (trd_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return 0;
+	}
+	
+	//Leemos cabecera archivo trd
+        FILE *ptr_file_trd_browser;
+        ptr_file_trd_browser=fopen(filename,"rb");
+
+        if (!ptr_file_trd_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(trd_file_memory);
+		return 0;
+	}
+
+
+        int leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return 0;
+        }
+
+
+        fclose(ptr_file_trd_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+
+	//char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+
+
+ 	//sprintf(buffer_texto,"TRD disk image");
+	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+/*
+00000000  43 43 31 30 41 59 20 20  42 4a 00 4a 00 31 00 01  |CC10AY  BJ.J.1..|
+00000010  74 69 74 6c 65 20 20 20  43 20 20 00 1b 1b 01 04  |title   C  .....|
+00000020  73 6b 69 6e 20 20 20 20  43 20 20 00 1b 1b 0c 05  |skin    C  .....|
+00000030  20 4e 69 67 68 74 49 6e  6d 20 20 b9 0a 0b 07 07  | NightInm  .....|
+00000040  20 45 76 61 31 20 20 20  70 74 33 26 0c 0d 02 08  | Eva1   pt3&....|
+00000050  20 45 76 61 32 20 20 20  70 74 33 c4 1e 1f 0f 08  | Eva2   pt3.....|
+00000060  20 52 6f 73 65 31 20 20  70 74 33 ef 03 04 0e 0a  | Rose1  pt3.....|
+00000070  20 52 6f 73 65 32 20 20  70 74 33 a2 04 05 02 0b  | Rose2  pt3.....|
+00000080  20 53 74 72 6f 6c 6c 6e  70 74 33 a6 19 1a 07 0b  | Strollnpt3.....|
+00000090  20 53 77 6f 6f 6e 43 56  6d 20 20 7f 0f 10 01 0d  | SwoonCVm  .....|
+000000a0  20 53 6f 70 68 69 65 45  6d 20 20 76 11 12 01 0e  | SophieEm  v....|
+000000b0  20 73 75 6d 6d 65 72 31  70 74 33 e0 06 07 03 0f  | summer1pt3.....|
+000000c0  20 73 75 6d 6d 65 72 32  70 74 33 8d 05 06 0a 0f  | summer2pt3.....|
+000000d0  20 62 74 74 66 31 20 20  70 74 33 60 0b 0c 00 10  | bttf1  pt3`....|
+000000e0  20 62 74 74 66 32 20 20  70 74 33 41 04 05 0c 10  | bttf2  pt3A....|
+000000f0  20 54 6f 52 69 73 6b 54  6d 20 20 e3 28 29 01 11  | ToRiskTm  .()..|
+*/
+
+	//La extension es de 1 byte
+
+
+	//sprintf(buffer_texto,"Filesystem: TRDOS");
+        //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	int start_track_8=256*8;
+
+
+        //char trd_label[8+1];
+        //menu_file_mmc_browser_show_file(&trd_file_memory[0x8f5],trd_label,0,8);
+        //sprintf(buffer_texto,"TRD Label: %s",trd_label);
+        //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	//sprintf(buffer_texto,"Free sectors on disk: %d",trd_file_memory[start_track_8+229]+256*trd_file_memory[start_track_8+230]);
+        //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	//sprintf(buffer_texto,"First free sector %dt:%ds",trd_file_memory[start_track_8+226],trd_file_memory[start_track_8+225]);
+	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+/*
+	char *trd_disk_types[]={
+	"80 tracks, double side",
+	"40 tracks, double side",
+	"80 tracks, single side",
+	"40 tracks, single side"};
+
+	char buffer_trd_disk_type[32];
+	z80_byte trd_disk_type=trd_file_memory[start_track_8+227];
+
+	if (trd_disk_type>=0x16 && trd_disk_type<=0x19) {
+		strcpy(buffer_trd_disk_type,trd_disk_types[trd_disk_type-0x16]);
+	}
+	else strcpy(buffer_trd_disk_type,"Unknown");
+*/
+	//sprintf(buffer_texto,"Disk type: %04XH (%s)",trd_disk_type,buffer_trd_disk_type);
+	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	//sprintf(buffer_texto,"Files on disk: %d",trd_file_memory[start_track_8+228]);
+        //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+        z80_int files_on_disk=trd_file_memory[start_track_8+228];
+
+	//sprintf(buffer_texto,"Deleted files on disk: %d",trd_file_memory[start_track_8+244]);
+        //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+        z80_int deleted_files_on_disk=trd_file_memory[start_track_8+244];
+
+
+	//sprintf(buffer_texto,"First file entries:");
+	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	int puntero,i;
+
+	puntero=0;
+
+        char buffer_temp_file[PATH_MAX];
+
+	for (i=0;i<files_on_disk+deleted_files_on_disk;i++) {
+		menu_file_mmc_browser_show_file(&trd_file_memory[puntero],buffer_texto,1,9);
+		if (buffer_texto[0]!='?') {
+			//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+		z80_byte start_sector=trd_file_memory[puntero+14];
+		z80_byte start_track=trd_file_memory[puntero+15];
+                z80_int longitud_final=trd_file_memory[puntero+11]+256*trd_file_memory[puntero+12];
+		debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d size %d",buffer_texto,start_track,start_sector);
+
+                //calcular offset
+                int offset=16*256*start_track+256*start_sector;
+
+                //grabar archivo
+                sprintf (buffer_temp_file,"%s/%s",tempdir,buffer_texto);
+		
+           
+                util_save_file(&trd_file_memory[offset],longitud_final,buffer_temp_file);
+		}
+
+
+		puntero +=tamanyo_trd_entry;	
+
+
+
+	}
+	
+
+
+	//texto_browser[indice_buffer]=0;
+	//char titulo_ventana[32];
+	//sprintf(titulo_ventana,"%s file browser",tipo_imagen);
+	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+	free(trd_file_memory);
+
+        return 0;
+
+}
+
+

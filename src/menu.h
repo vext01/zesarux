@@ -519,6 +519,8 @@ extern z80_bit screen_bw_no_multitask_menu;
 
 extern int menu_hardware_autofire_cond(void);
 
+extern void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension,int longitud);
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \

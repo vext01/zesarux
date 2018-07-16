@@ -18046,6 +18046,9 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si es tzx, tambien lo soportamos
 	if (!strcasecmp(extension,"tzx")) return 1;	
 
+	//Si es trd, tambien lo soportamos
+	if (!strcasecmp(extension,"trd")) return 1;		
+
 	return 0;
 
 }
@@ -19147,6 +19150,9 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 		if (buffer_texto[0]!='?') {
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 		}
+		z80_byte start_sector=trd_file_memory[puntero+14];
+		z80_byte start_track=trd_file_memory[puntero+15];
+		debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d",buffer_texto,start_track,start_sector);
 
 		puntero +=tamanyo_trd_entry;	
 	}
@@ -29590,7 +29596,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
-			"- Use Space to expand files, currently supported: tap, tzx, mdv, hdf, P, O\n"
+			"- Use Space to expand files, currently supported: tap, tzx, trd, mdv, hdf, P, O\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
@@ -32899,6 +32905,11 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
                 debug_printf (VERBOSE_DEBUG,"Is a tzx file");
                 return util_extract_tzx(archivo,tmpdir);
         }
+
+        else if (!util_compare_file_extension(archivo,"trd") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a trd file");
+                return util_extract_trd(archivo,tmpdir);
+        }		
 
         else if (!util_compare_file_extension(archivo,"p") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a P file");
