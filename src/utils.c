@@ -10901,3 +10901,229 @@ int util_extract_o(char *filename,char *tempdir)
 
 
 
+
+int util_extract_tzx(char *filename,char *tempdir)
+{
+
+	
+	//tapefile
+	if (util_compare_file_extension(filename,"tap")!=0) {
+		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
+		return 1;
+	}
+
+	//Leemos cinta en memoria
+	int total_mem=get_file_size(filename);
+
+	z80_byte *taperead;
+
+
+
+        FILE *ptr_tapebrowser;
+        ptr_tapebrowser=fopen(filename,"rb");
+
+        if (!ptr_tapebrowser) {
+		debug_printf(VERBOSE_ERR,"Unable to open tape");
+		return 1; 
+	}
+
+	taperead=malloc(total_mem);
+	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser");
+
+	z80_byte *puntero_lectura;
+	puntero_lectura=taperead;
+
+
+        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading tape");
+		free(taperead);
+                return 1;
+        }
+
+
+        fclose(ptr_tapebrowser);
+
+	char buffer_texto[32*4]; //4 lineas mas que suficiente
+
+	int longitud_bloque;
+
+
+
+	int filenumber=0;
+
+	int previo_longitud_segun_cabecera=-1; //Almacena longitud de bloque justo anterior
+	z80_byte previo_flag=255; //Almacena flag de bloque justo anterior 
+	z80_byte previo_tipo_bloque=255; //Almacena previo tipo bloque anterior (0, program, 3 bytes etc)
+
+	puntero_lectura +=10; //Saltar cabecera (version tzx etc)
+
+	int salir=0;
+
+		z80_byte *copia_puntero;
+
+	while(total_mem>0 && !salir) {
+
+		z80_byte tzx_id=*puntero_lectura;
+
+		puntero_lectura++;
+
+		switch (tzx_id) {
+
+//TODO ID 11 - Turbo Data Block:");
+
+		case 0x10:
+
+
+		copia_puntero=puntero_lectura;
+		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
+		total_mem-=longitud_bloque;
+		puntero_lectura +=longitud_bloque;
+		//debug_printf (VERBOSE_DEBUG,"Tape browser. Block: %s",buffer_texto);
+
+
+     //printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
+
+		char buffer_temp_file[PATH_MAX];
+		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
+
+		z80_byte tipo_bloque=255;
+
+		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
+		z80_byte flag=copia_puntero[2];
+
+		//printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+
+		int longitud_segun_cabecera=-1;
+
+		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
+			sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
+
+			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
+
+			//printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
+
+			//Longitud segun cabecera
+			longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
+		
+		}
+		else {
+			char extension_agregar[10];
+			extension_agregar[0]=0; //Por defecto
+
+			//Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0	
+			if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
+				//Corresponde. Agregar extensiones bas o scr segun el caso
+				if (previo_tipo_bloque==0) {
+					//Basic
+					strcpy(extension_agregar,".bas");
+				}
+
+				if (previo_tipo_bloque==3 && longitud_final==6912) {
+					//Screen
+                                        strcpy(extension_agregar,".scr");
+                                }
+			}
+
+			sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
+		}
+
+
+		//Generar bloque con datos, saltando los dos de cabecera y el flag
+		util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+
+		filenumber++;
+
+		previo_flag=flag;
+		previo_longitud_segun_cabecera=longitud_segun_cabecera;
+		previo_tipo_bloque=tipo_bloque;
+
+		break;
+
+
+		case 0x20:
+
+
+                                //sprintf(buffer_texto,"ID 20 - Pause");
+                                //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+                                puntero_lectura+=2;
+
+
+
+                        break;
+
+                        case 0x30:
+                                //sprintf(buffer_texto,"ID 30 Text description:");
+                                //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+                                longitud_bloque=*puntero_lectura;
+                                //printf ("puntero: %d longitud: %d\n",puntero,longitud_bloque);
+                                //util_binary_to_ascii(&tzx_file_mem[puntero+1],buffer_bloque,longitud_bloque,longitud_bloque);
+                                //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+                                puntero_lectura+=1;
+                                puntero_lectura+=longitud_bloque;
+                                //printf ("puntero: %d\n",puntero);
+                        break;
+
+                        case 0x31:
+                                //sprintf(buffer_texto,"ID 31 Message block:");
+                                //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+                                longitud_bloque=puntero_lectura[1];
+                                //util_binary_to_ascii(&tzx_file_mem[puntero+2],buffer_bloque,longitud_bloque,longitud_bloque);
+                                //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+                                puntero_lectura+=2;
+                                puntero_lectura+=longitud_bloque;
+                        break;
+
+                        case 0x32:
+                                //sprintf(buffer_texto,"ID 32 Archive info:");
+                                //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+                                longitud_bloque=puntero_lectura[0]+256*puntero_lectura[1];
+                                puntero_lectura+=2;
+
+                                z80_byte nstrings=*puntero_lectura;
+				puntero_lectura++;
+
+
+				char buffer_text_id[256];
+                                char buffer_text_text[256];
+
+                                for (;nstrings;nstrings--) {
+                                        z80_byte text_type=*puntero_lectura;
+					puntero_lectura++;
+                                        z80_byte longitud_texto=*puntero_lectura;
+					puntero_lectura++;
+                                        //tape_tzx_get_archive_info(text_type,buffer_text_id);
+                                        //util_binary_to_ascii(&tzx_file_mem[puntero],buffer_text_text,longitud_texto,longitud_texto);
+                                        //sprintf (buffer_texto,"%s: %s",buffer_text_id,buffer_text_text);
+
+                                        //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+                                        puntero_lectura +=longitud_texto;
+                                }
+
+                        break;
+
+		default:
+			salir=1;
+		break;
+
+	   }
+	}
+
+
+	free(taperead);
+
+	return 0;
+
+}
+
+
+

@@ -18040,8 +18040,11 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si es hdf, tambien lo soportamos
 	if (!strcasecmp(extension,"hdf")) return 1;
 
-	//Si es hdf, tambien lo soportamos
+	//Si es tap, tambien lo soportamos
 	if (!strcasecmp(extension,"tap")) return 1;	
+
+	//Si es tzx, tambien lo soportamos
+	if (!strcasecmp(extension,"tzx")) return 1;	
 
 	return 0;
 
@@ -29564,7 +29567,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
-			"- Use Space to expand files, currently supported: tap, mdv, hdf, P, O\n"
+			"- Use Space to expand files, currently supported: tap, tzx, mdv, hdf, P, O\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
@@ -32867,6 +32870,11 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
         else if (!util_compare_file_extension(archivo,"tap") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a tap file");
         	return util_extract_tap(archivo,tmpdir);
+        }
+
+        else if (!util_compare_file_extension(archivo,"tzx") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a tzx file");
+                return util_extract_tzx(archivo,tmpdir);
         }
 
         else if (!util_compare_file_extension(archivo,"p") ) {
