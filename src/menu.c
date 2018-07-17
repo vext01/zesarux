@@ -19176,6 +19176,105 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 }
 
 
+//Retorna el offset al dsk segun la pista y sector dados (ambos desde 0...)
+//-1 si no se encuentra
+int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar)
+{
+
+/*
+sectores van alternados:
+00000100  54 72 61 63 6b 2d 49 6e  66 6f 0d 0a 00 00 00 00  |Track-Info......|
+00000110  00 00 00 00 02 09 4e e5  00 00 c1 02 00 00 00 02  |......N.........|
+00000120  00 00 c6 02 00 00 00 02  00 00 c2 02 00 00 00 02  |................|
+00000130  00 00 c7 02 00 00 00 02  00 00 c3 02 00 00 00 02  |................|
+00000140  00 00 c8 02 00 00 00 02  00 00 c4 02 00 00 00 02  |................|
+00000150  00 00 c9 02 00 00 00 02  00 00 c5 02 00 00 00 02  |................|
+00000160  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+
+1,6,2,7,3,8
+
+
+0 1 2 3 4 5 6 7 8  
+0,5,1,6,2,7,3,8,4
+
+*/
+
+	int pista;
+	int sector;
+
+	int iniciopista_orig=256;
+
+	//Buscamos en todo el archivo dsk
+	for (pista=0;pista<total_pistas;pista++) {
+
+		int sectores_en_pista=dsk_memoria[iniciopista_orig+0x15];
+		//debug_printf(VERBOSE_DEBUG,"Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  ",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
+
+		//int iniciopista_orig=traps_plus3dos_getoff_start_trackinfo(pista);
+		int iniciopista=iniciopista_orig;
+		//saltar 0x18
+		iniciopista +=0x18;
+
+		for (sector=0;sector<sectores_en_pista;sector++) {
+			int offset_tabla_sector=sector*8; 
+			z80_byte pista_id=dsk_memoria[iniciopista+offset_tabla_sector]; //Leemos pista id
+			z80_byte sector_id=dsk_memoria[iniciopista+offset_tabla_sector+2]; //Leemos c1, c2, etc
+
+			//debug_printf(VERBOSE_DEBUG,"%02X ",sector_id);
+
+			sector_id &=0xF;
+
+			sector_id--;  //empiezan en 1...
+
+			if (pista_id==pista_buscar && sector_id==sector_buscar) {
+				//printf("Found sector %d/%d at %d/%d",pista_buscar,sector_buscar,pista,sector);
+		                //int offset=traps_plus3dos_getoff_start_track(pista);
+		                int offset=iniciopista_orig+256;
+
+                		//int iniciopista=traps_plus3dos_getoff_start_track(pista);
+		                return offset+512*sector;
+			}
+
+		}
+
+		debug_printf(VERBOSE_DEBUG,"");
+
+		iniciopista_orig +=256;
+		iniciopista_orig +=512*sectores_en_pista;
+	}
+
+	debug_printf(VERBOSE_DEBUG,"Not found sector %d/%d",pista_buscar,sector_buscar);	
+	
+	//retornamos offset fuera de rango
+	return -1;
+
+
+}
+
+
+int menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int bloque)
+{
+
+			bloque *=2; //cada bloque es de 2 sectores
+
+			//tenemos sector total en variable bloque
+			//sacar pista
+			int pista=bloque/9; //9 sectores por pista
+			int sector_en_pista=bloque % 9;
+
+			//printf ("pista: %d sector en pista: %d\n",pista,sector_en_pista);
+
+			//offset a los datos dentro del dsk
+			//int offset=pista*4864+sector_en_pista*512;
+
+			int total_pistas=longitud_dsk/4864;
+
+			int offset=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista);
+
+			return offset;
+
+}
+
 
 void menu_file_dsk_browser_show(char *filename)
 {
@@ -19189,7 +19288,7 @@ void menu_file_dsk_browser_show(char *filename)
 	//int bytes_to_load=tamanyo_dsk_entry*max_entradas_dsk;
 
 	//Leemos 4kb. esto permite leer el directorio 
-	int bytes_to_load=4096;
+	int bytes_to_load=300000;  //temp. 4096
 
 	z80_byte *dsk_file_memory;
 	dsk_file_memory=malloc(bytes_to_load);
@@ -19309,6 +19408,48 @@ void menu_file_dsk_browser_show(char *filename)
 		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
 		if (buffer_texto[0]!='?') {
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+			printf ("\narchivo %s\n",buffer_texto);
+
+			//Averiguar inicio de los datos
+			//Es un poco mas complejo ya que hay que localizar cada sector donde esta ubicado
+			int total_bloques=1;
+			int bloque;
+
+			bloque=dsk_file_memory[puntero+15];
+				//Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
+				//(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
+				//Luego se pueden guardar hasta 16 bloques en esa entrada
+				//Si el archivo ocupa mas de 16kb, se genera otra entrada con mismo nombre de archivo, con los siguientes bloques
+				//Si ocupa mas de 32 kb, otra entrada mas, etc
+				//Notas: archivo de 16 kb exactos, genera dos entradas de archivo, incluso ocupando un bloque del siguiente,
+				//dado que al principio esta la cabecera
+
+
+			do {
+			
+
+				int offset=menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque);
+
+				//Sacar longitud real, de cabecera plus3dos
+				if (total_bloques==1) {
+					int offset_a_longitud=offset+16;
+					z80_int longitud=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
+					printf ("longitud real archivo: %d\n",longitud);
+				}
+
+			
+				printf ("b:%02XH of:%XH ",bloque,offset);
+
+				total_bloques++;
+				bloque=dsk_file_memory[puntero+15-1+total_bloques];
+
+
+
+			} while (bloque!=0 && total_bloques<=16);
+
+			printf ("\n");
+
 		}
 
 		puntero +=tamanyo_dsk_entry;	
