@@ -19252,26 +19252,36 @@ sectores van alternados:
 }
 
 
-int menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int bloque)
+void menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int bloque,int *offset1,int *offset2)
 {
 
-			bloque *=2; //cada bloque es de 2 sectores
+			int total_pistas=longitud_dsk/4864;
+			int pista;
+			int sector_en_pista;
+
+			int sector_total;
+
+			sector_total=bloque*2; //cada bloque es de 2 sectores
 
 			//tenemos sector total en variable bloque
 			//sacar pista
-			int pista=bloque/9; //9 sectores por pista
-			int sector_en_pista=bloque % 9;
+			pista=sector_total/9; //9 sectores por pista
+			sector_en_pista=sector_total % 9;
 
 			//printf ("pista: %d sector en pista: %d\n",pista,sector_en_pista);
 
 			//offset a los datos dentro del dsk
 			//int offset=pista*4864+sector_en_pista*512;
 
-			int total_pistas=longitud_dsk/4864;
 
-			int offset=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista);
 
-			return offset;
+			*offset1=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista);
+
+			sector_total++;
+			pista=sector_total/9; //9 sectores por pista
+			sector_en_pista=sector_total % 9;			
+
+			*offset2=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista);
 
 }
 
@@ -19403,6 +19413,9 @@ void menu_file_dsk_browser_show(char *filename)
 	int puntero,i;
 	puntero=0x201;
 
+	z80_byte buffer_temp[80000];
+	int destino_en_buffer_temp=0;
+
 	for (i=0;i<max_entradas_dsk;i++) {
 
 		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
@@ -19417,29 +19430,56 @@ void menu_file_dsk_browser_show(char *filename)
 			int bloque;
 
 			bloque=dsk_file_memory[puntero+15];
-				//Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
-				//(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
-				//Luego se pueden guardar hasta 16 bloques en esa entrada
-				//Si el archivo ocupa mas de 16kb, se genera otra entrada con mismo nombre de archivo, con los siguientes bloques
-				//Si ocupa mas de 32 kb, otra entrada mas, etc
-				//Notas: archivo de 16 kb exactos, genera dos entradas de archivo, incluso ocupando un bloque del siguiente,
-				//dado que al principio esta la cabecera
 
+			//Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
+			//(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
+			//Luego se pueden guardar hasta 16 bloques en esa entrada
+			//Si el archivo ocupa mas de 16kb, se genera otra entrada con mismo nombre de archivo, con los siguientes bloques
+			//Si ocupa mas de 32 kb, otra entrada mas, etc
+			//Notas: archivo de 16 kb exactos, genera dos entradas de archivo, incluso ocupando un bloque del siguiente,
+			//dado que al principio esta la cabecera de plus3dos
+			//Desde la cabecera de plus3dos a los datos hay 0x80 bytes
+
+			z80_int longitud_real_archivo=0;
 
 			do {
 			
+				int offset1,offset2;
+				menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque,&offset1,&offset2);
 
-				int offset=menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque);
-
-				//Sacar longitud real, de cabecera plus3dos
+				//Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos,
+				//por tanto el primer sector contiene 512-128=384 datos, mientras que los siguientes,
+				//contienen 512 bytes de datos. El sector final puede contener 512 bytes o menos
 				if (total_bloques==1) {
-					int offset_a_longitud=offset+16;
-					z80_int longitud=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
-					printf ("longitud real archivo: %d\n",longitud);
+					int offset_a_longitud=offset1+16;
+					longitud_real_archivo=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
+					printf ("longitud real archivo: %d\n",longitud_real_archivo);
+					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
+
+					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
+
+					//Siguiente sector
+					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+
+					destino_en_buffer_temp +=512;
+
+
+					/*
+						z80_byte buffer_temp[80000];
+	int destino_en_buffer_temp=0;
+					*/
+				}
+
+				else {
+					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
+					destino_en_buffer_temp +=512;
+					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+					destino_en_buffer_temp +=512;
 				}
 
 			
-				printf ("b:%02XH of:%XH ",bloque,offset);
+				printf ("b:%02XH of:%XH %XH  ",bloque,offset1,offset2);
+				//Cada offset es un sector de 512 bytes
 
 				total_bloques++;
 				bloque=dsk_file_memory[puntero+15-1+total_bloques];
@@ -19447,6 +19487,12 @@ void menu_file_dsk_browser_show(char *filename)
 
 
 			} while (bloque!=0 && total_bloques<=16);
+
+			//Grabar archivo
+			char buffer_nombre_destino[PATH_MAX];
+			sprintf (buffer_nombre_destino,"/tmp/pruebas/%s",buffer_texto);
+
+			util_save_file(buffer_temp,longitud_real_archivo,buffer_nombre_destino);
 
 			printf ("\n");
 
