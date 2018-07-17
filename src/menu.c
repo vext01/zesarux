@@ -19416,7 +19416,7 @@ void menu_file_dsk_browser_show(char *filename)
 	//z80_byte buffer_temp[80000];
 	z80_byte *buffer_temp;
 	buffer_temp=malloc(80000);
-	int destino_en_buffer_temp=0;
+	
 
 	for (i=0;i<max_entradas_dsk;i++) {
 
@@ -19444,6 +19444,8 @@ void menu_file_dsk_browser_show(char *filename)
 
 			z80_int longitud_real_archivo=0;
 
+			int destino_en_buffer_temp=0;
+
 			do {
 			
 				int offset1,offset2;
@@ -19463,9 +19465,9 @@ void menu_file_dsk_browser_show(char *filename)
 					//Siguiente sector
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
 					printf ("Escribiendo sector 2\n");
-					buffer_temp[destino_en_buffer_temp]='X';
-					buffer_temp[destino_en_buffer_temp+1]='X';
-					buffer_temp[destino_en_buffer_temp+2]='X';
+					//buffer_temp[destino_en_buffer_temp]='X';
+					//buffer_temp[destino_en_buffer_temp+1]='X';
+					//buffer_temp[destino_en_buffer_temp+2]='X';
 
 
 					destino_en_buffer_temp +=512;
