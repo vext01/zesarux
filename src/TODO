@@ -28,7 +28,13 @@ renombrarla
 --- Cosas para la siguiente version
 
 
--expansor de dsk 
+-expansor de dsk: completar y falta archivos de mas de 16 kb. se podria hacer que las entradas de directorio siguientes, hicieran append al archivo,
+aunque ... como sabemos que entrada es la primera y cuales las siguientes?
+
+extern void util_save_file(z80_byte *origin, long int tamanyo_origen, char *destination_file);
+extern void util_file_save(char *filename,z80_byte *puntero, int tamanyo);
+
+Repetido!!!
 
 -Opción para generar un .config con opciones en curso, opciones basicas
 
