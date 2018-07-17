@@ -19413,7 +19413,9 @@ void menu_file_dsk_browser_show(char *filename)
 	int puntero,i;
 	puntero=0x201;
 
-	z80_byte buffer_temp[80000];
+	//z80_byte buffer_temp[80000];
+	z80_byte *buffer_temp;
+	buffer_temp=malloc(80000);
 	int destino_en_buffer_temp=0;
 
 	for (i=0;i<max_entradas_dsk;i++) {
@@ -19453,26 +19455,30 @@ void menu_file_dsk_browser_show(char *filename)
 				if (total_bloques==1) {
 					int offset_a_longitud=offset1+16;
 					longitud_real_archivo=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
-					printf ("longitud real archivo: %d\n",longitud_real_archivo);
-					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
+					printf ("longitud archivo %s real : %d\n",buffer_texto,longitud_real_archivo);
 
+					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
 					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
 
 					//Siguiente sector
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+					printf ("Escribiendo sector 2\n");
+					buffer_temp[destino_en_buffer_temp]='X';
+					buffer_temp[destino_en_buffer_temp+1]='X';
+					buffer_temp[destino_en_buffer_temp+2]='X';
+
 
 					destino_en_buffer_temp +=512;
 
 
-					/*
-						z80_byte buffer_temp[80000];
-	int destino_en_buffer_temp=0;
-					*/
 				}
 
 				else {
+
+					//Los dos sectores
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
 					destino_en_buffer_temp +=512;
+
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
 					destino_en_buffer_temp +=512;
 				}
@@ -19494,7 +19500,7 @@ void menu_file_dsk_browser_show(char *filename)
 
 			util_save_file(buffer_temp,longitud_real_archivo,buffer_nombre_destino);
 
-			printf ("\n");
+			printf ("Grabando archivo %s\n",buffer_nombre_destino);
 
 		}
 
