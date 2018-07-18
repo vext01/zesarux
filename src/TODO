@@ -28,9 +28,6 @@ renombrarla
 --- Cosas para la siguiente version
 
 
--expansor de dsk: evitar archivos borrados. ver DICE.txt
-
-
 extern void util_save_file(z80_byte *origin, long int tamanyo_origen, char *destination_file);
 extern void util_file_save(char *filename,z80_byte *puntero, int tamanyo);
 

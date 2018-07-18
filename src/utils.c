@@ -11437,28 +11437,32 @@ TODO. supuestamente entradas del directorio pueden ocupar 4 sectores. Actualment
 */
 
 	if (puntero==-1) {
-		printf ("Filesystem track/sector 0/0 not found. Guessing it\n");
+		//printf ("Filesystem track/sector 0/0 not found. Guessing it\n");
 		//no encontrado. probar con lo habitual
 		puntero=0x200;
 	}
 	//else {
 		//Si contiene e5 en el nombre, nos vamos a pista 1
 		if (dsk_file_memory[puntero+1]==0xe5) {
-			printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
+			//printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
                         int total_pistas=bytes_to_load/4864;
 
                         puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0);
 
-			printf ("puntero: %d\n",puntero);
+			//printf ("puntero: %d\n",puntero);
 
 			if (puntero==-1) {
-		                printf ("Filesystem track/sector 1/0 not found. Guessing it\n");
+		                //printf ("Filesystem track/sector 1/0 not found. Guessing it\n");
 		                //no encontrado. probar con lo habitual
 	                	puntero=0x200;
 			}
-			else 	printf ("Filesystem found at offset %XH\n",puntero);
+			else 	{
+                                //printf ("Filesystem found at offset %XH\n",puntero);
+                        }
 		}
-		else printf ("Filesystem found at offset %XH\n",puntero);
+		else {
+                        //printf ("Filesystem found at offset %XH\n",puntero);
+                }
 	//}
 	
 	puntero++; //Saltar el primer byte en la entrada de filesystem
@@ -11476,16 +11480,16 @@ en que empieza en 1300H. Porque??
 	
 
 	for (i=0;i<max_entradas_dsk;i++) {
-		//TODO. ignorar archivos borrados
+
                 z80_byte file_is_deleted=dsk_file_memory[puntero-1];
 		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
 
 		if (buffer_texto[0]!='?') {
-                if (file_is_deleted==0xE5) printf ("File %s is deleted. Skipping\n",buffer_texto);
+                if (file_is_deleted==0xE5) debug_printf (VERBOSE_DEBUG,"File %s is deleted. Skipping",buffer_texto);
                 else {
 			//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-			printf ("\narchivo %s\n",buffer_texto);
+			debug_printf (VERBOSE_DEBUG,"File %s",buffer_texto);
 
 			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
 
@@ -11520,18 +11524,14 @@ en que empieza en 1300H. Porque??
 				if (total_bloques==1 && continuation_marker==0) {
 					int offset_a_longitud=offset1+16;
 					longitud_real_archivo=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
-					printf ("longitud archivo %s real leida de cabecera PLUS3DOS: %d\n",buffer_texto,longitud_real_archivo);
+					debug_printf (VERBOSE_DEBUG,"Real length file %s read from PLUS3DOS header: %d",buffer_texto,longitud_real_archivo);
 
 					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
 					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
 
 					//Siguiente sector
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
-					printf ("Escribiendo sector 2\n");
-					//buffer_temp[destino_en_buffer_temp]='X';
-					//buffer_temp[destino_en_buffer_temp+1]='X';
-					//buffer_temp[destino_en_buffer_temp+2]='X';
-
+					//printf ("Escribiendo sector 2\n");
 
 					destino_en_buffer_temp +=512;
 
@@ -11549,7 +11549,7 @@ en que empieza en 1300H. Porque??
 				}
 
 			
-				printf ("b:%02XH of:%XH %XH  ",bloque,offset1,offset2);
+				//printf ("b:%02XH of:%XH %XH  ",bloque,offset1,offset2);
 				//Cada offset es un sector de 512 bytes
 
 				total_bloques++;
@@ -11586,17 +11586,20 @@ Byte 12
                                 //En este caso, se ha grabado el archivo inicial y se sabe la longitud real segun cabecera plus3dos
                                 //si resulta que la longitud en bloques a guardar ahora es mayor que la cabecera, reducir
                                 if (longitud_final>longitud_real_archivo) longitud_final=longitud_real_archivo;
-				printf ("\nEntrada de archivo es la primera. Guardando %d bytes en el archivo\n",longitud_final);
+				debug_printf (VERBOSE_DEBUG,"File entry is the first. Saving %d bytes on file",longitud_final);
 				util_save_file(buffer_temp,longitud_final,buffer_nombre_destino);
 			}
 			
 			else {
-				printf ("\nEntrada de archivo NO es la primera. Agregando %d bytes al archivo\n",longitud_en_bloques);
+				debug_printf (VERBOSE_DEBUG,"File entry is not the first. Adding %d bytes to the file",longitud_en_bloques);
 				util_file_append(buffer_nombre_destino,buffer_temp,longitud_en_bloques);
+                                //TODO: al guardar entradas de archivo diferentes a la primera, 
+                                //se agregan siempre longitudes en bloques de 1kb
+                                //por lo que el archivo acabará ocupando mas de lo que deberia
 			}
 
 
-			printf ("Grabando archivo %s\n",buffer_nombre_destino);
+			debug_printf (VERBOSE_DEBUG,"Saving file %s",buffer_nombre_destino);
 
 		}
                 }
