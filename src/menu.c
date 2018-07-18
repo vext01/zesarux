@@ -19426,6 +19426,8 @@ void menu_file_dsk_browser_show(char *filename)
 
 			printf ("\narchivo %s\n",buffer_texto);
 
+			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
+
 			//Averiguar inicio de los datos
 			//Es un poco mas complejo ya que hay que localizar cada sector donde esta ubicado
 			int total_bloques=1;
@@ -19451,13 +19453,13 @@ void menu_file_dsk_browser_show(char *filename)
 				int offset1,offset2;
 				menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque,&offset1,&offset2);
 
-				//Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos,
+				//Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos y la primera entrada del archivo,
 				//por tanto el primer sector contiene 512-128=384 datos, mientras que los siguientes,
 				//contienen 512 bytes de datos. El sector final puede contener 512 bytes o menos
-				if (total_bloques==1) {
+				if (total_bloques==1 && continuation_marker==0) {
 					int offset_a_longitud=offset1+16;
 					longitud_real_archivo=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
-					printf ("longitud archivo %s real : %d\n",buffer_texto,longitud_real_archivo);
+					printf ("longitud archivo %s real leida de cabecera PLUS3DOS: %d\n",buffer_texto,longitud_real_archivo);
 
 					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
 					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
@@ -19514,17 +19516,16 @@ Byte 12
    it is 01 for the second 02 and so on.
 */
 
-			int longitud_en_bloques=(total_bloques-1)*1024;
+			int longitud_en_bloques=destino_en_buffer_temp; //(total_bloques-1)*1024;
 
 
-			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
 			if (continuation_marker==0) {
-				printf ("\nEntrada de archivo es la primera\n");
+				printf ("\nEntrada de archivo es la primera. Guardando %d bytes en el archivo\n",longitud_en_bloques);
 				util_save_file(buffer_temp,longitud_en_bloques,buffer_nombre_destino);
 			}
 			
 			else {
-				printf ("\nEntrada de archivo NO es la primera\n");
+				printf ("\nEntrada de archivo NO es la primera. Agregando %d bytes al archivo\n",longitud_en_bloques);
 				util_file_append(buffer_nombre_destino,buffer_temp,longitud_en_bloques);
 			}
 
