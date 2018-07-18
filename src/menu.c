@@ -19514,16 +19514,20 @@ Byte 12
    it is 01 for the second 02 and so on.
 */
 
+			int longitud_en_bloques=(total_bloques-1)*1024;
+
+
 			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
 			if (continuation_marker==0) {
-				printf ("Entrada de archivo es la primera\n");
+				printf ("\nEntrada de archivo es la primera\n");
+				util_save_file(buffer_temp,longitud_en_bloques,buffer_nombre_destino);
 			}
 			
 			else {
-				printf ("Entrada de archivo NO es la primera\n");
+				printf ("\nEntrada de archivo NO es la primera\n");
+				util_file_append(buffer_nombre_destino,buffer_temp,longitud_en_bloques);
 			}
 
-			util_save_file(buffer_temp,longitud_real_archivo,buffer_nombre_destino);
 
 			printf ("Grabando archivo %s\n",buffer_nombre_destino);
 
