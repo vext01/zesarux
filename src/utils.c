@@ -10375,6 +10375,26 @@ void util_file_save(char *filename,z80_byte *puntero, int tamanyo)
 
 }
 
+void util_file_append(char *filename,z80_byte *puntero, int tamanyo)
+{
+                   FILE *ptr_filesave;
+                                  ptr_filesave=fopen(filename,"ab");
+                                  if (!ptr_filesave)
+                                {
+                                      debug_printf (VERBOSE_ERR,"Unable to open file %s",filename);
+
+                                  }
+                                else {
+
+                                        fwrite(puntero,1,tamanyo,ptr_filesave);
+
+                                  fclose(ptr_filesave);
+
+
+                                }
+
+}
+
 /*
 Funcion usada en compresion de datos
 Dado un puntero de entrada, y la longitud del bloque, dice cuantas veces aparecer el primer byte, y que byte es

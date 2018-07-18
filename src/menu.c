@@ -19500,6 +19500,29 @@ void menu_file_dsk_browser_show(char *filename)
 			char buffer_nombre_destino[PATH_MAX];
 			sprintf (buffer_nombre_destino,"/tmp/pruebas/%s",buffer_texto);
 
+			//Ver si es primer entrada de archivo (con lo que sobreescribimos) o si es segunda y siguientes, hacer append
+/*
+
+Byte 12
+    _______________            Continuation marker.  Each directory entry
+   | | | | | | | | |           provides space for 16 data blocks
+   | | | |*| | | | |           identifying where data is stored on the
+   | | | | | | | | |           disk.  Files exceeding 16K use additional
+   |_|_|_|_|_|_|_|_|           entries to record data blocks.  For
+                               files up to 16K and for the initial entry
+   of a longer file this byte value is 00.  For the fist continuation
+   it is 01 for the second 02 and so on.
+*/
+
+			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
+			if (continuation_marker==0) {
+				printf ("Entrada de archivo es la primera\n");
+			}
+			
+			else {
+				printf ("Entrada de archivo NO es la primera\n");
+			}
+
 			util_save_file(buffer_temp,longitud_real_archivo,buffer_nombre_destino);
 
 			printf ("Grabando archivo %s\n",buffer_nombre_destino);
