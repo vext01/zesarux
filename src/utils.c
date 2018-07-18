@@ -11299,3 +11299,408 @@ int util_extract_trd(char *filename,char *tempdir)
 }
 
 
+int util_extract_dsk(char *filename,char *tempdir)  {
+
+
+	int tamanyo_dsk_entry=32;
+
+	int max_entradas_dsk=16;
+
+	//Asignamos para 16 entradas
+	//int bytes_to_load=tamanyo_dsk_entry*max_entradas_dsk;
+
+	//Max 300kb
+	int bytes_to_load=300000;  //temp. 4096
+
+	z80_byte *dsk_file_memory;
+	dsk_file_memory=malloc(bytes_to_load);
+	if (dsk_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return 0;
+	}
+	
+	//Leemos archivo dsk
+        FILE *ptr_file_dsk_browser;
+        ptr_file_dsk_browser=fopen(filename,"rb");
+
+        if (!ptr_file_dsk_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(dsk_file_memory);
+		return 0;
+	}
+
+
+        int leidos=fread(dsk_file_memory,1,bytes_to_load,ptr_file_dsk_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return 0;
+        }
+
+
+        fclose(ptr_file_dsk_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+
+	//char texto_browser[MAX_TEXTO_BROWSER];
+	//int indice_buffer=0;
+
+	
+
+
+ 	//sprintf(buffer_texto,"DSK disk image");
+	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+/*
+00000000  45 58 54 45 4e 44 45 44  20 43 50 43 20 44 53 4b  |EXTENDED CPC DSK|
+00000010  20 46 69 6c 65 0d 0a 44  69 73 6b 2d 49 6e 66 6f  | File..Disk-Info|
+00000020  0d 0a 43 50 44 52 65 61  64 20 76 33 2e 32 34 00  |..CPDRead v3.24.|
+00000030  2d 01 00 00 13 13 13 13  13 13 13 13 13 13 13 13  |-...............|
+00000040  13 13 13 13 13 13 13 13  13 13 13 13 13 13 13 13  |................|
+00000050  13 13 13 13 13 13 13 13  13 13 13 13 00 00 00 00  |................|
+00000060  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000100  54 72 61 63 6b 2d 49 6e  66 6f 0d 0a 00 00 00 00  |Track-Info......|
+00000110  00 00 00 00 02 09 4e e5  00 00 c1 02 00 00 00 02  |......N.........|
+00000120  00 00 c6 02 00 00 00 02  00 00 c2 02 00 00 00 02  |................|
+00000130  00 00 c7 02 00 00 00 02  00 00 c3 02 00 00 00 02  |................|
+00000140  00 00 c8 02 00 00 00 02  00 00 c4 02 00 00 00 02  |................|
+00000150  00 00 c9 02 00 00 00 02  00 00 c5 02 00 00 00 02  |................|
+00000160  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000200  00 43 4f 4d 50 49 4c 45  52 c2 49 4e 00 00 00 80  |.COMPILER.IN....|
+00000210  02 03 04 05 06 07 08 09  0a 0b 0c 0d 0e 0f 10 11  |................|
+00000220  00 43 4f 4d 50 49 4c 45  52 c2 49 4e 01 00 00 59  |.COMPILER.IN...Y|
+00000230  12 13 14 15 16 17 18 19  1a 1b 1c 1d 00 00 00 00  |................|
+00000240  00 4b 49 54 31 32 38 4c  44 c2 49 4e 00 00 00 03  |.KIT128LD.IN....|
+00000250  1e 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000260  00 4b 49 54 31 32 38 20  20 c2 49 4e 00 00 00 80  |.KIT128  .IN....|
+00000270  1f 20 21 22 23 24 25 26  27 28 29 2a 2b 2c 2d 2e  |. !"#$%&'()*+,-.|
+00000280  00 4b 49 54 31 32 38 20  20 c2 49 4e 01 00 00 59  |.KIT128  .IN...Y|
+*/
+
+	//La extension es de 1 byte
+
+
+/*
+ 	sprintf(buffer_texto,"Disk information:");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	util_binary_to_ascii(&dsk_file_memory[0], buffer_texto, 34, 34);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+ 	sprintf(buffer_texto,"\nCreator:");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	util_binary_to_ascii(&dsk_file_memory[0x22], buffer_texto, 14, 14);
+
+	sprintf(buffer_texto,"\nTracks: %d",dsk_file_memory[0x30]);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"Sides: %d",dsk_file_memory[0x31]);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	
+
+
+        sprintf(buffer_texto,"\nFirst PLUS3 entries:");
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+*/
+
+
+	int puntero,i;
+	//puntero=0x201;
+
+	puntero=menu_dsk_get_start_filesystem(dsk_file_memory,bytes_to_load);
+/*
+en teoria , el directorio empieza en pista 0 sector 0, aunque esta info dice otra cosa:
+
+                TRACK 0          TRACK 1             TRACK 2
+
+SPECTRUM +3    Reserved          Directory             -
+                               (sectors 0-3)
+
+
+Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
+
+*/
+
+	if (puntero==-1) {
+		printf ("Filesystem track/sector not found. Guessing int\n");
+		//no encontrado. probar con lo habitual
+		puntero=0x200;
+	}
+	else {
+		//Si contiene e5 en el nombre, nos vamos a pista 1
+		if (dsk_file_memory[puntero+1]==0xe5) {
+			printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
+                        int total_pistas=bytes_to_load/4864;
+
+                        puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0);
+
+			if (puntero==-1) {
+		                printf ("Filesystem track/sector not found. Guessing int\n");
+		                //no encontrado. probar con lo habitual
+	                	puntero=0x200;
+			}
+			else 	printf ("Filesystem found at offset %XH\n",puntero);
+		}
+		else printf ("Filesystem found at offset %XH\n",puntero);
+	}
+	
+	puntero++; //Saltar el primer byte en la entrada de filesystem
+
+
+	//z80_byte buffer_temp[80000];
+	z80_byte *buffer_temp;
+	buffer_temp=malloc(80000);
+	
+
+	for (i=0;i<max_entradas_dsk;i++) {
+
+		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
+		if (buffer_texto[0]!='?') {
+			//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+			printf ("\narchivo %s\n",buffer_texto);
+
+			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
+
+			//Averiguar inicio de los datos
+			//Es un poco mas complejo ya que hay que localizar cada sector donde esta ubicado
+			int total_bloques=1;
+			int bloque;
+
+			bloque=dsk_file_memory[puntero+15];
+
+			//Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
+			//(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
+			//Luego se pueden guardar hasta 16 bloques en esa entrada
+			//Si el archivo ocupa mas de 16kb, se genera otra entrada con mismo nombre de archivo, con los siguientes bloques
+			//Si ocupa mas de 32 kb, otra entrada mas, etc
+			//Notas: archivo de 16 kb exactos, genera dos entradas de archivo, incluso ocupando un bloque del siguiente,
+			//dado que al principio esta la cabecera de plus3dos
+			//Desde la cabecera de plus3dos a los datos hay 0x80 bytes
+
+			z80_int longitud_real_archivo=0;
+
+			int destino_en_buffer_temp=0;
+
+			do {
+			
+				int offset1,offset2;
+				menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque,&offset1,&offset2);
+
+				//Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos y la primera entrada del archivo,
+				//por tanto el primer sector contiene 512-128=384 datos, mientras que los siguientes,
+				//contienen 512 bytes de datos. El sector final puede contener 512 bytes o menos
+				if (total_bloques==1 && continuation_marker==0) {
+					int offset_a_longitud=offset1+16;
+					longitud_real_archivo=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
+					printf ("longitud archivo %s real leida de cabecera PLUS3DOS: %d\n",buffer_texto,longitud_real_archivo);
+
+					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
+					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
+
+					//Siguiente sector
+					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+					printf ("Escribiendo sector 2\n");
+					//buffer_temp[destino_en_buffer_temp]='X';
+					//buffer_temp[destino_en_buffer_temp+1]='X';
+					//buffer_temp[destino_en_buffer_temp+2]='X';
+
+
+					destino_en_buffer_temp +=512;
+
+
+				}
+
+				else {
+
+					//Los dos sectores
+					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
+					destino_en_buffer_temp +=512;
+
+					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+					destino_en_buffer_temp +=512;
+				}
+
+			
+				printf ("b:%02XH of:%XH %XH  ",bloque,offset1,offset2);
+				//Cada offset es un sector de 512 bytes
+
+				total_bloques++;
+				bloque=dsk_file_memory[puntero+15-1+total_bloques];
+
+
+
+			} while (bloque!=0 && total_bloques<=16);
+
+			//Grabar archivo
+			char buffer_nombre_destino[PATH_MAX];
+			sprintf (buffer_nombre_destino,"%s/%s",tempdir,buffer_texto);
+
+			//Ver si es primer entrada de archivo (con lo que sobreescribimos) o si es segunda y siguientes, hacer append
+/*
+
+Byte 12
+    _______________            Continuation marker.  Each directory entry
+   | | | | | | | | |           provides space for 16 data blocks
+   | | | |*| | | | |           identifying where data is stored on the
+   | | | | | | | | |           disk.  Files exceeding 16K use additional
+   |_|_|_|_|_|_|_|_|           entries to record data blocks.  For
+                               files up to 16K and for the initial entry
+   of a longer file this byte value is 00.  For the fist continuation
+   it is 01 for the second 02 and so on.
+*/
+
+			int longitud_en_bloques=destino_en_buffer_temp; //(total_bloques-1)*1024;
+
+
+			if (continuation_marker==0) {
+				printf ("\nEntrada de archivo es la primera. Guardando %d bytes en el archivo\n",longitud_en_bloques);
+				util_save_file(buffer_temp,longitud_en_bloques,buffer_nombre_destino);
+			}
+			
+			else {
+				printf ("\nEntrada de archivo NO es la primera. Agregando %d bytes al archivo\n",longitud_en_bloques);
+				util_file_append(buffer_nombre_destino,buffer_temp,longitud_en_bloques);
+			}
+
+
+			printf ("Grabando archivo %s\n",buffer_nombre_destino);
+
+		}
+
+		puntero +=tamanyo_dsk_entry;	
+
+
+		/*
+		Como saber, de cada archivo, donde está ubicado en disco, y su longitud?
+		Ejemplo:
+
+00000200  00 4c 20 20 20 20 20 20  20 a0 a0 20 00 00 00 03  |.L       .. ....|
+00000210  02 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000220  00 44 49 53 4b 20 20 20  20 a0 20 20 00 00 00 02  |.DISK    .  ....|
+00000230  03 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000240  00 50 41 4e 54 20 20 20  20 42 41 4b 00 00 00 38  |.PANT    BAK...8|
+00000250  04 05 06 07 08 09 0a 00  00 00 00 00 00 00 00 00  |................|
+00000260  00 50 41 4e 54 20 20 20  20 20 20 20 00 00 00 38  |.PANT       ...8|
+00000270  0b 0c 0d 0e 0f 10 11 00  00 00 00 00 00 00 00 00  |................|
+00000280  00 50 41 4e 54 32 20 20  20 20 20 20 00 00 00 38  |.PANT2      ...8|
+00000290  12 13 14 15 16 17 18 00  00 00 00 00 00 00 00 00  |................|
+000002a0  00 50 41 4e 54 32 20 20  20 42 41 4b 00 00 00 38  |.PANT2   BAK...8|
+000002b0  19 1a 1b 1c 1d 1e 1f 00  00 00 00 00 00 00 00 00  |................|
+000002c0  00 50 41 4e 54 33 20 20  20 42 41 4b 00 00 00 38  |.PANT3   BAK...8|
+000002d0  20 21 22 23 24 25 26 00  00 00 00 00 00 00 00 00  | !"#$%&.........|
+000002e0  00 50 41 4e 54 33 20 20  20 20 20 20 00 00 00 38  |.PANT3      ...8|
+000002f0  27 28 29 2a 2b 2c 2d 00  00 00 00 00 00 00 00 00  |'()*+,-.........|
+00000300  00 42 41 53 49 43 20 20  20 20 20 20 00 00 00 03  |.BASIC      ....|
+00000310  2e 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000320  e5 e5 e5 e5 e5 e5 e5 e5  e5 e5 e5 e5 e5 e5 e5 e5  |................|
+
+Ese PANT es un code 16384,6913
+
+Este es el DISK?:
+00000800  50 4c 55 53 33 44 4f 53  1a 01 00 b3 00 00 00 00  |PLUS3DOS........|
+00000810  33 00 0a 00 33 00 00 00  00 00 00 00 00 00 00 00  |3...3...........|
+00000820  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000870  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 9b  |................|
+00000880  00 0a 2f 00 e7 c3 a7 3a  f4 32 33 36 39 33 0e 00  |../....:.23693..|
+00000890  00 8d 5c 00 2c c3 a7 3a  fd b0 22 32 33 39 39 39  |..\.,..:.."23999|
+000008a0  22 3a ef 22 6c 22 af 3a  f9 c0 b0 22 32 34 30 30  |":."l".:..."2400|
+000008b0  30 22 0d 00 00 00 00 00  00 00 00 00 00 00 00 00  |0"..............|
+
+
+Este el PANT:
+
+00001000  50 4c 55 53 33 44 4f 53  1a 01 00 81 1b 00 00 03  |PLUS3DOS........|
+00001010  01 1b 00 40 00 80 00 00  00 00 00 00 00 00 00 00  |...@............|
+00001020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001070  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 f3  |................|
+00001080  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001180  00 00 00 18 00 7c 7e 42  00 00 00 00 00 00 00 00  |.....|~B........|
+
+
+Fijarse en la linea:
+00001010  01 1b 00 40
+
+1b01H=6913
+4000H=16384
+
+Aqui supuestamente esta PANT2:
+(19968=4e00h)
+00004e00  50 4c 55 53 33 44 4f 53  1a 01 00 82 1b 00 00 03  |PLUS3DOS........|
+00004e10  02 1b 00 40 00 80 00 00  00 00 00 00 00 00 00 00  |...@............|
+00004e20  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00004e70  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 f5  |................|
+00004e80  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+
+PANT2 en la tabla de asignacion:
+00000280  00 50 41 4e 54 32 20 20  20 20 20 20 00 00 00 38  |.PANT2      ...8|
+00000290  12 13 14 15 16 17 18 00  00 00 00 00 00 00 00 00  |................|
+
+Ese 12h indica de alguna manera que empieza en 4e00h
+19968-512=19456
+19456/1024=19 =18+1=12H+1
+
+
+PANT en la tabla de asignacion:
+00000260  00 50 41 4e 54 20 20 20  20 20 20 20 00 00 00 38  |.PANT       ...8|
+00000270  0b 0c 0d 0e 0f 10 11 00  00 00 00 00 00 00 00 00  |................|
+
+
+
+Este "Basic" es:
+00000300  00 42 41 53 49 43 20 20  20 20 20 20 00 00 00 03  |.BASIC      ....|
+00000310  2e 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+
+2e+1=2f
+2fh*1024=48128=0xBC00
+
+BC00H+512=0xBE00
+
+Aunque el basic esta en:
+
+0000c800  50 4c 55 53 33 44 4f 53  1a 01 00 18 01 00 00 00  |PLUS3DOS........|
+0000c810  98 00 00 80 98 00 00 00  00 00 00 00 00 00 00 00  |................|
+0000c820  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+0000c870  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 41  |...............A|
+0000c880  00 01 0e 00 ea 68 6f 6c  61 20 71 75 65 20 74 61  |.....hola que ta|
+0000c890  6c 0d 00 02 02 00 f0 0d  00 03 21 00 f8 22 61 3a  |l.........!.."a:|
+0000c8a0  70 61 6e 74 22 af 31 36  33 38 34 0e 00 00 00 40  |pant".16384....@|
+
+c800h/1024=32h
+
+
+		*/
+	}
+	
+
+
+	//texto_browser[indice_buffer]=0;
+
+
+	//menu_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+
+	free(dsk_file_memory);
+
+	return 0;
+
+}
+
+
+

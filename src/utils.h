@@ -669,4 +669,6 @@ extern int util_extract_trd(char *filename,char *tempdir);
 
 extern void util_file_append(char *filename,z80_byte *puntero, int tamanyo);
 
+extern int util_extract_dsk(char *filename,char *tempdir);
+
 #endif
