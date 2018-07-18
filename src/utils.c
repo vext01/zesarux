@@ -11477,8 +11477,12 @@ en que empieza en 1300H. Porque??
 
 	for (i=0;i<max_entradas_dsk;i++) {
 		//TODO. ignorar archivos borrados
+                z80_byte file_is_deleted=dsk_file_memory[puntero-1];
 		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
+
 		if (buffer_texto[0]!='?') {
+                if (file_is_deleted==0xE5) printf ("File %s is deleted. Skipping\n",buffer_texto);
+                else {
 			//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 			printf ("\narchivo %s\n",buffer_texto);
@@ -11577,8 +11581,13 @@ Byte 12
 
 
 			if (continuation_marker==0) {
-				printf ("\nEntrada de archivo es la primera. Guardando %d bytes en el archivo\n",longitud_en_bloques);
-				util_save_file(buffer_temp,longitud_en_bloques,buffer_nombre_destino);
+                                int longitud_final=longitud_en_bloques;
+
+                                //En este caso, se ha grabado el archivo inicial y se sabe la longitud real segun cabecera plus3dos
+                                //si resulta que la longitud en bloques a guardar ahora es mayor que la cabecera, reducir
+                                if (longitud_final>longitud_real_archivo) longitud_final=longitud_real_archivo;
+				printf ("\nEntrada de archivo es la primera. Guardando %d bytes en el archivo\n",longitud_final);
+				util_save_file(buffer_temp,longitud_final,buffer_nombre_destino);
 			}
 			
 			else {
@@ -11590,6 +11599,7 @@ Byte 12
 			printf ("Grabando archivo %s\n",buffer_nombre_destino);
 
 		}
+                }
 
 		puntero +=tamanyo_dsk_entry;	
 
