@@ -11457,6 +11457,12 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 	
 	puntero++; //Saltar el primer byte en la entrada de filesystem
 
+/*
+TODO
+Pista 1 suele empezar en offset 1400H, aunque me encuentro con algunos discos, como el http://www.worldofspectrum.org/infoseekid.cgi?id=0011456 (4 Top Games),
+en que empieza en 1300H. Porque??
+*/
+
 
 	//z80_byte buffer_temp[80000];
 	z80_byte *buffer_temp;

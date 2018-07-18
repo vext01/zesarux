@@ -19240,7 +19240,7 @@ sectores van alternados:
 
 		}
 
-		debug_printf(VERBOSE_DEBUG,"");
+		//debug_printf(VERBOSE_DEBUG,"");
 
 		iniciopista_orig +=256;
 		iniciopista_orig +=512*sectores_en_pista;
