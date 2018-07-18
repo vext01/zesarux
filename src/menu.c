@@ -19434,13 +19434,37 @@ void menu_file_dsk_browser_show(char *filename)
 	//puntero=0x201;
 
 	puntero=menu_dsk_get_start_filesystem(dsk_file_memory,bytes_to_load);
+/*
+en teoria , el directorio empieza en pista 0 sector 0, aunque esta info dice otra cosa:
+
+                TRACK 0          TRACK 1             TRACK 2
+
+SPECTRUM +3    Reserved          Directory             -
+                               (sectors 0-3)
+
+
+Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
+
+*/
+
 	if (puntero==-1) {
 		printf ("Filesystem track/sector not found. Guessing int\n");
 		//no encontrado. probar con lo habitual
 		puntero=0x200;
 	}
 	else {
-		printf ("Filesystem found at offset %XH\n",puntero);
+		//Si contiene e5 en el nombre, nos vamos a pista 1
+		if (dsk_file_memory[puntero+1]==0xe5) {
+			printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
+			puntero=menu_dsk_get_start_filesystem(dsk_file_memory,bytes_to_load);
+			if (puntero==-1) {
+		                printf ("Filesystem track/sector not found. Guessing int\n");
+		                //no encontrado. probar con lo habitual
+	                	puntero=0x200;
+			}
+			else 	printf ("Filesystem found at offset %XH\n",puntero);
+		}
+		else printf ("Filesystem found at offset %XH\n",puntero);
 	}
 	
 	puntero++; //Saltar el primer byte en la entrada de filesystem
