@@ -523,6 +523,10 @@ extern void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int s
 
 extern void menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int bloque,int *offset1,int *offset2);
 
+extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_dsk);
+
+extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar);
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \

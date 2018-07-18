@@ -19320,7 +19320,8 @@ void menu_file_dsk_browser_show(char *filename)
 	//Asignamos para 16 entradas
 	//int bytes_to_load=tamanyo_dsk_entry*max_entradas_dsk;
 
-	//Leemos 4kb. esto permite leer el directorio 
+	//Leemos 300kb. aunque esto excede con creces el tamanyo para leer el directorio, podria pasar que la pista 0 donde esta
+	//el directorio estuviera ordenada al final del archivo
 	int bytes_to_load=300000;  //temp. 4096
 
 	z80_byte *dsk_file_memory;
@@ -19477,234 +19478,17 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 	puntero++; //Saltar el primer byte en la entrada de filesystem
 
 
-	//z80_byte buffer_temp[80000];
-	z80_byte *buffer_temp;
-	buffer_temp=malloc(80000);
-	
 
 	for (i=0;i<max_entradas_dsk;i++) {
 
 		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
 		if (buffer_texto[0]!='?') {
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
-
-			printf ("\narchivo %s\n",buffer_texto);
-
-			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
-
-			//Averiguar inicio de los datos
-			//Es un poco mas complejo ya que hay que localizar cada sector donde esta ubicado
-			int total_bloques=1;
-			int bloque;
-
-			bloque=dsk_file_memory[puntero+15];
-
-			//Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
-			//(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
-			//Luego se pueden guardar hasta 16 bloques en esa entrada
-			//Si el archivo ocupa mas de 16kb, se genera otra entrada con mismo nombre de archivo, con los siguientes bloques
-			//Si ocupa mas de 32 kb, otra entrada mas, etc
-			//Notas: archivo de 16 kb exactos, genera dos entradas de archivo, incluso ocupando un bloque del siguiente,
-			//dado que al principio esta la cabecera de plus3dos
-			//Desde la cabecera de plus3dos a los datos hay 0x80 bytes
-
-			z80_int longitud_real_archivo=0;
-
-			int destino_en_buffer_temp=0;
-
-			do {
-			
-				int offset1,offset2;
-				menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque,&offset1,&offset2);
-
-				//Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos y la primera entrada del archivo,
-				//por tanto el primer sector contiene 512-128=384 datos, mientras que los siguientes,
-				//contienen 512 bytes de datos. El sector final puede contener 512 bytes o menos
-				if (total_bloques==1 && continuation_marker==0) {
-					int offset_a_longitud=offset1+16;
-					longitud_real_archivo=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
-					printf ("longitud archivo %s real leida de cabecera PLUS3DOS: %d\n",buffer_texto,longitud_real_archivo);
-
-					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
-					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
-
-					//Siguiente sector
-					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
-					printf ("Escribiendo sector 2\n");
-					//buffer_temp[destino_en_buffer_temp]='X';
-					//buffer_temp[destino_en_buffer_temp+1]='X';
-					//buffer_temp[destino_en_buffer_temp+2]='X';
-
-
-					destino_en_buffer_temp +=512;
-
-
-				}
-
-				else {
-
-					//Los dos sectores
-					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
-					destino_en_buffer_temp +=512;
-
-					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
-					destino_en_buffer_temp +=512;
-				}
-
-			
-				printf ("b:%02XH of:%XH %XH  ",bloque,offset1,offset2);
-				//Cada offset es un sector de 512 bytes
-
-				total_bloques++;
-				bloque=dsk_file_memory[puntero+15-1+total_bloques];
-
-
-
-			} while (bloque!=0 && total_bloques<=16);
-
-			//Grabar archivo
-			char buffer_nombre_destino[PATH_MAX];
-			sprintf (buffer_nombre_destino,"/tmp/pruebas/%s",buffer_texto);
-
-			//Ver si es primer entrada de archivo (con lo que sobreescribimos) o si es segunda y siguientes, hacer append
-/*
-
-Byte 12
-    _______________            Continuation marker.  Each directory entry
-   | | | | | | | | |           provides space for 16 data blocks
-   | | | |*| | | | |           identifying where data is stored on the
-   | | | | | | | | |           disk.  Files exceeding 16K use additional
-   |_|_|_|_|_|_|_|_|           entries to record data blocks.  For
-                               files up to 16K and for the initial entry
-   of a longer file this byte value is 00.  For the fist continuation
-   it is 01 for the second 02 and so on.
-*/
-
-			int longitud_en_bloques=destino_en_buffer_temp; //(total_bloques-1)*1024;
-
-
-			if (continuation_marker==0) {
-				printf ("\nEntrada de archivo es la primera. Guardando %d bytes en el archivo\n",longitud_en_bloques);
-				util_save_file(buffer_temp,longitud_en_bloques,buffer_nombre_destino);
-			}
-			
-			else {
-				printf ("\nEntrada de archivo NO es la primera. Agregando %d bytes al archivo\n",longitud_en_bloques);
-				util_file_append(buffer_nombre_destino,buffer_temp,longitud_en_bloques);
-			}
-
-
-			printf ("Grabando archivo %s\n",buffer_nombre_destino);
-
 		}
 
 		puntero +=tamanyo_dsk_entry;	
 
 
-		/*
-		Como saber, de cada archivo, donde está ubicado en disco, y su longitud?
-		Ejemplo:
-
-00000200  00 4c 20 20 20 20 20 20  20 a0 a0 20 00 00 00 03  |.L       .. ....|
-00000210  02 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-00000220  00 44 49 53 4b 20 20 20  20 a0 20 20 00 00 00 02  |.DISK    .  ....|
-00000230  03 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-00000240  00 50 41 4e 54 20 20 20  20 42 41 4b 00 00 00 38  |.PANT    BAK...8|
-00000250  04 05 06 07 08 09 0a 00  00 00 00 00 00 00 00 00  |................|
-00000260  00 50 41 4e 54 20 20 20  20 20 20 20 00 00 00 38  |.PANT       ...8|
-00000270  0b 0c 0d 0e 0f 10 11 00  00 00 00 00 00 00 00 00  |................|
-00000280  00 50 41 4e 54 32 20 20  20 20 20 20 00 00 00 38  |.PANT2      ...8|
-00000290  12 13 14 15 16 17 18 00  00 00 00 00 00 00 00 00  |................|
-000002a0  00 50 41 4e 54 32 20 20  20 42 41 4b 00 00 00 38  |.PANT2   BAK...8|
-000002b0  19 1a 1b 1c 1d 1e 1f 00  00 00 00 00 00 00 00 00  |................|
-000002c0  00 50 41 4e 54 33 20 20  20 42 41 4b 00 00 00 38  |.PANT3   BAK...8|
-000002d0  20 21 22 23 24 25 26 00  00 00 00 00 00 00 00 00  | !"#$%&.........|
-000002e0  00 50 41 4e 54 33 20 20  20 20 20 20 00 00 00 38  |.PANT3      ...8|
-000002f0  27 28 29 2a 2b 2c 2d 00  00 00 00 00 00 00 00 00  |'()*+,-.........|
-00000300  00 42 41 53 49 43 20 20  20 20 20 20 00 00 00 03  |.BASIC      ....|
-00000310  2e 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-00000320  e5 e5 e5 e5 e5 e5 e5 e5  e5 e5 e5 e5 e5 e5 e5 e5  |................|
-
-Ese PANT es un code 16384,6913
-
-Este es el DISK?:
-00000800  50 4c 55 53 33 44 4f 53  1a 01 00 b3 00 00 00 00  |PLUS3DOS........|
-00000810  33 00 0a 00 33 00 00 00  00 00 00 00 00 00 00 00  |3...3...........|
-00000820  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-00000870  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 9b  |................|
-00000880  00 0a 2f 00 e7 c3 a7 3a  f4 32 33 36 39 33 0e 00  |../....:.23693..|
-00000890  00 8d 5c 00 2c c3 a7 3a  fd b0 22 32 33 39 39 39  |..\.,..:.."23999|
-000008a0  22 3a ef 22 6c 22 af 3a  f9 c0 b0 22 32 34 30 30  |":."l".:..."2400|
-000008b0  30 22 0d 00 00 00 00 00  00 00 00 00 00 00 00 00  |0"..............|
-
-
-Este el PANT:
-
-00001000  50 4c 55 53 33 44 4f 53  1a 01 00 81 1b 00 00 03  |PLUS3DOS........|
-00001010  01 1b 00 40 00 80 00 00  00 00 00 00 00 00 00 00  |...@............|
-00001020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-00001070  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 f3  |................|
-00001080  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-00001180  00 00 00 18 00 7c 7e 42  00 00 00 00 00 00 00 00  |.....|~B........|
-
-
-Fijarse en la linea:
-00001010  01 1b 00 40
-
-1b01H=6913
-4000H=16384
-
-Aqui supuestamente esta PANT2:
-(19968=4e00h)
-00004e00  50 4c 55 53 33 44 4f 53  1a 01 00 82 1b 00 00 03  |PLUS3DOS........|
-00004e10  02 1b 00 40 00 80 00 00  00 00 00 00 00 00 00 00  |...@............|
-00004e20  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-00004e70  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 f5  |................|
-00004e80  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-
-PANT2 en la tabla de asignacion:
-00000280  00 50 41 4e 54 32 20 20  20 20 20 20 00 00 00 38  |.PANT2      ...8|
-00000290  12 13 14 15 16 17 18 00  00 00 00 00 00 00 00 00  |................|
-
-Ese 12h indica de alguna manera que empieza en 4e00h
-19968-512=19456
-19456/1024=19 =18+1=12H+1
-
-
-PANT en la tabla de asignacion:
-00000260  00 50 41 4e 54 20 20 20  20 20 20 20 00 00 00 38  |.PANT       ...8|
-00000270  0b 0c 0d 0e 0f 10 11 00  00 00 00 00 00 00 00 00  |................|
-
-
-
-Este "Basic" es:
-00000300  00 42 41 53 49 43 20 20  20 20 20 20 00 00 00 03  |.BASIC      ....|
-00000310  2e 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-
-2e+1=2f
-2fh*1024=48128=0xBC00
-
-BC00H+512=0xBE00
-
-Aunque el basic esta en:
-
-0000c800  50 4c 55 53 33 44 4f 53  1a 01 00 18 01 00 00 00  |PLUS3DOS........|
-0000c810  98 00 00 80 98 00 00 00  00 00 00 00 00 00 00 00  |................|
-0000c820  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-*
-0000c870  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 41  |...............A|
-0000c880  00 01 0e 00 ea 68 6f 6c  61 20 71 75 65 20 74 61  |.....hola que ta|
-0000c890  6c 0d 00 02 02 00 f0 0d  00 03 21 00 f8 22 61 3a  |l.........!.."a:|
-0000c8a0  70 61 6e 74 22 af 31 36  33 38 34 0e 00 00 00 40  |pant".16384....@|
-
-c800h/1024=32h
-
-
-		*/
 	}
 	
 

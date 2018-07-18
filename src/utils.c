@@ -11432,8 +11432,12 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 
 */
 
+/*
+TODO. supuestamente entradas del directorio pueden ocupar 4 sectores. Actualmente solo hago 1
+*/
+
 	if (puntero==-1) {
-		printf ("Filesystem track/sector not found. Guessing it\n");
+		printf ("Filesystem track/sector 0/0 not found. Guessing it\n");
 		//no encontrado. probar con lo habitual
 		puntero=0x200;
 	}
@@ -11445,8 +11449,10 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 
                         puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0);
 
+			printf ("puntero: %d\n",puntero);
+
 			if (puntero==-1) {
-		                printf ("Filesystem track/sector not found. Guessing it\n");
+		                printf ("Filesystem track/sector 1/0 not found. Guessing it\n");
 		                //no encontrado. probar con lo habitual
 	                	puntero=0x200;
 			}
@@ -11470,7 +11476,7 @@ en que empieza en 1300H. Porque??
 	
 
 	for (i=0;i<max_entradas_dsk;i++) {
-
+		//TODO. ignorar archivos borrados
 		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
 		if (buffer_texto[0]!='?') {
 			//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
