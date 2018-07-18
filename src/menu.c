@@ -19456,7 +19456,10 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 		//Si contiene e5 en el nombre, nos vamos a pista 1
 		if (dsk_file_memory[puntero+1]==0xe5) {
 			printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
-			puntero=menu_dsk_get_start_filesystem(dsk_file_memory,bytes_to_load);
+                        int total_pistas=bytes_to_load/4864;
+
+                        puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0);
+
 			if (puntero==-1) {
 		                printf ("Filesystem track/sector not found. Guessing int\n");
 		                //no encontrado. probar con lo habitual
