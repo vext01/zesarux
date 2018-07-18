@@ -28,20 +28,6 @@ renombrarla
 --- Cosas para la siguiente version
 
 
--expansor de dsk: completar y falta archivos de mas de 16 kb. se podria hacer que las entradas de directorio siguientes, hicieran append al archivo,
-aunque ... como sabemos que entrada es la primera y cuales las siguientes?
-https://spectrumcomputing.co.uk/pub/sinclair/games-info/d/DICE.txt
-
-Byte 12
-    _______________            Continuation marker.  Each directory entry
-   | | | | | | | | |           provides space for 16 data blocks
-   | | | |*| | | | |           identifying where data is stored on the
-   | | | | | | | | |           disk.  Files exceeding 16K use additional
-   |_|_|_|_|_|_|_|_|           entries to record data blocks.  For
-                               files up to 16K and for the initial entry
-   of a longer file this byte value is 00.  For the fist continuation
-   it is 01 for the second 02 and so on.
-
 -expansor de dsk: evitar archivos borrados. ver DICE.txt
 
 
