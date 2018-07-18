@@ -19286,6 +19286,26 @@ void menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int bloque
 }
 
 
+int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_dsk)
+{
+
+                        int total_pistas=longitud_dsk/4864;
+
+                        //tenemos sector total en variable bloque
+                        //sacar pista
+
+                        //printf ("pista: %d sector en pista: %d\n",pista,sector_en_pista);
+
+                        //offset a los datos dentro del dsk
+                        //int offset=pista*4864+sector_en_pista*512;
+
+
+
+                        return menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,0,0);
+
+}
+
+
 void menu_file_dsk_browser_show(char *filename)
 {
 
@@ -19411,7 +19431,20 @@ void menu_file_dsk_browser_show(char *filename)
 
 
 	int puntero,i;
-	puntero=0x201;
+	//puntero=0x201;
+
+	puntero=menu_dsk_get_start_filesystem(dsk_file_memory,bytes_to_load);
+	if (puntero==-1) {
+		printf ("Filesystem track/sector not found. Guessing int\n");
+		//no encontrado. probar con lo habitual
+		puntero=0x200;
+	}
+	else {
+		printf ("Filesystem found at offset %XH\n",puntero);
+	}
+	
+	puntero++; //Saltar el primer byte en la entrada de filesystem
+
 
 	//z80_byte buffer_temp[80000];
 	z80_byte *buffer_temp;
