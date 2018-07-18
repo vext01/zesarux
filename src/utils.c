@@ -11433,11 +11433,11 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 */
 
 	if (puntero==-1) {
-		printf ("Filesystem track/sector not found. Guessing int\n");
+		printf ("Filesystem track/sector not found. Guessing it\n");
 		//no encontrado. probar con lo habitual
 		puntero=0x200;
 	}
-	else {
+	//else {
 		//Si contiene e5 en el nombre, nos vamos a pista 1
 		if (dsk_file_memory[puntero+1]==0xe5) {
 			printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
@@ -11446,14 +11446,14 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
                         puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0);
 
 			if (puntero==-1) {
-		                printf ("Filesystem track/sector not found. Guessing int\n");
+		                printf ("Filesystem track/sector not found. Guessing it\n");
 		                //no encontrado. probar con lo habitual
 	                	puntero=0x200;
 			}
 			else 	printf ("Filesystem found at offset %XH\n",puntero);
 		}
 		else printf ("Filesystem found at offset %XH\n",puntero);
-	}
+	//}
 	
 	puntero++; //Saltar el primer byte en la entrada de filesystem
 
