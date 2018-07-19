@@ -11367,9 +11367,20 @@ void menu_beeper_pianokeyboard_overlay(void)
 			char nota_a[4];
 			sprintf(nota_a,"%s",get_note_name(freq_a) );
 
-
+			//Si no hay sonido, suele dar frecuencia 5 o menos
+			if (frecuencia<=5) nota_a[0]=0;
 
 			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_a);
+
+			char buffer_texto[40];
+			
+			if (nota_a[0]!=0) {
+                        sprintf (buffer_texto,"%d Hz (%s)",frecuencia,nota_a);
+			}
+
+			else strcpy (buffer_texto,"             ");
+                        menu_escribe_linea_opcion(5,-1,1,buffer_texto);
+
 
 	
 
@@ -11403,7 +11414,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 
 						piano_graphic_base_y=5;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,7,"Beeper Piano");
+						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,8,"Beeper Piano");
 
 
 				}
