@@ -27,7 +27,7 @@ renombrarla
 
 --- Cosas para la siguiente version
 
--Opción para generar un .config con opciones en curso, opciones basicas
+-Opción para generar un .config con opciones en curso, opciones basicas. en que menu? Save...? settings? debug...?
 
 -formato zsf debe guardar iff1 y iff2 por separado
 
@@ -109,10 +109,11 @@ O quizá setting configurable
 -Conversor tzx a tap para tzx de tipo solo binario
 También de tap a tzx
 En menú file útils
+->quiza como hay el expansor de archivos no tiene mucho sentido...
 
 -quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
 
--Buscar bytes en memory zone
+-Buscar bytes en memory zone -> problema: ahora las direcciones en memory zone pueden ser > 65535
 En ql llega a buscar?
 
 -Si hay error en config file no hace experthelp

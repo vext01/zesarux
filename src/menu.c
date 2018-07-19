@@ -11340,6 +11340,135 @@ valor_contador_segundo_anterior=contador_segundo;
 
 
 
+void menu_beeper_pianokeyboard_overlay(void)
+{
+        normal_overlay_texto_menu();
+
+	//char volumen[16],textovolumen[32],textotono[32];
+
+
+	int linea=1;
+
+	int canal=0;
+
+        audiobuffer_stats audiostats;
+        audio_get_audiobuffer_stats(&audiostats);
+
+
+        int frecuencia=audiostats.frecuencia;
+
+		//printf ("frecuencia %d\n",frecuencia);
+
+
+
+			int freq_a=frecuencia;
+
+
+			char nota_a[4];
+			sprintf(nota_a,"%s",get_note_name(freq_a) );
+
+
+
+			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_a);
+
+	
+
+}
+
+
+
+
+
+void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
+{
+        menu_espera_no_tecla();
+
+				if (!menu_multitarea) {
+					menu_warn_message("This menu item needs multitask enabled");
+					return;
+				}
+
+				//Como si fuera 1 solo chip
+
+
+
+				if (!si_mostrar_ay_piano_grafico()) {
+
+					menu_dibuja_ventana(7,7,18,11,"Beeper Piano");
+
+				}
+				//#define PIANO_GRAPHIC_BASE_X 7
+				//#define PIANO_GRAPHIC_BASE_Y 7
+				else {
+					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
+
+						piano_graphic_base_y=5;
+						menu_dibuja_ventana(7,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,13,"Beeper Piano");
+
+
+				}
+
+        z80_byte acumulado;
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de piano + texto
+        set_menu_overlay_function(menu_beeper_pianokeyboard_overlay);
+
+
+				int valor_contador_segundo_anterior;
+
+valor_contador_segundo_anterior=contador_segundo;
+
+   do {
+
+                //esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+										valor_contador_segundo_anterior=contador_segundo;
+
+										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+                       if (menu_multitarea==0) menu_refresca_pantalla();
+
+
+                }
+
+                menu_cpu_core_loop();
+                acumulado=menu_da_todas_teclas();
+
+
+
+
+               //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        acumulado=0;
+                }
+
+
+								z80_byte tecla;
+								tecla=menu_get_pressed_key();
+
+								//Si tecla no es ESC, no salir
+								if (tecla!=2) {
+									acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+								}
+
+
+        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+}
+
+
 int menu_cond_allow_write_rom(void)
 {
 
@@ -11929,6 +12058,9 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_chip,"View AY P~~iano");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
+
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"View ~~Beeper Piano");
+					menu_add_item_menu_shortcut(array_menu_audio_settings,'b');					
 
 					//menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_espectro_sonido,NULL,"View old Waveform");
 
