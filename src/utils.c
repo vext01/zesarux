@@ -10355,7 +10355,9 @@ void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_max, int
 
 
 
-void util_file_save(char *filename,z80_byte *puntero, int tamanyo)
+
+
+/*void util_file_save(char *filename,z80_byte *puntero, long int tamanyo);
 {
 	           FILE *ptr_filesave;
                                   ptr_filesave=fopen(filename,"wb");
@@ -10373,7 +10375,7 @@ void util_file_save(char *filename,z80_byte *puntero, int tamanyo)
 
                                 }
 
-}
+}*/
 
 void util_file_append(char *filename,z80_byte *puntero, int tamanyo)
 {
