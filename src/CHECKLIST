@@ -92,6 +92,7 @@ Drivers audio:
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
 -probar any flag loading cintas, con copiador
 -probar archivos zip, tar, rar, gz
+-probar expansor archivos tap, tzx, dsk, trd, etc
 -probar cambiando rutas a sox, unzip, etc...
 
 -probar diferentes cargas, a continuacion, hay ejemplos en carpeta snap_tests y tambien alguno suelto, como canciones.smp y orquesta.smp

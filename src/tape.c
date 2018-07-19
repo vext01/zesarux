@@ -380,7 +380,10 @@ int tap_open(void)
 		reset_cpu();
 
 		//Activamos top speed si conviene
-		if (fast_autoload.v) top_speed_timer.v=1;
+		if (fast_autoload.v) {
+                        debug_printf (VERBOSE_INFO,"Set top speed");
+                        top_speed_timer.v=1;
+                }
 
 	}
 
@@ -2074,6 +2077,12 @@ void realtape_insert(void)
                 //si esta autoload, tambien hacer reset para que luego se haga load automaticamente
                 debug_printf (VERBOSE_INFO,"Reset cpu due to autoload");
                 reset_cpu();
+
+		//Activamos top speed si conviene
+		if (fast_autoload.v) {
+                        debug_printf (VERBOSE_INFO,"Set top speed");
+                        top_speed_timer.v=1;                
+                }
 
         }
 

@@ -27,9 +27,7 @@ renombrarla
 
 --- Cosas para la siguiente version
 
-
 -Opción para generar un .config con opciones en curso, opciones basicas
-
 
 -formato zsf debe guardar iff1 y iff2 por separado
 
@@ -105,7 +103,6 @@ clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 
 -Tecla escape debería hacer break cuando se está escuchando speech
 O quizá setting configurable 
 
--fast load "" deberia tambien hacerlo cuando se inserta real tape
 
 -Prism: opcion de timex real 512x192 no tiene sentido, ya que siempre lo hace real al ser la pantalla siempre de 512 de ancho..?
 
