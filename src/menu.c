@@ -11344,6 +11344,8 @@ void menu_beeper_pianokeyboard_overlay(void)
 {
         normal_overlay_texto_menu();
 
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
 	//char volumen[16],textovolumen[32],textotono[32];
 
 
@@ -11405,7 +11407,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
-					menu_dibuja_ventana(7,7,18,11,"Beeper Piano");
+					menu_dibuja_ventana(7,7,18,11,"Wave Piano");
 
 				}
 				//#define PIANO_GRAPHIC_BASE_X 7
@@ -11414,7 +11416,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 
 						piano_graphic_base_y=5;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,8,"Beeper Piano");
+						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,8,"Wave Piano");
 
 
 				}
@@ -12073,21 +12075,26 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
                 	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
 
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"View ~~Beeper Piano");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'b');		
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the Beeper");
-                	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the Beeper. "
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"View W~~ave Piano");
+					menu_add_item_menu_shortcut(array_menu_audio_settings,'a');		
+					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the output speakers");
+                	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the output speakers. "
+						"In case you don't have AY sound or DAC audio, that note is the one that is played through the beeper. "
 						"It can be inaccurate with short notes");
 
 
 					//menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_espectro_sonido,NULL,"View old Waveform");
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_waveform,NULL,"View ~~Waveform");
+					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
+					menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'w');
 
 					//menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_player_player,NULL,"OLD AY Player");
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_ayplayer,NULL,"AY ~~Player");
+					menu_add_item_menu_tooltip(array_menu_audio_settings,"Opens the .ay file player menu");
+					menu_add_item_menu_ayuda(array_menu_audio_settings,"Opens the .ay file player menu");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'p');
 
 

@@ -1684,7 +1684,6 @@ opcion tambien para bajar bit 7 final
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
 
--Mostrar ay piano pero para notas deducidas del beeper (wave form)
 
 -items recientemente abiertos en quickload . Y en otros menus de carga tambien?
 
@@ -1826,7 +1825,14 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 
 -Trap door. rutina de carga propia, aunque uses un tap. Se confunde los traps a rom y no carga bien. Poniendo como real tape si que carga
 
--Desensamblado mediante ejecución de código. Que desensamble solo lo que ejecute y lógicamente evite repetidos
+-Desensamblado mediante ejecución de código. Que desensamble solo lo que ejecute y lógicamente evite repetidos:
+quiza se podria hacer mediante una tabla de 65536 posiciones, que indique si el registro PC ha pasado por una de esas posiciones.
+Luego cuando se detenga el proceso, reseguir la tabla y desensamblar las posiciones indicadas solamente.
+Esto solo sirve para programas de 48k: en 128k o mas, al paginar otra memoria, habrian confusiones: quiza en este
+caso se podrian tener varias tablas de esas 65536 posiciones...
+Cual es la finalidad de esta función: saber en un juego por ejemplo, donde hay código y donde hay gráficos o datos. En este caso
+el problema reside en que si hay una zona de código que no llegamos a ejecutar (por ejemplo una pantalla a la que no llegamos) , no se 
+desensamblará el código. Por lo que su uso va a ser muy minoritario....
 
 -funcion strcasestr da warning al compilar en linux
 
