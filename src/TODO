@@ -11,9 +11,6 @@ sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de
 -alsa no va bien. dejamos de momento driver en mono
 -dsp: ok
 
-
-
-
 -audio out to file rwa, wav ok
 Probar bien rwa de salida, wav de salida y carga rwa tanto viejos como nuevos 
 *rwa tiene que ser mono
@@ -33,6 +30,9 @@ renombrarla
 
 -al cambiar de core reduced o no, si habia breakpoints, aparecen como activos aunque realmente el core no esta usando el debug core (se ha perdido el nested)
 
+-expansor de archivos .eprom/.epr de z88. Puede servir mucho el menu de Copy from eprom. Problema: que creo que las funciones
+de copia desde eprom estan pensadas para la eprom cargada en la memoria, no para archivos de disco
+->por lo mismo, no hay menu visor de .eprom/.epr
 
 -en visor hexadecimal de file utils, si hay archivo con caracter 7E (~~~) como orquesta.rwa, se acaba viendo texto inverso.
 dicho visor no tendria que entender los tags especiales de texto...
@@ -1833,6 +1833,7 @@ caso se podrian tener varias tablas de esas 65536 posiciones...
 Cual es la finalidad de esta función: saber en un juego por ejemplo, donde hay código y donde hay gráficos o datos. En este caso
 el problema reside en que si hay una zona de código que no llegamos a ejecutar (por ejemplo una pantalla a la que no llegamos) , no se 
 desensamblará el código. Por lo que su uso va a ser muy minoritario....
+Si al final es saber por donde se ha estado ejecutando un programa, se puede usar el transaction log.
 
 -funcion strcasestr da warning al compilar en linux
 

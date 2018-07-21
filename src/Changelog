@@ -22,6 +22,7 @@ Improved debugger:
 **INTFIRED: returns 1 when an interrupt has been generated
 
 Fixed autoload tape on TBBlue
+Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
 
 
 Some other minor bugfixes and improvements

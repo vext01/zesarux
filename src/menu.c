@@ -18426,7 +18426,7 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
         //Obtenemos directorio de snap
         //si no hay directorio, vamos a rutas predefinidas
         if (quickfile==NULL) menu_chdir_sharedfiles();
-	else {
+		else {
                 char directorio[PATH_MAX];
                 util_get_dir(quickfile,directorio);
                 //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
@@ -18456,15 +18456,15 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
 
         if (ret==1) {
 
-		quickfile=quickload_file;
+			quickfile=quickload_file;
 
                 //sin overlay de texto, que queremos ver las franjas de carga con el color normal (no apagado)
                 reset_menu_overlay_function();
 
 
-		if (quickload(quickload_file)) {
-			debug_printf (VERBOSE_ERR,"Unknown file format");
-		}
+			if (quickload(quickload_file)) {
+				debug_printf (VERBOSE_ERR,"Unknown file format");
+			}
 
                 //restauramos modo normal de texto de menu
                 set_menu_overlay_function(normal_overlay_texto_menu);
@@ -18473,6 +18473,7 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
                 salir_todos_menus=1;
         }
 
+	//printf ("tapefile: %p %s\n",tapefile,tapefile);
 
 }
 
@@ -33636,10 +33637,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					}
 
 
-					//sino, devolvemos nombre con path
+					//sino, devolvemos nombre con path, siempre que extension sea conocida
 					else {
                     	cls_menu_overlay();
                         menu_espera_no_tecla();
+
+						if (menu_avisa_si_extension_no_habitual(filtros,filesel_nombre_archivo_seleccionado)) {
 
                         //unimos directorio y nombre archivo. siempre que inicio != '/'
 						if (filesel_nombre_archivo_seleccionado[0]!='/') {
@@ -33653,7 +33656,19 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                         menu_filesel_chdir(filesel_directorio_inicial);
 						menu_filesel_free_mem();
 
-						return menu_avisa_si_extension_no_habitual(filtros,archivo);
+						//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+						return 1;
+
+						}
+
+						else {
+							//Extension no conocida. No modificar variable archivo
+							//printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+							return 0;
+						}
+						
+
+
 
 						//Volver con OK
                         //return 1;
@@ -34040,6 +34055,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					                cls_menu_overlay();
         	                        menu_espera_no_tecla();
 
+									if (menu_avisa_si_extension_no_habitual(filtros,filesel_nombre_archivo_seleccionado)) {
+
 									//unimos directorio y nombre archivo
 									getcwd(archivo,PATH_MAX);
 									sprintf(&archivo[strlen(archivo)],"/%s",item_seleccionado->d_name);
@@ -34047,7 +34064,17 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									menu_filesel_chdir(filesel_directorio_inicial);
 									menu_filesel_free_mem();
 
-									return menu_avisa_si_extension_no_habitual(filtros,archivo);
+									//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+									return 1;
+
+									}
+
+                                    else {
+                                                        //Extension no conocida. No modificar variable archivo
+                                                        //printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+                                                        return 0;
+                                    }
+
 
 									//Volver con OK
 									//return 1;
