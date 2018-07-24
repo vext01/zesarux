@@ -64,6 +64,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Roberto (zenvoid), for reporting me the bug with the IFF2 behaviour when firing an interrupt
 -Hacker VBI (Burenko Vladimir, Ukraine), for granting permission to include some demos and games for TSConf
 -zup, for creating the Spectrum rom files which contain Mantransfer
+-Robin Verhagen-Guest, helping me with the MB02/Next DMA
 
 -Everyone at several forums about Spectrum, ZX80, ZX81, Z88, Raspberry Pi, etc for all the suggestions to my emulator
 -Everyone who test the beta and stable versions of the emulator and report bugs
