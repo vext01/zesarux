@@ -3742,3 +3742,42 @@ int tbblue_is_writable_segment_mmu_rom_space(z80_int dir)
 	else return 0;
 }
 
+
+
+void datagear_write_value(z80_byte value)
+{
+	//TODO gestionar si estamos esperando parametros de comando
+
+	//Obtener tipo de comando
+	//SI WR0
+
+	z80_byte value_mask_wr0_wr3=value&(128+2+1);
+	if (value_mask_wr0_wr3==1 || value_mask_wr0_wr3==2 ||value_mask_wr0_wr3==3 ) {
+		printf ("WR0\n");
+	}
+
+	if (value_mask_wr0_wr3==128) {
+		printf ("WR3\n");
+	}
+
+	if (value_mask_wr0_wr3==129) {
+		printf ("WR4\n");
+	}	
+
+	if (value_mask_wr0_wr3==128+2+1) {
+		printf ("WR6\n");
+	}	
+
+	z80_byte value_mask_wr1_wr2=value&(128+4+2+1);
+	if (value_mask_wr1_wr2==4) {
+		printf ("WR1\n");
+	}
+	if (value_mask_wr1_wr2==0) {
+		printf ("WR2\n");
+	}
+
+	z80_byte value_mask_wr5=value&(128+64+4+2+1);
+	if (value_mask_wr5==128+2) {
+		printf ("WR5\n");
+	}
+}

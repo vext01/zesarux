@@ -76,7 +76,8 @@ extern void tbblue_set_timing_48k(void);
 #define TBBLUE_SPRITE_PATTERN_PORT 0x5b
 #define TBBLUE_SPRITE_SPRITE_PORT 0x57
 
-#define TBBLUE_DMA_PORT 0x6b
+#define TBBLUE_DMA_PORT 0x0b
+#define DATAGEAR_DMA_PORT 0x6b
 
 
 #define MAX_SPRITES_PER_LINE 12
