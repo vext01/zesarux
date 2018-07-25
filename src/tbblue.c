@@ -37,6 +37,9 @@
 #include "ula.h"
 #include "audio.h"
 
+//temp para datagear
+#include "operaciones.h"
+
 #define TBBLUE_MAX_SRAM_8KB_BLOCKS 224
 
 //Punteros a los 64 bloques de 8kb de ram de spectrum
@@ -3962,6 +3965,16 @@ void datagear_write_value(z80_byte value)
 				}					
 
 				printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_source,transfer_destination);
+
+				while (transfer_length) {
+					z80_byte byte_leido=peek_byte_no_time(transfer_source);
+					poke_byte_no_time(transfer_destination,byte_leido);
+
+					transfer_source++;
+					transfer_destination++;
+
+					transfer_length--;
+				}
 
 
 			break;		
