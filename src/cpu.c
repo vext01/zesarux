@@ -854,6 +854,8 @@ void reset_cpu(void)
 	Z80_FLAGS=0xff;
 	reg_sp=0xffff;
 
+extern z80_byte datagear_mask_commands;
+	datagear_mask_commands=0;
 
 	diviface_control_register&=(255-128);
 	diviface_paginacion_automatica_activa.v=0;
