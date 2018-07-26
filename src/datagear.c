@@ -299,7 +299,7 @@ void datagear_write_value(z80_byte value)
 				z80_int transfer_port_a,transfer_port_b;
 
 				//if (datagear_wr0 & 4) 	{
-					printf ("Port A -> Port B\n");
+					//printf ("Port A -> Port B\n");
 					transfer_port_a=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
 					transfer_port_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
 				//}
@@ -311,6 +311,9 @@ void datagear_write_value(z80_byte value)
 
 				if (datagear_wr0 & 4) printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_a,transfer_port_b);
                 else printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_b,transfer_port_a);
+
+                if (datagear_wr1 & 8) printf ("Port A I/O. not implemented yet\n");
+                if (datagear_wr2 & 8) printf ("Port B I/O. not implemented yet\n");
 
 				while (transfer_length) {
                     z80_byte byte_leido;

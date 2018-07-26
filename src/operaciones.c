@@ -5979,13 +5979,13 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//Este puerto solo se puede leer en TBBLUE y es necesario para que NextOS funcione bien
 		if (puerto_l==0xe3 && diviface_enabled.v) return diviface_control_register;
 
-		if (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) {
-			printf ("Reading TBBLUE DMA Port %04XH\n",puerto);
-			return 0;
-		}
+
 	}
 
-
+	if (datagear_dma_emulation.v && (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) ) {
+			printf ("Reading Datagear DMA Port %04XH\n",puerto);
+			return 0;
+	}
 
         //Puertos ZXMMC. Interfiere con Fuller Audio Box
         if (zxmmc_emulation.v && (puerto_l==0x1f || puerto_l==0x3f) ) {
@@ -7373,16 +7373,13 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
                 if (puerto==DS1307_PORT_CLOCK) ds1307_write_port_clock(value);
                 if (puerto==DS1307_PORT_DATA) ds1307_write_port_data(value);
 
-		if (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) {
-			printf ("Writing TBBLUE DMA port %04XH with value %02XH\n",puerto,value);
-			datagear_write_value(value);
-		}
-
-
 
 	}
 
-
+	if (datagear_dma_emulation.v && (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) ) {
+			printf ("Writing Datagear DMA port %04XH with value %02XH\n",puerto,value);
+			datagear_write_value(value);
+	}
 
 	//Fuller audio box
 	//The sound board works on port numbers 0x3f and 0x5f. Port 0x3f is used to select the active AY register and to

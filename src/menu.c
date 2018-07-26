@@ -23841,13 +23841,17 @@ void menu_debug_tsconf_dma_zxuno_dibuja_ventana(void)
 	strcpy(texto_ventana,"DMA");
 	int alto=11;
 
+
 	if (MACHINE_IS_ZXUNO) {
 		strcpy(texto_ventana,"ZXUNO DMA");
 		alto++;
 	}
 
 	if (MACHINE_IS_TSCONF) strcpy(texto_ventana,"TSConf DMA");
-	
+
+	if (datagear_dma_emulation.v) strcpy(texto_ventana,"Datagear DMA");	
+
+
 	menu_dibuja_ventana(2,6,27,alto,texto_ventana);
 }
 
@@ -23863,10 +23867,8 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 
     normal_overlay_texto_menu();
 
-    int linea;
-
-
-    linea=0;
+    int linea=0;
+   
 
     
     	//mostrarlos siempre a cada refresco
@@ -23874,8 +23876,45 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 
 	char texto_dma[33];
 
-	if (MACHINE_IS_TSCONF) {
+	if (datagear_dma_emulation.v) {
+		//NOTA: Si se activa datagear, no se vera si hay dma de tsconf o zxuno
+		z80_int dma_port_a=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
+		z80_int dma_port_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
 
+		z80_int dma_len=value_8_to_16(datagear_block_length_high,datagear_block_length_low);	
+
+		sprintf (texto_dma,"Port A:      %04XH",dma_port_a);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Port B:      %04XH",dma_port_b);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Lenght:      %5d",dma_len);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		if (datagear_wr0 & 4) sprintf (texto_dma,"Port A->B");
+		else sprintf (texto_dma,"Port B->A");
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		if ( (datagear_wr1 & 32) == 0 ) {
+            if (datagear_wr1 & 16) sprintf (texto_dma,"Port A++");
+            else sprintf (texto_dma,"Port A--");
+        }
+		else sprintf (texto_dma,"Port A fixed");
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		if ( (datagear_wr2 & 32) == 0 ) {
+            if (datagear_wr2 & 16) sprintf (texto_dma,"Port B++");
+            else sprintf (texto_dma,"Port B--");
+        }
+		else sprintf (texto_dma,"Port B fixed");
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);		
+
+	}
+
+	else {
+
+	if (MACHINE_IS_TSCONF) {
 		//Construimos 16 valores posibles segun rw (bit bajo) y ddev (bits altos)
 		int dma_type=debug_tsconf_dma_ddev*2+debug_tsconf_dma_rw;
 						//18 maximo el tipo
@@ -23943,6 +23982,8 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 
 		sprintf (texto_dma,"Stat:          %02XH",dma_stat);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);			
+
+	}
 
 	}
 }
@@ -24789,7 +24830,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 					);
 
-		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO) {
+		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO || datagear_dma_emulation.v) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_zxuno,NULL,"Debug DMA");
 			//menu_add_item_menu_shortcut(array_menu_debug_settings,'d');
 		}					

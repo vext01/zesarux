@@ -35,4 +35,22 @@ extern z80_bit datagear_dma_emulation;
 extern void datagear_dma_disable(void);
 extern void datagear_dma_enable(void);
 
+
+extern z80_byte datagear_port_a_start_addr_low;
+extern z80_byte datagear_port_a_start_addr_high;
+
+extern z80_byte datagear_port_b_start_addr_low;
+extern z80_byte datagear_port_b_start_addr_high;
+
+extern z80_byte datagear_block_length_low;
+extern z80_byte datagear_block_length_high;
+
+extern z80_byte datagear_wr0;
+extern z80_byte datagear_wr1;
+extern z80_byte datagear_wr2;
+extern z80_byte datagear_wr3;
+extern z80_byte datagear_wr4;
+extern z80_byte datagear_wr5;
+extern z80_byte datagear_wr6;
+
 #endif
