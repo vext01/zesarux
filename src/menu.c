@@ -23896,6 +23896,7 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 		else sprintf (texto_dma,"Port B->A");
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
+
 		if ( (datagear_wr1 & 32) == 0 ) {
             if (datagear_wr1 & 16) sprintf (texto_dma,"Port A++");
             else sprintf (texto_dma,"Port A--");
@@ -23903,12 +23904,24 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 		else sprintf (texto_dma,"Port A fixed");
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
+        if (datagear_wr1 & 8) sprintf (texto_dma,"Port A I/O"); 
+		else sprintf (texto_dma,"Port A Memory");
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
+
+
+
 		if ( (datagear_wr2 & 32) == 0 ) {
             if (datagear_wr2 & 16) sprintf (texto_dma,"Port B++");
             else sprintf (texto_dma,"Port B--");
         }
 		else sprintf (texto_dma,"Port B fixed");
-		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);		
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
+
+
+        if (datagear_wr2 & 8) sprintf (texto_dma,"Port B I/O"); 
+		else sprintf (texto_dma,"Port B Memory");
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
+
 
 	}
 

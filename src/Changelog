@@ -12,6 +12,7 @@ Improved menu:
 New file expander on file selector menu, with space keys, for the following file types : .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O
 Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens)
 Added ZXUno DMA emulation
+Added TBBlue/DataGear/MB02 DMA emulation
 Added Beeper Piano Menu
 
 Improved debugger:
