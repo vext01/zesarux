@@ -468,15 +468,16 @@ void datagear_handle_dma(void)
 
 		//dmapre *=cpu_turbo_speed;
 
+		int resta_antes=resta;
 
 
+		//printf ("Antes transferencia: dmapre: %d datagear_dma_last_testados %d t_estados %d resta %d dmapre %d length %d\n",
+		//	dmapre,datagear_dma_last_testados,t_estados,resta,dmapre,transfer_length);
 
-		printf ("Antes transferencia: dmapre: %d datagear_dma_last_testados %d t_estados %d resta %d dmapre %d length %d\n",
-			dmapre,datagear_dma_last_testados,t_estados,resta,dmapre,transfer_length);
-
-		//TEMP hacerlo de golpe
+		//TEMP hacerlo de golpe. ejemplo: dmafill
 		while (transfer_length>0) {
-		//while (resta>=dmapre && transfer_length) {
+
+		//while (resta>=dmapre && transfer_length>0) {
 			//for (i=0;i<cpu_turbo_speed;i++) {
 				//printf ("dma op ");
 			           z80_byte byte_leido;
@@ -512,8 +513,17 @@ void datagear_handle_dma(void)
 			//printf ("post ajuste %d\n",datagear_dma_last_testados);
 
 			resta=datagear_return_resta_testados(datagear_dma_last_testados,t_estados);
-
+	
 			//printf ("En transferencia: dmapre: %6d datagear_dma_last_testados %6d t_estados %6d resta %6d\n",	dmapre,datagear_dma_last_testados,t_estados,resta);
+
+		//si da la vuelta
+			if (resta<resta_antes) {
+				//provocar fin
+				resta=0;
+			}
+
+
+			resta_antes=resta;
 
 		}
 
@@ -524,16 +534,16 @@ void datagear_handle_dma(void)
         datagear_block_length_high=value_16_to_8h(transfer_length);
 
         datagear_port_a_start_addr_low=value_16_to_8l(transfer_port_a);
-        datagear_port_a_start_addr_high=value_16_to_8l(transfer_port_a);
+        datagear_port_a_start_addr_high=value_16_to_8h(transfer_port_a);
 
         datagear_port_b_start_addr_low=value_16_to_8l(transfer_port_b);
-        datagear_port_b_start_addr_high=value_16_to_8l(transfer_port_b);        
+        datagear_port_b_start_addr_high=value_16_to_8h(transfer_port_b);        
 	
    
 				//}
 
     if (transfer_length==0) datagear_is_dma_transfering.v=0;
 
-	printf ("length: %d\n",transfer_length);
+	//printf ("length: %d\n",transfer_length);
 
 }
