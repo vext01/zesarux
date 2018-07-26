@@ -94,6 +94,7 @@
 #include "tape_tzx.h" 
 #include "snap_zsf.h"
 #include "settings.h"
+#include "datagear.h"
 
 
 #if defined(__APPLE__)
@@ -17713,6 +17714,11 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_hardware_datagear_dma(MENU_ITEM_PARAMETERS)
+{
+	if (datagear_dma_emulation.v) datagear_dma_disable();
+	else datagear_dma_enable();
+}
 
 
 
@@ -17809,6 +17815,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
 		}
 
+		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_datagear_dma,NULL,"Datagear DMA emulation: %s",(datagear_dma_emulation.v==1 ? "On" : "Off"));
 	
 
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator Spee~~d: %d%%",porcentaje_velocidad_emulador);

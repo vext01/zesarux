@@ -70,6 +70,19 @@ z80_byte datagear_wr4;
 z80_byte datagear_wr5;
 z80_byte datagear_wr6;
 
+z80_bit datagear_dma_emulation={0};
+
+void datagear_dma_disable(void)
+{
+    datagear_dma_emulation.v=0;
+}
+
+void datagear_dma_enable(void)
+{
+    datagear_dma_emulation.v=1;
+}
+
+
 void datagear_reset(void)
 {
     datagear_mask_commands=0;

@@ -30,4 +30,9 @@
 extern void datagear_reset(void);
 extern void datagear_write_value(z80_byte value);
 
+extern z80_bit datagear_dma_emulation;
+
+extern void datagear_dma_disable(void);
+extern void datagear_dma_enable(void);
+
 #endif

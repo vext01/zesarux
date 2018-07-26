@@ -2774,6 +2774,9 @@ void set_machine_params(void)
 		if (scr_z88_cpc_load_keymap!=NULL) scr_z88_cpc_load_keymap();
 
 
+		if (MACHINE_IS_TBBLUE) datagear_dma_enable();
+		else datagear_dma_disable();
+
 		//Quitar mensajes de footer establecidos con autoselectoptions.c
 		//Desactivado. Esto provoca:
 		//Al cambiar de maquina, si hay un mensaje pendiente, seguira desplazandose hasta que acabe
