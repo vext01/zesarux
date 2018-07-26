@@ -408,6 +408,24 @@ void datagear_write_value(z80_byte value)
 
 int datagear_dma_last_testados=0;
 
+z80_byte datagear_read_operation(z80_int address,z80_byte dma_mem_type)
+{
+
+    z80_byte byte_leido;
+
+    if (dma_mem_type) byte_leido=lee_puerto_spectrum_no_time((address>>8)&0xFF,address & 0xFF);
+    else byte_leido=peek_byte_no_time(address);
+
+    return byte_leido;
+}
+
+void datagear_write_operation(z80_int address,z80_byte value,z80_byte dma_mem_type)
+{
+    if (dma_mem_type) out_port_spectrum_no_time(address,value);
+    else poke_byte_no_time(address,value);
+}
+					    
+
 void datagear_handle_dma(void)
 {
         if (datagear_is_dma_transfering.v==0) return;
@@ -442,13 +460,13 @@ void datagear_handle_dma(void)
 			//for (i=0;i<cpu_turbo_speed;i++) {
 			           z80_byte byte_leido;
                     if (datagear_wr0 & 4) {
-                        byte_leido=peek_byte_no_time(transfer_port_a);
-					    poke_byte_no_time(transfer_port_b,byte_leido);
+                        byte_leido=datagear_read_operation(transfer_port_a,datagear_wr1 & 8);
+					    datagear_write_operation(transfer_port_b,byte_leido,datagear_wr2 & 8);
                     }
 
                     else {
-                        byte_leido=peek_byte_no_time(transfer_port_b);
-					    poke_byte_no_time(transfer_port_a,byte_leido);                        
+                        byte_leido=datagear_read_operation(transfer_port_b,datagear_wr2 & 8);
+					    datagear_write_operation(transfer_port_a,byte_leido,datagear_wr1 & 8);                        
                     }
 
                     if ( (datagear_wr1 & 32) == 0 ) {
