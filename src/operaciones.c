@@ -72,6 +72,7 @@
 #include "zxevo.h"
 #include "settings.h"
 #include "saa_simul.h"
+#include "datagear.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -5978,7 +5979,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//Este puerto solo se puede leer en TBBLUE y es necesario para que NextOS funcione bien
 		if (puerto_l==0xe3 && diviface_enabled.v) return diviface_control_register;
 
-		if (puerto_l==TBBLUE_DMA_PORT || puerto_l==DATAGEAR_DMA_PORT) {
+		if (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) {
 			printf ("Reading TBBLUE DMA Port %04XH\n",puerto);
 			return 0;
 		}
@@ -7372,7 +7373,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
                 if (puerto==DS1307_PORT_CLOCK) ds1307_write_port_clock(value);
                 if (puerto==DS1307_PORT_DATA) ds1307_write_port_data(value);
 
-		if (puerto_l==TBBLUE_DMA_PORT || puerto_l==DATAGEAR_DMA_PORT) {
+		if (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) {
 			printf ("Writing TBBLUE DMA port %04XH with value %02XH\n",puerto,value);
 			datagear_write_value(value);
 		}
