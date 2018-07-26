@@ -427,7 +427,18 @@ void datagear_write_operation(z80_int address,z80_byte value,z80_byte dma_mem_ty
     if (dma_mem_type) out_port_spectrum_no_time(address,value);
     else poke_byte_no_time(address,value);
 }
-					    
+
+
+int datagear_return_resta_testados(int anterior, int actual)
+{
+	//screen_testados_total
+
+	int resta=actual-anterior;
+
+	if (resta<0) resta=screen_testados_total-anterior+actual;
+
+	return resta; 
+}				    
 
 void datagear_handle_dma(void)
 {
@@ -453,14 +464,21 @@ void datagear_handle_dma(void)
 
         int dmapre=4; //Cada 4 estados, una transferencia
 
-		int resta=zxuno_return_resta_testados(datagear_dma_last_testados,t_estados);
+		int resta=datagear_return_resta_testados(datagear_dma_last_testados,t_estados);
 
 		//dmapre *=cpu_turbo_speed;
 
-		//printf ("Antes transferencia: dmapre: %d datagear_dma_last_testados %d t_estados %d\n",dmapre,datagear_dma_last_testados,t_estados);
 
-		while (resta>=dmapre && transfer_length) {
+
+
+		printf ("Antes transferencia: dmapre: %d datagear_dma_last_testados %d t_estados %d resta %d dmapre %d length %d\n",
+			dmapre,datagear_dma_last_testados,t_estados,resta,dmapre,transfer_length);
+
+		//TEMP hacerlo de golpe
+		while (transfer_length>0) {
+		//while (resta>=dmapre && transfer_length) {
 			//for (i=0;i<cpu_turbo_speed;i++) {
+				//printf ("dma op ");
 			           z80_byte byte_leido;
                     if (datagear_wr0 & 4) {
                         byte_leido=datagear_read_operation(transfer_port_a,datagear_wr1 & 8);
@@ -493,9 +511,9 @@ void datagear_handle_dma(void)
 			datagear_dma_last_testados %=screen_testados_total;
 			//printf ("post ajuste %d\n",datagear_dma_last_testados);
 
-			resta=zxuno_return_resta_testados(datagear_dma_last_testados,t_estados);
+			resta=datagear_return_resta_testados(datagear_dma_last_testados,t_estados);
 
-			//printf ("En transferencia: dmapre: %6d datagear_dma_last_testados %6d t_estados %6d resta %6d\n",dmapre,datagear_dma_last_testados,t_estados,resta);
+			//printf ("En transferencia: dmapre: %6d datagear_dma_last_testados %6d t_estados %6d resta %6d\n",	dmapre,datagear_dma_last_testados,t_estados,resta);
 
 		}
 
@@ -516,6 +534,6 @@ void datagear_handle_dma(void)
 
     if (transfer_length==0) datagear_is_dma_transfering.v=0;
 
-
+	printf ("length: %d\n",transfer_length);
 
 }
