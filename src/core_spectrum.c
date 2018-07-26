@@ -55,6 +55,7 @@
 
 #include "scrstdout.h"
 #include "settings.h"
+#include "datagear.h"
 
 z80_byte byte_leido_core_spectrum;
 
@@ -380,6 +381,8 @@ void cpu_core_loop_spectrum(void)
 
 				//Soporte DMA ZXUNO
 				if (MACHINE_IS_ZXUNO && zxuno_dma_disabled.v==0) zxuno_handle_dma();
+
+				if (datagear_dma_emulation.v && datagear_dma_is_disabled.v==0) datagear_handle_dma(); 
 
 				//Soporte copper
 				if (MACHINE_IS_TBBLUE) {

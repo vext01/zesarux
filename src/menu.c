@@ -23897,30 +23897,30 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
 
+
+		char access_type[20];
+
+        if (datagear_wr1 & 8) sprintf (access_type,"I/O"); 
+		else sprintf (access_type,"Memory");
+
 		if ( (datagear_wr1 & 32) == 0 ) {
-            if (datagear_wr1 & 16) sprintf (texto_dma,"Port A++");
-            else sprintf (texto_dma,"Port A--");
+            if (datagear_wr1 & 16) sprintf (texto_dma,"Port A++. %s",access_type);
+            else sprintf (texto_dma,"Port A--. %s",access_type);
         }
-		else sprintf (texto_dma,"Port A fixed");
+		else sprintf (texto_dma,"Port A fixed. %s",access_type);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
-        if (datagear_wr1 & 8) sprintf (texto_dma,"Port A I/O"); 
-		else sprintf (texto_dma,"Port A Memory");
-		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
 
-
+        if (datagear_wr2 & 8) sprintf (access_type,"I/O"); 
+		else sprintf (access_type,"Memory");
 
 		if ( (datagear_wr2 & 32) == 0 ) {
-            if (datagear_wr2 & 16) sprintf (texto_dma,"Port B++");
-            else sprintf (texto_dma,"Port B--");
+            if (datagear_wr2 & 16) sprintf (texto_dma,"Port B++. %s",access_type);
+            else sprintf (texto_dma,"Port B--. %s",access_type);
         }
-		else sprintf (texto_dma,"Port B fixed");
+		else sprintf (texto_dma,"Port B fixed. %s",access_type);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
 
-
-        if (datagear_wr2 & 8) sprintf (texto_dma,"Port B I/O"); 
-		else sprintf (texto_dma,"Port B Memory");
-		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
 
 
 	}
@@ -24008,8 +24008,12 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 
 void menu_debug_tsconf_dma_zxuno_disable(MENU_ITEM_PARAMETERS)
 {
-	if (MACHINE_IS_TSCONF) tsconf_dma_disabled.v ^=1;
-	if (MACHINE_IS_ZXUNO) zxuno_dma_disabled.v ^=1;
+	if (datagear_dma_emulation.v) datagear_dma_is_disabled.v ^=1;
+
+	else {
+		if (MACHINE_IS_TSCONF) tsconf_dma_disabled.v ^=1;
+		if (MACHINE_IS_ZXUNO) zxuno_dma_disabled.v ^=1;
+	}
 }
 
 
@@ -24044,6 +24048,8 @@ void menu_debug_tsconf_dma_zxuno(MENU_ITEM_PARAMETERS)
 				lin++;	
 				condicion_dma_disabled=zxuno_dma_disabled.v;
 			}
+
+			if (datagear_dma_emulation.v) condicion_dma_disabled=datagear_dma_is_disabled.v;
 		
 				menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_dma_zxuno,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_zxuno_disable,NULL,"~~DMA: %s",
 					(condicion_dma_disabled ? "Disabled" : "Enabled") );

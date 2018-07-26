@@ -28,6 +28,7 @@
 #include "utils.h"
 #include "operaciones.h"
 #include "ula.h"
+#include "screen.h"
 
 
 
@@ -70,7 +71,14 @@ z80_byte datagear_wr4;
 z80_byte datagear_wr5;
 z80_byte datagear_wr6;
 
+//Si esta activada la emulacion de dma
 z80_bit datagear_dma_emulation={0};
+
+//Si esta desactivada la dma. Si esta desactivada, se puede acceder igualmente a todo, excepto que no ejecuta transferencias DMA
+z80_bit datagear_dma_is_disabled={0};
+
+//Si hay transferencia de dma activa
+z80_bit datagear_is_dma_transfering={0};
 
 void datagear_dma_disable(void)
 {
@@ -88,8 +96,57 @@ void datagear_reset(void)
     datagear_mask_commands=0;
 
     datagear_wr0=datagear_wr1=datagear_wr2=datagear_wr3=datagear_wr4=datagear_wr5=datagear_wr6=0;
+    datagear_is_dma_transfering.v=0;
 
 }
+
+/*void datagear_do_transfer(void)
+{
+    if (datagear_dma_is_disabled.v) return;
+
+				z80_int transfer_length=value_8_to_16(datagear_block_length_high,datagear_block_length_low);
+				z80_int transfer_port_a,transfer_port_b;
+
+		
+					transfer_port_a=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
+					transfer_port_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
+							
+
+				if (datagear_wr0 & 4) printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_a,transfer_port_b);
+                else printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_b,transfer_port_a);
+
+                if (datagear_wr1 & 8) printf ("Port A I/O. not implemented yet\n");
+                if (datagear_wr2 & 8) printf ("Port B I/O. not implemented yet\n");
+
+				//while (transfer_length) {
+                    z80_byte byte_leido;
+                    if (datagear_wr0 & 4) {
+                        byte_leido=peek_byte_no_time(transfer_port_a);
+					    poke_byte_no_time(transfer_port_b,byte_leido);
+                    }
+
+                    else {
+                        byte_leido=peek_byte_no_time(transfer_port_b);
+					    poke_byte_no_time(transfer_port_a,byte_leido);                        
+                    }
+
+                    if ( (datagear_wr1 & 32) == 0 ) {
+                        if (datagear_wr1 & 16) transfer_port_a++;
+                        else transfer_port_a--;
+                    }
+
+                    if ( (datagear_wr2 & 32) == 0 ) {
+                        if (datagear_wr2 & 16) transfer_port_b++;
+                        else transfer_port_b--;
+                    }                    
+
+					transfer_length--;
+				//}
+
+    if (transfer_length==0) datagear_is_dma_transfering.v=0;
+
+}
+*/
 
 void datagear_write_value(z80_byte value)
 {
@@ -295,51 +352,8 @@ void datagear_write_value(z80_byte value)
 			case 0x87:
 				printf ("Enable DMA\n");
 				//Prueba rapida de transferencia DMA
-				z80_int transfer_length=value_8_to_16(datagear_block_length_high,datagear_block_length_low);
-				z80_int transfer_port_a,transfer_port_b;
-
-				//if (datagear_wr0 & 4) 	{
-					//printf ("Port A -> Port B\n");
-					transfer_port_a=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
-					transfer_port_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
-				//}
-				/*else {
-					printf ("Port B -> Port A\n");			
-					transfer_source=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
-					transfer_destination=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
-				}*/					
-
-				if (datagear_wr0 & 4) printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_a,transfer_port_b);
-                else printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_b,transfer_port_a);
-
-                if (datagear_wr1 & 8) printf ("Port A I/O. not implemented yet\n");
-                if (datagear_wr2 & 8) printf ("Port B I/O. not implemented yet\n");
-
-				while (transfer_length) {
-                    z80_byte byte_leido;
-                    if (datagear_wr0 & 4) {
-                        byte_leido=peek_byte_no_time(transfer_port_a);
-					    poke_byte_no_time(transfer_port_b,byte_leido);
-                    }
-
-                    else {
-                        byte_leido=peek_byte_no_time(transfer_port_b);
-					    poke_byte_no_time(transfer_port_a,byte_leido);                        
-                    }
-
-                    if ( (datagear_wr1 & 32) == 0 ) {
-                        if (datagear_wr1 & 16) transfer_port_a++;
-                        else transfer_port_a--;
-                    }
-
-                    if ( (datagear_wr2 & 32) == 0 ) {
-                        if (datagear_wr2 & 16) transfer_port_b++;
-                        else transfer_port_b--;
-                    }                    
-
-					transfer_length--;
-				}
-
+                datagear_is_dma_transfering.v=1;
+                //datagear_do_transfer();
 
 			break;		
 			
@@ -389,4 +403,98 @@ void datagear_write_value(z80_byte value)
 	}
 
 	}
+}
+
+
+int datagear_dma_last_testados=0;
+
+void datagear_handle_dma(void)
+{
+        if (datagear_is_dma_transfering.v==0) return;
+
+
+      				z80_int transfer_length=value_8_to_16(datagear_block_length_high,datagear_block_length_low);
+				z80_int transfer_port_a,transfer_port_b;
+
+		
+					transfer_port_a=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
+					transfer_port_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
+							
+
+				if (datagear_wr0 & 4) printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_a,transfer_port_b);
+                else printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_b,transfer_port_a);
+
+                if (datagear_wr1 & 8) printf ("Port A I/O. not implemented yet\n");
+                if (datagear_wr2 & 8) printf ("Port B I/O. not implemented yet\n");
+
+
+
+
+        int dmapre=4; //Cada 4 estados, una transferencia
+
+		int resta=zxuno_return_resta_testados(datagear_dma_last_testados,t_estados);
+
+		//dmapre *=cpu_turbo_speed;
+
+		//printf ("Antes transferencia: dmapre: %d datagear_dma_last_testados %d t_estados %d\n",dmapre,datagear_dma_last_testados,t_estados);
+
+		while (resta>=dmapre && transfer_length) {
+			//for (i=0;i<cpu_turbo_speed;i++) {
+			           z80_byte byte_leido;
+                    if (datagear_wr0 & 4) {
+                        byte_leido=peek_byte_no_time(transfer_port_a);
+					    poke_byte_no_time(transfer_port_b,byte_leido);
+                    }
+
+                    else {
+                        byte_leido=peek_byte_no_time(transfer_port_b);
+					    poke_byte_no_time(transfer_port_a,byte_leido);                        
+                    }
+
+                    if ( (datagear_wr1 & 32) == 0 ) {
+                        if (datagear_wr1 & 16) transfer_port_a++;
+                        else transfer_port_a--;
+                    }
+
+                    if ( (datagear_wr2 & 32) == 0 ) {
+                        if (datagear_wr2 & 16) transfer_port_b++;
+                        else transfer_port_b--;
+                    }                    
+
+					transfer_length--;
+
+			//}
+
+			datagear_dma_last_testados +=dmapre;
+
+			//Ajustar a total t-estados
+			//printf ("pre ajuste %d\n",datagear_dma_last_testados);
+			datagear_dma_last_testados %=screen_testados_total;
+			//printf ("post ajuste %d\n",datagear_dma_last_testados);
+
+			resta=zxuno_return_resta_testados(datagear_dma_last_testados,t_estados);
+
+			//printf ("En transferencia: dmapre: %6d datagear_dma_last_testados %6d t_estados %6d resta %6d\n",dmapre,datagear_dma_last_testados,t_estados,resta);
+
+		}
+
+
+        //Guardar valores contadores
+  
+        datagear_block_length_low=value_16_to_8l(transfer_length);
+        datagear_block_length_high=value_16_to_8h(transfer_length);
+
+        datagear_port_a_start_addr_low=value_16_to_8l(transfer_port_a);
+        datagear_port_a_start_addr_high=value_16_to_8l(transfer_port_a);
+
+        datagear_port_b_start_addr_low=value_16_to_8l(transfer_port_b);
+        datagear_port_b_start_addr_high=value_16_to_8l(transfer_port_b);        
+	
+   
+				//}
+
+    if (transfer_length==0) datagear_is_dma_transfering.v=0;
+
+
+
 }
