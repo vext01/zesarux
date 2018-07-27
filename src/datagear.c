@@ -424,8 +424,14 @@ z80_byte datagear_read_operation(z80_int address,z80_byte dma_mem_type)
 
 void datagear_write_operation(z80_int address,z80_byte value,z80_byte dma_mem_type)
 {
-    if (dma_mem_type) out_port_spectrum_no_time(address,value);
-    else poke_byte_no_time(address,value);
+    if (dma_mem_type) {
+		out_port_spectrum_no_time(address,value);
+		t_estados +=1; //Por ejemplo ;)
+	}
+
+    else {
+		poke_byte_no_time(address,value);
+	}
 }
 
 
@@ -443,8 +449,10 @@ int datagear_return_resta_testados(int anterior, int actual)
 int datagear_condicion_transferencia(z80_int transfer_length,int dma_continuous,int resta,int dmapre)
 {
 
+	printf ("dma condicion length: %d dma_cont %d resta %d dmapre %d\n",transfer_length,dma_continuous,resta,dmapre);
+
 	//Si hay bytes a transferir
-	if (transfer_length>0) return 1;
+	if (transfer_length==0) return 0;
 
 	//Si es modo continuo
 	if (dma_continuous) return 1;
@@ -480,7 +488,7 @@ void datagear_handle_dma(void)
 
 
 
-        int dmapre=4; //Cada 4 estados, una transferencia
+        int dmapre=2; //Cada 2 estados, una transferencia
 
 		int resta=datagear_return_resta_testados(datagear_dma_last_testados,t_estados);
 
@@ -494,7 +502,7 @@ void datagear_handle_dma(void)
 
 		//Ver si modo continuo o modo burst
 		//WR4. Bits D6 D5:
-		//#       0   0 = Do not use (Behaves like Continuous mode, Byte mode on Z80 DMA)
+		//#       0   0 = Byte mode -> Do not use (Behaves like Continuous mode, Byte mode on Z80 DMA)
 		//#       0   1 = Continuous mode
 		//#       1   0 = Burst mode
 		//#       1   1 = Do not use

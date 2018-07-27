@@ -23921,6 +23921,20 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 		else sprintf (texto_dma,"Port B fixed. %s",access_type);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
 
+		//WR4. Bits D6 D5:
+		//#       0   0 = Byte mode -> Do not use (Behaves like Continuous mode, Byte mode on Z80 DMA)
+		//#       0   1 = Continuous mode
+		//#       1   0 = Burst mode
+		//#       1   1 = Do not use
+
+		z80_byte modo_transferencia=(datagear_wr4>>5)&3;
+		if (modo_transferencia==0) 		sprintf (texto_dma,"Mode: Byte mode");
+		else if (modo_transferencia==1) sprintf (texto_dma,"Mode: Continuous");
+		else if (modo_transferencia==2) sprintf (texto_dma,"Mode: Burst");
+		else 							sprintf (texto_dma,"Mode: Do not use");
+
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
+
 
 
 	}
