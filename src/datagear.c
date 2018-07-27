@@ -438,7 +438,26 @@ int datagear_return_resta_testados(int anterior, int actual)
 	if (resta<0) resta=screen_testados_total-anterior+actual;
 
 	return resta; 
-}				    
+}		
+
+int datagear_condicion_transferencia(z80_int transfer_length,int dma_continuous,int resta,int dmapre)
+{
+
+	//Si hay bytes a transferir
+	if (transfer_length>0) return 1;
+
+	//Si es modo continuo
+	if (dma_continuous) return 1;
+
+	//Modo burst. Permitiendo ejecutar la cpu entre medio
+	if (resta>=dmapre) return 1;
+
+
+	//Otro caso, retornar 0
+	return 0;
+
+
+}
 
 void datagear_handle_dma(void)
 {
@@ -456,8 +475,7 @@ void datagear_handle_dma(void)
 				/*if (datagear_wr0 & 4) printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_a,transfer_port_b);
                 else printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_b,transfer_port_a);
 
-                if (datagear_wr1 & 8) printf ("Port A I/O. not implemented yet\n");
-                if (datagear_wr2 & 8) printf ("Port B I/O. not implemented yet\n");*/
+                */
 
 
 
@@ -474,10 +492,29 @@ void datagear_handle_dma(void)
 		//printf ("Antes transferencia: dmapre: %d datagear_dma_last_testados %d t_estados %d resta %d dmapre %d length %d\n",
 		//	dmapre,datagear_dma_last_testados,t_estados,resta,dmapre,transfer_length);
 
+		//Ver si modo continuo o modo burst
+		//WR4. Bits D6 D5:
+		//#       0   0 = Do not use (Behaves like Continuous mode, Byte mode on Z80 DMA)
+		//#       0   1 = Continuous mode
+		//#       1   0 = Burst mode
+		//#       1   1 = Do not use
+
+		//Por defecto, modo continuo (todo de golpe). Modo burst, permite ejecutar la cpu entre medio
+		int dma_continuous=1;
+
+		z80_byte modo_transferencia=datagear_wr4 & (64+32);
+		if (modo_transferencia==64) dma_continuous=0;
+
 		//TEMP hacerlo de golpe. ejemplo: dmafill
-		while (transfer_length>0) {
+		//while (transfer_length>0) {
 
 		//while (resta>=dmapre && transfer_length>0) {
+
+		if (dma_continuous) printf ("Transferencia modo continuous\n");
+		else printf ("Transferencia modo burst\n");
+
+		while ( datagear_condicion_transferencia(transfer_length,dma_continuous,resta,dmapre) ) {
+
 			//for (i=0;i<cpu_turbo_speed;i++) {
 				//printf ("dma op ");
 			           z80_byte byte_leido;
