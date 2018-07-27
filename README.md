@@ -166,6 +166,8 @@ __FEATURES__
 
 * Emulates Multiface One, 128 and Three
 
+* Emulates Datagear/MB02 DMA
+
 * Handles DCK Timex dock cartridges
 
 * Emulates +3 Disk

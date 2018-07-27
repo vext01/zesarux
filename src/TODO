@@ -24,6 +24,8 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-datagear dma: timing (puesto tiempos arbitrarios), demos que hacen out no se ven bien, modo turbo next afecta a timing?
+
 -Opción para generar un .config con opciones en curso, opciones basicas. en que menu? Save...? settings? debug...?
 
 -formato zsf debe guardar iff1 y iff2 por separado
