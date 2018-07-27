@@ -172,22 +172,22 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_a_start_addr_low=value;
-						printf ("Setting port a start address low to %02XH\n",value);
+						//printf ("Setting port a start address low to %02XH\n",value);
 					break;
 
 					case 1:
 						datagear_port_a_start_addr_high=value;
-						printf ("Setting port a start address high to %02XH\n",value);
+						//printf ("Setting port a start address high to %02XH\n",value);
 					break;					
 
 					case 2:
 						datagear_block_length_low=value;
-						printf ("Setting block length low to %02XH\n",value);
+						//printf ("Setting block length low to %02XH\n",value);
 					break;
 
 					case 3:
 						datagear_block_length_high=value;
-						printf ("Setting block length high to %02XH\n",value);
+						//printf ("Setting block length high to %02XH\n",value);
 					break;
 
 				}
@@ -210,7 +210,7 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_a_variable_timing_byte=value;
-						printf ("Setting port a variable timing byte to %02XH\n",value);
+						//printf ("Setting port a variable timing byte to %02XH\n",value);
 					break;
 
 				}
@@ -232,7 +232,7 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_b_variable_timing_byte=value;
-						printf ("Setting port b variable timing byte to %02XH\n",value);
+						//printf ("Setting port b variable timing byte to %02XH\n",value);
 					break;
 
 				}
@@ -257,12 +257,12 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_b_start_addr_low=value;
-						printf ("Setting port b start address low to %02XH\n",value);
+						//printf ("Setting port b start address low to %02XH\n",value);
 					break;
 
 					case 1:
 						datagear_port_b_start_addr_high=value;
-						printf ("Setting port b start address high to %02XH\n",value);
+						//printf ("Setting port b start address high to %02XH\n",value);
 					break;					
 
 				}
@@ -290,7 +290,7 @@ void datagear_write_value(z80_byte value)
 
 	z80_byte value_mask_wr0_wr3=value&(128+2+1);
 	if (value_mask_wr0_wr3==1 || value_mask_wr0_wr3==2 ||value_mask_wr0_wr3==3 ) {
-		printf ("WR0\n");
+		//printf ("WR0\n");
 		datagear_last_command=0;
 		datagear_wr0=value;
 
@@ -308,28 +308,27 @@ void datagear_write_value(z80_byte value)
 		datagear_mask_commands=(value>>3)&15;
 
 		z80_byte transfer_type=value&3;
-		if (transfer_type==1) printf ("Type: transfer\n");
+		/*if (transfer_type==1) printf ("Type: transfer\n");
 		else if (transfer_type==2) printf ("Type: search\n");
 		else if (transfer_type==3) printf ("Type: search/transfer\n");
 
 		if (value&4) printf ("Port A -> Port B\n");
-		else printf ("Port B -> Port A\n");
+		else printf ("Port B -> Port A\n");*/
 
 
 	}
 
 	if (value_mask_wr0_wr3==128) {
-		printf ("WR3\n");
+		//printf ("WR3\n");
 		datagear_last_command=3;
 		datagear_wr3=value;
 	}
 
 	if (value_mask_wr0_wr3==129) {
-		printf ("WR4\n");
+		//printf ("WR4\n");
 		datagear_last_command=4;
 		datagear_wr4=value;
 
-		//TODO. Bit D4 diferente de 0. En next, D4 siempre es 0
 		datagear_mask_commands=(value>>2)&3;
 
 
@@ -337,23 +336,22 @@ void datagear_write_value(z80_byte value)
 	}	
 
 	if (value_mask_wr0_wr3==128+2+1) {
-		printf ("WR6\n");
+		//printf ("WR6\n");
 		datagear_last_command=6;
 		datagear_wr6=value;
 
 		//Tratar todos los diferentes comandos
 		switch (value) {
 			case 0xCF:
-				printf ("Load starting address for both ports, clear byte counter\n");
+				//printf ("Load starting address for both ports, clear byte counter\n");
 			break;
 
 			case 0xAB:
-				printf ("Enable interrupts\n");
+				//printf ("Enable interrupts\n");
 			break;
 
 			case 0x87:
-				printf ("Enable DMA\n");
-				//Prueba rapida de transferencia DMA
+				//printf ("Enable DMA\n");
                 datagear_is_dma_transfering.v=1;
                 //datagear_do_transfer();
                 datagear_dma_last_testados=t_estados;
@@ -361,11 +359,11 @@ void datagear_write_value(z80_byte value)
 			break;		
 			
 			case 0xB3:
-				printf ("Force an internal ready condition independent 'on the rdy' input\n");
+				//printf ("Force an internal ready condition independent 'on the rdy' input\n");
 			break;				
 
 			case 0xB7:
-				printf ("Enable after RETI so dma requests bus only after receiving a reti\n");
+				//printf ("Enable after RETI so dma requests bus only after receiving a reti\n");
 			break;
 
 
@@ -376,7 +374,7 @@ void datagear_write_value(z80_byte value)
 
 	z80_byte value_mask_wr1_wr2=value&(128+4+2+1);
 	if (value_mask_wr1_wr2==4) {
-		printf ("WR1\n");
+		//printf ("WR1\n");
 		datagear_last_command=1;
 		datagear_wr1=value;
 
@@ -388,7 +386,7 @@ void datagear_write_value(z80_byte value)
 	}
 
 	if (value_mask_wr1_wr2==0) {
-		printf ("WR2\n");
+		//printf ("WR2\n");
 		datagear_last_command=2;
 		datagear_wr2=value;
 
@@ -400,7 +398,7 @@ void datagear_write_value(z80_byte value)
 
 	z80_byte value_mask_wr5=value&(128+64+4+2+1);
 	if (value_mask_wr5==128+2) {
-		printf ("WR5\n");
+		//printf ("WR5\n");
 		datagear_last_command=5;
 		datagear_wr5=value;
 	}
@@ -449,7 +447,7 @@ int datagear_return_resta_testados(int anterior, int actual)
 int datagear_condicion_transferencia(z80_int transfer_length,int dma_continuous,int resta,int dmapre)
 {
 
-	printf ("dma condicion length: %d dma_cont %d resta %d dmapre %d\n",transfer_length,dma_continuous,resta,dmapre);
+	//printf ("dma condicion length: %d dma_cont %d resta %d dmapre %d\n",transfer_length,dma_continuous,resta,dmapre);
 
 	//Si hay bytes a transferir
 	if (transfer_length==0) return 0;
@@ -518,8 +516,8 @@ void datagear_handle_dma(void)
 
 		//while (resta>=dmapre && transfer_length>0) {
 
-		if (dma_continuous) printf ("Transferencia modo continuous\n");
-		else printf ("Transferencia modo burst\n");
+		//if (dma_continuous) printf ("Transferencia modo continuous\n");
+		//else printf ("Transferencia modo burst\n");
 
 		while ( datagear_condicion_transferencia(transfer_length,dma_continuous,resta,dmapre) ) {
 
