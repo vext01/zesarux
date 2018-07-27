@@ -356,7 +356,13 @@ void datagear_write_value(z80_byte value)
                 //datagear_do_transfer();
                 datagear_dma_last_testados=t_estados;
 
-			break;		
+			break;	
+
+			case 0x83:
+				//printf ("Disable DMA\n");
+                datagear_is_dma_transfering.v=0;
+
+			break;					
 			
 			case 0xB3:
 				//printf ("Force an internal ready condition independent 'on the rdy' input\n");
@@ -478,10 +484,10 @@ void datagear_handle_dma(void)
 					transfer_port_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
 							
 
-				/*if (datagear_wr0 & 4) printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_a,transfer_port_b);
-                else printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_b,transfer_port_a);
+				//if (datagear_wr0 & 4) printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_a,transfer_port_b);
+                //else printf ("Copying %d bytes from %04XH to %04XH\n",transfer_length,transfer_port_b,transfer_port_a);
 
-                */
+                
 
 
 
@@ -514,7 +520,10 @@ void datagear_handle_dma(void)
 		//TEMP hacerlo de golpe. ejemplo: dmafill
 		//while (transfer_length>0) {
 
+		//TEMP hacerlo combinando tiempo con cpu
 		//while (resta>=dmapre && transfer_length>0) {
+
+			//dma_continuous=1;
 
 		//if (dma_continuous) printf ("Transferencia modo continuous\n");
 		//else printf ("Transferencia modo burst\n");
