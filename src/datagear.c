@@ -172,22 +172,22 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_a_start_addr_low=value;
-						//printf ("Setting port a start address low to %02XH\n",value);
+						printf ("Setting port a start address low to %02XH\n",value);
 					break;
 
 					case 1:
 						datagear_port_a_start_addr_high=value;
-						//printf ("Setting port a start address high to %02XH\n",value);
+						printf ("Setting port a start address high to %02XH\n",value);
 					break;					
 
 					case 2:
 						datagear_block_length_low=value;
-						//printf ("Setting block length low to %02XH\n",value);
+						printf ("Setting block length low to %02XH\n",value);
 					break;
 
 					case 3:
 						datagear_block_length_high=value;
-						//printf ("Setting block length high to %02XH\n",value);
+						printf ("Setting block length high to %02XH\n",value);
 					break;
 
 				}
@@ -210,7 +210,7 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_a_variable_timing_byte=value;
-						//printf ("Setting port a variable timing byte to %02XH\n",value);
+						printf ("Setting port a variable timing byte to %02XH\n",value);
 					break;
 
 				}
@@ -232,8 +232,21 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_b_variable_timing_byte=value;
-						//printf ("Setting port b variable timing byte to %02XH\n",value);
+						printf ("Setting port b variable timing byte to %02XH\n",value);
 					break;
+
+/*
+TODO: Solo en Next. Si bit 5 no es 0, se leera otro parametro:
+D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
+#
+# The ZXN PRESCALAR is a feature of the ZXN DMA implementation.
+# If non-zero, a delay will be inserted after each byte is transferred
+# such that the total time needed for the transfer is at least the number
+# of cycles indicated by the prescalar.  This works in both the continuous
+# mode and the burst mode.
+
+*/
+
 
 				}
 
@@ -325,7 +338,7 @@ void datagear_write_value(z80_byte value)
 	}
 
 	if (value_mask_wr0_wr3==129) {
-		//printf ("WR4\n");
+		printf ("WR4 = %02XH\n",value);
 		datagear_last_command=4;
 		datagear_wr4=value;
 
@@ -392,7 +405,7 @@ void datagear_write_value(z80_byte value)
 	}
 
 	if (value_mask_wr1_wr2==0) {
-		//printf ("WR2\n");
+		printf ("WR2\n");
 		datagear_last_command=2;
 		datagear_wr2=value;
 
@@ -516,6 +529,52 @@ void datagear_handle_dma(void)
 
 		z80_byte modo_transferencia=datagear_wr4 & (64+32);
 		if (modo_transferencia==64) dma_continuous=0;
+
+/*
+Excepción:
+# The ZXN DMA can operate in either burst or continuous mode.  Continuous mode means the DMA chip
+# runs to completion without allowing the CPU to run.  Burst mode nominally means the DMA lets the
+# CPU run if either port is not ready.  This condition can't happen in the ZXN DMA chip except when
+# operated in the special fixed time transfer mode.  In this mode, the ZXN DMA chip will let the CPU
+# run while it waits for the fixed time to expire between bytes transferred.  Note that there is no
+# byte transfer mode as in the Z80 DMA.
+*/		
+
+		//Por tanto de momento:
+		if (MACHINE_IS_TBBLUE) dma_continuous=1;
+
+		//TODO Ver ese delay
+		/*
+# WR2 - Write Register Group 2
+#
+#  D7  D6  D5  D4  D3  D2  D1  D0  BASE REGISTER BYTE
+#   0   |   |   |   |   0   0   0
+#       |   |   |   |
+#       |   |   |   0 = Port B is memory
+#       |   |   |   1 = Port B is IO
+#       |   |   |
+#       |   0   0 = Port B address decrements
+#       |   0   1 = Port B address increments
+#       |   1   0 = Port B address is fixed
+#       |   1   1 = Port B address is fixed
+#       |
+#       V
+#  D7  D6  D5  D4  D3  D2  D1  D0  PORT B VARIABLE TIMING BYTE
+#   0   0   |   0   0   0   |   |
+#           |               0   0 = Cycle Length = 4
+#           |               0   1 = Cycle Length = 3
+#           |               1   0 = Cycle Length = 2
+#           |               1   1 = Do not use
+#           |
+#           V
+#  D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
+#
+# The ZXN PRESCALAR is a feature of the ZXN DMA implementation.
+# If non-zero, a delay will be inserted after each byte is transferred
+# such that the total time needed for the transfer is at least the number
+# of cycles indicated by the prescalar.  This works in both the continuous
+# mode and the burst mode.		
+		*/
 
 		//TEMP hacerlo de golpe. ejemplo: dmafill
 		//while (transfer_length>0) {
