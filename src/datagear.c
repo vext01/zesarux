@@ -47,7 +47,8 @@ int datagear_command_index;
 //z80_byte datagear_last_command_byte;
 
 
-//Indica ultimo comando leido, 0=WR0, 1=WR1, etc
+//Indica ultimo comando leido, 0=WR0, 1=WR1, etc. Caso especial: 128+2 (130) para valor de ZXN PRESCALAR (FIXED TIME TRANSFER) de WR2 en TBBLUE
+
 z80_byte datagear_last_command;
 
 z80_byte datagear_port_a_start_addr_low;
@@ -79,6 +80,9 @@ z80_bit datagear_dma_is_disabled={0};
 
 //Si hay transferencia de dma activa
 z80_bit datagear_is_dma_transfering={0};
+
+//Valor de la DMA de TBBLUE de prescaler
+z80_byte datagear_dma_tbblue_prescaler;
 
 int datagear_dma_last_testados=0;
 
@@ -197,6 +201,7 @@ void datagear_write_value(z80_byte value)
 
 			break;
 
+			//WR1
 			case 1:
 				//si parametro de indice actual se salta porque mascara vale 0 en bit bajo
 				while ( (datagear_mask_commands&1)==0) {
@@ -219,6 +224,7 @@ void datagear_write_value(z80_byte value)
 				datagear_command_index++;			
 			break;
 
+			//WR2
 			case 2:
 				//si parametro de indice actual se salta porque mascara vale 0 en bit bajo
 				while ( (datagear_mask_commands&1)==0) {
@@ -233,7 +239,9 @@ void datagear_write_value(z80_byte value)
 					case 0:
 						datagear_port_b_variable_timing_byte=value;
 						printf ("Setting port b variable timing byte to %02XH\n",value);
-					break;
+						if (value&32 && MACHINE_IS_TBBLUE) {
+
+							//De momento solo leo el valor del prescaler, aunque no hago nada con el
 
 /*
 TODO: Solo en Next. Si bit 5 no es 0, se leera otro parametro:
@@ -245,18 +253,44 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 # of cycles indicated by the prescalar.  This works in both the continuous
 # mode and the burst mode.
 
+# The ZXN DMA's speed matches the current CPU speed so it can operate
+# at 3.5MHz, 7MHz or 14MHz.  Since the prescalar delay is a cycle count,
+# the actual duration depends on the speed of the DMA.  A prescalar
+# delay set to N cycles will result in a real time transfer taking N/fCPU
+# seconds.  For example, if the DMA is operating at 3.5MHz and the max
+# prescalar of 255 is set, the transfer time for each byte will be
+# 255/3.5MHz = 72.9us.  If the DMA is used to send sampled audio, the
+# sample rate would be 13.7kHz and this is the lowest sample rate possible
+# using the prescalar.
+#
+# If the DMA is operated in burst mode, the DMA will give up any waiting
+# time to the CPU so that the CPU can run while the DMA is idle.
+
+
+
 */
 
+						printf ("Will receive ZXN Prescaler\n");
+						datagear_last_command=128+2;
 
+						datagear_mask_commands=1;        //Realmente esto cualquier cosa diferente de 0 nos vale
+						
+						}
+					break;
 				}
 
-				datagear_mask_commands=datagear_mask_commands >> 1;
-				datagear_command_index++;	            
+				//Siempre que no vayamos a recibir el prescaler
+				if (datagear_last_command!=130) {
+					datagear_mask_commands=datagear_mask_commands >> 1;
+					datagear_command_index++;	            
+				}
 			break;
 
+			//WR3
 			case 3:
 			break;
 
+			//WR4
 			case 4:
 				//si parametro de indice actual se salta porque mascara vale 0 en bit bajo
 				while ( (datagear_mask_commands&1)==0) {
@@ -284,10 +318,19 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 				datagear_command_index++;				
 			break;
 
+			//WR5
 			case 5:
 			break;
 
+			//WR6
 			case 6:
+			break;
+
+
+			case 130:
+				printf ("Reading ZXN Prescaler = %02XH\n",value);
+				datagear_dma_tbblue_prescaler=value;
+				datagear_mask_commands=0;
 			break;
 
 		}
@@ -303,7 +346,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 	z80_byte value_mask_wr0_wr3=value&(128+2+1);
 	if (value_mask_wr0_wr3==1 || value_mask_wr0_wr3==2 ||value_mask_wr0_wr3==3 ) {
-		//printf ("WR0\n");
+		printf ("WR0\n");
 		datagear_last_command=0;
 		datagear_wr0=value;
 
@@ -332,7 +375,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 	}
 
 	if (value_mask_wr0_wr3==128) {
-		//printf ("WR3\n");
+		printf ("WR3\n");
 		datagear_last_command=3;
 		datagear_wr3=value;
 	}
@@ -349,7 +392,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 	}	
 
 	if (value_mask_wr0_wr3==128+2+1) {
-		//printf ("WR6\n");
+		printf ("WR6\n");
 		datagear_last_command=6;
 		datagear_wr6=value;
 
@@ -393,7 +436,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 	z80_byte value_mask_wr1_wr2=value&(128+4+2+1);
 	if (value_mask_wr1_wr2==4) {
-		//printf ("WR1\n");
+		printf ("WR1\n");
 		datagear_last_command=1;
 		datagear_wr1=value;
 
@@ -417,7 +460,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 	z80_byte value_mask_wr5=value&(128+64+4+2+1);
 	if (value_mask_wr5==128+2) {
-		//printf ("WR5\n");
+		printf ("WR5 = %02XH\n",value);
 		datagear_last_command=5;
 		datagear_wr5=value;
 	}
