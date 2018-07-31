@@ -30135,14 +30135,14 @@ void menu_about(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_about,"Install on ~~Windows",MENU_OPCION_NORMAL,menu_about_installwindows,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'w');
 
+            menu_add_item_menu(array_menu_about,"C~~ompile info",MENU_OPCION_NORMAL,menu_about_compile_info,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'o');			
+
             menu_add_item_menu(array_menu_about,"~~Statistics",MENU_OPCION_NORMAL,menu_about_statistics,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'s');
 
             menu_add_item_menu(array_menu_about,"Core Statistics",MENU_OPCION_NORMAL,menu_about_core_statistics,NULL);
 			//menu_add_item_menu_shortcut(array_menu_about,'r');
-
-            menu_add_item_menu(array_menu_about,"C~~ompile info",MENU_OPCION_NORMAL,menu_about_compile_info,NULL);
-			menu_add_item_menu_shortcut(array_menu_about,'o');
 
 			menu_add_item_menu(array_menu_about,"R~~unning info",MENU_OPCION_NORMAL,menu_about_running_info,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'u');

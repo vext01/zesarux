@@ -5983,7 +5983,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//sea 0 antes de empezar
 		// http://devnext.referata.com/wiki/UART_TX
 		// https://www.specnext.com/the-next-on-the-network/
-		if (puerto==TBBLUE_UART_RX) return 0;
+		if (puerto==TBBLUE_UART_RX_PORT) return 0;
 
 
 	}
