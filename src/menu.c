@@ -23396,6 +23396,16 @@ void menu_debug_view_basic(MENU_ITEM_PARAMETERS)
   menu_generic_message_format("View Basic","%s",results_buffer);
 }
 
+//Devuelve 1 si caracter es imprimible en pantalla (entre 32 y 126 o caracteres 10, 13, y algun otro)
+int menu_file_viewer_read_text_file_char_print(z80_byte caracter)
+{
+	if (caracter>=32 && caracter<=126) return 1;
+
+	if (caracter>=9 && caracter<=13) return 1; //9=horiz tab, 10=LF, 11=vert tab, 12=new page, 13=CR
+
+	return 0;
+	
+}
 
 void menu_file_viewer_read_text_file(char *title,char *file_name)
 {
@@ -23453,7 +23463,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 
 	//Ahora deducir si el archivo cargado es texto o binario.
-	//Codigos mayores de 127 hacen disparar el aviso. Cuantos tiene que haber? Por porcentaje del archivo o por numero?
+	//Codigos mayores de 127 o menores de 32 (sin ser el 10, 13 y algun otro) hacen disparar el aviso. Cuantos tiene que haber? Por porcentaje del archivo o por numero?
 	//Mejor por porcentaje. Cualquier archivo con un 10% minimo de codigos no imprimibles, se considerara binario
 	int i;
 	int codigos_no_imprimibles=0;
@@ -23461,7 +23471,8 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	for (i=0;i<leidos;i++) {
 		caracter=file_read_memory[i];
-		if (caracter>127) codigos_no_imprimibles++;
+		//if (caracter>127) codigos_no_imprimibles++;
+		if (!menu_file_viewer_read_text_file_char_print(caracter)) codigos_no_imprimibles++;
 	}
 
 	//Sacar porcentaje 10%
