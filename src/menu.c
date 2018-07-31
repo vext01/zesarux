@@ -30096,83 +30096,82 @@ void menu_about(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
         do {
-                menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_about,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'a');
+            menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_about,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'a');
 
-		menu_add_item_menu(array_menu_about,"~~Help",MENU_OPCION_NORMAL,menu_about_help,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'h');
+			menu_add_item_menu(array_menu_about,"~~Help",MENU_OPCION_NORMAL,menu_about_help,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'h');
 
-		menu_add_item_menu(array_menu_about,"~~Readme",MENU_OPCION_NORMAL,menu_about_readme,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'r');
+			menu_add_item_menu(array_menu_about,"~~Readme",MENU_OPCION_NORMAL,menu_about_readme,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'r');
 
-		menu_add_item_menu(array_menu_about,"~~Features",MENU_OPCION_NORMAL,menu_about_features,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'f');
+			menu_add_item_menu(array_menu_about,"~~Features",MENU_OPCION_NORMAL,menu_about_features,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'f');
 
-                menu_add_item_menu(array_menu_about,"H~~istory",MENU_OPCION_NORMAL,menu_about_history,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'i');
+            menu_add_item_menu(array_menu_about,"H~~istory",MENU_OPCION_NORMAL,menu_about_history,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'i');
 
-                menu_add_item_menu(array_menu_about,"A~~cknowledgements",MENU_OPCION_NORMAL,menu_about_acknowledgements,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'c');
+            menu_add_item_menu(array_menu_about,"A~~cknowledgements",MENU_OPCION_NORMAL,menu_about_acknowledgements,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'c');
 
-		menu_add_item_menu(array_menu_about,"~~Donate",MENU_OPCION_NORMAL,menu_about_donate,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'d');
+			menu_add_item_menu(array_menu_about,"~~Donate",MENU_OPCION_NORMAL,menu_about_donate,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'d');
 
-		menu_add_item_menu(array_menu_about,"FA~~Q",MENU_OPCION_NORMAL,menu_about_faq,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'q');
+			menu_add_item_menu(array_menu_about,"FA~~Q",MENU_OPCION_NORMAL,menu_about_faq,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'q');
 
-		menu_add_item_menu(array_menu_about,"Cha~~ngelog",MENU_OPCION_NORMAL,menu_about_changelog,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'n');
+			menu_add_item_menu(array_menu_about,"Cha~~ngelog",MENU_OPCION_NORMAL,menu_about_changelog,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'n');
 
-		menu_add_item_menu(array_menu_about,"Alternate RO~~MS",MENU_OPCION_NORMAL,menu_about_alternate_roms,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'m');
+			menu_add_item_menu(array_menu_about,"Alternate RO~~MS",MENU_OPCION_NORMAL,menu_about_alternate_roms,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'m');
 
-		menu_add_item_menu(array_menu_about,"Included ~~tapes",MENU_OPCION_NORMAL,menu_about_included_tapes,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'t');
+			menu_add_item_menu(array_menu_about,"Included ~~tapes",MENU_OPCION_NORMAL,menu_about_included_tapes,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'t');
 
-		menu_add_item_menu(array_menu_about,"Insta~~ll",MENU_OPCION_NORMAL,menu_about_install,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'l');
+			menu_add_item_menu(array_menu_about,"Insta~~ll",MENU_OPCION_NORMAL,menu_about_install,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'l');
 
-		menu_add_item_menu(array_menu_about,"Install on ~~Windows",MENU_OPCION_NORMAL,menu_about_installwindows,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'w');
+			menu_add_item_menu(array_menu_about,"Install on ~~Windows",MENU_OPCION_NORMAL,menu_about_installwindows,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'w');
 
-                menu_add_item_menu(array_menu_about,"~~Statistics",MENU_OPCION_NORMAL,menu_about_statistics,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'s');
+            menu_add_item_menu(array_menu_about,"~~Statistics",MENU_OPCION_NORMAL,menu_about_statistics,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'s');
 
-                menu_add_item_menu(array_menu_about,"Core Statistics",MENU_OPCION_NORMAL,menu_about_core_statistics,NULL);
-		//menu_add_item_menu_shortcut(array_menu_about,'r');
+            menu_add_item_menu(array_menu_about,"Core Statistics",MENU_OPCION_NORMAL,menu_about_core_statistics,NULL);
+			//menu_add_item_menu_shortcut(array_menu_about,'r');
 
-                menu_add_item_menu(array_menu_about,"C~~ompile info",MENU_OPCION_NORMAL,menu_about_compile_info,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'o');
+            menu_add_item_menu(array_menu_about,"C~~ompile info",MENU_OPCION_NORMAL,menu_about_compile_info,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'o');
 
-		menu_add_item_menu(array_menu_about,"R~~unning info",MENU_OPCION_NORMAL,menu_about_running_info,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'u');
+			menu_add_item_menu(array_menu_about,"R~~unning info",MENU_OPCION_NORMAL,menu_about_running_info,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'u');
 
-                menu_add_item_menu(array_menu_about,"Lic~~ense",MENU_OPCION_NORMAL,menu_about_license,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'e');
+            menu_add_item_menu(array_menu_about,"Lic~~ense",MENU_OPCION_NORMAL,menu_about_license,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'e');
 
-		menu_add_item_menu(array_menu_about,"Motorola Core License",MENU_OPCION_NORMAL,menu_about_license_motorola_core,NULL);
+			menu_add_item_menu(array_menu_about,"Motorola Core License",MENU_OPCION_NORMAL,menu_about_license_motorola_core,NULL);
+
+			menu_add_item_menu(array_menu_about,"SCM~~P Core License",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'p');
 
 
-		menu_add_item_menu(array_menu_about,"SCM~~P Core License",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
-		menu_add_item_menu_shortcut(array_menu_about,'p');
+            menu_add_item_menu(array_menu_about,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
+            menu_add_ESC_item(array_menu_about);
 
-                menu_add_item_menu(array_menu_about,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+            retorno_menu=menu_dibuja_menu(&about_opcion_seleccionada,&item_seleccionado,array_menu_about,"Help" );
 
-                menu_add_ESC_item(array_menu_about);
+			cls_menu_overlay();
 
-                retorno_menu=menu_dibuja_menu(&about_opcion_seleccionada,&item_seleccionado,array_menu_about,"Help" );
-
-		cls_menu_overlay();
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
-                        }
+            if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            	//llamamos por valor de funcion
+                if (item_seleccionado.menu_funcion!=NULL) {
+                	//printf ("actuamos por funcion\n");
+                    item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                    cls_menu_overlay();
                 }
+            }
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
