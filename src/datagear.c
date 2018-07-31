@@ -176,22 +176,22 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_a_start_addr_low=value;
-						printf ("Setting port a start address low to %02XH\n",value);
+						//printf ("Setting port a start address low to %02XH\n",value);
 					break;
 
 					case 1:
 						datagear_port_a_start_addr_high=value;
-						printf ("Setting port a start address high to %02XH\n",value);
+						//printf ("Setting port a start address high to %02XH\n",value);
 					break;					
 
 					case 2:
 						datagear_block_length_low=value;
-						printf ("Setting block length low to %02XH\n",value);
+						//printf ("Setting block length low to %02XH\n",value);
 					break;
 
 					case 3:
 						datagear_block_length_high=value;
-						printf ("Setting block length high to %02XH\n",value);
+						//printf ("Setting block length high to %02XH\n",value);
 					break;
 
 				}
@@ -215,7 +215,7 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_a_variable_timing_byte=value;
-						printf ("Setting port a variable timing byte to %02XH\n",value);
+						//printf ("Setting port a variable timing byte to %02XH\n",value);
 					break;
 
 				}
@@ -238,7 +238,7 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_b_variable_timing_byte=value;
-						printf ("Setting port b variable timing byte to %02XH\n",value);
+						//printf ("Setting port b variable timing byte to %02XH\n",value);
 						if (value&32 && MACHINE_IS_TBBLUE) {
 
 							//De momento solo leo el valor del prescaler, aunque no hago nada con el
@@ -270,7 +270,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 */
 
-						printf ("Will receive ZXN Prescaler\n");
+						//printf ("Will receive ZXN Prescaler\n");
 						datagear_last_command=128+2;
 
 						datagear_mask_commands=1;        //Realmente esto cualquier cosa diferente de 0 nos vale
@@ -328,7 +328,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 
 			case 130:
-				printf ("Reading ZXN Prescaler = %02XH\n",value);
+				//printf ("Reading ZXN Prescaler = %02XH\n",value);
 				datagear_dma_tbblue_prescaler=value;
 				datagear_mask_commands=0;
 			break;
@@ -346,7 +346,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 	z80_byte value_mask_wr0_wr3=value&(128+2+1);
 	if (value_mask_wr0_wr3==1 || value_mask_wr0_wr3==2 ||value_mask_wr0_wr3==3 ) {
-		printf ("WR0\n");
+		//printf ("WR0\n");
 		datagear_last_command=0;
 		datagear_wr0=value;
 
@@ -363,7 +363,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 		datagear_mask_commands=(value>>3)&15;
 
-		z80_byte transfer_type=value&3;
+		//z80_byte transfer_type=value&3;
 		/*if (transfer_type==1) printf ("Type: transfer\n");
 		else if (transfer_type==2) printf ("Type: search\n");
 		else if (transfer_type==3) printf ("Type: search/transfer\n");
@@ -375,13 +375,13 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 	}
 
 	if (value_mask_wr0_wr3==128) {
-		printf ("WR3\n");
+		//printf ("WR3\n");
 		datagear_last_command=3;
 		datagear_wr3=value;
 	}
 
 	if (value_mask_wr0_wr3==129) {
-		printf ("WR4 = %02XH\n",value);
+		//printf ("WR4 = %02XH\n",value);
 		datagear_last_command=4;
 		datagear_wr4=value;
 
@@ -392,7 +392,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 	}	
 
 	if (value_mask_wr0_wr3==128+2+1) {
-		printf ("WR6\n");
+		//printf ("WR6\n");
 		datagear_last_command=6;
 		datagear_wr6=value;
 
@@ -436,7 +436,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 	z80_byte value_mask_wr1_wr2=value&(128+4+2+1);
 	if (value_mask_wr1_wr2==4) {
-		printf ("WR1\n");
+		//printf ("WR1\n");
 		datagear_last_command=1;
 		datagear_wr1=value;
 
@@ -448,7 +448,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 	}
 
 	if (value_mask_wr1_wr2==0) {
-		printf ("WR2\n");
+		//printf ("WR2\n");
 		datagear_last_command=2;
 		datagear_wr2=value;
 
@@ -460,7 +460,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 	z80_byte value_mask_wr5=value&(128+64+4+2+1);
 	if (value_mask_wr5==128+2) {
-		printf ("WR5 = %02XH\n",value);
+		//printf ("WR5 = %02XH\n",value);
 		datagear_last_command=5;
 		datagear_wr5=value;
 	}
@@ -486,6 +486,7 @@ void datagear_write_operation(z80_int address,z80_byte value,z80_byte dma_mem_ty
 {
     if (dma_mem_type) {
 		out_port_spectrum_no_time(address,value);
+		//printf ("Port %04XH value %02XH\n",address,value);
 		t_estados +=1; //Por ejemplo ;)
 	}
 

@@ -5979,6 +5979,12 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//Este puerto solo se puede leer en TBBLUE y es necesario para que NextOS funcione bien
 		if (puerto_l==0xe3 && diviface_enabled.v) return diviface_control_register;
 
+		//TODO puerto UART de tbbue. De momento retornamos 0, en la demo de Pogie espera que ese valor (el bit 1 concretamente)
+		//sea 0 antes de empezar
+		// http://devnext.referata.com/wiki/UART_TX
+		// https://www.specnext.com/the-next-on-the-network/
+		if (puerto==TBBLUE_UART_RX) return 0;
+
 
 	}
 
