@@ -23485,6 +23485,9 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 	}
 
 	else {
+		debug_printf(VERBOSE_INFO,"Considering file as text because the invalid characters are lower than 10%% of the total size (%d/%d)",
+			codigos_no_imprimibles,leidos);
+
 		if (avisolimite) debug_printf (VERBOSE_ERR,"Read max text buffer: %d bytes. Showing only these",leidos);
 
 		menu_generic_message(title,file_read_memory);
@@ -30148,7 +30151,10 @@ void menu_about(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_about,'e');
 
 		menu_add_item_menu(array_menu_about,"Motorola Core License",MENU_OPCION_NORMAL,menu_about_license_motorola_core,NULL);
-		menu_add_item_menu(array_menu_about,"SCMP Core License",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
+
+
+		menu_add_item_menu(array_menu_about,"SCM~~P Core License",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
+		menu_add_item_menu_shortcut(array_menu_about,'p');
 
 
                 menu_add_item_menu(array_menu_about,"",MENU_OPCION_SEPARADOR,NULL,NULL);
