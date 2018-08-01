@@ -10790,11 +10790,15 @@ int piano_graphic_base_y=0;
 
 #define AY_PIANO_ANCHO_VENTANA ( menu_char_width==8 || menu_char_width==6 ? 14 : 15 )
 
+z80_bit menu_ay_piano_drawing_wavepiano={0};
 
 //Escala alto en vertical teclado piano segun si ay chip>2, para que el teclado sea mas pequeñito
 int scale_y_chip(int y)
 {
 	if (ay_retorna_numero_chips()<3) return y;
+
+	//Si venimos de un Wave Piano, no hay que hacerlo pequeño , aunque tengamos 3 chips de audio, a ese menu no le tiene que afectar
+	if (menu_ay_piano_drawing_wavepiano.v) return y;
 
 	//Casos:
 	//3,4,7,8
@@ -11182,6 +11186,8 @@ void menu_ay_pianokeyboard_overlay(void)
 {
         normal_overlay_texto_menu();
 
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
+
 	//char volumen[16],textovolumen[32],textotono[32];
 
 	int  total_chips=ay_retorna_numero_chips();
@@ -11345,10 +11351,19 @@ valor_contador_segundo_anterior=contador_segundo;
 	menu_espera_no_tecla();
 
 	/* Nota:
-	Creo que este es de los pocos casos en que llamamos a menu_espera_no_tecla al salir,
-	si no se hiciera, cuando hay text-to-speech+also send menu, la tecla ESC se suele escalar hacia abajo, probablemente porque activa
+	Creo que este es de los pocos casos en que llamamos a menu_espera_no_tecla al salir, por dos razones:
+
+	1) si no se hiciera, cuando hay text-to-speech+also send menu, la tecla ESC se suele escalar hacia abajo, probablemente porque activa
 	variable menu_speech_tecla_pulsada=1
 	Probablemente habria que llamar siempre a menu_espera_no_tecla(); al finalizar ventanas que no estan gestionadas por menu_dibuja_menu
+
+	
+	2) si no se hiciera, saldria con menu_speech_tecla_pulsada=1, y la tecla pulsada utilizada para salir de esta ventana (ESC),
+	acaba pasando al menu anterior, cerrando el menu directamente. Esto solo pasa si no hay text-to-speech+also send menu
+	No se muy bien porque solo sucede en este caso, quiza es porque estamos mostrando texto directamente en la funcion overlay y 
+	de manera muy rapida. Esto es lo mismo que en el menu de Wave Piano
+	
+
 	*/			
 
 }
@@ -11387,7 +11402,11 @@ void menu_beeper_pianokeyboard_overlay(void)
 			//Si no hay sonido, suele dar frecuencia 5 o menos
 			if (frecuencia<=5) nota_a[0]=0;
 
+			//Indicar que no hay que reducir el tamaño del piano segun el numero de chips (esto va bien en ay piano, pero no aqui)
+			menu_ay_piano_drawing_wavepiano.v=1;
 			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_a);
+			//Restauramos comportamiento por defecto
+			menu_ay_piano_drawing_wavepiano.v=0;
 
 			char buffer_texto[40];
 			
