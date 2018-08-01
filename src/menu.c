@@ -4864,6 +4864,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	while (tecla!=13 && tecla!=32 && tecla!=MENU_RETORNO_ESC && tecla!=MENU_RETORNO_F1 && tecla!=MENU_RETORNO_F2 && tecla!=MENU_RETORNO_F10 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
 
+		//printf ("tecla desde bucle: %d\n",tecla);
 		//Ajustar scroll
 		scroll_opciones=0;
 
@@ -5007,6 +5008,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			else if ((puerto_especial1 & 1)==0) {
 				//Enter
+				//printf ("Leido ESC\n");
 				tecla=MENU_RETORNO_ESC;
 			}
 
@@ -5075,6 +5077,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		//Si no se ha pulsado tecla de atajo:
 		if (!((tecla_leida>='a' && tecla_leida<='z') || (tecla_leida>='A' && tecla_leida<='Z')) ) {
+			//printf ("Esperando no pulsar tecla\n");
 			menu_espera_no_tecla();
 		}
 
@@ -5289,7 +5292,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Salir del menu diciendo que no se ha pulsado tecla
 	menu_speech_tecla_pulsada=0;
 
-
+	//printf ("tecla: %d\n",tecla);
 
 	if (tecla==MENU_RETORNO_ESC) return MENU_RETORNO_ESC;
 	else if (tecla==MENU_RETORNO_F1) return MENU_RETORNO_F1;
@@ -10259,6 +10262,8 @@ void menu_audio_draw_sound_wave(void)
 			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
 				menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
 			menu_escribe_linea_opcion(3,-1,1,buffer_texto_medio);
+
+			//printf ("menu_speech_tecla_pulsada: %d\n",menu_speech_tecla_pulsada);
 	}
 
 
@@ -11337,6 +11342,15 @@ valor_contador_segundo_anterior=contador_segundo;
 
         cls_menu_overlay();
 
+	menu_espera_no_tecla();
+
+	/* Nota:
+	Creo que este es de los pocos casos en que llamamos a menu_espera_no_tecla al salir,
+	si no se hiciera, cuando hay text-to-speech+also send menu, la tecla ESC se suele escalar hacia abajo, probablemente porque activa
+	variable menu_speech_tecla_pulsada=1
+	Probablemente habria que llamar siempre a menu_espera_no_tecla(); al finalizar ventanas que no estan gestionadas por menu_dibuja_menu
+	*/			
+
 }
 
 
@@ -11382,7 +11396,10 @@ void menu_beeper_pianokeyboard_overlay(void)
 			}
 
 			else strcpy (buffer_texto,"             ");
-                        menu_escribe_linea_opcion(5,-1,1,buffer_texto);
+            
+			menu_escribe_linea_opcion(5,-1,1,buffer_texto);
+			//printf ("menu_speech_tecla_pulsada despues de enviar texto: %d\n",menu_speech_tecla_pulsada);
+
 
 
 	
@@ -11479,6 +11496,16 @@ valor_contador_segundo_anterior=contador_segundo;
 
 
         cls_menu_overlay();
+
+	menu_espera_no_tecla();
+
+	/* Nota:
+	Creo que este es de los pocos casos en que llamamos a menu_espera_no_tecla al salir,
+	si no se hiciera, saldria con menu_speech_tecla_pulsada=1, y la tecla pulsada utilizada para salir de esta ventana (ESC),
+	acaba pasando al menu anterior, cerrando el menu directamente. Esto solo pasa si no hay text-to-speech+also send menu
+	No se muy bien porque solo sucede en este caso, quiza es porque estamos mostrando texto directamente en la funcion overlay y 
+	de manera muy rapida
+	*/	
 
 }
 
@@ -12125,7 +12152,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+							cls_menu_overlay();
         	        }
 		}
 
