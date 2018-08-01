@@ -11452,7 +11452,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 				else {
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 
-						piano_graphic_base_y=5;
+						piano_graphic_base_y=8;
 						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,8,"Wave Piano");
 
 
