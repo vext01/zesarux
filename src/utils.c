@@ -11733,10 +11733,7 @@ c800h/1024=32h
 
 int util_extract_z88_card(char *filename,char *tempdir)  
 {
-
-        //Asignar memoria de lectura del archivo
-
-        
+      
         long int bytes_to_load=get_file_size(filename);
 
         z80_byte *flash_file_memory;
@@ -11776,16 +11773,8 @@ int util_extract_z88_card(char *filename,char *tempdir)
         }
 
 
-	//#define MAX_TEXTO 4096
-        //char texto_buffer[MAX_TEXTO];
-
-        //int max_texto=MAX_TEXTO;
-
-
-        //z88_dir dir;
         z88_eprom_flash_file file;
 
-        //z88_eprom_flash_find_init(&dir,slot);
 
         z80_byte *dir;
 
@@ -11794,10 +11783,7 @@ int util_extract_z88_card(char *filename,char *tempdir)
         char buffer_nombre[Z88_MAX_CARD_FILENAME+1];
 
         int retorno;
-        //int longitud;
-
-
-        //int indice_buffer=0;
+ 
 
         do {
                 z80_byte *dir_current;
@@ -11808,17 +11794,7 @@ int util_extract_z88_card(char *filename,char *tempdir)
                         z88_eprom_flash_get_file_name(&file,buffer_nombre);
 
 			if (buffer_nombre[0]=='.') buffer_nombre[0]='D'; //archivo borrado
-
-			//printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
-                        //longitud=strlen(buffer_nombre)+1; //Agregar salto de linea
-                        //if (indice_buffer+longitud>max_texto-1) retorno=0;
-                        //else {
-                        //        sprintf (&texto_buffer[indice_buffer],"%s\n",buffer_nombre);
-                        //        indice_buffer +=longitud;
-                        //}
-                        
-
-
+                 
                         z80_long_int tamanyo=file.size[0]+(file.size[1]*256)+(file.size[2]*65536)+(file.size[3]*16777216);
                         debug_printf (VERBOSE_INFO,"Name: %s size: %d",buffer_nombre,tamanyo);
 
@@ -11836,14 +11812,10 @@ int util_extract_z88_card(char *filename,char *tempdir)
 
 			util_save_file(data_ptr,tamanyo,buffer_nombre_destino);
 
-
-
                 }
+
         } while (retorno!=0);
 
-        //texto_buffer[indice_buffer]=0;
-
-	//menu_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, "%s", texto_buffer);
 
         free(flash_file_memory);
 

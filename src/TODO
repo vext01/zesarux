@@ -34,10 +34,6 @@ Y montones de flags y parámetros de dma que de momento no gestiono
 
 -al cambiar de core reduced o no, si habia breakpoints, aparecen como activos aunque realmente el core no esta usando el debug core (se ha perdido el nested)
 
--expansor de archivos .eprom/.epr de z88. Puede servir mucho el menu de Copy from eprom. Problema: que creo que las funciones
-de copia desde eprom estan pensadas para la eprom cargada en la memoria, no para archivos de disco
-->por lo mismo, no hay menu visor de .eprom/.epr
-
 -en visor hexadecimal de file utils, si hay archivo con caracter 7E (~~~) como orquesta.rwa, se acaba viendo texto inverso.
 dicho visor no tendria que entender los tags especiales de texto...
 
