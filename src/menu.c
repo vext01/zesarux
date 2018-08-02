@@ -12872,6 +12872,7 @@ void menu_z88_slot_copy_to_eprom_flash(MENU_ITEM_PARAMETERS)
 void menu_z88_new_ptr_card_browser(char *archivo)
 {
 
+		//printf ("Z88 card browser\n");
 
         //Asignar 1 mb
 
@@ -12908,6 +12909,7 @@ void menu_z88_new_ptr_card_browser(char *archivo)
 
         //El segundo byte tiene que ser 0 (archivo borrado) o '/'
         if (flash_file_memory[1]!=0 && flash_file_memory[1]!='/') {
+			//printf ("Calling read text file\n");
         	menu_file_viewer_read_text_file("Flash file",archivo);
         	free(flash_file_memory);
         	return;
@@ -18261,6 +18263,11 @@ int menu_file_filter(const char *name,char *filtros[])
 
 	//Si es trd, tambien lo soportamos
 	if (!strcasecmp(extension,"trd")) return 1;		
+
+	//Si es epr, eprom o flash, tambien lo soportamos
+	if (!strcasecmp(extension,"epr")) return 1;
+	if (!strcasecmp(extension,"eprom")) return 1;
+	if (!strcasecmp(extension,"flash")) return 1;		
 
 	//NOTA: Aqui agregamos todas las extensiones que en principio pueden generar muchos diferentes tipos de archivos,
 	//ya sea porque son archivos comprimidos (p.ej. zip) o porque son archivos que se pueden expandir (p.j. tap)
@@ -30084,7 +30091,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
-			"- Use Space to expand files, currently supported: tap, tzx, trd, dsk, mdv, hdf, P, O\n"
+			"- Use Space to expand files, currently supported: tap, tzx, trd, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash)\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
@@ -33405,6 +33412,15 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
                 debug_printf (VERBOSE_DEBUG,"Is a dsk file");
                 return util_extract_dsk(archivo,tmpdir);
         }		
+
+        else if (
+			!util_compare_file_extension(archivo,"epr")  ||
+			!util_compare_file_extension(archivo,"eprom")  ||
+			!util_compare_file_extension(archivo,"flash")  
+		) {
+                debug_printf (VERBOSE_DEBUG,"Is a Z88 card file");
+                return util_extract_z88_card(archivo,tmpdir);
+        }				
 
         else if (!util_compare_file_extension(archivo,"p") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a P file");

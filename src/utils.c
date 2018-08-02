@@ -11731,3 +11731,122 @@ c800h/1024=32h
 
 
 
+int util_extract_z88_card(char *filename,char *tempdir)  
+{
+
+        //Asignar memoria de lectura del archivo
+
+        
+        long int bytes_to_load=get_file_size(filename);
+
+        z80_byte *flash_file_memory;
+        flash_file_memory=malloc(bytes_to_load);
+        if (flash_file_memory==NULL) {
+                debug_printf(VERBOSE_ERR,"Unable to assign memory");
+                return 1;
+        }
+        
+        //Leemos cabecera archivo 
+        FILE *ptr_file_flash_browser;
+        ptr_file_flash_browser=fopen(filename,"rb");
+
+        if (!ptr_file_flash_browser) {
+                debug_printf(VERBOSE_ERR,"Unable to open file");
+                free(flash_file_memory);
+                return 1;
+        }
+
+
+        int leidos=fread(flash_file_memory,1,bytes_to_load,ptr_file_flash_browser);
+
+        if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return 1;
+        }
+
+
+        fclose(ptr_file_flash_browser);
+
+        //El segundo byte tiene que ser 0 (archivo borrado) o '/'
+        if (flash_file_memory[1]!=0 && flash_file_memory[1]!='/') {
+                //No es archivo epr, eprom o flash con archivos. Salir
+                debug_printf (VERBOSE_INFO,"This is not a Z88 File Card");
+        	free(flash_file_memory);
+        	return 1;
+        }
+
+
+	#define MAX_TEXTO 4096
+        char texto_buffer[MAX_TEXTO];
+
+        int max_texto=MAX_TEXTO;
+
+
+        //z88_dir dir;
+        z88_eprom_flash_file file;
+
+        //z88_eprom_flash_find_init(&dir,slot);
+
+        z80_byte *dir;
+
+        dir=flash_file_memory;
+
+        char buffer_nombre[Z88_MAX_CARD_FILENAME+1];
+
+        int retorno;
+        int longitud;
+
+
+        int indice_buffer=0;
+
+        do {
+                z80_byte *dir_current;
+                dir_current=dir;
+
+                retorno=z88_eprom_new_ptr_flash_find_next(&dir,&file);
+                if (retorno) {
+                        z88_eprom_flash_get_file_name(&file,buffer_nombre);
+
+			if (buffer_nombre[0]=='.') buffer_nombre[0]='D'; //archivo borrado
+
+			//printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
+                        longitud=strlen(buffer_nombre)+1; //Agregar salto de linea
+                        if (indice_buffer+longitud>max_texto-1) retorno=0;
+                        else {
+                                sprintf (&texto_buffer[indice_buffer],"%s\n",buffer_nombre);
+                                indice_buffer +=longitud;
+                        }
+                        
+
+
+                        z80_long_int tamanyo=file.size[0]+(file.size[1]*256)+(file.size[2]*65536)+(file.size[3]*16777216);
+                        printf ("nombre: %s size: %d\n",buffer_nombre,tamanyo);
+
+                        //Datos empieza en dir+(byte longitud nombre)+longitud nombre+4(de tamanyo archivo)
+                        z80_byte *data_ptr=dir_current+1+file.namelength+4;
+
+                        //Si nombre empieza por /, evitar primer byte
+                        int index_nombre=0;
+                        if (buffer_nombre[0]=='/') index_nombre++;
+
+
+                        //Grabar archivo
+			char buffer_nombre_destino[PATH_MAX];
+			sprintf (buffer_nombre_destino,"%s/%s",tempdir,&buffer_nombre[index_nombre]);
+
+			util_save_file(data_ptr,tamanyo,buffer_nombre_destino);
+
+
+
+                }
+        } while (retorno!=0);
+
+        texto_buffer[indice_buffer]=0;
+
+	//menu_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, "%s", texto_buffer);
+
+        free(flash_file_memory);
+
+
+        return 0;
+}
