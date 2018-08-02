@@ -24,6 +24,21 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-si se deja cursor quieto en filebrowser, que muestre informacion del archivo:
+* nombre completo
+* tamaño
+* fecha 
+* otros datos?
+
+-Z88 basic file browser. Ver rom de z88 (Z88OZ47.rom), offset 00025ad7.
+Hay tabla de tokens, cada token con codigo >=128. Primer byte delante de token indica su codigo
+Cada texto de token finaliza con byte >=128, que es el del siguiente token
+Finaliza con byte 01 (en 25d7d esta el 01) , 679 bytes de longitud
+
+se usa:
+pruebatokens.txt -> tokens en crudo
+exportz88tokens.tap ->basic para convertir tokens en crudo a string
+
 
 -datagear dma: timing (puesto tiempos arbitrarios), demos que hacen out no se ven bien, modo turbo next afecta a timing?
 Y montones de flags y parámetros de dma que de momento no gestiono
