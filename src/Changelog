@@ -24,7 +24,7 @@ Improved debugger:
 
 Fixed autoload tape on TBBlue
 Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
-Fixed bug detecting extensions on files with no extensions
+Fixed bug reading extension on files with no extension
 
 
 Some other minor bugfixes and improvements
