@@ -233,6 +233,145 @@ char *zx80_rom_tokens[]={
 "CLEAR","REM","?"
 };
  
+
+struct s_z88_basic_rom_tokens {
+	z80_byte index;
+	char token[20];
+};
+
+
+struct s_z88_basic_rom_tokens z88_basic_rom_tokens[]={
+{0x80,"AND"},
+{0x94,"ABS"},
+{0x95,"ACS"},
+{0x96,"ADVAL"},
+{0x97,"ASC"},
+{0x98,"ASN"},
+{0x99,"ATN"},
+{0xC6,"AUTO"},
+{0x9A,"BGET"},
+{0xD5,"BPUT"},
+{0xFB,"COLOUR"},
+{0xFB,"COLOR"},
+{0xD6,"CALL"},
+{0xD7,"CHAIN"},
+{0xBD,"CHR$"},
+{0xD8,"CLEAR"},
+{0xD9,"CLOSE"},
+{0xDA,"CLG"},
+{0xDB,"CLS"},
+{0x9B,"COS"},
+{0x9C,"COUNT"},
+{0xDC,"DATA"},
+{0x9D,"DEG"},
+{0xDD,"DEF"},
+{0xC7,"DELETE"},
+{0x81,"DIV"},
+{0xDE,"DIM"},
+{0xDF,"DRAW"},
+{0xE1,"ENDPROC"},
+{0xE0,"END"},
+{0xE2,"ENVELOPE"},
+{0x8B,"ELSE"},
+{0xA0,"EVAL"},
+{0x9E,"ERL"},
+{0x85,"ERROR"},
+{0xC5,"EOF"},
+{0x82,"EOR"},
+{0x9F,"ERR"},
+{0xA1,"EXP"},
+{0xA2,"EXT"},
+{0xE3,"FOR"},
+{0xA3,"FALSE"},
+{0xA4,"FN"},
+{0xE5,"GOTO"},
+{0xBE,"GET$"},
+{0xA5,"GET"},
+{0xE4,"GOSUB"},
+{0xE6,"GCOL"},
+{0x93,"HIMEM"},
+{0xE8,"INPUT"},
+{0xE7,"IF"},
+{0xBF,"INKEY$"},
+{0xA6,"INKEY"},
+{0xA8,"INT"},
+{0xA7,"INSTR("},
+{0xC9,"LIST"},
+{0x86,"LINE"},
+{0xC8,"LOAD"},
+{0x92,"LOMEM"},
+{0xEA,"LOCAL"},
+{0xC0,"LEFT$("},
+{0xA9,"LEN"},
+{0xE9,"LET"},
+{0xAB,"LOG"},
+{0xAA,"LN"},
+{0xC1,"MID$("},
+{0xEB,"MODE"},
+{0x83,"MOD"},
+{0xEC,"MOVE"},
+{0xED,"NEXT"},
+{0xCA,"NEW"},
+{0xAC,"NOT"},
+{0xCB,"OLD"},
+{0xEE,"ON"},
+{0x87,"OFF"},
+{0x84,"OR"},
+{0x8E,"OPENIN"},
+{0xAE,"OPENOUT"},
+{0xAD,"OPENUP"},
+{0xFF,"OSCLI"},
+{0xF1,"PRINT"},
+{0x90,"PAGE"},
+{0x8F,"PTR"},
+{0xAF,"PI"},
+{0xF0,"PLOT"},
+{0xB0,"POINT("},
+{0xF2,"PROC"},
+{0xB1,"POS"},
+{0xCE,"PUT"},
+{0xF8,"RETURN"},
+{0xF5,"REPEAT"},
+{0xF6,"REPORT"},
+{0xF3,"READ"},
+{0xF4,"REM"},
+{0xF9,"RUN"},
+{0xB2,"RAD"},
+{0xF7,"RESTORE"},
+{0xC2,"RIGHT$("},
+{0xB3,"RND"},
+{0xCC,"RENUMBER"},
+{0x88,"STEP"},
+{0xCD,"SAVE"},
+{0xB4,"SGN"},
+{0xB5,"SIN"},
+{0xB6,"SQR"},
+{0x89,"SPC"},
+{0xC3,"STR$"},
+{0xC4,"STRING$("},
+{0xD4,"SOUND"},
+{0xFA,"STOP"},
+{0xB7,"TAN"},
+{0x8C,"THEN"},
+{0xB8,"TO"},
+{0x8A,"TAB("},
+{0xFC,"TRACE"},
+{0x91,"TIME"},
+{0xB9,"TRUE"},
+{0xFD,"UNTIL"},
+{0xBA,"USR"},
+{0xEF,"VDU"},
+{0xBB,"VAL"},
+{0xBC,"VPOS"},
+{0xFE,"WIDTH"},
+{0xD3,"HIMEM"},
+{0xD2,"LOMEM"},
+{0xD0,"PAGE"},
+{0xCF,"PTR"},
+{0xD1,"TIME"},
+{0x01,""}
+};
+
 //Rutina auxiliar que pueden usar los drivers de video para mostrar los registros. Mete en una string los registros
 void print_registers(char *buffer)
 {
@@ -3273,6 +3412,119 @@ int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo )
           results_buffer[index_buffer]=0;
 
 }
+
+void debug_view_z88_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,
+	z80_byte (*lee_byte_function)(z80_int dir) )
+{
+
+	  	z80_int dir;
+
+  	debug_printf (VERBOSE_INFO,"Start Basic: %d. End Basic: %d",dir_inicio_linea,final_basic);
+
+          int index_buffer;
+
+
+
+          index_buffer=0;
+
+          int salir=0;
+
+  	z80_int numero_linea;
+
+  	z80_byte longitud_linea;
+
+  	//deberia ser un byte, pero para hacer tokens de pi,rnd, inkeys en zx81, que en el array estan en posicion al final
+  	z80_int byte_leido;
+
+  	int lo_ultimo_es_un_token;
+
+
+  	while (dir_inicio_linea<final_basic && salir==0) {
+  		lo_ultimo_es_un_token=0;
+  		dir=dir_inicio_linea;
+  		//obtener numero linea. orden inverso
+  		//numero_linea=(peek_byte_no_time(dir++))*256 + peek_byte_no_time(dir++);
+		longitud_linea=(lee_byte_function(dir++));
+		debug_printf (VERBOSE_DEBUG,"Line length: %d",longitud_linea);
+
+  		numero_linea=lee_byte_function(dir++);
+  		numero_linea +=(lee_byte_function(dir++))*256;
+
+  		//escribir numero linea
+  		sprintf (&results_buffer[index_buffer],"%4d",numero_linea);
+  		index_buffer +=4;
+
+  		
+	
+  		//asignamos ya siguiente direccion.
+  		dir_inicio_linea=dir+longitud_linea;
+
+		//descontar los 3 bytes
+		longitud_linea -=3;
+		dir_inicio_linea -=3;
+
+  		while (longitud_linea>0) {
+  			byte_leido=lee_byte_function(dir++);
+  			longitud_linea--;
+
+			if (byte_leido>=32 && byte_leido<=126) {
+				results_buffer[index_buffer++]=byte_leido;
+			}
+
+			else if (byte_leido>=128) {
+				//token
+				//int indice_token=byte_leido-inicio_tokens;
+  				//printf ("byte_leido: %d inicio_tokens: %d indice token: %d\n",byte_leido,inicio_tokens,indice_token);
+  				//sprintf (&results_buffer[index_buffer],"%s ",dir_tokens[indice_token]);
+  				//index_buffer +=strlen(dir_tokens[indice_token])+1;
+  				sprintf (&results_buffer[index_buffer],"%s ","TOKEN");
+  				index_buffer +=strlen("TOKEN")+1;				  
+  				lo_ultimo_es_un_token=1;
+  			}
+
+
+  			else if (byte_leido==13) {
+  			}
+
+  			else {
+  				results_buffer[index_buffer++]='?';
+  			}
+
+
+
+  			//controlar maximo
+  			//1024 bytes de margen
+  			if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
+                          	debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first ones");
+                  	        //forzar salir
+  				longitud_linea=0;
+          	                salir=1;
+  	                }
+
+
+  		}
+
+
+                  //controlar maximo
+                  //1024 bytes de margen
+                  if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
+                          debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first ones");
+                          //forzar salir
+                          salir=1;
+                  }
+
+
+  		//meter dos saltos de linea
+  		results_buffer[index_buffer++]='\n';
+  		results_buffer[index_buffer++]='\n';
+
+  	}
+
+
+          results_buffer[index_buffer]=0;
+
+}
+
 
 
 void debug_view_basic(char *results_buffer)
