@@ -806,18 +806,31 @@ void util_get_file_extension(char *filename,char *extension)
 
         //obtener extension del nombre
         //buscar ultimo punto
+        //parar si se encuentra / o \ de division de carpeta
+
+        char caracter_carpeta='/';
+#ifdef MINGW
+        caracter_carpeta='\\';    
+#endif
+
 
         int j;
         j=strlen(filename);
         if (j==0) extension[0]=0;
         else {
-                for (;j>=0 && filename[j]!='.';j--);
+                for (;j>=0 && filename[j]!='.' && filename[j]!=caracter_carpeta;j--);
 
-                if (j>=0) strcpy(extension,&filename[j+1]);
-                else extension[0]=0;
+                if (filename[j]==caracter_carpeta) {
+                        extension[0]=0; //no hay extension
+                }
+
+                else {
+                        if (j>=0) strcpy(extension,&filename[j+1]);
+                        else extension[0]=0;
+                }
         }
 
-        //printf ("Filename: %s Extension: %s\n",filename,extension);
+        debug_printf (VERBOSE_DEBUG,"Filename: [%s] Extension: [%s]",filename,extension);
 }
 
 //Obtiene el nombre de filename sin extension y la guarda en filename_without_extension.
@@ -11821,4 +11834,57 @@ int util_extract_z88_card(char *filename,char *tempdir)
 
 
         return 0;
+}
+
+
+
+//Archivos de basic z88 acaban con 3 bytes: 00 FF FF
+int file_is_z88_basic(char *filename)
+{
+        long int bytes_to_load=get_file_size(filename);
+
+        z80_byte *flash_file_memory;
+        flash_file_memory=malloc(bytes_to_load);
+        if (flash_file_memory==NULL) {
+                debug_printf(VERBOSE_ERR,"Unable to assign memory");
+                return 0;
+        }
+        
+        //Leemos archivo 
+        FILE *ptr_file_flash_browser;
+        ptr_file_flash_browser=fopen(filename,"rb");
+
+        if (!ptr_file_flash_browser) {
+                debug_printf(VERBOSE_ERR,"Unable to open file");
+                free(flash_file_memory);
+                return 0;
+        }
+
+
+        int leidos=fread(flash_file_memory,1,bytes_to_load,ptr_file_flash_browser);
+
+        if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return 0;
+        }
+
+
+        fclose(ptr_file_flash_browser);
+
+        int esbasic=0;
+
+        if (bytes_to_load>3) {
+           if (flash_file_memory[bytes_to_load-3]==0x00 && 
+                flash_file_memory[bytes_to_load-2]==0xFF &&      
+                flash_file_memory[bytes_to_load-1]==0xFF) {
+
+                debug_printf (VERBOSE_INFO,"File is probably Z88 Basic");
+
+                esbasic=1;
+           }
+        }
+
+        free(flash_file_memory);    
+
+        return esbasic;
 }

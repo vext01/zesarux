@@ -10,7 +10,7 @@ Improved menu:
 * you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
 * now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
 New file expander on file selector menu, with space keys, for the following file types : .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O, Z88 Cards (.epr, .eprom, .flash)
-Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens)
+Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens), Z88 basic files with tokens
 Added ZXUno DMA emulation
 Added TBBlue/DataGear/MB02 DMA emulation
 Added Beeper Piano Menu
@@ -24,6 +24,7 @@ Improved debugger:
 
 Fixed autoload tape on TBBlue
 Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
+Fixed bug detecting extensions on files with no extensions
 
 
 Some other minor bugfixes and improvements

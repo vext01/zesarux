@@ -673,4 +673,6 @@ extern int util_extract_dsk(char *filename,char *tempdir);
 
 extern int util_extract_z88_card(char *filename,char *tempdir);
 
+extern int file_is_z88_basic(char *filename);
+
 #endif

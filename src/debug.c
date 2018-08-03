@@ -369,7 +369,7 @@ struct s_z88_basic_rom_tokens z88_basic_rom_tokens[]={
 {0xD0,"PAGE"},
 {0xCF,"PTR"},
 {0xD1,"TIME"},
-{0x01,""}
+{0x01,""}  //Importante este 01 final
 };
 
 //Rutina auxiliar que pueden usar los drivers de video para mostrar los registros. Mete en una string los registros
@@ -3413,6 +3413,27 @@ int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo )
 
 }
 
+
+void debug_view_z88_print_token(z80_byte index,char *texto_destino)
+{
+
+	int salir=0;
+	int i;
+
+	for (i=0;!salir;i++) {
+		if (z88_basic_rom_tokens[i].index==1) {
+			strcpy (texto_destino,"?TOKEN");
+			salir=1;
+		}
+
+		if (z88_basic_rom_tokens[i].index==index) {
+			strcpy (texto_destino,z88_basic_rom_tokens[i].token);
+			salir=1;
+		}
+	}
+
+}
+
 void debug_view_z88_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,
 	z80_byte (*lee_byte_function)(z80_int dir) )
 {
@@ -3450,68 +3471,72 @@ void debug_view_z88_basic_from_memory(char *results_buffer,int dir_inicio_linea,
   		numero_linea=lee_byte_function(dir++);
   		numero_linea +=(lee_byte_function(dir++))*256;
 
-  		//escribir numero linea
-  		sprintf (&results_buffer[index_buffer],"%4d",numero_linea);
-  		index_buffer +=4;
+		if (numero_linea==65535) {
+			salir=1;
+		}
 
-  		
-	
-  		//asignamos ya siguiente direccion.
-  		dir_inicio_linea=dir+longitud_linea;
+		else {
 
-		//descontar los 3 bytes
-		longitud_linea -=3;
-		dir_inicio_linea -=3;
+  			//escribir numero linea
+  			sprintf (&results_buffer[index_buffer],"%5d ",numero_linea);
+  			index_buffer +=6;
 
-  		while (longitud_linea>0) {
-  			byte_leido=lee_byte_function(dir++);
-  			longitud_linea--;
+  			
+	  		//asignamos ya siguiente direccion.
+  			dir_inicio_linea=dir+longitud_linea;
 
-			if (byte_leido>=32 && byte_leido<=126) {
-				results_buffer[index_buffer++]=byte_leido;
-			}
+			//descontar los 3 bytes
+			longitud_linea -=3;
+			dir_inicio_linea -=3;
 
-			else if (byte_leido>=128) {
-				//token
-				//int indice_token=byte_leido-inicio_tokens;
-  				//printf ("byte_leido: %d inicio_tokens: %d indice token: %d\n",byte_leido,inicio_tokens,indice_token);
-  				//sprintf (&results_buffer[index_buffer],"%s ",dir_tokens[indice_token]);
-  				//index_buffer +=strlen(dir_tokens[indice_token])+1;
-  				sprintf (&results_buffer[index_buffer],"%s ","TOKEN");
-  				index_buffer +=strlen("TOKEN")+1;				  
-  				lo_ultimo_es_un_token=1;
-  			}
+  			while (longitud_linea>0) {
+  				byte_leido=lee_byte_function(dir++);
+  				longitud_linea--;
 
+				if (byte_leido>=32 && byte_leido<=126) {
+					results_buffer[index_buffer++]=byte_leido;
+				}
 
-  			else if (byte_leido==13) {
-  			}
-
-  			else {
-  				results_buffer[index_buffer++]='?';
-  			}
+				else if (byte_leido>=128) {
+					//token
+					char buffer_token[20];
+					debug_view_z88_print_token(byte_leido,buffer_token);
+	  				sprintf (&results_buffer[index_buffer],"%s",buffer_token);
+  					index_buffer +=strlen(buffer_token);				  
+  					lo_ultimo_es_un_token=1;
+  				}
 
 
+	  			else if (byte_leido==13) {
+  				}
 
-  			//controlar maximo
-  			//1024 bytes de margen
-  			if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
+  				else {
+  					results_buffer[index_buffer++]='?';
+  				}
+
+
+	  			//controlar maximo
+  				//1024 bytes de margen
+  				if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
                           	debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first ones");
                   	        //forzar salir
-  				longitud_linea=0;
+  					longitud_linea=0;
           	                salir=1;
-  	                }
+  	            }
 
 
-  		}
+  			}
 
 
-                  //controlar maximo
-                  //1024 bytes de margen
-                  if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
+	  	}
+
+        //controlar maximo
+        //1024 bytes de margen
+        if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
                           debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first ones");
                           //forzar salir
                           salir=1;
-                  }
+        }
 
 
   		//meter dos saltos de linea

@@ -20338,6 +20338,7 @@ z80_byte menu_file_bas_browser_show_peek(z80_int dir)
 	return last_bas_browser_memory[dir % last_bas_browser_memory_size]; //con % para no salirnos de la memoria
 }
 
+
 void menu_file_basic_browser_show(char *filename)
 {
 	
@@ -20417,40 +20418,53 @@ void menu_file_basic_browser_show(char *filename)
 
 	}	
 
+	//Si extension z88 o si firma de final de archivo parece ser .z88
+	else if (!util_compare_file_extension(filename,"basz88") || file_is_z88_basic(filename)) {
+		dir_inicio_linea=0;
+		debug_view_z88_basic_from_memory(results_buffer,dir_inicio_linea,tamanyo,menu_file_bas_browser_show_peek);
+
+  		menu_generic_message_format("View Z88 Basic","%s",results_buffer);
+		free(memoria);
+	//void debug_view_z88_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,
+	//z80_byte (*lee_byte_function)(z80_int dir) )	
+		//Este finaliza aqui
+		return;	
+	}
+
 	else {
 		//.bas , .b
 
-	//Deducimos si es un simple .bas de texto normal, o es de basic spectrum
-	//Comprobacion facil, primeros dos bytes contiene numero de linea. Asumimos que si los dos son caracteres ascii imprimibles, son de texto
-	//Y siempre que extension no sea .B (en este caso es spectrum con tokens)
-	if (leidos>2 && util_compare_file_extension(filename,"b") ) {
-		z80_byte caracter1=memoria[0];
-		z80_byte caracter2=memoria[1]; 
-		if (caracter1>=32 && caracter1<=127 && caracter2>=32 && caracter2<=127) {
-			//Es ascii. abrir visor ascii
-			debug_printf(VERBOSE_INFO,".bas file type is guessed as simple text");
-			free(memoria);
-			menu_file_viewer_read_text_file("Basic file",filename);
-			return;
+		//Deducimos si es un simple .bas de texto normal, o es de basic spectrum
+		//Comprobacion facil, primeros dos bytes contiene numero de linea. Asumimos que si los dos son caracteres ascii imprimibles, son de texto
+		//Y siempre que extension no sea .B (en este caso es spectrum con tokens)
+		if (leidos>2 && util_compare_file_extension(filename,"b") ) {
+			z80_byte caracter1=memoria[0];
+			z80_byte caracter2=memoria[1]; 
+			if (caracter1>=32 && caracter1<=127 && caracter2>=32 && caracter2<=127) {
+				//Es ascii. abrir visor ascii
+				debug_printf(VERBOSE_INFO,".bas file type is guessed as simple text");
+				free(memoria);
+				menu_file_viewer_read_text_file("Basic file",filename);
+				return;
+			}
+			else {
+				debug_printf(VERBOSE_INFO,".bas file type is guessed as Spectrum/ZX80/ZX81");
+			}
 		}
-		else {
-			debug_printf(VERBOSE_INFO,".bas file type is guessed as Spectrum/ZX80/ZX81");
-		}
-	}
 
 
 
 
-	//basic spectrum
-  		dir_tokens=spectrum_rom_tokens;
+		//basic spectrum
+  			dir_tokens=spectrum_rom_tokens;
 
-  		inicio_tokens=163;
+  			inicio_tokens=163;
 	}
 
 
 	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,tamanyo,dir_tokens,inicio_tokens,menu_file_bas_browser_show_peek,tipo);
 
-  menu_generic_message_format("View Basic","%s",results_buffer);
+  	menu_generic_message_format("View Basic","%s",results_buffer);
 	free(memoria);
 
 }
@@ -23552,6 +23566,10 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 void menu_file_viewer_read_file(char *title,char *file_name)
 {
+
+	//printf ("extension vacia: %d\n",util_compare_file_extension(file_name,"") );
+	//printf ("es z88 basic: %d\n",file_is_z88_basic(file_name));
+
 	//Algunos tipos conocidos
 	if (!util_compare_file_extension(file_name,"tap")) menu_tape_browser_show(file_name);
 
@@ -23572,6 +23590,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"baszx80")) menu_file_basic_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"baszx81")) menu_file_basic_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"basz88")) menu_file_basic_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
 
@@ -23599,6 +23619,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"eprom")) menu_z88_new_ptr_card_browser(file_name);
 
 	else if (!util_compare_file_extension(file_name,"zsf")) menu_file_zsf_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"") && file_is_z88_basic(file_name)) menu_file_basic_browser_show(file_name);
 
 
 	//Por defecto, texto
