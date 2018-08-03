@@ -20457,7 +20457,7 @@ void menu_file_basic_browser_show(char *filename)
 			}
 			else {
 				debug_printf(VERBOSE_INFO,".bas file type is guessed as Spectrum/ZX80/ZX81");
-				strcpy(titulo_ventana,"View ZX-Spectrum Basic");
+				strcpy(titulo_ventana,"View ZX Spectrum Basic");
 			}
 		}
 
