@@ -20374,6 +20374,9 @@ void menu_file_basic_browser_show(char *filename)
 
 	char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
 
+	char titulo_ventana[33];
+	strcpy(titulo_ventana,"View Basic");
+
   	char **dir_tokens;
   	int inicio_tokens;	
 
@@ -20397,6 +20400,8 @@ void menu_file_basic_browser_show(char *filename)
 
 				tipo=2;
 
+				strcpy(titulo_ventana,"View ZX81 Basic");
+
 	}
 
 	else if (!util_compare_file_extension(filename,"baszx80")) {
@@ -20415,6 +20420,8 @@ void menu_file_basic_browser_show(char *filename)
                   inicio_tokens=213;
 
                 tipo=1;
+
+		strcpy(titulo_ventana,"View ZX80 Basic");				
 
 	}	
 
@@ -20450,6 +20457,7 @@ void menu_file_basic_browser_show(char *filename)
 			}
 			else {
 				debug_printf(VERBOSE_INFO,".bas file type is guessed as Spectrum/ZX80/ZX81");
+				strcpy(titulo_ventana,"View ZX-Spectrum Basic");
 			}
 		}
 
@@ -20465,7 +20473,7 @@ void menu_file_basic_browser_show(char *filename)
 
 	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,tamanyo,dir_tokens,inicio_tokens,menu_file_bas_browser_show_peek,tipo);
 
-  	menu_generic_message_format("View Basic","%s",results_buffer);
+  	menu_generic_message_format(titulo_ventana,"%s",results_buffer);
 	free(memoria);
 
 }
