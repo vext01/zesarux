@@ -3422,7 +3422,7 @@ void debug_view_z88_print_token(z80_byte index,char *texto_destino)
 
 	for (i=0;!salir;i++) {
 		if (z88_basic_rom_tokens[i].index==1) {
-			strcpy (texto_destino,"?TOKEN");
+			sprintf (texto_destino,"?TOKEN%02XH?",index);
 			salir=1;
 		}
 
@@ -3466,7 +3466,7 @@ void debug_view_z88_basic_from_memory(char *results_buffer,int dir_inicio_linea,
   		//obtener numero linea. orden inverso
   		//numero_linea=(peek_byte_no_time(dir++))*256 + peek_byte_no_time(dir++);
 		longitud_linea=(lee_byte_function(dir++));
-		debug_printf (VERBOSE_DEBUG,"Line length: %d",longitud_linea);
+		//debug_printf (VERBOSE_DEBUG,"Line length: %d",longitud_linea);
 
   		numero_linea=lee_byte_function(dir++);
   		numero_linea +=(lee_byte_function(dir++))*256;

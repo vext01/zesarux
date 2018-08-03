@@ -20432,6 +20432,7 @@ void menu_file_basic_browser_show(char *filename)
 	}
 
 	else {
+		//O es texto tal cual o es tokens de spectrum
 		//.bas , .b
 
 		//Deducimos si es un simple .bas de texto normal, o es de basic spectrum
@@ -23591,6 +23592,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
 	else if (!util_compare_file_extension(file_name,"baszx81")) menu_file_basic_browser_show(file_name);
 
+	//Aunque esa extension no la usa nadie pero es una manera de forzar que se pueda mostrar un archivo de tokens
+	//z88 en caso que la deteccion automatica (que se hace aqui mas abajo) falle
 	else if (!util_compare_file_extension(file_name,"basz88")) menu_file_basic_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
@@ -23620,6 +23623,7 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
 	else if (!util_compare_file_extension(file_name,"zsf")) menu_file_zsf_browser_show(file_name);
 
+	//Si archivo no tiene extension pero su contenido parece indicar que es z88 basic
 	else if (!util_compare_file_extension(file_name,"") && file_is_z88_basic(file_name)) menu_file_basic_browser_show(file_name);
 
 
