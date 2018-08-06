@@ -1305,10 +1305,19 @@ void tbsprite_put_color_line(int x,z80_byte color,int rangoxmin,int rangoxmax)
 	z80_byte sprites_over_border=tbblue_registers[21]&2;
 	if (sprites_over_border==0 && (x<clipxmin || x>=clipxmax)) return;
 
+	//Si index de color es transparente, no hacer nada
+/*
+The sprites have now a new register for sprite transparency. Unlike the Global Transparency Colour register this refers to an index and  should be set when using indices other than 0xE3:
+
+(R/W) 0x4B (75) => Transparency index for Sprites
+bits 7-0 = Set the index value. (0XE3 after a reset)
+	*/
+	if (color==tbblue_registers[75]) return;
+
 	z80_int color_final=tbblue_get_palette_active_sprite(color);
 
-	//Si color transparente, no hacer nada
-	if (tbblue_si_transparent(color_final)) return;
+	//Si color transparente, no hacer nada. Esto ya no es asi, se comprueba antes el indice de color a ver si es transparente
+	//if (tbblue_si_transparent(color_final)) return;
 
 	int xfinal=x;
 
@@ -2375,6 +2384,7 @@ void tbblue_reset_common(void)
 	tbblue_registers[66]=15;
 	tbblue_registers[67]=0;
 	tbblue_registers[74]=0;
+	tbblue_registers[75]=0xE3;
 	tbblue_registers[97]=0;
 	tbblue_registers[98]=0;
 
@@ -2446,10 +2456,11 @@ void tbblue_hard_reset(void)
 
 	tbblue_registers[3]=0;
 	tbblue_registers[4]=0;
-	tbblue_registers[5]=0;
+	tbblue_registers[5]=1;
 	tbblue_registers[6]=0;
 	tbblue_registers[7]=0;
-	tbblue_registers[8]=0;
+	tbblue_registers[8]=16;
+	tbblue_registers[9]=0;
 
 	tbblue_reset_common();
 
