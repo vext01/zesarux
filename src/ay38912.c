@@ -72,7 +72,7 @@ R8 � Control de amplitud del ca~al A
 R9 � Control de amplitud del canal B
 RA � Control de amplitud del canal C
 D4
-l=utilizar generador de envolvente
+1=utilizar generador de envolvente
 O=utilizar el valor de D3-DO como amplitud
 D3-DO Amplitud
 Estos tres registros controlan la amplitud de cada canal y si esta debe ser modul~h
@@ -89,9 +89,8 @@ D3 Continua
 D2 Ataque
 Dl Alternada
 DO Sostenida
-El diagrama de las formas de envolvente (Seccion 19 de este capitulo) da una ilustraci~n
-gr
-fica de los posibles estados de este registro.
+El diagrama de las formas de envolvente (Seccion 19 de este capitulo) da una ilustración
+gráfica de los posibles estados de este registro.
 
 Si est~ conectada la unidad de disquete externa, su control lo realiza el circuito controla-
 dor ~PD765A del interfaz externo. Tal como explicamos en la Secci~n 23, el registro dc
@@ -217,8 +216,11 @@ z80_int randomize_noise[MAX_AY_CHIPS];
 //Fin variables que dependen del chip activo
 //
 
-
-
+//Mascara para bits no usados en registros de chip
+z80_byte ay_mascara_registros[16]={
+  0xff, 0x0f, 0xff, 0x0f, 0xff, 0x0f, 0x1f, 0xff,
+  0x1f, 0x1f, 0x1f, 0xff, 0xff, 0x0f, 0xff, 0xff,	
+};
 
 void return_envelope_name(int value,char *string)
 {
@@ -931,8 +933,11 @@ z80_byte in_port_ay(z80_byte puerto_h)
         	        }
 
 		}
+		z80_byte valor_retorno=ay_3_8912_registros[ay_chip_selected][r];
+		//Aplicar mascara de bits. Bits no usados en registros AY se ponen a 0
+		valor_retorno &=ay_mascara_registros[r];
 
-		return ay_3_8912_registros[ay_chip_selected][r];
+		return valor_retorno;
         }
 
 	return 255;
