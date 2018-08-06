@@ -2359,6 +2359,27 @@ void tbblue_set_emulator_setting_turbo(void)
 	cpu_set_turbo_speed();
 }
 
+void tbblue_set_emulator_setting_reg_8(void)
+{
+/*
+(R/W) 0x08 (08) => Peripheral 3 setting:
+  bit 7 = 128K paging enable (inverse of port 0x7ffd, bit 5)
+          Unlike the paging lock in port 0x7ffd,
+          this may be enabled or disabled at any time.
+          Use "1" to disable the locked paging.
+  bit 6 = "1" to disable RAM contention. (0 after a reset)
+  bit 5 = Stereo mode (0 = ABC, 1 = ACB)(0 after a PoR or Hard-reset)
+  bit 4 = Enable internal speaker (1 = enabled)(1 after a PoR or Hard-reset)
+  bit 3 = Enable Specdrum/Covox (1 = enabled)(0 after a PoR or Hard-reset)
+  bit 2 = Enable Timex modes (1 = enabled)(0 after a PoR or Hard-reset)
+  bit 1 = Enable TurboSound (1 = enabled)(0 after a PoR or Hard-reset)
+  bit 0 = Reserved, must be 0
+*/
+
+	
+
+}
+
 void tbblue_reset_common(void)
 {
 
@@ -2688,6 +2709,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 	z80_byte last_register_6=tbblue_registers[6];
 	z80_byte last_register_7=tbblue_registers[7];
+	z80_byte last_register_8=tbblue_registers[8];
 	z80_byte last_register_21=tbblue_registers[21];
 	z80_byte last_register_66=tbblue_registers[66];
 	z80_byte last_register_67=tbblue_registers[67];
@@ -2846,6 +2868,9 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
   bit 1 = Enable TurboSound (1 = enabled)(0 after a PoR or Hard-reset)
   bit 0 = Reserved, must be 0
 */
+
+			if ( last_register_8 != value ) tbblue_set_emulator_setting_reg_8();
+
 		break;
 
 		case 21:
