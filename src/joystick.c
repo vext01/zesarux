@@ -82,7 +82,8 @@ int mouse_right=0;
 //se toma como base el mismo formato que gunstick x e y pero con modulo % 256
 z80_byte kempston_mouse_x=0,kempston_mouse_y=0;
 
-
+//Sensibilidad usada al leer kempston mouse desde spectrum
+z80_byte kempston_mouse_factor_sensibilidad=1;
 
 z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 

@@ -17768,7 +17768,11 @@ void menu_hardware_datagear_dma(MENU_ITEM_PARAMETERS)
 	else datagear_dma_enable();
 }
 
-
+void menu_hardware_kempston_mouse_sensibilidad(MENU_ITEM_PARAMETERS)
+{
+	kempston_mouse_factor_sensibilidad++;
+	if (kempston_mouse_factor_sensibilidad==5) kempston_mouse_factor_sensibilidad=1;
+}
 
 //menu hardware settings
 void menu_hardware_settings(MENU_ITEM_PARAMETERS)
@@ -17837,6 +17841,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse,NULL,"Kempston Mou~~se emulation: %s",(kempston_mouse_emulation.v==1 ? "On" : "Off"));
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'s');
 
+			if (kempston_mouse_emulation.v) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse_sensibilidad,NULL," Mouse Sensitivity: %d",kempston_mouse_factor_sensibilidad);
+			}
 
 		}
 

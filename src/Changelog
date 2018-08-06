@@ -15,6 +15,7 @@ Added ZXUno DMA emulation
 Added TBBlue/DataGear/MB02 DMA emulation
 Added Beeper Piano Menu
 Added new Z80 TBBlue opcodes and deleted obsolete ones
+Added setting to change Kempston Mouse sentitivity
 
 Improved debugger:
 *Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches

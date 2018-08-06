@@ -5897,14 +5897,15 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 		z80_byte acumulado=0;
 
+
 		if ((puerto_h&7)==3) {
 			//X-Axis
-			acumulado=kempston_mouse_x;
+			acumulado=kempston_mouse_x*kempston_mouse_factor_sensibilidad;
 		}
 
                 if ((puerto_h&7)==7) {
                         //Y-Axis
-			acumulado=kempston_mouse_y;
+			acumulado=kempston_mouse_y*kempston_mouse_factor_sensibilidad;
                 }
 
                 if ((puerto_h&3)==2) {
