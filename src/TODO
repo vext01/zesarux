@@ -24,6 +24,15 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+
+TBBlue
+(R/W) 0x4A (74) => Transparency colour fallback
+  bits 7-0 = Set the 8 bit colour.
+  (0 = black on reset on reset)
+
+Ver tambien otros registros de tbblue nuevos
+
+
 -si se deja cursor quieto en filebrowser, que muestre informacion del archivo:
 * nombre completo
 * tamaño
