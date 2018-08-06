@@ -126,13 +126,12 @@ struct s_tbblue_extended_string_opcode {
   int sumar_longitud;
 };
 
-#define TOTAL_TBBLUE_EXTENDED_OPCODES 31
+#define TOTAL_TBBLUE_EXTENDED_OPCODES 29
 
 struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLUE_EXTENDED_OPCODES]={
 	{"SWAPNIB",0x23,0},
   {"MIRROR A",0x24,0},
   {"LD HL,SP",0x25,0},
-  {"MIRROR DE",0x26,0},
   {"TEST N",0x27,1},
 	{"MUL",0x30,0},
   {"ADD HL,A",0x31,0},
@@ -149,7 +148,6 @@ struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLU
   {"SUB DEHL,A",0x3C,0}, 
   {"SUB DEHL,BC",0x3D,0}, 
   {"PUSH NN",0x8A,2},
-  {"POPX",0x8B,0},
   {"OUTINB",0x90,0},
   {"NEXTREG N,N",0x91,2},
   {"NEXTREG N,A",0x92,1},

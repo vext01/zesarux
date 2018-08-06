@@ -17,7 +17,6 @@ New Z80 opcodes on the NEXT (more to come)
 -   swapnib           ED 23          4+4  A bits 7-4 swap with A bits 3-0
 -   mirror a          ED 24          4+4 mirror the bits in A     
 -   ld  hl,sp         ED 25          4+4 transfer SP to HL
--   mirror de         ED 26          4+4 mirror the bits in DE     
 -   test N            ED 27           4+4+3 And A with $XX and set all flags. A is not affected.
 -   mul  d,e          ED 30          4+4  D*E = DE
 -   add  hl,a         ED 31          4+4  Add A to HL (no flags set)
@@ -40,13 +39,13 @@ New Z80 opcodes on the NEXT (more to come)
 -   pixelad           ED 94           using D,E (as Y,X) calculate the ULA screen address and store in HL
 -   setae             ED 95           Using the lower 3 bits of E (X coordinate), set the correct bit value in A
 -   ldix              ED A4           As LDI,  but if byte==A does not copy
+-   LDWS              ED A5           (DE) = (HL) : D++ : L++ 14Ts. BC is not modified. Flags are set as if an INC D instruction was executed.
 -   ldirx             ED B4           As LDIR, but if byte==A does not copy
 -   lddx              ED AC           As LDD,  but if byte==A does not copy, and DE is incremented
 -   lddrx             ED BC           As LDDR,  but if byte==A does not copy
    ldirscale         ED B6           As LDIRX,  if(hl)!=A then (de)=(hl); HL_E'+=BC'; DE+=DE'; dec BC; Loop.
    ldpirx            ED B7           (de) = ( (hl&$fff8)+(E&7) ) when != A
 -   push NN        ED 8A HI LO   4+4+3+3+3+3 (3+3 for read, 3+3 for write)  push 16bit immediate value. ATTENTION: big endian!
--   popx              ED 8B         4+4  pop value and disguard
 
 
 see also

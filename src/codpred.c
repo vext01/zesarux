@@ -255,20 +255,7 @@ void instruccion_ed_37 ()
 
 void instruccion_ed_38 ()
 {
-        if (MACHINE_IS_TBBLUE) {
-                //mirror de         ED 26          4+4 mirror the bits in DE
-                //15 14 13 12 11 10 9 8 76543210 -> 0123456789 10 11 12 13 14 15
-                int i;
-                z80_int result_de=0;
-                for (i=0;i<16;i++) {
-                  result_de = result_de >> 1;
-                  if (DE&32768) result_de |=32768;
-                  DE=DE << 1;
-                }
-
-                DE=result_de;
-        }  
-        else invalid_opcode_ed("237 38");
+        invalid_opcode_ed("237 38");
 }
 
 void instruccion_ed_39 ()
@@ -1361,13 +1348,7 @@ void instruccion_ed_138 ()
 void instruccion_ed_139 ()
 {
 
-        if (MACHINE_IS_TBBLUE) {
-                //POPX
-                //popx              ED 8B         4+4  pop value and disguard
-                reg_sp +=2;
-        }
-
-        else invalid_opcode_ed("237 139");
+        invalid_opcode_ed("237 139");
 }
 
 void instruccion_ed_140 ()
@@ -1736,7 +1717,24 @@ LDIR        --000-  Load, Inc., Repeat    LDI till BC=0
 
 void instruccion_ed_165 ()
 {
-        invalid_opcode_ed("237 165");
+	//Leer ed y opcode: 4+4=8 T estados
+
+	if (MACHINE_IS_TBBLUE) {
+		//LDWS (LoaD Wasp Special) (0xED 0xA5), (DE) = (HL) : D++ : L++ 14Ts. BC is not modified. Flags are set as if an INC D instruction was executed
+		z80_byte byte_leido;
+
+		byte_leido=peek_byte(HL);  //3 T
+		poke_byte(DE,byte_leido);  //3 T
+
+		reg_l++;
+
+		inc_8bit(reg_d); 
+	}
+	//Total T-estados = 8+3+3=14
+	
+        else invalid_opcode_ed("237 165");
+
+	
 }
 
 void instruccion_ed_166 ()
