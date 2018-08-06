@@ -2407,12 +2407,12 @@ void tbblue_set_emulator_setting_reg_8(void)
 	if (value&32) {
 		//ABC
 		ay3_stereo_mode=2;
-		printf ("Setting ABC stereo\n");
+		debug_printf (VERBOSE_DEBUG,"Setting ABC stereo");
 	}
 	else {
 		//ACB
 		ay3_stereo_mode=1;
-		printf ("Setting ACB stereo\n");
+		debug_printf (VERBOSE_DEBUG,"Setting ACB stereo");
 	}
 
 
@@ -2420,30 +2420,30 @@ void tbblue_set_emulator_setting_reg_8(void)
   	//bit 4 = Enable internal speaker (1 = enabled)(1 after a PoR or Hard-reset)
 	if (value&16) {
 		beeper_enabled.v=1;
-		printf ("Enabling beeper\n");
+		debug_printf (VERBOSE_DEBUG,"Enabling beeper");
 	}
 	else {
 		beeper_enabled.v=0;
-		printf ("Disabling beeper\n");
+		debug_printf (VERBOSE_DEBUG,"Disabling beeper");
 	}
 
   	//bit 3 = Enable Specdrum/Covox (1 = enabled)(0 after a PoR or Hard-reset)
 	if (value&8) {
 		audiodac_enabled.v=1;
 		audiodac_selected_type=0;
-		printf ("Enabling audiodac Specdrum\n");
+		debug_printf (VERBOSE_DEBUG,"Enabling audiodac Specdrum");
 	}
 	else {
 		audiodac_enabled.v=0;
-		printf ("Disabling audiodac Specdrum\n");
+		debug_printf (VERBOSE_DEBUG,"Disabling audiodac Specdrum");
 	}
   	//bit 2 = Enable Timex modes (1 = enabled)(0 after a PoR or Hard-reset)
 	if (value&4) {
-		printf ("Disabling timex video\n");
+		debug_printf (VERBOSE_DEBUG,"Disabling timex video");
 		enable_timex_video();
 	}
 	else {
-		printf ("Enabling timex video\n");
+		debug_printf (VERBOSE_DEBUG,"Enabling timex video");
 		disable_timex_video();
 	}
   	
@@ -2451,9 +2451,7 @@ void tbblue_set_emulator_setting_reg_8(void)
 	if (value &2) set_total_ay_chips(3);
 	else set_total_ay_chips(1);
 
-	//if (ditay) set_total_ay_chips(1);
-    //else set_total_ay_chips(2);
-	
+
 
 }
 
