@@ -26,7 +26,7 @@
 
 #define TBBLUE_CORE_VERSION_MAJOR     1 
 #define TBBLUE_CORE_VERSION_MINOR     10
-#define TBBLUE_CORE_VERSION_SUBMINOR  31
+#define TBBLUE_CORE_VERSION_SUBMINOR  47
 
 extern z80_byte *tbblue_ram_memory_pages[];
 

@@ -2375,7 +2375,16 @@ void tbblue_set_emulator_setting_reg_8(void)
   bit 1 = Enable TurboSound (1 = enabled)(0 after a PoR or Hard-reset)
   bit 0 = Reserved, must be 0
 */
+	z80_byte value=tbblue_registers[8];
 
+	printf ("Setting register 8 to %02XH\n",value);
+
+	//bit 1 = Enable TurboSound (1 = enabled)(0 after a PoR or Hard-reset)
+	if (value &2) set_total_ay_chips(3);
+	else set_total_ay_chips(1);
+
+	//if (ditay) set_total_ay_chips(1);
+    //else set_total_ay_chips(2);
 	
 
 }
