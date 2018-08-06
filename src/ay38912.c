@@ -935,6 +935,7 @@ z80_byte in_port_ay(z80_byte puerto_h)
 		}
 		z80_byte valor_retorno=ay_3_8912_registros[ay_chip_selected][r];
 		//Aplicar mascara de bits. Bits no usados en registros AY se ponen a 0
+		//printf ("Retornando valor registro chip AY %02XH\n",r);
 		valor_retorno &=ay_mascara_registros[r];
 
 		return valor_retorno;
