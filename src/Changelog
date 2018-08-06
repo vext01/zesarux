@@ -23,6 +23,8 @@ Improved debugger:
 **INFIRED: returns 1 if last Z80 opcode was an IN operation
 **INTFIRED: returns 1 when an interrupt has been generated
 
+Updated to the last Next SD image
+
 Fixed autoload tape on TBBlue
 Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
 Fixed bug reading extension on files with no extension
