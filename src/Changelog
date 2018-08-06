@@ -14,6 +14,7 @@ Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with
 Added ZXUno DMA emulation
 Added TBBlue/DataGear/MB02 DMA emulation
 Added Beeper Piano Menu
+Added new Z80 TBBlue opcodes and deleted obsolete ones
 
 Improved debugger:
 *Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches
