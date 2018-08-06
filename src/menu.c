@@ -17771,7 +17771,7 @@ void menu_hardware_datagear_dma(MENU_ITEM_PARAMETERS)
 void menu_hardware_kempston_mouse_sensibilidad(MENU_ITEM_PARAMETERS)
 {
 	kempston_mouse_factor_sensibilidad++;
-	if (kempston_mouse_factor_sensibilidad==5) kempston_mouse_factor_sensibilidad=1;
+	if (kempston_mouse_factor_sensibilidad==6) kempston_mouse_factor_sensibilidad=1;
 }
 
 //menu hardware settings
