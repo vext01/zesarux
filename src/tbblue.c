@@ -38,6 +38,7 @@
 #include "audio.h"
 
 #include "datagear.h"
+#include "ay38912.h"
 
 #define TBBLUE_MAX_SRAM_8KB_BLOCKS 224
 
@@ -2377,8 +2378,75 @@ void tbblue_set_emulator_setting_reg_8(void)
 */
 	z80_byte value=tbblue_registers[8];
 
-	printf ("Setting register 8 to %02XH\n",value);
+	debug_printf (VERBOSE_DEBUG,"Setting register 8 to %02XH",value);
 
+	//bit 6 = "1" to disable RAM contention. (0 after a reset)
+	if (value&64) {
+		//Desactivar contention. Solo hacerlo cuando hay cambio
+		if (contend_enabled.v) {
+			debug_printf (VERBOSE_DEBUG,"Disabling contention");
+        	contend_enabled.v=0;
+	        inicializa_tabla_contend();
+		}
+	}
+
+	else {
+		//Activar contention. Solo hacerlo cuando hay cambio
+		if (contend_enabled.v==0) {
+			debug_printf (VERBOSE_DEBUG,"Enabling contention");
+        	contend_enabled.v=1;
+	        inicializa_tabla_contend();
+		}		
+
+	}
+
+  	//bit 5 = Stereo mode (0 = ABC, 1 = ACB)(0 after a PoR or Hard-reset)
+	//ay3_stereo_mode;
+	//1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
+    //2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)	  
+	if (value&32) {
+		//ABC
+		ay3_stereo_mode=2;
+		printf ("Setting ABC stereo\n");
+	}
+	else {
+		//ACB
+		ay3_stereo_mode=1;
+		printf ("Setting ACB stereo\n");
+	}
+
+
+  
+  	//bit 4 = Enable internal speaker (1 = enabled)(1 after a PoR or Hard-reset)
+	if (value&16) {
+		beeper_enabled.v=1;
+		printf ("Enabling beeper\n");
+	}
+	else {
+		beeper_enabled.v=0;
+		printf ("Disabling beeper\n");
+	}
+
+  	//bit 3 = Enable Specdrum/Covox (1 = enabled)(0 after a PoR or Hard-reset)
+	if (value&8) {
+		audiodac_enabled.v=1;
+		audiodac_selected_type=0;
+		printf ("Enabling audiodac Specdrum\n");
+	}
+	else {
+		audiodac_enabled.v=0;
+		printf ("Disabling audiodac Specdrum\n");
+	}
+  	//bit 2 = Enable Timex modes (1 = enabled)(0 after a PoR or Hard-reset)
+	if (value&4) {
+		printf ("Disabling timex video\n");
+		enable_timex_video();
+	}
+	else {
+		printf ("Enabling timex video\n");
+		disable_timex_video();
+	}
+  	
 	//bit 1 = Enable TurboSound (1 = enabled)(0 after a PoR or Hard-reset)
 	if (value &2) set_total_ay_chips(3);
 	else set_total_ay_chips(1);
