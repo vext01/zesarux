@@ -3169,6 +3169,8 @@ int util_write_configfile(void)
 
   if (kempston_mouse_emulation.v)             ADD_STRING_CONFIG,"--enablekempstonmouse");
 
+                                              ADD_STRING_CONFIG,"--kempstonmouse-sens %d",kempston_mouse_factor_sensibilidad);
+
 
   if (core_spectrum_uses_reduced.v)           ADD_STRING_CONFIG,"--spectrum-reduced-core");
   else                                        ADD_STRING_CONFIG,"--no-spectrum-reduced-core");

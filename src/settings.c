@@ -184,3 +184,12 @@ z80_bit fast_autoload={0};
 
 //Si se muestra piano grafico en drivers grafico. Si no, muestra piano de texto en drivers graficos
 z80_bit setting_mostrar_ay_piano_grafico={1};
+
+
+
+//
+// Hardware Settings
+//
+
+//Sensibilidad usada al leer kempston mouse desde spectrum
+z80_byte kempston_mouse_factor_sensibilidad=1;
