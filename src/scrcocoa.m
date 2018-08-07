@@ -918,6 +918,15 @@ NSPoint locationInView = [self convertPoint:[event locationInWindow]
 
 	}
 
+   else {
+           //Si se tiene que mostrar, pero se habia ocultado y ahora se ha vuelto a habilitar el setting
+           if (cocoa_raton_oculto) {
+                debug_printf (VERBOSE_PARANOID,"Mouse was hidden and the setting is now enabled. Unhide it");
+		cocoa_raton_oculto=0;
+		[NSCursor unhide];                   
+           }
+   }
+
 
                         //debug_printf (VERBOSE_PARANOID,"Mouse motion. X: %d Y:%d kempston x: %d y: %d",mouse_x,mouse_y,kempston_mouse_x,kempston_mouse_y);
 }

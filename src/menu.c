@@ -25491,7 +25491,20 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 	
 }
 
+void menu_interface_hidemouse(MENU_ITEM_PARAMETERS)
+{
+    debug_printf(VERBOSE_INFO,"End Screen");
+    scr_end_pantalla();
 
+	mouse_pointer_shown.v ^=1;
+
+	screen_init_pantalla_and_others();
+
+    debug_printf(VERBOSE_INFO,"Creating Screen");
+
+	menu_init_footer();
+	
+}
 
 int menu_interface_border_cond(void)
 {
@@ -26000,6 +26013,11 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF) {
 	                menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,"~~Border enabled: %s", (border_enabled.v==1 ? "On" : "Off") );
 			menu_add_item_menu_shortcut(array_menu_window_settings,'b');
+		}
+
+		if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") || !strcmp(scr_driver_name,"cocoa") ) {
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"~~Mouse pointer: %s", (mouse_pointer_shown.v==1 ? "On" : "Off") );
+			menu_add_item_menu_shortcut(array_menu_window_settings,'m');
 		}
 
 
