@@ -338,10 +338,22 @@ void esxdos_handler_call_f_open(void)
 #define ESXDOS_RST8_FA_OPEN_AL  0x08
 			*/
 
-			case ESXDOS_RST8_FA_OPEN_AL|ESXDOS_RST8_FA_CREATE_NEW:
+			case ESXDOS_RST8_FA_CREATE_TRUNC:
 				//significa ESXDOS_MODE_CREAT_TRUNC :  create or replace an existing file; fp = 0
 				strcpy(fopen_mode,"wb");
 			break;
+
+/*
+Debug: ESXDOS handler: FA_WRITE|
+Debug: ESXDOS handler: FA_OPEN_AL|
+Debug: ESXDOS handler: FA_CREATE_NEW|
+
+Esto se usa en NextDaw, es open+truncate
+*/
+			case ESXDOS_RST8_FA_WRITE|ESXDOS_RST8_FA_OPEN_AL|ESXDOS_RST8_FA_CREATE_NEW:
+				strcpy(fopen_mode,"wb");
+			break;
+		
 
 			//case FA_WRITE|FA_CREATE_NEW|FA_USE_HEADER
 
@@ -388,9 +400,9 @@ void esxdos_handler_call_f_open(void)
 
 
 	//Ver tipos de apertura que dan error si existe
-	if ( (modo_abrir&ESXDOS_RST8_FA_CREATE_NEW)==ESXDOS_RST8_FA_CREATE_NEW) {
+	if ( modo_abrir==(ESXDOS_RST8_FA_CREATE_NEW | ESXDOS_RST8_FA_WRITE))  {
 		if (si_existe_archivo(fullpath)) {
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: file exists and using mode FA_CREATE_NEW. Error");
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: file exists and using mode FA_CREATE_NEW|ESXDOS_RST8_FA_WRITE. Error");
 			esxdos_handler_error_carry(ESXDOS_ERROR_EEXIST);
 			esxdos_handler_old_return_call();
 			return;
@@ -572,10 +584,16 @@ On return BCDE=current file pointer. FIXME-Should return bytes actually seeked
 
 	}
 
-	fseek (esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix, offset, whence);
+	if (fseek (esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix, offset, whence)!=0) {
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error running fseek system call");
+	}
 
 	//Retornar BCDE
 	offset=ftell(esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: offset is now at %ld",offset);
+
+	//sleep (5);
 
 	//long offset=(reg_b<<24) | (reg_c<<16) | (reg_d<<8) | reg_e;
 	reg_b=(offset>>24)&0xFF;

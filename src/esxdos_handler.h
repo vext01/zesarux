@@ -34,8 +34,15 @@
 #define ESXDOS_RST8_FA_CREATE_NEW 0x04
 // create if does not exist, else error
 
+
 #define ESXDOS_RST8_FA_OPEN_AL  0x08
 // open if exists, if not create
+
+
+
+#define ESXDOS_RST8_FA_CREATE_TRUNC 0x0c
+// combinacion de ESXDOS_RST8_FA_OPEN_AL y ESXDOS_RST8_FA_CREATE_NEW (8+4)
+
 
 /*
 FA_OPEN_EX              equ             %00000000                       ; Open if exists, else error
