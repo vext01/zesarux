@@ -574,6 +574,15 @@ On return BCDE=current file pointer. FIXME-Should return bytes actually seeked
 
 	fseek (esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix, offset, whence);
 
+	//Retornar BCDE
+	offset=ftell(esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
+
+	//long offset=(reg_b<<24) | (reg_c<<16) | (reg_d<<8) | reg_e;
+	reg_b=(offset>>24)&0xFF;
+	reg_c=(offset>>16)&0xFF;
+	reg_d=(offset>>8)&0xFF;
+	reg_e= offset & 0xFF;
+
 	esxdos_handler_no_error_uncarry();
 	esxdos_handler_old_return_call();
 }

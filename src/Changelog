@@ -33,6 +33,7 @@ Fixed bug reading AY registers: unused bits for registers are set to 0
 Fixed bugs on esxdos handler:
 *readdir call was incrementing PC register when there was no more files
 *added ESXDOS_MODE_CREAT_TRUNC mode when opening files
+*BCDE was not returning from a f_seek call
 
 
 Some other minor bugfixes and improvements
