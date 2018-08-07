@@ -331,6 +331,18 @@ void esxdos_handler_call_f_open(void)
 				strcpy(fopen_mode,"ab");
 			break;
 
+			/*
+			#define ESXDOS_RST8_FA_CREATE_NEW 0x04
+// create if does not exist, else error
+
+#define ESXDOS_RST8_FA_OPEN_AL  0x08
+			*/
+
+			case ESXDOS_RST8_FA_OPEN_AL|ESXDOS_RST8_FA_CREATE_NEW:
+				//significa ESXDOS_MODE_CREAT_TRUNC :  create or replace an existing file; fp = 0
+				strcpy(fopen_mode,"wb");
+			break;
+
 			//case FA_WRITE|FA_CREATE_NEW|FA_USE_HEADER
 
 			default:

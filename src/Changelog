@@ -30,7 +30,9 @@ Fixed autoload tape on TBBlue
 Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
 Fixed bug reading extension on files with no extension
 Fixed bug reading AY registers: unused bits for registers are set to 0
-Fixed bug on esxdos handler readdir call
+Fixed bugs on esxdos handler:
+*readdir call was incrementing PC register when there was no more files
+*added ESXDOS_MODE_CREAT_TRUNC mode when opening files
 
 
 Some other minor bugfixes and improvements
