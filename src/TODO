@@ -32,6 +32,8 @@ TBBlue
 
 Ver tambien otros registros de tbblue nuevos
 
+-esxdos: fseek no parece funcionar en el NextDAW de Gary Biasillo. Al exportar musica a NDR no lo hace bien. Por que?
+
 -factor sensibilidad kempston mouse como setting linea comandos
 -opcion en menu de ocultar mouse
 

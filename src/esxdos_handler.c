@@ -547,6 +547,11 @@ void esxdos_handler_call_f_seek(void)
 		return;
 	}
 
+
+	long initial_offset=ftell(esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: offset was before at now at %ld",initial_offset);
+
 /*
 F_SEEK: Seek BCDE bytes. A=handle
 
@@ -583,6 +588,9 @@ On return BCDE=current file pointer. FIXME-Should return bytes actually seeked
 		break;
 
 	}
+
+
+
 
 	if (fseek (esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix, offset, whence)!=0) {
 		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error running fseek system call");
@@ -1470,7 +1478,7 @@ void esxdos_handler_begin_handling_commands(void)
 
 		case ESXDOS_RST8_F_WRITE:
 		//Write BC bytes at HL from file handle A.
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_Write. Write %d bytes at %04XH from file handle %d",reg_bc,(*registro_parametros_hl_ix),reg_a);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_Write. Write %d bytes from %04XH from file handle %d",reg_bc,(*registro_parametros_hl_ix),reg_a);
 			esxdos_handler_call_f_write();
 			esxdos_handler_new_return_call();
 		break;
