@@ -1890,7 +1890,7 @@ int scrxwindows_init (void) {
 	screen_refresh_menu=1;
 
 
-	//Esta funcion no va
+	//Esta funcion quiza no iba antes, pero en un xorg reciente funciona
 	if (mouse_pointer_shown.v==0) {
 		debug_printf (VERBOSE_INFO,"Hiding mouse pointer");
 		scrxwindows_hide_mouse_pointer();
