@@ -636,7 +636,7 @@ z80_int *tbblue_get_palette_rw(void)
 {
 /*
 (R/W) 0x43 (67) => Palette Control
-  bit 7 = Reserved, must be 0
+  bit 7 = '1' to disable palette write auto-increment.
   bits 6-4 = Select palette for reading or writing:
      000 = ULA first palette
      100 = ULA secondary palette
@@ -1082,10 +1082,14 @@ void tbblue_reset_palette_write_state(void)
 
 void tbblue_increment_palette_index(void)
 {
+//(R/W) 0x43 (67) => Palette Control
+//  bit 7 = '1' to disable palette write auto-increment.
 
-	z80_byte indice=tbblue_registers[0x40];
-	indice++;
-	tbblue_registers[0x40]=indice;
+	if ((tbblue_registers[0x43] & 128)==0) {
+		z80_byte indice=tbblue_registers[0x40];
+		indice++;
+		tbblue_registers[0x40]=indice;
+	}
 
 	tbblue_reset_palette_write_state();
 }
@@ -1110,6 +1114,9 @@ void tbblue_write_palette_value_high8(z80_byte valor)
   Note the lower blue bit colour will be an OR between bit 1 and bit 0. 
   After the write, the palette index is auto-incremented to the next index. 
   The changed palette remains until a Hard Reset.
+
+(R/W) 0x43 (67) => Palette Control
+  bit 7 = '1' to disable palette write auto-increment.
 
 
 (R/W) 0x44 (68) => Palette Value (9 bit colour)
@@ -3834,8 +3841,17 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 						//Borde izquierdo o derecho o pantalla. Ver si estamos en pantalla
 						if (i>=screen_total_borde_izquierdo*border_enabled.v &&
 							i<screen_total_borde_izquierdo*border_enabled.v+256) {
-							//Poner color negro
-							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+0;
+							//Poner color indicado por registro:
+							/*
+							(R/W) 0x4A (74) => Transparency colour fallback
+  							bits 7-0 = Set the 8 bit colour.
+  							(0 = black on reset on reset)
+							*/
+
+							//Suponemos que es un color tal cual, no un indice a paleta, multiplicado por 2
+							z80_int fallbackcolour=tbblue_registers[74];
+							fallbackcolour *=2;
+							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
 						}
 
 						else {

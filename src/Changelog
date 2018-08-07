@@ -1,4 +1,4 @@
-Version 7.1. 16 July 2018 - XXX edition
+Version 7.1. 7 August 2018 - XXX edition
 
 Added ACB/ABC/BAC/Custom Stereo emulation
 Improved menu windows: now can have more lines than 22, doing scroll
@@ -31,6 +31,7 @@ Fixed bug when smartload and selecting an unknown file type: if you cancel it, t
 Fixed bug reading extension on files with no extension
 Fixed bug reading AY registers: unused bits for registers are set to 0
 Fixed bugs on esxdos handler:
+
 *readdir call was incrementing PC register when there was no more files
 *added ESXDOS_MODE_CREAT_TRUNC mode when opening files
 *BCDE was not returning from a f_seek call

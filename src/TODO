@@ -25,15 +25,6 @@ renombrarla
 --- Cosas para la siguiente version
 
 
-TBBlue
-(R/W) 0x4A (74) => Transparency colour fallback
-  bits 7-0 = Set the 8 bit colour.
-  (0 = black on reset on reset)
-
-Ver tambien otros registros de tbblue nuevos
-
--esxdos: fseek no parece funcionar en el NextDAW de Gary Biasillo. Al exportar musica a NDR no lo hace bien. Por que?
-
 -reloj deberia salir en nextos
 -si se deja cursor quieto en filebrowser, que muestre informacion del archivo:
 * nombre completo
@@ -837,6 +828,8 @@ http://www.spinpoint.org/2016/05/06/m4-board-retrofun-8-bit-amstrad-cpc-wifi/#co
 -esxdos handler
 fopen,fread,fwrite,fclose,fopendir,freaddir
 *soporta cargar comandos, tapein, grabar snaps desde nmi
+
+-esxdos: fseek no parece funcionar en el NextDAW de Gary Biasillo. Al exportar musica a NDR no lo hace bien. Por que?
 
 -Esxdos. Decidir hl o ix según si está paginada la memoria divmmc?
 
