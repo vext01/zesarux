@@ -970,6 +970,7 @@ int esxdos_aux_readdir(int file_handler)
 
 		//temp closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
 		//temp esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
+		debug_printf (VERBOSE_DEBUG,"No more files on readdir");
 
 
 		//no hay mas archivos
@@ -1032,9 +1033,12 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 
 	if (!esxdos_aux_readdir(file_handler)) {
 		//no hay mas archivos
+		debug_printf (VERBOSE_DEBUG,"Returning no more files to readdir");
 		reg_a=0;
 		esxdos_handler_no_error_uncarry();
 		esxdos_handler_return_call();
+		//Parche para que funcione NextDaw, probablemente tienen un fallo en ese programa o en z88dk
+		//HL=0;
 		return;
 	}
 
@@ -1129,6 +1133,9 @@ esxdos_fopen_files[file_handler].contador_directorio +=32;
 reg_a=1; //Hay mas ficheros
 esxdos_handler_no_error_uncarry();
 esxdos_handler_return_call();
+
+//Parche para que funcione NextDaw, probablemente tienen un fallo en ese programa o en z88dk
+//HL=1;
 
 }
 
@@ -1439,6 +1446,7 @@ void esxdos_handler_begin_handling_commands(void)
 		case ESXDOS_RST8_F_READDIR:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_READDIR");
 			esxdos_handler_call_f_readdir();
+			//printf ("Codigos retorno: A=%02XH HL=%02XH carry=%d\n",reg_a,HL,Z80_FLAGS & FLAG_C);
 		break;
 
 		case ESXDOS_RST8_F_TELLDIR:
