@@ -3457,11 +3457,11 @@ void debug_view_z88_basic_from_memory(char *results_buffer,int dir_inicio_linea,
   	//deberia ser un byte, pero para hacer tokens de pi,rnd, inkeys en zx81, que en el array estan en posicion al final
   	z80_int byte_leido;
 
-  	int lo_ultimo_es_un_token;
+  	//int lo_ultimo_es_un_token;
 
 
   	while (dir_inicio_linea<final_basic && salir==0) {
-  		lo_ultimo_es_un_token=0;
+  		//lo_ultimo_es_un_token=0;
   		dir=dir_inicio_linea;
   		//obtener numero linea. orden inverso
   		//numero_linea=(peek_byte_no_time(dir++))*256 + peek_byte_no_time(dir++);
@@ -3503,7 +3503,7 @@ void debug_view_z88_basic_from_memory(char *results_buffer,int dir_inicio_linea,
 					debug_view_z88_print_token(byte_leido,buffer_token);
 	  				sprintf (&results_buffer[index_buffer],"%s",buffer_token);
   					index_buffer +=strlen(buffer_token);				  
-  					lo_ultimo_es_un_token=1;
+  					//lo_ultimo_es_un_token=1;
   				}
 
 

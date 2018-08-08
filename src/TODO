@@ -38,6 +38,8 @@ en el caso de dichos archivos
 -Quizá quitar real-time cuando root? Casi nunca se ha probado
 Y además casi nadie lo lanza como root 
 
+-emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
+
 -datagear dma: timing (puesto tiempos arbitrarios), demos que hacen out no se ven bien, modo turbo next afecta a timing?
 Y montones de flags y parámetros de dma que de momento no gestiono
 
