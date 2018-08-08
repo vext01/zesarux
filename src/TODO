@@ -35,6 +35,8 @@ renombrarla
 -se deberia poder expandir tambien archivos comprimidos (zip, rar, etc) con tecla espacio? Al final es la misma funcion que enter
 en el caso de dichos archivos
 
+-Quizá quitar real-time cuando root? Casi nunca se ha probado
+Y además casi nadie lo lanza como root 
 
 -datagear dma: timing (puesto tiempos arbitrarios), demos que hacen out no se ven bien, modo turbo next afecta a timing?
 Y montones de flags y parámetros de dma que de momento no gestiono
