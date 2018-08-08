@@ -568,7 +568,7 @@ void datagear_handle_dma(void)
 		//#       1   0 = Burst mode
 		//#       1   1 = Do not use
 
-		//Por defecto, modo continuo (todo de golpe). Modo burst, permite ejecutar la cpu entre medio
+		//Por defecto, modo continuo (todo de golpe) (dma_continuous=1). Modo burst (dma_continuous=0), permite ejecutar la cpu entre medio
 		int dma_continuous=1;
 
 		z80_byte modo_transferencia=datagear_wr4 & (64+32);
@@ -585,7 +585,19 @@ Excepción:
 */		
 
 		//Por tanto de momento:
-		if (MACHINE_IS_TBBLUE) dma_continuous=1;
+		if (MACHINE_IS_TBBLUE && dma_continuous==0) {
+			//Modo burst en tbblue
+
+			//Si tiene pre escalar, se permite modo burst. Si no, no
+
+			//printf ("Tbblue and burst mode\n");
+
+			if ( (datagear_port_b_variable_timing_byte & 32)==0 ) {
+				//printf ("burst mode not allowed on tbblue because it has no pre escalar\n");
+				dma_continuous=1; //no tiene pre escalar
+			}
+		}
+			
 
 		//TODO Ver ese delay
 		/*
