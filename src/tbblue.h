@@ -78,6 +78,7 @@ extern void tbblue_set_timing_48k(void);
 
 #define TBBLUE_UART_RX_PORT 0x133b
 
+#define TBBLUE_SECOND_KEMPSTON_PORT 0x37
 
 #define MAX_SPRITES_PER_LINE 12
 

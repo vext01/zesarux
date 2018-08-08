@@ -5986,6 +5986,9 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		// https://www.specnext.com/the-next-on-the-network/
 		if (puerto==TBBLUE_UART_RX_PORT) return 0;
 
+		//TODO puerto segundo joystick. De momento retornar 0
+		if (puerto==TBBLUE_SECOND_KEMPSTON_PORT) return 0;
+
 
 	}
 
