@@ -59,6 +59,13 @@ dicho visor no tendria que entender los tags especiales de texto...
 y al inicio de cursor draw lo lea de ahi y lo guarde en un setting suyo
 *control de raton en todos sitios. Por ejemplo en aplicar sprites no se mueve
 
+En cursor draw, Para sumar incremento de kempston mouse, hay que saber primero si incremento es positivo o negativo. Para eso , al restar posición final, si no hay acarreo, es positivo. 
+Si es positivo, hay que sumar ese salto a posición cursor. Si hay acarreo, significa que va más allá de 255 y por tanto, no actualizamos cursor
+Si es negativo, restamos ese salto (mediante neg y haciendo sbc) a posición cursor. Si hay acarreo, significa que va menos de 0 y por tanto no actualizamos cursor. 
+En caso de suma de posición vertical no permitir que vaya más allá de 191 tampoco. 
+
+Probar también con Fuse u otro emulador que soporte kempston mouse 
+
 -al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
 visor sprites tambien se ve mal
 

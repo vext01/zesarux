@@ -393,7 +393,7 @@ See files on extras/docs/prism/ to know which roms are included in the Flash
 
 
 TBBlue
------
+------
 
 
 Q: I can't run TBBlue machine. I get the following error: "Erro ao inicializar cartao!"
@@ -443,6 +443,20 @@ A: Yes. You can use the tbblue-fast-boot-mode setting and it will go directly to
 Q: Trying the breakout demo, it gives me the error: Nonsense in basic at line 10
 A: That is an old version which uses previous NextOS basic. Change line 10 to:
 10 LOAD "breakout.SPR" BANK 10 
+
+----------------------------------------------------------------------------
+
+
+TSConf
+------
+
+
+Q: When I do a hard reset, the screen goes to black and seems it runs nothing
+A: Do a hard reset and just after that, keep pressing Symbol Shift (CTRL or ALT) and you will return to the TSConf Bios
+
+Q: Some .spg games seem to fail loading
+A: Be sure you haven't enabled divmmc or divide paging, it's incompatible with some of them  
+
 
 ----------------------------------------------------------------------------
 
