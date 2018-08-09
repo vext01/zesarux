@@ -467,6 +467,9 @@ z80_bit cpu_step_mode;
 //border se ha modificado
 z80_bit modificado_border;
 
+//Si se genera valor random para cada cold boot en el registro R
+z80_bit cpu_random_r_register={0};
+
 
 z80_bit zxmmc_emulation={0};
 
@@ -707,6 +710,11 @@ void cold_start_cpu_registers(void)
         reg_h_shadow=reg_l_shadow=reg_b_shadow=reg_c_shadow=reg_d_shadow=reg_e_shadow=reg_a_shadow=Z80_FLAGS_SHADOW=0xff;
         reg_i=0;
         reg_r=reg_r_bit7=0;
+
+	if (cpu_random_r_register.v) {
+		reg_r=value_16_to_8l(randomize_noise[0]) & 127;
+		debug_printf (VERBOSE_DEBUG,"R Register set to random value: %02XH",reg_r);
+	}
 
 	out_254_original_value=out_254=0xff;
 
@@ -1335,6 +1343,7 @@ printf (
 		"--denyturbozxunoboot       Deny setting turbo mode on ZX-Uno boot\n"
 		"--tbblue-fast-boot-mode    Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)\n"
 		//no uso esto de momento "--tbblue-123b-port n        Sets the initial value for port 123b on hard reset, for tbblue-fast-boot-mode\n"
+		"--random-r-register        Generate random value for R register on every cold start, instead of the normal 0 value\n"
 
 		"\n"
 		"\n"
@@ -4677,6 +4686,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--tbblue-fast-boot-mode")) {
 				tbblue_fast_boot_mode.v=1;
 			}  
+
+			else if (!strcmp(argv[puntero_parametro],"--random-r-register")) {
+				cpu_random_r_register.v=1;
+			}
 
 			/* no uso esto de momento
 			else if (!strcmp(argv[puntero_parametro],"--tbblue-123b-port")) {

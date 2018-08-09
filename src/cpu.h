@@ -259,6 +259,8 @@ extern z80_byte reg_r_antes_zx8081;
 extern z80_bit temp_zx8081_lineasparimpar;
 extern char *get_machine_name(z80_byte m);
 
+extern z80_bit cpu_random_r_register;
+
 extern int porcentaje_velocidad_emulador;
 extern void set_emulator_speed(void);
 
