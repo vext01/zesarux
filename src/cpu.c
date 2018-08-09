@@ -1343,7 +1343,7 @@ printf (
 		"--denyturbozxunoboot       Deny setting turbo mode on ZX-Uno boot\n"
 		"--tbblue-fast-boot-mode    Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)\n"
 		//no uso esto de momento "--tbblue-123b-port n        Sets the initial value for port 123b on hard reset, for tbblue-fast-boot-mode\n"
-		"--random-r-register        Generate random value for R register on every cold start, instead of the normal 0 value\n"
+		"--random-r-register        Generate random value for R register on every cold start, instead of the normal 0 value. Useful to avoid same R register in the start of games, when they use that register as a random value\n"
 
 		"\n"
 		"\n"
