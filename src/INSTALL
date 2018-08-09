@@ -125,7 +125,7 @@ The quick way to compile and run ZEsarUX is:
     $ ./zesarux
 
 
-However, you can tune the compile process a bit, depending on your operating system:
+However, you can tune the compilation process a bit, depending on your operating system:
 
 
 * macOS
@@ -154,28 +154,14 @@ However, you can tune the compile process a bit, depending on your operating sys
     $ make
     $ ./zesarux
 
-This will ensure that memptr, visualmem, and cpustats are not enabled.
-
-Even more, if you have a slow device like the Raspberry Pi 1 or Zero, I recommend:
+Even more, if you have a slow device like the Raspberry Pi 1 or Zero, I recommend you:
 
     $ ./configure --enable-raspberry --spectrum-reduced-core
 
 This will also ensure that the "reduced core" is on by default, which uses less cpu, although you can also switch it from command line, or at runtime.
 
 
-NOTE: by using the reduced core the following features will NOT be available, or will NOT be properly emulated:
-
-- Debug t-states
-- Char detection
-- +3 Disk
-- Save to tape
-- Divide
-- Divmmc
-- RZX
-- Raster interrupts
-- TBBlue Copper
-- Audio DAC
-- Video out to file
+NOTE: by using the reduced core some features will NOT be available. See the FAQ file, where it talks about the Spectrum reduced core
 
 
 
