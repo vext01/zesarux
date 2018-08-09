@@ -32008,15 +32008,22 @@ void menu_inicio(void)
 
 	*/
 
-	//No liberar teclas ni esperar a no pulsar teclas si solo hay evento printe, etc
-	//Pero tener en cuenta que en los eventos se pueden abrir menus tambien
-	//Como hacerlo??
+	/*No liberar teclas ni esperar a no pulsar teclas si solo hay evento printe, etc
+	  Pero tener en cuenta que en los eventos se pueden abrir menus tambien
+	/*/
 
 	int liberar_teclas_y_esperar=1; //Si se liberan teclas y se espera a liberar teclado
 
 	if (menu_breakpoint_exception.v) {
 		if (!debug_if_breakpoint_action_menu(catch_breakpoint_index)) {
 			//Accion no es de abrir menu
+			/*
+			Tecnicamente, haciendo esto, no estamos controlando que se dispare un evento de breakpoin accion, por ejemplo , printe,
+			y a la vez, se genere otro evento, por ejemplo quickload. En ese caso sucederia que al llamar a quickload, no se liberarian
+			las teclas en la maquina emulada ni se esperaria a no pulsar tecla
+			Para evitar este remoto caso, habria que hacer que no se liberen las teclas aqui al principio, sino que cada evento
+			libere teclas por su cuenta
+			*/
 			liberar_teclas_y_esperar=0;
 		}
 	}
