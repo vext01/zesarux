@@ -31963,6 +31963,29 @@ int debug_show_fired_breakpoints_type=0;
 
 }
 
+void menu_inicio_reset_emulated_keys(void)
+{
+	//Resetear todas teclas excepto bits de puertos especiales
+	z80_byte p_puerto_especial1,p_puerto_especial2,p_puerto_especial3,p_puerto_especial4;
+
+	p_puerto_especial1=puerto_especial1;
+	p_puerto_especial2=puerto_especial2;
+	p_puerto_especial3=puerto_especial3;
+	p_puerto_especial4=puerto_especial4;
+
+	reset_keyboard_ports();
+
+	//Restaurar estado teclas especiales, para poder esperar a liberar dichas teclas, por ejemplo
+	puerto_especial1=p_puerto_especial1;
+	puerto_especial2=p_puerto_especial2;
+	puerto_especial3=p_puerto_especial3;
+	puerto_especial4=p_puerto_especial4;
+
+
+	//Desactivar fire, por si esta disparador automatico
+	joystick_release_fire();	
+}
+
 //menu principal
 void menu_inicio(void)
 {
@@ -31983,25 +32006,8 @@ void menu_inicio(void)
 
 	*/
 
-	//Resetear todas teclas excepto bits de puertos especiales
-	z80_byte p_puerto_especial1,p_puerto_especial2,p_puerto_especial3,p_puerto_especial4;
+	menu_inicio_reset_emulated_keys();
 
-	p_puerto_especial1=puerto_especial1;
-	p_puerto_especial2=puerto_especial2;
-	p_puerto_especial3=puerto_especial3;
-	p_puerto_especial4=puerto_especial4;
-
-	reset_keyboard_ports();
-
-	//Restaurar estado teclas especiales, para poder esperar a liberar dichas teclas, por ejemplo
-	puerto_especial1=p_puerto_especial1;
-	puerto_especial2=p_puerto_especial2;
-	puerto_especial3=p_puerto_especial3;
-	puerto_especial4=p_puerto_especial4;
-
-
-	//Desactivar fire, por si esta disparador automatico
-	joystick_release_fire();
 
 	//printf ("before menu_espera_no_tecla\n");
 
