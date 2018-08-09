@@ -10,6 +10,10 @@ Improved menu:
 * you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
 * now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
 New file expander on file selector menu, with space keys, for the following file types : .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O, Z88 Cards (.epr, .eprom, .flash)
+
+Improved debugger:
+* breakpoints actions do not reset keyboard 
+
 Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens), Z88 basic files with tokens
 Added ZXUno DMA emulation
 Added TBBlue/DataGear/MB02 DMA emulation

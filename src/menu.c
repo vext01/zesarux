@@ -31965,7 +31965,7 @@ int debug_show_fired_breakpoints_type=0;
 
 void menu_inicio_reset_emulated_keys(void)
 {
-	//Resetear todas teclas excepto bits de puertos especiales
+	//Resetear todas teclas excepto bits de puertos especiales y esperar a no pulsar tecla
 	z80_byte p_puerto_especial1,p_puerto_especial2,p_puerto_especial3,p_puerto_especial4;
 
 	p_puerto_especial1=puerto_especial1;
@@ -31984,6 +31984,8 @@ void menu_inicio_reset_emulated_keys(void)
 
 	//Desactivar fire, por si esta disparador automatico
 	joystick_release_fire();	
+
+	menu_espera_no_tecla();
 }
 
 //menu principal
@@ -32006,14 +32008,29 @@ void menu_inicio(void)
 
 	*/
 
-	menu_inicio_reset_emulated_keys();
+	//No liberar teclas ni esperar a no pulsar teclas si solo hay evento printe, etc
+	//Pero tener en cuenta que en los eventos se pueden abrir menus tambien
+	//Como hacerlo??
+
+	int liberar_teclas_y_esperar=1; //Si se liberan teclas y se espera a liberar teclado
+
+	if (menu_breakpoint_exception.v) {
+		if (!debug_if_breakpoint_action_menu(catch_breakpoint_index)) {
+			//Accion no es de abrir menu
+			liberar_teclas_y_esperar=0;
+		}
+	}
+
+	if (liberar_teclas_y_esperar) {
+		menu_inicio_reset_emulated_keys();
+	}
 
 
 	//printf ("before menu_espera_no_tecla\n");
 
 	//Si se ha pulsado tecla de OSD keyboard, al llamar a espera_no_tecla, se abrira osd y no conviene.
 	
-	menu_espera_no_tecla();
+
 
 			//printf ("Event open menu: %d\n",menu_event_open_menu.v);
 
@@ -32046,7 +32063,7 @@ void menu_inicio(void)
 
 
 	cls_menu_overlay();
-        set_menu_overlay_function(normal_overlay_texto_menu);
+    set_menu_overlay_function(normal_overlay_texto_menu);
 
 
 
@@ -32055,7 +32072,7 @@ void menu_inicio(void)
 
 
 	if (menu_button_osdkeyboard.v) {
-		menu_espera_no_tecla();
+		//menu_espera_no_tecla();
 		menu_onscreen_keyboard(0);
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer
 		cls_menu_overlay();
@@ -32073,7 +32090,7 @@ void menu_inicio(void)
 
 		//para evitar que entre con la pulsacion de teclas activa
 		//menu_espera_no_tecla_con_repeticion();
-		menu_espera_no_tecla();
+		//menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		menu_quickload(0);
@@ -32084,7 +32101,7 @@ void menu_inicio(void)
 		//Pulsado salir del emulador
                 //para evitar que entre con la pulsacion de teclas activa
                 //menu_espera_no_tecla_con_repeticion();
-                menu_espera_no_tecla();
+                //menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
                 menu_exit_emulator(0);
@@ -32096,7 +32113,7 @@ void menu_inicio(void)
 		//Entrado drag-drop de archivo
                 //para evitar que entre con la pulsacion de teclas activa
                 //menu_espera_no_tecla_con_repeticion();
-                menu_espera_no_tecla();
+                //menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		quickfile=quickload_file;
 
@@ -32153,7 +32170,7 @@ void menu_inicio(void)
 
 	if (menu_event_remote_protocol_enterstep.v) {
 		//Entrada
-		menu_espera_no_tecla();
+		//menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		remote_ack_enter_cpu_step.v=1; //Avisar que nos hemos enterado
@@ -32185,7 +32202,7 @@ void menu_inicio(void)
 	if (menu_button_f_function.v) {
 		//printf ("pulsada tecl de funcion\n");
 		//Entrada
-		menu_espera_no_tecla();
+		//menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		//Procesar comandos F

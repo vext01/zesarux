@@ -151,9 +151,6 @@ Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 -Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
 ->problema que el breakpoint que ha saltado, indicado por la variable catch_breakpoint_index, solo puede ser uno cada vez...
 
--condicion tipo A=0 -> printe BC DE -> al ejecutarse continuamente, como se entra en funcion de inicio menu,
-se resetean teclas y por tanto en apariencia no se puede enviar ninguna tecla a spectrum
-->habria que hacer que se reseteen teclas solo cuando no haya una accion de tipo de abertura de menu
 
 -al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
 Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
