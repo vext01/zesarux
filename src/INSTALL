@@ -128,10 +128,17 @@ Optionally you may wish to enable these features:
 NOTE: these options make the emulator use a bit more CPU power.
 
 
+# Compiling on macOS
+
+I recommend you to use the cocoa-opengl driver:
+
+
+    $ ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-cocoa-opengl
+
 
 # Compiling for raspberry-raspbian
 
-I recommend you set these flags:
+I recommend you to set these flags:
 
     $ export CFLAGS=-O2
     $ export LDFLAGS=-O2
