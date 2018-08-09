@@ -115,11 +115,12 @@ The following is a list of complete features, all of which are optional.
 Compiling ZEsarUX
 -----------------
 
-The quick process to compile and run ZEsarUX is:
+The quick way to compile and run ZEsarUX is:
 
 
     $ cd src
     $ ./configure
+    $ make clean
     $ make
     $ ./zesarux
 
@@ -130,13 +131,15 @@ However, you can tune the compile process a bit, depending on your operating sys
 * macOS
 
     $ ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-cocoa-opengl
+    $ make clean
     $ make
     $ ./zesarux
 
 
-* Linux and other Unix flavours
+* Linux and other Unix systems (except Raspberry-raspbian)
 
     $ ./configure --enable-memptr --enable-visualmem --enable-cpustats
+    $ make clean
     $ make
     $ ./zesarux
 
@@ -147,6 +150,7 @@ However, you can tune the compile process a bit, depending on your operating sys
     $ export LDFLAGS=-O2
 
     $ ./configure --enable-raspberry
+    $ make clean
     $ make
     $ ./zesarux
 
@@ -178,7 +182,7 @@ NOTE: by using the reduced core the following features will NOT be available, or
 Install and Run ZEsarUX
 -----------------------
 
-It is possible to run the emulator from the current directory without installing, just by running:
+As I said, it is possible to run the emulator from the current directory without installing, just by running:
     $ ./zesarux
 
 
