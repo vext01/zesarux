@@ -108,7 +108,7 @@ The following is a list of complete features, all of which are optional.
 
 - pthreads: pthread includes. Usually included on all Unix systems.
 - realtime: sched includes. Usually included on Linux systems.
-- autodetect snapshots and tape files by its contents: libssl.
+- autodetect snapshots and tape files by its contents, in order to apply some predefined settings: libssl.
 
 
 
