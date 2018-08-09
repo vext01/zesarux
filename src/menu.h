@@ -513,6 +513,8 @@ extern z80_bit menu_filesel_hide_dirs;
 
 extern int osd_kb_no_mostrar_desde_menu;
 
+extern void menu_fire_event_open_menu(void);
+
 extern int menu_button_f_function_action;
 
 extern z80_bit screen_bw_no_multitask_menu;

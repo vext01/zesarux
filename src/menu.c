@@ -31801,6 +31801,7 @@ void menu_inicio_pre_retorno(void)
     menu_breakpoint_exception.v=0;
     menu_event_remote_protocol_enterstep.v=0;
     menu_button_f_function.v=0;
+	menu_event_open_menu.v=0;
 
     reset_menu_overlay_function();
     menu_set_menu_abierto(0);
@@ -32008,6 +32009,8 @@ void menu_inicio(void)
 	
 	menu_espera_no_tecla();
 
+			//printf ("Event open menu: %d\n",menu_event_open_menu.v);
+
 	//printf ("after menu_espera_no_tecla\n");
 
 
@@ -32071,7 +32074,7 @@ void menu_inicio(void)
 		cls_menu_overlay();
 	}
 
-	else if (menu_button_exit_emulator.v) {
+	if (menu_button_exit_emulator.v) {
 		//Pulsado salir del emulador
                 //para evitar que entre con la pulsacion de teclas activa
                 //menu_espera_no_tecla_con_repeticion();
@@ -32082,7 +32085,7 @@ void menu_inicio(void)
                 cls_menu_overlay();
 	}
 
-        else if (menu_event_drag_drop.v) {
+        if (menu_event_drag_drop.v) {
 							debug_printf(VERBOSE_INFO,"Received drag and drop event with file %s",quickload_file);
 		//Entrado drag-drop de archivo
                 //para evitar que entre con la pulsacion de teclas activa
@@ -32102,7 +32105,7 @@ void menu_inicio(void)
 
 
 	//ha saltado un breakpoint
-	else if (menu_breakpoint_exception.v) {
+	if (menu_breakpoint_exception.v) {
 		//Ver tipo de accion para ese breakpoint
 		//printf ("indice breakpoint & accion : %d\n",catch_breakpoint_index);
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
@@ -32142,7 +32145,7 @@ void menu_inicio(void)
 
 	}
 
-	else if (menu_event_remote_protocol_enterstep.v) {
+	if (menu_event_remote_protocol_enterstep.v) {
 		//Entrada
 		menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
@@ -32173,7 +32176,7 @@ void menu_inicio(void)
 		cls_menu_overlay();
 	}
 
-	else if (menu_button_f_function.v) {
+	if (menu_button_f_function.v) {
 		//printf ("pulsada tecl de funcion\n");
 		//Entrada
 		menu_espera_no_tecla();
@@ -32193,7 +32196,7 @@ void menu_inicio(void)
 		cls_menu_overlay();
 	}
 
-	else if (menu_event_new_version_show_changes.v) {
+	if (menu_event_new_version_show_changes.v) {
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		menu_event_new_version_show_changes.v=0;
 		menu_generic_message_format("Updated version","You have updated ZEsarUX :)\nPlease take a look at the changes:");
@@ -32202,10 +32205,11 @@ void menu_inicio(void)
 		cls_menu_overlay();
 	}
 
-	else {
+	if (menu_event_open_menu.v) {
 
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
-		//Cualquier otra cosa abrir menu normal
+		
+		//Abrir menu normal
 		menu_inicio_bucle();
 
 	}

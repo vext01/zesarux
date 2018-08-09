@@ -78,10 +78,8 @@ visor sprites tambien se ve mal
   //test meter un NOOP
   zsf_write_block(ptr_zsf_file, NULL,0, 0);
 
--Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
-->problema que el breakpoint que ha saltado, indicado por la variable catch_breakpoint_index, solo puede ser uno cada vez...
 
--Parece que si hay un breakpoint de accion (por ejemplo cuando lee puerto FEH), no deja abrir el menu
+
 
 -con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
 En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
@@ -148,20 +146,10 @@ Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 -Salida 16 bits sonido?
 
 
--breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
-si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
-luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
-->habria que cambiar todos los "else if " de menu_inicio por if a secas. Y el ultimo else que hace abrir el menu:
-        else {
+-con menu abierto no se disparan acciones, excepto si se va a menu debug cpu: logicamente pues eso solo se gestiona al iniciar el menu
 
-                osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
-                //Cualquier otra cosa abrir menu normal
-                menu_inicio_bucle();
-
-        }
-
-que sea un "if" tipo "if pulsado tecla openmenu"
-
+-Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
+->problema que el breakpoint que ha saltado, indicado por la variable catch_breakpoint_index, solo puede ser uno cada vez...
 
 -al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
 Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
