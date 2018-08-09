@@ -5373,7 +5373,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 
         if (si_menu_mouse_activado() ) {
           //Si no esta menu abierto, hace accion de abrir menu
-          if (menu_abierto==0) menu_abierto=1;
+          if (menu_abierto==0) menu_fire_event_open_menu();
           else {
             //Si esta menu abierto, es como enviar enter
             util_set_reset_key(UTIL_KEY_ENTER,1);
@@ -5401,7 +5401,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 
         if (si_menu_mouse_activado() ) {
           //Si no esta menu abierto, hace accion de abrir menu
-          if (menu_abierto==0) menu_abierto=1;
+          if (menu_abierto==0) menu_fire_event_open_menu();
           else {
             //Si esta menu abierto, es como enviar ESC
             util_set_reset_key(UTIL_KEY_ESC,1);
@@ -6522,7 +6522,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         case UTIL_KEY_F5:
 
                                 if (pressrelease) {
-					if (util_if_open_just_menu() )  menu_abierto=1;
+					if (util_if_open_just_menu() )  menu_fire_event_open_menu();
                                         ql_keyboard_table[0] &= (255-32); //Caso especial F5 y QL
                                 }
                                 else {

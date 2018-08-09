@@ -772,7 +772,7 @@ void debug_printf (int debuglevel, const char * format , ...)
         //if (!strcmp(scr_driver_name,"")) return;
         sprintf (pending_error_message,"%s",buffer_inicial);
         if_pending_error_message=1;
-        menu_abierto=1;
+        menu_fire_event_open_menu();
     }
 
 }

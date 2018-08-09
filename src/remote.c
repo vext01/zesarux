@@ -1256,7 +1256,7 @@ void remote_disable_multitask(void)
 
 void remote_enter_menu(void)
 {
-  menu_abierto=1;
+  menu_fire_event_open_menu();
 }
 void remote_disable_multitask_enter_menu(void)
 {

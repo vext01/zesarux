@@ -255,9 +255,12 @@ int menu_multitarea=1;
 //Si se oculta la barra vertical en la zona de porcentaje de ventanas de texto o selector de archivos
 z80_bit menu_hide_vertical_percentaje_bar={0};
 
-//indica que se ha pulsado ESC y por tanto debe aparecer el menu
+//indica que se ha pulsado ESC y por tanto debe aparecer el menu, o gestion de breakpoints, osd, etc
 //y tambien, la lectura de puertos de teclado (254) no devuelve nada
 int menu_abierto=0;
+
+//Si realmente aparecera el menu
+z80_bit menu_event_open_menu={0};
 
 //indica si hay pendiente un mensaje de error por mostrar
 int if_pending_error_message=0;
@@ -780,6 +783,13 @@ z80_byte menu_debug_get_mapped_byte(int direccion)
 
 }
 
+
+//Interrumpe el core y le dice que hay que abrir el menu
+void menu_fire_event_open_menu(void)
+{
+	menu_abierto=1;
+	menu_event_open_menu.v=1;
+}
 
 //Escribe byte mapeado de ram normal o de zona de menu mapeada
 void menu_debug_write_mapped_byte(int direccion,z80_byte valor)

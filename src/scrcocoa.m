@@ -2119,7 +2119,7 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 - (void) openzesaruxmenu:(id)sender
 {
         //printf ("open zesarux menu\n");
-        menu_abierto=1;
+        menu_fire_event_open_menu();
 }
 
 - (void) setzoomone:(id)sender

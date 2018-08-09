@@ -40,8 +40,6 @@ Y además casi nadie lo lanza como root
 
 -emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
 
--datagear dma: timing (puesto tiempos arbitrarios), demos que hacen out no se ven bien, modo turbo next afecta a timing?
-Y montones de flags y parámetros de dma que de momento no gestiono
 
 -Opción para generar un .config con opciones en curso, opciones basicas. en que menu? Save...? settings? debug...?
 
@@ -81,6 +79,8 @@ visor sprites tambien se ve mal
   zsf_write_block(ptr_zsf_file, NULL,0, 0);
 
 -Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
+->problema que el breakpoint que ha saltado, indicado por la variable catch_breakpoint_index, solo puede ser uno cada vez...
+
 -Parece que si hay un breakpoint de accion (por ejemplo cuando lee puerto FEH), no deja abrir el menu
 
 -con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
@@ -486,6 +486,9 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 -----------------------
 
+
+-datagear dma: timing (puesto tiempos arbitrarios), demos que hacen out no se ven bien, modo turbo next afecta a timing?
+Y montones de flags y parámetros de dma que de momento no gestiono
 
 
 --- TSConf ---

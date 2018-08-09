@@ -400,7 +400,7 @@ void scrstdout_actualiza_tablas_teclado(void){
 				//hacer acciones segun comando introducido
 				if (strlen(buffer_tecla_comando)>0) {
 					if (!strcmp(buffer_tecla_comando,"menu")) {
-						menu_abierto=1;
+						menu_fire_event_open_menu();
 					}
 					
 					if (!strcmp(buffer_tecla_comando,"stoptext")) {
