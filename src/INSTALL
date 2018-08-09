@@ -115,35 +115,40 @@ The following is a list of complete features, all of which are optional.
 Compiling ZEsarUX
 -----------------
 
-Navigate to the `src` directory and type:
+The quick process to compile and run ZEsarUX is:
 
+
+    $ cd src
     $ ./configure
+    $ make
+    $ ./zesarux
 
 
-Optionally you may wish to enable these features:
-
-    $ ./configure --enable-memptr --enable-visualmem --enable-cpustats
+However, you can tune the compile process a bit, depending on your operating system:
 
 
-NOTE: these options make the emulator use a bit more CPU power.
-
-
-# Compiling on macOS
-
-I recommend you to use the cocoa-opengl driver:
-
+* macOS
 
     $ ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-cocoa-opengl
+    $ make
+    $ ./zesarux
 
 
-# Compiling for raspberry-raspbian
+* Linux and other Unix flavours
 
-I recommend you to set these flags:
+    $ ./configure --enable-memptr --enable-visualmem --enable-cpustats
+    $ make
+    $ ./zesarux
+
+
+* Raspberry-raspbian
 
     $ export CFLAGS=-O2
     $ export LDFLAGS=-O2
 
     $ ./configure --enable-raspberry
+    $ make
+    $ ./zesarux
 
 This will ensure that memptr, visualmem, and cpustats are not enabled.
 
@@ -194,7 +199,6 @@ You may wish to move this to your "Applications" folder.
 
 If installing from source code:
 
-    $ make
     $ su root
     $ make install
 
