@@ -4,16 +4,6 @@ Added ACB/ABC/BAC/Custom Stereo emulation
 Improved menu windows: now can have more lines than 22, doing scroll
 Added joystick action to change emulated joystick type: Sinclair, Kempston, etc
 Added support to show some unicode (utf8) characters on menu
-Improved menu: 
-* now you can write any ascii character on the menu
-* now you can use binary numbers on expressions
-* you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
-* now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
-New file expander on file selector menu, with space keys, for the following file types : .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O, Z88 Cards (.epr, .eprom, .flash)
-
-Improved debugger:
-* breakpoints actions do not reset keyboard 
-
 Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens), Z88 basic files with tokens
 Added ZXUno DMA emulation
 Added TBBlue/DataGear/MB02 DMA emulation
@@ -27,8 +17,14 @@ Improved debugger:
 **OUTFIRED: returns 1 if last Z80 opcode was an OUT operation
 **INFIRED: returns 1 if last Z80 opcode was an IN operation
 **INTFIRED: returns 1 when an interrupt has been generated
+* breakpoints actions do not reset keyboard 
 
-Updated to the last Next SD image
+Improved menu: 
+* now you can write any ascii character on the menu
+* now you can use binary numbers on expressions
+* you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
+* now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
+* new file expander on file selector menu, using space key, for the following file types : .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O, Z88 Cards (.epr, .eprom, .flash)
 
 Fixed autoload tape on TBBlue
 Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
@@ -40,6 +36,7 @@ Fixed bugs on esxdos handler:
 *added ESXDOS_MODE_CREAT_TRUNC mode when opening files
 *BCDE was not returning from a f_seek call
 
+Updated to the last Next SD image
 
 Some other minor bugfixes and improvements
 

@@ -40,6 +40,7 @@ Y además casi nadie lo lanza como root
 
 -emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
 
+-mostrar <exp> para archivos expandibles/comprimidos? gestionado por menu_util_file_is_compressed
 
 -Opción para generar un .config con opciones en curso, opciones basicas. en que menu? Save...? settings? debug...?
 
