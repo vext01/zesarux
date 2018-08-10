@@ -30160,7 +30160,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
-			"- Use Space to expand files, currently supported: tap, tzx, trd, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash)\n"
+			"- Use Space to expand files, currently supported: tap, tzx, trd, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash) and also all the compressed supported files\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
@@ -33067,6 +33067,11 @@ void file_utils_file_convert(char *fullpath)
 			NULL};
 
 		int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}
+
 		switch (opcion) {
 			case 0:
 				sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
@@ -33082,6 +33087,10 @@ void file_utils_file_convert(char *fullpath)
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
                 switch (opcion) {
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
@@ -33103,6 +33112,10 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
                 switch (opcion) {
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
@@ -33118,6 +33131,10 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
                 switch (opcion) {
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
@@ -33133,6 +33150,10 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
                 switch (opcion) {
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
@@ -33148,6 +33169,10 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
                 switch (opcion) {
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
@@ -33482,71 +33507,6 @@ void menu_filesel_file_no_ext(char *origen, char *destino)
 
 }
 
-//Expandir archivos (no descomprimir, sino expandir por ejemplo un tap o un hdf)
-//Devuelve 0 si ok
-int menu_filesel_expand(char *archivo,char *tmpdir)
-{
-
-	sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
-	menu_filesel_mkdir(tmpdir);
-
-
-        if (!util_compare_file_extension(archivo,"hdf") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a hdf file");
-                return util_extract_hdf(archivo,tmpdir);
-        }
-
-        else if (!util_compare_file_extension(archivo,"tap") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a tap file");
-        	return util_extract_tap(archivo,tmpdir);
-        }
-
-        else if (!util_compare_file_extension(archivo,"tzx") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a tzx file");
-                return util_extract_tzx(archivo,tmpdir);
-        }
-
-        else if (!util_compare_file_extension(archivo,"trd") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a trd file");
-                return util_extract_trd(archivo,tmpdir);
-        }		
-
-        else if (!util_compare_file_extension(archivo,"dsk") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a dsk file");
-                return util_extract_dsk(archivo,tmpdir);
-        }		
-
-        else if (
-			!util_compare_file_extension(archivo,"epr")  ||
-			!util_compare_file_extension(archivo,"eprom")  ||
-			!util_compare_file_extension(archivo,"flash")  
-		) {
-                debug_printf (VERBOSE_DEBUG,"Is a Z88 card file");
-                return util_extract_z88_card(archivo,tmpdir);
-        }				
-
-        else if (!util_compare_file_extension(archivo,"p") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a P file");
-        	return util_extract_p(archivo,tmpdir);
-        }	
-
-        else if (!util_compare_file_extension(archivo,"o") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a O file");
-        	return util_extract_o(archivo,tmpdir);
-        }				
-
-        else if ( !util_compare_file_extension(archivo,"mdv") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a mdv file");
-                return util_extract_mdv(archivo,tmpdir);
-        }
-
-		//else debug_printf(VERBOSE_DEBUG,"Don't know how to expand that file");
-
-
-        return 1;
-
-
-}
 
 #define COMPRESSED_ZIP 1
 #define COMPRESSED_GZ  2
@@ -33666,6 +33626,78 @@ return 1;
 
 
 return 0;
+
+}
+
+
+//Expandir archivos (no descomprimir, sino expandir por ejemplo un tap o un hdf)
+//Devuelve 0 si ok
+int menu_filesel_expand(char *archivo,char *tmpdir)
+{
+
+	sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
+	menu_filesel_mkdir(tmpdir);
+
+
+        if (!util_compare_file_extension(archivo,"hdf") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a hdf file");
+                return util_extract_hdf(archivo,tmpdir);
+        }
+
+        else if (!util_compare_file_extension(archivo,"tap") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a tap file");
+        	return util_extract_tap(archivo,tmpdir);
+        }
+
+        else if (!util_compare_file_extension(archivo,"tzx") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a tzx file");
+                return util_extract_tzx(archivo,tmpdir);
+        }
+
+        else if (!util_compare_file_extension(archivo,"trd") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a trd file");
+                return util_extract_trd(archivo,tmpdir);
+        }		
+
+        else if (!util_compare_file_extension(archivo,"dsk") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a dsk file");
+                return util_extract_dsk(archivo,tmpdir);
+        }		
+
+        else if (
+			!util_compare_file_extension(archivo,"epr")  ||
+			!util_compare_file_extension(archivo,"eprom")  ||
+			!util_compare_file_extension(archivo,"flash")  
+		) {
+                debug_printf (VERBOSE_DEBUG,"Is a Z88 card file");
+                return util_extract_z88_card(archivo,tmpdir);
+        }				
+
+        else if (!util_compare_file_extension(archivo,"p") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a P file");
+        	return util_extract_p(archivo,tmpdir);
+        }	
+
+        else if (!util_compare_file_extension(archivo,"o") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a O file");
+        	return util_extract_o(archivo,tmpdir);
+        }				
+
+        else if ( !util_compare_file_extension(archivo,"mdv") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a mdv file");
+                return util_extract_mdv(archivo,tmpdir);
+        }
+
+		else if (menu_filesel_is_compressed(archivo)) {
+			debug_printf (VERBOSE_DEBUG,"Expanding Compressed file");
+			return menu_filesel_uncompress(archivo,tmpdir);
+		}
+
+		//else debug_printf(VERBOSE_DEBUG,"Don't know how to expand that file");
+
+
+        return 1;
+
 
 }
 
