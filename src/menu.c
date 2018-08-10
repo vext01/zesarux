@@ -2945,6 +2945,9 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 
 		}
 
+		//if (x>=32) {
+		//	printf ("Escribiendo caracter [%c] en x: %d\n",letra,x);
+		//}
 
 
 		if (!era_utf) x++;

@@ -32,6 +32,11 @@ renombrarla
 * fecha 
 * otros datos?
 
+-entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
+->ahora ya no da el cpu_panic de Window out of bounds
+->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
+en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
+
 -se deberia poder expandir tambien archivos comprimidos (zip, rar, etc) con tecla espacio? Al final es la misma funcion que enter
 en el caso de dichos archivos
 
