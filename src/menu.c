@@ -32549,7 +32549,8 @@ void set_splash_text(void)
 
 
         char texto_edition[40];
-        sprintf(texto_edition," ^^" EMULATOR_EDITION_NAME "^^ ");
+        //sprintf(texto_edition," ^^" EMULATOR_EDITION_NAME "^^ ");
+		sprintf(texto_edition," " EMULATOR_EDITION_NAME " ");
 
         //centramos texto
         x=16-strlen(texto_edition)/2;
