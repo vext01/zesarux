@@ -71,7 +71,6 @@ Probar también con Fuse u otro emulador que soporte kempston mouse
 -al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
 visor sprites tambien se ve mal
 
--probar accion de cambio de joystick seleccionado, mediante boton de joystick real
 
 -parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
 

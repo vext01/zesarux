@@ -33547,20 +33547,14 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
 
 
 }
-//Devuelve 0 si ok
-
-int menu_filesel_uncompress (char *archivo,char *tmpdir)
-{
-
-
-//descomprimir creando carpeta TMPDIR_BASE/zipname
- sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
- menu_filesel_mkdir(tmpdir);
 
 #define COMPRESSED_ZIP 1
 #define COMPRESSED_GZ  2
 #define COMPRESSED_TAR 3
 #define COMPRESSED_RAR 4
+
+int menu_filesel_is_compressed(char *archivo)
+{
   int compressed_type=0;
 
 	//if ( strstr(archivo,".zip")!=NULL || strstr(archivo,".ZIP")!=NULL) {
@@ -33583,6 +33577,22 @@ int menu_filesel_uncompress (char *archivo,char *tmpdir)
                 debug_printf (VERBOSE_DEBUG,"Is a rar file");
                 compressed_type=COMPRESSED_RAR;
         }
+
+	return compressed_type;	
+}
+
+//Devuelve 0 si ok
+
+int menu_filesel_uncompress (char *archivo,char *tmpdir)
+{
+
+
+//descomprimir creando carpeta TMPDIR_BASE/zipname
+ sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
+ menu_filesel_mkdir(tmpdir);
+
+
+  int compressed_type=menu_filesel_is_compressed(archivo);
 
 
 //descomprimir
