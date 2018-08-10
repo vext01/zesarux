@@ -1,7 +1,6 @@
 Version 7.1. 7 August 2018 - XXX edition
 
 Added ACB/ABC/BAC/Custom Stereo emulation
-Improved menu windows: now can have more lines than 22, doing scroll
 Added joystick action to change emulated joystick type: Sinclair, Kempston, etc
 Added support to show some unicode (utf8) characters on menu
 Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens), Z88 basic files with tokens
@@ -20,6 +19,7 @@ Improved debugger:
 * breakpoints actions do not reset keyboard 
 
 Improved menu: 
+* menu windows: now can have more lines than 22, doing scroll
 * now you can write any ascii character on the menu
 * now you can use binary numbers on expressions
 * you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
@@ -30,8 +30,8 @@ Fixed autoload tape on TBBlue
 Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
 Fixed bug reading extension on files with no extension
 Fixed bug reading AY registers: unused bits for registers are set to 0
-Fixed bugs on esxdos handler:
 
+Fixed bugs on esxdos handler:
 *readdir call was incrementing PC register when there was no more files
 *added ESXDOS_MODE_CREAT_TRUNC mode when opening files
 *BCDE was not returning from a f_seek call
