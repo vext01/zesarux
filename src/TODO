@@ -26,7 +26,11 @@ renombrarla
 
 -funcion rename y quiza tambien delete en esxdos handler
 
--reloj deberia salir en nextos
+-poder hacer 50 FPS en carga top speed: problema, que al hacer top speed, ya no llevamos la cuenta de cuanto son 50 fps, pues no hay sleep de 
+final de frame. Y al no haberlo , si metemos un refresco de pantalla al final de cada supuesto frame, se estara lanzando muchos mas de 50 veces por segundo
+el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos a velocidad normal en vez de top speed
+
+-reloj deberia salir en nextos 
 -si se deja cursor quieto en filebrowser, que muestre informacion del archivo:
 * nombre completo
 * tamaño
@@ -37,9 +41,6 @@ renombrarla
 ->ahora ya no da el cpu_panic de Window out of bounds
 ->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
 en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
-
--se deberia poder expandir tambien archivos comprimidos (zip, rar, etc) con tecla espacio? Al final es la misma funcion que enter
-en el caso de dichos archivos
 
 -Quizá quitar real-time cuando root? Casi nunca se ha probado
 Y además casi nadie lo lanza como root 
