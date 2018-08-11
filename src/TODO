@@ -24,6 +24,7 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+-funcion rename y quiza tambien delete en esxdos handler
 
 -reloj deberia salir en nextos
 -si se deja cursor quieto en filebrowser, que muestre informacion del archivo:
