@@ -8,7 +8,7 @@ Added ZXUno DMA emulation
 Added TBBlue/DataGear/MB02 DMA emulation
 Added Beeper Piano Menu
 Added new Z80 TBBlue opcodes and deleted obsolete ones
-Added setting to change Kempston Mouse sentitivity
+Added setting to change Kempston Mouse sensitivity
 
 Improved debugger:
 *Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches
@@ -35,6 +35,7 @@ Fixed bugs on esxdos handler:
 *readdir call was incrementing PC register when there was no more files
 *added ESXDOS_MODE_CREAT_TRUNC mode when opening files
 *BCDE was not returning from a f_seek call
+*fixed mode OPEN_CREAT|WRITE which has appending data after a seek instead of overwriting
 
 Updated to the last Next SD image
 

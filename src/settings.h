@@ -24,6 +24,8 @@
 
 #include "cpu.h"
 
+#define MAX_KMOUSE_SENSITIVITY 10
+
 extern z80_bit menu_debug_registers_if_showscan;
 
 extern z80_bit debug_settings_show_screen;
@@ -56,7 +58,7 @@ extern z80_bit fast_autoload;
 
 extern z80_bit setting_mostrar_ay_piano_grafico;
 
-extern z80_byte kempston_mouse_factor_sensibilidad;
+extern int kempston_mouse_factor_sensibilidad;
 
 #endif
 

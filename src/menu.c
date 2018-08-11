@@ -17783,8 +17783,12 @@ void menu_hardware_datagear_dma(MENU_ITEM_PARAMETERS)
 
 void menu_hardware_kempston_mouse_sensibilidad(MENU_ITEM_PARAMETERS)
 {
-	kempston_mouse_factor_sensibilidad++;
-	if (kempston_mouse_factor_sensibilidad==6) kempston_mouse_factor_sensibilidad=1;
+	//kempston_mouse_factor_sensibilidad++;
+	//if (kempston_mouse_factor_sensibilidad==6) kempston_mouse_factor_sensibilidad=1;
+	char titulo_ventana[33];
+	sprintf (titulo_ventana,"Sensitivity (1-%d)",MAX_KMOUSE_SENSITIVITY);
+
+	menu_hardware_advanced_input_value(1,MAX_KMOUSE_SENSITIVITY,titulo_ventana,&kempston_mouse_factor_sensibilidad);
 }
 
 //menu hardware settings

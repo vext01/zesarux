@@ -1621,7 +1621,9 @@ printf (
 		printf (
 		"\n"
 		"--enablekempstonmouse      Enable kempston mouse emulation\n"
-		"--kempstonmouse-sens n     Set kempston mouse sensitivity (1-5)\n" 
+		"--kempstonmouse-sens n     Set kempston mouse sensitivity (1-%d)\n",MAX_KMOUSE_SENSITIVITY);
+
+		printf (
 		"--spectrum-reduced-core    Use Spectrum reduced core. It uses less cpu, ideal for slow devices like Raspberry Pi One and Zero\n"
 		"                           The following features will NOT be available or will NOT be properly emulated when using this core:\n"
 		"                           Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, TBBlue Copper, Audio DAC, Video out to file\n"
@@ -5154,7 +5156,7 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--kempstonmouse-sens")) {
 				siguiente_parametro_argumento();
                 int valor=atoi(argv[puntero_parametro]);
-                if (valor<1 || valor>5) {
+                if (valor<1 || valor>MAX_KMOUSE_SENSITIVITY) {
                		printf ("Invalid Kempston Mouse Sensitivity value\n");
                     exit(1);
                 }

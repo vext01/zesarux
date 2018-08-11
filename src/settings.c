@@ -192,4 +192,4 @@ z80_bit setting_mostrar_ay_piano_grafico={1};
 //
 
 //Sensibilidad usada al leer kempston mouse desde spectrum
-z80_byte kempston_mouse_factor_sensibilidad=1;
+int kempston_mouse_factor_sensibilidad=1;

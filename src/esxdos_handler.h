@@ -22,8 +22,21 @@
 #ifndef ESXDOS_HANDLER_H
 #define ESXDOS_HANDLER_H
 
-#define ESXDOS_RST8_FA_OPEN_EX  0x00
-// open if exists, else error
+//Algunos nombres de flags cambiados segun _DEVELOPMENT/target/zx/config/config_esxdos.m4
+/*
+define(`__ESXDOS_MODE_READ', 0x01)            # read access
+define(`__ESXDOS_MODE_WRITE', 0x02)           # write access
+
+define(`__ESXDOS_MODE_OPEN_EXIST', 0x00)      # open if exists else error; fp = 0
+define(`__ESXDOS_MODE_OPEN_CREAT', 0x08)      # open if exists else create; fp = 0
+define(`__ESXDOS_MODE_CREAT_NOEXIST', 0x04)   # if file exists error else create; fp = 0
+define(`__ESXDOS_MODE_CREAT_TRUNC', 0x0c)     # create or replace an existing file; fp = 0
+define(`__ESXDOS_MODE_USE_HEADER', 0x40)      # use +3DOS header passed in DE
+
+*/
+
+#define ESXDOS_RST8_FA_OPEN_EXIST  0x00
+// open if exists else error; fp = 0
 
 #define ESXDOS_RST8_FA_READ 0x01
 // read access
@@ -31,25 +44,25 @@
 #define ESXDOS_RST8_FA_WRITE  0x02
 // write access
 
-#define ESXDOS_RST8_FA_CREATE_NEW 0x04
-// create if does not exist, else error
+#define ESXDOS_RST8_FA_CREAT_NOEXIST 0x04
+// open if exists else create; fp = 0
 
 
-#define ESXDOS_RST8_FA_OPEN_AL  0x08
-// open if exists, if not create
+#define ESXDOS_RST8_FA_OPEN_CREAT  0x08
+// # open if exists else create; fp = 0
 
 
 
 #define ESXDOS_RST8_FA_CREATE_TRUNC 0x0c
-// combinacion de ESXDOS_RST8_FA_OPEN_AL y ESXDOS_RST8_FA_CREATE_NEW (8+4)
+// combinacion de ESXDOS_RST8_FA_OPEN_CREAT y ESXDOS_RST8_FA_CREAT_NOEXIST (8+4)
 
 
 /*
-FA_OPEN_EX              equ             %00000000                       ; Open if exists, else error
+FA_OPEN_EXIST              equ             %00000000                       ; Open if exists, else error
 FA_READ                 equ             %00000001                       ; Read access
 FA_WRITE                equ             %00000010                       ; Write access
-FA_CREATE_NEW   equ             %00000100                       ; Create if not exists, if exists error
-FA_OPEN_AL              equ             %00001000                       ; Open if exists, if not create
+FA_CREAT_NOEXIST   equ             %00000100                       ; Create if not exists, if exists error
+FA_OPEN_CREAT              equ             %00001000                       ; Open if exists, if not create
 
 
 FA_CREATE_AL    equ             %00001100                       ; Create if not exists, else open and truncate

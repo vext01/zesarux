@@ -265,9 +265,9 @@ void esxdos_handler_debug_file_flags(z80_byte b)
 {
 	if (b&ESXDOS_RST8_FA_READ) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_READ|");
 	if (b&ESXDOS_RST8_FA_WRITE) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_WRITE|");
-	if (b&ESXDOS_RST8_FA_OPEN_EX) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_OPEN_EX|");
-	if (b&ESXDOS_RST8_FA_OPEN_AL) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_OPEN_AL|");
-	if (b&ESXDOS_RST8_FA_CREATE_NEW) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_CREATE_NEW|");
+	if (b&ESXDOS_RST8_FA_OPEN_EXIST) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_OPEN_EXIST|");
+	if (b&ESXDOS_RST8_FA_OPEN_CREAT) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_OPEN_CREAT|");
+	if (b&ESXDOS_RST8_FA_CREAT_NOEXIST) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_CREAT_NOEXIST|");
 	if (b&ESXDOS_RST8_FA_USE_HEADER) debug_printf (VERBOSE_DEBUG,"ESXDOS handler: FA_USE_HEADER|");
 
 	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
@@ -323,19 +323,19 @@ void esxdos_handler_call_f_open(void)
 				strcpy(fopen_mode,"wb");
 			break;
 
-			case ESXDOS_RST8_FA_CREATE_NEW|ESXDOS_RST8_FA_WRITE:
+			case ESXDOS_RST8_FA_CREAT_NOEXIST|ESXDOS_RST8_FA_WRITE:
 				strcpy(fopen_mode,"wb");
 			break;
 
-			case ESXDOS_RST8_FA_OPEN_AL|ESXDOS_RST8_FA_WRITE:
-				strcpy(fopen_mode,"ab");
+			case ESXDOS_RST8_FA_OPEN_CREAT|ESXDOS_RST8_FA_WRITE:
+				strcpy(fopen_mode,"wb");
 			break;
 
 			/*
-			#define ESXDOS_RST8_FA_CREATE_NEW 0x04
+			#define ESXDOS_RST8_FA_CREAT_NOEXIST 0x04
 // create if does not exist, else error
 
-#define ESXDOS_RST8_FA_OPEN_AL  0x08
+#define ESXDOS_RST8_FA_OPEN_CREAT  0x08
 			*/
 
 			case ESXDOS_RST8_FA_CREATE_TRUNC:
@@ -345,17 +345,17 @@ void esxdos_handler_call_f_open(void)
 
 /*
 Debug: ESXDOS handler: FA_WRITE|
-Debug: ESXDOS handler: FA_OPEN_AL|
-Debug: ESXDOS handler: FA_CREATE_NEW|
+Debug: ESXDOS handler: FA_OPEN_CREAT|
+Debug: ESXDOS handler: FA_CREAT_NOEXIST|
 
 Esto se usa en NextDaw, es open+truncate
 */
-			case ESXDOS_RST8_FA_WRITE|ESXDOS_RST8_FA_OPEN_AL|ESXDOS_RST8_FA_CREATE_NEW:
+			case ESXDOS_RST8_FA_WRITE|ESXDOS_RST8_FA_OPEN_CREAT|ESXDOS_RST8_FA_CREAT_NOEXIST:
 				strcpy(fopen_mode,"wb");
 			break;
 		
 
-			//case FA_WRITE|FA_CREATE_NEW|FA_USE_HEADER
+			//case FA_WRITE|FA_CREAT_NOEXIST|FA_USE_HEADER
 
 			default:
 
@@ -365,6 +365,8 @@ Esto se usa en NextDaw, es open+truncate
 				return;
 			break;
 	}
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Opening file in system mode: [%s]",fopen_mode);
 
 
 	//Ver si no se han abierto el maximo de archivos y obtener handle libre
@@ -400,9 +402,9 @@ Esto se usa en NextDaw, es open+truncate
 
 
 	//Ver tipos de apertura que dan error si existe
-	if ( modo_abrir==(ESXDOS_RST8_FA_CREATE_NEW | ESXDOS_RST8_FA_WRITE))  {
+	if ( modo_abrir==(ESXDOS_RST8_FA_CREAT_NOEXIST | ESXDOS_RST8_FA_WRITE))  {
 		if (si_existe_archivo(fullpath)) {
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: file exists and using mode FA_CREATE_NEW|ESXDOS_RST8_FA_WRITE. Error");
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: file exists and using mode FA_CREAT_NOEXIST|ESXDOS_RST8_FA_WRITE. Error");
 			esxdos_handler_error_carry(ESXDOS_ERROR_EEXIST);
 			esxdos_handler_old_return_call();
 			return;
@@ -1479,6 +1481,10 @@ void esxdos_handler_begin_handling_commands(void)
 		case ESXDOS_RST8_F_WRITE:
 		//Write BC bytes at HL from file handle A.
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_Write. Write %d bytes from %04XH from file handle %d",reg_bc,(*registro_parametros_hl_ix),reg_a);
+
+			//temp
+			//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_Write. content 1 byte: %02XH",peek_byte_no_time(*registro_parametros_hl_ix));
+			
 			esxdos_handler_call_f_write();
 			esxdos_handler_new_return_call();
 		break;
