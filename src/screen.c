@@ -7476,6 +7476,11 @@ int screen_force_refresh=0;
 int screen_if_refresh(void)
 {
 
+	//Si autoframeskip no esta activo, entonces siempre refresca. Esto se comprueba al principio
+	if (autoframeskip.v==0) {
+		return 1;
+	}
+
 	//Forzado puntual de refresco de pantalla, para que no haga frameskip. Usado por ejemplo en debug cpu
 	//Cuando se hace una vez, luego se resetea a 0
 	if (screen_force_refresh) {
@@ -7495,7 +7500,7 @@ int screen_if_refresh(void)
 		return 1;
 	}
 
-
+	//Como autoframeskip.v==0 ya lo comprobamos antes, aqui sobraria
 	if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
 		return 1;
 	}
