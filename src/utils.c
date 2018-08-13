@@ -11893,3 +11893,9 @@ int file_is_z88_basic(char *filename)
 
         return esbasic;
 }
+
+
+
+void util_save_game_config(char *filename)
+{
+}

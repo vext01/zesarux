@@ -21460,6 +21460,30 @@ void menu_snapshot_quicksave(MENU_ITEM_PARAMETERS)
 
 void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 {
+	 char *filtros[2];
+
+
+                filtros[0]="config";
+                filtros[1]=0;
+
+
+	char game_config_file[PATH_MAX];
+
+        if (menu_filesel("Snapshot file",filtros,game_config_file)==1) {
+ //Ver si archivo existe y preguntar
+
+                if (si_existe_archivo(game_config_file) ) {
+
+                        if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+
+                }
+
+
+                util_save_game_config(game_config_file);
+
+
+
+        }
 }
 
 void menu_snapshot(MENU_ITEM_PARAMETERS)
