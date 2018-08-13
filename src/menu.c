@@ -21479,11 +21479,14 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
                 }
 
 
-                util_save_game_config(game_config_file);
 
 
 
         }
+                
+	util_save_game_config(game_config_file);
+
+	menu_generic_message("Save autoconfig","OK. File saved");
 }
 
 void menu_snapshot(MENU_ITEM_PARAMETERS)
@@ -21549,7 +21552,7 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 
 
 				menu_add_item_menu(array_menu_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-				menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_game_config,NULL,"Save .config");
+				menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_game_config,NULL,"Save autoconfig file");
 				menu_add_item_menu_tooltip(array_menu_snapshot,"Generate .config file with common settings");
 				menu_add_item_menu_ayuda(array_menu_snapshot,"Generate .config file with common settings. Used to define custom settings for games");
 

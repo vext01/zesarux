@@ -11918,20 +11918,111 @@ void util_save_game_config(char *filename)
 
 
   //Y empezamos a meter opciones
-                                              ADD_STRING_CONFIG,"--zoom %d",zoom_x);
+
+  get_machine_config_name_by_number(buffer_temp,current_machine_type);
+  if (buffer_temp[0]!=0) {
+                                              ADD_STRING_CONFIG,"--machine %s",buffer_temp);
+  }
+
   if (frameskip)                              ADD_STRING_CONFIG,"--frameskip %d",frameskip);
 
 
+  if (border_enabled.v==0)                    ADD_STRING_CONFIG,"--disableborder");
+  else					      ADD_STRING_CONFIG,"--enableborder");
+
+  if (rainbow_enabled.v)                      ADD_STRING_CONFIG,"--realvideo");
+
+/*
+--aychip                    Enable AY-Chip
+--zx8081mem n
+--zx8081ram8K2000
+--zx8081ram16K8000
+--zx8081ram16KC000
+--zx8081vsyncsound
+--snoweffect
+--enableinterlace           Enable interlace video mode
+--disableinterlace          Disable interlace video mode
+--enableulaplus             Enable ULAplus video modes
+--disableulaplus            Disable ULAplus video modes
+--enablespectra             Enable Spectra video modes
+--disablespectra            Disable Spectra video modes
+--enabletimexvideo          Enable Timex video modes
+--disabletimexvideo         Disable Timex video modes
+--enablezgx
+--wrx
+--chroma81
+--vsync-minimum-length n
+--no-horiz-stabilization    Disable Horizontal Stabilization
+--gigascreen                Enable GigaScreen emulation
+--enablezx8081lnctradjust   Enable LNCTR adjust on ZX80/81
+--disablezx8081lnctradjust  Disable LNCTR adjust on ZX80/81
+--redefinekey src dest
+--joystickkeyev evt key
+*/
 
 
+					ADD_STRING_CONFIG,"--clearredefinekey");
+					ADD_STRING_CONFIG,"--cleareventlist");
 
 
+						ADD_STRING_CONFIG,"--joystickemulated \"%s\"",joystick_texto[joystick_emulation]);
 
 
+  //real joystick buttons to events
+  for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
+        if (realjoystick_events_array[i].asignado.v) {
+                char texto_button[20];
+                int button_type;
+                button_type=realjoystick_events_array[i].button_type;
+
+                util_write_config_aux_realjoystick(button_type, realjoystick_events_array[i].button, texto_button);
+
+                /*
+                if (button_type==0) {
+                        sprintf(texto_button,"%d",realjoystick_events_array[i].button);
+                }
+                else if (button_type<0) {
+                        sprintf(texto_button,"-%d",realjoystick_events_array[i].button);
+                }
+
+                else {
+                        sprintf(texto_button,"+%d",realjoystick_events_array[i].button);
+                }*/
+
+                ADD_STRING_CONFIG,"--joystickevent %s %s",texto_button,realjoystick_event_names[i]);
+        }
+  }
 
 
+  //real joystick buttons to keys
+  for (i=0;i<MAX_KEYS_JOYSTICK;i++) {
+        if (realjoystick_keys_array[i].asignado.v) {
+                char texto_button[20];
+                int button_type;
+                z80_byte caracter;
+                caracter=realjoystick_keys_array[i].caracter;
+                button_type=realjoystick_keys_array[i].button_type;
 
-    char configfile[PATH_MAX];
+                util_write_config_aux_realjoystick(button_type, realjoystick_keys_array[i].button, texto_button);
+
+                /*
+                if (button_type==0) {
+                        sprintf(texto_button,"%d",realjoystick_keys_array[i].button);
+                }
+                else if (button_type<0) {
+                        sprintf(texto_button,"-%d",realjoystick_keys_array[i].button);
+                }
+
+                else {
+                        sprintf(texto_button,"+%d",realjoystick_keys_array[i].button);
+                }
+                */
+
+                ADD_STRING_CONFIG,"--joystickkeybt %s %d",texto_button,caracter);
+        }
+  }
+
+
          FILE *ptr_configfile;
 
      ptr_configfile=fopen(filename,"wb");
