@@ -3,7 +3,7 @@ soporte stereo. De momento esta:
 -coreaudio ok
 -sdl2 ok
 -sdl1 ok
-    
+     
 -pulse:
 pthreads: ok
 sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de chasquidos. OK
