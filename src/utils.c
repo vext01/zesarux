@@ -11903,35 +11903,44 @@ void util_save_game_config(char *filename)
 
 
   if (border_enabled.v==0)                    ADD_STRING_CONFIG,"--disableborder");
-  else					      ADD_STRING_CONFIG,"--enableborder");
+
+
+//Estas siguientes solo si es ZX80/81
+  if (MACHINE_IS_ZX8081) {
+        if (zx8081_get_standard_ram()!=16)          ADD_STRING_CONFIG,"--zx8081mem %d",zx8081_get_standard_ram());
+        if (zx8081_vsync_sound.v)                   ADD_STRING_CONFIG,"--zx8081vsyncsound");
+        if (ram_in_8192.v)                          ADD_STRING_CONFIG,"--zx8081ram8K2000");
+        if (ram_in_32768.v)                         ADD_STRING_CONFIG,"--zx8081ram16K8000");
+        if (ram_in_49152.v)                         ADD_STRING_CONFIG,"--zx8081ram16KC000");  
+        if (wrx_present.v)                          ADD_STRING_CONFIG,"--wrx");
+        if (chroma81.v)                             ADD_STRING_CONFIG,"--chroma81");
+                                                    ADD_STRING_CONFIG,"--vsync-minimum-length %d",minimo_duracion_vsync); 
+        if (video_zx8081_estabilizador_imagen.v==0) ADD_STRING_CONFIG,"--no-horiz-stabilization"); 
+        if (video_zx8081_lnctr_adjust.v)            ADD_STRING_CONFIG,"--enablezx8081lnctradjust");        
+  }
+
 
   if (rainbow_enabled.v)                      ADD_STRING_CONFIG,"--realvideo");
+  if (video_interlaced_mode.v)                ADD_STRING_CONFIG,"--enableinterlaced");
+
+  
+
+
+//Estas solo si es Spectrum
+  if (MACHINE_IS_SPECTRUM) {
+        if (snow_effect_enabled.v)                  ADD_STRING_CONFIG,"--snoweffect");    
+        if (ulaplus_presente.v)                     ADD_STRING_CONFIG,"--enableulaplus");
+        if (spectra_enabled.v)                      ADD_STRING_CONFIG,"--enablespectra");  
+        if (timex_video_emulation.v)                ADD_STRING_CONFIG,"--enabletimexvideo");
+  }
+
+
+  if (gigascreen_enabled.v)                   ADD_STRING_CONFIG,"--enablegigascreen");  
 
 /*
---aychip                    Enable AY-Chip
---zx8081mem n
---zx8081ram8K2000
---zx8081ram16K8000
---zx8081ram16KC000
---zx8081vsyncsound
---snoweffect
---enableinterlace           Enable interlace video mode
---disableinterlace          Disable interlace video mode
---enableulaplus             Enable ULAplus video modes
---disableulaplus            Disable ULAplus video modes
---enabletimexvideo          Enable Timex video modes
---disabletimexvideo         Disable Timex video modes
---wrx
---chroma81
---vsync-minimum-length n
---no-horiz-stabilization    Disable Horizontal Stabilization
---gigascreen                Enable GigaScreen emulation
---enablezx8081lnctradjust   Enable LNCTR adjust on ZX80/81
---disablezx8081lnctradjust  Disable LNCTR adjust on ZX80/81
 --redefinekey src dest
 --joystickkeyev evt key
 */
-
 
 					ADD_STRING_CONFIG,"--clearredefinekey");
 					ADD_STRING_CONFIG,"--cleareventlist");

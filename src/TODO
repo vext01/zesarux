@@ -49,7 +49,6 @@ Y además casi nadie lo lanza como root
 
 -mostrar <exp> para archivos expandibles/comprimidos? gestionado por menu_util_file_is_compressed
 
--Opción para generar un .config con opciones en curso, opciones basicas. en que menu? Save...? settings? debug...?
 
 -formato zsf debe guardar iff1 y iff2 por separado
 
