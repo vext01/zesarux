@@ -21460,17 +21460,66 @@ void menu_snapshot_quicksave(MENU_ITEM_PARAMETERS)
 
 void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 {
-	 char *filtros[2];
 
+        char *filtros[29];
 
-                filtros[0]="config";
-                filtros[1]=0;
+        filtros[0]="zx";
+        filtros[1]="sp";
+        filtros[2]="z80";
+        filtros[3]="sna";
 
+        filtros[4]="o";
+        filtros[5]="p";
+        filtros[6]="80";
+        filtros[7]="81";
+        filtros[8]="z81";
 
+        filtros[9]="tzx";
+        filtros[10]="tap";
+
+        filtros[11]="rwa";
+        filtros[12]="smp";
+        filtros[13]="wav";
+
+        filtros[14]="epr";
+        filtros[15]="63";
+        filtros[16]="eprom";
+        filtros[17]="flash";
+
+        filtros[18]="ace";
+
+        filtros[19]="dck";
+
+        filtros[20]="cdt";
+
+        filtros[21]="ay";
+
+        filtros[22]="scr";
+
+        filtros[23]="rzx";
+
+        filtros[24]="zsf";
+
+        filtros[25]="spg";
+
+        filtros[26]="trd";
+
+        filtros[27]="config";
+
+        filtros[28]=0;
+
+	char source_file[PATH_MAX];
 	char game_config_file[PATH_MAX];
 
-        if (menu_filesel("Snapshot file",filtros,game_config_file)==1) {
+        if (menu_filesel("Source file",filtros,source_file)==1) {
  //Ver si archivo existe y preguntar
+
+		//Archivo final agregar .config, si es que no es ya el .config el que hemos seleccionado
+		if (!util_compare_file_extension(source_file,"config")) strcpy(game_config_file,source_file);
+		else sprintf (game_config_file,"%s.config",source_file);
+
+
+		debug_printf (VERBOSE_INFO,"Destination file will be %s",game_config_file);
 
                 if (si_existe_archivo(game_config_file) ) {
 
@@ -21480,13 +21529,12 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 
 
 
+	util_save_game_config(game_config_file);
+	menu_generic_message("Save autoconfig","OK. File saved");
 
 
         }
                 
-	util_save_game_config(game_config_file);
-
-	menu_generic_message("Save autoconfig","OK. File saved");
 }
 
 void menu_snapshot(MENU_ITEM_PARAMETERS)
