@@ -832,7 +832,8 @@ int realjoystick_buscar_evento_en_tabla(int button, int button_type)
 	int i;
 
 	for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
-		if (realjoystick_events_array[i].button==button && realjoystick_events_array[i].button_type==button_type) return i;
+		if (realjoystick_events_array[i].asignado.v &&
+			realjoystick_events_array[i].button==button && realjoystick_events_array[i].button_type==button_type) return i;
 	}
 
 	return -1;

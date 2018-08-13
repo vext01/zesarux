@@ -607,7 +607,7 @@ void cpu_set_turbo_speed(void)
 	//Ajustes previos de t_estados. En estos ajustes, solo las variables t_estados, antes_t_estados se usan. Las t_estados_en_linea, t_estados_percx son para debug
 	//printf ("Turbo was %d, setting turbo %d\n",cpu_turbo_speed_antes,cpu_turbo_speed);
 
-	int t_estados_en_linea=t_estados % screen_testados_linea;
+	//int t_estados_en_linea=t_estados % screen_testados_linea;
 
 	//int t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
 
@@ -657,7 +657,7 @@ void cpu_set_turbo_speed(void)
 	t_estados=antes_t_estados * cpu_turbo_speed;
 
 
-	t_estados_en_linea=t_estados % screen_testados_linea;
+	//t_estados_en_linea=t_estados % screen_testados_linea;
 
 	//t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
 

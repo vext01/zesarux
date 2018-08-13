@@ -21535,7 +21535,7 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
                                 menu_tape_settings_trunc_name(nombre,nombre_shown,25);
 
 
-		if (menu_confirm_yesno_texto("Generate conf for",nombre_shown)) {
+		if (menu_confirm_yesno_texto("Generate config for",nombre_shown)) {
 			strcpy(source_file,quickfile);
 			ret=1;
 		}
