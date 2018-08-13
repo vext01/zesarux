@@ -3494,18 +3494,6 @@ int util_write_configfile(void)
 
   		util_write_config_aux_realjoystick(button_type, realjoystick_events_array[i].button, texto_button);
 
-  		/*
-  		if (button_type==0) {
-  			sprintf(texto_button,"%d",realjoystick_events_array[i].button);
-  		}
-  		else if (button_type<0) {
-  			sprintf(texto_button,"-%d",realjoystick_events_array[i].button);
-  		}
-
-  		else {
-  			sprintf(texto_button,"+%d",realjoystick_events_array[i].button);
-  		}*/
-  		
   		ADD_STRING_CONFIG,"--joystickevent %s %s",texto_button,realjoystick_event_names[i]);
   	}
   }
@@ -3522,19 +3510,6 @@ int util_write_configfile(void)
 
 		util_write_config_aux_realjoystick(button_type, realjoystick_keys_array[i].button, texto_button);	
 
-		/*
-  		if (button_type==0) {
-  			sprintf(texto_button,"%d",realjoystick_keys_array[i].button);
-  		}
-  		else if (button_type<0) {
-  			sprintf(texto_button,"-%d",realjoystick_keys_array[i].button);
-  		}
-
-  		else {
-  			sprintf(texto_button,"+%d",realjoystick_keys_array[i].button);
-  		}
-  		*/
-  		
   		ADD_STRING_CONFIG,"--joystickkeybt %s %d",texto_button,caracter);
   	}
   }
@@ -11977,18 +11952,6 @@ void util_save_game_config(char *filename)
 
                 util_write_config_aux_realjoystick(button_type, realjoystick_events_array[i].button, texto_button);
 
-                /*
-                if (button_type==0) {
-                        sprintf(texto_button,"%d",realjoystick_events_array[i].button);
-                }
-                else if (button_type<0) {
-                        sprintf(texto_button,"-%d",realjoystick_events_array[i].button);
-                }
-
-                else {
-                        sprintf(texto_button,"+%d",realjoystick_events_array[i].button);
-                }*/
-
                 ADD_STRING_CONFIG,"--joystickevent %s %s",texto_button,realjoystick_event_names[i]);
         }
   }
@@ -12004,19 +11967,6 @@ void util_save_game_config(char *filename)
                 button_type=realjoystick_keys_array[i].button_type;
 
                 util_write_config_aux_realjoystick(button_type, realjoystick_keys_array[i].button, texto_button);
-
-                /*
-                if (button_type==0) {
-                        sprintf(texto_button,"%d",realjoystick_keys_array[i].button);
-                }
-                else if (button_type<0) {
-                        sprintf(texto_button,"-%d",realjoystick_keys_array[i].button);
-                }
-
-                else {
-                        sprintf(texto_button,"+%d",realjoystick_keys_array[i].button);
-                }
-                */
 
                 ADD_STRING_CONFIG,"--joystickkeybt %s %d",texto_button,caracter);
         }
