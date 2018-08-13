@@ -21511,8 +21511,37 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 	char source_file[PATH_MAX];
 	char game_config_file[PATH_MAX];
 
-        if (menu_filesel("Source file",filtros,source_file)==1) {
- //Ver si archivo existe y preguntar
+
+
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+        //Obtenemos directorio de quickload, para generar el .config en la ultima ruta que se haya hecho smartload
+        //si no hay directorio, vamos a rutas predefinidas
+        if (quickfile!=NULL)  {
+                char directorio[PATH_MAX];
+                util_get_dir(quickfile,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        menu_filesel_chdir(directorio);
+                }
+
+        }
+
+
+        int ret;
+
+	ret=menu_filesel("Source or dest file",filtros,source_file);
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
+
+        if (ret) {
 
 		//Archivo final agregar .config, si es que no es ya el .config el que hemos seleccionado
 		if (!util_compare_file_extension(source_file,"config")) strcpy(game_config_file,source_file);
@@ -21521,6 +21550,7 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 
 		debug_printf (VERBOSE_INFO,"Destination file will be %s",game_config_file);
 
+		 //Ver si archivo existe y preguntar
                 if (si_existe_archivo(game_config_file) ) {
 
                         if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
@@ -21529,8 +21559,8 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 
 
 
-	util_save_game_config(game_config_file);
-	menu_generic_message("Save autoconfig","OK. File saved");
+		util_save_game_config(game_config_file);
+		menu_generic_message("Save autoconfig","OK. File saved");
 
 
         }
