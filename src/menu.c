@@ -21530,19 +21530,19 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 		util_get_file_no_directory(quickfile,nombre);
 
 
-		char nombre_shown[10];
+		char nombre_shown[25];
 
-                                menu_tape_settings_trunc_name(nombre,nombre_shown,10);
+                                menu_tape_settings_trunc_name(nombre,nombre_shown,25);
 
 
-		if (menu_confirm_yesno_texto("Generate conf for",nombre)) {
+		if (menu_confirm_yesno_texto("Generate conf for",nombre_shown)) {
 			strcpy(source_file,quickfile);
 			ret=1;
 		}
 
 
 		else {
-			//Cambiar directorio
+			//No seleccionamos ultimo quickfile como source. Cambiar a directorio quickfile
 	                char directorio[PATH_MAX];
         	        util_get_dir(quickfile,directorio);
                 	//printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
@@ -21660,7 +21660,8 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu(array_menu_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 				menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_game_config,NULL,"Save autoconfig file");
 				menu_add_item_menu_tooltip(array_menu_snapshot,"Generate .config file with common settings");
-				menu_add_item_menu_ayuda(array_menu_snapshot,"Generate .config file with common settings. Used to define custom settings for games");
+				menu_add_item_menu_ayuda(array_menu_snapshot,"Generate .config file with common settings. Used to define custom settings for games, "
+					"by default it asks to generate a .config file for the last smartloaded game");
 
 
 
