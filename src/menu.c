@@ -21512,6 +21512,8 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 	char game_config_file[PATH_MAX];
 
 
+	//por defecto
+	source_file[0]=0;
 
         //guardamos directorio actual
         char directorio_actual[PATH_MAX];
@@ -21527,7 +21529,13 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 		char nombre[PATH_MAX];
 		util_get_file_no_directory(quickfile,nombre);
 
-		if (menu_confirm_yesno_texto("Generate config for",nombre)) {
+
+		char nombre_shown[10];
+
+                                menu_tape_settings_trunc_name(nombre,nombre_shown,10);
+
+
+		if (menu_confirm_yesno_texto("Generate conf for",nombre)) {
 			strcpy(source_file,quickfile);
 			ret=1;
 		}
@@ -21545,14 +21553,21 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
                         	menu_filesel_chdir(directorio);
 	                }
 
-			ret=menu_filesel("Source or dest file",filtros,source_file);
-			//volvemos a directorio inicial
-			menu_filesel_chdir(directorio_actual);
 
 		}
 
         }
 
+	//Si no se selecciona source_file como ultimo archivo cargado
+	if (source_file[0]==0) {
+
+			ret=menu_filesel("Source or dest file",filtros,source_file);
+			//volvemos a directorio inicial
+			menu_filesel_chdir(directorio_actual);
+
+	}
+
+	debug_printf (VERBOSE_INFO,"Source file: %s",source_file);
 
         if (ret) {
 
