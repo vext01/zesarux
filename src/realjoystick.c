@@ -818,6 +818,25 @@ int realjoystick_find_key(int indice_inicial,int button,int type,int value)
         return realjoystick_find_event_or_key(indice_inicial,realjoystick_keys_array,MAX_KEYS_JOYSTICK,button,type,value);
 }
 
+//Busca evento en tabla segun numero de boton y tipo
+int realjoystick_buscar_evento_en_tabla(int button, int button_type)
+{
+/*
+	//numero de boton
+	int button;
+
+	//tipo de boton: 0-boton normal, +1 axis positivo, -1 axis negativo
+	int button_type;
+*/
+//realjoystick_events_keys_function realjoystick_events_array[MAX_EVENTS_JOYSTICK];
+	int i;
+
+	for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
+		if (realjoystick_events_array[i].button==button && realjoystick_events_array[i].button_type==button_type) return i;
+	}
+
+	return -1;
+}
 
 
 void realjoystick_print_char(z80_byte caracter)

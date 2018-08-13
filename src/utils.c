@@ -11972,9 +11972,19 @@ void util_save_game_config(char *filename)
                 caracter=realjoystick_keys_array[i].caracter;
                 button_type=realjoystick_keys_array[i].button_type;
 
-                util_write_config_aux_realjoystick(button_type, realjoystick_keys_array[i].button, texto_button);
+                //Si hay evento en vez de numero de boton, meter --joystickkeyev
+                
+                //printf ("Buscando evento para boton %d tipo %d\n",realjoystick_keys_array[i].button,button_type);
+                int buscar_evento_index=realjoystick_buscar_evento_en_tabla(realjoystick_keys_array[i].button,button_type);
+                if (buscar_evento_index>=0) {
+                        //printf ("Encontrado evento %d para boton %d tipo %d\n",buscar_evento_index,realjoystick_keys_array[i].button,button_type);
+                    ADD_STRING_CONFIG,"--joystickkeyev %s %d",realjoystick_event_names[buscar_evento_index],caracter);    
+                }
 
-                ADD_STRING_CONFIG,"--joystickkeybt %s %d",texto_button,caracter);
+                else {
+                        util_write_config_aux_realjoystick(button_type, realjoystick_keys_array[i].button, texto_button);
+                        ADD_STRING_CONFIG,"--joystickkeybt %s %d",texto_button,caracter);
+                }
         }
   }
 

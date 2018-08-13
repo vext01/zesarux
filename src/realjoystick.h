@@ -150,6 +150,8 @@ extern int realjoystick_last_button,realjoystick_last_type,realjoystick_last_val
 extern int simulador_joystick;
 extern int simulador_joystick_forzado;
 
+//extern int realjoystick_find_event(int indice_inicial,int button,int type,int value);
+extern int realjoystick_buscar_evento_en_tabla(int button, int button_type);
 
 
 #endif
