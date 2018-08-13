@@ -21513,32 +21513,45 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 
 
 
-
         //guardamos directorio actual
         char directorio_actual[PATH_MAX];
         getcwd(directorio_actual,PATH_MAX);
 
+	int ret;
+
         //Obtenemos directorio de quickload, para generar el .config en la ultima ruta que se haya hecho smartload
         //si no hay directorio, vamos a rutas predefinidas
         if (quickfile!=NULL)  {
-                char directorio[PATH_MAX];
-                util_get_dir(quickfile,directorio);
-                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+		debug_printf (VERBOSE_INFO,"Last smartload file: %s",quickfile);
 
-                //cambiamos a ese directorio, siempre que no sea nulo
-                if (directorio[0]!=0) {
-                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
-                }
+		char nombre[PATH_MAX];
+		util_get_file_no_directory(quickfile,nombre);
+
+		if (menu_confirm_yesno_texto("Generate config for",nombre)) {
+			strcpy(source_file,quickfile);
+			ret=1;
+		}
+
+
+		else {
+			//Cambiar directorio
+	                char directorio[PATH_MAX];
+        	        util_get_dir(quickfile,directorio);
+                	//printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+	                //cambiamos a ese directorio, siempre que no sea nulo
+        	        if (directorio[0]!=0) {
+                	        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        	menu_filesel_chdir(directorio);
+	                }
+
+			ret=menu_filesel("Source or dest file",filtros,source_file);
+			//volvemos a directorio inicial
+			menu_filesel_chdir(directorio_actual);
+
+		}
 
         }
-
-
-        int ret;
-
-	ret=menu_filesel("Source or dest file",filtros,source_file);
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
 
 
         if (ret) {
