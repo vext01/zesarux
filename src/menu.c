@@ -21458,6 +21458,10 @@ void menu_snapshot_quicksave(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
+{
+}
+
 void menu_snapshot(MENU_ITEM_PARAMETERS)
 {
 
@@ -21518,6 +21522,12 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_seconds,NULL," Seconds: %d",snapshot_autosave_interval_seconds);
 					menu_add_item_menu_tooltip(array_menu_snapshot,"Save snapshot every desired interval");
 					menu_add_item_menu_ayuda(array_menu_snapshot,"Save snapshot every desired interval");
+
+
+				menu_add_item_menu(array_menu_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+				menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_game_config,NULL,"Save .config");
+				menu_add_item_menu_tooltip(array_menu_snapshot,"Generate .config file with common settings");
+				menu_add_item_menu_ayuda(array_menu_snapshot,"Generate .config file with common settings. Used to define custom settings for games");
 
 
 
