@@ -1624,6 +1624,80 @@ void esxdos_handler_call_disk_status(void)
 	else esxdos_handler_error_carry(ESXDOS_ERROR_ENODRV);
 }
 
+void esxdos_handler_call_disk_info(void)
+{
+/*
+DISK_INFO: If A=0 -> Get a buffer at address HL filled with a list of available block devices. If A<>0 -> Get info for a specific device. Buffer format:
+
+<byte>  Device Path (see below)
+<byte>  Device Flags (to be documented, block size, etc)
+<dword> Device size in blocks
+
+The buffer is over when you read a Device Path and you get a 0. FIXME: Make so that on return A=# of devs
+
+; Device Entry Description
+;
+; [BYTE] DEVICE PATH
+;
+; ---------------------------------
+; |       MAJOR       |  MINOR    |
+; +-------------------------------+
+; | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+; +---+---+---+---+---+---+---+---+
+; | E | D | C | B   B | A   A   A |
+;
+;
+; A: MINOR
+; --------
+; 000 : RAW (whole device)
+; 001 : 0       (first partition/session)
+; 010 : 1       (second partition/session)
+; 011 : 2       (etc...)
+; 100 : 3
+; 101 : 4
+; 110 : 5
+; 111 : 6
+;
+; B:
+; --
+; 00 : RESERVED
+; 01 : IDE
+; 10 : FLOPPY
+; 11 : VIRTUAL
+;
+; C:
+; --
+; 0 : PRIMARY
+; 1 : SECONDARY
+;
+; D:
+; --
+; 0 : MASTER
+; 1 : SLAVE
+;
+; E:
+; --
+; 0 : ATA
+; 1 : ATAPI
+
+This needs changing/fixing for virtual devs, etc.
+
+*/
+	//Retornar el primer disco solo
+	z80_byte byte_info=8; //IDE
+
+	//DISK_INFO: If A=0 -> Get a buffer at address HL filled with a list of available block devices. If A<>0 -> Get info for a specific device. Buffer format:
+	poke_byte_no_time((*registro_parametros_hl_ix),byte_info);
+
+	if (reg_a==0) {
+		//Siguiente byte a 0
+		poke_byte_no_time((*registro_parametros_hl_ix)+1,0);
+	}
+
+	esxdos_handler_no_error_uncarry();	
+
+}
+
 void esxdos_handler_begin_handling_commands(void)
 {
 	z80_byte funcion=peek_byte_no_time(reg_pc);
@@ -1647,9 +1721,10 @@ void esxdos_handler_begin_handling_commands(void)
 
 		case ESXDOS_RST8_DISK_INFO:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_DISK_INFO. A register: %02XH",reg_a);
-			esxdos_handler_run_normal_rst8();
+			esxdos_handler_call_disk_info();
+			//esxdos_handler_run_normal_rst8();
 			//esxdos_handler_no_error_uncarry();	
-			//esxdos_handler_new_return_call();
+			esxdos_handler_new_return_call();
 		break;	
 
 		case ESXDOS_RST8_M_DRIVEINFO:
@@ -1657,7 +1732,15 @@ void esxdos_handler_begin_handling_commands(void)
 			esxdos_handler_run_normal_rst8();
 			//esxdos_handler_no_error_uncarry();	
 			//esxdos_handler_new_return_call();
-		break;				
+		break;	
+
+		case ESXDOS_RST8_F_MOUNT:
+			//Pues de momento retornar ok tal cual
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_MOUNT. A register: %02XH",reg_a);
+			esxdos_handler_no_error_uncarry();
+			esxdos_handler_new_return_call();
+		break;	 
+
 
 		case ESXDOS_RST8_M_GETSETDRV:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_M_GETSETDRV");

@@ -94,6 +94,8 @@ FA_USE_HEADER   equ             %01000000                       ; Use +3DOS head
 #define ESXDOS_RST8_M_GETSETDRV   0x89
 #define ESXDOS_RST8_M_DRIVEINFO 0x8a
 
+#define ESXDOS_RST8_F_MOUNT 0x98
+
 #define ESXDOS_RST8_F_OPEN      0x9a
 #define ESXDOS_RST8_F_CLOSE      0x9b
 #define ESXDOS_RST8_F_READ      0x9d
