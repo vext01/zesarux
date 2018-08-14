@@ -1616,6 +1616,14 @@ void esxdos_handler_run_normal_rst8(void)
 	rst(8);
 }
 
+void esxdos_handler_call_disk_status(void)
+{
+
+	//Si primer disco, retornar ok
+	if (reg_a==0x80) esxdos_handler_no_error_uncarry();	
+	else esxdos_handler_error_carry(ESXDOS_ERROR_ENODRV);
+}
+
 void esxdos_handler_begin_handling_commands(void)
 {
 	z80_byte funcion=peek_byte_no_time(reg_pc);
@@ -1626,10 +1634,30 @@ void esxdos_handler_begin_handling_commands(void)
 	switch (funcion)
 	{
 
+		case ESXDOS_RST8_DISK_STATUS:
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_DISK_STATUS. A register: %02XH",reg_a);
+			esxdos_handler_call_disk_status();
+			esxdos_handler_new_return_call();			
+		break;
+
 		case ESXDOS_RST8_DISK_READ:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_DISK_READ");
 			esxdos_handler_run_normal_rst8();
 		break;
+
+		case ESXDOS_RST8_DISK_INFO:
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_DISK_INFO. A register: %02XH",reg_a);
+			esxdos_handler_run_normal_rst8();
+			//esxdos_handler_no_error_uncarry();	
+			//esxdos_handler_new_return_call();
+		break;	
+
+		case ESXDOS_RST8_M_DRIVEINFO:
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_M_DRIVE_INFO. A register: %02XH",reg_a);
+			esxdos_handler_run_normal_rst8();
+			//esxdos_handler_no_error_uncarry();	
+			//esxdos_handler_new_return_call();
+		break;				
 
 		case ESXDOS_RST8_M_GETSETDRV:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_M_GETSETDRV");
