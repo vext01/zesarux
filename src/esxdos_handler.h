@@ -110,6 +110,8 @@ FA_USE_HEADER   equ             %01000000                       ; Use +3DOS head
 #define ESXDOS_RST8_F_STAT 0xac
 #define ESXDOS_RST8_F_UNLINK 0xad
 
+#define ESXDOS_RST8_F_RENAME 0xb0
+
 
 #define ESXDOS_ERROR_EOK                      1          // OK
 #define ESXDOS_ERROR_EGENERAL                 2          // Syntax error

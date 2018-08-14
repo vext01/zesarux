@@ -169,9 +169,25 @@ poke_byte_no_time(puntero++,campo_fecha&0xFF);
 poke_byte_no_time(puntero++,(campo_fecha>>8)&0xff);
 }
 
+void esxdos_handler_copy_register_to_string(char *buffer_fichero,z80_int registro)
+{
+
+	int i;
+
+	for (i=0;peek_byte_no_time(registro+i);i++) {
+		buffer_fichero[i]=peek_byte_no_time(registro+i);
+	}
+
+	buffer_fichero[i]=0;
+}
+
 void esxdos_handler_copy_hl_to_string(char *buffer_fichero)
 {
 
+
+	esxdos_handler_copy_register_to_string(buffer_fichero,*registro_parametros_hl_ix);
+
+/*	
 	int i;
 
 	for (i=0;peek_byte_no_time((*registro_parametros_hl_ix)+i);i++) {
@@ -179,6 +195,7 @@ void esxdos_handler_copy_hl_to_string(char *buffer_fichero)
 	}
 
 	buffer_fichero[i]=0;
+*/
 }
 
 void esxdos_handler_no_error_uncarry(void)
@@ -390,6 +407,52 @@ void esxdos_handler_call_f_unlink(void)
 	esxdos_handler_no_error_uncarry();
 
 }
+
+void esxdos_handler_call_f_rename(void)
+{
+/*
+; ***************************************************************************
+; * F_RENAME ($b0) *
+; ***************************************************************************
+; Rename or move a file.
+; Entry:
+; A=drive specifier (overridden if filespec includes a drive)
+; IX=source filespec, null-terminated
+; DE=destination filespec, null-terminated
+; Exit (success):
+; Fc=0
+; Exit (failure):
+; Fc=1
+; A=error code
+
+*/
+	
+	char nombre_archivo[PATH_MAX];
+	char fullpath[PATH_MAX];
+
+	char nombre_archivo_destino[PATH_MAX];
+	char fullpath_destino[PATH_MAX];
+
+	esxdos_handler_copy_hl_to_string(nombre_archivo);
+	esxdos_handler_pre_fileopen(nombre_archivo,fullpath);
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: fullpath file: %s",fullpath);
+
+	if (!si_existe_archivo(fullpath)) {
+		esxdos_handler_error_carry(ESXDOS_ERROR_ENOENT);
+		return;
+	}
+
+	esxdos_handler_copy_register_to_string(nombre_archivo_destino,reg_de);
+	esxdos_handler_pre_fileopen(nombre_archivo_destino,fullpath_destino);
+
+
+	rename(fullpath,fullpath_destino);
+
+	esxdos_handler_no_error_uncarry();
+
+}
+
 
 void esxdos_handler_call_f_stat(void)
 {
@@ -1558,6 +1621,7 @@ void esxdos_handler_begin_handling_commands(void)
 	z80_byte funcion=peek_byte_no_time(reg_pc);
 
 	char buffer_fichero[256];
+	char buffer_fichero2[256];
 
 	switch (funcion)
 	{
@@ -1650,7 +1714,15 @@ void esxdos_handler_begin_handling_commands(void)
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_UNLINK: %s",buffer_fichero);
 			esxdos_handler_call_f_unlink();
 			esxdos_handler_new_return_call();
-		break;				
+		break;		
+
+		case ESXDOS_RST8_F_RENAME:
+			esxdos_handler_copy_register_to_string(buffer_fichero,*registro_parametros_hl_ix);
+			esxdos_handler_copy_register_to_string(buffer_fichero2,reg_de);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_RENAME: %s to %s",buffer_fichero,buffer_fichero2);
+			esxdos_handler_call_f_rename();
+			esxdos_handler_new_return_call();
+		break;					
 
 		case ESXDOS_RST8_F_OPENDIR:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_OPENDIR");

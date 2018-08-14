@@ -37,7 +37,7 @@ Fixed bugs on esxdos handler:
 *added ESXDOS_MODE_CREAT_TRUNC mode when opening files
 *BCDE was not returning from a f_seek call
 *fixed mode OPEN_CREAT|WRITE which has appending data after a seek instead of overwriting
-*added f_stat,f_unlink calls
+*added f_stat,f_unlink,f_rename calls
 
 Updated to the last Next SD image
 
