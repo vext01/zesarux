@@ -27,6 +27,9 @@ Improved menu:
 * now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
 * new file expander on file selector menu, using space key, for the following file types : .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O, Z88 Cards (.epr, .eprom, .flash)
 
+Improved native snapshot format (ZSF):
+* Added divmmc/divide state save
+
 Fixed autoload tape on TBBlue
 Fixed bug when smartload and selecting an unknown file type: if you cancel it, the inserted tape was modified
 Fixed bug reading extension on files with no extension

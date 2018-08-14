@@ -63,6 +63,7 @@
 #include "diviface.h"
 #include "snap_rzx.h"
 #include "divmmc.h"
+#include "divide.h"
 #include "zxevo.h"
 #include "tsconf.h"
 #include "baseconf.h"
@@ -90,6 +91,8 @@
 #define ZSF_ZXEVO_NVRAM 13
 #define ZSF_TSCONF_RAMBLOCK 14
 #define ZSF_TSCONF_CONF 15
+#define ZSF_DIVIFACE_CONF 16
+#define ZSF_DIVIFACE_MEM 17
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -235,6 +238,27 @@ Byte fields:
 0:255: tsconf_af_ports[256];
 256-1279: tsconf_fmaps
 
+-Block ID 16: ZSF_DIVIFACE_CONF
+Divmmc/divide common settings (diviface), in case it's enabled
+Byte fields:
+
+0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
+1: Diviface control register
+2: Status bits: 
+  Bit 0=If entered automatic divmmc paging. 
+  Bit 1=If divmmc interface is enabled
+  Bit 2=If divmmc ports are enabled
+  Bit 3=If divide interface is enabled
+  Bit 4=If divide ports are enabled  
+  Bits 5-7: unused by now
+
+-Block ID 17: ZSF_DIVIFACE_MEM
+A ram binary block for diviface memory
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1: ram block id 
+2 and next bytes: data bytes
 
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
@@ -247,7 +271,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 16
+#define MAX_ZSF_BLOCK_ID_NAMES 18
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -266,6 +290,8 @@ char *zsf_block_id_names[]={
   "ZSF_ZXEVO_NVRAM",
   "ZSF_TSCONF_RAMBLOCK",
   "ZSF_TSCONF_CONF",
+  "ZSF_DIVIFACE_CONF",
+  "ZSF_DIVIFACE_MEM",
 
   "Unknown"  //Este siempre al final
 };
@@ -505,6 +531,37 @@ void load_zsf_zxuno_snapshot_block_data(z80_byte *block_data,int longitud_origin
 
 }
 
+
+void load_zsf_diviface_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+
+  i++;
+
+  z80_byte ram_page=block_data[i];
+  i++;
+
+  z80_int block_lenght=16384;
+
+  debug_printf (VERBOSE_DEBUG,"Block diviface ram_page: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=3;
+
+    z80_byte *puntero_origen;
+    puntero_origen=&diviface_memory_pointer[16384*ram_page];
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],puntero_origen,block_lenght,longitud_original,block_flags&1);
+
+}
+
+
 void load_zsf_tsconf_snapshot_block_data(z80_byte *block_data,int longitud_original)
 {
 
@@ -620,6 +677,65 @@ Byte fields:
         for (i=0;i<64;i++) ulaplus_palette_table[i]=header[3+i];
 }
 
+void load_zsf_diviface_conf(z80_byte *header)
+{
+/*
+Block ID 16: ZSF_DIVIFACE_CONF
+Divmmc/divide common settings (diviface), in case it's enabled
+Byte fields:
+
+0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
+1: Diviface control register
+2: Status bits: 
+  Bit 0=If entered automatic divmmc paging. 
+  Bit 1=If divmmc interface is enabled
+  Bit 2=If divmmc ports are enabled
+  Bit 3=If divide interface is enabled
+  Bit 4=If divide ports are enabled  
+  Bits 5-7: unused by now
+*/
+
+  //Resetear settings divide/divmmc. Ya los habilitara luego si conviene
+  divmmc_diviface_enabled.v=0;
+  divide_diviface_enabled.v=0;
+  diviface_enabled.v=0;
+
+  diviface_current_ram_memory_bits=header[0];
+
+  //Activar dispositivos segun bits
+  //Si divmmc
+  if (header[2] & 2) {
+    divmmc_diviface_enable();
+  }
+
+  //O divide
+  if (header[2] & 8) {
+    divide_diviface_disable();
+  }
+
+  //Y settings de puertos
+  if (header[2] & 4) {
+    divmmc_mmc_ports_enable();
+  }
+  else {
+    divmmc_mmc_ports_disable();
+  }
+
+
+  if (header[2] & 16) {
+    divide_ide_ports_enable();
+  }
+  else {
+    divide_ide_ports_disable();
+  }
+
+  //Control register al final, y tambien el automatic paging
+  diviface_control_register=header[1];
+  diviface_paginacion_automatica_activa.v=header[2]&1;
+
+}
+
+
 void load_zsf_zx8081_conf(z80_byte *header)
 {
 /*
@@ -697,9 +813,7 @@ Byte fields:
 
   zxuno_set_memory_pages();    
 
-  //Resetear settings mmc. Ya los habilitara luego si conviene
-  divmmc_diviface_enabled.v=0;
-  diviface_enabled.v=0;
+
 
 
   //Sincronizar settings de emulador con los valores de puertos de zxuno
@@ -887,6 +1001,14 @@ void load_zsf_snapshot(char *filename)
       case ZSF_TSCONF_CONF:
         load_zsf_tsconf_conf(block_data);
       break;
+
+      case ZSF_DIVIFACE_CONF:
+        load_zsf_diviface_conf(block_data);
+      break;  
+
+      case ZSF_DIVIFACE_MEM:
+        load_zsf_diviface_snapshot_block_data(block_data,block_lenght);
+      break;          
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1426,7 +1548,85 @@ Byte fields:
     }
   }
 
+ //DIVMMC/DIVIDE config
+ //Solo si diviface esta habilitado
+ if (diviface_enabled.v==1) {
+
+/*-Block ID 16: ZSF_DIVIFACE_CONF
+Divmmc/divide common settings (diviface), in case it's enabled
+Byte fields:
+
+0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
+1: Diviface control register
+2: Status bits: 
+  Bit 0=If entered automatic divmmc paging. 
+  Bit 1=If divmmc interface is enabled
+  Bit 2=If divmmc ports are enabled
+  Bit 3=If divide interface is enabled
+  Bit 4=If divide ports are enabled  
+  Bits 5-7: unused by now
+*/
+
+  z80_byte divifaceblock[3];
+
+  divifaceblock[0]=diviface_current_ram_memory_bits;
+  divifaceblock[1]=diviface_control_register;
+  divifaceblock[2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+
+  zsf_write_block(ptr_zsf_file, divifaceblock,ZSF_DIVIFACE_CONF, 3);
+
+  //memoria divmmc solo en el caso que no sea ni zxuno, ni tbblue ni prism 
+  if (!MACHINE_IS_ZXUNO && !MACHINE_IS_TBBLUE && !MACHINE_IS_PRISM) {
+  /*
+
+-Block ID 17: ZSF_DIVIFACE_MEM
+A ram binary block for diviface memory
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1: ram block id 
+2 and next bytes: data bytes
+  */
+
+  //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(32768);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+  int paginas=(DIVIFACE_FIRMWARE_ALLOCATED_KB+DIVIFACE_RAM_ALLOCATED_KB)/16;
+  z80_byte ram_page;
+
+  for (ram_page=0;ram_page<paginas;ram_page++) {
+
+    int longitud_ram=16384;
+
+    compressed_ramblock[0]=0;
+    compressed_ramblock[1]=ram_page;
+
+    int si_comprimido;
+
+    z80_byte *puntero_origen;
+    puntero_origen=&diviface_memory_pointer[16384*ram_page];
+
+    int longitud_bloque=save_zsf_copyblock_compress_uncompres(puntero_origen,&compressed_ramblock[2],longitud_ram,&si_comprimido);
+    if (si_comprimido) compressed_ramblock[0]|=1;
+
+    debug_printf(VERBOSE_DEBUG,"Saving ZSF_DIVIFACE_MEM ram page: %d length: %d",ram_page,longitud_bloque);
+
+    //Store block to file
+    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_DIVIFACE_MEM, longitud_bloque+3);
+
+  }
+
+  free(compressed_ramblock);
+  }
+
+
+ }
  
+ //DIVMMC/DIVIDE memoria. En caso de maquinas que no son zxuno o tbblue o prism (dado que estas paginan memoria divmmc en su espacio de ram)
 
 
   //test meter un NOOP
