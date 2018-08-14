@@ -1550,6 +1550,7 @@ Byte fields:
 
  //DIVMMC/DIVIDE config
  //Solo si diviface esta habilitado
+ //Esta parte tiene que estar despues de definir y cargar memoria de maquinas, sobre el final del archivo ZSF
  if (diviface_enabled.v==1) {
 
 /*-Block ID 16: ZSF_DIVIFACE_CONF
