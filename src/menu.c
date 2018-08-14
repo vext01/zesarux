@@ -33090,7 +33090,7 @@ void menu_print_dir(int inicial)
 	char buffer3[50];
 	getcwd(current_dir,PATH_MAX);
 
-	menu_tape_settings_trunc_name(current_dir,buffer_dir,15);
+	menu_tape_settings_trunc_name(current_dir,buffer_dir,16);
 	sprintf (buffer3,"Current dir: %s",buffer_dir);
 	menu_escribe_texto_ventana(1,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer3);
 

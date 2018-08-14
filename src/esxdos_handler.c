@@ -274,6 +274,189 @@ void esxdos_handler_debug_file_flags(z80_byte b)
 }
 
 
+//Obtiene de un nombre de archivo con path completo:
+//atributo, timestamp, datestamp, filesize
+//atributo retornado en variable attr. timestamp,datestamp, filesize se llena en memoria donde apunta puntero
+//Retorna 0 si ok. 1 si error (por ejemplo no existe)
+int esxdos_handler_get_attr_etc(char *nombre,z80_int puntero,z80_byte *atributo)
+{
+
+	if (!si_existe_archivo(nombre)) return 1;
+
+	*atributo=0;
+
+	/*
+	Attribute - a bitvector. Bit 0: read only. Bit 1: hidden.
+    	    Bit 2: system file. Bit 3: volume label. Bit 4: subdirectory.
+        	Bit 5: archive. Bits 6-7: unused.
+
+	*/
+
+
+	if (get_file_type_from_name(nombre)==2) {
+		//meter flags directorio y nombre entre <>
+		//esxdos_handler_filinfo_fattrib |=16;
+		//sprintf((char *) &esxdos_handler_globaldata[0],"<%s>",esxdos_handler_dp->d_name);
+		//longitud_nombre +=2;
+		*atributo |=16;
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Is a directory");
+	}
+
+	else {
+		//sprintf((char *) &esxdos_handler_globaldata[0],"%s",esxdos_handler_dp->d_name);
+	}
+
+	//Meter nombre. Saltamos primer byte.
+	//poke_byte_no_time((*registro_parametros_hl_ix)++,0);
+
+
+	/*
+	;                                                                       // <dword>  date
+	;                                                                       // <dword>  filesize
+	*/
+
+	//Fecha.
+	/*
+	22-23   Time (5/6/5 bits, for hour/minutes/doubleseconds)
+	24-25   Date (7/4/5 bits, for year-since-1980/month/day)
+	*/
+
+	int hora;
+	int minutos;
+	int doblesegundos;
+
+	int anyo;
+	int mes;
+	int dia;
+
+
+	get_file_date_from_name(nombre,&hora,&minutos,&doblesegundos,&dia,&mes,&anyo);
+
+	anyo-=1980;
+	doblesegundos *=2;
+
+	esxdos_handler_fill_date_struct(puntero,hora,minutos,doblesegundos,dia,mes,anyo);
+
+
+	//Tamanyo
+
+	//copia para ir dividiendo entre 256
+	long int longitud_total=get_file_size(nombre);
+
+	z80_long_int l=longitud_total;
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: lenght file: %d",l);
+	esxdos_handler_fill_size_struct(puntero+4,l);
+
+	return 0;
+
+
+}
+
+
+void esxdos_handler_call_f_unlink(void)
+{
+/*
+; ***************************************************************************
+; * F_UNLINK ($ad) *
+; ***************************************************************************
+; Delete file.
+; Entry:
+; A=drive specifier (overridden if filespec includes a drive)
+; IX=filespec, null-terminated
+; Exit (success):
+; Fc=0
+; Exit (failure):
+; Fc=1
+; A=error code
+*/
+	
+	char nombre_archivo[PATH_MAX];
+	char fullpath[PATH_MAX];
+	esxdos_handler_copy_hl_to_string(nombre_archivo);
+
+	
+	esxdos_handler_pre_fileopen(nombre_archivo,fullpath);
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: fullpath file: %s",fullpath);
+
+	if (!si_existe_archivo(fullpath)) {
+		esxdos_handler_error_carry(ESXDOS_ERROR_ENOENT);
+		return;
+	}
+
+	unlink(fullpath);
+
+	esxdos_handler_no_error_uncarry();
+
+}
+
+void esxdos_handler_call_f_stat(void)
+{
+/*
+; ***************************************************************************
+; * F_STAT ($ac) *
+; ***************************************************************************
+; Get unopened file information/status.
+; Entry:
+; A=drive specifier (overridden if filespec includes a drive)
+; IX=filespec, null-terminated
+; DE=11-byte buffer address
+; Exit (success):
+; Fc=0
+; Exit (failure):
+; Fc=1
+; A=error code
+;
+; NOTES:
+; The following details are returned in the 11-byte buffer:
+; +0(1) drive specifier
+; +1(1) $81
+; +2(1) file attributes (MS-DOS format)
+; +3(2) timestamp (MS-DOS format)
+; +5(2) datestamp (MS-DOS format)
+; +7(4) file size in bytes
+*/
+	
+	char nombre_archivo[PATH_MAX];
+	char fullpath[PATH_MAX];
+	esxdos_handler_copy_hl_to_string(nombre_archivo);
+
+	
+	esxdos_handler_pre_fileopen(nombre_archivo,fullpath);
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: fullpath file: %s",fullpath);
+
+	z80_int puntero=reg_de;
+	poke_byte_no_time(puntero++,0); //drive
+
+	poke_byte_no_time(puntero++,0x81);
+
+	z80_byte atributos;
+
+	//de momento saltar byte atributos
+	z80_int puntero_atrib=puntero;
+
+	puntero++;
+
+	if (esxdos_handler_get_attr_etc(fullpath,puntero_atrib,&atributos)) {
+		/*
+		; Exit (failure):
+; Fc=1
+; A=error code
+		*/
+		esxdos_handler_error_carry(ESXDOS_ERROR_ENOENT);
+		return;
+	}
+
+	//Meter atributos
+	poke_byte_no_time(puntero_atrib,atributos);
+
+	esxdos_handler_no_error_uncarry();
+
+}
+
+
 
 void esxdos_handler_call_f_open(void)
 {
@@ -1047,6 +1230,7 @@ int esxdos_aux_readdir(int file_handler)
 	return 1;
 }
 
+
 void esxdos_handler_call_f_readdir(void)
 {
 
@@ -1108,80 +1292,26 @@ if (esxdos_fopen_files[file_handler].esxdos_handler_dfd==NULL) {
 char nombre_final[PATH_MAX];
 util_get_complete_path(esxdos_fopen_files[file_handler].esxdos_handler_last_dir_open,esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name,nombre_final);
 
-z80_byte atributo_archivo=0;
-
-/*
-Attribute - a bitvector. Bit 0: read only. Bit 1: hidden.
-        Bit 2: system file. Bit 3: volume label. Bit 4: subdirectory.
-        Bit 5: archive. Bits 6-7: unused.
-
-*/
-
-
-if (get_file_type(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_type,nombre_final)==2) {
-	//meter flags directorio y nombre entre <>
-	//esxdos_handler_filinfo_fattrib |=16;
-	//sprintf((char *) &esxdos_handler_globaldata[0],"<%s>",esxdos_handler_dp->d_name);
-	//longitud_nombre +=2;
-	atributo_archivo |=16;
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Is a directory");
-}
-
-else {
-	//sprintf((char *) &esxdos_handler_globaldata[0],"%s",esxdos_handler_dp->d_name);
-}
-
-//Meter nombre. Saltamos primer byte.
-//poke_byte_no_time((*registro_parametros_hl_ix)++,0);
+z80_byte atributo_archivo;
 
 
 
 z80_int puntero=(*registro_parametros_hl_ix);
-//Atributos
-poke_byte_no_time(puntero++,atributo_archivo);
+//Saltamos byte Atributos de momento. Se rellena despues
+puntero++;
 
 int retornado_nombre=esxdos_handler_string_to_msdos(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name,puntero);
 
 
 puntero+=retornado_nombre;
 
-/*
-;                                                                       // <dword>  date
-;                                                                       // <dword>  filesize
-*/
 
-//Fecha.
-/*
-22-23   Time (5/6/5 bits, for hour/minutes/doubleseconds)
-24-25   Date (7/4/5 bits, for year-since-1980/month/day)
-*/
+//Obtener atributo, hora, fecha, longitud
+esxdos_handler_get_attr_etc(nombre_final,puntero,&atributo_archivo);
 
-int hora;
-int minutos;
-int doblesegundos;
-
-int anyo;
-int mes;
-int dia;
-
-
-get_file_date_from_name(nombre_final,&hora,&minutos,&doblesegundos,&dia,&mes,&anyo);
-
-anyo-=1980;
-doblesegundos *=2;
-
-esxdos_handler_fill_date_struct(puntero,hora,minutos,doblesegundos,dia,mes,anyo);
-
-
-//Tamanyo
-
-//copia para ir dividiendo entre 256
-long int longitud_total=get_file_size(nombre_final);
-
-z80_long_int l=longitud_total;
-
-debug_printf (VERBOSE_DEBUG,"ESXDOS handler: lenght file: %d",l);
-esxdos_handler_fill_size_struct(puntero+4,l);
+//Meter atributo en direccion de registro_parametros_hl_ix, por tanto recuperamos puntero inicial
+puntero=(*registro_parametros_hl_ix);
+poke_byte_no_time(puntero,atributo_archivo);
 
 
 //para telldir
@@ -1507,6 +1637,20 @@ void esxdos_handler_begin_handling_commands(void)
 			esxdos_handler_call_f_chdir();
 			esxdos_handler_new_return_call();
 		break;
+
+		case ESXDOS_RST8_F_STAT:
+			esxdos_handler_copy_hl_to_string(buffer_fichero);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_STAT: %s",buffer_fichero);
+			esxdos_handler_call_f_stat();
+			esxdos_handler_new_return_call();
+		break;		
+
+		case ESXDOS_RST8_F_UNLINK:
+			esxdos_handler_copy_hl_to_string(buffer_fichero);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_UNLINK: %s",buffer_fichero);
+			esxdos_handler_call_f_unlink();
+			esxdos_handler_new_return_call();
+		break;				
 
 		case ESXDOS_RST8_F_OPENDIR:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_OPENDIR");

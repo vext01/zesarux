@@ -24,6 +24,7 @@ renombrarla
 
 --- Cosas para la siguiente version
 
+
 -funcion rename y quiza tambien delete en esxdos handler
 
 -poder hacer 50 FPS en carga top speed: problema, que al hacer top speed, ya no llevamos la cuenta de cuanto son 50 fps, pues no hay sleep de 
