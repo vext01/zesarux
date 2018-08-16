@@ -24,16 +24,16 @@ When I finished sped (the 52th version), I really only made two programs using t
 -some technical details:
 
 
-* The debugger used on sped52 is mainly based on my real debug, and the assembler was also based on real debug (real debug 128kb version had a simple compiler). So if there are some bugs (if any) they could probably exist on real debug and also on sped ;) But I think there are not many (or none) because the sped compiles with the same sped... (although I don't use all the Z80 opcodes).
+* The debugger used on sped52 is mainly based on my real debug, and the assembler was also based on real debug (real debug 128kb version had a simple compiler). So if there are some bugs (if any) they could probably exist on real debug and also on sped ;) But I think there are not many (or none) because the sped compiles with the same sped... (although logically I don't use all the Z80 opcodes in the source code of sped). It should be written a source code test program with all the Z80 opcodes and see if they all compile as expected
 
 
 * the symbol table uses some kind of binary tree. In fact, before writing it, I read something about a binary table on the gens4 manual, but I didn't know exactly how it worked. So, I started writing my own algorithm to sort the symbols in memory, and at the end, I wrote a binary tree without knowing it was a binary tree ;) I'm not sure but maybe my sort algorithm only sorted the symbols by reading the fist letter of every symbol, but I'm not sure now
 
 
-* about the usr0 mode by default: I wanted to use all the ram (even ram7) so this is why I just go to the 48kb rom with paging enabled. At that time my machine was a +2a, so no +3 disk to use... Ram7 is used by the debug information and also by the third block of source code (if present, then the debug information is not available). It will be easy to use another Next Ram page to allocate all this
+* about the usr0 mode by default: I wanted to use all the ram (even ram7) so this is why I just go to the 48kb rom with paging enabled. At that time my machine was a +2a, so no +3 disk to use... Ram7 is used by the debug information and also by the third block of source code (if present, then the debug information is not available). It will be easy to use another Ram page (for example, on ZXUno or Next extended pages, or even more, using 256kb/512kb of extended bits of port 7ffd to allocate all this)
 
 
-* about the "go to basic" function: yesterday you told me about the previous usr0 mode and I thought you were talking about this "go to basic" function. It just runs a NEW rom call, lowering the RAMTOP value. You can go back to sped by setting ram 1 (out 32765,17) and doing a randomize usr (the exact usr value is shown in the screen when you run the "go to basic" function). This is the only entry point where you can test your compiled code (apart from, of course, saving the compiled data to tape and load it after a reset)
+* about the "go to basic" function: It just runs a NEW rom call, lowering the RAMTOP value. You can go back to sped by setting ram 1 (out 32765,17) and doing a randomize usr (the exact usr value is shown in the screen when you run the "go to basic" function). This is the only entry point where you can test your compiled code (apart from, of course, saving the compiled data to tape and load it after a reset)
 
 
 * about source code comments: there are no comments (or only a few) due to memory limitations on the first editor I used. When I moved to sped source code I could have added some comments, but all the information was in my head and also in a bunch of papers (that I haven't found yet). But if you have doubts with function calls, I can probably remember the meaning of each one. I haven't looked at the source code now, but as I remember, most of the symbols are written in spanish
@@ -44,7 +44,9 @@ When I finished sped (the 52th version), I really only made two programs using t
 
 * conversion tool: I did a conversion tool to convert from GENS or Microhobby editor to Microhobby editor or Sped
 
- https://github.com/chernandezba/zesarux/blob/master/src/my_soft/spectrum/vintage/converso.tap. The conversions are easy:
+https://github.com/chernandezba/zesarux/blob/master/src/my_soft/spectrum/vintage/converso.tap. 
+
+The conversions are easy:
 
 -- gens use line numbers at the beginning of each line and use a character for tabulators (chr$ 9 if I remember well)
 
