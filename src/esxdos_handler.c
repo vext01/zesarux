@@ -702,20 +702,24 @@ Esto se usa en NextDaw, es open+truncate
 			*/
 
 			//Saltar los primeros 15
-			//char buffer_quince[15];
-			//temp fread(&buffer_quince,1,15,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+			char buffer_quince[15];
+			fread(&buffer_quince,1,15,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
 
 			//Y meter en DE los siguientes 8
 			int i;
-			//z80_byte byte_leido;
+			z80_byte byte_leido;
 			for (i=0;i<8;i++) {
-				//temp fread(&byte_leido,1,1,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
-				//poke_byte_no_time(reg_de+i,byte_leido);
-				poke_byte_no_time(reg_de+i,0xFF); //temp
+				fread(&byte_leido,1,1,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+				poke_byte_no_time(reg_de+i,byte_leido);
+				//poke_byte_no_time(reg_de+i,0xFF); //temp
 				//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %02XH ",byte_leido);
 			}
 
 			//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
+
+			//Y saltar otros (128-23)
+			char buffer_restante[128-23];
+			fread(&buffer_restante,1,128-23,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
 		}
 
 
