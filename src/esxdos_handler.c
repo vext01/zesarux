@@ -687,21 +687,35 @@ Esto se usa en NextDaw, es open+truncate
 			print_registers(buffer_registros);
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %s",buffer_registros);
 
+			//TODO: realmente hay que meter esos bytes de esxdos header en memoria, probablemente los 8 ultimos de DE
+			//(el +3 Basic header data)
+			//pero logicamente sin hacer read.
+			//El NMI handler, al abrir la pantalla de ayuda, utiliza esto
+			/*
+        Bytes 0...7     - +3DOS signature - 'PLUS3DOS'
+        Byte 8          - 1Ah (26) Soft-EOF (end of file)
+        Byte 9          - Issue number
+        Byte 10         - Version number
+        Bytes 11...14   - Length of the file in bytes, 32 bit number,
+                            least significant byte in lowest address
+        Bytes 15...22   - +3 BASIC header data			
+			*/
 
 			//Saltar los primeros 15
-			char buffer_quince[15];
-			fread(&buffer_quince,1,15,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+			//char buffer_quince[15];
+			//temp fread(&buffer_quince,1,15,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
 
 			//Y meter en DE los siguientes 8
 			int i;
-			z80_byte byte_leido;
+			//z80_byte byte_leido;
 			for (i=0;i<8;i++) {
-				fread(&byte_leido,1,1,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
-				poke_byte_no_time(reg_de+i,byte_leido);
-				debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %02XH ",byte_leido);
+				//temp fread(&byte_leido,1,1,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+				//poke_byte_no_time(reg_de+i,byte_leido);
+				poke_byte_no_time(reg_de+i,0xFF); //temp
+				//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %02XH ",byte_leido);
 			}
 
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
+			//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
 		}
 
 
@@ -1624,13 +1638,13 @@ void esxdos_handler_call_disk_status(void)
 	else esxdos_handler_error_carry(ESXDOS_ERROR_ENODRV);
 }
 
-void esxdos_handler_call_drive_info(void)
+void esxdos_handler_call_m_drive_info(void)
 {
 	//Deducir:
 	//Entrada: a=numero de disco
 	//Retorno: a=numero de particiones. Escrito en HL
 
-	char *texto="HO";
+	//char *texto="HO";
 
 	z80_int puntero=*registro_parametros_hl_ix;
 
@@ -1640,10 +1654,10 @@ void esxdos_handler_call_drive_info(void)
 		poke_byte_no_time((*registro_parametros_hl_ix),texto[i]);
 	}*/
 
-	z80_byte partinfo1=0xF1;
+	z80_byte partinfo1=0x00| (('s'-96)<<3); //3 bits bajos: numero particion. 5 bits altos: letra-96
 	poke_byte_no_time(puntero++,partinfo1);
 
-	z80_byte partinfo2=0xFF;
+	z80_byte partinfo2=0xFF; //disk-info??
 	poke_byte_no_time(puntero++,partinfo2);
 
 	z80_byte partinfo3=0xFF;
@@ -1663,7 +1677,7 @@ void esxdos_handler_call_drive_info(void)
 	poke_byte_no_time(puntero++,partinfo7);		
 
 	//Name?
-	char *fsname="ZSFAT";
+	char *fsname="ZXFAT";
 
 	for (i=0;fsname[i];i++) {
 		poke_byte_no_time(puntero++,fsname[i]);		
@@ -1672,13 +1686,14 @@ void esxdos_handler_call_drive_info(void)
 	poke_byte_no_time(puntero++,0);
 
 	//Label?
-	char *fslabel="ZEsarUX";
+	char *fslabel="ESXHandler";
 
 	for (i=0;fslabel[i];i++) {
 		poke_byte_no_time(puntero++,fslabel[i]);		
 	}
 
 	poke_byte_no_time(puntero++,0);	
+
 
 	reg_a=1; //Numero particiones en a
 
@@ -1746,6 +1761,8 @@ This needs changing/fixing for virtual devs, etc.
 */
 	z80_int puntero=*registro_parametros_hl_ix;
 
+	int i;
+
 	//Retornar el primer disco solo
 	z80_byte byte_info=8; //IDE
 
@@ -1760,7 +1777,16 @@ This needs changing/fixing for virtual devs, etc.
 	poke_byte_no_time(puntero++,0xFF);
 	poke_byte_no_time(puntero++,0xFF);
 	poke_byte_no_time(puntero++,0xFF);
-	poke_byte_no_time(puntero++,0xFF);			
+	poke_byte_no_time(puntero++,0xFF);	
+
+	//Disk label.
+	//Label?
+	/*char *disklabel="ZEsarUX";
+
+	for (i=0;disklabel[i];i++) {
+		poke_byte_no_time(puntero++,disklabel[i]);		
+	}
+	*/
 
 	if (reg_a==0) {
 		//Siguiente byte a 0
@@ -1802,7 +1828,7 @@ void esxdos_handler_begin_handling_commands(void)
 
 		case ESXDOS_RST8_M_DRIVEINFO:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_M_DRIVE_INFO. A register: %02XH",reg_a);
-			esxdos_handler_call_drive_info();
+			esxdos_handler_call_m_drive_info();
 			//esxdos_handler_no_error_uncarry();	
 			esxdos_handler_new_return_call();
 		break;	
