@@ -22,6 +22,14 @@
 #ifndef ESXDOS_HANDLER_H
 #define ESXDOS_HANDLER_H
 
+#include <dirent.h>
+#if defined(__APPLE__)
+        #include <sys/syslimits.h>
+#endif
+
+#include "cpu.h"
+#include "utils.h"
+
 //Algunos nombres de flags cambiados segun _DEVELOPMENT/target/zx/config/config_esxdos.m4
 /*
 define(`__ESXDOS_MODE_READ', 0x01)            # read access
@@ -167,5 +175,46 @@ extern void esxdos_handler_disable(void);
 extern void esxdos_handler_reset(void);
 
 #define ESXDOS_MAX_OPEN_FILES 16
+
+
+//Usados al fopen de archivos y tambien al abrir directorios
+
+struct s_esxdos_fopen {
+
+	/* Para archivos */
+	FILE *esxdos_last_open_file_handler_unix;
+	//z80_byte temp_esxdos_last_open_file_handler;
+
+	//Usado al hacer fstat
+	struct stat last_file_buf_stat;
+
+
+	/* Para directorios */
+	//usados al leer directorio
+	//z80_byte esxdos_handler_filinfo_fattrib;
+	struct dirent *esxdos_handler_dp;
+	DIR *esxdos_handler_dfd; //	=NULL;
+	//ultimo directorio leido al listar archivos
+	char esxdos_handler_last_dir_open[PATH_MAX];
+
+	//para telldir
+	unsigned int contador_directorio;
+
+
+	z80_byte buffer_plus3dos_header[8];
+	z80_bit tiene_plus3dos_header;
+
+	/* Comun */
+	//Indica a 1 que el archivo/directorio esta abierto. A 0 si no
+	z80_bit open_file;
+
+	z80_bit is_a_directory;
+
+	//Usado solo por debug de ZRCP:
+	char debug_name[PATH_MAX];
+	char debug_fullpath[PATH_MAX];
+};
+
+extern struct s_esxdos_fopen esxdos_fopen_files[];
 
 #endif

@@ -47,9 +47,6 @@
 char esxdos_handler_root_dir[PATH_MAX]="";
 char esxdos_handler_cwd[PATH_MAX]="";
 
-
-
-
 z80_int *registro_parametros_hl_ix;
 
 
@@ -64,39 +61,6 @@ void esxdos_handler_footer_esxdos_handler_operating(void)
 
 
 
-//Usados al fopen de archivos y tambien al abrir directorios
-
-struct s_esxdos_fopen {
-
-	/* Para archivos */
-	FILE *esxdos_last_open_file_handler_unix;
-	//z80_byte temp_esxdos_last_open_file_handler;
-
-	//Usado al hacer fstat
-	struct stat last_file_buf_stat;
-
-
-	/* Para directorios */
-	//usados al leer directorio
-	//z80_byte esxdos_handler_filinfo_fattrib;
-	struct dirent *esxdos_handler_dp;
-	DIR *esxdos_handler_dfd; //	=NULL;
-	//ultimo directorio leido al listar archivos
-	char esxdos_handler_last_dir_open[PATH_MAX];
-
-	//para telldir
-	unsigned int contador_directorio;
-
-
-	z80_byte buffer_plus3dos_header[8];
-	z80_bit tiene_plus3dos_header;
-
-	/* Comun */
-	//Indica a 1 que el archivo/directorio esta abierto. A 0 si no
-	z80_bit open_file;
-
-	z80_bit is_a_directory;
-};
 
 struct s_esxdos_fopen esxdos_fopen_files[ESXDOS_MAX_OPEN_FILES];
 
@@ -755,6 +719,10 @@ Esto se usa en NextDaw, es open+truncate
 		esxdos_fopen_files[free_handle].open_file.v=1;
 
 		esxdos_fopen_files[free_handle].is_a_directory.v=0;
+
+		//Y poner nombres para debug
+		strcpy(esxdos_fopen_files[free_handle].debug_name,nombre_archivo);
+		strcpy(esxdos_fopen_files[free_handle].debug_fullpath,fullpath);
 	}
 
 

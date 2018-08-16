@@ -49,6 +49,7 @@
 #include "kartusho.h"
 #include "zxevo.h"
 #include "settings.h"
+#include "esxdos_handler.h"
 
 
 
@@ -712,6 +713,7 @@ struct s_items_ayuda items_ayuda[]={
   {"enable-breakpoint","|eb","index","Enable specific breakpoint"},
   {"enable-breakpoints",NULL,NULL,"Enable breakpoints"},
   {"enter-cpu-step",NULL,NULL,"Enter cpu step to step mode"},
+	{"esxdoshandler-get-open-files","|esxgof",NULL,"Gets a list of open files and directories on the esxdos handler"},
   {"evaluate","|e","expression","Evaluate expression, can be more than one register separated by spaces. It's the same as using watches on the debug menu"},
   {"exit-cpu-step","|ecs",NULL,"Exit cpu step to step mode"},
   {"exit-emulator",NULL,NULL,"Ends emulator"},
@@ -1653,6 +1655,24 @@ void remote_evaluate(int misocket,char *texto)
 
   debug_watches_loop(texto,buffer_retorno);
   escribir_socket(misocket,buffer_retorno);
+}
+
+
+void remote_esxdos_gof(int misocket)
+{
+	int i;
+
+	for (i=0;i<ESXDOS_MAX_OPEN_FILES;i++) {
+		if (esxdos_fopen_files[i].open_file.v) {
+			if (esxdos_fopen_files[i].is_a_directory.v) {
+				escribir_socket_format(misocket,"%d (dir) Name: %s\n",i,esxdos_fopen_files[i].esxdos_handler_last_dir_open);
+			}
+			else {
+				escribir_socket_format(misocket,"%d (file) Name: %s Full Path: %s\n",i,esxdos_fopen_files[i].debug_name,esxdos_fopen_files[i].debug_fullpath);
+			}
+		}
+	}
+
 }
 
 /*void easter_egg_put_char(int x,int y,int color,unsigned char c)
@@ -3290,6 +3310,12 @@ char buffer_retorno[2048];
   else if (!strcmp(comando_sin_parametros,"enter-cpu-step")) {
     remote_cpu_enter_step(misocket);
   }
+
+	else if (!strcmp(comando_sin_parametros,"esxdoshandler-get-open-files") || !strcmp(comando_sin_parametros,"esxgof")) {
+		if (esxdos_handler_enabled.v==0) escribir_socket(misocket,"Error. Handler is not enabled");
+		else remote_esxdos_gof(misocket);
+  }
+
 
 
   else if (!strcmp(comando_sin_parametros,"evaluate") || !strcmp(comando_sin_parametros,"e")) {
