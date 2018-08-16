@@ -1624,6 +1624,67 @@ void esxdos_handler_call_disk_status(void)
 	else esxdos_handler_error_carry(ESXDOS_ERROR_ENODRV);
 }
 
+void esxdos_handler_call_drive_info(void)
+{
+	//Deducir:
+	//Entrada: a=numero de disco
+	//Retorno: a=numero de particiones. Escrito en HL
+
+	char *texto="HO";
+
+	z80_int puntero=*registro_parametros_hl_ix;
+
+	int i;
+
+	/*for (i=0;texto[i];i++) {
+		poke_byte_no_time((*registro_parametros_hl_ix),texto[i]);
+	}*/
+
+	z80_byte partinfo1=0xF1;
+	poke_byte_no_time(puntero++,partinfo1);
+
+	z80_byte partinfo2=0xFF;
+	poke_byte_no_time(puntero++,partinfo2);
+
+	z80_byte partinfo3=0xFF;
+	poke_byte_no_time(puntero++,partinfo3);
+
+	//Size??
+	z80_byte partinfo4=0xFF;
+	poke_byte_no_time(puntero++,partinfo4);
+
+	z80_byte partinfo5=0xFF;
+	poke_byte_no_time(puntero++,partinfo5);
+
+	z80_byte partinfo6=0xFF;
+	poke_byte_no_time(puntero++,partinfo6);
+
+	z80_byte partinfo7=0xFF;
+	poke_byte_no_time(puntero++,partinfo7);		
+
+	//Name?
+	char *fsname="ZSFAT";
+
+	for (i=0;fsname[i];i++) {
+		poke_byte_no_time(puntero++,fsname[i]);		
+	}
+
+	poke_byte_no_time(puntero++,0);
+
+	//Label?
+	char *fslabel="ZEsarUX";
+
+	for (i=0;fslabel[i];i++) {
+		poke_byte_no_time(puntero++,fslabel[i]);		
+	}
+
+	poke_byte_no_time(puntero++,0);	
+
+	reg_a=1; //Numero particiones en a
+
+
+}
+
 void esxdos_handler_call_disk_info(void)
 {
 /*
@@ -1683,15 +1744,27 @@ The buffer is over when you read a Device Path and you get a 0. FIXME: Make so t
 This needs changing/fixing for virtual devs, etc.
 
 */
+	z80_int puntero=*registro_parametros_hl_ix;
+
 	//Retornar el primer disco solo
 	z80_byte byte_info=8; //IDE
 
 	//DISK_INFO: If A=0 -> Get a buffer at address HL filled with a list of available block devices. If A<>0 -> Get info for a specific device. Buffer format:
-	poke_byte_no_time((*registro_parametros_hl_ix),byte_info);
+	poke_byte_no_time(puntero++,byte_info);
+
+
+	//Flags
+	poke_byte_no_time(puntero++,0xFF);
+
+	//Dword size
+	poke_byte_no_time(puntero++,0xFF);
+	poke_byte_no_time(puntero++,0xFF);
+	poke_byte_no_time(puntero++,0xFF);
+	poke_byte_no_time(puntero++,0xFF);			
 
 	if (reg_a==0) {
 		//Siguiente byte a 0
-		poke_byte_no_time((*registro_parametros_hl_ix)+1,0);
+		poke_byte_no_time(puntero++,0);
 	}
 
 	esxdos_handler_no_error_uncarry();	
@@ -1729,9 +1802,9 @@ void esxdos_handler_begin_handling_commands(void)
 
 		case ESXDOS_RST8_M_DRIVEINFO:
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_M_DRIVE_INFO. A register: %02XH",reg_a);
-			esxdos_handler_run_normal_rst8();
+			esxdos_handler_call_drive_info();
 			//esxdos_handler_no_error_uncarry();	
-			//esxdos_handler_new_return_call();
+			esxdos_handler_new_return_call();
 		break;	
 
 		case ESXDOS_RST8_F_MOUNT:
