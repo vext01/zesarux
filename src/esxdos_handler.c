@@ -53,6 +53,7 @@ char esxdos_handler_cwd[PATH_MAX]="";
 z80_int *registro_parametros_hl_ix;
 
 
+const char *esxdos_plus3dos_signature="PLUS3DOS";
 
 
 void esxdos_handler_footer_esxdos_handler_operating(void)
@@ -543,7 +544,7 @@ void esxdos_handler_call_f_open(void)
 	//Si se debe escribir la cabecera plus3 . escribir en el sentido de:
 	//Si se abre para lectura, se pasaran los 8 bytes del basic a destino DE
 	//Si se abre para escritura, se leeran 8 bytes desde DE al archivo en cuanto se escriba la primera vez
-	int debe_escribir_plus3_header=0;
+	int debe_usar_plus3_header=0;
 
 	//Si se abre archivo para lectura
 	int escritura=1;
@@ -551,7 +552,7 @@ void esxdos_handler_call_f_open(void)
 	//Si debe escribir cabecera PLUS3DOS
 	if ( (modo_abrir&ESXDOS_RST8_FA_USE_HEADER)==ESXDOS_RST8_FA_USE_HEADER) {
 		//volcar contenido DE 8 bytes a buffer
-		debe_escribir_plus3_header=1;
+		debe_usar_plus3_header=1;
 		modo_abrir &=(255-ESXDOS_RST8_FA_USE_HEADER);
 
 	}
@@ -629,16 +630,17 @@ Esto se usa en NextDaw, es open+truncate
 
 	esxdos_fopen_files[free_handle].tiene_plus3dos_header.v=0;
 
-	if (debe_escribir_plus3_header && escritura) {
+	if (debe_usar_plus3_header && escritura) {
+		debug_printf (VERBOSE_DEBUG,"Preparing PLUS3DOS 8 byte header");
 		esxdos_fopen_files[free_handle].tiene_plus3dos_header.v=1;
 		int i;
 		for (i=0;i<8;i++) {
 			z80_byte byte_leido=peek_byte_no_time(reg_de+i);
 			esxdos_fopen_files[free_handle].buffer_plus3dos_header[i]=byte_leido;
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %02XH ",byte_leido);
+			//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %02XH ",byte_leido);
 		}
 
-		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
+		//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
 	}
 
 
@@ -681,16 +683,15 @@ Esto se usa en NextDaw, es open+truncate
 	}
 	else {
 		//temp_esxdos_last_open_file_handler=1;
-		if (debe_escribir_plus3_header && escritura==0) {
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Reading PLUS3DOS header");
+		if (debe_usar_plus3_header && escritura==0) {
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Reading PLUS3DOS header at DE=%04XH",reg_de);
 			char buffer_registros[1024];
-			print_registers(buffer_registros);
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %s",buffer_registros);
+			//print_registers(buffer_registros);
+			//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %s",buffer_registros);
 
-			//TODO: realmente hay que meter esos bytes de esxdos header en memoria, probablemente los 8 ultimos de DE
-			//(el +3 Basic header data)
-			//pero logicamente sin hacer read.
-			//El NMI handler, al abrir la pantalla de ayuda, utiliza esto
+			//TODO: El NMI handler, al abrir la pantalla de ayuda, utiliza esto, aunque realmente es un .scr sin cabecera
+			//como workaround, hacemos que el que realmente no tenga cabecera (no empieza por "plus3dos"), no se le lea cabecera
+			//Si no, la pantalla de ayuda se veria desplazada estos 128 bytes
 			/*
         Bytes 0...7     - +3DOS signature - 'PLUS3DOS'
         Byte 8          - 1Ah (26) Soft-EOF (end of file)
@@ -701,25 +702,43 @@ Esto se usa en NextDaw, es open+truncate
         Bytes 15...22   - +3 BASIC header data			
 			*/
 
-			//Saltar los primeros 15
-			char buffer_quince[15];
-			fread(&buffer_quince,1,15,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+			//Leer los primeros 8 bytes
+			char buffer_signature[8+1]; //8+1 del final
+			fread(&buffer_signature,1,8,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
 
-			//Y meter en DE los siguientes 8
-			int i;
-			z80_byte byte_leido;
-			for (i=0;i<8;i++) {
-				fread(&byte_leido,1,1,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
-				poke_byte_no_time(reg_de+i,byte_leido);
-				//poke_byte_no_time(reg_de+i,0xFF); //temp
-				//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %02XH ",byte_leido);
+			//meter 0 del final
+			buffer_signature[8]=0;
+
+			//Ver si es la firma esperada
+			if (strcmp(esxdos_plus3dos_signature,buffer_signature))  {
+				//No lo es. reabrir archivo
+				debug_printf(VERBOSE_DEBUG,"ESXDOS handler: Requested PLUS3DOS header but file does not have one");
+				fclose(esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+				esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix=fopen(fullpath,fopen_mode);
 			}
 
-			//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
+			else {
+				debug_printf(VERBOSE_DEBUG,"ESXDOS handler: File seems to have good PLUS3DOS header");
+				//Saltar los primeros 15-8=7
+				char buffer_siete[7];
+				fread(&buffer_siete,1,7,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
 
-			//Y saltar otros (128-23)
-			char buffer_restante[128-23];
-			fread(&buffer_restante,1,128-23,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+				//Y meter en DE los siguientes 8
+				int i;
+				z80_byte byte_leido;
+				for (i=0;i<8;i++) {
+					fread(&byte_leido,1,1,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+					poke_byte_no_time(reg_de+i,byte_leido);
+					//poke_byte_no_time(reg_de+i,0xFF); //temp
+					//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %02XH ",byte_leido);
+				}
+
+				//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ");
+
+				//Y saltar otros (128-23)
+				char buffer_restante[128-23];
+				fread(&buffer_restante,1,128-23,esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix);
+			}
 		}
 
 
@@ -908,6 +927,7 @@ void esxdos_handler_call_f_write(void)
 
 		if (esxdos_fopen_files[file_handler].tiene_plus3dos_header.v) {
 			//Escribir primero cabecera PLUS3DOS
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Adding PLUS3DOS Header");
 			//TODO: asumimos que se escriben todos los bytes de golpe->BC contiene la longitud total del bloque
 			/*
 
@@ -921,8 +941,8 @@ Offset	Length	Description
 23..126		Reserved (note 3)
 127		Checksum (note 4))
 */
-			char *cabe="PLUS3DOS";
-			fwrite(cabe,1,8,esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
+			//char *cabe="PLUS3DOS";
+			fwrite(esxdos_plus3dos_signature,1,8,esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
 
 			z80_byte marker=0x1a,issue=1,version=1;
 			fwrite(&marker,1,1,esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
@@ -1014,6 +1034,33 @@ void esxdos_handler_call_f_close(void)
 
 	esxdos_handler_old_return_call();
 }
+
+
+void esxdos_handler_call_f_sync(void)
+{
+
+	int file_handler=reg_a;
+
+	if (file_handler>=ESXDOS_MAX_OPEN_FILES) {
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_sync. Handler %d out of range",file_handler);
+		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+		return;
+	}
+
+
+
+	if (esxdos_fopen_files[file_handler].open_file.v==0) {
+		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+		return;
+
+	}
+
+
+		
+	fflush(esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
+
+}
+
 
 //tener en cuenta raiz y directorio actual
 //si localdir no es NULL, devolver directorio local (quitando esxdos_handler_root_dir)
@@ -1876,8 +1923,13 @@ void esxdos_handler_begin_handling_commands(void)
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_CLOSE");
 			esxdos_handler_call_f_close();
 			esxdos_handler_new_return_call();
-
 		break;
+
+		case ESXDOS_RST8_F_SYNC:
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_SYNC");
+			esxdos_handler_call_f_sync();
+			esxdos_handler_new_return_call();
+		break;		
 
 		case ESXDOS_RST8_F_READ:
 		//Read BC bytes at HL from file handle A.
