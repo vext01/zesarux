@@ -10,6 +10,7 @@ Added Beeper Piano Menu
 Added new Z80 TBBlue opcodes and deleted obsolete ones
 Added setting to change Kempston Mouse sensitivity
 Added menu item to create autoconfig files (.config) 
+Added setting --random-r-register to generate random value for R register on every cold start, instead of the normal 0 value. Useful to avoid same R register in the start of games, when they use that register as a random value
 
 Improved debugger:
 *Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches
