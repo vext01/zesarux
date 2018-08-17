@@ -310,12 +310,14 @@ void generate_nmi(void)
 void generate_nmi_multiface_tbblue(void)
 {
     //hacer que no salte mapeo de divmmc
-    if (divmmc_diviface_enabled.v) divmmc_diviface_disable();
+    //if (divmmc_diviface_enabled.v) divmmc_diviface_disable();
 
 	interrupcion_non_maskable_generada.v=1;
 	if (multiface_enabled.v) {
 		multiface_map_memory();
         multiface_lockout=0;
+        //Temp . Meter un NOP en 66H
+        multiface_memory_pointer[0x66]=0;
 	}
 
     if (betadisk_enabled.v) {
