@@ -3280,6 +3280,8 @@ You don't need timings for H/V sync =)
                 lee_puerto=lee_puerto_spectrum;
                 ay_chip_present.v=1;
 
+				multiface_type=MULTIFACE_TYPE_THREE;
+
                 break;
 
 

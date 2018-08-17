@@ -2313,16 +2313,12 @@ which allows you access to all SRAM.
 
 }
 
-void tbblue_set_emulator_setting_multiface(void)
+/*void tbblue_set_emulator_setting_multiface(void)
 {
-	/*
-	(R/W) 0x06 (06) => Peripheral 2 setting:
-  bit 7 = Enable turbo mode (0 = disabled, 1 = enabled)(0 after a PoR or Hard-reset)
-  bit 6 = DAC chip mode (0 = I2S, 1 = JAP) (Only VTrucco board, 0 after a PoR or Hard-reset)
-  bit 5 = Enable Lightpen (1 = enabled)(0 after a PoR or Hard-reset)
-  bit 4 = DivMMC automatic paging (1 = enabled)(0 after a PoR or Hard-reset)
-  bit 3 = Enable Multiface (1 = enabled)(0 after a PoR or Hard-reset)
-	*/
+	
+	//(R/W) 0x06 (06) => Peripheral 2 setting:
+  //bit 3 = Enable Multiface (1 = enabled)(0 after a PoR or Hard-reset)
+	
 
 	//de momento nada
 	//return;
@@ -2341,6 +2337,7 @@ void tbblue_set_emulator_setting_multiface(void)
 		//temp multiface_disable();
 	}
 }
+*/
 
 void tbblue_set_emulator_setting_divmmc(void)
 {
@@ -2955,7 +2952,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 						bit 3 = Enable Multiface (1 = enabled)(0 after a PoR or Hard-reset)
 					*/
 			if ( (last_register_6&16) != (value&16)) tbblue_set_emulator_setting_divmmc();
-			if ( (last_register_6&8) != (value&8)) tbblue_set_emulator_setting_multiface();
+			//if ( (last_register_6&8) != (value&8)) tbblue_set_emulator_setting_multiface();
 		break;
 
 

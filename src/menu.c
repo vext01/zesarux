@@ -25153,7 +25153,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
     		menu_add_item_menu(array_menu_debug_settings,"Generate ~~NMI",MENU_OPCION_NORMAL,menu_debug_nmi,NULL);
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'n');
 
-			if (MACHINE_IS_TBBLUE) menu_add_item_menu(array_menu_debug_settings,"Generate Multiface NMI",MENU_OPCION_NORMAL,menu_debug_nmi_multiface_tbblue,NULL);
+			if (MACHINE_IS_TBBLUE && multiface_enabled.v && (tbblue_registers[6]&8) ) menu_add_item_menu(array_menu_debug_settings,"Generate Multiface NMI",MENU_OPCION_NORMAL,menu_debug_nmi_multiface_tbblue,NULL);
 		}
 
 		if (MACHINE_IS_ZXUNO_BOOTM_DISABLED) {
