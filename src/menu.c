@@ -7459,7 +7459,7 @@ void menu_debug_get_legend(int linea,char *s)
 			if (cpu_step_mode.v) {
 							//01234567890123456789012345678901
 							// ClrTstPart 1-5:View ViewScr	
-				sprintf (s,"ClrTst~~Part ~~1-~~7:View ~~ViewScr");
+				sprintf (s,"ClrTst~~Part ~~1-~~7:View ~~VScr M~~Z %d",menu_debug_memory_zone);
 			}
 			else {
 							//01234567890123456789012345678901
@@ -8117,6 +8117,30 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
                                 }
+
+					if (tecla=='z') {
+
+cls_menu_overlay();
+
+				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+                                        menu_debug_registers_change_memory_zone();
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					menu_debug_registers_ventana();
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+					si_ejecuta_una_instruccion=0;
+
+
+                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+
+																}								
 
                                 if (tecla=='b') {
                                         cls_menu_overlay();
@@ -21753,6 +21777,18 @@ void menu_debug_nmi(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_debug_nmi_multiface_tbblue(MENU_ITEM_PARAMETERS)
+{
+        if (menu_confirm_yesno("Generate Multiface NMI")==1) {
+
+		generate_nmi_multiface_tbblue();
+
+                //Y salimos de todos los menus
+                salir_todos_menus=1;
+        }
+
+}
+
 void menu_debug_special_nmi(MENU_ITEM_PARAMETERS)
 {
         if (menu_confirm_yesno("Generate Special NMI")==1) {
@@ -25114,8 +25150,10 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (!CPU_IS_MOTOROLA) {
-    menu_add_item_menu(array_menu_debug_settings,"Generate ~~NMI",MENU_OPCION_NORMAL,menu_debug_nmi,NULL);
-		menu_add_item_menu_shortcut(array_menu_debug_settings,'n');
+    		menu_add_item_menu(array_menu_debug_settings,"Generate ~~NMI",MENU_OPCION_NORMAL,menu_debug_nmi,NULL);
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'n');
+
+			if (MACHINE_IS_TBBLUE) menu_add_item_menu(array_menu_debug_settings,"Generate Multiface NMI",MENU_OPCION_NORMAL,menu_debug_nmi_multiface_tbblue,NULL);
 		}
 
 		if (MACHINE_IS_ZXUNO_BOOTM_DISABLED) {

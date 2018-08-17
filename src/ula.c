@@ -32,6 +32,7 @@
 #include "multiface.h"
 #include "betadisk.h"
 #include "settings.h"
+#include "divmmc.h"
 
 
 //#define ZESARUX_ZXI_PORT_REGISTER 0xCF3B
@@ -306,6 +307,21 @@ void generate_nmi(void)
     }
 }
 
+void generate_nmi_multiface_tbblue(void)
+{
+    //hacer que no salte mapeo de divmmc
+    if (divmmc_diviface_enabled.v) divmmc_diviface_disable();
+
+	interrupcion_non_maskable_generada.v=1;
+	if (multiface_enabled.v) {
+		multiface_map_memory();
+        multiface_lockout=0;
+	}
+
+    if (betadisk_enabled.v) {
+        betadisk_active.v=1;
+    }
+}
 
 //Convertir tecla leida del recreated en tecla real y en si es un press (1) o un release(0)
 /*

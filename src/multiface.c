@@ -252,13 +252,24 @@ void multiface_enable(void)
 
 	if (multiface_enabled.v) return;
 
-	if (multiface_rom_file_name[0]==0) {
-		debug_printf (VERBOSE_ERR,"Trying to enable Multiface but no ROM file selected");
-		return;
-	}
+        //TBBLUE tiene su propio multiface
+        if (MACHINE_IS_TBBLUE) {
+                multiface_memory_pointer=&memoria_spectrum[0x014000];
+        }
 
-	multiface_alloc_memory();
-	if (multiface_load_rom()) return;
+        else {
+
+	        if (multiface_rom_file_name[0]==0) {
+		        debug_printf (VERBOSE_ERR,"Trying to enable Multiface but no ROM file selected");
+		        return;
+	        }
+
+
+	        multiface_alloc_memory();
+	        if (multiface_load_rom()) return;
+        }
+
+        
 
 	multiface_set_peek_poke_functions();
 
@@ -301,7 +312,10 @@ void multiface_disable(void)
 
 	multiface_restore_peek_poke_functions();
 
-	free(multiface_memory_pointer);
+        //TBBLUE tiene su propio multiface
+        if (!MACHINE_IS_TBBLUE) {
+	        free(multiface_memory_pointer);
+        }
 
 
 	multiface_enabled.v=0;

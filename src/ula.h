@@ -72,6 +72,7 @@ extern void zesarux_zxi_write_register_value(z80_byte value);
 extern z80_byte zesarux_zxi_read_register_value(void);
 
 extern void generate_nmi(void);
+extern void generate_nmi_multiface_tbblue(void);
 
 
 extern z80_bit keyboard_matrix_error;

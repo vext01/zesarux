@@ -624,6 +624,9 @@ void cpu_set_turbo_speed(void)
 	z80_bit antes_betadisk_enabled;
 	antes_betadisk_enabled.v=betadisk_enabled.v;
 
+	z80_bit antes_mutiface_enabled;
+	antes_mutiface_enabled.v=multiface_enabled.v;
+
 	if (cpu_turbo_speed>MAX_CPU_TURBO_SPEED) {
 		debug_printf (VERBOSE_INFO,"Turbo mode higher than maximum. Setting to %d",MAX_CPU_TURBO_SPEED);
 		cpu_turbo_speed=MAX_CPU_TURBO_SPEED;
@@ -631,6 +634,8 @@ void cpu_set_turbo_speed(void)
 
 	//Si esta divmmc/divide, volver a aplicar funciones poke
 	if (diviface_enabled.v) diviface_restore_peek_poke_functions();
+
+
 
 
 	//Variable turbo se sobreescribe al llamar a set_machine_params. Guardar y restaurar luego
@@ -679,6 +684,8 @@ void cpu_set_turbo_speed(void)
 	}
 
 	if (antes_betadisk_enabled.v) betadisk_enable();
+
+	if (antes_mutiface_enabled.v) multiface_enable();
 
 	cpu_turbo_speed_antes=cpu_turbo_speed;
 
@@ -2648,6 +2655,7 @@ void set_machine_params(void)
 		allow_write_rom.v=0;
 
 		multiface_enabled.v=0;
+
 		dandanator_enabled.v=0;
 		superupgrade_enabled.v=0;
 		kartusho_enabled.v=0;
