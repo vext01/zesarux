@@ -2327,18 +2327,18 @@ void tbblue_set_emulator_setting_multiface(void)
 	//de momento nada
 	//return;
 
-	//multiface_type=MULTIFACE_TYPE_THREE; //Vamos a suponer este tipo
+	multiface_type=MULTIFACE_TYPE_THREE; //Vamos a suponer este tipo
 	z80_byte multisetting=tbblue_registers[6]&8;
 
 	if (multisetting) {
 		printf ("Enabling multiface\n");
 		//sleep (1);
-		multiface_enable();
+		//temp multiface_enable();
 	}
 	else {
 		printf ("Disabling multiface\n");
 		//sleep (1);
-		multiface_disable();
+		//temp multiface_disable();
 	}
 }
 
