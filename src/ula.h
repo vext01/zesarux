@@ -83,7 +83,8 @@ extern z80_bit recreated_zx_keyboard_support;
 extern z80_bit recreated_zx_keyboard_pressed_caps;
 
 extern void nmi_handle_pending_prepost_fetch(void);
-extern z80_bit nmi_pending_pre_opcode;
-extern z80_bit nmi_pending_post_opcode;
+extern int nmi_pending_pre_opcode;
+extern int nmi_pending_post_opcode;
+extern void generate_nmi_prepare_fetch(void);
 
 #endif

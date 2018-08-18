@@ -330,7 +330,7 @@ void cpu_core_loop_spectrum(void)
 
 				if (MACHINE_IS_TSCONF) tsconf_handle_frame_interrupts();
 
-					if (nmi_pending_pre_opcode.v) {
+					if (nmi_pending_pre_opcode) {
 						//Dado que esto se activa despues de lanzar nmi y antes de leer opcode, aqui saltara cuando PC=66H
 						printf ("Handling nmi mapping pre opcode fetch at %04XH\n",reg_pc);
 						nmi_handle_pending_prepost_fetch();
@@ -363,10 +363,13 @@ void cpu_core_loop_spectrum(void)
 
                 reg_pc++;
 
-					if (nmi_pending_post_opcode.v) {
+					//Nota: agregar estos dos if de nmi_pending_pre_opcode y nmi_pending_post_opcode 
+					//supone un 0.2 % de uso mas en mi iMac: pasa de usar 5.4% cpu a 5.6% cpu en --vo null y --ao null
+					//Es muy poco...
+					if (nmi_pending_post_opcode) {
 						//Dado que esto se activa despues de lanzar nmi y leer opcode, aqui saltara cuando PC=67H
 						printf ("Handling nmi mapping post opcode fetch at %04XH\n",reg_pc);
-						nmi_handle_pending_prepost_fetch();
+						nmi_handle_pending_prepost_fetch(); 
 					}				
 
 				reg_r++;
