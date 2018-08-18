@@ -332,7 +332,7 @@ void cpu_core_loop_spectrum(void)
 
 					if (nmi_pending_pre_opcode) {
 						//Dado que esto se activa despues de lanzar nmi y antes de leer opcode, aqui saltara cuando PC=66H
-						printf ("Handling nmi mapping pre opcode fetch at %04XH\n",reg_pc);
+						debug_printf (VERBOSE_DEBUG,"Handling nmi mapping pre opcode fetch at %04XH",reg_pc);
 						nmi_handle_pending_prepost_fetch();
 					}				
 
@@ -368,7 +368,7 @@ void cpu_core_loop_spectrum(void)
 					//Es muy poco...
 					if (nmi_pending_post_opcode) {
 						//Dado que esto se activa despues de lanzar nmi y leer opcode, aqui saltara cuando PC=67H
-						printf ("Handling nmi mapping post opcode fetch at %04XH\n",reg_pc);
+						debug_printf (VERBOSE_DEBUG,"Handling nmi mapping post opcode fetch at %04XH",reg_pc);
 						nmi_handle_pending_prepost_fetch(); 
 					}				
 
@@ -708,7 +708,7 @@ void cpu_core_loop_spectrum(void)
 
 					if (interrupcion_non_maskable_generada.v) {
 						debug_anota_retorno_step_nmi();
-						printf ("generada nmi\n");
+						//printf ("generada nmi\n");
                                                 interrupcion_non_maskable_generada.v=0;
 
 
@@ -736,7 +736,7 @@ void cpu_core_loop_spectrum(void)
                                                 //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
                                                 reg_pc= 0x66;
 
-												printf ("generada nmi pc=%04XH\n",reg_pc);
+												//printf ("generada nmi pc=%04XH\n",reg_pc);
 
                                                 //temp
 

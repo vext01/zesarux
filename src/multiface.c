@@ -41,6 +41,7 @@ char multiface_rom_file_name[PATH_MAX]="";
 //char multiface_rom_file_name[PATH_MAX]="mf1.rom";
 
 z80_byte *multiface_memory_pointer;
+z80_byte *multiface_ram_memory_pointer;
 
 
 z80_bit multiface_switched_on={0};
@@ -84,12 +85,14 @@ int multiface_check_if_ram_area(z80_int dir)
 
 z80_byte multiface_read_byte(z80_int dir)
 {
-	return multiface_memory_pointer[dir];
+	if (dir<8192) return multiface_memory_pointer[dir];
+        else return multiface_ram_memory_pointer[dir-8192];
 }
 
 void multiface_write_byte(z80_int dir,z80_byte value)
 {
-        multiface_memory_pointer[dir]=value;
+        //Este if no haria falta ya que cuando se entra aqui ya se sabe que se esta en esa region
+        if (dir>=8192 && dir<=16383) multiface_ram_memory_pointer[dir-8192]=value;
 }
 
 
@@ -206,6 +209,7 @@ void multiface_alloc_memory(void)
                 cpu_panic ("No enough memory for multiface emulation");
         }
 
+        multiface_ram_memory_pointer=&multiface_memory_pointer[8192];
 
 }
 
@@ -255,6 +259,9 @@ void multiface_enable(void)
         //TBBLUE tiene su propio multiface
         if (MACHINE_IS_TBBLUE) {
                 multiface_memory_pointer=&memoria_spectrum[0x014000];
+
+                //0x01c000 – 0x01FFFF (16K) => Multiface RAM
+                multiface_ram_memory_pointer=&memoria_spectrum[0x01c000];
         }
 
         else {
@@ -326,7 +333,7 @@ void multiface_map_memory(void)
 {
 
 	multiface_switched_on.v=1;
-	debug_printf(VERBOSE_DEBUG,"Mapping Multiface RAM and ROM with PC=%04XH",reg_pc);
+	//debug_printf(VERBOSE_DEBUG,"Mapping Multiface RAM and ROM with PC=%04XH",reg_pc);
 
 }
 
@@ -334,6 +341,6 @@ void multiface_unmap_memory(void)
 {
 
         multiface_switched_on.v=0;
-	debug_printf(VERBOSE_DEBUG,"Unmapping Multiface RAM and ROM with PC=%04XH",reg_pc);
+	//debug_printf(VERBOSE_DEBUG,"Unmapping Multiface RAM and ROM with PC=%04XH",reg_pc);
 
 }

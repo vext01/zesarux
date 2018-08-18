@@ -640,7 +640,6 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 --- TBBlue ---
 
 -probar que pasa cuando llega a mas de 12 sprites en linea tbblue
--Multiface rom en tbblue debería leer la de tbblue
 -Sincronizar bits de joystick de puerto config2
 -no dejar aumentar memoria divmmc mas de 128kb, pues tbblue no tiene mas que eso. sino, se accederia a memoria mas alla del divmmc
 

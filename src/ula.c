@@ -330,14 +330,28 @@ void generate_nmi_multiface_tbblue(void)
     
 
     //Parchecillo para next. Parece que ellos no mapean en 66h sino en 67h
-	if (multiface_enabled.v) {
+	/*if (multiface_enabled.v) {
 		//Meter un push af en 66H, pues tienen un RET
         multiface_memory_pointer[0x66]=245;
-	}    
+	} */   
    
 }
 
 void generate_nmi_prepare_fetch(void)
+{
+    //Vamos a suponer que lo normal es que salte en 66h, o sea, con pre_opcode
+
+    nmi_pending_pre_opcode=1;
+    
+    if (MACHINE_IS_TBBLUE && multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
+        //Pero en tbblue, salta con post
+        nmi_pending_post_opcode=1;
+        nmi_pending_pre_opcode=0;
+    }
+
+}
+
+void old_generate_nmi_prepare_fetch(void)
 {
     nmi_pending_post_opcode=1;
 

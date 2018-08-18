@@ -17376,6 +17376,9 @@ void menu_hardware_multiface_type(MENU_ITEM_PARAMETERS)
 
 int menu_hardware_multiface_type_cond(void)
 {
+	//En tbblue no se puede cambiar el tipo
+	if (MACHINE_IS_TBBLUE) return 0;
+
 	return !multiface_enabled.v;
 }
 
@@ -17388,12 +17391,18 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
                 char string_multiface_file_shown[13];
 
+				//Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+                menu_add_item_menu_inicial(&array_menu_multiface,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+					//En tbblue, la rom no es seleccionable, la carga el mismo en la sdram
 
+					if (!MACHINE_IS_TBBLUE) {
                         menu_tape_settings_trunc_name(multiface_rom_file_name,string_multiface_file_shown,13);
-                        menu_add_item_menu_inicial_format(&array_menu_multiface,MENU_OPCION_NORMAL,menu_multiface_rom_file,NULL,"~~ROM File: %s",string_multiface_file_shown);
+                        menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_multiface_rom_file,NULL,"~~ROM File: %s",string_multiface_file_shown);
                         menu_add_item_menu_shortcut(array_menu_multiface,'r');
                         menu_add_item_menu_tooltip(array_menu_multiface,"ROM Emulation file");
                         menu_add_item_menu_ayuda(array_menu_multiface,"ROM Emulation file");
+					}
+
 
                         menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_hardware_multiface_type,menu_hardware_multiface_type_cond,"~~Type: %s",multiface_types_string[multiface_type]);
                   menu_add_item_menu_shortcut(array_menu_multiface,'t');
