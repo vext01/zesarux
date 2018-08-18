@@ -337,7 +337,7 @@ void generate_nmi_multiface_tbblue(void)
    
 }
 
-void generate_nmi_prepare_fetch(void)
+void old_generate_nmi_prepare_fetch(void)
 {
     //Vamos a suponer que lo normal es que salte en 66h, o sea, con pre_opcode
 
@@ -351,7 +351,21 @@ void generate_nmi_prepare_fetch(void)
 
 }
 
-void old_generate_nmi_prepare_fetch(void)
+void generate_nmi_prepare_fetch(void)
+{
+    //Vamos a suponer que lo normal es que salte en 67h, o sea, con post_opcode
+
+    nmi_pending_post_opcode=1;
+    
+    if (!MACHINE_IS_TBBLUE && multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
+        //Pero en mf3 (no en tbblue), salta con pre
+        nmi_pending_pre_opcode=1;
+        nmi_pending_post_opcode=0;
+    }
+
+}
+
+void old_old_generate_nmi_prepare_fetch(void)
 {
     nmi_pending_post_opcode=1;
 
