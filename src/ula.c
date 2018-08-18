@@ -319,10 +319,10 @@ void generate_nmi(void)
 	interrupcion_non_maskable_generada.v=1;
     nmi_pending_post_opcode.v=1;
 
-    if (multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
+    /*if (multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
         nmi_pending_post_opcode.v=0;
         nmi_pending_pre_opcode.v=1;
-    }
+    }*/
 
 	/*if (multiface_enabled.v) {
 		multiface_map_memory();
@@ -340,12 +340,19 @@ void generate_nmi_multiface_tbblue(void)
     //if (divmmc_diviface_enabled.v) divmmc_diviface_disable();
 
 	interrupcion_non_maskable_generada.v=1;
-    nmi_pending_post_opcode.v=1;
+    
+
+    //Parchecillo para next. Parece que ellos no mapean en 66h sino en 67h
+	if (multiface_enabled.v) {
+		//Meter un push af en 66H
+        multiface_memory_pointer[0x66]=245;
+	}    
+    /*nmi_pending_post_opcode.v=1;
 
     if (multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
         nmi_pending_post_opcode.v=0;
         nmi_pending_pre_opcode.v=1;
-    }
+    }*/
 
 	/*if (multiface_enabled.v) {
 		multiface_map_memory();
@@ -357,6 +364,22 @@ void generate_nmi_multiface_tbblue(void)
     if (betadisk_enabled.v) {
         betadisk_active.v=1;
     }*/
+}
+
+void generate_nmi_prepare_fetch(void)
+{
+    nmi_pending_post_opcode.v=1;
+
+    if (multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
+        nmi_pending_post_opcode.v=0;
+        nmi_pending_pre_opcode.v=1;
+    }
+
+    //Betadisk tambien hace en pre??
+    if (betadisk_enabled.v) {
+        nmi_pending_post_opcode.v=0;
+        nmi_pending_pre_opcode.v=1;        
+    }
 }
 
 //Convertir tecla leida del recreated en tecla real y en si es un press (1) o un release(0)
