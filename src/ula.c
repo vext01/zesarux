@@ -344,7 +344,7 @@ void generate_nmi_prepare_fetch(void)
     nmi_pending_pre_opcode=1;
     
     if (MACHINE_IS_TBBLUE && multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
-        //Pero en tbblue, salta con post
+        //Pero en tbblue, salta con post. Entonces no se esta comportando como un mf3 realmente
         nmi_pending_post_opcode=1;
         nmi_pending_pre_opcode=0;
     }
