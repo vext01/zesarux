@@ -317,7 +317,7 @@ void nmi_handle_pending_prepost_fetch(void)
 void generate_nmi(void)
 {
 	interrupcion_non_maskable_generada.v=1;
-    nmi_pending_post_opcode=1;
+    //nmi_pending_post_opcode=1;
 
 }
 
@@ -327,13 +327,7 @@ void generate_nmi_multiface_tbblue(void)
     //if (divmmc_diviface_enabled.v) divmmc_diviface_disable();
 
 	interrupcion_non_maskable_generada.v=1;
-    
 
-    //Parchecillo para next. Parece que ellos no mapean en 66h sino en 67h
-	/*if (multiface_enabled.v) {
-		//Meter un push af en 66H, pues tienen un RET
-        multiface_memory_pointer[0x66]=245;
-	} */   
    
 }
 
