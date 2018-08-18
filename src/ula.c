@@ -84,6 +84,10 @@ z80_bit recreated_zx_keyboard_support={0};
 
 z80_bit recreated_zx_keyboard_pressed_caps={0};
 
+
+z80_bit nmi_pending_pre_opcode={0};
+z80_bit nmi_pending_post_opcode={0};
+
 void ula_pentagon_timing_common(void)
 {
 
@@ -292,12 +296,13 @@ Index is reset to 0 every reset
   return zesarux_zxi_registers_array[zesarux_zxi_last_register];
 }
 
-
-
-void generate_nmi(void)
+void nmi_handle_pending_prepost_fetch(void)
 {
-	interrupcion_non_maskable_generada.v=1;
-	if (multiface_enabled.v) {
+
+    nmi_pending_pre_opcode.v=0;
+    nmi_pending_post_opcode.v=0;
+
+    if (multiface_enabled.v) {
 		multiface_map_memory();
         multiface_lockout=0;
 	}
@@ -305,6 +310,28 @@ void generate_nmi(void)
     if (betadisk_enabled.v) {
         betadisk_active.v=1;
     }
+
+    
+}
+
+void generate_nmi(void)
+{
+	interrupcion_non_maskable_generada.v=1;
+    nmi_pending_post_opcode.v=1;
+
+    if (multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
+        nmi_pending_post_opcode.v=0;
+        nmi_pending_pre_opcode.v=1;
+    }
+
+	/*if (multiface_enabled.v) {
+		multiface_map_memory();
+        multiface_lockout=0;
+	}
+
+    if (betadisk_enabled.v) {
+        betadisk_active.v=1;
+    }*/
 }
 
 void generate_nmi_multiface_tbblue(void)
@@ -313,7 +340,14 @@ void generate_nmi_multiface_tbblue(void)
     //if (divmmc_diviface_enabled.v) divmmc_diviface_disable();
 
 	interrupcion_non_maskable_generada.v=1;
-	if (multiface_enabled.v) {
+    nmi_pending_post_opcode.v=1;
+
+    if (multiface_enabled.v && multiface_type==MULTIFACE_TYPE_THREE) {
+        nmi_pending_post_opcode.v=0;
+        nmi_pending_pre_opcode.v=1;
+    }
+
+	/*if (multiface_enabled.v) {
 		multiface_map_memory();
         multiface_lockout=0;
         //Temp . Meter un NOP en 66H
@@ -322,7 +356,7 @@ void generate_nmi_multiface_tbblue(void)
 
     if (betadisk_enabled.v) {
         betadisk_active.v=1;
-    }
+    }*/
 }
 
 //Convertir tecla leida del recreated en tecla real y en si es un press (1) o un release(0)

@@ -329,7 +329,12 @@ void cpu_core_loop_spectrum(void)
 #endif
 
 				if (MACHINE_IS_TSCONF) tsconf_handle_frame_interrupts();
-		
+
+					if (nmi_pending_pre_opcode.v) {
+						//Dado que esto se activa despues de lanzar nmi y antes de leer opcode, aqui saltara cuando PC=66H
+						printf ("Handling nmi mapping at %04XH\n",reg_pc);
+						nmi_handle_pending_prepost_fetch();
+					}				
 
 
 				//Modo normal
@@ -337,6 +342,8 @@ void cpu_core_loop_spectrum(void)
 
         	                        contend_read( reg_pc, 4 );
 					byte_leido_core_spectrum=fetch_opcode();
+
+
 
 				}
 
@@ -354,7 +361,13 @@ void cpu_core_loop_spectrum(void)
 				util_stats_increment_counter(stats_codsinpr,byte_leido_core_spectrum);
 #endif
 
-                                reg_pc++;
+                reg_pc++;
+
+					if (nmi_pending_post_opcode.v) {
+						//Dado que esto se activa despues de lanzar nmi y leer opcode, aqui saltara cuando PC=67H
+						printf ("Handling nmi mapping at %04XH\n",reg_pc);
+						nmi_handle_pending_prepost_fetch();
+					}				
 
 				reg_r++;
 
