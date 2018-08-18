@@ -357,6 +357,12 @@ void generate_nmi_prepare_fetch(void)
         nmi_pending_post_opcode=0;
     }
 
+    //prueba betadisk. todo indica por la rom que hace pre, aunque luego igualmente al lanzar la nmi, peta
+    if (betadisk_enabled.v) {
+        nmi_pending_pre_opcode=1;
+        nmi_pending_post_opcode=0;        
+    }
+
 }
 
 void old_old_generate_nmi_prepare_fetch(void)
