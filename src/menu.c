@@ -17334,7 +17334,9 @@ void menu_osd_adventure_kb_press_key(void)
 	printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
 	//osd_adv_kbd_list
 
-	convert_numeros_letras_puerto_teclado_continue(letra,1);
+	//Espacio no la gestiona esta funcion de convert_numeros_...
+	if (letra==' ') util_set_reset_key(UTIL_KEY_SPACE,1);
+	else convert_numeros_letras_puerto_teclado_continue(letra,1);
 
 	//Lanzar pulsar tecla 
 	timer_on_screen_adv_key=50; //durante 1 segundo total

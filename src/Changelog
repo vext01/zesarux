@@ -12,7 +12,7 @@ Added setting to change Kempston Mouse sensitivity
 Added menu item to create autoconfig files (.config) 
 Added setting --random-r-register to generate random value for R register on every cold start, instead of the normal 0 value. Useful to avoid same R register in the start of games, when they use that register as a random value
 Added TBBlue Multiface emulation
-Added OSD Adventure Text Keyboard, useful for having typical words on Adventure Text Games
+Added OSD Adventure Text Keyboard, useful for having typical words on Adventure Text Games (and of course any other kind of games and programs)
 
 Improved debugger:
 *Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches

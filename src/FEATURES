@@ -120,7 +120,7 @@
 
 * Joystick emulation with real joystick (on Linux) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand. Autofire function also
 
-* On Screen keyboard useful when playing with joystick
+* On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, and another with words, useful for playing Text Adventures
 
 * Emulates Spectrum keyboard ghosting error feature
 
