@@ -820,6 +820,7 @@ z80_byte menu_debug_get_mapped_byte(int direccion)
 //Interrumpe el core y le dice que hay que abrir el menu
 void menu_fire_event_open_menu(void)
 {
+	//printf ("Ejecutar menu_fire_event_open_menu\n");
 	menu_abierto=1;
 	menu_event_open_menu.v=1;
 }
@@ -17548,6 +17549,12 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
 
         cls_menu_overlay();
+		menu_espera_no_tecla();
+
+		//menu_abierto=1;
+		//Si con control de joystick se ha salido con tecla ESCMenu, esa tecla de joystick lo que hace es ESC
+		//pero luego fuerza a abrir el menu de nuevo. Por tanto, decimos que no hay que abrir menu
+		menu_event_open_menu.v=0;
 
 }
 
@@ -32596,6 +32603,7 @@ void menu_inicio(void)
 		menu_osd_adventure_keyboard_next();
 		//menu_osd_adventure_keyboard(0);
 		cls_menu_overlay();
+
 	}
 
 	//Evento de abrir menu adventure text
@@ -32604,6 +32612,7 @@ void menu_inicio(void)
 
                 menu_osd_adventure_keyboard(0);
                 cls_menu_overlay();
+						//printf ("Returning from osd keyboard\n");
         }
 
 
@@ -32757,6 +32766,7 @@ void menu_inicio(void)
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		
 		//Abrir menu normal
+		//printf ("Abrir menu normal\n");
 		menu_inicio_bucle();
 
 	}
