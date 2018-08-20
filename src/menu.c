@@ -212,7 +212,7 @@ z80_bit menu_filesel_hide_dirs={0};
 
 
 //3 entradas definidas de ejemplo
-int osd_adv_kbd_defined=100;
+int osd_adv_kbd_defined=10;
 char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH]={
 	"~~north",
 	"~~west",

@@ -3498,6 +3498,11 @@ int util_write_configfile(void)
   	}
   }
 
+  //text osd keyboard
+  for (i=0;i<osd_adv_kbd_defined;i++) {
+	ADD_STRING_CONFIG,"--text-keyboard-add %s",osd_adv_kbd_list[i]);
+  }
+
 
   //real joystick buttons to keys
   for (i=0;i<MAX_KEYS_JOYSTICK;i++) {
