@@ -17549,7 +17549,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
 
         cls_menu_overlay();
-		menu_espera_no_tecla();
+		//menu_espera_no_tecla();
 
 		//menu_abierto=1;
 		//Si con control de joystick se ha salido con tecla ESCMenu, esa tecla de joystick lo que hace es ESC
