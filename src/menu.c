@@ -211,11 +211,19 @@ z80_bit menu_filesel_hide_dirs={0};
 
 
 //3 entradas definidas de ejemplo
-int osd_adv_kbd_defined=3;
+int osd_adv_kbd_defined=11;
 char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH]={
-	"North",
-	"West",
-	"South"
+	"north",
+	"west",
+	"east",
+	"south",
+	"look",
+	"examine",
+	"help",
+	"jump",
+	"talk",
+	"exit",
+	"suicide"
 };
 
 
@@ -592,6 +600,8 @@ int menu_tape_settings_cond(void);
 void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS);
 
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS);
+
+void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS);
 
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
@@ -17333,6 +17343,8 @@ void menu_osd_adventure_keyboard_next(void)
 	adventure_keyboard_index_selected_item++;
 	if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 		printf ("Fin texto\n");
+		//En este caso reabrir el menu
+		menu_osd_adventure_keyboard(0);
 		return;
 	}
 
@@ -17340,10 +17352,10 @@ void menu_osd_adventure_keyboard_next(void)
 }
 
 
-#define ADVENTURE_KB_X 1
-#define ADVENTURE_KB_Y 1
-#define ADVENTURE_KB_ANCHO 28
-#define ADVENTURE_KB_ALTO 20
+#define ADVENTURE_KB_X 0
+#define ADVENTURE_KB_Y 0
+#define ADVENTURE_KB_ANCHO 32
+#define ADVENTURE_KB_ALTO 24
 
 
 void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
@@ -17365,19 +17377,35 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 	                                //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
                 menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
+	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
+	//osd_adv_kbd_defined
+		int i;
+		int last_x=1;
+		int last_y=0;
+		int salir=0;
+		
+		for (i=0;i<osd_adv_kbd_defined && !salir;i++) {
+			int longitud_texto=strlen(osd_adv_kbd_list[i])+1; //Espacio para la entrada y 1 espacio
+			if (last_x+longitud_texto>ADVENTURE_KB_ANCHO) {
+				last_x=1;
+				last_y++; 
+			}
 
-                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go north");
-                        menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,1,0);
-			menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,0);
+			//controlar maximo de alto
+			if (last_y>=ADVENTURE_KB_ALTO-1) {
+				printf ("Llegado a maximo ventana en alto\n");
+				salir=1;
+			}
 
-                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go west");
-                        menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,10,0);
-			menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,1);
+			else {
+	                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,osd_adv_kbd_list[i]);
+        	                menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
+				menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,i);
 
-                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go South");
-                        menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,1,1);
-			menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,2);
+				last_x+=longitud_texto+1;
+			}
 
+		}
 
 
 
