@@ -17301,7 +17301,8 @@ int adventure_keyboard_index_selected_item=0;
 
 void menu_osd_adventure_kb_press_key(void)
 {
-	printf ("Pulsar tecla entrada %d indice en entrada: %d\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item);
+	printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,
+		osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]);
 	//osd_adv_kbd_list
 
 	//Lanzar pulsar tecla 
@@ -17313,11 +17314,26 @@ void menu_osd_adventure_kb_press_key(void)
 void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
 {
 	printf ("opcion seleccionada: %d\n",valor_opcion);
-				adventure_keyboard_selected_item=valor_opcion;
+	adventure_keyboard_selected_item=valor_opcion;
+	adventure_keyboard_index_selected_item=0;
 
 
 	menu_osd_adventure_kb_press_key();
 }
+
+//Retorno desde el core
+void menu_osd_adventure_keyboard_next(void)
+{
+	//Si final de string
+	adventure_keyboard_index_selected_item++;
+	if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
+		printf ("Fin texto\n");
+		return;
+	}
+
+	menu_osd_adventure_kb_press_key();
+}
+
 
 #define ADVENTURE_KB_X 1
 #define ADVENTURE_KB_Y 1
@@ -32417,7 +32433,7 @@ void menu_inicio(void)
 		printf ("Debe abrir menu adventure keyboard\n");
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
-		//TODO abrir menu
+		menu_osd_adventure_keyboard_next();
 		cls_menu_overlay();
 	}
 
