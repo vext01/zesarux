@@ -17603,12 +17603,14 @@ int adventure_keyboard_index_selected_item=0;
 void menu_osd_adventure_kb_press_key(void)
 {
 
-	printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,
-		osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]);
+	//Aunque el usuario haya puesto alguna mayuscula, metemos minusculas
+	char letra=letra_minuscula(osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]);
+
+
+	printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
 	//osd_adv_kbd_list
 
-	convert_numeros_letras_puerto_teclado_continue(osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item],1);
-
+	convert_numeros_letras_puerto_teclado_continue(letra,1);
 
 	//Lanzar pulsar tecla 
 	timer_on_screen_adv_key=50; //durante 1 segundo total
