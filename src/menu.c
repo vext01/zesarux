@@ -4832,6 +4832,7 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 					if (y_destino==22) {
 						menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,1,"...");
 						se_ha_llegado_limite=1;
+						//printf ("llegado al limite en opcion %d\n",i);
 					}
 					else menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
 				}
@@ -5204,7 +5205,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		scroll_opciones=0;
 
 		int limite_scroll=alto-3;
-		if (linea_seleccionada>limite_scroll) {
+
+		//Esto solo debe saltar cuando tipo de menu no es tabulado, miramos el primer item
+		if (linea_seleccionada>limite_scroll && m->es_menu_tabulado==0) {
 			//printf ("beyond limit\n");
 			scroll_opciones=linea_seleccionada-limite_scroll;
 		}
@@ -17685,14 +17688,14 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
 			//controlar maximo de alto
 			if (last_y>=ADVENTURE_KB_ALTO-2) {
-				printf ("Llegado a maximo ventana en alto\n");
+				debug_printf (VERBOSE_DEBUG,"Reached maximum window height");
 				salir=1;
 			}
 
 			else {
 				//Si es cadena vacia, ignorarla. No deberia pasar pues se debe denegar desde donde se lee la configuracion, pero por si acaso
 				if (osd_adv_kbd_list[i][0]==0) {
-					printf ("Null string at %d\n",i);
+					debug_printf (VERBOSE_DEBUG,"Null string at %d",i);
 				}
 
 				else {
