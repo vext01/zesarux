@@ -601,7 +601,10 @@ z80_bit menu_button_quickload={0};
 z80_bit menu_button_osdkeyboard={0};
 z80_bit menu_button_osdkeyboard_return={0};
 
+//Retorno de envio de una tecla
 z80_bit menu_button_osd_adv_keyboard_return={0};
+//Abrir el menu de Adventure text
+z80_bit menu_button_osd_adv_keyboard_openmenu={0};
 
 //Comun para zx8081 y spectrum
 //z80_bit menu_button_osdkeyboard_caps={0};
@@ -17602,7 +17605,7 @@ int adventure_keyboard_selected_item=0;
 //Posicion dentro del string
 int adventure_keyboard_index_selected_item=0;
 
-z80_bit menu_osd_adventure_sending_keys={0};
+//z80_bit menu_osd_adventure_sending_keys={0};
 
 
 void menu_osd_adventure_kb_press_key(void)
@@ -17639,7 +17642,7 @@ void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
 
 
 	//Estamos enviando teclas
-	menu_osd_adventure_sending_keys.v=1;
+	//menu_osd_adventure_sending_keys.v=1;
 
 	menu_osd_adventure_kb_press_key();
 }
@@ -17654,7 +17657,7 @@ void menu_osd_adventure_keyboard_next(void)
 	adventure_keyboard_index_selected_item++;
 	if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 		printf ("Fin texto\n");
-		menu_osd_adventure_sending_keys.v=0;
+		//menu_osd_adventure_sending_keys.v=0;
 		//En este caso reabrir el menu
 		menu_osd_adventure_keyboard(0);
 		return;
@@ -17679,6 +17682,9 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 	//	menu_osd_adventure_keyboard_next();
 	//	return;
 	//}
+
+	//Si estamos enviando teclas, desactivar
+	timer_on_screen_adv_key=0;
 
 
         menu_espera_no_tecla();
@@ -32560,6 +32566,7 @@ void menu_inicio_pre_retorno(void)
     menu_button_quickload.v=0;
     menu_button_osdkeyboard.v=0;
     menu_button_osd_adv_keyboard_return.v=0;
+    menu_button_osd_adv_keyboard_openmenu.v=0;
     menu_button_exit_emulator.v=0;
     menu_event_drag_drop.v=0;
     menu_breakpoint_exception.v=0;
@@ -32862,6 +32869,14 @@ void menu_inicio(void)
 		//menu_osd_adventure_keyboard(0);
 		cls_menu_overlay();
 	}
+
+	//Evento de abrir menu adventure text
+	if (menu_button_osd_adv_keyboard_openmenu.v) {
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
+
+                menu_osd_adventure_keyboard(0);
+                cls_menu_overlay();
+        }
 
 
 	//Gestionar pulsaciones directas de teclado o joystick

@@ -447,6 +447,7 @@ char *realjoystick_event_names[]={
     "Smartload",
 	"Quicksave",
 	"Osdkeyboard",
+	"Osdtextkb",
 	"NumSelect",
 	"NumAction",
 	"JoySelect",
@@ -1056,6 +1057,13 @@ void realjoystick_set_reset_action(int index,int value)
 				if (value) {
         	                        menu_abierto=1;
                 	                menu_button_osdkeyboard.v=1;
+	                        }
+                break;
+
+		case REALJOYSTICK_EVENT_OSD_TEXT_KEYBOARD:
+				if (value) {
+        	                        menu_abierto=1;
+                	                menu_button_osd_adv_keyboard_openmenu.v=1;
 	                        }
                 break;
 

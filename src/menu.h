@@ -347,6 +347,7 @@ extern z80_bit menu_button_quickload;
 extern z80_bit menu_button_osdkeyboard;
 extern z80_bit menu_button_osdkeyboard_return;
 extern z80_bit menu_button_osd_adv_keyboard_return;
+extern z80_bit menu_button_osd_adv_keyboard_openmenu;
 extern z80_bit menu_button_exit_emulator;
 extern z80_bit menu_event_drag_drop;
 extern z80_bit menu_event_new_version_show_changes;
