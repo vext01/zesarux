@@ -167,7 +167,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"LoadBinary",F_FUNCION_LOADBINARY},
 	{"SaveBinary",F_FUNCION_SAVEBINARY},
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD},
-	{"OSDTextKeyboard",F_FUNCION_OSDKEYBOARD},
+	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD},
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER},
 	{"ReloadMMC",F_FUNCION_RELOADMMC},
 	{"ReinsertTape",F_FUNCION_REINSERTTAPE},
@@ -17705,7 +17705,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
 
           //Hay que redibujar la ventana desde este bucle
-          if (!initial_test) menu_dibuja_ventana(ADVENTURE_KB_X,y_ventana,ADVENTURE_KB_ANCHO,alto_ventana,"OSD Adventure KB");
+          if (!initial_test) menu_dibuja_ventana(ADVENTURE_KB_X,y_ventana,ADVENTURE_KB_ANCHO,alto_ventana,"OSD Adventure Keyboard");
 
 
                 //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
