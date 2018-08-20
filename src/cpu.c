@@ -1599,7 +1599,14 @@ printf (
 		"--disablemenu              Disable menu. Any event that opens the menu will exit the emulator\n"
 		"--text-keyboard-add text   Add a string to the Adventure Text OSD Keyboard. Must be written in lowercase. The first addition erases the default text keyboard.\n"
 		" You can use hotkeys by using double character ~~ just before the letter, for example:\n"
-		" --text-keyboard-add ~~north   --text-keyboard-add e~~xamine\n"
+		" --text-keyboard-add ~~north   --text-keyboard-add e~~xamine\n");
+
+printf (
+		"--text-keyboard-length n   Define the duration for every key press on the Adventure Text OSD Keyboard, in 1/50 seconds (default %d)\n"
+		"The half of this value, the key will be pressed, the other half, released. Example: --text-keyboard-length 50 to last 1 second\n",
+		DEFAULT_ADV_KEYBOARD_KEY_LENGTH);
+
+printf (
 		//"--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
 		"\n"
 		"\n"
@@ -5029,6 +5036,17 @@ int parse_cmdline_options(void) {
 				//printf ("Adding text keyboard %s\n",argv[puntero_parametro]);
 				util_add_text_adventure_kdb(argv[puntero_parametro]);
                         }
+
+				else if (!strcmp(argv[puntero_parametro],"--text-keyboard-length")) {
+						siguiente_parametro_argumento();
+						int valor=parse_string_to_number(argv[puntero_parametro]);
+						if (valor<10 || valor>100) {
+                                        printf ("Invalid text-keyboard-length value\n");
+                                        exit(1);
+                                }
+						adventure_keyboard_key_length=valor;
+				}
+						
 
 
 			/*else if (!strcmp(argv[puntero_parametro],"--overlayinfo")) {

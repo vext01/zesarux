@@ -3503,6 +3503,9 @@ int util_write_configfile(void)
 	ADD_STRING_CONFIG,"--text-keyboard-add \"%s\"",osd_adv_kbd_list[i]);
   }
 
+                                        ADD_STRING_CONFIG,"--text-keyboard-length %d",adventure_keyboard_key_length);
+		
+
 
   //real joystick buttons to keys
   for (i=0;i<MAX_KEYS_JOYSTICK;i++) {

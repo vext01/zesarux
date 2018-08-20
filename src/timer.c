@@ -502,7 +502,7 @@ void timer_check_interrupt(void)
 				timer_on_screen_adv_key--;
 
 				//Si llega a 25, es ese medio segundo sin pulsar tecla
-				if (timer_on_screen_adv_key==25) {
+				if (timer_on_screen_adv_key==adventure_keyboard_key_length/2) {
 					reset_keyboard_ports();
 				}
 

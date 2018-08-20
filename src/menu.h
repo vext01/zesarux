@@ -365,6 +365,9 @@ extern int menu_button_f_function_index;
 extern int osd_adv_kbd_defined;
 extern char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH];
 
+#define DEFAULT_ADV_KEYBOARD_KEY_LENGTH 50
+extern int adventure_keyboard_key_length;
+
 extern int menu_contador_teclas_repeticion;
 extern int menu_segundo_contador_teclas_repeticion;
 

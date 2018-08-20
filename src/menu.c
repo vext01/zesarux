@@ -17315,6 +17315,9 @@ int adventure_keyboard_index_selected_item=0;
 
 //z80_bit menu_osd_adventure_sending_keys={0};
 
+//Tiempo que dura la tecla total (mitad de esto pulsada, mitad no pulsada). En 1/50 de segundo
+int adventure_keyboard_key_length=DEFAULT_ADV_KEYBOARD_KEY_LENGTH;
+
 
 void menu_osd_adventure_kb_press_key(void)
 {
@@ -17339,7 +17342,7 @@ void menu_osd_adventure_kb_press_key(void)
 	else convert_numeros_letras_puerto_teclado_continue(letra,1);
 
 	//Lanzar pulsar tecla 
-	timer_on_screen_adv_key=50; //durante 1 segundo total
+	timer_on_screen_adv_key=adventure_keyboard_key_length; 
 
 }
 
