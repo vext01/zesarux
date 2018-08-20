@@ -17792,7 +17792,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
 				}
 
-				last_x+=longitud_texto+1;
+				last_x+=longitud_texto;
 			}
 
 		}
