@@ -656,6 +656,7 @@ int debug_tsconf_dma_opcion_seleccionada=0;
 int debug_tsconf_opcion_seleccionada;
 
 int accessibility_settings_opcion_seleccionada=0;
+int osd_adventure_keyboard_opcion_seleccionada=0;
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -17271,6 +17272,71 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
+{
+	printf ("opcion seleccionada: %d\n",valor_opcion);
+}
+
+#define ADVENTURE_KB_X 1
+#define ADVENTURE_KB_Y 1
+#define ADVENTURE_KB_ANCHO 28
+#define ADVENTURE_KB_ALTO 20
+
+
+void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
+{
+
+        menu_espera_no_tecla();
+
+       
+        menu_item *array_menu_osd_adventure_keyboard;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+          //Hay que redibujar la ventana desde este bucle
+        menu_dibuja_ventana(ADVENTURE_KB_X,ADVENTURE_KB_Y,ADVENTURE_KB_ANCHO,ADVENTURE_KB_ALTO,"OSD Adventure KB");
+
+
+	                                //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+                menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+
+                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go north");
+                        menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,1,0);
+
+                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go west");
+                        menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,10,0);
+
+                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go Sourth");
+                        menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,1,1);
+
+
+
+
+//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&osd_adventure_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_osd_adventure_keyboard,"OSD Adventure KB" );
+
+
+        cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+				printf ("Item seleccionado: %d\n",item_seleccionado.valor_opcion);
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+        cls_menu_overlay();
+
+}
+
 
 
 
@@ -26335,6 +26401,10 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_osd_settings,'k');
 			menu_add_item_menu_tooltip(array_menu_osd_settings,"Open on screen keyboard");
 			menu_add_item_menu_ayuda(array_menu_osd_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
+
+
+
+
 		}
 
 
@@ -26470,6 +26540,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"~~OSD settings");
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
+
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
