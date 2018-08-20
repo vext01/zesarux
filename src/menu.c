@@ -220,7 +220,7 @@ char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH]={
 	"~~south",
 	"loo~~k",  //5
 	"e~~xamine",
-	"help~~",
+	"~~help",
 	"~~talk",
 	"ex~~it"
 };
