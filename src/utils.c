@@ -3183,7 +3183,7 @@ int util_write_configfile(void)
   if (menu_multitarea==0)                     ADD_STRING_CONFIG,"--disablemultitaskmenu");
 
 
-  if (screen_bw_no_multitask_menu.v==0)       ADD_STRING_CONFIG,"--disablebw-no-multitask");
+  //if (screen_bw_no_multitask_menu.v==0)       ADD_STRING_CONFIG,"--disablebw-no-multitask");
 
   get_machine_config_name_by_number(buffer_temp,current_machine_type);
   if (buffer_temp[0]!=0) {
@@ -12003,4 +12003,40 @@ void util_save_game_config(char *filename)
       fclose(ptr_configfile);
 
 
+}
+
+
+void util_add_text_adventure_kdb(char *texto)
+{
+	if (osd_adv_kbd_defined==MAX_OSD_ADV_KEYB_WORDS) {
+		debug_printf (VERBOSE_ERR,"Maximum keyboard text entries reached");
+		return;
+	}
+
+	if (strlen(texto)>MAX_OSD_ADV_KEYB_TEXT_LENGTH-1) {
+		debug_printf (VERBOSE_ERR,"String %s too long to add to the keyboard text entries (max: %d)",texto,MAX_OSD_ADV_KEYB_TEXT_LENGTH-1);
+		return;
+	}
+
+
+
+//OSD teclado aventura
+/*
+//numero maximo de entradas
+#define MAX_OSD_ADV_KEYB_WORDS 40
+//longitud maximo de cada entrada
+#define MAX_OSD_ADV_KEYB_TEXT_LENGTH 20
+*/
+
+
+//3 entradas definidas de ejemplo
+//int osd_adv_kbd_defined=100;
+//char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH]={
+	strcpy(osd_adv_kbd_list[osd_adv_kbd_defined++],texto);
+
+}
+
+void util_clear_text_adventure_kdb(void)
+{
+	osd_adv_kbd_defined=0;
 }

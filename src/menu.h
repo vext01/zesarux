@@ -357,6 +357,14 @@ extern z80_bit menu_event_remote_protocol_enterstep;
 extern z80_bit menu_button_f_function;
 extern int menu_button_f_function_index;
 
+//numero maximo de entradas 
+#define MAX_OSD_ADV_KEYB_WORDS 300
+//longitud maximo de cada entrada
+#define MAX_OSD_ADV_KEYB_TEXT_LENGTH 20
+
+extern int osd_adv_kbd_defined;
+extern char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH];
+
 extern int menu_contador_teclas_repeticion;
 extern int menu_segundo_contador_teclas_repeticion;
 
@@ -520,7 +528,7 @@ extern void menu_fire_event_open_menu(void);
 
 extern int menu_button_f_function_action;
 
-extern z80_bit screen_bw_no_multitask_menu;
+//extern z80_bit screen_bw_no_multitask_menu;
 
 extern int menu_hardware_autofire_cond(void);
 
@@ -532,10 +540,6 @@ extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_
 
 extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar);
 
-//numero maximo de entradas 
-#define MAX_OSD_ADV_KEYB_WORDS 300
-//longitud maximo de cada entrada
-#define MAX_OSD_ADV_KEYB_TEXT_LENGTH 20
 
 
 

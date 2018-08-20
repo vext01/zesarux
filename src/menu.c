@@ -871,7 +871,7 @@ z80_bit tooltip_enabled;
 
 
 //Si se refresca en color gris cuando menu abierto y multitask es off
-z80_bit screen_bw_no_multitask_menu={1};
+//z80_bit screen_bw_no_multitask_menu={1};
 
 
 int menu_display_cursesstdout_cond(void);
@@ -17684,6 +17684,12 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 	//	return;
 	//}
 
+	//Si lista vacia, error
+	if (osd_adv_kbd_defined==0) {
+		debug_printf (VERBOSE_ERR,"Empty list");
+		return;
+	}
+
 	//Si estamos enviando teclas, desactivar
 	timer_on_screen_adv_key=0;
 
@@ -27005,10 +27011,10 @@ void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_bw_no_multitask(MENU_ITEM_PARAMETERS)
+/*void menu_bw_no_multitask(MENU_ITEM_PARAMETERS)
 {
 	screen_bw_no_multitask_menu.v ^=1;
-}
+}*/
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
@@ -27023,11 +27029,15 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Setting multitask on makes the emulation does not stop when the menu is active");
 
 
+
+		/*
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_bw_no_multitask,NULL,"B&W when no multitask: %s",
 			(screen_bw_no_multitask_menu.v ? "Yes" : "No") );
 
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Emulated machine display will change to black & white colours when menu open and multitask is off");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Emulated machine display will change to black & white colours when menu open and multitask is off");
+
+		*/
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~Window settings");

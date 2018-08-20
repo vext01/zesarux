@@ -1567,7 +1567,7 @@ printf (
 
 		"--disablefooter            Disable window footer\n"
 		"--disablemultitaskmenu     Disable multitasking menu\n"
-		"--disablebw-no-multitask   Disable changing to black & white colours on the emulator machine when menu open and multitask is off\n"
+		//"--disablebw-no-multitask   Disable changing to black & white colours on the emulator machine when menu open and multitask is off\n"
 		"--nosplash                 Disable all splash texts\n"
 #ifndef MINGW
 		"--cpu-usage                Show host CPU usage on footer\n"
@@ -1597,6 +1597,8 @@ printf (
 		"--hide-dirs                Do not show directories on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
 		"--disablemenu              Disable menu. Any event that opens the menu will exit the emulator\n"
+		"--text-keyboard-add        Add a string to the Adventure Text Keyboard\n"
+		"--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
 		"\n"
 		"\n"
 		"Hardware Settings\n"
@@ -5009,6 +5011,20 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--disablemenumouse")) {
 				mouse_menu_disabled.v=1;
 			}
+/*
+                "--text-keyboard-add        Add a string to the Adventure Text Keyboard\n"
+                "--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
+*/
+
+		       else if (!strcmp(argv[puntero_parametro],"--text-keyboard-add")) {
+                                siguiente_parametro_argumento();
+				util_add_text_adventure_kdb(argv[puntero_parametro]);
+                        }
+
+			else if (!strcmp(argv[puntero_parametro],"--text-keyboard-clear")) {
+				util_clear_text_adventure_kdb();
+			}
+			
 
 			/*else if (!strcmp(argv[puntero_parametro],"--overlayinfo")) {
 				enable_second_layer();
@@ -5023,7 +5039,8 @@ int parse_cmdline_options(void) {
 			}
 		
 			else if (!strcmp(argv[puntero_parametro],"--disablebw-no-multitask")) {
-            	screen_bw_no_multitask_menu.v=0;
+				//Obsoleto
+            			//screen_bw_no_multitask_menu.v=0;
 			}
 
 
