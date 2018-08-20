@@ -443,6 +443,7 @@ char *realjoystick_event_names[]={
     "Fire",
     "EscMenu",
     "Enter",
+    "MenuTab",
     "Smartload",
 	"Quicksave",
 	"Osdkeyboard",
@@ -969,6 +970,18 @@ void realjoystick_set_reset_action(int index,int value)
                                 }
 
 		break;
+
+
+                case REALJOYSTICK_EVENT_MENU_TAB:
+			//printf ("Event menutab %d\n",value);
+                                if (value) {
+					menu_tab.v=1;
+                                }
+                                else {
+                                        menu_tab.v=0;
+                                }
+
+                break;
 
 		case REALJOYSTICK_EVENT_NUMBERSELECT:
 
