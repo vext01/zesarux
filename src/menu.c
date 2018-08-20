@@ -212,7 +212,11 @@ z80_bit menu_filesel_hide_dirs={0};
 
 //3 entradas definidas de ejemplo
 int osd_adv_kbd_defined=3;
-char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH];
+char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH]={
+	"North",
+	"West",
+	"South"
+};
 
 
 //Definir una tecla a una funcion
@@ -297,6 +301,8 @@ z80_bit menu_button_quickload={0};
 //para on screen keyboard
 z80_bit menu_button_osdkeyboard={0};
 z80_bit menu_button_osdkeyboard_return={0};
+
+z80_bit menu_button_osd_adv_keyboard={0};
 
 //Comun para zx8081 y spectrum
 //z80_bit menu_button_osdkeyboard_caps={0};
@@ -17286,9 +17292,31 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 }
 
+//Entrada seleccionada
+int adventure_keyboard_selected_item=0;
+
+//Posicion dentro del string
+int adventure_keyboard_index_selected_item=0;
+
+
+void menu_osd_adventure_kb_press_key(void)
+{
+	printf ("Pulsar tecla entrada %d indice en entrada: %d\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item);
+	//osd_adv_kbd_list
+
+	//Lanzar pulsar tecla 
+    	timer_on_screen_key=25; //durante medio segundo
+
+}
+
+
 void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
 {
 	printf ("opcion seleccionada: %d\n",valor_opcion);
+				adventure_keyboard_selected_item=valor_opcion;
+
+
+	menu_osd_adventure_kb_press_key();
 }
 
 #define ADVENTURE_KB_X 1
@@ -17342,6 +17370,9 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
                         if (item_seleccionado.menu_funcion!=NULL) {
 				printf ("Item seleccionado: %d\n",item_seleccionado.valor_opcion);
                                 //printf ("actuamos por funcion\n");
+
+	                        salir_todos_menus=1;
+
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
                                 cls_menu_overlay();
                         }
@@ -32088,6 +32119,7 @@ void menu_inicio_pre_retorno(void)
     //desactivar botones de acceso directo
     menu_button_quickload.v=0;
     menu_button_osdkeyboard.v=0;
+    menu_button_osd_adv_keyboard.v=0;
     menu_button_exit_emulator.v=0;
     menu_event_drag_drop.v=0;
     menu_breakpoint_exception.v=0;
@@ -32379,7 +32411,15 @@ void menu_inicio(void)
 
 
 	else {
-	
+
+
+	if (menu_button_osd_adv_keyboard.v) {
+		printf ("Debe abrir menu adventure keyboard\n");
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
+
+		//TODO abrir menu
+		cls_menu_overlay();
+	}
 
 
 	//Gestionar pulsaciones directas de teclado o joystick

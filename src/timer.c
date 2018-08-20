@@ -95,6 +95,9 @@ int conta_envio_audio=0;
 //Contador que se decrementa(si esta activo) cada 1/50 s, e indica cuando se debe liberar una tecla pulsada desde el menu de On Screen Keyboard
 int timer_on_screen_key=0;
 
+//Parecido pero para adventure keyboard
+int timer_on_screen_adv_key=0;
+
 
 //lo que dura un frame en microsegundos  (20 ms = 200000 milisec)
 //#define FRAME_MICROSECONDS (1000000/50)
@@ -494,6 +497,22 @@ void timer_check_interrupt(void)
 				timer_osd_keyboard_menu--;
 			}
 
+
+			if (timer_on_screen_adv_key) {
+				timer_on_screen_adv_key--;
+
+				//Si llega a 25, es ese medio segundo sin pulsar tecla
+				if (timer_on_screen_adv_key==25) {
+					reset_keyboard_ports();
+				}
+
+                                //Si llega a 0, volver a menu
+				if (timer_on_screen_adv_key==0) {
+					//Hay que volver a menu
+					menu_button_osd_adv_keyboard.v=1;
+                                        menu_abierto=1;
+				}
+			}
 
 			//joystick autofire
 			if (joystick_autofire_frequency!=0) {

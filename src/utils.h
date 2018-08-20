@@ -530,7 +530,6 @@ extern void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
 extern void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pressrelease);
 
-extern int timer_on_screen_key;
 
 
 extern int util_tape_tap_get_info(z80_byte *tape,char *texto);

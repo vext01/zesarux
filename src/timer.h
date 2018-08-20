@@ -70,4 +70,8 @@ extern long core_cpu_timer_each_frame_difftime;
 extern long core_cpu_timer_each_frame_media;
 
 
+extern int timer_on_screen_key;
+extern int timer_on_screen_adv_key;
+
+
 #endif
