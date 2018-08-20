@@ -529,6 +529,12 @@ extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_
 
 extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar);
 
+//numero maximo de entradas 
+#define MAX_OSD_ADV_KEYB_WORDS 40
+//longitud maximo de cada entrada
+#define MAX_OSD_ADV_KEYB_TEXT_LENGTH 20
+
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \

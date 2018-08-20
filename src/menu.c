@@ -201,6 +201,20 @@ z80_bit menu_limit_menu_open={0};
 z80_bit menu_filesel_hide_dirs={0};
 
 
+//OSD teclado aventura
+/*
+//numero maximo de entradas
+#define MAX_OSD_ADV_KEYB_WORDS 40
+//longitud maximo de cada entrada
+#define MAX_OSD_ADV_KEYB_TEXT_LENGTH 20
+*/
+
+
+//3 entradas definidas de ejemplo
+int osd_adv_kbd_defined=3;
+char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH];
+
+
 //Definir una tecla a una funcion
 //Entrada: tecla: 1...15 F1...15   funcion: string correspondiente a defined_f_functions_array
 //Devuelve 0 si ok
@@ -17305,12 +17319,15 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go north");
                         menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,1,0);
+			menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,0);
 
                         menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go west");
                         menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,10,0);
+			menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,1);
 
-                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go Sourth");
+                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"Go South");
                         menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,1,1);
+			menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,2);
 
 
 
