@@ -7678,6 +7678,8 @@ void parse_customfile_options(void)
 	//Cuando se lee el primero, se inicializa la tabla a 0
 	int leido_config_joystick_a_key=0;
 
+	z80_bit added_some_osd_text_keyboard={0};
+
         while (!siguiente_parametro()) {
 
 		debug_printf (VERBOSE_DEBUG,"Parsing setting %s",argv[puntero_parametro]);
@@ -7891,6 +7893,18 @@ void parse_customfile_options(void)
 		}
 
 
+                  else if (!strcmp(argv[puntero_parametro],"--text-keyboard-add")) {
+                                if (added_some_osd_text_keyboard.v==0) {
+                                        util_clear_text_adventure_kdb();
+                                        added_some_osd_text_keyboard.v=1;
+                                        printf ("Clearing text keyboard\n");
+                                }
+                                siguiente_parametro_argumento();
+                                printf ("Adding text keyboard %s\n",argv[puntero_parametro]);
+                                util_add_text_adventure_kdb(argv[puntero_parametro]);
+                        }
+
+
 		 else if (!strcmp(argv[puntero_parametro],"--machine")) {
                                 char *machine_name;
                                 siguiente_parametro_argumento();
@@ -8026,6 +8040,7 @@ void customconfig_help(void)
 	"--joystickevent but evt\n"
 	"--joystickkeybt but key\n"
 	"--joystickkeyev evt key\n"
+	"--text-keyboard-add text\n"
 	"--cleareventlist\n"
 
 	"\n"

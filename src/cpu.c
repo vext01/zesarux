@@ -1597,10 +1597,10 @@ printf (
 		"--hide-dirs                Do not show directories on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
 		"--disablemenu              Disable menu. Any event that opens the menu will exit the emulator\n"
-		"--text-keyboard-add        Add a string to the Adventure Text Keyboard. Must be written in lowercase.\n"
+		"--text-keyboard-add text   Add a string to the Adventure Text OSD Keyboard. Must be written in lowercase. The first addition erases the default text keyboard.\n"
 		" You can use hotkeys by using double character ~~ just before the letter, for example:\n"
 		" --text-keyboard-add ~~north   --text-keyboard-add e~~xamine\n"
-		"--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
+		//"--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
 		"\n"
 		"\n"
 		"Hardware Settings\n"
@@ -4543,6 +4543,7 @@ int command_line_load_binary_length;
 int command_line_chardetect_printchar_enabled=-1;
 
 
+z80_bit added_some_osd_text_keyboard={0};
 
 
 
@@ -5019,14 +5020,16 @@ int parse_cmdline_options(void) {
 */
 
 		       else if (!strcmp(argv[puntero_parametro],"--text-keyboard-add")) {
+				if (added_some_osd_text_keyboard.v==0) {
+					util_clear_text_adventure_kdb();
+					added_some_osd_text_keyboard.v=1;
+					//printf ("Clearing text keyboard\n");
+				}
                                 siguiente_parametro_argumento();
+				//printf ("Adding text keyboard %s\n",argv[puntero_parametro]);
 				util_add_text_adventure_kdb(argv[puntero_parametro]);
                         }
 
-			else if (!strcmp(argv[puntero_parametro],"--text-keyboard-clear")) {
-				util_clear_text_adventure_kdb();
-			}
-			
 
 			/*else if (!strcmp(argv[puntero_parametro],"--overlayinfo")) {
 				enable_second_layer();

@@ -676,4 +676,8 @@ extern int file_is_z88_basic(char *filename);
 
 extern void util_save_game_config(char *filename);
 
+extern void util_add_text_adventure_kdb(char *texto);
+
+extern void util_clear_text_adventure_kdb(void);
+
 #endif
