@@ -17685,6 +17685,11 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		int last_x=1;
 		int last_y=0;
 		int salir=0;
+
+		//Asignar hotkeys, segun si se han asignado antes o no
+		int hotkeys_assigned[26]; //de la A a la Z
+		for (i=0;i<26;i++) hotkeys_assigned[i]=0;
+		
 		
 		for (i=0;i<osd_adv_kbd_defined && !salir;i++) {
 			int longitud_texto=strlen(osd_adv_kbd_list[i])+1; //Espacio para la entrada y 1 espacio
@@ -17707,9 +17712,43 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 				}
 
 				else {
-		                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,osd_adv_kbd_list[i]);
+
+					int tiene_hotkey=0;
+
+					char texto_opcion[64];
+					strcpy(texto_opcion,osd_adv_kbd_list[i]);
+
+					char hotkey=osd_adv_kbd_list[i][0];
+
+					//Caracter de hotkey. Dejar que el usuario lo escriba en la cadena de texto. Ver si dicha cadena lo tiene
+
+					int j;
+					for (j=0;texto_opcion[j];j++) {
+						if (texto_opcion[j]=='~' && texto_opcion[j+1]=='~') {
+							//Si hay letra detras
+							hotkey=texto_opcion[j+2];
+							if (hotkey) tiene_hotkey=1;
+						}
+					}
+					
+
+					//Caracter de hotkey. Crearlo automaticamente
+					/*if (hotkey>='a' && hotkey<='z') {
+						//Ver si no se ha usado antes
+						int indice_hotkey=hotkey-'a';
+						if (hotkeys_assigned[indice_hotkey]==0) {
+							hotkeys_assigned[indice_hotkey]=1;
+							sprintf (texto_opcion,"~~%s",osd_adv_kbd_list[i]);
+							tiene_hotkey=1;
+						}
+					}*/
+
+		                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,texto_opcion);
         		                menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
 					menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,i);
+
+					if (tiene_hotkey) menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,hotkey);
+
 				}
 
 				last_x+=longitud_texto+1;
@@ -17723,7 +17762,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		printf ("ultima y: %d\n",last_y);
 		alto_ventana=last_y+3;
 		y_ventana=12-alto_ventana/2;
-		if (y_ventana>0) y_ventana=0;	
+		if (y_ventana<0) y_ventana=0;	
 
                 //int alto_ventana=last_y;
                 //int y_ventana=ADVENTURE_KB_Y;
