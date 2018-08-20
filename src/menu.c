@@ -1744,6 +1744,7 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 		if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
+		//printf ("Despues de espera tecla\n");
 		tecla=menu_get_pressed_key();
 		//printf ("tecla leida=%d\n",tecla);
 		menu_espera_no_tecla();
@@ -4058,7 +4059,6 @@ void menu_espera_tecla(void)
 
 		acumulado=menu_da_todas_teclas();
 
-		//printf ("menu_espera_tecla acumulado: %d\n",acumulado);
 
 	} while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
 
