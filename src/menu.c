@@ -17664,12 +17664,19 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
+		int initial_test; //si es 1, haremos el calculo inicial del alto
+
+		int alto_ventana=ADVENTURE_KB_ALTO;
+		int y_ventana=ADVENTURE_KB_Y;
+
+		for (initial_test=1;initial_test>=0;initial_test--) {
+
 
           //Hay que redibujar la ventana desde este bucle
-        menu_dibuja_ventana(ADVENTURE_KB_X,ADVENTURE_KB_Y,ADVENTURE_KB_ANCHO,ADVENTURE_KB_ALTO,"OSD Adventure KB");
+          if (!initial_test) menu_dibuja_ventana(ADVENTURE_KB_X,y_ventana,ADVENTURE_KB_ANCHO,alto_ventana,"OSD Adventure KB");
 
 
-	                                //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+                //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
                 menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
@@ -17689,6 +17696,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 			//controlar maximo de alto
 			if (last_y>=ADVENTURE_KB_ALTO-2) {
 				debug_printf (VERBOSE_DEBUG,"Reached maximum window height");
+				last_y--;
 				salir=1;
 			}
 
@@ -17706,6 +17714,20 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
 				last_x+=longitud_texto+1;
 			}
+
+		}
+
+		//Recalcular alto, y_inivial
+		//del alto, se pierden 2 siempre
+		//si tuvieramos el maximo de y, valdria 21. Y el maximo de alto es 24
+		printf ("ultima y: %d\n",last_y);
+		alto_ventana=last_y+3;
+		y_ventana=12-alto_ventana/2;
+		if (y_ventana>0) y_ventana=0;	
+
+                //int alto_ventana=last_y;
+                //int y_ventana=ADVENTURE_KB_Y;
+
 
 		}
 
