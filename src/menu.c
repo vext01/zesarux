@@ -213,13 +213,13 @@ z80_bit menu_filesel_hide_dirs={0};
 //3 entradas definidas de ejemplo
 int osd_adv_kbd_defined=100;
 char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH]={
-	"north",
-	"west",
-	"east",
-	"south",
-	"look",
-	"examine",
-	"help",
+	"~~north",
+	"~~west",
+	"~~east",
+	"~~south",
+	"loo~~k",
+	"e~~xamine",
+	"help~~",
 	"jump",
 	"talk",
 	"exit",
@@ -17607,8 +17607,16 @@ void menu_osd_adventure_kb_press_key(void)
 {
 
 	//Aunque el usuario haya puesto alguna mayuscula, metemos minusculas
-	char letra=letra_minuscula(osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]);
+	char letra;
 
+	//Ignorar ~~
+
+	do {
+		letra=letra_minuscula(osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]);
+		if (letra=='~') adventure_keyboard_index_selected_item++;
+	} while (letra=='~' && letra!=0);
+
+	if (letra==0) return; //pequenyo bug: si acaba texto con ~~ no se abrira luego de nuevo el menu. Bug???
 
 	printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
 	//osd_adv_kbd_list
@@ -17747,7 +17755,10 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
         		                menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
 					menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,i);
 
-					if (tiene_hotkey) menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,hotkey);
+					if (tiene_hotkey) {
+						menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,hotkey);
+						longitud_texto -=2;
+					}
 
 				}
 
