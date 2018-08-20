@@ -509,7 +509,7 @@ void timer_check_interrupt(void)
                                 //Si llega a 0, volver a menu
 				if (timer_on_screen_adv_key==0) {
 					//Hay que volver a menu
-					menu_button_osd_adv_keyboard.v=1;
+					menu_button_osd_adv_keyboard_return.v=1;
                                         menu_abierto=1;
 				}
 			}

@@ -601,7 +601,7 @@ z80_bit menu_button_quickload={0};
 z80_bit menu_button_osdkeyboard={0};
 z80_bit menu_button_osdkeyboard_return={0};
 
-z80_bit menu_button_osd_adv_keyboard={0};
+z80_bit menu_button_osd_adv_keyboard_return={0};
 
 //Comun para zx8081 y spectrum
 //z80_bit menu_button_osdkeyboard_caps={0};
@@ -17602,6 +17602,8 @@ int adventure_keyboard_selected_item=0;
 //Posicion dentro del string
 int adventure_keyboard_index_selected_item=0;
 
+z80_bit menu_osd_adventure_sending_keys={0};
+
 
 void menu_osd_adventure_kb_press_key(void)
 {
@@ -17636,22 +17638,30 @@ void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
 	adventure_keyboard_index_selected_item=0;
 
 
+	//Estamos enviando teclas
+	menu_osd_adventure_sending_keys.v=1;
+
 	menu_osd_adventure_kb_press_key();
 }
 
 //Retorno desde el core
 void menu_osd_adventure_keyboard_next(void)
 {
+
+	//if (menu_osd_adventure_sending_keys.v==0 return;
+
 	//Si final de string
 	adventure_keyboard_index_selected_item++;
 	if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 		printf ("Fin texto\n");
+		menu_osd_adventure_sending_keys.v=0;
 		//En este caso reabrir el menu
 		menu_osd_adventure_keyboard(0);
 		return;
 	}
 
-	menu_osd_adventure_kb_press_key();
+	//Siguiente tecla
+	else menu_osd_adventure_kb_press_key();
 }
 
 
@@ -17663,6 +17673,13 @@ void menu_osd_adventure_keyboard_next(void)
 
 void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 {
+
+	//Si estamos enviando teclas
+	//if (menu_osd_adventure_sending_keys.v) {
+	//	menu_osd_adventure_keyboard_next();
+	//	return;
+	//}
+
 
         menu_espera_no_tecla();
 
@@ -32542,7 +32559,7 @@ void menu_inicio_pre_retorno(void)
     //desactivar botones de acceso directo
     menu_button_quickload.v=0;
     menu_button_osdkeyboard.v=0;
-    menu_button_osd_adv_keyboard.v=0;
+    menu_button_osd_adv_keyboard_return.v=0;
     menu_button_exit_emulator.v=0;
     menu_event_drag_drop.v=0;
     menu_breakpoint_exception.v=0;
@@ -32836,11 +32853,13 @@ void menu_inicio(void)
 	else {
 
 
-	if (menu_button_osd_adv_keyboard.v) {
+	//Evento para generar siguiente tecla
+	if (menu_button_osd_adv_keyboard_return.v) {
 		printf ("Debe abrir menu adventure keyboard\n");
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		menu_osd_adventure_keyboard_next();
+		//menu_osd_adventure_keyboard(0);
 		cls_menu_overlay();
 	}
 
