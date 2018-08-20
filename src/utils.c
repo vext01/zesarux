@@ -3500,7 +3500,9 @@ int util_write_configfile(void)
 
   //text osd keyboard
   for (i=0;i<osd_adv_kbd_defined;i++) {
-	ADD_STRING_CONFIG,"--text-keyboard-add \"%s\"",osd_adv_kbd_list[i]);
+          //Truco para poder poner " en el texto. Con barra invertida
+          if (!strcmp(osd_adv_kbd_list[i],"\"")) ADD_STRING_CONFIG,"--text-keyboard-add \\");
+	else ADD_STRING_CONFIG,"--text-keyboard-add \"%s\"",osd_adv_kbd_list[i]);
   }
 
                                         ADD_STRING_CONFIG,"--text-keyboard-length %d",adventure_keyboard_key_length);
@@ -3604,6 +3606,11 @@ char *configfile_next_field(char *m,int comillas_iniciales)
 	 ) {
 
 		if (comillas_iniciales==0 && *m==' ') break;
+
+                //Dejamos que se puedan escapar unas " si van precedidas de barra invertida
+                //if ( (*m)=='\\') {
+                //        if (*(m+1)=='"') m++;
+                //}
 
                 m++;
         }
@@ -12055,7 +12062,11 @@ void util_add_text_adventure_kdb(char *texto)
 //3 entradas definidas de ejemplo
 //int osd_adv_kbd_defined=100;
 //char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH]={
-	strcpy(osd_adv_kbd_list[osd_adv_kbd_defined++],texto);
+        //Truco para poder poner " en la configuracion, mientras no tenga un parser que me permita escapar,
+        //es meter la barra invertida
+        if (!strcmp(texto,"\\")) strcpy(osd_adv_kbd_list[osd_adv_kbd_defined++],"\"");
+
+	else strcpy(osd_adv_kbd_list[osd_adv_kbd_defined++],texto);
 
 }
 

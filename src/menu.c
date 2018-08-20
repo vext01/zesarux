@@ -17339,7 +17339,8 @@ void menu_osd_adventure_kb_press_key(void)
 
 	//Espacio no la gestiona esta funcion de convert_numeros_...
 	if (letra==' ') util_set_reset_key(UTIL_KEY_SPACE,1);
-	else convert_numeros_letras_puerto_teclado_continue(letra,1);
+	//else convert_numeros_letras_puerto_teclado_continue(letra,1);
+	else ascii_to_keyboard_port(letra);
 
 	//Lanzar pulsar tecla 
 	timer_on_screen_adv_key=adventure_keyboard_key_length; 
