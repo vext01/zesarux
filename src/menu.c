@@ -17334,7 +17334,7 @@ void menu_osd_adventure_kb_press_key(void)
 
 	if (letra==0) return; //pequenyo bug: si acaba texto con ~~ no se abrira luego de nuevo el menu. Bug???
 
-	printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
+	//printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
 	//osd_adv_kbd_list
 
 	//Espacio no la gestiona esta funcion de convert_numeros_...
@@ -17350,7 +17350,7 @@ void menu_osd_adventure_kb_press_key(void)
 
 void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
 {
-	printf ("opcion seleccionada: %d\n",valor_opcion);
+	//printf ("opcion seleccionada: %d\n",valor_opcion);
 	adventure_keyboard_selected_item=valor_opcion;
 	adventure_keyboard_index_selected_item=0;
 
@@ -17370,7 +17370,7 @@ void menu_osd_adventure_keyboard_next(void)
 	//Si final de string
 	adventure_keyboard_index_selected_item++;
 	if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
-		printf ("Fin texto\n");
+		//printf ("Fin texto\n");
 		//menu_osd_adventure_sending_keys.v=0;
 		//En este caso reabrir el menu
 		menu_osd_adventure_keyboard(0);
@@ -17534,7 +17534,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
-				printf ("Item seleccionado: %d\n",item_seleccionado.valor_opcion);
+				//printf ("Item seleccionado: %d\n",item_seleccionado.valor_opcion);
                                 //printf ("actuamos por funcion\n");
 
 	                        salir_todos_menus=1;
@@ -32590,7 +32590,7 @@ void menu_inicio(void)
 
 	//Evento para generar siguiente tecla
 	if (menu_button_osd_adv_keyboard_return.v) {
-		printf ("Debe abrir menu adventure keyboard\n");
+		//printf ("Debe abrir menu adventure keyboard\n");
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		menu_osd_adventure_keyboard_next();
