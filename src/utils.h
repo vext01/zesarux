@@ -685,8 +685,8 @@ extern void util_add_text_adventure_kdb(char *texto);
 
 extern void util_clear_text_adventure_kdb(void);
 
-extern int util_paws_dump_vocabulary(void);
+extern int util_paws_dump_vocabulary(int *p_quillversion);
 
-
+extern char *quillversions_strings[];
 
 #endif

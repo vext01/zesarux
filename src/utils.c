@@ -12116,6 +12116,13 @@ void util_clear_final_spaces(char *orig,char *destination)
         destination[indice]=0;
 }
 
+char *quillversions_strings[]={
+        "PAW",
+        "Quill.A",
+        "Unkown version 2",
+        "Quill.C"
+};
+
 int util_unpaws_detect_version(z80_int *p_mainattr)
 {
         int quillversion=0;
@@ -12132,7 +12139,7 @@ int util_unpaws_detect_version(z80_int *p_mainattr)
    && (peek_byte_no_time(MainAttr+8) == 20)
    && (peek_byte_no_time(MainAttr+10) == 21) 
         ) {
-                debug_printf (VERBOSE_DEBUG,"PAW signature found");
+                //debug_printf (VERBOSE_DEBUG,"PAW signature found");
         }
 
   else {
@@ -12145,7 +12152,7 @@ int util_unpaws_detect_version(z80_int *p_mainattr)
         && (peek_byte_no_time(MainAttr+8) == 20)
         && (peek_byte_no_time(MainAttr+10) == 21)
       ) {
-          debug_printf (VERBOSE_DEBUG,"Quill.A signature found");
+          //debug_printf (VERBOSE_DEBUG,"Quill.A signature found");
           quillversion=1;
       }
 
@@ -12159,7 +12166,7 @@ int util_unpaws_detect_version(z80_int *p_mainattr)
              && (peek_byte_no_time(MainAttr+8) == 20)
              && (peek_byte_no_time(MainAttr+10) == 21)
            ) {
-               debug_printf (VERBOSE_DEBUG,"Quill.C signature found");
+               //debug_printf (VERBOSE_DEBUG,"Quill.C signature found");
                quillversion=3;
            }
 
@@ -12169,6 +12176,8 @@ int util_unpaws_detect_version(z80_int *p_mainattr)
      
       }
   }
+
+  if (quillversion>=0) debug_printf (VERBOSE_DEBUG,"%s signature found",quillversions_strings[quillversion]);
 
   *p_mainattr=MainAttr;
   return quillversion;
@@ -12223,8 +12232,29 @@ QuillVersion:=0;
 
 }
 
+
+/*
+CONST tVocs:ARRAY [0..6] OF String=(
+'Verb',
+'Adverb',
+'Noun',
+'Adjective',
+'Preposition',
+'Conjunction',
+'Pronoun');
+*/
+  char *unpaws_tvocs[]={
+"Verb",
+"Adverb",
+"Noun",
+"Adjective",
+"Preposition",
+"Conjunction",
+"Pronoun"        
+  };
+
 //TODO: analizar si tipo es paws, etc
-int util_paws_dump_vocabulary(void)
+int util_paws_dump_vocabulary(int *p_quillversion)
 {
 
 
@@ -12269,26 +12299,9 @@ BEGIN
                             else Type_Voc:='RESERVED';
 END;
 */
-/*
-CONST tVocs:ARRAY [0..6] OF String=(
-'Verb',
-'Adverb',
-'Noun',
-'Adjective',
-'Preposition',
-'Conjunction',
-'Pronoun');
-*/
 
-  char *tvocs[]={
-"Verb",
-"Adverb",
-"Noun",
-"Adjective",
-"Preposition",
-"Conjunction",
-"Pronoun"        
-  };
+
+
 
   util_clear_text_adventure_kdb();
 
@@ -12310,8 +12323,9 @@ CONST tVocs:ARRAY [0..6] OF String=(
 
   quillversion=util_unpaws_detect_version(&mainattr);
 
-  if (quillversion<1) {
+  if (quillversion<0) {
           debug_printf (VERBOSE_ERR,"It does not seem to be a Quill/PAW game");
+          *p_quillversion=-1;
           return 0;
   }
 
@@ -12335,23 +12349,37 @@ CONST tVocs:ARRAY [0..6] OF String=(
           char palabra[6];
           z80_byte indice_palabra;
           z80_byte tipo_palabra;
-          for (j=0;j<5;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
 
-          indice_palabra=peek_byte_no_time(vocptr+j);
-          palabra[j]=0;
-          tipo_palabra=peek_byte_no_time(vocptr+j+1);
+          if (quillversion==0) {
+
+                for (j=0;j<5;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
+
+                indice_palabra=peek_byte_no_time(vocptr+j);
+                palabra[j]=0;
+                tipo_palabra=peek_byte_no_time(vocptr+j+1);
+
+          }
+
+          else {
+                for (j=0;j<4;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
+
+                indice_palabra=peek_byte_no_time(vocptr+j);
+                palabra[j]=0;
+                tipo_palabra=0; //no hay tipos. lo dejamos forzado                  
+          }
 
           char buf_tipo_palabra[30];
 
           int reservado=0;
 
-          if (tipo_palabra>=0 && tipo_palabra<=MAXTVOC) strcpy (buf_tipo_palabra,tvocs[tipo_palabra]);
+          if (tipo_palabra>=0 && tipo_palabra<=MAXTVOC) strcpy (buf_tipo_palabra,unpaws_tvocs[tipo_palabra]);
           else {
                   strcpy(buf_tipo_palabra,"RESERVED");
                   reservado=1;
           }
 
-          debug_printf (VERBOSE_DEBUG,"unPAWs dump. Vocabulary word: %s Index: %d Type: %s",palabra,indice_palabra,buf_tipo_palabra);
+          if (quillversion==0) debug_printf (VERBOSE_DEBUG,"unPAWs dump. Vocabulary word: %s Index: %d Type: %s",palabra,indice_palabra,buf_tipo_palabra);
+          else debug_printf (VERBOSE_DEBUG,"unPAWs dump. Vocabulary word: %s Index: %d",palabra,indice_palabra);
 
           if (!reservado) {
                   //Meter en array. Quitar antes espacios del final
@@ -12399,9 +12427,9 @@ CONST tVocs:ARRAY [0..6] OF String=(
         */
 
   //Y ahora agregamos la lista total del array
-  debug_printf (VERBOSE_DEBUG,"Adding words to OSD Adventure text keyboard");
+  if (quillversion==0) debug_printf (VERBOSE_DEBUG,"Adding words to OSD Adventure text keyboard");
   for (i=0;i<MAXTVOC;i++) {
-          debug_printf (VERBOSE_DEBUG,"Adding words type %s",tvocs[i]);
+          debug_printf (VERBOSE_DEBUG,"Adding words type %s",unpaws_tvocs[i]);
         for (j=0;j<256;j++) {
                   if (lista_palabras[i][j][0]!=0) {
                           debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",lista_palabras[i][j]);
@@ -12410,6 +12438,7 @@ CONST tVocs:ARRAY [0..6] OF String=(
         }
   }
 
+  *p_quillversion=quillversion;
   return total_palabras;
 
   //TODO Deteccion tipo

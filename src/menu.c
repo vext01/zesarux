@@ -25419,10 +25419,13 @@ void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
 
 void menu_unpaws(MENU_ITEM_PARAMETERS)
 {
-	int palabras=util_paws_dump_vocabulary();
+	int version;
+	int palabras=util_paws_dump_vocabulary(&version);
 
-
-	menu_generic_message_format("UnPAWS to OSD Text KB","OK. %d words added",palabras);
+	if (version>=0) {
+		menu_generic_message_format("UnPAWS to OSD Text KB","OK. %s signature found. %d words added",
+			quillversions_strings[version],palabras);
+	}
 
 }
 
