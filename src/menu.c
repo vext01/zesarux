@@ -25431,7 +25431,8 @@ void menu_unpaws(MENU_ITEM_PARAMETERS)
 
 void menu_ungac(MENU_ITEM_PARAMETERS)
 {
-	util_gac_dump_dictonary();
+	int palabras=util_gac_dump_dictonary();
+	menu_generic_message_format("UnGAC","OK. %d words addded",palabras);
 }
 
 

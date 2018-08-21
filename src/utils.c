@@ -12456,6 +12456,8 @@ z80_int readtokenised(z80_int puntero)
 #define MAX_DICT_GAC_ENTRIES 5000
 #define MAX_DICT_GAC_STRING_LENGTH 30
 
+int util_gac_palabras_agregadas;
+
 int util_gac_get_offset_dictionary(int index)
 {
         return index*(MAX_DICT_GAC_STRING_LENGTH+1);        
@@ -12463,16 +12465,74 @@ int util_gac_get_offset_dictionary(int index)
 
 void util_gac_put_string_dictionary(int index,z80_byte *memoria,char *string)
 {
+
+        char string_shown[256];
+
+        //menu_tape_settings_trunc_name(string,string_shown,MAX_DICT_GAC_STRING_LENGTH+1);       
+        //int longitud_texto=strlen(string);
+        strcpy(string_shown,string);
+        string_shown[MAX_DICT_GAC_STRING_LENGTH]=0;
         int offset=util_gac_get_offset_dictionary(index);
 
-        strcpy((char *)&memoria[offset],string);
+        strcpy((char *)&memoria[offset],string_shown);
 }
 
 void util_gac_get_string_dictionary(int index,z80_byte *memoria,char *string)
 {
         int offset=util_gac_get_offset_dictionary(index);
+        if (index>MAX_DICT_GAC_ENTRIES) strcpy(string,"Outofrange");
 
-        strcpy(string,(char *)&memoria[offset]);
+        else strcpy(string,(char *)&memoria[offset]);
+}
+
+void util_gac_readobjects(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario)
+{
+        z80_byte count,temp;
+        z80_int copia_puntero;
+
+        z80_byte object,tamanyo,weight,scrap;
+
+        int start;
+
+      do {
+      copia_puntero=puntero;
+      object=peek_byte_no_time(puntero++);
+      tamanyo=peek_byte_no_time(puntero++);
+      weight=peek_byte_no_time(puntero++);
+      start=peek_byte_no_time(puntero++);
+      scrap=peek_byte_no_time(puntero++);
+      start+=scrap<<8;
+      tamanyo-=3;
+      //puntero+=5;
+      if (object!=0 && tamanyo!=0)
+      {
+
+         //len=0;
+         z80_int dictentry=readtokenised(puntero);
+         if ((dictentry&0xC000)==0xC000) {
+                 printf ("Ignorar. Es puntuacion\n");
+         }
+         else {
+                char buffer_palabra[MAX_DICT_GAC_STRING_LENGTH+1];
+                printf("token %d\n",dictentry);
+                util_gac_get_string_dictionary(dictentry,mem_diccionario,buffer_palabra);
+         
+                printf ("nombre token %d palabra: %s\n",dictentry,buffer_palabra);  
+
+                util_add_text_adventure_kdb(buffer_palabra);
+                util_gac_palabras_agregadas++;
+         
+                //strcat(objects[current]->description,readstring(infile, size));
+         }
+         puntero+=tamanyo;
+         puntero+=3;
+         //current++;
+      }
+      // move up to next object
+      puntero=copia_puntero+tamanyo+5;
+      //fseek(infile,fileptr+size+5,SEEK_SET);          
+
+  } while (puntero<endptr);
 }
 
 void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario)
@@ -12495,6 +12555,10 @@ void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario
          util_gac_get_string_dictionary(dictentry,mem_diccionario,buffer_palabra);
          printf ("nombre token %d palabra: %s\n",dictentry,buffer_palabra);
          puntero+=2;
+
+                util_add_text_adventure_kdb(buffer_palabra);
+                util_gac_palabras_agregadas++;
+
          //strncpy(words[current]->word,dictionary[dictentry],60);
          //words[current]->number=count;
          //current++;
@@ -12506,8 +12570,11 @@ void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario
 
 
 
-void util_gac_dump_dictonary(void)
+int util_gac_dump_dictonary(void)
 {
+
+        util_clear_text_adventure_kdb();
+        util_gac_palabras_agregadas=0;
 
         //Asignar memoria para el diccionario. 
         z80_byte *diccionario_array;
@@ -12525,13 +12592,21 @@ void util_gac_dump_dictonary(void)
         for (i=0;i<MAX_DICT_GAC_ENTRIES;i++) util_gac_put_string_dictionary(i,diccionario_array,"");
 
         z80_int spec_start=0xA51F;
+        z80_int room_data=0xA54D;
 
         //Vamos primero a hacer dump del dicccionario
         z80_int dictptr=peek_word_no_time(spec_start+9*2); //Saltar los 9 word de delante
 
 
         z80_int nounptr=peek_word_no_time(spec_start);
+        z80_int adverbptr=peek_word_no_time(spec_start+1*2);
+        z80_int objectptr=peek_word_no_time(spec_start+2*2);
+        z80_int roomptr=peek_word_no_time(spec_start+3*2);
+
         z80_int endptr=peek_word_no_time(spec_start+10*2); 
+
+        z80_int verbptr=room_data+2;
+
         printf ("Dictionary start: %04XH\n",dictptr);
 
         z80_byte longitud_palabra;
@@ -12560,11 +12635,24 @@ void util_gac_dump_dictonary(void)
                         indice++;
                 }
         } while (longitud_palabra!=0 && puntero<endptr);
-       
+
+       printf ("Dumping verbs. Start at %04XH\n",verbptr);
+       util_gac_readwords(verbptr,nounptr,diccionario_array);       
 
        printf ("Dumping nouns. Start at %04XH\n",nounptr);
+       util_gac_readwords(nounptr,adverbptr,diccionario_array);
 
-       util_gac_readwords(nounptr,endptr,diccionario_array);
+       printf ("Dumping adverbs. Start at %04XH\n",adverbptr);
+       util_gac_readwords(adverbptr,objectptr,diccionario_array);
+
+       printf ("Dumping objects. Start at %04XH\n",objectptr);
+       util_gac_readobjects(objectptr,roomptr,diccionario_array);
+
+   /*
+
+
+   printf("Reading adverbs: %x\n",header->adverbptr);
+   header->adverbs=readwords(infile,header,adverbs,header->adverbptr,header->objectptr);       */
 
        /*puntero=nounptr;
        z80_byte count,temp;
@@ -12596,4 +12684,5 @@ void util_gac_dump_dictonary(void)
 
        free(diccionario_array);
 
+        return util_gac_palabras_agregadas;
 }

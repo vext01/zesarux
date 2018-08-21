@@ -360,7 +360,7 @@ extern int menu_button_f_function_index;
 //numero maximo de entradas 
 #define MAX_OSD_ADV_KEYB_WORDS 300
 //longitud maximo de cada entrada
-#define MAX_OSD_ADV_KEYB_TEXT_LENGTH 20
+#define MAX_OSD_ADV_KEYB_TEXT_LENGTH 31
 
 extern int osd_adv_kbd_defined;
 extern char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH];
