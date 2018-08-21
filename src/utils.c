@@ -12309,7 +12309,7 @@ END;
 
   //Precargo palabras (solo 1 sinonimo de cada, la mas corta) antes en un array
   //tipo, indice
-  char lista_palabras[MAXTVOC][256][7];
+  char lista_palabras[MAXTVOC][256][6];
 
   //Inicializarlas vacias
   int i,j;
