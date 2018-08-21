@@ -17337,6 +17337,7 @@ void menu_osd_adventure_kb_press_key(void)
 
 	//printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
 	//osd_adv_kbd_list
+	debug_printf (VERBOSE_DEBUG,"Pressing key %c of word %s",letra,osd_adv_kbd_list[adventure_keyboard_selected_item]);
 
 	//Espacio no la gestiona esta funcion de convert_numeros_...
 	if (letra==' ') util_set_reset_key(UTIL_KEY_SPACE,1);
@@ -17555,6 +17556,8 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		//Si con control de joystick se ha salido con tecla ESCMenu, esa tecla de joystick lo que hace es ESC
 		//pero luego fuerza a abrir el menu de nuevo. Por tanto, decimos que no hay que abrir menu
 		menu_event_open_menu.v=0;
+
+		//printf ("en final de funcion\n");
 
 }
 

@@ -7907,10 +7907,10 @@ void parse_customfile_options(void)
                                 if (added_some_osd_text_keyboard.v==0) {
                                         util_clear_text_adventure_kdb();
                                         added_some_osd_text_keyboard.v=1;
-                                        printf ("Clearing text keyboard\n");
+                                        //printf ("Clearing text keyboard\n");
                                 }
                                 siguiente_parametro_argumento();
-                                printf ("Adding text keyboard %s\n",argv[puntero_parametro]);
+                                //printf ("Adding text keyboard %s\n",argv[puntero_parametro]);
                                 util_add_text_adventure_kdb(argv[puntero_parametro]);
                         }
 
