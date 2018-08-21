@@ -25429,6 +25429,10 @@ void menu_unpaws(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_ungac(MENU_ITEM_PARAMETERS)
+{
+	util_gac_dump_dictonary();
+}
 
 
 //menu debug settings
@@ -25611,7 +25615,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws,NULL,"UnPAWS to OSD Text KB");					
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws,NULL,"UnPAWS to OSD Text KB");	
+
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_ungac,NULL,"UnGAC");					
 		}
 
 		/* De momento desactivado

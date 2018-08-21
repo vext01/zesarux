@@ -12253,7 +12253,6 @@ CONST tVocs:ARRAY [0..6] OF String=(
 "Pronoun"        
   };
 
-//TODO: analizar si tipo es paws, etc
 int util_paws_dump_vocabulary(int *p_quillversion)
 {
 
@@ -12290,7 +12289,6 @@ int util_paws_dump_vocabulary(int *p_quillversion)
   end;
         */
 
-  //De momento solo paws
 #define  MAXTVOC 6
 /*
 FUNCTION Type_Voc(C:Integer):String;
@@ -12328,6 +12326,7 @@ END;
           *p_quillversion=-1;
           return 0;
   }
+  
 
   z80_int vocptr;
   z80_int limite_voc;
@@ -12441,54 +12440,160 @@ END;
   *p_quillversion=quillversion;
   return total_palabras;
 
-  //TODO Deteccion tipo
-  /*
-(* Analyze *)
 
- QuillVersion:=0;
+}
 
- MainTop:=DPeek(65533);
- MainAttr:=MainTop+311;
- IF   (MainTop<=(65535-321))
-   and (MainTop>=(16384-311))
-   and (Peek(MainAttr) = 16)
-   and (Peek(MainAttr+2) = 17)
-   and (Peek(MainAttr+4) = 18)
-   and (Peek(MainAttr+6) = 19)
-   and (Peek(MainAttr+8) = 20)
-   and (Peek(MainAttr+10) = 21)
- THEN
-     Writeln('PAW signature found.')
- ELSE BEGIN
-      MainTop:=26931;
-      MainAttr:=MainTop+977;
-      IF    (Peek(MainAttr) = 16)
-        and (Peek(MainAttr+2) = 17)
-        and (Peek(MainAttr+4) = 18)
-        and (Peek(MainAttr+6) = 19)
-        and (Peek(MainAttr+8) = 20)
-        and (Peek(MainAttr+10) = 21)
-      THEN BEGIN
-          Writeln('Quill.A signature found.');
-          QuillVersion:=1;
-      END
-      ELSE BEGIN
-           MainTop:=27356;
-           MainAttr:=MainTop+169;
-           IF    (Peek(MainAttr) = 16)
-             and (Peek(MainAttr+2) = 17)
-             and (Peek(MainAttr+4) = 18)
-             and (Peek(MainAttr+6) = 19)
-             and (Peek(MainAttr+8) = 20)
-             and (Peek(MainAttr+10) = 21)
-           THEN BEGIN
-               Writeln('Quill.C signature found.');
-               QuillVersion:=3;
-           END
-           ELSE
-               Error(3);
-      END
- END;  
-  */
+z80_int readtokenised(z80_int puntero)
+{
+   z80_byte low, high;
+
+   low=peek_byte_no_time(puntero++);
+   high=peek_byte_no_time(puntero++);
+
+   return ((high & 0x7f) << 8) + low;
+}
+
+#define MAX_DICT_GAC_ENTRIES 5000
+#define MAX_DICT_GAC_STRING_LENGTH 30
+
+int util_gac_get_offset_dictionary(int index)
+{
+        return index*(MAX_DICT_GAC_STRING_LENGTH+1);        
+}
+
+void util_gac_put_string_dictionary(int index,z80_byte *memoria,char *string)
+{
+        int offset=util_gac_get_offset_dictionary(index);
+
+        strcpy((char *)&memoria[offset],string);
+}
+
+void util_gac_get_string_dictionary(int index,z80_byte *memoria,char *string)
+{
+        int offset=util_gac_get_offset_dictionary(index);
+
+        strcpy(string,(char *)&memoria[offset]);
+}
+
+void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario)
+{
+        z80_byte count,temp;
+       temp=1;
+       z80_int dictentry;
+
+       do {
+
+      count=peek_byte_no_time(puntero++);
+      if (count==0)
+      {
+         temp=peek_byte_no_time(puntero);
+      }
+      if (count!=0 && temp!=0)
+      {
+         dictentry=readtokenised(puntero);
+         char buffer_palabra[256];
+         util_gac_get_string_dictionary(dictentry,mem_diccionario,buffer_palabra);
+         printf ("nombre token %d palabra: %s\n",dictentry,buffer_palabra);
+         puntero+=2;
+         //strncpy(words[current]->word,dictionary[dictentry],60);
+         //words[current]->number=count;
+         //current++;
+      }
+
+
+       } while (puntero<endptr && count!=0 && temp!=0);
+}
+
+
+
+void util_gac_dump_dictonary(void)
+{
+
+        //Asignar memoria para el diccionario. 
+        z80_byte *diccionario_array;
+
+        diccionario_array=malloc(MAX_DICT_GAC_ENTRIES*(MAX_DICT_GAC_STRING_LENGTH+1));
+
+        if (diccionario_array==NULL) cpu_panic("Can not allocate memory");
+
+        //Array para el diccionario. Palabras de mas de 30 caracteres los ignoramos
+
+        //char diccionario_array[MAX_DICT_GAC_ENTRIES][MAX_DICT_GAC_STRING_LENGTH+1];
+
+        //Inicializar a ""
+        int i;
+        for (i=0;i<MAX_DICT_GAC_ENTRIES;i++) util_gac_put_string_dictionary(i,diccionario_array,"");
+
+        z80_int spec_start=0xA51F;
+
+        //Vamos primero a hacer dump del dicccionario
+        z80_int dictptr=peek_word_no_time(spec_start+9*2); //Saltar los 9 word de delante
+
+
+        z80_int nounptr=peek_word_no_time(spec_start);
+        z80_int endptr=peek_word_no_time(spec_start+10*2); 
+        printf ("Dictionary start: %04XH\n",dictptr);
+
+        z80_byte longitud_palabra;
+
+        z80_int puntero=dictptr;
+        int indice=0;
+
+        do {
+                longitud_palabra=peek_byte_no_time(puntero++);
+                if (longitud_palabra>0) {
+                        char palabra[256];
+                        int i;
+                        for (i=0;i<longitud_palabra;i++) {
+                                z80_byte caracter_leido=peek_byte_no_time(puntero++) & 127;
+                                if (caracter_leido<32) caracter_leido=32;
+                                palabra[i]=caracter_leido & 127;
+                        }
+
+                        palabra[i]=0;
+
+                        printf ("Palabra indice %d: %s (longitud: %d)\n",indice,palabra,longitud_palabra);
+                        if (longitud_palabra<=MAX_DICT_GAC_STRING_LENGTH) {
+                                //strcpy(diccionario_array[indice],palabra);
+                                util_gac_put_string_dictionary(indice,diccionario_array,palabra);
+                        }
+                        indice++;
+                }
+        } while (longitud_palabra!=0 && puntero<endptr);
+       
+
+       printf ("Dumping nouns. Start at %04XH\n",nounptr);
+
+       util_gac_readwords(nounptr,endptr,diccionario_array);
+
+       /*puntero=nounptr;
+       z80_byte count,temp;
+       temp=1;
+       z80_int dictentry;
+
+       do {
+
+      count=peek_byte_no_time(puntero++);
+      if (count==0)
+      {
+         temp=peek_byte_no_time(puntero);
+      }
+      if (count!=0 && temp!=0)
+      {
+         dictentry=readtokenised(puntero);
+         printf ("nombre token %d palabra: %s\n",dictentry,diccionario_array[dictentry]);
+         puntero+=2;
+         //strncpy(words[current]->word,dictionary[dictentry],60);
+         //words[current]->number=count;
+         //current++;
+      }
+
+
+       } while (puntero<endptr && count!=0 && temp!=0);*/
+
+
+       // free(mem_diccionario);
+
+       free(diccionario_array);
 
 }
