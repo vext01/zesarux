@@ -12116,6 +12116,113 @@ void util_clear_final_spaces(char *orig,char *destination)
         destination[indice]=0;
 }
 
+int util_unpaws_detect_version(z80_int *p_mainattr)
+{
+        int quillversion=0;
+
+        z80_int MainTop=peek_word_no_time(65533);
+        z80_int MainAttr=MainTop+311;
+
+        if   (MainTop<=(65535-321) 
+   && (MainTop>=(16384-311))
+   && (peek_byte_no_time(MainAttr) == 16)
+   && (peek_byte_no_time(MainAttr+2) == 17)
+   && (peek_byte_no_time(MainAttr+4) == 18)
+   && (peek_byte_no_time(MainAttr+6) == 19)
+   && (peek_byte_no_time(MainAttr+8) == 20)
+   && (peek_byte_no_time(MainAttr+10) == 21) 
+        ) {
+                debug_printf (VERBOSE_DEBUG,"PAW signature found");
+        }
+
+  else {
+       MainTop=26931;
+      MainAttr=MainTop+977;
+      if  (  (peek_byte_no_time(MainAttr) == 16)
+        && (peek_byte_no_time(MainAttr+2) == 17)
+        && (peek_byte_no_time(MainAttr+4) == 18)
+        && (peek_byte_no_time(MainAttr+6) == 19)
+        && (peek_byte_no_time(MainAttr+8) == 20)
+        && (peek_byte_no_time(MainAttr+10) == 21)
+      ) {
+          debug_printf (VERBOSE_DEBUG,"Quill.A signature found");
+          quillversion=1;
+      }
+
+      else {
+              MainTop=27356;
+           MainAttr=MainTop+169;
+           if (    (peek_byte_no_time(MainAttr) == 16)
+             && (peek_byte_no_time(MainAttr+2) == 17)
+             && (peek_byte_no_time(MainAttr+4) == 18)
+             && (peek_byte_no_time(MainAttr+6) == 19)
+             && (peek_byte_no_time(MainAttr+8) == 20)
+             && (peek_byte_no_time(MainAttr+10) == 21)
+           ) {
+               debug_printf (VERBOSE_DEBUG,"Quill.C signature found");
+               quillversion=3;
+           }
+
+           else {
+                   quillversion=-1;
+           }
+     
+      }
+  }
+
+  *p_mainattr=MainAttr;
+  return quillversion;
+
+/*
+QuillVersion:=0;
+
+ MainTop:=DPeek(65533);
+ MainAttr:=MainTop+311;
+ IF   (MainTop<=(65535-321))
+   and (MainTop>=(16384-311))
+   and (Peek(MainAttr) = 16)
+   and (Peek(MainAttr+2) = 17)
+   and (Peek(MainAttr+4) = 18)
+   and (Peek(MainAttr+6) = 19)
+   and (Peek(MainAttr+8) = 20)
+   and (Peek(MainAttr+10) = 21)
+ THEN
+     Writeln('PAW signature found.')
+ ELSE BEGIN
+      MainTop:=26931;
+      MainAttr:=MainTop+977;
+      IF    (Peek(MainAttr) = 16)
+        and (Peek(MainAttr+2) = 17)
+        and (Peek(MainAttr+4) = 18)
+        and (Peek(MainAttr+6) = 19)
+        and (Peek(MainAttr+8) = 20)
+        and (Peek(MainAttr+10) = 21)
+      THEN BEGIN
+          Writeln('Quill.A signature found.');
+          QuillVersion:=1;
+      END
+      ELSE BEGIN
+           MainTop:=27356;
+           MainAttr:=MainTop+169;
+           IF    (Peek(MainAttr) = 16)
+             and (Peek(MainAttr+2) = 17)
+             and (Peek(MainAttr+4) = 18)
+             and (Peek(MainAttr+6) = 19)
+             and (Peek(MainAttr+8) = 20)
+             and (Peek(MainAttr+10) = 21)
+           THEN BEGIN
+               Writeln('Quill.C signature found.');
+               QuillVersion:=3;
+           END
+           ELSE
+               Error(3);
+      END
+ END;
+
+*/
+
+}
+
 //TODO: analizar si tipo es paws, etc
 int util_paws_dump_vocabulary(void)
 {
@@ -12197,14 +12304,42 @@ CONST tVocs:ARRAY [0..6] OF String=(
         for (j=0;j<256;j++) lista_palabras[i][j][0]=0;
   }
 
-  z80_int vocptr=peek_word_no_time(65509);
-  while (vocptr < 65509 && peek_byte_no_time(vocptr)!=0) {
+  int quillversion;
+
+  z80_int mainattr;
+
+  quillversion=util_unpaws_detect_version(&mainattr);
+
+  if (quillversion<1) {
+          debug_printf (VERBOSE_ERR,"It does not seem to be a Quill/PAW game");
+          return 0;
+  }
+
+  z80_int vocptr;
+  z80_int limite_voc;
+
+  if (quillversion==0) {
+          vocptr=peek_word_no_time(65509);
+          limite_voc=65509;
+  }
+
+  else {
+          if (quillversion==1) vocptr=peek_word_no_time(mainattr+29);
+          else vocptr=peek_word_no_time(mainattr+32);
+          limite_voc=65530;
+  }
+
+
+
+  while (vocptr < limite_voc && peek_byte_no_time(vocptr)!=0) {
           char palabra[6];
+          z80_byte indice_palabra;
+          z80_byte tipo_palabra;
           for (j=0;j<5;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
 
-          z80_byte indice_palabra=peek_byte_no_time(vocptr+j);
+          indice_palabra=peek_byte_no_time(vocptr+j);
           palabra[j]=0;
-          z80_byte tipo_palabra=peek_byte_no_time(vocptr+j+1);
+          tipo_palabra=peek_byte_no_time(vocptr+j+1);
 
           char buf_tipo_palabra[30];
 
@@ -12248,7 +12383,8 @@ CONST tVocs:ARRAY [0..6] OF String=(
                   
           }
 
-          vocptr+=7;
+          if (quillversion==0) vocptr+=7;
+          else vocptr+=5;
   }
   /*
             if (!reservado) {
