@@ -12480,7 +12480,7 @@ void util_gac_put_string_dictionary(int index,z80_byte *memoria,char *string)
 void util_gac_get_string_dictionary(int index,z80_byte *memoria,char *string)
 {
         int offset=util_gac_get_offset_dictionary(index);
-        if (index>MAX_DICT_GAC_ENTRIES) strcpy(string,"Outofrange");
+        if (index>MAX_DICT_GAC_ENTRIES) strcpy(string,"");
 
         else strcpy(string,(char *)&memoria[offset]);
 }
@@ -12519,8 +12519,10 @@ void util_gac_readobjects(z80_int puntero,z80_int endptr,z80_byte *mem_diccionar
          
                 printf ("nombre token %d palabra: %s\n",dictentry,buffer_palabra);  
 
-                util_add_text_adventure_kdb(buffer_palabra);
-                util_gac_palabras_agregadas++;
+                if (strlen(buffer_palabra)) {
+                        util_add_text_adventure_kdb(buffer_palabra);
+                        util_gac_palabras_agregadas++;
+                }
          
                 //strcat(objects[current]->description,readstring(infile, size));
          }
@@ -12556,8 +12558,10 @@ void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario
          printf ("nombre token %d palabra: %s\n",dictentry,buffer_palabra);
          puntero+=2;
 
-                util_add_text_adventure_kdb(buffer_palabra);
-                util_gac_palabras_agregadas++;
+                if (strlen(buffer_palabra)) {
+                        util_add_text_adventure_kdb(buffer_palabra);
+                        util_gac_palabras_agregadas++;
+                }
 
          //strncpy(words[current]->word,dictionary[dictentry],60);
          //words[current]->number=count;
