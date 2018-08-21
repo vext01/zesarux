@@ -2897,7 +2897,7 @@ int configfile_read_aux(char *configfile,char *mem)
 {
 
         //Avisar si tamanyo grande
-        if (get_file_size(configfile) > (long int)MAX_SIZE_CONFIG_FILE) cpu_panic("Configuration file is larger than maximum allowed (64kb)");
+        if (get_file_size(configfile) > (long int)MAX_SIZE_CONFIG_FILE) cpu_panic("Configuration file is larger than maximum size allowed");
 
 	FILE *ptr_configfile;
         ptr_configfile=fopen(configfile,"rb");
@@ -3661,6 +3661,10 @@ void configfile_parse_lines(char *mem,char *p_argv[],int *p_argc)
 
 			p_argv[argumentos]=mem;
 			argumentos++;
+                        if (argumentos>MAX_PARAMETERS_CONFIG_FILE) {
+                                cpu_panic("Maximum parameters in config file reached");
+                        }
+
 			mem=configfile_next_field(mem,comillas_iniciales);
 
 			//Poner codigo 0 al final
@@ -3674,7 +3678,8 @@ void configfile_parse_lines(char *mem,char *p_argv[],int *p_argc)
 
 }
 
-char *configfile_argv[256];
+
+char *configfile_argv[MAX_PARAMETERS_CONFIG_FILE];
 int configfile_argc=0;
 
 //Convertir archivo de configuracion leido en argv
@@ -3685,6 +3690,7 @@ int configfile_argc=0;
 void configfile_parse(void)
 {
 	char *mem_config=malloc(MAX_SIZE_CONFIG_FILE+1);
+        //printf ("mem_config init: %p\n",mem_config);
 
         if (mem_config==NULL) {
 		cpu_panic("Unable to allocate memory for configuration file");
@@ -3694,6 +3700,7 @@ void configfile_parse(void)
 		//No hay archivo de configuracion. Parametros vacios
 		configfile_argv[0]="";
 		configfile_argc=1;
+                //free(mem_config);
 		return;
 	}
 
@@ -3708,6 +3715,9 @@ void configfile_parse(void)
 		}
 	}
 
+        //TODO: Este free da segmentation fault. Por que??? Revisar los otros free de leer archivos de config que estan comentados tambien
+        //printf ("mem_config in free: %p\n",mem_config);
+        //free(mem_config);
 	return;
 }
 
@@ -3741,6 +3751,7 @@ void configfile_parse_custom_file(char *archivo)
                 //No hay archivo de configuracion. Parametros vacios
                 configfile_argv[0]="";
                 configfile_argc=1;
+                //free(custom_config_mem_pointer);
                 return;
         }
 
@@ -3755,6 +3766,7 @@ void configfile_parse_custom_file(char *archivo)
                 }
         }
 
+        //free(custom_config_mem_pointer);
         return;
 }
 
@@ -12073,4 +12085,193 @@ void util_add_text_adventure_kdb(char *texto)
 void util_clear_text_adventure_kdb(void)
 {
 	osd_adv_kbd_defined=0;
+}
+
+int util_find_right_most_space(char *texto)
+{
+        int i=strlen(texto)-1;
+
+        for (;i>=0;i--) {
+                if (texto[i]!=' ') return i;
+        }
+
+        return i;
+}
+
+void util_clear_final_spaces(char *orig,char *destination)
+{
+        //Quitar espacios al final del texto
+        //Primero localizar primer espacio de la derecha
+
+        int indice=0;
+
+        int espacio_derecha=util_find_right_most_space(orig);
+
+        if (espacio_derecha>=0) {
+            for (indice=0;indice<=espacio_derecha && orig[indice];indice++) {
+                    destination[indice]=orig[indice];
+            }    
+        }
+
+        destination[indice]=0;
+}
+
+//TODO: analizar si tipo es paws, etc
+int util_paws_dump_vocabulary(void)
+{
+
+
+        /*
+
+        Extracted from https://github.com/Utodev/unPAWs
+
+        if QuillVersion=0 then
+  begin
+     vocptr := DPeek(65509);
+     OffVoc := DPeek(65509);
+
+     WHILE (vocptr < 65509) AND  (Peek(vocptr)<>0) DO
+     BEGIN
+      WriteLn(FOut,char(PeekNeg(vocptr)),char(PeekNeg(vocptr+1)),
+             char(PeekNeg(vocptr+2)),char(PeekNeg(vocptr+3)),char(PeekNeg(vocptr+4)),
+             Peek(vocptr+5):5,' ',type_voc(Peek(vocptr+6)));
+      VocPtr := VocPtr + 7 ;
+     END;
+  end
+  else { Quill Vocabulary}
+  begin
+     if QuillVersion=1 then vocptr := DPeek(MainAttr+29)
+     else vocptr := DPeek(MainAttr+32);
+     OffVoc := vocptr;
+
+     WHILE (vocptr < 65530) AND  (Peek(vocptr)<>0) DO
+     BEGIN
+      WriteLn(FOut,char(PeekNeg(vocptr)),char(PeekNeg(vocptr+1)),
+             char(PeekNeg(vocptr+2)),char(PeekNeg(vocptr+3)),Peek(vocptr+4):5);
+      VocPtr := VocPtr + 5 ;
+     END;
+  end;
+        */
+
+  //De momento solo paws
+#define  MAXTVOC 6
+/*
+FUNCTION Type_Voc(C:Integer):String;
+BEGIN
+ IF (C>=0) AND (C<=MAXTVOC) then Type_Voc:=TVocs[c]
+                            else Type_Voc:='RESERVED';
+END;
+*/
+/*
+CONST tVocs:ARRAY [0..6] OF String=(
+'Verb',
+'Adverb',
+'Noun',
+'Adjective',
+'Preposition',
+'Conjunction',
+'Pronoun');
+*/
+
+  char *tvocs[]={
+"Verb",
+"Adverb",
+"Noun",
+"Adjective",
+"Preposition",
+"Conjunction",
+"Pronoun"        
+  };
+
+  util_clear_text_adventure_kdb();
+
+  int total_palabras=0;
+
+  z80_int vocptr=peek_word_no_time(65509);
+  while (vocptr < 65509 && peek_byte_no_time(vocptr)!=0) {
+          char palabra[7];
+          int j;
+          for (j=0;j<5;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
+
+          z80_byte indice_palabra=peek_byte_no_time(vocptr+j);
+          palabra[j]=0;
+          z80_byte tipo_palabra=peek_byte_no_time(vocptr+j+1);
+
+          char buf_tipo_palabra[30];
+
+          int reservado=0;
+
+          if (tipo_palabra>=0 && tipo_palabra<=MAXTVOC) strcpy (buf_tipo_palabra,tvocs[tipo_palabra]);
+          else {
+                  strcpy(buf_tipo_palabra,"RESERVED");
+                  reservado=1;
+          }
+
+          debug_printf (VERBOSE_DEBUG,"unPAWs dump. Vocabulary word: %s Index: %d Type: %s",palabra,indice_palabra,buf_tipo_palabra);
+
+          if (!reservado) {
+                  //Meter a teclado de palabras. Quitar antes espacios del final
+                  char palabra_sin_espacios[7];
+                  util_clear_final_spaces(palabra,palabra_sin_espacios);
+                  debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",palabra_sin_espacios);
+                  util_add_text_adventure_kdb(palabra_sin_espacios);
+
+                  total_palabras++;
+          }
+
+          vocptr+=7;
+  }
+
+  return total_palabras;
+
+  //TODO Deteccion tipo
+  /*
+(* Analyze *)
+
+ QuillVersion:=0;
+
+ MainTop:=DPeek(65533);
+ MainAttr:=MainTop+311;
+ IF   (MainTop<=(65535-321))
+   and (MainTop>=(16384-311))
+   and (Peek(MainAttr) = 16)
+   and (Peek(MainAttr+2) = 17)
+   and (Peek(MainAttr+4) = 18)
+   and (Peek(MainAttr+6) = 19)
+   and (Peek(MainAttr+8) = 20)
+   and (Peek(MainAttr+10) = 21)
+ THEN
+     Writeln('PAW signature found.')
+ ELSE BEGIN
+      MainTop:=26931;
+      MainAttr:=MainTop+977;
+      IF    (Peek(MainAttr) = 16)
+        and (Peek(MainAttr+2) = 17)
+        and (Peek(MainAttr+4) = 18)
+        and (Peek(MainAttr+6) = 19)
+        and (Peek(MainAttr+8) = 20)
+        and (Peek(MainAttr+10) = 21)
+      THEN BEGIN
+          Writeln('Quill.A signature found.');
+          QuillVersion:=1;
+      END
+      ELSE BEGIN
+           MainTop:=27356;
+           MainAttr:=MainTop+169;
+           IF    (Peek(MainAttr) = 16)
+             and (Peek(MainAttr+2) = 17)
+             and (Peek(MainAttr+4) = 18)
+             and (Peek(MainAttr+6) = 19)
+             and (Peek(MainAttr+8) = 20)
+             and (Peek(MainAttr+10) = 21)
+           THEN BEGIN
+               Writeln('Quill.C signature found.');
+               QuillVersion:=3;
+           END
+           ELSE
+               Error(3);
+      END
+ END;  
+  */
+
 }

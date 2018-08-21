@@ -53,7 +53,12 @@ extern void open_sharedfile(char *archivo,FILE **f);
 
 #define MAX_COMPILE_INFO_LENGTH 4096
 
-#define MAX_SIZE_CONFIG_FILE 65535
+//1000 parametros
+#define MAX_PARAMETERS_CONFIG_FILE 1000
+
+//128 kb
+#define MAX_SIZE_CONFIG_FILE 131072
+//65535
 
 extern void get_compile_info(char *s);
 
@@ -679,5 +684,9 @@ extern void util_save_game_config(char *filename);
 extern void util_add_text_adventure_kdb(char *texto);
 
 extern void util_clear_text_adventure_kdb(void);
+
+extern int util_paws_dump_vocabulary(void);
+
+
 
 #endif

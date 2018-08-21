@@ -25417,6 +25417,15 @@ void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_unpaws(MENU_ITEM_PARAMETERS)
+{
+	int palabras=util_paws_dump_vocabulary();
+
+
+	menu_generic_message_format("UnPAWS to OSD Text KB","OK. %d words added",palabras);
+
+}
+
 
 
 //menu debug settings
@@ -25596,6 +25605,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					"so, a saved program can be run on a real spectrum or another emulator, "
 					"but the saving routine sees im1 by default, so, saving from a real spectrum or another emulator "
 					"instead ZEsarUX will only work if the cpu is in IM1 mode (and not IM2)");
+
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws,NULL,"UnPAWS to OSD Text KB");					
+		}
 
 		/* De momento desactivado
 		if (MACHINE_IS_SPECTRUM) {
