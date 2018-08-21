@@ -25439,6 +25439,32 @@ void menu_ungac(MENU_ITEM_PARAMETERS)
 	}
 }
 
+void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
+{
+	int version;
+	int palabras=util_paws_dump_vocabulary(&version);
+
+	//Es Paws?
+	if (version>=0) {
+		menu_generic_message_format("UnPAWS to OSD Text KB","OK. %s signature found. %d words added",
+			quillversions_strings[version],palabras);
+	}
+
+	else {
+		//No es paws. Probar con GAC
+		palabras=util_gac_dump_dictonary(&version);
+		if (version>=0) {
+			menu_generic_message_format("UnGAC to OSD Text KB","OK. %s signature found. %d words added",
+				gacversions_strings[version],palabras);
+		}	
+
+		else {
+			//Ni paws ni gac
+			debug_printf (VERBOSE_ERR,"It does not seem to be a Quill/PAW/GAC game");
+		}
+	}
+}
+
 
 //menu debug settings
 void menu_debug_settings(MENU_ITEM_PARAMETERS)
@@ -25620,9 +25646,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws,NULL,"UnPAWS to OSD Text KB");	
+			/*menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws,NULL,"UnPAWS to OSD Text KB");	
 
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_ungac,NULL,"UnGAC to OSD Text KB");					
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_ungac,NULL,"UnGAC to OSD Text KB");		*/
+
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws_ungac,NULL,"UnPAWS/unGAC to OSD Text KB");			
 		}
 
 		/* De momento desactivado

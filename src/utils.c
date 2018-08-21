@@ -12322,7 +12322,7 @@ END;
   quillversion=util_unpaws_detect_version(&mainattr);
 
   if (quillversion<0) {
-          debug_printf (VERBOSE_ERR,"It does not seem to be a Quill/PAW game");
+          debug_printf (VERBOSE_DEBUG,"It does not seem to be a Quill/PAW game");
           *p_quillversion=-1;
           return 0;
   }
@@ -12613,7 +12613,7 @@ int util_gac_dump_dictonary(int *p_gacversion)
         gacversion=util_gac_detect_version();
 
   if (gacversion<0) {
-          debug_printf (VERBOSE_ERR,"It does not seem to be a GAC game");
+          debug_printf (VERBOSE_DEBUG,"It does not seem to be a GAC game");
           *p_gacversion=-1;
           return 0;
   }        
