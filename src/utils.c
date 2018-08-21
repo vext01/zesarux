@@ -12187,10 +12187,19 @@ CONST tVocs:ARRAY [0..6] OF String=(
 
   int total_palabras=0;
 
+  //Precargo palabras (solo 1 sinonimo de cada, la mas corta) antes en un array
+  //tipo, indice
+  char lista_palabras[MAXTVOC][256][7];
+
+  //Inicializarlas vacias
+  int i,j;
+  for (i=0;i<MAXTVOC;i++) {
+        for (j=0;j<256;j++) lista_palabras[i][j][0]=0;
+  }
+
   z80_int vocptr=peek_word_no_time(65509);
   while (vocptr < 65509 && peek_byte_no_time(vocptr)!=0) {
-          char palabra[7];
-          int j;
+          char palabra[6];
           for (j=0;j<5;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
 
           z80_byte indice_palabra=peek_byte_no_time(vocptr+j);
@@ -12210,6 +12219,39 @@ CONST tVocs:ARRAY [0..6] OF String=(
           debug_printf (VERBOSE_DEBUG,"unPAWs dump. Vocabulary word: %s Index: %d Type: %s",palabra,indice_palabra,buf_tipo_palabra);
 
           if (!reservado) {
+                  //Meter en array. Quitar antes espacios del final
+                  char palabra_sin_espacios[6];
+                  util_clear_final_spaces(palabra,palabra_sin_espacios);
+
+                  int insertar=1;
+
+                //Ver si ya habia un sinonimo, y en ese caso, ver si la de ahora es mas corta
+                  if (lista_palabras[tipo_palabra][indice_palabra][0]!=0) {
+                        int longitud_almacenada=strlen(lista_palabras[tipo_palabra][indice_palabra]);
+                        int longitud_nueva=strlen(palabra_sin_espacios);
+
+                        if (longitud_nueva>longitud_almacenada) insertar=0;
+                  }
+
+                  if (insertar) {
+                        strcpy(lista_palabras[tipo_palabra][indice_palabra],palabra_sin_espacios);
+                        debug_printf (VERBOSE_DEBUG,"Adding word %s to array list",palabra_sin_espacios);
+                        total_palabras++;
+
+                  }
+
+                  else {
+                      debug_printf (VERBOSE_DEBUG,"Not adding word %s to array list as it is a longer synonim of %s",
+                      palabra_sin_espacios,lista_palabras[tipo_palabra][indice_palabra]);    
+                  }
+
+                  
+          }
+
+          vocptr+=7;
+  }
+  /*
+            if (!reservado) {
                   //Meter a teclado de palabras. Quitar antes espacios del final
                   char palabra_sin_espacios[7];
                   util_clear_final_spaces(palabra,palabra_sin_espacios);
@@ -12218,8 +12260,18 @@ CONST tVocs:ARRAY [0..6] OF String=(
 
                   total_palabras++;
           }
+        */
 
-          vocptr+=7;
+  //Y ahora agregamos la lista total del array
+  debug_printf (VERBOSE_DEBUG,"Adding words to OSD Adventure text keyboard");
+  for (i=0;i<MAXTVOC;i++) {
+          debug_printf (VERBOSE_DEBUG,"Adding words type %s",tvocs[i]);
+        for (j=0;j<256;j++) {
+                  if (lista_palabras[i][j][0]!=0) {
+                          debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",lista_palabras[i][j]);
+                        util_add_text_adventure_kdb(lista_palabras[i][j]);   
+                }
+        }
   }
 
   return total_palabras;
