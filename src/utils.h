@@ -689,6 +689,8 @@ extern int util_paws_dump_vocabulary(int *p_quillversion);
 
 extern char *quillversions_strings[];
 
-extern int util_gac_dump_dictonary(void);
+extern int util_gac_dump_dictonary(int *p_gacversion);
+
+extern char *gacversions_strings[];
 
 #endif

@@ -12510,16 +12510,17 @@ void util_gac_readobjects(z80_int puntero,z80_int endptr,z80_byte *mem_diccionar
          //len=0;
          z80_int dictentry=readtokenised(puntero);
          if ((dictentry&0xC000)==0xC000) {
-                 printf ("Ignorar. Es puntuacion\n");
+                 debug_printf (VERBOSE_DEBUG,"Ignore. Is a puntuation word");
          }
          else {
                 char buffer_palabra[MAX_DICT_GAC_STRING_LENGTH+1];
-                printf("token %d\n",dictentry);
+                //printf("token %d\n",dictentry);
                 util_gac_get_string_dictionary(dictentry,mem_diccionario,buffer_palabra);
          
-                printf ("nombre token %d palabra: %s\n",dictentry,buffer_palabra);  
+                debug_printf (VERBOSE_DEBUG,"Dictionary entry %d word: %s",dictentry,buffer_palabra); 
 
                 if (strlen(buffer_palabra)) {
+                        debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",buffer_palabra);
                         util_add_text_adventure_kdb(buffer_palabra);
                         util_gac_palabras_agregadas++;
                 }
@@ -12555,10 +12556,11 @@ void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario
          dictentry=readtokenised(puntero);
          char buffer_palabra[256];
          util_gac_get_string_dictionary(dictentry,mem_diccionario,buffer_palabra);
-         printf ("nombre token %d palabra: %s\n",dictentry,buffer_palabra);
+         debug_printf (VERBOSE_DEBUG,"Dictionary entry %d word: %s",dictentry,buffer_palabra);
          puntero+=2;
 
                 if (strlen(buffer_palabra)) {
+                        debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",buffer_palabra);
                         util_add_text_adventure_kdb(buffer_palabra);
                         util_gac_palabras_agregadas++;
                 }
@@ -12572,10 +12574,49 @@ void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario
        } while (puntero<endptr && count!=0 && temp!=0);
 }
 
+char *gacversions_strings[]={
+        "GAC version 0",
+};
 
-
-int util_gac_dump_dictonary(void)
+int util_gac_detect_version(void)
 {
+
+        int version=0;
+
+        //en 67cf se encuentra esta cadena
+        char *signature="You have run out of memory";
+
+        char read_signature[100];
+
+        //Leemos la firma de la memoria
+        int longitud_firma=strlen(signature);
+
+        z80_int puntero=0x67cf;
+
+        int i;
+        for (i=0;i<longitud_firma;i++) {
+                read_signature[i]=peek_byte_no_time(puntero+i);
+        }
+
+        read_signature[i]=0;
+        if (strcmp(read_signature,signature)) version=-1;
+
+        return version;
+
+}
+
+int util_gac_dump_dictonary(int *p_gacversion)
+{
+
+        int gacversion; //Realmente no se si hay mas de una version
+
+        gacversion=util_gac_detect_version();
+
+  if (gacversion<0) {
+          debug_printf (VERBOSE_ERR,"It does not seem to be a GAC game");
+          *p_gacversion=-1;
+          return 0;
+  }        
 
         util_clear_text_adventure_kdb();
         util_gac_palabras_agregadas=0;
@@ -12611,7 +12652,7 @@ int util_gac_dump_dictonary(void)
 
         z80_int verbptr=room_data+2;
 
-        printf ("Dictionary start: %04XH\n",dictptr);
+        debug_printf (VERBOSE_DEBUG,"Dictionary start: %04XH",dictptr);
 
         z80_byte longitud_palabra;
 
@@ -12631,7 +12672,7 @@ int util_gac_dump_dictonary(void)
 
                         palabra[i]=0;
 
-                        printf ("Palabra indice %d: %s (longitud: %d)\n",indice,palabra,longitud_palabra);
+                        debug_printf (VERBOSE_DEBUG,"Dictonary word index %d: %s (length: %d)",indice,palabra,longitud_palabra);
                         if (longitud_palabra<=MAX_DICT_GAC_STRING_LENGTH) {
                                 //strcpy(diccionario_array[indice],palabra);
                                 util_gac_put_string_dictionary(indice,diccionario_array,palabra);
@@ -12640,16 +12681,16 @@ int util_gac_dump_dictonary(void)
                 }
         } while (longitud_palabra!=0 && puntero<endptr);
 
-       printf ("Dumping verbs. Start at %04XH\n",verbptr);
+       debug_printf (VERBOSE_DEBUG,"Dumping verbs. Start at %04XH",verbptr);
        util_gac_readwords(verbptr,nounptr,diccionario_array);       
 
-       printf ("Dumping nouns. Start at %04XH\n",nounptr);
+       debug_printf (VERBOSE_DEBUG,"Dumping nouns. Start at %04XH",nounptr);
        util_gac_readwords(nounptr,adverbptr,diccionario_array);
 
-       printf ("Dumping adverbs. Start at %04XH\n",adverbptr);
+       debug_printf (VERBOSE_DEBUG,"Dumping adverbs. Start at %04XH",adverbptr);
        util_gac_readwords(adverbptr,objectptr,diccionario_array);
 
-       printf ("Dumping objects. Start at %04XH\n",objectptr);
+       debug_printf (VERBOSE_DEBUG,"Dumping objects. Start at %04XH",objectptr);
        util_gac_readobjects(objectptr,roomptr,diccionario_array);
 
    /*
@@ -12688,5 +12729,6 @@ int util_gac_dump_dictonary(void)
 
        free(diccionario_array);
 
+        *p_gacversion=gacversion;
         return util_gac_palabras_agregadas;
 }

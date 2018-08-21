@@ -25431,8 +25431,12 @@ void menu_unpaws(MENU_ITEM_PARAMETERS)
 
 void menu_ungac(MENU_ITEM_PARAMETERS)
 {
-	int palabras=util_gac_dump_dictonary();
-	menu_generic_message_format("UnGAC","OK. %d words addded",palabras);
+	int version;
+	int palabras=util_gac_dump_dictonary(&version);
+	if (version>=0) {
+		menu_generic_message_format("UnGAC to OSD Text KB","OK. %s signature found. %d words added",
+			gacversions_strings[version],palabras);
+	}
 }
 
 
@@ -25618,7 +25622,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws,NULL,"UnPAWS to OSD Text KB");	
 
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_ungac,NULL,"UnGAC");					
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_ungac,NULL,"UnGAC to OSD Text KB");					
 		}
 
 		/* De momento desactivado
