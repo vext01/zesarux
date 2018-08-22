@@ -12605,6 +12605,11 @@ int util_gac_detect_version(void)
 
 }
 
+
+/* based on grackle tool
+http://ifarchive.jmac.org/indexes/if-archiveXsolutionsXtools.html
+Grackle 0.2 Alpha, by David Lodge. A dumper and player for adventures written using the Graphic Adventure Creator. At the moment it supports games from the Spectrum (in .sna format) and the Amstrad CPC (as extracted files with the AMSDOS header from a disk image)
+*/
 int util_gac_dump_dictonary(int *p_gacversion)
 {
 
