@@ -172,6 +172,10 @@ A: There are three kind of video drivers:
 -Stdout: Basic text printing and text-graphic simulation. Can trap character routines and speech capabilities. Can read keyboard. Can run on Unix systems
 -Simpletext: Like stdout but can not read keyboard, can not trap character routines and does not have speech capabilities. This driver is intended to work on any system, without any additional library.
 
+
+Q: I have put ZEsarUX on fullscreen but it does not fill the whole screen and/or does not have normal proportions
+A: The fullscreen feature is experimental and it depends on the video driver, operating system and window manager. So there are some cases which works perfect and some which does not. So if this is your case, where the fullscreen is not working, please be patient and wait for future fixes (and use window mode instead of full screen).
+
 ----------------------------------------------------------------------------
 
 
