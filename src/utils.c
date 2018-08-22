@@ -12134,26 +12134,27 @@ void util_init_unpawsgac_hotkeys(void)
 //util_add_text_adventure_kdb(buffer_palabra);
 void util_unpawsgac_add_word_kb(char *palabra)
 {
+
+        //Buffer de maximo tamanyo y agregando dos ~~ al principio
+        char buffer_palabra_destino[MAX_OSD_ADV_KEYB_TEXT_LENGTH+2];
+        //De momento sin hotkey
+        sprintf (buffer_palabra_destino,"%s",palabra);        
+
         //Agregamos la palabra metiendo hotkey si conviene
         char inicial=letra_minuscula(*palabra);
 
-        int indice=inicial-'a';
+        if (inicial>='a' && inicial<'z') {
+                int indice=inicial-'a';
 
-        if (util_unpawsgac_hotkeys[indice]==0) {
-                //Meterla con hotkey
-                util_unpawsgac_hotkeys[indice]=1;
+                if (util_unpawsgac_hotkeys[indice]==0) {
+                        //Meterla con hotkey
+                        util_unpawsgac_hotkeys[indice]=1;
 
-                //Buffer de maximo tamanyo y agregando dos ~~ al principio
-                char buffer_palabra_destino[MAX_OSD_ADV_KEYB_TEXT_LENGTH+2];
-                sprintf (buffer_palabra_destino,"~~%s",palabra);
-                util_add_text_adventure_kdb(buffer_palabra_destino);
-
+                        sprintf (buffer_palabra_destino,"~~%s",palabra);
+                }
         }
 
-        else {
-                //Meterla tal cual viene sin hotkey
-                util_add_text_adventure_kdb(palabra);
-        }
+        util_add_text_adventure_kdb(buffer_palabra_destino);
 }
 
 char *quillversions_strings[]={

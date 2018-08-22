@@ -1597,7 +1597,7 @@ printf (
 		"--hide-dirs                Do not show directories on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
 		"--disablemenu              Disable menu. Any event that opens the menu will exit the emulator\n"
-		"--text-keyboard-add text   Add a string to the Adventure Text OSD Keyboard. Must be written in lowercase. The first addition erases the default text keyboard.\n"
+		"--text-keyboard-add text   Add a string to the Adventure Text OSD Keyboard. The first addition erases the default text keyboard.\n"
 		" You can use hotkeys by using double character ~~ just before the letter, for example:\n"
 		" --text-keyboard-add ~~north   --text-keyboard-add e~~xamine\n");
 

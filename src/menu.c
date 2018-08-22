@@ -17478,7 +17478,10 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 					char texto_opcion[64];
 					strcpy(texto_opcion,osd_adv_kbd_list[i]);
 
-					char hotkey=osd_adv_kbd_list[i][0];
+					char hotkey;
+					
+					//Caracter de hotkey. Crearlo automaticamente
+					//hotkey=letra_minuscula(osd_adv_kbd_list[i][0]);
 
 					//Caracter de hotkey. Dejar que el usuario lo escriba en la cadena de texto. Ver si dicha cadena lo tiene
 
@@ -17486,7 +17489,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 					for (j=0;texto_opcion[j];j++) {
 						if (texto_opcion[j]=='~' && texto_opcion[j+1]=='~') {
 							//Si hay letra detras
-							hotkey=texto_opcion[j+2];
+							hotkey=letra_minuscula(texto_opcion[j+2]);
 							if (hotkey) tiene_hotkey=1;
 						}
 					}
