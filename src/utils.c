@@ -12116,6 +12116,20 @@ void util_clear_final_spaces(char *orig,char *destination)
         destination[indice]=0;
 }
 
+
+//Usado en unpaws, ungac etc para agregar letra de hotkey automaticamente
+#define TOTAL_UNPAWSGAC_HOTKEYS 26
+int util_unpawsgac_hotkeys[TOTAL_UNPAWSGAC_HOTKEYS]; //De la A a la Z
+
+void util_init_unpawsgac_hotkeys(void)
+{
+        int i;
+
+        for (i=0;i<TOTAL_UNPAWSGAC_HOTKEYS;i++) {
+             util_unpawsgac_hotkeys[i]=0;   
+        }
+}
+
 char *quillversions_strings[]={
         "PAW",
         "Quill.A",
@@ -12737,4 +12751,36 @@ int util_gac_dump_dictonary(int *p_gacversion)
 
         *p_gacversion=gacversion;
         return util_gac_palabras_agregadas;
+}
+
+
+//Retorna 0 si ok. -1 si error
+int util_unpawsetc_dump_words(char *mensaje)
+{
+
+        int version;
+
+	int palabras=util_paws_dump_vocabulary(&version);        
+
+	//Es Paws?
+	if (version>=0) {
+                sprintf(mensaje,"OK. %s signature found. %d words added",
+			quillversions_strings[version],palabras);
+	}
+
+	else {
+		//No es paws. Probar con GAC
+		palabras=util_gac_dump_dictonary(&version);
+		if (version>=0) {
+			sprintf(mensaje,"OK. %s signature found. %d words added",
+				gacversions_strings[version],palabras);
+		}	
+
+		else {
+			//Ni paws ni gac
+			sprintf(mensaje,"It does not seem to be a Quill/PAW/GAC game");
+		}
+	}
+
+        return version;
 }

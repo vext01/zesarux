@@ -25427,7 +25427,20 @@ void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
 
 void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
 {
-	int version;
+
+	char mensaje[1024];
+
+	int retorno=util_unpawsetc_dump_words(mensaje);
+
+	if (retorno>=0) {
+		menu_generic_message_format("Extract Words",mensaje);
+	}
+
+	else {
+		debug_printf (VERBOSE_ERR,mensaje);
+	}
+
+/*	
 	int palabras=util_paws_dump_vocabulary(&version);
 
 	//Es Paws?
@@ -25449,6 +25462,7 @@ void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
 			debug_printf (VERBOSE_ERR,"It does not seem to be a Quill/PAW/GAC game");
 		}
 	}
+*/
 }
 
 

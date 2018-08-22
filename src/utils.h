@@ -693,4 +693,6 @@ extern int util_gac_dump_dictonary(int *p_gacversion);
 
 extern char *gacversions_strings[];
 
+extern int util_unpawsetc_dump_words(char *mensaje);
+
 #endif
