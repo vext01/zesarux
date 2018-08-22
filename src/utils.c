@@ -12130,6 +12130,32 @@ void util_init_unpawsgac_hotkeys(void)
         }
 }
 
+
+//util_add_text_adventure_kdb(buffer_palabra);
+void util_unpawsgac_add_word_kb(char *palabra)
+{
+        //Agregamos la palabra metiendo hotkey si conviene
+        char inicial=letra_minuscula(*palabra);
+
+        int indice=inicial-'a';
+
+        if (util_unpawsgac_hotkeys[indice]==0) {
+                //Meterla con hotkey
+                util_unpawsgac_hotkeys[indice]=1;
+
+                //Buffer de maximo tamanyo y agregando dos ~~ al principio
+                char buffer_palabra_destino[MAX_OSD_ADV_KEYB_TEXT_LENGTH+2];
+                sprintf (buffer_palabra_destino,"~~%s",palabra);
+                util_add_text_adventure_kdb(buffer_palabra_destino);
+
+        }
+
+        else {
+                //Meterla tal cual viene sin hotkey
+                util_add_text_adventure_kdb(palabra);
+        }
+}
+
 char *quillversions_strings[]={
         "PAW",
         "Quill.A",
@@ -12447,7 +12473,7 @@ END;
         for (j=0;j<256;j++) {
                   if (lista_palabras[i][j][0]!=0) {
                           debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",lista_palabras[i][j]);
-                        util_add_text_adventure_kdb(lista_palabras[i][j]);   
+                        util_unpawsgac_add_word_kb(lista_palabras[i][j]);   
                 }
         }
   }
@@ -12536,7 +12562,7 @@ void util_gac_readobjects(z80_int puntero,z80_int endptr,z80_byte *mem_diccionar
 
                 if (strlen(buffer_palabra)) {
                         debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",buffer_palabra);
-                        util_add_text_adventure_kdb(buffer_palabra);
+                        util_unpawsgac_add_word_kb(buffer_palabra);
                         util_gac_palabras_agregadas++;
                 }
          
@@ -12576,7 +12602,7 @@ void util_gac_readwords(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario
 
                 if (strlen(buffer_palabra)) {
                         debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",buffer_palabra);
-                        util_add_text_adventure_kdb(buffer_palabra);
+                        util_unpawsgac_add_word_kb(buffer_palabra);
                         util_gac_palabras_agregadas++;
                 }
 
@@ -12757,6 +12783,8 @@ int util_gac_dump_dictonary(int *p_gacversion)
 //Retorna 0 si ok. -1 si error
 int util_unpawsetc_dump_words(char *mensaje)
 {
+
+        util_init_unpawsgac_hotkeys();
 
         int version;
 
