@@ -12302,7 +12302,6 @@ END;
 
 
 
-  util_clear_text_adventure_kdb();
 
   int total_palabras=0;
 
@@ -12328,6 +12327,7 @@ END;
           return 0;
   }
   
+  util_clear_text_adventure_kdb();
 
   z80_int vocptr;
   z80_int limite_voc;
