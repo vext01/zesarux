@@ -12260,6 +12260,7 @@ int util_paws_dump_vocabulary(int *p_quillversion)
         /*
 
         Extracted from https://github.com/Utodev/unPAWs
+UnPAWS takes snapshot files (.SNA, .SP, .Z80) of  Spectrum  games written  with PAWS or Quill system (version A or C), and  produces  text listings of the game database.
 
         if QuillVersion=0 then
   begin
