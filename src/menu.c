@@ -757,7 +757,7 @@ char zxprinter_ocr_filename_buffer[PATH_MAX];
 char last_timex_cart[PATH_MAX]="";
 char last_ay_file[PATH_MAX]="";
 
-void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea);
+void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea,z80_byte valor_xor);
 void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode);
 
 //directorio inicial al entrar
@@ -6034,7 +6034,7 @@ void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int l
 
 //Vuelca contenido ascii de memoria de spectrum en cadena de texto
 //modoascii: 0: normal. 1:zx80. 2:zx81
-void menu_debug_registers_dump_ascii(char *texto,menu_z80_moto_int direccion,int longitud,int modoascii)
+void menu_debug_registers_dump_ascii(char *texto,menu_z80_moto_int direccion,int longitud,int modoascii,z80_byte valor_xor)
 {
 
         z80_byte byte_leido;
@@ -6053,14 +6053,14 @@ void menu_debug_registers_dump_ascii(char *texto,menu_z80_moto_int direccion,int
 
                 //else {
 									//byte_leido=peek_byte_z80_moto(direccion);
-									byte_leido=menu_debug_get_mapped_byte(direccion);
+									byte_leido=menu_debug_get_mapped_byte(direccion) ^ valor_xor;
 									direccion++;
 								//}
 
 
 
 		if (modoascii==0) {
-		if (byte_leido<32 || byte_leido>127) byte_leido='.';
+		if (byte_leido<32 || byte_leido>126) byte_leido='.';
 		}
 
 		else if (modoascii==1) {
@@ -6794,7 +6794,7 @@ int menu_debug_registers_subview_type=0;
 
 					//Si mostramos en vez de desensamblado, volcado hexa o ascii
 					if (menu_debug_registers_subview_type==1)	menu_debug_registers_dump_hex(dumpassembler,puntero_dir,longitud_op);
-					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii);
+					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii,0);
 					//4 para direccion, fijo
 					
 					sprintf(&buffer_linea[1],"%04X %s",puntero_dir,dumpassembler);
@@ -6873,7 +6873,7 @@ int menu_debug_registers_subview_type=0;
 			int limite=menu_debug_get_main_list_view();
 
 			for (i=0;i<limite;i++) {
-					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
+					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea,0);
 					//menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_linea;
@@ -8592,7 +8592,7 @@ void menu_debug_hexdump_ventana(void)
 
 
 
-void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea)
+void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea,z80_byte valor_xor)
 {
 	//dir_leida=adjust_address_space_cpu(dir_leida);
 
@@ -8619,7 +8619,9 @@ void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida
 	dumpmemoria[offset]=' ';
 	//dumpmemoria[offset]='X';
 
-	menu_debug_registers_dump_ascii(&dumpmemoria[offset+1],dir_leida,bytes_por_linea,menu_debug_hexdump_with_ascii_modo_ascii);
+	//Tener en cuenta el valor xor
+
+	menu_debug_registers_dump_ascii(&dumpmemoria[offset+1],dir_leida,bytes_por_linea,menu_debug_hexdump_with_ascii_modo_ascii,valor_xor);
 
 	//printf ("%s\n",dumpmemoria);
 }
@@ -8651,6 +8653,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	//menu_z80_moto_int menu_debug_hexdump_direccion=get_pc_register();
 
 	int salir=0;
+
+	z80_byte valor_xor=0;
 
 
 
@@ -8706,7 +8710,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				}
 			}*/
 
-			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,bytes_por_linea);
+			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,bytes_por_linea,valor_xor);
 			//printf ("hexa: %s\n",dumpmemoria);
 
 
@@ -8721,17 +8725,16 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 				char buffer_linea[40];
 				if (menu_debug_hexdump_with_ascii_modo_ascii==0) {
-					sprintf (buffer_linea,"M: Change pointer C: ASCII");
+					sprintf (buffer_linea,"M: Ch.ptr I: Inv: %s C: ASCII",(valor_xor==0 ? "No" : "Yes") );
 				}
 
 				else if (menu_debug_hexdump_with_ascii_modo_ascii==1) {
-                                        sprintf (buffer_linea,"M: Change pointer C: ZX80");
+                                        sprintf (buffer_linea,"M: Ch.ptr I: Inv: %s C: ZX80",(valor_xor==0 ? "No" : "Yes") );
                                 }
 
-				else sprintf (buffer_linea,"M: Change pointer C: ZX81");
+				else sprintf (buffer_linea,"M: Ch.ptr I: Inv: %s C: ZX81",(valor_xor==0 ? "No" : "Yes") );
 
 
-				//menu_escribe_linea_opcion(linea++,-1,1,"M: Change pointer C:");
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 				//if (MACHINE_IS_INVES) {
@@ -8801,6 +8804,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 					case 'c':
 						menu_debug_hexdump_with_ascii_modo_ascii++;
 						if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
+					break;
+
+					case 'i':
+						valor_xor ^= 255;
 					break;
 
 					//case 'l':
