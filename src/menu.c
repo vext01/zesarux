@@ -21866,12 +21866,24 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 		util_get_file_no_directory(quickfile,nombre);
 
 
-		char nombre_shown[25];
+		int usar_nombre_autodetectado;
+		
+     
 
-                                menu_tape_settings_trunc_name(nombre,nombre_shown,25);
+		//Si nombre vacio, no usar nombre autodetectado
+		if (nombre[0]==0) {
+			usar_nombre_autodetectado=0;
+		}
 
+		else {
+			//Nombre previo. El usuario quiere usarlo?
+			char nombre_shown[25];
+			menu_tape_settings_trunc_name(nombre,nombre_shown,25);
+			usar_nombre_autodetectado=menu_confirm_yesno_texto("Generate config for",nombre_shown);
 
-		if (menu_confirm_yesno_texto("Generate config for",nombre_shown)) {
+		}
+
+		if (usar_nombre_autodetectado) {
 			strcpy(source_file,quickfile);
 			ret=1;
 		}

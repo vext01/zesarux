@@ -7926,6 +7926,15 @@ void parse_customfile_options(void)
                                 util_add_text_adventure_kdb(argv[puntero_parametro]);
                         }
 
+				else if (!strcmp(argv[puntero_parametro],"--text-keyboard-length")) {
+						siguiente_parametro_argumento();
+						int valor=parse_string_to_number(argv[puntero_parametro]);
+						if (valor<10 || valor>100) {
+                                        debug_printf (VERBOSE_ERR,"Invalid text-keyboard-length value\n");
+                                        return;
+                                }
+						adventure_keyboard_key_length=valor;
+				}
 
 		 else if (!strcmp(argv[puntero_parametro],"--machine")) {
                                 char *machine_name;
@@ -8063,6 +8072,7 @@ void customconfig_help(void)
 	"--joystickkeybt but key\n"
 	"--joystickkeyev evt key\n"
 	"--text-keyboard-add text\n"
+        "--text-keyboard-length n\n"
 	"--cleareventlist\n"
 
 	"\n"
@@ -12029,6 +12039,17 @@ void util_save_game_config(char *filename)
                 }
         }
   }
+
+
+  //text osd keyboard
+  for (i=0;i<osd_adv_kbd_defined;i++) {
+          //Truco para poder poner " en el texto. Con barra invertida
+          if (!strcmp(osd_adv_kbd_list[i],"\"")) ADD_STRING_CONFIG,"--text-keyboard-add \\");
+        else ADD_STRING_CONFIG,"--text-keyboard-add \"%s\"",osd_adv_kbd_list[i]);
+  }
+
+        ADD_STRING_CONFIG,"--text-keyboard-length %d",adventure_keyboard_key_length);
+
 
 
          FILE *ptr_configfile;
