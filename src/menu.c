@@ -25417,27 +25417,6 @@ void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_unpaws(MENU_ITEM_PARAMETERS)
-{
-	int version;
-	int palabras=util_paws_dump_vocabulary(&version);
-
-	if (version>=0) {
-		menu_generic_message_format("UnPAWS to OSD Text KB","OK. %s signature found. %d words added",
-			quillversions_strings[version],palabras);
-	}
-
-}
-
-void menu_ungac(MENU_ITEM_PARAMETERS)
-{
-	int version;
-	int palabras=util_gac_dump_dictonary(&version);
-	if (version>=0) {
-		menu_generic_message_format("UnGAC to OSD Text KB","OK. %s signature found. %d words added",
-			gacversions_strings[version],palabras);
-	}
-}
 
 void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
 {
@@ -25645,13 +25624,6 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					"instead ZEsarUX will only work if the cpu is in IM1 mode (and not IM2)");
 
 
-		if (MACHINE_IS_SPECTRUM) {
-			/*menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws,NULL,"UnPAWS to OSD Text KB");	
-
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_ungac,NULL,"UnGAC to OSD Text KB");		*/
-
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_unpaws_ungac,NULL,"UnPAWS/unGAC to OSD Text KB");			
-		}
 
 		/* De momento desactivado
 		if (MACHINE_IS_SPECTRUM) {
@@ -26675,17 +26647,6 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
 
 
-		//Teclado en pantalla
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
-			menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_onscreen_keyboard,NULL,"On Screen ~~Keyboard");
-			menu_add_item_menu_shortcut(array_menu_osd_settings,'k');
-			menu_add_item_menu_tooltip(array_menu_osd_settings,"Open on screen keyboard");
-			menu_add_item_menu_ayuda(array_menu_osd_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
-
-
-
-
-		}
 
 
 
@@ -26826,7 +26787,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
+		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
@@ -28075,6 +28036,27 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 												"Mapped colour palettes means the active palette for a mode, for example 64 colours on ULAPlus."
 
 				);
+
+
+       //Teclados en pantalla
+                if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
+                        menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_onscreen_keyboard,NULL,"On Screen ~~Keyboard");
+                        menu_add_item_menu_shortcut(array_menu_display_settings,'k');
+                        menu_add_item_menu_tooltip(array_menu_display_settings,"Open on screen keyboard");
+                        menu_add_item_menu_ayuda(array_menu_display_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
+
+
+
+			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
+
+
+			if (MACHINE_IS_SPECTRUM) {
+				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_unpaws_ungac,NULL," UnPAWS/unGAC to OSD Text KB");			
+			}
+
+                }
+
+
 
  
 
