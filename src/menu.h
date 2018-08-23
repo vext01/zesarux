@@ -600,7 +600,8 @@ extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,i
 "(32768)&0FH=3 : it will match when memory address 32768 has the low 4 bits set to value 3\n" \
 "OUTFIRED=1 AND PWA&00FFH=FEH AND PWV&7=1 : it will match when changing border color to blue\n" \
 "HL=DE : it will mach when HL is equal to DE register\n" \
-"32768>PC : it will match when PC>32768\n" \
+"32768>PC : it will match when PC<32768\n" \
+"1=1 : it will match when 1=1, so always ;) \n" \
 "FS=1: it will match when flag S is set\n" \
 "A=10 and BC<33 : it will match when A register is 10 and BC is below 33\n" \
 "OPCODE=ED4AH : it will match when running opcode ADC HL,BC\n" \
