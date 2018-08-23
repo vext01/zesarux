@@ -3335,7 +3335,7 @@ char buffer_retorno[2048];
     }
     else {
       int result=debug_breakpoint_condition_loop(parametros,1);
-      escribir_socket_format(misocket,"Result","%s -> %s",parametros,(result ? "True" : "False " ));
+      escribir_socket_format(misocket,"Result: %s -> %s",parametros,(result ? "True" : "False " ));
     }
   }
 
