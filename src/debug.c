@@ -1445,12 +1445,19 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 
 	*/
 
+	if (debug) {
+		debug_printf (VERBOSE_DEBUG,"Dividing two members of condition. Left=%s Right=%s");
+	}
+
 	//Parte izquierda
 	unsigned int valor_registro=debug_parse_value_register_etc(registro,&si_cond_opcode);
 	//Parte derecha
 	valor=debug_parse_value_register_etc(texto,&si_cond_opcode);
 
 	//TODO: comprobar condicion OPCODE a ver si va
+	if (debug) {
+		debug_printf (VERBOSE_DEBUG,"Parsing two members of condition. Left=%u Right=%u",valor_registro,valor);
+	}
 
 
 	//unsigned int debug_parse_value_register_etc(char *texto,int *si_cond_opcode)
