@@ -1844,25 +1844,29 @@ void cpu_core_loop_debug_check_breakpoints(void)
 
 		//Breakpoint de condicion
 		for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
-			if (debug_breakpoints_conditions_array[i][0]!=0) {
-				int se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
-				if ( se_cumple_breakpoint && debug_breakpoints_conditions_enabled[i] ) {
-					//Si condicion pasa de false a true o bien el comportamiento por defecto es saltar siempre
-					if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
-						debug_breakpoints_conditions_saltado[i]=1;
-	                	char buffer_mensaje[MAX_BREAKPOINT_CONDITION_LENGTH+64];
-        	        	sprintf(buffer_mensaje,"%s",&debug_breakpoints_conditions_array[i][0]);
+			//Si ese breakpoint esta activo
+			if (debug_breakpoints_conditions_enabled[i]) {
+				if (debug_breakpoints_conditions_array[i][0]!=0) {
 
-	                    //Ejecutar accion, por defecto es abrir menu
-						catch_breakpoint_index=i;
-        	        	cpu_core_loop_debug_breakpoint(buffer_mensaje);
+					int se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
+					if ( se_cumple_breakpoint ) {
+						//Si condicion pasa de false a true o bien el comportamiento por defecto es saltar siempre
+						if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
+							debug_breakpoints_conditions_saltado[i]=1;
+	        	        	char buffer_mensaje[MAX_BREAKPOINT_CONDITION_LENGTH+64];
+        	    	    	sprintf(buffer_mensaje,"%s",&debug_breakpoints_conditions_array[i][0]);
+
+	                    	//Ejecutar accion, por defecto es abrir menu
+							catch_breakpoint_index=i;
+        	        		cpu_core_loop_debug_breakpoint(buffer_mensaje);
+						}
+            		}
+					else {
+						//No se cumple condicion. Indicarlo que esa condicion esta false
+						debug_breakpoints_conditions_saltado[i]=0;
 					}
-            	}
-				else {
-					//No se cumple condicion. Indicarlo que esa condicion esta false
-					debug_breakpoints_conditions_saltado[i]=0;
-				}
-    	    }
+    	    	}
+			}
     	}
 
     }
