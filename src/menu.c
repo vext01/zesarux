@@ -31474,11 +31474,11 @@ void menu_display_tsconf_pal_depth(MENU_ITEM_PARAMETERS)
 void menu_display_osd_word_kb_length(MENU_ITEM_PARAMETERS)
 {
 
-	char string_length[3];
+	char string_length[4];
 
         sprintf (string_length,"%d",adventure_keyboard_key_length);
 
-        menu_ventana_scanf("Length? (10-100)",string_length,3);
+        menu_ventana_scanf("Length? (10-100)",string_length,4);
 
         int valor=parse_string_to_number(string_length);
 	if (valor<10 || valor>100) {
