@@ -1848,7 +1848,9 @@ void cpu_core_loop_debug_check_breakpoints(void)
 			if (debug_breakpoints_conditions_enabled[i]) {
 				if (debug_breakpoints_conditions_array[i][0]!=0) {
 
-					int se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
+					int se_cumple_breakpoint;
+
+					se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
 					if ( se_cumple_breakpoint ) {
 						//Si condicion pasa de false a true o bien el comportamiento por defecto es saltar siempre
 						if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
