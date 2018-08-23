@@ -715,6 +715,7 @@ struct s_items_ayuda items_ayuda[]={
   {"enter-cpu-step",NULL,NULL,"Enter cpu step to step mode"},
 	{"esxdoshandler-get-open-files","|esxgof",NULL,"Gets a list of open files and directories on the esxdos handler"},
   {"evaluate","|e","expression","Evaluate expression, can be more than one register separated by spaces. It's the same as using watches on the debug menu"},
+  {"evaluate-condition","|ec","condition","Evaluate condition. It's the same as using evaluate condition on the breakpoints debug menu"},
   {"exit-cpu-step","|ecs",NULL,"Exit cpu step to step mode"},
   {"exit-emulator",NULL,NULL,"Ends emulator"},
 {"find-label",NULL,"label","Finds label on source code"},
@@ -3327,6 +3328,16 @@ char buffer_retorno[2048];
     }
   }
 
+
+   else if (!strcmp(comando_sin_parametros,"evaluate-condition") || !strcmp(comando_sin_parametros,"ec")) {
+    if (parametros[0]==0) {
+      escribir_socket(misocket,"Error. No expression");
+    }
+    else {
+      int result=debug_breakpoint_condition_loop(parametros,1);
+      escribir_socket_format(misocket,"Result","%s -> %s",parametros,(result ? "True" : "False " ));
+    }
+  }
 
 
 
