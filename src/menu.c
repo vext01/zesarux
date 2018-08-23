@@ -31471,6 +31471,26 @@ void menu_display_tsconf_pal_depth(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_display_osd_word_kb_length(MENU_ITEM_PARAMETERS)
+{
+
+	char string_length[3];
+
+        sprintf (string_length,"%d",adventure_keyboard_key_length);
+
+        menu_ventana_scanf("Length? (10-100)",string_length,3);
+
+        int valor=parse_string_to_number(string_length);
+	if (valor<10 || valor>100) {
+		debug_printf (VERBOSE_ERR,"Invalid value");
+	}
+
+	else {
+		adventure_keyboard_key_length=valor;
+	}
+
+}
+
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
@@ -31809,10 +31829,20 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Disables colours for Spectrum display");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Disables colours for Spectrum display");
 
+
+
 		}
 
 
 
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_osd_word_kb_length,NULL,"OSD Adventure KB length: %s",adventure_keyboard_key_length);
+
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Define the duration for every key press on the Adventure Text OSD Keyboard");
+			menu_add_item_menu_ayuda(array_menu_settings_display,"Define the duration for every key press on the Adventure Text OSD Keyboard, in 1/50 seconds (default 50)");
+
+
+		}
 
 
 		if (menu_display_cursesstdoutsimpletext_cond() || menu_display_aa_cond() ) {

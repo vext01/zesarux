@@ -1602,7 +1602,7 @@ printf (
 		" --text-keyboard-add ~~north   --text-keyboard-add e~~xamine\n");
 
 printf (
-		"--text-keyboard-length n   Define the duration for every key press on the Adventure Text OSD Keyboard, in 1/50 seconds (default %d)\n"
+		"--text-keyboard-length n   Define the duration for every key press on the Adventure Text OSD Keyboard, in 1/50 seconds (default %d). Minimum 10, maximum 100\n"
 		"The half of this value, the key will be pressed, the other half, released. Example: --text-keyboard-length 50 to last 1 second\n",
 		DEFAULT_ADV_KEYBOARD_KEY_LENGTH);
 
