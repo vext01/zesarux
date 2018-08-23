@@ -1837,54 +1837,38 @@ int debug_breakpoint_condition_loop(char *texto,int debug)
 //Comprobar condiciones. Solo lo hacemos en core_loop
 void cpu_core_loop_debug_check_breakpoints(void)
 {
-        //Condicion de debug
-        if (debug_breakpoints_enabled.v) {
+	//Condicion de debug
+	if (debug_breakpoints_enabled.v) {
 
-          //printf ("core con debug\n");
+		int i;
 
-                //Tabla de breakpoints PC. No usada. porque se puede emular con condicion PC=
-
-                int i;
-
-                /*
-                for (i=0;i<MAX_BREAKPOINTS;i++) {
-                        if (debug_breakpoints_array[i]!=-1) {
-                                if (debug_breakpoints_array[i]==reg_pc) {
-                                        char buffer_mensaje[32];
-                                        sprintf(buffer_mensaje,"PC Address is: %d",reg_pc);
-                                        cpu_core_loop_debug_breakpoint(buffer_mensaje);
-                                }
-                        }
-                }
-                */
-
-                //Breakpoint de condicion
-                for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
-                        if (debug_breakpoints_conditions_array[i][0]!=0) {
-                                if (
+		//Breakpoint de condicion
+		for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+			if (debug_breakpoints_conditions_array[i][0]!=0) {
+				if (
 					debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0) &&
-					debug_breakpoints_conditions_enabled[i]
+						debug_breakpoints_conditions_enabled[i]
 
-				) {
+					) {
 					//Si condicion pasa de false a true o bien el comportamiento por defecto es saltar siempre
 					if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
 						debug_breakpoints_conditions_saltado[i]=1;
-	                                        char buffer_mensaje[MAX_BREAKPOINT_CONDITION_LENGTH+64];
-        	                                sprintf(buffer_mensaje,"%s",&debug_breakpoints_conditions_array[i][0]);
+	                	char buffer_mensaje[MAX_BREAKPOINT_CONDITION_LENGTH+64];
+        	        	sprintf(buffer_mensaje,"%s",&debug_breakpoints_conditions_array[i][0]);
 
-                                          //Ejecutar accion, por defecto es abrir menu
+	                    //Ejecutar accion, por defecto es abrir menu
 						catch_breakpoint_index=i;
-                	                        cpu_core_loop_debug_breakpoint(buffer_mensaje);
+        	        	cpu_core_loop_debug_breakpoint(buffer_mensaje);
 					}
-                                }
+            	}
 				else {
 					//No se cumple condicion. Indicarlo que esa condicion esta false
 					debug_breakpoints_conditions_saltado[i]=0;
 				}
-                        }
-                }
+    	    }
+    	}
 
-        }
+    }
 
 }
 
