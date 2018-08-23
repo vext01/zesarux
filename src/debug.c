@@ -1833,6 +1833,42 @@ int debug_breakpoint_condition_loop(char *texto,int debug)
 	return valor_final;
 }
 
+//Parsea un breakpoint optimizado
+int debug_breakpoint_condition_optimized(int indice)
+{
+
+	int tipo_optimizacion;
+
+    tipo_optimizacion=optimized_breakpoint_array[indice].operator;
+
+	unsigned int valor;
+	unsigned int valor_variable;
+
+	valor=optimized_breakpoint_array[indice].valor;
+
+	//Segun el tipo
+	switch (tipo_optimizacion) {
+		case OPTIMIZED_BRK_TYPE_PC:
+			valor_variable=reg_pc;
+		break;
+
+		case OPTIMIZED_BRK_TYPE_MRA:
+			valor_variable=debug_mmu_mra;
+		break;
+
+		case OPTIMIZED_BRK_TYPE_MWA:
+			valor_variable=debug_mmu_mwa;
+		break;		
+
+		default:
+			return 0;
+		break;
+	}
+
+	if (valor_variable==valor) return 1;
+	return 0;
+}
+
 
 //Comprobar condiciones. Solo lo hacemos en core_loop
 void cpu_core_loop_debug_check_breakpoints(void)
@@ -1849,8 +1885,13 @@ void cpu_core_loop_debug_check_breakpoints(void)
 				if (debug_breakpoints_conditions_array[i][0]!=0) {
 
 					int se_cumple_breakpoint;
-
-					se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
+					//Si esta optimizado
+					if (optimized_breakpoint_array[i].optimized) {
+						se_cumple_breakpoint=debug_breakpoint_condition_optimized(i);
+					}
+					else {
+						se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
+					}
 					if ( se_cumple_breakpoint ) {
 						//Si condicion pasa de false a true o bien el comportamiento por defecto es saltar siempre
 						if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
@@ -3260,9 +3301,14 @@ else if (!strcasecmp(texto_registro,"L'")) {
 
 void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 {
-
 	//de momento suponemos que no esta optimizado
 	optimized_breakpoint_array[breakpoint_index].optimized=0;
+
+	//Si no es Z80, no optimizar
+	if (!CPU_IS_Z80) {
+		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: CPU is not Z80. Not optimized");
+		return;
+	}
 
 	//Aqui asumimos los siguientes:
 	//PC=VALOR
