@@ -16,6 +16,12 @@ Added OSD Adventure Text Keyboard, useful for having typical words on Adventure 
 Added tool to export vocabulary from a PAWS/QUILL/GAC game to list of words on OSD Adventure Text Keyboard
 
 Improved debugger:
+*Now you can use every register, variable, number on any position of a condition (left, right), so the following breakpoint conditions are now valid:
+32768>PC
+HL=DE
+3=PC
+DE>IX
+etc...
 *Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches
 *New pseudo variables:
 **OUTFIRED: returns 1 if last Z80 opcode was an OUT operation
