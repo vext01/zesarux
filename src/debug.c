@@ -1865,7 +1865,13 @@ int debug_breakpoint_condition_optimized(int indice)
 		break;
 	}
 
-	if (valor_variable==valor) return 1;
+	if (valor_variable==valor) {
+		debug_printf (VERBOSE_DEBUG,"return variable is ok from optimizer type: %d value: %04XH",tipo_optimizacion,valor);
+		return 1;
+	}
+
+	//printf ("NOT return variable is ok from optimizer tipo: %d valor: %d\n",tipo_optimizacion,valor);
+
 	return 0;
 }
 
@@ -1885,13 +1891,17 @@ void cpu_core_loop_debug_check_breakpoints(void)
 				if (debug_breakpoints_conditions_array[i][0]!=0) {
 
 					int se_cumple_breakpoint;
+					//printf ("Checking breakpoint %d\n",i);
 					//Si esta optimizado
+
 					if (optimized_breakpoint_array[i].optimized) {
+						//printf ("Parsing optimized breakpoint\n");
 						se_cumple_breakpoint=debug_breakpoint_condition_optimized(i);
 					}
 					else {
 						se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
 					}
+
 					if ( se_cumple_breakpoint ) {
 						//Si condicion pasa de false a true o bien el comportamiento por defecto es saltar siempre
 						if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
@@ -3399,11 +3409,12 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 	//Pues tenemos que suponer que es un valor. Parsearlo y meterlo en array de optimizacion
 	valor=parse_string_to_number(valor_comparar);
 
-	optimized_breakpoint_array[i].optimized=1;
-	optimized_breakpoint_array[i].operator=tipo_optimizacion;
-	optimized_breakpoint_array[i].valor=valor;
+	optimized_breakpoint_array[breakpoint_index].optimized=1;
+	optimized_breakpoint_array[breakpoint_index].operator=tipo_optimizacion;
+	optimized_breakpoint_array[breakpoint_index].valor=valor;
 
-	debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Set optimized breakpoint operator type %d value %04XH",tipo_optimizacion,valor);
+	debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Set optimized breakpoint operator index %d type %d value %04XH",
+				breakpoint_index,tipo_optimizacion,valor);
 
 
 }
