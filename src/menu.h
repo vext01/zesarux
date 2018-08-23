@@ -544,11 +544,14 @@ extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_
 extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar);
 
 
+//"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
-"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" \
+"[EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR]  [EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR] ... where: \n" \
+"[EXPRESSION] can be a COMPLEXVARIABLE or a VALUE  \n" \
+"[COMPLEXVARIABLE] is formed by [VARIABLE][VOP][CONDITION][VALUE] \n" \
 "[VARIABLE] can be a CPU register or some pseudo variables: A,B,C,D,E,F,H,L,AF,BC,DE,HL,A',B',C',D',E',F',H',L',AF',BC',DE',HL',I,R,SP,PC,IX,IY\n" \
 "FS,FZ,FP,FV,FH,FN,FC: Flags\n" \
 "(BC),(DE),(HL),(SP),(PC),(IX),(IY), (NN), IFF1, IFF2, OPCODE,\n" \
@@ -596,6 +599,8 @@ extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,i
 "A|1=255 : it will match when register A, doing OR bitwise (|), it equal to 255\n" \
 "(32768)&0FH=3 : it will match when memory address 32768 has the low 4 bits set to value 3\n" \
 "OUTFIRED=1 AND PWA&00FFH=FEH AND PWV&7=1 : it will match when changing border color to blue\n" \
+"HL=DE : it will mach when HL is equal to DE register\n" \
+"32768>PC : it will match when PC>32768\n" \
 "FS=1: it will match when flag S is set\n" \
 "A=10 and BC<33 : it will match when A register is 10 and BC is below 33\n" \
 "OPCODE=ED4AH : it will match when running opcode ADC HL,BC\n" \
