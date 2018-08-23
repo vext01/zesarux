@@ -1342,6 +1342,27 @@ int debug_breakpoint_cond_opcode(unsigned int valor)
 }
 
 
+unsigned int debug_parse_value_register_etc(char *texto,int *si_cond_opcode)
+{
+
+	//Primero vemos si es registro, variable, etc. Y si no lo es, parsear como numero
+
+	unsigned int valor;
+
+	valor=cpu_core_loop_debug_registro(texto,si_cond_opcode);
+
+        if (valor!=0xFFFFFFFF) {
+		return valor;
+        }
+
+	//Registro/variable desconocida. Parseamos como numero tal cual
+        valor=parse_string_to_number(texto);
+
+
+	return valor;
+
+}
+
 
 //Determina si una condicion es valida o no, hasta final de condicion o que se encuentre un operador: and, or, xor
 
@@ -1397,6 +1418,7 @@ int debug_breakpoint_condition(char *texto_total,int debug)
         }
 
 	//Obtener valor de despues del operador <, > o = o /
+	//Aqui obtenemos parte derecha de la comparacion. El valor antiguamente
 	valor=parse_string_to_number(texto);
 
         if (debug) {
@@ -1406,6 +1428,8 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 
 	int si_cond_opcode;
 
+
+	//Aqui obtenemos parte izquierda de la comparacion. El registro antiguamente
 	unsigned int v_reg=cpu_core_loop_debug_registro(registro,&si_cond_opcode);
 
 	if (v_reg==0xFFFFFFFF) {
