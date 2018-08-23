@@ -723,6 +723,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"get-audio-buffer-info",NULL,NULL,"Get audio buffer information"},
   {"get-breakpoints","|gb","[index] [items]","Get breakpoints list. If set index, returns item at index. If set items, returns number of items list starting from index parameter"},
 	{"get-breakpointsactions","|gba","[index] [items]","Get breakpoints actions list. If set first, returns item at index. If set items, returns number of items list starting from index parameter"},
+	{"get-breakpoints-optimized",NULL,"[index] [items]","Show which breakpoints are optimized or not. If set index, returns item at index. If set items, returns number of items list starting from index parameter"},	
 	  {"get-buildnumber",NULL,NULL,"Shows build number. Useful on beta version, this build number is the compilation date of ZEsarUX in Unix time format"},
 	{"get-cpu-core-name",NULL,NULL,"Get emulation cpu core name"},
   {"get-crc32",NULL,"start_address length","Calculate crc32 checksum starting at address for defined length. It uses current memory zone"},
@@ -915,6 +916,32 @@ void remote_get_breakpoints(int misocket,int inicio,int items)
   }
 }
 
+//Inicio contando desde cero
+void remote_get_breakpoints_optimized(int misocket,int inicio,int items)
+{
+  int i;
+
+  escribir_socket (misocket,"Breakpoints: ");
+  //if (debug_breakpoints_enabled.v) escribir_socket (misocket,"On\n");
+  //else escribir_socket (misocket,"Off\n");
+
+  for (i=inicio;i<MAX_BREAKPOINTS_CONDITIONS && i<inicio+items;i++) {
+
+
+    if (optimized_breakpoint_array[i].optimized==0) {
+      escribir_socket_format(misocket,"Not optimized %d",i+1);
+
+    }
+    else {
+      escribir_socket_format(misocket,"Optimized %d: Type: %d Value: %d",
+				i+1,optimized_breakpoint_array[i].operator,optimized_breakpoint_array[i].valor);			
+    }
+
+
+    escribir_socket(misocket,"\n");
+
+  }
+}
 
 void remote_get_memory_zones(int misocket)
 {
@@ -3427,6 +3454,28 @@ char buffer_retorno[2048];
 
 
 	    remote_get_breakpointsactions(misocket,inicio-1,items);
+	  }
+
+	  else if (!strcmp(comando_sin_parametros,"get-breakpoints-optimized") ) {
+        int inicio=1;
+	int items=MAX_BREAKPOINTS_CONDITIONS;
+
+		remote_parse_commands_argvc(parametros);
+                if (remote_command_argc>0) {
+			inicio=parse_string_to_number(remote_command_argv[0]);
+			if (inicio<1 || inicio>MAX_BREAKPOINTS_CONDITIONS) {
+				escribir_socket (misocket,"ERROR. Index out of range");
+				return;
+			}
+			items=1;
+                }
+
+                if (remote_command_argc>1) {
+			items=parse_string_to_number(remote_command_argv[1]);
+                }
+
+
+    remote_get_breakpoints_optimized(misocket,inicio-1,items);
 	  }
 
 	else if (!strcmp(comando_sin_parametros,"get-buildnumber")) {

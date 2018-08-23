@@ -109,22 +109,7 @@ int debug_breakpoints_conditions_saltado[MAX_BREAKPOINTS_CONDITIONS];
 //A 1 si ese breakpoint esta activado. A 0 si no
 int debug_breakpoints_conditions_enabled[MAX_BREAKPOINTS_CONDITIONS];
 
-#define OPTIMIZED_BRK_TYPE_NINGUNA 0
-#define OPTIMIZED_BRK_TYPE_PC 1
-#define OPTIMIZED_BRK_TYPE_MWA 2
-#define OPTIMIZED_BRK_TYPE_MRA 3
 
-//Optimizaciones de breakpoints
-struct s_optimized_breakpoint {
-	int optimized; //0 si no esta optimizado
-
-	//Operador a la izquierda
-	int operator; //tipos: OPTIMIZED_BRK_TYPE_PC, OPTIMIZED_BRK_TYPE_MWA etc
-
-	unsigned int valor; //Valor despues del "="
-};
-
-typedef struct s_optimized_breakpoint optimized_breakpoint;
 
 optimized_breakpoint optimized_breakpoint_array[MAX_BREAKPOINTS_CONDITIONS];
 
@@ -3416,7 +3401,7 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 	}
 
 	if (tipo_optimizacion==OPTIMIZED_BRK_TYPE_NINGUNA) {
-		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: not detected known optimizable variables. Not optimized");
+		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: not detected known optimizable register/variable. Not optimized");
 		return;
 	}
 

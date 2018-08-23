@@ -306,4 +306,24 @@ extern int debug_fired_in;
 extern int debug_fired_interrupt;
 
 
+#define OPTIMIZED_BRK_TYPE_NINGUNA 0
+#define OPTIMIZED_BRK_TYPE_PC 1
+#define OPTIMIZED_BRK_TYPE_MWA 2
+#define OPTIMIZED_BRK_TYPE_MRA 3
+
+//Optimizaciones de breakpoints
+struct s_optimized_breakpoint {
+	int optimized; //0 si no esta optimizado
+
+	//Operador a la izquierda
+	int operator; //tipos: OPTIMIZED_BRK_TYPE_PC, OPTIMIZED_BRK_TYPE_MWA etc
+
+	unsigned int valor; //Valor despues del "="
+};
+
+typedef struct s_optimized_breakpoint optimized_breakpoint;
+
+extern optimized_breakpoint optimized_breakpoint_array[];
+
+
 #endif
