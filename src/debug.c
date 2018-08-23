@@ -1417,6 +1417,11 @@ int debug_breakpoint_condition(char *texto_total,int debug)
                 return 0;
         }
 
+	int si_cond_opcode;
+
+
+	/* Metodo antiguo de obtener parte izquierda y derecha 
+
 	//Obtener valor de despues del operador <, > o = o /
 	//Aqui obtenemos parte derecha de la comparacion. El valor antiguamente
 	valor=parse_string_to_number(texto);
@@ -1426,7 +1431,6 @@ int debug_breakpoint_condition(char *texto_total,int debug)
         }
 
 
-	int si_cond_opcode;
 
 
 	//Aqui obtenemos parte izquierda de la comparacion. El registro antiguamente
@@ -1438,6 +1442,18 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 	}
 
 	unsigned int valor_registro=v_reg;
+
+	*/
+
+	//Parte izquierda
+	unsigned int valor_registro=debug_parse_value_register_etc(registro,&si_cond_opcode);
+	//Parte derecha
+	valor=debug_parse_value_register_etc(texto,&si_cond_opcode);
+
+	//TODO: comprobar condicion OPCODE a ver si va
+
+
+	//unsigned int debug_parse_value_register_etc(char *texto,int *si_cond_opcode)
 
 
 	//gestionar condicion
