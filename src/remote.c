@@ -921,7 +921,7 @@ void remote_get_breakpoints_optimized(int misocket,int inicio,int items)
 {
   int i;
 
-  escribir_socket (misocket,"Breakpoints: ");
+  //escribir_socket (misocket,"Breakpoints: ");
   //if (debug_breakpoints_enabled.v) escribir_socket (misocket,"On\n");
   //else escribir_socket (misocket,"Off\n");
 
