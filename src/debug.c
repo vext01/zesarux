@@ -1833,7 +1833,51 @@ int debug_breakpoint_condition_loop(char *texto,int debug)
 	return valor_final;
 }
 
-//Parsea un breakpoint optimizado
+/*
+Sobre el parser optimizado y otras optimizaciones. Usos de cpu antes y ahora:
+
+-hasta ayer. 
+--noconfigfile --set-breakpoint 1 bc=4444 ; 52 %  cpu
+
+-con nuevo parser que permite meter registros y valores en ambos lados del operador de comparación
+--noconfigfile --set-breakpoint 1 bc=4444 ; 70 % cpu
+
+-con optimizaron si valor empieza por dígito:
+54%
+
+-con optimizacion metiendo comparación de “pc” arriba del todo y condición:
+51% cpu. Con codigo de ayer 51%
+
+
+-si valor no empieza por dígito, por ejemplo PC=CCCCH. Uso cpu 70%
+
+
+
+——————
+
+Optimizando expresiones PC=XXXX, MRA=XXXX, MWA=XXXX, optimizado basado en lo comentado con Thomas Busse
+
+**1 breakpoint
+
+--noconfigfile --set-breakpoint 1 pc=4444
+-con optimizado 
+ 43% cpu
+
+-con parser anterior 
+55%cpu
+
+
+** Con 10 breakpoints. 
+./zesarux --noconfigfile --set-breakpoint 1 pc=40000 --set-breakpoint 2 pc=40001 --set-breakpoint 3 pc=40002 --set-breakpoint 4 pc=40003 --set-breakpoint 5 pc=40005 --set-breakpoint 6 pc=40006 --set-breakpoint 7 pc=40007 --set-breakpoint 8 pc=40008 --set-breakpoint 9 pc=40009 --set-breakpoint 10 pc=40010
+
+-con optimizado  45 %
+
+-con parser anterior   85% cpu. (Desactivando auto frameskip. con autoframeskip, hace 75% cpu, 2 FPS
+
+
+*/
+
+//Parsea un breakpoint optimizado, basado en codigo de Thomas Busse
 int debug_breakpoint_condition_optimized(int indice)
 {
 
@@ -1866,7 +1910,7 @@ int debug_breakpoint_condition_optimized(int indice)
 	}
 
 	if (valor_variable==valor) {
-		debug_printf (VERBOSE_DEBUG,"return variable is ok from optimizer type: %d value: %04XH",tipo_optimizacion,valor);
+		debug_printf (VERBOSE_DEBUG,"Fired optimized breakpoont. Optimizer type: %d value: %04XH",tipo_optimizacion,valor);
 		return 1;
 	}
 
