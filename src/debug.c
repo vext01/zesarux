@@ -1446,7 +1446,7 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 	*/
 
 	if (debug) {
-		debug_printf (VERBOSE_DEBUG,"Dividing two members of condition. Left=%s Right=%s");
+		debug_printf (VERBOSE_DEBUG,"Dividing two members of condition. Left=%s Right=%s",registro,texto);
 	}
 
 	//Parte izquierda
