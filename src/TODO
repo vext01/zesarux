@@ -24,17 +24,6 @@ renombrarla
 
 --- Cosas para la siguiente version
 
--parser de breakpoints mejorar para que los dos lados de una condicion (izq / derecha ) se pueda usar mismo tipo de expresiones.
-Es decir:
-
-Ahora en la izquierda solo puede haber una variable (registro, MRW, etc) con un operador logico (and & or | xor ^) y en la derecha, solo valores
-Permitir que tanto la izquierda como la derecha permitan todo tipo de valores, asi se podrian tener breakpoints tan bizarros como:
-
-MWA=MPA
-3=BC
-HL=DE
-
-etc...
 
 -poder cargar un .config sin mas, sin que cargue snapshot ni cinta ni nada, solo parseando el config. raro? en smartload estaran los dos, el juego y la config
 
