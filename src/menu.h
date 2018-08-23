@@ -617,7 +617,7 @@ extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,i
 "DE=3FFFH \n" \
 "is faster than\n" \
 "DE=FFFFH \n" \
-"So I recommend you to add a 0 at the begin of the number, if it does not start with a digit. So using the same example, this expression will be faster: \n" \
+"So I recommend you to add a 0 at the beginning of the number, if it does not start with a digit. So using the same example, this expression will be faster: \n" \
 "DE=0FFFFH \n" \
 "The technical explanation for that is, if the parser sees a starting digit, it doesn't have to try to find a match on every register/variable\n" \
 "\nNote 3: Breakpoint types PC=XXXX, MWA=XXXX and MRA=XXXX are a lot faster than the rest, because they use a breakpoint optimizer"
