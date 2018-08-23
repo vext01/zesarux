@@ -109,7 +109,24 @@ int debug_breakpoints_conditions_saltado[MAX_BREAKPOINTS_CONDITIONS];
 //A 1 si ese breakpoint esta activado. A 0 si no
 int debug_breakpoints_conditions_enabled[MAX_BREAKPOINTS_CONDITIONS];
 
+#define OPTIMIZED_BRK_TYPE_NINGUNA 0
+#define OPTIMIZED_BRK_TYPE_PC 1
+#define OPTIMIZED_BRK_TYPE_MWA 2
+#define OPTIMIZED_BRK_TYPE_MRA 3
 
+//Optimizaciones de breakpoints
+struct s_optimized_breakpoint {
+	int optimized; //0 si no esta optimizado
+
+	//Operador a la izquierda
+	int operator; //tipos: OPTIMIZED_BRK_TYPE_PC, OPTIMIZED_BRK_TYPE_MWA etc
+
+	unsigned int valor; //Valor despues del "="
+};
+
+typedef struct s_optimized_breakpoint optimized_breakpoint;
+
+optimized_breakpoint optimized_breakpoint_array[MAX_BREAKPOINTS_CONDITIONS];
 
 
 
@@ -451,9 +468,11 @@ void init_breakpoints_table(void)
 
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 		debug_breakpoints_conditions_array[i][0]=0;
-    debug_breakpoints_actions_array[i][0]=0;
+    	debug_breakpoints_actions_array[i][0]=0;
 		debug_breakpoints_conditions_saltado[i]=0;
 		debug_breakpoints_conditions_enabled[i]=0;
+
+		optimized_breakpoint_array[i].optimized=0;
 	}
 
         //for (i=0;i<MAX_BREAKPOINTS_PEEK;i++) debug_breakpoints_peek_array[i]=-1;
@@ -3252,6 +3271,110 @@ else if (!strcasecmp(texto_registro,"L'")) {
 
 }
 
+void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
+{
+
+	//de momento suponemos que no esta optimizado
+	optimized_breakpoint_array[breakpoint_index].optimized=0;
+
+	//Aqui asumimos los siguientes:
+	//PC=VALOR
+	//MWA=VALOR
+	//MRA=VALOR
+
+	//Minimo 4 caracteres
+	int longitud=strlen(condicion);
+	if (longitud<4) {
+		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: length<4. Not optimized");
+		return;
+	}
+
+	//Copiamos los 3 primeros caracteres
+	char variable[4];
+	int i;
+	for (i=0;i<3;i++) variable[i]=condicion[i];
+
+	/*
+	+#define OPTIMIZED_BRK_TYPE_PC 0
++#define OPTIMIZED_BRK_TYPE_MWA 1
++#define OPTIMIZED_BRK_TYPE_MRA 2
+*/
+	int tipo_optimizacion=OPTIMIZED_BRK_TYPE_NINGUNA;
+	int posicion_igual;
+
+	//Ver si variable de 2 o 3 caracteres
+	if (variable[2]=='=') {
+		posicion_igual=2;
+		variable[2]=0;
+
+		//Comparar con admitidos
+		if (!strcasecmp(variable,"PC")) tipo_optimizacion=OPTIMIZED_BRK_TYPE_PC;
+
+	}
+
+	else if (condicion[3]=='=') {
+		//3 caracteres
+		posicion_igual=3;
+		variable[3]=0;
+
+		//Comparar con admitidos
+		if (!strcasecmp(variable,"MWA")) tipo_optimizacion=OPTIMIZED_BRK_TYPE_MWA;
+		if (!strcasecmp(variable,"MRA")) tipo_optimizacion=OPTIMIZED_BRK_TYPE_MRA;
+
+	}
+
+	else {
+		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: not detected = on 3th or 4th position. Not optimized");
+		return; //Volver sin mas, no se puede optimizar
+	}
+
+	if (tipo_optimizacion==OPTIMIZED_BRK_TYPE_NINGUNA) {
+		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: not detected known optimizable variables. Not optimized");
+		return;
+	}
+
+	//Sabemos el tipo de optimizacion
+	debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Detected possible optimized type=%d",tipo_optimizacion);
+
+	//Ver si lo que hay al otro lado es un valor y nada mas
+	//Buscar si hay un espacio copiando en destino
+	char valor_comparar[MAX_BREAKPOINT_CONDITION_LENGTH];
+
+	int index_destino=0;
+
+	for (i=posicion_igual+1;condicion[i]!=' ' && condicion[i];i++,index_destino++) {
+		valor_comparar[index_destino]=condicion[i];
+	}
+
+	valor_comparar[index_destino]=0;
+
+	//Si ha acabado con un espacio, no optimizar
+	if (condicion[i]==' ') return;
+
+	//Ver si eso que hay a la derecha del igual es una variable
+	int si_cond_opcode=0;
+	unsigned int valor;
+
+    valor=cpu_core_loop_debug_registro(valor_comparar,&si_cond_opcode);
+
+    if (valor!=0xFFFFFFFF) {
+			//Resulta que es una variable, no un numero . no optimizar
+			debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Value is a variable. Not optimized");
+			return;
+    }
+
+	//Pues tenemos que suponer que es un valor. Parsearlo y meterlo en array de optimizacion
+	valor=parse_string_to_number(valor_comparar);
+
+	optimized_breakpoint_array[i].optimized=1;
+	optimized_breakpoint_array[i].operator=tipo_optimizacion;
+	optimized_breakpoint_array[i].valor=valor;
+
+	debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Set optimized breakpoint operator type %d value %04XH",tipo_optimizacion,valor);
+
+
+}
+
 //Indice entre 0 y MAX_BREAKPOINTS_CONDITIONS-1
 void debug_set_breakpoint(int breakpoint_index,char *condicion)
 {
@@ -3266,6 +3389,9 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
 
   	debug_breakpoints_conditions_saltado[breakpoint_index]=0;
   	debug_breakpoints_conditions_enabled[breakpoint_index]=1;
+
+	//Llamamos al optimizador
+	debug_set_breakpoint_optimized(breakpoint_index,condicion);
 
 }
 
