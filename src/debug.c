@@ -961,6 +961,10 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 //Lo siguiente siempre al principio!!
   	*si_cond_opcode=0;
 
+	//Si el primer caracter es un digito, no es una variable y por tanto retornamos error
+	if (util_is_digit(*registro)) {
+		return 0xFFFFFFFF;
+	}
 
 	//printf ("cpu_core_loop_debug_registro: registro: -%s-\n",registro);
 
@@ -1007,6 +1011,11 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 	}
 
 
+	//Caso Z80
+    if (!strcasecmp(registro,"pc")) return reg_pc;
+    if (!strcasecmp(registro,"sp")) return reg_sp;
+    if (!strcasecmp(registro,"ix")) return reg_ix;
+    if (!strcasecmp(registro,"iy")) return reg_iy;	
 
 	if (!strcasecmp(registro,"a")) return reg_a;
 	if (!strcasecmp(registro,"b")) return reg_b;
@@ -1038,7 +1047,7 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
       if (!strcasecmp(registro,"de'")) return REG_DE_SHADOW;
       if (!strcasecmp(registro,"hl'")) return REG_HL_SHADOW;
 
-      if (!strcasecmp(registro,"a'")) return reg_a_shadow;
+    	if (!strcasecmp(registro,"a'")) return reg_a_shadow;
     	if (!strcasecmp(registro,"b'")) return reg_b_shadow;
     	if (!strcasecmp(registro,"c'")) return reg_c_shadow;
     	if (!strcasecmp(registro,"d'")) return reg_d_shadow;
@@ -1049,10 +1058,7 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 
 
 
-        if (!strcasecmp(registro,"sp")) return reg_sp;
-        if (!strcasecmp(registro,"pc")) return reg_pc;
-        if (!strcasecmp(registro,"ix")) return reg_ix;
-        if (!strcasecmp(registro,"iy")) return reg_iy;
+
 
         if (!strcasecmp(registro,"fs")) return ( Z80_FLAGS & FLAG_S ? 1 : 0);
         if (!strcasecmp(registro,"fz")) return ( Z80_FLAGS & FLAG_Z ? 1 : 0);
@@ -1191,8 +1197,8 @@ int debug_exitrom=0;
 	}
 
 
-
-        return 0xFFFFFFFF;
+	//No se reconoce variable
+    return 0xFFFFFFFF;
 }
 
 

@@ -695,4 +695,6 @@ extern char *gacversions_strings[];
 
 extern int util_unpawsetc_dump_words(char *mensaje);
 
+extern int util_is_digit(char c);
+
 #endif
