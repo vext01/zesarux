@@ -8634,6 +8634,9 @@ void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida
 
 menu_z80_moto_int menu_debug_hexdump_direccion=0;
 
+int menu_hexdump_edit_position_x=0; //Posicion del cursor relativa al inicio del volcado hexa
+int menu_hexdump_edit_position_y=0; //Posicion del cursor relativa al inicio del volcado hexa
+
 //Ajustar cuando se pulsa hacia arriba por debajo de direccion 0.
 //Debe poner el puntero hacia el final de la zona de memoria
 menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,int linesize)
@@ -8706,8 +8709,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	int edit_mode=0;
 
-	int edit_position_x=0; //Posicion del cursor relativa al inicio del volcado hexa
-	int edit_position_y=0; //Posicion del cursor relativa al inicio del volcado hexa
+
 
         do {
 
@@ -8768,8 +8770,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		//Mostrar cursor
 		if (edit_mode) {
-			int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+edit_position_x;
-			int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+edit_position_y;
+			int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
+			int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+menu_hexdump_edit_position_y;
 
 			menu_debug_hexdump_print_editcursor(xfinal,yfinal);
 		}
@@ -8792,7 +8794,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		//Si esta en edit mode y en zona de ascii, no hay atajos
 
 		int cursor_en_zona_ascii=0;
-		if (edit_position_x>bytes_por_linea*2) cursor_en_zona_ascii=1;
+		if (menu_hexdump_edit_position_x>bytes_por_linea*2) cursor_en_zona_ascii=1;
 
 		int editando_en_zona_ascii=0;
 		if (edit_mode && cursor_en_zona_ascii) editando_en_zona_ascii=1;
@@ -8870,7 +8872,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 11:
 						//arriba
 						if (edit_mode) {
-							if (edit_position_y>0) edit_position_y--;
+							if (menu_hexdump_edit_position_y>0) menu_hexdump_edit_position_y--;
 							else alterar_ptr=1;
 						}
 
@@ -8888,7 +8890,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 10:
 						//abajo
 						if (edit_mode) {
-							if (edit_position_y<lineas_total-1) edit_position_y++;
+							if (menu_hexdump_edit_position_y<lineas_total-1) menu_hexdump_edit_position_y++;
 							else alterar_ptr=1;
 						}						
 						else {
@@ -8905,16 +8907,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 12:
 						//izquierda o delete
 						if (edit_mode) {
-							//if (edit_position_x>0) edit_position_x--;
-							edit_position_x=menu_debug_hexdump_cursor_izquierda(edit_position_x,bytes_por_linea);
+							//if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
+							menu_hexdump_edit_position_x=menu_debug_hexdump_cursor_izquierda(menu_hexdump_edit_position_x,bytes_por_linea);
 						}
 					break;
 
 					case 9:
 						//derecha
 						if (edit_mode) {
-							edit_position_x=menu_debug_hexdump_cursor_derecha(edit_position_x,bytes_por_linea);
-							//if (edit_position_x<(bytes_por_linea*2)-1) edit_position_x++;
+							menu_hexdump_edit_position_x=menu_debug_hexdump_cursor_derecha(menu_hexdump_edit_position_x,bytes_por_linea);
+							//if (menu_hexdump_edit_position_x<(bytes_por_linea*2)-1) menu_hexdump_edit_position_x++;
 						}
 					break;					
 
@@ -8994,20 +8996,20 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
 
 						//int si_zona_hexa=0; //en zona hexa o ascii
-						//if (edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
+						//if (menu_hexdump_edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
 
 
 						if (!cursor_en_zona_ascii) {
 							//Sumar x (cada dos, una posicion)
-							direccion_cursor +=edit_position_x/2;
+							direccion_cursor +=menu_hexdump_edit_position_x/2;
 						}
 						else {
 							int indice_hasta_ascii=bytes_por_linea*2+1; //el hexa y el espacio
-							direccion_cursor +=edit_position_x-indice_hasta_ascii;
+							direccion_cursor +=menu_hexdump_edit_position_x-indice_hasta_ascii;
 						}
 
 						//Sumar y. 
-						direccion_cursor +=edit_position_y*bytes_por_linea;
+						direccion_cursor +=menu_hexdump_edit_position_y*bytes_por_linea;
 
 						//Ajustar direccion a zona memoria
 						direccion_cursor=adjust_address_memory_size(direccion_cursor);
@@ -9033,7 +9035,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 							else valor_nibble=tecla-'a'+10;
 
 							//Ver si par o impar
-							if ( (edit_position_x %2) ==0) {
+							if ( (menu_hexdump_edit_position_x %2) ==0) {
 								//par. alterar nibble alto
 								valor_leido=(valor_leido&0x0F) | (valor_nibble<<4);
 							}
@@ -9055,7 +9057,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
 
 						//Y mover cursor
-						edit_position_x=menu_debug_hexdump_cursor_derecha(edit_position_x,bytes_por_linea);
+						menu_hexdump_edit_position_x=menu_debug_hexdump_cursor_derecha(menu_hexdump_edit_position_x,bytes_por_linea);
 
 					
 				}

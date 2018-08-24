@@ -26,6 +26,8 @@ renombrarla
 
 -no va bien pgup en zona memoria ql en direcciones altas (mas alla de 40000h)
 
+-que el editor hexa si llega a final de linea, salte cursor a siguiente posicion
+
 -poder cargar un .config sin mas, sin que cargue snapshot ni cinta ni nada, solo parseando el config. raro? en smartload estaran los dos, el juego y la config
 
 -poder hacer 50 FPS en carga top speed: problema, que al hacer top speed, ya no llevamos la cuenta de cuanto son 50 fps, pues no hay sleep de 
