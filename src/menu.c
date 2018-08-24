@@ -8672,7 +8672,9 @@ void menu_debug_hexdump_edit_cursor_izquierda(void)
 
 }
 
-void menu_debug_hexdump_edit_cursor_derecha(void)
+//escribiendo_memoria cursor indica que si estamos a la derecha de zona de edicion escribiendo,
+//tiene que saltar a la zona izquierda de la zona ascii o hexa, al llegar a la derecha de dicha zona
+void menu_debug_hexdump_edit_cursor_derecha(int escribiendo_memoria)
 {
 
 	//Hexdump. bytes_por_linea*2 espacio bytes_por_linea
@@ -8682,15 +8684,21 @@ void menu_debug_hexdump_edit_cursor_derecha(void)
 	if (menu_hexdump_edit_position_x<ancho_linea-1) {
 		menu_hexdump_edit_position_x++;
 
-		if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) menu_hexdump_edit_position_x++;
+		if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) { //Fin zona derecha hexa
+			if (escribiendo_memoria) {
+				menu_hexdump_edit_position_x=0;
+				menu_debug_hexdump_cursor_abajo();
+			}
+			else {
+				menu_hexdump_edit_position_x++;
+			}
+		}
 	}
 
 	else {
-		//Estamos al final de la derecha. 
+		//Fin zona derecha ascii. 
 		menu_debug_hexdump_cursor_abajo();
-
-		//Y cursor en la izquierda de ascii
-		menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*2+1;
+		if (escribiendo_memoria) menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*2+1;
 	}
 
 }
@@ -8938,7 +8946,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 9:
 						//derecha
 						if (menu_hexdump_edit_mode) {
-							menu_debug_hexdump_edit_cursor_derecha();
+							menu_debug_hexdump_edit_cursor_derecha(0);
 							//if (menu_hexdump_edit_position_x<(bytes_por_linea*2)-1) menu_hexdump_edit_position_x++;
 						}
 					break;					
@@ -9079,8 +9087,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Escribimos valor
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
 
-						//Y mover cursor
-						menu_debug_hexdump_edit_cursor_derecha();
+						//Y mover cursor a la derecha
+						menu_debug_hexdump_edit_cursor_derecha(0);
+
+						//Si se llega a detecha de hexa o ascii, saltar linea
 
 					
 				}
