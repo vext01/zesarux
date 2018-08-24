@@ -8641,6 +8641,8 @@ const int menu_hexdump_lineas_total=13;
 int menu_hexdump_edit_mode=0;
 const int menu_hexdump_bytes_por_linea=8;
 
+void menu_debug_hexdump_cursor_abajo(void);
+
 //Ajustar cuando se pulsa hacia arriba por debajo de direccion 0.
 //Debe poner el puntero hacia el final de la zona de memoria
 menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,int linesize)
@@ -8679,10 +8681,17 @@ void menu_debug_hexdump_edit_cursor_derecha(void)
 
 	if (menu_hexdump_edit_position_x<ancho_linea-1) {
 		menu_hexdump_edit_position_x++;
+
+		if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) menu_hexdump_edit_position_x++;
 	}
 
-	//Si en medio de ese espacio
-	if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) menu_hexdump_edit_position_x++;
+	else {
+		//Estamos al final de la derecha. 
+		menu_debug_hexdump_cursor_abajo();
+
+		//Y cursor en la izquierda de ascii
+		menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*2+1;
+	}
 
 }
 
