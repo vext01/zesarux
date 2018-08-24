@@ -8583,9 +8583,14 @@ int menu_debug_hexdump_change_pointer(int p)
 
 }
 
+#define DEBUG_HEXDUMP_WINDOW_X 0
+#define DEBUG_HEXDUMP_WINDOW_Y 1
+#define DEBUG_HEXDUMP_WINDOW_ANCHO 32
+#define DEBUG_HEXDUMP_WINDOW_ALTO 22
+
 void menu_debug_hexdump_ventana(void)
 {
-        menu_dibuja_ventana(0,1,32,22,"Hex Dump");
+        menu_dibuja_ventana(DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,"Hex Dump");
 }
 
 
@@ -8640,6 +8645,15 @@ menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,i
 	return dir;
 }
 
+void menu_debug_hexdump_print_editcursor(int x,int y)
+{
+	z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
+    z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
+
+	putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
+
+}
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
@@ -8663,6 +8677,11 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	else menu_debug_hexdump_with_ascii_modo_ascii=0;
 
+	int edit_mode=0;
+
+	int edit_position_x=0; //Posicion del cursor relativa al inicio del volcado hexa
+	int edit_position_y=0; //Posicion del cursor relativa al inicio del volcado hexa
+
         do {
 
 					//Si maquina no es QL, direccion siempre entre 0 y 65535
@@ -8673,9 +8692,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 						menu_debug_hexdump_direccion=menu_debug_hexdump_direccion % menu_debug_memory_zone_size;
 					}*/
 
-				int linea=0;
+		int linea=0;
 
-				int lineas_hex=0;
+		int lineas_hex=0;
 		const int bytes_por_linea=8;
 		const int lineas_total=13;
 
@@ -8719,28 +8738,48 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			menu_escribe_linea_opcion(linea,-1,1,dumpmemoria);
 		}
 
+
+		//Mostrar cursor
+		if (edit_mode) {
+			int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+edit_position_x;
+			int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+edit_position_y;
+
+			menu_debug_hexdump_print_editcursor(xfinal,yfinal);
+		}
+
+                //Forzar a mostrar atajos
+                z80_bit antes_menu_writing_inverse_color;
+                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+                menu_writing_inverse_color.v=1;
+
+
 //printf ("zone size: %x dir: %x\n",menu_debug_memory_zone_size,menu_debug_hexdump_direccion);
 
         menu_escribe_linea_opcion(linea++,-1,1,"");
 
-				char buffer_linea[40];
+		char buffer_linea[64]; //Por si acaso, entre negritas y demas
+
+		char buffer_char_type[20];
 				if (menu_debug_hexdump_with_ascii_modo_ascii==0) {
-					sprintf (buffer_linea,"M: Ch.ptr I: Inv: %s C: ASCII",(valor_xor==0 ? "No" : "Yes") );
+					sprintf (buffer_char_type,"ASCII");
 				}
 
 				else if (menu_debug_hexdump_with_ascii_modo_ascii==1) {
-                                        sprintf (buffer_linea,"M: Ch.ptr I: Inv: %s C: ZX80",(valor_xor==0 ? "No" : "Yes") );
-                                }
+                	sprintf (buffer_char_type,"ZX80");
+                }
 
-				else sprintf (buffer_linea,"M: Ch.ptr I: Inv: %s C: ZX81",(valor_xor==0 ? "No" : "Yes") );
+				else sprintf (buffer_char_type,"ZX81");
+
+
+
+				sprintf (buffer_linea,"~~Memptr ~~Char: %s",buffer_char_type);
 
 
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
-				//if (MACHINE_IS_INVES) {
-				//	if (menu_debug_hex_shows_inves_low_ram.v) menu_escribe_linea_opcion(linea++,-1,1,"L: Hide Inves Low RAM");
-				//	else menu_escribe_linea_opcion(linea++,-1,1,"L: Show Inves Low RAM");
-				//}
+				sprintf (buffer_linea,"~~Invert: %s ~~Edit: %s",(valor_xor==0 ? "No" : "Yes"), (edit_mode==0 ? "No" : "Yes" ));
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+
 
 				char memory_zone_text[64]; //espacio temporal mas grande por si acaso
 				if (menu_debug_show_memory_zones==0) {
@@ -8763,6 +8802,11 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 				menu_escribe_linea_opcion(linea++,-1,1,textoshow);
 
+
+//Restaurar comportamiento atajos
+menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+
 				if (menu_multitarea==0) menu_refresca_pantalla();
 
 
@@ -8776,13 +8820,21 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 					case 11:
 						//arriba
-						menu_debug_hexdump_direccion -=bytes_por_linea;
-						menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,bytes_por_linea);
+						if (!edit_mode) {
+							menu_debug_hexdump_direccion -=bytes_por_linea;
+							menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,bytes_por_linea);
+						}
+						else {
+							if (edit_position_y>0) edit_position_y--;
+						}
 					break;
 
 					case 10:
 						//abajo
-						menu_debug_hexdump_direccion +=bytes_por_linea;
+						if (!edit_mode) menu_debug_hexdump_direccion +=bytes_por_linea;
+						else {
+							if (edit_position_y<lineas_total-1) edit_position_y++;
+						}
 					break;
 
 					case 24:
@@ -8809,6 +8861,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 					case 'i':
 						valor_xor ^= 255;
 					break;
+
+					case 'e':
+						edit_mode ^= 1;
+					break;					
 
 					//case 'l':
 					//	menu_debug_hex_shows_inves_low_ram.v ^=1;
