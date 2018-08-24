@@ -5934,14 +5934,14 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
 		//Maximo 10 breakpoints mostrados en pantalla. Para mas, usar ZRCP
                 for (i=0;i<MAX_BREAKPOINTS_CONDITIONS && i<10;i++) {
-			char string_condition_shown[14];
-			char string_action_shown[8];
+			char string_condition_shown[17];
+			char string_action_shown[7];
 
 			char string_condition_action[33];
 
 			if (debug_breakpoints_conditions_array[i][0]) {
-				menu_tape_settings_trunc_name(debug_breakpoints_conditions_array[i],string_condition_shown,14);
-				menu_tape_settings_trunc_name(debug_breakpoints_actions_array[i],string_action_shown,8);
+				menu_tape_settings_trunc_name(debug_breakpoints_conditions_array[i],string_condition_shown,17);
+				menu_tape_settings_trunc_name(debug_breakpoints_actions_array[i],string_action_shown,7);
 				if (debug_breakpoints_actions_array[i][0]) sprintf (string_condition_action,"%s->%s",string_condition_shown,string_action_shown);
 				else sprintf (string_condition_action,"%s->menu",string_condition_shown);
 			}
@@ -30311,11 +30311,17 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 		return;
 	}
 
+	int scanf_x=2;
+	int scanf_y=10;
+	int scanf_ancho=28;
+	int scanf_alto=3;
 
         menu_espera_no_tecla();
-        menu_dibuja_ventana(2,10,28,3,titulo);
+		// menu_dibuja_ventana(2,10,28,3,titulo);
+        menu_dibuja_ventana(scanf_x,scanf_y,scanf_ancho,scanf_alto,titulo);
 
-	menu_scanf(texto,max_length,20,3,11);
+	menu_scanf(texto,max_length,scanf_ancho-2,scanf_x+1,scanf_y+1);
+	//int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,int y)
 
 	//Al salir
 	//menu_refresca_pantalla();
