@@ -8794,7 +8794,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		int cursor_en_zona_ascii=0;
 		if (edit_position_x>bytes_por_linea*2) cursor_en_zona_ascii=1;
 
-		if (cursor_en_zona_ascii) string_atajos[0]=0;
+		int editando_en_zona_ascii=0;
+		if (edit_mode && cursor_en_zona_ascii) editando_en_zona_ascii=1;
+
+		if (editando_en_zona_ascii) string_atajos[0]=0;
 
 				if (menu_debug_hexdump_with_ascii_modo_ascii==0) {
 					sprintf (buffer_char_type,"ASCII");
@@ -8927,25 +8930,25 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'm':
-						if (!cursor_en_zona_ascii)  {
+						if (!editando_en_zona_ascii)  {
 							menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
 							menu_debug_hexdump_ventana();
 						}
 					break;
 
 					case 'h':
-						if (!cursor_en_zona_ascii)  {
+						if (!editando_en_zona_ascii)  {
 							menu_debug_hexdump_with_ascii_modo_ascii++;
 							if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
 						}
 					break;
 
 					case 'i':
-						if (!cursor_en_zona_ascii) valor_xor ^= 255;
+						if (!editando_en_zona_ascii) valor_xor ^= 255;
 					break;
 
 					case 't':
-						if (!cursor_en_zona_ascii) edit_mode ^= 1;
+						if (!editando_en_zona_ascii) edit_mode ^= 1;
 					break;					
 
 					//case 'l':
@@ -8954,7 +8957,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 'z':
 
-						if (!cursor_en_zona_ascii) menu_debug_change_memory_zone();
+						if (!editando_en_zona_ascii) menu_debug_change_memory_zone();
 
 						break;
 
