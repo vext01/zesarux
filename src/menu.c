@@ -9023,6 +9023,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						}
 						else salir=1;
 					break;
+
+					//Enter tambien sale de modo edit
+					case 13:
+						if (menu_hexdump_edit_mode) menu_hexdump_edit_mode=0;
+					break;
 				}
 
 				//Y ahora para el caso de edit_mode y pulsar tecla hexa o ascii segun la zona
@@ -25841,7 +25846,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu(array_menu_debug_settings,"He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
+		menu_add_item_menu(array_menu_debug_settings,"He~~xadecimal Editor",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'x');
 
 		menu_add_item_menu(array_menu_debug_settings,"View ~~Basic",MENU_OPCION_NORMAL,menu_debug_view_basic,menu_debug_view_basic_cond);
