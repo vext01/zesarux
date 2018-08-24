@@ -8789,8 +8789,12 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		char buffer_char_type[20];
 
 		char string_atajos[3]="~~"; 
-		//Si esta en edit mode, no hay atajos
-		string_atajos[0]=0;
+		//Si esta en edit mode y en zona de ascii, no hay atajos
+
+		int cursor_en_zona_ascii=0;
+		if (edit_position_x>bytes_por_linea*2) cursor_en_zona_ascii=1;
+
+		if (cursor_en_zona_ascii) string_atajos[0]=0;
 
 				if (menu_debug_hexdump_with_ascii_modo_ascii==0) {
 					sprintf (buffer_char_type,"ASCII");
@@ -8923,25 +8927,25 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'm':
-						if (!edit_mode)  {
+						if (!cursor_en_zona_ascii)  {
 							menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
 							menu_debug_hexdump_ventana();
 						}
 					break;
 
 					case 'h':
-						if (!edit_mode)  {
+						if (!cursor_en_zona_ascii)  {
 							menu_debug_hexdump_with_ascii_modo_ascii++;
 							if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
 						}
 					break;
 
 					case 'i':
-						if (!edit_mode) valor_xor ^= 255;
+						if (!cursor_en_zona_ascii) valor_xor ^= 255;
 					break;
 
 					case 't':
-						if (!edit_mode) edit_mode ^= 1;
+						if (!cursor_en_zona_ascii) edit_mode ^= 1;
 					break;					
 
 					//case 'l':
@@ -8950,7 +8954,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 'z':
 
-						if (!edit_mode) menu_debug_change_memory_zone();
+						if (!cursor_en_zona_ascii) menu_debug_change_memory_zone();
 
 						break;
 
@@ -8963,21 +8967,30 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 				}
 
-				//Y ahora para el caso de edit_mode y pulsar tecla hexadecimal
+				//Y ahora para el caso de edit_mode y pulsar tecla hexa o ascii segun la zona
+				int editar_byte=0;
 				if (edit_mode) {
+					//Para la zona ascii
+					if (cursor_en_zona_ascii && tecla>=32 && tecla<=126) editar_byte=1; 
+
+					//Para la zona hexa
 					if (
-					(tecla>='0' && tecla<='9') ||
-					(tecla>='a' && tecla<='f')
-					)
-					{
+						cursor_en_zona_ascii && 
+						( (tecla>='0' && tecla<='9') || (tecla>='a' && tecla<='f') )
+						) {
+						editar_byte=1; 
+					}
+				}
+
+				if (editar_byte) {
 						//Obtener direccion puntero
 						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
 
-						int si_zona_hexa=0; //en zona hexa o ascii
-						if (edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
+						//int si_zona_hexa=0; //en zona hexa o ascii
+						//if (edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
 
 
-						if (si_zona_hexa) {
+						if (!cursor_en_zona_ascii) {
 							//Sumar x (cada dos, una posicion)
 							direccion_cursor +=edit_position_x/2;
 						}
@@ -9002,7 +9015,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 						//Estamos en zona hexa o ascii
 
-						if (si_zona_hexa) {
+						if (!cursor_en_zona_ascii) {
 							printf ("Zona hexa\n");
 							//Zona hexa
 
@@ -9037,7 +9050,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Y mover cursor
 						edit_position_x=menu_debug_hexdump_cursor_derecha(edit_position_x,bytes_por_linea);
 
-					}
+					
 				}
 
 
