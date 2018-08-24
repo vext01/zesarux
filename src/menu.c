@@ -8816,26 +8816,58 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                 menu_espera_no_tecla_con_repeticion();
 
+				//Variable usada para mover puntero de la pantalla, al mover cursor y queremos subir arriba o abajo
+				int alterar_ptr=0;
+
 				switch (tecla) {
 
 					case 11:
 						//arriba
-						if (!edit_mode) {
+						if (edit_mode) {
+							if (edit_position_y>0) edit_position_y--;
+							else alterar_ptr=1;
+						}
+
+						else {
+							alterar_ptr=1;
+						}
+
+						if (alterar_ptr) {
 							menu_debug_hexdump_direccion -=bytes_por_linea;
 							menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,bytes_por_linea);
 						}
-						else {
-							if (edit_position_y>0) edit_position_y--;
-						}
+
 					break;
 
 					case 10:
 						//abajo
-						if (!edit_mode) menu_debug_hexdump_direccion +=bytes_por_linea;
-						else {
+						if (edit_mode) {
 							if (edit_position_y<lineas_total-1) edit_position_y++;
+							else alterar_ptr=1;
+						}						
+						else {
+							alterar_ptr=1;
+						}
+
+						if (alterar_ptr) {
+							menu_debug_hexdump_direccion +=bytes_por_linea;
+						}
+
+					break;
+
+					case 8:
+						//izquierda
+						if (edit_mode) {
+							if (edit_position_x>0) edit_position_x--;
 						}
 					break;
+
+					case 9:
+						//derecha
+						if (edit_mode) {
+							if (edit_position_x<(bytes_por_linea*2)-1) edit_position_x++;
+						}
+					break;					
 
 					case 24:
 						//PgUp
