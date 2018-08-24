@@ -8949,6 +8949,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 't':
 						if (!editando_en_zona_ascii) edit_mode ^= 1;
+						menu_espera_no_tecla();
 					break;					
 
 					//case 'l':
@@ -9010,7 +9011,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 						//TODO: ver si se sale de tamanyo zona memoria
 
-						printf ("Direccion edicion: %X\n",direccion_cursor);
+						//printf ("Direccion edicion: %X\n",direccion_cursor);
 
 						//Obtenemos byte en esa posicion
 						z80_byte valor_leido=menu_debug_get_mapped_byte(direccion_cursor);
@@ -9019,7 +9020,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Estamos en zona hexa o ascii
 
 						if (!cursor_en_zona_ascii) {
-							printf ("Zona hexa\n");
+							//printf ("Zona hexa\n");
 							//Zona hexa
 
 							//Obtener valor nibble
@@ -9041,7 +9042,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						}
 
 						else {
-							printf ("Zona ascii\n");
+							//printf ("Zona ascii\n");
 							valor_leido=tecla;
 						}
 
