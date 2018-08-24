@@ -8954,8 +8954,18 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Obtener direccion puntero
 						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
 
-						//Sumar x (cada dos, una posicion)
-						direccion_cursor +=edit_position_x/2;
+						int si_zona_hexa=0; //en zona hexa o ascii
+						if (edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
+
+
+						if (si_zona_hexa) {
+							//Sumar x (cada dos, una posicion)
+							direccion_cursor +=edit_position_x/2;
+						}
+						else {
+							int indice_hasta_ascii=bytes_por_linea*2+1; //el hexa y el espacio
+							direccion_cursor +=edit_position_x-indice_hasta_ascii;
+						}
 
 						//Sumar y. 
 						direccion_cursor +=edit_position_y*bytes_por_linea;
@@ -8963,27 +8973,44 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Ajustar direccion a zona memoria
 						direccion_cursor=adjust_address_memory_size(direccion_cursor);
 
+						//TODO: ver si se sale de tamanyo zona memoria
+
 						printf ("Direccion edicion: %X\n",direccion_cursor);
 
 						//Obtenemos byte en esa posicion
 						z80_byte valor_leido=menu_debug_get_mapped_byte(direccion_cursor);
 
-						//Obtener valor nibble
-						z80_byte valor_nibble;
 
-						if (tecla>='0' && tecla<='9') valor_nibble=tecla-'0';
-						else valor_nibble=tecla-'a'+10;
+						//Estamos en zona hexa o ascii
 
-						//Ver si par o impar
-						if ( (edit_position_x %2) ==0) {
-							//par. alterar nibble alto
-							valor_leido=(valor_leido&0x0F) | (valor_nibble<<4);
+						if (si_zona_hexa) {
+							printf ("Zona hexa\n");
+							//Zona hexa
+
+							//Obtener valor nibble
+							z80_byte valor_nibble;
+
+							if (tecla>='0' && tecla<='9') valor_nibble=tecla-'0';
+							else valor_nibble=tecla-'a'+10;
+
+							//Ver si par o impar
+							if ( (edit_position_x %2) ==0) {
+								//par. alterar nibble alto
+								valor_leido=(valor_leido&0x0F) | (valor_nibble<<4);
+							}
+
+							else {
+								//impar. alterar nibble bajo
+								valor_leido=(valor_leido&0xF0) | valor_nibble;
+							}
 						}
 
 						else {
-							//impar. alterar nibble bajo
-							valor_leido=(valor_leido&0xF0) | valor_nibble;
+							printf ("Zona ascii\n");
+							valor_leido=tecla;
 						}
+
+
 
 						//Escribimos valor
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
