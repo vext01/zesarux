@@ -8975,7 +8975,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					//Para la zona hexa
 					if (
-						cursor_en_zona_ascii && 
+						!cursor_en_zona_ascii && 
 						( (tecla>='0' && tecla<='9') || (tecla>='a' && tecla<='f') )
 						) {
 						editar_byte=1; 
