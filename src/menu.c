@@ -8636,6 +8636,7 @@ menu_z80_moto_int menu_debug_hexdump_direccion=0;
 
 int menu_hexdump_edit_position_x=0; //Posicion del cursor relativa al inicio del volcado hexa
 int menu_hexdump_edit_position_y=0; //Posicion del cursor relativa al inicio del volcado hexa
+const int menu_hexdump_lineas_total=13;
 
 //Ajustar cuando se pulsa hacia arriba por debajo de direccion 0.
 //Debe poner el puntero hacia el final de la zona de memoria
@@ -8657,31 +8658,29 @@ void menu_debug_hexdump_print_editcursor(int x,int y)
 
 }
 
-int menu_debug_hexdump_cursor_izquierda(int x,int bytes_linea)
+void menu_debug_hexdump_edit_cursor_izquierda(int bytes_linea)
 {
-	if (x>0) x--;
+	if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
 
 	//Si en medio del espacio entre hexa y ascii
-	if (x==bytes_linea*2) x--;
+	if (menu_hexdump_edit_position_x==bytes_linea*2) menu_hexdump_edit_position_x--;
 
-	return x;
 }
 
-int menu_debug_hexdump_cursor_derecha(int x,int bytes_linea)
+void menu_debug_hexdump_edit_cursor_derecha(int bytes_linea)
 {
 
 	//Hexdump. bytes_por_linea*2 espacio bytes_por_linea
 
 	int ancho_linea=bytes_linea*3+1;
 
-	if (x<ancho_linea-1) {
-		x++;
+	if (menu_hexdump_edit_position_x<ancho_linea-1) {
+		menu_hexdump_edit_position_x++;
 	}
 
 	//Si en medio de ese espacio
-	if (x==bytes_linea*2) x++;
+	if (menu_hexdump_edit_position_x==bytes_linea*2) menu_hexdump_edit_position_x++;
 
-	return x;
 }
 
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
@@ -8725,9 +8724,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		int lineas_hex=0;
 		const int bytes_por_linea=8;
-		const int lineas_total=13;
 
-		int bytes_por_ventana=bytes_por_linea*lineas_total;
+
+		int bytes_por_ventana=bytes_por_linea*menu_hexdump_lineas_total;
 
 		char dumpmemoria[33];
 
@@ -8746,7 +8745,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 
-		for (;lineas_hex<lineas_total;lineas_hex++,linea++) {
+		for (;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
 			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*bytes_por_linea;
 			//menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
@@ -8890,7 +8889,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 10:
 						//abajo
 						if (edit_mode) {
-							if (menu_hexdump_edit_position_y<lineas_total-1) menu_hexdump_edit_position_y++;
+							if (menu_hexdump_edit_position_y<menu_hexdump_lineas_total-1) menu_hexdump_edit_position_y++;
 							else alterar_ptr=1;
 						}						
 						else {
@@ -8908,14 +8907,14 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//izquierda o delete
 						if (edit_mode) {
 							//if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
-							menu_hexdump_edit_position_x=menu_debug_hexdump_cursor_izquierda(menu_hexdump_edit_position_x,bytes_por_linea);
+							menu_debug_hexdump_edit_cursor_izquierda(bytes_por_linea);
 						}
 					break;
 
 					case 9:
 						//derecha
 						if (edit_mode) {
-							menu_hexdump_edit_position_x=menu_debug_hexdump_cursor_derecha(menu_hexdump_edit_position_x,bytes_por_linea);
+							menu_debug_hexdump_edit_cursor_derecha(bytes_por_linea);
 							//if (menu_hexdump_edit_position_x<(bytes_por_linea*2)-1) menu_hexdump_edit_position_x++;
 						}
 					break;					
@@ -9057,7 +9056,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
 
 						//Y mover cursor
-						menu_hexdump_edit_position_x=menu_debug_hexdump_cursor_derecha(menu_hexdump_edit_position_x,bytes_por_linea);
+						menu_debug_hexdump_edit_cursor_derecha(bytes_por_linea);
 
 					
 				}
