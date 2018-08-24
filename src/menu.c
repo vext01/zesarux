@@ -8661,29 +8661,65 @@ void menu_debug_hexdump_print_editcursor(int x,int y)
 
 }
 
-void menu_debug_hexdump_edit_cursor_izquierda(int bytes_linea)
+void menu_debug_hexdump_edit_cursor_izquierda(void)
 {
 	if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
 
 	//Si en medio del espacio entre hexa y ascii
-	if (menu_hexdump_edit_position_x==bytes_linea*2) menu_hexdump_edit_position_x--;
+	if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) menu_hexdump_edit_position_x--;
 
 }
 
-void menu_debug_hexdump_edit_cursor_derecha(int bytes_linea)
+void menu_debug_hexdump_edit_cursor_derecha(void)
 {
 
 	//Hexdump. bytes_por_linea*2 espacio bytes_por_linea
 
-	int ancho_linea=bytes_linea*3+1;
+	int ancho_linea=menu_hexdump_bytes_por_linea*3+1;
 
 	if (menu_hexdump_edit_position_x<ancho_linea-1) {
 		menu_hexdump_edit_position_x++;
 	}
 
 	//Si en medio de ese espacio
-	if (menu_hexdump_edit_position_x==bytes_linea*2) menu_hexdump_edit_position_x++;
+	if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) menu_hexdump_edit_position_x++;
 
+}
+
+void menu_debug_hexdump_cursor_arriba(void)
+{
+	int alterar_ptr=0;
+						//arriba
+						if (menu_hexdump_edit_mode) {
+							if (menu_hexdump_edit_position_y>0) menu_hexdump_edit_position_y--;
+							else alterar_ptr=1;
+						}
+
+						else {
+							alterar_ptr=1;
+						}
+
+						if (alterar_ptr) {
+							menu_debug_hexdump_direccion -=menu_hexdump_bytes_por_linea;
+							menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,menu_hexdump_bytes_por_linea);
+						}
+}
+
+void menu_debug_hexdump_cursor_abajo(void)
+{
+	int alterar_ptr=0;
+						//abajo
+						if (menu_hexdump_edit_mode) {
+							if (menu_hexdump_edit_position_y<menu_hexdump_lineas_total-1) menu_hexdump_edit_position_y++;
+							else alterar_ptr=1;
+						}						
+						else {
+							alterar_ptr=1;
+						}
+
+						if (alterar_ptr) {
+							menu_debug_hexdump_direccion +=menu_hexdump_bytes_por_linea;
+						}
 }
 
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
@@ -8867,41 +8903,17 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 menu_espera_no_tecla_con_repeticion();
 
 				//Variable usada para mover puntero de la pantalla, al mover cursor y queremos subir arriba o abajo
-				int alterar_ptr=0;
+				//int alterar_ptr=0;
 
 				switch (tecla) {
 
 					case 11:
-						//arriba
-						if (menu_hexdump_edit_mode) {
-							if (menu_hexdump_edit_position_y>0) menu_hexdump_edit_position_y--;
-							else alterar_ptr=1;
-						}
-
-						else {
-							alterar_ptr=1;
-						}
-
-						if (alterar_ptr) {
-							menu_debug_hexdump_direccion -=menu_hexdump_bytes_por_linea;
-							menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,menu_hexdump_bytes_por_linea);
-						}
+						menu_debug_hexdump_cursor_arriba();
 
 					break;
 
 					case 10:
-						//abajo
-						if (menu_hexdump_edit_mode) {
-							if (menu_hexdump_edit_position_y<menu_hexdump_lineas_total-1) menu_hexdump_edit_position_y++;
-							else alterar_ptr=1;
-						}						
-						else {
-							alterar_ptr=1;
-						}
-
-						if (alterar_ptr) {
-							menu_debug_hexdump_direccion +=menu_hexdump_bytes_por_linea;
-						}
+						menu_debug_hexdump_cursor_abajo();
 
 					break;
 
@@ -8910,14 +8922,14 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//izquierda o delete
 						if (menu_hexdump_edit_mode) {
 							//if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
-							menu_debug_hexdump_edit_cursor_izquierda(menu_hexdump_bytes_por_linea);
+							menu_debug_hexdump_edit_cursor_izquierda();
 						}
 					break;
 
 					case 9:
 						//derecha
 						if (menu_hexdump_edit_mode) {
-							menu_debug_hexdump_edit_cursor_derecha(menu_hexdump_bytes_por_linea);
+							menu_debug_hexdump_edit_cursor_derecha();
 							//if (menu_hexdump_edit_position_x<(bytes_por_linea*2)-1) menu_hexdump_edit_position_x++;
 						}
 					break;					
@@ -9059,7 +9071,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
 
 						//Y mover cursor
-						menu_debug_hexdump_edit_cursor_derecha(menu_hexdump_bytes_por_linea);
+						menu_debug_hexdump_edit_cursor_derecha();
 
 					
 				}
