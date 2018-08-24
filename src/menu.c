@@ -8772,12 +8772,12 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 
-				sprintf (buffer_linea,"~~Memptr ~~Char: %s",buffer_char_type);
+				sprintf (buffer_linea,"~~Memptr C~~har: %s",buffer_char_type);
 
 
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
-				sprintf (buffer_linea,"~~Invert: %s ~~Edit: %s",(valor_xor==0 ? "No" : "Yes"), (edit_mode==0 ? "No" : "Yes" ));
+				sprintf (buffer_linea,"~~Invert: %s Edi~~t: %s",(valor_xor==0 ? "No" : "Yes"), (edit_mode==0 ? "No" : "Yes" ));
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
@@ -8885,7 +8885,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_hexdump_ventana();
 					break;
 
-					case 'c':
+					case 'h':
 						menu_debug_hexdump_with_ascii_modo_ascii++;
 						if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
 					break;
@@ -8894,7 +8894,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						valor_xor ^= 255;
 					break;
 
-					case 'e':
+					case 't':
 						edit_mode ^= 1;
 					break;					
 
@@ -8912,6 +8912,53 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 2:
 						salir=1;
 					break;
+				}
+
+				//Y ahora para el caso de edit_mode y pulsar tecla hexadecimal
+				if (edit_mode) {
+					if (
+					(tecla>='0' && tecla<='9') ||
+					(tecla>='a' && tecla<='f')
+					)
+					{
+						//Obtener direccion puntero
+						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
+
+						//Sumar x (cada dos, una posicion)
+						direccion_cursor +=edit_position_x/2;
+
+						//Sumar y. 
+						direccion_cursor +=edit_position_y*bytes_por_linea;
+
+						//Ajustar direccion a zona memoria
+						direccion_cursor=adjust_address_memory_size(direccion_cursor);
+
+						printf ("Direccion edicion: %X\n",direccion_cursor);
+
+						//Obtenemos byte en esa posicion
+						z80_byte valor_leido=menu_debug_get_mapped_byte(direccion_cursor);
+
+						//Obtener valor nibble
+						z80_byte valor_nibble;
+
+						if (tecla>='0' && tecla<='9') valor_nibble=tecla-'0';
+						else valor_nibble=tecla-'a';
+
+						//Ver si par o impar
+						if ( (edit_position_x %2) ==0) {
+							//par. alterar nibble alto
+							valor_leido=(valor_leido&0x0F) | (valor_nibble<<4);
+						}
+
+						else {
+							//impar. alterar nibble bajo
+							valor_leido=(valor_leido&0xF0) | valor_nibble;
+						}
+
+						//Escribimos valor
+						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
+
+					}
 				}
 
 
