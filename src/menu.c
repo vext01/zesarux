@@ -8642,6 +8642,7 @@ int menu_hexdump_edit_mode=0;
 const int menu_hexdump_bytes_por_linea=8;
 
 void menu_debug_hexdump_cursor_abajo(void);
+void menu_debug_hexdump_cursor_arriba(void);
 
 //Ajustar cuando se pulsa hacia arriba por debajo de direccion 0.
 //Debe poner el puntero hacia el final de la zona de memoria
@@ -8665,10 +8666,18 @@ void menu_debug_hexdump_print_editcursor(int x,int y)
 
 void menu_debug_hexdump_edit_cursor_izquierda(void)
 {
-	if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
+	if (menu_hexdump_edit_position_x>0) {
+		menu_hexdump_edit_position_x--;
 
-	//Si en medio del espacio entre hexa y ascii
-	if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) menu_hexdump_edit_position_x--;
+		//Si en medio del espacio entre hexa y ascii
+		if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) menu_hexdump_edit_position_x--;
+	}
+
+	else {
+		//Aparecer por la derecha
+		menu_debug_hexdump_cursor_arriba();
+		menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*3-1;
+	}
 
 }
 
@@ -8686,10 +8695,12 @@ void menu_debug_hexdump_edit_cursor_derecha(int escribiendo_memoria)
 
 		if (menu_hexdump_edit_position_x==menu_hexdump_bytes_por_linea*2) { //Fin zona derecha hexa
 			if (escribiendo_memoria) {
+				//Ponernos al inicio zona hexa de nuevo saltando siguiente linea
 				menu_hexdump_edit_position_x=0;
 				menu_debug_hexdump_cursor_abajo();
 			}
 			else {
+				//Saltar a zona ascii
 				menu_hexdump_edit_position_x++;
 			}
 		}
@@ -8698,7 +8709,14 @@ void menu_debug_hexdump_edit_cursor_derecha(int escribiendo_memoria)
 	else {
 		//Fin zona derecha ascii. 
 		menu_debug_hexdump_cursor_abajo();
-		if (escribiendo_memoria) menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*2+1;
+
+		if (escribiendo_memoria) {
+			//Ponernos en el principio zona ascii
+			menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*2+1;
+		}
+		else {
+			menu_hexdump_edit_position_x=0;
+		}
 	}
 
 }
@@ -9088,7 +9106,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
 
 						//Y mover cursor a la derecha
-						menu_debug_hexdump_edit_cursor_derecha(0);
+						menu_debug_hexdump_edit_cursor_derecha(1);
 
 						//Si se llega a detecha de hexa o ascii, saltar linea
 
