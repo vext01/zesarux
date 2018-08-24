@@ -8638,6 +8638,9 @@ int menu_hexdump_edit_position_x=0; //Posicion del cursor relativa al inicio del
 int menu_hexdump_edit_position_y=0; //Posicion del cursor relativa al inicio del volcado hexa
 const int menu_hexdump_lineas_total=13;
 
+int menu_hexdump_edit_mode=0;
+const int menu_hexdump_bytes_por_linea=8;
+
 //Ajustar cuando se pulsa hacia arriba por debajo de direccion 0.
 //Debe poner el puntero hacia el final de la zona de memoria
 menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,int linesize)
@@ -8706,7 +8709,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	else menu_debug_hexdump_with_ascii_modo_ascii=0;
 
-	int edit_mode=0;
+
 
 
 
@@ -8723,10 +8726,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		int linea=0;
 
 		int lineas_hex=0;
-		const int bytes_por_linea=8;
 
 
-		int bytes_por_ventana=bytes_por_linea*menu_hexdump_lineas_total;
+
+		int bytes_por_ventana=menu_hexdump_bytes_por_linea*menu_hexdump_lineas_total;
 
 		char dumpmemoria[33];
 
@@ -8747,7 +8750,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		for (;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
-			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*bytes_por_linea;
+			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*menu_hexdump_bytes_por_linea;
 			//menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
 			menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
 
@@ -8757,7 +8760,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				}
 			}*/
 
-			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,bytes_por_linea,valor_xor);
+			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,valor_xor);
 			//printf ("hexa: %s\n",dumpmemoria);
 
 
@@ -8768,7 +8771,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 		//Mostrar cursor
-		if (edit_mode) {
+		if (menu_hexdump_edit_mode) {
 			int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
 			int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+menu_hexdump_edit_position_y;
 
@@ -8793,10 +8796,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		//Si esta en edit mode y en zona de ascii, no hay atajos
 
 		int cursor_en_zona_ascii=0;
-		if (menu_hexdump_edit_position_x>bytes_por_linea*2) cursor_en_zona_ascii=1;
+		if (menu_hexdump_edit_position_x>menu_hexdump_bytes_por_linea*2) cursor_en_zona_ascii=1;
 
 		int editando_en_zona_ascii=0;
-		if (edit_mode && cursor_en_zona_ascii) editando_en_zona_ascii=1;
+		if (menu_hexdump_edit_mode && cursor_en_zona_ascii) editando_en_zona_ascii=1;
 
 		if (editando_en_zona_ascii) string_atajos[0]=0;
 
@@ -8821,7 +8824,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 					string_atajos,
 					(valor_xor==0 ? "No" : "Yes"), 
 					string_atajos,
-					(edit_mode==0 ? "No" : "Yes" ));
+					(menu_hexdump_edit_mode==0 ? "No" : "Yes" ));
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
@@ -8870,7 +8873,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 11:
 						//arriba
-						if (edit_mode) {
+						if (menu_hexdump_edit_mode) {
 							if (menu_hexdump_edit_position_y>0) menu_hexdump_edit_position_y--;
 							else alterar_ptr=1;
 						}
@@ -8880,15 +8883,15 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						}
 
 						if (alterar_ptr) {
-							menu_debug_hexdump_direccion -=bytes_por_linea;
-							menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,bytes_por_linea);
+							menu_debug_hexdump_direccion -=menu_hexdump_bytes_por_linea;
+							menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,menu_hexdump_bytes_por_linea);
 						}
 
 					break;
 
 					case 10:
 						//abajo
-						if (edit_mode) {
+						if (menu_hexdump_edit_mode) {
 							if (menu_hexdump_edit_position_y<menu_hexdump_lineas_total-1) menu_hexdump_edit_position_y++;
 							else alterar_ptr=1;
 						}						
@@ -8897,7 +8900,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						}
 
 						if (alterar_ptr) {
-							menu_debug_hexdump_direccion +=bytes_por_linea;
+							menu_debug_hexdump_direccion +=menu_hexdump_bytes_por_linea;
 						}
 
 					break;
@@ -8905,16 +8908,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 8:
 					case 12:
 						//izquierda o delete
-						if (edit_mode) {
+						if (menu_hexdump_edit_mode) {
 							//if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
-							menu_debug_hexdump_edit_cursor_izquierda(bytes_por_linea);
+							menu_debug_hexdump_edit_cursor_izquierda(menu_hexdump_bytes_por_linea);
 						}
 					break;
 
 					case 9:
 						//derecha
-						if (edit_mode) {
-							menu_debug_hexdump_edit_cursor_derecha(bytes_por_linea);
+						if (menu_hexdump_edit_mode) {
+							menu_debug_hexdump_edit_cursor_derecha(menu_hexdump_bytes_por_linea);
 							//if (menu_hexdump_edit_position_x<(bytes_por_linea*2)-1) menu_hexdump_edit_position_x++;
 						}
 					break;					
@@ -8950,7 +8953,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 't':
 						if (!editando_en_zona_ascii) {
-							edit_mode ^= 1;
+							menu_hexdump_edit_mode ^= 1;
 							menu_espera_no_tecla();
 							tecla=0; //para no enviar dicha tecla al editor
 						}
@@ -8968,8 +8971,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					//Salir con ESC si no es modo edit
 					case 2:
-						if (edit_mode) {
-							edit_mode=0;
+						if (menu_hexdump_edit_mode) {
+							menu_hexdump_edit_mode=0;
 						}
 						else salir=1;
 					break;
@@ -8977,7 +8980,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				//Y ahora para el caso de edit_mode y pulsar tecla hexa o ascii segun la zona
 				int editar_byte=0;
-				if (edit_mode) {
+				if (menu_hexdump_edit_mode) {
 					//Para la zona ascii
 					if (cursor_en_zona_ascii && tecla>=32 && tecla<=126) editar_byte=1; 
 
@@ -9003,12 +9006,12 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 							direccion_cursor +=menu_hexdump_edit_position_x/2;
 						}
 						else {
-							int indice_hasta_ascii=bytes_por_linea*2+1; //el hexa y el espacio
+							int indice_hasta_ascii=menu_hexdump_bytes_por_linea*2+1; //el hexa y el espacio
 							direccion_cursor +=menu_hexdump_edit_position_x-indice_hasta_ascii;
 						}
 
 						//Sumar y. 
-						direccion_cursor +=menu_hexdump_edit_position_y*bytes_por_linea;
+						direccion_cursor +=menu_hexdump_edit_position_y*menu_hexdump_bytes_por_linea;
 
 						//Ajustar direccion a zona memoria
 						direccion_cursor=adjust_address_memory_size(direccion_cursor);
@@ -9056,7 +9059,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
 
 						//Y mover cursor
-						menu_debug_hexdump_edit_cursor_derecha(bytes_por_linea);
+						menu_debug_hexdump_edit_cursor_derecha(menu_hexdump_bytes_por_linea);
 
 					
 				}
