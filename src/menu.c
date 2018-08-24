@@ -8654,6 +8654,13 @@ void menu_debug_hexdump_print_editcursor(int x,int y)
 
 }
 
+int menu_debug_hexdump_cursor_derecha(int x,int bytes_linea)
+{
+	if (x<(bytes_linea*2)-1) x++;
+
+	return x;
+}
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
@@ -8865,7 +8872,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 9:
 						//derecha
 						if (edit_mode) {
-							if (edit_position_x<(bytes_por_linea*2)-1) edit_position_x++;
+							edit_position_x=menu_debug_hexdump_cursor_derecha(edit_position_x,bytes_por_linea);
+							//if (edit_position_x<(bytes_por_linea*2)-1) edit_position_x++;
 						}
 					break;					
 
@@ -8942,7 +8950,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						z80_byte valor_nibble;
 
 						if (tecla>='0' && tecla<='9') valor_nibble=tecla-'0';
-						else valor_nibble=tecla-'a';
+						else valor_nibble=tecla-'a'+10;
 
 						//Ver si par o impar
 						if ( (edit_position_x %2) ==0) {
@@ -8957,6 +8965,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 						//Escribimos valor
 						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
+
+						//Y mover cursor
+						edit_position_x=menu_debug_hexdump_cursor_derecha(edit_position_x,bytes_por_linea);
 
 					}
 				}
