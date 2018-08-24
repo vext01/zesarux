@@ -8654,9 +8654,29 @@ void menu_debug_hexdump_print_editcursor(int x,int y)
 
 }
 
+int menu_debug_hexdump_cursor_izquierda(int x,int bytes_linea)
+{
+	if (x>0) x--;
+
+	//Si en medio del espacio entre hexa y ascii
+	if (x==bytes_linea*2) x--;
+
+	return x;
+}
+
 int menu_debug_hexdump_cursor_derecha(int x,int bytes_linea)
 {
-	if (x<(bytes_linea*2)-1) x++;
+
+	//Hexdump. bytes_por_linea*2 espacio bytes_por_linea
+
+	int ancho_linea=bytes_linea*3+1;
+
+	if (x<ancho_linea-1) {
+		x++;
+	}
+
+	//Si en medio de ese espacio
+	if (x==bytes_linea*2) x++;
 
 	return x;
 }
@@ -8863,9 +8883,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 8:
-						//izquierda
+					case 12:
+						//izquierda o delete
 						if (edit_mode) {
-							if (edit_position_x>0) edit_position_x--;
+							//if (edit_position_x>0) edit_position_x--;
+							edit_position_x=menu_debug_hexdump_cursor_izquierda(edit_position_x,bytes_por_linea);
 						}
 					break;
 
