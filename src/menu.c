@@ -8787,6 +8787,11 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		char buffer_linea[64]; //Por si acaso, entre negritas y demas
 
 		char buffer_char_type[20];
+
+		char string_atajos[3]="~~"; 
+		//Si esta en edit mode, no hay atajos
+		string_atajos[0]=0;
+
 				if (menu_debug_hexdump_with_ascii_modo_ascii==0) {
 					sprintf (buffer_char_type,"ASCII");
 				}
@@ -8799,25 +8804,29 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 
-				sprintf (buffer_linea,"~~Memptr C~~har: %s",buffer_char_type);
+				sprintf (buffer_linea,"%sMemptr C%shar: %s",string_atajos,string_atajos,buffer_char_type);
 
 
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
-				sprintf (buffer_linea,"~~Invert: %s Edi~~t: %s",(valor_xor==0 ? "No" : "Yes"), (edit_mode==0 ? "No" : "Yes" ));
+				sprintf (buffer_linea,"%sInvert: %s Edi%st: %s",
+					string_atajos,
+					(valor_xor==0 ? "No" : "Yes"), 
+					string_atajos,
+					(edit_mode==0 ? "No" : "Yes" ));
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
 				char memory_zone_text[64]; //espacio temporal mas grande por si acaso
 				if (menu_debug_show_memory_zones==0) {
-					sprintf (memory_zone_text,"Z: Mem zone (mapped memory)");
+					sprintf (memory_zone_text,"%sZ: Mem zone (mapped memory)",string_atajos);
 				}
 				else {
 					//printf ("Info zona %d\n",menu_debug_memory_zone);
 					char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
 					//int readwrite;
 					machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
-					sprintf (memory_zone_text,"Z: Mem zone (%d %s)",menu_debug_memory_zone,buffer_name);
+					sprintf (memory_zone_text,"%sZ: Mem zone (%d %s)",string_atajos,menu_debug_memory_zone,buffer_name);
 					//printf ("size: %X\n",menu_debug_memory_zone_size);
 					//printf ("Despues zona %d\n",menu_debug_memory_zone);
 				}
@@ -8828,6 +8837,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 				sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 				menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+
+		
+
 
 
 //Restaurar comportamiento atajos
@@ -8911,21 +8923,25 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'm':
-						menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
-						menu_debug_hexdump_ventana();
+						if (!edit_mode)  {
+							menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
+							menu_debug_hexdump_ventana();
+						}
 					break;
 
 					case 'h':
-						menu_debug_hexdump_with_ascii_modo_ascii++;
-						if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
+						if (!edit_mode)  {
+							menu_debug_hexdump_with_ascii_modo_ascii++;
+							if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
+						}
 					break;
 
 					case 'i':
-						valor_xor ^= 255;
+						if (!edit_mode) valor_xor ^= 255;
 					break;
 
 					case 't':
-						edit_mode ^= 1;
+						if (!edit_mode) edit_mode ^= 1;
 					break;					
 
 					//case 'l':
@@ -8934,13 +8950,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 'z':
 
-						menu_debug_change_memory_zone();
+						if (!edit_mode) menu_debug_change_memory_zone();
 
 						break;
 
-					//Salir con ESC
+					//Salir con ESC si no es modo edit
 					case 2:
-						salir=1;
+						if (edit_mode) {
+							edit_mode=0;
+						}
+						else salir=1;
 					break;
 				}
 
@@ -25749,7 +25768,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu(array_menu_debug_settings,"View He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
+		menu_add_item_menu(array_menu_debug_settings,"He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'x');
 
 		menu_add_item_menu(array_menu_debug_settings,"View ~~Basic",MENU_OPCION_NORMAL,menu_debug_view_basic,menu_debug_view_basic_cond);
