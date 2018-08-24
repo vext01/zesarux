@@ -8948,8 +8948,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 't':
-						if (!editando_en_zona_ascii) edit_mode ^= 1;
-						menu_espera_no_tecla();
+						if (!editando_en_zona_ascii) {
+							edit_mode ^= 1;
+							menu_espera_no_tecla();
+							tecla=0; //para no enviar dicha tecla al editor
+						}
 					break;					
 
 					//case 'l':
