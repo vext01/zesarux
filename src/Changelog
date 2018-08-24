@@ -30,7 +30,7 @@ etc...
 **INTFIRED: returns 1 when an interrupt has been generated
 * breakpoints actions do not reset keyboard 
 
-Improved hexdump: now you can edit bytes
+Improved hexdump menu: now you can edit memory. Now the menu is called "Hexadecimal Editor"
 
 Improved menu: 
 * menu windows: now can have more lines than 22, doing scroll
