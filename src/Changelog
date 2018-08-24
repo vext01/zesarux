@@ -14,7 +14,6 @@ Added setting --random-r-register to generate random value for R register on eve
 Added TBBlue Multiface emulation
 Added OSD Adventure Text Keyboard, useful for having typical words on Adventure Text Games (and of course any other kind of games and programs)
 Added tool to export vocabulary from a PAWS/QUILL/GAC game to list of words on OSD Adventure Text Keyboard
-Added hexdump editor
 
 Improved debugger:
 *Now you can use every register, variable, number on any position of a condition (left, right), so the following breakpoint conditions are now valid:
@@ -30,6 +29,8 @@ etc...
 **INFIRED: returns 1 if last Z80 opcode was an IN operation
 **INTFIRED: returns 1 when an interrupt has been generated
 * breakpoints actions do not reset keyboard 
+
+Improved hexdump: now you can edit bytes
 
 Improved menu: 
 * menu windows: now can have more lines than 22, doing scroll
