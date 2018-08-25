@@ -9137,6 +9137,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						else {
 							//printf ("Zona ascii\n");
 							valor_leido=tecla;
+
+							//En el caso de zx80/81
+
+							if (menu_debug_hexdump_with_ascii_modo_ascii!=0) valor_leido=ascii_to_zx81(valor_leido);
 						}
 
 
