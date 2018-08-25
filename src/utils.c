@@ -9381,6 +9381,7 @@ void util_truncate_file(char *filename)
 
 //Retorna tamanyo de zona y actualiza puntero a memoria indicada
 //Si es 0, no existe
+//Attrib: bit 0: read, bit 1: write
 
 unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 {
@@ -9499,7 +9500,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //diviface rom
     case 2:
       if (diviface_enabled.v) {
-        *readwrite=3;
+        *readwrite=1;
         size=DIVIFACE_FIRMWARE_KB*1024;
       }
     break;
@@ -9523,6 +9524,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //tsconf fmaps
     case 5:
       if (MACHINE_IS_TSCONF) {
+        *readwrite=3;
         size=TSCONF_FMAPS_SIZE;
       }
     break;
@@ -9530,6 +9532,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //kartusho
     case 6:
 	if (kartusho_enabled.v) {
+          *readwrite=1;      
 	  size=KARTUSHO_SIZE;
 	}
     break;
@@ -9537,6 +9540,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //dandanator
     case 7:
         if (dandanator_enabled.v) {
+          *readwrite=1;
           size=DANDANATOR_SIZE;
         }
     break;
@@ -9545,6 +9549,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //Superupgrade ram
     case 8:
         if (superupgrade_enabled.v) {
+          *readwrite=3;
           size=SUPERUPGRADE_RAM_SIZE;
         }
     break;
@@ -9552,6 +9557,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //Superupgrade rom
     case 9:
         if (superupgrade_enabled.v) {
+          *readwrite=1;
           size=SUPERUPGRADE_ROM_SIZE;
         }
     break;
@@ -9559,6 +9565,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //Z88 memory
     case 10:
     	if (MACHINE_IS_Z88) {
+                *readwrite=1;
     		size=4*1024*1024; //Zona entera de los 4 MB
     	}
     break;
@@ -9568,6 +9575,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //Betadisk
     case 11:
     	if (betadisk_enabled.v) {
+                *readwrite=1;
     		size=BETADISK_SIZE; 
     	}
     break;
@@ -9576,6 +9584,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //Multiface rom
     case 12:
     	if (multiface_enabled.v) {
+                *readwrite=1;
     		size=8192;
     	}
     break;
@@ -9583,6 +9592,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //Multiface ram
     case 13:
     	if (multiface_enabled.v) {
+                *readwrite=3;
     		size=8192;
     	}
     break;
@@ -9590,6 +9600,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //tbblue sprites
     case 14:
       if (MACHINE_IS_TBBLUE) {
+        *readwrite=3;
         size=TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_SIZE;
       }
     break;    
@@ -9597,6 +9608,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //tsconf sprites
     case 15:
       if (MACHINE_IS_TSCONF) {
+        *readwrite=3;
         size=4*1024*1024; //Puede ser toda la ram
       }
     break;        
@@ -9604,6 +9616,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 	//memory zone by file
     case 16:
       if (memory_zone_by_file_size>0) {
+        *readwrite=3;
         size=memory_zone_by_file_size;
       }
     break;     
@@ -9611,6 +9624,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     //tbblue copper
     case TBBLUE_COPPER_MEMORY_ZONE_NUM:
       if (MACHINE_IS_TBBLUE) {
+        *readwrite=3;
         size=TBBLUE_COPPER_MEMORY;
       }
     break;          
