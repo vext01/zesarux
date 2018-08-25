@@ -20962,6 +20962,7 @@ void menu_file_hexdump_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
+
 	menu_generic_message_tooltip("Hex viewer", 0, 0, 1, NULL, "%s", texto_browser);
 
 	free(hexdump_file_memory);
@@ -24456,6 +24457,9 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 void menu_file_viewer_read_file(char *title,char *file_name)
 {
 
+	//No mostrar caracteres especiales
+	menu_disable_special_chars.v=1;
+
 	//printf ("extension vacia: %d\n",util_compare_file_extension(file_name,"") );
 	//printf ("es z88 basic: %d\n",file_is_z88_basic(file_name));
 
@@ -24517,6 +24521,11 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
+
+
+	//IMPORTANTE: siempre se debe salir de la funcion desde aqui abajo, para que se vuelva a mostrar los caracteres especiales
+	//Volver a mostrar caracteres especiales
+	menu_disable_special_chars.v=0;
 }
 
 

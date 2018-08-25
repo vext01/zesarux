@@ -58,6 +58,7 @@ Fixed bugs on esxdos handler:
 *fixed loading esxdos files with plus3dos header
 
 Fixed Multiface Three emulation
+Fixed text viewer, hex viewer showing some special characters ~ | ^
 
 Updated to the last Next SD image
 
