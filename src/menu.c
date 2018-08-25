@@ -404,6 +404,9 @@ z80_bit menu_force_writing_inverse_color={0};
 int menu_escribe_linea_startx=1;
 
 
+//Si se desactiva parseo caracteres especiales como ~~ o ^^ etc
+z80_bit menu_disable_special_chars={0};
+
 int estilo_gui_activo=0;
 
 estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
@@ -2813,6 +2816,9 @@ void menu_desactiva_cuadrado(void)
 //Sino, 0
 int menu_escribe_texto_si_inverso(char *texto, int indice)
 {
+
+	if (menu_disable_special_chars.v) return 0;
+
 	if (texto[indice++]!='~') return 0;
 	if (texto[indice++]!='~') return 0;
 
@@ -2826,6 +2832,9 @@ int menu_escribe_texto_si_inverso(char *texto, int indice)
 //Sino, 0
 int menu_escribe_texto_si_parpadeo(char *texto, int indice)
 {
+
+	if (menu_disable_special_chars.v) return 0;
+
         if (texto[indice++]!='^') return 0;
         if (texto[indice++]!='^') return 0;
 
@@ -3241,7 +3250,7 @@ void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_acti
 	int encontrado=-1;
 	int destino=0;
 	for (i=0;texto_entrada[i];i++) {
-		if (texto_entrada[i]=='|' && texto_entrada[i+1]=='|') {
+		if (menu_disable_special_chars.v==0 && texto_entrada[i]=='|' && texto_entrada[i+1]=='|') {
 			encontrado=i;
 			i ++;
 		}
@@ -8783,6 +8792,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	int asked_about_writing_rom=0;
 
+                //Guardar estado atajos
+                z80_bit antes_menu_writing_inverse_color;
+                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;	
+
 
 
         do {
@@ -8821,6 +8834,12 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		//Hacer que texto ventana empiece pegado a la izquierda
 		menu_escribe_linea_startx=0;
 
+		//No mostrar atajos en el dump hexa
+		//menu_writing_inverse_color.v=0;
+
+		//No mostrar caracteres especiales
+		menu_disable_special_chars.v=1;
+
 		for (;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
 			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*menu_hexdump_bytes_por_linea;
@@ -8845,6 +8864,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		menu_escribe_linea_startx=1;
 
+		//Volver a mostrar caracteres especiales
+		menu_disable_special_chars.v=0;		
+
 		//Mostrar cursor
 		if (menu_hexdump_edit_mode) {
 			int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
@@ -8853,9 +8875,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			menu_debug_hexdump_print_editcursor(xfinal,yfinal);
 		}
 
-                //Forzar a mostrar atajos
-                z80_bit antes_menu_writing_inverse_color;
-                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+
+				//Forzar a mostrar atajos
                 menu_writing_inverse_color.v=1;
 
 
@@ -27167,7 +27188,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"Force visible hotkeys:  %s",(menu_force_writing_inverse_color.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"Force visible hotkeys: %s",(menu_force_writing_inverse_color.v ? "Yes" : "No") );
                 menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
                 menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
 
