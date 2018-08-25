@@ -9389,7 +9389,6 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
   //Por defecto
   int size=0;
 
-
   //Zona 0, ram speccy
   switch (zone) {
     case 0:

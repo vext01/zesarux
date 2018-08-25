@@ -8759,7 +8759,7 @@ void menu_debug_hexdump_cursor_abajo(void)
 
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
-        menu_espera_no_tecla();
+    menu_espera_no_tecla();
 	menu_debug_hexdump_ventana();
 
 	menu_reset_counters_tecla_repeticion();
@@ -8781,6 +8781,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	else menu_debug_hexdump_with_ascii_modo_ascii=0;
 
 
+	int asked_about_writing_rom=0;
 
 
 
@@ -8804,8 +8805,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		char dumpmemoria[33];
 
-		//Hacer que texto ventana empiece pegado a la izquierda
-		menu_escribe_linea_startx=0;
+
 
 		//Antes de escribir, normalizar zona memoria
 		menu_debug_set_memory_zone_attr();
@@ -8818,6 +8818,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
                                 menu_escribe_linea_opcion(linea++,-1,1,"");
 
 
+		//Hacer que texto ventana empiece pegado a la izquierda
+		menu_escribe_linea_startx=0;
 
 		for (;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
@@ -8840,6 +8842,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			menu_escribe_linea_opcion(linea,-1,1,dumpmemoria);
 		}
 
+
+		menu_escribe_linea_startx=1;
 
 		//Mostrar cursor
 		if (menu_hexdump_edit_mode) {
@@ -9012,7 +9016,10 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 'z':
 
-						if (!editando_en_zona_ascii) menu_debug_change_memory_zone();
+						if (!editando_en_zona_ascii) {
+							menu_debug_change_memory_zone();
+							asked_about_writing_rom=0;
+						}
 
 						break;
 
@@ -9044,6 +9051,33 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						editar_byte=1; 
 					}
 				}
+
+				//Ver si vamos a editar en zona de rom
+				if (editar_byte) {
+					int attribute_zone;
+					//Si zona por defecto mapped memory, asumimos lectura/escritura
+					if (menu_debug_memory_zone==-1) attribute_zone=3;
+					else machine_get_memory_zone_attrib(menu_debug_memory_zone, &attribute_zone);
+
+					//printf ("Attrib zone %d asked %d\n",attribute_zone,asked_about_writing_rom);
+
+					//Attrib: bit 0: read, bit 1: write
+					//Si no tiene atributo de escritura y no se ha pedido antes si se quiere escribir en rom
+					if ( (attribute_zone&2)==0 && !asked_about_writing_rom) {
+						if (menu_confirm_yesno_texto("Memory zone is ROM","Sure you want to edit?")==0) {
+							editar_byte=0;
+						}
+						else {
+							asked_about_writing_rom=1;
+						}
+
+						//Volver a dibujar ventana, pues se ha borrado al pregutar confirmacion
+						menu_debug_hexdump_ventana();
+					}
+				}
+
+
+				//asked_about_writing_rom
 
 				if (editar_byte) {
 						//Obtener direccion puntero
@@ -9122,7 +9156,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
         } while (salir==0);
 
 	cls_menu_overlay();
-	menu_escribe_linea_startx=1;
+	
 
 }
 
