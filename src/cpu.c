@@ -6318,14 +6318,14 @@ int parse_cmdline_options(void) {
 
 		 else if (!strcmp(argv[puntero_parametro],"--set-mem-breakpoint")) {
 			 siguiente_parametro_argumento();
-			 int direccion=atoi(argv[puntero_parametro]);
+			 int direccion=parse_string_to_number(argv[puntero_parametro]);
 			 if (direccion<0 || direccion>65535) {
 				 printf("Address %d out of range setting memory breakpoint\n",direccion);
 				 exit(1);
 			 }
 
 			siguiente_parametro_argumento();
-			 int valor=atoi(argv[puntero_parametro]);
+			 int valor=parse_string_to_number(argv[puntero_parametro]);
 			 if (valor<0 || valor>255) {
 				 printf("Type %d out of range setting memory breakpoint at address %04XH\n",valor,direccion);
 				 exit(1);

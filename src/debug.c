@@ -135,23 +135,27 @@ Address/value
 ejemplo : MRA: memory read address
 */
 
+//Todos estos valores podrian ser z80_byte o z80_int, pero dado que al arrancar el ordenador
+//estarian a 0, una condicion tipo MRA=0 o MWV=0 etc haria saltar esos breakpoints
+//por tanto los inicializo a un valor fuera de rango de z80_int incluso
 
-z80_byte debug_mmu_mrv; //Memory Read Value (valor leido en peek)
-z80_byte debug_mmu_mwv; //Memory Write Value (valor escrito en poke)
-z80_byte debug_mmu_prv; //Port Read Value (valor leido en lee_puerto)
-z80_byte debug_mmu_pwv; //Port Write Value (valor escrito en out_port)
+unsigned int debug_mmu_mrv=65536; //Memory Read Value (valor leido en peek)
+unsigned int debug_mmu_mwv=65536; //Memory Write Value (valor escrito en poke)
+unsigned int debug_mmu_prv=65536; //Port Read Value (valor leido en lee_puerto)
+unsigned int debug_mmu_pwv=65536; //Port Write Value (valor escrito en out_port)
 
-z80_int debug_mmu_pra; //Port Read Address (direccion usada en lee_puerto)
-z80_int debug_mmu_pwa; //Port Write Address (direccion usada en out_port)
+unsigned int debug_mmu_pra=65536; //Port Read Address (direccion usada en lee_puerto)
+unsigned int debug_mmu_pwa=65536; //Port Write Address (direccion usada en out_port)
 
+//Inicializar a algo invalido porque si no podria saltar el primer MRA=0 al leer de la rom,
+//por tanto a -1 (y si no fuera por ese -1, podria ser un tipo z80_int en vez de int)
+unsigned int debug_mmu_mra=65536; //Memory Read Addres (direccion usada peek)
+unsigned int debug_mmu_mwa=65536; //Memory Write Address (direccion usada en poke)
 
-z80_int debug_mmu_mra; //Memory Read Addres (direccion usada peek)
-z80_int debug_mmu_mwa; //Memory Write Address (direccion usada en poke)
-
-//Anteriores valores para mra y mwa. De momento usado en los nuevos memory-breakpoints
+//Anteriores valores para mra y mwa. Solo usado en los nuevos memory-breakpoints
 //Si es -1, no hay valor anterior
-int anterior_debug_mmu_mra=-1;
-int anterior_debug_mmu_mwa=-1;
+unsigned int anterior_debug_mmu_mra=65536;
+unsigned int anterior_debug_mmu_mwa=65536;
 
 //Array usado en memory-breakpoints
 /*
@@ -1994,7 +1998,7 @@ int anterior_debug_mmu_mwa=-1;
 	//Probar mra
 	if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mra,1,anterior_debug_mmu_mra)) {
 		//Hacer saltar breakpoint MRA
-		//printf ("Saltado breakpoint MRA en %04XH\n",debug_mmu_mra);
+		//printf ("Saltado breakpoint MRA en %04XH PC=%04XH\n",debug_mmu_mra,reg_pc);
 		catch_breakpoint_index=-1;
 
 
@@ -2002,17 +2006,26 @@ int anterior_debug_mmu_mwa=-1;
 		sprintf(buffer_mensaje,"Memory Breakpoint Read Address: %04XH",debug_mmu_mra);
                 cpu_core_loop_debug_breakpoint(buffer_mensaje);
 
+		//Cambiar esto tambien aqui porque si no escribiera en los siguientes opcodes, no llamaria a peek_debug y por tanto no 
+		//cambiaria esto. Aunque es absurdo porque al leer opcodes siempre esta cambiando MRA. por tanto lo comento, solo
+		//tiene sentido para mwa
+		//anterior_debug_mmu_mra=debug_mmu_mra;
+
 	}
 
 	//Probar mwa
         if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,2,anterior_debug_mmu_mwa)) {
                 //Hacer saltar breakpoint MWA
-                //printf ("Saltado breakpoint MWA en %04XH\n",debug_mmu_mwa);
+                //printf ("Saltado breakpoint MWA en %04XH PC=%04XH\n",debug_mmu_mwa,reg_pc);
 		catch_breakpoint_index=-1;
 
 		char buffer_mensaje[100];
 		sprintf(buffer_mensaje,"Memory Breakpoint Write Address: %04XH",debug_mmu_mwa);
                 cpu_core_loop_debug_breakpoint(buffer_mensaje);
+
+		//Cambiar esto tambien aqui porque si no escribiera en los siguientes opcodes, no llamaria a poke_debug y por tanto no 
+		//cambiaria esto
+		anterior_debug_mmu_mwa=debug_mmu_mwa;
 
         }
 
