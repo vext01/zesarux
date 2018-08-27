@@ -149,8 +149,20 @@ z80_int debug_mmu_mra; //Memory Read Addres (direccion usada peek)
 z80_int debug_mmu_mwa; //Memory Write Address (direccion usada en poke)
 
 //Anteriores valores para mra y mwa. De momento usado en los nuevos memory-breakpoints
+//Si es -1, no hay valor anterior
 int anterior_debug_mmu_mra=-1;
 int anterior_debug_mmu_mwa=-1;
+
+//Array usado en memory-breakpoints
+/*
+Es equivalente a MRA o MWA pero mucho mas rapido
+Valores:
+0: no hay mem breakpoint para esa direccion
+1: hay mem breakpoint de lectura para esa direccion
+2: hay mem breakpoint de escritura para esa direccion
+3: hay mem breakpoint de lectura o escritura para esa direccion
+*/
+z80_byte mem_breakpoint_array[65536];
 
 //Avisa cuando se ha entrado o salido de rom. Solo salta una vez el breakpoint
 //0: no esta en rom
@@ -459,7 +471,7 @@ void init_breakpoints_table(void)
 
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 		debug_breakpoints_conditions_array[i][0]=0;
-    	debug_breakpoints_actions_array[i][0]=0;
+	    	debug_breakpoints_actions_array[i][0]=0;
 		debug_breakpoints_conditions_saltado[i]=0;
 		debug_breakpoints_conditions_enabled[i]=0;
 
@@ -467,6 +479,12 @@ void init_breakpoints_table(void)
 	}
 
         //for (i=0;i<MAX_BREAKPOINTS_PEEK;i++) debug_breakpoints_peek_array[i]=-1;
+
+
+	for (i=0;i<65536;i++) {
+		mem_breakpoint_array[i]=0;	
+	}
+
 
 
 }
@@ -1915,11 +1933,68 @@ int debug_breakpoint_condition_optimized(int indice)
 }
 
 
+//Ver si salta breakpoint y teniendo en cuenta setting de saltar siempre o con cambio
+int cpu_core_loop_debug_check_mem_brkp_aux(z80_int dir, z80_byte tipo_mascara, int anterior_dir)
+{
+	if (mem_breakpoint_array[dir] & tipo_mascara) {
+		//Coincide condicion
+
+		int saltar_breakpoint=0;
+
+                //Setting de saltar siempre
+                if (debug_breakpoints_cond_behaviour.v==0) saltar_breakpoint=1;
+
+                else {
+                        //Solo saltar con cambio
+                        if (dir != anterior_dir) saltar_breakpoint=1;
+                }
+
+		return saltar_breakpoint;
+	}
+	else return 0;
+}
+
+void cpu_core_loop_debug_check_mem_breakpoints(void)
+{
+
+	
+//	mem_breakpoint_array
+//Ver si coincide mra o mwa
+/*
+z80_int debug_mmu_mra; //Memory Read Addres (direccion usada peek)
+z80_int debug_mmu_mwa; //Memory Write Address (direccion usada en poke)
+
+//Anteriores valores para mra y mwa. De momento usado en los nuevos memory-breakpoints
+//Si es -1, no hay valor anterior
+int anterior_debug_mmu_mra=-1;
+int anterior_debug_mmu_mwa=-1;
+*/
+
+	//Probar mra
+	if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mra,1,anterior_debug_mmu_mra)) {
+		//Hacer saltar breakpoint MRA
+		printf ("Saltado breakpoint MRA en %04XH\n",debug_mmu_mra);
+	}
+
+	//Probar mwa
+        if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,1,anterior_debug_mmu_mwa)) {
+                //Hacer saltar breakpoint MWA
+                printf ("Saltado breakpoint MWA en %04XH\n",debug_mmu_mwa);
+        }
+
+	
+
+}
+
+
 //Comprobar condiciones. Solo lo hacemos en core_loop
 void cpu_core_loop_debug_check_breakpoints(void)
 {
 	//Condicion de debug
 	if (debug_breakpoints_enabled.v) {
+
+		//Comprobar los mem-breakpoints
+		cpu_core_loop_debug_check_mem_breakpoints();
 
 		int i;
 
