@@ -3387,7 +3387,7 @@ int util_write_configfile(void)
 
   for (i=0;i<65536;i++) {
 		if (mem_breakpoint_array[i]!=0)
-                                              ADD_STRING_CONFIG,"--set-mem-breakpoint %d \"%s\"",i,mem_breakpoint_array[i]);
+                                              ADD_STRING_CONFIG,"--set-mem-breakpoint %d %d",i,mem_breakpoint_array[i]);
 	}  
 
   if (hardware_debug_port.v)                  ADD_STRING_CONFIG,"--hardware-debug-ports");

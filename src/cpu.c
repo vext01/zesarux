@@ -6320,14 +6320,14 @@ int parse_cmdline_options(void) {
 			 siguiente_parametro_argumento();
 			 int direccion=atoi(argv[puntero_parametro]);
 			 if (direccion<0 || direccion>65535) {
-				 printf("Address %d out of range setting memory breakpoint",direccion);
+				 printf("Address %d out of range setting memory breakpoint\n",direccion);
 				 exit(1);
 			 }
 
 			siguiente_parametro_argumento();
 			 int valor=atoi(argv[puntero_parametro]);
 			 if (valor<0 || valor>255) {
-				 printf("Type %d out of range setting memory breakpoint at address %04XH",valor,direccion);
+				 printf("Type %d out of range setting memory breakpoint at address %04XH\n",valor,direccion);
 				 exit(1);
 			 }			
 

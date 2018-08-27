@@ -5933,8 +5933,8 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_enable_disable,NULL,"~~Breakpoints: %s",
 			(debug_breakpoints_enabled.v ? "On" : "Off") );
 		menu_add_item_menu_shortcut(array_menu_breakpoints,'b');
-		menu_add_item_menu_tooltip(array_menu_breakpoints,"Enable Breakpoints");
-		menu_add_item_menu_ayuda(array_menu_breakpoints,"Enable Breakpoints");
+		menu_add_item_menu_tooltip(array_menu_breakpoints,"Enable Breakpoints. All breakpoint types depend on this setting");
+		menu_add_item_menu_ayuda(array_menu_breakpoints,"Enable Breakpoints. All breakpoint types depend on this setting");
 
 		//char buffer_texto[40];
 
