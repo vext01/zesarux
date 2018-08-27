@@ -733,7 +733,7 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"get-io-ports",NULL,NULL,"Returns currently i/o ports used"},
 
-  	{"get-membreakpoints",NULL,"[address] [items]","Get mem breakpoints list. If set address, returns item at address if enabled. If set items, returns number of enabled items list starting from address parameter"},
+  	{"get-membreakpoints",NULL,"[address] [items]","Get mem breakpoints list. If set address, returns item at address. If set items, returns number of enabled items list starting from address parameter"},
 	{"get-machines",NULL,NULL,"Returns list of emulated machines"},
 	{"get-memory-pages","|gmp","[verbose]","Returns current state of memory pages. Default output will be the same as on debug menu; verbose output gives a detailed description of every page"},
 	{"get-memory-zones","|gmz",NULL,"Returns list of memory zones of this machine"},
@@ -931,6 +931,13 @@ void remote_get_membreakpoints(int misocket,int inicio,int items)
   escribir_socket (misocket,"Breakpoints: ");
   if (debug_breakpoints_enabled.v) escribir_socket (misocket,"On\n");
   else escribir_socket (misocket,"Off\n");
+
+
+//Caso retornar estado del que solo miramos
+	if (items==0) {
+		escribir_socket_format(misocket,"%04XH : %d\n",inicio,mem_breakpoint_array[inicio]);
+		return;
+	}
 
  int total_activos=0;
 
@@ -3645,14 +3652,18 @@ char buffer_retorno[2048];
                 if (remote_command_argc>0) {
                         inicio=parse_string_to_number(remote_command_argv[0]);
                         if (inicio<0 || inicio>65535) {
-                                escribir_socket (misocket,"ERROR. Index out of range");
+                                escribir_socket (misocket,"ERROR. Address out of range");
                                 return;
                         }
-                        items=1;
+                        items=0; //decirle que solo el que vamos a mirar 
                 }
 
                 if (remote_command_argc>1) {
                         items=parse_string_to_number(remote_command_argv[1]);
+			if (items<0 || items>65536) {
+                                escribir_socket (misocket,"ERROR. Items out of range");
+                                return;
+                        }
                 }
 
 
@@ -4108,7 +4119,7 @@ else if (!strcmp(comando_sin_parametros,"set-membreakpoint") ) {
 
   	int index_int=parse_string_to_number(remote_command_argv[0]);
   	if (index_int<0 || index_int>65536) {
-		escribir_socket(misocket,"ERROR. Index out of range");
+		escribir_socket(misocket,"ERROR. Address out of range");
 		return;
 	}
   
