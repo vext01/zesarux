@@ -211,7 +211,7 @@ void menu_mem_breakpoints_list(MENU_ITEM_PARAMETERS)
 
 		int i;
 
-        for (i=0;i<65536;i++) {
+        for (i=0;i<65536 && salir==0;i++) {
 			z80_byte tipo=mem_breakpoint_array[i];
 			if (tipo) {
 				if (tipo<MAX_MEM_BREAKPOINT_TYPES) {
