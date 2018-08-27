@@ -28,6 +28,8 @@ And also:
 * Amstrad CPC 464
 
 ZEsarUX source code and binaries are distributed under GNU GPL license. 
+ZEsarUX also includes a folder, "my_soft", which has some programs and data made by me. The entire folder is also covered by the GNU GPL license.
+
 ZEsarUX also includes third-party roms, media, programs and games NOT covered by this license.
 
 This is my second ZX Spectrum emulator after ZXSpectr
@@ -204,9 +206,9 @@ __FEATURES__
 
 * Supports RAM packs on Jupiter Ace up to 35 KB
 
-* Joystick emulation with real joystick (on Linux) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand. Autofire function also
+* Joystick emulation with real joystick (on Linux) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Autofire function also
 
-* On Screen keyboard useful when playing with joystick
+* On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, and another with words, useful for playing Text Adventures. Also a tool to extract words from text adventures and configure this on screen text keyboard
 
 * Emulates Spectrum keyboard ghosting error feature
 
@@ -228,9 +230,11 @@ __FEATURES__
 
 * Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
 
-* Can use a reduced Spectrum core, with some features disables, useful on slow devices, like Raspberry Pi 1/Zero
+* Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 
 * Powerful debug features: Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Dump, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
+
+* File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc
 
 * Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character rutines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can be also read by a text-to-speech program.
 
