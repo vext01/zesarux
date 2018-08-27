@@ -187,6 +187,7 @@ int debug_fired_interrupt=0;
 char catch_breakpoint_message[MAX_MESSAGE_CATCH_BREAKPOINT];
 
 //Id indice breakpoint que ha saltado
+//Si -1, no ha saltado por indice, quiza por un membreakpoint
 int catch_breakpoint_index=0;
 
 
@@ -1974,12 +1975,25 @@ int anterior_debug_mmu_mwa=-1;
 	if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mra,1,anterior_debug_mmu_mra)) {
 		//Hacer saltar breakpoint MRA
 		printf ("Saltado breakpoint MRA en %04XH\n",debug_mmu_mra);
+		catch_breakpoint_index=-1;
+
+
+		char buffer_mensaje[100];
+		sprintf(buffer_mensaje,"Memory Breakpoint Read Address %04XH",debug_mmu_mra);
+                cpu_core_loop_debug_breakpoint(buffer_mensaje);
+
 	}
 
 	//Probar mwa
         if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,2,anterior_debug_mmu_mwa)) {
                 //Hacer saltar breakpoint MWA
                 printf ("Saltado breakpoint MWA en %04XH\n",debug_mmu_mwa);
+		catch_breakpoint_index=-1;
+
+		char buffer_mensaje[100];
+		sprintf(buffer_mensaje,"Memory Breakpoint Write Address %04XH",debug_mmu_mwa);
+                cpu_core_loop_debug_breakpoint(buffer_mensaje);
+
         }
 
 	
@@ -4180,6 +4194,10 @@ void debug_get_ioports(char *stats_buffer)
 
 int debug_if_breakpoint_action_menu(int index)
 {
+
+ //Si indice -1 quiza ha saltado por un membreakpoint
+ if (index==-1) return 1;
+
   //Si accion nula o menu o break
   if (debug_breakpoints_actions_array[index][0]==0 ||
     !strcmp(debug_breakpoints_actions_array[index],"menu") ||
