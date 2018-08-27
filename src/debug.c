@@ -141,10 +141,16 @@ z80_byte debug_mmu_mwv; //Memory Write Value (valor escrito en poke)
 z80_byte debug_mmu_prv; //Port Read Value (valor leido en lee_puerto)
 z80_byte debug_mmu_pwv; //Port Write Value (valor escrito en out_port)
 
-z80_int debug_mmu_mra; //Memory Read Addres (direccion usada peek)
-z80_int debug_mmu_mwa; //Memory Write Address (direccion usada en poke)
 z80_int debug_mmu_pra; //Port Read Address (direccion usada en lee_puerto)
 z80_int debug_mmu_pwa; //Port Write Address (direccion usada en out_port)
+
+
+z80_int debug_mmu_mra; //Memory Read Addres (direccion usada peek)
+z80_int debug_mmu_mwa; //Memory Write Address (direccion usada en poke)
+
+//Anteriores valores para mra y mwa. De momento usado en los nuevos memory-breakpoints
+int anterior_debug_mmu_mra=-1;
+int anterior_debug_mmu_mwa=-1;
 
 //Avisa cuando se ha entrado o salido de rom. Solo salta una vez el breakpoint
 //0: no esta en rom
@@ -866,6 +872,7 @@ z80_byte peek_byte_no_time_debug (z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor;
 
+	anterior_debug_mmu_mra=debug_mmu_mra;
 	debug_mmu_mra=dir;
 
 	//valor=peek_byte_no_time_no_debug(dir);
@@ -883,6 +890,7 @@ z80_byte peek_byte_debug (z80_int dir,z80_byte value GCC_UNUSED)
 {
 	z80_byte valor;
 
+	anterior_debug_mmu_mra=debug_mmu_mra;
 	debug_mmu_mra=dir;
 
         //valor=peek_byte_no_debug(dir);
@@ -902,6 +910,7 @@ z80_byte peek_byte_debug (z80_int dir,z80_byte value GCC_UNUSED)
 z80_byte poke_byte_no_time_debug(z80_int dir,z80_byte value)
 {
 	debug_mmu_mwv=value;
+	anterior_debug_mmu_mwa=debug_mmu_mwa;
 	debug_mmu_mwa=dir;
 
 	//poke_byte_no_time_no_debug(dir,value);
@@ -915,6 +924,7 @@ z80_byte poke_byte_no_time_debug(z80_int dir,z80_byte value)
 z80_byte poke_byte_debug(z80_int dir,z80_byte value)
 {
 	debug_mmu_mwv=value;
+	anterior_debug_mmu_mwa=debug_mmu_mwa;
 	debug_mmu_mwa=dir;
 
 	//poke_byte_no_debug(dir,value);
