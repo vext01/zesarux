@@ -796,7 +796,7 @@ struct s_items_ayuda items_ayuda[]={
 				"Bit 5: Step over interrupt when running cpu-step, cpu-step-over and run verbose. It's the same setting as Step Over Interrupt on menu\n"
 		},
 	{"set-machine","|sm","machine_name","Set machine"},
-	{"set-membreakpoint",NULL,"index type","Sets a memory breakpoint at desired index entry for type. type can be: "
+	{"set-membreakpoint",NULL,"index type","Sets a memory breakpoint at desired index entry for type. type can be:\n"
 		"0: disabled\n"
 		"1: Fired when reading memory\n"
 		"2: Fired when writing memory\n"

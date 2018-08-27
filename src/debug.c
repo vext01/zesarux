@@ -1977,7 +1977,7 @@ int anterior_debug_mmu_mwa=-1;
 	}
 
 	//Probar mwa
-        if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,1,anterior_debug_mmu_mwa)) {
+        if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,2,anterior_debug_mmu_mwa)) {
                 //Hacer saltar breakpoint MWA
                 printf ("Saltado breakpoint MWA en %04XH\n",debug_mmu_mwa);
         }
