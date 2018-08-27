@@ -733,7 +733,7 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"get-io-ports",NULL,NULL,"Returns currently i/o ports used"},
 
-  	{"get-membreakpoints",NULL,"[index] [items]","Get mem breakpoints list. If set index, returns item at index. If set items, returns number of items list starting from index parameter"},
+  	{"get-membreakpoints",NULL,"[index] [items]","Get mem breakpoints list. If set index, returns item at index. If set items, returns number of enabled items list starting from index parameter"},
 	{"get-machines",NULL,NULL,"Returns list of emulated machines"},
 	{"get-memory-pages","|gmp","[verbose]","Returns current state of memory pages. Default output will be the same as on debug menu; verbose output gives a detailed description of every page"},
 	{"get-memory-zones","|gmz",NULL,"Returns list of memory zones of this machine"},
@@ -796,7 +796,12 @@ struct s_items_ayuda items_ayuda[]={
 				"Bit 5: Step over interrupt when running cpu-step, cpu-step-over and run verbose. It's the same setting as Step Over Interrupt on menu\n"
 		},
 	{"set-machine","|sm","machine_name","Set machine"},
-	{"set-membreakpoint",NULL,"index type","Sets a memory breakpoint at desired index entry for type\n"},
+	{"set-membreakpoint",NULL,"index type","Sets a memory breakpoint at desired index entry for type. type can be: "
+		"0: disabled\n"
+		"1: Fired when reading memory\n"
+		"2: Fired when writing memory\n"
+		"3: Fired when reading or writing memory\n"
+		},
 	{"set-memory-zone","|smz","zone","Set memory zone number"},
   {"set-register","|sr","register=value","Changes register value. Example: set-register DE=3344H"},
 
@@ -4088,6 +4093,33 @@ else if (!strcmp(comando_sin_parametros,"set-machine") || !strcmp(comando_sin_pa
 		remote_cpu_exit_step(misocket);
 	}
 
+}
+
+else if (!strcmp(comando_sin_parametros,"set-membreakpoint") ) {
+  if (debug_breakpoints_enabled.v==0) escribir_socket (misocket,"Error. You must enable breakpoints first");
+  else {
+
+                                remote_parse_commands_argvc(parametros);
+
+                                if (remote_command_argc<2) {
+                                        escribir_socket(misocket,"ERROR. Needs two parameters");
+                                        return;
+                                }
+
+  	int index_int=parse_string_to_number(remote_command_argv[0]);
+  	if (index_int<0 || index_int>65536) {
+		escribir_socket(misocket,"ERROR. Index out of range");
+		return;
+	}
+  
+	int type=parse_string_to_number(remote_command_argv[1]);
+	if (type<0 || type>255) {
+                escribir_socket(misocket,"ERROR. Type out of range");
+                return;
+        }
+
+	mem_breakpoint_array[index_int]=type;	
+  }
 }
 
 else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_sin_parametros,"smz") ) {
