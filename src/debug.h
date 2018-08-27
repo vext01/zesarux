@@ -92,8 +92,8 @@ extern z80_byte lee_puerto_debug(z80_byte puerto_h,z80_byte puerto_l);
 extern void set_peek_byte_function_debug(void);
 extern void reset_peek_byte_function_debug(void);
 
-//4 lineas
-#define MAX_MESSAGE_CATCH_BREAKPOINT (32*4)
+//4 lineas + la longitud del maximo de un breakpoint
+#define MAX_MESSAGE_CATCH_BREAKPOINT ((32*4)+MAX_BREAKPOINT_CONDITION_LENGTH)
 extern char catch_breakpoint_message[];
 
 extern int catch_breakpoint_index;
