@@ -733,7 +733,7 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"get-io-ports",NULL,NULL,"Returns currently i/o ports used"},
 
-  	{"get-membreakpoints",NULL,"[index] [items]","Get mem breakpoints list. If set index, returns item at index. If set items, returns number of enabled items list starting from index parameter"},
+  	{"get-membreakpoints",NULL,"[address] [items]","Get mem breakpoints list. If set address, returns item at address if enabled. If set items, returns number of enabled items list starting from address parameter"},
 	{"get-machines",NULL,NULL,"Returns list of emulated machines"},
 	{"get-memory-pages","|gmp","[verbose]","Returns current state of memory pages. Default output will be the same as on debug menu; verbose output gives a detailed description of every page"},
 	{"get-memory-zones","|gmz",NULL,"Returns list of memory zones of this machine"},
@@ -796,7 +796,7 @@ struct s_items_ayuda items_ayuda[]={
 				"Bit 5: Step over interrupt when running cpu-step, cpu-step-over and run verbose. It's the same setting as Step Over Interrupt on menu\n"
 		},
 	{"set-machine","|sm","machine_name","Set machine"},
-	{"set-membreakpoint",NULL,"index type","Sets a memory breakpoint at desired index entry for type. type can be:\n"
+	{"set-membreakpoint",NULL,"address type","Sets a memory breakpoint at desired address entry for type. type can be:\n"
 		"0: disabled\n"
 		"1: Fired when reading memory\n"
 		"2: Fired when writing memory\n"
