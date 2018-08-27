@@ -22,14 +22,14 @@ HL=DE
 3=PC
 DE>IX
 etc...
-*Optimized debugger so common conditions like PC=X, MRA=X or MWA=X uses lots of less cpu than before
+*Optimized debugger so common conditions like PC=X, MRA=X or MWA=X use lots of less cpu than before
 *Added new kind of breakpoints, "memory breakpoints", which behave like MRA and MWA conditions but a lot faster than them
-*Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches
+*Added bitwise operators AND (&), OR (|), XOR (^) when using registers/variables breakpoints/watches
+*Breakpoints actions do not reset keyboard 
 *New pseudo variables:
 **OUTFIRED: returns 1 if last Z80 opcode was an OUT operation
 **INFIRED: returns 1 if last Z80 opcode was an IN operation
 **INTFIRED: returns 1 when an interrupt has been generated
-* breakpoints actions do not reset keyboard 
 
 Improved hexdump menu: now you can edit memory. Now the menu is called "Hexadecimal Editor"
 
