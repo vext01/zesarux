@@ -23,6 +23,7 @@ HL=DE
 DE>IX
 etc...
 *Optimized debugger so common conditions like PC=X, MRA=X or MWA=X uses lots of less cpu than before
+*Added new kind of breakpoints, "memory breakpoints", which behave like MRA and MWA conditions but a lot faster than them
 *Added bitwise operators AND (&), OR (|), XOR (^) when using registers breakpoints/watches
 *New pseudo variables:
 **OUTFIRED: returns 1 if last Z80 opcode was an OUT operation
