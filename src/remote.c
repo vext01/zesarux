@@ -4128,8 +4128,7 @@ else if (!strcmp(comando_sin_parametros,"set-membreakpoint") ) {
                 escribir_socket(misocket,"ERROR. Type out of range");
                 return;
         }
-
-	mem_breakpoint_array[index_int]=type;	
+	debug_set_mem_breakpoint(index_int,type);
   }
 }
 

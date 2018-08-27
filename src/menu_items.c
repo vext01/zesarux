@@ -142,6 +142,7 @@ int poke_opcion_seleccionada=0;
 int settings_debug_opcion_seleccionada=0;
 int change_audio_driver_opcion_seleccionada=0;
 int settings_audio_opcion_seleccionada=0;
+int mem_breakpoints_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -151,6 +152,151 @@ int last_debug_poke_dir=16384;
 
 //aofile. aofilename apuntara aqui
 char aofilename_file[PATH_MAX];
+
+
+void menu_mem_breakpoints_edit(MENU_ITEM_PARAMETERS)
+{
+
+
+        int brkp_type,dir;
+
+        char string_type[4];
+        char string_dir[10];
+
+        strcpy (string_dir,"0");
+
+        menu_ventana_scanf("Address",string_dir,10);
+
+        dir=parse_string_to_number(string_dir);
+
+        if (dir<0 || dir>65535) {
+                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
+                return;
+        }				
+
+        strcpy (string_type,"0");
+
+        menu_ventana_scanf("Type (1:RD,2:WR,3:RW)",string_type,4);
+
+        brkp_type=parse_string_to_number(string_type);
+
+        if (brkp_type<0 || brkp_type>255) {
+                debug_printf (VERBOSE_ERR,"Invalid value %d",brkp_type);
+                return;
+        }
+
+	debug_set_mem_breakpoint(dir,brkp_type);
+	//mem_breakpoint_array[dir]=brkp_type;
+	
+
+}
+
+void menu_mem_breakpoints_list(MENU_ITEM_PARAMETERS)
+{
+
+        //int index_find;
+		int index_buffer;
+
+        char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+
+        //margen suficiente para que quepa una linea
+        //direccion+salto linea+codigo 0
+        char buf_linea[33];
+
+        index_buffer=0;
+
+        int encontrados=0;
+
+        int salir=0;
+
+		int i;
+
+        for (i=0;i<65536;i++) {
+			z80_byte tipo=mem_breakpoint_array[i];
+			if (tipo) {
+				if (tipo<MAX_MEM_BREAKPOINT_TYPES) {
+					sprintf (buf_linea,"%04XH : %s\n",i,mem_breakpoint_types_strings[tipo]);
+				}
+				else {
+					sprintf (buf_linea,"%04XH : Unknown (%d)\n",i,tipo);
+				}
+
+				sprintf (&results_buffer[index_buffer],"%s\n",buf_linea);
+                index_buffer +=strlen(buf_linea);
+                encontrados++;
+                
+
+                //controlar maximo
+                //33 bytes de margen
+                if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-33) {
+                        debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first %d",encontrados);
+                        //forzar salir
+                        salir=1;
+                }
+			}
+
+        }
+
+        results_buffer[index_buffer]=0;
+
+        menu_generic_message("List Memory Breakpoints",results_buffer);
+}
+
+void menu_mem_breakpoints_clear(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno("Clear breakpoints")) {
+		clear_mem_breakpoints();
+		menu_generic_message("Clear breakpoints","OK. All breakpoints cleared");
+	}
+}
+
+
+void menu_mem_breakpoints(MENU_ITEM_PARAMETERS)
+{
+
+	menu_espera_no_tecla();
+
+        menu_item *array_menu_mem_breakpoints;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+		menu_add_item_menu_inicial_format(&array_menu_mem_breakpoints,MENU_OPCION_NORMAL,menu_mem_breakpoints_edit,NULL,"~~Edit Breakpoint");
+		menu_add_item_menu_shortcut(array_menu_mem_breakpoints,'e');
+		menu_add_item_menu_tooltip(array_menu_mem_breakpoints,"Edit Breakpoints");
+		menu_add_item_menu_ayuda(array_menu_mem_breakpoints,"Edit Breakpoints");
+
+		menu_add_item_menu_format(array_menu_mem_breakpoints,MENU_OPCION_NORMAL,menu_mem_breakpoints_list,NULL,"~~List breakpoints");
+		menu_add_item_menu_shortcut(array_menu_mem_breakpoints,'l');
+		menu_add_item_menu_tooltip(array_menu_mem_breakpoints,"List breakpoints");
+		menu_add_item_menu_ayuda(array_menu_mem_breakpoints,"List enabled memory breakpoints");
+
+
+		menu_add_item_menu_format(array_menu_mem_breakpoints,MENU_OPCION_NORMAL,menu_mem_breakpoints_clear,NULL,"~~Clear breakpoints");
+		menu_add_item_menu_shortcut(array_menu_mem_breakpoints,'c');
+		menu_add_item_menu_tooltip(array_menu_mem_breakpoints,"Clear all memory breakpoints");
+		menu_add_item_menu_ayuda(array_menu_mem_breakpoints,"Clear all memory breakpoints");
+
+
+                menu_add_item_menu(array_menu_mem_breakpoints,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                menu_add_ESC_item(array_menu_mem_breakpoints);
+                retorno_menu=menu_dibuja_menu(&mem_breakpoints_opcion_seleccionada,&item_seleccionado,array_menu_mem_breakpoints,"Memory Breakpoints" );
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+}
+
 
  
 void menu_debug_poke(MENU_ITEM_PARAMETERS)

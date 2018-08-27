@@ -1337,6 +1337,7 @@ printf(
 );
 
 printf (
+	  "--set-mem-breakpoint a n   Set memory breakpoint at address a for type n\n"
 	  "--hardware-debug-ports     Enables hardware debug ports to be able to show on console numbers or ascii characters\n"
 	  "-—dump-ram-to-file f       Dump memory from 4000h to ffffh to a file, when exiting emulator\n"
 		"\n"
@@ -6313,9 +6314,27 @@ int parse_cmdline_options(void) {
 
 			 debug_set_breakpoint(valor,argv[puntero_parametro]);
 
-
-
 		 }
+
+		 else if (!strcmp(argv[puntero_parametro],"--set-mem-breakpoint")) {
+			 siguiente_parametro_argumento();
+			 int direccion=atoi(argv[puntero_parametro]);
+			 if (direccion<0 || direccion>65535) {
+				 printf("Address %d out of range setting memory breakpoint",direccion);
+				 exit(1);
+			 }
+
+			siguiente_parametro_argumento();
+			 int valor=atoi(argv[puntero_parametro]);
+			 if (valor<0 || valor>255) {
+				 printf("Type %d out of range setting memory breakpoint at address %04XH",valor,direccion);
+				 exit(1);
+			 }			
+
+			 debug_set_mem_breakpoint(direccion,valor);
+
+		 }		 
+
 
 		 else if (!strcmp(argv[puntero_parametro],"--set-breakpointaction")) {
 			 siguiente_parametro_argumento();

@@ -635,6 +635,7 @@ int hardware_realjoystick_opcion_seleccionada=0;
 int hardware_realjoystick_event_opcion_seleccionada=0;
 int hardware_realjoystick_keys_opcion_seleccionada=0;
 int breakpoints_opcion_seleccionada=0;
+
 int watches_opcion_seleccionada=0;
 int z88_slots_opcion_seleccionada=0;
 int z88_slot_insert_opcion_seleccionada=0;
@@ -5845,7 +5846,9 @@ void menu_breakpoints_conditions_set(MENU_ITEM_PARAMETERS)
         //int breakpoint_index=breakpoints_opcion_seleccionada-MAX_BREAKPOINTS-1;
 
 	//saltamos las primeras 2 lineas
-	int breakpoint_index=breakpoints_opcion_seleccionada-2;
+	//int breakpoint_index=breakpoints_opcion_seleccionada-2;
+
+	int breakpoint_index=valor_opcion;
 
   char string_texto[MAX_BREAKPOINT_CONDITION_LENGTH];
 
@@ -5914,6 +5917,8 @@ void menu_breakpoints_condition_enable_disable(MENU_ITEM_PARAMETERS)
 }
 
 
+
+
 void menu_breakpoints(MENU_ITEM_PARAMETERS)
 {
 
@@ -5942,7 +5947,7 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_breakpoints,"It tests a condition using the same method as breakpoint conditions below");
 
 		//Maximo 10 breakpoints mostrados en pantalla. Para mas, usar ZRCP
-                for (i=0;i<MAX_BREAKPOINTS_CONDITIONS && i<10;i++) {
+        for (i=0;i<MAX_BREAKPOINTS_CONDITIONS && i<10;i++) {
 			char string_condition_shown[17];
 			char string_action_shown[7];
 
@@ -5981,9 +5986,12 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
 					);
 
-                }
+        }
 
-		
+		menu_add_item_menu(array_menu_breakpoints,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_mem_breakpoints,NULL,"~~Memory breakpoints");
+		menu_add_item_menu_shortcut(array_menu_breakpoints,'m');
 
 
 

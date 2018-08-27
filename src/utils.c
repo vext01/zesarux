@@ -3385,6 +3385,11 @@ int util_write_configfile(void)
                                               ADD_STRING_CONFIG,"--set-breakpointaction %d \"%s\"",i+1,debug_breakpoints_actions_array[i]);
   }
 
+  for (i=0;i<65536;i++) {
+		if (mem_breakpoint_array[i]!=0)
+                                              ADD_STRING_CONFIG,"--set-mem-breakpoint %d \"%s\"",i,mem_breakpoint_array[i]);
+	}  
+
   if (hardware_debug_port.v)                  ADD_STRING_CONFIG,"--hardware-debug-ports");
 
   if (autoselect_snaptape_options.v==0)       ADD_STRING_CONFIG,"--noautoselectfileopt");

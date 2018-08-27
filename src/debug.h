@@ -62,6 +62,13 @@ extern void init_breakpoints_table(void);
 #define MAX_BREAKPOINTS_CONDITIONS 100
 extern char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
 
+#define MAX_MEM_BREAKPOINT_TYPES 4
+extern char *mem_breakpoint_types_strings[];
+
+extern void clear_mem_breakpoints(void);
+
+extern void debug_set_mem_breakpoint(z80_int dir,z80_byte brkp_type);
+
 //Acciones al saltar un breakpoint
 extern char debug_breakpoints_actions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
 

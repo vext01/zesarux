@@ -164,6 +164,13 @@ Valores:
 */
 z80_byte mem_breakpoint_array[65536];
 
+char *mem_breakpoint_types_strings[]={
+	"Disabled",
+	"Read",
+	"Write",
+	"Read & Write"
+};
+
 //Avisa cuando se ha entrado o salido de rom. Solo salta una vez el breakpoint
 //0: no esta en rom
 //1: esta en rom y aun no ha saltado breakpoint
@@ -463,6 +470,15 @@ z80_bit debug_core_lanzado_inter={0};
 z80_int debug_core_lanzado_inter_retorno_pc_nmi=0;
 z80_int debug_core_lanzado_inter_retorno_pc_maskable=0;
 
+void clear_mem_breakpoints(void)
+{
+
+	int i;
+
+	for (i=0;i<65536;i++) {
+		mem_breakpoint_array[i]=0;	
+	}
+}
 
 void init_breakpoints_table(void)
 {
@@ -482,9 +498,7 @@ void init_breakpoints_table(void)
         //for (i=0;i<MAX_BREAKPOINTS_PEEK;i++) debug_breakpoints_peek_array[i]=-1;
 
 
-	for (i=0;i<65536;i++) {
-		mem_breakpoint_array[i]=0;	
-	}
+	clear_mem_breakpoints();
 
 
 
@@ -1933,6 +1947,12 @@ int debug_breakpoint_condition_optimized(int indice)
 	return 0;
 }
 
+void debug_set_mem_breakpoint(z80_int dir,z80_byte brkp_type)
+{
+	mem_breakpoint_array[dir]=brkp_type;
+}
+	
+
 
 //Ver si salta breakpoint y teniendo en cuenta setting de saltar siempre o con cambio
 int cpu_core_loop_debug_check_mem_brkp_aux(z80_int dir, z80_byte tipo_mascara, int anterior_dir)
@@ -1974,12 +1994,12 @@ int anterior_debug_mmu_mwa=-1;
 	//Probar mra
 	if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mra,1,anterior_debug_mmu_mra)) {
 		//Hacer saltar breakpoint MRA
-		printf ("Saltado breakpoint MRA en %04XH\n",debug_mmu_mra);
+		//printf ("Saltado breakpoint MRA en %04XH\n",debug_mmu_mra);
 		catch_breakpoint_index=-1;
 
 
 		char buffer_mensaje[100];
-		sprintf(buffer_mensaje,"Memory Breakpoint Read Address %04XH",debug_mmu_mra);
+		sprintf(buffer_mensaje,"Memory Breakpoint Read Address: %04XH",debug_mmu_mra);
                 cpu_core_loop_debug_breakpoint(buffer_mensaje);
 
 	}
@@ -1987,11 +2007,11 @@ int anterior_debug_mmu_mwa=-1;
 	//Probar mwa
         if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,2,anterior_debug_mmu_mwa)) {
                 //Hacer saltar breakpoint MWA
-                printf ("Saltado breakpoint MWA en %04XH\n",debug_mmu_mwa);
+                //printf ("Saltado breakpoint MWA en %04XH\n",debug_mmu_mwa);
 		catch_breakpoint_index=-1;
 
 		char buffer_mensaje[100];
-		sprintf(buffer_mensaje,"Memory Breakpoint Write Address %04XH",debug_mmu_mwa);
+		sprintf(buffer_mensaje,"Memory Breakpoint Write Address: %04XH",debug_mmu_mwa);
                 cpu_core_loop_debug_breakpoint(buffer_mensaje);
 
         }
