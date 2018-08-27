@@ -71,6 +71,7 @@ extern int debug_breakpoints_conditions_saltado[MAX_BREAKPOINTS_CONDITIONS];
 extern int debug_breakpoints_conditions_enabled[MAX_BREAKPOINTS_CONDITIONS];
 
 
+extern z80_byte mem_breakpoint_array[];
 
 //#define MAX_BREAKPOINTS_PEEK 4
 //extern int debug_breakpoints_peek_array[];

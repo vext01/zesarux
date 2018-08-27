@@ -733,6 +733,7 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"get-io-ports",NULL,NULL,"Returns currently i/o ports used"},
 
+  	{"get-membreakpoints",NULL,"[index] [items]","Get mem breakpoints list. If set index, returns item at index. If set items, returns number of items list starting from index parameter"},
 	{"get-machines",NULL,NULL,"Returns list of emulated machines"},
 	{"get-memory-pages","|gmp","[verbose]","Returns current state of memory pages. Default output will be the same as on debug menu; verbose output gives a detailed description of every page"},
 	{"get-memory-zones","|gmz",NULL,"Returns list of memory zones of this machine"},
@@ -795,6 +796,7 @@ struct s_items_ayuda items_ayuda[]={
 				"Bit 5: Step over interrupt when running cpu-step, cpu-step-over and run verbose. It's the same setting as Step Over Interrupt on menu\n"
 		},
 	{"set-machine","|sm","machine_name","Set machine"},
+	{"set-membreakpoint",NULL,"index type","Sets a memory breakpoint at desired index entry for type\n"},
 	{"set-memory-zone","|smz","zone","Set memory zone number"},
   {"set-register","|sr","register=value","Changes register value. Example: set-register DE=3344H"},
 
@@ -912,6 +914,29 @@ void remote_get_breakpoints(int misocket,int inicio,int items)
     }
 
     escribir_socket(misocket,"\n");
+
+  }
+}
+
+//Inicio contando desde cero
+void remote_get_membreakpoints(int misocket,int inicio,int items)
+{
+  int i;
+
+  escribir_socket (misocket,"Breakpoints: ");
+  if (debug_breakpoints_enabled.v) escribir_socket (misocket,"On\n");
+  else escribir_socket (misocket,"Off\n");
+
+ int total_activos=0;
+
+  for (i=inicio;i<65536 && total_activos<items;i++) {
+
+    z80_byte tipo=mem_breakpoint_array[i];
+
+    if (tipo!=0) {
+	escribir_socket_format(misocket,"%04XH : %d\n",i,tipo);
+	total_activos++;
+    }
 
   }
 }
@@ -3606,6 +3631,28 @@ char buffer_retorno[2048];
 		//debug_get_memory_pages(buffer_temporal);
 		//escribir_socket (misocket,buffer_temporal);
 	}
+
+  else if (!strcmp(comando_sin_parametros,"get-membreakpoints") ) {
+        int inicio=0;
+        int items=65536;
+
+                remote_parse_commands_argvc(parametros);
+                if (remote_command_argc>0) {
+                        inicio=parse_string_to_number(remote_command_argv[0]);
+                        if (inicio<0 || inicio>65535) {
+                                escribir_socket (misocket,"ERROR. Index out of range");
+                                return;
+                        }
+                        items=1;
+                }
+
+                if (remote_command_argc>1) {
+                        items=parse_string_to_number(remote_command_argv[1]);
+                }
+
+
+    remote_get_membreakpoints(misocket,inicio,items);
+  }
 
 	else if (!strcmp(comando_sin_parametros,"get-memory-zones") || !strcmp(comando_sin_parametros,"gmz")) {
 		remote_get_memory_zones(misocket);
