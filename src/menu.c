@@ -8801,6 +8801,13 @@ void menu_debug_hexdump_copy(void)
 
 }
 
+void menu_debug_hexdump_aviso_edit_filezone(void)
+{
+							menu_warn_message("Memory zone is File zone. Changes won't be saved to the file");
+							//Volver a dibujar ventana, pues se ha borrado al aparecer el aviso
+							menu_debug_hexdump_ventana();	
+}
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
     menu_espera_no_tecla();
@@ -9077,6 +9084,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 							menu_espera_no_tecla();
 							tecla=0; //para no enviar dicha tecla al editor
 						}
+
+						//Si zona de filemem
+						if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_FILE_ZONE) {
+							menu_debug_hexdump_aviso_edit_filezone();				
+						}
 					break;					
 
 					//case 'l':
@@ -9144,10 +9156,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_hexdump_ventana();
 					}
 
-					//Si zona de filemem
-					if (menu_debug_memory_zone==MEMORY_ZONE_FILE_ZONE) {
-						menu_warn_message("Memory zone is File zone. Changes won't be saved to the file");
-					}
+
 				}
 
 
