@@ -8786,7 +8786,7 @@ void menu_debug_hexdump_copy(void)
     menu_ventana_scanf("Source?",string_address,10);
 	menu_z80_moto_int source=parse_string_to_number(string_address);
 
-    sprintf (string_address,"%XH",menu_debug_hexdump_direccion);
+    sprintf (string_address,"%XH",source);
     menu_ventana_scanf("Destination?",string_address,10);
 	menu_z80_moto_int destination=parse_string_to_number(string_address);
 
@@ -8946,17 +8946,18 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 
-				sprintf (buffer_linea,"%sMemptr C%shar: %s",string_atajos,string_atajos,buffer_char_type);
+				sprintf (buffer_linea,"%sMemptr C%sopy",string_atajos,string_atajos);
 
 
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
-				sprintf (buffer_linea,"%sInvert: %s Edi%st: %s %sCopy",
+				sprintf (buffer_linea,"%sInvert:%s Edi%st:%s C%shar:%s",
 					string_atajos,
 					(valor_xor==0 ? "No" : "Yes"), 
 					string_atajos,
 					(menu_hexdump_edit_mode==0 ? "No" : "Yes" ),
-					string_atajos
+					string_atajos,
+					buffer_char_type
 					);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
@@ -9001,6 +9002,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				//Variable usada para mover puntero de la pantalla, al mover cursor y queremos subir arriba o abajo
 				//int alterar_ptr=0;
+
+				//Aviso: hay que conseguir que las letras de accion no esten entre la a-f, porque asi,
+				//podemos usar dichas letras para editar hexa
 
 				switch (tecla) {
 
@@ -9049,7 +9053,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						}
 					break;
 
-					case 'c':
+					case 'o':
 						if (!editando_en_zona_ascii)  {
 							menu_debug_hexdump_copy();
 							menu_debug_hexdump_ventana();
