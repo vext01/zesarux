@@ -8683,6 +8683,9 @@ void menu_debug_hexdump_print_editcursor(int x,int y,char caracter)
 	z80_byte papel=ESTILO_GUI_PAPEL_SELECCIONADO;
     z80_byte tinta=ESTILO_GUI_TINTA_SELECCIONADO;	
 
+	//Si multitarea esta off, no se vera el parpadeo. Entonces cambiar el caracter por cursor '_'
+	if (!menu_multitarea) caracter='_';
+
 	putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,1);
 
 }
