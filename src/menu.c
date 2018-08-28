@@ -6498,7 +6498,7 @@ void menu_debug_registers_adjust_ptr_on_follow(void)
 	if (menu_debug_follow_pc.v) {
                 menu_debug_memory_pointer=get_pc_register();
                 //Si se esta mirando zona copper
-                if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
+                if (menu_debug_memory_zone==MEMORY_ZONE_NUM_TBBLUE_COPPER) {
                         menu_debug_memory_pointer=tbblue_copper_pc;
                 }
 

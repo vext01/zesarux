@@ -649,7 +649,7 @@ Esto se usa en NextDaw, es open+truncate
 		//temp_esxdos_last_open_file_handler=1;
 		if (debe_usar_plus3_header && escritura==0) {
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Reading PLUS3DOS header at DE=%04XH",reg_de);
-			char buffer_registros[1024];
+			//char buffer_registros[1024];
 			//print_registers(buffer_registros);
 			//debug_printf (VERBOSE_DEBUG,"ESXDOS handler: %s",buffer_registros);
 
@@ -1780,7 +1780,7 @@ This needs changing/fixing for virtual devs, etc.
 */
 	z80_int puntero=*registro_parametros_hl_ix;
 
-	int i;
+	//int i;
 
 	//Retornar el primer disco solo
 	z80_byte byte_info=8; //IDE

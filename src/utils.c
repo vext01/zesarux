@@ -9626,7 +9626,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     break;     
 
     //tbblue copper
-    case TBBLUE_COPPER_MEMORY_ZONE_NUM:
+    case MEMORY_ZONE_NUM_TBBLUE_COPPER:
       if (MACHINE_IS_TBBLUE) {
         *readwrite=3;
         size=TBBLUE_COPPER_MEMORY;
@@ -9847,7 +9847,7 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 	break;
 
     //tbblue copper
-    case TBBLUE_COPPER_MEMORY_ZONE_NUM:
+    case MEMORY_ZONE_NUM_TBBLUE_COPPER:
       if (MACHINE_IS_TBBLUE) {
         p=tbblue_copper_memory;
         p=p+address;
@@ -10006,7 +10006,7 @@ void machine_get_memory_zone_name(int zone, char *name)
 	break;
 
     //tbblue copper. 17
-    case TBBLUE_COPPER_MEMORY_ZONE_NUM:
+    case MEMORY_ZONE_NUM_TBBLUE_COPPER:
       if (MACHINE_IS_TBBLUE) {
           		   //123456789012345
 		strcpy(name,"TBBlue copper");   
@@ -12568,7 +12568,7 @@ void util_gac_get_string_dictionary(int index,z80_byte *memoria,char *string)
 
 void util_gac_readobjects(z80_int puntero,z80_int endptr,z80_byte *mem_diccionario)
 {
-        z80_byte count,temp;
+        //z80_byte count,temp; 
         z80_int copia_puntero;
 
         z80_byte object,tamanyo,weight,scrap;

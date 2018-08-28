@@ -698,6 +698,6 @@ extern int util_unpawsetc_dump_words(char *mensaje);
 extern int util_is_digit(char c);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
-#define TBBLUE_COPPER_MEMORY_ZONE_NUM 17
+#define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 
 #endif

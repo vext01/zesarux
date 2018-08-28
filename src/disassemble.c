@@ -258,7 +258,7 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 	}
 
 	//Caso para copper
-	if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
+	if (menu_debug_memory_zone==MEMORY_ZONE_NUM_TBBLUE_COPPER) {
 		//Casos WAIT y MOVE
 
 		z80_byte op=disassemble_peek_byte(address);
