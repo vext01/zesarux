@@ -190,7 +190,7 @@ extern z80_int tbblue_copper_pc;
 #define TBBLUE_RCCH_COPPER_RUN_LOOP         0x80
 #define TBBLUE_RCCH_COPPER_RUN_VBI          0xc0
 
-#define TBBLUE_COPPER_MEMORY_ZONE_NUM 17
+
 
 extern int tbblue_get_current_raster_horiz_position(void);
 extern int tbblue_get_current_raster_position(void);

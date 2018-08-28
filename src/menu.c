@@ -9143,6 +9143,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Volver a dibujar ventana, pues se ha borrado al pregutar confirmacion
 						menu_debug_hexdump_ventana();
 					}
+
+					//Si zona de filemem
+					if (menu_debug_memory_zone==MEMORY_ZONE_FILE_ZONE) {
+						menu_warn_message("Memory zone is File zone. Changes won't be saved to the file");
+					}
 				}
 
 
