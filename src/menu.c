@@ -8674,7 +8674,7 @@ menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,i
 	return dir;
 }
 
-void menu_debug_hexdump_print_editcursor(int x,int y)
+void menu_debug_hexdump_print_editcursor(int x,int y,char caracter)
 {
 	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
     //z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
@@ -8683,7 +8683,7 @@ void menu_debug_hexdump_print_editcursor(int x,int y)
 	z80_byte papel=ESTILO_GUI_PAPEL_SELECCIONADO;
     z80_byte tinta=ESTILO_GUI_TINTA_SELECCIONADO;	
 
-	putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
+	putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,1);
 
 }
 
@@ -8908,7 +8908,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		int editando_en_zona_ascii=0;
 		if (menu_hexdump_edit_mode && cursor_en_zona_ascii) editando_en_zona_ascii=1;		
 
-		char nibble_char='X';		
+		char nibble_char='X';	
+		char nibble_char_cursor='X';		
 
 		for (;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
@@ -8929,8 +8930,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			menu_escribe_linea_opcion(linea,-1,1,dumpmemoria);
 
 			//Meter el nibble_char si corresponde
-			if (lineas_hex==menu_hexdump_edit_position_y && !editando_en_zona_ascii) {
-				nibble_char=dumpmemoria[7+menu_hexdump_edit_position_x_nibble];
+			if (lineas_hex==menu_hexdump_edit_position_y) {
+				nibble_char_cursor=dumpmemoria[7+menu_hexdump_edit_position_x];
+				if (!editando_en_zona_ascii) nibble_char=dumpmemoria[7+menu_hexdump_edit_position_x_nibble];
 			}
 		}
 
@@ -8947,7 +8949,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
 			int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+menu_hexdump_edit_position_y;
 
-			menu_debug_hexdump_print_editcursor(xfinal,yfinal);
+			menu_debug_hexdump_print_editcursor(xfinal,yfinal,nibble_char_cursor);
 
 			//Indicar nibble entero. En caso de edit hexa
 			if (!editando_en_zona_ascii) {
