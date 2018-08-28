@@ -9086,7 +9086,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						}
 
 						//Si zona de filemem
-						if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_FILE_ZONE) {
+						if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_NUM_FILE_ZONE) {
 							menu_debug_hexdump_aviso_edit_filezone();				
 						}
 					break;					

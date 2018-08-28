@@ -9618,7 +9618,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     break;        
 
 	//memory zone by file. 16
-    case MEMORY_ZONE_FILE_ZONE:
+    case MEMORY_ZONE_NUM_FILE_ZONE:
       if (memory_zone_by_file_size>0) {
         *readwrite=3;
         size=memory_zone_by_file_size;
@@ -9840,7 +9840,7 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     break;           
 
 	//memory zone by file. 16
-	case MEMORY_ZONE_FILE_ZONE:
+	case MEMORY_ZONE_NUM_FILE_ZONE:
 		if (memory_zone_by_file_size>0) {
 			p=&memory_zone_by_file_pointer[address];
 		}
@@ -9998,7 +9998,7 @@ void machine_get_memory_zone_name(int zone, char *name)
         break;                   
 
 	//memory zone by file. 16
-	case MEMORY_ZONE_FILE_ZONE:
+	case MEMORY_ZONE_NUM_FILE_ZONE:
 		if (memory_zone_by_file_size>0) {
           		   //123456789012345
 		strcpy(name,"File zone");   
