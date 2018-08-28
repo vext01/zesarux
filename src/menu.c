@@ -8580,6 +8580,8 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 
 }
 
+
+
 int menu_debug_hexdump_change_pointer(int p)
 {
 
@@ -8774,6 +8776,31 @@ void menu_debug_hexdump_cursor_abajo(void)
 						}
 }
 
+void menu_debug_hexdump_copy(void)
+{
+
+
+    char string_address[10];
+
+    sprintf (string_address,"%XH",menu_debug_hexdump_direccion);
+    menu_ventana_scanf("Source?",string_address,10);
+	menu_z80_moto_int source=parse_string_to_number(string_address);
+
+    sprintf (string_address,"%XH",menu_debug_hexdump_direccion);
+    menu_ventana_scanf("Destination?",string_address,10);
+	menu_z80_moto_int destination=parse_string_to_number(string_address);
+
+    strcpy (string_address,"1");
+    menu_ventana_scanf("Length?",string_address,10);
+	menu_z80_moto_int longitud=parse_string_to_number(string_address);	
+
+	if (menu_confirm_yesno("Copy bytes")) {
+		for (;longitud>0;source++,destination++,longitud--) poke_byte_z80_moto(destination,peek_byte_z80_moto(source) );
+	}
+
+
+}
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
     menu_espera_no_tecla();
@@ -8924,24 +8951,26 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
-				sprintf (buffer_linea,"%sInvert: %s Edi%st: %s",
+				sprintf (buffer_linea,"%sInvert: %s Edi%st: %s %sCopy",
 					string_atajos,
 					(valor_xor==0 ? "No" : "Yes"), 
 					string_atajos,
-					(menu_hexdump_edit_mode==0 ? "No" : "Yes" ));
+					(menu_hexdump_edit_mode==0 ? "No" : "Yes" ),
+					string_atajos
+					);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
 				char memory_zone_text[64]; //espacio temporal mas grande por si acaso
 				if (menu_debug_show_memory_zones==0) {
-					sprintf (memory_zone_text,"%sZ: Mem zone (mapped memory)",string_atajos);
+					sprintf (memory_zone_text,"Mem %szone (mapped memory)",string_atajos);
 				}
 				else {
 					//printf ("Info zona %d\n",menu_debug_memory_zone);
 					char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
 					//int readwrite;
 					machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
-					sprintf (memory_zone_text,"%sZ: Mem zone (%d %s)",string_atajos,menu_debug_memory_zone,buffer_name);
+					sprintf (memory_zone_text,"Mem %szone (%d %s)",string_atajos,menu_debug_memory_zone,buffer_name);
 					//printf ("size: %X\n",menu_debug_memory_zone_size);
 					//printf ("Despues zona %d\n",menu_debug_memory_zone);
 				}
@@ -9019,6 +9048,13 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 							menu_debug_hexdump_ventana();
 						}
 					break;
+
+					case 'c':
+						if (!editando_en_zona_ascii)  {
+							menu_debug_hexdump_copy();
+							menu_debug_hexdump_ventana();
+						}
+					break;					
 
 					case 'h':
 						if (!editando_en_zona_ascii)  {

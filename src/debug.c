@@ -175,6 +175,23 @@ char *mem_breakpoint_types_strings[]={
 	"Read & Write"
 };
 
+/*
+Pruebas de uso de cpu entre el parser clasico (versiones anteriores a la 7.1), el parser optimizado para PC=, MRA=, MWA, y
+los mem_breakpoints:
+
+mra=32768
+
+Con zesarux de siempre: 66% de cpu
+Con MRA optimizado: 44% de cpu
+Con memory breakpoint: 44% de cpu
+Mismo uso de cpu en los dos casos anteriores sin breakpoints, solo habilitando breakpoints: 44% cpu
+
+
+Con 10 mra en optimizado: 48% 
+Con 10 memory breakpoints: 44%
+
+*/
+
 //Avisa cuando se ha entrado o salido de rom. Solo salta una vez el breakpoint
 //0: no esta en rom
 //1: esta en rom y aun no ha saltado breakpoint
