@@ -700,6 +700,7 @@ struct s_items_ayuda
 struct s_items_ayuda items_ayuda[]={
 
   {"about",NULL,NULL,"Shows about message"},
+	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
@@ -709,7 +710,6 @@ struct s_items_ayuda items_ayuda[]={
                                         "disassemble from PC register. If no lines specified, disassembles one line"},
 	{"dump-nested-functions",NULL,NULL,"Shows internal nested core functions"},
 	{"dump-scanline-buffer",NULL,NULL,"Shows internal scanline rainbow buffer, pixel and atribute byte pairs"},
-
   {"enable-breakpoint","|eb","index","Enable specific breakpoint"},
   {"enable-breakpoints",NULL,NULL,"Enable breakpoints"},
   {"enter-cpu-step",NULL,NULL,"Enter cpu step to step mode"},
@@ -733,7 +733,7 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"get-io-ports",NULL,NULL,"Returns currently i/o ports used"},
 
-  	{"get-membreakpoints",NULL,"[address] [items]","Get mem breakpoints list. If set address, returns item at address. If set items, returns number of enabled items list starting from address parameter"},
+  	{"get-membreakpoints",NULL,"[address] [items]","Get memory breakpoints list. If set address, returns item at address. If set items, returns number of enabled items list starting from address parameter"},
 	{"get-machines",NULL,NULL,"Returns list of emulated machines"},
 	{"get-memory-pages","|gmp","[verbose]","Returns current state of memory pages. Default output will be the same as on debug menu; verbose output gives a detailed description of every page"},
 	{"get-memory-zones","|gmz",NULL,"Returns list of memory zones of this machine"},
@@ -797,7 +797,7 @@ struct s_items_ayuda items_ayuda[]={
 		},
 	{"set-machine","|sm","machine_name","Set machine"},
 	{"set-membreakpoint",NULL,"address type [items]","Sets a memory breakpoint starting at desired address entry for type. If items parameter is not set, the default is 1. type can be:\n"
-		"0: disabled\n"
+		"0: Disabled\n"
 		"1: Fired when reading memory\n"
 		"2: Fired when writing memory\n"
 		"3: Fired when reading or writing memory\n"
@@ -3279,6 +3279,14 @@ char buffer_retorno[2048];
 	else if (comando_sin_parametros[0]=='A' && comando_sin_parametros[1]=='T' && comando_sin_parametros[2]=='D' && comando_sin_parametros[3]=='T') {
 		escribir_socket (misocket,"NO CARRIER");
 	}
+
+
+ else if (!strcmp(comando_sin_parametros,"clear-membreakpoints")) {
+	 clear_mem_breakpoints();
+  }
+
+
+
 
   else if (!strcmp(comando_sin_parametros,"cpu-panic")) {
 	//Entramos en el mismo modo que cpu-step para poder congelar la emulacion
