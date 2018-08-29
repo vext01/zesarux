@@ -33814,7 +33814,7 @@ void menu_filesel_print_legend(void)
 
 
 								//    01234  567890  12345  678901  2345678901
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Trunc ~~Del m~~Kdir C~~Onvert");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Trunc ~~Del m~~Kdr c~~Onv ~~Inf");
 		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
 
 		//Restaurar comportamiento mostrar atajos
@@ -34897,7 +34897,30 @@ void menu_filesel_print_text_contents(void)
 	menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
 }
 
+void file_utils_info_file(char *archivo)
+{
 
+	long int tamanyo=get_file_size(archivo);
+	//fecha
+       int hora;
+        int minutos;
+        int doblesegundos;
+
+        int anyo;
+        int mes;
+        int dia;
+
+
+        get_file_date_from_name(archivo,&hora,&minutos,&doblesegundos,&dia,&mes,&anyo);
+
+        anyo-=1980;
+        doblesegundos *=2;
+
+
+	menu_generic_message_format("Info file","Size: %ld\nModified time: %02d:%02d:%02d %02d/%02d/%02d",
+		tamanyo,hora,minutos,doblesegundos,dia,mes,anyo);
+
+}
 
 
 //Si hay que iniciar el filesel pero mover el cursor a un archivo concreto
@@ -35529,13 +35552,16 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O') {
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
 							item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
 							if (item_seleccionado!=NULL) {
 								//Esto pasa en las carpetas vacias, como /home en Mac OS
+								//Info para cualquier tipo de archivo
+								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
+
 								//Si no es directorio
 								if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)!=2) {
 									//unimos directorio y nombre archivo
