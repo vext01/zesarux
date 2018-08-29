@@ -796,7 +796,7 @@ struct s_items_ayuda items_ayuda[]={
 				"Bit 5: Step over interrupt when running cpu-step, cpu-step-over and run verbose. It's the same setting as Step Over Interrupt on menu\n"
 		},
 	{"set-machine","|sm","machine_name","Set machine"},
-	{"set-membreakpoint",NULL,"address type","Sets a memory breakpoint at desired address entry for type. type can be:\n"
+	{"set-membreakpoint",NULL,"address type [items]","Sets a memory breakpoint starting at desired address entry for type. If items parameter is not set, the default is 1. type can be:\n"
 		"0: disabled\n"
 		"1: Fired when reading memory\n"
 		"2: Fired when writing memory\n"
@@ -4113,7 +4113,7 @@ else if (!strcmp(comando_sin_parametros,"set-membreakpoint") ) {
                                 remote_parse_commands_argvc(parametros);
 
                                 if (remote_command_argc<2) {
-                                        escribir_socket(misocket,"ERROR. Needs two parameters");
+                                        escribir_socket(misocket,"ERROR. Needs two parameters minimum");
                                         return;
                                 }
 
@@ -4128,7 +4128,18 @@ else if (!strcmp(comando_sin_parametros,"set-membreakpoint") ) {
                 escribir_socket(misocket,"ERROR. Type out of range");
                 return;
         }
-	debug_set_mem_breakpoint(index_int,type);
+
+	int items=1;
+
+	if (remote_command_argc>=3) {
+		items=parse_string_to_number(remote_command_argv[2]);
+	}
+
+
+
+	for (;items>0;items--) {
+		debug_set_mem_breakpoint(index_int++,type);
+	}
   }
 }
 
