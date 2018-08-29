@@ -34913,12 +34913,12 @@ void file_utils_info_file(char *archivo)
 
         get_file_date_from_name(archivo,&hora,&minutos,&doblesegundos,&dia,&mes,&anyo);
 
-        anyo-=1980;
+        //anyo-=1980;
         doblesegundos *=2;
 
 
-	menu_generic_message_format("Info file","Size: %ld\nModified time: %02d:%02d:%02d %02d/%02d/%02d",
-		tamanyo,hora,minutos,doblesegundos,dia,mes,anyo);
+	menu_generic_message_format("Info file","Full path: %s\n\nSize: %ld bytes\nModified: %02d:%02d:%02d %02d/%02d/%02d",
+		archivo,tamanyo,hora,minutos,doblesegundos,dia,mes,anyo);
 
 }
 
@@ -35559,14 +35559,17 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
 							if (item_seleccionado!=NULL) {
 								//Esto pasa en las carpetas vacias, como /home en Mac OS
+									//unimos directorio y nombre archivo
+									getcwd(file_utils_file_selected,PATH_MAX);
+									sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);								
 								//Info para cualquier tipo de archivo
 								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
 
 								//Si no es directorio
 								if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)!=2) {
 									//unimos directorio y nombre archivo
-									getcwd(file_utils_file_selected,PATH_MAX);
-									sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
+									//getcwd(file_utils_file_selected,PATH_MAX);
+									//sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
 									
 									//Visor de archivos
 									if (tecla=='V') menu_file_viewer_read_file("Text file view",file_utils_file_selected);
