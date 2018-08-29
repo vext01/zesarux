@@ -4696,11 +4696,13 @@ int get_file_date_from_stat(struct stat *buf_stat,int *hora,int *minuto,int *seg
 #if defined(__APPLE__)
           struct timespec *d;
           d=&buf_stat->st_mtimespec;
-          foo = gmtime((const time_t *)d);
+          //foo = gmtime((const time_t *)d);
+          foo = localtime((const time_t *)d);
 #else
           struct time_t *d;
           d=&buf_stat->st_mtime;
-          foo = gmtime((const time_t *)d);
+          //foo = gmtime((const time_t *)d);
+          foo = localtime((const time_t *)d);
 #endif
 
 //printf("Year: %d\n", foo->tm_year);

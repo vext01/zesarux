@@ -34904,21 +34904,19 @@ void file_utils_info_file(char *archivo)
 	//fecha
        int hora;
         int minutos;
-        int doblesegundos;
+        int segundos;
 
         int anyo;
         int mes;
         int dia;
 
 
-        get_file_date_from_name(archivo,&hora,&minutos,&doblesegundos,&dia,&mes,&anyo);
+        get_file_date_from_name(archivo,&hora,&minutos,&segundos,&dia,&mes,&anyo);
 
-        //anyo-=1980;
-        doblesegundos *=2;
 
 
 	menu_generic_message_format("Info file","Full path: %s\n\nSize: %ld bytes\nModified: %02d:%02d:%02d %02d/%02d/%02d",
-		archivo,tamanyo,hora,minutos,doblesegundos,dia,mes,anyo);
+		archivo,tamanyo,hora,minutos,segundos,dia,mes,anyo);
 
 }
 

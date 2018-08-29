@@ -33,11 +33,7 @@ final de frame. Y al no haberlo , si metemos un refresco de pantalla al final de
 el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos a velocidad normal en vez de top speed
 
 -reloj deberia salir en nextos 
--si se deja cursor quieto en filebrowser, que muestre informacion del archivo:
-* nombre completo
-* tamaño
-* fecha 
-* otros datos?
+
 
 -entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
 ->ahora ya no da el cpu_panic de Window out of bounds
