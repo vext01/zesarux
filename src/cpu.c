@@ -4113,7 +4113,7 @@ Total 20 pages=320 Kb
                                         cpu_panic("Error loading ROM");
                                  }
 
-                                leidos=fread(timex_ex_ram_mem_table[0],1,8192,ptr_romfile);
+                                leidos=fread(timex_ex_rom_mem_table[0],1,8192,ptr_romfile);
                                 if (leidos!=8192) {
                                         cpu_panic("Error loading ROM");
                                  }

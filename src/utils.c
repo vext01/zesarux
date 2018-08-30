@@ -9638,7 +9638,19 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       }
     break;          
 
+    case MEMORY_ZONE_NUM_TIMEX_EXROM:
+      if (MACHINE_IS_TIMEX_TS2068) {
+        *readwrite=1;
+        size=8192;
+      }
+    break;      
 
+    case MEMORY_ZONE_NUM_TIMEX_DOCK:
+      if (MACHINE_IS_TIMEX_TS2068) {
+        *readwrite=1;
+        size=65536;
+      }
+    break;     
 
   }
 
@@ -9859,6 +9871,20 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
       }
     break;      
 
+    case MEMORY_ZONE_NUM_TIMEX_EXROM:
+      if (MACHINE_IS_TIMEX_TS2068) {
+        z80_byte *start=timex_ex_rom_mem_table[0];
+        p=&start[address];              
+      }
+    break;      
+
+    case MEMORY_ZONE_NUM_TIMEX_DOCK:
+      if (MACHINE_IS_TIMEX_TS2068) {
+        z80_byte *start=timex_dock_rom_mem_table[0];
+        p=&start[address];              
+      }
+    break;        
+
 
   }
 
@@ -10016,7 +10042,19 @@ void machine_get_memory_zone_name(int zone, char *name)
           		   //123456789012345
 		strcpy(name,"TBBlue copper");   
       }
-    break;         
+    break;   
+
+    case MEMORY_ZONE_NUM_TIMEX_EXROM:
+      if (MACHINE_IS_TIMEX_TS2068) {
+        strcpy(name,"Timex EXROM");             
+      }
+    break;      
+
+    case MEMORY_ZONE_NUM_TIMEX_DOCK:
+      if (MACHINE_IS_TIMEX_TS2068) {
+        strcpy(name,"Timex Dock");               
+      }
+    break;             
 
   }
 

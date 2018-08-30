@@ -24,8 +24,6 @@ renombrarla
 
 --- Cosas para la siguiente version
 
--no va bien pgup en zona memoria ql en direcciones altas (mas alla de 40000h)
-
 -poder cargar un .config sin mas, sin que cargue snapshot ni cinta ni nada, solo parseando el config. raro? en smartload estaran los dos, el juego y la config
 
 -poder hacer 50 FPS en carga top speed: problema, que al hacer top speed, ya no llevamos la cuenta de cuanto son 50 fps, pues no hay sleep de 
@@ -35,25 +33,40 @@ el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos
 -reloj deberia salir en nextos 
 
 
--entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
-->ahora ya no da el cpu_panic de Window out of bounds
-->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
-en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
+
 
 -Quizá quitar real-time cuando root? Casi nunca se ha probado
 Y además casi nadie lo lanza como root 
 
 -emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
 
+Menu
+
+-entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
+->ahora ya no da el cpu_panic de Window out of bounds
+->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
+en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
+
 -mostrar <exp> para archivos expandibles/comprimidos? gestionado por menu_util_file_is_compressed
+
+-con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
+En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
+
+
+Fin Menu
  
 
 -formato zsf debe guardar iff1 y iff2 por separado
 
+-parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
+
+  //test meter un NOOP
+  zsf_write_block(ptr_zsf_file, NULL,0, 0);
+
+
 -al cambiar de core reduced o no, si habia breakpoints, aparecen como activos aunque realmente el core no esta usando el debug core (se ha perdido el nested)
 
--en visor hexadecimal de file utils, si hay archivo con caracter 7E (~~~) como orquesta.rwa, se acaba viendo texto inverso.
-dicho visor no tendria que entender los tags especiales de texto...
+
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
@@ -77,24 +90,11 @@ Probar también con Fuse u otro emulador que soporte kempston mouse
 visor sprites tambien se ve mal
 
 
--parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
-
-  //test meter un NOOP
-  zsf_write_block(ptr_zsf_file, NULL,0, 0);
-
-
-
-
--con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
-En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
-
 -fbdev. lectura teclas F11 en adelante  
 
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
-
--memory zone para Timex
 
 TBBLUE: 
  

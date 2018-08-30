@@ -699,5 +699,7 @@ extern int util_is_digit(char c);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
+#define MEMORY_ZONE_NUM_TIMEX_EXROM 18
+#define MEMORY_ZONE_NUM_TIMEX_DOCK 19
 
 #endif

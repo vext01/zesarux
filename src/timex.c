@@ -53,10 +53,10 @@ z80_byte *timex_rom_mem_table[1];
 z80_byte *timex_home_ram_mem_table[3];
 
 //Direcciones donde estan cada pagina de ram ex
-z80_byte *timex_ex_ram_mem_table[8];
+z80_byte *timex_ex_rom_mem_table[8];
 
 //Direcciones donde estan cada pagina de ram dock
-z80_byte *timex_dock_ram_mem_table[8];
+z80_byte *timex_dock_rom_mem_table[8];
 
 //Direcciones actuales mapeadas, bloques de 8 kb
 z80_byte *timex_memory_paged[8];
@@ -136,7 +136,7 @@ void timex_set_memory_pages(void)
 				z80_byte *puntero_memoria;
 				if (timex_port_ff&128) {
 					//EX
-					puntero_memoria=timex_ex_ram_mem_table[bloque_ram];
+					puntero_memoria=timex_ex_rom_mem_table[bloque_ram];
 					timex_type_memory_paged[bloque_ram]=TIMEX_MEMORY_TYPE_EX;
 
 					//temp
@@ -147,7 +147,7 @@ void timex_set_memory_pages(void)
 				}
 				else {
 					//DOCK
-					puntero_memoria=timex_dock_ram_mem_table[bloque_ram];
+					puntero_memoria=timex_dock_rom_mem_table[bloque_ram];
 					timex_type_memory_paged[bloque_ram]=TIMEX_MEMORY_TYPE_DOCK;
 				}
 				timex_memory_paged[bloque_ram]=puntero_memoria;
@@ -174,10 +174,10 @@ void timex_init_memory_tables(void)
 //z80_byte *timex_home_ram_mem_table[8];
 
 //Direcciones donde estan cada pagina de ram ex
-//z80_byte *timex_ex_ram_mem_table[8];
+//z80_byte *timex_ex_rom_mem_table[8];
 
 //Direcciones donde estan cada pagina de ram dock
-//z80_byte *timex_dock_ram_mem_table[8];
+//z80_byte *timex_dock_rom_mem_table[8];
 
 //Direcciones actuales mapeadas, bloques de 8 kb
 	*/
@@ -201,27 +201,27 @@ void timex_init_memory_tables(void)
 	}
 
 	for (i=0;i<8;i++) {
-		timex_ex_ram_mem_table[i]=puntero;
+		timex_ex_rom_mem_table[i]=puntero;
 		puntero +=8192;
 	}
 
 	for (i=0;i<8;i++) {
-		timex_dock_ram_mem_table[i]=puntero;
+		timex_dock_rom_mem_table[i]=puntero;
 		puntero +=8192;
 	}
 
 	//Parece que los 8 kb de rom que se cargan en ex rom[0] tambien estan presentes en rom[1]
-	timex_ex_ram_mem_table[1]=timex_ex_ram_mem_table[0];
+	timex_ex_rom_mem_table[1]=timex_ex_rom_mem_table[0];
 	//temp
-	//timex_ex_ram_mem_table[2]=timex_ex_ram_mem_table[0];
-	//timex_ex_ram_mem_table[3]=timex_ex_ram_mem_table[0];
-	//timex_ex_ram_mem_table[4]=timex_ex_ram_mem_table[0];
-	//timex_ex_ram_mem_table[5]=timex_ex_ram_mem_table[0];
-	//timex_ex_ram_mem_table[6]=timex_ex_ram_mem_table[0];
-	//timex_ex_ram_mem_table[7]=timex_ex_ram_mem_table[0];
+	//timex_ex_rom_mem_table[2]=timex_ex_rom_mem_table[0];
+	//timex_ex_rom_mem_table[3]=timex_ex_rom_mem_table[0];
+	//timex_ex_rom_mem_table[4]=timex_ex_rom_mem_table[0];
+	//timex_ex_rom_mem_table[5]=timex_ex_rom_mem_table[0];
+	//timex_ex_rom_mem_table[6]=timex_ex_rom_mem_table[0];
+	//timex_ex_rom_mem_table[7]=timex_ex_rom_mem_table[0];
 
 	//prueba
-	//timex_dock_ram_mem_table[0]=timex_ex_ram_mem_table[0];
+	//timex_dock_rom_mem_table[0]=timex_ex_rom_mem_table[0];
 
 
 }
@@ -237,7 +237,7 @@ void timex_empty_dock_space(void)
 
 	z80_byte *puntero;
 
-	puntero=timex_dock_ram_mem_table[0];
+	puntero=timex_dock_rom_mem_table[0];
 
 	for (i=0;i<65536;i++) {
 		*puntero=255;
@@ -284,7 +284,7 @@ void timex_insert_dck_cartridge(char *filename)
 				//Leer 8kb
 				int segmento=bloque*8192;
 				debug_printf (VERBOSE_DEBUG,"Loading 8kb block at Segment %04XH-%04XH",segmento,segmento+8191);
-				fread(timex_dock_ram_mem_table[bloque],1,8192,ptr_cartridge);
+				fread(timex_dock_rom_mem_table[bloque],1,8192,ptr_cartridge);
 			}
 
 			else {

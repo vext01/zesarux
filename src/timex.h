@@ -33,7 +33,9 @@ extern z80_byte *timex_rom_mem_table[];
 
 extern z80_byte *timex_home_ram_mem_table[];
 
-extern z80_byte *timex_ex_ram_mem_table[];
+extern z80_byte *timex_ex_rom_mem_table[];
+
+extern z80_byte *timex_dock_rom_mem_table[];
 
 extern z80_byte *timex_memory_paged[];
 
