@@ -76,6 +76,8 @@ z80_byte *tbblue_memory_paged[8];
 //Si arranca rapido sin pasar por el proceso de boot. Va directamente a rom 48k
 z80_bit tbblue_fast_boot_mode={0};
 
+z80_bit tbblue_deny_turbo_rom={0};
+
 
 //Copper
 z80_byte tbblue_copper_memory[TBBLUE_COPPER_MEMORY];
@@ -2388,8 +2390,8 @@ void tbblue_set_emulator_setting_turbo(void)
 	else if (t==1) cpu_turbo_speed=2;
 	else if (t==2 || t==3) cpu_turbo_speed=4;
 
-
-	//printf ("Setting turbo: %d\n",cpu_turbo_speed);
+	if (tbblue_deny_turbo_rom.v && reg_pc<16384) return;
+	printf ("Setting turbo: %d on pc %04XH\n",cpu_turbo_speed,reg_pc);
 
 	cpu_set_turbo_speed();
 }

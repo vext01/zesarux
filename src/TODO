@@ -40,20 +40,7 @@ Y además casi nadie lo lanza como root
 
 -emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
 
-Menu
 
--entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
-->ahora ya no da el cpu_panic de Window out of bounds
-->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
-en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
-
--mostrar <exp> para archivos expandibles/comprimidos? gestionado por menu_util_file_is_compressed
-
--con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
-En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
-
-
-Fin Menu
  
 
 -formato zsf debe guardar iff1 y iff2 por separado
@@ -902,6 +889,17 @@ Mark Hutchings
 -------------
 
 --- menu - mejoras ---
+
+
+-entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
+->ahora ya no da el cpu_panic de Window out of bounds
+->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
+en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
+
+-mostrar <exp> para archivos expandibles/comprimidos? gestionado por menu_util_file_is_compressed
+
+
+
 
 -Mouse: para que no haga framedrop al moverse sobre un menu, quiza se deberia considerar cada x frames de tiempo.
 
@@ -1768,6 +1766,11 @@ condition: pc=4000h
 action: prints hello ; menu
 
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
+
+-con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
+En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
+
+
 
 -en menu debug, poder ver sprites del chip de sprites ZGX
 

@@ -18218,6 +18218,12 @@ void menu_tbblue_fast_boot_mode(MENU_ITEM_PARAMETERS)
 	tbblue_fast_boot_mode.v ^=1;
 }
 
+void menu_tbblue_deny_turbo_rom(MENU_ITEM_PARAMETERS)
+{
+
+	tbblue_deny_turbo_rom.v ^=1;
+}
+
 //menu cpu settings
 void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 {
@@ -18256,7 +18262,13 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
 					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
 	  }
-	  
+
+		if (MACHINE_IS_TBBLUE) {
+					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"Deny turbo on ROM: %s",
+							(tbblue_deny_turbo_rom.v ? "Yes" : "No") );
+					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM");
+					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM");
+	  }	  
 
 		if (!MACHINE_IS_Z88) {
 			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_hardware_top_speed,NULL,"~~Top Speed: %s",(top_speed_timer.v ? "Yes" : "No") );

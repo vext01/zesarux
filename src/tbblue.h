@@ -198,4 +198,6 @@ extern int tbblue_copper_wait_cond_fired(void);
 extern void tbblue_copper_handle_next_opcode(void);
 extern void tbblue_copper_handle_vsync(void);
 
+extern z80_bit tbblue_deny_turbo_rom;
+
 #endif
