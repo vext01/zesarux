@@ -18266,8 +18266,8 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_TBBLUE) {
 					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"Deny turbo on ROM: %s",
 							(tbblue_deny_turbo_rom.v ? "Yes" : "No") );
-					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM");
-					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM");
+					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
+					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
 	  }	  
 
 		if (!MACHINE_IS_Z88) {

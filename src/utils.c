@@ -3136,6 +3136,8 @@ int util_write_configfile(void)
   if (porcentaje_velocidad_emulador!=100)     ADD_STRING_CONFIG,"--cpuspeed %d",porcentaje_velocidad_emulador);
   if (zxuno_deny_turbo_bios_boot.v)           ADD_STRING_CONFIG,"--denyturbozxunoboot");
 
+  if (tbblue_deny_turbo_rom.v)                ADD_STRING_CONFIG,"--denyturbotbbluerom");
+
 
   if (tbblue_fast_boot_mode.v)                ADD_STRING_CONFIG,"--tbblue-fast-boot-mode");
 

@@ -1349,6 +1349,7 @@ printf (
 
 		"--cpuspeed n               Set CPU speed in percentage\n"
 		"--denyturbozxunoboot       Deny setting turbo mode on ZX-Uno boot\n"
+		"--denyturbotbbluerom       Deny setting turbo mode on TBBlue ROM\n"
 		"--tbblue-fast-boot-mode    Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)\n"
 		//no uso esto de momento "--tbblue-123b-port n        Sets the initial value for port 123b on hard reset, for tbblue-fast-boot-mode\n"
 		"--random-r-register        Generate random value for R register on every cold start, instead of the normal 0 value. Useful to avoid same R register in the start of games, when they use that register as a random value\n"
@@ -4707,6 +4708,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--denyturbozxunoboot")) {
 					zxuno_deny_turbo_bios_boot.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--denyturbotbbluerom")) {
+					tbblue_deny_turbo_rom.v=1;
+			}			
 
 			else if (!strcmp(argv[puntero_parametro],"--tbblue-fast-boot-mode")) {
 				tbblue_fast_boot_mode.v=1;

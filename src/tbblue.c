@@ -2385,13 +2385,22 @@ void tbblue_set_emulator_setting_turbo(void)
 	Si se establece a 11, hara 14 mhz tambien
 
 				*/
+
 	z80_byte t=tbblue_registers[7] & 3;
+
+	//printf ("Setting turbo: value %d on pc %04XH\n",t,reg_pc);			
+
+	if (tbblue_deny_turbo_rom.v && reg_pc<16384) {
+		//printf ("denying cpu turbo change\n");
+		return;
+	}
+
+
 	if (t==0) cpu_turbo_speed=1;
 	else if (t==1) cpu_turbo_speed=2;
 	else if (t==2 || t==3) cpu_turbo_speed=4;
 
-	if (tbblue_deny_turbo_rom.v && reg_pc<16384) return;
-	printf ("Setting turbo: %d on pc %04XH\n",cpu_turbo_speed,reg_pc);
+	
 
 	cpu_set_turbo_speed();
 }
