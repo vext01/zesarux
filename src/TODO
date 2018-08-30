@@ -30,9 +30,7 @@ renombrarla
 final de frame. Y al no haberlo , si metemos un refresco de pantalla al final de cada supuesto frame, se estara lanzando muchos mas de 50 veces por segundo
 el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos a velocidad normal en vez de top speed
 
--reloj deberia salir en nextos 
-
-
+-reloj deberia salir en nextos, ya que implementa el chip de reloj. Porque no aparece?
 
 
 -Quizá quitar real-time cuando root? Casi nunca se ha probado
@@ -40,21 +38,7 @@ Y además casi nadie lo lanza como root
 
 -emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
 
-
  
-
--formato zsf debe guardar iff1 y iff2 por separado
-
--parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
-
-  //test meter un NOOP
-  zsf_write_block(ptr_zsf_file, NULL,0, 0);
-
-
--al cambiar de core reduced o no, si habia breakpoints, aparecen como activos aunque realmente el core no esta usando el debug core (se ha perdido el nested)
-
-
-
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
 
@@ -72,9 +56,6 @@ Si es negativo, restamos ese salto (mediante neg y haciendo sbc) a posición cur
 En caso de suma de posición vertical no permitir que vaya más allá de 191 tampoco. 
 
 Probar también con Fuse u otro emulador que soporte kempston mouse 
-
--al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
-visor sprites tambien se ve mal
 
 
 -fbdev. lectura teclas F11 en adelante  
@@ -95,11 +76,11 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
 
--con cpc464 , si redimensionando la ventana con footer desactivado, falla con segmentation fault. Probado en mac con driver COCOA(OpenGL)
+
 
 --fix en compilacion en mac para sistemas antiguos
 
---machine cpc464 en aa,caca en consola de texto real da segmentation fault
+
 
 -probando el test testtimexmode6.tap, sin real timex 512x192, y luego cargar un spg (digger.spg por ejemplo), da segmentation fault en mac. quiza porque esta continuamente haciendo
 clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 255,0) y ya va
@@ -115,7 +96,6 @@ clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 
 O quizá setting configurable 
 
 
--Prism: opcion de timex real 512x192 no tiene sentido, ya que siempre lo hace real al ser la pantalla siempre de 512 de ancho..?
 
 -Conversor tzx a tap para tzx de tipo solo binario
 También de tap a tzx
@@ -137,12 +117,6 @@ Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 -Salida 16 bits sonido?
 
 
--con menu abierto no se disparan acciones, excepto si se va a menu debug cpu: logicamente pues eso solo se gestiona al iniciar el menu
-
--Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
-->problema que el breakpoint que ha saltado, indicado por la variable catch_breakpoint_index, solo puede ser uno cada vez...
-
-
 -al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
 Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
 Info: Enabling RealVideo
@@ -154,6 +128,13 @@ Info: Disabling WRX video mode
 Info: Loading keymap
 Info: Emulating ZX81 with 16 KB (ramtop=32767)
 
+-formato zsf debe guardar iff1 y iff2 por separado
+
+-parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
+
+  //test meter un NOOP
+  zsf_write_block(ptr_zsf_file, NULL,0, 0);
+
 ->pasa casi lo mismo con un .zx pero en estos, hay parametro de si esta wrx activo (y aunque se pierda desde el config se lee desde el .zx),
 pero con el --vsync-minimum-length se pierde y no esta en el .zx ...
 ->el config se carga primero. Luego el snapshot, y al meter core de zx80/81 se desactiva wrx y otros settings.
@@ -163,7 +144,7 @@ Quiza habria que parsear algunos parametros del .config tambien despues de carga
 o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
 
 
---- Fin cosas para la siguiente version
+-------- Fin cosas para la siguiente version
 
 
 
@@ -567,6 +548,7 @@ Solo afecta a chloe
 -Modo turbo tipo VGA. Modo turbo solo hago los tipo CPU aunque no igual que Jeff: el envia 100 interrupciones por segundo en turbo x2
 -Test franja borde vertical para prism, comparar en emulador y maquina real
 -no hace sprite chip
+-Prism: opcion de timex real 512x192 no tiene sentido, ya que siempre lo hace real al ser la pantalla siempre de 512 de ancho..?
 -Bit de bloqueo de paginacion de 128 no le afecta. Deberia?
 -mejorar sonido. al grabar por ejemplo se oye entrecortado y hace que no se pueda luego cargar una cinta grabada
 -Modo interlaced en prism
@@ -620,6 +602,10 @@ relacionado:
 http://www.zxuno.com/forum/viewtopic.php?f=37&t=552&sid=88847dce1ad30a54353f35884937ef1f
 -Demo across the edge se ve ligeramente mejor si se pone setting IM2 slow a yes
 Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
+
+-al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
+visor sprites tambien se ve mal
+
 
 -------------
 
@@ -761,6 +747,8 @@ http://velesoft.speccy.cz/sam_zx128.htm
 --- CPC ---
 
 -ay player en modo cpc no borra debajo de pantalla diferentes ventanas
+--machine cpc464 en aa,caca en consola de texto real da segmentation fault
+-con cpc464 , si redimensionando la ventana con footer desactivado, falla con segmentation fault. Probado en mac con driver COCOA(OpenGL)
 -dibujado de border cuando pantalla es menor de lo habitual, temporal, no va bien en casos como paperboy. Esto seria mejor para solucionarlo implementar realvideo
 -debug i/o ports
 -teclas cpc y keymap para otros drivers. ahora solo esta para cocoa y xwindows y sdl y fbdev
@@ -810,6 +798,7 @@ http://www.cpcwiki.eu/index.php/Format:TAP_tape_image_file_format
 
 -Sd en cpc
 http://www.spinpoint.org/2016/05/06/m4-board-retrofun-8-bit-amstrad-cpc-wifi/#comment-69
+
 
 
 -------------
@@ -1767,10 +1756,15 @@ action: prints hello ; menu
 
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
+-al cambiar de core reduced o no, si habia breakpoints, aparecen como activos aunque realmente el core no esta usando el debug core (se ha perdido el nested)
+
 -con multitarea on, en debug cpu, en step mode, por lo tanto, no ejecuta cpu opcodes de fondo, si se activa OSD, se ejecutaran opcodes mientras dure el OSD
 En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no vuelve -> parece que incluso sin modo step, el osd se colgara al enviar una tecla : en el caso de que no es modo step, realmente no se ha colgado, solo que se ha quedado la tecla indicada pulsada-> pulsar misma tecla para liberarlo
 
+-con menu abierto no se disparan acciones, excepto si se va a menu debug cpu: logicamente pues eso solo se gestiona al iniciar el menu
 
+-Si un breakpoint de menu y otro de accion (prints por ejemplo) coinciden al mismo tiempo, solo salta el breakpoint de menu
+->problema que el breakpoint que ha saltado, indicado por la variable catch_breakpoint_index, solo puede ser uno cada vez...
 
 -en menu debug, poder ver sprites del chip de sprites ZGX
 
