@@ -17910,8 +17910,8 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		int salir=0;
 
 		//Asignar hotkeys, segun si se han asignado antes o no
-		int hotkeys_assigned[26]; //de la A a la Z
-		for (i=0;i<26;i++) hotkeys_assigned[i]=0;
+		//int hotkeys_assigned[26]; //de la A a la Z
+		//for (i=0;i<26;i++) hotkeys_assigned[i]=0;
 		
 		
 		for (i=0;i<osd_adv_kbd_defined && !salir;i++) {
