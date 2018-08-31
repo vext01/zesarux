@@ -846,6 +846,31 @@ void debug_printf (int debuglevel, const char * format , ...)
 }
 
 
+//igual que debug_printf pero mostrando nombre archivo fuente y linea
+//util para debug con modo debug o paranoid. mensajes de info o warn no tienen sentido mostrar archivo fuente
+//Usar con, ejemplo:
+//debug_printf_source (VERBOSE_DEBUG, __FILE__, __LINE__, "Probando mensaje");
+void debug_printf_source (int debuglevel, char *archivo, int linea, const char * format , ...)
+{
+  int copia_verbose_level;
+
+  copia_verbose_level=verbose_level;
+
+  if (debuglevel<=copia_verbose_level) {
+        //tamaño del buffer bastante mas grande que el valor constante definido
+    char buffer_inicial[DEBUG_MAX_MESSAGE_LENGTH*2+64];
+    char *verbose_message;
+    va_list args;
+    va_start (args, format);
+    vsprintf (buffer_inicial,format, args);
+    va_end (args);
+    debug_printf (debuglevel,"%s:%s %s",archivo,linea,buffer_inicial);
+  }
+
+
+}
+
+
 int debug_nested_id_poke_byte;
 int debug_nested_id_poke_byte_no_time;
 int debug_nested_id_peek_byte;

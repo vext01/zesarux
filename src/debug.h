@@ -47,6 +47,7 @@ extern void debug_tiempo_inicial(void);
 extern void debug_tiempo_final(void);
 
 extern void debug_printf (int debuglevel,__const char *__restrict __format, ...);
+extern void debug_printf_source (int debuglevel, char *archivo, int linea, const char * format , ...);
 
 extern z80_bit menu_breakpoint_exception;
 
