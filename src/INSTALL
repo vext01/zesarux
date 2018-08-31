@@ -43,10 +43,12 @@ The following is a list of recommended minimum features for each operating syste
 - libpthreads
 - alsa
 - pulse
+- no specific distribution nor kernel version is required, so it should run in all Linux machines
 
 
 # macOS
 
+- Mac OS X 10.5 or higher
 - gcc, which can be installed with XCode. libpthreads is also included with XCode.
 - Video support is provided by Cocoa driver, but you can also try to compile using X11 or another video driver.
 

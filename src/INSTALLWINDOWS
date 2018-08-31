@@ -1,4 +1,5 @@
 ZEsarUX supports both native Windows execution (using mingw) or Cygwin.
+Minimum Windows version to run ZEsarUX is Windows XP
 Mingw is a minimal GNU environment system for Windows, and Cygwin is a more complete GNU system, including X-Windows.
 I recommend you to use mingw. I will describe both:
 

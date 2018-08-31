@@ -557,6 +557,7 @@ void screen_show_panic_screen(int xmax, int ymax)
 }
 
 //Compile with -g -rdynamic to show function names
+//These functions on Mac OS X are available starting from Mac OS 10.5
 void exec_show_backtrace(void) {
 
 #if defined(linux) || defined(__APPLE__) 
