@@ -208,6 +208,14 @@ Usually you can change the current memory zone by pressing "Z" on a debug menu.
 There is even a "File memory zone", that allows you to read a file (up to 16 MB) and use the debug menus with it. To load a file in that zone, you should open the File utilities menu, select a file, and press key F (Shift-f), which means "File memory zone"
 
 
+Q: When a ZEsarUX kernel panic is generated, I can see on the console the cpu registers and after that, a list of pointer calls but no call names. How can I see the emulator call names?
+A: Just set the following compilation settings:
+export CFLAGS="-g -rdynamic"
+export LDFLAGS="-g -rdynamic"
+
+Before ./configure, then ./configure (with your desired settings) ; make clean ; make
+Then, when a ZEsarUX kernel panic is generated, you will see the call names on the backtrace. This is only valid on Linux or Mac (and Mac seems to enable these compilation settings by default)
+
 ----------------------------------------------------------------------------
 
 
