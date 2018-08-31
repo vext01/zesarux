@@ -2482,10 +2482,19 @@ void tbblue_set_emulator_setting_reg_8(void)
 		audiodac_enabled.v=0;
 		debug_printf (VERBOSE_DEBUG,"Disabling audiodac Specdrum");
 	}
+
+
   	//bit 2 = Enable Timex modes (1 = enabled)(0 after a PoR or Hard-reset)
 	if (value&4) {
+
+		/*
+		Desactivamos esto, pues NextOS al arrancar activa modo timex, y por tanto, el real video
+		Con real video activado, usa mucha mas cpu
+		Quitando esto, arrancara NextOS sin forzar a activar modo timex ni real video y por tanto usara menos cpu
+		Si alguien quiere modo timex y/o real video, que lo habilite a mano
 		debug_printf (VERBOSE_DEBUG,"Disabling timex video");
 		enable_timex_video();
+		*/
 	}
 	else {
 		debug_printf (VERBOSE_DEBUG,"Enabling timex video");
