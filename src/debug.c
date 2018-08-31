@@ -28,7 +28,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef linux
+#if defined(linux) || defined(__APPLE__)
 #include <execinfo.h>
 #endif
 
@@ -558,7 +558,8 @@ void screen_show_panic_screen(int xmax, int ymax)
 
 //Compile with -g -rdynamic to show function names
 void exec_show_backtrace(void) {
-#ifdef linux
+
+#if defined(linux) || defined(__APPLE__) 
   int max_items=50;
   void *array[max_items];
   size_t size;
