@@ -63,6 +63,19 @@ Probar también con Fuse u otro emulador que soporte kempston mouse
 El ORG deberia estar ajustado para que acabe en 65536 el final
 
 
+-org 58068
+-ent 58068
+->bajamos todo 1000 bytes
+
+-org 57068
+-ent 57068
+
+57068,7656
+final: rst 16 rst 8 
+
+-sped52. parece que al grabar codigo objeto no lo hace de la ram que toca
+
+
 -fbdev. lectura teclas F11 en adelante  
 
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
