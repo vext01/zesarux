@@ -33,6 +33,7 @@ etc...
 **INTFIRED: returns 1 when an interrupt has been generated
 
 Improved hexdump menu: now you can edit memory. Now the menu is called "Hexadecimal Editor"
+Improved Cursor Draw program: now you can use kempston joystick. Load cursordr_mouse.tap instead of cursordr.tap
 
 Improved menu: 
 * menu windows: now can have more lines than 22, doing scroll
