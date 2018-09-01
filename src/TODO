@@ -60,6 +60,7 @@ Si es negativo, restamos ese salto (mediante neg y haciendo sbc) a posición cur
 En caso de suma de posición vertical no permitir que vaya más allá de 191 tampoco. 
 
 Probar también con Fuse u otro emulador que soporte kempston mouse 
+El ORG deberia estar ajustado para que acabe en 65536 el final
 
 
 -fbdev. lectura teclas F11 en adelante  
