@@ -34197,6 +34197,7 @@ void file_utils_file_convert(char *fullpath)
 
 	if (!util_compare_file_extension(archivo,"tap")) {
 		char *opciones[]={
+			"TAP to TZX",
 			"TAP to RWA",
 			NULL};
 
@@ -34208,6 +34209,11 @@ void file_utils_file_convert(char *fullpath)
 
 		switch (opcion) {
 			case 0:
+				sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+				util_extract_tap(fullpath,NULL,archivo_destino);
+			break;	
+
+			case 1:
 				sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
 				convert_tap_to_rwa(fullpath,archivo_destino);
 			break;
@@ -34786,7 +34792,7 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
 
         else if (!util_compare_file_extension(archivo,"tap") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a tap file");
-        	return util_extract_tap(archivo,tmpdir);
+        	return util_extract_tap(archivo,tmpdir,NULL);
         }
 
         else if (!util_compare_file_extension(archivo,"tzx") ) {

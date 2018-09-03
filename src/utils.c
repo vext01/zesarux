@@ -10778,7 +10778,9 @@ int util_get_sign(int valor)
 	return +1;
 }
 
-int util_extract_tap(char *filename,char *tempdir)
+//Rutina para extraer TAP pero tambien para convertir a TZX
+//Si tzxfile !=NULL, lo convierte a tzx, en vez de expandir
+int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 {
 
 	
@@ -10808,6 +10810,17 @@ int util_extract_tap(char *filename,char *tempdir)
 
 	z80_byte *puntero_lectura;
 	puntero_lectura=taperead;
+
+        //Abrir fichero tzxfile si conviene convertir
+        FILE *ptr_tzxfile;
+        if (tzxfile!=NULL) {
+                ptr_tzxfile=fopen(tzxfile,"wb");
+
+                if (!ptr_tzxfile) {
+                                debug_printf (VERBOSE_ERR,"Can not open %s",tzxfile);
+                                return 1;
+                }
+        }        
 
 
         int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
@@ -10856,7 +10869,7 @@ int util_extract_tap(char *filename,char *tempdir)
 		int longitud_segun_cabecera=-1;
 
 		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
-			sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
+			if (tzxfile==NULL) sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
 
 			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
 
@@ -10884,12 +10897,35 @@ int util_extract_tap(char *filename,char *tempdir)
                                 }
 			}
 
-			sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
+			if (tzxfile==NULL) sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
 		}
 
 
-		//Generar bloque con datos, saltando los dos de cabecera y el flag
-		util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                if (tzxfile==NULL) {
+		        //Generar bloque con datos, saltando los dos de cabecera y el flag
+		        util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                }
+
+                //Convertir a tzx
+                else {
+                        //Generar bloque con datos. TZX ID 10h, word pausa de 1000ms, longitud
+                        z80_byte buffer_tzx[5];
+                        buffer_tzx[0]=0x10;
+                        buffer_tzx[1]=232;
+                        buffer_tzx[2]=3;
+
+                        z80_int longitud_cabecera_tzx=longitud_bloque+2;
+                        buffer_tzx[3]=value_16_to_8l(longitud_cabecera_tzx);
+                        buffer_tzx[4]=value_16_to_8h(longitud_cabecera_tzx);
+
+                        fwrite(buffer_tzx,1,5,ptr_tzxfile);
+
+
+                        //Meter datos tal cual de tap: longitud, flag, datos, crc
+                        fwrite(copia_puntero,1,longitud_bloque,ptr_tzxfile);
+
+
+                }                
 
 		filenumber++;
 
@@ -10901,134 +10937,11 @@ int util_extract_tap(char *filename,char *tempdir)
 
 	free(taperead);
 
-	return 0;
-
-}
-
-
-//Realmente lo que hacemos es copiar el .p en .baszx81 con un offset , saltando datos iniciales para situarnos en el programa basic
-int util_extract_p(char *filename,char *tempdir)
-{
-
-	
-	//tapefile
-	if (util_compare_file_extension(filename,"p")!=0) {
-		debug_printf(VERBOSE_ERR,"Expander not supported for this file type");
-		return 1;
-	}
-
-
-	//Leemos archivo en memoria
-	int total_mem=get_file_size(filename);
-
-	z80_byte *taperead;
-
-
-
-        FILE *ptr_tapebrowser;
-        ptr_tapebrowser=fopen(filename,"rb");
-
-        if (!ptr_tapebrowser) {
-		debug_printf(VERBOSE_ERR,"Unable to open file");
-		return 1; 
-	}
-
-	taperead=malloc(total_mem);
-	if (taperead==NULL) cpu_panic("Error allocating memory for expander");
-
-
-        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
-
-	if (leidos==0) {
-                debug_printf(VERBOSE_ERR,"Error reading tape");
-		free(taperead);
-                return 1;
-        }
-
-
-        fclose(ptr_tapebrowser);
-
-
-
-        char buffer_temp_file[PATH_MAX];
-        sprintf (buffer_temp_file,"%s/basic-data.baszx81",tempdir);
-
-        int offset=116;
-        //116 = 16509-0x4009
-
-        int longitud_final=total_mem-offset;
-
-        util_save_file(&taperead[offset],longitud_final,buffer_temp_file);
-        
-
-        free(taperead);
+        if (tzxfile!=NULL) fclose(ptr_tzxfile);        
 
 	return 0;
 
 }
-
-
-//Realmente lo que hacemos es copiar el .o en .baszx80 con un offset , saltando datos iniciales para situarnos en el programa basic
-int util_extract_o(char *filename,char *tempdir)
-{
-
-	
-	//tapefile
-	if (util_compare_file_extension(filename,"o")!=0) {
-		debug_printf(VERBOSE_ERR,"Expander not supported for this file type");
-		return 1;
-	}
-
-
-	//Leemos archivo en memoria
-	int total_mem=get_file_size(filename);
-
-	z80_byte *taperead;
-
-
-
-        FILE *ptr_tapebrowser;
-        ptr_tapebrowser=fopen(filename,"rb");
-
-        if (!ptr_tapebrowser) {
-		debug_printf(VERBOSE_ERR,"Unable to open file");
-		return 1; 
-	}
-
-	taperead=malloc(total_mem);
-	if (taperead==NULL) cpu_panic("Error allocating memory for expander");
-
-
-        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
-
-	if (leidos==0) {
-                debug_printf(VERBOSE_ERR,"Error reading tape");
-		free(taperead);
-                return 1;
-        }
-
-
-        fclose(ptr_tapebrowser);
-
-
-
-        char buffer_temp_file[PATH_MAX];
-        sprintf (buffer_temp_file,"%s/basic-data.baszx80",tempdir);
-
-        int offset=40;
-        //40 = 16424-16384
-
-        int longitud_final=total_mem-offset;
-
-        util_save_file(&taperead[offset],longitud_final,buffer_temp_file);
-        
-
-        free(taperead);
-
-	return 0;
-
-}
-
 
 
 //Rutina para extraer TZX pero tambien para convertir a TAP
@@ -11324,6 +11237,133 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 	return 0;
 
 }
+
+
+
+
+//Realmente lo que hacemos es copiar el .p en .baszx81 con un offset , saltando datos iniciales para situarnos en el programa basic
+int util_extract_p(char *filename,char *tempdir)
+{
+
+	
+	//tapefile
+	if (util_compare_file_extension(filename,"p")!=0) {
+		debug_printf(VERBOSE_ERR,"Expander not supported for this file type");
+		return 1;
+	}
+
+
+	//Leemos archivo en memoria
+	int total_mem=get_file_size(filename);
+
+	z80_byte *taperead;
+
+
+
+        FILE *ptr_tapebrowser;
+        ptr_tapebrowser=fopen(filename,"rb");
+
+        if (!ptr_tapebrowser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return 1; 
+	}
+
+	taperead=malloc(total_mem);
+	if (taperead==NULL) cpu_panic("Error allocating memory for expander");
+
+
+        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading tape");
+		free(taperead);
+                return 1;
+        }
+
+
+        fclose(ptr_tapebrowser);
+
+
+
+        char buffer_temp_file[PATH_MAX];
+        sprintf (buffer_temp_file,"%s/basic-data.baszx81",tempdir);
+
+        int offset=116;
+        //116 = 16509-0x4009
+
+        int longitud_final=total_mem-offset;
+
+        util_save_file(&taperead[offset],longitud_final,buffer_temp_file);
+        
+
+        free(taperead);
+
+	return 0;
+
+}
+
+
+//Realmente lo que hacemos es copiar el .o en .baszx80 con un offset , saltando datos iniciales para situarnos en el programa basic
+int util_extract_o(char *filename,char *tempdir)
+{
+
+	
+	//tapefile
+	if (util_compare_file_extension(filename,"o")!=0) {
+		debug_printf(VERBOSE_ERR,"Expander not supported for this file type");
+		return 1;
+	}
+
+
+	//Leemos archivo en memoria
+	int total_mem=get_file_size(filename);
+
+	z80_byte *taperead;
+
+
+
+        FILE *ptr_tapebrowser;
+        ptr_tapebrowser=fopen(filename,"rb");
+
+        if (!ptr_tapebrowser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return 1; 
+	}
+
+	taperead=malloc(total_mem);
+	if (taperead==NULL) cpu_panic("Error allocating memory for expander");
+
+
+        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading tape");
+		free(taperead);
+                return 1;
+        }
+
+
+        fclose(ptr_tapebrowser);
+
+
+
+        char buffer_temp_file[PATH_MAX];
+        sprintf (buffer_temp_file,"%s/basic-data.baszx80",tempdir);
+
+        int offset=40;
+        //40 = 16424-16384
+
+        int longitud_final=total_mem-offset;
+
+        util_save_file(&taperead[offset],longitud_final,buffer_temp_file);
+        
+
+        free(taperead);
+
+	return 0;
+
+}
+
 
 
 
