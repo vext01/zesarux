@@ -11032,8 +11032,8 @@ int util_extract_o(char *filename,char *tempdir)
 
 
 //Rutina para extraer TZX pero tambien para convertir a TAP
-//Si tapfile !=NULL, lo convierte a tap
-int util_extract_tzx(char *filename,char *tempdir,char *tapfile)
+//Si tapfile !=NULL, lo convierte a tap, en vez de expandir
+int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 {
 
 	
@@ -11157,7 +11157,7 @@ int util_extract_tzx(char *filename,char *tempdir,char *tapfile)
 		int longitud_segun_cabecera=-1;
 
 		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
-			sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
+			if (tapfile==NULL) sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdirectory,filenumber,buffer_texto);
 
 			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
 
@@ -11185,7 +11185,7 @@ int util_extract_tzx(char *filename,char *tempdir,char *tapfile)
                                 }
 			}
 
-			sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
+			if (tapfile==NULL) sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
 		}
 
 
