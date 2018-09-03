@@ -34785,7 +34785,7 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
 
         else if (!util_compare_file_extension(archivo,"tzx") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a tzx file");
-                return util_extract_tzx(archivo,tmpdir);
+                return util_extract_tzx(archivo,tmpdir,NULL);
         }
 
         else if (!util_compare_file_extension(archivo,"trd") ) {

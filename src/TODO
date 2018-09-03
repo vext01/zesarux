@@ -25,24 +25,12 @@ renombrarla
 --- Cosas para la siguiente version
 
 -Actualizar Next SD
-
--Setting para disable real video al hacer reset / hard reset?
+-emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
+-reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
+-en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 
 -poder cargar un .config sin mas, sin que cargue snapshot ni cinta ni nada, solo parseando el config. raro? en smartload estaran los dos, el juego y la config
 
--poder hacer 50 FPS en carga top speed: problema, que al hacer top speed, ya no llevamos la cuenta de cuanto son 50 fps, pues no hay sleep de 
-final de frame. Y al no haberlo , si metemos un refresco de pantalla al final de cada supuesto frame, se estara lanzando muchos mas de 50 veces por segundo
-el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos a velocidad normal en vez de top speed
-
--reloj deberia salir en nextos, ya que implementa el chip de reloj. Porque no aparece?
-
-
--Quizá quitar real-time cuando root? Casi nunca se ha probado
-Y además casi nadie lo lanza como root 
-
--emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
-
- 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
 
@@ -80,12 +68,6 @@ El LD IX,49152 debe ser: LD IX,(PUNORG)
 49152,14670
 
 
--fbdev. lectura teclas F11 en adelante  
-
--reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
-
--en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
-
 TBBLUE: 
  
 
@@ -99,25 +81,14 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 *Desactivar puertos viejos de establecer paleta sprites get/set
 
 
+-fix en compilacion en mac para sistemas antiguos
 
---fix en compilacion en mac para sistemas antiguos
-
-
-
--probando el test testtimexmode6.tap, sin real timex 512x192, y luego cargar un spg (digger.spg por ejemplo), da segmentation fault en mac. quiza porque esta continuamente haciendo
-clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 255,0) y ya va
-
--esc en curses parece que no va ni en mac ni en linux
-
--menus de debug tsconf en stdout no se ven bien del todo. y en lista de sprites y tiles no se puede salir. en menu debug cpu tampoco se puede salir
 
 -Speech:
 -enter le envia siempre speech pending. normal?
 -en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
 -Tecla escape debería hacer break cuando se está escuchando speech
 O quizá setting configurable 
-
-
 
 -Conversor tzx a tap para tzx de tipo solo binario
 También de tap a tzx
@@ -259,6 +230,16 @@ browser para flash. primer archivo es de “truco”
 -en fbdev, lectura de tecla windows, usada en teclado chloe. parece que es una tecla compuesta
 
 -en fbdev fadeout no hace fadeout de footer
+
+-fbdev. lectura teclas F11 en adelante  
+
+-probando el test testtimexmode6.tap, sin real timex 512x192, y luego cargar un spg (digger.spg por ejemplo), da segmentation fault en mac. quiza porque esta continuamente haciendo
+clear putpixel cache?? Para que no pete, basta con poner timex modo normal (out 255,0) y ya va
+
+-esc en curses parece que no va ni en mac ni en linux
+
+-menus de debug tsconf en stdout no se ven bien del todo. y en lista de sprites y tiles no se puede salir. en menu debug cpu tampoco se puede salir
+
 
 -cocoa: fullscreen distorsiona
 
@@ -633,6 +614,7 @@ visor sprites tambien se ve mal
 
 --- TBBlue ---
 
+-reloj deberia salir en nextos, ya que implementa el chip de reloj. Porque no aparece?
 -probar que pasa cuando llega a mas de 12 sprites en linea tbblue
 -Sincronizar bits de joystick de puerto config2
 -no dejar aumentar memoria divmmc mas de 128kb, pues tbblue no tiene mas que eso. sino, se accederia a memoria mas alla del divmmc
@@ -1482,6 +1464,14 @@ eliminar warnings de funciones sin definir como extern
 
 -nombre ultimo juego cargado en titulo ventana
 
+
+-setting para desactivar realvideo cuando se haga reset
+
+-poder hacer 50 FPS en carga top speed: problema, que al hacer top speed, ya no llevamos la cuenta de cuanto son 50 fps, pues no hay sleep de 
+final de frame. Y al no haberlo , si metemos un refresco de pantalla al final de cada supuesto frame, se estara lanzando muchos mas de 50 veces por segundo
+el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos a velocidad normal en vez de top speed
+
+
 -watermark sin realvideo no hace zoom. importante???
 
 Opcion desactivar colores que solo va en realvideo off:
@@ -1852,6 +1842,9 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 -Implementar cp/m mediante emulación 
 
 -overscan, con ula im2 slow a yes, se ven bien del todo
+
+-Quizá quitar real-time cuando root? Casi nunca se ha probado
+Y además casi nadie lo lanza como root 
 
 -Visualmem pero que notifique mediante ZRCP de cada operacion de escritura que se realice. Quiza solo se puede hacer cuando este en modo "run" desde ZRCP
 

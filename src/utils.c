@@ -11031,8 +11031,9 @@ int util_extract_o(char *filename,char *tempdir)
 
 
 
-
-int util_extract_tzx(char *filename,char *tempdir)
+//Rutina para extraer TZX pero tambien para convertir a TAP
+//Si tapfile !=NULL, lo convierte a tap
+int util_extract_tzx(char *filename,char *tempdir,char *tapfile)
 {
 
 	
@@ -11058,10 +11059,21 @@ int util_extract_tzx(char *filename,char *tempdir)
 	}
 
 	taperead=malloc(total_mem);
-	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser");
+	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser/convert");
 
 	z80_byte *puntero_lectura;
 	puntero_lectura=taperead;
+
+        //Abrir fichero tapfile si conviene convertir
+        FILE *ptr_tapfile;
+        if (tapfile!=NULL) {
+                ptr_tapfile=fopen(tapfile,"wb");
+
+                if (!ptr_tapfile) {
+                                debug_printf (VERBOSE_ERR,"Can not open %s",tapfile);
+                                return 1;
+                }
+        }
 
 
         int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
@@ -11101,11 +11113,11 @@ int util_extract_tzx(char *filename,char *tempdir)
 
 		switch (tzx_id) {
 
-//TODO ID 11 - Turbo Data Block:");
-
 		case 0x10:
                 case 0x11:
 
+                //ID 10 - Standard Speed Data Block
+                //ID 11 - Turbo Speed Data Block
 
                 if (tzx_id==0x11) {
                         copia_puntero=puntero_lectura;
@@ -11177,8 +11189,34 @@ int util_extract_tzx(char *filename,char *tempdir)
 		}
 
 
-		//Generar bloque con datos, saltando los dos de cabecera y el flag
-		util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                //Si expandir
+                if (tapfile==NULL) {
+		        //Generar bloque con datos, saltando los dos de cabecera y el flag                
+		        util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                }
+
+                //Convertir a tap
+                else {
+                        //Generar bloque con datos
+                        //Meter longitud, flag
+                        z80_byte buffer_tap[3];
+                        z80_int longitud_cabecera_tap=longitud_final+2;
+                        buffer_tap[0]=value_16_to_8l(longitud_cabecera_tap);
+                        buffer_tap[1]=value_16_to_8h(longitud_cabecera_tap);
+                        buffer_tap[2]=flag;
+                        fwrite(buffer_tap+3,1,3,ptr_tapfile);
+
+
+                        //Meter datos
+                        fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
+
+                        //Agregar CRC
+                        z80_byte byte_crc=*(copia_puntero+3+longitud_final);
+
+                        buffer_tap[0]=byte_crc;
+                        fwrite(buffer_tap,1,1,ptr_tapfile);
+
+                }
 
 		filenumber++;
 
@@ -11280,6 +11318,8 @@ int util_extract_tzx(char *filename,char *tempdir)
 
 
 	free(taperead);
+
+        if (tapfile!=NULL) fclose(ptr_tapfile);
 
 	return 0;
 
