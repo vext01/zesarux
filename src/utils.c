@@ -10916,12 +10916,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                         buffer_tzx[1]=232;
                         buffer_tzx[2]=3;
 
-                        z80_int longitud_cabecera_tzx=longitud_bloque+2;
-                        buffer_tzx[3]=value_16_to_8l(longitud_cabecera_tzx);
-                        buffer_tzx[4]=value_16_to_8h(longitud_cabecera_tzx);
-
-                        fwrite(buffer_tzx,1,5,ptr_tzxfile);
-
+                        fwrite(buffer_tzx,1,3,ptr_tzxfile);
 
                         //Meter datos tal cual de tap: longitud, flag, datos, crc
                         fwrite(copia_puntero,1,longitud_bloque,ptr_tzxfile);

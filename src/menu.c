@@ -34209,7 +34209,7 @@ void file_utils_file_convert(char *fullpath)
 
 		switch (opcion) {
 			case 0:
-				sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+				sprintf(archivo_destino,"%s/%s.tzx",directorio,archivo);
 				util_extract_tap(fullpath,NULL,archivo_destino);
 			break;	
 
