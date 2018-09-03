@@ -11204,7 +11204,7 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
                         buffer_tap[0]=value_16_to_8l(longitud_cabecera_tap);
                         buffer_tap[1]=value_16_to_8h(longitud_cabecera_tap);
                         buffer_tap[2]=flag;
-                        fwrite(buffer_tap+3,1,3,ptr_tapfile);
+                        fwrite(buffer_tap,1,3,ptr_tapfile);
 
 
                         //Meter datos

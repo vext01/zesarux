@@ -34217,6 +34217,7 @@ void file_utils_file_convert(char *fullpath)
 
         else if (!util_compare_file_extension(archivo,"tzx")) {
                 char *opciones[]={
+						"TZX to TAP",
                         "TZX to RWA",
                         NULL};
 
@@ -34227,6 +34228,11 @@ void file_utils_file_convert(char *fullpath)
 		}				
                 switch (opcion) {
                         case 0:
+                                sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
+								util_extract_tzx(fullpath,NULL,archivo_destino);
+                        break;
+
+                        case 1:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
                                 convert_tzx_to_rwa(fullpath,archivo_destino);
                         break;
