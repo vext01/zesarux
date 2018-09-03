@@ -10910,11 +10910,11 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
                 //Convertir a tzx
                 else {
-                        //Generar bloque con datos. TZX ID 10h, word pausa de 1000ms, longitud
+                        //Generar bloque con datos. TZX ID 10h, word pausa de 500ms, longitud
                         z80_byte buffer_tzx[5];
                         buffer_tzx[0]=0x10;
-                        buffer_tzx[1]=232;
-                        buffer_tzx[2]=3;
+                        buffer_tzx[1]=244;
+                        buffer_tzx[2]=1;
 
                         fwrite(buffer_tzx,1,3,ptr_tzxfile);
 

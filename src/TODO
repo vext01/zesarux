@@ -90,11 +90,6 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 -Tecla escape debería hacer break cuando se está escuchando speech
 O quizá setting configurable 
 
--Conversor tzx a tap para tzx de tipo solo binario
-También de tap a tzx
-En menú file útils
-->quiza como hay el expansor de archivos no tiene mucho sentido...
-
 -quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
 
 -Buscar bytes en memory zone -> problema: ahora las direcciones en memory zone pueden ser > 65535
