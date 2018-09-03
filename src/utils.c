@@ -10820,6 +10820,8 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                                 debug_printf (VERBOSE_ERR,"Can not open %s",tzxfile);
                                 return 1;
                 }
+
+                tape_write_tzx_header_ptr(ptr_tzxfile);
         }        
 
 

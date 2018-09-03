@@ -38,5 +38,7 @@ extern z80_bit tzx_read_returned_unknown_id;
 
 extern void tape_tzx_get_archive_info(z80_byte type_text,char *buffer_text_description);
 
+extern void tape_write_tzx_header_ptr(FILE *ptr_archivo);
+
 
 #endif
