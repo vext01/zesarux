@@ -8709,6 +8709,7 @@ menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,i
 	if (dir>=menu_debug_memory_zone_size) {
 		dir=menu_debug_memory_zone_size-linesize;
 	}
+	//printf ("menu_debug_memory_zone_size %X\n",menu_debug_memory_zone_size);
 
 	return dir;
 }
@@ -10517,7 +10518,7 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 
 	do {
-		//printf ("dir: %X\n",dir);
+		//printf ("dir: %X dir_orig %X saltados: %d traspasado_negativo %d\n",dir,dir_orig,opcodes_saltados,traspasado_negativo);
 		//dir=adjust_address_space_cpu(dir);
 		debugger_disassemble(buffer,30,&longitud_opcode,dir);
 		
@@ -10531,12 +10532,14 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 		if (traspasado_negativo==1) {
 			if (sumado<dir_orig) traspasado_negativo=0;  //valor actual ya es menor que la inicial. Ya hemos vuelto a posiciones bajas
 
-			//Por si acaso, no me fio que siempre se vaya a cumplir esto, tener manera de salir cuando se hayan saltado, por ejemplo, 50 opcodes
-			if (opcodes_saltados>50) {
-				traspasado_negativo=0;
-				debug_printf (VERBOSE_DEBUG,"Applying workaround after 50 opcodes");
-			}
+
 		}
+
+		//Por si acaso, no me fio que siempre se vaya a cumplir esto, tener manera de salir cuando se hayan saltado, por ejemplo, 50 opcodes
+			if (opcodes_saltados>50) {
+				debug_printf (VERBOSE_DEBUG,"Applying workaround after 50 opcodes");
+				return dir;
+			}
 		
 		if (sumado>=dir_inicial && traspasado_negativo==0) {
 			return dir;
@@ -10546,6 +10549,7 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 		dir=sumado;
 
 		opcodes_saltados++;
+		//usleep(100000);
 	} while (1);
 
 
