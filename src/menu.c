@@ -7446,7 +7446,8 @@ int menu_debug_registers_show_ptr_text(int linea)
                                 char string_direccion[10];
                                 menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
 
-                                sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
+                                //sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
+								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~7:View",
                                         string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
                                 menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 
@@ -7513,12 +7514,12 @@ void menu_debug_get_legend(int linea,char *s)
 			if (cpu_step_mode.v) {
 							//01234567890123456789012345678901
 							// ClrTstPart 1-5:View ViewScr	
-				sprintf (s,"ClrTst~~Part ~~1-~~7:View ~~VScr M~~Z %d",menu_debug_memory_zone);
+				sprintf (s,"ClrTst~~Part Wr~~ite ~~VScr M~~Z %d",menu_debug_memory_zone);
 			}
 			else {
 							//01234567890123456789012345678901
 							// Clr.tstpart. 1-5 View MZone 99
-				sprintf (s,"ClrTst~~Part ~~1-~~7:View M~~Zone %d",menu_debug_memory_zone);
+				sprintf (s,"ClrTst~~Part Wr~~ite M~~Zone %d",menu_debug_memory_zone);
 			}
 		break;
 	}
@@ -7923,6 +7924,17 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_registers_ventana();
                                 }
 
+								
+								
+				if (tecla=='i') {
+										last_debug_poke_dir=menu_debug_memory_pointer;
+                                        cls_menu_overlay();
+                                        menu_debug_poke(0);
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+                                }								
+
                                 if (tecla=='p') {
                                         //cls_menu_overlay();
 					debug_t_estados_parcial=0;
@@ -8241,6 +8253,33 @@ cls_menu_overlay();
                                         //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
 					menu_multitarea=antes_menu_multitarea;
                                 }
+
+
+                  if (tecla=='i') {
+                                        cls_menu_overlay();
+
+				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+									
+										last_debug_poke_dir=menu_debug_memory_pointer;
+                                        menu_debug_poke(0);
+
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+
+                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+                                }
+
+
+	
 
 				if (tecla=='m' && menu_debug_registers_current_view==1) {
 		                           //cls_menu_overlay();
