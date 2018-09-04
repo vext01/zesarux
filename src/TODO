@@ -33,6 +33,10 @@ renombrarla
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
+-debug: mejorar funcion para ir arriba opcodes
+menu_debug_disassemble_subir
+Ahora con QL subiendo desde la direccion 0, cuando va a 3FFFFH y subir, acaba por el workaround de los 50 opcodes maximo
+
 
 -Para cursor draw:
 *iconos con mas de una opcion, que se les indique de alguna manera. con un punto??? Con 3 pixeles en arriba derecha asi:
