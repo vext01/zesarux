@@ -76,13 +76,6 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 
 -fix en compilacion en mac para sistemas antiguos
 
-
--Speech:
--enter le envia siempre speech pending. normal?
--en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
--Tecla escape debería hacer break cuando se está escuchando speech
-O quizá setting configurable 
-
 -quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
 
 -Buscar bytes en memory zone -> problema: ahora las direcciones en memory zone pueden ser > 65535
@@ -97,29 +90,6 @@ Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
 -Salida 16 bits sonido?
 
-
--al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
-Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
-Info: Enabling RealVideo
-Info: Enabling WRX video mode
-Info: Block id: 1 (ZSF_MACHINEID) Lenght: 1
-Info: Setting timer_sleep_machine to 20000 us
-Info: Setting ZX80/81 CPU core
-Info: Disabling WRX video mode
-Info: Loading keymap
-Info: Emulating ZX81 with 16 KB (ramtop=32767)
-
--formato zsf debe guardar iff1 y iff2 por separado
-
--parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
-
-  //test meter un NOOP
-  zsf_write_block(ptr_zsf_file, NULL,0, 0);
-
-->pasa casi lo mismo con un .zx pero en estos, hay parametro de si esta wrx activo (y aunque se pierda desde el config se lee desde el .zx),
-pero con el --vsync-minimum-length se pierde y no esta en el .zx ...
-->el config se carga primero. Luego el snapshot, y al meter core de zx80/81 se desactiva wrx y otros settings.
-Quiza habria que parsear algunos parametros del .config tambien despues de cargar el snapshot. Cuales? por ejemplo --realvideo, --wrx, --vsync-minimum-length
 
 -revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
 o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
@@ -696,6 +666,33 @@ pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
 *ACE      
 *CPC464  
 
+
+
+-al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
+Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
+Info: Enabling RealVideo
+Info: Enabling WRX video mode
+Info: Block id: 1 (ZSF_MACHINEID) Lenght: 1
+Info: Setting timer_sleep_machine to 20000 us
+Info: Setting ZX80/81 CPU core
+Info: Disabling WRX video mode
+Info: Loading keymap
+Info: Emulating ZX81 with 16 KB (ramtop=32767)
+
+-formato zsf debe guardar iff1 y iff2 por separado
+
+-parece que en los zsf se genera al final un ZSF_NOOP. -> lo estoy metiendo yo por codigo:
+
+  //test meter un NOOP
+  zsf_write_block(ptr_zsf_file, NULL,0, 0);
+
+->pasa casi lo mismo con un .zx pero en estos, hay parametro de si esta wrx activo (y aunque se pierda desde el config se lee desde el .zx),
+pero con el --vsync-minimum-length se pierde y no esta en el .zx ...
+->el config se carga primero. Luego el snapshot, y al meter core de zx80/81 se desactiva wrx y otros settings.
+Quiza habria que parsear algunos parametros del .config tambien despues de cargar el snapshot. Cuales? por ejemplo --realvideo, --wrx, --vsync-minimum-length
+
+
+
 -----------------------
 
 --- SAM coupe ---
@@ -1256,6 +1253,11 @@ crear tambien metodos de deteccion de tercer trap? Aunque esto quiza solo sirve 
 
 **
 
+-Speech:
+-enter le envia siempre speech pending. normal?
+-en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
+-Tecla escape debería hacer break cuando se está escuchando speech
+O quizá setting configurable 
 
 
 -------------
