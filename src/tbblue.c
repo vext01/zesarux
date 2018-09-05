@@ -2505,13 +2505,15 @@ void tbblue_set_emulator_setting_reg_8(void)
 		Con real video activado, usa mucha mas cpu
 		Quitando esto, arrancara NextOS sin forzar a activar modo timex ni real video y por tanto usara menos cpu
 		Si alguien quiere modo timex y/o real video, que lo habilite a mano
-		debug_printf (VERBOSE_DEBUG,"Disabling timex video");
+		debug_printf (VERBOSE_DEBUG,"Enabling timex video");
 		enable_timex_video();
 		*/
 	}
 	else {
-		debug_printf (VERBOSE_DEBUG,"Enabling timex video");
+		/*
+		debug_printf (VERBOSE_DEBUG,"Disabling timex video");
 		disable_timex_video();
+		*/
 	}
   	
 	//bit 1 = Enable TurboSound (1 = enabled)(0 after a PoR or Hard-reset)
