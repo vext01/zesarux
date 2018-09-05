@@ -1323,7 +1323,7 @@ The sprites have now a new register for sprite transparency. Unlike the Global T
 (R/W) 0x4B (75) => Transparency index for Sprites
 bits 7-0 = Set the index value. (0XE3 after a reset)
 	*/
-	if (color==tbblue_registers[75]) return;
+	//if (color==tbblue_registers[75]) return;
 
 	z80_int color_final=tbblue_get_palette_active_sprite(color);
 
@@ -1614,6 +1614,16 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							for (i=0;i<TBBLUE_SPRITE_WIDTH;i++) {
 								z80_byte index_color=tbsprite_do_overlay_get_pattern_xy(index_pattern,sx,sy);
 
+									//Si index de color es transparente, no hacer nada
+/*
+The sprites have now a new register for sprite transparency. Unlike the Global Transparency Colour register this refers to an index and  should be set when using indices other than 0xE3:
+
+(R/W) 0x4B (75) => Transparency index for Sprites
+bits 7-0 = Set the index value. (0XE3 after a reset)
+	*/
+
+								if (index_color!=tbblue_registers[75]) {
+
 								//Sumar palette offset. Logicamente si es >256 el resultado, dará la vuelta el contador
 								index_color +=palette_offset;
 
@@ -1635,6 +1645,8 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 								//z80_byte color=tbsprite_palette[index_color];
 								//tbsprite_put_color_line(sprite_x++,color,rangoxmin,rangoxmax);
 								tbsprite_put_color_line(sprite_x,index_color,rangoxmin,rangoxmax);
+
+								}
 								sprite_x++;
 
 
