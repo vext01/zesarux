@@ -1327,8 +1327,6 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 
 	z80_int color_final=tbblue_get_palette_active_sprite(color);
 
-	//Si color transparente, no hacer nada. Esto ya no es asi, se comprueba antes el indice de color a ver si es transparente
-	//if (tbblue_si_transparent(color_final)) return;
 
 	int xfinal=x;
 
@@ -1636,7 +1634,8 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 								}*/
 								//z80_byte color=tbsprite_palette[index_color];
 								//tbsprite_put_color_line(sprite_x++,color,rangoxmin,rangoxmax);
-								tbsprite_put_color_line(sprite_x++,index_color,rangoxmin,rangoxmax);
+								tbsprite_put_color_line(sprite_x,index_color,rangoxmin,rangoxmax);
+								sprite_x++;
 
 
 							}

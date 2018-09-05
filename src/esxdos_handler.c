@@ -1662,6 +1662,20 @@ void esxdos_handler_call_m_drive_info(void)
 	//Deducir:
 	//Entrada: a=numero de disco
 	//Retorno: a=numero de particiones. Escrito en HL
+/*
+Info de David Pesqueira:
+M_DRIVEINFO 0x8a
+================
+HL -> Dirección del buffer
+Formato de la información devuelta:
+Offset Size Description
+0   1  byte   Drive unit (40h, 41h... '@','A'... hd1, hd2...)
+1   1  byte   Device
+2   1  byte   Flags
+3   1  dword  Drive size in 512 bytes blocks (little-endian)
+7   -  asciiz File System Type
+-   -  asciiz Volume Label
+*/	
 
 	//char *texto="HO";
 
