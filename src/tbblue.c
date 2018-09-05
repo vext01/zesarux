@@ -1622,6 +1622,10 @@ The sprites have now a new register for sprite transparency. Unlike the Global T
 bits 7-0 = Set the index value. (0XE3 after a reset)
 	*/
 
+								sx=sx+incx;
+								sy=sy+incy;
+
+
 								if (index_color!=tbblue_registers[75]) {
 
 								//Sumar palette offset. Logicamente si es >256 el resultado, dará la vuelta el contador
@@ -1630,8 +1634,6 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 								//printf ("index color: %d\n",index_color);
 								
 
-								sx=sx+incx;
-								sy=sy+incy;
 
 								/*
 								if (mirror_x) {
