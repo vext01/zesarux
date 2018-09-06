@@ -3368,6 +3368,8 @@ void tbblue_set_layer_priorities(void)
   */
 	z80_byte prio=(tbblue_registers[0x15] >> 2)&7;
 
+	//printf ("prio: %d\n",prio);
+
 	switch (prio) {
 		case 0:
 			p_layer_first=tbblue_layer_sprites;
@@ -3430,6 +3432,9 @@ void tbblue_set_layer_priorities(void)
 			layer_no_transp_third=1;
 		break;
 	}
+
+	//temp
+	layer_no_transp_first=0;
 
 }
 
