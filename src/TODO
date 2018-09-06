@@ -26,17 +26,7 @@ renombrarla
 
 -Actualizar Next SD
 -tbblue:
-quiza collision flag ahora no se gestiona bien con el offset de paleta. en esto:
-	//Ver si habia un color y activar bit colision
-	z80_int color_antes=tbblue_layer_sprites[xfinal];
-
-	if (!tbblue_si_transparent(color_antes)) {
-		//colision
-		tbblue_port_303b |=1;
-		//printf ("set colision flag. result value: %d\n",tbblue_port_303b);
-	}
-
-  ?? creo que no afecta esto
+menu video debug video registers completar
 
 -emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
