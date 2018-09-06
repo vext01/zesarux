@@ -22671,11 +22671,7 @@ void menu_debug_special_nmi(MENU_ITEM_PARAMETERS)
 
 
 
-int menu_run_mantransfer_cond(void)
-{
-	if (MACHINE_IS_SPECTRUM_16_48) return 1;
-	return 0;
-}
+
 
 void menu_run_mantransfer(MENU_ITEM_PARAMETERS)
 {
@@ -26180,7 +26176,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'l');*/
 
 
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_run_mantransfer,menu_run_mantransfer_cond,"Run ~~mantransfer");
+	if (MACHINE_IS_SPECTRUM_16_48) {
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_run_mantransfer,NULL,"Run ~~mantransfer");
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'m');
 		menu_add_item_menu_tooltip(array_menu_debug_settings,"Run mantransfer, which dumps ram memory contents (snapshot) to Spectrum Tape\n"
 					"Only Spectrum 48k/16k models supported");
@@ -26195,7 +26192,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					"so, a saved program can be run on a real spectrum or another emulator, "
 					"but the saving routine sees im1 by default, so, saving from a real spectrum or another emulator "
 					"instead ZEsarUX will only work if the cpu is in IM1 mode (and not IM2)");
-
+	}
 
 
 		/* De momento desactivado
@@ -31702,7 +31699,19 @@ void menu_display_timex_ugly_hack(MENU_ITEM_PARAMETERS)
 
 void menu_tsconf_layer_dibuja_ventana(void)
 {
-        menu_dibuja_ventana(7,1,19,22,"Video Layers");
+
+	int x=7;
+	int y=1;
+
+	int ancho=19;
+	int alto=22;
+
+	if (MACHINE_IS_TBBLUE) {
+		alto=16;
+		y=4;
+	}
+    menu_dibuja_ventana(x,y,ancho,alto,"Video Layers");
+
 }
 
 int menu_tsconf_layer_valor_contador_segundo_anterior;
@@ -31758,15 +31767,15 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				}
 
 				if (MACHINE_IS_TBBLUE) {
-                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
+                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(1) ); //ULA siempre activo
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 				linea +=3;
 
-                sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tbblue_if_sprites_enabled() ));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
 				linea +=3;		
 
-				sprintf (texto_layer,"Layer 2:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
+				sprintf (texto_layer,"Layer 2:   %s",menu_tsconf_layer_aux_usedunused(tbblue_is_active_layer2() ) );
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 				linea +=3;						
 				}			

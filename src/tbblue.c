@@ -1382,11 +1382,19 @@ z80_int tbsprite_return_color_index(z80_byte index)
 	return color_final;
 }
 
+int tbblue_if_sprites_enabled(void) {
+
+	return tbblue_registers[21]&1;
+
+}
+
 void tbsprite_do_overlay(void)
 {
 
         //spritechip activo o no?
-        if ( (tbblue_registers[21]&1)==0) return;
+        //if ( (tbblue_registers[21]&1)==0) return;
+
+		if (!tbblue_if_sprites_enabled() ) return;
 
 				//printf ("tbblue sprite chip activo\n");
 
@@ -3891,7 +3899,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				
 				//(W) 0x1A (26) => Clip Window ULA/LoRes
 				if (posx>=clip_window_ula[0] && posx<=clip_window_ula[1] && scanline_copia>=clip_window_ula[2] && scanline_copia<=clip_window_ula[3]) {
-				tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
+				if (!tbblue_force_disable_layer_ula.v) tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
 				}
 
 				//Capa layer2
