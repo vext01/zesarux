@@ -3915,19 +3915,19 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 		//Primera capa
 		color=p_layer_first[i];
-		if (!tbblue_si_transparent(color)) {
+		if (!tbblue_si_transparent(color) || layer_no_transp_first) {
 			*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
 		}
 
 		else {
 			color=p_layer_second[i];
-			if (!tbblue_si_transparent(color)) {
+			if (!tbblue_si_transparent(color) || layer_no_transp_second) {
 				*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
 			}
 
 			else {
 				color=p_layer_third[i];
-				if (!tbblue_si_transparent(color)) {
+				if (!tbblue_si_transparent(color) || layer_no_transp_third) {
 					*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
 				}
 				//TODO: que pasa si las tres capas son transparentes
