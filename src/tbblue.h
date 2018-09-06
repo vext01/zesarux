@@ -205,4 +205,6 @@ extern z80_bit tbblue_force_disable_layer_ula;
 extern z80_bit tbblue_force_disable_layer_sprites;
 extern z80_bit tbblue_force_disable_layer_layer_two;
 
+extern int tbblue_if_sprites_enabled(void);
+
 #endif

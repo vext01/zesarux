@@ -25290,6 +25290,8 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 				//int sumatotal;
 
 
+				if (MACHINE_IS_TSCONF) {
+
 				int vpage_addr=tsconf_get_vram_page()*16384;
 
 				tsconf_get_current_video_mode(texto_buffer2);
@@ -25312,11 +25314,19 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 				sprintf (texto_buffer,"Sprite Graphics addr: %06XH",tsconf_return_spritesgraphicspage() );
 				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
+				}
 
+				if (MACHINE_IS_TBBLUE) {
+				sprintf (texto_buffer,"Video mode: 256x192");
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);		
 
-                        if (menu_multitarea==0) menu_refresca_pantalla();
+				sprintf (texto_buffer,"To be completed...");
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);				
+				}
 
-                }
+            if (menu_multitarea==0) menu_refresca_pantalla();
+
+            }
 
                 menu_cpu_core_loop();
                 acumulado=menu_da_todas_teclas();
@@ -25450,7 +25460,7 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 
 				z80_byte byte_4=tbsprite_sprites[current_sprite][3];
 				z80_byte visible=byte_4 & 128; //
-				z80_byte pattern=byte_4 & 64; //
+				z80_byte pattern=byte_4 & 63; //
 
 			sprintf (dumpmemoria,"%02d X: %3d Y: %3d %s %s %s",current_sprite,x,y,
 					(mirror_x ? "MIRX" : "    "),(mirror_y ? "MIRY" : "    "),(rotate ? "RT" : "  ")
@@ -25532,9 +25542,9 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 		int linea=TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
 
 			
-		char buffer_linea[40];
+		char buffer_linea[64];
 
-		sprintf (buffer_linea,"Move:Cursors,PgUp,PgDn. Size:QA");
+		sprintf (buffer_linea,"Move:Cursors,PgUp,PgDn.Size:QA");
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
