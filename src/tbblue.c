@@ -1278,6 +1278,17 @@ void tbblue_out_sprite_sprite(z80_byte value)
 //Guarda scanline actual y el pattern (los indices a colores) sobre la paleta activa de sprites
 //z80_byte sprite_line[MAX_X_SPRITE_LINE];
 
+#define TBBLUE_SPRITE_TRANS_FICT 65535
+
+//Dice si un color de la capa de sprites es igual al color transparente ficticio inicial
+
+//Dice si un color de la paleta rbg9 es transparente
+int tbblue_si_sprite_transp_ficticio(z80_int color)
+{
+        if (color==TBBLUE_SPRITE_TRANS_FICT) return 1;
+        return 0;
+}
+
 
 //Dice si un color de la paleta rbg9 es transparente
 int tbblue_si_transparent(z80_int color)
@@ -3338,6 +3349,14 @@ int layer_no_transp_first;
 int layer_no_transp_second;
 int layer_no_transp_third;
 
+//+int tbblue_si_sprite_transp_ficticio(z80_int color)
+
+//z80_byte (*peek_byte_no_time)(z80_int dir);
+
+int (*tbblue_fn_pixel_layer_transp_first)(z80_int color);
+int (*tbblue_fn_pixel_layer_transp_second)(z80_int color);
+int (*tbblue_fn_pixel_layer_transp_third)(z80_int color);
+
 void tbblue_set_layer_priorities(void)
 {
 	//Por defecto
@@ -3350,6 +3369,15 @@ void tbblue_set_layer_priorities(void)
 	layer_no_transp_first=1;  //La primera capa es sprites, por tanto, no hacer transparencia
 	layer_no_transp_second=0; //La segunda capa es layer2, por tanto, si hacer transparencia
 	layer_no_transp_third=0;  //La tercera capa es ula, por tanto, si hacer transparencia
+
+
+//+int tbblue_si_sprite_transp_ficticio(z80_int color)
+
+//z80_byte (*peek_byte_no_time)(z80_int dir);
+
+	tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
+	tbblue_fn_pixel_layer_transp_second=tbblue_si_transparent;
+	tbblue_fn_pixel_layer_transp_third=tbblue_si_transparent;
 
 	/*
 	(R/W) 0x15 (21) => Sprite and Layers system
@@ -3379,6 +3407,10 @@ void tbblue_set_layer_priorities(void)
 			layer_no_transp_first=1;
 			layer_no_transp_second=0;
 			layer_no_transp_third=0;
+
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_transparent;
 		break;
 
 		case 1:
@@ -3389,6 +3421,10 @@ void tbblue_set_layer_priorities(void)
 			layer_no_transp_first=0;
 			layer_no_transp_second=1;
 			layer_no_transp_third=0;
+
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_transparent;
 		break;
 
 
@@ -3400,6 +3436,10 @@ void tbblue_set_layer_priorities(void)
 			layer_no_transp_first=1;
 			layer_no_transp_second=0;
 			layer_no_transp_third=0;
+
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_transparent;
 		break;
 
 		case 3:
@@ -3410,6 +3450,10 @@ void tbblue_set_layer_priorities(void)
 			layer_no_transp_first=0;
 			layer_no_transp_second=0;
 			layer_no_transp_third=1;
+
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
 		break;
 
 		case 4:
@@ -3420,6 +3464,10 @@ void tbblue_set_layer_priorities(void)
 			layer_no_transp_first=0;
 			layer_no_transp_second=1;
 			layer_no_transp_third=0;
+
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_transparent;
 		break;
 
 		case 5:
@@ -3430,6 +3478,10 @@ void tbblue_set_layer_priorities(void)
 			layer_no_transp_first=0;
 			layer_no_transp_second=0;
 			layer_no_transp_third=1;
+
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_transparent;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
 		break;
 	}
 
@@ -3557,7 +3609,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 	for (i=0;i<512;i++) {
 		tbblue_layer_ula[i]=TBBLUE_TRANSPARENT_REGISTER_9;
 		tbblue_layer_layer2[i]=TBBLUE_TRANSPARENT_REGISTER_9;
-		tbblue_layer_sprites[i]=TBBLUE_TRANSPARENT_REGISTER_9;
+		tbblue_layer_sprites[i]=TBBLUE_SPRITE_TRANS_FICT;
 	}
 
 	int bordesupinf=0;
@@ -3920,19 +3972,19 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 		//Primera capa
 		color=p_layer_first[i];
-		if (!tbblue_si_transparent(color) || layer_no_transp_first) {
+		if (!tbblue_fn_pixel_layer_transp_first(color) || layer_no_transp_first) {
 			*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
 		}
 
 		else {
 			color=p_layer_second[i];
-			if (!tbblue_si_transparent(color) || layer_no_transp_second) {
+			if (!tbblue_fn_pixel_layer_transp_second(color) || layer_no_transp_second) {
 				*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
 			}
 
 			else {
 				color=p_layer_third[i];
-				if (!tbblue_si_transparent(color) || layer_no_transp_third) {
+				if (!tbblue_fn_pixel_layer_transp_third(color) || layer_no_transp_third) {
 					*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
 				}
 				//TODO: que pasa si las tres capas son transparentes
