@@ -25452,7 +25452,7 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 			);
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
-			sprintf (dumpmemoria,"Pattern: %2d Palof: %03d Visible: %s"
+			sprintf (dumpmemoria," Pattr: %2d Palof: %03d Vis: %s"
 				,pattern,paloff, (visible ? "Yes" : "No ") );
 
 
