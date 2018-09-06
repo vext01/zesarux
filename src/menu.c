@@ -25335,11 +25335,14 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 }
 
 
+int tsconf_spritenav_window_y=2;
+int tsconf_spritenav_window_alto=20;
+
 #define TSCONF_SPRITENAV_WINDOW_X 0
-#define TSCONF_SPRITENAV_WINDOW_Y 0
+#define TSCONF_SPRITENAV_WINDOW_Y tsconf_spritenav_window_y
 #define TSCONF_SPRITENAV_WINDOW_ANCHO 32
-#define TSCONF_SPRITENAV_WINDOW_ALTO 24
-#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 10
+#define TSCONF_SPRITENAV_WINDOW_ALTO tsconf_spritenav_window_alto
+#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 8
 
 void menu_debug_tsconf_tbblue_spritenav_ventana(void)
 {
@@ -25448,11 +25451,11 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 				z80_byte pattern=byte_4 & 64; //
 
 			sprintf (dumpmemoria,"%02d X: %3d Y: %3d %s %s %s",current_sprite,x,y,
-					(mirror_x ? "MRX" : "   "),(mirror_y ? "MRY" : "   "),(rotate ? "RT" : "XX")
+					(mirror_x ? "MIRX" : "    "),(mirror_y ? "MIRY" : "    "),(rotate ? "RT" : "  ")
 			);
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
-			sprintf (dumpmemoria," Pattr: %2d Palof: %03d Vis: %s"
+			sprintf (dumpmemoria," Pattr: %2d Palof: %3d Vis: %s"
 				,pattern,paloff, (visible ? "Yes" : "No ") );
 
 
@@ -25524,12 +25527,12 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
 
-		int linea=TSCONF_SPRITENAV_WINDOW_Y+TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
+		int linea=TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
 
 			
 		char buffer_linea[40];
 
-		sprintf (buffer_linea,"Move: Cursors, PgUp, PgDn");
+		sprintf (buffer_linea,"Move: Cursors, PgUp, PgDn. QA");
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
@@ -25582,6 +25585,24 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 							menu_debug_tsconf_tbblue_spritenav_cursor_abajo();
 						}
 						menu_debug_tsconf_tbblue_spritenav_ventana();
+					break;
+
+					case 'q':
+						if (tsconf_spritenav_window_y>0) {
+							tsconf_spritenav_window_y--;
+							tsconf_spritenav_window_alto +=2;
+							cls_menu_overlay();
+							menu_debug_tsconf_tbblue_spritenav_ventana();
+						}
+					break;					
+
+					case 'a':
+						if (tsconf_spritenav_window_y<12) {
+							tsconf_spritenav_window_y++;
+							tsconf_spritenav_window_alto -=2;
+							cls_menu_overlay();
+							menu_debug_tsconf_tbblue_spritenav_ventana();
+						}
 					break;
 
 					//Salir con ESC
