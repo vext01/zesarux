@@ -25419,6 +25419,7 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
 				spal );
 
+			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 			}
 
 			if (MACHINE_IS_TBBLUE) {
@@ -25430,35 +25431,38 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 4th: bit 7 is the visible flag, bit 6 is reserved, bits 5-0 is Name (pattern index, 0-63).
 */
 
-				z80_int x=tbsprite_sprites[current_sprite][0];
-				z80_byte y=tbsprite_sprites[current_sprite][1];
+				z80_int x=tbsprite_sprites[current_sprite][0]; //
+				z80_byte y=tbsprite_sprites[current_sprite][1];  //
 
 				z80_byte byte_3=tbsprite_sprites[current_sprite][2];
-				z80_byte paloff=byte_3 & 0xF0;
-				z80_byte mirror_x=byte_3 & 8;
-				z80_byte mirror_y=byte_3 & 4;
-				z80_byte rotate=byte_3 & 2;
-				z80_byte msb_x=byte_3 &1;
+				z80_byte paloff=byte_3 & 0xF0; //
+				z80_byte mirror_x=byte_3 & 8; //
+				z80_byte mirror_y=byte_3 & 4; //
+				z80_byte rotate=byte_3 & 2; //
+				z80_byte msb_x=byte_3 &1; //
 
 				x +=msb_x*256;
 
 				z80_byte byte_4=tbsprite_sprites[current_sprite][3];
-				z80_byte visible=byte_4 & 128;
-				z80_byte pattern=byte_4 & 64;
+				z80_byte visible=byte_4 & 128; //
+				z80_byte pattern=byte_4 & 64; //
 
-			sprintf (dumpmemoria,"%02d X: %3d Y: %3d",current_sprite,x,y);
+			sprintf (dumpmemoria,"%02d X: %3d Y: %3d %s %s %s",current_sprite,x,y,
+					(mirror_x ? "MRX" : "   "),(mirror_y ? "MRY" : "   "),(rotate ? "RT" : "XX")
+			);
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
-			/*sprintf (dumpmemoria,"Tile: %2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
-				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
-				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
-				spal );
+			sprintf (dumpmemoria,"Pattern: %2d Palof: %03d Visible: %s"
+				,pattern,paloff, (visible ? "Yes" : "No ") );
 
-			}*/				
 
-			}
+				menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
-			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			}			
+
+			
+
+
 					
 		}
 
@@ -25493,6 +25497,8 @@ void menu_debug_tsconf_tbblue_spritenav_cursor_abajo(void)
 {
 
 	int limite=TSCONF_MAX_SPRITES;
+
+	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
 
 	if (menu_debug_tsconf_tbblue_spritenav_current_sprite<limite-1) {
 		menu_debug_tsconf_tbblue_spritenav_current_sprite++;
