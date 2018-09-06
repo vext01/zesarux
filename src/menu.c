@@ -25257,7 +25257,7 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 {
 
     //char textostats[32];
@@ -25345,20 +25345,20 @@ void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
 #define TSCONF_SPRITENAV_WINDOW_ALTO 24
 #define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 10
 
-void menu_debug_tsconf_spritenav_ventana(void)
+void menu_debug_tsconf_tbblue_spritenav_ventana(void)
 {
         menu_dibuja_ventana(TSCONF_SPRITENAV_WINDOW_X,TSCONF_SPRITENAV_WINDOW_Y,TSCONF_SPRITENAV_WINDOW_ANCHO,TSCONF_SPRITENAV_WINDOW_ALTO,"Sprite navigator");
 }
 
 
-//int menu_debug_tsconf_spritenav_current_palette=0;
-int menu_debug_tsconf_spritenav_current_sprite=0;
+//int menu_debug_tsconf_tbblue_spritenav_current_palette=0;
+int menu_debug_tsconf_tbblue_spritenav_current_sprite=0;
 
 
 
 
 //Muestra lista de sprites
-int menu_debug_tsconf_spritenav_lista_sprites(void)
+int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 {
 
 	char dumpmemoria[33];
@@ -25373,10 +25373,10 @@ int menu_debug_tsconf_spritenav_lista_sprites(void)
 
 
 		for (linea_color=0;linea_color<TSCONF_SPRITENAV_SPRITES_PER_WINDOW &&
-				menu_debug_tsconf_spritenav_current_sprite+linea_color<limite;
+				menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color<limite;
 				linea_color++) {
 
-			current_sprite=menu_debug_tsconf_spritenav_current_sprite+linea_color;
+			current_sprite=menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color;
 
 			int offset=current_sprite*6;
 			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
@@ -25426,14 +25426,14 @@ int menu_debug_tsconf_spritenav_lista_sprites(void)
 	return linea;
 }
 
-void menu_debug_tsconf_spritenav_draw_sprites(void)
+void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
 {
 
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
 				//Mostrar lista sprites
-				menu_debug_tsconf_spritenav_lista_sprites();
+				menu_debug_tsconf_tbblue_spritenav_lista_sprites();
 
 				//Esto tiene que estar despues de escribir la lista de sprites, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
@@ -25441,28 +25441,28 @@ void menu_debug_tsconf_spritenav_draw_sprites(void)
 
 }
 
-void menu_debug_tsconf_spritenav_cursor_arriba(void)
+void menu_debug_tsconf_tbblue_spritenav_cursor_arriba(void)
 {
-	if (menu_debug_tsconf_spritenav_current_sprite>0) {
-		menu_debug_tsconf_spritenav_current_sprite--;
+	if (menu_debug_tsconf_tbblue_spritenav_current_sprite>0) {
+		menu_debug_tsconf_tbblue_spritenav_current_sprite--;
 	}
 }
 
-void menu_debug_tsconf_spritenav_cursor_abajo(void)
+void menu_debug_tsconf_tbblue_spritenav_cursor_abajo(void)
 {
 
 	int limite=TSCONF_MAX_SPRITES;
 
-	if (menu_debug_tsconf_spritenav_current_sprite<limite-1) {
-		menu_debug_tsconf_spritenav_current_sprite++;
+	if (menu_debug_tsconf_tbblue_spritenav_current_sprite<limite-1) {
+		menu_debug_tsconf_tbblue_spritenav_current_sprite++;
 	}
 
 }
 
-void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
-	menu_debug_tsconf_spritenav_ventana();
+	menu_debug_tsconf_tbblue_spritenav_ventana();
 
 	menu_reset_counters_tecla_repeticion();
 
@@ -25472,7 +25472,7 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 	int salir=0;
 
 
-	set_menu_overlay_function(menu_debug_tsconf_spritenav_draw_sprites);
+	set_menu_overlay_function(menu_debug_tsconf_tbblue_spritenav_draw_sprites);
 
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
@@ -25502,18 +25502,18 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 
 					case 11:
 						//arriba
-						menu_debug_tsconf_spritenav_cursor_arriba();
+						menu_debug_tsconf_tbblue_spritenav_cursor_arriba();
 
-						menu_debug_tsconf_spritenav_ventana();
-						//menu_debug_tsconf_spritenav_direccion -=bytes_por_linea;
-						//menu_debug_tsconf_spritenav_direccion=menu_debug_tsconf_spritenav_adjusta_en_negativo(menu_debug_tsconf_spritenav_direccion,bytes_por_linea);
+						menu_debug_tsconf_tbblue_spritenav_ventana();
+						//menu_debug_tsconf_tbblue_spritenav_direccion -=bytes_por_linea;
+						//menu_debug_tsconf_tbblue_spritenav_direccion=menu_debug_tsconf_tbblue_spritenav_adjusta_en_negativo(menu_debug_tsconf_tbblue_spritenav_direccion,bytes_por_linea);
 					break;
 
 					case 10:
 						//abajo
-						menu_debug_tsconf_spritenav_cursor_abajo();
+						menu_debug_tsconf_tbblue_spritenav_cursor_abajo();
 
-						menu_debug_tsconf_spritenav_ventana();
+						menu_debug_tsconf_tbblue_spritenav_ventana();
 
 
 					break;
@@ -25521,20 +25521,20 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 					case 24:
 						//PgUp
 						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
-							menu_debug_tsconf_spritenav_cursor_arriba();
+							menu_debug_tsconf_tbblue_spritenav_cursor_arriba();
 						}
-						menu_debug_tsconf_spritenav_ventana();
+						menu_debug_tsconf_tbblue_spritenav_ventana();
 
-						//menu_debug_tsconf_spritenav_direccion -=bytes_por_ventana;
-						//menu_debug_tsconf_spritenav_direccion=menu_debug_tsconf_spritenav_adjusta_en_negativo(menu_debug_tsconf_spritenav_direccion,bytes_por_ventana);
+						//menu_debug_tsconf_tbblue_spritenav_direccion -=bytes_por_ventana;
+						//menu_debug_tsconf_tbblue_spritenav_direccion=menu_debug_tsconf_tbblue_spritenav_adjusta_en_negativo(menu_debug_tsconf_tbblue_spritenav_direccion,bytes_por_ventana);
 					break;
 
 					case 25:
 						//PgDn
 						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
-							menu_debug_tsconf_spritenav_cursor_abajo();
+							menu_debug_tsconf_tbblue_spritenav_cursor_abajo();
 						}
-						menu_debug_tsconf_spritenav_ventana();
+						menu_debug_tsconf_tbblue_spritenav_ventana();
 					break;
 
 					//Salir con ESC
@@ -25563,24 +25563,24 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 #define TSCONF_TILENAV_TILES_VERT_PER_WINDOW 9
 #define TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW 27
 
-void menu_debug_tsconf_tilenav_ventana(void)
+void menu_debug_tsconf_tbblue_tilenav_ventana(void)
 {
         menu_dibuja_ventana(TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,"Tile navigator");
 }
 
 
-//int menu_debug_tsconf_tilenav_current_palette=0;
-int menu_debug_tsconf_tilenav_current_tile=0;
+//int menu_debug_tsconf_tbblue_tilenav_current_palette=0;
+int menu_debug_tsconf_tbblue_tilenav_current_tile=0;
 
-int menu_debug_tsconf_tilenav_current_tilelayer=0;
+int menu_debug_tsconf_tbblue_tilenav_current_tilelayer=0;
 
-z80_bit menu_debug_tsconf_tilenav_showmap={0};
+z80_bit menu_debug_tsconf_tbblue_tilenav_showmap={0};
 
 
 #define DEBUG_TSCONF_TILENAV_MAX_TILES (64*64)
 
 
-char menu_debug_tsconf_tiles_retorna_visualchar(int tnum)
+char menu_debug_tsconf_tbblue_tiles_retorna_visualchar(int tnum)
 {
 	//Hacer un conjunto de 64 caracteres. Mismo set de caracteres que para Base64. Por que? Por que si :)
 			   //0123456789012345678901234567890123456789012345678901234567890123
@@ -25591,7 +25591,7 @@ char menu_debug_tsconf_tiles_retorna_visualchar(int tnum)
 }
 
 //Muestra lista de tiles
-int menu_debug_tsconf_tilenav_lista_tiles(void)
+int menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 {
 
 	//Suficientemente grande para almacenar regla superior en modo visual
@@ -25611,12 +25611,12 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 	puntero_tilemap_orig=puntero_tilemap;
 
 	int limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;
-	if (menu_debug_tsconf_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2;
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2;
 
-	int current_tile_x=menu_debug_tsconf_tilenav_current_tile%64;
+	int current_tile_x=menu_debug_tsconf_tbblue_tilenav_current_tile%64;
 
 
-	if (menu_debug_tsconf_tilenav_showmap.v) {
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 				  //0123456789012345678901234567890123456789012345678901234567890123
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 
@@ -25628,20 +25628,20 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 
 
 		for (linea_color=0;linea_color<limite_vertical &&
-				menu_debug_tsconf_tilenav_current_tile+linea_color<limite;
+				menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color<limite;
 				linea_color++) {
 
 
 			int repetir_ancho=1;
 			int mapa_tile_x=3;
-			if (menu_debug_tsconf_tilenav_showmap.v==0) {
+			if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
 				//Modo lista tiles
-				current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color;
+				current_tile=menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color;
 			}
 
 			else {
 				//Modo mapa tiles
-				current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color*64;
+				current_tile=menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color*64;
 				repetir_ancho=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW;
 
 				//poner regla vertical
@@ -25660,7 +25660,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 
 				int offset=256*y+x*2;
 
-				offset+=menu_debug_tsconf_tilenav_current_tilelayer*128;
+				offset+=menu_debug_tsconf_tbblue_tilenav_current_tilelayer*128;
 
 				int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
 
@@ -25672,7 +25672,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				z80_byte tile_xf=puntero_tilemap[offset+1]&64;
 				z80_byte tile_yf=puntero_tilemap[offset+1]&128;
 
-				if (menu_debug_tsconf_tilenav_showmap.v==0) {
+				if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
 					//Modo lista tiles
 					sprintf (dumpmemoria,"X: %3d Y: %3d",x,y);
 					menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
@@ -25692,7 +25692,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 					else {
 						//int caracteres_totales=50; //127-33;
 						//caracter_final=33+(tnum%caracteres_totales);
-						caracter_final=menu_debug_tsconf_tiles_retorna_visualchar(tnum);
+						caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
 					}
 
 					dumpmemoria[mapa_tile_x++]=caracter_final;
@@ -25702,7 +25702,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				repetir_ancho--;
 			} while (repetir_ancho);
 
-			if (menu_debug_tsconf_tilenav_showmap.v) {
+			if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 				dumpmemoria[mapa_tile_x++]=0;
 				menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
@@ -25718,14 +25718,14 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 	return linea;
 }
 
-void menu_debug_tsconf_tilenav_draw_sprites(void)
+void menu_debug_tsconf_tbblue_tilenav_draw_sprites(void)
 {
 
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
 				//Mostrar lista tiles
-				menu_debug_tsconf_tilenav_lista_tiles();
+				menu_debug_tsconf_tbblue_tilenav_lista_tiles();
 
 				//Esto tiene que estar despues de escribir la lista de tiles, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
@@ -25733,61 +25733,61 @@ void menu_debug_tsconf_tilenav_draw_sprites(void)
 
 }
 
-void menu_debug_tsconf_tilenav_cursor_izquierda(void)
+void menu_debug_tsconf_tbblue_tilenav_cursor_izquierda(void)
 {
-	if (menu_debug_tsconf_tilenav_showmap.v) {
-		int cursor_x=menu_debug_tsconf_tilenav_current_tile % 64;
-		if (cursor_x>0) menu_debug_tsconf_tilenav_current_tile--;
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+		int cursor_x=menu_debug_tsconf_tbblue_tilenav_current_tile % 64;
+		if (cursor_x>0) menu_debug_tsconf_tbblue_tilenav_current_tile--;
 	}
 }
 
-void menu_debug_tsconf_tilenav_cursor_derecha(void)
+void menu_debug_tsconf_tbblue_tilenav_cursor_derecha(void)
 {
-        if (menu_debug_tsconf_tilenav_showmap.v) {
-                int cursor_x=menu_debug_tsconf_tilenav_current_tile % 64;
-                if (cursor_x<64-TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW) menu_debug_tsconf_tilenav_current_tile++;
+        if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+                int cursor_x=menu_debug_tsconf_tbblue_tilenav_current_tile % 64;
+                if (cursor_x<64-TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW) menu_debug_tsconf_tbblue_tilenav_current_tile++;
         }
 }
 
-void menu_debug_tsconf_tilenav_cursor_arriba(void)
+void menu_debug_tsconf_tbblue_tilenav_cursor_arriba(void)
 {
-	if (menu_debug_tsconf_tilenav_showmap.v==0) {
-		if (menu_debug_tsconf_tilenav_current_tile>0) {
-			menu_debug_tsconf_tilenav_current_tile--;
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile>0) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile--;
 		}
 	}
 	else {
-		if (menu_debug_tsconf_tilenav_current_tile>=64) {
-			menu_debug_tsconf_tilenav_current_tile-=64;
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile>=64) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile-=64;
 		}
 	}
 }
 
-void menu_debug_tsconf_tilenav_cursor_abajo(void)
+void menu_debug_tsconf_tbblue_tilenav_cursor_abajo(void)
 {
 
 	int limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
 
-	if (menu_debug_tsconf_tilenav_showmap.v==0) {
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
 
-		if (menu_debug_tsconf_tilenav_current_tile<limite-1) {
-			menu_debug_tsconf_tilenav_current_tile++;
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile<limite-1) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile++;
 		}
 
 	}
 	else {
-		if (menu_debug_tsconf_tilenav_current_tile<limite-64*TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2) {
-			menu_debug_tsconf_tilenav_current_tile +=64;
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile<limite-64*TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile +=64;
 		}
 
 	}
 
 }
 
-void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
-	menu_debug_tsconf_tilenav_ventana();
+	menu_debug_tsconf_tbblue_tilenav_ventana();
 
 	menu_reset_counters_tecla_repeticion();
 
@@ -25797,7 +25797,7 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 	int salir=0;
 
 
-	set_menu_overlay_function(menu_debug_tsconf_tilenav_draw_sprites);
+	set_menu_overlay_function(menu_debug_tsconf_tbblue_tilenav_draw_sprites);
 
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
@@ -25813,14 +25813,14 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 		menu_writing_inverse_color.v=1;
 
-		if (menu_debug_tsconf_tilenav_showmap.v) {
-			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tilenav_current_tilelayer);
+		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: Visual");
 		}
 
 		else {
-			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tilenav_current_tilelayer);
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: List");
 		}
@@ -25843,34 +25843,34 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 					case 11:
 						//arriba
-						menu_debug_tsconf_tilenav_cursor_arriba();
+						menu_debug_tsconf_tbblue_tilenav_cursor_arriba();
 
-						menu_debug_tsconf_tilenav_ventana();
+						menu_debug_tsconf_tbblue_tilenav_ventana();
 						
 					break;
 
 					case 10:
 						//abajo
-						menu_debug_tsconf_tilenav_cursor_abajo();
+						menu_debug_tsconf_tbblue_tilenav_cursor_abajo();
 
-						menu_debug_tsconf_tilenav_ventana();
+						menu_debug_tsconf_tbblue_tilenav_ventana();
 
 
 					break;
 
                                         case 8:
                                                 //izquierda
-                                                menu_debug_tsconf_tilenav_cursor_izquierda();
+                                                menu_debug_tsconf_tbblue_tilenav_cursor_izquierda();
 
-                                                menu_debug_tsconf_tilenav_ventana();
+                                                menu_debug_tsconf_tbblue_tilenav_ventana();
 
                                         break;
 
                                         case 9:
                                                 //derecha
-                                                menu_debug_tsconf_tilenav_cursor_derecha();
+                                                menu_debug_tsconf_tbblue_tilenav_cursor_derecha();
 
-                                                menu_debug_tsconf_tilenav_ventana();
+                                                menu_debug_tsconf_tbblue_tilenav_ventana();
 
 
                                         break;
@@ -25878,29 +25878,29 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 					case 24:
 						//PgUp
 						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_VERT_PER_WINDOW;aux_pgdnup++) {
-							menu_debug_tsconf_tilenav_cursor_arriba();
+							menu_debug_tsconf_tbblue_tilenav_cursor_arriba();
 						}
-						menu_debug_tsconf_tilenav_ventana();
+						menu_debug_tsconf_tbblue_tilenav_ventana();
 
-						//menu_debug_tsconf_tilenav_direccion -=bytes_por_ventana;
-						//menu_debug_tsconf_tilenav_direccion=menu_debug_tsconf_tilenav_adjusta_en_negativo(menu_debug_tsconf_tilenav_direccion,bytes_por_ventana);
+						//menu_debug_tsconf_tbblue_tilenav_direccion -=bytes_por_ventana;
+						//menu_debug_tsconf_tbblue_tilenav_direccion=menu_debug_tsconf_tbblue_tilenav_adjusta_en_negativo(menu_debug_tsconf_tbblue_tilenav_direccion,bytes_por_ventana);
 					break;
 
 					case 25:
 						//PgDn
 						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_VERT_PER_WINDOW;aux_pgdnup++) {
-							menu_debug_tsconf_tilenav_cursor_abajo();
+							menu_debug_tsconf_tbblue_tilenav_cursor_abajo();
 						}
-						menu_debug_tsconf_tilenav_ventana();
+						menu_debug_tsconf_tbblue_tilenav_ventana();
 					break;
 
 					case 'l':
-						menu_debug_tsconf_tilenav_current_tilelayer ^=1;
+						menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
 					break;
 
 					case 'm':
-						menu_debug_tsconf_tilenav_showmap.v ^=1;
-						menu_debug_tsconf_tilenav_current_tile=0;
+						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
+						menu_debug_tsconf_tbblue_tilenav_current_tile=0;
 					break;
 
 					//Salir con ESC
@@ -25924,32 +25924,41 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 
 
-void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_debug_tsconf;
+        menu_item *array_menu_debug_tsconf_tbblue;
         menu_item item_seleccionado;
 	int retorno_menu;
         do {
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_videoregisters,NULL,"Video ~~Registers");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'r');
+		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_videoregisters,NULL,"Video ~~Registers");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'r');
 
-		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'l');
+		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'l');
 
-		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_spritenav,NULL,"~~Sprite navigator");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'s');
+		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_spritenav,NULL,"~~Sprite navigator");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'s');
 
-		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_tilenav,NULL,"~~Tile navigator");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'t');
+		if (MACHINE_IS_TSCONF) {
+			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_tilenav,NULL,"~~Tile navigator");
+			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'t');
+		}
 
-                menu_add_item_menu(array_menu_debug_tsconf,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_debug_tsconf,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_debug_tsconf);
+                menu_add_item_menu(array_menu_debug_tsconf_tbblue,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_debug_tsconf_tbblue,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_debug_tsconf_tbblue);
 
-                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf,"Debug TSConf" );
+		char titulo_ventana[33];
+
+		//por defecto
+		strcpy(titulo_ventana,"Debug TSConf");
+
+		if (MACHINE_IS_TBBLUE) strcpy(titulo_ventana,"Debug TBBlue");
+
+                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue,titulo_ventana);
 
                 cls_menu_overlay();
 
@@ -26075,8 +26084,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
-			if (MACHINE_IS_TSCONF) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"~~TSConf");
-			if (MACHINE_IS_TBBLUE) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"~~TBBlue");
+			if (MACHINE_IS_TSCONF) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue,NULL,"~~TSConf");
+			if (MACHINE_IS_TBBLUE) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue,NULL,"~~TBBlue");
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
 		}
 
