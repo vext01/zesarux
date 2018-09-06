@@ -31846,6 +31846,17 @@ void menu_tbblue_layer_settings_sprites(MENU_ITEM_PARAMETERS)
 	tbblue_force_disable_layer_sprites.v ^=1;
 }
 
+void menu_tbblue_layer_settings_ula(MENU_ITEM_PARAMETERS)
+{
+	tbblue_force_disable_layer_ula.v ^=1;
+}
+
+void menu_tbblue_layer_settings_layer_two(MENU_ITEM_PARAMETERS)
+{
+	tbblue_force_disable_layer_layer_two.v ^=1;
+}
+
+
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_tsconf_layer_settings;
@@ -31899,7 +31910,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			}
 
 			if (MACHINE_IS_TBBLUE) {
- 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"%s",(tbblue_force_disable_layer_ula.v ? "Disabled" : "Enabled"));
+ 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_ula,NULL,"%s",(tbblue_force_disable_layer_ula.v ? "Disabled" : "Enabled"));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;			
 
@@ -31907,7 +31918,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_zero,NULL,"%s",(tbblue_force_disable_layer_layer_two.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_layer_two,NULL,"%s",(tbblue_force_disable_layer_layer_two.v ? "Disabled" : "Enabled"));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;				
 			}
