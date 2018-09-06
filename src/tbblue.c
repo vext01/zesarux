@@ -3332,6 +3332,11 @@ z80_int *p_layer_first;
 z80_int *p_layer_second;
 z80_int *p_layer_third;
 
+//Indica si ese layer se hace transparencia o no: los sprites se mira la transparencia antes del proceso de mix de las tres capas
+int layer_transp_first;
+int layer_transp_second;
+int layer_transp_third;
+
 void tbblue_set_layer_priorities(void)
 {
 	//Por defecto
@@ -3339,6 +3344,11 @@ void tbblue_set_layer_priorities(void)
 	p_layer_first=tbblue_layer_sprites;
 	p_layer_second=tbblue_layer_layer2;
 	p_layer_third=tbblue_layer_ula;
+
+
+	layer_transp_first=0;  //La primera capa es sprites, por tanto, no hacer transparencia
+	layer_transp_second=1; //La segunda capa es layer2, por tanto, si hacer transparencia
+	layer_transp_third=1;  //La tercera capa es ula, por tanto, si hacer transparencia
 
 	/*
 	(R/W) 0x15 (21) => Sprite and Layers system
@@ -3362,12 +3372,20 @@ void tbblue_set_layer_priorities(void)
 			p_layer_first=tbblue_layer_sprites;
 			p_layer_second=tbblue_layer_layer2;
 			p_layer_third=tbblue_layer_ula;
+
+			layer_transp_first=0;
+			layer_transp_second=1;
+			layer_transp_third=1;
 		break;
 
 		case 1:
 			p_layer_first=tbblue_layer_layer2;
 			p_layer_second=tbblue_layer_sprites;
 			p_layer_third=tbblue_layer_ula;
+
+			layer_transp_first=1;
+			layer_transp_second=0;
+			layer_transp_third=1;
 		break;
 
 
@@ -3375,24 +3393,40 @@ void tbblue_set_layer_priorities(void)
 			p_layer_first=tbblue_layer_sprites;
 			p_layer_second=tbblue_layer_ula;
 			p_layer_third=tbblue_layer_layer2;
+
+			layer_transp_first=0;
+			layer_transp_second=1;
+			layer_transp_third=1;
 		break;
 
 		case 3:
 			p_layer_first=tbblue_layer_layer2;
 			p_layer_second=tbblue_layer_ula;
 			p_layer_third=tbblue_layer_sprites;
+
+			layer_transp_first=1;
+			layer_transp_second=1;
+			layer_transp_third=0;
 		break;
 
 		case 4:
 			p_layer_first=tbblue_layer_ula;
 			p_layer_second=tbblue_layer_sprites;
 			p_layer_third=tbblue_layer_layer2;
+
+			layer_transp_first=1;
+			layer_transp_second=0;
+			layer_transp_third=1;
 		break;
 
 		case 5:
 			p_layer_first=tbblue_layer_ula;
 			p_layer_second=tbblue_layer_layer2;
 			p_layer_third=tbblue_layer_sprites;
+
+			layer_transp_first=1;
+			layer_transp_second=1;
+			layer_transp_third=0;
 		break;
 	}
 
