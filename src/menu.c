@@ -24990,7 +24990,7 @@ void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
 	else spritefinder_enable();
 }
 
-void menu_debug_tsconf_dma_zxuno_dibuja_ventana(void)
+void menu_debug_dma_tsconf_zxuno_dibuja_ventana(void)
 {
 	char texto_ventana[33];
 	//por defecto por si acaso
@@ -25018,7 +25018,7 @@ void menu_debug_tsconf_dma_zxuno_dibuja_ventana(void)
 
 
 
-void menu_debug_tsconf_dma_zxuno_overlay(void)
+void menu_debug_dma_tsconf_zxuno_overlay(void)
 {
 
     normal_overlay_texto_menu();
@@ -25176,7 +25176,7 @@ void menu_debug_tsconf_dma_zxuno_overlay(void)
 
 
 
-void menu_debug_tsconf_dma_zxuno_disable(MENU_ITEM_PARAMETERS)
+void menu_debug_dma_tsconf_zxuno_disable(MENU_ITEM_PARAMETERS)
 {
 	if (datagear_dma_emulation.v) datagear_dma_is_disabled.v ^=1;
 
@@ -25187,23 +25187,23 @@ void menu_debug_tsconf_dma_zxuno_disable(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_debug_tsconf_dma_zxuno(MENU_ITEM_PARAMETERS)
+void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 {
 
 
          //Cambiamos funcion overlay de texto de menu
-		set_menu_overlay_function(menu_debug_tsconf_dma_zxuno_overlay);
+		set_menu_overlay_function(menu_debug_dma_tsconf_zxuno_overlay);
 
 
 
-	menu_item *array_menu_debug_tsconf_dma_zxuno;
+	menu_item *array_menu_debug_dma_tsconf_zxuno;
         menu_item item_seleccionado;
         int retorno_menu;
         do {
 
         			
             //Hay que redibujar la ventana desde este bucle
-            menu_debug_tsconf_dma_zxuno_dibuja_ventana();
+            menu_debug_dma_tsconf_zxuno_dibuja_ventana();
 
 	
 
@@ -25221,17 +25221,17 @@ void menu_debug_tsconf_dma_zxuno(MENU_ITEM_PARAMETERS)
 
 			if (datagear_dma_emulation.v) condicion_dma_disabled=datagear_dma_is_disabled.v;
 		
-				menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_dma_zxuno,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_zxuno_disable,NULL,"~~DMA: %s",
+				menu_add_item_menu_inicial_format(&array_menu_debug_dma_tsconf_zxuno,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno_disable,NULL,"~~DMA: %s",
 					(condicion_dma_disabled ? "Disabled" : "Enabled") );
-				menu_add_item_menu_shortcut(array_menu_debug_tsconf_dma_zxuno,'d');
-				menu_add_item_menu_ayuda(array_menu_debug_tsconf_dma_zxuno,"Disable DMA");
-				menu_add_item_menu_tabulado(array_menu_debug_tsconf_dma_zxuno,1,lin);
+				menu_add_item_menu_shortcut(array_menu_debug_dma_tsconf_zxuno,'d');
+				menu_add_item_menu_ayuda(array_menu_debug_dma_tsconf_zxuno,"Disable DMA");
+				menu_add_item_menu_tabulado(array_menu_debug_dma_tsconf_zxuno,1,lin);
 
 
 
 
 		//Nombre de ventana solo aparece en el caso de stdout
-                retorno_menu=menu_dibuja_menu(&debug_tsconf_dma_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_dma_zxuno,"TSConf DMA" );
+                retorno_menu=menu_dibuja_menu(&debug_tsconf_dma_opcion_seleccionada,&item_seleccionado,array_menu_debug_dma_tsconf_zxuno,"TSConf DMA" );
 
 
 	cls_menu_overlay();
@@ -26062,7 +26062,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					);
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO || datagear_dma_emulation.v) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_zxuno,NULL,"Debug DMA");
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno,NULL,"Debug DMA");
 			//menu_add_item_menu_shortcut(array_menu_debug_settings,'d');
 		}					
 
@@ -26074,8 +26074,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'c');
 		}
 
-		if (MACHINE_IS_TSCONF) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"~~TSConf");
+		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
+			if (MACHINE_IS_TSCONF) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"~~TSConf");
+			if (MACHINE_IS_TBBLUE) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"~~TBBlue");
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
 		}
 
