@@ -15,6 +15,7 @@ Added TBBlue Multiface emulation
 Added OSD Adventure Text Keyboard, useful for having typical words on Adventure Text Games (and of course any other kind of games and programs)
 Added tool to export vocabulary from a PAWS/QUILL/GAC game to list of words on OSD Adventure Text Keyboard
 Added setting to deny turbo mode on Spectrum Next, useful on slow machines
+Added TBBlue Debug menu: Sprite navigator, Video layers, Video mode
 
 Improved debugger:
 *Now you can use every register, variable, number on any position of a condition (left, right), so the following breakpoint conditions are now valid:
