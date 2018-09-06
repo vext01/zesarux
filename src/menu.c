@@ -31707,8 +31707,8 @@ void menu_tsconf_layer_dibuja_ventana(void)
 	int alto=22;
 
 	if (MACHINE_IS_TBBLUE) {
-		alto=16;
-		y=4;
+		alto=10;
+		y=7;
 	}
     menu_dibuja_ventana(x,y,ancho,alto,"Video Layers");
 
