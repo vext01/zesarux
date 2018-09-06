@@ -25463,11 +25463,11 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 				z80_byte pattern=byte_4 & 63; //
 
 			sprintf (dumpmemoria,"%02d X: %3d Y: %3d %s %s %s",current_sprite,x,y,
-					(mirror_x ? "MIRX" : "    "),(mirror_y ? "MIRY" : "    "),(rotate ? "RT" : "  ")
+					(mirror_x ? "MIRX" : "    "),(mirror_y ? "MIRY" : "    "),(rotate ? "ROT" : "   ")
 			);
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
-			sprintf (dumpmemoria," Pattr: %2d Palof: %3d Vis: %s"
+			sprintf (dumpmemoria," Pattn: %2d Palof: %3d Vis: %s"
 				,pattern,paloff, (visible ? "Yes" : "No ") );
 
 
