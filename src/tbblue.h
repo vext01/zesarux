@@ -200,4 +200,9 @@ extern void tbblue_copper_handle_vsync(void);
 
 extern z80_bit tbblue_deny_turbo_rom;
 
+
+extern z80_bit tbblue_force_disable_layer_ula;
+extern z80_bit tbblue_force_disable_layer_sprites;
+extern z80_bit tbblue_force_disable_layer_layer_two;
+
 #endif

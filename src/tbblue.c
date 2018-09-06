@@ -633,6 +633,12 @@ z80_byte clip_window_ula[4];
 z80_byte clip_window_ula_index;
 
 
+//Forzar desde menu a desactivar capas 
+z80_bit tbblue_force_disable_layer_ula={0};
+z80_bit tbblue_force_disable_layer_sprites={0};
+z80_bit tbblue_force_disable_layer_layer_two={0};
+
+
 //Damos la paleta que se esta leyendo o escribiendo en una operacion de I/O
 //Para ello mirar bits 6-4  de reg 0x43
 z80_int *tbblue_get_palette_rw(void)
@@ -3889,7 +3895,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				}
 
 				//Capa layer2
-				if (tbblue_is_active_layer2()) {
+				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
 					if (posx>=clip_window_layer2[0] && posx<=clip_window_layer2[1] && scanline_copia>=clip_window_layer2[2] && scanline_copia<=clip_window_layer2[3]) {
 					z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
 					z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
@@ -3933,10 +3939,14 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 	}
 
 	
-	if (mostrar_sprites) {
+	if (mostrar_sprites && !tbblue_force_disable_layer_sprites.v) {
 	tbsprite_do_overlay();
 	}
-
+/*
+z80_bit tbblue_force_disable_layer_ula={0};
+z80_bit tbblue_force_disable_layer_sprites={0};
+z80_bit tbblue_force_disable_layer_layer_two={0};
+*/
 
 	//int i;
 
