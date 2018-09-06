@@ -1287,8 +1287,6 @@ void tbblue_out_sprite_sprite(z80_byte value)
 #define TBBLUE_SPRITE_TRANS_FICT 65535
 
 //Dice si un color de la capa de sprites es igual al color transparente ficticio inicial
-
-//Dice si un color de la paleta rbg9 es transparente
 int tbblue_si_sprite_transp_ficticio(z80_int color)
 {
         if (color==TBBLUE_SPRITE_TRANS_FICT) return 1;
@@ -1354,7 +1352,8 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 	//Ver si habia un color y activar bit colision
 	z80_int color_antes=tbblue_layer_sprites[xfinal];
 
-	if (!tbblue_si_transparent(color_antes)) {
+	//if (!tbblue_si_transparent(color_antes)) {
+	if (!tbblue_si_sprite_transp_ficticio(color_antes) ) {
 		//colision
 		tbblue_port_303b |=1;
 		//printf ("set colision flag. result value: %d\n",tbblue_port_303b);
