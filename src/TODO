@@ -27,6 +27,7 @@ renombrarla
 -Actualizar Next SD
 -tbblue:
 menu video debug video registers completar
+, que muestre orden de capas en prioridades
 
 -emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
