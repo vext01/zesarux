@@ -25342,7 +25342,9 @@ int tsconf_spritenav_window_alto=20;
 #define TSCONF_SPRITENAV_WINDOW_Y tsconf_spritenav_window_y
 #define TSCONF_SPRITENAV_WINDOW_ANCHO 32
 #define TSCONF_SPRITENAV_WINDOW_ALTO tsconf_spritenav_window_alto
-#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 8
+//#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 8
+#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW ((tsconf_spritenav_window_alto-4)/2)
+
 
 void menu_debug_tsconf_tbblue_spritenav_ventana(void)
 {
@@ -25532,7 +25534,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 			
 		char buffer_linea[40];
 
-		sprintf (buffer_linea,"Move: Cursors, PgUp, PgDn. QA");
+		sprintf (buffer_linea,"Move:Cursors,PgUp,PgDn. Size:QA");
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
@@ -25597,7 +25599,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 					break;					
 
 					case 'a':
-						if (tsconf_spritenav_window_y<12) {
+						if (tsconf_spritenav_window_y<9) {
 							tsconf_spritenav_window_y++;
 							tsconf_spritenav_window_alto -=2;
 							cls_menu_overlay();
