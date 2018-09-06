@@ -25365,6 +25365,16 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 	int linea=0;
 	limite=TSCONF_MAX_SPRITES; //85 sprites max
 
+	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
+
+	//z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
+	/*
+	1st: X position (bits 7-0).
+2nd: Y position (0-255).
+3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is the rotate flag and bit 0 is X MSB.
+4th: bit 7 is the visible flag, bit 6 is reserved, bits 5-0 is Name (pattern index, 0-63).
+*/
+
 	int current_sprite;
 
 
@@ -25374,17 +25384,12 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 
 			current_sprite=menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color;
 
+			if (MACHINE_IS_TSCONF) {
+
 			int offset=current_sprite*6;
 			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
 
 			z80_byte sprite_leap=sprite_r0h&64;
-				//if (sprite_r0h&64) {
-				//salir=1; //Bit Leap, ultimo sprite
-				//printf ("\nUltimo sprite");
-				//}
-
-			//Si sprite activo
-			//if (sprite_r0h&32) {
 
 			int sprite_act=sprite_r0h&32;
         	int y=tsconf_fmaps[0x200+offset]+256*(sprite_r0h&1);
@@ -25413,6 +25418,46 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
 				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
 				spal );
+
+			}
+
+			if (MACHINE_IS_TBBLUE) {
+					//z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
+	/*
+	1st: X position (bits 7-0).
+2nd: Y position (0-255).
+3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is the rotate flag and bit 0 is X MSB.
+4th: bit 7 is the visible flag, bit 6 is reserved, bits 5-0 is Name (pattern index, 0-63).
+*/
+
+				z80_int x=tbsprite_sprites[current_sprite][0];
+				z80_byte y=tbsprite_sprites[current_sprite][1];
+
+				z80_byte byte_3=tbsprite_sprites[current_sprite][2];
+				z80_byte paloff=byte_3 & 0xF0;
+				z80_byte mirror_x=byte_3 & 8;
+				z80_byte mirror_y=byte_3 & 4;
+				z80_byte rotate=byte_3 & 2;
+				z80_byte msb_x=byte_3 &1;
+
+				x +=msb_x*256;
+
+				z80_byte byte_4=tbsprite_sprites[current_sprite][3];
+				z80_byte visible=byte_4 & 128;
+				z80_byte pattern=byte_4 & 64;
+
+			sprintf (dumpmemoria,"%02d X: %3d Y: %3d",current_sprite,x,y);
+			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
+			/*sprintf (dumpmemoria,"Tile: %2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
+				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
+				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
+				spal );
+
+			}*/				
+
+			}
+
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 					
 		}
