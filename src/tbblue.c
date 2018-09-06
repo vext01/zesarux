@@ -3434,7 +3434,7 @@ void tbblue_set_layer_priorities(void)
 	}
 
 	//temp
-	layer_no_transp_first=0;
+	layer_no_transp_first=layer_no_transp_second=layer_no_transp_third=0;
 
 }
 
