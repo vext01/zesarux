@@ -25347,7 +25347,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 				//tbblue_get_offset_start_layer2_reg
 					//menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM page");
-					sprintf (texto_buffer,"Layer 2 addr: %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
+					sprintf (texto_buffer,"Layer 2 addr:        %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
 					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
 					//menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM shadow page");
