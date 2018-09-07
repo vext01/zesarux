@@ -25263,9 +25263,9 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
     z80_byte acumulado;
 
-	char texto_buffer[33];
+	char texto_buffer[64];
 
-	char texto_buffer2[33];
+	char texto_buffer2[64];
 
 	//Empezar con espacio
     texto_buffer[0]=' ';
@@ -25321,6 +25321,12 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 					menu_escribe_linea_opcion(linea++,-1,1,"ULA Video mode:");		
 
 					menu_escribe_linea_opcion(linea++,-1,1,get_spectrum_ula_string_video_mode() );
+
+
+					menu_escribe_linea_opcion(linea++,-1,1,"Palette format:");
+
+					tbblue_get_string_palette_format(texto_buffer);
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 		
 				}
 

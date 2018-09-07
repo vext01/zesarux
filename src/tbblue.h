@@ -209,4 +209,6 @@ extern int tbblue_if_sprites_enabled(void);
 
 extern char *tbblue_get_string_layer_prio(int layer,z80_byte prio);
 
+extern void tbblue_get_string_palette_format(char *texto);
+
 #endif

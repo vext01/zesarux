@@ -13218,7 +13218,6 @@ int screen_init_pantalla_and_others(void)
 
 
 const char *s_spectrum_video_mode_standard="256x192";
-const char *s_spectrum_video_mode_timex_standard_zero="256x192 Timex Screen 0";
 const char *s_spectrum_video_mode_timex_standard_one="256x192 Timex Screen 1";
 const char *s_spectrum_video_mode_timex_hicol="256x192 Timex 8x1 Color";
 const char *s_spectrum_video_mode_timex_hires="512x192 Timex monochrome";
@@ -13233,8 +13232,7 @@ char *get_spectrum_ula_string_video_mode(void)
 
 	if (timex_video_emulation.v) {
 
-			if ((timex_port_ff&7)==0) string_mode=s_spectrum_video_mode_timex_standard_zero;
-			else if ((timex_port_ff&7)==1) string_mode=s_spectrum_video_mode_timex_standard_one;
+			if ((timex_port_ff&7)==1) string_mode=s_spectrum_video_mode_timex_standard_one;
 			else if ((timex_port_ff&7)==2) string_mode=s_spectrum_video_mode_timex_hicol;
 			else if ((timex_port_ff&7)==6) string_mode=s_spectrum_video_mode_timex_hires;
 
