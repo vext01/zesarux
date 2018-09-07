@@ -25262,7 +25262,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
     menu_dibuja_ventana(0,7,32,8,"Video Info");
 
 	if (MACHINE_IS_TBBLUE) {
-		menu_dibuja_ventana(0,3,32,15,"Video Info");
+		menu_dibuja_ventana(0,2,32,19,"Video Info");
 	}
 
     z80_byte acumulado;
@@ -25380,6 +25380,16 @@ z80_byte clip_window_ula[4];
 					sprintf (texto_buffer,"ULA:     X=%3d-%3d Y=%3d-%3d",
 					clip_window_ula[0],clip_window_ula[1],clip_window_ula[2],clip_window_ula[3]);
 					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+					linea++;
+					sprintf (texto_buffer,"Offset Windows:");
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+
+					sprintf (texto_buffer,"Layer2: X=%3d Y=%3d",tbblue_registers[22],tbblue_registers[23]);
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					sprintf (texto_buffer,"LoRes:  X=%3d Y=%3d",tbblue_registers[50],tbblue_registers[51]);
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
 
 				}
 
