@@ -31791,8 +31791,8 @@ void menu_tsconf_layer_dibuja_ventana(void)
 	int alto=22;
 
 	if (MACHINE_IS_TBBLUE) {
-		alto=10;
-		y=7;
+		alto=15;
+		y=4;
 	}
     menu_dibuja_ventana(x,y,ancho,alto,"Video Layers");
 
@@ -31862,6 +31862,19 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				sprintf (texto_layer,"Layer 2:   %s",menu_tsconf_layer_aux_usedunused(tbblue_is_active_layer2() ) );
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 				linea +=3;						
+
+
+				//Layer priorities
+
+				z80_byte prio=tbblue_get_layers_priorities();
+				sprintf (texto_layer,"Priorities: (%XH)",prio);
+				menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
+
+				//temp
+				menu_escribe_linea_opcion(linea++,-1,1,"Sprites");
+				menu_escribe_linea_opcion(linea++,-1,1,"Layer 2");
+				menu_escribe_linea_opcion(linea++,-1,1,"ULA");
+				
 				}			
 
 

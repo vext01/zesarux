@@ -3367,6 +3367,11 @@ int (*tbblue_fn_pixel_layer_transp_first)(z80_int color);
 int (*tbblue_fn_pixel_layer_transp_second)(z80_int color);
 int (*tbblue_fn_pixel_layer_transp_third)(z80_int color);
 
+z80_byte tbblue_get_layers_priorities(void)
+{
+	return (tbblue_registers[0x15] >> 2)&7;
+}
+
 void tbblue_set_layer_priorities(void)
 {
 	//Por defecto
@@ -3402,7 +3407,8 @@ void tbblue_set_layer_priorities(void)
   bit 1 = Over border (1 = yes)(Back to 0 after a reset)
   bit 0 = Sprites visible (1 = visible)(Back to 0 after a reset)
   */
-	z80_byte prio=(tbblue_registers[0x15] >> 2)&7;
+	//z80_byte prio=(tbblue_registers[0x15] >> 2)&7;
+	z80_byte prio=tbblue_get_layers_priorities();
 
 	//printf ("prio: %d\n",prio);
 
