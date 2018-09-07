@@ -2098,12 +2098,32 @@ void instruccion_ed_181 ()
 
 void instruccion_ed_182 ()
 {
-        invalid_opcode_ed("237 182");
+        if (MACHINE_IS_TBBLUE) {
+                //LDIRSCALE ED B6 as LDIR but 24 bit source pointer HLA' takes high 16 bits as address
+                //??? no entiendo que hace
+
+                invalid_opcode_ed("Unimplemented tbblue LDIRSCALE");
+
+        }
+
+        else invalid_opcode_ed("237 182");
 }
 
 void instruccion_ed_183 ()
 {
-        invalid_opcode_ed("237 183");
+        if (MACHINE_IS_TBBLUE) {
+                //LDPIRX ED B7 it's like LDIRX, but is for 8 byte patterend fills 
+                //basically the lower 3 bits of E are put into lower 3 bits of L
+                z80_byte lowbits=reg_e & 7;
+
+                reg_l &=(255-7);
+                reg_l |=lowbits;
+
+                //Y llamar a ldirx
+                instruccion_ed_180(); 
+        }
+
+        else invalid_opcode_ed("237 183");
 }
 
 
