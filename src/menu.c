@@ -25262,7 +25262,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
     menu_dibuja_ventana(0,7,32,8,"Video Info");
 
 	if (MACHINE_IS_TBBLUE) {
-		menu_dibuja_ventana(0,4,32,16,"Video Info");
+		menu_dibuja_ventana(0,3,32,15,"Video Info");
 	}
 
     z80_byte acumulado;
@@ -25369,7 +25369,7 @@ z80_byte clip_window_ula[4];
 					sprintf (texto_buffer,"Clip Windows:");
 					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
-					sprintf (texto_buffer,"Layer2: X=%3d-%3d Y=%3d-%3d",
+					sprintf (texto_buffer,"Layer2:  X=%3d-%3d Y=%3d-%3d",
 					clip_window_layer2[0],clip_window_layer2[1],clip_window_layer2[2],clip_window_layer2[3]);
 					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
@@ -25377,7 +25377,7 @@ z80_byte clip_window_ula[4];
 					clip_window_sprites[0],clip_window_sprites[1],clip_window_sprites[2],clip_window_sprites[3]);
 					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
-					sprintf (texto_buffer,"ULA: X=%3d-%3d Y=%3d-%3d",
+					sprintf (texto_buffer,"ULA:     X=%3d-%3d Y=%3d-%3d",
 					clip_window_ula[0],clip_window_ula[1],clip_window_ula[2],clip_window_ula[3]);
 					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 

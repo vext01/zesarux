@@ -930,8 +930,6 @@ int tbblue_get_offset_start_layer2_reg(z80_byte register_value)
 
 int tbblue_get_offset_start_layer2(void)
 {
-	int offset;
-
 	if (tbblue_port_123b & 8 ) return tbblue_get_offset_start_layer2_reg(tbblue_registers[19]);
 	else return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
 
