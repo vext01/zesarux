@@ -25317,11 +25317,11 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 				}
 
 				if (MACHINE_IS_TBBLUE) {
-				sprintf (texto_buffer,"Video mode: 256x192");
-				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);		
 
-				sprintf (texto_buffer,"To be completed...");
-				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);				
+					menu_escribe_linea_opcion(linea++,-1,1,"ULA Video mode:");		
+
+					menu_escribe_linea_opcion(linea++,-1,1,get_spectrum_ula_string_video_mode() );
+		
 				}
 
             if (menu_multitarea==0) menu_refresca_pantalla();
