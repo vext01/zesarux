@@ -3351,11 +3351,26 @@ z80_byte *get_lores_pointer(int y)
 }
 
 
+struct s_tbblue_priorities_names {
+	char layers[3][20];
+};
 
 
-//Retorna en "texto" la capa que corresponde segun el byte de prioridad y la capa demandada en layer
+struct s_tbblue_priorities_names tbblue_priorities_names[8]={
+	{ { "Sprites" ,  "Layer 2"  ,  "ULA" } },
+	{ { "Layer 2" ,  "Layer 2"  ,  "ULA" } },
+	{ { "Sprites" ,  "Layer 2"  ,  "Layer 2" } },
+	{ { "Layer 2" ,  "Layer 2"  ,  "ULA" } },
+	{ { "Sprites" ,  "Layer 2"  ,  "Layer 2" } },
+	{ { "Sprites" ,  "Layer 2"  ,  "ULA" } },
+
+	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
+	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
+};
+
+//Retorna el texto de la capa que corresponde segun el byte de prioridad y la capa demandada en layer
 //La capa de arriba del todo, es capa 0. La de en medio, la 1, etc
-void tbblue_get_string_layer_prio(char *texto,int layer,z80_byte prio)
+char *tbblue_get_string_layer_prio(int layer,z80_byte prio)
 {
 /*
      Reset default is 000, sprites over the Layer 2, over the ULA graphics
@@ -3367,7 +3382,13 @@ void tbblue_get_string_layer_prio(char *texto,int layer,z80_byte prio)
      101 - U L S
 */
 
+	//por si acaso. capa entre 0 y 7
+	prio = prio & 7;
 
+	//layer entre 0 y 2
+	layer = layer % 3;
+
+	return tbblue_priorities_names[prio].layers[layer];
 
 }
 
