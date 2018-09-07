@@ -13225,7 +13225,7 @@ const char *s_spectrum_video_mode_timex_hires="512x192 Timex monochrome";
 
 const char *s_spectrum_video_mode_tbblue_lores="128x96 256 colours";
 
-const char *get_spectrum_ula_string_video_mode(void)
+char *get_spectrum_ula_string_video_mode(void)
 {
 
 	//Por defecto
@@ -13244,6 +13244,6 @@ const char *get_spectrum_ula_string_video_mode(void)
 		if (tbblue_registers[21]&128) string_mode=s_spectrum_video_mode_tbblue_lores;
 	}
 
-	return string_mode;
+	return (char *)string_mode;
 
 }
