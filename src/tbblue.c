@@ -895,14 +895,10 @@ int tbblue_is_active_layer2(void)
 	return 0;
 }
 
-
-int tbblue_get_offset_start_layer2(void)
+int tbblue_get_offset_start_layer2_reg(z80_byte register_value)
 {
-	int offset=tbblue_registers[18]&63;
+	int offset=register_value &=63;
 
-	if (tbblue_port_123b & 8 ) offset=tbblue_registers[19]&63;
-
-	//offset=tbblue_registers[18]&63;
 	offset*=16384;
 
 	//Y empezar en 0x040000 – 0x05FFFF (128K) => ZX Spectrum RAM
@@ -929,6 +925,16 @@ int tbblue_get_offset_start_layer2(void)
 	offset +=0x040000;
 
 	return offset;
+
+}
+
+int tbblue_get_offset_start_layer2(void)
+{
+	int offset;
+
+	if (tbblue_port_123b & 8 ) return tbblue_get_offset_start_layer2_reg(tbblue_registers[19]);
+	else return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
+
 }
 
 void tbblue_reset_sprites(void)

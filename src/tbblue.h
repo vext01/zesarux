@@ -211,4 +211,6 @@ extern char *tbblue_get_string_layer_prio(int layer,z80_byte prio);
 
 extern void tbblue_get_string_palette_format(char *texto);
 
+extern int tbblue_get_offset_start_layer2_reg(z80_byte register_value);
+
 #endif

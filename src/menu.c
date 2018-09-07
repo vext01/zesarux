@@ -25259,7 +25259,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
     //char textostats[32];
 
     menu_espera_no_tecla();
-    menu_dibuja_ventana(0,7,32,8,"Video Registers");
+    menu_dibuja_ventana(0,7,32,8,"Video Info");
 
     z80_byte acumulado;
 
@@ -25322,11 +25322,30 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 					menu_escribe_linea_opcion(linea++,-1,1,get_spectrum_ula_string_video_mode() );
 
+					linea++;
 
 					menu_escribe_linea_opcion(linea++,-1,1,"Palette format:");
 
 					tbblue_get_string_palette_format(texto_buffer);
 					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+					linea++;
+
+					/*
+					(R/W) 0x12 (18) => Layer 2 RAM page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 8 after a Reset)
+
+(R/W) 0x13 (19) => Layer 2 RAM shadow page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 11 after a Reset)
+					*/
+
+				//tbblue_get_offset_start_layer2_reg
+					menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM page");
+					sprintf (texto_buffer,"%06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
+					menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM shadow page");
+					sprintf (texto_buffer,"%06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[19]) );					
 		
 				}
 
@@ -26019,8 +26038,8 @@ void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_videoregisters,NULL,"Video ~~Registers");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'r');
+		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_videoregisters,NULL,"Video ~~Info");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'i');
 
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'l');
