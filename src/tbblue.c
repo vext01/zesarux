@@ -3352,6 +3352,27 @@ z80_byte *get_lores_pointer(int y)
 
 
 
+
+//Retorna en "texto" la capa que corresponde segun el byte de prioridad y la capa demandada en layer
+//La capa de arriba del todo, es capa 0. La de en medio, la 1, etc
+void tbblue_get_string_layer_prio(char *texto,int layer,z80_byte prio)
+{
+/*
+     Reset default is 000, sprites over the Layer 2, over the ULA graphics
+     000 - S L U
+     001 - L S U
+     010 - S U L
+     011 - L U S
+     100 - U S L
+     101 - U L S
+*/
+
+
+
+}
+
+
+
 //Inicializa punteros a los 3 layers
 z80_int *p_layer_first;
 z80_int *p_layer_second;
