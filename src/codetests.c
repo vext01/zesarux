@@ -365,6 +365,21 @@ void codetests_tbblue_get_horizontal_raster(void)
 
 
 
+void codetests_tbblue_layers(void)
+{
+//tbblue_get_string_layer_prio
+//+extern char *tbblue_get_string_layer_prio(int layer,z80_byte prio);
+
+
+	int layer, prio;
+
+	for (prio=0;prio<8;prio++) {
+		printf ("Priority %d\n",prio);
+		for (layer=0;layer<3;layer++) {
+			printf ("Layer %d : %s\n",layer,tbblue_get_string_layer_prio(layer,prio));
+		}
+	}
+}
 
 void codetests_main(int main_argc,char *main_argv[])
 {
@@ -374,6 +389,9 @@ void codetests_main(int main_argc,char *main_argv[])
 		coretests_compress_uncompress_repetitions(main_argv[2]);
 		exit(0);
 	}
+
+	//printf ("\nRunning tbblue layers strings\n");
+	//codetests_tbblue_layers();
 
 	printf ("\nRunning repetitions code\n");
 	codetests_repetitions();
