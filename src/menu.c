@@ -25261,6 +25261,10 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
     menu_espera_no_tecla();
     menu_dibuja_ventana(0,7,32,8,"Video Info");
 
+	if (MACHINE_IS_TBBLUE) {
+		menu_dibuja_ventana(0,4,32,16,"Video Info");
+	}
+
     z80_byte acumulado;
 
 	char texto_buffer[64];
@@ -25342,11 +25346,41 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 					*/
 
 				//tbblue_get_offset_start_layer2_reg
-					menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM page");
-					sprintf (texto_buffer,"%06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
-					menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM shadow page");
-					sprintf (texto_buffer,"%06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[19]) );					
-		
+					//menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM page");
+					sprintf (texto_buffer,"Layer 2 addr: %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+					//menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM shadow page");
+					sprintf (texto_buffer,"Layer 2 shadow addr: %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[19]) );					
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+
+					/*
+					z80_byte clip_window_layer2[4];
+z80_byte clip_window_layer2_index;
+
+z80_byte clip_window_sprites[4];
+z80_byte clip_window_sprites_index;
+
+z80_byte clip_window_ula[4];
+					*/
+
+					linea++;
+					sprintf (texto_buffer,"Clip Windows:");
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+					sprintf (texto_buffer,"Layer2: X=%3d-%3d Y=%3d-%3d",
+					clip_window_layer2[0],clip_window_layer2[1],clip_window_layer2[2],clip_window_layer2[3]);
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+					sprintf (texto_buffer,"Sprites: X=%3d-%3d Y=%3d-%3d",
+					clip_window_sprites[0],clip_window_sprites[1],clip_window_sprites[2],clip_window_sprites[3]);
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+					sprintf (texto_buffer,"ULA: X=%3d-%3d Y=%3d-%3d",
+					clip_window_ula[0],clip_window_ula[1],clip_window_ula[2],clip_window_ula[3]);
+					menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
 				}
 
             if (menu_multitarea==0) menu_refresca_pantalla();
