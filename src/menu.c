@@ -31871,9 +31871,9 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
 
 				//temp
-				menu_escribe_linea_opcion(linea++,-1,1,"Sprites");
-				menu_escribe_linea_opcion(linea++,-1,1,"Layer 2");
-				menu_escribe_linea_opcion(linea++,-1,1,"ULA");
+				menu_escribe_linea_opcion(linea++,-1,1,tbblue_get_string_layer_prio(0,prio) );
+				menu_escribe_linea_opcion(linea++,-1,1,tbblue_get_string_layer_prio(0,prio) );
+				menu_escribe_linea_opcion(linea++,-1,1,tbblue_get_string_layer_prio(0,prio) );
 				
 				}			
 

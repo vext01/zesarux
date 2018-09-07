@@ -207,4 +207,6 @@ extern z80_bit tbblue_force_disable_layer_layer_two;
 
 extern int tbblue_if_sprites_enabled(void);
 
+extern char *tbblue_get_string_layer_prio(int layer,z80_byte prio);
+
 #endif

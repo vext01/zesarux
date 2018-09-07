@@ -3358,11 +3358,11 @@ struct s_tbblue_priorities_names {
 
 struct s_tbblue_priorities_names tbblue_priorities_names[8]={
 	{ { "Sprites" ,  "Layer 2"  ,  "ULA" } },
-	{ { "Layer 2" ,  "Layer 2"  ,  "ULA" } },
-	{ { "Sprites" ,  "Layer 2"  ,  "Layer 2" } },
-	{ { "Layer 2" ,  "Layer 2"  ,  "ULA" } },
-	{ { "Sprites" ,  "Layer 2"  ,  "Layer 2" } },
-	{ { "Sprites" ,  "Layer 2"  ,  "ULA" } },
+	{ { "Layer 2" ,  "Sprites"  ,  "ULA" } },
+	{ { "Sprites" ,  "ULA"  ,  "Layer 2" } },
+	{ { "Layer 2" ,  "ULA"  ,  "Sprites" } },
+	{ { "ULA" ,  "Sprites"  ,  "Layer 2" } },
+	{ { "ULA" ,  "Layer 2"  ,  "Sprites" } },
 
 	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
 	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
