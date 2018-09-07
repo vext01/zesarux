@@ -31936,7 +31936,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				//Layer priorities
 
 				z80_byte prio=tbblue_get_layers_priorities();
-				sprintf (texto_layer,"Priorities: (%XH)",prio);
+				sprintf (texto_layer,"Priorities: (%d)",prio);
 				menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
 
 				//temp
