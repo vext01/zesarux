@@ -159,7 +159,7 @@ struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLU
   {"LDIRX",0xB4,0},
   {"LDDX",0xAC,0},
   {"LDDRX",0xBC,0},
-  {"LDPIRX",0xED,0}
+  {"LDPIRX",0xB7,0}
 };
 
 void debugger_handle_extended_tbblue_opcodes(char *buffer, unsigned int address, int *sumar_longitud)
