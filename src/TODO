@@ -78,7 +78,6 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
 
-
 -fix en compilacion en mac para sistemas antiguos
 
 -quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
@@ -599,6 +598,9 @@ Ver registro 2:
 
 *Contended en mmu tbblue. De momento la contencion la hace por bloques de 16 kb
 -dma
+
+-PIXELUP/DN quiza pueda ir mas alla de coordenada 191
+https://www.specnext.com/forum/viewtopic.php?p=8226#p8226
 
 -------------
 
