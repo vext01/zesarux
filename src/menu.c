@@ -31946,7 +31946,8 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				
 					int i;
 					for (i=0;i<3;i++) {
-						sprintf (texto_layer,"     %s",tbblue_get_string_layer_prio(i,prio));
+						if (i!=2) sprintf (texto_layer,"v---%s---v",tbblue_get_string_layer_prio(i,prio));
+						else sprintf (texto_layer,"v---%s    ---v",tbblue_get_string_layer_prio(i,prio));
 						menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
 					}
 				
