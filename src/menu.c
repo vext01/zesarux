@@ -31924,29 +31924,31 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				}
 
 				if (MACHINE_IS_TBBLUE) {
-                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(1) ); //ULA siempre activo
-                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
-				linea +=3;
+	                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(1) ); //ULA siempre activo
+    	            menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					linea +=3;
 
-                sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tbblue_if_sprites_enabled() ));
-                menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
-				linea +=3;		
+                	sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tbblue_if_sprites_enabled() ));
+                	menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+					linea +=3;		
 
-				sprintf (texto_layer,"Layer 2:   %s",menu_tsconf_layer_aux_usedunused(tbblue_is_active_layer2() ) );
-                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
-				linea +=3;						
+					sprintf (texto_layer,"Layer 2:   %s",menu_tsconf_layer_aux_usedunused(tbblue_is_active_layer2() ) );
+    	            menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					linea +=3;						
 
 
-				//Layer priorities
+					//Layer priorities
 
-				z80_byte prio=tbblue_get_layers_priorities();
-				sprintf (texto_layer,"Priorities: (%d)",prio);
-				menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
+					z80_byte prio=tbblue_get_layers_priorities();
+					sprintf (texto_layer,"Priorities: (%d)",prio);
+					menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
 
-				//temp
-				menu_escribe_linea_opcion(linea++,-1,1,tbblue_get_string_layer_prio(0,prio) );
-				menu_escribe_linea_opcion(linea++,-1,1,tbblue_get_string_layer_prio(1,prio) );
-				menu_escribe_linea_opcion(linea++,-1,1,tbblue_get_string_layer_prio(2,prio) );
+				
+					int i;
+					for (i=0;i<3;i++) {
+						sprintf (texto_layer,"     %s",tbblue_get_string_layer_prio(i,prio));
+						menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
+					}
 				
 				}			
 
