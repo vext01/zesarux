@@ -72,7 +72,6 @@ TBBLUE:
 
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
-revisar los que hayan cambiado.
 Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar en grupo desarrollo
 
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
@@ -1265,6 +1264,7 @@ crear tambien metodos de deteccion de tercer trap? Aunque esto quiza solo sirve 
 -Tecla escape debería hacer break cuando se está escuchando speech
 O quizá setting configurable 
 
+-al leer lineas con varios hotkeys, solo lee el ultimo hotkey
 
 -------------
 

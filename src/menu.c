@@ -8648,7 +8648,7 @@ int menu_debug_hexdump_change_pointer(int p)
 
 void menu_debug_hexdump_ventana(void)
 {
-        menu_dibuja_ventana(DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,"Hex Dump");
+        menu_dibuja_ventana(DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,"Hexadecimal Editor");
 }
 
 
@@ -10536,10 +10536,10 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 		}
 
 		//Por si acaso, no me fio que siempre se vaya a cumplir esto, tener manera de salir cuando se hayan saltado, por ejemplo, 50 opcodes
-			if (opcodes_saltados>50) {
-				debug_printf (VERBOSE_DEBUG,"Applying workaround after 50 opcodes");
-				return dir;
-			}
+		if (opcodes_saltados>50) {
+			debug_printf (VERBOSE_DEBUG,"Applying workaround after 50 opcodes");
+			return dir;
+		}
 		
 		if (sumado>=dir_inicial && traspasado_negativo==0) {
 			return dir;
@@ -25259,10 +25259,14 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
     //char textostats[32];
 
     menu_espera_no_tecla();
-    menu_dibuja_ventana(0,7,32,8,"Video Info");
+    
 
 	if (MACHINE_IS_TBBLUE) {
 		menu_dibuja_ventana(0,2,32,19,"Video Info");
+	}
+
+	else {
+		menu_dibuja_ventana(0,7,32,8,"Video Info");
 	}
 
     z80_byte acumulado;

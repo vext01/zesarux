@@ -1334,7 +1334,7 @@ void tbsprite_put_color_line(int x,z80_byte color,int rangoxmin,int rangoxmax)
 	int clipxmin=clip_window_sprites[0]+TBBLUE_SPRITE_BORDER;
 	int clipxmax=clip_window_sprites[1]+TBBLUE_SPRITE_BORDER;
 	z80_byte sprites_over_border=tbblue_registers[21]&2;
-	if (sprites_over_border==0 && (x<clipxmin || x>=clipxmax)) return;
+	if (sprites_over_border==0 && (x<clipxmin || x>clipxmax)) return;
 
 	//Si index de color es transparente, no hacer nada
 /*
