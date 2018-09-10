@@ -1,4 +1,4 @@
-This is sped53, with the save object code bug from sped52 fixed, and with the English translation made by Tim Gilberts
+This is sped53en, with the save object code bug from sped52 fixed, and with the English translation made by Tim Gilberts
 
 The sources are in just plain text files, not on sped file format, so you can compile with your favorite cross assembler
 Also, 8-bit registers from IX have the sped syntax (LX, HX) which are compatible with sjasmplus syntax.

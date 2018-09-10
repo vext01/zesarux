@@ -1,1 +1,3 @@
-sped52 had a bug when saving object code: it was saved always starting at 49152. sped53 fixes that bug
+sped52 tenia un bug al salvar codigo objeto: siempre guardaba empezando en la 49152. Esta version sped53 lo corrige
+Esta version sigue siendo en español
+sped53en es la version traducida por Tim Gilberts y con este bug corregido
