@@ -24588,10 +24588,37 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 	int codigos_no_imprimibles=0;
 	z80_byte caracter;
 
+	/* Detector archivos sped:
+	-que hayan códigos 13 de salto de línea
+	-que no hayan otros códigos menores que 32 excepto los saltos de línea
+	-que haya ascii
+	-que haya códigos mayores que 128
+	*/
+
+	int sped_cr=0;
+	int sped_below_32=0;
+	int sped_ascii=0;
+	int sped_beyond_128=0;
+
 	for (i=0;i<leidos;i++) {
 		caracter=file_read_memory[i];
 		//if (caracter>127) codigos_no_imprimibles++;
 		if (!menu_file_viewer_read_text_file_char_print(caracter)) codigos_no_imprimibles++;
+
+		//Deteccion sped
+		if (caracter<32) {
+			if (caracter==13) sped_cr=1;
+			else sped_below_32=1;
+		}
+
+		if (caracter>=32 && caracter<=127) sped_ascii=1;
+		if (caracter>127) sped_beyond_128=1;
+		
+	}
+
+	//Deteccion sped
+	if (sped_cr && !sped_below_32 && sped_ascii && sped_beyond_128) {
+		printf ("Archivo posiblemente es SPED\n");
 	}
 
 	//Sacar porcentaje 10%

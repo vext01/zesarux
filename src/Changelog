@@ -4,6 +4,7 @@ Added ACB/ABC/BAC/Custom Stereo emulation
 Added joystick action to change emulated joystick type: Sinclair, Kempston, etc
 Added support to show some unicode (utf8) characters on menu
 Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens), Z88 basic files with tokens
+Added Sped format file viewer
 Added ZXUno DMA emulation
 Added TBBlue/DataGear/MB02 DMA emulation
 Added Beeper Piano Menu
