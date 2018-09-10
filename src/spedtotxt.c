@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+ 
 //Sped file format to txt converter
 
 int main(int argc, char *argv[]) {
+	if (argc<2) {
+		printf ("%s file\n",argv[0]);
+		exit(1);
+        }
+
+
 	char *filename=argv[1];
 
 	FILE *ptr_file;
