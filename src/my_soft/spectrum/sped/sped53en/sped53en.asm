@@ -1,14 +1,37 @@
+;    SPED - SPectrum Ensamblador Desensamblador / SuPer Ensamblador Desensamblador
+;    Copyright (C) 1995 Cesar Hernandez Bano
+;
+;    This file is part of ZEsarUX.
+;
+;    SPED is free software: you can redistribute it and/or modify
+;    it under the terms of the GNU General Public License as published by
+;    the Free Software Foundation, either version 3 of the License, or
+;    (at your option) any later version.
+;
+;    This program is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;    GNU General Public License for more details.
+;
+;    You should have received a copy of the GNU General Public License
+;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
         ORG  49152
 	OUTPUT sped.bin
+
+
+
 ;
 ;SPED53  ,        ,       ~,
 ;   (C) CESAR HERNANDEZ BANO
-;   (11/7/1997)
-;
-;ENGLISH VERSION TIM GILBERTS
-;AUG 2018
-;
 ;VERSION 1.2 EN
+
+
+; V 1.0 (01/04/1995) SPED 1.0
+; V 1.1/SPED52 (11/07/1997)
+; V 1.1 EN/SPED52 ENGLISH VERSION by TIM GILBERTS (17/08/2018)
+; V 1.2 EN/SPED53 (10/09/2018)
+;
 ;
 ;Licence: GNU GPL
 ;
