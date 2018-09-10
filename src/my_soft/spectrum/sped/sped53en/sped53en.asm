@@ -1,5 +1,5 @@
         ORG  49152
-	OBJECT prueba.bin
+	OUTPUT sped.bin
 ;
 ;SPED53  ,        ,       ~,
 ;   (C) CESAR HERNANDEZ BANO
@@ -5924,7 +5924,6 @@ STRHLP DEFM " COMMAND LINE OPT"
        DEFM "wn. ME-+1 Instruc"
        DEFM "."
        DEFB 255
-
 
 
 
