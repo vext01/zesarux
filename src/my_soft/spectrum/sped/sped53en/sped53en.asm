@@ -30,6 +30,7 @@
 ; V 1.0           (01/04/1995) - Preliminary version   - CESAR HERNANDEZ BANO
 ; V 1.1/SPED52    (11/07/1997) - Full working version  - CESAR HERNANDEZ BANO
 ; V 1.1 EN/SPED52 (17/08/2018) - English version       - TIM GILBERTS
+; V 1.2 SPED53    (04/09/2018) - Bug fixed version     - CESAR HERNANDEZ BANO
 ; V 1.2 EN/SPED53 (10/09/2018) - Bug fixed version     - CESAR HERNANDEZ BANO
 ;
 ;
