@@ -51,7 +51,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Yerzmyey, for granting permission to include his Astral Combat demo. http://yerzmyey.i-demo.pl/ . http://hooyprogram.republika.pl/
 -JSJ, helping me with pthreads on Windows version
 -Miodrag Milanovic, for granting permission to include his National Semiconductor SC/MP CPU Emulator https://github.com/mamedev/mame/blob/master/src/devices/cpu/scmp/ . Distributed under BSD-3 license
--Tim Gilberts, for bug reporting
+-Tim Gilberts, for bug reporting and the Sped translation to English
 -Gary Lancaster, for bug reporting
 -Mark Hutchings, for bug reporting, proposing new features and code contribution
 -g0blinish/Krapivin Dmitry, for granting permission to include some demos and games for TSConf
