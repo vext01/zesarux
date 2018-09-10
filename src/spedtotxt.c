@@ -22,7 +22,6 @@ int main(int argc, char *argv[]) {
 		fread(&caracter,1,1,ptr_file);
 
 		if (caracter==13) {
-			x=0;
 			caracter=10;
 		}
 
@@ -34,10 +33,10 @@ int main(int argc, char *argv[]) {
 		else if (caracter>=128) {
 			caracter -=128;	
 			int tabcolumn;
-			if (x<=7) tabcolumn=7;
+			if (x<7) tabcolumn=7;
 			else tabcolumn=12;
 
-			while (x<=tabcolumn) {
+			while (x<tabcolumn) {
 				printf (" ");
 				x++;
 			}
@@ -46,6 +45,7 @@ int main(int argc, char *argv[]) {
 
 		printf ("%c",caracter);
 		x++;
+		if (caracter==10) x=0;
 			 
 	}
 

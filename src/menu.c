@@ -24530,30 +24530,25 @@ void menu_file_viewer_sped_show(char *file_read_memory,int longitud)
 {
 
 
-        int index_find,index_buffer;
+        int index_buffer;
 
         char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
 
-        //margen suficiente para que quepa una linea
-        //direccion+salto linea+codigo 0
-        char buf_linea[9];
-
         index_buffer=0;
-
-        int encontrados=0;
 
         int salir=0;
 
-		int i=0;
 		int x=0;
+
+		int lineas=0;
 
 		while (!salir && longitud) {
 			z80_byte caracter=*file_read_memory;
 			file_read_memory++;
 
 			if (caracter==13) {
-				x=0;
 				caracter=10;
+				lineas++;
 			}
 
 			else if (caracter==127) {
@@ -24564,27 +24559,27 @@ void menu_file_viewer_sped_show(char *file_read_memory,int longitud)
 			else if (caracter>=128) {
 				caracter -=128;	
 				int tabcolumn;
-				if (x<=7) tabcolumn=7;
+				if (x<7) tabcolumn=7;
 				else tabcolumn=12;
 
-				while (x<=tabcolumn) {
+				while (x<tabcolumn) {
 					results_buffer[index_buffer++]=' ';
 					x++;
 				}
 
 			}
 
-				results_buffer[index_buffer++]=caracter;
-			                //controlar maximo
-                //20 bytes de margen
-                if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-20) {
-                        debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first %d",encontrados);
-                        //forzar salir
-                        salir=1;
-                }
+			results_buffer[index_buffer++]=caracter;
+			//controlar maximo
+            //100 bytes de margen
+            if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-100 || lineas>=MAX_LINEAS_TOTAL_GENERIC_MESSAGE) {
+            	debug_printf (VERBOSE_ERR,"Too many lines to show. Showing only the first %d",lineas);
+                //forzar salir
+                salir=1;
+            }
 
-			x++;
-
+            x++;
+            if (caracter==10) x=0;
 
 			longitud--;
 		}
