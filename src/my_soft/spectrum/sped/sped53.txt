@@ -1,0 +1,1 @@
+sped52 had a bug when saving object code: it was saved always starting at 49152. sped53 fixes that bug
