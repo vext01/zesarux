@@ -1465,7 +1465,7 @@ textspeech.o: textspeech.c textspeech.h cpu.h operaciones.h debug.h screen.h cha
 
 
 clean:
-	rm -f *.o zesarux zesarux.exe smpatap sp_z80 tapabin leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite install.sh 
+	rm -f *.o zesarux zesarux.exe smpatap sp_z80 tapabin leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite spedtotxt install.sh 
 	rm -fR bintargztemp/ sourcetargztemp/ ZEsarUX_win-\$(EMULATOR_VERSION)/
 	rm -fR macos/zesarux.app
 	rm -fR macos/zesarux.dmg
