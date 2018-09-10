@@ -34,7 +34,7 @@
 ; V 1.2 EN/SPED53 (10/09/2018) - Bug fixed version     - CESAR HERNANDEZ BANO
 ;
 ;
-;Licence: GNU GPL
+;License: GNU GPL
 ;
 FLAGS1 EQU  23582
 FLAGS2 EQU  23583
