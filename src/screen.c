@@ -1497,6 +1497,8 @@ void clear_putpixel_cache(void)
         if (putpixel_cache==NULL) return;
 
 	debug_printf (VERBOSE_INFO,"Clearing putpixel cache");
+
+
 	int x,y;
 	int indice=0;
 

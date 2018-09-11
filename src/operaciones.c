@@ -7549,18 +7549,19 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
                 	screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
 		}
 
-        if ((value&7)==6) {
+        	if ((value&7)==6) {
                         //Indicar que se ha puesto modo timex en alguna parte del frame
-                //timex_ugly_hack_last_hires=t_estados/screen_testados_linea;
-                //printf ("estableciendo modo timex en y: %d\n",timex_ugly_hack_last_hires);
-        }
+	                //timex_ugly_hack_last_hires=t_estados/screen_testados_linea;
+        	        //printf ("estableciendo modo timex en y: %d\n",timex_ugly_hack_last_hires);
+        	}
 
 
+		z80_byte last_timex_port_ff=timex_port_ff;
 		timex_port_ff=value;
 		//Color del border en modo timex hi-res sale de aqui
 		//Aunque con esto avisamos que el color del border en modo 512x192 se puede haber modificado
 		modificado_border.v=1;
-		clear_putpixel_cache(); //porque se puede cambiar de modo, borrar la putpixel cache
+		if (last_timex_port_ff!=timex_port_ff) clear_putpixel_cache(); //porque se puede cambiar de modo, borrar la putpixel cache
 
 		if (MACHINE_IS_CHLOE_280SE) chloe_set_memory_pages();
 		if (MACHINE_IS_PRISM) prism_set_memory_pages();
