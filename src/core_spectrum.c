@@ -595,16 +595,19 @@ void cpu_core_loop_spectrum(void)
 					if ( MACHINE_IS_TIMEX_TS2068 && ( timex_port_ff & 64) ) interrupcion_maskable_generada.v=0;
 
 					//En ZXuno, ver bit disvint
-                                	if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) {
+                    if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) {
 
-	                                        if (get_zxuno_tbblue_rasterctrl() & 4) {
-        	                                        //interrupciones normales deshabilitadas
-                	                                //printf ("interrupciones normales deshabilitadas\n");
+	                    if (get_zxuno_tbblue_rasterctrl() & 4) {
+        	                //interrupciones normales deshabilitadas
+                	        //printf ("interrupciones normales deshabilitadas\n");
 							//Pero siempre que no se haya disparado una maskable generada por raster
 
-							if (zxuno_tbblue_disparada_raster.v==0) interrupcion_maskable_generada.v=0;
-                        	                }
-                                	}
+							if (zxuno_tbblue_disparada_raster.v==0) {
+								//printf ("interrupciones normales deshabilitadas y no raster disparada\n");
+								interrupcion_maskable_generada.v=0;
+							}
+                        }
+                    }
 
 					//TSConf lo gestiona mediante interrupciones de frame
 					if (MACHINE_IS_TSCONF) interrupcion_maskable_generada.v=0;
