@@ -31244,7 +31244,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
     //char textostats[32];
 
     menu_espera_no_tecla();
-    menu_dibuja_ventana(0,7,32,8,"Core Statistics");
+    menu_dibuja_ventana(0,7,32,9,"Core Statistics");
 
     z80_byte acumulado;
 
@@ -31296,7 +31296,7 @@ Calculando ese tiempo: 12% cpu
 				if (valor_mostrar>999999) valor_mostrar=999999;
 			     //01234567890123456789012345678901
 			     // Last core frame: 999999 us
-				sprintf (texto_buffer,"Last core frame: %ld us",valor_mostrar);
+				sprintf (texto_buffer,"Last core frame:     %6ld us",valor_mostrar);
 				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
 
                                 valor_mostrar=core_cpu_timer_frame_media;
@@ -31304,7 +31304,7 @@ Calculando ese tiempo: 12% cpu
 				if (valor_mostrar>999999) valor_mostrar=999999;
                                 //01234567890123456789012345678901
                                  // Last core frame: 999999 us
-                                sprintf (texto_buffer," Average: %ld us",valor_mostrar);
+                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
                                 valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
@@ -31312,7 +31312,7 @@ Calculando ese tiempo: 12% cpu
                                 if (valor_mostrar>999999) valor_mostrar=999999;
                              //01234567890123456789012345678901
                              // Last render display: 999999 us
-                                sprintf (texto_buffer,"Last full render: %ld us",valor_mostrar);
+                                sprintf (texto_buffer,"Last full render:    %6ld us",valor_mostrar);
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
                                 valor_mostrar=core_cpu_timer_refresca_pantalla_media;
@@ -31320,7 +31320,7 @@ Calculando ese tiempo: 12% cpu
                                 if (valor_mostrar>999999) valor_mostrar=999999;
                                 //01234567890123456789012345678901
                                  // Last core refresca_pantalla: 999999 us
-                                sprintf (texto_buffer," Average: %ld us",valor_mostrar);
+                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
 
@@ -31329,7 +31329,7 @@ Calculando ese tiempo: 12% cpu
                                 if (valor_mostrar>999999) valor_mostrar=999999;
                              //01234567890123456789012345678901
                              // Time between frames: 999999 us
-                                sprintf (texto_buffer,"Time between frames: %ld us",valor_mostrar);
+                                sprintf (texto_buffer,"Time between frames: %6ld us",valor_mostrar);
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
                                 valor_mostrar=core_cpu_timer_each_frame_media;
@@ -31337,8 +31337,10 @@ Calculando ese tiempo: 12% cpu
                                 if (valor_mostrar>999999) valor_mostrar=999999;
                                 //01234567890123456789012345678901
                                  // Last core each_frame: 999999 us
-                                sprintf (texto_buffer," Average: %ld us",valor_mostrar);
+                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+								 menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
 
 
                         if (menu_multitarea==0) menu_refresca_pantalla();
@@ -32040,8 +32042,14 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				
 					int i;
 					for (i=0;i<3;i++) {
-						if (i!=2) sprintf (texto_layer,"|----%s----|",tbblue_get_string_layer_prio(i,prio));
-						else sprintf (texto_layer,"v----  %s  ----v",tbblue_get_string_layer_prio(i,prio));
+						char nombre_capa[32];
+						strcpy(nombre_capa,tbblue_get_string_layer_prio(i,prio) );
+						if (!strcmp(nombre_capa,"ULA")) strcpy(nombre_capa,"  ULA  "); //meter espacios para centrarlo
+						//las otras capas son "Sprites" y "Layer 2" y ocupan lo mismo
+
+						if (i!=2) sprintf (texto_layer,"|----%s----|",nombre_capa);
+						else sprintf (texto_layer,"v----%s----v",nombre_capa);
+
 						menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
 					}
 				
@@ -34070,8 +34078,13 @@ void set_splash_text(void)
         char texto_edition[40];
         sprintf(texto_edition," ^^" EMULATOR_EDITION_NAME "^^ ");
 
+		int longitud_texto=strlen(texto_edition);
+		//temporal, como estamos usando parpadeo mediante caracteres ^^, no deben contar en la longitud
+		//cuando no se use parpadeo, quitar esta resta
+		longitud_texto -=4;
+
         //centramos texto
-        x=16-strlen(texto_edition)/2;
+        x=16-longitud_texto/2;
         if (x<0) x=0;
 
         menu_escribe_texto(x,3,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_edition);
