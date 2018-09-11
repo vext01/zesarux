@@ -4103,6 +4103,11 @@ void debug_get_ioports(char *stats_buffer)
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
   	}
 
+	if (diviface_enabled.v) {
+  		sprintf (buf_linea,"Diviface control port: %02X\n",diviface_control_register);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		
+	}
+
     if (superupgrade_enabled.v) {
       sprintf (buf_linea,"Superupgrade 43B port: %02X\n",superupgrade_puerto_43b);
       sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
