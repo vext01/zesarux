@@ -215,4 +215,6 @@ extern int tbblue_get_offset_start_layer2_reg(z80_byte register_value);
 
 extern z80_byte tbblue_get_layers_priorities(void);
 
+extern z80_byte tbblue_get_register_port(void);
+
 #endif

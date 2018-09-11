@@ -5969,6 +5969,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//if (puerto==0x24D5) return tbblue_read_port_24d5();
 		//if (puerto==0x24DD) return tbblue_config2;
 		//if (puerto==0x24DF) return tbblue_port_24df;
+		if (puerto==TBBLUE_REGISTER_PORT) return tbblue_get_register_port();
 		if (puerto==TBBLUE_VALUE_PORT) return tbblue_get_value_port();
 		if (puerto==TBBLUE_SPRITE_INDEX_PORT)	return tbblue_get_port_sprite_index();
 		if (puerto==TBBLUE_LAYER2_PORT)	return tbblue_get_port_layer2_value();

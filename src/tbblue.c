@@ -2823,6 +2823,11 @@ void tbblue_set_register_port(z80_byte value)
 	tbblue_last_register=value;
 }
 
+z80_byte tbblue_get_register_port(void)
+{
+	return tbblue_last_register;
+}
+
 void tbblue_get_string_palette_format(char *texto)
 {
 //if (value&128) screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
