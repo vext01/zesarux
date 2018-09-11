@@ -426,7 +426,7 @@ z80_byte diviface_peek_byte_to_internal_memory(z80_int dir)
 		z80_byte reg_mmu_value=return_tbblue_mmu_segment(dir);
 		if (reg_mmu_value!=255) {
 			//Mapeo diferente
-                	puntero=diviface_return_tbblue_memory_pointer(dir);
+            puntero=diviface_return_tbblue_memory_pointer(dir);
 		}
 	}
 	return *puntero;
