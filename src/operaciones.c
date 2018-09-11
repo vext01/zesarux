@@ -5979,7 +5979,8 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 		//Puertos DIVMMC/DIVIDE. El de Paginacion
 		//Este puerto solo se puede leer en TBBLUE y es necesario para que NextOS funcione bien
-		if (puerto_l==0xe3 && diviface_enabled.v) return diviface_control_register;
+		//if (puerto_l==0xe3 && diviface_enabled.v) return diviface_read_control_register();
+		if (puerto_l==0xe3) return diviface_read_control_register();
 
 		//TODO puerto UART de tbbue. De momento retornamos 0, en la demo de Pogie espera que ese valor (el bit 1 concretamente)
 		//sea 0 antes de empezar
@@ -5989,11 +5990,6 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 		//TODO puerto segundo joystick. De momento retornar 0
 		if (puerto==TBBLUE_SECOND_KEMPSTON_PORT) return 0;
-
-		//Puertos DIVMMC/DIVIDE. El de Paginacion
-		if (puerto_l==0xe3) {
-	       		return diviface_read_control_register();
-		}
 
 
 	}

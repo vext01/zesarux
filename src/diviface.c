@@ -212,7 +212,7 @@ void diviface_post_opcode_fetch(void)
 void diviface_write_control_register(z80_byte value)
 {
 
-	//printf ("Escribiendo registro de control diviface valor: 0x%02X (antes: %02XH, antes paginacion: %d)\n",value,diviface_control_register,diviface_paginacion_manual_activa.v);
+	//printf ("Escribiendo registro de control diviface valor: 0x%02X (antes: %02XH)\n",value,diviface_control_register);
 	if (value&128) {
 		//printf ("Activando paginacion\n");
 		//diviface_paginacion_manual_activa.v=1;
