@@ -227,6 +227,13 @@ void diviface_write_control_register(z80_byte value)
 }
 
 
+//Lectura de puerto de control divide/divmmc
+z80_byte diviface_read_control_register(void)
+{
+
+	return diviface_control_register;
+}
+
 //Rutinas originales antes de cambiarlas
 //void (*diviface_original_poke_byte)(z80_int dir,z80_byte valor);
 //void (*diviface_original_poke_byte_no_time)(z80_int dir,z80_byte valor);

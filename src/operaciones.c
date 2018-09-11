@@ -5990,6 +5990,11 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//TODO puerto segundo joystick. De momento retornar 0
 		if (puerto==TBBLUE_SECOND_KEMPSTON_PORT) return 0;
 
+		//Puertos DIVMMC/DIVIDE. El de Paginacion
+		if (puerto_l==0xe3) {
+	       		return diviface_read_control_register();
+		}
+
 
 	}
 
