@@ -18,7 +18,7 @@ Added menu item to create autoconfig files (.config)
 Added setting --random-r-register to generate random value for R register on every cold start, instead of the normal 0 value. Useful to avoid same R register in the start of games, when they use that register as a random value
 Added TBBlue Multiface emulation
 Added OSD Adventure Text Keyboard, useful for having typical words on Adventure Text Games (and of course any other kind of games and programs)
-Added tool to export vocabulary from a PAWS/QUILL/GAC game to list of words on OSD Adventure Text Keyboard
+Added tool to export vocabulary from a PAWS/QUILL/GAC game to a list of words in the OSD Adventure Text Keyboard
 Added setting to deny turbo mode on Spectrum Next, useful on slow machines
 Added TBBlue Debug menu: Sprite navigator, Video layers, Video info
 Added new versions of my Sped compiler:
@@ -43,15 +43,15 @@ etc...
 **INFIRED: returns 1 if last Z80 opcode was an IN operation
 **INTFIRED: returns 1 when an interrupt has been generated
 
-Improved hexdump menu: now you can edit memory. Now the menu is called "Hexadecimal Editor"
-Improved Cursor Draw program: now you can use kempston joystick. Load cursordr_mouse.tap instead of cursordr.tap
+Improved hexdump menu (called now "Hexadecimal Editor"): now you can edit memory and copy zones of memory
+Improved Cursor Draw program: now you can use kempston mouse. Load cursordr_mouse.tap instead of cursordr.tap
 Improved file converter: tzx to tap, tap to tzx
 
 Improved menu: 
 * menu windows: now can have more lines than 22, doing scroll
 * now you can write any ascii character on the menu
-* now you can use binary numbers on expressions
-* you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*)
+* now you can use binary numbers on expressions (suffix %)
+* you can now scroll with mouse on windows with text contents and file selector menus, by clicking the right progress symbol (*) or the arrows
 * now you can move cursor up/down with mouse on windows with text contents and file selector by clicking new arrow buttons
 * new file expander on file selector menu, using space key, for the following file types : .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O, Z88 Cards (.epr, .eprom, .flash)
 
