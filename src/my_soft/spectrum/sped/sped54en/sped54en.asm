@@ -22,9 +22,9 @@
 
 
 ;
-;SPED53  ,        ,       ~,
+;SPED54  ,        ,       ~,
 ;   (C) CESAR HERNANDEZ BANO
-;VERSION 1.2 EN
+;VERSION 1.3 EN
 
 
 ; V 1.0           (01/04/1995) - Preliminary version   - CESAR HERNANDEZ BANO
@@ -32,6 +32,7 @@
 ; V 1.1 EN/SPED52 (17/08/2018) - English version       - TIM GILBERTS
 ; V 1.2 SPED53    (04/09/2018) - Bug fixed version     - CESAR HERNANDEZ BANO
 ; V 1.2 EN/SPED53 (10/09/2018) - Bug fixed version     - CESAR HERNANDEZ BANO
+; V 1.3 EN/SPED54 (13/09/2018) - Bug fixed version     - CESAR HERNANDEZ BANO
 ;
 ;
 ;License: GNU GPL
@@ -804,7 +805,7 @@ TAMENU DEFM "A"
 HLPMNU XOR  A
        JP   HELP
 PRSPED CALL PRIMES
-       DEFM "SPED 1.2 EN@"
+       DEFM "SPED 1.3 EN@"
        RET
 PRCPYR CALL PRIMES
        DEFM "#   ,   "
