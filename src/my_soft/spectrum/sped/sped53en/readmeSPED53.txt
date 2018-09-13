@@ -23,7 +23,8 @@ Use the Browser to change the speed to 14Mhz - the editor and the assembly are
 really improved with this speed boost.  If you forget just tap F8 of course.
 
 Then use Mode 0 to load SPED53EN.TAP (or .RUN SPED53EN.TAP) from the tools
-directory.
+directory. You can also simply choose SPED53.BAS and it will ask you
+which language version you want to use.
 
 If you exit to BASIC (Capital B) then it will print an address:
 
@@ -330,7 +331,7 @@ For some more background:
 
 https://github.com/chernandezba/zesarux/blob/master/src/my_soft/spectrum/sped
 
-Licence
+License
 -------
 
     SPED53 - integrated Assembler/Monitor and Disassembler for the 128K Spectrum
@@ -363,14 +364,19 @@ SPED53.BAS   - Loader with language selection (Must use on DivMMC ESXDOS)
 SPED53EN.TAP - English version of the Assembler (Can load direct on NextZXOS)
 SPED53ES.TAP - Spanish version of the Assembler (Can load direct on NextZXOS)
 
-sources/sped53
+sources/sped52
 
-SPE53AEN.TAP - English source (and object code) for SPED53 1.1 (A) ENglish
-SPE53AES.TAP - Spanish source (and object code) for SPED53 1.1 (A) ESpañol
+SPE53AEN.TAP - English source (and object code) for SPED53 1.2 (A) ENglish
+SPE53AES.TAP - Spanish source (and object code) for SPED53 1.2 (A) ESpañol
 
 docs/
 
 readmeSPED53.txt
+
+SPED53 changes
+--------------
+
+Fixed bug when saving object code, was saving always from 49152
 
 
 Release 2 changes
