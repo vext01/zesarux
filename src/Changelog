@@ -24,7 +24,8 @@ Added TBBlue Debug menu: Sprite navigator, Video layers, Video info
 Added new versions of my Sped compiler:
 *Sped52en: English translation by Tim Gilberts, based on Sped52. In Sped format
 *Sped53:   Fixed bug from Sped52 (object code was always saved from 49152), based on Sped52. Spanish Version. In Sped format
-*Sped53en: Fixed bug from Sped52 + English translation by Tim Gilberts, based on Sped52en and Sped53. English Version. In plain text format
+*Sped53en: Fixed bug from Sped52 + English translation + minor changes in Spanish version by Tim Gilberts, based on Sped52en and Sped53. English and Spanish Version. In Sped format
+*Sped54en: Fixed bug from Sped52 + English translation by Tim Gilberts, based on Sped52en and Sped53. English Version. In plain text format
 
 
 Improved debugger:

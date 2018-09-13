@@ -256,7 +256,7 @@ bit blocks...
 
 Source Code
 -----------
-Attach the SPE52AEN.TAP for English or SPE52AES.TAP for Spanish which will be in
+Attach the SPE53AEN.TAP for English or SPE53AES.TAP for Spanish which will be in
 the sources folder.  Just use L to load the first set of blocks!
 
 You can then go to each block and use E to edit them and look through the
@@ -365,8 +365,8 @@ SPED53ES.TAP - Spanish version of the Assembler (Can load direct on NextZXOS)
 
 sources/sped53
 
-SPE52AEN.TAP - English source (and object code) for SPED53 1.1 (A) ENglish
-SPE52AES.TAP - Spanish source (and object code) for SPED53 1.1 (A) ESpañol
+SPE53AEN.TAP - English source (and object code) for SPED53 1.1 (A) ENglish
+SPE53AES.TAP - Spanish source (and object code) for SPED53 1.1 (A) ESpañol
 
 docs/
 
