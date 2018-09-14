@@ -2493,14 +2493,14 @@ void tbblue_set_emulator_setting_reg_8(void)
 	//1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
     //2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)	  
 	if (value&32) {
-		//ABC
-		ay3_stereo_mode=2;
-		debug_printf (VERBOSE_DEBUG,"Setting ABC stereo");
-	}
-	else {
 		//ACB
 		ay3_stereo_mode=1;
 		debug_printf (VERBOSE_DEBUG,"Setting ACB stereo");
+	}
+	else {
+		//ABC
+		ay3_stereo_mode=2;
+		debug_printf (VERBOSE_DEBUG,"Setting ABC stereo");
 	}
 
 
