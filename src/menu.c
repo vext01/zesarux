@@ -10562,9 +10562,7 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 	//Metodo:
 	//Empezamos en direccion-10 (en QL: direccion-30)
 	//inicializamos un puntero ficticio de direccion a 0, mientras que mantenemos la posicion de memoria de lectura inicial en direccion-10/30
-	//Vamos leyendo opcodes. Cuando el puntero ficticio este >=10 (o 30), nuestra direccion final será la del opcode anterior
-	//opcode leido
-
+	//Vamos leyendo opcodes. Cuando el puntero ficticio este >=10 (o 30), nuestra direccion final será la inicial - longitud opcode anterior
 
 	char buffer[32];
 	size_t longitud_opcode;
@@ -10591,14 +10589,14 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 		debugger_disassemble(buffer,30,&longitud_opcode,dir);
 		
-		//dir=adjust_address_memory_size(dir);	
-
 		dir+=longitud_opcode;
 		dir=adjust_address_memory_size(dir);
 		puntero_ficticio+=longitud_opcode;
 
+		//printf ("dir %X dir_anterior %X puntero_ficticio %d\n",dir,dir_anterior,puntero_ficticio);
+
 		if (puntero_ficticio>=decremento) {
-			return dir_anterior;
+			return menu_debug_hexdump_adjusta_en_negativo(dir_inicial-longitud_opcode,1);
 		}
 		
 
