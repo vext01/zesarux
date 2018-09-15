@@ -10478,7 +10478,7 @@ menu_z80_moto_int menu_debug_disassemble_bajar(menu_z80_moto_int dir_inicial)
 	return dir_inicial;
 }
 
-menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
+menu_z80_moto_int old_menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 {
 	//Subir 1 opcode en el listado
 
@@ -10550,6 +10550,58 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 		opcodes_saltados++;
 		//usleep(100000);
+	} while (1);
+
+
+}
+
+menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
+{
+	//Subir 1 opcode en el listado
+
+	//Metodo:
+	//Empezamos en direccion-10 (en QL: direccion-30)
+	//inicializamos un puntero ficticio de direccion a 0, mientras que mantenemos la posicion de memoria de lectura inicial en direccion-10/30
+	//Vamos leyendo opcodes. Cuando el puntero ficticio este >=10 (o 30), nuestra direccion final será la del opcode anterior
+	//opcode leido
+
+
+	char buffer[32];
+	size_t longitud_opcode;
+
+	menu_z80_moto_int dir;
+
+	int decremento=10;
+
+	if (CPU_IS_MOTOROLA) decremento=30; //En el caso de motorola mejor empezar antes
+
+
+	dir=dir_inicial-decremento;
+
+	dir=menu_debug_hexdump_adjusta_en_negativo(dir,1);
+
+	menu_z80_moto_int dir_anterior=dir;
+
+	int puntero_ficticio=0;
+
+
+	do {
+
+		dir_anterior=dir;
+
+		debugger_disassemble(buffer,30,&longitud_opcode,dir);
+		
+		//dir=adjust_address_memory_size(dir);	
+
+		dir+=longitud_opcode;
+		dir=adjust_address_memory_size(dir);
+		puntero_ficticio+=longitud_opcode;
+
+		if (puntero_ficticio>=decremento) {
+			return dir_anterior;
+		}
+		
+
 	} while (1);
 
 
