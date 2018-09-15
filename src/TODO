@@ -26,6 +26,7 @@ renombrarla
 
 -Actualizar Next SD
 
+-zrcp smartload y snapshot-load parametro para no tener que entrar en cpu step mode
 
 -tab en curses en menu filesel no lo lee
 
