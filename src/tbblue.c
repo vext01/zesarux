@@ -1043,24 +1043,22 @@ done < /tmp/archivo_lista.txt
 
 	for (j=0;j<16;j++) {
 		for (i=0;i<16;i++) {
-			tbblue_palette_ula_first[j*16+i]=tbblue_default_ula_colours[i];
-			tbblue_palette_ula_second[j*16+i]=tbblue_default_ula_colours[i];
+			int colorpaleta=tbblue_default_ula_colours[i];
+
+
+	//bright magenta son colores transparentes por defecto (1C7H y 1C6H  / 2 = E3H)
+	//lo cambio a 1CF, que es un color FF24FFH, que no es magenta puro, pero evita el problema de transparente por defecto
+	//esto lo corrige igualmente nextos al arrancar, pero si arrancamos tbblue en modo fast-boot, pasaria que los bright
+	//magenta se verian transparentes
+			if (i==11) colorpaleta=0x1CF;
+
+
+			tbblue_palette_ula_first[j*16+i]=colorpaleta;
+			tbblue_palette_ula_second[j*16+i]=colorpaleta;
+
 		}
 	}
 
-	/*
-
- 	
-	tbblue_palette_ula_first[8]=tbblue_palette_ula_first[8+128]=0;
-	tbblue_palette_ula_first[9]=tbblue_palette_ula_first[9+128]=7;
-	tbblue_palette_ula_first[10]=tbblue_palette_ula_first[10+128]=448;
-	tbblue_palette_ula_first[11]=tbblue_palette_ula_first[11+128]=455; 
-
-	 //tanto 455 como 454 (1C7H y 1C6H) son colores transparentes por defecto (1C7H y 1C6H  / 2 = E3H)
-	tbblue_palette_ula_first[12]=tbblue_palette_ula_first[12+128]=56;
-	tbblue_palette_ula_first[13]=tbblue_palette_ula_first[13+128]=63;
-	tbblue_palette_ula_first[14]=tbblue_palette_ula_first[14+128]=504;
-	tbblue_palette_ula_first[15]=tbblue_palette_ula_first[15+128]=511;*/
 
 
 }
