@@ -579,13 +579,9 @@ z80_int tbblue_palette_sprite_second[256];
 //Si en zona pantalla y todo es transparente, se pone un 0
 //Layers con el indice al olor final en la paleta RGB9 (0..511)
 
-#define TBBLUE_LAYERS_PIXEL_WIDTH 512
+//borde izquierdo + pantalla + borde derecho
+#define TBBLUE_LAYERS_PIXEL_WIDTH (48+256+48)
 
-//Por que ancho 512? Es mas de lo necesario. 
-//256 pixeles de ancho + 48 sumando borde izquierdo y derecho dan 304
-//es mas, probando a donde llega el indice "posicion_array_layer" es efectivamente 304
-//Por lo que con 304 seria mas que suficiente
-//Seguramente este 512 ha sido una confusión debido a que en el comentario anterior se habla de colores RGB9 desde 0 hasta 511
 z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 z80_int tbblue_layer_layer2[TBBLUE_LAYERS_PIXEL_WIDTH];
 z80_int tbblue_layer_sprites[TBBLUE_LAYERS_PIXEL_WIDTH];
@@ -1366,6 +1362,8 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 
 	//sprite_line[x]=color;
 	tbblue_layer_sprites[xfinal]=color_final;
+
+	//if (xfinal<0 || xfinal>TBBLUE_LAYERS_PIXEL_WIDTH) printf ("out of range x sprites: %d\n",xfinal);
 
 }
 
@@ -3718,17 +3716,18 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 	z80_int *clear_p_sprites=tbblue_layer_sprites;
 
 	for (i=0;i<TBBLUE_LAYERS_PIXEL_WIDTH;i++) {
-		tbblue_layer_ula[i]=TBBLUE_TRANSPARENT_REGISTER_9;
+		/*tbblue_layer_ula[i]=TBBLUE_TRANSPARENT_REGISTER_9;
 		tbblue_layer_layer2[i]=TBBLUE_TRANSPARENT_REGISTER_9;
-		tbblue_layer_sprites[i]=TBBLUE_SPRITE_TRANS_FICT;
+		tbblue_layer_sprites[i]=TBBLUE_SPRITE_TRANS_FICT;*/
 
-		/**clear_p_ula=TBBLUE_TRANSPARENT_REGISTER_9;
+		//Esto es un pelin mas rapido hacerlo asi, con punteros e incrementarlos, en vez de indices a array
+		*clear_p_ula=TBBLUE_TRANSPARENT_REGISTER_9;
 		*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
 		*clear_p_sprites=TBBLUE_SPRITE_TRANS_FICT;
 
 		clear_p_ula++;
 		clear_p_layer2++;
-		clear_p_sprites++;*/
+		clear_p_sprites++;
 
 	}
 
@@ -4089,6 +4088,8 @@ z80_bit tbblue_force_disable_layer_layer_two={0};
 
 	z80_int color;
 	//z80_int color_final=;
+
+	//printf ("ancho total: %d size layers: %d\n",get_total_ancho_rainbow(),TBBLUE_LAYERS_PIXEL_WIDTH );
 
 	for (i=0;i<get_total_ancho_rainbow();i++) {
 
