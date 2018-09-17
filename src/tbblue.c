@@ -3893,6 +3893,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				//Obtenemos color
 				//tin6=col6;
 				pap6=get_timex_paper_mode6_color();
+				printf ("papel: %d\n",pap6);
 
 				//Y con brillo
 				col6=((pap6*8)+tin6)+64;
@@ -3922,9 +3923,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 	int posicion_array_pixeles_atributos=0;
         for (x=0;x<32;x++) {
 
-
-                        //byte_leido=screen[direccion];
-                        byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+            byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
 			//Timex. Reducir 512x192 a 256x192.
 			//Obtenemos los dos bytes implicados, metemos en variable de 16 bits,
@@ -3953,7 +3952,6 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
             attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
-
                
 
 			get_pixel_color_tbblue(attribute,&ink,&paper);

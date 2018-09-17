@@ -2385,25 +2385,6 @@ void scr_refresca_pantalla_timex_512x192(void)
 
 
 
-        //int offsetx;
-        //int offsety;
-
-                //offsetx=LEFT_BORDER*border_enabled.v;
-                //offsety=TOP_BORDER*border_enabled.v;
-        //int xzoom=x*zoom_x;
-        //int yzoom=y*zoom_y;
-
-
-
-        //Escalado a zoom indicado
-        //for (zx=0;zx<zoom_x;zx++) {
-          //      for (zy=0;zy<zoom_y;zy++) {
-            //            scr_putpixel(offsetx+xzoom+zx,offsety+yzoom+zy,color);
-              //  }
-        //}
-
-
-
 
 
        z80_byte *screen=get_base_mem_pantalla();
@@ -2441,6 +2422,12 @@ BITS INK PAPER BORDER
 					pap6 +=16;
 					tin6=ulaplus_palette_table[tin6]+ULAPLUS_INDEX_FIRST_COLOR;
 					pap6=ulaplus_palette_table[pap6]+ULAPLUS_INDEX_FIRST_COLOR;
+				}
+
+				//Si tbblue
+				if (MACHINE_IS_TBBLUE) {
+					z80_byte attribute_temp=((pap6*8)+tin6)+64;
+					get_pixel_color_tbblue(attribute_temp,&tin6,&pap6);
 				}
 
 		z80_int incremento_offset=0;
