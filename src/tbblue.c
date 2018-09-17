@@ -3990,21 +3990,21 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				
 				//(W) 0x1A (26) => Clip Window ULA/LoRes
 				if (posx>=clip_window_ula[0] && posx<=clip_window_ula[1] && scanline_copia>=clip_window_ula[2] && scanline_copia<=clip_window_ula[3]) {
-				if (!tbblue_force_disable_layer_ula.v) tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
+					if (!tbblue_force_disable_layer_ula.v) tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
 				}
 
 				//Capa layer2
 				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
 					if (posx>=clip_window_layer2[0] && posx<=clip_window_layer2[1] && scanline_copia>=clip_window_layer2[2] && scanline_copia<=clip_window_layer2[3]) {
-					z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
-					z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
-					tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
+						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
+						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
+						tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
 					}
 				}
 
 				posicion_array_layer++;
 
-                                byte_leido=byte_leido<<1;
+                byte_leido=byte_leido<<1;
 
 
 					
