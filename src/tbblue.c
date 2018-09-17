@@ -3893,7 +3893,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				//Obtenemos color
 				//tin6=col6;
 				pap6=get_timex_paper_mode6_color();
-				printf ("papel: %d\n",pap6);
+				//printf ("papel: %d\n",pap6);
 
 				//Y con brillo
 				col6=((pap6*8)+tin6)+64;

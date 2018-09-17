@@ -2396,8 +2396,10 @@ void scr_refresca_pantalla_timex_512x192(void)
 				tin6=get_timex_ink_mode6_color();
 
 
-                                //Obtenemos color
-                                pap6=get_timex_paper_mode6_color();
+                //Obtenemos color
+                pap6=get_timex_paper_mode6_color();
+
+				//printf ("antes tin6: %d pap6: %d\n",tin6,pap6);
 
 
 				//Poner brillo1
@@ -2426,8 +2428,11 @@ BITS INK PAPER BORDER
 
 				//Si tbblue
 				if (MACHINE_IS_TBBLUE) {
-					z80_byte attribute_temp=((pap6*8)+tin6)+64;
+					z80_byte attribute_temp=(pap6&7)*8  + (tin6&7) + 64;
 					get_pixel_color_tbblue(attribute_temp,&tin6,&pap6);
+					tin6=RGB9_INDEX_FIRST_COLOR+tbblue_get_palette_active_ula(tin6);
+					pap6=RGB9_INDEX_FIRST_COLOR+tbblue_get_palette_active_ula(pap6);
+					//printf ("attr: %d tin6: %d pap6: %d\n",attribute_temp,tin6,pap6);
 				}
 
 		z80_int incremento_offset=0;
