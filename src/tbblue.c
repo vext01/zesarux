@@ -579,15 +579,16 @@ z80_int tbblue_palette_sprite_second[256];
 //Si en zona pantalla y todo es transparente, se pone un 0
 //Layers con el indice al olor final en la paleta RGB9 (0..511)
 
+#define TBBLUE_LAYERS_PIXEL_WIDTH 512
 
 //Por que ancho 512? Es mas de lo necesario. 
 //256 pixeles de ancho + 48 sumando borde izquierdo y derecho dan 304
 //es mas, probando a donde llega el indice "posicion_array_layer" es efectivamente 304
 //Por lo que con 304 seria mas que suficiente
 //Seguramente este 512 ha sido una confusión debido a que en el comentario anterior se habla de colores RGB9 desde 0 hasta 511
-z80_int tbblue_layer_ula[512];
-z80_int tbblue_layer_layer2[512];
-z80_int tbblue_layer_sprites[512];
+z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
+z80_int tbblue_layer_layer2[TBBLUE_LAYERS_PIXEL_WIDTH];
+z80_int tbblue_layer_sprites[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 /* 
 Clip window registers
@@ -3711,10 +3712,24 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 	if (if_store_scanline_interlace(t_scanline_draw)==0) return;
 
 	int i;
-	for (i=0;i<512;i++) {
+
+	z80_int *clear_p_ula=tbblue_layer_ula;
+	z80_int *clear_p_layer2=tbblue_layer_layer2;
+	z80_int *clear_p_sprites=tbblue_layer_sprites;
+
+	for (i=0;i<TBBLUE_LAYERS_PIXEL_WIDTH;i++) {
 		tbblue_layer_ula[i]=TBBLUE_TRANSPARENT_REGISTER_9;
 		tbblue_layer_layer2[i]=TBBLUE_TRANSPARENT_REGISTER_9;
 		tbblue_layer_sprites[i]=TBBLUE_SPRITE_TRANS_FICT;
+
+		/**clear_p_ula=TBBLUE_TRANSPARENT_REGISTER_9;
+		*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
+		*clear_p_sprites=TBBLUE_SPRITE_TRANS_FICT;
+
+		clear_p_ula++;
+		clear_p_layer2++;
+		clear_p_sprites++;*/
+
 	}
 
 	int bordesupinf=0;
