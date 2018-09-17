@@ -3733,13 +3733,8 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 	int bordesupinf=0;
 
-  //En zona visible pantalla (no borde superior ni inferior)
-  if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
-
-
-
-
-
+  	//En zona visible pantalla (no borde superior ni inferior)
+  	if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
 
 
         //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
@@ -3762,44 +3757,41 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
         int x,bit;
         z80_int direccion;
-	//z80_int dir_atributo;
         z80_byte byte_leido;
 
 
         int color=0;
-        //int fila;
 
         z80_byte attribute;
-        //z80_byte bright,flash;
-	z80_int ink,paper;
-	//z80_int aux;
+		z80_int ink,paper;
+
 
 
         z80_byte *screen=get_base_mem_pantalla();
 
         direccion=screen_addr_table[(scanline_copia<<5)];
 
-				//Inicializar puntero a layer2 de tbblue, irlo incrementando a medida que se ponen pixeles
-				//Layer2 siempre se dibuja desde registro que indique pagina 18. Registro 19 es un backbuffer pero siempre se dibuja desde 18
-				//int tbblue_layer2_offset=tbblue_registers[18]&63;
+		//Inicializar puntero a layer2 de tbblue, irlo incrementando a medida que se ponen pixeles
+		//Layer2 siempre se dibuja desde registro que indique pagina 18. Registro 19 es un backbuffer pero siempre se dibuja desde 18
+		//int tbblue_layer2_offset=tbblue_registers[18]&63;
 
-				//tbblue_layer2_offset*=16384;
-
-
-
-				int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
+		//tbblue_layer2_offset*=16384;
 
 
-				//Mantener el offset y en 0..191
-				z80_byte tbblue_reg_23=tbblue_registers[23];
+
+		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
 
 
-				tbblue_reg_23 +=scanline_copia;
-				tbblue_reg_23=tbblue_reg_23 % 192;
+		//Mantener el offset y en 0..191
+		z80_byte tbblue_reg_23=tbblue_registers[23];
 
-				tbblue_layer2_offset +=tbblue_reg_23*256;
 
-				z80_byte tbblue_reg_22=tbblue_registers[22];
+		tbblue_reg_23 +=scanline_copia;
+		tbblue_reg_23=tbblue_reg_23 % 192;
+
+		tbblue_layer2_offset +=tbblue_reg_23*256;
+
+		z80_byte tbblue_reg_22=tbblue_registers[22];
 
 /*
 (R/W) 22 => Layer2 Offset X
@@ -3814,32 +3806,32 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
         //dir_atributo=6144+(fila*32);
 
 
-	z80_byte *puntero_buffer_atributos;
+		z80_byte *puntero_buffer_atributos;
 
 
-	//Si modo timex 512x192 pero se hace modo escalado
-	//Si es modo timex 512x192, llamar a otra funcion
+		//Si modo timex 512x192 pero se hace modo escalado
+		//Si es modo timex 512x192, llamar a otra funcion
         if (timex_si_modo_512_y_zoom_par() ) {
-                //Si zoom x par
-                if (timex_mode_512192_real.v) {
-                	return;
+        	//Si zoom x par
+            if (timex_mode_512192_real.v) {
+            	return;
         	}
         }
 
 
-	//temporal modo 6 timex 512x192 pero hacemos 256x192
-	z80_byte temp_prueba_modo6[SCANLINEBUFFER_ONE_ARRAY_LENGTH];
-	z80_byte col6;
-	z80_byte tin6, pap6;
+		//temporal modo 6 timex 512x192 pero hacemos 256x192
+		z80_byte temp_prueba_modo6[SCANLINEBUFFER_ONE_ARRAY_LENGTH];
+		z80_byte col6;
+		z80_byte tin6, pap6;
 
-	z80_byte timex_video_mode=timex_port_ff&7;
-	z80_byte timexhires_resultante;
-	z80_int timexhires_origen;
+		z80_byte timex_video_mode=timex_port_ff&7;
+		z80_byte timexhires_resultante;
+		z80_int timexhires_origen;
 
-	z80_bit si_timex_hires={0};
+		z80_bit si_timex_hires={0};
 
-	//Por defecto
-	puntero_buffer_atributos=scanline_buffer;
+		//Por defecto
+		puntero_buffer_atributos=scanline_buffer;
 
 	/* modo lores
 	(R/W) 0x15 (21) => Sprite and Layers system
@@ -3847,35 +3839,33 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
   bits 6-5 = Reserved, must be 0
   	*/
 
-  	int tbblue_lores=tbblue_registers[0x15] & 128;
+	  	int tbblue_lores=tbblue_registers[0x15] & 128;
 
-  	z80_byte *lores_pointer;
-  	z80_byte posicion_x_lores_pointer=0;
+  		z80_byte *lores_pointer;
+  		z80_byte posicion_x_lores_pointer=0;
 
-  	if (tbblue_lores) {
-  		int linea_lores=scanline_copia;  
-  		//Sumamos offset y
-  		/*
-  		(R/W) 0x33 (51) => LoRes Offset Y
-  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
-  Being only 96 pixels, this allows the display to scroll in "half-pixels",
-  at the same resolution and smoothness as Layer 2.
-  		*/
-  		linea_lores +=tbblue_registers[0x33];
+  		if (tbblue_lores) {
+	  		int linea_lores=scanline_copia;  
+  			//Sumamos offset y
+	  		/*
+  			(R/W) 0x33 (51) => LoRes Offset Y
+  			bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+  			Being only 96 pixels, this allows the display to scroll in "half-pixels",
+  			at the same resolution and smoothness as Layer 2.
+  			*/
+  			linea_lores +=tbblue_registers[0x33];
 
-  		linea_lores=linea_lores % 192;
-  		//if (linea_lores>=192) linea_lores -=192;
+  			linea_lores=linea_lores % 192;
+  			//if (linea_lores>=192) linea_lores -=192;
 
-  		lores_pointer=get_lores_pointer(linea_lores/2);  //admite hasta y=95, dividimos entre 2 linea actual
+  			lores_pointer=get_lores_pointer(linea_lores/2);  //admite hasta y=95, dividimos entre 2 linea actual
 
-
-
-  		//Y scroll horizontal
-  		posicion_x_lores_pointer=tbblue_registers[0x32];
-  	}
+	  		//Y scroll horizontal
+  			posicion_x_lores_pointer=tbblue_registers[0x32];
+  		}
 
 
-	if (timex_video_emulation.v) {
+		if (timex_video_emulation.v) {
 		//Modos de video Timex
 		/*
 000 - Video data at address 16384 and 8x8 color attributes at address 22528 (like on ordinary Spectrum);
@@ -3886,10 +3876,10 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 110 - Extended resolution: without color attributes, even columns of video data are taken from address 16384, and odd columns of video data are taken from address 24576
 		*/
-		switch (timex_video_mode) {
+			switch (timex_video_mode) {
 
-			case 4:
-			case 6:
+				case 4:
+				case 6:
 				//512x192 monocromo. aunque hacemos 256x192
 				//y color siempre fijo
 				/*
@@ -3923,19 +3913,19 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 					temp_prueba_modo6[i]=col6;
 				}
 				si_timex_hires.v=1;
-			break;
+				break;
 
 
+			}
 		}
-	}
 
-	int posicion_array_layer=0;
+		int posicion_array_layer=0;
 
-	posicion_array_layer +=screen_total_borde_izquierdo*border_enabled.v;
+		posicion_array_layer +=screen_total_borde_izquierdo*border_enabled.v;
 
 
-	int posicion_array_pixeles_atributos=0;
-        for (x=0;x<32;x++) {
+		int posicion_array_pixeles_atributos=0;
+       	for (x=0;x<32;x++) {
 
             byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
@@ -3946,26 +3936,26 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 			if (si_timex_hires.v) {
 
-					//comprimir bytes
-					timexhires_resultante=0;
-					//timexhires_origen=byte_leido*256+screen[direccion+8192];
-					timexhires_origen=screen[direccion]*256+screen[direccion+8192];
+				//comprimir bytes
+				timexhires_resultante=0;
+				//timexhires_origen=byte_leido*256+screen[direccion+8192];
+				timexhires_origen=screen[direccion]*256+screen[direccion+8192];
 
-					//comprimir pixeles
-					int i;
-					for (i=0;i<8;i++) {
-						timexhires_resultante=timexhires_resultante<<1;
-						if ( (timexhires_origen&(32768+16384))   ) timexhires_resultante |=1;
-						timexhires_origen=timexhires_origen<<2;
-					}
+				//comprimir pixeles
+				int i;
+				for (i=0;i<8;i++) {
+					timexhires_resultante=timexhires_resultante<<1;
+					if ( (timexhires_origen&(32768+16384))   ) timexhires_resultante |=1;
+					timexhires_origen=timexhires_origen<<2;
+				}
 
-					byte_leido=timexhires_resultante;
+				byte_leido=timexhires_resultante;
 
 			}
 
 
 
-            attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+           	attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
                
 
 			get_pixel_color_tbblue(attribute,&ink,&paper);
@@ -3978,7 +3968,6 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 			//cambiada_paper=0;
 
             for (bit=0;bit<8;bit++) {
-
 				
 				color= ( byte_leido & 128 ? ink : paper ) ;
 
@@ -4016,21 +4005,15 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 				posicion_array_layer++;
 
-                byte_leido=byte_leido<<1;
-
-
-					
+           	    byte_leido=byte_leido<<1;
+				
 				tbblue_reg_22++;
             }
 			direccion++;
 
-
-        }
+	    }
 
 		//printf ("posicion_array_layer: %d\n",posicion_array_layer);
-
-
-
 
 	}
 
@@ -4051,44 +4034,29 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 	
 	if (mostrar_sprites && !tbblue_force_disable_layer_sprites.v) {
-	tbsprite_do_overlay();
+		tbsprite_do_overlay();
 	}
-/*
-z80_bit tbblue_force_disable_layer_ula={0};
-z80_bit tbblue_force_disable_layer_sprites={0};
-z80_bit tbblue_force_disable_layer_layer_two={0};
-*/
 
-	//int i;
 
-	//int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+    //la copiamos a buffer rainbow
+    //z80_int *puntero_buf_rainbow;
+    //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+	int y;
 
-        //la copiamos a buffer rainbow
-        //z80_int *puntero_buf_rainbow;
-        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-        int y;
+    y=t_scanline_draw-screen_invisible_borde_superior;
+    if (border_enabled.v==0) y=y-screen_borde_superior;
 
-        y=t_scanline_draw-screen_invisible_borde_superior;
-        if (border_enabled.v==0) y=y-screen_borde_superior;
-
-	//puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
 	z80_int *puntero_final_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
 
 	//Por defecto
 	//sprites over the Layer 2, over the ULA graphics
 
-	//p_layer_first=tbblue_layer_sprites;
-	//p_layer_second=tbblue_layer_layer2;
-	//p_layer_third=tbblue_layer_ula;
 
 	tbblue_set_layer_priorities();
 
 
-
-
 	z80_int color;
-	//z80_int color_final=;
-
+	
 	//printf ("ancho total: %d size layers: %d\n",get_total_ancho_rainbow(),TBBLUE_LAYERS_PIXEL_WIDTH );
 
 	for (i=0;i<get_total_ancho_rainbow();i++) {
@@ -4110,10 +4078,10 @@ z80_bit tbblue_force_disable_layer_layer_two={0};
 				if (!tbblue_fn_pixel_layer_transp_third(color) ) {
 					*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
 				}
-				//TODO: que pasa si las tres capas son transparentes
+					
 				else {
 					if (bordesupinf) {
-					//Si estamos en borde inferior o superior, no hacemos nada, dibujar color borde
+						//Si estamos en borde inferior o superior, no hacemos nada, dibujar color borde
 					}
 
 					else {
@@ -4123,8 +4091,8 @@ z80_bit tbblue_force_disable_layer_layer_two={0};
 							//Poner color indicado por registro:
 							/*
 							(R/W) 0x4A (74) => Transparency colour fallback
-  							bits 7-0 = Set the 8 bit colour.
-  							(0 = black on reset on reset)
+ 								bits 7-0 = Set the 8 bit colour.
+ 								(0 = black on reset on reset)
 							*/
 
 							//Suponemos que es un color tal cual, no un indice a paleta, multiplicado por 2
@@ -4132,9 +4100,8 @@ z80_bit tbblue_force_disable_layer_layer_two={0};
 							fallbackcolour *=2;
 							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
 						}
-
 						else {
-						//Es borde. dejar ese color
+							//Es borde. dejar ese color
 						}
 					
 					}
