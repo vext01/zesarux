@@ -2429,7 +2429,12 @@ BITS INK PAPER BORDER
 				//Si tbblue
 				if (MACHINE_IS_TBBLUE) {
 					z80_byte attribute_temp=(pap6&7)*8  + (tin6&7) + 64;
-					get_pixel_color_tbblue(attribute_temp,&tin6,&pap6);
+					z80_int tinta_temp=tin6;
+					z80_int papel_temp=pap6;
+					get_pixel_color_tbblue(attribute_temp,&tinta_temp,&papel_temp);
+
+					tin6=tinta_temp;
+					pap6=papel_temp;
 					tin6=RGB9_INDEX_FIRST_COLOR+tbblue_get_palette_active_ula(tin6);
 					pap6=RGB9_INDEX_FIRST_COLOR+tbblue_get_palette_active_ula(pap6);
 					//printf ("attr: %d tin6: %d pap6: %d\n",attribute_temp,tin6,pap6);
