@@ -9,7 +9,7 @@ Added joystick action to change emulated joystick type: Sinclair, Kempston, etc
 Added support to show some unicode (utf8) characters on menu
 Added Basic viewer for .bas basic files (plain ascii or Basic Spectrum data with tokens), .baszx80 (Basic ZX80 with tokens), .baszx81 (Basic ZX81 with tokens), Z88 basic files with tokens
 Added Sped format file viewer
-Added ZXUno DMA emulation
+Added ZXUno DMA emulation. Added some dma demos to zxuno.mmc image
 Added TBBlue/DataGear/MB02 DMA emulation
 Added Beeper Piano Menu
 Added new Z80 TBBlue opcodes and deleted obsolete ones
