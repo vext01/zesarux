@@ -7113,18 +7113,16 @@ struct sched_param sparam;
 	//desactivado normalmente en versiones snapshot
 	signal(SIGFPE, floatingpoint_signal_handler);
 
-  //Capturar sigbus. TODO probar en que casos salta
-  //desactivado normalmente en versiones snapshot
-  //signal(SIGBUS, sigbus_signal_handler);
-
-
-
 	//Capturar segint (CTRL+C)
 	signal(SIGINT, segint_signal_handler);
 
 	//Capturar segterm
 	signal(SIGTERM, segterm_signal_handler);
 
+
+  //Capturar sigbus. TODO probar en que casos salta
+  //desactivado normalmente en versiones snapshot
+  //signal(SIGBUS, sigbus_signal_handler);
 
 
 	//Inicio bucle principal

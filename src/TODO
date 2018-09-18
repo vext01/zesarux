@@ -1,3 +1,5 @@
+--- Para esta version 7.1:
+
 soporte stereo. De momento esta:
 -null ok
 -coreaudio ok
@@ -22,9 +24,11 @@ revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y q
 renombrarla
 ->core reduced usara mono?
 
---- Cosas para la siguiente version
+-Agregar demos dma zxuno a imagen mmc
 
--Actualizar Next SD
+
+--- Cosas para la siguiente version 7.2
+
 
 -zrcp smartload y snapshot-load parametro para no tener que entrar en cpu step mode
 
@@ -34,7 +38,7 @@ renombrarla
 
 -y copy bytes desde menu debug quiza deberia usar memory zone
 
--emulator edition name en pantalla de bienvenida parpadeando, solo para esta versión 7.1
+-emulator edition name en pantalla de bienvenida parpadeando, solo era para la versión 7.1
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 
@@ -42,33 +46,6 @@ renombrarla
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
-
--Para cursor draw:
-*iconos con mas de una opcion, que se les indique de alguna manera. con un punto??? Con 3 pixeles en arriba derecha asi:
-  ##
-   #
-*que pregunte si hay soporte mouse el programa basic. Si no, activar algun flag en alguna dirección baja (ejemplo 30000)
-y al inicio de cursor draw lo lea de ahi y lo guarde en un setting suyo
-*control de raton en todos sitios. Por ejemplo en aplicar sprites no se mueve
-
-En cursor draw, Para sumar incremento de kempston mouse, hay que saber primero si incremento es positivo o negativo. Para eso , al restar posición final, si no hay acarreo, es positivo. 
-Si es positivo, hay que sumar ese salto a posición cursor. Si hay acarreo, significa que va más allá de 255 y por tanto, no actualizamos cursor
-Si es negativo, restamos ese salto (mediante neg y haciendo sbc) a posición cursor. Si hay acarreo, significa que va menos de 0 y por tanto no actualizamos cursor. 
-En caso de suma de posición vertical no permitir que vaya más allá de 191 tampoco. 
-
-Probar también con Fuse u otro emulador que soporte kempston mouse 
-El ORG deberia estar ajustado para que acabe en 65536 el final
-
--org 58068
--ent 58068
-->bajamos todo 1000 bytes
-
--org 57068
--ent 57068
-
-
-tamanyo total sprites?
- 
 
 TBBLUE: 
  
@@ -96,7 +73,6 @@ En ql llega a buscar?
 Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
 -Salida 16 bits sonido?
-
 
 -revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
 o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
@@ -407,6 +383,36 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 -----------------------
 
+
+--- Programas mios de Spectrum ---
+
+-Para cursor draw:
+*iconos con mas de una opcion, que se les indique de alguna manera. con un punto??? Con 3 pixeles en arriba derecha asi:
+  ##
+   #
+*que pregunte si hay soporte mouse el programa basic. Si no, activar algun flag en alguna dirección baja (ejemplo 30000)
+y al inicio de cursor draw lo lea de ahi y lo guarde en un setting suyo
+*control de raton en todos sitios. Por ejemplo en aplicar sprites no se mueve
+
+En cursor draw, Para sumar incremento de kempston mouse, hay que saber primero si incremento es positivo o negativo. Para eso , al restar posición final, si no hay acarreo, es positivo. 
+Si es positivo, hay que sumar ese salto a posición cursor. Si hay acarreo, significa que va más allá de 255 y por tanto, no actualizamos cursor
+Si es negativo, restamos ese salto (mediante neg y haciendo sbc) a posición cursor. Si hay acarreo, significa que va menos de 0 y por tanto no actualizamos cursor. 
+En caso de suma de posición vertical no permitir que vaya más allá de 191 tampoco. 
+
+Probar también con Fuse u otro emulador que soporte kempston mouse 
+El ORG deberia estar ajustado para que acabe en 65536 el final
+
+-org 58068
+-ent 58068
+->bajamos todo 1000 bytes
+
+-org 57068
+-ent 57068
+
+
+tamanyo total sprites?
+
+-----------------------
 
 
 --- Chrome ---
