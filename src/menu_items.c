@@ -1239,46 +1239,47 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"These effects are used, for example, in Chase H.Q.");
 
 
-//		int ay3_stereo_mode=0;
-/*
-          0=Mono
-          1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
-          2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
-		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
-*/
+		if (MACHINE_IS_SPECTRUM) {
+	//		int ay3_stereo_mode=0;
+	/*
+    	      0=Mono
+        	  1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
+          	2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
+		  	3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
+	*/
 
-		/*if (ay3_stereo_mode==4) {
-			//Metemos separador, que queda mas bonito
-			menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			/*if (ay3_stereo_mode==4) {
+				//Metemos separador, que queda mas bonito
+				menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-		}*/
+			}*/
 
-		char ay3_stereo_string[16];
-		if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
-		else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
-		else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
-		else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
-		else strcpy(ay3_stereo_string,"Mono");
+			char ay3_stereo_string[16];
+			if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
+			else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
+			else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
+			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
+			else strcpy(ay3_stereo_string,"Mono");
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"AY Stereo mode: %s",
-			ay3_stereo_string);
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"AY Stereo mode: %s",
+				ay3_stereo_string);
 
-		if (ay3_stereo_mode==4) {	
+			if (ay3_stereo_mode==4) {	
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
-				"Channel A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
+					"Channel A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
-				"Channel B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
+					"Channel B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
-				"Channel C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
+					"Channel C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
 
-			//menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+				//menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+			}
 
 		}
-
-
 
 
 
