@@ -1,30 +1,12 @@
 --- Para esta version 7.1:
 
-soporte stereo. De momento esta:
--null ok
--coreaudio ok
--sdl2 ok
--sdl1 ok
-         
--pulse: PROBAR!!!
-pthreads: ok
-sin pthreads:  chasquidos, pero igual que version anterior, quiza un poco mas de chasquidos. OK
-
--alsa no va bien. dejamos de momento driver en mono
--dsp: ok
-
--audio out to file rwa, wav ok
-Probar bien rwa de salida, wav de salida y carga rwa tanto viejos como nuevos 
-*rwa tiene que ser mono
-*wav tiene que ser stereo
 
 revisar que no se toque/lea audio_buffer en otros sitios aparte de waveform, y que no se hayan corregido, como en drivers de audio, etc
 ->habria que eliminar dicha variable audio_valor_enviar_sonido para ver donde se usa. Corregir leyenda de generacion audio a wave/raw
 ->ver si realtape loading depende de stereo. Creo que no
 renombrarla
-->core reduced usara mono?
 
--Agregar demos dma zxuno a imagen mmc
+
 
 
 --- Cosas para la siguiente version 7.2
@@ -86,6 +68,10 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 
 -en alsa falla al cambiar velocidad cpu (tanto con pthreads con sin pthreads)
 ->no falla con todas las velocidades. por ejemplo con 200% falla pero no con 300%
+
+-alsa no va stereo. dejamos de momento driver en mono
+
+-pulse: sin pthreads:  chasquidos, pero igual que antes de tener stereo, quiza un poco mas de chasquidos. OK
 
 -en dsp, con debian 8, mala calidad sonido dsp (eso cuando lo puede activar)
 parece que emula dsp con osspd que da muy mal resultado

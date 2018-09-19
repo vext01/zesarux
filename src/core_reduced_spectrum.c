@@ -68,15 +68,6 @@ void cpu_core_loop_reduced_spectrum(void)
 
 
 
-//#ifdef COMPILE_STDOUT
-//		if (screen_stdout_driver) scr_stdout_printchar();
-//#endif
-//
-//#ifdef COMPILE_SIMPLETEXT
-//                if (screen_simpletext_driver) scr_simpletext_printchar();
-//#endif
-
-
 		//Gestionar autoload
 		gestionar_autoload_spectrum();
 
@@ -148,19 +139,7 @@ void cpu_core_loop_reduced_spectrum(void)
 
 				//printf ("t_estados:%d\n",t_estados);
 
-				/*if (rzx_reproduciendo && rzx_in_fetch_counter_til_next_int) {
-					if (rzx_in_fetch_counter_til_next_int_counter>=rzx_in_fetch_counter_til_next_int) {
-						//Forzar final de frame
-						//t_estados=screen_testados_total;
-						printf ("Forzar final de frame\n");
-						rzx_next_frame_recording();
-					}
-				}*/
-
-
-
-
-
+			
 
                         }
                 }
@@ -438,15 +417,7 @@ void cpu_core_loop_reduced_spectrum(void)
 																									superupgrade_set_memory_pages();
 																								}
 
-						//Prueba
-						//Al recibir nmi tiene que poner paginacion normal. Luego ya saltara por autotrap de diviface
-						if (diviface_enabled.v) {
-							//diviface_paginacion_manual_activa.v=0;
-							diviface_control_register&=(255-128);
-							diviface_paginacion_automatica_activa.v=0;
-						}
-
-
+	
 
 					}
 
@@ -468,11 +439,7 @@ void cpu_core_loop_reduced_spectrum(void)
 
 						interrupcion_si_despues_lda_ir();
 
-						//Aunque parece que rzx deberia saltar aqui al siguiente frame, lo hacemos solo cuando es necesario (cuando las lecturas en un frame exceden el frame)
-						//if (rzx_reproduciendo) {
-							//rzx_next_frame_recording();
-						//}
-
+						
 						z80_byte reg_pc_h,reg_pc_l;
                                                 reg_pc_h=value_16_to_8h(reg_pc);
                                                 reg_pc_l=value_16_to_8l(reg_pc);
@@ -529,6 +496,6 @@ void cpu_core_loop_reduced_spectrum(void)
 
 			}
 
-                }
+    }
 
 }
