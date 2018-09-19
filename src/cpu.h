@@ -41,10 +41,10 @@ Examples
 
 */
 
-//#define EMULATOR_VERSION "7.1"
+#define EMULATOR_VERSION "7.1"
 
+//#define EMULATOR_VERSION "7.1-SN"
 //#define EMULATOR_VERSION "7.1-RC"
-#define EMULATOR_VERSION "7.1-RC"
 //#define SNAPSHOT_VERSION
 
 #define EMULATOR_DATE "24 September 2018"
