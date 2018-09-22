@@ -237,7 +237,7 @@ void audiosdl_fifo_sdl_read(char *destino,int longitud)
 
 int contador_buffer_sonido=0;
 
-char temporary_audiosdl_fifo_sdl_buffer[AUDIO_BUFFER_SIZE*MAX_AUDIOSDL_FIFO_MULTIPLIER];
+char temporary_audiosdl_fifo_sdl_buffer[AUDIO_BUFFER_SIZE*MAX_AUDIOSDL_FIFO_MULTIPLIER*2];
 
 //ver http://www.libsdl.org/release/SDL-1.2.15/docs/html/guideaudioexamples.html
 

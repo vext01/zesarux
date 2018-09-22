@@ -439,8 +439,9 @@ void cpu_core_loop_spectrum(void)
 					}
 
 					else {
-						audio_valor_enviar_sonido_izquierdo += get_value_beeper_sum_array();
-						audio_valor_enviar_sonido_derecho += get_value_beeper_sum_array();
+						char suma_beeper=get_value_beeper_sum_array();
+						audio_valor_enviar_sonido_izquierdo += suma_beeper;
+						audio_valor_enviar_sonido_derecho += suma_beeper;
 						beeper_new_line();
 					}
 
@@ -482,7 +483,6 @@ void cpu_core_loop_spectrum(void)
 				}
 
 				else {
-        	        //audio_send_mono_sample(audio_valor_enviar_sonido);
 					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
 				}
 
@@ -571,7 +571,8 @@ void cpu_core_loop_spectrum(void)
                                 int linea_estados=t_estados/screen_testados_linea;
 
                                 while (linea_estados<312) {
-										audio_send_mono_sample(audio_valor_enviar_sonido_izquierdo);
+					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
+					//audio_send_mono_sample(audio_valor_enviar_sonido_izquierdo);
                                         linea_estados++;
                                 }
 
