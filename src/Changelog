@@ -77,6 +77,7 @@ Fixed bugs on esxdos handler:
 
 Fixed Multiface Three emulation
 Fixed text viewer, hex viewer showing some special characters ~ | ^
+Fixed some errors on sdl driver (windows, rpi affected by default)
 
 Updated to the last Next SD image TBBLUE V.1.0 "GOLD EDITION" 
 

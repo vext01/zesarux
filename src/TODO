@@ -4,6 +4,8 @@
 
 --- Cosas para la siguiente version 7.2
 
+-buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
+y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en browser y luego pulsar continuamente. sin real beeper no pasa
 
 -zrcp smartload y snapshot-load parametro para no tener que entrar en cpu step mode
 
