@@ -4,6 +4,15 @@
 
 --- Cosas para la siguiente version 7.2
 
+-arranco zxuno con zoom 2. cambio a zoom 1 desde menu y peta:
+
+Info: resizeContentToWidth 352 X 328
+2018-09-28 20:53:10.714 zesarux[514:9037] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'NSWindow drag regions should only be invalidated on the Main Thread!'
+*** First throw call stack:
+
+
+
+
 -buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
 y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en browser y luego pulsar continuamente. sin real beeper no pasa
 
