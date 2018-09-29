@@ -10,7 +10,7 @@ Info: resizeContentToWidth 352 X 328
 2018-09-28 20:53:10.714 zesarux[514:9037] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'NSWindow drag regions should only be invalidated on the Main Thread!'
 *** First throw call stack:
 
-
+-parametro de linea de comandos para decirle que archivo de configuracion usar. probablemente tenga que ser el primer parametro, de manera similar al parametro de no usar archivo de configuracion
 
 
 -buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
