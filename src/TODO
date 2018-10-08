@@ -4,6 +4,8 @@
 
 --- Cosas para la siguiente version 7.2
 
+-parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
+
 -arranco zxuno con zoom 2. cambio a zoom 1 desde menu y peta:
 
 Info: resizeContentToWidth 352 X 328
