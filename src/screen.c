@@ -9718,7 +9718,7 @@ Bit	Purpose
 
 	unsigned char *memoria_pantalla_ql;
 
-	memoria_pantalla_ql=&memoria_ql[0x20000];
+	memoria_pantalla_ql=&memoria_ql[0x20000 + ((mc_stat & 0x80) << 8)];
 
 	//int temp_cuenta=0;
 
