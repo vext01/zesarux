@@ -29,7 +29,9 @@ pc_ipcwr equ    $18003  IPC write address
 pc_mctrl equ    $18020  microdrive/link control register
 *pc_intr equ    $18021  7..5 masks and 4..0 to clear interrupt
 pc_tdata equ    $18022  transmit register
+
 *mc_stat equ    $18023  on some ql's this controls the video display.
+**FIX: chernandezba : This is $18063, not $18023
 
 *************** pc_clock function:
 * Reading the longword at pc_clock gets the current time.
