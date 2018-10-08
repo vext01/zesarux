@@ -10,6 +10,16 @@ Info: resizeContentToWidth 352 X 328
 2018-09-28 20:53:10.714 zesarux[514:9037] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'NSWindow drag regions should only be invalidated on the Main Thread!'
 *** First throw call stack:
 
+https://discourse.libsdl.org/t/crash-on-macos-10-14-mojave-with-sdl-showmessagebox/25100/2
+
+Apple only allows native UI functionality to be used on the main thread in macOS and iOS. It sounds like they have more robust runtime checks for that in 10.14, which is probably a good thing if the alternative is hard-to-diagnose glitches and crashes due to memory corruption etc.
+
+See also: https://developer.apple.com/documentation/code_diagnostics/main_thread_checker 2
+
+Ouch, thank you for the response – this will require some hard studying to figure out how to pull this off properly. Unfortunately most of the code I’m playing with is dimensions beyond me, but fingers crossed that I’ll be able to get it functioning.  :stuck_out_tongue:
+
+
+
 -parametro de linea de comandos para decirle que archivo de configuracion usar. probablemente tenga que ser el primer parametro, de manera similar al parametro de no usar archivo de configuracion
 
 

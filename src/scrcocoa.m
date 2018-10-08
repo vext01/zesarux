@@ -584,6 +584,10 @@ int pendiente_z88_draw_lower=0;
 	pendingresize_h=height;
 
 
+	[normalWindow redimensionaVentana:pendingresize_w height:pendingresize_h];
+	pendingresize=0;        
+
+
 }
 
 
@@ -2484,11 +2488,13 @@ void scrcocoa_refresca_pantalla(void)
 	}
 
 
-	if (pendingresize && pendingresize_w!=0 && pendingresize_h!=0) {
-		//printf ("redimensionar desde refresca_pantalla\n");
+        if (pendingresize) return;
+
+	/*if (pendingresize && pendingresize_w!=0 && pendingresize_h!=0) {
+		printf ("redimensionar desde refresca_pantalla\n");
 		[normalWindow redimensionaVentana:pendingresize_w height:pendingresize_h];
 		pendingresize=0;
-	}
+	}*/
 
 
 
