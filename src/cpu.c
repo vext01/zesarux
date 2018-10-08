@@ -7107,11 +7107,11 @@ struct sched_param sparam;
 
 	//Capturar segmentation fault
 	//desactivado normalmente en versiones snapshot
-	signal(SIGSEGV, segfault_signal_handler);
+	//signal(SIGSEGV, segfault_signal_handler);
 
 	//Capturar floating point exception
 	//desactivado normalmente en versiones snapshot
-	signal(SIGFPE, floatingpoint_signal_handler);
+	//signal(SIGFPE, floatingpoint_signal_handler);
 
 	//Capturar segint (CTRL+C)
 	signal(SIGINT, segint_signal_handler);
