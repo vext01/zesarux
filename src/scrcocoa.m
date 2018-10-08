@@ -486,6 +486,8 @@ int pendiente_z88_draw_lower=0;
 
 }
 
+
+
 - (void)redimensionaVentana:(int)width height:(int)height
 {
 	debug_printf (VERBOSE_INFO,"resize Window %d X %d",width,height);
@@ -1321,6 +1323,7 @@ screen_get_window_size_width_zoom_border_en(),screen_get_window_size_height_zoom
 #endif
     }
 }
+
 
 int temp_cocoa_contador=0;
 
@@ -2696,6 +2699,19 @@ int scrcocoa_init (void) {
 	debug_printf (VERBOSE_INFO,"Init COCOA Video Driver");
 #endif
 
+        int soyelmainthread;
+
+        if ([NSThread isMainThread]) {
+                //printf ("Soy el main thread\n");
+                soyelmainthread=1;
+        }
+
+        else {
+                //printf ("No soy el main thread\n");
+                //Esto solo se puede hacer desde el main thread
+                //dispatch_sync(dispatch_get_main_queue(), cocoaView toggleFullScreen:nil);
+                soyelmainthread=0;
+        }
 
         //Inicializaciones necesarias
         scr_putpixel=scrcocoa_putpixel;
@@ -2730,7 +2746,9 @@ int scrcocoa_init (void) {
     pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
 
 
+        if (soyelmainthread) {
    [cocoaView resizeContentToWidth:(int)(pixel_screen_width) height:(int)(pixel_screen_height) ];
+        }
 
 
 	if (ventana_fullscreen) {
