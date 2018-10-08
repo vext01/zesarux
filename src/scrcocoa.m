@@ -2746,9 +2746,10 @@ int scrcocoa_init (void) {
     pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
 
 
-        if (soyelmainthread) {
+        //Esto tiene que llamarlo desde el thread principal:
+        dispatch_async(dispatch_get_main_queue(), ^{
    [cocoaView resizeContentToWidth:(int)(pixel_screen_width) height:(int)(pixel_screen_height) ];
-        }
+        });
 
 
 	if (ventana_fullscreen) {
