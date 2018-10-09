@@ -22,9 +22,6 @@ Ouch, thank you for the response – this will require some hard studying to fig
 
 
 
--parametro de linea de comandos para decirle que archivo de configuracion usar. probablemente tenga que ser el primer parametro, de manera similar al parametro de no usar archivo de configuracion
-
-
 -buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
 y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en browser y luego pulsar continuamente. sin real beeper no pasa
 

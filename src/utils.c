@@ -129,6 +129,8 @@ unsigned char input_file_keyboard_last_key;
 void parse_customfile_options(void);
 
 
+char *customconfigfile=NULL;
+
 int write_rom_nested_id_poke_byte;
 int write_rom_nested_id_poke_byte_no_time;
 
@@ -2924,6 +2926,10 @@ int configfile_read_aux(char *configfile,char *mem)
 //0 si error
 int util_get_configfile_name(char *configfile)
 {
+  if (customconfigfile!=NULL) {
+        sprintf(configfile,"%s",customconfigfile);
+        return 1;
+  }
 
   #ifndef MINGW
   	char *directorio_home;
@@ -2933,7 +2939,7 @@ int util_get_configfile_name(char *configfile)
   		return 0;
   	}
 
-  	sprintf(configfile,"%s/%s",directorio_home,ZESARUX_CONFIG_FILE);
+  	sprintf(configfile,"%s/%s",directorio_home,DEFAULT_ZESARUX_CONFIG_FILE);
 
   #else
   	char *homedrive;
@@ -2946,7 +2952,7 @@ int util_get_configfile_name(char *configfile)
                   return 0;
           }
 
-  	sprintf(configfile,"%s\\%s\\%s",homedrive,homepath,ZESARUX_CONFIG_FILE);
+  	sprintf(configfile,"%s\\%s\\%s",homedrive,homepath,DEFAULT_ZESARUX_CONFIG_FILE);
 
   #endif
 
@@ -8037,7 +8043,7 @@ void customconfig_help(void)
 		"but adding extension .config, and it will apply every parameter contained in the file.\n"
 		"\n"
 		"So, if you load for example: game.tap, it will be searched a file game.tap.config\n"
-		"This config file is a text file you can edit; the format is like the " ZESARUX_CONFIG_FILE " main configuration file,\n"
+		"This config file is a text file you can edit; the format is like the " DEFAULT_ZESARUX_CONFIG_FILE " main configuration file,\n"
 		"but not every command line parameter allowed on main configuration file is allowed on a custom config file.\n"
 		"There are some .config files included in this emulator, you can view them to have some examples."
 		"\n"

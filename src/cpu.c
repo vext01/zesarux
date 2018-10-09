@@ -1251,10 +1251,11 @@ void cpu_help(void)
 
 		printf ("\n"
 		"--noconfigfile     Do not load configuration file. This parameter must be the first and it's ignored if written on config file\n"
+		"--configfile f     Use the specified config file. This parameter must be the first and it's ignored if written on config file\n"
 		"--experthelp       Show expert options\n"
 		"\n"
 		"Any command line setting shown here or on experthelp can be written on a configuration file,\n"
-		"this configuration file is on your home directory with name: " ZESARUX_CONFIG_FILE "\n"
+		"this configuration file is on your home directory with name: " DEFAULT_ZESARUX_CONFIG_FILE "\n"
 
 		"\n"
 
@@ -4595,6 +4596,11 @@ int parse_cmdline_options(void) {
                                 //Este parametro aqui se ignora, solo se lee antes del parseo del archivo de configuracion
                         }
 
+			else if (!strcmp(argv[puntero_parametro],"--configfile")) {
+                                //Este parametro aqui se ignora, solo se lee antes del parseo del archivo de configuracion
+					siguiente_parametro_argumento();
+                        }						
+
 			else if (!strcmp(argv[puntero_parametro],"--saveconf-on-exit")) {
 				save_configuration_file_on_exit.v=1;
 			}
@@ -6886,6 +6892,11 @@ tooltip_enabled.v=1;
                         if (!strcmp(main_argv[1],"--noconfigfile")) {
 				noconfigfile=1;
                         }
+
+                        if (!strcmp(main_argv[1],"--configfile")) {
+				customconfigfile=main_argv[2];
+                        }
+
                 }
 
 

@@ -539,7 +539,9 @@ extern void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pr
 
 extern int util_tape_tap_get_info(z80_byte *tape,char *texto);
 
-#define ZESARUX_CONFIG_FILE ".zesaruxrc"
+#define DEFAULT_ZESARUX_CONFIG_FILE ".zesaruxrc"
+
+extern char *customconfigfile;
 
 extern void get_machine_config_name_by_number(char *machine_name,int machine_number);
 
