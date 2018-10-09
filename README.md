@@ -236,7 +236,7 @@ __FEATURES__
 
 * File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc
 
-* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character rutines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can be also read by a text-to-speech program.
+* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can be also read by a text-to-speech program.
 
 * Simulates upper RAM memory refresh on Spectrum 48Kb, losing its contents when changing R register very quickly
 
