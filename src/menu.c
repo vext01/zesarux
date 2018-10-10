@@ -34051,12 +34051,12 @@ void set_splash_text(void)
 
 
         char texto_edition[40];
-        sprintf(texto_edition," ^^" EMULATOR_EDITION_NAME "^^ ");
+        sprintf(texto_edition," " EMULATOR_EDITION_NAME " ");
 
 		int longitud_texto=strlen(texto_edition);
 		//temporal, como estamos usando parpadeo mediante caracteres ^^, no deben contar en la longitud
 		//cuando no se use parpadeo, quitar esta resta
-		longitud_texto -=4;
+		//longitud_texto -=4;
 
         //centramos texto
         x=16-longitud_texto/2;

@@ -5,6 +5,10 @@
 
 -arranco zxuno con zoom 2. cambio a zoom 1 desde menu y peta:
 
+
+Comentar los cambios de cocoa con llamadas al main thread, que son debidos a:
+
+"
 Info: resizeContentToWidth 352 X 328
 2018-09-28 20:53:10.714 zesarux[514:9037] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'NSWindow drag regions should only be invalidated on the Main Thread!'
 *** First throw call stack:
@@ -17,6 +21,7 @@ See also: https://developer.apple.com/documentation/code_diagnostics/main_thread
 
 Ouch, thank you for the response – this will require some hard studying to figure out how to pull this off properly. Unfortunately most of the code I’m playing with is dimensions beyond me, but fingers crossed that I’ll be able to get it functioning.  :stuck_out_tongue:
 
+"
 
 
 -buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
@@ -30,7 +35,6 @@ y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en brow
 
 -y copy bytes desde menu debug quiza deberia usar memory zone
 
--emulator edition name en pantalla de bienvenida parpadeando, solo era para la versión 7.1
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 
