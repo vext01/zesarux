@@ -1,5 +1,8 @@
 --- Para esta version 7.2:
  
+--quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
+para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
+Ver "Temporal codigo control color tinta" -> como hacer compatible el color con el skin de gui?
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 

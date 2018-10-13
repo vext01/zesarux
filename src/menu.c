@@ -2948,6 +2948,12 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
                         letra=texto[i];
 		}
 
+		//Temporal codigo control color tinta
+		/*if (texto[i]=='%' && texto[i+1]=='%') {
+			tinta=texto[i+2]-'0';
+			i+=3;
+			letra=texto[i];
+		}*/
 
 		//ver si dos ~~ seguidas y cuidado al comparar que no nos vayamos mas alla del codigo 0 final
 		if (menu_escribe_texto_si_inverso(texto,i)) {
@@ -5811,21 +5817,32 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 	else {
 		registro_volumen=registro_volumen & 15;
 		int i;
+		int destino;
+		int indicado_rojo=0;
 
-		for (i=0;i<registro_volumen;i++) {
-			texto[i]='=';
+		for (i=0,destino=0;i<registro_volumen;i++,destino++) {
+			texto[destino]='=';
+
+
+			//Temporal codigo control color tinta
+			/*if (i==8) {
+				texto[destino++]='%';
+				texto[destino++]='%';
+				texto[destino]='2';
+				indicado_rojo=1;
+			} */
 		}
 
                 for (;i<15;i++) {
-                        texto[i]=' ';
+                        texto[destino++]=' ';
                 }
 
-		texto[i]=0;
+		texto[destino]=0;
 
 		//Si indice es menor que volumen, forzar a valor que volumen
 		if (indice_decae<registro_volumen) indice_decae=registro_volumen;
 
-		if (indice_decae>=0 && indice_decae<=14 && indice_decae>=registro_volumen) texto[indice_decae]='>';
+		if (indice_decae>=0 && indice_decae<=14 && indice_decae>=registro_volumen) texto[indice_decae+indicado_rojo*3]='>';
 	}
 }
 
@@ -11078,7 +11095,7 @@ void menu_ay_registers_overlay(void)
 {
         normal_overlay_texto_menu();
 
-	char volumen[16],textovolumen[32],textotono[32];
+	char volumen[32],textovolumen[32],textotono[32];
 
 
 	int total_chips=ay_retorna_numero_chips();
@@ -12255,7 +12272,7 @@ void menu_audio_new_ayplayer_overlay(void)
 
     	if (menu_audio_new_ayplayer_si_mostrar()) {
     	//Los volumenes mostrarlos siempre a cada refresco
-	char volumen[16],textovolumen[32];
+	char volumen[32],textovolumen[32];
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
