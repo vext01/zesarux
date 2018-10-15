@@ -5848,15 +5848,17 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 		int destino;
 		int indicado_rojo=0;
 
-		for (i=0,destino=0;i<registro_volumen;i++,destino++) {
-			texto[destino]='=';
+		
+
+		for (i=0,destino=0;i<registro_volumen;i++) {
+			texto[destino++]='=';
 
 
 			//Temporal codigo control color tinta
-			if (i==10) {
+			if (i==12) { 
 				texto[destino++]='$';
 				texto[destino++]='$';
-				texto[destino]='2';
+				texto[destino++]='2';
 				indicado_rojo=1;
 			}
 		}
@@ -5871,6 +5873,8 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 		if (indice_decae<registro_volumen) indice_decae=registro_volumen;
 
 		if (indice_decae>=0 && indice_decae<=14 && indice_decae>=registro_volumen) texto[indice_decae+indicado_rojo*3]='>';
+
+		//printf ("registro volumen: %d indice decae: %d pos decae: %d\n",registro_volumen,indice_decae,indice_decae+indicado_rojo*3);
 	}
 }
 
