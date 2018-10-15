@@ -2836,16 +2836,33 @@ int menu_escribe_texto_si_parpadeo(char *texto, int indice)
 
 	if (menu_disable_special_chars.v) return 0;
 
-        if (texto[indice++]!='^') return 0;
-        if (texto[indice++]!='^') return 0;
+    if (texto[indice++]!='^') return 0;
+    if (texto[indice++]!='^') return 0;
 
-        //Y siguiente caracter no es final de texto
-        if (texto[indice]==0) return 0;
+    //Y siguiente caracter no es final de texto
+    if (texto[indice]==0) return 0;
 
-        return 1;
+    return 1;
 }
 
-//Quita simbolos ^^y ~~ de un texto. Puede que esta funcion este repetida en algun otro sitio
+
+int menu_escribe_texto_si_cambio_tinta(char *texto,int indice)
+{
+	if (menu_disable_special_chars.v) return 0;
+
+    if (texto[indice++]!='$') return 0;
+    if (texto[indice++]!='$') return 0;
+	if (texto[indice]<'0' || texto[indice]>'7') return 0;
+	indice++;
+
+    //Y siguiente caracter no es final de texto
+    if (texto[indice]==0) return 0;
+
+    return 1;
+
+}
+
+//Quita simbolos ^^y ~~ y $$X de un texto. Puede que esta funcion este repetida en algun otro sitio
 void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 {
 	int origen,destino;
@@ -2857,6 +2874,11 @@ void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 		if (menu_escribe_texto_si_inverso(texto,origen) || menu_escribe_texto_si_parpadeo(texto,origen) ) {
 			origen +=2;
 		}
+
+		else if (menu_escribe_texto_si_cambio_tinta(texto,origen)) {
+			origen +=3;
+		}
+
 		else {
 			c=texto[origen];
 			texto_destino[destino]=c;
@@ -2949,11 +2971,11 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 		}
 
 		//Temporal codigo control color tinta
-		/*if (texto[i]=='%' && texto[i+1]=='%') {
+		if (menu_escribe_texto_si_cambio_tinta(texto,i)) {
 			tinta=texto[i+2]-'0';
 			i+=3;
 			letra=texto[i];
-		}*/
+		}
 
 		//ver si dos ~~ seguidas y cuidado al comparar que no nos vayamos mas alla del codigo 0 final
 		if (menu_escribe_texto_si_inverso(texto,i)) {
@@ -3053,6 +3075,7 @@ void menu_textspeech_send_text(char *texto)
 
 		//printf ("texto orig : %d\n",texto[orig]);
 		//printf ("texto orig char: %c\n",texto[orig]);
+		//TODO: saltar cuando hay cambio de color de tinta %%X
 		//Si no es ~ ni ^, copiar e incrementar destino
 		if (texto[orig]!='~' && texto[orig]!='^') {
 			buf_speech[dest]=texto[orig];
@@ -4229,7 +4252,7 @@ void menu_view_screen(MENU_ITEM_PARAMETERS)
 }
 
 
-//Quita de la linea los caracteres de atajo ~~ o ^^
+//Quita de la linea los caracteres de atajo ~~ o ^^ o $$X
 void menu_dibuja_menu_stdout_texto_sin_atajo(char *origen, char *destino)
 {
 
@@ -4244,6 +4267,10 @@ void menu_dibuja_menu_stdout_texto_sin_atajo(char *origen, char *destino)
 
 		if (menu_escribe_texto_si_parpadeo(origen,indice_orig)) {
 			indice_orig +=2;
+		}
+
+		if (menu_escribe_texto_si_cambio_tinta(origen,indice_orig)) {
+			indice_orig +=3;
 		}
 
 
@@ -4756,13 +4783,14 @@ void menu_dibuja_menu_espera_no_tecla(void)
 
 int menu_calcular_ancho_string_item(char *texto)
 {
-	//Devuelve longitud de texto teniendo en cuenta de no sumar caracteres ~~ o ^^
+	//Devuelve longitud de texto teniendo en cuenta de no sumar caracteres ~~ o ^^ o $$X
 	unsigned int l;
 	int ancho_calculado=strlen(texto);
 
 	for (l=0;l<strlen(texto);l++) {
 			if (menu_escribe_texto_si_inverso(texto,l)) ancho_calculado-=2;
 			if (menu_escribe_texto_si_parpadeo(texto,l)) ancho_calculado-=2;
+			if (menu_escribe_texto_si_cambio_tinta(texto,l)) ancho_calculado-=3;
 	}
 
 	return ancho_calculado;
@@ -5825,12 +5853,12 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 
 
 			//Temporal codigo control color tinta
-			/*if (i==8) {
-				texto[destino++]='%';
-				texto[destino++]='%';
+			if (i==10) {
+				texto[destino++]='$';
+				texto[destino++]='$';
 				texto[destino]='2';
 				indicado_rojo=1;
-			} */
+			}
 		}
 
                 for (;i<15;i++) {
@@ -10811,7 +10839,7 @@ void menu_audio_draw_sound_wave(void)
 
 	normal_overlay_texto_menu();
 
-				char buffer_texto_medio[40];
+				char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
@@ -10984,7 +11012,7 @@ void menu_audio_draw_sound_wave(void)
 	//if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
 	menu_waveform_previous_volume=menu_decae_ajusta_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
 
-	char texto_volumen[32];
+	char texto_volumen[32]; 
     menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
                                                                 //"Volume C: %s"
 
@@ -11095,7 +11123,8 @@ void menu_ay_registers_overlay(void)
 {
         normal_overlay_texto_menu();
 
-	char volumen[32],textovolumen[32],textotono[32];
+	char volumen[32],textotono[32];
+	char textovolumen[35]; //32+3 de posible color rojo del maximo
 
 
 	int total_chips=ay_retorna_numero_chips();
@@ -12272,7 +12301,8 @@ void menu_audio_new_ayplayer_overlay(void)
 
     	if (menu_audio_new_ayplayer_si_mostrar()) {
     	//Los volumenes mostrarlos siempre a cada refresco
-	char volumen[32],textovolumen[32];
+	char volumen[32];
+	char textovolumen[35]; //32+3 de posible color rojo del maximo
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
