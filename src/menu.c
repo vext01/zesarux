@@ -5855,7 +5855,7 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 
 
 			//Temporal codigo control color tinta
-			if (i==12) { 
+			if (i==11) { 
 				texto[destino++]='$';
 				texto[destino++]='$';
 				texto[destino++]='2';
