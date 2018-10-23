@@ -10843,6 +10843,7 @@ int menu_waveform_valor_contador_segundo_anterior;
 
 int menu_waveform_previous_volume=0;
 
+
 void menu_audio_draw_sound_wave(void)
 {
 

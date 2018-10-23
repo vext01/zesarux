@@ -19,6 +19,8 @@ quiza tiene que ver con scr_putsprite_comun_zoom
 hay un workaround que es un clear putpixel cache antes de dibujar pixeles en zona de pixeles
 
 pensaba que era porque scr_putpixel_gui_zoom no actualizaba putpixel cache pero no es asi
+quiza es algo de que ahi hay texto, y al refrescar pantalla no actualiza (borra con espacios) esa zona, antes de dibujar la onda?
+pero porque solo falla en pentagon y no en otras maquinas???
 
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
