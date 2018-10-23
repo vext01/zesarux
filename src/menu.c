@@ -1936,9 +1936,14 @@ void menu_scr_putpixel(int x,int y,int color)
 
 		//Hacer zoom de ese pixel si conviene
 		int incx,incy;
+		int incremento=0;
+
+		//Con realvideo y pentagon, linea de pixeles es 8 posiciones mas abajo
+		if (MACHINE_IS_PENTAGON && rainbow_enabled.v) incremento +=8;
+
 		for (incy=0;incy<menu_gui_zoom;incy++) {
 			for (incx=0;incx<menu_gui_zoom;incx++) {
-				scr_putpixel_zoom(x+incx,y+incy,color);
+				scr_putpixel_zoom(x+incx,y+incy+incremento,color);
 			}
 		}
 

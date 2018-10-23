@@ -1,5 +1,11 @@
 --- Para esta version 7.2:
- 
+ -problema de interfaz de menu en Pentagon solo sucede al activar real video con acciones de pixeles->con real video on, 
+ la interfaz de menu esta mas abajo, pero los pixeles no!
+ es tema del putpixel cache+real video
+ linea pixeles esta donde toca: igual posicion con real video o sin
+ en cambio, texto aparece mas abajo con real video on, y mas arriba con real video off. esto es ok pues sigue posicion del border
+ lo que deberia ser es que pixeles del menu tambien van mas abano con real video on
+
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
 Ver "Temporal codigo control color tinta" -> como hacer compatible el color con el skin de gui?
@@ -29,6 +35,7 @@ Ouch, thank you for the response – this will require some hard studying to fig
 
 -buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
 y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en browser y luego pulsar continuamente. sin real beeper no pasa
+->el por que lo sigue haciendo en next aunque hayas soltado la tecla de cursor abajo es un miesterio
 
 -zrcp smartload y snapshot-load parametro para no tener que entrar en cpu step mode
 
@@ -1638,7 +1645,7 @@ ver de momento workaround audio_using_sdl2
 -lectura de sonido desde line-in, para poder cargar directo desde casette
 
 -reducir fifo por defecto de pulse? de 10 a 2?
-reducir fifo por defecto de alsa? de 4 a 2?
+-reducir fifo por defecto de alsa? de 4 a 2?
 -probar a reducir buffer sonido en otros drivers: dsp, alsa, pulse
 
 

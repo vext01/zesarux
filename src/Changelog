@@ -1,5 +1,6 @@
 Version 7.2. 08 October 2018 - xxx edition
 
+Added setting to specify configuration file
 Improved vu-meters: high volumes are shown in red
 
 
