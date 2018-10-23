@@ -15,8 +15,10 @@ visor sprites tambien se ve mal
                         screen_invisible_borde_superior=16;
                         screen_borde_superior=64;
                         screen_total_borde_inferior=48;
+quiza tiene que ver con scr_putsprite_comun_zoom
+hay un workaround que es un clear putpixel cache antes de dibujar pixeles en zona de pixeles
 
-
+pensaba que era porque scr_putpixel_gui_zoom no actualizaba putpixel cache pero no es asi
 
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos

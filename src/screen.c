@@ -1859,7 +1859,7 @@ void set_putpixel_zoom(void)
 
 //Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
 void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
-{
+{ 
 	//Hacer zoom de ese pixel si conviene
 	int incx,incy;
 	for (incy=0;incy<zoom_level;incy++) {
