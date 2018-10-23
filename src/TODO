@@ -1,10 +1,22 @@
 --- Para esta version 7.2:
+
+-al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
+visor sprites tambien se ve mal
+
+
  -problema de interfaz de menu en Pentagon solo sucede al activar real video con acciones de pixeles->con real video on, 
  la interfaz de menu esta mas abajo, pero los pixeles no!
  es tema del putpixel cache+real video
  linea pixeles esta donde toca: igual posicion con real video o sin
  en cambio, texto aparece mas abajo con real video on, y mas arriba con real video off. esto es ok pues sigue posicion del border
  lo que deberia ser es que pixeles del menu tambien van mas abano con real video on
+
+ Alguno de estos 3 parametros son los que fastidian la putpixel cache en menu:
+                        screen_invisible_borde_superior=16;
+                        screen_borde_superior=64;
+                        screen_total_borde_inferior=48;
+
+
 
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
@@ -263,7 +275,6 @@ no cierra la ventana sdl. si en cambio el driver audio no es sdl, al cambiar de 
 
 -opcion para reducir tamanyo border. Ahora solo se puede: completo o no visible. Se podria hacer algo para mostrar medio border o menos por ejemplo
 
--al activar pentagon timing no deberia desplazarse texto footer hacia abajo
 
 -stdout. opciones que se activan con espacio  (como activar/desactivar breakpoints), poderlas activar en stdout tambien
 
@@ -587,8 +598,7 @@ http://www.zxuno.com/forum/viewtopic.php?f=37&t=552&sid=88847dce1ad30a54353f3588
 -Demo across the edge se ve ligeramente mejor si se pone setting IM2 slow a yes
 Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
--al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
-visor sprites tambien se ve mal
+
 
 
 -------------

@@ -10848,6 +10848,11 @@ void menu_audio_draw_sound_wave(void)
 
 	normal_overlay_texto_menu();
 
+	//workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
+	//la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
+	//esta en alguna parte de la putpixel cache
+	//if (MACHINE_IS_PENTAGON) clear_putpixel_cache();
+
 				char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
