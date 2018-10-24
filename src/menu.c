@@ -1928,7 +1928,11 @@ void putchar_menu_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte 
 
 
 
-//con zoom de menu gui
+//con zoom de menu gui. Funcion vieja. Estaba mal, pues usaba siempre funcion de putpixel sin rainbow
+//esto, en todas las maquinas que en pentagon, no daba problemas
+//en cambio, com pentagon y realvideo, en ese caso, pentagon está 8 lineas por debajo en modo realvideo,
+//pero dado que escribia por encima (al no usar putpixel realvideo) provocaba glitches en menus
+//audio wave, visualmem, ay piano, wave piano, view sprites
 void old_menu_scr_putpixel(int x,int y,int color)
 {
 	x *=menu_gui_zoom;
@@ -10881,6 +10885,10 @@ void workaround_pentagon_clear_putpixel_cache(void)
     //workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
     //la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
     //esta en alguna parte de la putpixel cache
+
+	return; 
+
+	//ya no hace falta hacer nada, despues de corregir funcion menu_scr_putpixel para que use funciones rainbow de pixel cuando este activo rainbow
     if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();	
 
 }

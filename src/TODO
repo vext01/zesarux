@@ -1,35 +1,5 @@
 --- Para esta version 7.2:
 
--al abrir ay piano (y algun otro menu) en pentagon, deja rastro debajo del putpixel cache
-visor sprites tambien se ve mal
-
-
- -problema de interfaz de menu en Pentagon solo sucede al activar real video con acciones de pixeles->con real video on, 
- la interfaz de menu esta mas abajo, pero los pixeles no!
- es tema del putpixel cache+real video
- linea pixeles esta donde toca: igual posicion con real video o sin
- en cambio, texto aparece mas abajo con real video on, y mas arriba con real video off. esto es ok pues sigue posicion del border
- lo que deberia ser es que pixeles del menu tambien van mas abano con real video on
-
- Alguno de estos 3 parametros son los que fastidian la putpixel cache en menu:
-                        screen_invisible_borde_superior=16;
-                        screen_borde_superior=64;
-                        screen_total_borde_inferior=48;
-quiza tiene que ver con scr_putsprite_comun_zoom
-hay un workaround que es un clear putpixel cache antes de dibujar pixeles en zona de pixeles
-
-pensaba que era porque scr_putpixel_gui_zoom no actualizaba putpixel cache pero no es asi
-quiza es algo de que ahi hay texto, y al refrescar pantalla no actualiza (borra con espacios) esa zona, antes de dibujar la onda?
-pero porque solo falla en pentagon y no en otras maquinas???
-
-quiza la culpa es de scr_putpixel_zoom_mas_de_uno (este es puntero de scr_putpixel_zoom)
-o de scr_putsprite_comun_zoom -> este llama a scr_putpixel_gui_zoom. y de ahi a scr_putpixel_zoom_rainbow(normalmente scr_putpixel_zoom_rainbow_mas_de_uno) o scr_putpixel_zoom
-
-
-
-void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
-llama a menu_scr_putpixel, y este a scr_putpixel_zoom, que es siempre no rainbow
-
 
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos

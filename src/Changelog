@@ -2,7 +2,7 @@ Version 7.2. 08 October 2018 - xxx edition
 
 Added setting to specify configuration file
 Improved vu-meters: high volumes are shown in red
-Fixed visual glitches in menu+pentagon machine+real video on and menus: audio wave, visualmem, ay piano, wave piano
+Fixed visual glitches in some menus when Pentagon machine and real video: audio wave, visualmem, ay piano, wave piano, view sprites
 
 
 Version 7.1. 24 September 2018 - 5th Anniversary edition
