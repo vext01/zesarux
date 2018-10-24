@@ -1876,6 +1876,43 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 }
 
 
+void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr)
+{
+
+        *margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
+        *margeny_arr=screen_borde_superior*border_enabled.v;
+
+if (MACHINE_IS_Z88) {
+		//no hay border. estas variables se leen en modo rainbow
+		*margenx_izq=*margeny_arr=0;
+	}
+
+	else if (MACHINE_IS_CPC) {
+		*margenx_izq=CPC_LEFT_BORDER_NO_ZOOM*border_enabled.v;
+		*margeny_arr=CPC_TOP_BORDER_NO_ZOOM*border_enabled.v;
+	}
+
+	else if (MACHINE_IS_PRISM) {
+		*margenx_izq=PRISM_LEFT_BORDER_NO_ZOOM*border_enabled.v;
+		*margeny_arr=PRISM_TOP_BORDER_NO_ZOOM*border_enabled.v;
+	}
+
+	else if (MACHINE_IS_TSCONF) {
+		*margenx_izq=TSCONF_LEFT_BORDER_NO_ZOOM*border_enabled.v;
+		*margeny_arr=TSCONF_TOP_BORDER_NO_ZOOM*border_enabled.v;
+	}
+
+        else if (MACHINE_IS_SAM) {
+                *margenx_izq=SAM_LEFT_BORDER_NO_ZOOM*border_enabled.v;
+                *margeny_arr=SAM_TOP_BORDER_NO_ZOOM*border_enabled.v;
+        }
+
+				else if (MACHINE_IS_QL) {
+								*margenx_izq=QL_LEFT_BORDER_NO_ZOOM*border_enabled.v;
+								*margeny_arr=QL_TOP_BORDER_NO_ZOOM*border_enabled.v;
+				}
+
+}
 
 //Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
 //entrada: puntero=direccion a tabla del caracter
@@ -1895,43 +1932,16 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
         //printf ("tinta %d papel %d\n",tinta,papel);
 
         //margenes de zona interior de pantalla. Para modo rainbow
-        int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
-        int margeny_arr=screen_borde_superior*border_enabled.v;
+        int margenx_izq;
+        int margeny_arr;
+
+
+
+	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
 
 	//Caso de pentagon y en footer
 	if (pentagon_timing.v && y>=31) margeny_arr=56*border_enabled.v;
-
-	if (MACHINE_IS_Z88) {
-		//no hay border. estas variables se leen en modo rainbow
-		margenx_izq=margeny_arr=0;
-	}
-
-	else if (MACHINE_IS_CPC) {
-		margenx_izq=CPC_LEFT_BORDER_NO_ZOOM*border_enabled.v;
-		margeny_arr=CPC_TOP_BORDER_NO_ZOOM*border_enabled.v;
-	}
-
-	else if (MACHINE_IS_PRISM) {
-		margenx_izq=PRISM_LEFT_BORDER_NO_ZOOM*border_enabled.v;
-		margeny_arr=PRISM_TOP_BORDER_NO_ZOOM*border_enabled.v;
-	}
-
-	else if (MACHINE_IS_TSCONF) {
-		margenx_izq=TSCONF_LEFT_BORDER_NO_ZOOM*border_enabled.v;
-		margeny_arr=TSCONF_TOP_BORDER_NO_ZOOM*border_enabled.v;
-	}
-
-        else if (MACHINE_IS_SAM) {
-                margenx_izq=SAM_LEFT_BORDER_NO_ZOOM*border_enabled.v;
-                margeny_arr=SAM_TOP_BORDER_NO_ZOOM*border_enabled.v;
-        }
-
-				else if (MACHINE_IS_QL) {
-								margenx_izq=QL_LEFT_BORDER_NO_ZOOM*border_enabled.v;
-								margeny_arr=QL_TOP_BORDER_NO_ZOOM*border_enabled.v;
-				}
-
-
+	
         y=y*8;
 
         for (line=0;line<8;line++,y++) {

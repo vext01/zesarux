@@ -62,6 +62,8 @@ extern void (*scr_messages_debug)(char *mensaje);
 
 extern void (*scr_putpixel) (int x,int y,unsigned int color);
 
+extern void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr);
+
 extern void (*scr_putpixel_zoom) (int x,int y,unsigned color);
 extern void (*scr_putpixel_zoom_rainbow)(int x,int y,unsigned int color);
 

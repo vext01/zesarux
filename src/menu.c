@@ -1929,7 +1929,7 @@ void putchar_menu_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte 
 
 
 //con zoom de menu gui
-void menu_scr_putpixel(int x,int y,int color)
+void old_menu_scr_putpixel(int x,int y,int color)
 {
 	x *=menu_gui_zoom;
 	y *=menu_gui_zoom;
@@ -1947,8 +1947,40 @@ void menu_scr_putpixel(int x,int y,int color)
 			}
 		}
 
-
 }
+
+void menu_scr_putpixel(int x,int y,int color)
+{
+
+	int margenx_izq,margeny_arr;
+	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+
+	if (rainbow_enabled.v) {
+		x+=margenx_izq;
+		y+=margeny_arr;
+	}
+
+	x *=menu_gui_zoom;
+	y *=menu_gui_zoom;
+
+	scr_putpixel_gui_zoom(x,y,color,menu_gui_zoom);
+}
+/*
+//Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
+void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
+{ 
+	//Hacer zoom de ese pixel si conviene
+	int incx,incy;
+	for (incy=0;incy<zoom_level;incy++) {
+		for (incx=0;incx<zoom_level;incx++) {
+			//printf("putpixel %d,%d\n",x+incx,y+incy);
+			if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x+incx,y+incy,color);
+
+			else scr_putpixel_zoom(x+incx,y+incy,color);
+		}
+	}
+}
+*/
 
 void menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
 {
@@ -12012,7 +12044,7 @@ void menu_beeper_pianokeyboard_overlay(void)
 {
     normal_overlay_texto_menu();
 
-	workaround_pentagon_clear_putpixel_cache();
+	//workaround_pentagon_clear_putpixel_cache();
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
@@ -12047,6 +12079,8 @@ void menu_beeper_pianokeyboard_overlay(void)
 			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_a);
 			//Restauramos comportamiento por defecto
 			menu_ay_piano_drawing_wavepiano.v=0;
+
+			workaround_pentagon_clear_putpixel_cache();
 
 			char buffer_texto[40];
 			

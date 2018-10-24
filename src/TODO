@@ -22,6 +22,15 @@ pensaba que era porque scr_putpixel_gui_zoom no actualizaba putpixel cache pero 
 quiza es algo de que ahi hay texto, y al refrescar pantalla no actualiza (borra con espacios) esa zona, antes de dibujar la onda?
 pero porque solo falla en pentagon y no en otras maquinas???
 
+quiza la culpa es de scr_putpixel_zoom_mas_de_uno (este es puntero de scr_putpixel_zoom)
+o de scr_putsprite_comun_zoom -> este llama a scr_putpixel_gui_zoom. y de ahi a scr_putpixel_zoom_rainbow(normalmente scr_putpixel_zoom_rainbow_mas_de_uno) o scr_putpixel_zoom
+
+
+
+void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
+llama a menu_scr_putpixel, y este a scr_putpixel_zoom, que es siempre no rainbow
+
+
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
 Ver "Temporal codigo control color tinta" -> como hacer compatible el color con el skin de gui?
