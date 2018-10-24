@@ -10843,16 +10843,23 @@ int menu_waveform_valor_contador_segundo_anterior;
 
 int menu_waveform_previous_volume=0;
 
+void workaround_pentagon_clear_putpixel_cache(void)
+{
+
+    //workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
+    //la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
+    //esta en alguna parte de la putpixel cache
+    if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();	
+
+}
+
 
 void menu_audio_draw_sound_wave(void)
 {
 
 	normal_overlay_texto_menu();
 
-	//workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
-	//la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
-	//esta en alguna parte de la putpixel cache
-	//if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();
+	workaround_pentagon_clear_putpixel_cache();
 
 				char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
@@ -11805,9 +11812,13 @@ void menu_ay_pianokeyboard_draw_piano(int linea,int canal,char *note)
 }
 
 
+
+
 void menu_ay_pianokeyboard_overlay(void)
 {
-        normal_overlay_texto_menu();
+    normal_overlay_texto_menu();
+
+	workaround_pentagon_clear_putpixel_cache();
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
 
@@ -11971,6 +11982,10 @@ valor_contador_segundo_anterior=contador_segundo;
 
         cls_menu_overlay();
 
+
+
+	workaround_pentagon_clear_putpixel_cache();	
+
 	menu_espera_no_tecla();
 
 	/* Nota:
@@ -11995,7 +12010,9 @@ valor_contador_segundo_anterior=contador_segundo;
 
 void menu_beeper_pianokeyboard_overlay(void)
 {
-        normal_overlay_texto_menu();
+    normal_overlay_texto_menu();
+
+	workaround_pentagon_clear_putpixel_cache();
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
@@ -12038,13 +12055,12 @@ void menu_beeper_pianokeyboard_overlay(void)
 			}
 
 			else strcpy (buffer_texto,"             ");
+
+				
             
 			menu_escribe_linea_opcion(5,-1,1,buffer_texto);
 			//printf ("menu_speech_tecla_pulsada despues de enviar texto: %d\n",menu_speech_tecla_pulsada);
 
-
-
-	
 
 }
 
@@ -23093,6 +23109,8 @@ void menu_debug_draw_visualmem(void)
 
         normal_overlay_texto_menu();
 
+		workaround_pentagon_clear_putpixel_cache();
+
 
         int ancho=(VISUALMEM_ANCHO-2);
         int alto=(VISUALMEM_ALTO-6);
@@ -23340,7 +23358,7 @@ void menu_debug_visualmem_dibuja_ventana(void)
 	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 }
 
-void menu_debug_visualmem(MENU_ITEM_PARAMETERS)
+void old_menu_debug_visualmem(MENU_ITEM_PARAMETERS)
 {
 
         //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
@@ -23488,6 +23506,8 @@ void menu_debug_visualmem(MENU_ITEM_PARAMETERS)
 
 
         cls_menu_overlay();
+
+	workaround_pentagon_clear_putpixel_cache();
 
 }
 
@@ -23647,6 +23667,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
         cls_menu_overlay();
+
+	workaround_pentagon_clear_putpixel_cache();
 
 }
 
