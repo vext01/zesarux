@@ -1494,13 +1494,12 @@ void clear_putpixel_cache(void)
 
 #ifdef PUTPIXELCACHE
 
-        if (putpixel_cache==NULL) return;
+    if (putpixel_cache==NULL) return;
 
 	debug_printf (VERBOSE_INFO,"Clearing putpixel cache");
 
 
-	int x,y;
-	int indice=0;
+
 
 	int tamanyo_y;
 
@@ -1516,7 +1515,9 @@ void clear_putpixel_cache(void)
 
 
 	//printf ("Clearing putpixel cache %d X %d\n",tamanyo_x,tamanyo_y);
-
+	/*int x,y;
+	int indice=0;
+	
 	for (y=0;y<tamanyo_y;y++) {
 		for (x=0;x<tamanyo_x;x++) {
 			//cambiar toda la cache
@@ -1525,11 +1526,13 @@ void clear_putpixel_cache(void)
 
 			indice++;
 		}
-	}
+	}*/
 
-	//temp
+	//Alternativa con memset mas rapido
+	int longitud=tamanyo_y*tamanyo_x*2; //*2 porque es un z80_int
+	memset(putpixel_cache,255,longitud);
+
 	//printf ("clear putpixel cache get_total_ancho_rainbow=%d get_total_alto_rainbow=%d \n",get_total_ancho_rainbow(),get_total_alto_rainbow() );
-	//sleep(2);
 #endif
 
 }

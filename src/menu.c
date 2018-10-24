@@ -10852,7 +10852,7 @@ void menu_audio_draw_sound_wave(void)
 	//workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
 	//la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
 	//esta en alguna parte de la putpixel cache
-	//if (MACHINE_IS_PENTAGON) clear_putpixel_cache();
+	//if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();
 
 				char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
