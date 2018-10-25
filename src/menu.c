@@ -10227,15 +10227,15 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 {
 
         //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        z80_bit copia_video_interlaced_mode;
-        copia_video_interlaced_mode.v=video_interlaced_mode.v;
+        //z80_bit copia_video_interlaced_mode;
+        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
 
 
 	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
 
 		if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
 
-        disable_interlace();
+        //disable_interlace();
 
 
         menu_espera_no_tecla();
@@ -10538,7 +10538,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
         } while (salir==0);
 
         //Restauramos modo interlace
-        if (copia_video_interlaced_mode.v) enable_interlace();
+        //if (copia_video_interlaced_mode.v) enable_interlace();
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
@@ -11099,10 +11099,10 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 {
 
         //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        z80_bit copia_video_interlaced_mode;
-        copia_video_interlaced_mode.v=video_interlaced_mode.v;
+        //z80_bit copia_video_interlaced_mode;
+        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
 
-        disable_interlace();
+        //disable_interlace();
 
 
         menu_espera_no_tecla();
@@ -11164,7 +11164,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 
         //Restauramos modo interlace
-        if (copia_video_interlaced_mode.v) enable_interlace();
+        //if (copia_video_interlaced_mode.v) enable_interlace();
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
@@ -23404,10 +23404,10 @@ void old_menu_debug_visualmem(MENU_ITEM_PARAMETERS)
 {
 
         //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        z80_bit copia_video_interlaced_mode;
-        copia_video_interlaced_mode.v=video_interlaced_mode.v;
+        //z80_bit copia_video_interlaced_mode;
+        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
 
-        disable_interlace();
+        //disable_interlace();
 
 
         menu_espera_no_tecla();
@@ -23541,7 +23541,7 @@ void old_menu_debug_visualmem(MENU_ITEM_PARAMETERS)
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
 
         //Restauramos modo interlace
-        if (copia_video_interlaced_mode.v) enable_interlace();
+        //if (copia_video_interlaced_mode.v) enable_interlace();
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
@@ -23595,10 +23595,10 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 {
 
         //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        z80_bit copia_video_interlaced_mode;
-        copia_video_interlaced_mode.v=video_interlaced_mode.v;
+        //z80_bit copia_video_interlaced_mode;
+        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
 
-        disable_interlace();
+        //disable_interlace();
 
 
         menu_espera_no_tecla();
@@ -23702,7 +23702,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
         //Restauramos modo interlace
-        if (copia_video_interlaced_mode.v) enable_interlace();
+        //if (copia_video_interlaced_mode.v) enable_interlace();
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);

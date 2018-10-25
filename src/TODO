@@ -1491,8 +1491,6 @@ Opcion desactivar colores que solo va en realvideo off:
 -Escalado 0.75. De cada 4 pixeles, los dos últimos hacer media de color.
  Usar colores gigascreen para eso, pues tienen todas las combinaciones. Setting activable para ese tipo de reducción o la normal
 
--interlaced con frameskip impar no dibuja bien el menu (se ve entrelazado el menu)
-
 -sdl2 peta con easter-egg en linux
 
 - Vídeo que muestre text to speech con aventura conversacional
