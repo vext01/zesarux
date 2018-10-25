@@ -23125,16 +23125,22 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 
 #ifdef EMULATE_VISUALMEM
 
-#define VISUALMEM_MAX_ALTO 23
+#define VISUALMEM_MAX_ALTO 24
+#define VISUALMEM_MAX_ANCHO 32
 
-int visualmem_ancho_variable=30;
-int visualmem_alto_variable=VISUALMEM_MAX_ALTO;
+int visualmem_ancho_variable=VISUALMEM_MAX_ANCHO-2;
+int visualmem_alto_variable=VISUALMEM_MAX_ALTO-2;
 
-#define VISUALMEM_X 1
-#define VISUALMEM_Y 0
-//#define VISUALMEM_ANCHO 30
+#define VISUALMEM_MIN_X 0
+#define VISUALMEM_MIN_Y 0
+
+#define VISUALMEM_DEFAULT_X (VISUALMEM_MIN_X+1)
+int visualmem_x_variable=VISUALMEM_DEFAULT_X;
+
+#define VISUALMEM_DEFAULT_Y (VISUALMEM_MIN_Y+1)
+int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
+
 #define VISUALMEM_ANCHO (visualmem_ancho_variable)
-//#define VISUALMEM_ALTO 15
 #define VISUALMEM_ALTO (visualmem_alto_variable)
 
 //0=vemos visualmem write
@@ -23156,8 +23162,8 @@ void menu_debug_draw_visualmem(void)
 
         int ancho=(VISUALMEM_ANCHO-2);
         int alto=(VISUALMEM_ALTO-6);
-        int xorigen=(VISUALMEM_X+1);
-        int yorigen=(VISUALMEM_Y+5);
+        int xorigen=(visualmem_x_variable+1);
+        int yorigen=(visualmem_y_variable+5);
 
         if (si_complete_video_driver() ) {
                 ancho *=menu_char_width;
@@ -23373,7 +23379,7 @@ void menu_debug_draw_visualmem(void)
 
 void menu_debug_visualmem_dibuja_ventana(void)
 {
-	menu_dibuja_ventana(VISUALMEM_X,VISUALMEM_Y,VISUALMEM_ANCHO,VISUALMEM_ALTO,"Visual memory");
+	menu_dibuja_ventana(visualmem_x_variable,visualmem_y_variable,VISUALMEM_ANCHO,VISUALMEM_ALTO,"Visual memory");
 
 
 	//Forzar a mostrar atajos
@@ -23384,7 +23390,7 @@ void menu_debug_visualmem_dibuja_ventana(void)
 
 	char texto_linea[33];
 	sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
-	menu_escribe_linea_opcion(VISUALMEM_Y,-1,1,texto_linea);
+	menu_escribe_linea_opcion(0,-1,1,texto_linea);
 
 
 	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: Written Mem");
@@ -23393,7 +23399,7 @@ void menu_debug_visualmem_dibuja_ventana(void)
 
 
 	//sprintf (texto_linea,"~~Looking: %s",(menu_visualmem_donde == 0 ? "Written Mem" : "Opcode") );
-	menu_escribe_linea_opcion(VISUALMEM_Y+1,-1,1,texto_linea);
+	menu_escribe_linea_opcion(1,-1,1,texto_linea);
 
 
 	//Restaurar comportamiento atajos
@@ -23572,23 +23578,41 @@ void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
 
 void menu_debug_new_visualmem_key_o(MENU_ITEM_PARAMETERS)
 {
-                        if (visualmem_ancho_variable>23) visualmem_ancho_variable--;
+    if (visualmem_ancho_variable>23) {
+		visualmem_ancho_variable--;
+
+		if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_DEFAULT_X;
+	}
 }
 
 
 void menu_debug_new_visualmem_key_p(MENU_ITEM_PARAMETERS)
 {
-                        if (visualmem_ancho_variable<30) visualmem_ancho_variable++;
+    if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO) {
+		visualmem_ancho_variable++;
+
+		//Mover a la izquierda si maximo
+		if (visualmem_ancho_variable>=VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_MIN_X;
+	}
 }
 
 void menu_debug_new_visualmem_key_q(MENU_ITEM_PARAMETERS)
 {
-                        if (visualmem_alto_variable>7) visualmem_alto_variable--;
+    if (visualmem_alto_variable>7) {
+		visualmem_alto_variable--;
+
+		if (visualmem_alto_variable<VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_DEFAULT_Y;
+	}
 }
 
 void menu_debug_new_visualmem_key_a(MENU_ITEM_PARAMETERS)
 {
-                        if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) visualmem_alto_variable++;
+    if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) {
+		visualmem_alto_variable++;
+
+		//Mover a la arriba si maximo
+		if (visualmem_alto_variable>=VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_MIN_Y;		
+	}
 }
 
 void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
