@@ -1432,3 +1432,110 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
+
+
+
+void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
+{
+
+        //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
+        //z80_bit copia_video_interlaced_mode;
+        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
+
+        //disable_interlace();
+
+
+        menu_espera_no_tecla();
+
+        //z80_byte acumulado;
+
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de audio waveform
+	//set_menu_overlay_function(menu_audio_draw_sound_wave);
+
+	zxvision_window ventana;
+
+#define SOUND_ZXVISION_WAVE_X 1
+#define SOUND_ZXVISION_WAVE_Y 3
+#define SOUND_ZXVISION_WAVE_ANCHO 27
+#define SOUND_ZXVISION_WAVE_ALTO 14
+
+
+	menu_item *array_menu_audio_new_waveform;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        
+
+
+	  //Hay que redibujar la ventana desde este bucle
+	//menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
+	zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,SOUND_ZXVISION_WAVE_ANCHO,SOUND_ZXVISION_WAVE_ALTO+4,
+							SOUND_ZXVISION_WAVE_ANCHO,SOUND_ZXVISION_WAVE_ALTO+4,"ZXVision Waveform");
+	zxvision_draw_window(&ventana);
+
+
+	overlay_screen caracter;
+
+/*	struct s_overlay_screen {
+	z80_byte tinta,papel,parpadeo;
+	z80_byte caracter;
+};*/
+
+	caracter.tinta=0;
+	caracter.papel=7;
+	caracter.parpadeo=0;
+	caracter.caracter='A';
+
+	zxvision_print_char(&ventana,0,0,&caracter);
+
+
+                    /*    menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
+                        menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
+
+                        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+                        //menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
+                        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
+						//0123456789
+						// Change wave Shape
+						
+			menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
+
+
+
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );*/
+
+
+	menu_espera_tecla();
+
+	zxvision_destroy_window(&ventana);
+             /*   if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);*/
+
+
+
+
+
+
+        //Restauramos modo interlace
+        //if (copia_video_interlaced_mode.v) enable_interlace();
+
+       //restauramos modo normal de texto de menu
+       //set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+}

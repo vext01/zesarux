@@ -28,6 +28,7 @@
 extern void menu_poke(MENU_ITEM_PARAMETERS);
 extern void menu_settings_debug(MENU_ITEM_PARAMETERS);
 extern void menu_settings_audio(MENU_ITEM_PARAMETERS);
+extern void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS);
 extern void menu_mem_breakpoints(MENU_ITEM_PARAMETERS);
 extern int menu_cond_ay_chip(void);
 extern int last_debug_poke_dir;

@@ -46,6 +46,8 @@ extern void cls_menu_overlay(void);
 extern void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
 extern void normal_overlay_texto_menu(void);
 
+void menu_espera_tecla(void);
+
 extern z80_bit menu_symshift;
 extern z80_bit menu_capshift;
 extern z80_bit menu_backspace;
@@ -68,6 +70,25 @@ struct s_overlay_screen {
 #define OVERLAY_SCREEN_HEIGTH 24
 
 typedef struct s_overlay_screen overlay_screen;
+
+//Nuevas ventanas zxvision
+struct s_zxvision_window {
+	overlay_screen *memory;
+	int visible_width,visible_height;
+	int x,y;
+
+	int offset_x,offset_y;
+
+	int total_width,total_height;
+	char window_title[256];
+};
+
+typedef struct s_zxvision_window zxvision_window;
+
+extern void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title);
+extern void zxvision_destroy_window(zxvision_window *w);
+extern void zxvision_draw_window(zxvision_window *w);
+extern void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter);
 
 #define MAX_F_FUNCTIONS 19
 

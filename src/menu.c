@@ -271,6 +271,9 @@ int menu_footer=1;
 //buffer de escritura de segunda capa
 //overlay_screen second_overlay_screen_array[32*24];
 
+
+
+
 //Si el menu esta desactivado completamente. Si es asi, cualquier evento que abra el menu, provocará la salida del emulador
 z80_bit menu_desactivado={0};
 
@@ -354,7 +357,7 @@ void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80
 
 void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2);
 
-void menu_espera_tecla(void);
+
 void menu_espera_tecla_timeout_tooltip(void);
 z80_byte menu_da_todas_teclas(void);
 void menu_cpu_core_loop(void);
@@ -3629,6 +3632,8 @@ void menu_dibuja_ventana_franja_arcoiris_trozo_current(int trozos)
 	menu_dibuja_ventana_franja_arcoiris_trozo(ventana_x,ventana_y,ventana_ancho,trozos);
 }
 
+
+
 //dibuja ventana de menu, con:
 //titulo
 //contenido blanco
@@ -3720,6 +3725,102 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 
 
 
+}
+
+void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
+{
+
+	//Alto visible se reduce en 1 - por el titulo de ventana
+	
+	w->x=x;
+	w->y=y;
+	w->visible_width=visible_width;
+	w->visible_height=visible_height;
+
+	w->total_width=total_width;
+	w->total_height=total_height;
+
+	w->offset_x=0;
+	w->offset_y=0;
+
+	w->memory=malloc(total_width*total_height);
+
+	if (w->memory==NULL) cpu_panic ("Can not allocate memory for window");
+
+	//Establecer titulo ventana
+	strcpy(w->window_title,title);
+}
+
+void zxvision_destroy_window(zxvision_window *w)
+{
+	free(w->memory);
+}
+
+void zxvision_draw_window(zxvision_window *w)
+{
+	menu_dibuja_ventana(w->x,w->y,w->visible_width,w->visible_height,w->window_title);
+	//TODO: esto dibuja en pantalla ventana con contenido blanco. Habria que hacer que solo dibuje titulo y marco ventana, no?
+	//O meter contenido blanco siempre por defecto...?
+}
+
+void zxvision_draw_window_contents(zxvision_window *w)
+{
+	int xdestination=w->x,ydestination=w->y;
+	int width,height;
+
+	//Alto del contenido es 1 menos, por el titulo de ventana
+	width=w->visible_width;
+	height=w->visible_height-1;
+
+	int x,y;
+
+	for (x=0;x<width;x++) {
+		for (y=0;y<height;y++) {
+			//obtener caracter
+			int offset_caracter=((y+w->offset_y)*w->total_width)+x+w->offset_x;
+			overlay_screen *caracter;
+			caracter=w->memory;
+			caracter=&caracter[offset_caracter];
+
+			putchar_menu_overlay_parpadeo(xdestination+x,ydestination+y,
+				caracter->caracter,caracter->tinta,caracter->papel,caracter->parpadeo);
+/*
+struct s_overlay_screen {
+	z80_byte tinta,papel,parpadeo;
+	z80_byte caracter;
+};
+*/
+		}
+	}
+
+}
+
+void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter)
+{
+	//Comprobar limites
+	if (x>=w->total_width || x<0 || y>w->total_height || y<0) return;
+
+	//Sacamos offset
+	int offset=(y*w->total_width)+x;
+
+	/*struct s_overlay_screen {
+	z80_byte tinta,papel,parpadeo;
+	z80_byte caracter;
+};	*/
+
+	//Puntero
+	overlay_screen *p;
+
+	p=w->memory; //Puntero inicial
+
+	p=&p[offset]; //Puntero con offset
+
+	p->tinta=caracter->tinta;
+	p->papel=caracter->papel;
+	p->parpadeo=caracter->parpadeo;
+	p->caracter=caracter->caracter;
+
+	
 }
 
 //Retorna el item i
@@ -12818,6 +12919,11 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
 					menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'w');
+
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_zxvision_waveform,NULL,"View ~~ZXVision Waveform");
+					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
+					menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
+					menu_add_item_menu_shortcut(array_menu_audio_settings,'z');
 
 					//menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_player_player,NULL,"OLD AY Player");
 
