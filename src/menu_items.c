@@ -1462,6 +1462,11 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 #define SOUND_ZXVISION_WAVE_ANCHO 27
 #define SOUND_ZXVISION_WAVE_ALTO 14
 
+	int ancho_visible=SOUND_ZXVISION_WAVE_ANCHO;
+	int alto_visible=SOUND_ZXVISION_WAVE_ALTO+4;
+
+	int ancho_total=10;
+	int alto_total=alto_visible+2;
 
 	menu_item *array_menu_audio_new_waveform;
         menu_item item_seleccionado;
@@ -1471,8 +1476,8 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 
 	  //Hay que redibujar la ventana desde este bucle
 	//menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
-	zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,SOUND_ZXVISION_WAVE_ANCHO,SOUND_ZXVISION_WAVE_ALTO+4,
-							SOUND_ZXVISION_WAVE_ANCHO,SOUND_ZXVISION_WAVE_ALTO+4-1,"ZXVision Waveform");
+	zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,ancho_visible,alto_visible,
+							ancho_total,alto_total,"ZXVision Waveform");
 	zxvision_draw_window(&ventana);
 
 	printf ("Created window\n");
@@ -1506,8 +1511,8 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 
 	int x,y;
 
-	for (y=0;y<SOUND_ZXVISION_WAVE_ALTO+4;y++) {
-		for (x=0;x<SOUND_ZXVISION_WAVE_ANCHO;x++) {
+	for (y=0;y<alto_total;y++) {
+		for (x=0;x<ancho_total;x++) {
 			caracter.caracter=caracter_print;
 			zxvision_print_char(&ventana,x,y,&caracter);	
 
@@ -1556,8 +1561,8 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	//Jugar con offset
 	int i;
 
-	for (i=0;i<5;i++) {
-		ventana.offset_x=i;
+	for (i=0;i<7;i++) {
+		zxvision_set_offset_x(&ventana,i);
 
 		zxvision_draw_window_contents(&ventana);
 
@@ -1568,12 +1573,29 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	}
 
 
-	for (i=0;i<5;i++) {
-		ventana.offset_y=i;
+	for (i=0;i<7;i++) {
+		zxvision_set_offset_y(&ventana,i);
 
 		zxvision_draw_window_contents(&ventana);
 
 		printf ("Offset y %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}
+
+
+	//TODO: mover x,y
+	//cambiar ancho, alto visible
+
+	//TODO en draw_window_contents ver que no se salga de margen 32 en x o 24 en y
+
+	for (i=0;i<7;i++) {
+		ventana.x=i;
+
+		zxvision_draw_window_contents(&ventana);
+
+		printf ("mover x %d\n",i);
 
 		menu_espera_tecla();
 		menu_espera_no_tecla();		

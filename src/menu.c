@@ -3782,6 +3782,18 @@ void zxvision_draw_window(zxvision_window *w)
 	//O meter contenido blanco siempre por defecto...?
 }
 
+void zxvision_set_offset_x(zxvision_window *w,int offset_x)
+{
+	//TODO. de momento no comprobamos
+	w->offset_x=offset_x;	
+}
+
+void zxvision_set_offset_y(zxvision_window *w,int offset_y)
+{
+	//TODO. de momento no comprobamos
+	w->offset_y=offset_y;	
+}
+
 void zxvision_draw_window_contents(zxvision_window *w)
 {
 
@@ -3823,6 +3835,7 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				caracter_escribir,caracter->tinta,caracter->papel,caracter->parpadeo);
 			}
 
+			//Fuera de rango
 			else {
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
 				'X',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);

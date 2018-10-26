@@ -91,6 +91,9 @@ extern void zxvision_draw_window(zxvision_window *w);
 extern void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter);
 extern void zxvision_draw_window_contents(zxvision_window *w);
 
+extern void zxvision_set_offset_x(zxvision_window *w,int offset_x);
+extern void zxvision_set_offset_y(zxvision_window *w,int offset_y);
+
 #define MAX_F_FUNCTIONS 19
 
 enum defined_f_function_ids {
