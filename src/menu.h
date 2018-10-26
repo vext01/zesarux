@@ -89,6 +89,7 @@ extern void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width
 extern void zxvision_destroy_window(zxvision_window *w);
 extern void zxvision_draw_window(zxvision_window *w);
 extern void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter);
+extern void zxvision_draw_window_contents(zxvision_window *w);
 
 #define MAX_F_FUNCTIONS 19
 

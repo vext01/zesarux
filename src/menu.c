@@ -3743,12 +3743,31 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->offset_x=0;
 	w->offset_y=0;
 
-	w->memory=malloc(total_width*total_height);
+	//Establecer titulo ventana
+	strcpy(w->window_title,title);	
+
+	int buffer_size=total_width*total_height;
+	w->memory=malloc(buffer_size*sizeof(overlay_screen));
 
 	if (w->memory==NULL) cpu_panic ("Can not allocate memory for window");
 
-	//Establecer titulo ventana
-	strcpy(w->window_title,title);
+	//Inicializarlo todo con texto blanco
+	//putchar_menu_overlay(x+j,y+i+1,' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+
+	int i;
+	overlay_screen *p;
+	p=w->memory;
+
+	for (i=0;i<buffer_size;i++) {
+		p->tinta=ESTILO_GUI_TINTA_NORMAL;
+		p->papel=ESTILO_GUI_PAPEL_NORMAL;
+		p->parpadeo=0;
+		p->caracter=' ';
+
+		p++;
+	}
+
+
 }
 
 void zxvision_destroy_window(zxvision_window *w)
@@ -3765,7 +3784,7 @@ void zxvision_draw_window(zxvision_window *w)
 
 void zxvision_draw_window_contents(zxvision_window *w)
 {
-	int xdestination=w->x,ydestination=w->y;
+
 	int width,height;
 
 	//Alto del contenido es 1 menos, por el titulo de ventana
@@ -3774,16 +3793,40 @@ void zxvision_draw_window_contents(zxvision_window *w)
 
 	int x,y;
 
-	for (x=0;x<width;x++) {
-		for (y=0;y<height;y++) {
+	for (y=0;y<height;y++) {
+		for (x=0;x<width;x++) {
+		
+			int xdestination=w->x+x;
+			int ydestination=(w->y)+1+y; //y +1 porque empezamos a escribir debajo del titulo
+
 			//obtener caracter
-			int offset_caracter=((y+w->offset_y)*w->total_width)+x+w->offset_x;
+			int out_of_bonds=0;
+
+			int offset_x_final=x+w->offset_x;
+			if (offset_x_final>=w->total_width) out_of_bonds=1;
+
+			int offset_y_final=y+w->offset_y;
+			if (offset_y_final>=w->total_height) out_of_bonds=1;
+
+			if (!out_of_bonds) {
+			int offset_caracter=(offset_y_final*w->total_width)+offset_x_final;
+
 			overlay_screen *caracter;
 			caracter=w->memory;
 			caracter=&caracter[offset_caracter];
 
-			putchar_menu_overlay_parpadeo(xdestination+x,ydestination+y,
-				caracter->caracter,caracter->tinta,caracter->papel,caracter->parpadeo);
+			z80_byte caracter_escribir=caracter->caracter;
+
+
+			
+			putchar_menu_overlay_parpadeo(xdestination,ydestination,
+				caracter_escribir,caracter->tinta,caracter->papel,caracter->parpadeo);
+			}
+
+			else {
+				putchar_menu_overlay_parpadeo(xdestination,ydestination,
+				'X',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);
+			}
 /*
 struct s_overlay_screen {
 	z80_byte tinta,papel,parpadeo;
@@ -3792,6 +3835,8 @@ struct s_overlay_screen {
 */
 		}
 	}
+
+	//putchar_menu_overlay_parpadeo(xdestination,ydestination,'X',0,7,0);
 
 }
 

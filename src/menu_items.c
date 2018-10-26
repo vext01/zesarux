@@ -1486,9 +1486,32 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	caracter.tinta=0;
 	caracter.papel=7;
 	caracter.parpadeo=0;
+
+	//Relleno pantalla
+	z80_byte caracter_print=33;
+
+
+
+	int x,y;
+
+	for (y=0;y<SOUND_ZXVISION_WAVE_ALTO+4;y++) {
+		for (x=0;x<SOUND_ZXVISION_WAVE_ANCHO;x++) {
+			caracter.caracter=caracter_print;
+			zxvision_print_char(&ventana,x,y,&caracter);	
+
+			caracter_print++;
+			if (caracter_print>126) caracter_print=33;		
+		}
+	}
+
 	caracter.caracter='A';
 
 	zxvision_print_char(&ventana,0,0,&caracter);
+
+	caracter.caracter='B';
+
+	zxvision_print_char(&ventana,0,1,&caracter);
+
 
 
                     /*    menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
@@ -1511,6 +1534,26 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 
 
 	menu_espera_tecla();
+	menu_espera_no_tecla();
+
+	zxvision_draw_window_contents(&ventana);
+
+	menu_espera_tecla(); 
+	menu_espera_no_tecla();
+
+	//Jugar con offset
+	int i;
+
+	for (i=0;i<5;i++) {
+		ventana.offset_x=i;
+
+		zxvision_draw_window_contents(&ventana);
+
+		printf ("Offset x %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}
 
 	zxvision_destroy_window(&ventana);
              /*   if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
