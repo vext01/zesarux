@@ -1472,8 +1472,20 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	  //Hay que redibujar la ventana desde este bucle
 	//menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
 	zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,SOUND_ZXVISION_WAVE_ANCHO,SOUND_ZXVISION_WAVE_ALTO+4,
-							SOUND_ZXVISION_WAVE_ANCHO,SOUND_ZXVISION_WAVE_ALTO+4,"ZXVision Waveform");
+							SOUND_ZXVISION_WAVE_ANCHO,SOUND_ZXVISION_WAVE_ALTO+4-1,"ZXVision Waveform");
 	zxvision_draw_window(&ventana);
+
+	printf ("Created window\n");
+
+	menu_espera_tecla();
+	menu_espera_no_tecla();
+
+	zxvision_draw_window_contents(&ventana);
+
+	printf ("Drawn window contents\n");
+
+	menu_espera_tecla(); 
+	menu_espera_no_tecla();
 
 
 	overlay_screen caracter;
@@ -1550,6 +1562,18 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 		zxvision_draw_window_contents(&ventana);
 
 		printf ("Offset x %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}
+
+
+	for (i=0;i<5;i++) {
+		ventana.offset_y=i;
+
+		zxvision_draw_window_contents(&ventana);
+
+		printf ("Offset y %d\n",i);
 
 		menu_espera_tecla();
 		menu_espera_no_tecla();		
