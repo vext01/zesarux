@@ -3856,7 +3856,7 @@ struct s_overlay_screen {
 void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter)
 {
 	//Comprobar limites
-	if (x>=w->total_width || x<0 || y>w->total_height || y<0) return;
+	if (x>=w->total_width || x<0 || y>=w->total_height || y<0) return;
 
 	//Sacamos offset
 	int offset=(y*w->total_width)+x;
