@@ -93,6 +93,8 @@ extern void zxvision_draw_window_contents(zxvision_window *w);
 
 extern void zxvision_set_offset_x(zxvision_window *w,int offset_x);
 extern void zxvision_set_offset_y(zxvision_window *w,int offset_y);
+extern void zxvision_set_x_position(zxvision_window *w,int x);
+extern void zxvision_set_y_position(zxvision_window *w,int y);
 
 #define MAX_F_FUNCTIONS 19
 

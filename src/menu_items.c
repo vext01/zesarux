@@ -1477,7 +1477,7 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	  //Hay que redibujar la ventana desde este bucle
 	//menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
 	zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,ancho_visible,alto_visible,
-							ancho_total,alto_total,"ZXVision Waveform");
+							ancho_total,alto_total,"ZXVision Test");
 	zxvision_draw_window(&ventana);
 
 	printf ("Created window\n");
@@ -1585,15 +1585,22 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	}
 
 
-	//TODO: mover x,y
+	//TODO: 
 	//cambiar ancho, alto visible
 
 	//TODO en draw_window_contents ver que no se salga de margen 32 en x o 24 en y
 
-	for (i=0;i<7;i++) {
-		ventana.x=i;
+	for (i=0;i<10;i++) {
+		zxvision_set_x_position(&ventana,i);
 
-		zxvision_draw_window_contents(&ventana);
+		printf ("mover x %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}
+
+	for (i=0;i<10;i++) {
+		zxvision_set_y_position(&ventana,i);
 
 		printf ("mover x %d\n",i);
 
