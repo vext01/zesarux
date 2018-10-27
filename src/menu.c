@@ -3784,13 +3784,15 @@ void zxvision_draw_window(zxvision_window *w)
 
 void zxvision_set_offset_x(zxvision_window *w,int offset_x)
 {
-	//TODO. de momento no comprobamos
+	//TODO. de momento no comprobamos por mayor
+	if (offset_x<0) return;
 	w->offset_x=offset_x;	
 }
 
 void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 {
 	//TODO. de momento no comprobamos
+	if (offset_y<0) return;
 	w->offset_y=offset_y;	
 }
 
@@ -3824,6 +3826,29 @@ void zxvision_set_y_position(zxvision_window *w,int y)
 	if (zxvision_out_bonds(w->x,y,w->visible_width,w->visible_height)) return;
 
 	w->y=y;
+	zxvision_redraw_window_on_move(w);
+
+}
+
+
+void zxvision_set_visible_width(zxvision_window *w,int visible_width)
+{
+	if (zxvision_out_bonds(w->x,w->y,visible_width,w->visible_height)) return;
+
+	if (visible_width<1) return;
+
+	w->visible_width=visible_width;
+	zxvision_redraw_window_on_move(w);
+
+}
+
+void zxvision_set_visible_height(zxvision_window *w,int visible_height)
+{
+	if (zxvision_out_bonds(w->x,w->y,w->visible_width,visible_height)) return;
+
+	if (visible_height<1) return;
+
+	w->visible_height=visible_height;
 	zxvision_redraw_window_on_move(w);
 
 }

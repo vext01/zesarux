@@ -1434,6 +1434,17 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
+void zxvision_test_sleep_quarter(void)
+{
+	int previo_contador_segundo=contador_segundo;
+
+	while (1) {
+		menu_cpu_core_loop();
+		if (previo_contador_segundo!=contador_segundo && (contador_segundo%250)==0) return;
+	
+	}
+}
+
 
 void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 {
@@ -1465,7 +1476,7 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	int ancho_visible=SOUND_ZXVISION_WAVE_ANCHO;
 	int alto_visible=SOUND_ZXVISION_WAVE_ALTO+4;
 
-	int ancho_total=10;
+	int ancho_total=15;
 	int alto_total=alto_visible+2;
 
 	menu_item *array_menu_audio_new_waveform;
@@ -1602,10 +1613,118 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	for (i=0;i<10;i++) {
 		zxvision_set_y_position(&ventana,i);
 
-		printf ("mover x %d\n",i);
+		printf ("mover y %d\n",i);
 
 		menu_espera_tecla();
 		menu_espera_no_tecla();		
+	}
+
+	zxvision_set_x_position(&ventana,0);
+	zxvision_set_y_position(&ventana,0);
+
+	for (i=25;i<35;i++) {
+		zxvision_set_visible_width(&ventana,i);
+
+		printf ("width %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}	
+
+	for (i=18;i<28;i++) {
+		zxvision_set_visible_height(&ventana,i);
+
+		printf ("height %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}	
+
+
+	for (i=5;i>=0;i--) {
+		zxvision_set_visible_width(&ventana,i);
+
+		printf ("width %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}	
+
+	zxvision_set_visible_width(&ventana,20);
+
+	for (i=5;i>=0;i--) {
+		zxvision_set_visible_height(&ventana,i);
+
+		printf ("height %d\n",i);
+
+		menu_espera_tecla();
+		menu_espera_no_tecla();		
+	}	
+
+	zxvision_set_visible_height(&ventana,10);
+	zxvision_set_visible_width(&ventana,15);
+
+	//Rebotar
+	int contador=0;
+
+	int xpos=0;
+	int ypos=0;
+
+	int incx=+1;
+	int incy=+1;
+
+	int offsetx=0;
+	int offsety=0;	
+
+	z80_byte tecla=0;
+
+	//Salir con ESC
+	while (tecla>=2) {
+
+		zxvision_set_offset_x(&ventana,offsetx);
+		zxvision_set_offset_y(&ventana,offsety);
+
+		zxvision_set_x_position(&ventana,xpos);
+		zxvision_set_y_position(&ventana,ypos);		
+
+		zxvision_test_sleep_quarter();
+
+		z80_byte tecla=menu_get_pressed_key();
+		//Cambio offset con cursores
+		if (tecla==8) {
+			offsetx--;
+			printf ("Decrement offset x to %d\n",offsetx);
+		}
+
+		if (tecla==9) {
+			offsetx++;
+			printf ("Increment offset x to %d\n",offsetx);
+		}
+
+		if (tecla==10) {
+			offsety++;
+			printf ("Increment offset y to %d\n",offsety);
+		}
+
+		if (tecla==11) {
+			offsety--;
+			printf ("Decrement offset y to %d\n",offsety);
+		}
+
+
+		xpos +=incx;
+		if (xpos>=17 || xpos<=0) {
+			incx=-incx;
+		}
+
+		ypos +=incy;
+		if (ypos>=14 || ypos<=0) {
+			incy=-incy;
+		}		
+		
+		contador++;
+
+
 	}
 
 	zxvision_destroy_window(&ventana);
