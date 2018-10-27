@@ -1609,7 +1609,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	for (i=0;i<10;i++) {
 		zxvision_set_x_position(&ventana,i);
 
-		printf ("mover x %d\n",i);
+		printf ("Move x %d\n",i);
 
 		menu_espera_tecla();
 		menu_espera_no_tecla();		
@@ -1618,7 +1618,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	for (i=0;i<10;i++) {
 		zxvision_set_y_position(&ventana,i);
 
-		printf ("mover y %d\n",i);
+		printf ("Move y %d\n",i);
 
 		menu_espera_tecla();
 		menu_espera_no_tecla();		
@@ -1768,27 +1768,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	}
 
 	zxvision_destroy_window(&ventana);
-             /*   if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);*/
-
-
-
-
-
-
-        //Restauramos modo interlace
-        //if (copia_video_interlaced_mode.v) enable_interlace();
-
-       //restauramos modo normal de texto de menu
-       //set_menu_overlay_function(normal_overlay_texto_menu);
+            
 
 
         cls_menu_overlay();
