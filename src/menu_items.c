@@ -1541,7 +1541,10 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	zxvision_print_char(&ventana,0,1,&caracter);
 
 
-	zxvision_print_string(&ventana,2,4,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0," This is a test ");
+	zxvision_print_string(&ventana,2,4,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," This is a test ");
+
+	zxvision_print_string(&ventana,2,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Press a key ");
+	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to next step ");
 
 
                     /*    menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
@@ -1664,7 +1667,11 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	}	
 
 	zxvision_set_visible_height(&ventana,10);
-	zxvision_set_visible_width(&ventana,15);
+	zxvision_set_visible_width(&ventana,18);
+
+	zxvision_print_string(&ventana,2,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Use cursors ");
+	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to move offset ");	
+	zxvision_print_string(&ventana,2,7,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," ESC exit ");	
 
 	//Rebotar
 	int contador=0;
@@ -1715,7 +1722,7 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 
 
 		xpos +=incx;
-		if (xpos>=17 || xpos<=0) {
+		if (xpos>=14 || xpos<=0) {
 			incx=-incx;
 		}
 

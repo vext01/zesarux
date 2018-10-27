@@ -46,7 +46,9 @@ extern void cls_menu_overlay(void);
 extern void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
 extern void normal_overlay_texto_menu(void);
 
-void menu_espera_tecla(void);
+extern void menu_espera_tecla(void);
+extern void menu_cpu_core_loop(void);
+extern z80_byte menu_get_pressed_key(void);
 
 extern z80_bit menu_symshift;
 extern z80_bit menu_capshift;
