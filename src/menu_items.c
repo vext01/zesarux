@@ -1441,6 +1441,8 @@ void zxvision_test_sleep_quarter(void)
 	while (1) {
 		menu_cpu_core_loop();
 		if (previo_contador_segundo!=contador_segundo && (contador_segundo%250)==0) return;
+
+		if (menu_get_pressed_key()!=0) return;
 	
 	}
 }
@@ -1760,8 +1762,19 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 		
 		contador++;
 
+		if (tecla!=0) menu_espera_no_tecla();
 
 	}
+
+	tecla=0;
+
+	while (!mouse_right) {
+		//menu_espera_tecla();
+		//tecla=menu_get_pressed_key();
+		//Comprobar eventos raton
+		menu_cpu_core_loop();
+		zxvision_handle_mouse_events(&ventana);
+	} 
 
 	zxvision_destroy_window(&ventana);
             

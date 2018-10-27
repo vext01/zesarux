@@ -3727,6 +3727,12 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 
 }
 
+int last_mouse_x,last_mouse_y;
+int mouse_movido=0;
+
+int menu_mouse_x=0;
+int menu_mouse_y=0;
+
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
 
@@ -3955,6 +3961,94 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 	}	
 }
 
+int mouse_is_dragging=0;
+int window_is_being_moved=0;
+int window_mouse_x_before_move=0;
+int window_mouse_y_before_move=0;
+
+void zxvision_handle_mouse_events(zxvision_window *w)
+{
+	if (!si_menu_mouse_activado()) return;
+	menu_calculate_mouse_xy();
+
+
+	if (mouse_movido) {
+		printf ("mouse movido\n");
+		if (si_menu_mouse_en_ventana() ) {
+				//if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<ventana_ancho && menu_mouse_y<ventana_alto ) {
+					printf ("dentro ventana\n");
+					if (menu_mouse_y==0) {
+						printf ("En barra titulo\n");
+					}
+					//Descartar linea titulo y ultima linea
+		}
+
+	}
+
+	if (mouse_left) {
+		//printf ("Pulsado boton izquierdo\n");
+	}
+
+	if (!mouse_is_dragging) {
+		if (mouse_left && mouse_movido) {
+			printf ("Mouse has begun to drag\n");
+			mouse_is_dragging=1;
+
+			//Si estaba en titulo
+			if (si_menu_mouse_en_ventana()) {
+				if (menu_mouse_y==0) {
+					printf ("Arrastrando ventana\n");
+					window_is_being_moved=1;
+					window_mouse_x_before_move=menu_mouse_x;
+					window_mouse_y_before_move=menu_mouse_y;
+				}
+			}
+		}
+	}
+
+	if (mouse_is_dragging) {
+		if (!mouse_left) {
+			printf ("Mouse has stopped to drag\n");
+			mouse_is_dragging=0;
+			if (window_is_being_moved) {
+				printf ("Windows has been stopped moving. menu_mouse_x: %d menu_mouse_y: %d\n",menu_mouse_x,menu_mouse_y);
+				window_is_being_moved=0;
+
+				//Actualizar posicion
+				int new_y=w->y+menu_mouse_y;
+
+				zxvision_set_y_position(w,new_y);
+
+				//Actualizar posicion
+				int new_x=w->x+menu_mouse_x;
+
+				zxvision_set_x_position(w,new_x);
+			}
+		}
+
+		if (window_is_being_moved) {
+			//Si se ha movido un poco
+			if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
+				printf ("Redraw while dragging\n");
+				window_mouse_y_before_move=menu_mouse_y;
+				window_mouse_x_before_move=menu_mouse_x;
+				//Actualizar posicion
+				int new_y=w->y+menu_mouse_y;
+
+				zxvision_set_y_position(w,new_y);
+
+
+				//Actualizar posicion
+				int new_x=w->x+menu_mouse_x;
+
+				zxvision_set_x_position(w,new_x);								
+			}
+		}
+	}
+
+	//if (mouse_left && mouse_movido) printf ("Mouse is dragging\n");
+}
+
 //Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {
@@ -4036,11 +4130,7 @@ void menu_cpu_core_loop(void)
 
 }
 
-int last_mouse_x,last_mouse_y;
-int mouse_movido=0;
 
-int menu_mouse_x=0;
-int menu_mouse_y=0;
 
 int si_menu_mouse_en_ventana(void)
 {

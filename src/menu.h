@@ -45,6 +45,8 @@ extern void pruebas_texto_menu(void);
 extern void cls_menu_overlay(void);
 extern void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
 extern void normal_overlay_texto_menu(void);
+extern int si_menu_mouse_en_ventana(void);
+extern void menu_calculate_mouse_xy(void);
 
 extern void menu_espera_tecla(void);
 extern void menu_cpu_core_loop(void);
@@ -100,6 +102,7 @@ extern void zxvision_set_y_position(zxvision_window *w,int y);
 extern void zxvision_set_visible_width(zxvision_window *w,int visible_width);
 extern void zxvision_set_visible_height(zxvision_window *w,int visible_height);
 extern void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto);
+extern void zxvision_handle_mouse_events(zxvision_window *w);
 
 #define MAX_F_FUNCTIONS 19
 
