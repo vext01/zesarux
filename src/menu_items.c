@@ -1446,7 +1446,7 @@ void zxvision_test_sleep_quarter(void)
 }
 
 
-void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
+void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 {
 
         //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar

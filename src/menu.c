@@ -13052,10 +13052,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'w');
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_zxvision_waveform,NULL,"View ~~ZXVision Waveform");
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'z');
+
 
 					//menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_player_player,NULL,"OLD AY Player");
 
@@ -26782,6 +26779,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 								"Note: symbol | means Shift+1 (Edit)");
 		}
 
+
+					menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
 
 	/*	menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'e');
