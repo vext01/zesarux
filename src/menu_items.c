@@ -1601,10 +1601,6 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	}
 
 
-	//TODO: 
-	//cambiar ancho, alto visible
-
-	//TODO en draw_window_contents ver que no se salga de margen 32 en x o 24 en y
 
 	for (i=0;i<10;i++) {
 		zxvision_set_x_position(&ventana,i);
