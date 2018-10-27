@@ -4017,31 +4017,37 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//Actualizar posicion
 				int new_y=w->y+menu_mouse_y;
 
-				zxvision_set_y_position(w,new_y);
+				
 
 				//Actualizar posicion
 				int new_x=w->x+menu_mouse_x;
 
 				zxvision_set_x_position(w,new_x);
+				zxvision_set_y_position(w,new_y);
 			}
 		}
 
 		if (window_is_being_moved) {
 			//Si se ha movido un poco
 			if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
-				printf ("Redraw while dragging\n");
-				window_mouse_y_before_move=menu_mouse_y;
-				window_mouse_x_before_move=menu_mouse_x;
+				printf ("Redraw while dragging x %d %d y %d %d \n",menu_mouse_x,window_mouse_x_before_move,menu_mouse_y,window_mouse_y_before_move);
+
 				//Actualizar posicion
 				int new_y=w->y+menu_mouse_y;
-
-				zxvision_set_y_position(w,new_y);
-
-
 				//Actualizar posicion
 				int new_x=w->x+menu_mouse_x;
 
-				zxvision_set_x_position(w,new_x);								
+
+				
+
+				//Los dos de golpe mejor asi
+				zxvision_set_x_position(w,new_x);	
+				zxvision_set_y_position(w,new_y);
+
+				window_mouse_y_before_move=menu_mouse_y;
+				window_mouse_x_before_move=menu_mouse_x;						
+
+									
 			}
 		}
 	}
