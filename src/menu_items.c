@@ -1476,7 +1476,7 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	int ancho_visible=SOUND_ZXVISION_WAVE_ANCHO;
 	int alto_visible=SOUND_ZXVISION_WAVE_ALTO+4;
 
-	int ancho_total=15;
+	int ancho_total=20;
 	int alto_total=alto_visible+2;
 
 	menu_item *array_menu_audio_new_waveform;
@@ -1511,8 +1511,8 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	z80_byte caracter;
 };*/
 
-	caracter.tinta=0;
-	caracter.papel=7;
+	caracter.tinta=ESTILO_GUI_TINTA_NORMAL;
+	caracter.papel=ESTILO_GUI_PAPEL_NORMAL;
 	caracter.parpadeo=0;
 
 	//Relleno pantalla
@@ -1540,6 +1540,8 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 
 	zxvision_print_char(&ventana,0,1,&caracter);
 
+
+	zxvision_print_string(&ventana,2,4,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0," This is a test ");
 
 
                     /*    menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
@@ -1679,7 +1681,7 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 	z80_byte tecla=0;
 
 	//Salir con ESC
-	while (tecla>=2) {
+	while (tecla!=2) {
 
 		zxvision_set_offset_x(&ventana,offsetx);
 		zxvision_set_offset_y(&ventana,offsety);
@@ -1689,7 +1691,7 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 
 		zxvision_test_sleep_quarter();
 
-		z80_byte tecla=menu_get_pressed_key();
+		tecla=menu_get_pressed_key();
 		//Cambio offset con cursores
 		if (tecla==8) {
 			offsetx--;

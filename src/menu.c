@@ -3940,6 +3940,21 @@ void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter
 	
 }
 
+void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto)
+{
+	while (*texto) {
+		overlay_screen caracter_aux;
+		caracter_aux.tinta=tinta;
+		caracter_aux.papel=papel;
+		caracter_aux.parpadeo=parpadeo;
+		caracter_aux.caracter=*texto;
+
+		zxvision_print_char(w,x,y,&caracter_aux);
+		x++;
+		texto++;
+	}	
+}
+
 //Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {

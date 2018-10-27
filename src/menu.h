@@ -97,6 +97,7 @@ extern void zxvision_set_x_position(zxvision_window *w,int x);
 extern void zxvision_set_y_position(zxvision_window *w,int y);
 extern void zxvision_set_visible_width(zxvision_window *w,int visible_width);
 extern void zxvision_set_visible_height(zxvision_window *w,int visible_height);
+extern void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto);
 
 #define MAX_F_FUNCTIONS 19
 
