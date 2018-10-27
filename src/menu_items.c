@@ -1666,8 +1666,7 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 		menu_espera_no_tecla();		
 	}	
 
-	zxvision_set_visible_height(&ventana,10);
-	zxvision_set_visible_width(&ventana,18);
+
 
 	zxvision_print_string(&ventana,2,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Use cursors ");
 	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to move offset ");	
@@ -1684,6 +1683,12 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 
 	int offsetx=0;
 	int offsety=0;	
+
+	int ancho=20;
+	int alto=10;
+
+	zxvision_set_visible_height(&ventana,alto);
+	zxvision_set_visible_width(&ventana,ancho);	
 
 	z80_byte tecla=0;
 
@@ -1720,14 +1725,38 @@ void menu_audio_zxvision_waveform(MENU_ITEM_PARAMETERS)
 			printf ("Decrement offset y to %d\n",offsety);
 		}
 
+		//Cambio tamanyo
+		if (tecla=='a' && ypos+alto<24) {
+			alto++;
+			printf ("Increment height to %d\n",alto);
+			zxvision_set_visible_height(&ventana,alto);
+		}
+
+		if (tecla=='q' && alto>1) {
+			alto--;
+			printf ("Decrement height to %d\n",alto);
+			zxvision_set_visible_height(&ventana,alto);
+		}
+
+		if (tecla=='p' && xpos+ancho<32) {
+			ancho++;
+			printf ("Increment width to %d\n",ancho);
+			zxvision_set_visible_width(&ventana,ancho);
+		}
+
+		if (tecla=='o' && ancho>7) {
+			ancho--;
+			printf ("Decrement width to %d\n",ancho);
+			zxvision_set_visible_width(&ventana,ancho);
+		}
 
 		xpos +=incx;
-		if (xpos>=14 || xpos<=0) {
+		if (xpos+ancho>=32 || xpos<=0) {
 			incx=-incx;
 		}
 
 		ypos +=incy;
-		if (ypos>=14 || ypos<=0) {
+		if (ypos+alto>=24 || ypos<=0) {
 			incy=-incy;
 		}		
 		
