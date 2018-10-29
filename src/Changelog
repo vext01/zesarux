@@ -1,6 +1,7 @@
 Version 7.2. 08 October 2018 - xxx edition
 
 Added setting to specify configuration file
+Added new menu window type: ZX Vision
 Improved vu-meters: high volumes are shown in red
 Fixed visual glitches in some menus when Pentagon machine and real video: audio wave, visualmem, ay piano, wave piano, view sprites
 Fixed visual glitches in some menus when interlaced enabled: audio wave, visualmem, ay piano, wave piano, view sprites
