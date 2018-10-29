@@ -3967,7 +3967,7 @@ int window_is_being_resized=0;
 int window_mouse_x_before_move=0;
 int window_mouse_y_before_move=0;
 
-void zxvision_handle_mouse_aux(zxvision_window *w)
+void zxvision_handle_mouse_move_aux(zxvision_window *w)
 {
 				int movimiento_x=menu_mouse_x-window_mouse_x_before_move;
 				int movimiento_y=menu_mouse_y-window_mouse_y_before_move;
@@ -3984,6 +3984,24 @@ void zxvision_handle_mouse_aux(zxvision_window *w)
 
 				zxvision_set_x_position(w,new_x);
 				zxvision_set_y_position(w,new_y);
+}
+
+void zxvision_handle_mouse_resize_aux(zxvision_window *w)
+{
+				int incremento_ancho=menu_mouse_x-(w->visible_width)+1;
+				int incremento_alto=menu_mouse_y-(w->visible_height)+1;
+
+				printf ("Incremento %d x %d\n",incremento_ancho,incremento_alto);
+
+				int ancho_final=(w->visible_width)+incremento_ancho;
+				int alto_final=(w->visible_height)+incremento_alto;
+
+				zxvision_set_visible_width(w,ancho_final);
+
+				//Evitar ventana de alto 1, aunque se puede hacer, pero luego no habria zona de redimensionado
+				if (alto_final>1) {
+					zxvision_set_visible_height(w,alto_final);
+				}
 }
 
 int zxvision_mouse_in_bottom_right(zxvision_window *w)
@@ -4048,33 +4066,24 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			mouse_is_dragging=0;
 			if (window_is_being_moved) {
 
-				zxvision_handle_mouse_aux(w);
+				zxvision_handle_mouse_move_aux(w);
 				window_is_being_moved=0;
 
 			}
 
 			if (window_is_being_resized) {
-				int incremento_ancho=menu_mouse_x-(w->visible_width)+1;
-				int incremento_alto=menu_mouse_y-(w->visible_height)+1;
 
-				printf ("Incremento %d x %d\n",incremento_ancho,incremento_alto);
+				zxvision_handle_mouse_resize_aux(w);
+				
 
-				int ancho_final=(w->visible_width)+incremento_ancho;
-				int alto_final=(w->visible_width)+incremento_alto;
-
-				zxvision_set_visible_width(w,ancho_final);
-
-				//Evitar ventana de alto 1, aunque se puede hacer, pero luego no habria zona de redimensionado
-				if (alto_final>1) {
-					zxvision_set_visible_height(w,alto_final);
-				}
+				window_is_being_resized=0;
 			}
 		}
 
 		if (window_is_being_moved) {
 			//Si se ha movido un poco
 			if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
-				zxvision_handle_mouse_aux(w);
+				zxvision_handle_mouse_move_aux(w);
 				
 				//Hay que recalcular menu_mouse_x y menu_mouse_y dado que son relativos a la ventana que justo se ha movido
 				//menu_mouse_y siempre sera 0 dado que el titulo de la ventana, donde se puede arrastrar para mover, es posicion relativa 0
