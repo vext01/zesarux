@@ -3963,6 +3963,7 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 
 int mouse_is_dragging=0;
 int window_is_being_moved=0;
+int window_is_being_resized=0;
 int window_mouse_x_before_move=0;
 int window_mouse_y_before_move=0;
 
@@ -3983,6 +3984,13 @@ void zxvision_handle_mouse_aux(zxvision_window *w)
 
 				zxvision_set_x_position(w,new_x);
 				zxvision_set_y_position(w,new_y);
+}
+
+int zxvision_mouse_in_bottom_right(zxvision_window *w)
+{
+	if (menu_mouse_x==(w->visible_width)-1 && menu_mouse_y==w->visible_height-1) return 1;
+
+	return 0;
 }
 
 void zxvision_handle_mouse_events(zxvision_window *w)
@@ -4021,7 +4029,16 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					window_mouse_x_before_move=menu_mouse_x;
 					window_mouse_y_before_move=menu_mouse_y;
 				}
+
+				//Si esta en esquina inferior derecha (donde se puede redimensionar)
+				if (zxvision_mouse_in_bottom_right(w) ) {
+					printf ("Mouse dragging in bottom right\n");
+
+					window_is_being_resized=1;
+				}				
 			}
+
+
 		}
 	}
 
@@ -4034,7 +4051,23 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				zxvision_handle_mouse_aux(w);
 				window_is_being_moved=0;
 
+			}
 
+			if (window_is_being_resized) {
+				int incremento_ancho=menu_mouse_x-(w->visible_width)+1;
+				int incremento_alto=menu_mouse_y-(w->visible_height)+1;
+
+				printf ("Incremento %d x %d\n",incremento_ancho,incremento_alto);
+
+				int ancho_final=(w->visible_width)+incremento_ancho;
+				int alto_final=(w->visible_width)+incremento_alto;
+
+				zxvision_set_visible_width(w,ancho_final);
+
+				//Evitar ventana de alto 1, aunque se puede hacer, pero luego no habria zona de redimensionado
+				if (alto_final>1) {
+					zxvision_set_visible_height(w,alto_final);
+				}
 			}
 		}
 
@@ -4049,9 +4082,6 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 				window_mouse_y_before_move=menu_mouse_y;
 				window_mouse_x_before_move=menu_mouse_x;
-
-
-
 									
 			}
 		}
