@@ -1665,13 +1665,13 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	}	
 
 
-*/
+
 	zxvision_print_string(&ventana,2,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Use cursors ");
 	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to move offset ");	
 	zxvision_print_string(&ventana,2,7,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," QAOP size");	
 	zxvision_print_string(&ventana,2,8,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," ESC exit ");	
 
-
+*/
 	//Rebotar
 	int contador=0;
 
@@ -1684,7 +1684,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	int offsetx=0;
 	int offsety=0;	
 
-	int ancho=20;
+	int ancho=22;
 	int alto=10;
 
 	zxvision_set_visible_height(&ventana,alto);
@@ -1765,6 +1765,14 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 		if (tecla!=0) menu_espera_no_tecla();
 
 	}*/
+
+
+	zxvision_print_string(&ventana,1,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Use mouse    ");
+	zxvision_print_string(&ventana,1,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to move and   ");	
+	zxvision_print_string(&ventana,1,7,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," resize window  ");	
+	zxvision_print_string(&ventana,1,8,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Right button exits ");	
+
+	zxvision_draw_window_contents(&ventana);
 
 	tecla=0;
 
