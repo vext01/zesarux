@@ -1578,7 +1578,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 	//Jugar con offset
 	int i;
-
+/*
 	for (i=0;i<7;i++) {
 		zxvision_set_offset_x(&ventana,i);
 
@@ -1665,7 +1665,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	}	
 
 
-
+*/
 	zxvision_print_string(&ventana,2,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Use cursors ");
 	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to move offset ");	
 	zxvision_print_string(&ventana,2,7,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," QAOP size");	
@@ -1693,7 +1693,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	z80_byte tecla=0;
 
 	//Salir con ESC
-	while (tecla!=2) {
+	/*while (tecla!=2) {
 
 		zxvision_set_offset_x(&ventana,offsetx);
 		zxvision_set_offset_y(&ventana,offsety);
@@ -1764,7 +1764,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 		if (tecla!=0) menu_espera_no_tecla();
 
-	}
+	}*/
 
 	tecla=0;
 

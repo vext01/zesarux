@@ -3966,6 +3966,25 @@ int window_is_being_moved=0;
 int window_mouse_x_before_move=0;
 int window_mouse_y_before_move=0;
 
+void zxvision_handle_mouse_aux(zxvision_window *w)
+{
+				int movimiento_x=menu_mouse_x-window_mouse_x_before_move;
+				int movimiento_y=menu_mouse_y-window_mouse_y_before_move;
+
+				printf ("Windows has been moved. menu_mouse_x: %d (%d) menu_mouse_y: %d (%d)\n",
+				menu_mouse_x,movimiento_x,menu_mouse_y,movimiento_y);
+				
+
+
+				//Actualizar posicion
+				int new_x=w->x+movimiento_x;
+				int new_y=w->y+movimiento_y;
+
+
+				zxvision_set_x_position(w,new_x);
+				zxvision_set_y_position(w,new_y);
+}
+
 void zxvision_handle_mouse_events(zxvision_window *w)
 {
 	if (!si_menu_mouse_activado()) return;
@@ -4011,41 +4030,27 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			printf ("Mouse has stopped to drag\n");
 			mouse_is_dragging=0;
 			if (window_is_being_moved) {
-				printf ("Windows has been stopped moving. menu_mouse_x: %d menu_mouse_y: %d\n",menu_mouse_x,menu_mouse_y);
+
+				zxvision_handle_mouse_aux(w);
 				window_is_being_moved=0;
 
-				//Actualizar posicion
-				int new_y=w->y+menu_mouse_y;
 
-				
-
-				//Actualizar posicion
-				int new_x=w->x+menu_mouse_x;
-
-				zxvision_set_x_position(w,new_x);
-				zxvision_set_y_position(w,new_y);
 			}
 		}
 
 		if (window_is_being_moved) {
 			//Si se ha movido un poco
 			if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
-				printf ("Redraw while dragging x %d %d y %d %d \n",menu_mouse_x,window_mouse_x_before_move,menu_mouse_y,window_mouse_y_before_move);
-
-				//Actualizar posicion
-				int new_y=w->y+menu_mouse_y;
-				//Actualizar posicion
-				int new_x=w->x+menu_mouse_x;
-
-
+				zxvision_handle_mouse_aux(w);
 				
-
-				//Los dos de golpe mejor asi
-				zxvision_set_x_position(w,new_x);	
-				zxvision_set_y_position(w,new_y);
+				//Hay que recalcular menu_mouse_x y menu_mouse_y dado que son relativos a la ventana que justo se ha movido
+				//menu_mouse_y siempre sera 0 dado que el titulo de la ventana, donde se puede arrastrar para mover, es posicion relativa 0
+				menu_calculate_mouse_xy();
 
 				window_mouse_y_before_move=menu_mouse_y;
-				window_mouse_x_before_move=menu_mouse_x;						
+				window_mouse_x_before_move=menu_mouse_x;
+
+
 
 									
 			}
@@ -26876,7 +26881,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-					menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
+					menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"~~ZXVision test");
+					menu_add_item_menu_shortcut(array_menu_debug_settings,'z');
 
 	/*	menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'e');
