@@ -1518,7 +1518,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	caracter.parpadeo=0;
 
 	//Relleno pantalla
-	z80_byte caracter_print=33;
+	z80_byte caracter_print=32;
 
 
 
@@ -1530,7 +1530,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 			zxvision_print_char(&ventana,x,y,&caracter);	
 
 			caracter_print++;
-			if (caracter_print>126) caracter_print=33;		
+			if (caracter_print>126) caracter_print=32;		
 		}
 	}
 

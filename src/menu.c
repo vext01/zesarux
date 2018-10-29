@@ -382,6 +382,9 @@ menu_z80_moto_int menu_debug_disassemble_bajar(menu_z80_moto_int dir_inicial);
 int cuadrado_activo=0;
 z80_byte cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color;
 
+//Y si dicho recuadro tiene marca de redimensionado posible para zxvision
+int cuadrado_activo_resize=0;
+
 int draw_bateria_contador=0;
 int draw_cpu_use=0;
 int draw_cpu_temp=0;
@@ -1642,9 +1645,11 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	menu_save_overlay_text_contents(copia_overlay);
 	//Guardamos linea cuadrado ventana
 	int antes_cuadrado_activo=0;
+	int antes_cuadrado_activo_resize=0;
 	z80_byte antes_cuadrado_x1,antes_cuadrado_y1,antes_cuadrado_x2,antes_cuadrado_y2,antes_cuadrado_color;
 	
 	antes_cuadrado_activo=cuadrado_activo;
+	antes_cuadrado_activo_resize=cuadrado_activo_resize;
 	antes_cuadrado_x1=cuadrado_x1;
 	antes_cuadrado_y1=cuadrado_y1;
 	antes_cuadrado_x2=cuadrado_x2;
@@ -1700,6 +1705,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	
 	//Restaurar linea cuadrado ventana
 	cuadrado_activo=antes_cuadrado_activo;
+	cuadrado_activo_resize=antes_cuadrado_activo_resize;
 	cuadrado_x1=antes_cuadrado_x1;
 	cuadrado_y1=antes_cuadrado_y1;
 	cuadrado_x2=antes_cuadrado_x2;
@@ -2821,7 +2827,12 @@ void normal_overlay_texto_menu(void)
 		}
 	}
 
-	if (cuadrado_activo) menu_dibuja_cuadrado(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
+	if (cuadrado_activo) {
+		menu_dibuja_cuadrado(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
+
+		//Y si tiene marca de redimensionado
+		//if (cuadrado_activo_resize) menu_dibuja_cuadrado_resize(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
+	}
 
 	//si hay segunda capa, escribirla. aqui normalmente solo se escriben dibujos que no se pueden meter como texto, como la bateria
 	/*
@@ -2848,6 +2859,7 @@ void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80
 	cuadrado_y2=y2;
 	cuadrado_color=color;
 	cuadrado_activo=1;
+	cuadrado_activo_resize=0;
 
 }
 
@@ -2855,6 +2867,7 @@ void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80
 void menu_desactiva_cuadrado(void)
 {
 	cuadrado_activo=0;
+	cuadrado_activo_resize=0;
 }
 
 //Devuelve 1 si hay dos ~~ seguidas en la posicion del indice
@@ -3498,6 +3511,29 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
                                 }
                         }
 
+			//Marca redimensionado
+			if (cuadrado_activo_resize) {
+				//marca de redimensionado
+				//		  *
+				//		 **
+				//		***	
+
+
+				//Arriba del todo
+				scr_putpixel_gui_zoom((x2-1)*menu_gui_zoom,(y2-3)*menu_gui_zoom,color,menu_gui_zoom);	
+
+				//Medio
+				scr_putpixel_gui_zoom((x2-1)*menu_gui_zoom,(y2-2)*menu_gui_zoom,color,menu_gui_zoom);
+				scr_putpixel_gui_zoom((x2-2)*menu_gui_zoom,(y2-2)*menu_gui_zoom,color,menu_gui_zoom);				
+
+				//Abajo del todo
+				scr_putpixel_gui_zoom((x2-1)*menu_gui_zoom,(y2-1)*menu_gui_zoom,color,menu_gui_zoom);
+				scr_putpixel_gui_zoom((x2-2)*menu_gui_zoom,(y2-1)*menu_gui_zoom,color,menu_gui_zoom);
+				scr_putpixel_gui_zoom((x2-3)*menu_gui_zoom,(y2-1)*menu_gui_zoom,color,menu_gui_zoom);
+
+			
+
+			}
 
 		}
 
@@ -3524,6 +3560,25 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 					scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq+relleno_derecha,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
                                 }
                         }
+			//Marca redimensionado
+			if (cuadrado_activo_resize) {
+				//marca de redimensionado
+				//		  *
+				//		 **
+				//		***	
+
+				//Arriba del todo
+				scr_putpixel_gui_zoom((x2-1)*menu_gui_zoom+margenx_izq,(y2-3)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+
+				//Medio
+				scr_putpixel_gui_zoom((x2-1)*menu_gui_zoom+margenx_izq,(y2-2)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);		
+				scr_putpixel_gui_zoom((x2-2)*menu_gui_zoom+margenx_izq,(y2-2)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);	
+
+				//Abajo del todo
+				scr_putpixel_gui_zoom((x2-1)*menu_gui_zoom+margenx_izq,(y2-1)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);		
+				scr_putpixel_gui_zoom((x2-2)*menu_gui_zoom+margenx_izq,(y2-1)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);	
+				scr_putpixel_gui_zoom((x2-3)*menu_gui_zoom+margenx_izq,(y2-1)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);							
+			}
 
 		}
 	}
@@ -3774,6 +3829,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	}
 
 
+
 }
 
 void zxvision_destroy_window(zxvision_window *w)
@@ -3786,6 +3842,9 @@ void zxvision_draw_window(zxvision_window *w)
 	menu_dibuja_ventana(w->x,w->y,w->visible_width,w->visible_height,w->window_title);
 	//TODO: esto dibuja en pantalla ventana con contenido blanco. Habria que hacer que solo dibuje titulo y marco ventana, no?
 	//O meter contenido blanco siempre por defecto...?
+
+	//Decimos que se puede redimensionar
+	cuadrado_activo_resize=1;
 }
 
 void zxvision_set_offset_x(zxvision_window *w,int offset_x)
@@ -4053,6 +4112,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					printf ("Mouse dragging in bottom right\n");
 
 					window_is_being_resized=1;
+					window_mouse_x_before_move=menu_mouse_x;
+					window_mouse_y_before_move=menu_mouse_y;					
 				}				
 			}
 
@@ -4080,18 +4141,30 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			}
 		}
 
-		if (window_is_being_moved) {
-			//Si se ha movido un poco
-			if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
-				zxvision_handle_mouse_move_aux(w);
+		else {
+			if (window_is_being_moved) {
+				//Si se ha movido un poco
+				if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
+					zxvision_handle_mouse_move_aux(w);
 				
-				//Hay que recalcular menu_mouse_x y menu_mouse_y dado que son relativos a la ventana que justo se ha movido
-				//menu_mouse_y siempre sera 0 dado que el titulo de la ventana, donde se puede arrastrar para mover, es posicion relativa 0
-				menu_calculate_mouse_xy();
+					//Hay que recalcular menu_mouse_x y menu_mouse_y dado que son relativos a la ventana que justo se ha movido
+					//menu_mouse_y siempre sera 0 dado que el titulo de la ventana, donde se puede arrastrar para mover, es posicion relativa 0
+					menu_calculate_mouse_xy();
 
-				window_mouse_y_before_move=menu_mouse_y;
-				window_mouse_x_before_move=menu_mouse_x;
+					window_mouse_y_before_move=menu_mouse_y;
+					window_mouse_x_before_move=menu_mouse_x;
 									
+				}
+			}
+
+			if (window_is_being_resized) {
+				//Si se ha redimensionado un poco
+				if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
+					zxvision_handle_mouse_resize_aux(w);
+
+					window_mouse_y_before_move=menu_mouse_y;
+					window_mouse_x_before_move=menu_mouse_x;					
+				}
 			}
 		}
 	}
