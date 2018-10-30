@@ -3849,6 +3849,22 @@ int zxvision_get_effective_height(zxvision_window *w)
 	return w->visible_height-2;
 }
 
+int zxvision_if_vertical_scroll_bar(zxvision_window *w)
+{
+	int effective_height=zxvision_get_effective_height(w);
+	if (w->total_height>effective_height && w->visible_height>=6) return 1;
+
+	return 0;
+}
+
+int zxvision_if_horizontal_scroll_bar(zxvision_window *w)
+{
+	int effective_width=zxvision_get_effective_width(w);
+	if (w->total_width>effective_width && w->visible_width>=6) return 1;
+
+	return 0;
+}
+
 void zxvision_draw_scroll_bars(zxvision_window *w)
 {
 	//Barras de desplazamiento
@@ -3856,7 +3872,7 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 	int effective_height=zxvision_get_effective_height(w);
 	int effective_width=zxvision_get_effective_width(w);
 
-	if (w->total_height>effective_height && w->visible_height>=6) {
+	if (zxvision_if_vertical_scroll_bar(w)) {
 		//Dibujar barra vertical
 		int valor_parcial=w->offset_y; //+effective_height;
 		if (valor_parcial<0) valor_parcial=0;
@@ -3869,7 +3885,7 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 		menu_ventana_draw_vertical_perc_bar(w->x,w->y,w->visible_width,effective_height,porcentaje);
 	}
 
-	if (w->total_width>effective_width && w->visible_width>=6) {
+	if (zxvision_if_horizontal_scroll_bar(w)) {
 		//Dibujar barra horizontal
 		int valor_parcial=w->offset_x; //+effective_height;
 		if (valor_parcial<0) valor_parcial=0;
@@ -3903,6 +3919,9 @@ void zxvision_set_offset_x(zxvision_window *w,int offset_x)
 	//TODO. de momento no comprobamos por mayor
 	if (offset_x<0) return;
 	w->offset_x=offset_x;	
+
+	zxvision_draw_window_contents(w);
+	zxvision_draw_scroll_bars(w);
 }
 
 void zxvision_set_offset_y(zxvision_window *w,int offset_y)
@@ -3910,6 +3929,9 @@ void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 	//TODO. de momento no comprobamos
 	if (offset_y<0) return;
 	w->offset_y=offset_y;	
+
+	zxvision_draw_window_contents(w);
+	zxvision_draw_scroll_bars(w);
 }
 
 int zxvision_out_bonds(int x,int y,int ancho,int alto)
@@ -4080,6 +4102,10 @@ int window_is_being_resized=0;
 int window_mouse_x_before_move=0;
 int window_mouse_y_before_move=0;
 
+int last_x_mouse_clicked=0;
+int last_y_mouse_clicked=0;
+int mouse_is_clicking=0;
+
 void zxvision_handle_mouse_move_aux(zxvision_window *w)
 {
 				int movimiento_x=menu_mouse_x-window_mouse_x_before_move;
@@ -4148,6 +4174,65 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (mouse_left) {
 		//printf ("Pulsado boton izquierdo\n");
+
+		if (!mouse_movido) {
+			if (!mouse_is_clicking) {
+				printf ("Mouse started clicking\n");
+				mouse_is_clicking=1;
+				last_x_mouse_clicked=menu_mouse_x;
+				last_y_mouse_clicked=menu_mouse_y;
+			}
+		}
+	}
+
+	if (!mouse_left && mouse_is_clicking) {
+			printf ("Mouse stopped clicking\n");
+			mouse_is_clicking=0;
+			//Pulsacion en sitios de ventana
+
+			//Scroll horizontal
+			if (zxvision_if_horizontal_scroll_bar(w)) {
+				if (last_y_mouse_clicked==w->visible_height-1) {
+					//Linea scroll horizontal
+					int posicion_flecha_izquierda=1;
+					int posicion_flecha_derecha=w->visible_width-2;
+
+					//Flecha izquierda
+					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
+						printf ("Pulsado en scroll izquierda\n");
+						if (w->offset_x>0) {
+							zxvision_set_offset_x(w,w->offset_x-1);
+						}
+					}
+
+					//Flecha derecha
+					if (last_x_mouse_clicked==posicion_flecha_derecha) {
+						printf ("Pulsado en scroll derecha\n");
+						if (w->offset_x<(w->total_width-1)) {
+							zxvision_set_offset_x(w,w->offset_x+1);
+						}
+					}
+
+					if (last_x_mouse_clicked>posicion_flecha_izquierda && last_x_mouse_clicked<posicion_flecha_derecha) {
+						printf ("Pulsado en zona scroll horizontal\n");
+						//Sacamos porcentaje
+						int total_ancho=posicion_flecha_derecha-posicion_flecha_izquierda;
+						if (total_ancho==0) total_ancho=1; //Evitar dividir por cero
+
+						int parcial_ancho=last_x_mouse_clicked-posicion_flecha_izquierda;
+
+						int porcentaje=(parcial_ancho*100)/total_ancho;
+
+						printf ("Porcentaje: %d\n",porcentaje);
+
+						//Establecemos offset horizontal
+						int offset=((w->total_width)*porcentaje)/100;
+						zxvision_set_offset_x(w,offset);
+
+					}
+				}
+			} 
+		
 	}
 
 	if (!mouse_is_dragging) {
