@@ -3882,7 +3882,7 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 
 
 		int porcentaje=(valor_parcial*100)/(1+valor_total);  
-		menu_ventana_draw_vertical_perc_bar(w->x,w->y,w->visible_width,effective_height,porcentaje);
+		menu_ventana_draw_vertical_perc_bar(w->x,w->y,w->visible_width,w->visible_height-1,porcentaje);
 	}
 
 	if (zxvision_if_horizontal_scroll_bar(w)) {
@@ -4232,7 +4232,52 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					}
 				}
 			} 
-		
+
+
+			//Scroll vertical
+			if (zxvision_if_vertical_scroll_bar(w)) {
+				if (last_x_mouse_clicked==w->visible_width-1) {
+					//Linea scroll vertical
+					int posicion_flecha_arriba=1;
+					int posicion_flecha_abajo=w->visible_height-2;
+
+					//Flecha arriba
+					if (last_y_mouse_clicked==posicion_flecha_arriba) {
+						printf ("Pulsado en scroll arriba\n");
+						if (w->offset_y>0) {
+							zxvision_set_offset_y(w,w->offset_y-1);
+						}
+					}
+
+					//Flecha abajo
+					if (last_y_mouse_clicked==posicion_flecha_abajo) {
+						printf ("Pulsado en scroll abajo\n");
+						if (w->offset_y<(w->total_height-1)) {
+							zxvision_set_offset_y(w,w->offset_y+1);
+						}
+					}
+
+					if (last_y_mouse_clicked>posicion_flecha_arriba && last_y_mouse_clicked<posicion_flecha_abajo) {
+						printf ("Pulsado en zona scroll vertical\n");
+						//Sacamos porcentaje
+						int total_alto=posicion_flecha_abajo-posicion_flecha_arriba;
+						if (total_alto==0) total_alto=1; //Evitar dividir por cero
+
+						int parcial_alto=last_y_mouse_clicked-posicion_flecha_arriba;
+
+						int porcentaje=(parcial_alto*100)/total_alto;
+
+						printf ("Porcentaje: %d\n",porcentaje);
+
+						//Establecemos offset vertical
+						int offset=((w->total_height)*porcentaje)/100;
+						zxvision_set_offset_y(w,offset);
+
+					}
+				}
+			} 
+
+
 	}
 
 	if (!mouse_is_dragging) {
@@ -30927,11 +30972,13 @@ void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int po
 		putchar_menu_overlay(xbase-1,y+alto-1,'<',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 		putchar_menu_overlay(xbase+ancho-3,y+alto-1,'>',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
-		//mostrar linea vertical para indicar que es zona de porcentaje
-		if (!menu_hide_vertical_percentaje_bar.v) {
-			int i;
-			for (i=0;i<ancho-3;i++) putchar_menu_overlay(xbase+i,y+alto-1,'-',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
-		}
+		//mostrar linea horizontal para indicar que es zona de porcentaje
+		z80_byte caracter_barra='-';
+		if (menu_hide_vertical_percentaje_bar.v) caracter_barra=' ';
+
+		int i;
+		for (i=0;i<ancho-3;i++) putchar_menu_overlay(xbase+i,y+alto-1,caracter_barra,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+
 		
 		int sumarancho=((ancho-4)*porcentaje)/100;
 
@@ -30953,10 +31000,13 @@ void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porc
 		putchar_menu_overlay(x+ancho-1,ybase+alto-3,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
 		//mostrar linea vertical para indicar que es zona de porcentaje
-		if (!menu_hide_vertical_percentaje_bar.v) {
-			int i;
-			for (i=0;i<alto-3;i++) 	putchar_menu_overlay(x+ancho-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
-		}
+		z80_byte caracter_barra='|';
+		if (menu_hide_vertical_percentaje_bar.v) caracter_barra=' ';		
+
+		//mostrar linea vertical para indicar que es zona de porcentaje
+		int i;
+		for (i=0;i<alto-3;i++) 	putchar_menu_overlay(x+ancho-1,ybase+i,caracter_barra,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		
 		
 		int sumaralto=((alto-4)*porcentaje)/100;
 		putchar_menu_overlay(x+ancho-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
