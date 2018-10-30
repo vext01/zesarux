@@ -3837,6 +3837,52 @@ void zxvision_destroy_window(zxvision_window *w)
 	free(w->memory);
 }
 
+int zxvision_get_effective_width(zxvision_window *w)
+{
+	//Ancho del contenido es 1 menos, por la columna a la derecha de margen
+	return w->visible_width-1;
+}
+
+int zxvision_get_effective_height(zxvision_window *w)
+{
+	//Alto del contenido es 2 menos, por el titulo de ventana y la linea por debajo de margen
+	return w->visible_height-2;
+}
+
+void zxvision_draw_scroll_bars(zxvision_window *w)
+{
+	//Barras de desplazamiento
+	//Si hay que dibujar barra derecha de desplazamiento vertical
+	int effective_height=zxvision_get_effective_height(w);
+	int effective_width=zxvision_get_effective_width(w);
+
+	if (w->total_height>effective_height && w->visible_height>=6) {
+		//Dibujar barra vertical
+		int valor_parcial=w->offset_y; //+effective_height;
+		if (valor_parcial<0) valor_parcial=0;
+
+		int valor_total=w->total_height;
+		if (valor_total<=0) valor_total=1; //Evitar divisiones por cero o negativos
+
+
+		int porcentaje=(valor_parcial*100)/(1+valor_total);  
+		menu_ventana_draw_vertical_perc_bar(w->x,w->y,w->visible_width,effective_height,porcentaje);
+	}
+
+	if (w->total_width>effective_width && w->visible_width>=6) {
+		//Dibujar barra horizontal
+		int valor_parcial=w->offset_x; //+effective_height;
+		if (valor_parcial<0) valor_parcial=0;
+
+		int valor_total=w->total_width;
+		if (valor_total<=0) valor_total=1; //Evitar divisiones por cero o negativos
+
+
+		int porcentaje=(valor_parcial*100)/(1+valor_total);  
+		menu_ventana_draw_horizontal_perc_bar(w->x,w->y,effective_width,w->visible_height,porcentaje);
+	}	
+}
+
 void zxvision_draw_window(zxvision_window *w)
 {
 	menu_dibuja_ventana(w->x,w->y,w->visible_width,w->visible_height,w->window_title);
@@ -3845,6 +3891,11 @@ void zxvision_draw_window(zxvision_window *w)
 
 	//Decimos que se puede redimensionar
 	cuadrado_activo_resize=1;
+
+	zxvision_draw_scroll_bars(w);
+
+
+
 }
 
 void zxvision_set_offset_x(zxvision_window *w,int offset_x)
@@ -3918,14 +3969,17 @@ void zxvision_set_visible_height(zxvision_window *w,int visible_height)
 
 }
 
+
+
 void zxvision_draw_window_contents(zxvision_window *w)
 {
 
 	int width,height;
 
-	//Alto del contenido es 1 menos, por el titulo de ventana
-	width=w->visible_width;
-	height=w->visible_height-1;
+	width=zxvision_get_effective_width(w);
+
+	//Alto del contenido es 2 menos, por el titulo de ventana y la linea por debajo de margen
+	height=zxvision_get_effective_height(w);
 
 	int x,y;
 
@@ -30775,6 +30829,48 @@ void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, 
 
 }
 
+void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje)
+{
+		// mostrar * abajo para indicar donde estamos en porcentaje
+		int xbase=x+2;
+
+
+			//mostrar cursores izquierda y derecha
+		putchar_menu_overlay(xbase-1,y+alto-1,'<',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+		putchar_menu_overlay(xbase+ancho-3,y+alto-1,'>',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+
+		//mostrar linea vertical para indicar que es zona de porcentaje
+		/*if (!menu_hide_vertical_percentaje_bar.v) {
+			int i;
+			for (i=0;i<alto-3;i++) 	putchar_menu_overlay(x+ancho-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		}*/
+		
+		int sumarancho=((alto-4)*porcentaje)/100;
+
+		putchar_menu_overlay(xbase+sumarancho,y+alto-1,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+}
+
+void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porcentaje)
+{
+		// mostrar * a la derecha para indicar donde estamos en porcentaje
+		//menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
+		int ybase=y+2;
+
+
+			//mostrar cursores arriba y abajo
+		putchar_menu_overlay(x+ancho-1,ybase-1,'^',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+		putchar_menu_overlay(x+ancho-1,ybase+alto-3,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+
+		//mostrar linea vertical para indicar que es zona de porcentaje
+		if (!menu_hide_vertical_percentaje_bar.v) {
+			int i;
+			for (i=0;i<alto-3;i++) 	putchar_menu_overlay(x+ancho-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		}
+		
+		int sumaralto=((alto-4)*porcentaje)/100;
+		putchar_menu_overlay(x+ancho-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+}
+
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto de maximo 25 caracteres
 void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
 {
@@ -30998,17 +31094,23 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 	if (texto_no_cabe) {
 		// mostrar * a la derecha para indicar donde estamos en porcentaje
 		//menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
-		int ybase=yventana+2;
-		int porcentaje=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
-		//int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
 
-		//if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
+		int porcentaje=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
+
 		if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea)==0)
 			porcentaje=100;
 
 		debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
 
+		menu_ventana_draw_vertical_perc_bar(xventana,yventana,ancho_ventana,alto_ventana,porcentaje);
 
+
+		/*
+		int ybase=yventana+2;
+		
+		//int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
+
+		//if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
 
 
 		//mostrar cursores arriba y abajo
@@ -31023,7 +31125,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 		
 		int sumaralto=((alto_ventana-4)*porcentaje)/100;
 		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
-
+		*/
 	}
 
 
