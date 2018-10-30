@@ -3994,7 +3994,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	int primera_linea_a_speech=0;
 	int ultima_linea_a_speech=0;
 
-	do {
+	//do {
 
 	//printf ("primera_linea: %d\n",primera_linea);
 
@@ -4023,8 +4023,9 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
         //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
 	zxvision_window ventana;
 	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							MAX_ANCHO_LINEAS_GENERIC_MESSAGE+1,indice_linea,titulo);		
+							ancho_ventana-1,indice_linea,titulo);		
 
+	zxvision_draw_window(&ventana);
 
 				//Decir que se ha pulsado tecla asi no se lee todo cuando el cursor esta visible
 				if (mostrar_cursor) menu_speech_tecla_pulsada=1;
@@ -4038,8 +4039,11 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		//printf ("Linea seleccionada: %d (%s)\n",linea_cursor+primera_linea,buffer_lineas[linea_cursor+primera_linea]);
 	}*/
 
-	for (i=0;i<indice_linea;i++) zxvision_print_string(&ventana,0,i,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1,buffer_lineas[i]);
+	for (i=0;i<indice_linea;i++) zxvision_print_string(&ventana,1,i,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_lineas[i]);
 
+	zxvision_draw_window_contents(&ventana);
+
+	do {
 
 	//Enviar primera linea o ultima a speech
 
@@ -4105,7 +4109,11 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 
                 tecla=menu_get_pressed_key();
+				printf ("tecla: %d\n",tecla);
 
+
+				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
+				if (tecla==13 && mouse_left) tecla=0;
 
 
 								if (volver_timeout) tecla=13;
@@ -4113,7 +4121,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 								
 
-		if (tooltip_enabled==0) menu_espera_no_tecla_con_repeticion();
+		if (tooltip_enabled==0 && tecla) menu_espera_no_tecla_con_repeticion();
 
 		//Decir que no se ha pulsado tecla para que se relea esto cada vez
 		//menu_speech_tecla_pulsada=0;
@@ -4238,7 +4246,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	}
 
-        cls_menu_overlay();
+	zxvision_destroy_window(&ventana);
+    cls_menu_overlay();
 
         if (tooltip_enabled==0) menu_espera_no_tecla_con_repeticion();
 
@@ -4961,6 +4970,9 @@ int timer_osd_keyboard_menu=0;
 
 z80_byte menu_da_todas_teclas(void)
 {
+
+	//Ver tambien eventos de mouse de zxvision
+    zxvision_handle_mouse_events(zxvision_current_window);
 
                 //On screen keyboard desde el propio menu. Necesita multitask
                 if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu && menu_multitarea) {
