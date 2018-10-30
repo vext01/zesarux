@@ -30831,6 +30831,9 @@ void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, 
 
 void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje)
 {
+		if (porcentaje<0) porcentaje=0;
+		if (porcentaje>100) porcentaje=100;
+
 		// mostrar * abajo para indicar donde estamos en porcentaje
 		int xbase=x+2;
 
@@ -30840,18 +30843,21 @@ void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int po
 		putchar_menu_overlay(xbase+ancho-3,y+alto-1,'>',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
 		//mostrar linea vertical para indicar que es zona de porcentaje
-		/*if (!menu_hide_vertical_percentaje_bar.v) {
+		if (!menu_hide_vertical_percentaje_bar.v) {
 			int i;
-			for (i=0;i<alto-3;i++) 	putchar_menu_overlay(x+ancho-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
-		}*/
+			for (i=0;i<ancho-3;i++) putchar_menu_overlay(xbase+i,y+alto-1,'-',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		}
 		
-		int sumarancho=((alto-4)*porcentaje)/100;
+		int sumarancho=((ancho-4)*porcentaje)/100;
 
 		putchar_menu_overlay(xbase+sumarancho,y+alto-1,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 }
 
 void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porcentaje)
 {
+		if (porcentaje<0) porcentaje=0;
+		if (porcentaje>100) porcentaje=100;
+
 		// mostrar * a la derecha para indicar donde estamos en porcentaje
 		//menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
 		int ybase=y+2;
