@@ -52,6 +52,9 @@ extern void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,i
 extern void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje);
 
 extern void menu_espera_tecla(void);
+extern void menu_espera_no_tecla_con_repeticion(void);
+extern int menu_generic_message_final_abajo(int primera_linea,int alto_ventana,int indice_linea);
+extern void menu_espera_tecla_timeout_window_splash(void);
 extern void menu_cpu_core_loop(void);
 extern z80_byte menu_get_pressed_key(void);
 
@@ -72,6 +75,14 @@ struct s_overlay_screen {
 	z80_byte tinta,papel,parpadeo;
 	z80_byte caracter;
 };
+
+struct s_generic_message_tooltip_return {
+	char texto_seleccionado[40];
+	int linea_seleccionada;
+	int estado_retorno; //Retorna 1 si sale con enter. Retorna 0 si sale con ESC
+};
+
+typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 
 #define OVERLAY_SCREEN_WIDTH 32
 #define OVERLAY_SCREEN_HEIGTH 24
@@ -106,6 +117,9 @@ extern void zxvision_set_visible_width(zxvision_window *w,int visible_width);
 extern void zxvision_set_visible_height(zxvision_window *w,int visible_height);
 extern void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto);
 extern void zxvision_handle_mouse_events(zxvision_window *w);
+extern void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
+
+extern zxvision_window *zxvision_current_window;
 
 #define MAX_F_FUNCTIONS 19
 
@@ -312,13 +326,7 @@ extern void menu_generic_message_format(char *titulo, const char * format , ...)
 extern void menu_generic_message_splash(char *titulo, const char * texto);
 
 
-struct s_generic_message_tooltip_return {
-	char texto_seleccionado[40];
-	int linea_seleccionada;
-	int estado_retorno; //Retorna 1 si sale con enter. Retorna 0 si sale con ESC
-};
 
-typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 
 extern void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
 

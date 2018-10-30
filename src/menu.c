@@ -1244,6 +1244,9 @@ z80_bit menu_tab={0};
 z80_byte menu_get_pressed_key(void)
 {
 
+	//Ver tambien eventos de mouse de zxvision
+	zxvision_handle_mouse_events(zxvision_current_window);
+
 	z80_byte tecla;
 
 	//primero joystick
@@ -3788,6 +3791,8 @@ int mouse_movido=0;
 int menu_mouse_x=0;
 int menu_mouse_y=0;
 
+zxvision_window *zxvision_current_window;
+
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
 
@@ -3828,13 +3833,426 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 		p++;
 	}
 
+	zxvision_current_window=w;
 
 
 }
 
 void zxvision_destroy_window(zxvision_window *w)
 {
+	zxvision_current_window=NULL;
 	free(w->memory);
+}
+
+void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
+{
+	/*zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,ancho_visible,alto_visible,
+							ancho_total,alto_total,"ZXVision Test");
+	zxvision_draw_window(&ventana);
+
+
+	zxvision_draw_window_contents(&ventana);*/
+
+
+//Muestra un mensaje en ventana troceando el texto en varias lineas de texto de maximo 25 caracteres
+//void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
+//{
+
+	//Buffer de entrada
+
+        char texto[MAX_TEXTO_GENERIC_MESSAGE];
+        va_list args;
+        va_start (args, texto_format);
+        vsprintf (texto,texto_format, args);
+	va_end (args);
+
+	//printf ("input text: %s\n",texto);
+
+	if (volver_timeout) {
+		menu_window_splash_counter=0;
+		menu_window_splash_counter_ms=0;
+	}
+	//linea cursor en el caso que se muestre cursor
+	int linea_cursor=0;
+
+	//En caso de stdout, es mas simple, mostrar texto y esperar tecla
+        if (!strcmp(scr_driver_name,"stdout")) {
+		//printf ("%d\n",strlen(texto));
+
+
+		printf ("-%s-\n",titulo);
+		printf ("\n");
+		printf ("%s\n",texto);
+
+		scrstdout_menu_print_speech_macro(titulo);
+		scrstdout_menu_print_speech_macro(texto);
+
+		menu_espera_no_tecla();
+		menu_espera_tecla();
+
+		return;
+        }
+
+	//En caso de simpletext, solo mostrar texto sin esperar tecla
+	if (!strcmp(scr_driver_name,"simpletext")) {
+                printf ("-%s-\n",titulo);
+                printf ("\n");
+                printf ("%s\n",texto);
+
+		return;
+	}
+
+
+	int tecla;
+
+
+	//texto que contiene cada linea con ajuste de palabra. Al trocear las lineas aumentan
+	char buffer_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE][MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
+
+	const int max_ancho_texto=30;
+
+	//Primera linea que mostramos en la ventana
+	int primera_linea=0;
+
+	int indice_linea=0;  //Numero total de lineas??
+	int indice_texto=0;
+	int ultimo_indice_texto=0;
+	int longitud=strlen(texto);
+
+
+	//Copia del texto de entrada (ya formateado con vsprintf) que se leera solo al copiar clipboard
+	//Al pulsar tecla de copy a cliboard, se lee el texto que haya aqui,
+	//y no el contenido en el char *texto, pues ese se ha alterado quitando saltos de linea y otros caracteres
+	char *menu_generic_message_tooltip_text_initial;
+
+
+	debug_printf(VERBOSE_INFO,"Allocating %d bytes to initial text",longitud+1);
+	menu_generic_message_tooltip_text_initial=malloc(longitud+1);
+	if (menu_generic_message_tooltip_text_initial==NULL) {
+		debug_printf(VERBOSE_ERR,"Can not allocate buffer for initial text");
+	}
+
+
+	//En caso que se haya podido asignar el buffer de clonado
+	if (menu_generic_message_tooltip_text_initial!=NULL) {
+		strcpy(menu_generic_message_tooltip_text_initial,texto);
+	}
+
+	int ultima_linea_buscada=-1;
+	char buffer_texto_buscado[33];
+
+	//int indice_segunda_linea;
+
+	int texto_no_cabe=0;
+
+	do {
+		indice_texto+=max_ancho_texto;
+
+		//temp
+		//printf ("indice_linea: %d\n",indice_linea);
+
+		//Controlar final de texto
+		if (indice_texto>=longitud) indice_texto=longitud;
+
+		//Si no, miramos si hay que separar por espacios
+		else indice_texto=menu_generic_message_aux_wordwrap(texto,ultimo_indice_texto,indice_texto);
+
+		//Separamos por salto de linea, filtramos caracteres extranyos
+		indice_texto=menu_generic_message_aux_filter(texto,ultimo_indice_texto,indice_texto);
+
+		//copiar texto
+		int longitud_texto=indice_texto-ultimo_indice_texto;
+
+
+		//snprintf(buffer_lineas[indice_linea],longitud_texto,&texto[ultimo_indice_texto]);
+
+
+		menu_generic_message_aux_copia(&texto[ultimo_indice_texto],buffer_lineas[indice_linea],longitud_texto);
+		buffer_lineas[indice_linea++][longitud_texto]=0;
+		//printf ("copiado %d caracteres desde %d hasta %d: %s\n",longitud_texto,ultimo_indice_texto,indice_texto,buffer_lineas[indice_linea-1]);
+
+
+		//printf ("texto: %s\n",buffer_lineas[indice_linea-1]);
+
+		if (indice_linea==MAX_LINEAS_TOTAL_GENERIC_MESSAGE) {
+                        //cpu_panic("Max lines on menu_generic_message reached");
+			debug_printf(VERBOSE_INFO,"Max lines on menu_generic_message reached (%d)",MAX_LINEAS_TOTAL_GENERIC_MESSAGE);
+			//finalizamos bucle
+			indice_texto=longitud;
+		}
+
+		ultimo_indice_texto=indice_texto;
+		//printf ("ultimo indice: %d %c\n",ultimo_indice_texto,texto[ultimo_indice_texto]);
+
+	} while (indice_texto<longitud);
+
+
+	//printf ("\ntext after converting to lines: %s\n",texto);
+
+
+	debug_printf (VERBOSE_INFO,"Read %d lines (word wrapped)",indice_linea);
+	int primera_linea_a_speech=0;
+	int ultima_linea_a_speech=0;
+
+	do {
+
+	//printf ("primera_linea: %d\n",primera_linea);
+
+	int alto_ventana=indice_linea+2;
+	if (alto_ventana-2>MAX_LINEAS_VENTANA_GENERIC_MESSAGE) {
+		alto_ventana=MAX_LINEAS_VENTANA_GENERIC_MESSAGE+2;
+		texto_no_cabe=1;
+	}
+
+
+	//printf ("alto ventana: %d\n",alto_ventana);
+	//int ancho_ventana=max_ancho_texto+2;
+	int ancho_ventana=max_ancho_texto+2;
+
+	int xventana=16-ancho_ventana/2;
+	int yventana=12-alto_ventana/2;
+
+	if (tooltip_enabled==0) {
+		menu_espera_no_tecla_con_repeticion();
+		cls_menu_overlay();
+	}
+
+
+	//if (tooltip_enabled==0) cls_menu_overlay();
+
+        //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
+	zxvision_window ventana;
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+							MAX_ANCHO_LINEAS_GENERIC_MESSAGE+1,indice_linea,titulo);		
+
+
+				//Decir que se ha pulsado tecla asi no se lee todo cuando el cursor esta visible
+				if (mostrar_cursor) menu_speech_tecla_pulsada=1;
+	int i;
+	/*for (i=0;i<indice_linea-primera_linea && i<MAX_LINEAS_VENTANA_GENERIC_MESSAGE;i++) {
+		if (mostrar_cursor) {
+			menu_escribe_linea_opcion(i,linea_cursor,1,buffer_lineas[i+primera_linea]);
+		}
+        	else menu_escribe_linea_opcion(i,-1,1,buffer_lineas[i+primera_linea]);
+		//printf ("i: %d linea_cursor: %d primera_linea: %d\n",i,linea_cursor,primera_linea);
+		//printf ("Linea seleccionada: %d (%s)\n",linea_cursor+primera_linea,buffer_lineas[linea_cursor+primera_linea]);
+	}*/
+
+	for (i=0;i<indice_linea;i++) zxvision_print_string(&ventana,0,i,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1,buffer_lineas[i]);
+
+
+	//Enviar primera linea o ultima a speech
+
+	//La primera linea puede estar oculta por .., aunque para speech mejor que diga esa primera linea oculta
+	/*debug_printf (VERBOSE_DEBUG,"First line: %s",buffer_lineas[primera_linea]);
+	debug_printf (VERBOSE_DEBUG,"Last line: %s",buffer_lineas[i+primera_linea-1]);
+
+	if (!mostrar_cursor) {
+		if (primera_linea_a_speech) {
+			menu_speech_tecla_pulsada=0;
+			menu_textspeech_send_text(buffer_lineas[primera_linea]);
+		}
+		if (ultima_linea_a_speech) {
+			menu_speech_tecla_pulsada=0;
+			menu_textspeech_send_text(buffer_lineas[i+primera_linea-1]);
+		}
+	}
+
+	else {
+		menu_speech_tecla_pulsada=0;
+		menu_textspeech_send_text(buffer_lineas[primera_linea+linea_cursor]);
+	}*/
+
+
+	primera_linea_a_speech=0;
+	ultima_linea_a_speech=0;
+	menu_speech_tecla_pulsada=1;
+
+
+	//Escribir cursores en linea inferior
+	//26 espacios
+	//char cursores[]="                          ";
+	//abajo
+	//if (primera_linea<indice_linea-1) cursores[20]='D';
+	//Meter puntos suspensivos en la ultima linea indicando que hay mas abajo
+	/*if (primera_linea+alto_ventana-2<indice_linea) {
+		menu_escribe_linea_opcion(MAX_LINEAS_VENTANA_GENERIC_MESSAGE,-1,1,"...");
+	}*/
+
+	
+
+
+
+	//arriba
+	//if (primera_linea>0) cursores[21]='U';
+	//Meter puntos suspensivos en la primera linea indicando que hay mas arriba
+
+	//if (primera_linea>0) menu_escribe_linea_opcion(0,-1,1,"... ");
+
+	
+
+
+        menu_refresca_pantalla();
+
+
+							if (volver_timeout) {
+								menu_espera_tecla_timeout_window_splash();
+							}
+							else {
+								menu_espera_tecla(); //no se porque dos veces. pero esto esta asi desde hace mucho
+                menu_espera_tecla();
+							}
+
+
+                tecla=menu_get_pressed_key();
+
+
+
+								if (volver_timeout) tecla=13;
+						
+
+								
+
+		if (tooltip_enabled==0) menu_espera_no_tecla_con_repeticion();
+
+		//Decir que no se ha pulsado tecla para que se relea esto cada vez
+		//menu_speech_tecla_pulsada=0;
+
+		int contador_pgdnup;
+
+        /*switch (tecla) {
+                        //abajo
+                        case 10:
+						primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+						ultima_linea_a_speech=1;
+                        break;
+
+                        //arriba
+                        case 11:
+						primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+						primera_linea_a_speech=1;
+                        break;
+
+					//PgUp
+					case 24:
+						for (contador_pgdnup=0;contador_pgdnup<MAX_LINEAS_VENTANA_GENERIC_MESSAGE-1;contador_pgdnup++) {
+							primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+						}
+						//Decir que no se ha pulsado tecla para que se relea
+						menu_speech_tecla_pulsada=0;
+					break;
+
+                                        //PgDn
+                                        case 25:
+                                                for (contador_pgdnup=0;contador_pgdnup<MAX_LINEAS_VENTANA_GENERIC_MESSAGE-1;contador_pgdnup++) {
+							primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+                                                }
+
+						//Si esta en primera linea cursor, mover
+						//if (mostrar_cursor) {
+						//	if (linea_cursor==0) linea_cursor=1;
+						//}
+						//Decir que no se ha pulsado tecla para que se relea
+						menu_speech_tecla_pulsada=0;
+                                        break;
+
+                                        case 'c':
+                                        	menu_copy_clipboard(menu_generic_message_tooltip_text_initial);
+                                        	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard. Go to file utils and press P to paste to a file");
+                                        break;
+
+
+					//Buscar texto
+					case 'f':
+					case 'n':
+
+						if (tecla=='f' || ultima_linea_buscada==-1) {
+
+							buffer_texto_buscado[0]=0;
+			        			menu_ventana_scanf("Text to find",buffer_texto_buscado,33);
+
+							//ultima_linea_buscada=0; //Si lo pusiera a 0, no encontraria nada en primera linea
+							//pues no se cumpliria la condicion de mas abajo de i>ultima_linea_buscada
+
+							ultima_linea_buscada=-1;
+
+						}
+
+						int i;
+						char *encontrado=NULL;
+						for (i=0;i<indice_linea;i++) {
+							debug_printf(VERBOSE_DEBUG,"Searching text on line %d: %s",i,buffer_lineas[i]);
+							encontrado=util_strcasestr(buffer_lineas[i], buffer_texto_buscado);
+							if (encontrado && i>ultima_linea_buscada) {
+								break;
+							}
+						}
+
+						if (encontrado) {
+							ultima_linea_buscada=i;
+							//mover cursor hasta ahi
+							primera_linea=0;
+							linea_cursor=0;
+
+							//printf ("mover cursor hasta linea: %d\n",ultima_linea_buscada);
+
+							//Mostramos cursor para poder indicar en que linea se ha encontrado el texto
+							mostrar_cursor=1;
+
+							int contador;
+							for (contador=0;contador<ultima_linea_buscada;contador++) {
+									primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+							}
+
+							//menu_speech_tecla_pulsada=0;
+							//menu_textspeech_send_text(buffer_lineas[ultima_linea_buscada]);
+						}
+
+						else {
+							menu_warn_message("Text not found");
+						}
+
+
+					break;
+				}*/
+
+	//Salir con Enter o ESC o fin de tooltip
+	} while (tecla!=13 && tecla!=2 && tooltip_enabled==0);
+
+	if (retorno!=NULL) {
+		int linea_final=linea_cursor+primera_linea;
+		strcpy(retorno->texto_seleccionado,buffer_lineas[linea_final]);
+		retorno->linea_seleccionada=linea_final;
+
+		// int estado_retorno; //Retorna 1 si sale con enter. Retorna 0 si sale con ESC
+		if (tecla==2) retorno->estado_retorno=0;
+		else retorno->estado_retorno=1;
+
+		//printf ("\n\nLinea seleccionada: %d (%s)\n",linea_cursor+primera_linea,buffer_lineas[linea_cursor+primera_linea]);
+
+	}
+
+        cls_menu_overlay();
+
+        if (tooltip_enabled==0) menu_espera_no_tecla_con_repeticion();
+
+	cls_menu_overlay();
+
+
+	if (menu_generic_message_tooltip_text_initial!=NULL) {
+		debug_printf(VERBOSE_INFO,"Freeing previous buffer for initial text");
+		free(menu_generic_message_tooltip_text_initial);
+	}
+	//if (tooltip_enabled==0)
+
+
+
 }
 
 int zxvision_get_effective_width(zxvision_window *w)
@@ -4155,6 +4573,9 @@ int zxvision_mouse_in_bottom_right(zxvision_window *w)
 
 void zxvision_handle_mouse_events(zxvision_window *w)
 {
+
+	if (w==NULL) return;
+
 	if (!si_menu_mouse_activado()) return;
 	menu_calculate_mouse_xy();
 

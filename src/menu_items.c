@@ -1460,6 +1460,9 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
         menu_espera_no_tecla();
 
+
+		//zxvision_generic_message_tooltip("pruebas", 30, 0, 0, generic_message_tooltip_return *retorno, const char * texto_format , ...)
+		zxvision_generic_message_tooltip("Pruebas", 0, 0, 0, NULL, "%s", "Hola que tal como estas esto es una prueba de escribir texto. Adios");
         //z80_byte acumulado;
 
 
@@ -1778,10 +1781,10 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 	while (!mouse_right) {
 		//menu_espera_tecla();
-		//tecla=menu_get_pressed_key();
+		tecla=menu_get_pressed_key();
 		//Comprobar eventos raton
 		menu_cpu_core_loop();
-		zxvision_handle_mouse_events(&ventana);
+		//zxvision_handle_mouse_events(&ventana);
 	} 
 
 	zxvision_destroy_window(&ventana);
