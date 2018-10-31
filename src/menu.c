@@ -4101,7 +4101,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	
 
 
-        //temp disabled menu_refresca_pantalla();
+        if (!menu_multitarea) menu_refresca_pantalla();
 
 
 							if (volver_timeout) {
