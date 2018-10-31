@@ -4,7 +4,7 @@
 --zxvision:
 zxvision_generic_message_tooltip: gestion de teclado, variables de entrada volver_timeout, tooltip_enabled, mostrar_cursor,
  Ventanas que no se puedan redimensionar (por ejemplo en help->About)
-
+tratamiento de parpadeo, etc y otros caracteres de control, por ejemplo en help->statistics
 
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
