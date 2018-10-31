@@ -4101,14 +4101,14 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	
 
 
-        menu_refresca_pantalla();
+        //temp disabled menu_refresca_pantalla();
 
 
 							if (volver_timeout) {
 								menu_espera_tecla_timeout_window_splash();
 							}
 							else {
-								menu_espera_tecla(); //no se porque dos veces. pero esto esta asi desde hace mucho
+								//menu_espera_tecla(); //no se porque dos veces. pero esto esta asi desde hace mucho
                 menu_espera_tecla();
 							}
 
@@ -4116,9 +4116,16 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
                 tecla=menu_get_pressed_key();
 				//printf ("tecla: %d\n",tecla);
 
+				//menu_cpu_core_loop();
+
 
 				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
-				if (tecla==13 && mouse_left) tecla=0;
+				if (tecla==13 && mouse_left) {
+					tecla=0;
+					//printf ("ejecutando core\n");
+					menu_cpu_core_loop();
+				}
+
 
 
 								if (volver_timeout) tecla=13;
@@ -4126,7 +4133,9 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 								
 
-		if (tooltip_enabled==0 && tecla) menu_espera_no_tecla_con_repeticion();
+		if (tooltip_enabled==0 && tecla) {
+			menu_espera_no_tecla_con_repeticion();
+		}
 
 		//Decir que no se ha pulsado tecla para que se relea esto cada vez
 		//menu_speech_tecla_pulsada=0;
