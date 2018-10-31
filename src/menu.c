@@ -32747,7 +32747,10 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
 */
 	generic_message_tooltip_return retorno_ventana;
-	menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
+	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
+	zxvision_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
+
+
 
 	//Si se sale con ESC
         if (retorno_ventana.estado_retorno==0) return;

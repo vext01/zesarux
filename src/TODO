@@ -1,5 +1,9 @@
 --- Para esta version 7.2:
- 
+
+
+--zxvision:
+zxvision_generic_message_tooltip: gestion de teclado, variables de entrada volver_timeout, tooltip_enabled, mostrar_cursor,
+se detiene emulación mientras se mueve ratón. Ventanas que no se puedan redimensionar (por ejemplo en help->About)
 
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
