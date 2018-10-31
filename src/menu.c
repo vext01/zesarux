@@ -3844,6 +3844,8 @@ void zxvision_destroy_window(zxvision_window *w)
 	free(w->memory);
 }
 
+
+//TODO: gestionar volver_timeout, tooltip_enabled, mostrar_cursor
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
 {
 	/*zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,ancho_visible,alto_visible,
@@ -4039,7 +4041,10 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		//printf ("Linea seleccionada: %d (%s)\n",linea_cursor+primera_linea,buffer_lineas[linea_cursor+primera_linea]);
 	}*/
 
-	for (i=0;i<indice_linea;i++) zxvision_print_string(&ventana,1,i,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_lineas[i]);
+	for (i=0;i<indice_linea;i++) {
+		//TODO: mostrar_cursor
+		zxvision_print_string(&ventana,1,i,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_lineas[i]);
+	}
 
 	zxvision_draw_window_contents(&ventana);
 
@@ -4109,7 +4114,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 
                 tecla=menu_get_pressed_key();
-				printf ("tecla: %d\n",tecla);
+				//printf ("tecla: %d\n",tecla);
 
 
 				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
@@ -32311,7 +32316,8 @@ void menu_generic_message_format(char *titulo, const char * texto_format , ...)
         va_end (args);
 
 
-	menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
+	//menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
+	zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
 
 
 	//En Linux esto funciona bien sin tener que hacer las funciones va_ previas:
@@ -32322,7 +32328,8 @@ void menu_generic_message_format(char *titulo, const char * texto_format , ...)
 void menu_generic_message(char *titulo, const char * texto)
 {
 
-        menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
+        //menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
+		zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
 }
 
 
