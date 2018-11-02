@@ -529,7 +529,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
  
 z80_byte ventana_x,ventana_y,ventana_ancho,ventana_alto;
 
-
+//tipo ventana. normalmente activa. se pone tipo inactiva desde zxvision al pulsar fuera de la ventana
+int ventana_tipo_activa=1;
 
 
 //Elemento que identifica a un archivo en funcion de seleccion
@@ -3746,13 +3747,19 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 
         //titulo
         //primero franja toda negra normalmente en estilo ZEsarUX
-        for (i=0;i<ancho;i++) putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        for (i=0;i<ancho;i++) {
+			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+			else putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+		}
 
         //y luego el texto
-        for (i=0;i<strlen(titulo);i++) putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        for (i=0;i<strlen(titulo);i++) {
+			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+			else putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+		}
 
         //y las franjas de color
-	if (ESTILO_GUI_MUESTRA_RAINBOW) {
+	if (ESTILO_GUI_MUESTRA_RAINBOW && ventana_tipo_activa) {
 		//en el caso de drivers completos, hacerlo real
 		menu_dibuja_ventana_franja_arcoiris(x,y,ancho);
 		/*
@@ -3792,6 +3799,9 @@ int menu_mouse_x=0;
 int menu_mouse_y=0;
 
 zxvision_window *zxvision_current_window;
+
+//Decir que con una ventana zxvision visible, las pulsaciones de teclas no se envian a maquina emulada
+int zxvision_keys_event_not_send_to_machine=1;
 
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
@@ -3834,6 +3844,12 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	}
 
 	zxvision_current_window=w;
+
+
+	//Decir que al abrir la ventana, las pulsaciones de teclas no se envian por defecto a maquina emulada
+	zxvision_keys_event_not_send_to_machine=1;
+
+	ventana_tipo_activa=1;
 
 
 }
@@ -4653,6 +4669,26 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (!si_menu_mouse_activado()) return;
 	menu_calculate_mouse_xy();
+
+	if (mouse_left) {
+		//Si se pulsa dentro de ventana
+	 	if (si_menu_mouse_en_ventana() && !zxvision_keys_event_not_send_to_machine) {
+			printf ("Clicked inside window. Events are not sent to emulated machine\n");
+			zxvision_keys_event_not_send_to_machine=1;
+			ventana_tipo_activa=1;
+			zxvision_draw_window(w);
+			zxvision_draw_window_contents(w);
+		}
+
+		if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
+			//Si se pulsa fuera de ventana
+			printf ("Clicked outside window. Events are sent to emulated machine\n");
+			zxvision_keys_event_not_send_to_machine=0;
+			ventana_tipo_activa=0;
+			zxvision_draw_window(w);
+			zxvision_draw_window_contents(w);
+		}
+	}
 
 
 	if (mouse_movido) {

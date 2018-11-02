@@ -181,7 +181,7 @@ If you want to install it, the following are the instructions for the different 
 
     $ make macapp
 
-This will create a `macos` folder, which contains the `ZEsarUX.app` along with a compressed `.dmg` file.
+This will create a "macos" folder, which contains the "ZEsarUX.app" along with a compressed ".dmg" file.
 
 You may wish to move this to your "Applications" folder.
 
