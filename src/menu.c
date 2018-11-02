@@ -4142,10 +4142,15 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 		int contador_pgdnup;
 
-        /*switch (tecla) {
+        switch (tecla) {
+
+						//TODO: en teclas direccion, considerar el caso cuando cursor esta visible, y entonces solo hace scroll cuando
+						//cursor esta abajo del todo
+
                         //abajo
                         case 10:
-						primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+						//primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
+						zxvision_send_scroll_down(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
@@ -4154,36 +4159,51 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
                         //arriba
                         case 11:
-						primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+						//primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
+						zxvision_send_scroll_up(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
 						primera_linea_a_speech=1;
                         break;
 
-					//PgUp
-					case 24:
-						for (contador_pgdnup=0;contador_pgdnup<MAX_LINEAS_VENTANA_GENERIC_MESSAGE-1;contador_pgdnup++) {
-							primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
-						}
-						//Decir que no se ha pulsado tecla para que se relea
-						menu_speech_tecla_pulsada=0;
-					break;
+                        //izquierda
+                        case 8:
+						zxvision_send_scroll_left(&ventana);
 
-                                        //PgDn
-                                        case 25:
-                                                for (contador_pgdnup=0;contador_pgdnup<MAX_LINEAS_VENTANA_GENERIC_MESSAGE-1;contador_pgdnup++) {
-							primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
-                                                }
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+						ultima_linea_a_speech=1;
+                        break;
 
-						//Si esta en primera linea cursor, mover
-						//if (mostrar_cursor) {
-						//	if (linea_cursor==0) linea_cursor=1;
-						//}
-						//Decir que no se ha pulsado tecla para que se relea
-						menu_speech_tecla_pulsada=0;
-                                        break;
+                        //derecha
+                        case 9:
+						zxvision_send_scroll_right(&ventana);
 
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+						primera_linea_a_speech=1;
+                        break;						
+
+						//PgUp
+						case 24:
+							for (contador_pgdnup=0;contador_pgdnup<ventana.visible_height-2;contador_pgdnup++) {
+								zxvision_send_scroll_up(&ventana);
+							}
+							//Decir que no se ha pulsado tecla para que se relea
+							menu_speech_tecla_pulsada=0;
+						break;
+
+                    	//PgDn
+                    	case 25:
+                    		for (contador_pgdnup=0;contador_pgdnup<ventana.visible_height-2;contador_pgdnup++) {
+								zxvision_send_scroll_down(&ventana);
+                        	}
+
+							//Decir que no se ha pulsado tecla para que se relea
+							menu_speech_tecla_pulsada=0;
+                    	break;
+						/*
                                         case 'c':
                                         	menu_copy_clipboard(menu_generic_message_tooltip_text_initial);
                                         	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard. Go to file utils and press P to paste to a file");
@@ -4242,7 +4262,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 
 					break;
-				}*/
+					*/
+				}
 
 	//Salir con Enter o ESC o fin de tooltip
 	} while (tecla!=13 && tecla!=2 && tooltip_enabled==0);
@@ -4373,6 +4394,37 @@ void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 
 	zxvision_draw_window_contents(w);
 	zxvision_draw_scroll_bars(w);
+}
+
+
+void zxvision_send_scroll_down(zxvision_window *w)
+{
+	if (w->offset_y<(w->total_height-1)) {
+						zxvision_set_offset_y(w,w->offset_y+1);
+	}	
+}
+
+
+void zxvision_send_scroll_up(zxvision_window *w)
+{
+	if (w->offset_y>0) {
+		zxvision_set_offset_y(w,w->offset_y-1);
+	}
+}
+
+
+void zxvision_send_scroll_left(zxvision_window *w)
+{
+	if (w->offset_x>0) {
+		zxvision_set_offset_x(w,w->offset_x-1);
+	}
+}
+
+void zxvision_send_scroll_right(zxvision_window *w)
+{
+	if (w->offset_x<(w->total_width-1)) {
+		zxvision_set_offset_x(w,w->offset_x+1);
+	}
 }
 
 int zxvision_out_bonds(int x,int y,int ancho,int alto)
@@ -4644,17 +4696,19 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					//Flecha izquierda
 					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
 						printf ("Pulsado en scroll izquierda\n");
-						if (w->offset_x>0) {
+						zxvision_send_scroll_left(w);
+						/*if (w->offset_x>0) {
 							zxvision_set_offset_x(w,w->offset_x-1);
-						}
+						}*/
 					}
 
 					//Flecha derecha
 					if (last_x_mouse_clicked==posicion_flecha_derecha) {
 						printf ("Pulsado en scroll derecha\n");
-						if (w->offset_x<(w->total_width-1)) {
+						zxvision_send_scroll_right(w);
+						/*if (w->offset_x<(w->total_width-1)) {
 							zxvision_set_offset_x(w,w->offset_x+1);
-						}
+						}*/
 					}
 
 					if (last_x_mouse_clicked>posicion_flecha_izquierda && last_x_mouse_clicked<posicion_flecha_derecha) {
@@ -4688,17 +4742,19 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					//Flecha arriba
 					if (last_y_mouse_clicked==posicion_flecha_arriba) {
 						printf ("Pulsado en scroll arriba\n");
-						if (w->offset_y>0) {
+						zxvision_send_scroll_up(w);
+						/*if (w->offset_y>0) {
 							zxvision_set_offset_y(w,w->offset_y-1);
-						}
+						}*/
 					}
 
 					//Flecha abajo
 					if (last_y_mouse_clicked==posicion_flecha_abajo) {
 						printf ("Pulsado en scroll abajo\n");
-						if (w->offset_y<(w->total_height-1)) {
+						zxvision_send_scroll_down(w);
+						/*if (w->offset_y<(w->total_height-1)) {
 							zxvision_set_offset_y(w,w->offset_y+1);
-						}
+						}*/
 					}
 
 					if (last_y_mouse_clicked>posicion_flecha_arriba && last_y_mouse_clicked<posicion_flecha_abajo) {

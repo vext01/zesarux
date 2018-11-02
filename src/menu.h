@@ -119,6 +119,11 @@ extern void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int p
 extern void zxvision_handle_mouse_events(zxvision_window *w);
 extern void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
 
+extern void zxvision_send_scroll_up(zxvision_window *w);
+extern void zxvision_send_scroll_down(zxvision_window *w);
+extern void zxvision_send_scroll_left(zxvision_window *w);
+extern void zxvision_send_scroll_right(zxvision_window *w);
+
 extern zxvision_window *zxvision_current_window;
 
 #define MAX_F_FUNCTIONS 19
