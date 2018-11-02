@@ -6,6 +6,10 @@ zxvision_generic_message_tooltip: gestion de teclado, variables de entrada volve
  Ventanas que no se puedan redimensionar (por ejemplo en help->About)
 tratamiento de parpadeo, etc y otros caracteres de control, por ejemplo en help->statistics
 
+funciones de lectura teclado en maquinas emuladas: que tenga en cuenta si se ha pulsado fuera de ventana zxvision:
+if (menu_abierto==1 && zxvision_keys_event_not_send_to_machine) return 255;
+->Pero parece que no envia bien tecla a maquina emulada, solo boton izquierdo como enter
+
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
 Ver "Temporal codigo control color tinta" -> como hacer compatible el color con el skin de gui?

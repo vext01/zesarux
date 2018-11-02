@@ -5341,7 +5341,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
                 //puerto teclado
 
                 //si estamos en el menu, no devolver tecla
-                if (menu_abierto==1) return 255;
+                if (menu_abierto==1 && zxvision_keys_event_not_send_to_machine) return 255;
 
 
 		//Si esta spool file activo, generar siguiente tecla

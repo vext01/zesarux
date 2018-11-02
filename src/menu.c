@@ -2831,7 +2831,7 @@ void normal_overlay_texto_menu(void)
 		}
 	}
 
-	if (cuadrado_activo) {
+	if (cuadrado_activo && ventana_tipo_activa) {
 		menu_dibuja_cuadrado(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
 
 		//Y si tiene marca de redimensionado
@@ -3858,6 +3858,8 @@ void zxvision_destroy_window(zxvision_window *w)
 {
 	zxvision_current_window=NULL;
 	free(w->memory);
+	ventana_tipo_activa=1;
+	zxvision_keys_event_not_send_to_machine=1;
 }
 
 
@@ -4146,7 +4148,11 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 								if (volver_timeout) tecla=13;
 						
-
+			//Si ventana inactiva y se ha pulsado tecla, excepto ESC, no leer dicha tecla
+			if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
+				//printf ("no leemos tecla en ventana pues esta inactiva\n");
+				tecla=0; 
+			}
 								
 
 		if (tooltip_enabled==0 && tecla) {

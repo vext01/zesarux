@@ -71,6 +71,8 @@ extern void disable_footer(void);
 extern void menu_init_footer(void);
 extern void menu_footer_z88(void);
 
+
+
 struct s_overlay_screen {
 	z80_byte tinta,papel,parpadeo;
 	z80_byte caracter;
@@ -125,6 +127,8 @@ extern void zxvision_send_scroll_left(zxvision_window *w);
 extern void zxvision_send_scroll_right(zxvision_window *w);
 
 extern zxvision_window *zxvision_current_window;
+
+extern int zxvision_keys_event_not_send_to_machine;
 
 #define MAX_F_FUNCTIONS 19
 
