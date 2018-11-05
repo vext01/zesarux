@@ -4119,48 +4119,56 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	
 
 
-        if (!menu_multitarea) menu_refresca_pantalla();
+        if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+		}
 
+		/*else {
+			menu_cpu_core_loop();
+		}*/
 
 		if (volver_timeout) {
 			menu_espera_tecla_timeout_window_splash();
 		}
 		else {
-			//menu_espera_tecla(); //no se porque dos veces. pero esto esta asi desde hace mucho
 			printf ("Antes espera tecla\n");
 			menu_cpu_core_loop();
         	menu_espera_tecla();
-			printf ("Despues espera tecla\n");
-			printf ("zxvision_keys_event_not_send_to_machine: %d\n",zxvision_keys_event_not_send_to_machine);
+			//printf ("Despues espera tecla\n");
+			//printf ("zxvision_keys_event_not_send_to_machine: %d\n",zxvision_keys_event_not_send_to_machine);
 		}
 
 
                 tecla=menu_get_pressed_key();
-				printf ("tecla: %d\n",tecla);
+				//printf ("tecla: %d\n",tecla);
 
 				//menu_cpu_core_loop();
 
-
-				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
-				if (tecla==13 && mouse_left) {
-					//tecla=0;
-					//printf ("ejecutando core\n");
-					//menu_cpu_core_loop();
-				}
-
-
-
-								if (volver_timeout) tecla=13;
-						
 			//Si ventana inactiva y se ha pulsado tecla, excepto ESC, no leer dicha tecla
 			if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
 				//printf ("no leemos tecla en ventana pues esta inactiva\n");
 				tecla=0; 
 			}
+
+				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
+				//if (tecla==13 && mouse_left && zxvision_keys_event_not_send_to_machine && !mouse_is_dragging) {
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+					menu_refresca_pantalla();
+					//printf ("ejecutando core\n");
+					menu_cpu_core_loop();
+				}
+
+
+
+		if (volver_timeout) tecla=13;
+						
+
 								
 
 		if (tooltip_enabled==0 && tecla) {
-			printf ("Esperamos no tecla\n");
+			//printf ("Esperamos no tecla\n");
 			menu_espera_no_tecla_con_repeticion();
 		}
 
@@ -4673,16 +4681,24 @@ int zxvision_mouse_in_bottom_right(zxvision_window *w)
 	return 0;
 }
 
+//int zxvision_mouse_events_counter=0;
+
 void zxvision_handle_mouse_events(zxvision_window *w)
 {
 
 	if (w==NULL) return;
 
 	if (!si_menu_mouse_activado()) return;
+
+	//Contar eventos cada x llamadas
+	/*zxvision_mouse_events_counter++;
+
+	if ((zxvision_mouse_events_counter % 10)!=0) return;*/
+
 	menu_calculate_mouse_xy();
 
-	if (mouse_left) {
-		//Si se pulsa dentro de ventana
+	if (mouse_left && !mouse_is_dragging) {
+		//Si se pulsa dentro de ventana y no esta arrastrando
 	 	if (si_menu_mouse_en_ventana() && !zxvision_keys_event_not_send_to_machine) {
 			printf ("Clicked inside window. Events are not sent to emulated machine\n");
 			zxvision_keys_event_not_send_to_machine=1;
@@ -4703,7 +4719,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 
 	if (mouse_movido) {
-		printf ("mouse movido\n");
+		//printf ("mouse movido\n");
 		if (si_menu_mouse_en_ventana() ) {
 				//if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<ventana_ancho && menu_mouse_y<ventana_alto ) {
 					printf ("dentro ventana\n");

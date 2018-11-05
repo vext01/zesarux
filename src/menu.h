@@ -71,7 +71,7 @@ extern void disable_footer(void);
 extern void menu_init_footer(void);
 extern void menu_footer_z88(void);
 
-
+extern int mouse_is_dragging;
 
 struct s_overlay_screen {
 	z80_byte tinta,papel,parpadeo;
