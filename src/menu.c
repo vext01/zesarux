@@ -4132,7 +4132,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 			menu_espera_tecla_timeout_window_splash();
 		}
 		else {
-			printf ("Antes espera tecla\n");
+			//printf ("Antes espera tecla\n");
 			menu_cpu_core_loop();
         	menu_espera_tecla();
 
@@ -4158,9 +4158,12 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 				//if (tecla==13 && mouse_left && zxvision_keys_event_not_send_to_machine && !mouse_is_dragging) {
 				if (tecla==13 && mouse_left) {	
 					tecla=0;
-					menu_refresca_pantalla();
+					//menu_refresca_pantalla();
 					//printf ("ejecutando core\n");
-					menu_cpu_core_loop();
+
+					//y quitar la tecla enter del puerto
+					//util_set_reset_key(UTIL_KEY_ENTER,0);
+					//menu_cpu_core_loop();
 				}
 
 

@@ -2,6 +2,9 @@
 
 
 --zxvision:
+
+-hacer que mouse left no envie tecla enter. sera mejor para todo...
+
 zxvision_generic_message_tooltip: gestion de teclado, variables de entrada volver_timeout, tooltip_enabled, mostrar_cursor,
  Ventanas que no se puedan redimensionar (por ejemplo en help->About)
 tratamiento de parpadeo, etc y otros caracteres de control, por ejemplo en help->statistics

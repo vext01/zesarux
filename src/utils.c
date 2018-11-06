@@ -5392,8 +5392,8 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
           //Si no esta menu abierto, hace accion de abrir menu
           if (menu_abierto==0) menu_fire_event_open_menu();
           else {
-            //Si esta menu abierto, es como enviar enter
-            util_set_reset_key(UTIL_KEY_ENTER,1);
+            //Si esta menu abierto, es como enviar enter, pero cuando no esta la ventana en background
+            if (zxvision_keys_event_not_send_to_machine) util_set_reset_key(UTIL_KEY_ENTER,1);
           }
         }
 
