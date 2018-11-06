@@ -5393,7 +5393,12 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
           if (menu_abierto==0) menu_fire_event_open_menu();
           else {
             //Si esta menu abierto, es como enviar enter, pero cuando no esta la ventana en background
-            if (zxvision_keys_event_not_send_to_machine) util_set_reset_key(UTIL_KEY_ENTER,1);
+            if (zxvision_keys_event_not_send_to_machine) {
+                    //y si se pulsa dentro de ventana
+                    if (si_menu_mouse_en_ventana() ) {
+                    util_set_reset_key(UTIL_KEY_ENTER,1);
+                    }
+            }
           }
         }
 
@@ -5425,7 +5430,12 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
           if (menu_abierto==0) menu_fire_event_open_menu();
           else {
             //Si esta menu abierto, es como enviar ESC
-            util_set_reset_key(UTIL_KEY_ESC,1);
+            if (zxvision_keys_event_not_send_to_machine) {
+                    //y si se pulsa dentro de ventana
+                    if (si_menu_mouse_en_ventana() ) {
+                    util_set_reset_key(UTIL_KEY_ESC,1);
+                    }
+            }
           }
         }
 
