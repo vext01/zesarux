@@ -4135,8 +4135,11 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 			printf ("Antes espera tecla\n");
 			menu_cpu_core_loop();
         	menu_espera_tecla();
+
+
 			//printf ("Despues espera tecla\n");
 			//printf ("zxvision_keys_event_not_send_to_machine: %d\n",zxvision_keys_event_not_send_to_machine);
+
 		}
 
 
@@ -4682,7 +4685,7 @@ int zxvision_mouse_in_bottom_right(zxvision_window *w)
 }
 
 //int zxvision_mouse_events_counter=0;
-
+//int tempconta;
 void zxvision_handle_mouse_events(zxvision_window *w)
 {
 
@@ -4690,10 +4693,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (!si_menu_mouse_activado()) return;
 
-	//Contar eventos cada x llamadas
-	/*zxvision_mouse_events_counter++;
-
-	if ((zxvision_mouse_events_counter % 10)!=0) return;*/
+	//printf ("zxvision_handle_mouse_events %d\n",tempconta++);
 
 	menu_calculate_mouse_xy();
 

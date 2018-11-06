@@ -5386,8 +5386,8 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
   {
     case UTIL_MOUSE_LEFT_BUTTON:
       if (pressrelease) {
-        mouse_left=1;
 
+        //printf ("Leido press release mouse\n");
         if (si_menu_mouse_activado() ) {
           //Si no esta menu abierto, hace accion de abrir menu
           if (menu_abierto==0) menu_fire_event_open_menu();
@@ -5397,9 +5397,10 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
           }
         }
 
+        mouse_left=1;
+
       }
       else {
-        mouse_left=0;
 
         if (si_menu_mouse_activado()) {
 
@@ -5408,6 +5409,9 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
             util_set_reset_key(UTIL_KEY_ENTER,0);
           }
         }
+
+        mouse_left=0;
+
       }
     break;
 
