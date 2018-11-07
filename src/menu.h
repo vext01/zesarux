@@ -120,6 +120,7 @@ extern void zxvision_set_y_position(zxvision_window *w,int y);
 extern void zxvision_set_visible_width(zxvision_window *w,int visible_width);
 extern void zxvision_set_visible_height(zxvision_window *w,int visible_height);
 extern void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto);
+extern void zxvision_print_string_defaults(zxvision_window *w,int x,int y,char *texto);
 extern void zxvision_handle_mouse_events(zxvision_window *w);
 extern void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...);
 

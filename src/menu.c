@@ -4659,6 +4659,13 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 	}	
 }
 
+void zxvision_print_string_defaults(zxvision_window *w,int x,int y,char *texto)
+{
+
+	zxvision_print_string(w,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,texto);
+
+}
+
 int mouse_is_dragging=0;
 int window_is_being_moved=0;
 int window_is_being_resized=0;
@@ -25130,13 +25137,16 @@ void menu_debug_cpu_stats_diss_complete_no_print (z80_byte opcode,char *buffer,z
 }
 
 
-void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
+void old_menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 {
 
         char textostats[32];
 
         menu_espera_no_tecla();
         menu_dibuja_ventana(0,1,32,18,"CPU Compact Statistics");
+
+
+		
 
         z80_byte acumulado;
 
@@ -25294,6 +25304,174 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
 
         cls_menu_overlay();
+
+}
+
+void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
+{
+
+        char textostats[32];
+
+        menu_espera_no_tecla();
+        //menu_dibuja_ventana(0,1,32,18,"CPU Compact Statistics");
+
+		zxvision_window ventana;
+
+	zxvision_new_window(&ventana,0,1,32,18,
+							31,18,"CPU Compact Statistics");
+	zxvision_draw_window(&ventana);
+		
+
+        z80_byte acumulado;
+
+        char dumpassembler[32];
+
+        //Empezar con espacio
+        dumpassembler[0]=' ';
+
+				int valor_contador_segundo_anterior;
+
+				valor_contador_segundo_anterior=contador_segundo;
+
+		z80_byte tecla=0;
+
+        do {
+
+
+                //esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+									if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											valor_contador_segundo_anterior=contador_segundo;
+                        //contador_segundo_anterior=contador_segundo;
+												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+			int linea=0;
+                        int opcode;
+
+			unsigned int sumatotal;
+                        sumatotal=util_stats_sum_all_counters();
+                        sprintf (textostats,"Total opcodes run: %u",sumatotal);
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+                        
+
+
+						//menu_escribe_linea_opcion(linea++,-1,1,"Most used op. for each preffix");
+						zxvision_print_string_defaults(&ventana,1,linea++,"Most used op. for each preffix");
+
+                        opcode=util_stats_find_max_counter(stats_codsinpr);
+                        sprintf (textostats,"Op nopref:    %02XH: %u",opcode,util_stats_get_counter(stats_codsinpr,opcode) );
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+                        
+
+                        //Opcode
+						menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],0,0);
+						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						
+
+
+
+                        opcode=util_stats_find_max_counter(stats_codpred);
+                        sprintf (textostats,"Op pref ED:   %02XH: %u",opcode,util_stats_get_counter(stats_codpred,opcode) );
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+                        
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],237,0);
+						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+                        
+
+	
+                        opcode=util_stats_find_max_counter(stats_codprcb);
+                        sprintf (textostats,"Op pref CB:   %02XH: %u",opcode,util_stats_get_counter(stats_codprcb,opcode) );
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],203,0);
+						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+
+
+                        opcode=util_stats_find_max_counter(stats_codprdd);
+                        sprintf (textostats,"Op pref DD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprdd,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,0);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+                        opcode=util_stats_find_max_counter(stats_codprfd);
+                        sprintf (textostats,"Op pref FD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprfd,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,0);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+                        opcode=util_stats_find_max_counter(stats_codprddcb);
+                        sprintf (textostats,"Op pref DDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprddcb,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,203);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+
+                        opcode=util_stats_find_max_counter(stats_codprfdcb);
+                        sprintf (textostats,"Op pref FDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprfdcb,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,203);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+						zxvision_draw_window_contents(&ventana);
+
+                        if (menu_multitarea==0) menu_refresca_pantalla();
+
+                }
+
+                menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        //acumulado=0;
+                }
+
+				tecla=menu_get_pressed_key();
+				//con enter no salimos
+				if (tecla==13) tecla=0;
+
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla==0);
+
+        cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);
 
 }
 
@@ -27709,7 +27887,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 #ifdef EMULATE_CPU_STATS
 		if (CPU_IS_Z80) {
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_cpu_stats,NULL,"View CPU S~~tatistics");
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_cpu_stats,NULL,"View CPU S~~tatistics");
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
 		}
 
 #endif
