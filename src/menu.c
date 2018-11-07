@@ -3871,6 +3871,20 @@ void zxvision_destroy_window(zxvision_window *w)
 }
 
 
+z80_byte zxvision_read_keyboard(void)
+{
+    z80_byte tecla=menu_get_pressed_key();
+
+
+	//Si ventana inactiva y se ha pulsado tecla, excepto ESC, no leer dicha tecla
+	if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
+		//printf ("no leemos tecla en ventana pues esta inactiva\n");
+		tecla=0; 
+	}
+
+	return tecla;
+}
+
 //TODO: gestionar volver_timeout, tooltip_enabled, mostrar_cursor
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
@@ -4153,7 +4167,9 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		}
 
 
-                tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
+                /*tecla=menu_get_pressed_key();
 				//printf ("tecla: %d\n",tecla);
 
 				//menu_cpu_core_loop();
@@ -4162,7 +4178,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 			if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
 				//printf ("no leemos tecla en ventana pues esta inactiva\n");
 				tecla=0; 
-			}
+			}*/
 
 				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
 				//if (tecla==13 && mouse_left && zxvision_keys_event_not_send_to_machine && !mouse_is_dragging) {
@@ -25461,7 +25477,9 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
                         //acumulado=0;
                 }
 
-				tecla=menu_get_pressed_key();
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
 				//con enter no salimos
 				if (tecla==13) tecla=0;
 
