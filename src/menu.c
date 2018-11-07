@@ -2863,6 +2863,8 @@ void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80
 	cuadrado_y2=y2;
 	cuadrado_color=color;
 	cuadrado_activo=1;
+
+	//Por defecto no se ve marca de resize, para compatibilidad con ventanas no zxvision
 	cuadrado_activo_resize=0;
 
 }
@@ -3851,6 +3853,12 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	ventana_tipo_activa=1;
 
+	
+
+	//Decimos que se puede redimensionar
+	cuadrado_activo_resize=1;
+	w->can_be_resized=1;
+
 
 }
 
@@ -3864,7 +3872,7 @@ void zxvision_destroy_window(zxvision_window *w)
 
 
 //TODO: gestionar volver_timeout, tooltip_enabled, mostrar_cursor
-void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
+void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
 	/*zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,ancho_visible,alto_visible,
 							ancho_total,alto_total,"ZXVision Test");
@@ -4043,7 +4051,9 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
         //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
 	zxvision_window ventana;
 	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,indice_linea,titulo);		
+							ancho_ventana-1,indice_linea,titulo);	
+
+	if (!resizable) zxvision_set_not_resizable(&ventana);	
 
 	zxvision_draw_window(&ventana);
 
@@ -4408,13 +4418,32 @@ void zxvision_draw_window(zxvision_window *w)
 	//TODO: esto dibuja en pantalla ventana con contenido blanco. Habria que hacer que solo dibuje titulo y marco ventana, no?
 	//O meter contenido blanco siempre por defecto...?
 
-	//Decimos que se puede redimensionar
-	cuadrado_activo_resize=1;
+	//Ver si se puede redimensionar
+	//Dado que cada vez que se dibuja ventana, la marca de resize se establece por defecto a desactivada
+	cuadrado_activo_resize=w->can_be_resized;
 
 	zxvision_draw_scroll_bars(w);
 
 
 
+}
+
+void zxvision_set_not_resizable(zxvision_window *w)
+{
+	//Decimos que no se puede redimensionar
+	//printf ("set not resizable\n");
+	cuadrado_activo_resize=0;
+
+	w->can_be_resized=0;
+}
+
+void zxvision_set_resizable(zxvision_window *w)
+{
+	//Decimos que se puede redimensionar
+	//printf ("set resizable\n");
+	cuadrado_activo_resize=1;
+
+	w->can_be_resized=1;
 }
 
 void zxvision_set_offset_x(zxvision_window *w,int offset_x)
@@ -4860,8 +4889,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					window_mouse_y_before_move=menu_mouse_y;
 				}
 
-				//Si esta en esquina inferior derecha (donde se puede redimensionar)
-				if (zxvision_mouse_in_bottom_right(w) ) {
+				//Si esta en esquina inferior derecha (donde se puede redimensionar) y se permite resize
+				if (zxvision_mouse_in_bottom_right(w) && w->can_be_resized) {
 					printf ("Mouse dragging in bottom right\n");
 
 					window_is_being_resized=1;
@@ -32448,7 +32477,7 @@ void menu_generic_message_format(char *titulo, const char * texto_format , ...)
 
 
 	//menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
-	zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
+	zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, 1, "%s", texto);
 
 
 	//En Linux esto funciona bien sin tener que hacer las funciones va_ previas:
@@ -32460,7 +32489,7 @@ void menu_generic_message(char *titulo, const char * texto)
 {
 
         //menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
-		zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
+		zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, 1, "%s", texto);
 }
 
 
@@ -32879,7 +32908,7 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 */
 	generic_message_tooltip_return retorno_ventana;
 	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
-	zxvision_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
+	zxvision_generic_message_tooltip("About",0,0,0,&retorno_ventana,0,mensaje_about);
 
 
 

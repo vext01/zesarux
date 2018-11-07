@@ -101,6 +101,8 @@ struct s_zxvision_window {
 
 	int total_width,total_height;
 	char window_title[256];
+
+	int can_be_resized;
 };
 
 typedef struct s_zxvision_window zxvision_window;
@@ -119,12 +121,15 @@ extern void zxvision_set_visible_width(zxvision_window *w,int visible_width);
 extern void zxvision_set_visible_height(zxvision_window *w,int visible_height);
 extern void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto);
 extern void zxvision_handle_mouse_events(zxvision_window *w);
-extern void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
+extern void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...);
 
 extern void zxvision_send_scroll_up(zxvision_window *w);
 extern void zxvision_send_scroll_down(zxvision_window *w);
 extern void zxvision_send_scroll_left(zxvision_window *w);
 extern void zxvision_send_scroll_right(zxvision_window *w);
+
+extern void zxvision_set_not_resizable(zxvision_window *w);
+extern void zxvision_set_resizable(zxvision_window *w);
 
 extern zxvision_window *zxvision_current_window;
 
