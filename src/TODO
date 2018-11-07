@@ -7,14 +7,15 @@
 Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 Al pulsar en zonas scroll arriba o abajo del todo etc que vaya a inicio o final scroll 
 
+ok tratamiento de parpadeo, etc y otros caracteres de control, por ejemplo en help->statistics
+falta tratamiento utf
 
 zxvision_generic_message_tooltip: gestion de teclado, variables de entrada volver_timeout, tooltip_enabled, mostrar_cursor,
- Ventanas que no se puedan redimensionar (por ejemplo en help->About)
-tratamiento de parpadeo, etc y otros caracteres de control, por ejemplo en help->statistics
 
-funciones de lectura teclado en maquinas emuladas: que tenga en cuenta si se ha pulsado fuera de ventana zxvision:
-if (menu_abierto==1 && zxvision_keys_event_not_send_to_machine) return 255;
-->Pero parece que no envia bien tecla a maquina emulada, solo boton izquierdo como enter
+
+
+
+
 
 --quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
 para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos

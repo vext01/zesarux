@@ -4663,11 +4663,77 @@ void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter
 void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto)
 {
 	while (*texto) {
+
 		overlay_screen caracter_aux;
+		caracter_aux.caracter=*texto;
+
+		//TODO: gestion caracteres de control
+//Si dos ^ seguidas, invertir estado parpadeo
+		if (menu_escribe_texto_si_parpadeo(texto,0)) {
+			parpadeo ^=1;
+			//y saltamos esos codigos de negado
+                        texto +=2;
+                        caracter_aux.caracter=*texto;
+		}
+
+		//Temporal codigo control color tinta
+		if (menu_escribe_texto_si_cambio_tinta(texto,0)) {
+			tinta=texto[2]-'0';
+			texto+=3;
+			caracter_aux.caracter=*texto;
+		}
+
+		//ver si dos ~~ seguidas y cuidado al comparar que no nos vayamos mas alla del codigo 0 final
+		if (menu_escribe_texto_si_inverso(texto,0)) {
+			//y saltamos esos codigos de negado
+			texto +=2;
+			caracter_aux.caracter=*texto;
+
+			int papel_aux;
+			papel_aux=papel;
+			papel=tinta;
+			tinta=papel_aux;
+
+			//if (menu_writing_inverse_color.v) putchar_menu_overlay_parpadeo(x,y,letra,papel,tinta,parpadeo);
+			//else putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
+		}
+
+		/*else {
+
+			//Si estaba prefijo utf activo
+
+			if (era_utf) {
+				letra=menu_escribe_texto_convert_utf(era_utf,letra);
+				era_utf=0;
+
+				//Caracter final utf
+				putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
+			}
+
+
+			//Si no, ver si entra un prefijo utf
+			else {
+				//printf ("letra: %02XH\n",letra);
+				//Prefijo utf
+                	        if (menu_es_prefijo_utf(letra)) {
+        	                        era_utf=letra;
+					//printf ("activado utf\n");
+	                        }
+
+				else {
+					//Caracter normal
+					putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
+				}
+			}
+
+
+		}*/
+
+
 		caracter_aux.tinta=tinta;
 		caracter_aux.papel=papel;
 		caracter_aux.parpadeo=parpadeo;
-		caracter_aux.caracter=*texto;
+
 
 		zxvision_print_char(w,x,y,&caracter_aux);
 		x++;
@@ -25334,7 +25400,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 		zxvision_window ventana;
 
 	zxvision_new_window(&ventana,0,1,32,18,
-							31,18,"CPU Compact Statistics");
+							31,16,"CPU Compact Statistics");
 	zxvision_draw_window(&ventana);
 		
 
@@ -25480,7 +25546,8 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 				//tecla=menu_get_pressed_key();
 				tecla=zxvision_read_keyboard();
 
-				//con enter no salimos
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
 				if (tecla==13) tecla=0;
 
         //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
@@ -32863,7 +32930,14 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
     //char textostats[32];
 
     menu_espera_no_tecla();
-    menu_dibuja_ventana(0,7,32,9,"Core Statistics");
+    //menu_dibuja_ventana(0,7,32,9,"Core Statistics");
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,0,7,32,9,
+							31,7,"Core Statistics");
+
+	zxvision_draw_window(&ventana);
 
     z80_byte acumulado;
 
@@ -32877,6 +32951,8 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
         valor_contador_segundo_anterior=contador_segundo;
 
+
+		z80_byte tecla=0;
 
         do {
 
@@ -32916,7 +32992,8 @@ Calculando ese tiempo: 12% cpu
 			     //01234567890123456789012345678901
 			     // Last core frame: 999999 us
 				sprintf (texto_buffer,"Last core frame:     %6ld us",valor_mostrar);
-				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
                                 valor_mostrar=core_cpu_timer_frame_media;
                                 //controlar maximos
@@ -32924,7 +33001,9 @@ Calculando ese tiempo: 12% cpu
                                 //01234567890123456789012345678901
                                  // Last core frame: 999999 us
                                 sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
-                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
 
                                 valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
                                 //controlar maximos
@@ -32932,7 +33011,8 @@ Calculando ese tiempo: 12% cpu
                              //01234567890123456789012345678901
                              // Last render display: 999999 us
                                 sprintf (texto_buffer,"Last full render:    %6ld us",valor_mostrar);
-                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
                                 valor_mostrar=core_cpu_timer_refresca_pantalla_media;
                                 //controlar maximos
@@ -32940,7 +33020,8 @@ Calculando ese tiempo: 12% cpu
                                 //01234567890123456789012345678901
                                  // Last core refresca_pantalla: 999999 us
                                 sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
-                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
                                 valor_mostrar=core_cpu_timer_each_frame_difftime;
@@ -32949,7 +33030,8 @@ Calculando ese tiempo: 12% cpu
                              //01234567890123456789012345678901
                              // Time between frames: 999999 us
                                 sprintf (texto_buffer,"Time between frames: %6ld us",valor_mostrar);
-                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
                                 valor_mostrar=core_cpu_timer_each_frame_media;
                                 //controlar maximos
@@ -32957,28 +33039,44 @@ Calculando ese tiempo: 12% cpu
                                 //01234567890123456789012345678901
                                  // Last core each_frame: 999999 us
                                 sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
-                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-								 menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
+								 //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
+								 zxvision_print_string_defaults(&ventana,1,linea++," (ideal):  20000 us");
 
+
+								zxvision_draw_window_contents(&ventana);
 
                         if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
                 menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
+                //acumulado=menu_da_todas_teclas();
 
                 //si no hay multitarea, esperar tecla y salir
                 if (menu_multitarea==0) {
                         menu_espera_tecla();
 
-                        acumulado=0;
+                        //acumulado=0;
                 }
 
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
+
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla==0);
 
         cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);
+
 
 }
 
