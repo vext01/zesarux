@@ -4632,6 +4632,8 @@ struct s_overlay_screen {
 
 }
 
+
+//Escribir caracter en la memoria de la ventana
 void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter)
 {
 	//Comprobar limites
