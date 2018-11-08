@@ -1433,6 +1433,178 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
+{
+
+        char textostats[32];
+
+        menu_espera_no_tecla();
+        //menu_dibuja_ventana(0,1,32,18,"CPU Compact Statistics");
+
+		zxvision_window ventana;
+
+	zxvision_new_window(&ventana,0,1,32,18,
+							31,16,"CPU Compact Statistics");
+	zxvision_draw_window(&ventana);
+		
+
+        z80_byte acumulado;
+
+        char dumpassembler[32];
+
+        //Empezar con espacio
+        dumpassembler[0]=' ';
+
+				int valor_contador_segundo_anterior;
+
+				valor_contador_segundo_anterior=contador_segundo;
+
+		z80_byte tecla=0;
+
+        do {
+
+
+                //esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+									if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											valor_contador_segundo_anterior=contador_segundo;
+                        //contador_segundo_anterior=contador_segundo;
+												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+			int linea=0;
+                        int opcode;
+
+			unsigned int sumatotal;
+                        sumatotal=util_stats_sum_all_counters();
+                        sprintf (textostats,"Total opcodes run: %u",sumatotal);
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+                        
+
+
+						//menu_escribe_linea_opcion(linea++,-1,1,"Most used op. for each preffix");
+						zxvision_print_string_defaults(&ventana,1,linea++,"Most used op. for each preffix");
+
+                        opcode=util_stats_find_max_counter(stats_codsinpr);
+                        sprintf (textostats,"Op nopref:    %02XH: %u",opcode,util_stats_get_counter(stats_codsinpr,opcode) );
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+                        
+
+                        //Opcode
+						menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],0,0);
+						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						
+
+
+
+                        opcode=util_stats_find_max_counter(stats_codpred);
+                        sprintf (textostats,"Op pref ED:   %02XH: %u",opcode,util_stats_get_counter(stats_codpred,opcode) );
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+                        
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],237,0);
+						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+                        
+
+	
+                        opcode=util_stats_find_max_counter(stats_codprcb);
+                        sprintf (textostats,"Op pref CB:   %02XH: %u",opcode,util_stats_get_counter(stats_codprcb,opcode) );
+						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],203,0);
+						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+
+
+                        opcode=util_stats_find_max_counter(stats_codprdd);
+                        sprintf (textostats,"Op pref DD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprdd,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,0);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+                        opcode=util_stats_find_max_counter(stats_codprfd);
+                        sprintf (textostats,"Op pref FD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprfd,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,0);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+                        opcode=util_stats_find_max_counter(stats_codprddcb);
+                        sprintf (textostats,"Op pref DDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprddcb,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,203);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+
+                        opcode=util_stats_find_max_counter(stats_codprfdcb);
+                        sprintf (textostats,"Op pref FDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprfdcb,opcode) );
+                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+
+                        //Opcode
+                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,203);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+
+
+						zxvision_draw_window_contents(&ventana);
+
+                        if (menu_multitarea==0) menu_refresca_pantalla();
+
+                }
+
+                menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        //acumulado=0;
+                }
+
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
+
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla==0);
+
+        cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);
+
+}
+
+
 
 void zxvision_test_sleep_quarter(void)
 {
@@ -1558,7 +1730,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to next step ");
 
 	zxvision_print_string(&ventana,2,7,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0," --^^flash^^--");
-	zxvision_print_string(&ventana,2,8,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0," --~~inverse~~--");
+	zxvision_print_string(&ventana,2,8,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0," --~~inverse--");
 	zxvision_print_string(&ventana,2,9,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0," --$$2ink--");
 
 
@@ -1802,5 +1974,162 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 
         cls_menu_overlay();
+
+}
+
+
+void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
+{
+
+    //char textostats[32];
+
+    menu_espera_no_tecla();
+    //menu_dibuja_ventana(0,7,32,9,"Core Statistics");
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,0,7,32,9,
+							31,7,"Core Statistics");
+
+	zxvision_draw_window(&ventana);
+
+    z80_byte acumulado;
+
+        char texto_buffer[33];
+
+
+        //Empezar con espacio
+    texto_buffer[0]=' ';
+
+        int valor_contador_segundo_anterior;
+
+        valor_contador_segundo_anterior=contador_segundo;
+
+
+		z80_byte tecla=0;
+
+        do {
+
+
+                //esto hara ejecutar esto 2 veces por segundo
+            //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+                        if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                                                                                        valor_contador_segundo_anterior=contador_segundo;
+                        //contador_segundo_anterior=contador_segundo;
+                                                                                                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+                                int linea=0;
+                                //int opcode;
+                                //int sumatotal;
+
+/*
+
+Nota: calcular el tiempo entre ejecuciones de cada opcode no penaliza mucho el uso de cpu real.
+Ejemplo:
+--vo null --machine 48k 
+
+Sin calcular ese tiempo: 9% cpu
+Calculando ese tiempo: 12% cpu
+
+*/
+
+
+//Ultimo intervalo de tiempo
+//long core_cpu_timer_frame_difftime;
+//Media de todos los intervalos
+//long core_cpu_timer_frame_media=0;
+
+				long valor_mostrar;
+				valor_mostrar=core_cpu_timer_frame_difftime;
+				//controlar maximos
+				if (valor_mostrar>999999) valor_mostrar=999999;
+			     //01234567890123456789012345678901
+			     // Last core frame: 999999 us
+				sprintf (texto_buffer,"Last core frame:     %6ld us",valor_mostrar);
+				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                                valor_mostrar=core_cpu_timer_frame_media;
+                                //controlar maximos
+				if (valor_mostrar>999999) valor_mostrar=999999;
+                                //01234567890123456789012345678901
+                                 // Last core frame: 999999 us
+                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+
+                                valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
+                                //controlar maximos
+                                if (valor_mostrar>999999) valor_mostrar=999999;
+                             //01234567890123456789012345678901
+                             // Last render display: 999999 us
+                                sprintf (texto_buffer,"Last full render:    %6ld us",valor_mostrar);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                                valor_mostrar=core_cpu_timer_refresca_pantalla_media;
+                                //controlar maximos
+                                if (valor_mostrar>999999) valor_mostrar=999999;
+                                //01234567890123456789012345678901
+                                 // Last core refresca_pantalla: 999999 us
+                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+
+                                valor_mostrar=core_cpu_timer_each_frame_difftime;
+                                //controlar maximos
+                                if (valor_mostrar>999999) valor_mostrar=999999;
+                             //01234567890123456789012345678901
+                             // Time between frames: 999999 us
+                                sprintf (texto_buffer,"Time between frames: %6ld us",valor_mostrar);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                                valor_mostrar=core_cpu_timer_each_frame_media;
+                                //controlar maximos
+                                if (valor_mostrar>999999) valor_mostrar=999999;
+                                //01234567890123456789012345678901
+                                 // Last core each_frame: 999999 us
+                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
+                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+								 //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
+								 zxvision_print_string_defaults(&ventana,1,linea++," (ideal):  20000 us");
+
+
+								zxvision_draw_window_contents(&ventana);
+
+                        if (menu_multitarea==0) menu_refresca_pantalla();
+
+                }
+
+                menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        //acumulado=0;
+                }
+
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
+
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla==0);
+
+        cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);
+
 
 }
