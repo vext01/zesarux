@@ -7261,7 +7261,7 @@ int menu_decae_ajusta_valor_volumen(int valor_decae,int valor_volumen)
 //mete tambien caracter de "decae" si conviene (si >=0 y <=15)
 void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 {
-	if ( (registro_volumen & 16)!=0) sprintf (texto,"ENV             ");
+	if ( (registro_volumen & 16)!=0) sprintf (texto,"ENV            ");
 	else {
 		registro_volumen=registro_volumen & 15;
 		int i;
