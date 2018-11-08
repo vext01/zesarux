@@ -132,6 +132,8 @@ extern void zxvision_send_scroll_right(zxvision_window *w);
 extern void zxvision_set_not_resizable(zxvision_window *w);
 extern void zxvision_set_resizable(zxvision_window *w);
 
+extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
+
 extern zxvision_window *zxvision_current_window;
 
 extern int zxvision_keys_event_not_send_to_machine;

@@ -4763,6 +4763,47 @@ void zxvision_print_string_defaults(zxvision_window *w,int x,int y,char *texto)
 
 }
 
+void zxvision_putpixel(zxvision_window *w,int x,int y,int color)
+{
+
+	int final_x,final_y;
+
+	/*
+	//Nuevas ventanas zxvision
+struct s_zxvision_window {
+	overlay_screen *memory;
+	int visible_width,visible_height;
+	int x,y;
+
+	int offset_x,offset_y;
+
+	int total_width,total_height;
+	char window_title[256];
+
+	int can_be_resized;
+};
+*/
+	/*
+	    int offsetx=PIANO_GRAPHIC_BASE_X*menu_char_width+12;
+    int offsety=piano_graphic_base_y*scale_y_chip(8)+18;
+
+*/
+	//Obtener coordenadas en pixeles de zona ventana dibujable
+	int window_pixel_start_x=(w->x)*menu_char_width;
+	int window_pixel_start_y=((w->y)+1)*y;
+	int window_pixel_final_x=window_pixel_start_x+((w->visible_width)-1)*menu_char_width;
+	int window_pixel_final_y=window_pixel_start_y+((w->visible_height)-2)*8;
+
+	//Obtener coordenada x,y final donde va a parar
+	int xfinal=x+window_pixel_start_x-(w->offset_x)*menu_char_width;
+	int yfinal=y+window_pixel_start_y-(w->offset_y)*8;
+
+	//Ver si esta dentro de rango
+	if (xfinal>=window_pixel_start_x && xfinal<window_pixel_final_x && yfinal>=window_pixel_start_y && yfinal<window_pixel_final_y) {
+		menu_scr_putpixel(xfinal,yfinal,color);
+	}
+}
+
 int mouse_is_dragging=0;
 int window_is_being_moved=0;
 int window_is_being_resized=0;
@@ -12568,7 +12609,7 @@ int scale_y_chip(int y)
 	return y;
 }
 
-void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
+void old_menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
 {
 	//#define PIANO_ZOOM 3
 
@@ -12595,6 +12636,34 @@ void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int 
 
 }
 
+
+void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
+{
+	//#define PIANO_ZOOM 3
+
+	int offsetx=12;
+	int offsety=piano_graphic_base_y*scale_y_chip(8)+18;
+
+	x=offsetx+x*PIANO_ZOOM_X;
+	y=offsety+y*PIANO_ZOOM_Y;
+
+	int xorig=x;
+	int zx=0;
+	int zy=0;
+
+	for (zy=0;zy<PIANO_ZOOM_Y;zy++) {
+		x=xorig;
+		for (zx=0;zx<PIANO_ZOOM_X;zx++) {
+			//No deberia ser null , pero por si acaso
+			if (zxvision_current_window!=NULL) zxvision_putpixel(zxvision_current_window,x,y,color);
+
+			x++;
+
+		}
+		y++;
+	}
+
+}
 
 
 
@@ -13134,6 +13203,8 @@ valor_contador_segundo_anterior=contador_segundo;
 }
 
 
+zxvision_window *menu_beeper_pianokeyboard_overlay_window;
+
 
 void menu_beeper_pianokeyboard_overlay(void)
 {
@@ -13209,10 +13280,15 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 				//Como si fuera 1 solo chip
 
 
+				int xventana,yventana,ancho_ventana,alto_ventana;
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
-					menu_dibuja_ventana(7,7,18,11,"Wave Piano");
+					//menu_dibuja_ventana(7,7,18,11,"Wave Piano");
+					xventana=7;
+					yventana=7;
+					ancho_ventana=18;
+					alto_ventana=11;
 
 				}
 				//#define PIANO_GRAPHIC_BASE_X 7
@@ -13221,10 +13297,23 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 
 						piano_graphic_base_y=8;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,8,"Wave Piano");
+						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,8,"Wave Piano");
+
+					xventana=PIANO_GRAPHIC_BASE_X-2;
+					yventana=piano_graphic_base_y;
+					ancho_ventana=AY_PIANO_ANCHO_VENTANA+4;
+					alto_ventana=8;
+
 
 
 				}
+
+		zxvision_window ventana;
+
+		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"Wave Piano");
+
+		zxvision_draw_window(&ventana);						
 
         z80_byte acumulado;
 
@@ -13233,10 +13322,14 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
         //Se establece a la de funcion de piano + texto
         set_menu_overlay_function(menu_beeper_pianokeyboard_overlay);
 
+		menu_beeper_pianokeyboard_overlay_window=&ventana; 
+
 
 				int valor_contador_segundo_anterior;
 
 valor_contador_segundo_anterior=contador_segundo;
+
+z80_byte tecla=0;
 
    do {
 
@@ -13247,35 +13340,34 @@ valor_contador_segundo_anterior=contador_segundo;
 
 										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-                       if (menu_multitarea==0) menu_refresca_pantalla();
 
+
+			if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
                 menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
+                //acumulado=menu_da_todas_teclas();
 
-
-
-
-               //si no hay multitarea, esperar tecla y salir
+                //si no hay multitarea, esperar tecla y salir
                 if (menu_multitarea==0) {
                         menu_espera_tecla();
 
-                        acumulado=0;
+                        //acumulado=0;
                 }
 
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
 
-								z80_byte tecla;
-								tecla=menu_get_pressed_key();
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
 
-								//Si tecla no es ESC, no salir
-								if (tecla!=2) {
-									acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-								}
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
+		} while (tecla!=2);										
 
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+      
 
 
        //restauramos modo normal de texto de menu
@@ -13285,6 +13377,8 @@ valor_contador_segundo_anterior=contador_segundo;
         cls_menu_overlay();
 
 	menu_espera_no_tecla();
+
+	zxvision_destroy_window(&ventana);
 
 	/* Nota:
 	Creo que este es de los pocos casos en que llamamos a menu_espera_no_tecla al salir,
