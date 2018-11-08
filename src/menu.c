@@ -12976,8 +12976,13 @@ void menu_ay_pianokeyboard_draw_text_piano(int linea,int canal GCC_UNUSED,char *
 		}
 	}
 
-	menu_escribe_linea_opcion(linea++,-1,1,linea_negras);
-	menu_escribe_linea_opcion(linea++,-1,1,linea_blancas);
+	//menu_escribe_linea_opcion(linea++,-1,1,linea_negras);
+	//menu_escribe_linea_opcion(linea++,-1,1,linea_blancas);
+
+	zxvision_print_string_defaults(zxvision_current_window,1,linea++,linea_negras);
+	zxvision_print_string_defaults(zxvision_current_window,1,linea++,linea_blancas);
+
+
 	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 }
@@ -13011,6 +13016,7 @@ void menu_ay_pianokeyboard_draw_piano(int linea,int canal,char *note)
 }
 
 
+zxvision_window *menu_ay_pianokeyboard_overlay_window;
 
 
 void menu_ay_pianokeyboard_overlay(void)
@@ -13088,6 +13094,8 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
 
+		int xventana,yventana,ancho_ventana,alto_ventana;
+
 				if (!menu_multitarea) {
 					menu_warn_message("This menu item needs multitask enabled");
 					return;
@@ -13099,9 +13107,29 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
-					if (total_chips==1)      menu_dibuja_ventana(9,7,14,11,"AY Piano");
-          				else if (total_chips==2) menu_dibuja_ventana(9,2,14,20,"AY Piano");
-					else if (total_chips==3) menu_dibuja_ventana(9,1,14,22,"AY Piano");
+					if (total_chips==1) {
+						xventana=9;
+						yventana=7;
+						ancho_ventana=14;
+						alto_ventana=11;
+						//menu_dibuja_ventana(9,7,14,11,"AY Piano");
+					}
+          			else if (total_chips==2) {
+						xventana=9;
+						yventana=2;
+						ancho_ventana=14;
+						alto_ventana=20;						  
+						  
+						  //menu_dibuja_ventana(9,2,14,20,"AY Piano");
+					}
+
+					else if (total_chips==3) {
+						xventana=9;
+						yventana=1;
+						ancho_ventana=14;
+						alto_ventana=22;						
+						//menu_dibuja_ventana(9,1,14,22,"AY Piano");
+					}
 
 				}
 				//#define PIANO_GRAPHIC_BASE_X 7
@@ -13110,18 +13138,37 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 					if (total_chips==1) {
 						piano_graphic_base_y=5;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,13,"AY Piano");
+						xventana=PIANO_GRAPHIC_BASE_X;
+						yventana=piano_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
+						alto_ventana=13;						
+						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,13,"AY Piano");
 					}
 					else if (total_chips==2) {
 						piano_graphic_base_y=1;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,22,"AY Piano");
+						xventana=PIANO_GRAPHIC_BASE_X;
+						yventana=piano_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
+						alto_ventana=22;							
+						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,22,"AY Piano");
 					}
 
 					else if (total_chips==3) {
 						piano_graphic_base_y=0;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,24,"AY Piano");
+						xventana=PIANO_GRAPHIC_BASE_X;
+						yventana=piano_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
+						alto_ventana=24;							
+						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,24,"AY Piano");
 					}
 				}
+
+		zxvision_window ventana;
+
+		zxvision_new_window(&ventana,1,yventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"AY Piano");
+
+		zxvision_draw_window(&ventana);						
 
         z80_byte acumulado;
 
@@ -13131,9 +13178,14 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_pianokeyboard_overlay);
 
 
+		menu_ay_pianokeyboard_overlay_window=&ventana;
+
+
 				int valor_contador_segundo_anterior;
 
 valor_contador_segundo_anterior=contador_segundo;
+
+	z80_byte tecla=0;
 
    do {
 
@@ -13143,36 +13195,35 @@ valor_contador_segundo_anterior=contador_segundo;
 										valor_contador_segundo_anterior=contador_segundo;
 
 										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-
-                       if (menu_multitarea==0) menu_refresca_pantalla();
+				if (menu_multitarea==0) menu_refresca_pantalla();
 
 
                 }
 
-                menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
 
+				menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
 
-
-
-               //si no hay multitarea, esperar tecla y salir
+                //si no hay multitarea, esperar tecla y salir
                 if (menu_multitarea==0) {
                         menu_espera_tecla();
 
-                        acumulado=0;
+                        //acumulado=0;
                 }
 
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
 
-								z80_byte tecla;
-								tecla=menu_get_pressed_key();
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
 
-								//Si tecla no es ESC, no salir
-								if (tecla!=2) {
-									acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-								}
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla!=2);				
 
 
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+
 
 
        //restauramos modo normal de texto de menu
@@ -13180,6 +13231,8 @@ valor_contador_segundo_anterior=contador_segundo;
 
 
         cls_menu_overlay();
+
+	zxvision_destroy_window(&ventana);			
 
 
 
