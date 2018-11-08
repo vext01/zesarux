@@ -4790,7 +4790,7 @@ struct s_zxvision_window {
 */
 	//Obtener coordenadas en pixeles de zona ventana dibujable
 	int window_pixel_start_x=(w->x)*menu_char_width;
-	int window_pixel_start_y=((w->y)+1)*y;
+	int window_pixel_start_y=((w->y)+1)*8;
 	int window_pixel_final_x=window_pixel_start_x+((w->visible_width)-1)*menu_char_width;
 	int window_pixel_final_y=window_pixel_start_y+((w->visible_height)-2)*8;
 
@@ -4801,6 +4801,9 @@ struct s_zxvision_window {
 	//Ver si esta dentro de rango
 	if (xfinal>=window_pixel_start_x && xfinal<window_pixel_final_x && yfinal>=window_pixel_start_y && yfinal<window_pixel_final_y) {
 		menu_scr_putpixel(xfinal,yfinal,color);
+	}
+	else {
+		printf ("pixel out of window %d %d\n",x,y);
 	}
 }
 
@@ -12642,7 +12645,7 @@ void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int 
 	//#define PIANO_ZOOM 3
 
 	int offsetx=12;
-	int offsety=piano_graphic_base_y*scale_y_chip(8)+18;
+	int offsety=scale_y_chip(8)+0;
 
 	x=offsetx+x*PIANO_ZOOM_X;
 	y=offsety+y*PIANO_ZOOM_Y;
@@ -13258,9 +13261,12 @@ void menu_beeper_pianokeyboard_overlay(void)
 
 				
             
-			menu_escribe_linea_opcion(5,-1,1,buffer_texto);
+			//menu_escribe_linea_opcion(5,-1,1,buffer_texto);
+			zxvision_print_string_defaults(menu_beeper_pianokeyboard_overlay_window,1,5,buffer_texto);
 			//printf ("menu_speech_tecla_pulsada despues de enviar texto: %d\n",menu_speech_tecla_pulsada);
 
+
+	zxvision_draw_window_contents(menu_beeper_pianokeyboard_overlay_window); 
 
 }
 
