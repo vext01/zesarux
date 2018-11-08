@@ -12515,9 +12515,14 @@ int ayregisters_previo_valor_volume_C[MAX_AY_CHIPS];
 
 	int menu_ayregisters_valor_contador_segundo_anterior;
 
+zxvision_window *menu_ay_registers_overlay_window;
+
 void menu_ay_registers_overlay(void)
 {
-        normal_overlay_texto_menu();
+
+	//NOTA: //Hemos de suponer que current window es esta de ay registers
+
+    normal_overlay_texto_menu();
 
 	char volumen[32],textotono[32];
 	char textovolumen[35]; //32+3 de posible color rojo del maximo
@@ -12561,15 +12566,18 @@ void menu_ay_registers_overlay(void)
 
 			menu_string_volumen(volumen,ay_3_8912_registros[chip][8],ayregisters_previo_valor_volume_A[chip]);
 			sprintf (textovolumen,"Volume A: %s",volumen);
-			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
 
 			menu_string_volumen(volumen,ay_3_8912_registros[chip][9],ayregisters_previo_valor_volume_B[chip]);
 			sprintf (textovolumen,"Volume B: %s",volumen);
-			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
 
 			menu_string_volumen(volumen,ay_3_8912_registros[chip][10],ayregisters_previo_valor_volume_C[chip]);
 			sprintf (textovolumen,"Volume C: %s",volumen);
-			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
 
 
 
@@ -12577,13 +12585,16 @@ void menu_ay_registers_overlay(void)
 			int freq_b=ay_retorna_frecuencia(1,chip);
 			int freq_c=ay_retorna_frecuencia(2,chip);
 			sprintf (textotono,"Channel A:  %3s %7d Hz",get_note_name(freq_a),freq_a);
-			menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 			sprintf (textotono,"Channel B:  %3s %7d Hz",get_note_name(freq_b),freq_b);
-			menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 			sprintf (textotono,"Channel C:  %3s %7d Hz",get_note_name(freq_c),freq_c);
-			menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 
 			//Si hay 3 canales, los 3 siguientes items no se ven
@@ -12600,7 +12611,8 @@ void menu_ay_registers_overlay(void)
                         int freq_ruido=FRECUENCIA_NOISE/freq_temp;
 
                         sprintf (textotono,"Frequency Noise: %6d Hz",freq_ruido);
-                        menu_escribe_linea_opcion(linea++,-1,1,textotono);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 
 			//Envelope
@@ -12618,7 +12630,8 @@ void menu_ay_registers_overlay(void)
 			int freq_env_decimal=freq_envelope-(freq_env_10*10);
 
 			sprintf (textotono,"Freq Envelope:   %4d.%1d Hz",freq_env_10,freq_env_decimal);
-      menu_escribe_linea_opcion(linea++,-1,1,textotono);
+      		//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 
 
@@ -12626,7 +12639,8 @@ void menu_ay_registers_overlay(void)
 			z80_byte env_type=ay_3_8912_registros[chip][13] & 0x0F;
 			return_envelope_name(env_type,envelope_name);
 			sprintf (textotono,"Env.: %2d (%s)",env_type,envelope_name);
-                        menu_escribe_linea_opcion(linea++,-1,1,textotono);
+            //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 
 			}
@@ -12637,7 +12651,8 @@ void menu_ay_registers_overlay(void)
 				( (ay_3_8912_registros[chip][7]&1)==0 ? 'A' : ' '),
 				( (ay_3_8912_registros[chip][7]&2)==0 ? 'B' : ' '),
 				( (ay_3_8912_registros[chip][7]&4)==0 ? 'C' : ' '));
-			menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 			//Si hay 3 canales, los 3 siguientes items no se ven
 			if (total_chips<3) {
@@ -12646,7 +12661,8 @@ void menu_ay_registers_overlay(void)
                                 ( (ay_3_8912_registros[chip][7]&8)==0  ? 'A' : ' '),
                                 ( (ay_3_8912_registros[chip][7]&16)==0 ? 'B' : ' '),
                                 ( (ay_3_8912_registros[chip][7]&32)==0 ? 'C' : ' '));
-                        menu_escribe_linea_opcion(linea++,-1,1,textotono);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 			}
 
 	}
@@ -12678,6 +12694,9 @@ void menu_ay_registers_overlay(void)
         }
 
 
+	zxvision_draw_window_contents(menu_ay_registers_overlay_window); 
+
+
 }
 
 
@@ -12686,16 +12705,35 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
 
-				if (!menu_multitarea) {
-					menu_warn_message("This menu item needs multitask enabled");
-					return;
-				}
+		if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+		}
 
-				int total_chips=ay_retorna_numero_chips();
-				if (total_chips>3) total_chips=3;
+		int total_chips=ay_retorna_numero_chips();
+		if (total_chips>3) total_chips=3;
 
-        if (total_chips==1) menu_dibuja_ventana(1,5,30,14,"AY Registers");
-	else menu_dibuja_ventana(1,0,30,24,"AY Registers");
+		int yventana;
+		int alto_ventana;
+
+        if (total_chips==1) {
+			//menu_dibuja_ventana(1,5,30,14,"AY Registers");
+			yventana=5;
+			alto_ventana=14;
+		}
+		else {
+			//menu_dibuja_ventana(1,0,30,24,"AY Registers");
+			yventana=0;
+			alto_ventana=24;
+		}
+
+		zxvision_window ventana;
+
+		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
+		zxvision_new_window(&ventana,1,yventana,30,alto_ventana,
+							30-1,alto_ventana-2,"AY Registers");
+
+		zxvision_draw_window(&ventana);		
 
         z80_byte acumulado;
 
@@ -12704,11 +12742,13 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
         //Se establece a la de funcion de onda + texto
         set_menu_overlay_function(menu_ay_registers_overlay);
 
+		menu_ay_registers_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
 				int valor_contador_segundo_anterior;
 
 				valor_contador_segundo_anterior=contador_segundo;
 
-
+	z80_byte tecla=0;
    do {
 
                 //esto hara ejecutar esto 2 veces por segundo
@@ -12722,30 +12762,29 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
                 }
 
-                menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
 
+				menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
 
-
-
-               //si no hay multitarea, esperar tecla y salir
+                //si no hay multitarea, esperar tecla y salir
                 if (menu_multitarea==0) {
                         menu_espera_tecla();
 
-                        acumulado=0;
+                        //acumulado=0;
                 }
 
-								z80_byte tecla;
-								tecla=menu_get_pressed_key();
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
 
-								//Si tecla no es ESC, no salir
-								if (tecla!=2) {
-									acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-								}
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
 
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+		} while (tecla!=2);				
 
+ 
 		menu_espera_no_tecla(); //Si no, se va al menu anterior.
 		//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
@@ -12753,8 +12792,9 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
        set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-        cls_menu_overlay();
-
+    cls_menu_overlay();
+		
+	zxvision_destroy_window(&ventana);		
 }
 
 void menu_ay_pianokeyboard_insert_inverse(char *origen_orig, int indice)
