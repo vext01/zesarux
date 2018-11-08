@@ -2133,3 +2133,295 @@ Calculando ese tiempo: 12% cpu
 
 
 }
+
+
+
+
+int ayregisters_previo_valor_volume_A[MAX_AY_CHIPS];
+int ayregisters_previo_valor_volume_B[MAX_AY_CHIPS];
+int ayregisters_previo_valor_volume_C[MAX_AY_CHIPS];
+
+	int menu_ayregisters_valor_contador_segundo_anterior;
+
+zxvision_window *menu_ay_registers_overlay_window;
+
+void menu_ay_registers_overlay(void)
+{
+
+	//NOTA: //Hemos de suponer que current window es esta de ay registers
+
+    normal_overlay_texto_menu();
+
+	char volumen[32],textotono[32];
+	char textovolumen[35]; //32+3 de posible color rojo del maximo
+
+
+	int total_chips=ay_retorna_numero_chips();
+
+	//Como maximo mostrarmos 3 canales ay
+	if (total_chips>3) total_chips=3;
+
+	int chip;
+
+	int linea=0;
+
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+		int vol_A[MAX_AY_CHIPS],vol_B[MAX_AY_CHIPS],vol_C[MAX_AY_CHIPS];
+
+	for (chip=0;chip<total_chips;chip++) {
+
+
+        	vol_A[chip]=ay_3_8912_registros[chip][8] & 15;
+        	vol_B[chip]=ay_3_8912_registros[chip][9] & 15;
+        	vol_C[chip]=ay_3_8912_registros[chip][10] & 15;
+
+			//Controlar limites, dado que las variables entran sin inicializar
+			if (ayregisters_previo_valor_volume_A[chip]>16) ayregisters_previo_valor_volume_A[chip]=16;
+			if (ayregisters_previo_valor_volume_B[chip]>16) ayregisters_previo_valor_volume_B[chip]=16;
+			if (ayregisters_previo_valor_volume_C[chip]>16) ayregisters_previo_valor_volume_C[chip]=16;
+			
+
+			ayregisters_previo_valor_volume_A[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_A[chip],vol_A[chip]);
+			ayregisters_previo_valor_volume_B[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
+			ayregisters_previo_valor_volume_C[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
+
+
+        		//if (ayregisters_previo_valor_volume_A[chip]<vol_A[chip]) ayregisters_previo_valor_volume_A[chip]=vol_A[chip];
+        		//if (ayregisters_previo_valor_volume_B[chip]<vol_B[chip]) ayregisters_previo_valor_volume_B[chip]=vol_B[chip];
+        		//if (ayregisters_previo_valor_volume_C[chip]<vol_C[chip]) ayregisters_previo_valor_volume_C[chip]=vol_C[chip];
+
+
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][8],ayregisters_previo_valor_volume_A[chip]);
+			sprintf (textovolumen,"Volume A: %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
+
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][9],ayregisters_previo_valor_volume_B[chip]);
+			sprintf (textovolumen,"Volume B: %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
+
+			menu_string_volumen(volumen,ay_3_8912_registros[chip][10],ayregisters_previo_valor_volume_C[chip]);
+			sprintf (textovolumen,"Volume C: %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
+
+
+
+			int freq_a=ay_retorna_frecuencia(0,chip);
+			int freq_b=ay_retorna_frecuencia(1,chip);
+			int freq_c=ay_retorna_frecuencia(2,chip);
+			sprintf (textotono,"Channel A:  %3s %7d Hz",get_note_name(freq_a),freq_a);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+			sprintf (textotono,"Channel B:  %3s %7d Hz",get_note_name(freq_b),freq_b);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+			sprintf (textotono,"Channel C:  %3s %7d Hz",get_note_name(freq_c),freq_c);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+
+			//Si hay 3 canales, los 3 siguientes items no se ven
+			if (total_chips<3) {
+
+			                        //Frecuencia ruido
+                        int freq_temp=ay_3_8912_registros[chip][6] & 31;
+                        //printf ("Valor registros ruido : %d Hz\n",freq_temp);
+                        freq_temp=freq_temp*16;
+
+                        //controlamos divisiones por cero
+                        if (!freq_temp) freq_temp++;
+
+                        int freq_ruido=FRECUENCIA_NOISE/freq_temp;
+
+                        sprintf (textotono,"Frequency Noise: %6d Hz",freq_ruido);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+
+			//Envelope
+
+                        freq_temp=ay_3_8912_registros[chip][11]+256*(ay_3_8912_registros[chip][12] & 0xFF);
+
+
+                        //controlamos divisiones por cero
+                        if (!freq_temp) freq_temp++;
+                        int freq_envelope=FRECUENCIA_ENVELOPE/freq_temp;
+
+                        //sprintf (textotono,"Freq Envelope(*10): %5d Hz",freq_envelope);
+
+			int freq_env_10=freq_envelope/10;
+			int freq_env_decimal=freq_envelope-(freq_env_10*10);
+
+			sprintf (textotono,"Freq Envelope:   %4d.%1d Hz",freq_env_10,freq_env_decimal);
+      		//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+
+
+			char envelope_name[32];
+			z80_byte env_type=ay_3_8912_registros[chip][13] & 0x0F;
+			return_envelope_name(env_type,envelope_name);
+			sprintf (textotono,"Env.: %2d (%s)",env_type,envelope_name);
+            //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+
+			}
+
+
+
+			sprintf (textotono,"Tone Channels:  %c %c %c",
+				( (ay_3_8912_registros[chip][7]&1)==0 ? 'A' : ' '),
+				( (ay_3_8912_registros[chip][7]&2)==0 ? 'B' : ' '),
+				( (ay_3_8912_registros[chip][7]&4)==0 ? 'C' : ' '));
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+			//Si hay 3 canales, los 3 siguientes items no se ven
+			if (total_chips<3) {
+
+                        sprintf (textotono,"Noise Channels: %c %c %c",
+                                ( (ay_3_8912_registros[chip][7]&8)==0  ? 'A' : ' '),
+                                ( (ay_3_8912_registros[chip][7]&16)==0 ? 'B' : ' '),
+                                ( (ay_3_8912_registros[chip][7]&32)==0 ? 'C' : ' '));
+                        //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+			}
+
+	}
+
+
+
+
+	//Hacer decaer volumenes
+                        //Decrementar volumenes que caen, pero hacerlo no siempre, sino 2 veces por segundo
+                    //esto hara ejecutar esto 2 veces por segundo
+                        if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+                                 menu_ayregisters_valor_contador_segundo_anterior=contador_segundo;
+                                //printf ("Refrescando. contador_segundo=%d. chip: %d\n",contador_segundo,chip);
+
+				for (chip=0;chip<total_chips;chip++) {
+
+					ayregisters_previo_valor_volume_A[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_A[chip],vol_A[chip]);
+					ayregisters_previo_valor_volume_B[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
+					ayregisters_previo_valor_volume_C[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
+
+                                //if (ayregisters_previo_valor_volume_A[chip]>vol_A[chip]) ayregisters_previo_valor_volume_A[chip]--;
+                                //if (ayregisters_previo_valor_volume_B[chip]>vol_B[chip]) ayregisters_previo_valor_volume_B[chip]--;
+                                //if (ayregisters_previo_valor_volume_C[chip]>vol_C[chip]) ayregisters_previo_valor_volume_C[chip]--;
+
+				}
+
+
+        }
+
+
+	zxvision_draw_window_contents(menu_ay_registers_overlay_window); 
+
+
+}
+
+
+
+void menu_ay_registers(MENU_ITEM_PARAMETERS)
+{
+        menu_espera_no_tecla();
+
+		if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+		}
+
+		int total_chips=ay_retorna_numero_chips();
+		if (total_chips>3) total_chips=3;
+
+		int yventana;
+		int alto_ventana;
+
+        if (total_chips==1) {
+			//menu_dibuja_ventana(1,5,30,14,"AY Registers");
+			yventana=5;
+			alto_ventana=14;
+		}
+		else {
+			//menu_dibuja_ventana(1,0,30,24,"AY Registers");
+			yventana=0;
+			alto_ventana=24;
+		}
+
+		zxvision_window ventana;
+
+		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
+		zxvision_new_window(&ventana,1,yventana,30,alto_ventana,
+							30-1,alto_ventana-2,"AY Registers");
+
+		zxvision_draw_window(&ventana);		
+
+        z80_byte acumulado;
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de onda + texto
+        set_menu_overlay_function(menu_ay_registers_overlay);
+
+		menu_ay_registers_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+				int valor_contador_segundo_anterior;
+
+				valor_contador_segundo_anterior=contador_segundo;
+
+	z80_byte tecla=0;
+   do {
+
+                //esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+									if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+		valor_contador_segundo_anterior=contador_segundo;
+
+										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+                       if (menu_multitarea==0) menu_refresca_pantalla();
+
+
+                }
+
+
+				menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        //acumulado=0;
+                }
+
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
+
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla!=2);				
+
+ 
+		menu_espera_no_tecla(); //Si no, se va al menu anterior.
+		//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    cls_menu_overlay();
+		
+	zxvision_destroy_window(&ventana);		
+}
+
