@@ -72,6 +72,7 @@ extern void menu_init_footer(void);
 extern void menu_footer_z88(void);
 
 extern int mouse_is_dragging;
+extern int menu_mouse_left_double_click_counter;
 
 struct s_overlay_screen {
 	z80_byte tinta,papel,parpadeo;

@@ -4827,6 +4827,10 @@ int window_mouse_y_before_move=0;
 int last_x_mouse_clicked=0;
 int last_y_mouse_clicked=0;
 int mouse_is_clicking=0;
+int menu_mouse_left_double_click_counter=0;
+int menu_mouse_left_double_click_counter_initial=0;
+
+int mouse_is_double_clicking=0;
 
 void zxvision_handle_mouse_move_aux(zxvision_window *w)
 {
@@ -4931,6 +4935,19 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				mouse_is_clicking=1;
 				last_x_mouse_clicked=menu_mouse_x;
 				last_y_mouse_clicked=menu_mouse_y;
+
+
+				//Gestion doble click
+				if (menu_multitarea) {
+					if (menu_mouse_left_double_click_counter-menu_mouse_left_double_click_counter_initial<25) {
+						printf ("-IT is DOBLE click\n");
+						mouse_is_double_clicking=1;
+					}
+					else {
+						menu_mouse_left_double_click_counter_initial=menu_mouse_left_double_click_counter;
+						mouse_is_double_clicking=0;
+					}
+				}
 			}
 		}
 	}
@@ -4939,6 +4956,15 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			printf ("Mouse stopped clicking\n");
 			mouse_is_clicking=0;
 			//Pulsacion en sitios de ventana
+			//Si en barra titulo
+			if (last_y_mouse_clicked==0) {
+				printf ("Clicked on title\n");
+				//Y si ha sido doble click
+				if (mouse_is_double_clicking) {
+					printf ("Doble clicked on title\n");
+					if (w->can_be_resized) zxvision_set_visible_height(w,2);
+				}
+			}
 
 			//Scroll horizontal
 			if (zxvision_if_horizontal_scroll_bar(w)) {

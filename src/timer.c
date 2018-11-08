@@ -549,6 +549,8 @@ void timer_check_interrupt(void)
 			//decrementar contador pausa cinta
 			if (tape_pause!=0) tape_pause--;
 
+			//contador de doble click de raton
+			menu_mouse_left_double_click_counter++;
 
 			if (menu_contador_teclas_repeticion) {
 				menu_contador_teclas_repeticion--;
