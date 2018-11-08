@@ -4803,7 +4803,7 @@ struct s_zxvision_window {
 		menu_scr_putpixel(xfinal,yfinal,color);
 	}
 	else {
-		printf ("pixel out of window %d %d\n",x,y);
+		//printf ("pixel out of window %d %d\n",x,y);
 	}
 }
 
@@ -7261,7 +7261,7 @@ int menu_decae_ajusta_valor_volumen(int valor_decae,int valor_volumen)
 //mete tambien caracter de "decae" si conviene (si >=0 y <=15)
 void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 {
-	if ( (registro_volumen & 16)!=0) sprintf (texto,"ENV");
+	if ( (registro_volumen & 16)!=0) sprintf (texto,"ENV             ");
 	else {
 		registro_volumen=registro_volumen & 15;
 		int i;
@@ -13086,6 +13086,8 @@ void menu_ay_pianokeyboard_overlay(void)
 
 	}
 
+	zxvision_draw_window_contents(menu_ay_pianokeyboard_overlay_window); 
+
 }
 
 
@@ -13123,7 +13125,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						  //menu_dibuja_ventana(9,2,14,20,"AY Piano");
 					}
 
-					else if (total_chips==3) {
+					else {
 						xventana=9;
 						yventana=1;
 						ancho_ventana=14;
@@ -13153,7 +13155,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,22,"AY Piano");
 					}
 
-					else if (total_chips==3) {
+					else {
 						piano_graphic_base_y=0;
 						xventana=PIANO_GRAPHIC_BASE_X;
 						yventana=piano_graphic_base_y;
@@ -13165,7 +13167,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		zxvision_window ventana;
 
-		zxvision_new_window(&ventana,1,yventana,ancho_ventana,alto_ventana,
+		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,"AY Piano");
 
 		zxvision_draw_window(&ventana);						
