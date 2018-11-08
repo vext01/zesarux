@@ -4957,7 +4957,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			mouse_is_clicking=0;
 			//Pulsacion en sitios de ventana
 			//Si en barra titulo
-			if (last_y_mouse_clicked==0) {
+			if (si_menu_mouse_en_ventana() && last_y_mouse_clicked==0) {
 				printf ("Clicked on title\n");
 				//Y si ha sido doble click
 				if (mouse_is_double_clicking) {
