@@ -4438,6 +4438,17 @@ void zxvision_draw_window(zxvision_window *w)
 	//Dado que cada vez que se dibuja ventana, la marca de resize se establece por defecto a desactivada
 	cuadrado_activo_resize=w->can_be_resized;
 
+
+	//Si no hay barras de desplazamiento, alterar scroll horiz o vertical segun corresponda
+	if (!zxvision_if_horizontal_scroll_bar(w)) {
+		printf ("no hay barra scroll horizontal y por eso ponemos offset x a 0\n");
+		w->offset_x=0;
+	}
+	if (!zxvision_if_vertical_scroll_bar(w)) {
+		printf ("no hay barra scroll vertical y por eso ponemos offset y a 0\n");
+		w->offset_y=0;
+	}
+
 	zxvision_draw_scroll_bars(w);
 
 
