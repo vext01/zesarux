@@ -4667,6 +4667,7 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 
 
 	int inverso_letra=0;
+	int era_utf=0;
 
 	while (*texto) {
 
@@ -4702,16 +4703,16 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 			//else putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
 		}
 
-		/*else {
+		//else {
 
 			//Si estaba prefijo utf activo
 
 			if (era_utf) {
-				letra=menu_escribe_texto_convert_utf(era_utf,letra);
+				caracter_aux.caracter=menu_escribe_texto_convert_utf(era_utf,*texto);
 				era_utf=0;
 
 				//Caracter final utf
-				putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
+				//putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
 			}
 
 
@@ -4719,19 +4720,19 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 			else {
 				//printf ("letra: %02XH\n",letra);
 				//Prefijo utf
-                	        if (menu_es_prefijo_utf(letra)) {
-        	                        era_utf=letra;
+                if (menu_es_prefijo_utf(*texto)) {
+        	        era_utf=*texto;
 					//printf ("activado utf\n");
-	                        }
+	            }
 
-				else {
+				/*else {
 					//Caracter normal
 					putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
-				}
+				}*/
 			}
 
 
-		}*/
+		//}
 
 
 		if (!inverso_letra) {
@@ -4750,7 +4751,7 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 
 
 		zxvision_print_char(w,x,y,&caracter_aux);
-		x++;
+		if (!era_utf) x++;
 		texto++;
 	}	
 }
