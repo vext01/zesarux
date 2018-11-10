@@ -4475,8 +4475,12 @@ void zxvision_set_resizable(zxvision_window *w)
 
 void zxvision_set_offset_x(zxvision_window *w,int offset_x)
 {
-	//TODO. de momento no comprobamos por mayor
+	//Si se pasa por la izquierda
 	if (offset_x<0) return;
+
+	//Si se pasa por la derecha
+	if (offset_x+w->visible_width-1>w->total_width) return; //-1 porque se pierde 1 a la derecha con la linea scroll
+
 	w->offset_x=offset_x;	
 
 	zxvision_draw_window_contents(w);
@@ -4485,8 +4489,12 @@ void zxvision_set_offset_x(zxvision_window *w,int offset_x)
 
 void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 {
-	//TODO. de momento no comprobamos
+	//Si se pasa por arriba
 	if (offset_y<0) return;
+
+	//Si se pasa por abajo
+	if (offset_y+w->visible_height-2>w->total_height) return; //-2 porque se pierde 2 linea scroll y la linea titulo
+
 	w->offset_y=offset_y;	
 
 	zxvision_draw_window_contents(w);
@@ -4625,10 +4633,10 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				caracter_escribir,caracter->tinta,caracter->papel,caracter->parpadeo);
 			}
 
-			//Fuera de rango
+			//Fuera de rango. Metemos espacio
 			else {
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
-				'X',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);
+				' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);
 			}
 /*
 struct s_overlay_screen {
