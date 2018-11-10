@@ -5024,6 +5024,18 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						int offset=((offset_to_mult)*porcentaje)/100;
 
 						printf ("set offset: %d\n",offset);
+
+						//Casos especiales de izquierda del todo y derecha del todo
+						if (last_x_mouse_clicked==posicion_flecha_izquierda+1) {
+							printf ("Special case: clicked on the top left. Set offset 0\n");
+							offset=0;
+						}
+
+						if (last_x_mouse_clicked==posicion_flecha_derecha-1) {
+							printf ("Special case: clicked on the top right. Set offset to maximum\n");
+							offset=w->total_width-w->visible_width+1;
+						}
+
 						zxvision_set_offset_x(w,offset);
 
 					}
@@ -5076,6 +5088,17 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						int offset=((offset_to_mult)*porcentaje)/100;
 
 						printf ("set offset: %d\n",offset);
+
+						//Casos especiales de arriba del todo y abajo del todo
+						if (last_y_mouse_clicked==posicion_flecha_arriba+1) {
+							printf ("Special case: clicked on the top. Set offset 0\n");
+							offset=0;
+						}
+
+						if (last_y_mouse_clicked==posicion_flecha_abajo-1) {
+							printf ("Special case: clicked on the bottom. Set offset to maximum\n");
+							offset=w->total_height-w->visible_height+2;
+						}
 
 						zxvision_set_offset_y(w,offset);
 
