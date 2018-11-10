@@ -5017,8 +5017,13 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 						printf ("Porcentaje: %d\n",porcentaje);
 
+						int offset_to_mult=w->total_width-w->visible_width+1; //+1 porque se pierde linea derecha por scroll
+						printf ("Multiplicando sobre %d\n",offset_to_mult);
+
 						//Establecemos offset horizontal
-						int offset=((w->total_width)*porcentaje)/100;
+						int offset=((offset_to_mult)*porcentaje)/100;
+
+						printf ("set offset: %d\n",offset);
 						zxvision_set_offset_x(w,offset);
 
 					}
@@ -5063,8 +5068,15 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 						printf ("Porcentaje: %d\n",porcentaje);
 
+
+						int offset_to_mult=w->total_height-w->visible_height+2; //+2 porque se pierde linea abajo de scroll y titulo
+						printf ("Multiplicando sobre %d\n",offset_to_mult);
+
 						//Establecemos offset vertical
-						int offset=((w->total_height)*porcentaje)/100;
+						int offset=((offset_to_mult)*porcentaje)/100;
+
+						printf ("set offset: %d\n",offset);
+
 						zxvision_set_offset_y(w,offset);
 
 					}
