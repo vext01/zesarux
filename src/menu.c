@@ -13441,7 +13441,7 @@ void menu_beeper_pianokeyboard_overlay(void)
 			char buffer_texto[40];
 			
 			if (nota_a[0]!=0) {
-                        sprintf (buffer_texto,"%d Hz (%s)",frecuencia,nota_a);
+                        sprintf (buffer_texto,"%d Hz (%s) ",frecuencia,nota_a);
 			}
 
 			else strcpy (buffer_texto,"             ");
