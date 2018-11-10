@@ -4403,8 +4403,11 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 
 	if (zxvision_if_vertical_scroll_bar(w)) {
 		//Dibujar barra vertical
-		int valor_parcial=w->offset_y; //+effective_height;
+		int valor_parcial=w->offset_y+effective_height;
 		if (valor_parcial<0) valor_parcial=0;
+
+		//Si offset es cero, valor_parcial es 0 y no contemplamos el alto visible
+		if (w->offset_y==0) valor_parcial=0;		
 
 		int valor_total=w->total_height;
 		if (valor_total<=0) valor_total=1; //Evitar divisiones por cero o negativos
@@ -4416,8 +4419,11 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 
 	if (zxvision_if_horizontal_scroll_bar(w)) {
 		//Dibujar barra horizontal
-		int valor_parcial=w->offset_x; //+effective_height;
+		int valor_parcial=w->offset_x+effective_width;
 		if (valor_parcial<0) valor_parcial=0;
+
+		//Si offset es cero, valor_parcial es 0 y no contemplamos el ancho visible
+		if (w->offset_x==0) valor_parcial=0;
 
 		int valor_total=w->total_width;
 		if (valor_total<=0) valor_total=1; //Evitar divisiones por cero o negativos
