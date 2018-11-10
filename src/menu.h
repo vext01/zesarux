@@ -106,6 +106,7 @@ struct s_zxvision_window {
 	int can_be_resized;
 	int is_minimized;
 	int height_before_minimize;
+	int width_before_minimize;
 };
 
 typedef struct s_zxvision_window zxvision_window;

@@ -3862,6 +3862,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	w->is_minimized=0;
 	w->height_before_minimize=visible_height;	
+	w->width_before_minimize=visible_width;	
 
 
 }
@@ -5013,6 +5014,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						if (w->is_minimized) {
 							printf ("Unminimize window\n");
 							zxvision_set_visible_height(w,w->height_before_minimize);
+							zxvision_set_visible_width(w,w->width_before_minimize);
 							w->is_minimized=0;
 						}
 						else {
