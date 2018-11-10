@@ -8,7 +8,8 @@
 -hacer que mouse left no envie tecla enter. sera mejor para todo...
 Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 Al pulsar en zonas scroll arriba o abajo del todo etc que vaya a inicio o final scroll 
-
+-sprite navigator y tile navigator, para tbblue y tsconf, en zxvision
+-resize de nuevo con doble click
 
 zxvision_generic_message_tooltip: gestion de teclado, variables de entrada volver_timeout, tooltip_enabled, mostrar_cursor,
 

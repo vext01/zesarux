@@ -3860,6 +3860,10 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->can_be_resized=1;
 
 
+	w->is_minimized=0;
+	w->height_before_minimize=visible_height;	
+
+
 }
 
 void zxvision_destroy_window(zxvision_window *w)
@@ -4406,14 +4410,27 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 		int valor_parcial=w->offset_y+effective_height;
 		if (valor_parcial<0) valor_parcial=0;
 
-		//Si offset es cero, valor_parcial es 0 y no contemplamos el alto visible
-		if (w->offset_y==0) valor_parcial=0;		
+		//Caso especial arriba del todo cero, valor_parcial es 0 y no contemplamos el alto visible
+		//if (w->offset_y==0) valor_parcial=0;		
 
 		int valor_total=w->total_height;
 		if (valor_total<=0) valor_total=1; //Evitar divisiones por cero o negativos
 
 
 		int porcentaje=(valor_parcial*100)/(1+valor_total);  
+
+		//Caso especial arriba del todo
+		if (w->offset_y==0) {
+			printf ("Scroll vertical cursor is at the minimum\n");
+			porcentaje=0;
+		}		
+
+		//Caso especial abajo del todo
+		if (w->offset_y+(w->visible_height)-2==w->total_height) { //-2 de perder linea titulo y linea scroll
+			printf ("Scroll vertical cursor is at the maximum\n");
+			porcentaje=100;
+		}
+
 		menu_ventana_draw_vertical_perc_bar(w->x,w->y,w->visible_width,w->visible_height-1,porcentaje);
 	}
 
@@ -4423,13 +4440,28 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 		if (valor_parcial<0) valor_parcial=0;
 
 		//Si offset es cero, valor_parcial es 0 y no contemplamos el ancho visible
-		if (w->offset_x==0) valor_parcial=0;
+		//if (w->offset_x==0) valor_parcial=0;
 
 		int valor_total=w->total_width;
 		if (valor_total<=0) valor_total=1; //Evitar divisiones por cero o negativos
 
 
 		int porcentaje=(valor_parcial*100)/(1+valor_total);  
+
+		//Caso especial izquierda del todo
+		if (w->offset_x==0) {
+			printf ("Scroll horizontal cursor is at the minimum\n");
+			porcentaje=0;
+		}		
+
+		//Caso especial abajo del todo
+		if (w->offset_x+(w->visible_width)-1==w->total_width) { //-1 de perder linea scroll
+			printf ("Scroll horizontal cursor is at the maximum\n");
+			porcentaje=100;
+		}
+
+
+
 		menu_ventana_draw_horizontal_perc_bar(w->x,w->y,effective_width,w->visible_height,porcentaje);
 	}	
 }
@@ -4976,7 +5008,19 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//Y si ha sido doble click
 				if (mouse_is_double_clicking) {
 					printf ("Doble clicked on title\n");
-					if (w->can_be_resized) zxvision_set_visible_height(w,2);
+					
+					if (w->can_be_resized) {
+						if (w->is_minimized) {
+							printf ("Unminimize window\n");
+							zxvision_set_visible_height(w,w->height_before_minimize);
+							w->is_minimized=0;
+						}
+						else {
+							printf ("Minimize window\n");
+							zxvision_set_visible_height(w,2);
+							w->is_minimized=1;
+						}
+					}
 				}
 			}
 
@@ -26806,7 +26850,7 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
+void old_menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 {
 
     //char textostats[32];

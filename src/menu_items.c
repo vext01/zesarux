@@ -2425,3 +2425,229 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	zxvision_destroy_window(&ventana);		
 }
 
+
+
+
+void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
+{
+
+    //char textostats[32];
+
+    menu_espera_no_tecla();
+	int xventana=0;
+	int ancho_ventana=32;
+
+	int yventana;
+	int alto_ventana;
+    
+
+	if (MACHINE_IS_TBBLUE) {
+		yventana=2;
+		alto_ventana=19;
+	}
+
+	else {
+		yventana=7;
+		alto_ventana=8;
+	}
+
+	zxvision_window ventana;
+
+		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"Video Info");							
+
+	zxvision_draw_window(&ventana);
+
+
+    z80_byte acumulado;
+
+	char texto_buffer[64];
+
+	char texto_buffer2[64];
+
+	//Empezar con espacio
+    texto_buffer[0]=' ';
+
+	int valor_contador_segundo_anterior;
+
+	valor_contador_segundo_anterior=contador_segundo;
+
+	z80_byte tecla=0;
+
+
+    	do {
+
+
+        	//esto hara ejecutar esto 2 veces por segundo
+            //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+			if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											valor_contador_segundo_anterior=contador_segundo;
+                        //contador_segundo_anterior=contador_segundo;
+												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+				int linea=0;
+				//int opcode;
+				//int sumatotal;
+
+
+				if (MACHINE_IS_TSCONF) {
+
+				int vpage_addr=tsconf_get_vram_page()*16384;
+
+				tsconf_get_current_video_mode(texto_buffer2);
+				sprintf (texto_buffer,"Video mode: %s",texto_buffer2);
+				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+				
+                sprintf (texto_buffer,"Video addr: %06XH",vpage_addr);
+                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+				sprintf (texto_buffer,"Tile Map Page: %06XH",tsconf_return_tilemappage() );
+				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+				sprintf (texto_buffer,"Tile 0 Graphics addr: %06XH",tsconf_return_tilegraphicspage(0) );
+				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+				sprintf (texto_buffer,"Tile 1 Graphics addr: %06XH",tsconf_return_tilegraphicspage(1) );
+				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+
+				sprintf (texto_buffer,"Sprite Graphics addr: %06XH",tsconf_return_spritesgraphicspage() );
+				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+				}
+
+				if (MACHINE_IS_TBBLUE) {
+
+					//menu_escribe_linea_opcion(linea++,-1,1,"ULA Video mode:");		
+					zxvision_print_string_defaults(&ventana,1,linea++,"ULA Video mode:");
+
+					//menu_escribe_linea_opcion(linea++,-1,1,get_spectrum_ula_string_video_mode() );
+					zxvision_print_string_defaults(&ventana,1,linea++,get_spectrum_ula_string_video_mode() );
+
+					linea++;
+
+					//menu_escribe_linea_opcion(linea++,-1,1,"Palette format:");
+					zxvision_print_string_defaults(&ventana,1,linea++,"Palette format:");
+
+					tbblue_get_string_palette_format(texto_buffer);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					linea++;
+
+					/*
+					(R/W) 0x12 (18) => Layer 2 RAM page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 8 after a Reset)
+
+(R/W) 0x13 (19) => Layer 2 RAM shadow page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 11 after a Reset)
+					*/
+
+				//tbblue_get_offset_start_layer2_reg
+					//menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM page");
+					sprintf (texto_buffer,"Layer 2 addr:        %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					//menu_escribe_linea_opcion(linea++,-1,1,"Layer 2 RAM shadow page");
+					sprintf (texto_buffer,"Layer 2 shadow addr: %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[19]) );					
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+
+					/*
+					z80_byte clip_window_layer2[4];
+z80_byte clip_window_layer2_index;
+
+z80_byte clip_window_sprites[4];
+z80_byte clip_window_sprites_index;
+
+z80_byte clip_window_ula[4];
+					*/
+
+					linea++;
+					sprintf (texto_buffer,"Clip Windows:");
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Layer2:  X=%3d-%3d Y=%3d-%3d",
+					clip_window_layer2[0],clip_window_layer2[1],clip_window_layer2[2],clip_window_layer2[3]);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Sprites: X=%3d-%3d Y=%3d-%3d",
+					clip_window_sprites[0],clip_window_sprites[1],clip_window_sprites[2],clip_window_sprites[3]);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"ULA:     X=%3d-%3d Y=%3d-%3d",
+					clip_window_ula[0],clip_window_ula[1],clip_window_ula[2],clip_window_ula[3]);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					linea++;
+					sprintf (texto_buffer,"Offset Windows:");
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Layer2: X=%3d Y=%3d",tbblue_registers[22],tbblue_registers[23]);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+
+					sprintf (texto_buffer,"LoRes:  X=%3d Y=%3d",tbblue_registers[50],tbblue_registers[51]);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+
+				}
+
+
+
+				zxvision_draw_window_contents(&ventana);
+
+                        if (menu_multitarea==0) menu_refresca_pantalla();
+
+                }
+
+                menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        //acumulado=0;
+                }
+
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
+
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla==0);
+
+        cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);
+
+
+}
+
+
+
+
+
+
