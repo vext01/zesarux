@@ -2698,9 +2698,10 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 	int current_sprite;
 
 
-		for (linea_color=0;linea_color<TSCONF_SPRITENAV_SPRITES_PER_WINDOW &&
+		/*for (linea_color=0;linea_color<TSCONF_SPRITENAV_SPRITES_PER_WINDOW &&
 				menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color<limite;
-				linea_color++) {
+				linea_color++) {*/
+		for (linea_color=0;linea_color<limite;linea_color++) {					
 
 			current_sprite=menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color;
 
@@ -2732,14 +2733,16 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 			z80_byte sprite_yf=sprite_r0h&128;
 
 			sprintf (dumpmemoria,"%02d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
-			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 			sprintf (dumpmemoria,"Tile: %2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
 				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
 				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
 				spal );
 
-			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 			}
 
 			if (MACHINE_IS_TBBLUE) {
@@ -2770,13 +2773,15 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 			sprintf (dumpmemoria,"%02d X: %3d Y: %3d %s %s %s",current_sprite,x,y,
 					(mirror_x ? "MIRX" : "    "),(mirror_y ? "MIRY" : "    "),(rotate ? "ROT" : "   ")
 			);
-			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 			sprintf (dumpmemoria," Pattn: %2d Palof: %3d Vis: %s"
 				,pattern,paloff, (visible ? "Yes" : "No ") );
 
 
-				menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 			}			
 
@@ -2869,12 +2874,12 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 			
 		char buffer_linea[64];
 
-		sprintf (buffer_linea,"Move:Cursors,PgUp,PgDn.Size:QA");
+		//sprintf (buffer_linea,"Move:Cursors,PgUp,PgDn.Size:QA");
 
-		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
-		if (menu_multitarea==0) menu_refresca_pantalla();
+		/*if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
 
@@ -2882,7 +2887,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 		menu_espera_no_tecla_con_repeticion();
 
-		int aux_pgdnup;
+		int aux_pgdnup;*/
 		//int limite;
 
 				/*switch (tecla) {
