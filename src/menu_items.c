@@ -2653,15 +2653,15 @@ z80_byte clip_window_ula[4];
 
 
 
-int tsconf_spritenav_window_y=2;
-int tsconf_spritenav_window_alto=20;
+//int tsconf_spritenav_window_y=2;
+//int tsconf_spritenav_window_alto=20;
 
 #define TSCONF_SPRITENAV_WINDOW_X 0
-#define TSCONF_SPRITENAV_WINDOW_Y tsconf_spritenav_window_y
+#define TSCONF_SPRITENAV_WINDOW_Y 2
 #define TSCONF_SPRITENAV_WINDOW_ANCHO 32
-#define TSCONF_SPRITENAV_WINDOW_ALTO tsconf_spritenav_window_alto
+#define TSCONF_SPRITENAV_WINDOW_ALTO 20
 //#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 8
-#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW ((tsconf_spritenav_window_alto-4)/2)
+//#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW ((tsconf_spritenav_window_alto-4)/2)
 
 
 
@@ -2838,12 +2838,7 @@ void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
 void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
-	//menu_debug_tsconf_tbblue_spritenav_ventana();
-
 	menu_reset_counters_tecla_repeticion();
-
-    
-
 
 	
 		zxvision_window ventana;
