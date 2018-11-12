@@ -2920,3 +2920,471 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 		zxvision_destroy_window(&ventana);
 }
+
+
+
+
+
+
+
+
+#define TSCONF_TILENAV_WINDOW_X 0
+#define TSCONF_TILENAV_WINDOW_Y 0
+#define TSCONF_TILENAV_WINDOW_ANCHO 32
+#define TSCONF_TILENAV_WINDOW_ALTO 24
+#define TSCONF_TILENAV_TILES_VERT_PER_WINDOW 64
+#define TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW 64
+
+
+
+//int menu_debug_tsconf_tbblue_tilenav_current_palette=0;
+int menu_debug_tsconf_tbblue_tilenav_current_tile=0;
+
+int menu_debug_tsconf_tbblue_tilenav_current_tilelayer=0;
+
+z80_bit menu_debug_tsconf_tbblue_tilenav_showmap={0};
+
+//zxvision_window *menu_debug_tsconf_tbblue_tilenav_draw_tiles_window;
+zxvision_window *menu_debug_tsconf_tbblue_tilenav_lista_tiles_window;
+
+
+#define DEBUG_TSCONF_TILENAV_MAX_TILES (64*64)
+
+
+char menu_debug_tsconf_tbblue_tiles_retorna_visualchar(int tnum)
+{
+	//Hacer un conjunto de 64 caracteres. Mismo set de caracteres que para Base64. Por que? Por que si :)
+			   //0123456789012345678901234567890123456789012345678901234567890123
+	char *caracter_list="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+	int index=tnum % 64;
+	return caracter_list[index];
+}
+
+int menu_debug_tsconf_tbblue_tilenav_total_vert(void)
+{
+	int limite_vertical=DEBUG_TSCONF_TILENAV_MAX_TILES;
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
+
+	return limite_vertical;
+}
+
+//Muestra lista de tiles
+void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
+{
+
+	//Suficientemente grande para almacenar regla superior en modo visual
+	char dumpmemoria[68]; //64 + 3 espacios izquierda + 0 final
+
+	int linea_color;
+	int limite;
+
+	int linea=0;
+	limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
+
+	int current_tile;
+
+	z80_byte *puntero_tilemap;
+	z80_byte *puntero_tilemap_orig;
+	puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
+	puntero_tilemap_orig=puntero_tilemap;
+
+	//int limite_vertical=DEBUG_TSCONF_TILENAV_MAX_TILES;
+	//if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2;
+
+	int limite_vertical=menu_debug_tsconf_tbblue_tilenav_total_vert();
+
+	int current_tile_x=menu_debug_tsconf_tbblue_tilenav_current_tile%64;
+
+
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+				  //0123456789012345678901234567890123456789012345678901234567890123
+		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
+
+		//Indicar codigo 0 de final
+		dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+3]=0;  //3 espacios al inicio
+
+		//menu_escribe_linea_opcion(linea++,-1,1,&dumpmemoria[current_tile_x]); //Mostrar regla superior
+		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+	}
+
+
+		/*for (linea_color=0;linea_color<limite_vertical &&
+				menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color<limite;
+				linea_color++) {*/
+
+		for (linea_color=0;linea_color<limite_vertical;linea_color++) {
+
+			int repetir_ancho=1;
+			int mapa_tile_x=3;
+			if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+				//Modo lista tiles
+				current_tile=menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color;
+			}
+
+			else {
+				//Modo mapa tiles
+				current_tile=menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color*64;
+				repetir_ancho=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW;
+
+				//poner regla vertical
+				int linea_tile=current_tile/64;
+				if ( (linea_tile%5)==0) sprintf (dumpmemoria,"%2d ",linea_tile);
+				else sprintf (dumpmemoria,"   ");
+			}
+
+			//printf ("linea: %3d current tile: %10d puntero: %10d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
+
+			do {
+				int y=current_tile/64;
+				int x=current_tile%64; 
+
+				//printf ("x: %d y: %d\n",x,y);
+
+				int offset=256*y+x*2;
+
+				offset+=menu_debug_tsconf_tbblue_tilenav_current_tilelayer*128;
+
+				int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
+
+				z80_byte tnum_x=tnum&63;
+				z80_byte tnum_y=(tnum>>6)&63;
+
+		    	z80_byte tpal=(puntero_tilemap[offset+1]>>4)&3;
+
+				z80_byte tile_xf=puntero_tilemap[offset+1]&64;
+				z80_byte tile_yf=puntero_tilemap[offset+1]&128;
+
+				if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+					//Modo lista tiles
+					sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
+					//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+					zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+
+					sprintf (dumpmemoria,"Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
+						(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
+						tpal );
+					//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+					zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+				}
+				else {
+					//Modo mapa tiles
+					z80_byte caracter_final;
+
+					if (tnum==0) {
+						caracter_final=' '; 
+					}
+					else {
+						//int caracteres_totales=50; //127-33;
+						//caracter_final=33+(tnum%caracteres_totales);
+						caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
+					}
+
+					dumpmemoria[mapa_tile_x++]=caracter_final;
+				}
+
+				puntero_tilemap+=2;
+				repetir_ancho--;
+			} while (repetir_ancho);
+
+			if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+				//dumpmemoria[mapa_tile_x++]=0;
+				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+
+				//Siguiente linea de tiles (saltar 64 posiciones, 2 layers, 2 bytes por tile)
+				//puntero_tilemap_orig +=64*2*2;
+				puntero_tilemap=puntero_tilemap_orig;
+			}
+					
+		}
+
+
+
+	//return linea;
+
+	zxvision_draw_window_contents(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window); 
+}
+
+void menu_debug_tsconf_tbblue_tilenav_draw_tiles(void)
+{
+/*
+				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+
+				//Mostrar lista tiles
+				menu_debug_tsconf_tbblue_tilenav_lista_tiles();
+
+				//Esto tiene que estar despues de escribir la lista de tiles, para que se refresque y se vea
+				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
+				normal_overlay_texto_menu();
+				*/
+
+
+
+				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+				normal_overlay_texto_menu();
+				menu_debug_tsconf_tbblue_tilenav_lista_tiles();				
+
+}
+
+/*void menu_debug_tsconf_tbblue_tilenav_cursor_izquierda(void)
+{
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+		int cursor_x=menu_debug_tsconf_tbblue_tilenav_current_tile % 64;
+		if (cursor_x>0) menu_debug_tsconf_tbblue_tilenav_current_tile--;
+	}
+}
+
+void menu_debug_tsconf_tbblue_tilenav_cursor_derecha(void)
+{
+        if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+                int cursor_x=menu_debug_tsconf_tbblue_tilenav_current_tile % 64;
+                if (cursor_x<64-TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW) menu_debug_tsconf_tbblue_tilenav_current_tile++;
+        }
+}
+
+void menu_debug_tsconf_tbblue_tilenav_cursor_arriba(void)
+{
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile>0) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile--;
+		}
+	}
+	else {
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile>=64) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile-=64;
+		}
+	}
+}
+
+void menu_debug_tsconf_tbblue_tilenav_cursor_abajo(void)
+{
+
+	int limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
+
+	if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile<limite-1) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile++;
+		}
+
+	}
+	else {
+		if (menu_debug_tsconf_tbblue_tilenav_current_tile<limite-64*TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2) {
+			menu_debug_tsconf_tbblue_tilenav_current_tile +=64;
+		}
+
+	}
+
+}*/
+
+void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
+{
+
+		char titulo[33];
+		/*
+				if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: Visual");
+		}
+
+		else {
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: List");
+		}
+		*/
+
+		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+			sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+		}
+
+		else {
+			sprintf (titulo,"Tiles M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+		}
+
+		zxvision_new_window(ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
+							TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4,menu_debug_tsconf_tbblue_tilenav_total_vert()+1,titulo);
+
+		zxvision_draw_window(ventana);										
+}
+
+void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
+{
+
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
+
+	
+		zxvision_window ventana;
+
+		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
+		//zxvision_new_window(&ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
+		//					TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW,menu_debug_tsconf_tbblue_tilenav_total_vert()+1,"Tile navigator");
+
+		menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+
+
+
+        z80_byte acumulado;
+
+
+        set_menu_overlay_function(menu_debug_tsconf_tbblue_tilenav_draw_tiles);
+
+
+		menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+                                int valor_contador_segundo_anterior;
+
+                                valor_contador_segundo_anterior=contador_segundo;		
+
+
+		z80_byte tecla=0;
+
+do {
+    	menu_speech_tecla_pulsada=0; //Que envie a speech
+
+
+				//esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+               if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                valor_contador_segundo_anterior=contador_segundo;
+
+                                                                                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+                       if (menu_multitarea==0) menu_refresca_pantalla();
+
+
+                }		
+
+		
+	            menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                /*if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        //acumulado=0;
+                }*/
+
+				menu_espera_tecla();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
+
+		//if (tecla) {
+			//printf ("Esperamos no tecla\n");
+			menu_espera_no_tecla_con_repeticion();
+		//}			
+
+				switch (tecla) {
+
+					case 'l':
+						zxvision_destroy_window(&ventana);	
+						menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
+						menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+					break;
+
+					case 'm':
+
+						zxvision_destroy_window(&ventana);		
+						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
+						menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+
+						//menu_debug_tsconf_tbblue_tilenav_current_tile=0;
+					break;
+
+
+					default:
+						zxvision_handle_cursors_pgupdn(&ventana,tecla);
+					break;
+				}		
+
+		
+
+
+		} while (tecla!=2); 
+
+		//restauramos modo normal de texto de menu
+        set_menu_overlay_function(normal_overlay_texto_menu);		
+
+        cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);		
+
+
+	
+    /*do {
+
+    	menu_speech_tecla_pulsada=0; //Que envie a speech
+
+		int linea=TSCONF_TILENAV_WINDOW_Y+TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2+1;
+
+			
+		char buffer_linea[40];
+
+		//Forzar a mostrar atajos
+		z80_bit antes_menu_writing_inverse_color;
+		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+
+		menu_writing_inverse_color.v=1;
+
+		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: Visual");
+		}
+
+		else {
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: List");
+		}
+
+		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+
+		if (menu_multitarea==0) menu_refresca_pantalla();
+
+		menu_espera_tecla();
+
+		tecla=menu_get_pressed_key();
+
+		menu_espera_no_tecla_con_repeticion();
+
+		int aux_pgdnup;
+		//int limite;
+
+				switch (tecla) {
+
+					case 'l':
+						menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
+					break;
+
+					case 'm':
+						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
+						menu_debug_tsconf_tbblue_tilenav_current_tile=0;
+					break;
+
+					//Salir con ESC
+					case 2:
+						salir=1;
+					break;
+				}
+
+
+        } while (salir==0);
+
+		//restauramos modo normal de texto de menu
+        set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+	cls_menu_overlay();
+	//menu_escribe_linea_startx=1;*/
+
+}
+

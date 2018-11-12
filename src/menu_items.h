@@ -38,6 +38,7 @@ extern void menu_about_core_statistics(MENU_ITEM_PARAMETERS);
 extern void menu_ay_registers(MENU_ITEM_PARAMETERS);
 extern void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS);
 extern void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS);
+extern void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS);
 
 #endif
 
