@@ -2997,6 +2997,8 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	int current_tile_x=menu_debug_tsconf_tbblue_tilenav_current_tile%64;
 
 
+	linea_color=0;
+
 	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 				  //0123456789012345678901234567890123456789012345678901234567890123
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
@@ -3007,13 +3009,24 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 		//menu_escribe_linea_opcion(linea++,-1,1,&dumpmemoria[current_tile_x]); //Mostrar regla superior
 		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 	}
+	else {
+			//Aumentarlo en cuanto al offset que estamos (si modo lista)
+	//TODO: limite final +24 de alto como mucho, inicio donde escribimos, inicio de tile
+
+		int offset_y=menu_debug_tsconf_tbblue_tilenav_lista_tiles_window->offset_y;
+		linea=offset_y;
+
+		linea_color=offset_y/2;
+		limite_vertical=linea_color+24; //24 a voleo
+
+	}
 
 
 		/*for (linea_color=0;linea_color<limite_vertical &&
 				menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color<limite;
 				linea_color++) {*/
 
-		for (linea_color=0;linea_color<limite_vertical;linea_color++) {
+		for (;linea_color<limite_vertical;linea_color++) {
 
 			int repetir_ancho=1;
 			int mapa_tile_x=3;
@@ -3128,56 +3141,7 @@ void menu_debug_tsconf_tbblue_tilenav_draw_tiles(void)
 
 }
 
-/*void menu_debug_tsconf_tbblue_tilenav_cursor_izquierda(void)
-{
-	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-		int cursor_x=menu_debug_tsconf_tbblue_tilenav_current_tile % 64;
-		if (cursor_x>0) menu_debug_tsconf_tbblue_tilenav_current_tile--;
-	}
-}
 
-void menu_debug_tsconf_tbblue_tilenav_cursor_derecha(void)
-{
-        if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-                int cursor_x=menu_debug_tsconf_tbblue_tilenav_current_tile % 64;
-                if (cursor_x<64-TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW) menu_debug_tsconf_tbblue_tilenav_current_tile++;
-        }
-}
-
-void menu_debug_tsconf_tbblue_tilenav_cursor_arriba(void)
-{
-	if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
-		if (menu_debug_tsconf_tbblue_tilenav_current_tile>0) {
-			menu_debug_tsconf_tbblue_tilenav_current_tile--;
-		}
-	}
-	else {
-		if (menu_debug_tsconf_tbblue_tilenav_current_tile>=64) {
-			menu_debug_tsconf_tbblue_tilenav_current_tile-=64;
-		}
-	}
-}
-
-void menu_debug_tsconf_tbblue_tilenav_cursor_abajo(void)
-{
-
-	int limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
-
-	if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
-
-		if (menu_debug_tsconf_tbblue_tilenav_current_tile<limite-1) {
-			menu_debug_tsconf_tbblue_tilenav_current_tile++;
-		}
-
-	}
-	else {
-		if (menu_debug_tsconf_tbblue_tilenav_current_tile<limite-64*TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2) {
-			menu_debug_tsconf_tbblue_tilenav_current_tile +=64;
-		}
-
-	}
-
-}*/
 
 void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 {
@@ -3197,16 +3161,19 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		}
 		*/
 
+		int total_height=menu_debug_tsconf_tbblue_tilenav_total_vert();
 		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 			sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			
 		}
 
 		else {
 			sprintf (titulo,"Tiles M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			total_height*=2;
 		}
 
 		zxvision_new_window(ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
-							TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4,menu_debug_tsconf_tbblue_tilenav_total_vert()+1,titulo);
+							TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4,total_height+1,titulo);
 
 		zxvision_draw_window(ventana);										
 }
