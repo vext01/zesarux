@@ -2749,7 +2749,7 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 			//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 			zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
-			sprintf (dumpmemoria,"Tile: %2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
+			sprintf (dumpmemoria,"Tile:%2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
 				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
 				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
 				spal );
@@ -2840,7 +2840,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	//menu_debug_tsconf_tbblue_spritenav_ventana();
 
-	//menu_reset_counters_tecla_repeticion();
+	menu_reset_counters_tecla_repeticion();
 
     
 
@@ -2850,7 +2850,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
 		zxvision_new_window(&ventana,TSCONF_SPRITENAV_WINDOW_X,TSCONF_SPRITENAV_WINDOW_Y,TSCONF_SPRITENAV_WINDOW_ANCHO,TSCONF_SPRITENAV_WINDOW_ALTO,
-							TSCONF_SPRITENAV_WINDOW_ANCHO-1,(menu_debug_tsconf_tbblue_spritenav_get_total_sprites() *2)-2,"Sprite navigator");
+							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*2,"Sprite navigator");
 
 		zxvision_draw_window(&ventana);		
 
@@ -2895,22 +2895,23 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
                 //acumulado=menu_da_todas_teclas();
 
                 //si no hay multitarea, esperar tecla y salir
-                if (menu_multitarea==0) {
+                /*if (menu_multitarea==0) {
                         menu_espera_tecla();
 
                         //acumulado=0;
-                }
+                }*/
 
+				menu_espera_tecla();
 				tecla=zxvision_read_keyboard();
 
 				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
 				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
 				if (tecla==13) tecla=0;
 
-		if (tecla) {
+		//if (tecla) {
 			//printf ("Esperamos no tecla\n");
 			menu_espera_no_tecla_con_repeticion();
-		}				
+		//}			
 
 		zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
