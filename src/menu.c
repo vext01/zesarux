@@ -5234,6 +5234,69 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	//if (mouse_left && mouse_movido) printf ("Mouse is dragging\n");
 }
 
+//Funcion comun que usan algunas ventanas para movimiento de cursores y pgup/dn
+void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
+{
+	int contador_pgdnup;
+					switch (tecla) {
+
+		                //abajo
+                        case 10:
+						zxvision_send_scroll_down(ventana);
+
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+                        break;
+
+                        //arriba
+                        case 11:
+						zxvision_send_scroll_up(ventana);
+
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+                        break;
+
+                        //izquierda
+                        case 8:
+						zxvision_send_scroll_left(ventana);
+
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+                        break;
+
+                        //derecha
+                        case 9:
+						zxvision_send_scroll_right(ventana);
+
+						//Decir que se ha pulsado tecla para que no se relea
+						menu_speech_tecla_pulsada=1;
+                        break;						
+
+						//PgUp
+						case 24:
+							for (contador_pgdnup=0;contador_pgdnup<ventana->visible_height-2;contador_pgdnup++) {
+								zxvision_send_scroll_up(ventana);
+							}
+							//Decir que no se ha pulsado tecla para que se relea
+							menu_speech_tecla_pulsada=0;
+						break;
+
+                    	//PgDn
+                    	case 25:
+                    		for (contador_pgdnup=0;contador_pgdnup<ventana->visible_height-2;contador_pgdnup++) {
+								zxvision_send_scroll_down(ventana);
+                        	}
+
+							//Decir que no se ha pulsado tecla para que se relea
+							menu_speech_tecla_pulsada=0;
+                    	break;
+					
+
+				}
+
+
+}
+
 //Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {
