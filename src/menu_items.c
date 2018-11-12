@@ -2673,8 +2673,19 @@ int menu_debug_tsconf_tbblue_spritenav_current_sprite=0;
 
 zxvision_window *menu_debug_tsconf_tbblue_spritenav_draw_sprites_window;
 
+int menu_debug_tsconf_tbblue_spritenav_get_total_sprites(void)
+{
+	int limite;
+
+	limite=TSCONF_MAX_SPRITES; //85 sprites max
+
+	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
+
+	return limite;
+}
+
 //Muestra lista de sprites
-int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
+void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 {
 
 	char dumpmemoria[33];
@@ -2683,9 +2694,11 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 	int limite;
 
 	int linea=0;
-	limite=TSCONF_MAX_SPRITES; //85 sprites max
+	/*limite=TSCONF_MAX_SPRITES; //85 sprites max
 
-	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
+	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;*/
+
+	limite=menu_debug_tsconf_tbblue_spritenav_get_total_sprites();
 
 	//z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
 	/*
@@ -2791,15 +2804,17 @@ int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 					
 		}
 
+	zxvision_draw_window_contents(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window); 
 
 
-	return linea;
 }
 
 void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
 {
 
-				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+
+				/*menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
 				//Mostrar lista sprites
@@ -2807,50 +2822,35 @@ void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
 
 				//Esto tiene que estar despues de escribir la lista de sprites, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
+				normal_overlay_texto_menu();*/
+
+
+				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 				normal_overlay_texto_menu();
+				menu_debug_tsconf_tbblue_spritenav_lista_sprites();
+
+
 
 }
 
-/*void menu_debug_tsconf_tbblue_spritenav_cursor_arriba(void)
-{
-	if (menu_debug_tsconf_tbblue_spritenav_current_sprite>0) {
-		menu_debug_tsconf_tbblue_spritenav_current_sprite--;
-	}
-}
 
-void menu_debug_tsconf_tbblue_spritenav_cursor_abajo(void)
-{
-
-	int limite=TSCONF_MAX_SPRITES;
-
-	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
-
-	if (menu_debug_tsconf_tbblue_spritenav_current_sprite<limite-1) {
-		menu_debug_tsconf_tbblue_spritenav_current_sprite++;
-	}
-
-}*/
 
 void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
 	//menu_debug_tsconf_tbblue_spritenav_ventana();
 
-	menu_reset_counters_tecla_repeticion();
+	//menu_reset_counters_tecla_repeticion();
 
-    z80_byte tecla=0;
-
-
-
-	int salir=0;
+    
 
 
-
+	
 		zxvision_window ventana;
 
 		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
 		zxvision_new_window(&ventana,TSCONF_SPRITENAV_WINDOW_X,TSCONF_SPRITENAV_WINDOW_Y,TSCONF_SPRITENAV_WINDOW_ANCHO,TSCONF_SPRITENAV_WINDOW_ALTO,
-							TSCONF_SPRITENAV_WINDOW_ANCHO-1,TSCONF_SPRITENAV_WINDOW_ALTO-2,"Sprite navigator");
+							TSCONF_SPRITENAV_WINDOW_ANCHO-1,(menu_debug_tsconf_tbblue_spritenav_get_total_sprites() *2)-2,"Sprite navigator");
 
 		zxvision_draw_window(&ventana);		
 
@@ -2862,101 +2862,36 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 		menu_debug_tsconf_tbblue_spritenav_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
+                                int valor_contador_segundo_anterior;
 
+                                valor_contador_segundo_anterior=contador_segundo;		
+
+
+		z80_byte tecla=0;
 
 
 	
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
 
-		int linea=TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
+		//int linea=TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
 
 			
-		char buffer_linea[64];
+		//char buffer_linea[64];
 
-		//sprintf (buffer_linea,"Move:Cursors,PgUp,PgDn.Size:QA");
+				//esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+               if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                valor_contador_segundo_anterior=contador_segundo;
 
-		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-
-
-		/*if (menu_multitarea==0) menu_refresca_pantalla();
-
-		menu_espera_tecla();
-
-		tecla=menu_get_pressed_key();
-
-		menu_espera_no_tecla_con_repeticion();
-
-		int aux_pgdnup;*/
-		//int limite;
-
-				/*switch (tecla) {
-
-					case 11:
-						//arriba
-						menu_debug_tsconf_tbblue_spritenav_cursor_arriba();
-
-						menu_debug_tsconf_tbblue_spritenav_ventana();
-						//menu_debug_tsconf_tbblue_spritenav_direccion -=bytes_por_linea;
-						//menu_debug_tsconf_tbblue_spritenav_direccion=menu_debug_tsconf_tbblue_spritenav_adjusta_en_negativo(menu_debug_tsconf_tbblue_spritenav_direccion,bytes_por_linea);
-					break;
-
-					case 10:
-						//abajo
-						menu_debug_tsconf_tbblue_spritenav_cursor_abajo();
-
-						menu_debug_tsconf_tbblue_spritenav_ventana();
+                                                                                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+                       if (menu_multitarea==0) menu_refresca_pantalla();
 
 
-					break;
+                }		
 
-					case 24:
-						//PgUp
-						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
-							menu_debug_tsconf_tbblue_spritenav_cursor_arriba();
-						}
-						menu_debug_tsconf_tbblue_spritenav_ventana();
-
-						//menu_debug_tsconf_tbblue_spritenav_direccion -=bytes_por_ventana;
-						//menu_debug_tsconf_tbblue_spritenav_direccion=menu_debug_tsconf_tbblue_spritenav_adjusta_en_negativo(menu_debug_tsconf_tbblue_spritenav_direccion,bytes_por_ventana);
-					break;
-
-					case 25:
-						//PgDn
-						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
-							menu_debug_tsconf_tbblue_spritenav_cursor_abajo();
-						}
-						menu_debug_tsconf_tbblue_spritenav_ventana();
-					break;
-
-					case 'q':
-						if (tsconf_spritenav_window_y>0) {
-							tsconf_spritenav_window_y--;
-							tsconf_spritenav_window_alto +=2;
-							cls_menu_overlay();
-							menu_debug_tsconf_tbblue_spritenav_ventana();
-						}
-					break;					
-
-					case 'a':
-						if (tsconf_spritenav_window_y<9) {
-							tsconf_spritenav_window_y++;
-							tsconf_spritenav_window_alto -=2;
-							cls_menu_overlay();
-							menu_debug_tsconf_tbblue_spritenav_ventana();
-						}
-					break;
-
-					//Salir con ESC
-					case 2:
-						salir=1;
-					break;
-				}
-				*/
-
-			
-
-                menu_cpu_core_loop();
+		
+	            menu_cpu_core_loop();
                 //acumulado=menu_da_todas_teclas();
 
                 //si no hay multitarea, esperar tecla y salir
@@ -2966,7 +2901,6 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
                         //acumulado=0;
                 }
 
-				//tecla=menu_get_pressed_key();
 				tecla=zxvision_read_keyboard();
 
 				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
@@ -2975,7 +2909,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
         //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
-		} while (tecla==0);
+		} while (tecla!=2); 
 
 		//restauramos modo normal de texto de menu
         set_menu_overlay_function(normal_overlay_texto_menu);		

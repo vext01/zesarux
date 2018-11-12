@@ -137,6 +137,7 @@ extern void zxvision_set_not_resizable(zxvision_window *w);
 extern void zxvision_set_resizable(zxvision_window *w);
 
 extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
+extern z80_byte zxvision_read_keyboard(void);
 
 extern zxvision_window *zxvision_current_window;
 
