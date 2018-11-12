@@ -2651,3 +2651,331 @@ z80_byte clip_window_ula[4];
 
 
 
+
+
+int tsconf_spritenav_window_y=2;
+int tsconf_spritenav_window_alto=20;
+
+#define TSCONF_SPRITENAV_WINDOW_X 0
+#define TSCONF_SPRITENAV_WINDOW_Y tsconf_spritenav_window_y
+#define TSCONF_SPRITENAV_WINDOW_ANCHO 32
+#define TSCONF_SPRITENAV_WINDOW_ALTO tsconf_spritenav_window_alto
+//#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 8
+#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW ((tsconf_spritenav_window_alto-4)/2)
+
+
+
+
+
+//int menu_debug_tsconf_tbblue_spritenav_current_palette=0;
+int menu_debug_tsconf_tbblue_spritenav_current_sprite=0;
+
+
+zxvision_window *menu_debug_tsconf_tbblue_spritenav_draw_sprites_window;
+
+//Muestra lista de sprites
+int menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
+{
+
+	char dumpmemoria[33];
+
+	int linea_color;
+	int limite;
+
+	int linea=0;
+	limite=TSCONF_MAX_SPRITES; //85 sprites max
+
+	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
+
+	//z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
+	/*
+	1st: X position (bits 7-0).
+2nd: Y position (0-255).
+3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is the rotate flag and bit 0 is X MSB.
+4th: bit 7 is the visible flag, bit 6 is reserved, bits 5-0 is Name (pattern index, 0-63).
+*/
+
+	int current_sprite;
+
+
+		for (linea_color=0;linea_color<TSCONF_SPRITENAV_SPRITES_PER_WINDOW &&
+				menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color<limite;
+				linea_color++) {
+
+			current_sprite=menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color;
+
+			if (MACHINE_IS_TSCONF) {
+
+			int offset=current_sprite*6;
+			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
+
+			z80_byte sprite_leap=sprite_r0h&64;
+
+			int sprite_act=sprite_r0h&32;
+        	int y=tsconf_fmaps[0x200+offset]+256*(sprite_r0h&1);
+	      	z80_byte ysize=8*(1+((sprite_r0h>>1)&7));
+	               
+
+        	z80_byte sprite_r1h=tsconf_fmaps[0x200+offset+3];
+		    int x=tsconf_fmaps[0x200+offset+2]+256*(sprite_r1h&1);
+			z80_byte xsize=8*(1+((sprite_r1h>>1)&7));
+
+			z80_byte sprite_r2h=tsconf_fmaps[0x200+offset+5];
+			z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(sprite_r2h&15);
+			    	//Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
+			z80_int tnum_x=tnum & 63;
+    		z80_int tnum_y=(tnum>>6)&63;
+
+		    z80_byte spal=(sprite_r2h>>4)&15;
+
+			z80_byte sprite_xf=sprite_r1h&128;
+			z80_byte sprite_yf=sprite_r0h&128;
+
+			sprintf (dumpmemoria,"%02d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
+			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
+			sprintf (dumpmemoria,"Tile: %2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
+				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
+				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
+				spal );
+
+			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			}
+
+			if (MACHINE_IS_TBBLUE) {
+					//z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
+	/*
+	1st: X position (bits 7-0).
+2nd: Y position (0-255).
+3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is the rotate flag and bit 0 is X MSB.
+4th: bit 7 is the visible flag, bit 6 is reserved, bits 5-0 is Name (pattern index, 0-63).
+*/
+
+				z80_int x=tbsprite_sprites[current_sprite][0]; //
+				z80_byte y=tbsprite_sprites[current_sprite][1];  //
+
+				z80_byte byte_3=tbsprite_sprites[current_sprite][2];
+				z80_byte paloff=byte_3 & 0xF0; //
+				z80_byte mirror_x=byte_3 & 8; //
+				z80_byte mirror_y=byte_3 & 4; //
+				z80_byte rotate=byte_3 & 2; //
+				z80_byte msb_x=byte_3 &1; //
+
+				x +=msb_x*256;
+
+				z80_byte byte_4=tbsprite_sprites[current_sprite][3];
+				z80_byte visible=byte_4 & 128; //
+				z80_byte pattern=byte_4 & 63; //
+
+			sprintf (dumpmemoria,"%02d X: %3d Y: %3d %s %s %s",current_sprite,x,y,
+					(mirror_x ? "MIRX" : "    "),(mirror_y ? "MIRY" : "    "),(rotate ? "ROT" : "   ")
+			);
+			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
+			sprintf (dumpmemoria," Pattn: %2d Palof: %3d Vis: %s"
+				,pattern,paloff, (visible ? "Yes" : "No ") );
+
+
+				menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
+			}			
+
+			
+
+
+					
+		}
+
+
+
+	return linea;
+}
+
+void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
+{
+
+				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+
+				//Mostrar lista sprites
+				menu_debug_tsconf_tbblue_spritenav_lista_sprites();
+
+				//Esto tiene que estar despues de escribir la lista de sprites, para que se refresque y se vea
+				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
+				normal_overlay_texto_menu();
+
+}
+
+/*void menu_debug_tsconf_tbblue_spritenav_cursor_arriba(void)
+{
+	if (menu_debug_tsconf_tbblue_spritenav_current_sprite>0) {
+		menu_debug_tsconf_tbblue_spritenav_current_sprite--;
+	}
+}
+
+void menu_debug_tsconf_tbblue_spritenav_cursor_abajo(void)
+{
+
+	int limite=TSCONF_MAX_SPRITES;
+
+	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
+
+	if (menu_debug_tsconf_tbblue_spritenav_current_sprite<limite-1) {
+		menu_debug_tsconf_tbblue_spritenav_current_sprite++;
+	}
+
+}*/
+
+void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
+{
+	menu_espera_no_tecla();
+	//menu_debug_tsconf_tbblue_spritenav_ventana();
+
+	menu_reset_counters_tecla_repeticion();
+
+    z80_byte tecla=0;
+
+
+
+	int salir=0;
+
+
+
+		zxvision_window ventana;
+
+		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
+		zxvision_new_window(&ventana,TSCONF_SPRITENAV_WINDOW_X,TSCONF_SPRITENAV_WINDOW_Y,TSCONF_SPRITENAV_WINDOW_ANCHO,TSCONF_SPRITENAV_WINDOW_ALTO,
+							TSCONF_SPRITENAV_WINDOW_ANCHO-1,TSCONF_SPRITENAV_WINDOW_ALTO-2,"Sprite navigator");
+
+		zxvision_draw_window(&ventana);		
+
+        z80_byte acumulado;
+
+
+        set_menu_overlay_function(menu_debug_tsconf_tbblue_spritenav_draw_sprites);
+
+
+		menu_debug_tsconf_tbblue_spritenav_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+
+
+
+	
+    do {
+    	menu_speech_tecla_pulsada=0; //Que envie a speech
+
+		int linea=TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
+
+			
+		char buffer_linea[64];
+
+		sprintf (buffer_linea,"Move:Cursors,PgUp,PgDn.Size:QA");
+
+		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+
+
+		if (menu_multitarea==0) menu_refresca_pantalla();
+
+		menu_espera_tecla();
+
+		tecla=menu_get_pressed_key();
+
+		menu_espera_no_tecla_con_repeticion();
+
+		int aux_pgdnup;
+		//int limite;
+
+				/*switch (tecla) {
+
+					case 11:
+						//arriba
+						menu_debug_tsconf_tbblue_spritenav_cursor_arriba();
+
+						menu_debug_tsconf_tbblue_spritenav_ventana();
+						//menu_debug_tsconf_tbblue_spritenav_direccion -=bytes_por_linea;
+						//menu_debug_tsconf_tbblue_spritenav_direccion=menu_debug_tsconf_tbblue_spritenav_adjusta_en_negativo(menu_debug_tsconf_tbblue_spritenav_direccion,bytes_por_linea);
+					break;
+
+					case 10:
+						//abajo
+						menu_debug_tsconf_tbblue_spritenav_cursor_abajo();
+
+						menu_debug_tsconf_tbblue_spritenav_ventana();
+
+
+					break;
+
+					case 24:
+						//PgUp
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
+							menu_debug_tsconf_tbblue_spritenav_cursor_arriba();
+						}
+						menu_debug_tsconf_tbblue_spritenav_ventana();
+
+						//menu_debug_tsconf_tbblue_spritenav_direccion -=bytes_por_ventana;
+						//menu_debug_tsconf_tbblue_spritenav_direccion=menu_debug_tsconf_tbblue_spritenav_adjusta_en_negativo(menu_debug_tsconf_tbblue_spritenav_direccion,bytes_por_ventana);
+					break;
+
+					case 25:
+						//PgDn
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
+							menu_debug_tsconf_tbblue_spritenav_cursor_abajo();
+						}
+						menu_debug_tsconf_tbblue_spritenav_ventana();
+					break;
+
+					case 'q':
+						if (tsconf_spritenav_window_y>0) {
+							tsconf_spritenav_window_y--;
+							tsconf_spritenav_window_alto +=2;
+							cls_menu_overlay();
+							menu_debug_tsconf_tbblue_spritenav_ventana();
+						}
+					break;					
+
+					case 'a':
+						if (tsconf_spritenav_window_y<9) {
+							tsconf_spritenav_window_y++;
+							tsconf_spritenav_window_alto -=2;
+							cls_menu_overlay();
+							menu_debug_tsconf_tbblue_spritenav_ventana();
+						}
+					break;
+
+					//Salir con ESC
+					case 2:
+						salir=1;
+					break;
+				}
+				*/
+
+			
+
+                menu_cpu_core_loop();
+                //acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        //acumulado=0;
+                }
+
+				//tecla=menu_get_pressed_key();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13) tecla=0;
+
+        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
+
+		} while (tecla==0);
+
+		//restauramos modo normal de texto de menu
+        set_menu_overlay_function(normal_overlay_texto_menu);		
+
+        cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);
+}
