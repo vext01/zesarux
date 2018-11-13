@@ -107,6 +107,10 @@ struct s_zxvision_window {
 	int is_minimized;
 	int height_before_minimize;
 	int width_before_minimize;
+
+	//Posicion del cursor y si esta visible
+	int visible_cursor;
+	int cursor_line;
 };
 
 typedef struct s_zxvision_window zxvision_window;

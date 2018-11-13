@@ -3866,6 +3866,8 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->height_before_minimize=visible_height;	
 	w->width_before_minimize=visible_width;	
 
+	w->visible_cursor=0;
+	w->cursor_line=0;
 
 }
 
@@ -3891,6 +3893,83 @@ z80_byte zxvision_read_keyboard(void)
 
 	return tecla;
 }
+
+
+void zxvision_generic_message_cursor_down(zxvision_window *ventana)
+{
+	if (ventana->visible_cursor) {
+
+		//Movemos el cursor si es que es posible
+		if (ventana->cursor_line<ventana->total_height-1) {
+			printf ("Incrementamos linea cursor\n");
+			ventana->cursor_line++;
+		}
+		else return;
+
+		//Ver en que offset estamos
+		int offset_y=ventana->offset_y;
+		//Y donde esta el cursor
+		int cursor=ventana->cursor_line;
+
+		//Y si cursor no esta visible, lo ponemos para que este abajo del todo (hemos de suponer que estaba abajo y ha bajado 1 mas)
+		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
+			ventana->cursor_line=offset_y+ventana->visible_height-2;
+			zxvision_send_scroll_down(ventana);
+			printf ("Bajamos linea cursor y bajamos offset\n");
+		}
+		else {
+			//Redibujamos contenido
+			printf ("Solo redibujamos\n");
+			zxvision_draw_window_contents(ventana);
+			//zxvision_draw_scroll_bars(w);
+		}
+	}
+
+	else {	
+		zxvision_send_scroll_down(ventana);
+	}
+
+
+
+}
+
+void zxvision_generic_message_cursor_up(zxvision_window *ventana)
+{
+	if (ventana->visible_cursor) {
+
+		//Movemos el cursor si es que es posible
+		if (ventana->cursor_line>0) {
+			printf ("Decrementamos linea cursor\n");
+			ventana->cursor_line--;
+		}
+		else return;
+
+		//Ver en que offset estamos
+		int offset_y=ventana->offset_y;
+		//Y donde esta el cursor
+		int cursor=ventana->cursor_line;
+
+		//Y si cursor no esta visible, lo ponemos para que este arriba del todo (hemos de suponer que estaba arriba i ha subido 1 mas)
+		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
+			if (offset_y>0) ventana->cursor_line=offset_y-1;
+			zxvision_send_scroll_up(ventana);
+			printf ("Subimos linea cursor y subimos offset\n");
+		}
+		else {
+			//Redibujamos contenido
+			printf ("Solo redibujamos\n");
+			zxvision_draw_window_contents(ventana);
+			//zxvision_draw_scroll_bars(w);
+		}
+	}
+
+	else {	
+		zxvision_send_scroll_up(ventana);
+	}
+
+
+
+}						
 
 //TODO: gestionar volver_timeout, tooltip_enabled, mostrar_cursor
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
@@ -4099,6 +4178,11 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	do {
 
+		if (mostrar_cursor) {
+			ventana.visible_cursor=1;
+			//ventana.cursor_line=ultima_linea_buscada;
+		}
+
 	//Enviar primera linea o ultima a speech
 
 	//La primera linea puede estar oculta por .., aunque para speech mejor que diga esa primera linea oculta
@@ -4224,7 +4308,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
                         //abajo
                         case 10:
 						//primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
-						zxvision_send_scroll_down(&ventana);
+						zxvision_generic_message_cursor_down(&ventana);
+						//zxvision_send_scroll_down(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
@@ -4234,7 +4319,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
                         //arriba
                         case 11:
 						//primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
-						zxvision_send_scroll_up(&ventana);
+						//zxvision_send_scroll_up(&ventana);
+						zxvision_generic_message_cursor_up(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
@@ -4282,8 +4368,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
                                         	menu_copy_clipboard(menu_generic_message_tooltip_text_initial);
                                         	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard. Go to file utils and press P to paste to a file");
                                         break;
-
-
+						*/
+						
 					//Buscar texto
 					case 'f':
 					case 'n':
@@ -4321,10 +4407,12 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 							//Mostramos cursor para poder indicar en que linea se ha encontrado el texto
 							mostrar_cursor=1;
 
-							int contador;
+							ventana.cursor_line=i;
+
+							/*int contador;
 							for (contador=0;contador<ultima_linea_buscada;contador++) {
 									primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
-							}
+							}*/
 
 							//menu_speech_tecla_pulsada=0;
 							//menu_textspeech_send_text(buffer_lineas[ultima_linea_buscada]);
@@ -4334,9 +4422,12 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 							menu_warn_message("Text not found");
 						}
 
+						zxvision_draw_window(&ventana);
+						zxvision_draw_window_contents(&ventana);
+
 
 					break;
-					*/
+					
 				}
 
 	//Salir con Enter o ESC o fin de tooltip
@@ -4668,10 +4759,17 @@ void zxvision_draw_window_contents(zxvision_window *w)
 
 			z80_byte caracter_escribir=caracter->caracter;
 
+			int tinta=caracter->tinta;
+			int papel=caracter->papel;
 
+			//Si esta linea cursor visible
+			if (w->visible_cursor && w->cursor_line==offset_y_final) {
+				tinta=ESTILO_GUI_TINTA_SELECCIONADO;
+				papel=ESTILO_GUI_PAPEL_SELECCIONADO;
+			} 
 			
 			putchar_menu_overlay_parpadeo(xdestination,ydestination,
-				caracter_escribir,caracter->tinta,caracter->papel,caracter->parpadeo);
+				caracter_escribir,tinta,papel,caracter->parpadeo);
 			}
 
 			//Fuera de rango. Metemos espacio
