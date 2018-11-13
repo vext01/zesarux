@@ -2970,8 +2970,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 	}
 	else {
-			//Aumentarlo en cuanto al offset que estamos (si modo lista)
-	//TODO: limite final +24 de alto como mucho, inicio donde escribimos, inicio de tile
+		//Aumentarlo en cuanto al offset que estamos (si modo lista)
 
 		int offset_y=menu_debug_tsconf_tbblue_tilenav_lista_tiles_window->offset_y;
 		
@@ -2979,11 +2978,11 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 		offset_vertical=offset_y/2;
 		linea=offset_vertical*2;
 
-		limite_vertical=offset_vertical+24; //24 a voleo
+		limite_vertical=offset_vertical+((24-2)/2)+1; //El maximo que cabe en pantalla, +1 para cuando se baja 1 posicion con cursor
 
 	}
 
-		printf ("Init drawing tiles from vertical offset %d to %d. line print starts at %d\n",offset_vertical,limite_vertical,linea);
+		//printf ("Init drawing tiles from vertical offset %d to %d. line print starts at %d\n",offset_vertical,limite_vertical,linea);
 		/*for (linea_color=0;linea_color<limite_vertical &&
 				menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color<limite;
 				linea_color++) {*/
@@ -3133,6 +3132,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 			sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
+			total_height++; //uno mas pues hay la primera linea con la regla de columnas
 		}
 
 		else {
@@ -3141,7 +3141,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		}
 
 		zxvision_new_window(ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
-							total_width,total_height+1,titulo);
+							total_width,total_height,titulo);
 
 		zxvision_draw_window(ventana);										
 }
