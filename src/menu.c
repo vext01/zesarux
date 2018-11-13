@@ -1946,6 +1946,7 @@ void putchar_menu_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte 
 //en cambio, com pentagon y realvideo, en ese caso, pentagon está 8 lineas por debajo en modo realvideo,
 //pero dado que escribia por encima (al no usar putpixel realvideo) provocaba glitches en menus
 //audio wave, visualmem, ay piano, wave piano, view sprites
+/*
 void old_menu_scr_putpixel(int x,int y,int color)
 {
 	x *=menu_gui_zoom;
@@ -1965,6 +1966,7 @@ void old_menu_scr_putpixel(int x,int y,int color)
 		}
 
 }
+*/
 
 void menu_scr_putpixel(int x,int y,int color)
 {
@@ -12854,32 +12856,7 @@ int scale_y_chip(int y)
 	return y;
 }
 
-void old_menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
-{
-	//#define PIANO_ZOOM 3
 
-	int offsetx=PIANO_GRAPHIC_BASE_X*menu_char_width+12;
-	int offsety=piano_graphic_base_y*scale_y_chip(8)+18;
-
-	x=offsetx+x*PIANO_ZOOM_X;
-	y=offsety+y*PIANO_ZOOM_Y;
-
-	int xorig=x;
-	int zx=0;
-	int zy=0;
-
-	for (zy=0;zy<PIANO_ZOOM_Y;zy++) {
-		x=xorig;
-		for (zx=0;zx<PIANO_ZOOM_X;zx++) {
-			menu_scr_putpixel(x,y,color);
-
-			x++;
-
-		}
-		y++;
-	}
-
-}
 
 
 void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
@@ -24894,158 +24871,7 @@ void menu_debug_visualmem_dibuja_ventana(void)
 	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 }
 
-void old_menu_debug_visualmem(MENU_ITEM_PARAMETERS)
-{
 
-        //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        //z80_bit copia_video_interlaced_mode;
-        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
-
-        //disable_interlace();
-
-
-        menu_espera_no_tecla();
-	menu_debug_visualmem_dibuja_ventana();
-
-        z80_byte acumulado;
-
-
-
-
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de visualmem + texto
-        set_menu_overlay_function(menu_debug_draw_visualmem);
-
-
-				int valor_contador_segundo_anterior;
-
-				valor_contador_segundo_anterior=contador_segundo;
-
-
-        do {
-
-          //esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-											valor_contador_segundo_anterior=contador_segundo;
-											//printf ("Refrescando contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) menu_refresca_pantalla();
-
-                }
-
-                menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
-
-                //si no hay multitarea, esperar tecla y salir
-                if (menu_multitarea==0) {
-                        menu_espera_tecla();
-
-                        acumulado=0;
-                }
-
-		z80_byte tecla;
-		tecla=menu_get_pressed_key();
-
-
-		if (tecla=='b') {
-			menu_espera_no_tecla();
-			if (visualmem_bright_multiplier>=200) visualmem_bright_multiplier=1;
-			else if (visualmem_bright_multiplier==1) visualmem_bright_multiplier=10;
-			else visualmem_bright_multiplier +=10;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-			//decir que no hay tecla pulsada
-			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-		}
-
-
-		if (tecla=='l') {
-			menu_espera_no_tecla();
-
-			menu_visualmem_donde++;
-			if (menu_visualmem_donde==3) menu_visualmem_donde=0;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-			//decir que no hay tecla pulsada
-			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-		}
-
-		if (tecla=='o') {
-			menu_espera_no_tecla();
-			if (visualmem_ancho_variable>23) visualmem_ancho_variable--;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-			//decir que no hay tecla pulsada
-			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-		}
-
-                if (tecla=='p') {
-			menu_espera_no_tecla();
-                        if (visualmem_ancho_variable<30) visualmem_ancho_variable++;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-                        //decir que no hay tecla pulsada
-                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-                }
-
-                if (tecla=='q') {
-                        menu_espera_no_tecla();
-                        if (visualmem_alto_variable>7) visualmem_alto_variable--;
-
-                        cls_menu_overlay();
-                        menu_debug_visualmem_dibuja_ventana();
-
-                        //decir que no hay tecla pulsada
-                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-                }
-
-                if (tecla=='a') {
-                        menu_espera_no_tecla();
-                        if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) visualmem_alto_variable++;
-
-                        cls_menu_overlay();
-                        menu_debug_visualmem_dibuja_ventana();
-
-                        //decir que no hay tecla pulsada
-                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-                }
-
-								//Si tecla no es ESC, no salir
-								if (tecla!=2) {
-									acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-								}
-
-
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
-
-        //Restauramos modo interlace
-        //if (copia_video_interlaced_mode.v) enable_interlace();
-
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
-
-
-        cls_menu_overlay();
-
-	workaround_pentagon_clear_putpixel_cache();
-
-}
 
 
 
@@ -25384,176 +25210,6 @@ void menu_debug_cpu_stats_diss_complete_no_print (z80_byte opcode,char *buffer,z
 	}
 }
 
-
-void old_menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
-{
-
-        char textostats[32];
-
-        menu_espera_no_tecla();
-        menu_dibuja_ventana(0,1,32,18,"CPU Compact Statistics");
-
-
-		
-
-        z80_byte acumulado;
-
-        char dumpassembler[32];
-
-        //Empezar con espacio
-        dumpassembler[0]=' ';
-
-				int valor_contador_segundo_anterior;
-
-				valor_contador_segundo_anterior=contador_segundo;
-
-
-        do {
-
-
-                //esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-									if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-											valor_contador_segundo_anterior=contador_segundo;
-                        //contador_segundo_anterior=contador_segundo;
-												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-
-			int linea=0;
-                        int opcode;
-
-			unsigned int sumatotal;
-                        sumatotal=util_stats_sum_all_counters();
-                        sprintf (textostats,"Total opcodes run: %u",sumatotal);
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-
-			menu_escribe_linea_opcion(linea++,-1,1,"Most used op. for each preffix");
-
-                        opcode=util_stats_find_max_counter(stats_codsinpr);
-                        sprintf (textostats,"Op nopref:    %02XH: %u",opcode,util_stats_get_counter(stats_codsinpr,opcode) );
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-                        //Opcode
-			menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],0,0);
-			menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-
-			//menu_debug_cpu_stats_clear_disassemble_array();
-                        //menu_debug_cpu_stats_diss(0,opcode,linea);
-                        //linea++;
-
-
-
-                        opcode=util_stats_find_max_counter(stats_codpred);
-                        sprintf (textostats,"Op pref ED:   %02XH: %u",opcode,util_stats_get_counter(stats_codpred,opcode) );
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-                        //Opcode
-                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],237,0);
-                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-
-			//menu_debug_cpu_stats_clear_disassemble_array();
-			//disassemble_array[0]=237;
-                        //menu_debug_cpu_stats_diss(1,opcode,linea);
-                        //linea++;
-
-
-
-
-                        opcode=util_stats_find_max_counter(stats_codprcb);
-                        sprintf (textostats,"Op pref CB:   %02XH: %u",opcode,util_stats_get_counter(stats_codprcb,opcode) );
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-                        //Opcode
-                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],203,0);
-                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-
-                        //menu_debug_cpu_stats_clear_disassemble_array();
-                        //disassemble_array[0]=203;
-                        //menu_debug_cpu_stats_diss(1,opcode,linea);
-                        //linea++;
-
-
-                        opcode=util_stats_find_max_counter(stats_codprdd);
-                        sprintf (textostats,"Op pref DD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprdd,opcode) );
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-                        //Opcode
-                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,0);
-                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-
-                        //menu_debug_cpu_stats_clear_disassemble_array();
-                        //disassemble_array[0]=221;
-                        //menu_debug_cpu_stats_diss(1,opcode,linea);
-                        //linea++;
-
-
-                        opcode=util_stats_find_max_counter(stats_codprfd);
-                        sprintf (textostats,"Op pref FD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprfd,opcode) );
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-                        //Opcode
-                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,0);
-                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-
-                        //menu_debug_cpu_stats_clear_disassemble_array();
-                        //disassemble_array[0]=253;
-                        //menu_debug_cpu_stats_diss(1,opcode,linea);
-                        //linea++;
-
-
-
-                        opcode=util_stats_find_max_counter(stats_codprddcb);
-                        sprintf (textostats,"Op pref DDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprddcb,opcode) );
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-                        //Opcode
-                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,203);
-                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-
-                        //menu_debug_cpu_stats_clear_disassemble_array();
-                        //disassemble_array[0]=221;
-                        //disassemble_array[1]=203;
-                        //disassemble_array[2]=0;
-                        //menu_debug_cpu_stats_diss(3,opcode,linea);
-                        //linea++;
-
-
-                        opcode=util_stats_find_max_counter(stats_codprfdcb);
-                        sprintf (textostats,"Op pref FDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprfdcb,opcode) );
-                        menu_escribe_linea_opcion(linea++,-1,1,textostats);
-
-                        //Opcode
-                        menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,203);
-                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-
-                        //menu_debug_cpu_stats_clear_disassemble_array();
-                        //disassemble_array[0]=253;
-                        //disassemble_array[1]=203;
-                        //disassemble_array[2]=0;
-                        //menu_debug_cpu_stats_diss(3,opcode,linea);
-                        //linea++;
-
-
-
-                        if (menu_multitarea==0) menu_refresca_pantalla();
-
-                }
-
-                menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
-
-                //si no hay multitarea, esperar tecla y salir
-                if (menu_multitarea==0) {
-                        menu_espera_tecla();
-
-                        acumulado=0;
-                }
-
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
-
-        cls_menu_overlay();
-
-}
 
 
 void menu_cpu_full_stats(unsigned int *stats_table,char *title,z80_byte preffix1,z80_byte preffix2)
