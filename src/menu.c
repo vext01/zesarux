@@ -5297,6 +5297,42 @@ void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
 
 }
 
+/*
+Funcion comun usados en algunas ventanas que:
+-refrescan pantalla
+-ejecutan core loop si multitask activo
+-leen tecla y esperan a liberar dicha tecla
+*/
+z80_byte zxvision_common_getkey_refresh(void)
+{
+	z80_byte tecla;
+
+	     if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+		}					
+
+		
+	            menu_cpu_core_loop();
+
+
+				menu_espera_tecla();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}
+
+		if (tecla) {
+			//printf ("Esperamos no tecla\n");
+			menu_espera_no_tecla_con_repeticion();
+		}	
+
+	return tecla;
+}
+
 //Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {
