@@ -5319,7 +5319,7 @@ z80_byte zxvision_common_getkey_refresh(void)
 	z80_byte tecla;
 
 	     if (!menu_multitarea) {
-			//printf ("refresca pantalla\n");
+			printf ("refresca pantalla\n");
 			menu_refresca_pantalla();
 		}					
 

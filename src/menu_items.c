@@ -2855,6 +2855,14 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 	z80_byte tecla;
 
+		//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
+		//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
+		//esto solo es necesario para ventanas que usan overlay
+	    if (!menu_multitarea) {
+			printf ("refresca pantalla inicial\n");
+			menu_refresca_pantalla();
+		}			
+
 	
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
@@ -3015,7 +3023,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 				int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
 
-				printf ("Current tile: %d  x: %d y: %d  tnum: %d\n",current_tile,x,y,tnum);
+				//printf ("Current tile: %d  x: %d y: %d  tnum: %d\n",current_tile,x,y,tnum);
 
 				z80_byte tnum_x=tnum&63;
 				z80_byte tnum_y=(tnum>>6)&63;
@@ -3121,9 +3129,10 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		*/
 
 		int total_height=menu_debug_tsconf_tbblue_tilenav_total_vert();
+		int total_width=31;
 		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 			sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			
+			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
 		}
 
 		else {
@@ -3132,7 +3141,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		}
 
 		zxvision_new_window(ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
-							TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4,total_height+1,titulo);
+							total_width,total_height+1,titulo);
 
 		zxvision_draw_window(ventana);										
 }
@@ -3162,6 +3171,15 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 		z80_byte tecla;
 
+		//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
+		//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
+		//esto solo es necesario para ventanas que usan overlay
+	    if (!menu_multitarea) {
+			printf ("refresca pantalla inicial\n");
+			menu_refresca_pantalla();
+		}				
+
+
 	do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
 			
@@ -3183,7 +3201,6 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
 						menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
 
-						//menu_debug_tsconf_tbblue_tilenav_current_tile=0;
 					break;
 
 
