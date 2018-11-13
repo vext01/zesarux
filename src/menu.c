@@ -4155,10 +4155,12 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	if (!resizable) zxvision_set_not_resizable(&ventana);	
 
+	if (mostrar_cursor) ventana.visible_cursor=1;	
+
 	zxvision_draw_window(&ventana);
 
 				//Decir que se ha pulsado tecla asi no se lee todo cuando el cursor esta visible
-				if (mostrar_cursor) menu_speech_tecla_pulsada=1;
+				if (ventana.visible_cursor) menu_speech_tecla_pulsada=1;
 	int i;
 	/*for (i=0;i<indice_linea-primera_linea && i<MAX_LINEAS_VENTANA_GENERIC_MESSAGE;i++) {
 		if (mostrar_cursor) {
@@ -4177,10 +4179,10 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	do {
 
-		if (mostrar_cursor) {
+		/*if (mostrar_cursor) {
 			ventana.visible_cursor=1;
 			//ventana.cursor_line=ultima_linea_buscada;
-		}
+		}*/
 
 	//Enviar primera linea o ultima a speech
 
@@ -4407,9 +4409,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 							//printf ("mover cursor hasta linea: %d\n",ultima_linea_buscada);
 
 							//Mostramos cursor para poder indicar en que linea se ha encontrado el texto
-							mostrar_cursor=1;
+							//mostrar_cursor=1;
 
-							//esto esta un poco redundado pues tambien usa antes mostrar_cursor para poner ese parametro de la ventana
 							ventana.visible_cursor=1;
 
 							ventana.cursor_line=i;
@@ -4452,7 +4453,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		if (tecla==2) retorno->estado_retorno=0;
 		else retorno->estado_retorno=1;
 
-		printf ("\n\nLinea seleccionada: %d (%s)\n",linea_final,buffer_lineas[linea_final]);
+		//printf ("\n\nLinea seleccionada: %d (%s)\n",linea_final,buffer_lineas[linea_final]);
 
 	}
 
@@ -15212,7 +15213,8 @@ void menu_z88_new_ptr_card_browser(char *archivo)
 
         texto_buffer[indice_buffer]=0;
 
-	menu_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, "%s", texto_buffer);
+	//menu_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, "%s", texto_buffer);
+	zxvision_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, 1, "%s", texto_buffer);
 
         free(flash_file_memory);
 
