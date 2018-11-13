@@ -2880,33 +2880,36 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
                 valor_contador_segundo_anterior=contador_segundo;
 
                                                                                 //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) menu_refresca_pantalla();
+                       //if (menu_multitarea==0) menu_refresca_pantalla();
 
 
                 }		
 
+     if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+		}					
+
 		
 	            menu_cpu_core_loop();
-                //acumulado=menu_da_todas_teclas();
 
-                //si no hay multitarea, esperar tecla y salir
-                /*if (menu_multitarea==0) {
-                        menu_espera_tecla();
-
-                        //acumulado=0;
-                }*/
 
 				menu_espera_tecla();
 				tecla=zxvision_read_keyboard();
 
 				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
 				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
-				if (tecla==13) tecla=0;
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}
 
-		//if (tecla) {
+		if (tecla) {
 			//printf ("Esperamos no tecla\n");
 			menu_espera_no_tecla_con_repeticion();
-		//}			
+		}	
+
+
+		
 
 		zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
@@ -3220,33 +3223,33 @@ do {
                 valor_contador_segundo_anterior=contador_segundo;
 
                                                                                 //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) menu_refresca_pantalla();
+                       //if (menu_multitarea==0) menu_refresca_pantalla();
 
 
-                }		
+                }	
+
+        if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+		}					
 
 		
 	            menu_cpu_core_loop();
-                //acumulado=menu_da_todas_teclas();
 
-                //si no hay multitarea, esperar tecla y salir
-                /*if (menu_multitarea==0) {
-                        menu_espera_tecla();
-
-                        //acumulado=0;
-                }*/
 
 				menu_espera_tecla();
 				tecla=zxvision_read_keyboard();
 
 				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
 				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
-				if (tecla==13) tecla=0;
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}
 
-		//if (tecla) {
+		if (tecla) {
 			//printf ("Esperamos no tecla\n");
 			menu_espera_no_tecla_con_repeticion();
-		//}			
+		}			
 
 				switch (tecla) {
 
