@@ -10,7 +10,6 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 Al pulsar en zonas scroll arriba o abajo del todo etc que vaya a inicio o final scroll 
 -tile navigator que solo recargue parte de lista que se esta viendo (al menos cuando es modo lista), si no, consume mucha cpu
 :casi está. revisar
--tile navigator no refresca ventana cuando se redimensiona y multitask esta off
 
 zxvision_generic_message_tooltip: gestion de teclado, variables de entrada volver_timeout, tooltip_enabled, mostrar_cursor, copy, find etc
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco
