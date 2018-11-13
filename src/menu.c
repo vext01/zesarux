@@ -5238,6 +5238,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
 {
 	int contador_pgdnup;
+	int tecla_valida=1;
 					switch (tecla) {
 
 		                //abajo
@@ -5291,9 +5292,19 @@ void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
 							menu_speech_tecla_pulsada=0;
                     	break;
 					
+						default:
+							tecla_valida=0;
+						break;
 
 				}
 
+	if (tecla_valida) {
+		//Refrescamos pantalla para reflejar esto, util con multitask off
+		if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+		}		
+	}
 
 }
 

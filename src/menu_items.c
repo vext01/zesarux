@@ -2975,7 +2975,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 	}
 
-		printf ("Init drawing tiles from vertical offset %d to %d\n",offset_vertical,limite_vertical);
+		printf ("Init drawing tiles from vertical offset %d to %d. line print starts at %d\n",offset_vertical,limite_vertical,linea);
 		/*for (linea_color=0;linea_color<limite_vertical &&
 				menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color<limite;
 				linea_color++) {*/
@@ -3007,12 +3007,15 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 				int x=current_tile%64; 
 
 				//printf ("x: %d y: %d\n",x,y);
+				
 
-				int offset=256*y+x*2;
+				int offset=(256*y)+(x*2);
 
 				offset+=menu_debug_tsconf_tbblue_tilenav_current_tilelayer*128;
 
 				int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
+
+				printf ("Current tile: %d  x: %d y: %d  tnum: %d\n",current_tile,x,y,tnum);
 
 				z80_byte tnum_x=tnum&63;
 				z80_byte tnum_y=(tnum>>6)&63;
@@ -3050,7 +3053,9 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 					dumpmemoria[mapa_tile_x++]=caracter_final;
 				}
 
-				puntero_tilemap+=2;
+				//puntero_tilemap+=2;
+				current_tile++;
+
 				repetir_ancho--;
 			} while (repetir_ancho);
 
