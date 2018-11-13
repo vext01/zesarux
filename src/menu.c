@@ -4415,6 +4415,9 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 							ventana.cursor_line=i;
 
+							//Si no esta visible, cambiamos offset
+							if (i<ventana.offset_y || i>=ventana.offset_y+ventana.visible_height-2) zxvision_set_offset_y(&ventana,i);
+
 							/*int contador;
 							for (contador=0;contador<ultima_linea_buscada;contador++) {
 									primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
@@ -15274,7 +15277,9 @@ void menu_z88_slot_card_browser(MENU_ITEM_PARAMETERS)
                 return;
         }
 
-        menu_generic_message_tooltip("Card browser", 0, 0, 1, NULL, "%s", texto_buffer);
+        //menu_generic_message_tooltip("Card browser", 0, 0, 1, NULL, "%s", texto_buffer);
+
+	zxvision_generic_message_tooltip("Card Browser", 0, 0, 1, NULL, 1, "%s", texto_buffer);		
 
 }
 
@@ -21421,7 +21426,8 @@ void menu_file_p_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("P file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("P file browser", 0, 0, 1, NULL, "%s", texto_browser);
+  zxvision_generic_message_tooltip("P file Browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -21474,7 +21480,8 @@ void menu_file_o_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("O file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("O file browser", 0, 0, 1, NULL, "%s", texto_browser);
+  zxvision_generic_message_tooltip("O file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tao_get_info(z80_byte *tape,char *texto)
 
@@ -21533,7 +21540,8 @@ void menu_file_sp_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("SP file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("SP file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("SP file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -22262,7 +22270,8 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 	texto_browser[indice_buffer]=0;
 
 
-	menu_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//  menu_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 
 	free(dsk_file_memory);
@@ -22391,7 +22400,8 @@ After these 6 bytes, the data for the block comes.
 
 	texto_browser[indice_buffer]=0;
 
-	menu_generic_message_tooltip("ZSF file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//  menu_generic_message_tooltip("ZSF file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("ZSF file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 	free(zsf_file_memory);
@@ -22520,7 +22530,8 @@ Bitstreams
 	}
 
 
-	menu_generic_message_tooltip("ZX-Uno Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//  menu_generic_message_tooltip("ZX-Uno Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("ZX-Uno Flash browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -22637,7 +22648,8 @@ void menu_file_superupgrade_flash_browser_show(char *filename)
 
 
 
-	menu_generic_message_tooltip("Superupgrade Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("Superupgrade Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Superupgrade Flash browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 
 	free(superupgrade_flash_file_memory);
@@ -22799,7 +22811,8 @@ void menu_file_hexdump_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 
-	menu_generic_message_tooltip("Hex viewer", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("Hex viewer", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Hex viewer", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	free(hexdump_file_memory);
 
@@ -22872,7 +22885,8 @@ void menu_file_sna_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("SNA file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("SNA file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("SNA file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -23120,7 +23134,8 @@ void menu_file_spg_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -23201,7 +23216,8 @@ void menu_file_zx_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("ZEsarUX ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("ZEsarUX ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("ZEsarUX ZX file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -23297,7 +23313,8 @@ void menu_file_z80_browser_show(char *filename)
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -23510,7 +23527,8 @@ void menu_file_tzx_browser_show(char *filename)
 	}
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("TZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("TZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("TZX file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	free(tzx_file_mem);
 
@@ -23599,7 +23617,8 @@ void menu_tape_browser_show(char *filename)
 	}
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -26021,7 +26040,8 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 
 		//util_tape_tap_get_info((z80_byte *)file_read_memory,buffer_texto);
-		menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", buffer_texto);
+		//menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", buffer_texto);
+		zxvision_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, 1, "%s", buffer_texto);
 
 		
 		return;
