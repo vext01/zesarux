@@ -627,6 +627,8 @@ extern void menu_debug_cpu_stats_diss_complete_no_print (z80_byte opcode,char *b
 
 extern void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae);
 
+extern void menu_copy_clipboard(char *texto);
+
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

@@ -4170,7 +4170,6 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	}*/
 
 	for (i=0;i<indice_linea;i++) {
-		//TODO: mostrar_cursor
 		zxvision_print_string(&ventana,1,i,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_lineas[i]);
 	}
 
@@ -4348,7 +4347,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 						//PgUp
 						case 24:
 							for (contador_pgdnup=0;contador_pgdnup<ventana.visible_height-2;contador_pgdnup++) {
-								zxvision_send_scroll_up(&ventana);
+								zxvision_generic_message_cursor_up(&ventana);
 							}
 							//Decir que no se ha pulsado tecla para que se relea
 							menu_speech_tecla_pulsada=0;
@@ -4357,18 +4356,21 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
                     	//PgDn
                     	case 25:
                     		for (contador_pgdnup=0;contador_pgdnup<ventana.visible_height-2;contador_pgdnup++) {
-								zxvision_send_scroll_down(&ventana);
+								zxvision_generic_message_cursor_down(&ventana);
                         	}
 
 							//Decir que no se ha pulsado tecla para que se relea
 							menu_speech_tecla_pulsada=0;
                     	break;
-						/*
+						
                                         case 'c':
                                         	menu_copy_clipboard(menu_generic_message_tooltip_text_initial);
                                         	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard. Go to file utils and press P to paste to a file");
+
+											zxvision_draw_window(&ventana);
+											zxvision_draw_window_contents(&ventana);
                                         break;
-						*/
+						
 						
 					//Buscar texto
 					case 'f':
@@ -4406,6 +4408,9 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 							//Mostramos cursor para poder indicar en que linea se ha encontrado el texto
 							mostrar_cursor=1;
+
+							//esto esta un poco redundado pues tambien usa antes mostrar_cursor para poner ese parametro de la ventana
+							ventana.visible_cursor=1;
 
 							ventana.cursor_line=i;
 
