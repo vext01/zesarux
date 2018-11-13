@@ -613,6 +613,16 @@ extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_
 
 extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar);
 
+extern int menu_decae_ajusta_valor_volumen(int valor_decae,int valor_volumen);
+
+extern int menu_decae_dec_valor_volumen(int valor_decae,int valor_volumen);
+
+extern void menu_reset_counters_tecla_repeticion(void);
+
+extern void menu_debug_cpu_stats_diss_complete_no_print (z80_byte opcode,char *buffer,z80_byte preffix1,z80_byte preffix2);
+
+extern void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae);
+
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

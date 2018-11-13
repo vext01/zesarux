@@ -362,7 +362,7 @@ void menu_espera_tecla_timeout_tooltip(void);
 z80_byte menu_da_todas_teclas(void);
 
 
-void menu_reset_counters_tecla_repeticion(void);
+
 void menu_textspeech_send_text(char *texto);
 
 

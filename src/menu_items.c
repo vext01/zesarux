@@ -1448,7 +1448,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 	zxvision_draw_window(&ventana);
 		
 
-        z80_byte acumulado;
+        //z80_byte acumulado;
 
         char dumpassembler[32];
 
@@ -1634,7 +1634,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 
 		//zxvision_generic_message_tooltip("pruebas", 30, 0, 0, generic_message_tooltip_return *retorno, const char * texto_format , ...)
-		zxvision_generic_message_tooltip("Pruebas", 0, 0, 0, NULL, "%s", "Hola que tal como estas esto es una prueba de escribir texto. "
+		zxvision_generic_message_tooltip("Pruebas", 0, 0, 0, NULL, 0, "Hola que tal como estas esto es una prueba de escribir texto. "
 					"No se que mas poner pero me voy a empezar a repetir, " 
 					"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore "
 					"et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip"
@@ -1662,9 +1662,9 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	int ancho_total=20;
 	int alto_total=alto_visible+2;
 
-	menu_item *array_menu_audio_new_waveform;
-        menu_item item_seleccionado;
-        int retorno_menu;
+	//menu_item *array_menu_audio_new_waveform;
+      //  menu_item item_seleccionado;
+        //int retorno_menu;
         
 
 
@@ -1762,8 +1762,8 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 
 	//Jugar con offset
-	int i;
-/*
+/*	int i;
+
 	for (i=0;i<7;i++) {
 		zxvision_set_offset_x(&ventana,i);
 
@@ -1993,7 +1993,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
 	zxvision_draw_window(&ventana);
 
-    z80_byte acumulado;
+    //z80_byte acumulado;
 
         char texto_buffer[33];
 
@@ -2363,7 +2363,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 		zxvision_draw_window(&ventana);		
 
-        z80_byte acumulado;
+
 
 
         //Cambiamos funcion overlay de texto de menu
@@ -2459,7 +2459,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	zxvision_draw_window(&ventana);
 
 
-    z80_byte acumulado;
+
 
 	char texto_buffer[64];
 
@@ -3113,19 +3113,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 {
 
 		char titulo[33];
-		/*
-				if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: Visual");
-		}
-
-		else {
-			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: List");
-		}
-		*/
+		
 
 		int total_height=menu_debug_tsconf_tbblue_tilenav_total_vert();
 		int total_width=31;
@@ -3158,9 +3146,6 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 		menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
 
-
-
-        z80_byte acumulado;
 
 
         set_menu_overlay_function(menu_debug_tsconf_tbblue_tilenav_draw_tiles);
@@ -3223,74 +3208,7 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 
 	
-    /*do {
-
-    	menu_speech_tecla_pulsada=0; //Que envie a speech
-
-		int linea=TSCONF_TILENAV_WINDOW_Y+TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2+1;
-
-			
-		char buffer_linea[40];
-
-		//Forzar a mostrar atajos
-		z80_bit antes_menu_writing_inverse_color;
-		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-
-		menu_writing_inverse_color.v=1;
-
-		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: Visual");
-		}
-
-		else {
-			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: List");
-		}
-
-		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
-
-
-		if (menu_multitarea==0) menu_refresca_pantalla();
-
-		menu_espera_tecla();
-
-		tecla=menu_get_pressed_key();
-
-		menu_espera_no_tecla_con_repeticion();
-
-		int aux_pgdnup;
-		//int limite;
-
-				switch (tecla) {
-
-					case 'l':
-						menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
-					break;
-
-					case 'm':
-						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
-						menu_debug_tsconf_tbblue_tilenav_current_tile=0;
-					break;
-
-					//Salir con ESC
-					case 2:
-						salir=1;
-					break;
-				}
-
-
-        } while (salir==0);
-
-		//restauramos modo normal de texto de menu
-        set_menu_overlay_function(normal_overlay_texto_menu);
-
-
-	cls_menu_overlay();
-	//menu_escribe_linea_startx=1;
-	*/
+    
 
 }
 
