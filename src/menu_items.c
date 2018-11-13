@@ -2966,9 +2966,11 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	//TODO: limite final +24 de alto como mucho, inicio donde escribimos, inicio de tile
 
 		int offset_y=menu_debug_tsconf_tbblue_tilenav_lista_tiles_window->offset_y;
-		linea=offset_y/2;
+		
 
 		offset_vertical=offset_y/2;
+		linea=offset_vertical*2;
+
 		limite_vertical=offset_vertical+24; //24 a voleo
 
 	}
@@ -3026,7 +3028,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 					//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 					zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
-					sprintf (dumpmemoria,"Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
+					sprintf (dumpmemoria," Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
 						(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
 						tpal );
 					//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
