@@ -4439,7 +4439,12 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	} while (tecla!=13 && tecla!=2 && tooltip_enabled==0);
 
 	if (retorno!=NULL) {
-		int linea_final=linea_cursor+primera_linea;
+		int linea_final;
+
+		if (mostrar_cursor) linea_final=ventana.cursor_line;
+		else linea_final=ventana.offset_x;
+
+
 		strcpy(retorno->texto_seleccionado,buffer_lineas[linea_final]);
 		retorno->linea_seleccionada=linea_final;
 
@@ -4447,7 +4452,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		if (tecla==2) retorno->estado_retorno=0;
 		else retorno->estado_retorno=1;
 
-		//printf ("\n\nLinea seleccionada: %d (%s)\n",linea_cursor+primera_linea,buffer_lineas[linea_cursor+primera_linea]);
+		printf ("\n\nLinea seleccionada: %d (%s)\n",linea_final,buffer_lineas[linea_final]);
 
 	}
 
