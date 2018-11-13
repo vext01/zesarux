@@ -2841,65 +2841,37 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();
 
 	
-		zxvision_window ventana;
+	zxvision_window ventana;
 
-		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
-		zxvision_new_window(&ventana,TSCONF_SPRITENAV_WINDOW_X,TSCONF_SPRITENAV_WINDOW_Y,TSCONF_SPRITENAV_WINDOW_ANCHO,TSCONF_SPRITENAV_WINDOW_ALTO,
+	zxvision_new_window(&ventana,TSCONF_SPRITENAV_WINDOW_X,TSCONF_SPRITENAV_WINDOW_Y,TSCONF_SPRITENAV_WINDOW_ANCHO,TSCONF_SPRITENAV_WINDOW_ALTO,
 							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*2,"Sprite navigator");
 
-		zxvision_draw_window(&ventana);		
+	zxvision_draw_window(&ventana);		
 
-        z80_byte acumulado;
+    set_menu_overlay_function(menu_debug_tsconf_tbblue_spritenav_draw_sprites);
 
-
-        set_menu_overlay_function(menu_debug_tsconf_tbblue_spritenav_draw_sprites);
-
-
-		menu_debug_tsconf_tbblue_spritenav_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
-
-                                int valor_contador_segundo_anterior;
-
-                                valor_contador_segundo_anterior=contador_segundo;		
+	menu_debug_tsconf_tbblue_spritenav_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
-		z80_byte tecla=0;
-
+	z80_byte tecla;
 
 	
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
 
-		//int linea=TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
-
-			
-		//char buffer_linea[64];
-
-				//esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-               if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-                valor_contador_segundo_anterior=contador_segundo;
-
-                                                                                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       //if (menu_multitarea==0) menu_refresca_pantalla();
-
-
-                }		
-
-     
-		tecla=zxvision_common_getkey_refresh();
-		
-
+   		tecla=zxvision_common_getkey_refresh();
+	
 		zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
 
-		} while (tecla!=2); 
+	} while (tecla!=2); 
 
-		//restauramos modo normal de texto de menu
-        set_menu_overlay_function(normal_overlay_texto_menu);		
+	//restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);		
 
-        cls_menu_overlay();
+    cls_menu_overlay();
 
-		zxvision_destroy_window(&ventana);
+	zxvision_destroy_window(&ventana);
 }
 
 
@@ -2919,13 +2891,12 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 
 //int menu_debug_tsconf_tbblue_tilenav_current_palette=0;
-int menu_debug_tsconf_tbblue_tilenav_current_tile=0;
+//int menu_debug_tsconf_tbblue_tilenav_current_tile=0;
 
 int menu_debug_tsconf_tbblue_tilenav_current_tilelayer=0;
 
 z80_bit menu_debug_tsconf_tbblue_tilenav_showmap={0};
 
-//zxvision_window *menu_debug_tsconf_tbblue_tilenav_draw_tiles_window;
 zxvision_window *menu_debug_tsconf_tbblue_tilenav_lista_tiles_window;
 
 
@@ -2957,7 +2928,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	//Suficientemente grande para almacenar regla superior en modo visual
 	char dumpmemoria[68]; //64 + 3 espacios izquierda + 0 final
 
-	int linea_color;
+	
 	int limite;
 
 	int linea=0;
@@ -2975,17 +2946,17 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 	int limite_vertical=menu_debug_tsconf_tbblue_tilenav_total_vert();
 
-	int current_tile_x=menu_debug_tsconf_tbblue_tilenav_current_tile%64;
+	//int current_tile_x=0;
 
-
-	linea_color=0;
+	//int linea_color=0;
+	int offset_vertical=0;
 
 	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 				  //0123456789012345678901234567890123456789012345678901234567890123
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 
 		//Indicar codigo 0 de final
-		dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+3]=0;  //3 espacios al inicio
+		//dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+3]=0;  //3 espacios al inicio
 
 		//menu_escribe_linea_opcion(linea++,-1,1,&dumpmemoria[current_tile_x]); //Mostrar regla superior
 		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
@@ -2995,30 +2966,30 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	//TODO: limite final +24 de alto como mucho, inicio donde escribimos, inicio de tile
 
 		int offset_y=menu_debug_tsconf_tbblue_tilenav_lista_tiles_window->offset_y;
-		linea=offset_y;
+		linea=offset_y/2;
 
-		linea_color=offset_y/2;
-		limite_vertical=linea_color+24; //24 a voleo
+		offset_vertical=offset_y/2;
+		limite_vertical=offset_vertical+24; //24 a voleo
 
 	}
 
-
+		printf ("Init drawing tiles from vertical offset %d to %d\n",offset_vertical,limite_vertical);
 		/*for (linea_color=0;linea_color<limite_vertical &&
 				menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color<limite;
 				linea_color++) {*/
 
-		for (;linea_color<limite_vertical;linea_color++) {
+		for (;offset_vertical<limite_vertical;offset_vertical++) {
 
 			int repetir_ancho=1;
 			int mapa_tile_x=3;
 			if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
 				//Modo lista tiles
-				current_tile=menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color;
+				current_tile=offset_vertical;
 			}
 
 			else {
 				//Modo mapa tiles
-				current_tile=menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color*64;
+				current_tile=offset_vertical*64;
 				repetir_ancho=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW;
 
 				//poner regla vertical
@@ -3168,9 +3139,6 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 	
 		zxvision_window ventana;
 
-		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
-		//zxvision_new_window(&ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
-		//					TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW,menu_debug_tsconf_tbblue_tilenav_total_vert()+1,"Tile navigator");
 
 		menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
 
@@ -3184,27 +3152,12 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 		menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
-                                int valor_contador_segundo_anterior;
 
-                                valor_contador_segundo_anterior=contador_segundo;		
+		z80_byte tecla;
 
-
-		z80_byte tecla=0;
-
-do {
+	do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
-
-
-				//esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-               if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-                valor_contador_segundo_anterior=contador_segundo;
-
-                                                                                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       //if (menu_multitarea==0) menu_refresca_pantalla();
-
-
-                }	
+			
 
 		tecla=zxvision_common_getkey_refresh();				
 
@@ -3235,14 +3188,14 @@ do {
 		
 
 
-		} while (tecla!=2); 
+	} while (tecla!=2); 
 
-		//restauramos modo normal de texto de menu
-        set_menu_overlay_function(normal_overlay_texto_menu);		
+	//restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);		
 
-        cls_menu_overlay();
+    cls_menu_overlay();
 
-		zxvision_destroy_window(&ventana);		
+	zxvision_destroy_window(&ventana);		
 
 
 	
