@@ -3895,6 +3895,156 @@ z80_byte zxvision_read_keyboard(void)
 }
 
 
+//escribe la cadena de texto
+void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offset_string,int max_length_shown,int x,int y)
+{
+	z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
+	z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
+	char cadena_buf[2];
+
+	string=&string[offset_string];
+
+	//contar que hay que escribir el cursor
+	max_length_shown--;
+
+	//y si offset>0, primer caracter sera '<'
+	if (offset_string) {
+		//menu_escribe_texto(x,y,tinta,papel,"<");
+		zxvision_print_string_defaults(ventana,x,y,"<");
+		max_length_shown--;
+		x++;
+		string++;
+	}
+
+	for (;max_length_shown && (*string)!=0;max_length_shown--) {
+		cadena_buf[0]=*string;
+		cadena_buf[1]=0;
+		//menu_escribe_texto(x,y,tinta,papel,cadena_buf);
+		zxvision_print_string_defaults(ventana,x,y,cadena_buf);
+		x++;
+		string++;
+	}
+
+        //menu_escribe_texto(x,y,tinta,papel,"_");
+		putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
+		
+		zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
+
+
+        x++;
+
+
+        for (;max_length_shown!=0;max_length_shown--) {
+                //menu_escribe_texto(x,y,tinta,papel," ");
+				zxvision_print_string_defaults(ventana,x,y," ");
+                x++;
+        }
+
+	zxvision_draw_window_contents(ventana);
+
+
+}
+
+
+//devuelve cadena de texto desde teclado
+//max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
+//ejemplo, si el array es de 50, se le debe pasar max_length a 50
+int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length,int max_length_shown,int x,int y)
+{
+
+	//Enviar a speech
+	char buf_speech[MAX_BUFFER_SPEECH+1];
+	sprintf (buf_speech,"Edit box: %s",string);
+	menu_textspeech_send_text(buf_speech);
+
+
+	z80_byte tecla;
+
+	//ajustar offset sobre la cadena de texto visible en pantalla
+	int offset_string;
+
+	int j;
+	j=strlen(string);
+	if (j>max_length_shown-1) offset_string=j-max_length_shown+1;
+	else offset_string=0;
+
+
+	//max_length ancho maximo del texto, sin contar caracter 0
+	//por tanto si el array es de 50, se le debe pasar max_length a 50
+
+	max_length--;
+
+	//cursor siempre al final del texto
+
+	do {
+		zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y);
+
+		if (menu_multitarea==0) menu_refresca_pantalla();
+
+		menu_espera_tecla();
+		//printf ("Despues de espera tecla\n");
+		tecla=zxvision_common_getkey_refresh();	
+		//printf ("tecla leida=%d\n",tecla);
+		menu_espera_no_tecla();
+
+
+
+		//si tecla normal, agregar:
+		if (tecla>31 && tecla<128) {
+			if (strlen(string)<max_length) {
+				int i;
+				i=strlen(string);
+				string[i++]=tecla;
+				string[i]=0;
+
+				//Enviar a speech letra pulsada
+				menu_speech_tecla_pulsada=0;
+			        sprintf (buf_speech,"%c",tecla);
+        			menu_textspeech_send_text(buf_speech);
+
+
+				if (i>=max_length_shown) offset_string++;
+
+			}
+		}
+
+		//tecla borrar o tecla izquierda
+		if (tecla==12 || tecla==8) {
+			if (strlen(string)>0) {
+                                int i;
+                                i=strlen(string)-1;
+
+                                //Enviar a speech letra borrada
+
+				menu_speech_tecla_pulsada=0;
+                                sprintf (buf_speech,"%c",string[i]);
+                                menu_textspeech_send_text(buf_speech);
+
+
+                                string[i]=0;
+				if (offset_string>0) {
+					offset_string--;
+					//printf ("offset string: %d\n",offset_string);
+				}
+			}
+
+		}
+
+
+	} while (tecla!=13 && tecla!=15 && tecla!=2);
+
+	//if (tecla==13) printf ("salimos con enter\n");
+	//if (tecla==15) printf ("salimos con tab\n");
+
+	menu_reset_counters_tecla_repeticion();
+	return tecla;
+
+//papel=7+8;
+//tinta=0;
+
+}
+
+
 void zxvision_generic_message_cursor_down(zxvision_window *ventana)
 {
 	if (ventana->visible_cursor) {
@@ -31731,7 +31881,7 @@ int menu_confirm_yesno(char *texto_ventana)
 }
 
 //max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
-void menu_ventana_scanf(char *titulo,char *texto,int max_length)
+void old_menu_ventana_scanf(char *titulo,char *texto,int max_length)
 {
 
         //En caso de stdout, es mas simple, mostrar texto y esperar texto
@@ -31758,6 +31908,51 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 	//Al salir
 	//menu_refresca_pantalla();
 	menu_cls_refresh_emulated_screen();
+
+}
+
+//max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
+void menu_ventana_scanf(char *titulo,char *texto,int max_length)
+{
+
+        //En caso de stdout, es mas simple, mostrar texto y esperar texto
+        if (!strcmp(scr_driver_name,"stdout")) {
+		printf ("%s\n",titulo);
+		scrstdout_menu_print_speech_macro(titulo);
+		scanf("%s",texto);
+
+		return;
+	}
+
+	int scanf_x=2;
+	int scanf_y=10;
+	int scanf_ancho=28;
+	int scanf_alto=3;
+
+        menu_espera_no_tecla();
+		// menu_dibuja_ventana(2,10,28,3,titulo);
+
+
+        //menu_dibuja_ventana(scanf_x,scanf_y,scanf_ancho,scanf_alto,titulo);
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,scanf_x,scanf_y,scanf_ancho,scanf_alto,
+							scanf_ancho-1,scanf_alto-2,titulo);
+
+	ventana.can_be_resized=0;
+
+	zxvision_draw_window(&ventana);
+
+
+	zxvision_scanf(&ventana,texto,max_length,scanf_ancho-2,scanf_x+1,scanf_y+1);
+	//int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,int y)
+
+	//Al salir
+	//menu_refresca_pantalla();
+	menu_cls_refresh_emulated_screen();
+
+	zxvision_destroy_window(&ventana);
 
 }
 
