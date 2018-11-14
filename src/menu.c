@@ -384,6 +384,7 @@ z80_byte cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color;
 
 //Y si dicho recuadro tiene marca de redimensionado posible para zxvision
 int cuadrado_activo_resize=0;
+int ventana_activa_tipo_zxvision=0;
 
 int draw_bateria_contador=0;
 int draw_cpu_use=0;
@@ -2868,6 +2869,7 @@ void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80
 
 	//Por defecto no se ve marca de resize, para compatibilidad con ventanas no zxvision
 	cuadrado_activo_resize=0;
+	ventana_activa_tipo_zxvision=0;
 
 }
 
@@ -2876,6 +2878,7 @@ void menu_desactiva_cuadrado(void)
 {
 	cuadrado_activo=0;
 	cuadrado_activo_resize=0;
+	ventana_activa_tipo_zxvision=0;
 }
 
 //Devuelve 1 si hay dos ~~ seguidas en la posicion del indice
@@ -3487,6 +3490,14 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 	int relleno_izquierda=x1 % 8;
 	int relleno_derecha=7-(x2 % 8);
 
+	//Para poner una marca en la ventana indicando si es de tipo zxvision
+	int centro_marca_zxvison_x=x2-3-6;
+	int centro_marca_zxvison_y=y1+3+2;
+		
+	int longitud_marca_zxvision=3;
+	int mitad_long_marca_zxvision=longitud_marca_zxvision/2;
+	int color_marca_zxvision=ESTILO_GUI_PAPEL_NORMAL;
+
 
 	//printf ("Cuadrado %d,%d - %d,%d\n",x1,y1,x2,y2);
 
@@ -3538,10 +3549,28 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 				scr_putpixel_gui_zoom((x2-1)*menu_gui_zoom,(y2-1)*menu_gui_zoom,color,menu_gui_zoom);
 				scr_putpixel_gui_zoom((x2-2)*menu_gui_zoom,(y2-1)*menu_gui_zoom,color,menu_gui_zoom);
 				scr_putpixel_gui_zoom((x2-3)*menu_gui_zoom,(y2-1)*menu_gui_zoom,color,menu_gui_zoom);
-
-			
-
 			}
+
+			if (ventana_activa_tipo_zxvision) {
+				
+				//printf ("Dibujando marca zxvision\n");
+
+				//Poner una marca de un "asterisco"
+				/*int marca_y;
+				for (marca_y=0;marca_y<longitud_marca_zxvision;marca_y++) {
+					scr_putpixel_gui_zoom((centro_marca_zxvison_x)*menu_gui_zoom,(centro_marca_zxvison_y-mitad_long_marca_zxvision+marca_y)*menu_gui_zoom,color_marca_zxvision,menu_gui_zoom);	
+				}
+
+				int marca_x;
+				for (marca_x=0;marca_x<longitud_marca_zxvision;marca_x++) {
+					scr_putpixel_gui_zoom((centro_marca_zxvison_x-mitad_long_marca_zxvision+marca_x)*menu_gui_zoom,(centro_marca_zxvison_y)*menu_gui_zoom,color_marca_zxvision,menu_gui_zoom);	
+				}*/
+				
+
+				//Poner solo un pixel
+				scr_putpixel_gui_zoom((centro_marca_zxvison_x)*menu_gui_zoom,(centro_marca_zxvison_y)*menu_gui_zoom,color_marca_zxvision,menu_gui_zoom);					
+			}				
+
 
 		}
 
@@ -3587,6 +3616,27 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 				scr_putpixel_gui_zoom((x2-2)*menu_gui_zoom+margenx_izq,(y2-1)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);	
 				scr_putpixel_gui_zoom((x2-3)*menu_gui_zoom+margenx_izq,(y2-1)*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);							
 			}
+
+
+			if (ventana_activa_tipo_zxvision) {
+				
+				//printf ("Dibujando marca zxvision\n");
+
+				//Poner una marca de un "asterisco"
+				/*int marca_y;
+				for (marca_y=0;marca_y<longitud_marca_zxvision;marca_y++) {
+					scr_putpixel_gui_zoom((centro_marca_zxvison_x)*menu_gui_zoom+margenx_izq,(centro_marca_zxvison_y-mitad_long_marca_zxvision+marca_y)*menu_gui_zoom+margeny_arr,color_marca_zxvision,menu_gui_zoom);	
+				}
+
+				int marca_x;
+				for (marca_x=0;marca_x<longitud_marca_zxvision;marca_x++) {
+					scr_putpixel_gui_zoom((centro_marca_zxvison_x-mitad_long_marca_zxvision+marca_x)*menu_gui_zoom+margenx_izq,(centro_marca_zxvison_y)*menu_gui_zoom+margeny_arr,color_marca_zxvision,menu_gui_zoom);	
+				}*/
+				
+
+				//Poner solo un pixel
+				scr_putpixel_gui_zoom((centro_marca_zxvison_x)*menu_gui_zoom+margenx_izq,(centro_marca_zxvison_y)*menu_gui_zoom+margeny_arr,color_marca_zxvision,menu_gui_zoom);					
+			}			
 
 		}
 	}
@@ -3860,6 +3910,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	//Decimos que se puede redimensionar
 	cuadrado_activo_resize=1;
 	w->can_be_resized=1;
+	ventana_activa_tipo_zxvision=1;
 
 
 	w->is_minimized=0;
@@ -3976,9 +4027,9 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 	//cursor siempre al final del texto
 
-	do {
+	do { 
 		//zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y);
-		zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,1,0);
+		zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y);
 
 		if (menu_multitarea==0) menu_refresca_pantalla();
 
@@ -4734,6 +4785,7 @@ void zxvision_draw_window(zxvision_window *w)
 	//Ver si se puede redimensionar
 	//Dado que cada vez que se dibuja ventana, la marca de resize se establece por defecto a desactivada
 	cuadrado_activo_resize=w->can_be_resized;
+	ventana_activa_tipo_zxvision=1;
 
 
 	//Si no hay barras de desplazamiento, alterar scroll horiz o vertical segun corresponda
@@ -31941,12 +31993,15 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 	zxvision_new_window(&ventana,scanf_x,scanf_y,scanf_ancho,scanf_alto,
 							scanf_ancho-1,scanf_alto-2,titulo);
 
+	//No queremos que se pueda redimensionar
 	ventana.can_be_resized=0;
 
 	zxvision_draw_window(&ventana);
 
 
-	zxvision_scanf(&ventana,texto,max_length,scanf_ancho-2,scanf_x+1,scanf_y+1);
+	zxvision_scanf(&ventana,texto,max_length,scanf_ancho-2,1,0);
+
+	//menu_scanf(texto,max_length,scanf_ancho-2,scanf_x+1,scanf_y+1);
 	//int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,int y)
 
 	//Al salir
