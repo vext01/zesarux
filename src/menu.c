@@ -3926,7 +3926,7 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 	}
 
         //menu_escribe_texto(x,y,tinta,papel,"_");
-		putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
+		//putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
 		
 		zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
 
@@ -3977,7 +3977,8 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 	//cursor siempre al final del texto
 
 	do {
-		zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y);
+		//zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y);
+		zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,1,0);
 
 		if (menu_multitarea==0) menu_refresca_pantalla();
 
