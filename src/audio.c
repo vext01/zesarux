@@ -2062,3 +2062,9 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 
 }
 
+
+void audiodac_send_sample_value(z80_byte value)
+{
+	audiodac_last_value_data=value;
+	silence_detection_counter=0;
+}

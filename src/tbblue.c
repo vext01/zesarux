@@ -3165,20 +3165,12 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 /*
 (W) 0x2D (45) => SoundDrive (SpecDrum) port 0xDF mirror
  bits 7-0 = Data to be written at Soundrive
- this port cand be used to send data to the SoundDrive using the Copper co-processor
+ this port can be used to send data to the SoundDrive using the Copper co-processor
 */
 
 		case 45:
 
-/*
-        //DAC Audio
-        if (audiodac_enabled.v && puerto_l==audiodac_types[audiodac_selected_type].port) {
-                audiodac_last_value_data=value;
-                silence_detection_counter=0;
-        }
-*/
-
-		if (audiodac_enabled.v) audiodac_last_value_data=value;
+		if (audiodac_enabled.v) audiodac_send_sample_value(value);
 
 		break;
 

@@ -253,6 +253,8 @@ extern void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_soni
 
 //extern z80_bit audio_driver_accepts_stereo;
 
+extern void audiodac_send_sample_value(z80_byte value);
+
 #define FREQ_TOP_SPEED_CHANGE 12800
 
 

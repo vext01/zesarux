@@ -7620,8 +7620,9 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		if (puerto_l==0xDF && reg_pc<0x2000) sonido=0;
 
 		if (sonido) {
-			audiodac_last_value_data=value;
-			silence_detection_counter=0;
+			audiodac_send_sample_value(value);
+			//audiodac_last_value_data=value;
+			//silence_detection_counter=0;
 		}
 	}
 
