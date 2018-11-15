@@ -4179,15 +4179,10 @@ void zxvision_generic_message_cursor_up(zxvision_window *ventana)
 
 }						
 
-//TODO: gestionar volver_timeout, tooltip_enabled, mostrar_cursor
+//TODO: gestionar tooltip_enabled
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
-	/*zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,ancho_visible,alto_visible,
-							ancho_total,alto_total,"ZXVision Test");
-	zxvision_draw_window(&ventana);
-
-
-	zxvision_draw_window_contents(&ventana);*/
+	
 
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto de maximo 25 caracteres
@@ -6775,8 +6770,12 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 
 
 
-        if (si_tooltip) menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto);
-	else menu_generic_message("Help",texto);
+        if (si_tooltip) {
+			//menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto);
+			zxvision_generic_message_tooltip("Tooltip",0,1,0,NULL,0,"%s",texto);
+		}
+	
+		else menu_generic_message("Help",texto);
 
 
                                         //Restauramos funcion anterior de overlay
