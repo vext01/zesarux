@@ -111,6 +111,9 @@ struct s_zxvision_window {
 	//Posicion del cursor y si esta visible
 	int visible_cursor;
 	int cursor_line;
+
+	//Ventana anterior. Se van poniendo una encima de otra
+	struct s_zxvision_window *previous_window;
 };
 
 typedef struct s_zxvision_window zxvision_window;

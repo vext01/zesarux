@@ -3852,7 +3852,7 @@ int mouse_movido=0;
 int menu_mouse_x=0;
 int menu_mouse_y=0;
 
-zxvision_window *zxvision_current_window;
+zxvision_window *zxvision_current_window=NULL;
 
 //Decir que con una ventana zxvision visible, las pulsaciones de teclas no se envian a maquina emulada
 int zxvision_keys_event_not_send_to_machine=1;
@@ -3897,6 +3897,10 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 		p++;
 	}
 
+	//Ventana anterior
+	w->previous_window=zxvision_current_window;
+
+	//Ventana actual
 	zxvision_current_window=w;
 
 
@@ -3924,7 +3928,9 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 void zxvision_destroy_window(zxvision_window *w)
 {
-	zxvision_current_window=NULL;
+	zxvision_current_window=w->previous_window;
+	printf ("Setting current window to %p\n",zxvision_current_window);
+
 	free(w->memory);
 	ventana_tipo_activa=1;
 	zxvision_keys_event_not_send_to_machine=1;
