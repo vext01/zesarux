@@ -15565,7 +15565,8 @@ void menu_z88_slot_copy_from_eprom(MENU_ITEM_PARAMETERS)
 
 	//printf ("archivos: %s\n",texto_buffer);
 	generic_message_tooltip_return retorno_archivo;
-	menu_generic_message_tooltip("Select file", 0, 0, 1, &retorno_archivo, "%s", texto_buffer);
+	//menu_generic_message_tooltip("Select file", 0, 0, 1, &retorno_archivo, "%s", texto_buffer);
+	zxvision_generic_message_tooltip("Select file", 0, 0, 1, &retorno_archivo, 1,"%s", texto_buffer);
 
 	//Si se sale con ESC
 	if (retorno_archivo.estado_retorno==0) return;
@@ -22046,7 +22047,8 @@ Bytes   Content
 	texto_browser[indice_buffer]=0;
 	char titulo_ventana[32];
 	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
-	menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -22206,7 +22208,8 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	texto_browser[indice_buffer]=0;
 	char titulo_ventana[32];
 	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
-	menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
+	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -31098,7 +31101,9 @@ void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porc
 }
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto de maximo 25 caracteres
-void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
+//Rutina antigua no usada ya
+//sustituida por zxvision_generic_message_tooltip
+void old_menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
 {
 
 	//Buffer de entrada
