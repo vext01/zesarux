@@ -9,7 +9,7 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 
--lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco
+-lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
 
 
 
