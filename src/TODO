@@ -8,8 +8,6 @@
 Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
-zxvision_generic_message_tooltip: tooltip_enabled,  etc
--despues de buscar texto, no deja mover ventana con mouse
 
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco
 

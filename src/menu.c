@@ -3806,8 +3806,12 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 			else putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
 
-        //y luego el texto
-        for (i=0;i<strlen(titulo);i++) {
+        //y luego el texto. titulo mostrar solo lo que cabe de ancho
+		int ancho_mostrar_titulo=ancho;
+		//Y si muestra las franjas, quitar ancho de titulo
+		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_mostrar_titulo-=6;
+
+        for (i=0;i<strlen(titulo) && i<ancho_mostrar_titulo;i++) {
 			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 			else putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
