@@ -203,7 +203,7 @@ z80_bit interrupcion_fifty_generada={0};
 
 int timer_condicion_top_speed(void)
 {
-        if (zxvision_key_not_sent_emulated_mach() ) return 0;
+        if (menu_abierto==1) return 0;
         if (top_speed_timer.v) return 1;
         return 0;
 }
@@ -521,7 +521,7 @@ void timer_check_interrupt(void)
 					joystick_autofire_counter=0;
 
 					//si estamos en menu, no tocar disparador automatico
-					if (!zxvision_key_not_sent_emulated_mach() ) puerto_especial_joystick ^=16;
+					if (!menu_abierto) puerto_especial_joystick ^=16;
 				}
 			}
 
