@@ -2702,7 +2702,10 @@ z80_byte lee_puerto_sam_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		if (puerto_h==255) {
 			valor=(puerto_65534)&31;
 			if (joystick_emulation==JOYSTICK_CURSOR_SAM) {
-				if (menu_abierto!=1) {
+				if (zxvision_key_not_sent_emulated_mach() ) {
+
+				}
+				else {
 					//z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 					if (puerto_especial_joystick&1 ) valor &=(255-16);
 					if (puerto_especial_joystick&2 ) valor &=(255-8);
@@ -2764,7 +2767,7 @@ z80_byte lee_puerto_sam_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 
                 //si estamos en el menu, no devolver tecla
-                if (menu_abierto==1) return valor;
+                if (zxvision_key_not_sent_emulated_mach() ) return valor;
 
 
 		//Y agregar bits superiores teclado
@@ -4127,7 +4130,7 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		 if (joystick_emulation==JOYSTICK_ZEBRA) {
 			z80_byte valor_joystick=255;
 			//si estamos con menu abierto, no retornar nada
-			if (menu_abierto==1) return valor_joystick;
+			if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
 
 			//z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 
@@ -4148,7 +4151,7 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
                  if (joystick_emulation==JOYSTICK_MIKROGEN) {
                         z80_byte valor_joystick=255;
                         //si estamos con menu abierto, no retornar nada
-                        if (menu_abierto==1) return valor_joystick;
+                        if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
 
                         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 
@@ -5341,7 +5344,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
                 //puerto teclado
 
                 //si estamos en el menu, no devolver tecla
-                if (menu_abierto==1 && zxvision_keys_event_not_send_to_machine) return 255;
+                if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
 
 		//Si esta spool file activo, generar siguiente tecla
@@ -5533,7 +5536,7 @@ z80_byte get_kempston_value(void)
                         z80_byte acumulado=0;
 
                         //si estamos con menu abierto, no retornar nada
-                        if (menu_abierto==1) return 0;
+                        if (zxvision_key_not_sent_emulated_mach() ) return 0;
 
                         if (joystick_emulation==JOYSTICK_KEMPSTON) {
                                 //mapeo de ese puerto especial es igual que kempston
@@ -5649,7 +5652,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//65533 o 49149
 	//FFFDh (65533), BFFDh (49149)
 
-	if (rzx_reproduciendo && !menu_abierto) {
+	if (rzx_reproduciendo && !zxvision_key_not_sent_emulated_mach() ) {
 		z80_byte retorno;
 		if (rzx_lee_puerto(&retorno)) return retorno;
 	}
@@ -5809,7 +5812,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
                 if (joystick_emulation==JOYSTICK_FULLER) {
 			z80_byte valor_joystick=255;
 			//si estamos con menu abierto, no retornar nada
-			if (menu_abierto==1) return valor_joystick;
+			if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
 
 
 			if ((puerto_especial_joystick&1)) valor_joystick &=(255-8);

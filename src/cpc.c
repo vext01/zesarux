@@ -413,7 +413,7 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 					}
 
 			                //si estamos en el menu, no devolver tecla
-			                if (menu_abierto==1) return 255;
+			                if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
            //Si esta spool file activo, generar siguiente tecla
                 if (input_file_keyboard_is_playing() ) {

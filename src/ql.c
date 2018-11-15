@@ -350,7 +350,7 @@ unsigned char ql_read_ipc(void)
 int ql_pulsado_tecla(void)
 {
 
-	if (menu_abierto) return 0;
+	if (zxvision_key_not_sent_emulated_mach() ) return 0;
 
 	//Si backspace
 	if (ql_pressed_backspace) return 1;
@@ -762,7 +762,7 @@ kbdr_cmd equ    9       keyboard direct read
 	Por ejemplo, para leer si se pulsa Space, tenemos que leer row 1, y ver luego si bit 6 está a 1 (40H)
 	*/
 
-	if (menu_abierto)  resultado_row=255;
+	if (zxvision_key_not_sent_emulated_mach() )  resultado_row=255;
 
 	debug_printf (VERBOSE_PARANOID,"Reading ipc command 9: read keyrow. row %d returning %02XH",row,resultado_row);
 

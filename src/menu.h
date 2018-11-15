@@ -152,6 +152,7 @@ extern zxvision_window *zxvision_current_window;
 
 extern int zxvision_keys_event_not_send_to_machine;
 extern void zxvision_espera_tecla_timeout_window_splash(void);
+extern int zxvision_key_not_sent_emulated_mach(void);
 
 #define MAX_F_FUNCTIONS 19
 

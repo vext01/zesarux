@@ -898,7 +898,7 @@ z80_byte z88_return_keyboard_port_value(z80_byte puerto_h)
 {
 
                 //si estamos en el menu, no devolver tecla
-                if (menu_abierto==1) return 255;
+                if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
 
                 //Si esta spool file activo, generar siguiente tecla
@@ -3036,7 +3036,12 @@ char z88_get_beeper_sound(void)
 //Necesario para que juegos y programas siguientes no se cuelguen: Lemmings (justo al iniciar), Dstar (no lee ninguna tecla), Pipedream (al escribir muy rapido y hacer ENTER)
 void notificar_tecla_interrupcion_si_z88(void)
 {
-	if (MACHINE_IS_Z88 && menu_abierto==0) {
+	if (MACHINE_IS_Z88) {
+		if (zxvision_key_not_sent_emulated_mach() ) {
+
+		}
+
+		else {
 
 		//TODO
 		//Solo se deberian enviar interrupciones cuando se permite (blink_int & BM_INTKEY) == BM_INTKEY
@@ -3055,6 +3060,7 @@ void notificar_tecla_interrupcion_si_z88(void)
 		//No compruebo si se permite interrupcion y la envio siempre que se pulsa tecla
 		//debug_printf (VERBOSE_DEBUG,"Generate Maskable Interrupt to notify Z88 key press");
 		interrupcion_maskable_generada.v=1;
+		}
 	}
 }
 

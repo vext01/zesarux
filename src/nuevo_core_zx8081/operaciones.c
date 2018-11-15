@@ -2792,7 +2792,7 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		 if (joystick_emulation==JOYSTICK_ZEBRA) {
 			z80_byte valor_joystick=255;
 			//si estamos con menu abierto, no retornar nada
-			if (menu_abierto==1) return valor_joystick;
+			if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
 
 			//z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 
@@ -2813,7 +2813,7 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
                  if (joystick_emulation==JOYSTICK_MIKROGEN) {
                         z80_byte valor_joystick=255;
                         //si estamos con menu abierto, no retornar nada
-                        if (menu_abierto==1) return valor_joystick;
+                        if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
 
                         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 
@@ -3538,7 +3538,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
                 //puerto teclado
 
                 //si estamos en el menu, no devolver tecla
-                if (menu_abierto==1) return 255;
+                if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
 
 		//Si esta spool file activo, generar siguiente tecla
@@ -3699,7 +3699,7 @@ z80_byte get_kempston_value(void)
                         z80_byte acumulado=0;
                         
                         //si estamos con menu abierto, no retornar nada
-                        if (menu_abierto==1) return 0;
+                        if (zxvision_key_not_sent_emulated_mach() ) return 0;
                         
                         if (joystick_emulation==JOYSTICK_KEMPSTON) {
                                 //mapeo de ese puerto especial es igual que kempston
@@ -3815,7 +3815,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
                 if (joystick_emulation==JOYSTICK_FULLER) {
 			z80_byte valor_joystick=255;
 			//si estamos con menu abierto, no retornar nada
-			if (menu_abierto==1) return valor_joystick;
+			if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
 
 
 			if ((puerto_especial_joystick&1)) valor_joystick &=(255-8);

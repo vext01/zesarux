@@ -5666,6 +5666,15 @@ z80_byte zxvision_common_getkey_refresh(void)
 	return tecla;
 }
 
+//Retorna 1 si la tecla no se tiene que enviar a la maquina emulada
+//esto es , cuando el menu esta abierto y la ventana tiene el foco
+//En cambio retorna 0 (la tecla se va a enviar a la maquina emulada), cuando el menu esta cerrado o la ventana no tiene el foco
+int zxvision_key_not_sent_emulated_mach(void)
+{
+	if (menu_abierto==1 && zxvision_keys_event_not_send_to_machine) return 1;
+	else return 0;
+}
+
 //Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {

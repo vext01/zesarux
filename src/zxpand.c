@@ -985,7 +985,7 @@ z80_byte zxpand_read_joystick(void)
         z80_byte valor_joystick=0xF9;
 
         //si estamos con menu abierto, no retornar nada
-        if (menu_abierto==1) return valor_joystick;
+        if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
 
 
         //Si no es joystick de tipo zxpand, volver
