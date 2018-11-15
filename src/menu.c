@@ -4453,7 +4453,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		}*/
 
 		if (volver_timeout) {
-			menu_espera_tecla_timeout_window_splash();
+			zxvision_espera_tecla_timeout_window_splash();
 		}
 		else {
 			//printf ("Antes espera tecla\n");
@@ -6099,6 +6099,60 @@ void menu_espera_tecla_timeout_window_splash(void)
 	} while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && menu_window_splash_counter<WINDOW_SPLASH_SECONDS);
 
 }
+
+void zxvision_espera_tecla_timeout_window_splash(void)
+{
+	//printf ("espera splash\n");
+
+        //Esperar a pulsar una tecla o timeout de window splash
+        //z80_byte acumulado;
+
+        int contador_antes=menu_window_splash_counter_ms;
+        int trozos=4;
+        //WINDOW_SPLASH_SECONDS. 
+        //5 pasos. total de WINDOW_SPLASH_SECONDS
+        int tiempototal=1000*WINDOW_SPLASH_SECONDS;
+        //Quitamos 1 segundo
+        tiempototal-=1000;
+
+        //Intervalo de cambio
+        int intervalo=tiempototal/5; //5 pasos
+        //printf ("intervalo: %d\n",intervalo);
+
+
+		z80_byte tecla;
+
+        do {
+                menu_cpu_core_loop();
+
+
+                //acumulado=menu_da_todas_teclas();
+				tecla=zxvision_read_keyboard();
+
+				//con boton izquierdo no salimos
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}				
+
+                //Cada 400 ms
+                if (menu_window_splash_counter_ms-contador_antes>intervalo) {
+                	trozos--;
+                	contador_antes=menu_window_splash_counter_ms;
+                	//printf ("dibujar franjas trozos: %d\n",trozos);
+                	if (trozos>=0) {		
+                		menu_dibuja_ventana_franja_arcoiris_trozo_current(trozos);
+                	}
+                }
+
+
+		//printf ("menu_espera_tecla_timeout_tooltip acumulado: %d\n",acumulado);
+		//printf ("contador splash: %d\n",menu_window_splash_counter);
+		
+
+	} while (tecla==0 && menu_window_splash_counter<WINDOW_SPLASH_SECONDS);
+
+}
+
 
 void menu_espera_tecla(void)
 {
@@ -31930,7 +31984,8 @@ void menu_generic_message(char *titulo, const char * texto)
 void menu_generic_message_splash(char *titulo, const char * texto)
 {
 
-        menu_generic_message_tooltip(titulo, 1, 0, 0, NULL, "%s", texto);
+        //menu_generic_message_tooltip(titulo, 1, 0, 0, NULL, "%s", texto);
+		zxvision_generic_message_tooltip(titulo, 1, 0, 0, NULL, 0, "%s", texto);
 }
 
 
