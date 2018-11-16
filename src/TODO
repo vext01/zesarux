@@ -7,6 +7,10 @@
 -hacer que mouse left no envie tecla enter. sera mejor para todo...
 Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 
+-Sin multitarea, primera pulsación de teclado no hace scroll. Seguramente debido a que hace un espera tecla al principio
+
+-Movimiento ventana y redimensionado con teclas: QAOP , WSKL ?
+
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar

@@ -4510,8 +4510,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
         switch (tecla) {
 
-						//TODO: en teclas direccion, considerar el caso cuando cursor esta visible, y entonces solo hace scroll cuando
-						//cursor esta abajo del todo
+						//Nota: No llamamos a funcion generica zxvision_handle_cursors_pgupdn en caso de arriba,abajo, pg, pgdn,
+						//dado que se comporta distinto cuando cursor esta visible
 
                         //abajo
                         case 10:
@@ -4535,21 +4535,24 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 						primera_linea_a_speech=1;
                         break;
 
+
                         //izquierda
                         case 8:
-						zxvision_send_scroll_left(&ventana);
+						/*zxvision_send_scroll_left(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
-						menu_speech_tecla_pulsada=1;
+						menu_speech_tecla_pulsada=1;*/
+						zxvision_handle_cursors_pgupdn(&ventana,tecla);
 						ultima_linea_a_speech=1;
                         break;
 
                         //derecha
                         case 9:
-						zxvision_send_scroll_right(&ventana);
+						/*zxvision_send_scroll_right(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
-						menu_speech_tecla_pulsada=1;
+						menu_speech_tecla_pulsada=1;*/
+						zxvision_handle_cursors_pgupdn(&ventana,tecla);
 						primera_linea_a_speech=1;
                         break;						
 
@@ -4643,6 +4646,19 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 
 					break;
+
+					//Movimiento y redimensionado ventana con teclado
+					                        //derecha
+                    case 'Q':
+					case 'A':
+					case 'O':
+					case 'P':
+                    case 'W':
+					case 'S':
+					case 'K':
+					case 'L':
+						zxvision_handle_cursors_pgupdn(&ventana,tecla);
+                    break;		
 					
 				}
 
@@ -5613,6 +5629,41 @@ void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
 							//Decir que no se ha pulsado tecla para que se relea
 							menu_speech_tecla_pulsada=0;
                     	break;
+
+						//Mover ventana 
+						case 'Q':
+							zxvision_set_y_position(ventana,ventana->y-1);
+						break;
+
+						case 'A':
+							zxvision_set_y_position(ventana,ventana->y+1);
+						break;
+
+						case 'O':
+							zxvision_set_x_position(ventana,ventana->x-1);
+						break;						
+
+						case 'P':
+							zxvision_set_x_position(ventana,ventana->x+1);
+						break;						
+
+						//Redimensionar ventana
+						//Mover ventana 
+						case 'W':
+							if (ventana->visible_height-1>1) zxvision_set_visible_height(ventana,ventana->visible_height-1);
+						break;		
+
+						case 'S':
+							zxvision_set_visible_height(ventana,ventana->visible_height+1);
+						break;	
+
+						case 'K':
+							if (ventana->visible_width-1>5) zxvision_set_visible_width(ventana,ventana->visible_width-1);
+						break;									
+
+						case 'L':
+							zxvision_set_visible_width(ventana,ventana->visible_width+1);
+						break;											
 					
 						default:
 							tecla_valida=0;
@@ -32411,6 +32462,16 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or \"\")\n\n"
 			"Symbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "
 			"ctrl(symbol shift)+r. You should use ctrl/alt (no need to Spectrum extended mode) to write any of the following: ~|\\{}[], located on letters asdfgyu\n\n"
+			"\n"
+			"On ZX-Vision windows:\n"
+			"- Use mouse to move windows dragging from the title bar\n"
+			"- Drag mouse from the bottom-right part of the window to resize it\n"
+			"- Doble click on the title bar to minimize\n"
+			"- Click out of the window to put the focus on the emulated machine and send there keyboard presses\n"
+			"- Can also be moved with the keyboard: Shift+QAOP\n"
+			"- Can also be resized with the keyboard: Shift+WSKL\n"
+
+			"\n"
 
 			"Inside a machine, the keys are mapped this way:\n"
 			"ESC: If text to speech is not enabled, sends Shift+Space (break) on Spectrum. If enabled, stops playing text to speech\n"
