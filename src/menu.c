@@ -12341,7 +12341,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		zxvision_window ventana;
 
 	zxvision_new_window(&ventana,SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,
-						64 /*SPRITES_ANCHO-1*/, 26 /*SPRITES_ALTO_VENTANA-2*/,"Sprites");
+						64 /*SPRITES_ANCHO-1*/, 64+2 /*SPRITES_ALTO_VENTANA-2*/,"Sprites");
 
 	zxvision_draw_window(&ventana);
 
@@ -12633,7 +12633,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         case 'a':
 
-                                        	if (view_sprites_alto_sprite<192)  view_sprites_alto_sprite++;
+                                        	if (view_sprites_alto_sprite<512)  view_sprites_alto_sprite++;
                                         break;
 
 					case 'c':
