@@ -11982,6 +11982,8 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 
 }
 
+zxvision_window *menu_debug_draw_sprites_window;
+
 int view_sprites_bytes_por_linea=1;
 int view_sprites_bytes_por_ventana=1;
 int view_sprites_increment_cursor_vertical=1;
@@ -11998,16 +12000,17 @@ void menu_debug_draw_sprites(void)
 	int sy=SPRITES_Y+3;
 	
 	//Si es mas ancho, que ventana visible, mover coordenada x 1 posicion atrás
-	if (view_sprites_ancho_sprite/menu_char_width>=SPRITES_ANCHO-2) sx--;
+	//if (view_sprites_ancho_sprite/menu_char_width>=SPRITES_ANCHO-2) sx--;
 
 	//Si es mas alto, mover coordenada sprite a 1, asi podemos mostrar sprites de hasta 192 de alto
-	if (view_sprites_alto_sprite>168) sy=1;
+	//if (view_sprites_alto_sprite>168) sy=1;
 
 	//Si se pasa aun mas
-	if (view_sprites_alto_sprite>184) sy=0;
+	//if (view_sprites_alto_sprite>184) sy=0;
 
         int xorigen=sx*menu_char_width;
-        int yorigen=sy*8;
+        
+		int yorigen=16; //sy*8;
 
 
         int x,y,bit;
@@ -12040,7 +12043,7 @@ void menu_debug_draw_sprites(void)
 
 			puntero_inicio_linea=puntero;
 			finalx=xorigen;
-			for (x=0;x<view_sprites_ancho_sprite && x<maximo_visible_x;) {
+			for (x=0;x<view_sprites_ancho_sprite /*&& x<maximo_visible_x*/;) {
 				//byte_leido=peek_byte_z80_moto(puntero);
 				puntero=adjust_address_memory_size(puntero);
 				byte_leido=menu_debug_get_mapped_byte(puntero);
@@ -12114,7 +12117,8 @@ void menu_debug_draw_sprites(void)
 
 				}
 
-	            menu_scr_putpixel(finalx,yorigen+y,color);
+	            //menu_scr_putpixel(finalx,yorigen+y,color);
+				zxvision_putpixel(menu_debug_draw_sprites_window,finalx,yorigen+y,color);
 			   }
 			}
 
@@ -12163,7 +12167,7 @@ menu_z80_moto_int menu_debug_view_sprites_change_pointer(menu_z80_moto_int p)
 
 
 
-void menu_debug_view_sprites_ventana(void)
+void old_menu_debug_view_sprites_ventana(void)
 {
 
 	menu_dibuja_ventana(SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,"Sprites");
@@ -12331,7 +12335,15 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
         menu_espera_no_tecla();
-				menu_debug_view_sprites_ventana();
+				//menu_debug_view_sprites_ventana();
+
+//menu_dibuja_ventana(SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,"Sprites");
+		zxvision_window ventana;
+
+	zxvision_new_window(&ventana,SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,
+						64 /*SPRITES_ANCHO-1*/, 26 /*SPRITES_ALTO_VENTANA-2*/,"Sprites");
+
+	zxvision_draw_window(&ventana);
 
         z80_byte tecla=0;
 
@@ -12345,17 +12357,14 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
         //Se establece a la de funcion de ver sprites
         set_menu_overlay_function(menu_debug_draw_sprites);
 
+		menu_debug_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+
 
 
         do {
 
 					int linea=0;
 					char buffer_texto[64];
-
-
-					
-
-
 
 					//Antes de escribir, normalizar zona memoria
 					menu_debug_set_memory_zone_attr();
@@ -12393,7 +12402,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 			else sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 
 
-		menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
+		//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
+		zxvision_print_string_defaults(&ventana,1,linea++,buffer_texto);
 
 
 
@@ -12444,12 +12454,15 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 			//Inverse Save Pseudohires: Yes
 		
 
-		menu_escribe_linea_opcion(linea++,-1,1,buffer_primera_linea);
+		/*menu_escribe_linea_opcion(linea++,-1,1,buffer_primera_linea);
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_segunda_linea);
 
-		menu_escribe_linea_opcion(linea++,-1,1,buffer_tercera_linea);
+		menu_escribe_linea_opcion(linea++,-1,1,buffer_tercera_linea);*/
 
 
+		zxvision_print_string_defaults(&ventana,1,linea++,buffer_primera_linea);
+		zxvision_print_string_defaults(&ventana,1,linea++,buffer_segunda_linea);
+		zxvision_print_string_defaults(&ventana,1,linea++,buffer_tercera_linea);
 
 		//Mostrar zona memoria
 
@@ -12471,12 +12484,15 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 			//truncar texto a 32 por si acaso
 			memory_zone_text[32]=0;
-			menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
+			//menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
+			zxvision_print_string_defaults(&ventana,1,linea++,memory_zone_text);
 
 			sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
-			menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-	
+			//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+			zxvision_print_string_defaults(&ventana,1,linea++,textoshow);
 
+	
+			zxvision_draw_window_contents(&ventana);
 
 
 //Restaurar comportamiento atajos
@@ -12526,7 +12542,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         case 'm':
                                                 view_sprites_direccion=menu_debug_view_sprites_change_pointer(view_sprites_direccion);
-																								menu_debug_view_sprites_ventana();
+												//menu_debug_view_sprites_ventana();
                                         break;
 
 					case 'b':
@@ -12581,7 +12597,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 								cls_menu_overlay();
 
-								menu_debug_view_sprites_ventana();
+								//menu_debug_view_sprites_ventana();
 								set_menu_overlay_function(menu_debug_draw_sprites);
 							}
 
@@ -12636,6 +12652,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
        set_menu_overlay_function(normal_overlay_texto_menu);
 
         cls_menu_overlay();
+
+		zxvision_destroy_window(&ventana);		
 
 
 
