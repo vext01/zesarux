@@ -12498,7 +12498,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 //Restaurar comportamiento atajos
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
-		if (menu_multitarea==0) menu_refresca_pantalla();
+		/*if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
 
@@ -12506,7 +12506,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 tecla=menu_get_pressed_key();
 																//printf ("tecla: %d\n",tecla);
 
-                                menu_espera_no_tecla_con_repeticion();
+                                menu_espera_no_tecla_con_repeticion();*/
+		tecla=zxvision_common_getkey_refresh();		
 
                                 switch (tecla) {
 
