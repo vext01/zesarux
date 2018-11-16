@@ -12543,6 +12543,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         case 'm':
                                                 view_sprites_direccion=menu_debug_view_sprites_change_pointer(view_sprites_direccion);
 												//menu_debug_view_sprites_ventana();
+												zxvision_draw_window(&ventana);
                                         break;
 
 					case 'b':
@@ -12599,6 +12600,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 								//menu_debug_view_sprites_ventana();
 								set_menu_overlay_function(menu_debug_draw_sprites);
+								zxvision_draw_window(&ventana);
 							}
 
 						}
