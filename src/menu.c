@@ -12333,8 +12333,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
         //disable_interlace();
 
-
-        menu_espera_no_tecla();
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
 				//menu_debug_view_sprites_ventana();
 
 //menu_dibuja_ventana(SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,"Sprites");
@@ -12469,6 +12469,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 			char textoshow[33];
 
 			char memory_zone_text[64]; //espacio temporal mas grande por si acaso
+
 			if (menu_debug_show_memory_zones==0) {
 				sprintf (memory_zone_text,"Z: Mem zone (mapped memory)");
 			}
@@ -12485,6 +12486,11 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 			//truncar texto a 32 por si acaso
 			memory_zone_text[32]=0;
 			//menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
+
+			//primero metemos esa linea con espacios para borrar texto residual
+														//    1234567890123456789012345678901234567890
+			zxvision_print_string_defaults(&ventana,1,linea,"                                        ");
+
 			zxvision_print_string_defaults(&ventana,1,linea++,memory_zone_text);
 
 			sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
@@ -12498,16 +12504,21 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 //Restaurar comportamiento atajos
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
-		/*if (menu_multitarea==0) menu_refresca_pantalla();
+		if (menu_multitarea==0) menu_refresca_pantalla();
 
 		menu_espera_tecla();
 
 
-                                tecla=menu_get_pressed_key();
+                                //tecla=menu_get_pressed_key();
+								tecla=zxvision_read_keyboard();
 																//printf ("tecla: %d\n",tecla);
 
-                                menu_espera_no_tecla_con_repeticion();*/
-		tecla=zxvision_common_getkey_refresh();		
+                                menu_espera_no_tecla_con_repeticion();
+		
+		
+		//tecla=zxvision_common_getkey_refresh();		
+
+
 
                                 switch (tecla) {
 
