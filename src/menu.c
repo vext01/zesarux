@@ -3745,6 +3745,19 @@ void menu_dibuja_ventana_franja_arcoiris_trozo_current(int trozos)
 	menu_dibuja_ventana_franja_arcoiris_trozo(ventana_x,ventana_y,ventana_ancho,trozos);
 }
 
+int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
+{
+	        //y luego el texto. titulo mostrar solo lo que cabe de ancho
+		int ancho_disponible_titulo=ancho;
+		//Y si muestra las franjas, quitar ancho de titulo
+		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=6;
+
+		//el ancho del texto mostrado del titulo tiene que ser el que quepa 
+		int ancho_mostrar_titulo=strlen(titulo);
+		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
+
+	return ancho_mostrar_titulo;
+}
 
 
 //dibuja ventana de menu, con:
@@ -3806,12 +3819,20 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 			else putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
 
-        //y luego el texto. titulo mostrar solo lo que cabe de ancho
-		int ancho_mostrar_titulo=ancho;
-		//Y si muestra las franjas, quitar ancho de titulo
-		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_mostrar_titulo-=6;
+		int ancho_mostrar_titulo=menu_dibuja_ventana_ret_ancho_titulo(ancho,titulo);
 
-        for (i=0;i<strlen(titulo) && i<ancho_mostrar_titulo;i++) {
+        //y luego el texto. titulo mostrar solo lo que cabe de ancho
+		/*int ancho_disponible_titulo=ancho;
+		//Y si muestra las franjas, quitar ancho de titulo
+		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=6;
+
+		
+
+		//el ancho del texto mostrado del titulo tiene que ser el que quepa 
+		int ancho_mostrar_titulo=strlen(titulo);
+		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;*/
+
+        for (i=0;i<ancho_mostrar_titulo;i++) {
 			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 			else putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
@@ -5357,7 +5378,17 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						}
 						else {
 							printf ("Minimize window\n");
+
+							//Cambiar alto
 							zxvision_set_visible_height(w,2);
+
+							//Cambiar ancho
+							int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
+							//Espacio para las barras, si las hay
+							 if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
+
+							zxvision_set_visible_width(w,ancho_ventana_final);
+
 							w->is_minimized=1;
 						}
 					}
