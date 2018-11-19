@@ -1463,13 +1463,10 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
         do {
 
-
-                //esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-									if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+			//esto hara ejecutar esto 2 veces por segundo
+			if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 											valor_contador_segundo_anterior=contador_segundo;
-                        //contador_segundo_anterior=contador_segundo;
-												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 			int linea=0;
                         int opcode;
@@ -1999,11 +1996,9 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
 
                 //esto hara ejecutar esto 2 veces por segundo
-            //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-                        if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-                                                                                        valor_contador_segundo_anterior=contador_segundo;
-                        //contador_segundo_anterior=contador_segundo;
-                                                                                                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+                if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                     valor_contador_segundo_anterior=contador_segundo;
+                     //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
                                 int linea=0;
                                 //int opcode;
@@ -2276,8 +2271,8 @@ void menu_ay_registers_overlay(void)
 
 	//Hacer decaer volumenes
                         //Decrementar volumenes que caen, pero hacerlo no siempre, sino 2 veces por segundo
-                    //esto hara ejecutar esto 2 veces por segundo
-                        if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+            //esto hara ejecutar esto 2 veces por segundo
+            if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 
                                  menu_ayregisters_valor_contador_segundo_anterior=contador_segundo;
                                 //printf ("Refrescando. contador_segundo=%d. chip: %d\n",contador_segundo,chip);
@@ -2288,9 +2283,6 @@ void menu_ay_registers_overlay(void)
 					ayregisters_previo_valor_volume_B[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
 					ayregisters_previo_valor_volume_C[chip]=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
 
-                                //if (ayregisters_previo_valor_volume_A[chip]>vol_A[chip]) ayregisters_previo_valor_volume_A[chip]--;
-                                //if (ayregisters_previo_valor_volume_B[chip]>vol_B[chip]) ayregisters_previo_valor_volume_B[chip]--;
-                                //if (ayregisters_previo_valor_volume_C[chip]>vol_C[chip]) ayregisters_previo_valor_volume_C[chip]--;
 
 				}
 
@@ -2420,23 +2412,13 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	z80_byte tecla;
 
 
-		//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
-		//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
-		//esto solo es necesario para ventanas que usan overlay
-	    /*if (!menu_multitarea) {
-			printf ("refresca pantalla inicial\n");
-			menu_refresca_pantalla();
-		}	*/			
-
-
     	do {
 
 
         	//esto hara ejecutar esto 2 veces por segundo
 			if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 											valor_contador_segundo_anterior=contador_segundo;
-                        //contador_segundo_anterior=contador_segundo;
-												printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 				int linea=0;
 				//int opcode;
