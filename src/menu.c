@@ -5753,7 +5753,7 @@ z80_byte zxvision_common_getkey_refresh_noesperatecla(void)
 {
 
 	z80_byte tecla;
-	
+
                 menu_cpu_core_loop();
 
             	//si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
@@ -12432,8 +12432,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 	
 
 
-			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
-			else sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+			else sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 
 
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
@@ -12458,6 +12458,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		char nombre_paleta[33];
 		menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
+		//Borrar primero dicha linea con 30 espacios
+		strcpy(buffer_tercera_linea,"                              ");
 		sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
 
 
