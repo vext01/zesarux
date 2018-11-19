@@ -9,6 +9,8 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 -Sin multitarea, primera pulsación de teclado no hace scroll. Seguramente debido a que hace un espera tecla al principio
 -sin multitarea, menu sprites no redibuja ventana al arrastrarlas. mirar misma solucion que video info, cpu statistics o core statistics
+-view sprites, mejorar borrado de linea con espacios. O quiza, funcion zxvision que llene de espacios una linea,
+o incluso, que llene y luego escriba texto
 
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 
