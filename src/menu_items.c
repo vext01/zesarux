@@ -2351,13 +2351,11 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 				valor_contador_segundo_anterior=contador_segundo;
 
 	z80_byte tecla;
-   do {
 
-
-	   tecla=zxvision_common_getkey_refresh();		
-	   zxvision_handle_cursors_pgupdn(&ventana,tecla);
-
-   } while (tecla!=2);				
+	do {
+		tecla=zxvision_common_getkey_refresh();		
+		zxvision_handle_cursors_pgupdn(&ventana,tecla);
+	} while (tecla!=2);				
 
  
 	menu_espera_no_tecla(); //Si no, se va al menu anterior.
@@ -2805,12 +2803,8 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 	
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
-
    		tecla=zxvision_common_getkey_refresh();
-	
 		zxvision_handle_cursors_pgupdn(&ventana,tecla);
-
-
 	} while (tecla!=2); 
 
 	//restauramos modo normal de texto de menu
