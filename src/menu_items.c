@@ -1573,17 +1573,18 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 						zxvision_draw_window_contents(&ventana);
 
-                        if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
                 menu_cpu_core_loop();
 
-                //si no hay multitarea, esperar tecla y salir
-                if (menu_multitarea==0) {
-                        menu_espera_tecla();
 
-                }
+              //si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
+                if (menu_multitarea==0) {
+						menu_refresca_pantalla();
+                        menu_espera_tecla();
+                        //acumulado=0;
+                }				
 
 				tecla=zxvision_read_keyboard();
 
@@ -1985,8 +1986,9 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 {
 
-
     menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
+
 
 	zxvision_window ventana;
 
@@ -2103,18 +2105,17 @@ Calculando ese tiempo: 12% cpu
 
 								zxvision_draw_window_contents(&ventana);
 
-                        if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
                 menu_cpu_core_loop();
 
-                //si no hay multitarea, esperar tecla y salir
+              //si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
                 if (menu_multitarea==0) {
+						menu_refresca_pantalla();
                         menu_espera_tecla();
-
                         //acumulado=0;
-                }
+                }				
 
 				tecla=zxvision_read_keyboard();
 
@@ -2455,21 +2456,20 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 		//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
 		//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
 		//esto solo es necesario para ventanas que usan overlay
-	    if (!menu_multitarea) {
+	    /*if (!menu_multitarea) {
 			printf ("refresca pantalla inicial\n");
 			menu_refresca_pantalla();
-		}				
+		}	*/			
 
 
     	do {
 
 
         	//esto hara ejecutar esto 2 veces por segundo
-            //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
 			if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 											valor_contador_segundo_anterior=contador_segundo;
                         //contador_segundo_anterior=contador_segundo;
-												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+												printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 				int linea=0;
 				//int opcode;
@@ -2600,7 +2600,6 @@ z80_byte clip_window_ula[4];
 
 				zxvision_draw_window_contents(&ventana);
 
-                        //if (menu_multitarea==0) menu_refresca_pantalla();
 
                 }
 
@@ -2609,10 +2608,10 @@ z80_byte clip_window_ula[4];
 
                 menu_cpu_core_loop();
 
-                //si no hay multitarea, esperar tecla y salir
+                //si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
                 if (menu_multitarea==0) {
+						menu_refresca_pantalla();
                         menu_espera_tecla();
-
                         //acumulado=0;
                 }
 
