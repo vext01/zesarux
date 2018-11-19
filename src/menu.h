@@ -147,6 +147,7 @@ extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 extern z80_byte zxvision_read_keyboard(void);
 void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla);
 extern z80_byte zxvision_common_getkey_refresh(void);
+extern z80_byte zxvision_common_getkey_refresh_noesperatecla(void);
 
 extern zxvision_window *zxvision_current_window;
 

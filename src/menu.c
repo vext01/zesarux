@@ -5748,6 +5748,40 @@ z80_byte zxvision_common_getkey_refresh(void)
 	return tecla;
 }
 
+z80_byte zxvision_common_getkey_refresh_noesperatecla(void)
+//Igual que zxvision_common_getkey_refresh pero sin esperar tecla cuando multitarea activa
+{
+
+	z80_byte tecla;
+	
+                menu_cpu_core_loop();
+
+            	//si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
+                if (menu_multitarea==0) {
+						menu_refresca_pantalla();
+                        menu_espera_tecla();
+                        //acumulado=0;
+                }				
+
+				tecla=zxvision_read_keyboard();
+
+				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
+				//refrescar contenido de ventana, dado que aqui no llamamos a menu_espera_tecla
+				//(a no ser que este multitarea off)
+
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}					
+
+
+		if (tecla) {
+			//printf ("Esperamos no tecla\n");
+			menu_espera_no_tecla_con_repeticion();
+		}	
+
+	return tecla;
+}
+
 //Retorna 1 si la tecla no se tiene que enviar a la maquina emulada
 //esto es , cuando el menu esta abierto y la ventana tiene el foco
 //En cambio retorna 0 (la tecla se va a enviar a la maquina emulada), cuando el menu esta cerrado o la ventana no tiene el foco

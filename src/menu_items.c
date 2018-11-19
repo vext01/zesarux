@@ -1576,34 +1576,11 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
                 }
 
-                menu_cpu_core_loop();
-
-
-              //si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
-                if (menu_multitarea==0) {
-						menu_refresca_pantalla();
-                        menu_espera_tecla();
-                        //acumulado=0;
-                }				
-
-				tecla=zxvision_read_keyboard();
-
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
-				//refrescar contenido de ventana
-
-				if (tecla==13 && mouse_left) {	
-					tecla=0;
-				}					
-
-
-				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
-				//refrescar contenido de ventana
-
-
-		if (tecla) {
-			//printf ("Esperamos no tecla\n");
-			menu_espera_no_tecla_con_repeticion();
-		}	
+				//refrescar contenido de ventana, dado que aqui no llamamos a menu_espera_tecla
+				//(a no ser que este multitarea off)
+				tecla=zxvision_common_getkey_refresh_noesperatecla();
+               
 
 				zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
@@ -2115,33 +2092,11 @@ Calculando ese tiempo: 12% cpu
 
                 }
 
-                menu_cpu_core_loop();
-
-              //si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
-                if (menu_multitarea==0) {
-						menu_refresca_pantalla();
-                        menu_espera_tecla();
-                        //acumulado=0;
-                }				
-
-				tecla=zxvision_read_keyboard();
-
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
-				//refrescar contenido de ventana
+				//refrescar contenido de ventana, dado que aqui no llamamos a menu_espera_tecla
+				//(a no ser que este multitarea off)
+				tecla=zxvision_common_getkey_refresh_noesperatecla();				
 
-				if (tecla==13 && mouse_left) {	
-					tecla=0;
-				}					
-
-
-				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
-				//refrescar contenido de ventana
-
-
-		if (tecla) {
-			//printf ("Esperamos no tecla\n");
-			menu_espera_no_tecla_con_repeticion();
-		}	
 
 				zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
@@ -2617,32 +2572,11 @@ z80_byte clip_window_ula[4];
 
                 }
 
-
-
-
-                menu_cpu_core_loop();
-
-                //si no hay multitarea, refrescar pantalla para mostrar contenido ventana rellenada antes, esperar tecla, 
-                if (menu_multitarea==0) {
-						menu_refresca_pantalla();
-                        menu_espera_tecla();
-                        //acumulado=0;
-                }
-
-				tecla=zxvision_read_keyboard();
-
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
-				//refrescar contenido de ventana
+				//refrescar contenido de ventana, dado que aqui no llamamos a menu_espera_tecla
+				//(a no ser que este multitarea off)
+				tecla=zxvision_common_getkey_refresh_noesperatecla();
 
-				if (tecla==13 && mouse_left) {	
-					tecla=0;
-				}				
-
-
-		if (tecla) {
-			//printf ("Esperamos no tecla\n");
-			menu_espera_no_tecla_con_repeticion();
-		}	
 
 				zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
