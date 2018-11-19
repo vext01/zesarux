@@ -12458,8 +12458,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		char nombre_paleta[33];
 		menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
-		//Borrar primero dicha linea con 30 espacios
-		strcpy(buffer_tercera_linea,"                              ");
+
 		sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
 
 
@@ -12498,6 +12497,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 		zxvision_print_string_defaults(&ventana,1,linea++,buffer_primera_linea);
 		zxvision_print_string_defaults(&ventana,1,linea++,buffer_segunda_linea);
+
+		//Borrar primero dicha linea con 30 espacios
+		zxvision_print_string_defaults(&ventana,1,linea,"                              ");
 		zxvision_print_string_defaults(&ventana,1,linea++,buffer_tercera_linea);
 
 		//Mostrar zona memoria
