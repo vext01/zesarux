@@ -1588,6 +1588,13 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 				tecla=zxvision_read_keyboard();
 
+				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
+				//refrescar contenido de ventana
+
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}					
+
 
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
 				//refrescar contenido de ventana
@@ -2119,6 +2126,13 @@ Calculando ese tiempo: 12% cpu
 
 				tecla=zxvision_read_keyboard();
 
+				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
+				//refrescar contenido de ventana
+
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}					
+
 
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
 				//refrescar contenido de ventana
@@ -2619,6 +2633,10 @@ z80_byte clip_window_ula[4];
 
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
 				//refrescar contenido de ventana
+
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}				
 
 
 		if (tecla) {
