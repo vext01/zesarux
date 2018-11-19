@@ -1440,7 +1440,6 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
-        //menu_dibuja_ventana(0,1,32,18,"CPU Compact Statistics");
 
 		zxvision_window ventana;
 
@@ -1460,7 +1459,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 				valor_contador_segundo_anterior=contador_segundo;
 
-		z80_byte tecla=0;
+		z80_byte tecla;
 
         do {
 
@@ -1579,25 +1578,19 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
                 }
 
                 menu_cpu_core_loop();
-                //acumulado=menu_da_todas_teclas();
 
                 //si no hay multitarea, esperar tecla y salir
                 if (menu_multitarea==0) {
                         menu_espera_tecla();
 
-                        //acumulado=0;
                 }
 
-				//tecla=menu_get_pressed_key();
 				tecla=zxvision_read_keyboard();
 
 
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
 				//refrescar contenido de ventana
 
-				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
-				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
-				//if (tecla==13) tecla=0;
 
 		if (tecla) {
 			//printf ("Esperamos no tecla\n");
@@ -1606,8 +1599,6 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 				zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
-
-        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
 		} while (tecla!=2);
 
@@ -1994,10 +1985,8 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 {
 
-    //char textostats[32];
 
     menu_espera_no_tecla();
-    //menu_dibuja_ventana(0,7,32,9,"Core Statistics");
 
 	zxvision_window ventana;
 
@@ -2006,7 +1995,6 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
 	zxvision_draw_window(&ventana);
 
-    //z80_byte acumulado;
 
         char texto_buffer[33];
 
@@ -2019,7 +2007,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
         valor_contador_segundo_anterior=contador_segundo;
 
 
-		z80_byte tecla=0;
+		z80_byte tecla;
 
         do {
 
@@ -2120,7 +2108,6 @@ Calculando ese tiempo: 12% cpu
                 }
 
                 menu_cpu_core_loop();
-                //acumulado=menu_da_todas_teclas();
 
                 //si no hay multitarea, esperar tecla y salir
                 if (menu_multitarea==0) {
@@ -2129,16 +2116,12 @@ Calculando ese tiempo: 12% cpu
                         //acumulado=0;
                 }
 
-				//tecla=menu_get_pressed_key();
 				tecla=zxvision_read_keyboard();
 
 
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
 				//refrescar contenido de ventana
 
-				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
-				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
-				//if (tecla==13) tecla=0;
 
 		if (tecla) {
 			//printf ("Esperamos no tecla\n");
@@ -2147,7 +2130,6 @@ Calculando ese tiempo: 12% cpu
 
 				zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
-        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
 		} while (tecla!=2);
 
@@ -2355,7 +2337,8 @@ void menu_ay_registers_overlay(void)
 
 void menu_ay_registers(MENU_ITEM_PARAMETERS)
 {
-        menu_espera_no_tecla();
+    menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
 
 		if (!menu_multitarea) {
 			menu_warn_message("This menu item needs multitask enabled");
@@ -2369,19 +2352,16 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		int alto_ventana;
 
         if (total_chips==1) {
-			//menu_dibuja_ventana(1,5,30,14,"AY Registers");
 			yventana=5;
 			alto_ventana=14;
 		}
 		else {
-			//menu_dibuja_ventana(1,0,30,24,"AY Registers");
 			yventana=0;
 			alto_ventana=24;
 		}
 
 		zxvision_window ventana;
 
-		//menu_dibuja_ventana(1,yventana,30,alto_ventana,"AY Registers");
 		zxvision_new_window(&ventana,1,yventana,30,alto_ventana,
 							30-1,alto_ventana-2,"AY Registers");
 
@@ -2400,60 +2380,21 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 				valor_contador_segundo_anterior=contador_segundo;
 
-	z80_byte tecla=0;
+	z80_byte tecla;
    do {
 
 
 	   tecla=zxvision_common_getkey_refresh();		
 	   zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
-/*
-                //esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-									if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-		valor_contador_segundo_anterior=contador_segundo;
-
-										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) menu_refresca_pantalla();
-
-
-                }
-
-
-				menu_cpu_core_loop();
-                //acumulado=menu_da_todas_teclas();
-
-                //si no hay multitarea, esperar tecla y salir
-                if (menu_multitarea==0) {
-                        menu_espera_tecla();
-
-                        //acumulado=0;
-                }
-
-				//tecla=menu_get_pressed_key();
-				tecla=zxvision_read_keyboard();
-
-
-
-
-
-
-
-
-				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
-				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
-				if (tecla==13) tecla=0;
-
-        //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;*/
-
-		} while (tecla!=2);				
+   } while (tecla!=2);				
 
  
-		menu_espera_no_tecla(); //Si no, se va al menu anterior.
-		//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
+	menu_espera_no_tecla(); //Si no, se va al menu anterior.
+	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
 
 
     cls_menu_overlay();
@@ -2466,8 +2407,6 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 {
-
-    //char textostats[32];
 
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
@@ -2510,7 +2449,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 	valor_contador_segundo_anterior=contador_segundo;
 
-	z80_byte tecla=0;
+	z80_byte tecla;
 
 
 		//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
@@ -2666,10 +2605,9 @@ z80_byte clip_window_ula[4];
                 }
 
 
-				//tecla=zxvision_common_getkey_refresh();				
+
 
                 menu_cpu_core_loop();
-                //acumulado=menu_da_todas_teclas();
 
                 //si no hay multitarea, esperar tecla y salir
                 if (menu_multitarea==0) {
@@ -2678,15 +2616,11 @@ z80_byte clip_window_ula[4];
                         //acumulado=0;
                 }
 
-				//tecla=menu_get_pressed_key();
 				tecla=zxvision_read_keyboard();
 
 				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
 				//refrescar contenido de ventana
 
-				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
-				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
-				//if (tecla==13) tecla=0;
 
 		if (tecla) {
 			//printf ("Esperamos no tecla\n");
@@ -2704,11 +2638,6 @@ z80_byte clip_window_ula[4];
 
 
 }
-
-
-
-
-
 
 
 
