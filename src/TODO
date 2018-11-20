@@ -9,9 +9,14 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 -Sin multitarea, primera pulsación de teclado no hace scroll. Seguramente debido a que hace un espera tecla al principio
 
--menus tabulados en zxvision
--que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
+
+-menus zxvision:
+--menus tabulados en zxvision
+--que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
+
+--cuando se abre tooltip, al volver desaparece marca de zxvision, quiza porque se cambian preferencias de ventana?
+--sin multitask ,no deja mover ventanas
 
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 
