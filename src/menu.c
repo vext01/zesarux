@@ -5342,9 +5342,9 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 		//printf ("mouse movido\n");
 		if (si_menu_mouse_en_ventana() ) {
 				//if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<ventana_ancho && menu_mouse_y<ventana_alto ) {
-					printf ("dentro ventana\n");
+					//printf ("dentro ventana\n");
 					if (menu_mouse_y==0) {
-						printf ("En barra titulo\n");
+						//printf ("En barra titulo\n");
 					}
 					//Descartar linea titulo y ultima linea
 		}
@@ -12221,12 +12221,6 @@ menu_z80_moto_int menu_debug_view_sprites_change_pointer(menu_z80_moto_int p)
 
 
 
-void old_menu_debug_view_sprites_ventana(void)
-{
-
-	menu_dibuja_ventana(SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,"Sprites");
-
-}
 
 
 
@@ -12526,23 +12520,33 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
     //Se establece a la de funcion de ver sprites
     set_menu_overlay_function(menu_debug_draw_sprites);
 
-	menu_debug_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+	menu_debug_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
+
+	int redibujar_texto=1;	
 
 
     do {
 
-		menu_debug_view_sprites_textinfo(&ventana);
+
+		//Solo redibujar el texto cuando alguna tecla pulsada sea de las validas,
+		//y no con mouse moviendo la ventana
+		//porque usa mucha cpu y por ejemplo en maquina tsconf se clava si arrastramos ventana
+		if (redibujar_texto) {
+			//printf ("redibujamos texto\n");
+			menu_debug_view_sprites_textinfo(&ventana);
 
 		
-		//Si no esta multitarea, mostrar el texto que acabamos de escribir
-	    if (!menu_multitarea) {
-			zxvision_draw_window_contents(&ventana);
-		}			
+			//Si no esta multitarea, mostrar el texto que acabamos de escribir
+	    	if (!menu_multitarea) {
+				zxvision_draw_window_contents(&ventana);
+			}			
+		}
 
 	
 		tecla=zxvision_common_getkey_refresh();
 		//printf ("tecla: %d\n",tecla);
 
+		if (tecla) redibujar_texto=1;
 
         switch (tecla) {
 
@@ -12662,11 +12666,14 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 							else view_sprite_incremento=1;
 					break;
 
-
 					case 'r':
 							view_sprites_scr_sprite ^=1;
 					break;
 
+					default:
+						//no es tecla valida, no redibujar texto
+						redibujar_texto=0;
+					break;
 
 		}
 
