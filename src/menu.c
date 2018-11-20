@@ -12162,6 +12162,7 @@ void menu_debug_draw_sprites(void)
 		}
 	
 
+	zxvision_draw_window_contents(menu_debug_draw_sprites_window);
 
 }
 
@@ -12350,61 +12351,16 @@ void menu_debug_sprites_get_parameters_hardware(void)
 	}
 }
 
-
-
-
-void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
+void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 {
+	int linea=0;
+		char buffer_texto[64];
 
-        //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        //z80_bit copia_video_interlaced_mode;
-        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
+		//Antes de escribir, normalizar zona memoria
+		menu_debug_set_memory_zone_attr();
 
-
-	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
-
-		if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
-
-        //disable_interlace();
-
-	menu_espera_no_tecla();
-	menu_reset_counters_tecla_repeticion();
-				//menu_debug_view_sprites_ventana();
-
-//menu_dibuja_ventana(SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,"Sprites");
-		zxvision_window ventana;
-
-	zxvision_new_window(&ventana,SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,
-						64 /*SPRITES_ANCHO-1*/, 64+2 /*SPRITES_ALTO_VENTANA-2*/,"Sprites");
-
-	zxvision_draw_window(&ventana);
-
-        z80_byte tecla=0;
-
-
-        int salir=0;
-
-
-
-
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de ver sprites
-        set_menu_overlay_function(menu_debug_draw_sprites);
-
-		menu_debug_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
-
-
-
-        do {
-
-					int linea=0;
-					char buffer_texto[64];
-
-					//Antes de escribir, normalizar zona memoria
-					menu_debug_set_memory_zone_attr();
-
-					int restoancho=view_sprites_ancho_sprite % view_sprites_ppb;
-					if (view_sprites_ancho_sprite-restoancho>0) view_sprites_ancho_sprite-=restoancho;
+		int restoancho=view_sprites_ancho_sprite % view_sprites_ppb;
+		if (view_sprites_ancho_sprite-restoancho>0) view_sprites_ancho_sprite-=restoancho;
 
 		//esto antes que menu_debug_sprites_get_parameters_hardware
 		view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
@@ -12423,8 +12379,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		}
 
 		else {
-                        char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
-                        menu_debug_print_address_memory_zone(buffer_direccion,view_sprites_direccion);
+            char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
+            menu_debug_print_address_memory_zone(buffer_direccion,view_sprites_direccion);
 			sprintf(texto_memptr,"Memptr:%s",buffer_direccion);
 		}
 
@@ -12432,14 +12388,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 	
 
 
-			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
-			else sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+		if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+		else sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 
-
-		//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
-		zxvision_print_string_defaults(&ventana,1,linea++,buffer_texto);
-
-
+		zxvision_print_string_defaults(ventana,1,linea++,buffer_texto);
 
 
 
@@ -12458,10 +12410,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		char nombre_paleta[33];
 		menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
-
 		sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
-
-
 
 
 		char mensaje_texto_hardware[33];
@@ -12485,80 +12434,103 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		sprintf(buffer_segunda_linea, "~~Inverse %s%s%s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save " : ""),
 					mensaje_texto_hardware,mensaje_texto_zx81_pseudohires);
 
-			//0123456789012345678901234567890
-			//Inverse Save Pseudohires: Yes
-		
 
-		/*menu_escribe_linea_opcion(linea++,-1,1,buffer_primera_linea);
-		menu_escribe_linea_opcion(linea++,-1,1,buffer_segunda_linea);
-
-		menu_escribe_linea_opcion(linea++,-1,1,buffer_tercera_linea);*/
-
-
-		zxvision_print_string_defaults(&ventana,1,linea++,buffer_primera_linea);
-		zxvision_print_string_defaults(&ventana,1,linea++,buffer_segunda_linea);
+		zxvision_print_string_defaults(ventana,1,linea++,buffer_primera_linea);
+		zxvision_print_string_defaults(ventana,1,linea++,buffer_segunda_linea);
 
 		//Borrar primero dicha linea con 30 espacios
-		zxvision_print_string_defaults(&ventana,1,linea,"                              ");
-		zxvision_print_string_defaults(&ventana,1,linea++,buffer_tercera_linea);
+		zxvision_print_string_defaults(ventana,1,linea,"                              ");
+		zxvision_print_string_defaults(ventana,1,linea++,buffer_tercera_linea);
 
 		//Mostrar zona memoria
 
-			char textoshow[33];
+		char textoshow[33];
 
-			char memory_zone_text[64]; //espacio temporal mas grande por si acaso
+		char memory_zone_text[64]; //espacio temporal mas grande por si acaso
 
-			if (menu_debug_show_memory_zones==0) {
-				sprintf (memory_zone_text,"Z: Mem zone (mapped memory)");
-			}
-			else {
-				//printf ("Info zona %d\n",menu_debug_memory_zone);
-				char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
-				//int readwrite;
-				machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
-				sprintf (memory_zone_text,"Z: Mem zone (%d %s)",menu_debug_memory_zone,buffer_name);
-				//printf ("size: %X\n",menu_debug_memory_zone_size);
-				//printf ("Despues zona %d\n",menu_debug_memory_zone);
-			}
+		if (menu_debug_show_memory_zones==0) {
+			sprintf (memory_zone_text,"Z: Mem zone (mapped memory)");
+		}
 
-			//truncar texto a 32 por si acaso
-			memory_zone_text[32]=0;
-			//menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
+		else {
+			//printf ("Info zona %d\n",menu_debug_memory_zone);
+			char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
+			//int readwrite;
+			machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
+			sprintf (memory_zone_text,"Z: Mem zone (%d %s)",menu_debug_memory_zone,buffer_name);
+			//printf ("size: %X\n",menu_debug_memory_zone_size);
+			//printf ("Despues zona %d\n",menu_debug_memory_zone);
+		}
 
+		//truncar texto a 32 por si acaso
+		memory_zone_text[32]=0;
 			//primero metemos esa linea con espacios para borrar texto residual
 														//    1234567890123456789012345678901234567890
-			zxvision_print_string_defaults(&ventana,1,linea,"                                        ");
+		zxvision_print_string_defaults(ventana,1,linea,"                                        ");
 
-			zxvision_print_string_defaults(&ventana,1,linea++,memory_zone_text);
+		zxvision_print_string_defaults(ventana,1,linea++,memory_zone_text);
 
-			sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
-			//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-			zxvision_print_string_defaults(&ventana,1,linea++,textoshow);
+		sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
+		
+		zxvision_print_string_defaults(ventana,1,linea++,textoshow);
 
 	
+
+		//Restaurar comportamiento atajos
+		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+
+}
+
+
+void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
+{
+
+    //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
+    //z80_bit copia_video_interlaced_mode;
+    //copia_video_interlaced_mode.v=video_interlaced_mode.v;
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
+
+	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
+
+	if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
+
+    //disable_interlace();
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,SPRITES_X,SPRITES_Y,SPRITES_ANCHO,SPRITES_ALTO_VENTANA,
+						64 /*SPRITES_ANCHO-1*/, 64+2 /*SPRITES_ALTO_VENTANA-2*/,"Sprites");
+
+	zxvision_draw_window(&ventana);
+
+	z80_byte tecla;
+
+
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de ver sprites
+    set_menu_overlay_function(menu_debug_draw_sprites);
+
+	menu_debug_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+
+
+    do {
+
+		menu_debug_view_sprites_textinfo(&ventana);
+
+		
+		//Si no esta multitarea, mostrar el texto que acabamos de escribir
+	    if (!menu_multitarea) {
 			zxvision_draw_window_contents(&ventana);
+		}			
+
+	
+		tecla=zxvision_common_getkey_refresh();
+		//printf ("tecla: %d\n",tecla);
 
 
-//Restaurar comportamiento atajos
-menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
-
-		if (menu_multitarea==0) menu_refresca_pantalla();
-
-		menu_espera_tecla();
-
-
-                                //tecla=menu_get_pressed_key();
-								tecla=zxvision_read_keyboard();
-																//printf ("tecla: %d\n",tecla);
-
-                                menu_espera_no_tecla_con_repeticion();
-		
-		
-		//tecla=zxvision_common_getkey_refresh();		
-
-
-
-                                switch (tecla) {
+        switch (tecla) {
 
 					case 8:
 						//izquierda
@@ -12570,31 +12542,30 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						view_sprites_direccion++;
 					break;
 
-                                        case 11:
-                                                //arriba
-                                                view_sprites_direccion -=view_sprites_increment_cursor_vertical;
-                                        break;
+                    case 11:
+                        //arriba
+                        view_sprites_direccion -=view_sprites_increment_cursor_vertical;
+                    break;
 
-                                        case 10:
-                                                //abajo
-                                                view_sprites_direccion +=view_sprites_increment_cursor_vertical;
-                                        break;
+                    case 10:
+                        //abajo
+                        view_sprites_direccion +=view_sprites_increment_cursor_vertical;
+                    break;
 
-                                        case 24:
-                                                //PgUp
-                                                view_sprites_direccion -=view_sprites_bytes_por_ventana;
-                                        break;
+                    case 24:
+                        //PgUp
+                        view_sprites_direccion -=view_sprites_bytes_por_ventana;
+                    break;
 
-                                        case 25:
-                                                //PgDn
-                                                view_sprites_direccion +=view_sprites_bytes_por_ventana;
-                                        break;
+                    case 25:
+                        //PgDn
+                        view_sprites_direccion +=view_sprites_bytes_por_ventana;
+                    break;
 
-                                        case 'm':
-                                                view_sprites_direccion=menu_debug_view_sprites_change_pointer(view_sprites_direccion);
-												//menu_debug_view_sprites_ventana();
-												zxvision_draw_window(&ventana);
-                                        break;
+                    case 'm':
+                        view_sprites_direccion=menu_debug_view_sprites_change_pointer(view_sprites_direccion);
+							zxvision_draw_window(&ventana);
+                    break;
 
 					case 'b':
 						menu_debug_sprites_change_bpp();
@@ -12611,8 +12582,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'h':
-									if (MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) view_sprites_hardware ^=1;
-									
+						if (MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) view_sprites_hardware ^=1;								
 					break;
 
 					case 'e':
@@ -12620,7 +12590,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'i':
-								view_sprites_inverse.v ^=1;
+						view_sprites_inverse.v ^=1;
 					break;
 
 					case 'z':
@@ -12637,7 +12607,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 						else {
 
-								//Solo graba sprites de 1bpp (monocromos)
+							//Solo graba sprites de 1bpp (monocromos)
 							if (view_sprites_bpp==1 && !view_sprites_scr_sprite) {
 								//restauramos modo normal de texto de menu, sino, el selector de archivos se vera
 								//con el sprite encima
@@ -12665,14 +12635,13 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						if (view_sprites_ancho_sprite<512) view_sprites_ancho_sprite +=view_sprites_ppb;
 					break;
 
-                                        case 'q':
-                                                if (view_sprites_alto_sprite>1) view_sprites_alto_sprite--;
-                                        break;
+                    case 'q':
+                        if (view_sprites_alto_sprite>1) view_sprites_alto_sprite--;
+                    break;
 
-                                        case 'a':
-
-                                        	if (view_sprites_alto_sprite<512)  view_sprites_alto_sprite++;
-                                        break;
+                    case 'a':
+						if (view_sprites_alto_sprite<512)  view_sprites_alto_sprite++;
+                    break;
 
 					case 'c':
 							if (view_sprite_incremento==1) view_sprite_incremento=2;
@@ -12685,27 +12654,20 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 
+		}
 
 
-					//Salir con ESC
+    } while (tecla!=2);
 
-					case 2:
-							salir=1;
-					break;
-                                }
+    //Restauramos modo interlace
+    //if (copia_video_interlaced_mode.v) enable_interlace();
 
+    //restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);
 
-        } while (salir==0);
+    cls_menu_overlay();
 
-        //Restauramos modo interlace
-        //if (copia_video_interlaced_mode.v) enable_interlace();
-
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
-
-        cls_menu_overlay();
-
-		zxvision_destroy_window(&ventana);		
+	zxvision_destroy_window(&ventana);		
 
 
 
