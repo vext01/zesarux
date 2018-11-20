@@ -5402,10 +5402,14 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 							zxvision_set_visible_height(w,2);
 
 							//Cambiar ancho
+							//primero poner ancho inicial y luego reducir a ancho minimo para que quepa el titulo
+							zxvision_set_visible_width(w,w->width_before_minimize);
+							
 							int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
 							//Espacio para las barras, si las hay
 							if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
 
+							printf ("ancho final: %d\n",ancho_ventana_final);
 							zxvision_set_visible_width(w,ancho_ventana_final);
 
 							w->is_minimized=1;
