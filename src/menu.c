@@ -3314,6 +3314,85 @@ void menu_retorna_colores_linea_opcion(z80_byte indice,int opcion_actual,int opc
 
 }
 
+//escribe opcion de linea de texto
+//coordenadas "indice" relativa al interior de la ventana (0=inicio)
+//opcion_actual indica que numero de linea es la seleccionada
+//opcion activada indica a 1 que esa opcion es seleccionable
+void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,z80_byte indice,int opcion_actual,int opcion_activada,char *texto_entrada)
+{
+
+	char texto[64];
+
+        if (!strcmp(scr_driver_name,"stdout")) {
+		printf ("%s\n",texto_entrada);
+		scrstdout_menu_print_speech_macro (texto_entrada);
+		return;
+	}
+
+
+	z80_byte papel,tinta;
+	int i;
+
+	//tinta=0;
+
+
+	menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
+
+
+	//Obtenemos colores de una opcion sin seleccion y activada, para poder tener texto en ventana con linea en dos colores
+	z80_byte papel_normal,tinta_normal;
+	menu_retorna_colores_linea_opcion(0,-1,1,&papel_normal,&tinta_normal);
+
+	//Buscamos a ver si en el texto hay el caracter "||" y en ese caso lo eliminamos del texto final
+	int encontrado=-1;
+	int destino=0;
+	for (i=0;texto_entrada[i];i++) {
+		if (menu_disable_special_chars.v==0 && texto_entrada[i]=='|' && texto_entrada[i+1]=='|') {
+			encontrado=i;
+			i ++;
+		}
+		else {
+			texto[destino++]=texto_entrada[i];
+		}
+	}
+
+	texto[destino]=0;
+
+
+	//linea entera con espacios
+	for (i=0;i<ventana_ancho;i++) {
+		//menu_escribe_texto_ventana(i,indice,0,papel," ");
+		zxvision_print_string(ventana,i,indice,0,papel,0," ");
+	}
+
+	//y texto propiamente
+	int startx=menu_escribe_linea_startx;
+        //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
+		zxvision_print_string(ventana,startx,indice,tinta,papel,0,texto);
+
+	//Si tiene dos colores
+	if (encontrado>=0) {
+		//menu_escribe_texto_ventana(startx+encontrado,indice,tinta_normal,papel_normal,&texto[encontrado]);
+		zxvision_print_string(ventana,startx+encontrado,indice,tinta_normal,papel_normal,0,&texto[encontrado]);
+	}
+
+	//si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor
+	if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
+		if (opcion_actual==indice) {
+			if (opcion_activada==1) {
+				//menu_escribe_texto_ventana(0,indice,tinta,papel,">");
+				zxvision_print_string(ventana,0,indice,tinta,papel,0,">");
+			}
+			else {
+				//menu_escribe_texto_ventana(0,indice,tinta,papel,"x");
+				zxvision_print_string(ventana,0,indice,tinta,papel,0,"x");
+			}
+		}
+	}
+	menu_textspeech_send_text(texto);
+
+}
+
 
 //escribe opcion de linea de texto
 //coordenadas "indice" relativa al interior de la ventana (0=inicio)
@@ -6706,6 +6785,121 @@ int menu_retorna_atajo(menu_item *m,z80_byte tecla)
 
 int menu_active_item_primera_vez=1;
 
+void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int linea_seleccionada,int max_opciones,int scroll)
+{
+                int i;
+                int opcion_activa;
+
+		char texto_opcion_activa[100];
+		//Asumimos por si acaso que no hay ninguna activa
+		texto_opcion_activa[0]=0;
+
+		int se_ha_llegado_limite=0; //Si se llega a escribir puntos suspensivos
+
+
+        for (i=0;i<max_opciones;i++) {
+
+                        //si la opcion seleccionada es un separador, el cursor saltara a la siguiente
+                        //Nota: el separador no puede ser final de menu
+                        //if (linea_seleccionada==i && aux->tipo_opcion==MENU_OPCION_SEPARADOR) linea_seleccionada++;
+
+                        t_menu_funcion_activo menu_funcion_activo;
+
+                        menu_funcion_activo=aux->menu_funcion_activo;
+
+                        if (menu_funcion_activo!=NULL) {
+                                opcion_activa=menu_funcion_activo();
+                        }
+
+                        else {
+				opcion_activa=1;
+			}
+
+			//Cuando haya opcion_activa, nos la apuntamos para decirla al final en speech.
+			//Y si es la primera vez en ese menu, dice "Active item". Sino, solo dice el nombre de la opcion
+			if (linea_seleccionada==i) {
+				if (menu_active_item_primera_vez) {
+					sprintf (texto_opcion_activa,"Active item: %s",aux->texto_opcion);
+					menu_active_item_primera_vez=0;
+				}
+
+				else {
+					sprintf (texto_opcion_activa,"%s",aux->texto_opcion);
+				}
+			}
+
+			if (aux->es_menu_tabulado) {
+				menu_escribe_linea_opcion_tabulado(i,linea_seleccionada,opcion_activa,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
+			}
+            
+			
+			else {
+				int y_destino=i;
+				int linea_seleccionada_destino=linea_seleccionada;
+
+				//y_destino++; //temp
+				//linea_seleccionada_destino++;
+
+				//Restar el scroll
+				//int scroll=1;
+
+				y_destino-=scroll;
+				linea_seleccionada_destino-=scroll;
+
+				if (y_destino>=0) {
+					//Controlar si ultima linea. Es la 22,
+					//considerando una ventana de maximo de alto
+					if (y_destino==22) {
+						menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,1,"...");
+
+						se_ha_llegado_limite=1;
+						//printf ("llegado al limite en opcion %d\n",i);
+					}
+					else menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
+				}
+				
+				
+				//menu_escribe_linea_opcion(i,linea_seleccionada,opcion_activa,aux->texto_opcion);
+			}
+
+            
+			
+			aux=aux->next;
+
+        }
+
+		//Si hay mas opciones de las permitidas, pero no se han escrito ..., borrarlos por una posible impresion anterior
+		if (max_opciones>22 && !se_ha_llegado_limite) {
+			debug_printf (VERBOSE_DEBUG,"Erase possible ... written before");
+			menu_escribe_linea_opcion_zxvision(ventana,22,-1,1,"   ");
+		}
+
+		//Si hay scroll, primera linea mostrara ...
+		if (scroll) {
+			debug_printf (VERBOSE_DEBUG,"Showing ... on first line");
+			menu_escribe_linea_opcion_zxvision(ventana,0,-1,1,"...");			
+		}
+
+		if (texto_opcion_activa[0]!=0) {
+			//Active item siempre quiero que se escuche
+
+			//Guardamos estado actual
+			int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
+			menu_speech_tecla_pulsada=0;
+
+			menu_textspeech_send_text(texto_opcion_activa);
+
+			//Restauro estado
+			//Pero si se ha pulsado tecla, no restaurar estado
+			//Esto sino provocaria que , por ejemplo, en la ventana de confirmar yes/no,
+			//se entra con menu_speech_tecla_pulsada=0, se pulsa tecla mientras se esta leyendo el item activo,
+			//y luego al salir de aqui, se pierde el valor que se habia metido (1) y se vuelve a poner el 0 del principio
+			//provocando que cada vez que se mueve el cursor, se relea la ventana entera
+			if (menu_speech_tecla_pulsada==0) menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
+		}
+}
+
+
 void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opciones,int scroll)
 {
                 int i;
@@ -6772,6 +6966,7 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 					//considerando una ventana de maximo de alto
 					if (y_destino==22) {
 						menu_escribe_linea_opcion(y_destino,linea_seleccionada_destino,1,"...");
+
 						se_ha_llegado_limite=1;
 						//printf ("llegado al limite en opcion %d\n",i);
 					}
@@ -6818,6 +7013,7 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 			if (menu_speech_tecla_pulsada==0) menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
 		}
 }
+
 
 int menu_dibuja_menu_cursor_arriba(int linea_seleccionada,int max_opciones,menu_item *m)
 {
@@ -7006,6 +7202,585 @@ z80_int menu_mouse_frame_counter_anterior=0;
  
 
 int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item *m,char *titulo)
+{
+
+
+	//no escribir letras de atajos de teclado al entrar en un menu
+	menu_writing_inverse_color.v=0;
+
+	//Si se fuerza siempre que aparezcan letras de atajos
+	if (menu_force_writing_inverse_color.v) menu_writing_inverse_color.v=1;
+
+	//Primera vez decir active item. Luego solo el nombre del item
+	menu_active_item_primera_vez=1;
+
+        if (!strcmp(scr_driver_name,"stdout") ) {
+                //se abre menu con driver stdout. Llamar a menu alternativo
+
+		//si hay menu tabulado, agregamos ESC (pues no se incluye nunca)
+		if (m->es_menu_tabulado) menu_add_ESC_item(m);
+
+                return menu_dibuja_menu_stdout(opcion_inicial,item_seleccionado,m,titulo);
+        }
+/*
+        if (if_pending_error_message) {
+                if_pending_error_message=0;
+                menu_generic_message("ERROR",pending_error_message);
+        }
+*/
+
+
+	//esto lo haremos ligeramente despues menu_speech_tecla_pulsada=0;
+
+	if (!menu_dibuja_menu_permite_repeticiones_hotk) {
+		//printf ("llamar a menu_reset_counters_tecla_repeticion desde menu_dibuja_menu al inicio\n");
+		menu_reset_counters_tecla_repeticion();
+	}
+
+
+	//nota: parece que scr_actualiza_tablas_teclado se debe llamar en el caso de xwindows para que refresque la pantalla->seguramente viene por un evento
+
+
+	int max_opciones;
+	int linea_seleccionada=*opcion_inicial;
+
+	//si la anterior opcion era la final (ESC), establecemos el cursor a 0
+	//if (linea_seleccionada<0) linea_seleccionada=0;
+
+	int x,y,ancho,alto;
+
+	menu_item *aux;
+
+	aux=m;
+
+	//contar el numero de opciones totales
+	//calcular ancho maximo de la ventana
+	int ancho_calculado=0;
+
+	//Para permitir menus mas grandes verticalmente de lo que cabe en ventana.
+	int scroll_opciones=0;
+
+	//como minimo, lo que ocupa el titulo: texto + franjas de colores + margen
+	ancho=strlen(titulo)+7;
+
+	max_opciones=0;
+	do {
+		/*ancho_calculado=strlen(aux->texto_opcion)+2;
+		//en calculo de ancho, tener en cuenta los "~~" del shortcut que no cuentan
+		unsigned int l;
+		for (l=0;l<strlen(aux->texto_opcion);l++) {
+			if (menu_escribe_texto_si_inverso(aux->texto_opcion,l)) ancho_calculado-=2;
+			if (menu_escribe_texto_si_parpadeo(aux->texto_opcion,l)) ancho_calculado-=2;
+		}*/
+
+
+		ancho_calculado=menu_calcular_ancho_string_item(aux->texto_opcion)+2; //+2 espacios
+
+
+		if (ancho_calculado>ancho) ancho=ancho_calculado;
+		//printf ("%s\n",aux->texto);
+		aux=aux->next;
+		max_opciones++;
+	} while (aux!=NULL);
+
+	//printf ("Opciones totales: %d\n",max_opciones);
+
+	alto=max_opciones+2;
+
+	x=16-ancho/2;
+	y=12-alto/2;
+
+	if (x<0 || y<0 || x+ancho>32 || y+alto>24) {
+		//char window_error_message[100];
+		//sprintf(window_error_message,"Window out of bounds: x: %d y: %d ancho: %d alto: %d",x,y,ancho,alto);
+		//cpu_panic(window_error_message);
+
+		//Ajustar limites
+		if (x<0) x=0;
+		if (y<0) y=0;
+		if (x+ancho>32) ancho=32-x;
+		if (y+alto>24) alto=24-y;
+	}
+
+	int redibuja_ventana;
+	int tecla;
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,x,y,ancho,alto,
+							ancho-1,alto-2,titulo);
+
+	zxvision_draw_window(&ventana);		
+
+	//Entrar aqui cada vez que se dibuje otra subventana aparte, como tooltip o ayuda
+	do {
+	redibuja_ventana=0;
+	//printf ("redibujar ventana\n");
+
+
+	//Dibujar ventana siempre que el tipo no sea tabular. Miramos el primer item
+	//printf ("menu pointer: %p\n",m);
+	//TODO en zxvision menu tabular
+
+
+		
+
+
+	if (m->es_menu_tabulado==0) {
+		//menu_dibuja_ventana(x,y,ancho,alto,titulo);
+	}
+
+	menu_tooltip_counter=0;
+
+
+	tecla=0;
+
+        //si la opcion seleccionada es mayor que el total de opciones, seleccionamos linea 0
+        //esto pasa por ejemplo cuando activamos realvideo, dejamos el cursor por debajo, y cambiamos a zxspectrum
+        //printf ("linea %d max %d\n",linea_seleccionada,max_opciones);
+        if (linea_seleccionada>=max_opciones) {
+                debug_printf(VERBOSE_INFO,"Selected Option beyond limits. Set option to 0");
+                linea_seleccionada=0;
+        }
+
+
+	//menu_retorna_item(m,linea_seleccionada)->tipo_opcion==MENU_OPCION_SEPARADOR
+	//si opcion activa es un separador (que esto pasa por ejemplo cuando activamos realvideo, dejamos el cursor por debajo, y cambiamos a zxspectrum)
+	//en ese caso, seleccionamos linea 0
+	if (menu_retorna_item(m,linea_seleccionada)->tipo_opcion==MENU_OPCION_SEPARADOR) {
+		debug_printf(VERBOSE_INFO,"Selected Option is a separator. Set option to 0");
+		linea_seleccionada=0;
+	}
+
+
+	while (tecla!=13 && tecla!=32 && tecla!=MENU_RETORNO_ESC && tecla!=MENU_RETORNO_F1 && tecla!=MENU_RETORNO_F2 && tecla!=MENU_RETORNO_F10 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
+
+		//printf ("tecla desde bucle: %d\n",tecla);
+		//Ajustar scroll
+		scroll_opciones=0;
+
+		int limite_scroll=alto-3;
+
+		//Esto solo debe saltar cuando tipo de menu no es tabulado, miramos el primer item
+		if (linea_seleccionada>limite_scroll && m->es_menu_tabulado==0) {
+			//printf ("beyond limit\n");
+			scroll_opciones=linea_seleccionada-limite_scroll;
+		}
+
+		//escribir todas opciones
+		menu_escribe_opciones_zxvision(&ventana,m,linea_seleccionada,max_opciones,scroll_opciones);
+
+
+		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
+		zxvision_draw_window_contents(&ventana);
+
+        	menu_refresca_pantalla();
+
+		tecla=0;
+
+		//la inicializamos a 0. aunque parece que no haga falta, podria ser que el bucle siguiente
+		//no se entrase (porque menu_tooltip_counter<TOOLTIP_SECONDS) y entonces tecla_leida tendria valor indefinido
+		int tecla_leida=0;
+
+
+		//Si se estaba escuchando speech y se pulsa una tecla, esa tecla debe entrar aqui tal cual y por tanto, no hacemos espera_no_tecla
+		//temp menu_espera_no_tecla();
+		if (menu_speech_tecla_pulsada==0) {
+			//menu_espera_no_tecla();
+			menu_dibuja_menu_espera_no_tecla();
+		}
+		menu_speech_tecla_pulsada=0;
+
+		while (tecla==0 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
+
+			menu_espera_tecla_timeout_tooltip();
+
+			//leemos tecla de momento de dos maneras, con puerto y con get_pressed_key
+			tecla_leida=menu_get_pressed_key();
+
+			//Para poder usar repeticiones
+			if (tecla_leida==0) {
+				//printf ("llamar a menu_reset_counters_tecla_repeticion desde menu_dibuja_menu cuando tecla=0\n");
+				menu_reset_counters_tecla_repeticion();
+			}
+
+			else {
+				//printf ("no reset counter tecla %d\n",tecla);
+			}
+
+
+
+		
+
+			//Siempre forzado de momento
+			int mouse_frame_read=1;
+
+
+			//printf ("tecla_leida: %d\n",tecla_leida);
+			if (mouse_movido && mouse_frame_read) {
+				//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
+				//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
+				if (si_menu_mouse_en_ventana() ) {
+				//if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<ventana_ancho && menu_mouse_y<ventana_alto ) {
+					//printf ("dentro ventana\n");
+					//Descartar linea titulo y ultima linea
+
+					if (menu_mouse_y>0 && menu_mouse_y<ventana_alto-1) {
+						//printf ("dentro espacio efectivo ventana\n");
+						//Ver si hay que subir o bajar cursor
+						int posicion_raton_y=menu_mouse_y-1;
+
+						//Si no se selecciona separador. Menu no tabulado
+						if (m->es_menu_tabulado==0) {
+							if (menu_retorna_item(m,posicion_raton_y)->tipo_opcion!=MENU_OPCION_SEPARADOR) {
+								linea_seleccionada=posicion_raton_y;
+								redibuja_ventana=1;
+								menu_tooltip_counter=0;
+							}
+						}
+						else {
+							menu_item *buscar_tabulado;
+							int linea_buscada;
+							int posicion_raton_x=menu_mouse_x;
+							buscar_tabulado=menu_retorna_item_tabulado_xy(m,posicion_raton_x,posicion_raton_y,&linea_buscada);
+
+							if (buscar_tabulado!=NULL) {
+								//Buscar por coincidencia de coordenada x,y
+								if (buscar_tabulado->tipo_opcion!=MENU_OPCION_SEPARADOR) {
+									linea_seleccionada=linea_buscada;
+									redibuja_ventana=1;
+									menu_tooltip_counter=0;
+								}
+							}
+							else {
+								//printf ("item no encontrado\n");
+							}
+						}
+
+					}
+					//else {
+					//	printf ("En espacio ventana no usable\n");
+					//}
+				}
+				//else {
+				//	printf ("fuera ventana\n");
+				//}
+			}
+
+
+			if (tecla_leida==11) tecla='7';
+			else if (tecla_leida==10) tecla='6';
+			else if (tecla_leida==13) tecla=13;
+
+
+			//Teclas para menus tabulados
+			else if (tecla_leida==8) tecla='5';	
+			else if (tecla_leida==9) tecla='8';	
+
+
+			else if ((puerto_especial1 & 1)==0) {
+				//Enter
+				//printf ("Leido ESC\n");
+				tecla=MENU_RETORNO_ESC;
+			}
+
+			//En principio ya no volvemos mas con F1, dado que este se usa para ayuda contextual de cada funcion
+
+			//F1 (ayuda) o h en drivers que no soportan F
+            else if ((puerto_especial2 & 1)==0 || (tecla_leida=='h' && f_functions==0) ) {
+                                //F1
+				char *texto_ayuda;
+				texto_ayuda=menu_retorna_item(m,linea_seleccionada)->texto_ayuda;
+				if (texto_ayuda!=NULL) {
+					//Forzar que siempre suene
+					//Esperamos antes a liberar tecla, sino lo que hara sera que esa misma tecla F1 cancelara el speech texto de ayuda
+					menu_espera_no_tecla();
+					menu_speech_tecla_pulsada=0;
+
+
+					menu_dibuja_menu_help_tooltip(texto_ayuda,0);
+					//printf ("despues de menu_dibuja_menu_help_tooltip\n");
+					//No borrar pantalla, pues si el tipo de menu es menu_tabulado, hay que dejarlo como estaba pues 
+					//es la propia funcion que llama la que se encarga (al principio) de dibujar la ventana
+
+					//cls_menu_overlay(); 
+
+					//menu_generic_message("Help",texto_ayuda);
+
+
+					redibuja_ventana=1;
+					menu_tooltip_counter=0;
+					//Y volver a decir "active item"
+					menu_active_item_primera_vez=1;
+
+				}
+                        }
+
+
+                        else if ((puerto_especial2 & 2)==0) {
+                                //F2
+                                tecla=MENU_RETORNO_F2;
+                        }
+
+                        else if ((puerto_especial3 & 16)==0) {
+                                //F10
+                                tecla=MENU_RETORNO_F10;
+                        }
+
+
+			//teclas de atajos. De momento solo admitido entre a y z
+			else if ( (tecla_leida>='a' && tecla_leida<='z') || (tecla_leida>='A' && tecla_leida<='Z')) {
+				debug_printf (VERBOSE_DEBUG,"Read key: %c. Possibly shortcut",tecla_leida);
+				tecla=tecla_leida;
+			}
+
+			//tecla espacio. acciones adicionales. Ejemplo en breakpoints para desactivar
+			else if (tecla_leida==32) {
+				debug_printf (VERBOSE_DEBUG,"Pressed key space");
+				tecla=32;
+                        }
+
+
+			else tecla=0;
+
+
+			//printf ("menu tecla: %d\n",tecla);
+		}
+
+		//Si no se ha pulsado tecla de atajo:
+		if (!((tecla_leida>='a' && tecla_leida<='z') || (tecla_leida>='A' && tecla_leida<='Z')) ) {
+			//printf ("Esperando no pulsar tecla\n");
+			menu_espera_no_tecla();
+		}
+
+                t_menu_funcion_activo sel_activo;
+
+		t_menu_funcion funcion_espacio;
+
+		if (tecla!=0) menu_tooltip_counter=0;
+
+		switch (tecla) {
+			case 13:
+				//ver si la opcion seleccionada esta activa
+
+				sel_activo=menu_retorna_item(m,linea_seleccionada)->menu_funcion_activo;
+
+				if (sel_activo!=NULL) {
+		                	if ( sel_activo()==0 ) tecla=0;  //desactivamos seleccion
+				}
+                        break;
+
+
+			//Mover abajo
+			case '8':
+				//en menus tabulados, misma funcion que abajo
+				if (m->es_menu_tabulado==0) break;
+
+				//Si es tabulado, seguira hasta la opcion '6'
+			case '6':
+				linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+
+
+			break;
+
+
+			//Mover arriba
+                        case '5':
+                                //en menus tabulados, misma funcion que arriba
+                                if (m->es_menu_tabulado==0) break;
+
+                                //Si es tabulado, seguira hasta la opcion '7'
+			case '7':
+				linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+
+			break;
+
+
+
+			case 32:
+				//Accion para tecla espacio
+				//printf ("Pulsado espacio\n");
+                                //decimos que se ha pulsado Enter
+                                //tecla=13;
+
+				//Ver si tecla asociada a espacio
+				funcion_espacio=menu_retorna_item(m,linea_seleccionada)->menu_funcion_espacio;
+
+				if (funcion_espacio==NULL) {
+					debug_printf (VERBOSE_DEBUG,"No space key function associated to this menu item");
+					tecla=0;
+				}
+
+				else {
+
+					debug_printf (VERBOSE_DEBUG,"Found space key function associated to this menu item");
+
+	                                //ver si la opcion seleccionada esta activa
+
+        	                        sel_activo=menu_retorna_item(m,linea_seleccionada)->menu_funcion_activo;
+
+                	                if (sel_activo!=NULL) {
+                        	                if ( sel_activo()==0 ) {
+							tecla=0;  //desactivamos seleccion
+							debug_printf (VERBOSE_DEBUG,"Menu item is disabled");
+						}
+                                	}
+
+				}
+
+			break;
+
+
+
+		}
+
+		//teclas de atajos. De momento solo admitido entre a y z
+		if ( (tecla>='a' && tecla<='z') || (tecla>='A' && tecla<='Z')) {
+			//printf ("buscamos atajo\n");
+
+			int entrada_atajo;
+			entrada_atajo=menu_retorna_atajo(m,tecla);
+
+
+			//Encontrado atajo
+			if (entrada_atajo!=-1) {
+				linea_seleccionada=entrada_atajo;
+
+				//Mostrar por un momento opciones y letras
+				menu_writing_inverse_color.v=1;
+				menu_escribe_opciones_zxvision(&ventana,m,entrada_atajo,max_opciones,scroll_opciones);
+				menu_refresca_pantalla();
+				//menu_espera_no_tecla();
+				menu_dibuja_menu_espera_no_tecla();
+
+				//decimos que se ha pulsado Enter
+				tecla=13;
+
+	                        //Ver si esa opcion esta habilitada o no
+        	                t_menu_funcion_activo sel_activo;
+                	        sel_activo=menu_retorna_item(m,linea_seleccionada)->menu_funcion_activo;
+                        	if (sel_activo!=NULL) {
+	                                //opcion no habilitada
+        	                        if ( sel_activo()==0 ) {
+                	                        debug_printf (VERBOSE_DEBUG,"Shortcut found at entry number %d but entry disabled",linea_seleccionada);
+						tecla=0;
+                                	}
+	                        }
+
+
+			}
+
+			else {
+				debug_printf (VERBOSE_DEBUG,"No shortcut found for read key: %c",tecla);
+				tecla=0;
+				menu_espera_no_tecla();
+			}
+		}
+
+
+
+	}
+
+	//NOTA: contador de tooltip se incrementa desde bucle de timer, ejecutado desde cpu loop
+	//Si no hay multitask de menu, NO se incrementa contador y por tanto no hay tooltip
+
+	if (menu_tooltip_counter>=TOOLTIP_SECONDS) {
+
+        	redibuja_ventana=1;
+
+		//Por defecto asumimos que no saltara tooltip y por tanto que no queremos que vuelva a enviar a speech la ventana
+		//Aunque si que volvera a decir el "active item: ..." en casos que se este en una opcion sin tooltip,
+		//no aparecera el tooltip pero vendra aqui con el timeout y esto hara redibujar la ventana por redibuja_ventana=1
+		//si quitase ese redibujado, lo que pasaria es que no aparecerian los atajos de teclado para cada opcion
+		//Entonces tal y como esta ahora:
+		//Si la opcion seleccionada tiene tooltip, salta el tooltip
+		//Si no tiene tooltip, no salta tooltip, pero vuelve a decir "Active item: ..."
+		menu_speech_tecla_pulsada=1;
+
+		if (tooltip_enabled.v) {
+			char *texto_tooltip;
+			texto_tooltip=menu_retorna_item(m,linea_seleccionada)->texto_tooltip;
+			if (texto_tooltip!=NULL) {
+				//printf ("mostramos tooltip\n");
+				//Forzar que siempre suene
+				menu_speech_tecla_pulsada=0;
+
+
+					menu_dibuja_menu_help_tooltip(texto_tooltip,1);
+					//No borrar pantalla, pues si el tipo de menu es menu_tabulado, hay que dejarlo como estaba pues 
+					//es la propia funcion que llama la que se encarga (al principio) de dibujar la ventana
+					//cls_menu_overlay();
+
+
+				//Esperar no tecla
+				menu_espera_no_tecla();
+
+
+				//Y volver a decir "active item"
+				menu_active_item_primera_vez=1;
+
+	                }
+		}
+
+
+		//Hay que dibujar las letras correspondientes en texto inverso
+		menu_writing_inverse_color.v=1;
+
+		menu_tooltip_counter=0;
+	}
+
+	} while (redibuja_ventana==1);
+
+	*opcion_inicial=linea_seleccionada;
+
+	//nos apuntamos valor de retorno
+
+	menu_item *menu_sel;
+	menu_sel=menu_retorna_item(m,linea_seleccionada);
+
+	//Si tecla espacio
+	if (tecla==32) {
+		item_seleccionado->menu_funcion=menu_sel->menu_funcion_espacio;
+		tecla=13;
+	}
+	else item_seleccionado->menu_funcion=menu_sel->menu_funcion;
+
+	item_seleccionado->tipo_opcion=menu_sel->tipo_opcion;
+	item_seleccionado->valor_opcion=menu_sel->valor_opcion;
+
+
+	//Liberar memoria del menu
+        aux=m;
+	menu_item *nextfree;
+
+        do {
+		//printf ("Liberando %x\n",aux);
+		nextfree=aux->next;
+		free(aux);
+                aux=nextfree;
+        } while (aux!=NULL);
+
+
+	//Salir del menu diciendo que no se ha pulsado tecla
+	menu_speech_tecla_pulsada=0;
+
+	zxvision_destroy_window(&ventana);
+
+	//printf ("tecla: %d\n",tecla);
+
+	if (tecla==MENU_RETORNO_ESC) return MENU_RETORNO_ESC;
+	else if (tecla==MENU_RETORNO_F1) return MENU_RETORNO_F1;
+	else if (tecla==MENU_RETORNO_F2) return MENU_RETORNO_F2;
+	else if (tecla==MENU_RETORNO_F10) return MENU_RETORNO_F10;
+
+	else return MENU_RETORNO_NORMAL;
+
+}
+
+
+
+
+int old_menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item *m,char *titulo)
 {
 
 
