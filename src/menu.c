@@ -3494,8 +3494,8 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 	int centro_marca_zxvison_x=x2-3-6;
 	int centro_marca_zxvison_y=y1+3+2;
 		
-	int longitud_marca_zxvision=3;
-	int mitad_long_marca_zxvision=longitud_marca_zxvision/2;
+	//int longitud_marca_zxvision=3;
+	//int mitad_long_marca_zxvision=longitud_marca_zxvision/2;
 	int color_marca_zxvision=ESTILO_GUI_PAPEL_NORMAL;
 
 
@@ -3980,8 +3980,8 @@ z80_byte zxvision_read_keyboard(void)
 //escribe la cadena de texto
 void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offset_string,int max_length_shown,int x,int y)
 {
-	z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
-	z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
+	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
+	//z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
 	char cadena_buf[2];
 
 	string=&string[offset_string];
@@ -5180,10 +5180,29 @@ void zxvision_print_string_defaults(zxvision_window *w,int x,int y,char *texto)
 
 }
 
+//Igual que la anterior pero antes borra la linea con espacios
+void zxvision_print_string_defaults_fillspc(zxvision_window *w,int x,int y,char *texto)
+{
+
+	overlay_screen caracter_aux;
+	caracter_aux.caracter=' ';
+	caracter_aux.tinta=ESTILO_GUI_TINTA_NORMAL;
+	caracter_aux.papel=ESTILO_GUI_PAPEL_NORMAL;
+	caracter_aux.parpadeo=0;		
+
+	int i;
+	for (i=0;i<w->total_width;i++) {
+		zxvision_print_char(w,i,y,&caracter_aux);
+	}
+
+	zxvision_print_string(w,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,texto);
+
+}
+
 void zxvision_putpixel(zxvision_window *w,int x,int y,int color)
 {
 
-	int final_x,final_y;
+	//int final_x,final_y;
 
 	/*
 	//Nuevas ventanas zxvision
@@ -12031,7 +12050,7 @@ void menu_debug_draw_sprites(void)
 
 
 	int sx=SPRITES_X+1;
-	int sy=SPRITES_Y+3;
+	//int sy=SPRITES_Y+3;
 	
 	//Si es mas ancho, que ventana visible, mover coordenada x 1 posicion atrás
 	//if (view_sprites_ancho_sprite/menu_char_width>=SPRITES_ANCHO-2) sx--;
@@ -12064,7 +12083,7 @@ void menu_debug_draw_sprites(void)
 
 	menu_z80_moto_int puntero_inicio_linea;
 
-	int maximo_visible_x=32*menu_char_width;
+	//int maximo_visible_x=32*menu_char_width;
 
 
 
@@ -12388,10 +12407,10 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 	
 
 
-		if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
-		else sprintf (buffer_texto,"%s Size:%dX%d %dBPP   ",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+		if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+		else sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 
-		zxvision_print_string_defaults(ventana,1,linea++,buffer_texto);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_texto);
 
 
 
@@ -12435,12 +12454,9 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 					mensaje_texto_hardware,mensaje_texto_zx81_pseudohires);
 
 
-		zxvision_print_string_defaults(ventana,1,linea++,buffer_primera_linea);
-		zxvision_print_string_defaults(ventana,1,linea++,buffer_segunda_linea);
-
-		//Borrar primero dicha linea con 30 espacios
-		zxvision_print_string_defaults(ventana,1,linea,"                              ");
-		zxvision_print_string_defaults(ventana,1,linea++,buffer_tercera_linea);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_primera_linea);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_segunda_linea);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_tercera_linea);
 
 		//Mostrar zona memoria
 
@@ -12464,15 +12480,13 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 
 		//truncar texto a 32 por si acaso
 		memory_zone_text[32]=0;
-			//primero metemos esa linea con espacios para borrar texto residual
-														//    1234567890123456789012345678901234567890
-		zxvision_print_string_defaults(ventana,1,linea,"                                        ");
 
-		zxvision_print_string_defaults(ventana,1,linea++,memory_zone_text);
+
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,memory_zone_text);
 
 		sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 		
-		zxvision_print_string_defaults(ventana,1,linea++,textoshow);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
 
 	
 
@@ -13892,7 +13906,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		zxvision_draw_window(&ventana);						
 
-        z80_byte acumulado;
+        //z80_byte acumulado;
 
 
         //Cambiamos funcion overlay de texto de menu
@@ -14096,7 +14110,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		zxvision_draw_window(&ventana);						
 
-        z80_byte acumulado;
+        //z80_byte acumulado;
 
 
         //Cambiamos funcion overlay de texto de menu

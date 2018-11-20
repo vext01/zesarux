@@ -2787,7 +2787,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
     	menu_speech_tecla_pulsada=0; //Que envie a speech
    		tecla=zxvision_common_getkey_refresh();
 		zxvision_handle_cursors_pgupdn(&ventana,tecla);
-	} while (tecla!=2); 
+	} while (tecla!=2);  
 
 	//restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);		
