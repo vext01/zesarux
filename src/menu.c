@@ -7311,9 +7311,13 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	zxvision_new_window(&ventana,x,y,ancho,alto,
 							ancho-1,alto-2,titulo);
 
-	printf ("Nueva ventana\n");
+	//printf ("Nueva ventana\n");
 
 	zxvision_draw_window(&ventana);	
+
+	int mi_mouse_x=menu_mouse_x;
+	int mi_mouse_y=menu_mouse_y;
+	int mi_mouse_movido=0;
 	
 
 	//Entrar aqui cada vez que se dibuje otra subventana aparte, como tooltip o ayuda
@@ -7404,9 +7408,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			tecla_leida=zxvision_read_keyboard();
 
-		    /*if (tecla_leida==13 && mouse_left) {
-            	tecla_leida=0;
-            }*/
 
 
 			//Para poder usar repeticiones
@@ -7421,18 +7422,29 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 			//Redibujar ventana si mouse movido
-			if (mouse_movido) {
+			/*if (mouse_movido) {
 				printf ("Redraw window\n");
 				zxvision_draw_window_contents(&ventana);
-			}
+			}*/
 		
 
 			//Siempre forzado de momento
 			int mouse_frame_read=1;
 
+			if (menu_mouse_x!=mi_mouse_x || menu_mouse_y!=mi_mouse_y) {
+				mi_mouse_movido=1;
+			}
+			else {
+				mi_mouse_movido=0;
+			}
+
+			mi_mouse_x=menu_mouse_x;
+			mi_mouse_y=menu_mouse_y;
+			printf ("mi_mouse_movido: %d\n",mi_mouse_movido);
+
 
 			//printf ("tecla_leida: %d\n",tecla_leida);
-			if (mouse_movido && mouse_frame_read) {
+			if (mi_mouse_movido && mouse_frame_read) {
 				//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
 				//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
 				if (si_menu_mouse_en_ventana() ) {
