@@ -6008,7 +6008,6 @@ void menu_calculate_mouse_xy(void)
 		}
 
 		if (  (mouse_x!=last_mouse_x || mouse_y !=last_mouse_y) && mouse_en_emulador) {
-
 			mouse_movido=1;
 		}
 		else mouse_movido=0;
@@ -7382,7 +7381,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
 		zxvision_draw_window_contents(&ventana);
 
-        	menu_refresca_pantalla();
+        menu_refresca_pantalla();
 
 		tecla=0;
 
@@ -7428,9 +7427,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			}*/
 		
 
-			//Siempre forzado de momento
-			int mouse_frame_read=1;
-
 			if (menu_mouse_x!=mi_mouse_x || menu_mouse_y!=mi_mouse_y) {
 				mi_mouse_movido=1;
 			}
@@ -7440,11 +7436,11 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			mi_mouse_x=menu_mouse_x;
 			mi_mouse_y=menu_mouse_y;
-			printf ("mi_mouse_movido: %d\n",mi_mouse_movido);
+			//printf ("mi_mouse_movido: %d\n",mi_mouse_movido);
 
 
 			//printf ("tecla_leida: %d\n",tecla_leida);
-			if (mi_mouse_movido && mouse_frame_read) {
+			if (mi_mouse_movido) {
 				//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
 				//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
 				if (si_menu_mouse_en_ventana() ) {
