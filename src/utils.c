@@ -5396,7 +5396,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
             if (zxvision_keys_event_not_send_to_machine) {
                     //y si se pulsa dentro de ventana
                     if (si_menu_mouse_en_ventana() ) {
-                    util_set_reset_key(UTIL_KEY_ENTER,1);
+                    //util_set_reset_key(UTIL_KEY_ENTER,1);  //Ya no enviamos enter al pulsar boton mouse
                     }
             }
           }
@@ -5411,7 +5411,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 
           if (menu_abierto==1) {
             //Si esta menu abierto, es como enviar enter
-            util_set_reset_key(UTIL_KEY_ENTER,0);
+            //util_set_reset_key(UTIL_KEY_ENTER,0); //Ya no enviamos enter al pulsar boton mouse
           }
         }
 

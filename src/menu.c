@@ -5191,7 +5191,8 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 			//y saltamos esos codigos de negado
 			texto +=2;
 			caracter_aux.caracter=*texto;
-			inverso_letra=1;
+			if (menu_writing_inverse_color.v) inverso_letra=1;
+			else inverso_letra=0;
 
 
 
@@ -7396,7 +7397,14 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			menu_espera_tecla_timeout_tooltip();
 
 			//leemos tecla de momento de dos maneras, con puerto y con get_pressed_key
-			tecla_leida=menu_get_pressed_key();
+			//tecla_leida=menu_get_pressed_key();
+
+			tecla_leida=zxvision_read_keyboard();
+
+		    if (tecla_leida==13 && mouse_left) {
+            	tecla_leida=0;
+            }
+
 
 			//Para poder usar repeticiones
 			if (tecla_leida==0) {
