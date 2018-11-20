@@ -5404,7 +5404,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 							//Cambiar ancho
 							int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
 							//Espacio para las barras, si las hay
-							 if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
+							if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
 
 							zxvision_set_visible_width(w,ancho_ventana_final);
 
