@@ -3483,14 +3483,14 @@ void menu_debug_draw_visualmem(void)
 
 
         int ancho=(VISUALMEM_ANCHO-2);
-        int alto=(VISUALMEM_ALTO-6);
+        int alto=(VISUALMEM_ALTO-4);
 
 		if (ancho<1 || alto<1) return;
 
         //int xorigen=(visualmem_x_variable+1);
         //int yorigen=(visualmem_y_variable+5);
         int xorigen=1;
-        int yorigen=5;
+        int yorigen=3;
 
 
         if (si_complete_video_driver() ) {
