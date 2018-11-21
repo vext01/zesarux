@@ -144,6 +144,7 @@ int change_audio_driver_opcion_seleccionada=0;
 int settings_audio_opcion_seleccionada=0;
 int mem_breakpoints_opcion_seleccionada=0;
 int audio_new_waveform_opcion_seleccionada=0;
+int debug_new_visualmem_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -3236,7 +3237,9 @@ void menu_audio_draw_sound_wave(void)
         	        for (y=yorigen;y<yorigen+alto;y++) {
 				//putchar_menu_overlay(x,y,' ',0,7);
 				//putchar_menu_overlay(x,y,' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-				putchar_menu_overlay(x,y,' ',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
+				//putchar_menu_overlay(x,y,' ',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
+
+				zxvision_print_char_simple(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
 	                }
         	}
 	}
@@ -3331,7 +3334,8 @@ void menu_audio_draw_sound_wave(void)
 		}
 
 		else {
-			putchar_menu_overlay(SOUND_WAVE_X+x,SOUND_WAVE_Y+y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
+			//putchar_menu_overlay(SOUND_WAVE_X+x,SOUND_WAVE_Y+y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
+			zxvision_print_char_simple(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
 		}
 
 
@@ -3429,3 +3433,485 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	zxvision_destroy_window(&ventana);
 
 }
+
+
+zxvision_window *menu_debug_draw_visualmem_window;
+
+
+
+#ifdef EMULATE_VISUALMEM
+
+#define VISUALMEM_MAX_ALTO 24
+#define VISUALMEM_MAX_ANCHO 32
+
+int visualmem_ancho_variable=VISUALMEM_MAX_ANCHO-2;
+int visualmem_alto_variable=VISUALMEM_MAX_ALTO-2;
+
+#define VISUALMEM_MIN_X 0
+#define VISUALMEM_MIN_Y 0
+
+#define VISUALMEM_DEFAULT_X (VISUALMEM_MIN_X+1)
+int visualmem_x_variable=VISUALMEM_DEFAULT_X;
+
+#define VISUALMEM_DEFAULT_Y (VISUALMEM_MIN_Y+1)
+int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
+
+#define VISUALMEM_ANCHO (visualmem_ancho_variable)
+#define VISUALMEM_ALTO (visualmem_alto_variable)
+
+//0=vemos visualmem write
+//1=vemos visualmem read
+//2=vemos visualmem opcode
+int menu_visualmem_donde=0;
+
+
+int visualmem_bright_multiplier=10;
+
+
+void menu_debug_draw_visualmem(void)
+{
+
+        normal_overlay_texto_menu();
+
+		//workaround_pentagon_clear_putpixel_cache();
+
+
+        int ancho=(VISUALMEM_ANCHO-2);
+        int alto=(VISUALMEM_ALTO-6);
+        //int xorigen=(visualmem_x_variable+1);
+        //int yorigen=(visualmem_y_variable+5);
+        int xorigen=1;
+        int yorigen=5;
+
+
+        if (si_complete_video_driver() ) {
+                ancho *=menu_char_width;
+                alto *=8;
+                xorigen *=menu_char_width;
+                yorigen *=8;
+        }
+
+
+	int tamanyo_total=ancho*alto;
+
+        int x,y;
+
+
+        int inicio_puntero_membuffer,final_puntero_membuffer;
+
+	//Por defecto
+	inicio_puntero_membuffer=16384;
+	final_puntero_membuffer=65536;
+
+	//printf ("ancho: %d alto: %d\n",ancho,alto);
+
+	//En spectrum 16kb
+	if (MACHINE_IS_SPECTRUM_16) {
+		//printf ("spec 16kb\n");
+		final_puntero_membuffer=32768;
+	}
+
+	if (MACHINE_IS_Z88) {
+		        inicio_puntero_membuffer=0;
+	}
+
+	//En Inves, mostramos modificaciones a la RAM baja
+	if (MACHINE_IS_INVES) {
+                        inicio_puntero_membuffer=0;
+        }
+
+
+
+	//En zx80, zx81 mostrar desde 8192 por si tenemos expansion packs
+	if (MACHINE_IS_ZX8081) {
+		//por defecto
+		//printf ("ramtop_zx8081: %d\n",ramtop_zx8081);
+		final_puntero_membuffer=ramtop_zx8081+1;
+
+		if (ram_in_8192.v) {
+			//printf ("memoria en 8192\n");
+			inicio_puntero_membuffer=8192;
+		}
+
+        	if (ram_in_32768.v) {
+			//printf ("memoria en 32768\n");
+			final_puntero_membuffer=49152;
+		}
+
+	        if (ram_in_49152.v) {
+			//printf ("memoria en 49152\n");
+			final_puntero_membuffer=65536;
+		}
+
+	}
+
+        //En Jupiter Ace, desde 8192
+        if (MACHINE_IS_ACE) {
+                //por defecto
+                final_puntero_membuffer=ramtop_ace+1;
+                inicio_puntero_membuffer=8192;
+
+        }
+
+
+	//En CPC, desde 0
+	if (MACHINE_IS_CPC) {
+		inicio_puntero_membuffer=0;
+	}
+
+	if (MACHINE_IS_SAM) {
+                inicio_puntero_membuffer=0;
+        }
+
+
+
+	//En modos de RAM en ROM de +2a en puntero apuntara a direccion 0
+	if (MACHINE_IS_SPECTRUM_P2A_P3) {
+		if ( (puerto_32765 & 32) == 0 ) {
+			//paginacion habilitada
+
+			if ( (puerto_8189 & 1) ) {
+				//paginacion de ram en rom
+				//printf ("paginacion de ram en rom\n");
+				inicio_puntero_membuffer=0;
+			}
+		}
+	}
+
+	if (MACHINE_IS_QL) {
+		//inicio_puntero_membuffer=0x18000;
+		//la ram propiamente empieza en 20000H
+		inicio_puntero_membuffer=0x20000;
+		final_puntero_membuffer=QL_MEM_LIMIT+1;
+	}
+
+	//Si es de opcode o read, puede ser desde cualquier sitio desde la rom
+	if (menu_visualmem_donde>0) {
+		inicio_puntero_membuffer=0;
+	}
+
+	//Valores entre 0 y 255: numero de veces byte modificado
+	//Valor 65535 especial
+        //int si_modificado;
+
+
+             //Calcular cuantos bytes modificados representa un pixel, teniendo en cuenta maximo buffer
+	int max_valores=(final_puntero_membuffer-inicio_puntero_membuffer)/tamanyo_total;
+
+	//printf ("max_valores: %d\n",max_valores);
+	//le damos uno mas para poder llenar la ventana
+	//printf ("inicio: %06XH final: %06XH\n",inicio_puntero_membuffer,final_puntero_membuffer);
+	max_valores++;
+
+	for (y=yorigen;y<yorigen+alto;y++) {
+        for (x=xorigen;x<xorigen+ancho;x++) {
+
+                //Obtenemos conjunto de bytes modificados
+
+                int valores=max_valores;
+
+		int acumulado=0;
+		//si_modificado=0;
+                for (;valores>0;valores--,inicio_puntero_membuffer++) {
+                        if (inicio_puntero_membuffer>=final_puntero_membuffer) {
+				//printf ("llegado a final con x: %d y: %d ",x,y);
+				//Fuera de memoria direccionable. Zona gris. Decrementamos valor
+				//Como se lee a trozos de "max_valores" tamanyo, cuando este trozo empieza ya fuera de memoria
+				//acumulado acabara siendo <0 y saldra gris. Si es a medias, si acaba restando mucho, saldra gris tambien
+				//(eso solo pasara en el ultimo pixel de la zona direccionable)
+				acumulado--;
+                        }
+			else {
+				//Es en memoria direccionable. Sumar valor de visualmem y luego haremos valor medio
+				if (menu_visualmem_donde==0) {
+					acumulado +=visualmem_buffer[inicio_puntero_membuffer];
+					clear_visualmembuffer(inicio_puntero_membuffer);
+				}
+
+				else if (menu_visualmem_donde==1) {
+					acumulado +=visualmem_read_buffer[inicio_puntero_membuffer];
+					clear_visualmemreadbuffer(inicio_puntero_membuffer);
+				}
+
+				else {
+					acumulado +=visualmem_opcode_buffer[inicio_puntero_membuffer];
+					clear_visualmemopcodebuffer(inicio_puntero_membuffer);
+				}
+
+
+			}
+                }
+		//if (acumulado>0) printf ("final pixel %d %d (divisor: %d)\n",inicio_puntero_membuffer,acumulado,max_valores);
+
+                //dibujamos valor medio
+                if (acumulado>0) {
+
+			if (si_complete_video_driver() ) {
+
+				//Sacar valor medio
+				int color_final=acumulado/max_valores;
+
+				//printf ("color final: %d\n",color_final);
+
+				//Aumentar el brillo del color
+				color_final=color_final*visualmem_bright_multiplier;
+				if (color_final>255) color_final=255;
+
+
+
+				//menu_scr_putpixel(x,y,ESTILO_GUI_TINTA_NORMAL);
+				//menu_scr_putpixel(x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
+				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
+			}
+
+			else {
+				//putchar_menu_overlay(x,y,'#',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+				zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
+			}
+		}
+
+		//color ficticio para indicar fuera de memoria y por tanto final de ventana... para saber donde acaba
+		else if (acumulado<0) {
+			if (si_complete_video_driver() ) {
+				//menu_scr_putpixel(x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
+				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
+			}
+			else {
+				//putchar_menu_overlay(x,y,'-',ESTILO_GUI_COLOR_UNUSED_VISUALMEM,ESTILO_GUI_PAPEL_NORMAL);
+				zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'-');
+            }
+
+		}
+
+		//Valor 0
+		else {
+			if (si_complete_video_driver() ) {
+				//menu_scr_putpixel(x,y,ESTILO_GUI_PAPEL_NORMAL);
+				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL);
+			}
+			else {
+				//putchar_menu_overlay(x,y,' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+				zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
+			}
+		}
+
+        }
+	}
+
+}
+
+
+
+
+
+
+
+
+
+void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
+{
+	menu_visualmem_donde++;
+	if (menu_visualmem_donde==3) menu_visualmem_donde=0;
+}
+
+
+void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
+{
+                        if (visualmem_bright_multiplier>=200) visualmem_bright_multiplier=1;
+                        else if (visualmem_bright_multiplier==1) visualmem_bright_multiplier=10;
+                        else visualmem_bright_multiplier +=10;
+}
+
+
+void menu_debug_new_visualmem_key_o(MENU_ITEM_PARAMETERS)
+{
+    if (visualmem_ancho_variable>23) {
+		visualmem_ancho_variable--;
+
+		if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_DEFAULT_X;
+	}
+}
+
+
+void menu_debug_new_visualmem_key_p(MENU_ITEM_PARAMETERS)
+{
+    if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO) {
+		visualmem_ancho_variable++;
+
+		//Mover a la izquierda si maximo
+		if (visualmem_ancho_variable>=VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_MIN_X;
+	}
+}
+
+void menu_debug_new_visualmem_key_q(MENU_ITEM_PARAMETERS)
+{
+    if (visualmem_alto_variable>7) {
+		visualmem_alto_variable--;
+
+		if (visualmem_alto_variable<VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_DEFAULT_Y;
+	}
+}
+
+void menu_debug_new_visualmem_key_a(MENU_ITEM_PARAMETERS)
+{
+    if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) {
+		visualmem_alto_variable++;
+
+		//Mover a la arriba si maximo
+		if (visualmem_alto_variable>=VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_MIN_Y;		
+	}
+}
+
+void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
+{
+
+
+ 	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,visualmem_x_variable,visualmem_y_variable,VISUALMEM_ANCHO,VISUALMEM_ALTO,
+							VISUALMEM_ANCHO-1,VISUALMEM_ALTO-2,"Visual memory");
+	zxvision_draw_window(&ventana);				
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de visualmem + texto
+        set_menu_overlay_function(menu_debug_draw_visualmem);
+
+
+	menu_debug_draw_visualmem_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+
+
+	menu_dibuja_menu_permite_repeticiones_hotk=1;
+
+
+	menu_item *array_menu_debug_new_visualmem;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+	
+
+
+	//Forzar a mostrar atajos
+	z80_bit antes_menu_writing_inverse_color;
+	antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+	menu_writing_inverse_color.v=1;
+
+
+	char texto_linea[33];
+	sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
+	//menu_escribe_linea_opcion(0,-1,1,texto_linea);
+	zxvision_print_string_defaults_fillspc(&ventana,1,0,texto_linea);
+
+
+
+	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: Written Mem");
+	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~Looking: Read Mem");
+	else sprintf (texto_linea,"~~Looking: Opcode");
+
+
+	//sprintf (texto_linea,"~~Looking: %s",(menu_visualmem_donde == 0 ? "Written Mem" : "Opcode") );
+	//menu_escribe_linea_opcion(1,-1,1,texto_linea);
+	zxvision_print_string_defaults_fillspc(&ventana,1,1,texto_linea);
+
+
+	//Restaurar comportamiento atajos
+	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+
+
+//        char texto_linea[33];
+//        sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
+//        menu_escribe_linea_opcion(VISUALMEM_Y,-1,1,texto_linea);
+
+                        menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_o,NULL,"~~O");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'o');
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window width");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Decrease window width");
+						//0123456789
+						// Size: OPQA
+						// Size: OPQA Bright: %d
+						// Looking
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,7,0);
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_p,NULL,"~~P");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'p');
+                        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window width");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window width");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,8,0);
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_q,NULL,"~~Q");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'q');
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window height");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Decrease window height");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,9,0);
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_a,NULL,"~~A");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'a');
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window height");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window height");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,10,0);
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Change bright value");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Change bright value");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,12,0);
+
+
+			char texto_looking[32];
+	        	if (menu_visualmem_donde == 0) sprintf (texto_looking,"Written Mem");
+        		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"Read Mem");
+		        else sprintf (texto_looking,"Opcode");
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Which visualmem to look at");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at");
+                        menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
+
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Visual memory" );
+
+
+	cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+	menu_dibuja_menu_permite_repeticiones_hotk=0;
+
+
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    cls_menu_overlay();
+	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+	zxvision_destroy_window(&ventana);		
+
+
+}
+
+
+
+
+
+#endif

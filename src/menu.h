@@ -58,6 +58,9 @@ extern void menu_espera_tecla_timeout_window_splash(void);
 extern void menu_cpu_core_loop(void);
 extern z80_byte menu_get_pressed_key(void);
 
+extern z80_bit menu_writing_inverse_color;
+extern int menu_dibuja_menu_permite_repeticiones_hotk;
+
 extern z80_bit menu_symshift;
 extern z80_bit menu_capshift;
 extern z80_bit menu_backspace;
@@ -122,6 +125,7 @@ extern void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width
 extern void zxvision_destroy_window(zxvision_window *w);
 extern void zxvision_draw_window(zxvision_window *w);
 extern void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter);
+extern void zxvision_print_char_simple(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,z80_byte caracter);
 extern void zxvision_draw_window_contents(zxvision_window *w);
 
 extern void zxvision_set_offset_x(zxvision_window *w,int offset_x);
