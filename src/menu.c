@@ -687,7 +687,7 @@ int colour_settings_opcion_seleccionada=0;
 int zxuno_spi_flash_opcion_seleccionada=0;
 
 int debug_new_visualmem_opcion_seleccionada=0;
-int audio_new_waveform_opcion_seleccionada=0;
+
 int audio_new_ayplayer_opcion_seleccionada=0;
 
 int plusthreedisk_opcion_seleccionada=0;
@@ -3490,6 +3490,50 @@ void menu_escribe_linea_opcion_tabulado(z80_byte indice,int opcion_actual,int op
         //int startx=menu_escribe_linea_startx;
         //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
         menu_escribe_texto_ventana(x,y,tinta,papel,texto);
+
+        //si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor. De momento no
+	
+        /*if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
+                if (opcion_actual==indice) {
+                        if (opcion_activada==1) menu_escribe_texto_ventana(0,indice,tinta,papel,">");
+                        else menu_escribe_texto_ventana(0,indice,tinta,papel,"x");
+                }
+        }*/
+        menu_textspeech_send_text(texto);
+
+}
+
+
+//escribe opcion de texto tabulado
+//coordenadas "indice" relativa al interior de la ventana (0=inicio)
+//opcion_actual indica que numero de linea es la seleccionada
+//opcion activada indica a 1 que esa opcion es seleccionable
+void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,z80_byte indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
+{
+
+        if (!strcmp(scr_driver_name,"stdout")) {
+                printf ("%s\n",texto);
+                scrstdout_menu_print_speech_macro (texto);
+                return;
+        }
+
+
+        z80_byte papel,tinta;
+
+
+        menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
+
+
+        //linea entera con espacios
+        //for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
+
+        //y texto propiamente
+
+        //int startx=menu_escribe_linea_startx;
+        //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
+        
+		//menu_escribe_texto_ventana(x,y,tinta,papel,texto);
+		zxvision_print_string(ventana,x,y,tinta,papel,0,texto);
 
         //si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor. De momento no
 	
@@ -6829,7 +6873,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 			}
 
 			if (aux->es_menu_tabulado) {
-				menu_escribe_linea_opcion_tabulado(i,linea_seleccionada,opcion_activa,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
+				menu_escribe_linea_opcion_tabulado_zxvision(ventana,i,linea_seleccionada,opcion_activa,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
 			}
             
 			
@@ -7305,14 +7349,31 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	int redibuja_ventana;
 	int tecla;
 
-	zxvision_window ventana;
+	//Apuntamos a ventana usada. Si no es menu tabulado, creamos una nosotros
+	//Si es tabulado, usamos current_window (pues ya alguien la ha creado antes)
+	zxvision_window *ventana;
 
-	zxvision_new_window(&ventana,x,y,ancho,alto,
-							ancho-1,alto-2,titulo);
+	if (m->es_menu_tabulado==0) {
+		zxvision_window ventana_menu;
+
+		zxvision_new_window(&ventana_menu,x,y,ancho,alto,
+							ancho-1,alto-2,titulo);		
+
+		ventana=&ventana_menu;
+
+		//menu_dibuja_ventana(x,y,ancho,alto,titulo);
+	}
+
+	else {
+		ventana=zxvision_current_window;
+	}
+
+
+
 
 	//printf ("Nueva ventana\n");
 
-	zxvision_draw_window(&ventana);	
+	zxvision_draw_window(ventana);	
 
 	int mi_mouse_x=menu_mouse_x;
 	int mi_mouse_y=menu_mouse_y;
@@ -7327,15 +7388,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	//Dibujar ventana siempre que el tipo no sea tabular. Miramos el primer item
 	//printf ("menu pointer: %p\n",m);
-	//TODO en zxvision menu tabular
-
-
 		
 
 
-	if (m->es_menu_tabulado==0) {
+	//if (m->es_menu_tabulado==0) {
 		//menu_dibuja_ventana(x,y,ancho,alto,titulo);
-	}
+	//}
 
 	menu_tooltip_counter=0;
 
@@ -7375,11 +7433,11 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		}
 
 		//escribir todas opciones
-		menu_escribe_opciones_zxvision(&ventana,m,linea_seleccionada,max_opciones,scroll_opciones);
+		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones,scroll_opciones);
 
 
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
-		zxvision_draw_window_contents(&ventana);
+		zxvision_draw_window_contents(ventana);
 
         menu_refresca_pantalla();
 
@@ -7671,7 +7729,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 				//Mostrar por un momento opciones y letras
 				menu_writing_inverse_color.v=1;
-				menu_escribe_opciones_zxvision(&ventana,m,entrada_atajo,max_opciones,scroll_opciones);
+				menu_escribe_opciones_zxvision(ventana,m,entrada_atajo,max_opciones,scroll_opciones);
 				menu_refresca_pantalla();
 				//menu_espera_no_tecla();
 				menu_dibuja_menu_espera_no_tecla();
@@ -7787,7 +7845,11 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Salir del menu diciendo que no se ha pulsado tecla
 	menu_speech_tecla_pulsada=0;
 
-	zxvision_destroy_window(&ventana);
+
+	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+	if (m->es_menu_tabulado==0) {
+		zxvision_destroy_window(ventana);
+	}
 
 	//printf ("tecla: %d\n",tecla);
 
@@ -13781,9 +13843,9 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
 
 
-int menu_audio_draw_sound_wave_ycentro;
 
-void menu_linea(int x,int y1,int y2,int color)
+
+void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color)
 {
 
 	int yorigen;
@@ -13803,323 +13865,11 @@ void menu_linea(int x,int y1,int y2,int color)
 
 
 	for (;yorigen<=ydestino;yorigen++) {
-		menu_scr_putpixel(x,yorigen,color);
+		//menu_scr_putpixel(x,yorigen,color);
+		zxvision_putpixel(ventana,x,yorigen,color);
 	}
 }
 
-#define SOUND_WAVE_X 1
-#define SOUND_WAVE_Y 3
-#define SOUND_WAVE_ANCHO 30
-#define SOUND_WAVE_ALTO 15
-
-int menu_sound_wave_llena=1;
-
-char menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_max,menu_audio_draw_sound_wave_valor_min;
-int menu_audio_draw_sound_wave_frecuencia_aproximada;
-
-int menu_audio_draw_sound_wave_volumen=0;
-int menu_audio_draw_sound_wave_volumen_escalado=0;
-
-
-//Usado dentro del overlay de waveform, para mostrar dos veces por segundo el texto que average, etc
-int menu_waveform_valor_contador_segundo_anterior;
-
-int menu_waveform_previous_volume=0;
-
-void workaround_pentagon_clear_putpixel_cache(void)
-{
-
-    //workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
-    //la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
-    //esta en alguna parte de la putpixel cache
-
-	return; 
-
-	//ya no hace falta hacer nada, despues de corregir funcion menu_scr_putpixel para que use funciones rainbow de pixel cuando este activo rainbow
-    if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();	
-
-}
-
-
-void menu_audio_draw_sound_wave(void)
-{
-
-	normal_overlay_texto_menu();
-
-	workaround_pentagon_clear_putpixel_cache();
-
-				char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
-
-	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
-
-	//esto hara ejecutar esto 2 veces por segundo
-	if ( ((contador_segundo%500) == 0 && menu_waveform_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-
-		menu_waveform_valor_contador_segundo_anterior=contador_segundo;
-		//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-
-		//menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
-
-			//Average, min, max    
-
-			sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
-				menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_min,menu_audio_draw_sound_wave_valor_max);
-			menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
-
-
-	
-
-			//Hacer decaer el volumen
-			//if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
-			menu_waveform_previous_volume=menu_decae_dec_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
-
-
-			//Frecuency
-			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
-				menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
-			menu_escribe_linea_opcion(3,-1,1,buffer_texto_medio);
-
-			//printf ("menu_speech_tecla_pulsada: %d\n",menu_speech_tecla_pulsada);
-	}
-
-
-
-
-
-
-
-	int ancho=(SOUND_WAVE_ANCHO-2);
-	int alto=(SOUND_WAVE_ALTO-4);
-	int xorigen=(SOUND_WAVE_X+1);
-	int yorigen=(SOUND_WAVE_Y+4);
-
-	if (si_complete_video_driver() ) {
-        	ancho *=menu_char_width;
-	        alto *=8;
-        	xorigen *=menu_char_width;
-	        yorigen *=8;
-	}
-
-
-	//int ycentro=yorigen+alto/2;
-	menu_audio_draw_sound_wave_ycentro=yorigen+alto/2;
-
-	int x,y,lasty;
-
-
-	//Para drivers de texto, borrar zona
-
-	if (!si_complete_video_driver() ) {
-	        for (x=xorigen;x<xorigen+ancho;x++) {
-        	        for (y=yorigen;y<yorigen+alto;y++) {
-				//putchar_menu_overlay(x,y,' ',0,7);
-				//putchar_menu_overlay(x,y,' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-				putchar_menu_overlay(x,y,' ',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
-	                }
-        	}
-	}
-
-
-	
-
-	audiobuffer_stats audiostats;
-	audio_get_audiobuffer_stats(&audiostats);
-
-
-	menu_audio_draw_sound_wave_valor_max=audiostats.maximo;
-	menu_audio_draw_sound_wave_valor_min=audiostats.minimo;
-	menu_audio_draw_sound_wave_frecuencia_aproximada=audiostats.frecuencia;
-	menu_audio_draw_sound_wave_volumen=audiostats.volumen;
-	menu_audio_draw_sound_wave_volumen_escalado=audiostats.volumen_escalado;
-
-	int audiomedio=audiostats.medio;
-	menu_audio_draw_sound_wave_valor_medio=audiomedio;
-        audiomedio=audiomedio*alto/256;
-
-        //Lo situamos en el centro. Negativo hacia abajo (Y positiva)
-        audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
-
-	int puntero_audio=0;
-	char valor_audio;
-	for (x=xorigen;x<xorigen+ancho;x++) {
-
-		//Obtenemos valor medio de audio
-		int valor_medio=0;
-
-		//Calcular cuantos valores representa un pixel, teniendo en cuenta maximo buffer
-		const int max_valores=AUDIO_BUFFER_SIZE/ancho;
-
-		int valores=max_valores;
-		for (;valores>0;valores--,puntero_audio++) {
-			if (puntero_audio>=AUDIO_BUFFER_SIZE) {
-				//por si el calculo no es correcto, salir.
-				//esto no deberia suceder ya que el calculo de max_valores se hace en base al maximo
-				cpu_panic("menu_audio_draw_sound_wave: pointer beyond AUDIO_BUFFER_SIZE");
-			}
-
-			//stereo 
-			//if (audio_driver_accepts_stereo.v) {
-				int suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
-				suma_canales /=2;
-				valor_medio=valor_medio+suma_canales;
-			//}
-
-			//else valor_medio=valor_medio+audio_buffer[puntero_audio];
-
-
-		}
-
-		valor_medio=valor_medio/max_valores;
-
-		valor_audio=valor_medio;
-
-		//Lo escalamos a maximo alto
-
-		y=valor_audio;
-		y=valor_audio*alto/256;
-
-		//Lo situamos en el centro. Negativo hacia abajo (Y positiva)
-		y=menu_audio_draw_sound_wave_ycentro-y;
-
-
-		//unimos valor anterior con actual con una linea vertical
-		if (x!=xorigen) {
-			if (si_complete_video_driver() ) {
-
-				//Onda no llena
-				if (!menu_sound_wave_llena) menu_linea(x,lasty,y,ESTILO_GUI_COLOR_WAVEFORM);
-
-        			//dibujar la onda "llena", es decir, siempre contar desde centro
-			        //el centro de la y de la onda es variable... se saca valor medio de todos los valores mostrados en pantalla
-
-				//Onda llena
-				else menu_linea(x,audiomedio,y,ESTILO_GUI_COLOR_WAVEFORM);
-
-
-
-			}
-		}
-
-		lasty=y;
-
-		//dibujamos valor actual
-		if (si_complete_video_driver() ) {
-			menu_scr_putpixel(x,y,ESTILO_GUI_COLOR_WAVEFORM);
-		}
-
-		else {
-			putchar_menu_overlay(x,y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
-		}
-
-
-	}
-
-	//printf ("%d ",puntero_audio);
-
-
-	//Volume. Mostrarlo siempre, no solo dos veces por segundo, para que se actualice mas frecuentemente
-	//if (menu_waveform_previous_volume<menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume=menu_audio_draw_sound_wave_volumen_escalado;
-	menu_waveform_previous_volume=menu_decae_ajusta_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
-
-	char texto_volumen[32]; 
-    menu_string_volumen(texto_volumen,menu_audio_draw_sound_wave_volumen_escalado,menu_waveform_previous_volume);
-                                                                //"Volume C: %s"
-
-	sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
-	menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
-
-
-
-}
-
-
-
-
-void menu_audio_new_waveform_shape(MENU_ITEM_PARAMETERS)
-{
-	menu_sound_wave_llena ^=1;
-}
-
-
-
-void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
-{
-
-        //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
-        //z80_bit copia_video_interlaced_mode;
-        //copia_video_interlaced_mode.v=video_interlaced_mode.v;
-
-        //disable_interlace();
-
-
-        menu_espera_no_tecla();
-
-        //z80_byte acumulado;
-
-
-
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de audio waveform
-	set_menu_overlay_function(menu_audio_draw_sound_wave);
-
-
-
-	menu_item *array_menu_audio_new_waveform;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
-
-
-	  //Hay que redibujar la ventana desde este bucle
-	menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
-
-
-                        menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
-                        menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
-
-                        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
-                        //menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
-                        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
-						//0123456789
-						// Change wave Shape
-						
-			menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
-
-
-
-
-
-		//Nombre de ventana solo aparece en el caso de stdout
-                retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
-
-
-	cls_menu_overlay();
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-
-
-
-
-
-        //Restauramos modo interlace
-        //if (copia_video_interlaced_mode.v) enable_interlace();
-
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
-
-
-        cls_menu_overlay();
-
-}
 
 
 void menu_ay_pianokeyboard_insert_inverse(char *origen_orig, int indice)
