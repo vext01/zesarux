@@ -20,9 +20,12 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 --cuando se abre tooltip, al volver desaparece marca de zxvision, quiza porque se cambian preferencias de ventana?
 --sin multitask ,no deja mover ventanas
 
+-cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
 -zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
 Lo hace realmente con visible_width y visible_height
+
+-cuando todo sean ventanas zxvision, quitar el "punto" que las identifica en barra de título
 
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 
