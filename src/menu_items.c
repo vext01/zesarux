@@ -3707,6 +3707,8 @@ void menu_debug_draw_visualmem(void)
         }
 	}
 
+	zxvision_draw_window_contents(menu_debug_draw_visualmem_window); 
+
 }
 
 
@@ -3731,46 +3733,46 @@ void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
                         else visualmem_bright_multiplier +=10;
 }
 
-
+/*
 void menu_debug_new_visualmem_key_o(MENU_ITEM_PARAMETERS)
 {
-    /*if (visualmem_ancho_variable>23) {
+    /if (visualmem_ancho_variable>23) {
 		visualmem_ancho_variable--;
 
 		if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_DEFAULT_X;
-	}*/
+	}
 }
 
 
 void menu_debug_new_visualmem_key_p(MENU_ITEM_PARAMETERS)
 {
-    /*if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO) {
+    if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO) {
 		visualmem_ancho_variable++;
 
 		//Mover a la izquierda si maximo
 		if (visualmem_ancho_variable>=VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_MIN_X;
-	}*/
+	}
 }
 
 void menu_debug_new_visualmem_key_q(MENU_ITEM_PARAMETERS)
 {
-    /*if (visualmem_alto_variable>7) {
+    if (visualmem_alto_variable>7) {
 		visualmem_alto_variable--;
 
 		if (visualmem_alto_variable<VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_DEFAULT_Y;
-	}*/
+	}
 }
 
 void menu_debug_new_visualmem_key_a(MENU_ITEM_PARAMETERS)
 {
-    /*if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) {
+    if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) {
 		visualmem_alto_variable++;
 
 		//Mover a la arriba si maximo
 		if (visualmem_alto_variable>=VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_MIN_Y;		
-	}*/
+	}
 }
-
+*/
 void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 {
 
@@ -3812,7 +3814,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 	char texto_linea[33];
-	sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
+	//sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
+	sprintf (texto_linea,"~~Bright: %d",visualmem_bright_multiplier);
 	//menu_escribe_linea_opcion(0,-1,1,texto_linea);
 	zxvision_print_string_defaults_fillspc(&ventana,1,0,texto_linea);
 
@@ -3837,6 +3840,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 //        sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
 //        menu_escribe_linea_opcion(VISUALMEM_Y,-1,1,texto_linea);
 
+/*
                         menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_o,NULL,"~~O");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'o');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window width");
@@ -3865,12 +3869,14 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
                         //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window height");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window height");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,10,0);
+*/
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
+						menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
+                        //menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
                         //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Change bright value");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Change bright value");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,12,0);
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,0);
 
 
 			char texto_looking[32];
