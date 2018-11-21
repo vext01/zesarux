@@ -13843,7 +13843,19 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
 
 
+/*void workaround_pentagon_clear_putpixel_cache(void)
+{
 
+    //workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
+    //la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
+    //esta en alguna parte de la putpixel cache
+
+	return; 
+
+	//ya no hace falta hacer nada, despues de corregir funcion menu_scr_putpixel para que use funciones rainbow de pixel cuando este activo rainbow
+    if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();	
+
+}*/
 
 void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color)
 {
@@ -14316,7 +14328,7 @@ void menu_ay_pianokeyboard_overlay(void)
 {
     normal_overlay_texto_menu();
 
-	workaround_pentagon_clear_putpixel_cache();
+	//workaround_pentagon_clear_putpixel_cache();
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
 
@@ -14531,7 +14543,7 @@ valor_contador_segundo_anterior=contador_segundo;
 
 
 
-	workaround_pentagon_clear_putpixel_cache();	
+	//workaround_pentagon_clear_putpixel_cache();	
 
 	menu_espera_no_tecla();
 
@@ -14597,7 +14609,7 @@ void menu_beeper_pianokeyboard_overlay(void)
 			//Restauramos comportamiento por defecto
 			menu_ay_piano_drawing_wavepiano.v=0;
 
-			workaround_pentagon_clear_putpixel_cache();
+			//workaround_pentagon_clear_putpixel_cache();
 
 			char buffer_texto[40];
 			
@@ -25716,7 +25728,7 @@ void menu_debug_draw_visualmem(void)
 
         normal_overlay_texto_menu();
 
-		workaround_pentagon_clear_putpixel_cache();
+		//workaround_pentagon_clear_putpixel_cache();
 
 
         int ancho=(VISUALMEM_ANCHO-2);
@@ -26142,7 +26154,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
         cls_menu_overlay();
 
-	workaround_pentagon_clear_putpixel_cache();
+	//workaround_pentagon_clear_putpixel_cache();
 
 }
 

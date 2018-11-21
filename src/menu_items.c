@@ -3151,19 +3151,7 @@ int menu_waveform_valor_contador_segundo_anterior;
 
 int menu_waveform_previous_volume=0;
 
-void workaround_pentagon_clear_putpixel_cache(void)
-{
 
-    //workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
-    //la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
-    //esta en alguna parte de la putpixel cache
-
-	return; 
-
-	//ya no hace falta hacer nada, despues de corregir funcion menu_scr_putpixel para que use funciones rainbow de pixel cuando este activo rainbow
-    if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();	
-
-}
 
 zxvision_window *menu_audio_draw_sound_wave_window;
 
@@ -3172,7 +3160,7 @@ void menu_audio_draw_sound_wave(void)
 
 	normal_overlay_texto_menu();
 
-	workaround_pentagon_clear_putpixel_cache();
+	//workaround_pentagon_clear_putpixel_cache();
 
 				char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
@@ -3338,11 +3326,12 @@ void menu_audio_draw_sound_wave(void)
 
 		//dibujamos valor actual
 		if (si_complete_video_driver() ) {
-			menu_scr_putpixel(x,y,ESTILO_GUI_COLOR_WAVEFORM);
+			//menu_scr_putpixel(x,y,ESTILO_GUI_COLOR_WAVEFORM);
+			zxvision_putpixel(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_COLOR_WAVEFORM);
 		}
 
 		else {
-			putchar_menu_overlay(x,y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
+			putchar_menu_overlay(SOUND_WAVE_X+x,SOUND_WAVE_Y+y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
 		}
 
 
@@ -3384,23 +3373,18 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
  	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-		zxvision_window ventana;
+	zxvision_window ventana;
 
 	zxvision_new_window(&ventana,SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,
 							SOUND_WAVE_ANCHO-1,SOUND_WAVE_ALTO+4-2,"Waveform");
 	zxvision_draw_window(&ventana);		
 
-        //z80_byte acumulado;
-
-
-
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de audio waveform
+    
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de audio waveform
 	set_menu_overlay_function(menu_audio_draw_sound_wave);
 
 	menu_audio_draw_sound_wave_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
-
-
 
 	menu_item *array_menu_audio_new_waveform;
         menu_item item_seleccionado;
@@ -3408,51 +3392,35 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
         do {
 
 
-	  //Hay que redibujar la ventana desde este bucle
-	//menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
+		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
+        menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
 
-
-                        menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
-                        menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
-
-                        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
-                        //menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
-                        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
-						//0123456789
-						// Change wave Shape
+        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+        //menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
+        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
 						
-			menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
-
-
-
+		menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
 
 
 		//Nombre de ventana solo aparece en el caso de stdout
-                retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
+    	retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
 
 
-	cls_menu_overlay();
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
-                        }
-                }
+		cls_menu_overlay();
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+        	//llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                cls_menu_overlay();
+            }
+        }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
-
-
-        //Restauramos modo interlace
-        //if (copia_video_interlaced_mode.v) enable_interlace();
-
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
+	//restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);
 
 
     cls_menu_overlay();
