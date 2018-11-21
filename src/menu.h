@@ -160,6 +160,7 @@ extern int zxvision_keys_event_not_send_to_machine;
 extern void zxvision_espera_tecla_timeout_window_splash(void);
 extern int zxvision_key_not_sent_emulated_mach(void);
 extern void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color);
+extern void zxvision_fill_width_spaces(zxvision_window *w,int y);
 
 #define MAX_F_FUNCTIONS 19
 

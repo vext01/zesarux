@@ -4229,6 +4229,8 @@ int mostrar_player;
 
 		}
 	}
+
+	zxvision_draw_window_contents(menu_audio_new_ayplayer_overlay_window);
 }
 
 
@@ -4398,6 +4400,13 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+5);
 
 			if (menu_audio_new_ayplayer_si_mostrar() ) {
+				//Vamos a borrar con espacios para que no quede rastro de opciones anteriores, como Yes/No 
+				//Si no, pasaria que mostraria "Nos" como parte de la s final de Yes
+				int i;
+				for (i=13;i<=16;i++) {
+					zxvision_fill_width_spaces(&ventana,i);
+				}
+
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_prev,NULL,"~~Prev");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'p');
 				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Previous song");

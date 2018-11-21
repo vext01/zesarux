@@ -3533,6 +3533,9 @@ void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,z80_by
         //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
         
 		//menu_escribe_texto_ventana(x,y,tinta,papel,texto);
+		//Linea entera con espacios
+		//zxvision_fill_width_spaces(ventana,y);
+
 		zxvision_print_string(ventana,x,y,tinta,papel,0,texto);
 
         //si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor. De momento no
@@ -5315,10 +5318,8 @@ void zxvision_print_string_defaults(zxvision_window *w,int x,int y,char *texto)
 
 }
 
-//Igual que la anterior pero antes borra la linea con espacios
-void zxvision_print_string_defaults_fillspc(zxvision_window *w,int x,int y,char *texto)
+void zxvision_fill_width_spaces(zxvision_window *w,int y)
 {
-
 	overlay_screen caracter_aux;
 	caracter_aux.caracter=' ';
 	caracter_aux.tinta=ESTILO_GUI_TINTA_NORMAL;
@@ -5329,6 +5330,23 @@ void zxvision_print_string_defaults_fillspc(zxvision_window *w,int x,int y,char 
 	for (i=0;i<w->total_width;i++) {
 		zxvision_print_char(w,i,y,&caracter_aux);
 	}
+}
+
+//Igual que la anterior pero antes borra la linea con espacios
+void zxvision_print_string_defaults_fillspc(zxvision_window *w,int x,int y,char *texto)
+{
+
+	/*overlay_screen caracter_aux;
+	caracter_aux.caracter=' ';
+	caracter_aux.tinta=ESTILO_GUI_TINTA_NORMAL;
+	caracter_aux.papel=ESTILO_GUI_PAPEL_NORMAL;
+	caracter_aux.parpadeo=0;		
+
+	int i;
+	for (i=0;i<w->total_width;i++) {
+		zxvision_print_char(w,i,y,&caracter_aux);
+	}*/
+	zxvision_fill_width_spaces(w,y);
 
 	zxvision_print_string(w,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,texto);
 

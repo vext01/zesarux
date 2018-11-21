@@ -13,6 +13,7 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 -menus zxvision:
 --acabar de migrar los menus tabulados a zxvision
+--porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
 --que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
 --al mover raton, tiene que lanzar vuelta de menu_espera_tecla_timeout_tooltip
 
