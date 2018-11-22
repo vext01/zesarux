@@ -4510,13 +4510,6 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 #define DEBUG_HEXDUMP_WINDOW_ANCHO 32
 #define DEBUG_HEXDUMP_WINDOW_ALTO 22
 
-void menu_debug_hexdump_ventana(void)
-{
-        //menu_dibuja_ventana(DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,"Hexadecimal Editor");
-}
-
-
-
 
 
 void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea,z80_byte valor_xor)
@@ -4717,11 +4710,12 @@ void menu_debug_hexdump_copy(void)
 
 }
 
-void menu_debug_hexdump_aviso_edit_filezone(void)
+void menu_debug_hexdump_aviso_edit_filezone(zxvision_window *w)
 {
 							menu_warn_message("Memory zone is File zone. Changes won't be saved to the file");
 							//Volver a dibujar ventana, pues se ha borrado al aparecer el aviso
-							menu_debug_hexdump_ventana();	
+							//menu_debug_hexdump_ventana();	
+	zxvision_draw_window(w);
 }
 
 
@@ -4733,6 +4727,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
+	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
 	zxvision_new_window(&ventana,DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,
 							DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO-2,"Hexadecimal Editor");
 
@@ -4802,9 +4797,6 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		//Hacer que texto ventana empiece pegado a la izquierda
 		menu_escribe_linea_startx=0;
-
-		//No mostrar atajos en el dump hexa
-		//menu_writing_inverse_color.v=0;
 
 		//No mostrar caracteres especiales
 		menu_disable_special_chars.v=1;
@@ -4955,7 +4947,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			zxvision_draw_window_contents(&ventana);
 			//NOTA: este menu no acostumbra a refrescar rapido la ventana cuando la redimensionamos con el raton
 			//es una razon facil: el volcado de hexa usa relativamente mucha cpu,
-			//cada vez que redimensionamos ventana, se llama al bucle continuamente, usando mucha cpu y si esta el autoframedrop,
+			//cada vez que redimensionamos ventana, se llama al bucle continuamente, usando mucha cpu y si esta el autoframeskip,
 			//hace saltar frames
 			
 
@@ -5008,14 +5000,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 'm':
 						if (!editando_en_zona_ascii)  {
 							menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
-							menu_debug_hexdump_ventana();
+							//menu_debug_hexdump_ventana();
+							zxvision_draw_window(&ventana);
 						}
 					break;
 
 					case 'o':
 						if (!editando_en_zona_ascii)  {
 							menu_debug_hexdump_copy();
-							menu_debug_hexdump_ventana();
+							//menu_debug_hexdump_ventana();
+							zxvision_draw_window(&ventana);
 						}
 					break;					
 
@@ -5039,7 +5033,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 						//Si zona de filemem
 						if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_NUM_FILE_ZONE) {
-							menu_debug_hexdump_aviso_edit_filezone();				
+							menu_debug_hexdump_aviso_edit_filezone(&ventana);				
 						}
 					break;					
 
@@ -5108,10 +5102,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						}
 
 						//Volver a dibujar ventana, pues se ha borrado al pregutar confirmacion
-						menu_debug_hexdump_ventana();
+						//menu_debug_hexdump_ventana();
+						zxvision_draw_window(&ventana);
 					}
 
-
+ 
 				}
 
 
