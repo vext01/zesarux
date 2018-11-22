@@ -4740,10 +4740,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	zxvision_draw_window(&ventana);
 
 
-        z80_byte tecla=0;
-
-	//z80_int direccion=reg_pc;
-	//menu_z80_moto_int menu_debug_hexdump_direccion=get_pc_register();
+    z80_byte tecla;
 
 	int salir=0;
 
@@ -4770,10 +4767,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 					//Si maquina no es QL, direccion siempre entre 0 y 65535
 					//menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
 					menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
-					/*if (menu_debug_hexdump_direccion>=menu_debug_memory_zone_size) {
-						printf ("ajustamos direccion %d a %d\n",menu_debug_hexdump_direccion,menu_debug_memory_zone_size)
-						menu_debug_hexdump_direccion=menu_debug_hexdump_direccion % menu_debug_memory_zone_size;
-					}*/
+
 
 		int linea=0;
 
@@ -4827,11 +4821,6 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			//menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
 			menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
 
-			/*if (menu_debug_show_memory_zones) {
-				if (dir_leida>menu_debug_memory_zone_size) { //(int) para que no se queje el compilador
-					dir_leida -=menu_debug_memory_zone_size;
-				}
-			}*/
 
 			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,valor_xor);
 			//printf ("hexa: %s\n",dumpmemoria);
@@ -4856,15 +4845,15 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 		//Mostrar cursor si en modo edicion
-		/*
-		Al mostrar en cursor: si esta en parte ascii, hacer parpadear el caracter en esa zona, metiendo color de opcion seleccionada
-		Si esta en parte hexa, parpadeamos la parte del nibble que editamos, el otro nibble no parpadea. Ambos tienen color de opcion seleccionada
-		Si multitarea esta a off, no existe el parpadeo, y por tanto, para que se viera en que nibble edita, se mostrara el caracter _, logicamente
-		tapando el caracter de debajo
-		Para ver los caracteres de debajo, los asignamos antes, en el bucle que hace el volcado hexa, y lo guardo en las variables
-		nibble_char_cursor (que dice el caracter de debajo del cursor) y nibble_char (que dice el otro caracter que acompanya al nibble)
+		
+		//Al mostrar en cursor: si esta en parte ascii, hacer parpadear el caracter en esa zona, metiendo color de opcion seleccionada
+		//Si esta en parte hexa, parpadeamos la parte del nibble que editamos, el otro nibble no parpadea. Ambos tienen color de opcion seleccionada
+		//Si multitarea esta a off, no existe el parpadeo, y por tanto, para que se viera en que nibble edita, se mostrara el caracter _, logicamente
+		//tapando el caracter de debajo
+		//Para ver los caracteres de debajo, los asignamos antes, en el bucle que hace el volcado hexa, y lo guardo en las variables
+		//nibble_char_cursor (que dice el caracter de debajo del cursor) y nibble_char (que dice el otro caracter que acompanya al nibble)
 	
-		*/
+		
 		if (menu_hexdump_edit_mode) {
 			//int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
 			//int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+menu_hexdump_edit_position_y;
@@ -4963,18 +4952,11 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			zxvision_draw_window_contents(&ventana);
+			
+			//menu_refresca_pantalla(); 
 
 			tecla=zxvision_common_getkey_refresh();		
 
-
-				/*if (menu_multitarea==0) menu_refresca_pantalla();
-
-
-                                menu_espera_tecla();
-
-                                tecla=menu_get_pressed_key();
-
-                                menu_espera_no_tecla_con_repeticion();*/
 
 				//Variable usada para mover puntero de la pantalla, al mover cursor y queremos subir arriba o abajo
 				//int alterar_ptr=0;
@@ -5085,6 +5067,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 13:
 						if (menu_hexdump_edit_mode) menu_hexdump_edit_mode=0;
 					break;
+
+
+
 				}
 
 				//Y ahora para el caso de edit_mode y pulsar tecla hexa o ascii segun la zona

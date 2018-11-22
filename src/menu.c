@@ -5914,6 +5914,8 @@ z80_byte zxvision_common_getkey_refresh(void)
 			menu_refresca_pantalla();
 		}					
 
+		//temp
+		//menu_refresca_pantalla();
 		
 	            menu_cpu_core_loop();
 
