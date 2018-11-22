@@ -4724,6 +4724,8 @@ void menu_debug_hexdump_aviso_edit_filezone(void)
 							menu_debug_hexdump_ventana();	
 }
 
+
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
@@ -4763,6 +4765,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
         do {
+
+			int cursor_en_zona_ascii=0;
+			int editando_en_zona_ascii=0;
+
 
 					//Si maquina no es QL, direccion siempre entre 0 y 65535
 					//menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
@@ -4806,27 +4812,22 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		//Donde esta el otro caracter que acompanya al nibble, en caso de cursor en zona hexa
 		int menu_hexdump_edit_position_x_nibble=menu_hexdump_edit_position_x^1;
 
-		int cursor_en_zona_ascii=0;
+		
 		if (menu_hexdump_edit_position_x>menu_hexdump_bytes_por_linea*2) cursor_en_zona_ascii=1;
 
-		int editando_en_zona_ascii=0;
+
 		if (menu_hexdump_edit_mode && cursor_en_zona_ascii) editando_en_zona_ascii=1;		
 
 		char nibble_char='X';	
-		char nibble_char_cursor='X';		
+		char nibble_char_cursor='X';	
 
 		for (;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
 			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*menu_hexdump_bytes_por_linea;
-			//menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
 			menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
 
-
 			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,valor_xor);
-			//printf ("hexa: %s\n",dumpmemoria);
 
-
-			//menu_escribe_linea_opcion(linea,-1,1,dumpmemoria);
 			zxvision_print_string_defaults_fillspc(&ventana,0,linea,dumpmemoria);
 
 			//Meter el nibble_char si corresponde
@@ -4952,14 +4953,14 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			zxvision_draw_window_contents(&ventana);
+			//NOTA: este menu no acostumbra a refrescar rapido la ventana cuando la redimensionamos con el raton
+			//es una razon facil: el volcado de hexa usa relativamente mucha cpu,
+			//cada vez que redimensionamos ventana, se llama al bucle continuamente, usando mucha cpu y si esta el autoframedrop,
+			//hace saltar frames
 			
-			//menu_refresca_pantalla(); 
 
 			tecla=zxvision_common_getkey_refresh();		
 
-
-				//Variable usada para mover puntero de la pantalla, al mover cursor y queremos subir arriba o abajo
-				//int alterar_ptr=0;
 
 				//Aviso: hay que conseguir que las letras de accion no esten entre la a-f, porque asi,
 				//podemos usar dichas letras para editar hexa
@@ -5192,7 +5193,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Si se llega a detecha de hexa o ascii, saltar linea
 
 					
-				}
+				}	
 
 
         } while (salir==0);
