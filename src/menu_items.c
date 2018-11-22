@@ -4568,7 +4568,7 @@ void menu_debug_hexdump_cursor_arriba(void);
 
 
 
-void menu_debug_hexdump_print_editcursor(int x,int y,char caracter)
+void menu_debug_hexdump_print_editcursor(zxvision_window *ventana,int x,int y,char caracter)
 {
 	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
     //z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
@@ -4580,11 +4580,12 @@ void menu_debug_hexdump_print_editcursor(int x,int y,char caracter)
 	//Si multitarea esta off, no se vera el parpadeo. Entonces cambiar el caracter por cursor '_'
 	if (!menu_multitarea) caracter='_';
 
-	putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,1);
+	//putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,1);
+	zxvision_print_char_simple(ventana,x,y,tinta,papel,1,caracter);
 
 }
 
-void menu_debug_hexdump_print_editcursor_nibble(int x,int y,char caracter)
+void menu_debug_hexdump_print_editcursor_nibble(zxvision_window *ventana,int x,int y,char caracter)
 {
 	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
     //z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
@@ -4593,7 +4594,8 @@ void menu_debug_hexdump_print_editcursor_nibble(int x,int y,char caracter)
 	z80_byte papel=ESTILO_GUI_PAPEL_SELECCIONADO;
     z80_byte tinta=ESTILO_GUI_TINTA_SELECCIONADO;	
 
-	putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,0);
+	//putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,0);
+	zxvision_print_char_simple(ventana,x,y,tinta,papel,0,caracter);
 
 }
 
@@ -4609,7 +4611,7 @@ void menu_debug_hexdump_edit_cursor_izquierda(void)
 	else {
 		//Aparecer por la derecha
 		menu_debug_hexdump_cursor_arriba();
-		menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*3-1;
+		menu_hexdump_edit_position_x=menu_hexdump_bytes_por_linea*3;
 	}
 
 }
@@ -4730,7 +4732,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	zxvision_window ventana;
 
 	zxvision_new_window(&ventana,DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,
-							DEBUG_HEXDUMP_WINDOW_ANCHO-1,DEBUG_HEXDUMP_WINDOW_ALTO-2,"Hexadecimal Editor");
+							DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO-2,"Hexadecimal Editor");
 	zxvision_draw_window(&ventana);
 
 
@@ -4832,7 +4834,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 			//menu_escribe_linea_opcion(linea,-1,1,dumpmemoria);
-			zxvision_print_string_defaults_fillspc(&ventana,1,linea,dumpmemoria);
+			zxvision_print_string_defaults_fillspc(&ventana,0,linea,dumpmemoria);
 
 			//Meter el nibble_char si corresponde
 			if (lineas_hex==menu_hexdump_edit_position_y) {
@@ -4860,15 +4862,18 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	
 		*/
 		if (menu_hexdump_edit_mode) {
-			int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
-			int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+menu_hexdump_edit_position_y;
+			//int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
+			//int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+menu_hexdump_edit_position_y;
+			int xfinal=7+menu_hexdump_edit_position_x;
+			int yfinal=2+menu_hexdump_edit_position_y;			
 
-			menu_debug_hexdump_print_editcursor(xfinal,yfinal,nibble_char_cursor);
+			menu_debug_hexdump_print_editcursor(&ventana,xfinal,yfinal,nibble_char_cursor);
 
 			//Indicar nibble entero. En caso de edit hexa
 			if (!editando_en_zona_ascii) {
-				xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x_nibble;
-				menu_debug_hexdump_print_editcursor_nibble(xfinal,yfinal,nibble_char);
+				//xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x_nibble;
+				xfinal=7+menu_hexdump_edit_position_x_nibble;
+				menu_debug_hexdump_print_editcursor_nibble(&ventana,xfinal,yfinal,nibble_char);
 			}
 		}
 
