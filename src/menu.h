@@ -588,7 +588,25 @@ extern menu_z80_moto_int adjust_address_memory_size(menu_z80_moto_int direccion)
 
 extern int menu_debug_get_total_digits_hexa(int valor);
 
+extern int menu_debug_hexdump_with_ascii_modo_ascii;
+
+extern menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,int linesize);
+
+extern int menu_debug_hexdump_change_pointer(int p);
+
+extern void menu_debug_change_memory_zone(void);
+
+extern void menu_chdir_sharedfiles(void);
+
+extern void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int longitud);
+
+extern void menu_debug_registers_dump_ascii(char *texto,menu_z80_moto_int direccion,int longitud,int modoascii,z80_byte valor_xor);
+
 extern int menu_gui_zoom;
+
+extern int menu_escribe_linea_startx;
+
+extern z80_bit menu_disable_special_chars;
 
 extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
 
