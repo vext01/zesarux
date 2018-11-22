@@ -4733,6 +4733,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	zxvision_new_window(&ventana,DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,
 							DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO-2,"Hexadecimal Editor");
+
+
+	ventana.can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+
 	zxvision_draw_window(&ventana);
 
 

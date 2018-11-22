@@ -4071,6 +4071,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->is_minimized=0;
 	w->height_before_minimize=visible_height;	
 	w->width_before_minimize=visible_width;	
+	w->can_use_all_width=0;
 
 	w->visible_cursor=0;
 	w->cursor_line=0;
@@ -4848,10 +4849,18 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 }
 
+//Retorna 1 si se debe perder 1 de ancho visible por la linea de scroll vertical (lo habitual)
+//Retorna 0 si no
+int zxvision_get_minus_width_byscrollvbar(zxvision_window *w)
+{
+	if (w->can_use_all_width==0) return 1;
+	else return 0;
+}
+
 int zxvision_get_effective_width(zxvision_window *w)
 {
 	//Ancho del contenido es 1 menos, por la columna a la derecha de margen
-	return w->visible_width-1;
+	return w->visible_width-zxvision_get_minus_width_byscrollvbar(w);
 }
 
 int zxvision_get_effective_height(zxvision_window *w)
@@ -4862,6 +4871,7 @@ int zxvision_get_effective_height(zxvision_window *w)
 
 int zxvision_if_vertical_scroll_bar(zxvision_window *w)
 {
+	if (w->can_use_all_width==1) return 0;
 	int effective_height=zxvision_get_effective_height(w);
 	if (w->total_height>effective_height && w->visible_height>=6) return 1;
 
@@ -4881,7 +4891,8 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 	//Barras de desplazamiento
 	//Si hay que dibujar barra derecha de desplazamiento vertical
 	int effective_height=zxvision_get_effective_height(w);
-	int effective_width=zxvision_get_effective_width(w);
+	//int effective_width=zxvision_get_effective_width(w);
+	int effective_width=w->visible_width-1;
 
 	if (zxvision_if_vertical_scroll_bar(w)) {
 		//Dibujar barra vertical
@@ -4932,7 +4943,7 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 			porcentaje=0;
 		}		
 
-		//Caso especial abajo del todo
+		//Caso especial derecha del todo
 		if (w->offset_x+(w->visible_width)-1==w->total_width) { //-1 de perder linea scroll
 			printf ("Scroll horizontal cursor is at the maximum\n");
 			porcentaje=100;
@@ -5380,7 +5391,7 @@ struct s_zxvision_window {
 	//Obtener coordenadas en pixeles de zona ventana dibujable
 	int window_pixel_start_x=(w->x)*menu_char_width;
 	int window_pixel_start_y=((w->y)+1)*8;
-	int window_pixel_final_x=window_pixel_start_x+((w->visible_width)-1)*menu_char_width;
+	int window_pixel_final_x=window_pixel_start_x+((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*menu_char_width;
 	int window_pixel_final_y=window_pixel_start_y+((w->visible_height)-2)*8;
 
 	//Obtener coordenada x,y final donde va a parar

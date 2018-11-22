@@ -110,6 +110,7 @@ struct s_zxvision_window {
 	int is_minimized;
 	int height_before_minimize;
 	int width_before_minimize;
+	int can_use_all_width; //Si tenemos usable también la ultima columna derecha
 
 	//Posicion del cursor y si esta visible
 	int visible_cursor;
