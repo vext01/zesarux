@@ -7478,7 +7478,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			mi_mouse_x=menu_mouse_x;
 			mi_mouse_y=menu_mouse_y;*/
-			printf ("mouse_movido: %d\n",mouse_movido);
+			//printf ("mouse_movido: %d\n",mouse_movido);
 
 
 			//printf ("tecla_leida: %d\n",tecla_leida);
@@ -7532,8 +7532,23 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//}
 			}
 
+			//mouse boton izquierdo es como enter
+			int mouse_en_zona_opciones=1;
 
-			if (tecla_leida==11) tecla='7';
+			//if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<ventana_ancho && menu_mouse_y<ventana_alto ) return 1;
+
+			//Mouse en columna ultima de la derecha,
+			//o mouse en primera linea
+			// no enviamos enter si pulsamos boton
+			if (menu_mouse_x==ventana_ancho-1 || menu_mouse_y==0) mouse_en_zona_opciones=0;
+
+			if (si_menu_mouse_en_ventana() && mouse_left && mouse_en_zona_opciones) {
+				printf ("Enviamos enter\n");
+				tecla=13;
+			}					
+
+
+			else if (tecla_leida==11) tecla='7';
 			else if (tecla_leida==10) tecla='6';
 			else if (tecla_leida==13) tecla=13;
 
@@ -7548,6 +7563,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//printf ("Leido ESC\n");
 				tecla=MENU_RETORNO_ESC;
 			}
+
+
 
 			//En principio ya no volvemos mas con F1, dado que este se usa para ayuda contextual de cada funcion
 
@@ -7604,6 +7621,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				debug_printf (VERBOSE_DEBUG,"Pressed key space");
 				tecla=32;
                         }
+
+				
 
 
 			else tecla=0;
