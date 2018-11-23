@@ -10,6 +10,7 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 -Sin multitarea, primera pulsación de teclado no hace scroll. Seguramente debido a que hace un espera tecla al principio
 
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
+-debug dma ventana peta
 
 -menus zxvision:
 --acabar de migrar los menus tabulados a zxvision
