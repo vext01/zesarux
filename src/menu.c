@@ -4008,6 +4008,14 @@ zxvision_window *zxvision_current_window=NULL;
 //Decir que con una ventana zxvision visible, las pulsaciones de teclas no se envian a maquina emulada
 int zxvision_keys_event_not_send_to_machine=1;
 
+void zxvision_set_draw_window_parameters(zxvision_window *w)
+{
+	ventana_activa_tipo_zxvision=1;
+
+	cuadrado_activo_resize=w->can_be_resized;
+
+}
+
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
 
@@ -4063,10 +4071,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	
 
 	//Decimos que se puede redimensionar
-	cuadrado_activo_resize=1;
 	w->can_be_resized=1;
-	ventana_activa_tipo_zxvision=1;
-
 
 	w->is_minimized=0;
 	w->height_before_minimize=visible_height;	
@@ -4075,6 +4080,8 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	w->visible_cursor=0;
 	w->cursor_line=0;
+
+	zxvision_set_draw_window_parameters(w);
 
 }
 
@@ -4086,6 +4093,8 @@ void zxvision_destroy_window(zxvision_window *w)
 	free(w->memory);
 	ventana_tipo_activa=1;
 	zxvision_keys_event_not_send_to_machine=1;
+
+	if (zxvision_current_window!=NULL) zxvision_set_draw_window_parameters(zxvision_current_window);
 }
 
 
@@ -7096,7 +7105,7 @@ int menu_dibuja_menu_cursor_abajo(int linea_seleccionada,int max_opciones,menu_i
 
 
 
-void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
+void old_menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 {
 
 	//Para guardar estado ventana al abrir tooltips y menu ayuda-> util en menus tabulados
@@ -7185,6 +7194,45 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 		
 
 }
+
+
+void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
+{
+
+
+
+                                        //Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar temporalmente
+                                        void (*previous_function)(void);
+
+                                        previous_function=menu_overlay_function;
+
+                                       //restauramos modo normal de texto de menu
+                                       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+
+        if (si_tooltip) {
+			//menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto);
+			zxvision_generic_message_tooltip("Tooltip",0,1,0,NULL,0,"%s",texto);
+		}
+	
+		else menu_generic_message("Help",texto);
+
+
+                                        //Restauramos funcion anterior de overlay
+                                        set_menu_overlay_function(previous_function);
+
+		if (zxvision_current_window!=NULL) {
+			zxvision_draw_window(zxvision_current_window);
+			zxvision_draw_window_contents(zxvision_current_window);
+		}
+
+        menu_refresca_pantalla();
+
+		
+
+}
+
 
 //Indica que el menu permite repeticiones de teclas. Solo valido al pulsar hotkeys
 int menu_dibuja_menu_permite_repeticiones_hotk=0;
@@ -7355,34 +7403,23 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 
-	//printf ("Nueva ventana\n");
+	printf ("Nueva ventana\n");
 
 	zxvision_draw_window(ventana);	
 
-	/*int mi_mouse_x=menu_mouse_x;
-	int mi_mouse_y=menu_mouse_y;
-	int mi_mouse_movido=0;*/
 	
 
 	//Entrar aqui cada vez que se dibuje otra subventana aparte, como tooltip o ayuda
 	do {
-	redibuja_ventana=0;
-	//printf ("redibujar ventana\n");
+		redibuja_ventana=0;
+
+		printf ("Entrada desde subventana aparte, como tooltip o ayuda\n");
 
 
-	//Dibujar ventana siempre que el tipo no sea tabular. Miramos el primer item
-	//printf ("menu pointer: %p\n",m);
-		
+		menu_tooltip_counter=0;
 
 
-	//if (m->es_menu_tabulado==0) {
-		//menu_dibuja_ventana(x,y,ancho,alto,titulo);
-	//}
-
-	menu_tooltip_counter=0;
-
-
-	tecla=0;
+		tecla=0;
 
         //si la opcion seleccionada es mayor que el total de opciones, seleccionamos linea 0
         //esto pasa por ejemplo cuando activamos realvideo, dejamos el cursor por debajo, y cambiamos a zxspectrum
@@ -7417,6 +7454,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		}
 
 		//escribir todas opciones
+		printf ("Escribiendo de nuevo las opciones\n");
 		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones,scroll_opciones);
 
 
@@ -7793,7 +7831,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//Y volver a decir "active item"
 				menu_active_item_primera_vez=1;
 
-	                }
+
+				//Y reactivar parametros ventana usados en menu_dibuja_ventana
+				//zxvision_set_draw_window_parameters(ventana);
+
+	        }
+
 		}
 
 
