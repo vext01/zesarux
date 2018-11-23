@@ -1610,6 +1610,7 @@ printf (
 		DEFAULT_ADV_KEYBOARD_KEY_LENGTH);
 
 printf (
+		"--text-keyboard-finalspc   Sends a space after every word on the Adventure Text OSD Keyboard\n"
 		//"--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
 		"\n"
 		"\n"
@@ -5059,6 +5060,10 @@ int parse_cmdline_options(void) {
 						adventure_keyboard_key_length=valor;
 				}
 						
+				else if (!strcmp(argv[puntero_parametro],"--text-keyboard-finalspc")) {
+						adventure_keyboard_send_final_spc=1;
+
+				}
 
 
 			/*else if (!strcmp(argv[puntero_parametro],"--overlayinfo")) {

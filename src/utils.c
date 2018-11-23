@@ -3519,6 +3519,8 @@ int util_write_configfile(void)
   }
 
                                         ADD_STRING_CONFIG,"--text-keyboard-length %d",adventure_keyboard_key_length);
+
+     if (adventure_keyboard_send_final_spc) ADD_STRING_CONFIG,"--text-keyboard-finalspc");
 		
 
 
@@ -7965,6 +7967,11 @@ void parse_customfile_options(void)
 						adventure_keyboard_key_length=valor;
 				}
 
+				else if (!strcmp(argv[puntero_parametro],"--text-keyboard-finalspc")) {
+						adventure_keyboard_send_final_spc=1;
+
+				}                                
+
 		 else if (!strcmp(argv[puntero_parametro],"--machine")) {
                                 char *machine_name;
                                 siguiente_parametro_argumento();
@@ -8102,6 +8109,7 @@ void customconfig_help(void)
 	"--joystickkeyev evt key\n"
 	"--text-keyboard-add text\n"
         "--text-keyboard-length n\n"
+        "--text-keyboard-finalspc\n"
 	"--cleareventlist\n"
 
 	"\n"
@@ -12209,6 +12217,8 @@ void util_save_game_config(char *filename)
   }
 
         ADD_STRING_CONFIG,"--text-keyboard-length %d",adventure_keyboard_key_length);
+
+        if (adventure_keyboard_send_final_spc) ADD_STRING_CONFIG,"--text-keyboard-finalspc");
 
 
 
