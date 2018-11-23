@@ -6101,6 +6101,7 @@ void menu_calculate_mouse_xy(void)
 		last_mouse_x=mouse_x;
 		last_mouse_y=mouse_y;
 
+		//printf ("x: %04d y: %04d movido=%d\n",mouse_x,mouse_y,mouse_movido);
 
 		//Quitarle el zoom
 		x=mouse_x/zoom_x;
@@ -7358,9 +7359,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	zxvision_draw_window(ventana);	
 
-	int mi_mouse_x=menu_mouse_x;
+	/*int mi_mouse_x=menu_mouse_x;
 	int mi_mouse_y=menu_mouse_y;
-	int mi_mouse_movido=0;
+	int mi_mouse_movido=0;*/
 	
 
 	//Entrar aqui cada vez que se dibuje otra subventana aparte, como tooltip o ayuda
@@ -7443,12 +7444,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			menu_espera_tecla_timeout_tooltip();
 
-			//leemos tecla de momento de dos maneras, con puerto y con get_pressed_key
-			//tecla_leida=menu_get_pressed_key();
+			//Guardamos valor de mouse_movido pues se perdera el valor al leer el teclado de nuevo
+			int antes_mouse_movido=mouse_movido;
 
 			tecla_leida=zxvision_read_keyboard();
 
-
+			mouse_movido=antes_mouse_movido;
 
 			//Para poder usar repeticiones
 			if (tecla_leida==0) {
@@ -7468,7 +7469,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			}*/
 		
 
-			if (menu_mouse_x!=mi_mouse_x || menu_mouse_y!=mi_mouse_y) {
+			/*if (menu_mouse_x!=mi_mouse_x || menu_mouse_y!=mi_mouse_y) {
 				mi_mouse_movido=1;
 			}
 			else {
@@ -7476,12 +7477,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			}
 
 			mi_mouse_x=menu_mouse_x;
-			mi_mouse_y=menu_mouse_y;
-			//printf ("mi_mouse_movido: %d\n",mi_mouse_movido);
+			mi_mouse_y=menu_mouse_y;*/
+			printf ("mouse_movido: %d\n",mouse_movido);
 
 
 			//printf ("tecla_leida: %d\n",tecla_leida);
-			if (mi_mouse_movido) {
+			if (mouse_movido) {
 				//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
 				//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
 				if (si_menu_mouse_en_ventana() ) {
