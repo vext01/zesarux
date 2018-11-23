@@ -32,6 +32,7 @@
 #include <sys/time.h>
 #include <errno.h>
 
+#include "settings.h"
 
 #include "menu.h"
 #include "menu_items.h"
@@ -193,3 +194,14 @@ z80_bit setting_mostrar_ay_piano_grafico={1};
 
 //Sensibilidad usada al leer kempston mouse desde spectrum
 int kempston_mouse_factor_sensibilidad=1;
+
+//
+// Display Settings
+//
+
+
+//Si debe enviar un espacio al final de cada palabra del adventure keyboard
+int adventure_keyboard_send_final_spc=0;
+
+//Tiempo que dura la tecla total (mitad de esto pulsada, mitad no pulsada). En 1/50 de segundo
+int adventure_keyboard_key_length=DEFAULT_ADV_KEYBOARD_KEY_LENGTH;

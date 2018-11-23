@@ -5210,9 +5210,27 @@ int adventure_keyboard_index_selected_item=0;
 
 //z80_bit menu_osd_adventure_sending_keys={0};
 
-//Tiempo que dura la tecla total (mitad de esto pulsada, mitad no pulsada). En 1/50 de segundo
-int adventure_keyboard_key_length=DEFAULT_ADV_KEYBOARD_KEY_LENGTH;
 
+
+
+int adventure_keyboard_pending_send_final_spc=1;
+
+void menu_osd_adventure_kb_press_key_variable(char letra)
+{
+	if (letra==0) return; //pequenyo bug: si acaba texto con ~~ no se abrira luego de nuevo el menu. Bug???
+
+	//printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
+	//osd_adv_kbd_list
+	debug_printf (VERBOSE_DEBUG,"Pressing key %c of word %s",letra,osd_adv_kbd_list[adventure_keyboard_selected_item]);
+
+	//Espacio no la gestiona esta funcion de convert_numeros_...
+	if (letra==' ') util_set_reset_key(UTIL_KEY_SPACE,1);
+	//else convert_numeros_letras_puerto_teclado_continue(letra,1);
+	else ascii_to_keyboard_port(letra);
+
+	//Lanzar pulsar tecla 
+	timer_on_screen_adv_key=adventure_keyboard_key_length; 
+}
 
 void menu_osd_adventure_kb_press_key(void)
 {
@@ -5227,7 +5245,9 @@ void menu_osd_adventure_kb_press_key(void)
 		if (letra=='~') adventure_keyboard_index_selected_item++;
 	} while (letra=='~' && letra!=0);
 
-	if (letra==0) return; //pequenyo bug: si acaba texto con ~~ no se abrira luego de nuevo el menu. Bug???
+	menu_osd_adventure_kb_press_key_variable(letra);
+
+	/*if (letra==0) return; //pequenyo bug: si acaba texto con ~~ no se abrira luego de nuevo el menu. Bug???
 
 	//printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
 	//osd_adv_kbd_list
@@ -5239,7 +5259,7 @@ void menu_osd_adventure_kb_press_key(void)
 	else ascii_to_keyboard_port(letra);
 
 	//Lanzar pulsar tecla 
-	timer_on_screen_adv_key=adventure_keyboard_key_length; 
+	timer_on_screen_adv_key=adventure_keyboard_key_length; */
 
 }
 
@@ -5249,6 +5269,7 @@ void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
 	//printf ("opcion seleccionada: %d\n",valor_opcion);
 	adventure_keyboard_selected_item=valor_opcion;
 	adventure_keyboard_index_selected_item=0;
+	adventure_keyboard_pending_send_final_spc=1;
 
 
 	//Estamos enviando teclas
@@ -5267,10 +5288,17 @@ void menu_osd_adventure_keyboard_next(void)
 	adventure_keyboard_index_selected_item++;
 	if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 		//printf ("Fin texto\n");
-		//menu_osd_adventure_sending_keys.v=0;
-		//En este caso reabrir el menu
-		menu_osd_adventure_keyboard(0);
-		return;
+		
+		//Ver si habia que enviar un espacio al final
+		if (adventure_keyboard_send_final_spc && adventure_keyboard_pending_send_final_spc) {
+			menu_osd_adventure_kb_press_key_variable(' ');
+			adventure_keyboard_pending_send_final_spc=0;
+		}
+		else {
+			//En este caso reabrir el menu
+			menu_osd_adventure_keyboard(0);
+			return;
+		}
 	}
 
 	//Siguiente tecla

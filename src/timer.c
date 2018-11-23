@@ -53,6 +53,7 @@
 #include "esxdos_handler.h"
 #include "betadisk.h"
 #include "pd765.h"
+#include "settings.h"
 
 #include "autoselectoptions.h"
 
