@@ -5336,6 +5336,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 			  
 			  //Alteramos alto total para que coincida con alto ventana (siempre que sea menor que el alto actual)
 			  //si fuese mayor el alto, estariamos necesitando mas memoria y seria un problema
+			  //esto es un poco feo realmente, pero bueno, al reducir el tamaño no hay problema de que nos salgamos de la memoria
 			  int current_height=ventana.total_height;
 			  int desired_height=alto_ventana-2;
 

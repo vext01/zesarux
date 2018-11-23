@@ -7577,8 +7577,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			//Mouse en columna ultima de la derecha,
 			//o mouse en primera linea
+			//o mouse en ultima linea
 			// no enviamos enter si pulsamos boton
-			if (menu_mouse_x==ventana_ancho-1 || menu_mouse_y==0) mouse_en_zona_opciones=0;
+			if (menu_mouse_x==ventana_ancho-1 || menu_mouse_y==0 || menu_mouse_y==ventana_alto-1) mouse_en_zona_opciones=0;
 
 			if (si_menu_mouse_en_ventana() && mouse_left && mouse_en_zona_opciones) {
 				printf ("Enviamos enter\n");
