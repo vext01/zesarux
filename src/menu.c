@@ -7581,13 +7581,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 					menu_dibuja_menu_help_tooltip(texto_ayuda,0);
-					//printf ("despues de menu_dibuja_menu_help_tooltip\n");
-					//No borrar pantalla, pues si el tipo de menu es menu_tabulado, hay que dejarlo como estaba pues 
-					//es la propia funcion que llama la que se encarga (al principio) de dibujar la ventana
-
-					//cls_menu_overlay(); 
-
-					//menu_generic_message("Help",texto_ayuda);
 
 
 					redibuja_ventana=1;
@@ -7790,10 +7783,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				menu_speech_tecla_pulsada=0;
 
 
-					menu_dibuja_menu_help_tooltip(texto_tooltip,1);
-					//No borrar pantalla, pues si el tipo de menu es menu_tabulado, hay que dejarlo como estaba pues 
-					//es la propia funcion que llama la que se encarga (al principio) de dibujar la ventana
-					//cls_menu_overlay();
+				menu_dibuja_menu_help_tooltip(texto_tooltip,1);
 
 
 				//Esperar no tecla
