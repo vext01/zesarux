@@ -6164,8 +6164,8 @@ z80_byte menu_da_todas_teclas(void)
 	//Ver tambien eventos de mouse de zxvision
     zxvision_handle_mouse_events(zxvision_current_window);
 
-                //On screen keyboard desde el propio menu. Necesita multitask
-                if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu && menu_multitarea) {
+    //On screen keyboard desde el propio menu. Necesita multitask
+    if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu && menu_multitarea) {
 			debug_printf(VERBOSE_INFO,"Calling osd keyboard from menu keyboard read routine");
 
 			osd_kb_no_mostrar_desde_menu=1;
@@ -6179,7 +6179,7 @@ z80_byte menu_da_todas_teclas(void)
 			//Esperar 1 segundo hasta poder abrir menu osd. La pulsacion de teclas desde osd se hace por medio segundo,
 			//con lo que al retornar a 1 segundo ya es correcto
 			timer_osd_keyboard_menu=50;
-                }
+    }
 
 
 
@@ -6197,7 +6197,10 @@ z80_byte menu_da_todas_teclas(void)
 
 	//contar tambien botones mouse
 	if (si_menu_mouse_activado()) {
-		menu_calculate_mouse_xy();
+		//menu_calculate_mouse_xy(); //Ya no hacemos esto pues se ha calculado ya arriba en zxvision_handle_mouse_events
+		//quiza pareceria que no hay problema en leerlo dos veces, el problema es con la variable mouse_leido,
+		//que al llamarla aqui la segunda vez, siempre dira que el mouse no se ha movido
+
 		z80_byte valor_botones_mouse=(mouse_left | mouse_right | mouse_movido)^255;
 		acumulado=acumulado & valor_botones_mouse;
 	}
@@ -6207,75 +6210,13 @@ z80_byte menu_da_todas_teclas(void)
 	acumulado=acumulado & valor_teclas_menus;
 
 
-        //Modo Z88
-        /*if (MACHINE_IS_Z88) {
-		//no contar mayusculas
-                acumulado = acumulado & blink_kbd_a8 & blink_kbd_a9 & blink_kbd_a10 & blink_kbd_a11 & blink_kbd_a12 & blink_kbd_a13 & (blink_kbd_a14 | 64) & (blink_kbd_a15 | 128);
-
-        }
-
-        else {
-                //Poner los 3 bits superiores no usados a 1
-                acumulado |=(128+64+32);
-        }*/
-
+  
 
 	if ( (acumulado&MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) return acumulado;
 
-	//pero si que cuentan juntas (TAB)
-	/*if ( (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) {
-		//printf ("TAB\n");
-		acumulado=acumulado & puerto_65278 & puerto_32766;
-	}*/
-
-	/*if (MACHINE_IS_SAM) {
-		//Contar los 3 bits superiores de los puertos de teclas extendidas del sam
-		z80_byte acum_sam=puerto_teclado_sam_fef9 & puerto_teclado_sam_fdf9 & puerto_teclado_sam_fbf9 & puerto_teclado_sam_f7f9 & puerto_teclado_sam_eff9 & puerto_teclado_sam_dff9 & puerto_teclado_sam_bff9 & puerto_teclado_sam_7ff9;
-
-		//Rotarlo a 3 bits inferiores
-		acum_sam = acum_sam >> 5;
-		//Dejar los 3 bits inferiores y meter los bits que faltan a 1
-		acum_sam = acum_sam & 7;
-		acum_sam = acum_sam | (8+16+32+64+128);
-
-
-		acumulado=acumulado & acum_sam;
-
-		//printf ("acumulado: %d acum_sam: %d\n",acumulado,acum_sam);
-
-		
-		//TAB en SAM
-		//if ( (puerto_teclado_sam_f7f9 & 64)==0) {
-		//	acumulado=acumulado & (255-3);
-		//}
-
-		//DEL en SAM
-		//if (  (puerto_teclado_sam_eff9 & 128)==0) {
-		//	//da igual el valor de acumulado, simplemente con cambiar un bit nos vale
-		//	acumulado=acumulado & (255-1);
-		//}
-		
-
-	}*/
-
-	//o si en modo zx80/81, cuenta el '.'
-	/*if (MACHINE_IS_ZX8081) {
-		if ((puerto_32766&2)==0) acumulado=acumulado & puerto_32766;
-	}
-
-	if (MACHINE_IS_CPC) {
-		int j;
-		for (j=0;j<16;j++) {
-			//No contar mayusculas
-			if (j==2) acumulado = acumulado & (cpc_keyboard_table[j] | 32);
-			else acumulado = acumulado & cpc_keyboard_table[j];
-		}
-	}*/
+	
 
 	return acumulado;
-
-//z80_byte puerto_65278=255; //    db              255  ; V    C    X    Z    Sh    ;0
-//z80_byte puerto_32766=255; //    db              255  ; B    N    M    Simb Space ;7
 
 
 }
@@ -31259,7 +31200,7 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 		"Source code lines: %d\n"
 		"Total time invested on programming ZEsarUX: ^^%d^^ hours (and growing)\n\n"
 		"Edited with vim, VSCode and CLion\n"
-		"Developed on Debian 9, Raspbian, macOS High Sierra, and MinGW environment on Windows\n"
+		"Developed on Debian 9, Raspbian, macOS Mojave, and MinGW environment on Windows\n"
 		,LINES_SOURCE,tiempo_trabajado_en_zesarux);
 
 }
