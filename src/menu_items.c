@@ -146,6 +146,7 @@ int mem_breakpoints_opcion_seleccionada=0;
 int audio_new_waveform_opcion_seleccionada=0;
 int debug_new_visualmem_opcion_seleccionada=0;
 int audio_new_ayplayer_opcion_seleccionada=0;
+int osd_adventure_keyboard_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -5198,4 +5199,277 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 	
 
 }
+
+
+
+//Entrada seleccionada
+int adventure_keyboard_selected_item=0;
+
+//Posicion dentro del string
+int adventure_keyboard_index_selected_item=0;
+
+//z80_bit menu_osd_adventure_sending_keys={0};
+
+//Tiempo que dura la tecla total (mitad de esto pulsada, mitad no pulsada). En 1/50 de segundo
+int adventure_keyboard_key_length=DEFAULT_ADV_KEYBOARD_KEY_LENGTH;
+
+
+void menu_osd_adventure_kb_press_key(void)
+{
+
+	//Aunque el usuario haya puesto alguna mayuscula, metemos minusculas
+	char letra;
+
+	//Ignorar ~~
+
+	do {
+		letra=letra_minuscula(osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]);
+		if (letra=='~') adventure_keyboard_index_selected_item++;
+	} while (letra=='~' && letra!=0);
+
+	if (letra==0) return; //pequenyo bug: si acaba texto con ~~ no se abrira luego de nuevo el menu. Bug???
+
+	//printf ("Pulsar tecla entrada %d indice en entrada: %d letra: %c\n",adventure_keyboard_selected_item,adventure_keyboard_index_selected_item,letra);
+	//osd_adv_kbd_list
+	debug_printf (VERBOSE_DEBUG,"Pressing key %c of word %s",letra,osd_adv_kbd_list[adventure_keyboard_selected_item]);
+
+	//Espacio no la gestiona esta funcion de convert_numeros_...
+	if (letra==' ') util_set_reset_key(UTIL_KEY_SPACE,1);
+	//else convert_numeros_letras_puerto_teclado_continue(letra,1);
+	else ascii_to_keyboard_port(letra);
+
+	//Lanzar pulsar tecla 
+	timer_on_screen_adv_key=adventure_keyboard_key_length; 
+
+}
+
+
+void menu_osd_adventure_keyboard_action(MENU_ITEM_PARAMETERS)
+{
+	//printf ("opcion seleccionada: %d\n",valor_opcion);
+	adventure_keyboard_selected_item=valor_opcion;
+	adventure_keyboard_index_selected_item=0;
+
+
+	//Estamos enviando teclas
+	//menu_osd_adventure_sending_keys.v=1;
+
+	menu_osd_adventure_kb_press_key();
+}
+
+//Retorno desde el core
+void menu_osd_adventure_keyboard_next(void)
+{
+
+	//if (menu_osd_adventure_sending_keys.v==0 return;
+
+	//Si final de string
+	adventure_keyboard_index_selected_item++;
+	if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
+		//printf ("Fin texto\n");
+		//menu_osd_adventure_sending_keys.v=0;
+		//En este caso reabrir el menu
+		menu_osd_adventure_keyboard(0);
+		return;
+	}
+
+	//Siguiente tecla
+	else menu_osd_adventure_kb_press_key();
+}
+
+
+#define ADVENTURE_KB_X 0
+#define ADVENTURE_KB_Y 0
+#define ADVENTURE_KB_ANCHO 32
+#define ADVENTURE_KB_ALTO 24
+
+
+void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
+{
+
+	//Si estamos enviando teclas
+	//if (menu_osd_adventure_sending_keys.v) {
+	//	menu_osd_adventure_keyboard_next();
+	//	return;
+	//}
+
+	//Si lista vacia, error
+	if (osd_adv_kbd_defined==0) {
+		debug_printf (VERBOSE_ERR,"Empty list");
+		return;
+	}
+
+	//Si estamos enviando teclas, desactivar
+	timer_on_screen_adv_key=0;
+
+
+
+ 	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,ADVENTURE_KB_X,ADVENTURE_KB_Y,ADVENTURE_KB_ANCHO,ADVENTURE_KB_ALTO,
+							ADVENTURE_KB_ANCHO-1,ADVENTURE_KB_ALTO-2,"OSD Adventure Keyboard");
+	zxvision_draw_window(&ventana);		
+
+
+       
+        menu_item *array_menu_osd_adventure_keyboard;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+		int initial_test; //si es 1, haremos el calculo inicial del alto
+
+		int alto_ventana=ADVENTURE_KB_ALTO;
+		int y_ventana=ADVENTURE_KB_Y;
+
+		for (initial_test=1;initial_test>=0;initial_test--) {
+
+
+          //Hay que redibujar la ventana desde este bucle
+          if (!initial_test) {
+			  //menu_dibuja_ventana(ADVENTURE_KB_X,y_ventana,ADVENTURE_KB_ANCHO,alto_ventana,"OSD Adventure Keyboard");
+			  zxvision_set_y_position(&ventana,y_ventana);
+			  zxvision_set_visible_width(&ventana,alto_ventana);
+		  }
+
+
+                //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+                menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
+	//osd_adv_kbd_defined
+		int i;
+		int last_x=1;
+		int last_y=0;
+		int salir=0;
+
+		//Asignar hotkeys, segun si se han asignado antes o no
+		//int hotkeys_assigned[26]; //de la A a la Z
+		//for (i=0;i<26;i++) hotkeys_assigned[i]=0;
+		
+		
+		for (i=0;i<osd_adv_kbd_defined && !salir;i++) {
+			int longitud_texto=strlen(osd_adv_kbd_list[i])+1; //Espacio para la entrada y 1 espacio
+			if (last_x+longitud_texto>ADVENTURE_KB_ANCHO) {
+				last_x=1;
+				last_y++; 
+			}
+
+			//controlar maximo de alto
+			if (last_y>=ADVENTURE_KB_ALTO-2) {
+				debug_printf (VERBOSE_DEBUG,"Reached maximum window height");
+				last_y--;
+				salir=1;
+			}
+
+			else {
+				//Si es cadena vacia, ignorarla. No deberia pasar pues se debe denegar desde donde se lee la configuracion, pero por si acaso
+				if (osd_adv_kbd_list[i][0]==0) {
+					debug_printf (VERBOSE_DEBUG,"Null string at %d",i);
+				}
+
+				else {
+
+					int tiene_hotkey=0;
+
+					char texto_opcion[64];
+					strcpy(texto_opcion,osd_adv_kbd_list[i]);
+
+					char hotkey;
+					
+					//Caracter de hotkey. Crearlo automaticamente
+					//hotkey=letra_minuscula(osd_adv_kbd_list[i][0]);
+
+					//Caracter de hotkey. Dejar que el usuario lo escriba en la cadena de texto. Ver si dicha cadena lo tiene
+
+					int j;
+					for (j=0;texto_opcion[j];j++) {
+						if (texto_opcion[j]=='~' && texto_opcion[j+1]=='~') {
+							//Si hay letra detras
+							hotkey=letra_minuscula(texto_opcion[j+2]);
+							if (hotkey) tiene_hotkey=1;
+						}
+					}
+					
+
+					//Caracter de hotkey. Crearlo automaticamente
+					/*if (hotkey>='a' && hotkey<='z') {
+						//Ver si no se ha usado antes
+						int indice_hotkey=hotkey-'a';
+						if (hotkeys_assigned[indice_hotkey]==0) {
+							hotkeys_assigned[indice_hotkey]=1;
+							sprintf (texto_opcion,"~~%s",osd_adv_kbd_list[i]);
+							tiene_hotkey=1;
+						}
+					}*/
+
+		                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,texto_opcion);
+        		                menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
+					menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,i);
+
+					if (tiene_hotkey) {
+						menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,hotkey);
+						longitud_texto -=2;
+					}
+
+				}
+
+				last_x+=longitud_texto;
+			}
+
+		}
+
+		//Recalcular alto, y_inivial
+		//del alto, se pierden 2 siempre
+		//si tuvieramos el maximo de y, valdria 21. Y el maximo de alto es 24
+		//printf ("ultima y: %d\n",last_y);
+		alto_ventana=last_y+3;
+		y_ventana=12-alto_ventana/2;
+		if (y_ventana<0) y_ventana=0;	
+
+                //int alto_ventana=last_y;
+                //int y_ventana=ADVENTURE_KB_Y;
+
+
+		}
+
+
+
+//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&osd_adventure_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_osd_adventure_keyboard,"OSD Adventure KB" );
+
+
+        cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+				//printf ("Item seleccionado: %d\n",item_seleccionado.valor_opcion);
+                                //printf ("actuamos por funcion\n");
+
+	                        salir_todos_menus=1;
+
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+        cls_menu_overlay();
+		//menu_espera_no_tecla();
+
+		//menu_abierto=1;
+		//Si con control de joystick se ha salido con tecla ESCMenu, esa tecla de joystick lo que hace es ESC
+		//pero luego fuerza a abrir el menu de nuevo. Por tanto, decimos que no hay que abrir menu
+		menu_event_open_menu.v=0;
+
+		//printf ("en final de funcion\n");
+		zxvision_destroy_window(&ventana);
+
+}
+
 

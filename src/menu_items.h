@@ -43,6 +43,8 @@ extern void menu_audio_new_waveform(MENU_ITEM_PARAMETERS);
 extern void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS);
 extern void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS);
 extern void menu_debug_hexdump(MENU_ITEM_PARAMETERS);
+extern void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS);
+extern void menu_osd_adventure_keyboard_next(void);
 
 #endif
 
