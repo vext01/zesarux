@@ -11,6 +11,7 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
 -debug dma ventana peta
+-video layers peta
 
 -menus zxvision:
 --acabar de migrar los menus tabulados a zxvision
