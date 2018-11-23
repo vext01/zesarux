@@ -17,8 +17,10 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 --que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
 
 
---cuando se abre tooltip, al volver desaparece marca de zxvision, quiza porque se cambian preferencias de ventana?
 --sin multitask ,no deja mover ventanas
+
+
+-osd keyboard en zxvision
 
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
