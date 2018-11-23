@@ -19,6 +19,7 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 --sin multitask ,no deja mover ventanas
 
+-osd text keyboard ya puedo hacer que ventana sea mucho mas grande, sin limite prácticamente
 
 -osd keyboard en zxvision
 
