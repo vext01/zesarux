@@ -5332,7 +5332,16 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
           if (!initial_test) {
 			  //menu_dibuja_ventana(ADVENTURE_KB_X,y_ventana,ADVENTURE_KB_ANCHO,alto_ventana,"OSD Adventure Keyboard");
 			  zxvision_set_y_position(&ventana,y_ventana);
-			  zxvision_set_visible_width(&ventana,alto_ventana);
+			  zxvision_set_visible_height(&ventana,alto_ventana);
+			  
+			  //Alteramos alto total para que coincida con alto ventana (siempre que sea menor que el alto actual)
+			  //si fuese mayor el alto, estariamos necesitando mas memoria y seria un problema
+			  int current_height=ventana.total_height;
+			  int desired_height=alto_ventana-2;
+
+			  if (desired_height<current_height) {
+				  ventana.total_height=desired_height;
+			  }
 		  }
 
 
