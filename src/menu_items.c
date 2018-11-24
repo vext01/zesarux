@@ -149,6 +149,7 @@ int debug_new_visualmem_opcion_seleccionada=0;
 int audio_new_ayplayer_opcion_seleccionada=0;
 int osd_adventure_keyboard_opcion_seleccionada=0;
 int debug_tsconf_dma_opcion_seleccionada=0;
+int tsconf_layer_settings_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -5824,6 +5825,329 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 	zxvision_destroy_window(&ventana);				
 
 }
+
+
+
+
+int menu_tsconf_layer_valor_contador_segundo_anterior;
+
+char *menu_tsconf_layer_aux_usedunused_used="Used";
+char *menu_tsconf_layer_aux_usedunused_unused="Unused";
+
+char *menu_tsconf_layer_aux_usedunused(int value)
+{
+	if (value) return menu_tsconf_layer_aux_usedunused_used;
+	else return menu_tsconf_layer_aux_usedunused_unused;
+}
+
+
+zxvision_window *menu_tsconf_layer_overlay_window;
+
+void menu_tsconf_layer_overlay_mostrar_texto(void)
+{
+ int linea;
+
+    linea=0;
+
+    
+        //mostrarlos siempre a cada refresco
+
+                char texto_layer[33];
+
+				if (MACHINE_IS_TSCONF) {
+
+				//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
+				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
+				linea +=3;
+
+                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
+                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+				linea +=3;
+
+                sprintf (texto_layer,"Sprites 0: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+				linea +=3;		
+
+				sprintf (texto_layer,"Tiles 0:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
+                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+				linea +=3;	
+
+                sprintf (texto_layer,"Sprites 1: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+				linea +=3;	
+
+		    	sprintf (texto_layer,"Tiles 1:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
+                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+				linea +=3;
+
+                sprintf (texto_layer,"Sprites 2: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+				linea +=3;		
+				}
+
+				if (MACHINE_IS_TBBLUE) {
+	                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(1) ); //ULA siempre activo
+    	            //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;
+
+                	sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tbblue_if_sprites_enabled() ));
+                	//menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;		
+
+					sprintf (texto_layer,"Layer 2:   %s",menu_tsconf_layer_aux_usedunused(tbblue_is_active_layer2() ) );
+    	            //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;						
+
+
+					//Layer priorities
+
+					z80_byte prio=tbblue_get_layers_priorities();
+					sprintf (texto_layer,"Priorities: (%d)",prio);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea++,texto_layer);
+
+				
+					int i;
+					for (i=0;i<3;i++) {
+						char nombre_capa[32];
+						strcpy(nombre_capa,tbblue_get_string_layer_prio(i,prio) );
+						if (!strcmp(nombre_capa,"ULA")) strcpy(nombre_capa,"  ULA  "); //meter espacios para centrarlo
+						//las otras capas son "Sprites" y "Layer 2" y ocupan lo mismo
+
+						if (i!=2) sprintf (texto_layer,"|----%s----|",nombre_capa);
+						else sprintf (texto_layer,"v----%s----v",nombre_capa);
+
+						//menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
+						zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea++,texto_layer);
+
+					}
+				
+				}			
+
+
+         
+
+
+
+}
+
+
+
+void menu_tsconf_layer_overlay(void)
+{
+
+    normal_overlay_texto_menu();
+
+ 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+ 
+    //esto hara ejecutar esto 2 veces por segundo
+    if ( ((contador_segundo%500) == 0 && menu_tsconf_layer_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+        menu_tsconf_layer_valor_contador_segundo_anterior=contador_segundo;
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+       
+
+		menu_tsconf_layer_overlay_mostrar_texto();
+		zxvision_draw_window_contents(menu_tsconf_layer_overlay_window);
+
+    }
+}
+
+
+void menu_tsconf_layer_settings_ula(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_ula.v ^=1;
+}
+
+
+void menu_tsconf_layer_settings_sprites_zero(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_sprites_zero.v ^=1;
+}
+
+void menu_tsconf_layer_settings_sprites_one(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_sprites_one.v ^=1;
+}
+
+void menu_tsconf_layer_settings_sprites_two(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_sprites_two.v ^=1;
+}
+
+void menu_tsconf_layer_settings_tiles_zero(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_tiles_zero.v ^=1;
+}
+
+void menu_tsconf_layer_settings_tiles_one(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_tiles_one.v ^=1;
+}
+
+void menu_tsconf_layer_settings_border(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_border.v ^=1;
+}
+
+/*
+extern z80_bit tbblue_force_disable_layer_ula;
+extern z80_bit tbblue_force_disable_layer_sprites;
+extern z80_bit tbblue_force_disable_layer_layer_two;
+*/
+
+void menu_tbblue_layer_settings_sprites(MENU_ITEM_PARAMETERS)
+{
+	tbblue_force_disable_layer_sprites.v ^=1;
+}
+
+void menu_tbblue_layer_settings_ula(MENU_ITEM_PARAMETERS)
+{
+	tbblue_force_disable_layer_ula.v ^=1;
+}
+
+void menu_tbblue_layer_settings_layer_two(MENU_ITEM_PARAMETERS)
+{
+	tbblue_force_disable_layer_layer_two.v ^=1;
+}
+
+
+void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
+{
+
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+
+	int x=7;
+	int y=1;
+
+	int ancho=19;
+	int alto=22;
+
+	if (MACHINE_IS_TBBLUE) {
+		alto=15;
+		y=4;
+	}
+    //menu_dibuja_ventana(x,y,ancho,alto,"Video Layers");
+
+
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,x,y,ancho,alto,
+							ancho-1,alto-2,"Video Layers");
+	zxvision_draw_window(&ventana);		
+
+
+
+
+
+    //Cambiamos funcion overlay de texto de menu
+    set_menu_overlay_function(menu_tsconf_layer_overlay);
+
+	menu_tsconf_layer_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
+
+    menu_item *array_menu_tsconf_layer_settings;
+    menu_item item_seleccionado;
+    int retorno_menu;						
+
+    do {
+
+		//Valido tanto para cuando multitarea es off y para que nada mas entrar aqui, se vea, sin tener que esperar el medio segundo 
+		//que he definido en el overlay para que aparezca
+		menu_tsconf_layer_overlay_mostrar_texto();
+
+        int lin=1;
+
+		if (MACHINE_IS_TSCONF) {
+
+ 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"%s",(tsconf_force_disable_layer_border.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;			
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_ula,NULL,"%s",(tsconf_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_zero,NULL,"%s",(tsconf_force_disable_layer_sprites_zero.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_zero,NULL,"%s",(tsconf_force_disable_layer_tiles_zero.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_one,NULL,"%s",(tsconf_force_disable_layer_sprites_one.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_one,NULL,"%s",(tsconf_force_disable_layer_tiles_one.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_two,NULL,"%s",(tsconf_force_disable_layer_sprites_two.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+		}
+
+		if (MACHINE_IS_TBBLUE) {
+ 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_ula,NULL,"%s",(tbblue_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;			
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_sprites,NULL,"%s",(tbblue_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_layer_two,NULL,"%s",(tbblue_force_disable_layer_layer_two.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;				
+		}
+
+
+				
+
+        retorno_menu=menu_dibuja_menu(&tsconf_layer_settings_opcion_seleccionada,&item_seleccionado,array_menu_tsconf_layer_settings,"TSConf Layers" );
+
+        cls_menu_overlay();
+
+				//Nombre de ventana solo aparece en el caso de stdout
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+	   cls_menu_overlay();
+
+	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+	zxvision_destroy_window(&ventana);			   
+
+
+}
+
+
+
 
 
 
