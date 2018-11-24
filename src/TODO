@@ -12,12 +12,10 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
 
 -menus zxvision:
---acabar de migrar los menus tabulados a zxvision
 --porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
 --que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
 
-
---sin multitask ,no deja mover ventanas
+-acabar de migrar todas menu_dibuja_ventana a zxvision
 
 -osd text keyboard ya puedo hacer que ventana sea mucho mas grande, sin limite prácticamente
 

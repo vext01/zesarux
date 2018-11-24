@@ -7480,6 +7480,15 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		while (tecla==0 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
 
+
+             if (!menu_multitarea) {
+                        //printf ("refresca pantalla\n");
+                        menu_refresca_pantalla();
+                }
+
+            menu_cpu_core_loop();
+
+
 			menu_espera_tecla_timeout_tooltip();
 
 			//Guardamos valor de mouse_movido pues se perdera el valor al leer el teclado de nuevo
@@ -7500,22 +7509,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			}
 
 
-			//Redibujar ventana si mouse movido
-			/*if (mouse_movido) {
-				printf ("Redraw window\n");
-				zxvision_draw_window_contents(&ventana);
-			}*/
 		
-
-			/*if (menu_mouse_x!=mi_mouse_x || menu_mouse_y!=mi_mouse_y) {
-				mi_mouse_movido=1;
-			}
-			else {
-				mi_mouse_movido=0;
-			}
-
-			mi_mouse_x=menu_mouse_x;
-			mi_mouse_y=menu_mouse_y;*/
 			//printf ("mouse_movido: %d\n",mouse_movido);
 
 
@@ -7582,7 +7576,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			if (menu_mouse_x==ventana_ancho-1 || menu_mouse_y==0 || menu_mouse_y==ventana_alto-1) mouse_en_zona_opciones=0;
 
 			if (si_menu_mouse_en_ventana() && mouse_left && mouse_en_zona_opciones) {
-				printf ("Enviamos enter\n");
+				//printf ("Enviamos enter\n");
 				tecla=13;
 			}					
 
@@ -7652,7 +7646,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			else if (tecla_leida==32) {
 				debug_printf (VERBOSE_DEBUG,"Pressed key space");
 				tecla=32;
-                        }
+            }
 
 				
 
@@ -7665,11 +7659,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		//Si no se ha pulsado tecla de atajo:
 		if (!((tecla_leida>='a' && tecla_leida<='z') || (tecla_leida>='A' && tecla_leida<='Z')) ) {
-			//printf ("Esperando no pulsar tecla\n");
 			menu_espera_no_tecla();
 		}
 
-                t_menu_funcion_activo sel_activo;
+        t_menu_funcion_activo sel_activo;
 
 		t_menu_funcion funcion_espacio;
 
