@@ -3677,7 +3677,7 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 				scr_putpixel_gui_zoom((x2-3)*menu_gui_zoom,(y2-1)*menu_gui_zoom,color,menu_gui_zoom);
 			}
 
-			if (ventana_activa_tipo_zxvision) {
+			if (!ventana_activa_tipo_zxvision) {
 				
 				//printf ("Dibujando marca zxvision\n");
 
@@ -3744,7 +3744,7 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 			}
 
 
-			if (ventana_activa_tipo_zxvision) {
+			if (!ventana_activa_tipo_zxvision) {
 				
 				//printf ("Dibujando marca zxvision\n");
 
