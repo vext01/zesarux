@@ -45,7 +45,7 @@ extern void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS);
 extern void menu_debug_hexdump(MENU_ITEM_PARAMETERS);
 extern void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS);
 extern void menu_osd_adventure_keyboard_next(void);
-
+extern void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS);
 
 
 

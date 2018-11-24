@@ -95,6 +95,7 @@
 #include "snap_zsf.h"
 #include "compileoptions.h"
 #include "settings.h"
+#include "datagear.h"
 
  
 #if defined(__APPLE__)
@@ -147,6 +148,7 @@ int audio_new_waveform_opcion_seleccionada=0;
 int debug_new_visualmem_opcion_seleccionada=0;
 int audio_new_ayplayer_opcion_seleccionada=0;
 int osd_adventure_keyboard_opcion_seleccionada=0;
+int debug_tsconf_dma_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -5509,5 +5511,319 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		zxvision_destroy_window(&ventana);
 
 }
+
+
+
+
+
+
+
+
+
+//Usado dentro del overlay de tsconf_dma
+//int menu_tsconf_dma_valor_contador_segundo_anterior;
+
+zxvision_window *menu_debug_dma_tsconf_zxuno_overlay_window;
+
+
+void menu_debug_dma_tsconf_zxuno_overlay(void)
+{
+
+    normal_overlay_texto_menu();
+
+    int linea=0;
+   
+
+    
+    	//mostrarlos siempre a cada refresco
+    menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+	char texto_dma[33];
+
+	if (datagear_dma_emulation.v) {
+		//NOTA: Si se activa datagear, no se vera si hay dma de tsconf o zxuno
+		z80_int dma_port_a=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
+		z80_int dma_port_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
+
+		z80_int dma_len=value_8_to_16(datagear_block_length_high,datagear_block_length_low);	
+
+		sprintf (texto_dma,"Port A:      %04XH",dma_port_a);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Port B:      %04XH",dma_port_b);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Lenght:      %5d",dma_len);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		if (datagear_wr0 & 4) sprintf (texto_dma,"Port A->B");
+		else sprintf (texto_dma,"Port B->A");
+
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+
+
+		char access_type[20];
+
+        if (datagear_wr1 & 8) sprintf (access_type,"I/O"); 
+		else sprintf (access_type,"Memory");
+
+		if ( (datagear_wr1 & 32) == 0 ) {
+            if (datagear_wr1 & 16) sprintf (texto_dma,"Port A++. %s",access_type);
+            else sprintf (texto_dma,"Port A--. %s",access_type);
+        }
+		else sprintf (texto_dma,"Port A fixed. %s",access_type);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+
+        if (datagear_wr2 & 8) sprintf (access_type,"I/O"); 
+		else sprintf (access_type,"Memory");
+
+		if ( (datagear_wr2 & 32) == 0 ) {
+            if (datagear_wr2 & 16) sprintf (texto_dma,"Port B++. %s",access_type);
+            else sprintf (texto_dma,"Port B--. %s",access_type);
+        }
+		else sprintf (texto_dma,"Port B fixed. %s",access_type);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		//WR4. Bits D6 D5:
+		//#       0   0 = Byte mode -> Do not use (Behaves like Continuous mode, Byte mode on Z80 DMA)
+		//#       0   1 = Continuous mode
+		//#       1   0 = Burst mode
+		//#       1   1 = Do not use
+
+		z80_byte modo_transferencia=(datagear_wr4>>5)&3;
+		if (modo_transferencia==0) 		sprintf (texto_dma,"Mode: Byte mode");
+		else if (modo_transferencia==1) sprintf (texto_dma,"Mode: Continuous");
+		else if (modo_transferencia==2) sprintf (texto_dma,"Mode: Burst");
+		else 							sprintf (texto_dma,"Mode: Do not use");
+
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);	
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+
+
+	}
+
+	else {
+
+	if (MACHINE_IS_TSCONF) {
+		//Construimos 16 valores posibles segun rw (bit bajo) y ddev (bits altos)
+		int dma_type=debug_tsconf_dma_ddev*2+debug_tsconf_dma_rw;
+						//18 maximo el tipo
+						//  012345678901234567890123
+						//24. mas dos de margen banda y banda: 26
+		sprintf (texto_dma,"Type: %s",tsconf_dma_types[dma_type]);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Source:      %06XH",debug_tsconf_dma_source);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Destination: %06XH",debug_tsconf_dma_destination);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Burst lenght: %3d",debug_tsconf_dma_burst_length);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Burst number: %3d",debug_tsconf_dma_burst_number);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+						//Maximo 25
+		sprintf (texto_dma,"Align: %s %s",(debug_tsconf_dma_s_align ? "Source" : "      "),(debug_tsconf_dma_d_align ? "Destination" : "") );
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Align size: %d",(debug_tsconf_dma_addr_align_size+1)*256);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+	}
+
+	if (MACHINE_IS_ZXUNO) {
+		z80_byte dma_ctrl=zxuno_ports[0xa0];
+		z80_byte dma_type=(dma_ctrl & (4+8))>>2;
+		z80_byte dma_mode=dma_ctrl & 3;
+
+		z80_int dma_src=value_8_to_16(zxuno_dmareg[0][1],zxuno_dmareg[0][0]);
+		z80_int dma_dst=value_8_to_16(zxuno_dmareg[1][1],zxuno_dmareg[1][0]);
+		z80_int dma_pre=value_8_to_16(zxuno_dmareg[2][1],zxuno_dmareg[2][0]);
+		z80_int dma_len=value_8_to_16(zxuno_dmareg[3][1],zxuno_dmareg[3][0]);	
+		z80_int dma_prob=value_8_to_16(zxuno_dmareg[4][1],zxuno_dmareg[4][0]);		
+		z80_byte dma_stat=zxuno_ports[0xa6];
+
+		sprintf (texto_dma,"Type: %s",zxuno_dma_types[dma_type]);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Mode: %s",zxuno_dma_modes[dma_mode]);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);		
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Source:      %04XH",dma_src);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Destination: %04XH",dma_dst);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Lenght:      %5d",dma_len);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Preescaler:  %5d",dma_pre);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		char prob_type[10];
+		if (dma_ctrl&16) strcpy(prob_type,"dst");
+		else strcpy(prob_type,"src");
+
+		sprintf (texto_dma,"Prob: (%s)  %04XH",prob_type,dma_prob);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);		
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+		sprintf (texto_dma,"Stat:          %02XH",dma_stat);
+		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);			
+		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
+
+	}
+
+	}
+
+	zxvision_draw_window_contents(menu_debug_dma_tsconf_zxuno_overlay_window);
+}
+
+
+
+
+
+
+void menu_debug_dma_tsconf_zxuno_disable(MENU_ITEM_PARAMETERS)
+{
+	if (datagear_dma_emulation.v) datagear_dma_is_disabled.v ^=1;
+
+	else {
+		if (MACHINE_IS_TSCONF) tsconf_dma_disabled.v ^=1;
+		if (MACHINE_IS_ZXUNO) zxuno_dma_disabled.v ^=1;
+	}
+}
+
+
+void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
+{
+ 	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+
+
+
+
+	char texto_ventana[33];
+	//por defecto por si acaso
+	strcpy(texto_ventana,"DMA");
+	int alto=11;
+
+
+	if (MACHINE_IS_ZXUNO) {
+		strcpy(texto_ventana,"ZXUNO DMA");
+		alto++;
+	}
+
+	if (MACHINE_IS_TSCONF) strcpy(texto_ventana,"TSConf DMA");
+
+	if (datagear_dma_emulation.v) strcpy(texto_ventana,"Datagear DMA");	
+
+
+	//menu_dibuja_ventana(2,6,27,alto,texto_ventana);
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,2,6,27,alto,
+							27-1,alto-2,texto_ventana);
+	zxvision_draw_window(&ventana);			
+
+
+
+    //Cambiamos funcion overlay de texto de menu
+	set_menu_overlay_function(menu_debug_dma_tsconf_zxuno_overlay);
+
+	menu_debug_dma_tsconf_zxuno_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui			
+
+
+
+	menu_item *array_menu_debug_dma_tsconf_zxuno;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+        			
+            //Hay que redibujar la ventana desde este bucle
+            //menu_debug_dma_tsconf_zxuno_dibuja_ventana();
+
+	
+
+			int lin=8;
+
+			
+
+			int condicion_dma_disabled=tsconf_dma_disabled.v;
+
+
+			if (MACHINE_IS_ZXUNO) {
+				lin++;	
+				condicion_dma_disabled=zxuno_dma_disabled.v;
+			}
+
+			if (datagear_dma_emulation.v) condicion_dma_disabled=datagear_dma_is_disabled.v;
+		
+				menu_add_item_menu_inicial_format(&array_menu_debug_dma_tsconf_zxuno,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno_disable,NULL,"~~DMA: %s",
+					(condicion_dma_disabled ? "Disabled" : "Enabled") );
+				menu_add_item_menu_shortcut(array_menu_debug_dma_tsconf_zxuno,'d');
+				menu_add_item_menu_ayuda(array_menu_debug_dma_tsconf_zxuno,"Disable DMA");
+				menu_add_item_menu_tabulado(array_menu_debug_dma_tsconf_zxuno,1,lin);
+
+
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&debug_tsconf_dma_opcion_seleccionada,&item_seleccionado,array_menu_debug_dma_tsconf_zxuno,"TSConf DMA" );
+
+
+	cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+	zxvision_destroy_window(&ventana);				
+
+}
+
 
 
