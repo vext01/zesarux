@@ -5788,7 +5788,7 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 			if (datagear_dma_emulation.v) condicion_dma_disabled=datagear_dma_is_disabled.v;
 		
 				menu_add_item_menu_inicial_format(&array_menu_debug_dma_tsconf_zxuno,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno_disable,NULL,"~~DMA: %s",
-					(condicion_dma_disabled ? "Disabled" : "Enabled") );
+					(condicion_dma_disabled ? "Disabled" : "Enabled ") );  //Enabled acaba con espacio para borrar rastro de texto "Disabled"
 				menu_add_item_menu_shortcut(array_menu_debug_dma_tsconf_zxuno,'d');
 				menu_add_item_menu_ayuda(array_menu_debug_dma_tsconf_zxuno,"Disable DMA");
 				menu_add_item_menu_tabulado(array_menu_debug_dma_tsconf_zxuno,1,lin);

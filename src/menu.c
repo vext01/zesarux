@@ -25698,8 +25698,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					);
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO || datagear_dma_emulation.v) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno,NULL,"Debug DMA");
-			//menu_add_item_menu_shortcut(array_menu_debug_settings,'d');
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno,NULL,"Debug D~~MA");
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'m');
 		}					
 
 		if (CPU_IS_Z80) {
@@ -25731,8 +25731,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 #ifdef EMULATE_CPU_STATS
 		if (CPU_IS_Z80) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_cpu_stats,NULL,"View CPU S~~tatistics");
-			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_cpu_stats,NULL,"View CPU Statistics");
 		}
 
 #endif
@@ -25801,8 +25800,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-					menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"~~ZXVision test");
-					menu_add_item_menu_shortcut(array_menu_debug_settings,'z');
+					menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
+		
 
 	/*	menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'e');
@@ -25812,8 +25811,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 
 	if (MACHINE_IS_SPECTRUM_16_48) {
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_run_mantransfer,NULL,"Run ~~mantransfer");
-		menu_add_item_menu_shortcut(array_menu_debug_settings,'m');
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_run_mantransfer,NULL,"Run mantransfer");
 		menu_add_item_menu_tooltip(array_menu_debug_settings,"Run mantransfer, which dumps ram memory contents (snapshot) to Spectrum Tape\n"
 					"Only Spectrum 48k/16k models supported");
 		menu_add_item_menu_ayuda(array_menu_debug_settings,"The difference between this option and the Save snapshot option is that "
