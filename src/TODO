@@ -14,6 +14,8 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 -menus zxvision:
 --porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
 --que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
+--que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
+  de menu si el raton esta apuntando a alguna opcion
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 
