@@ -7480,13 +7480,14 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		while (tecla==0 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
 
-
+			//Si no hubera este menu_refresca_pantalla cuando multitask esta a off,
+			//no se moverian las ventanas con refresco al mover raton
+			//el resto de cosas funcionaria bien
              if (!menu_multitarea) {
-                        //printf ("refresca pantalla\n");
                         menu_refresca_pantalla();
                 }
 
-            menu_cpu_core_loop();
+            //menu_cpu_core_loop();
 
 
 			menu_espera_tecla_timeout_tooltip();
