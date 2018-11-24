@@ -13775,7 +13775,6 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						yventana=7;
 						ancho_ventana=14;
 						alto_ventana=11;
-						//menu_dibuja_ventana(9,7,14,11,"AY Piano");
 					}
           			else if (total_chips==2) {
 						xventana=9;
@@ -13783,7 +13782,6 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						ancho_ventana=14;
 						alto_ventana=20;						  
 						  
-						  //menu_dibuja_ventana(9,2,14,20,"AY Piano");
 					}
 
 					else {
@@ -13791,7 +13789,6 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						yventana=1;
 						ancho_ventana=14;
 						alto_ventana=22;						
-						//menu_dibuja_ventana(9,1,14,22,"AY Piano");
 					}
 
 				}
@@ -13805,7 +13802,6 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						yventana=piano_graphic_base_y;
 						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
 						alto_ventana=13;						
-						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,13,"AY Piano");
 					}
 					else if (total_chips==2) {
 						piano_graphic_base_y=1;
@@ -13813,7 +13809,6 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						yventana=piano_graphic_base_y;
 						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
 						alto_ventana=22;							
-						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,22,"AY Piano");
 					}
 
 					else {
@@ -13822,7 +13817,6 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						yventana=piano_graphic_base_y;
 						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
 						alto_ventana=24;							
-						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,24,"AY Piano");
 					}
 				}
 
@@ -14006,7 +14000,6 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
-					//menu_dibuja_ventana(7,7,18,11,"Wave Piano");
 					xventana=7;
 					yventana=7;
 					ancho_ventana=18;
@@ -14019,7 +14012,6 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 
 						piano_graphic_base_y=8;
-						//menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X-2,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA+4,8,"Wave Piano");
 
 					xventana=PIANO_GRAPHIC_BASE_X-2;
 					yventana=piano_graphic_base_y;
@@ -29610,7 +29602,6 @@ void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porc
 		if (porcentaje>100) porcentaje=100;
 
 		// mostrar * a la derecha para indicar donde estamos en porcentaje
-		//menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
 		int ybase=y+2;
 
 
@@ -29855,7 +29846,6 @@ void old_menu_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	if (texto_no_cabe) {
 		// mostrar * a la derecha para indicar donde estamos en porcentaje
-		//menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
 
 		int porcentaje=((primera_linea+linea_cursor+1)*100)/(indice_linea+1); //+1 para no hacer division por cero
 
@@ -30548,7 +30538,6 @@ void old_menu_ventana_scanf(char *titulo,char *texto,int max_length)
 	int scanf_alto=3;
 
         menu_espera_no_tecla();
-		// menu_dibuja_ventana(2,10,28,3,titulo);
         menu_dibuja_ventana(scanf_x,scanf_y,scanf_ancho,scanf_alto,titulo);
 
 	menu_scanf(texto,max_length,scanf_ancho-2,scanf_x+1,scanf_y+1);
@@ -30579,10 +30568,6 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 	int scanf_alto=3;
 
         menu_espera_no_tecla();
-		// menu_dibuja_ventana(2,10,28,3,titulo);
-
-
-        //menu_dibuja_ventana(scanf_x,scanf_y,scanf_ancho,scanf_alto,titulo);
 
 	zxvision_window ventana;
 
@@ -33549,7 +33534,7 @@ void menu_print_dir(int inicial)
 
     if (filesel_no_cabe_todo) {
                 // mostrar * a la derecha para indicar donde estamos en porcentaje
-                //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
+          
                 int ybase=ventana_y+5;
                 filesel_porcentaje_visible=((inicial+filesel_linea_seleccionada)*100)/(filesel_total_archivos+1); //+1 para no hacer division por cero
                 //int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
