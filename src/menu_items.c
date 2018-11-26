@@ -6258,7 +6258,8 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 					}
 
 			 		else {
-						menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+						//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+						zxvision_print_string_defaults_fillspc(menu_display_total_palette_draw_barras_window,1,linea++,dumpmemoria);
 					}
 		}
 
@@ -6328,71 +6329,69 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 	set_menu_overlay_function(menu_display_total_palette_draw_barras);
 	menu_display_total_palette_draw_barras_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
-        do {
-        	menu_speech_tecla_pulsada=0; //Que envie a speech
+    do {
+        menu_speech_tecla_pulsada=0; //Que envie a speech
 
-			int linea=0;
+		int linea=0;
+
+		char textoshow[33];
+
+		char nombre_paleta[33];
+
+		if (menu_display_total_palette_show_mapped==0) {
+			strcpy(nombre_paleta,total_palette_colours_array[menu_display_total_palette_current_palette].nombre_paleta);
+		}
+		else {
+			menu_debug_sprites_get_palette_name(menu_display_total_palette_current_palette,nombre_paleta);
+		}
+
+		sprintf (textoshow,"Palette %d: %s",menu_display_total_palette_current_palette,nombre_paleta);
+       	//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
+
+		if (menu_display_total_palette_show_mapped==0) {
+			sprintf (textoshow,"%s",total_palette_colours_array[menu_display_total_palette_current_palette].descripcion_paleta);
+		}
+		else {
+			sprintf (textoshow,"Total colours in array: %d",menu_display_total_palette_get_total_colors() );
+		}
+		//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
+
+   		//menu_escribe_linea_opcion(linea++,-1,1,"");
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+
+		//linea=menu_display_total_palette_lista_colores(linea,0);
+		linea +=16;
 
 
+		//printf ("zone size: %x dir: %x\n",menu_display_memory_zone_size,menu_display_total_palette_direccion);
 
+        //menu_escribe_linea_opcion(linea++,-1,1,"");
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
 
-				char textoshow[33];
+		char buffer_linea[40];
 
-				char nombre_paleta[33];
-
-				if (menu_display_total_palette_show_mapped==0) {
-					strcpy(nombre_paleta,total_palette_colours_array[menu_display_total_palette_current_palette].nombre_paleta);
-				}
-				else {
-					menu_debug_sprites_get_palette_name(menu_display_total_palette_current_palette,nombre_paleta);
-				}
-
-				sprintf (textoshow,"Palette %d: %s",menu_display_total_palette_current_palette,nombre_paleta);
-        menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-
-				if (menu_display_total_palette_show_mapped==0) {
-					sprintf (textoshow,"%s",total_palette_colours_array[menu_display_total_palette_current_palette].descripcion_paleta);
-				}
-				else {
-					sprintf (textoshow,"Total colours in array: %d",menu_display_total_palette_get_total_colors() );
-				}
-				menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-
-        menu_escribe_linea_opcion(linea++,-1,1,"");
-
-				//linea=menu_display_total_palette_lista_colores(linea,0);
-				linea +=16;
-
-
-//printf ("zone size: %x dir: %x\n",menu_display_memory_zone_size,menu_display_total_palette_direccion);
-
-        menu_escribe_linea_opcion(linea++,-1,1,"");
-
-				char buffer_linea[40];
-
-				linea=TOTAL_PALETTE_WINDOW_Y+TOTAL_PALETTE_COLORS_PER_WINDOW+4;
+		linea=TOTAL_PALETTE_WINDOW_Y+TOTAL_PALETTE_COLORS_PER_WINDOW+4;
 
 															// 01234567890123456789012345678901
-					sprintf (buffer_linea,"Move: Cursors,Q,A,PgUp,PgDn");
+		sprintf (buffer_linea,"Move: Cursors,Q,A,PgUp,PgDn");
 
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-				 sprintf (buffer_linea,"M: Mapped palette: %s",(menu_display_total_palette_show_mapped ? "Yes" : "No") );
-				 menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-
-
-
-				if (menu_multitarea==0) menu_refresca_pantalla();
+		sprintf (buffer_linea,"M: Mapped palette: %s",(menu_display_total_palette_show_mapped ? "Yes" : "No") );
+		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
 
-                                menu_espera_tecla();
 
-                                tecla=menu_get_pressed_key();
+		zxvision_draw_window_contents(&ventana);
+			
+		tecla=zxvision_common_getkey_refresh();		
 
-                                menu_espera_no_tecla_con_repeticion();
-
-				int aux_pgdnup;
-				int limite;
+		int aux_pgdnup;
+		int limite;
 
 				switch (tecla) {
 
