@@ -3512,7 +3512,7 @@ void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,z80_by
 
 
 		zxvision_print_string(ventana,x,y,tinta,papel,0,texto);
-		printf ("Escribiendo texto tabulado %s en %d,%d\n",texto,x,y);
+		//printf ("Escribiendo texto tabulado %s en %d,%d\n",texto,x,y);
 
         menu_textspeech_send_text(texto);
 
@@ -5008,6 +5008,7 @@ void zxvision_set_offset_y_visible(zxvision_window *w,int y)
 	//El cursor esta por arriba. Decimos que este lo mas arriba posible
 	if (y<w->offset_y) {
 		linea_final=y;
+		printf ("adjust verticall scroll por arriba to %d\n",linea_final);
 		
 	}
 
@@ -5019,6 +5020,8 @@ void zxvision_set_offset_y_visible(zxvision_window *w,int y)
 		//visble 10->efectivos son 8
 		//establecemos a linea 7
 		//linea_final=7-(10-2)+1 = 7-8+1=0
+
+		printf ("adjust verticall scroll por abajo to %d\n",linea_final);
 	}
 
 	else return;
@@ -5034,6 +5037,9 @@ void zxvision_set_offset_y_visible(zxvision_window *w,int y)
 
 	if (ultima_linea_scroll<0) ultima_linea_scroll=0;
 	if (linea_final>ultima_linea_scroll) linea_final=ultima_linea_scroll;
+
+	printf ("final scroll %d\n",linea_final);
+
 	zxvision_set_offset_y(w,linea_final);
 
 
@@ -7457,6 +7463,15 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			//printf ("beyond limit\n");
 			scroll_opciones=linea_seleccionada-limite_scroll;
 		}
+
+
+		//Si menu tabulado, ajustamos scroll de zxvision
+		if (m->es_menu_tabulado) {
+			int linea_cursor=menu_retorna_item(m,linea_seleccionada)->menu_tabulado_y;
+			printf ("ajustar scroll a %d\n",linea_cursor);
+			zxvision_set_offset_y_visible(ventana,linea_cursor);
+		}
+
 
 		//escribir todas opciones
 		printf ("Escribiendo de nuevo las opciones\n");
