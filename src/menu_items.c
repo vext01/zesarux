@@ -6249,7 +6249,7 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 					int longitud_texto=strlen(dumpmemoria);
 
 					int posicion_barra_color_x=TOTAL_PALETTE_WINDOW_X+longitud_texto+2;
-					int posicion_barra_color_y=TOTAL_PALETTE_WINDOW_Y+4+linea_color;
+					int posicion_barra_color_y=TOTAL_PALETTE_WINDOW_Y+3+linea_color;
 
 					//dibujar la barra de color
 					if (si_barras) {
