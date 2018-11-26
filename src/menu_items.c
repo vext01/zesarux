@@ -5314,6 +5314,12 @@ void menu_osd_adventure_keyboard_next(void)
 #define ADVENTURE_KB_ANCHO 32
 #define ADVENTURE_KB_ALTO 24
 
+//maximo de alto total admitido para la ventana
+#define ADVENTURE_KB_MAX_TOTAL_HEIGHT 100
+
+//conservar valor de scroll ultimo para que cuando listado sea grande,
+//poder conservar ultima posicion
+int menu_osd_advkb_last_offset_y=0;
 
 void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 {
@@ -5341,7 +5347,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 	zxvision_window ventana;
 
 	zxvision_new_window(&ventana,ADVENTURE_KB_X,ADVENTURE_KB_Y,ADVENTURE_KB_ANCHO,ADVENTURE_KB_ALTO,
-							ADVENTURE_KB_ANCHO-1,ADVENTURE_KB_ALTO-2,"OSD Adventure Keyboard");
+							ADVENTURE_KB_ANCHO-1,ADVENTURE_KB_MAX_TOTAL_HEIGHT,"OSD Adventure Keyboard");
 	zxvision_draw_window(&ventana);		
 
 
@@ -5400,7 +5406,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 			}
 
 			//controlar maximo de alto
-			if (last_y>=ADVENTURE_KB_ALTO-2) {
+			if (last_y>=ADVENTURE_KB_MAX_TOTAL_HEIGHT) {
 				debug_printf (VERBOSE_DEBUG,"Reached maximum window height");
 				last_y--;
 				salir=1;
@@ -5479,6 +5485,9 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
 
 
+		zxvision_set_offset_y(&ventana,menu_osd_advkb_last_offset_y);
+
+
 //Nombre de ventana solo aparece en el caso de stdout
                 retorno_menu=menu_dibuja_menu(&osd_adventure_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_osd_adventure_keyboard,"OSD Adventure KB" );
 
@@ -5499,6 +5508,8 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
+
+		menu_osd_advkb_last_offset_y=ventana.offset_y;
 
         cls_menu_overlay();
 		//menu_espera_no_tecla();

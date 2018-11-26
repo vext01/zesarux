@@ -4510,9 +4510,6 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	}
 
 
-	//if (tooltip_enabled==0) cls_menu_overlay();
-
-        //menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
 	zxvision_window ventana;
 	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,indice_linea,titulo);	
@@ -7393,7 +7390,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		ventana=&ventana_menu;
 
-		//menu_dibuja_ventana(x,y,ancho,alto,titulo);
 	}
 
 	else {
