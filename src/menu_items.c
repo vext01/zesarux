@@ -6330,6 +6330,12 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 	menu_display_total_palette_draw_barras_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
     do {
+
+		//Borramos lista de colores con espacios por si hay estos de antes
+		
+		int i;
+		for (i=0;i<16;i++) zxvision_print_string_defaults_fillspc(&ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
+
         menu_speech_tecla_pulsada=0; //Que envie a speech
 
 		int linea=0;
