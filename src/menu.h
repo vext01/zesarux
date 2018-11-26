@@ -34,6 +34,8 @@
 //Usado en ver sprites y ver colores mapeados
 #define MENU_TOTAL_MAPPED_PALETTES 14
 
+
+
 extern int menu_overlay_activo;
 extern void (*menu_overlay_function)(void);
 
@@ -387,6 +389,15 @@ extern int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior);
 extern int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior);
 
 extern void menu_refresca_pantalla(void);
+
+extern int menu_debug_sprites_total_colors_mapped_palette(int paleta);
+extern int menu_debug_sprites_return_index_palette(int paleta, z80_byte color);
+extern int menu_debug_sprites_return_color_palette(int paleta, z80_byte color);
+extern int menu_debug_sprites_max_value_mapped_palette(int paleta);
+extern void menu_dibuja_rectangulo_relleno(zxvision_window *w,int x, int y, int ancho, int alto, int color);
+extern void menu_debug_sprites_get_palette_name(int paleta, char *s);
+
+extern int menu_debug_get_total_digits_dec(int valor);
 
 //Fin funciones basicas que se suelen usar desde menu_items.c
 
