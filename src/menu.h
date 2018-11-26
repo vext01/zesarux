@@ -460,7 +460,7 @@ extern z80_bit menu_button_f_function;
 extern int menu_button_f_function_index;
 
 //numero maximo de entradas 
-#define MAX_OSD_ADV_KEYB_WORDS 300
+#define MAX_OSD_ADV_KEYB_WORDS 1000
 //longitud maximo de cada entrada
 #define MAX_OSD_ADV_KEYB_TEXT_LENGTH 31
 

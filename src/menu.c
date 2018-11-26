@@ -3482,23 +3482,10 @@ void menu_escribe_linea_opcion_tabulado(z80_byte indice,int opcion_actual,int op
         menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
 
 
-        //linea entera con espacios
-        //for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
 
-        //y texto propiamente
-
-        //int startx=menu_escribe_linea_startx;
-        //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
         menu_escribe_texto_ventana(x,y,tinta,papel,texto);
 
-        //si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor. De momento no
-	
-        /*if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
-                if (opcion_actual==indice) {
-                        if (opcion_activada==1) menu_escribe_texto_ventana(0,indice,tinta,papel,">");
-                        else menu_escribe_texto_ventana(0,indice,tinta,papel,"x");
-                }
-        }*/
+
         menu_textspeech_send_text(texto);
 
 }
@@ -3524,28 +3511,9 @@ void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,z80_by
         menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
 
 
-        //linea entera con espacios
-        //for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
-
-        //y texto propiamente
-
-        //int startx=menu_escribe_linea_startx;
-        //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
-        
-		//menu_escribe_texto_ventana(x,y,tinta,papel,texto);
-		//Linea entera con espacios
-		//zxvision_fill_width_spaces(ventana,y);
-
 		zxvision_print_string(ventana,x,y,tinta,papel,0,texto);
+		printf ("Escribiendo texto tabulado %s en %d,%d\n",texto,x,y);
 
-        //si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor. De momento no
-	
-        /*if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
-                if (opcion_actual==indice) {
-                        if (opcion_activada==1) menu_escribe_texto_ventana(0,indice,tinta,papel,">");
-                        else menu_escribe_texto_ventana(0,indice,tinta,papel,"x");
-                }
-        }*/
         menu_textspeech_send_text(texto);
 
 }
@@ -6821,8 +6789,11 @@ int menu_active_item_primera_vez=1;
 
 void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int linea_seleccionada,int max_opciones,int scroll)
 {
-                int i;
-                int opcion_activa;
+        int i;
+        int opcion_activa;
+
+		int menu_tabulado=0;
+		if (aux->es_menu_tabulado) menu_tabulado=1;
 
 		char texto_opcion_activa[100];
 		//Asumimos por si acaso que no hay ninguna activa
@@ -6862,7 +6833,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 				}
 			}
 
-			if (aux->es_menu_tabulado) {
+			if (menu_tabulado) {
 				menu_escribe_linea_opcion_tabulado_zxvision(ventana,i,linea_seleccionada,opcion_activa,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
 			}
             
@@ -6883,7 +6854,8 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 				if (y_destino>=0) {
 					//Controlar si ultima linea. Es la 22,
 					//considerando una ventana de maximo de alto
-					if (y_destino==22) {
+					//y siempre que no sea tipo tabulado (util en osd adv keyboard)
+					if (y_destino==22 && !menu_tabulado ) {
 						menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,1,"...");
 
 						se_ha_llegado_limite=1;
@@ -6903,7 +6875,8 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
         }
 
 		//Si hay mas opciones de las permitidas, pero no se han escrito ..., borrarlos por una posible impresion anterior
-		if (max_opciones>22 && !se_ha_llegado_limite) {
+		//Y siempre que no sea tipo tabulado  
+		if (max_opciones>22 && !se_ha_llegado_limite && !menu_tabulado ) {
 			debug_printf (VERBOSE_DEBUG,"Erase possible ... written before");
 			menu_escribe_linea_opcion_zxvision(ventana,22,-1,1,"   ");
 		}

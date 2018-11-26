@@ -5315,7 +5315,7 @@ void menu_osd_adventure_keyboard_next(void)
 #define ADVENTURE_KB_ALTO 24
 
 //maximo de alto total admitido para la ventana
-#define ADVENTURE_KB_MAX_TOTAL_HEIGHT 100
+#define ADVENTURE_KB_MAX_TOTAL_HEIGHT 500
 
 //conservar valor de scroll ultimo para que cuando listado sea grande,
 //poder conservar ultima posicion
@@ -5383,8 +5383,8 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		  }
 
 
-                //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
-                menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+        //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+        menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 	//osd_adv_kbd_defined
@@ -5442,20 +5442,10 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 					}
 					
 
-					//Caracter de hotkey. Crearlo automaticamente
-					/*if (hotkey>='a' && hotkey<='z') {
-						//Ver si no se ha usado antes
-						int indice_hotkey=hotkey-'a';
-						if (hotkeys_assigned[indice_hotkey]==0) {
-							hotkeys_assigned[indice_hotkey]=1;
-							sprintf (texto_opcion,"~~%s",osd_adv_kbd_list[i]);
-							tiene_hotkey=1;
-						}
-					}*/
-
-		                        menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,texto_opcion);
-        		                menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
+				    menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,texto_opcion);
+        		    menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
 					menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,i);
+					printf ("Agregando palabra %s en %d,%d\n",texto_opcion,last_x,last_y);
 
 					if (tiene_hotkey) {
 						menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,hotkey);
@@ -5477,19 +5467,16 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		y_ventana=12-alto_ventana/2;
 		if (y_ventana<0) y_ventana=0;	
 
-                //int alto_ventana=last_y;
-                //int y_ventana=ADVENTURE_KB_Y;
-
 
 		}
 
 
-
+		//Recuperamos antiguo offset de ventana
 		zxvision_set_offset_y(&ventana,menu_osd_advkb_last_offset_y);
 
 
-//Nombre de ventana solo aparece en el caso de stdout
-                retorno_menu=menu_dibuja_menu(&osd_adventure_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_osd_adventure_keyboard,"OSD Adventure KB" );
+		//Nombre de ventana solo aparece en el caso de stdout
+        retorno_menu=menu_dibuja_menu(&osd_adventure_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_osd_adventure_keyboard,"OSD Adventure KB" );
 
 
         cls_menu_overlay();
@@ -5509,6 +5496,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
+		//Guardamos offset de ventana actual
 		menu_osd_advkb_last_offset_y=ventana.offset_y;
 
         cls_menu_overlay();
