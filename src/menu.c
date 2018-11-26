@@ -7497,6 +7497,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 						//Ver si hay que subir o bajar cursor
 						int posicion_raton_y=menu_mouse_y-1;
 
+						//tener en cuenta scroll
+						posicion_raton_y +=ventana->offset_y;
+
 						//Si no se selecciona separador. Menu no tabulado
 						if (m->es_menu_tabulado==0) {
 							if (menu_retorna_item(m,posicion_raton_y)->tipo_opcion!=MENU_OPCION_SEPARADOR) {
