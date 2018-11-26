@@ -31,6 +31,9 @@
 
 #define MENU_ITEM_PARAMETERS int valor_opcion GCC_UNUSED
 
+//Usado en ver sprites y ver colores mapeados
+#define MENU_TOTAL_MAPPED_PALETTES 14
+
 extern int menu_overlay_activo;
 extern void (*menu_overlay_function)(void);
 
