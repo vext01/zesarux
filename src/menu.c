@@ -4308,15 +4308,9 @@ void zxvision_generic_message_cursor_up(zxvision_window *ventana)
 
 }						
 
-//TODO: gestionar tooltip_enabled
+//Muestra un mensaje en ventana troceando el texto en varias lineas de texto con estilo zxvision
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
-	
-
-
-//Muestra un mensaje en ventana troceando el texto en varias lineas de texto de maximo 25 caracteres
-//void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
-//{
 
 	//Buffer de entrada
 
@@ -4748,7 +4742,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 							ventana.cursor_line=i;
 
 							//Si no esta visible, cambiamos offset
-							if (i<ventana.offset_y || i>=ventana.offset_y+ventana.visible_height-2) zxvision_set_offset_y(&ventana,i);
+							zxvision_set_offset_y_visible(&ventana,i);
+							//if (i<ventana.offset_y || i>=ventana.offset_y+ventana.visible_height-2) zxvision_set_offset_y(&ventana,i);
 
 							/*int contador;
 							for (contador=0;contador<ultima_linea_buscada;contador++) {
@@ -5001,6 +4996,47 @@ void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 
 	zxvision_draw_window_contents(w);
 	zxvision_draw_scroll_bars(w);
+}
+
+
+//Si no esta visible, cambiamos offset
+void zxvision_set_offset_y_visible(zxvision_window *w,int y)
+{
+
+	int linea_final;
+
+	//El cursor esta por arriba. Decimos que este lo mas arriba posible
+	if (y<w->offset_y) {
+		linea_final=y;
+		
+	}
+
+	//El cursor esta por abajo. decimos que el cursor este lo mas abajo posible
+	else if (y>=w->offset_y+w->visible_height-2) {
+		linea_final=y-(w->visible_height-2)+1;
+		//Ejemplo
+		//total height 12
+		//visble 10->efectivos son 8
+		//establecemos a linea 7
+		//linea_final=7-(10-2)+1 = 7-8+1=0
+	}
+
+	else return;
+
+	int ultima_linea_scroll=w->total_height-(w->visible_height-2);
+	
+	/*
+	Ejemplo: visible_height 10-> efectivos son 8
+	total_height 12
+	podremos hacer 4 veces scroll
+	12-(10-2)=12-8=4
+	*/
+
+	if (ultima_linea_scroll<0) ultima_linea_scroll=0;
+	if (linea_final>ultima_linea_scroll) linea_final=ultima_linea_scroll;
+	zxvision_set_offset_y(w,linea_final);
+
+
 }
 
 
@@ -29486,51 +29522,11 @@ void old_menu_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		menu_ventana_draw_vertical_perc_bar(xventana,yventana,ancho_ventana,alto_ventana,porcentaje);
 
 
-		/*
-		int ybase=yventana+2;
 		
-		//int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
-
-		//if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
-
-
-		//mostrar cursores arriba y abajo
-		putchar_menu_overlay(xventana+ancho_ventana-1,ybase-1,'^',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+alto_ventana-3,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-
-		//mostrar linea vertical para indicar que es zona de porcentaje
-		if (!menu_hide_vertical_percentaje_bar.v) {
-			int i;
-			for (i=0;i<alto_ventana-3;i++) 	putchar_menu_overlay(xventana+ancho_ventana-1,ybase+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
-		}
-		
-		int sumaralto=((alto_ventana-4)*porcentaje)/100;
-		putchar_menu_overlay(xventana+ancho_ventana-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
-		*/
 	}
 
 
 
-	//arriba
-	//if (primera_linea>0) cursores[21]='U';
-	//Meter puntos suspensivos en la primera linea indicando que hay mas arriba
-
-	//if (primera_linea>0) menu_escribe_linea_opcion(0,-1,1,"... ");
-
-	/* No mostrar puntos suspensivos arriba
-	if (primera_linea>0) {
-		char buffer_temp[MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
-		sprintf (buffer_temp,"%s",buffer_lineas[primera_linea]);
-		buffer_temp[0]='.';
-		buffer_temp[1]='.';
-		buffer_temp[2]='.';
-		buffer_temp[3]=' ';
-		//Si texto impreso era menor que esos "... "
-		if (strlen(buffer_lineas[primera_linea])<4) buffer_temp[4]=0;
-
-		menu_escribe_linea_opcion(0,-1,1,buffer_temp);
-	}
-	*/
 
 
         menu_refresca_pantalla();
