@@ -6897,7 +6897,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 					//Controlar si ultima linea. Es la 22,
 					//considerando una ventana de maximo de alto
 					//y siempre que no sea tipo tabulado (util en osd adv keyboard)
-					if (y_destino==22 && !menu_tabulado ) {
+					if (y_destino==22 && !menu_tabulado && 0==1) { //Desactivamos esto
 						menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,1,"...");
 
 						se_ha_llegado_limite=1;
@@ -7378,6 +7378,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	x=16-ancho/2;
 	y=12-alto/2;
 
+	int ancho_visible=ancho;
+	int alto_visible=alto;
+
 	if (x<0 || y<0 || x+ancho>32 || y+alto>24) {
 		//char window_error_message[100];
 		//sprintf(window_error_message,"Window out of bounds: x: %d y: %d ancho: %d alto: %d",x,y,ancho,alto);
@@ -7386,8 +7389,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Ajustar limites
 		if (x<0) x=0;
 		if (y<0) y=0;
-		if (x+ancho>32) ancho=32-x;
-		if (y+alto>24) alto=24-y;
+		if (x+ancho>32) ancho_visible=32-x;
+		if (y+alto>24) alto_visible=24-y;
 	}
 
 	int redibuja_ventana;
@@ -7400,7 +7403,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	if (m->es_menu_tabulado==0) {
 		zxvision_window ventana_menu;
 
-		zxvision_new_window(&ventana_menu,x,y,ancho,alto,
+		zxvision_new_window(&ventana_menu,x,y,ancho_visible,alto_visible,
 							ancho-1,alto-2,titulo);		
 
 		ventana=&ventana_menu;
