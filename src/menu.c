@@ -6829,8 +6829,9 @@ int menu_retorna_atajo(menu_item *m,z80_byte tecla)
 
 int menu_active_item_primera_vez=1;
 
-void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int linea_seleccionada,int max_opciones,int scroll)
+void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int linea_seleccionada,int max_opciones)
 {
+
         int i;
         int opcion_activa;
 
@@ -6890,20 +6891,22 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 				//Restar el scroll
 				//int scroll=1;
 
-				y_destino-=scroll;
-				linea_seleccionada_destino-=scroll;
+				//y_destino-=scroll;
+				//linea_seleccionada_destino-=scroll;
 
 				if (y_destino>=0) {
 					//Controlar si ultima linea. Es la 22,
 					//considerando una ventana de maximo de alto
 					//y siempre que no sea tipo tabulado (util en osd adv keyboard)
-					if (y_destino==22 && !menu_tabulado && 0==1) { //Desactivamos esto
+					/*if (y_destino==22 && !menu_tabulado && 0==1) { //Desactivamos esto
 						menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,1,"...");
 
 						se_ha_llegado_limite=1;
 						//printf ("llegado al limite en opcion %d\n",i);
-					}
-					else menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
+					}*/
+					//else {
+						menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
+					//}
 				}
 				
 				
@@ -6918,16 +6921,16 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 
 		//Si hay mas opciones de las permitidas, pero no se han escrito ..., borrarlos por una posible impresion anterior
 		//Y siempre que no sea tipo tabulado  
-		if (max_opciones>22 && !se_ha_llegado_limite && !menu_tabulado ) {
+		/*if (max_opciones>22 && !se_ha_llegado_limite && !menu_tabulado ) {
 			debug_printf (VERBOSE_DEBUG,"Erase possible ... written before");
 			menu_escribe_linea_opcion_zxvision(ventana,22,-1,1,"   ");
-		}
+		}*/
 
 		//Si hay scroll, primera linea mostrara ...
-		if (scroll) {
+		/*if (scroll) {
 			debug_printf (VERBOSE_DEBUG,"Showing ... on first line");
 			menu_escribe_linea_opcion_zxvision(ventana,0,-1,1,"...");			
-		}
+		}*/
 
 		if (texto_opcion_activa[0]!=0) {
 			//Active item siempre quiero que se escuche
@@ -7459,13 +7462,16 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Ajustar scroll
 		scroll_opciones=0;
 
-		int limite_scroll=alto-3;
+
+		//desactivado en zxvision , tiene su propio scroll
+		/*int limite_scroll=alto-3;
 
 		//Esto solo debe saltar cuando tipo de menu no es tabulado, miramos el primer item
+		
 		if (linea_seleccionada>limite_scroll && m->es_menu_tabulado==0) {
-			//printf ("beyond limit\n");
+			printf ("beyond limit\n");
 			scroll_opciones=linea_seleccionada-limite_scroll;
-		}
+		}*/
 
 
 		//Si menu tabulado, ajustamos scroll de zxvision
@@ -7475,10 +7481,13 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			zxvision_set_offset_y_visible(ventana,linea_cursor);
 		}
 
+		else {
+			zxvision_set_offset_y_visible(ventana,linea_seleccionada);
+		}
 
 		//escribir todas opciones
 		printf ("Escribiendo de nuevo las opciones\n");
-		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones,scroll_opciones);
+		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
 
 
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
@@ -7784,7 +7793,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 				//Mostrar por un momento opciones y letras
 				menu_writing_inverse_color.v=1;
-				menu_escribe_opciones_zxvision(ventana,m,entrada_atajo,max_opciones,scroll_opciones);
+				menu_escribe_opciones_zxvision(ventana,m,entrada_atajo,max_opciones);
 				menu_refresca_pantalla();
 				//menu_espera_no_tecla();
 				menu_dibuja_menu_espera_no_tecla();
