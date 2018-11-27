@@ -16,7 +16,6 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 --que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
 --que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
---no gestiona bien posicion raton cuando hay scroll
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 

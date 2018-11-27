@@ -7402,12 +7402,45 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Apuntamos a ventana usada. Si no es menu tabulado, creamos una nosotros
 	//Si es tabulado, usamos current_window (pues ya alguien la ha creado antes)
 	zxvision_window *ventana;
+	zxvision_window ventana_menu;
 
 	if (m->es_menu_tabulado==0) {
-		zxvision_window ventana_menu;
+		
 
+
+
+		//zxvision_new_window(&ventana_menu,x,y,ancho_visible,alto_visible,
+		//					ancho-1,alto-2,titulo);		 //hacer de momento igual de ancho que ancho visible para poder usar ultima columna
+
+
+		//Hacer 1 mas de ancho total para poder usar columna derecha
 		zxvision_new_window(&ventana_menu,x,y,ancho_visible,alto_visible,
-							ancho-1,alto-2,titulo);		
+							ancho-1+1,alto-2,titulo);		 //hacer de momento igual de ancho que ancho visible para poder usar ultima columna
+
+
+		//Si no hay barra scroll vertical, usamos hasta la ultima columna
+		int incremento_por_columna=0;
+		printf ("visible height: %d alto %d\n",ventana_menu.visible_height,alto);
+		if (ventana_menu.visible_height==alto) {
+			incremento_por_columna=1;
+		}							
+
+		if (incremento_por_columna) {
+			printf ("Usamos hasta la ultima columna\n");
+			ventana_menu.can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+			ventana_menu.total_width=ancho-1+1;
+		}
+		else {
+			printf ("NO usamos hasta la ultima columna\n");
+			ventana_menu.can_use_all_width=0; 
+			ventana_menu.total_width=ancho-1;
+		}
+		/*printf ("total width: %d ancho: %d\n",ventana_menu.total_width,ancho);
+		ventana_menu.total_width=10;
+		printf ("total width: %d ancho: %d\n",ventana_menu.total_width,ancho);*/
+		//ventana_menu.total_width=
+		//printf ("total width: %d visible width %d\n",ventana_menu.total_width,ventana_menu.visible_width);
+		//ventana_menu.can_use_all_width=1;  //Esto falla porque en algun momento despues se pierde este parametro
 
 		ventana=&ventana_menu;
 
@@ -7417,10 +7450,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		ventana=zxvision_current_window;
 	}
 
-
-
-
-	printf ("Nueva ventana\n");
 
 	zxvision_draw_window(ventana);	
 
@@ -7492,6 +7521,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
 		zxvision_draw_window_contents(ventana);
+
 
         menu_refresca_pantalla();
 
