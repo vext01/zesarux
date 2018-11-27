@@ -7519,6 +7519,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
 
 
+	
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
 		zxvision_draw_window_contents(ventana);
 
