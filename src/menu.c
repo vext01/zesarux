@@ -7330,12 +7330,14 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		while (tecla==0 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
 
 
-			//Si no hay barra scroll vertical, usamos hasta la ultima columna
-			if (menu_dibuja_menu_adjust_last_column(ventana,ancho,alto)) {
-				printf ("Redibujar ventana pues hay cambio en columna final de scroll\n");
-				zxvision_draw_window(ventana);
-				menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
-				zxvision_draw_window_contents(ventana);
+			//Si no hay barra scroll vertical, usamos hasta la ultima columna, solo para menus no tabulados
+			if (m->es_menu_tabulado==0) {
+				if (menu_dibuja_menu_adjust_last_column(ventana,ancho,alto)) {
+					printf ("Redibujar ventana pues hay cambio en columna final de scroll\n");
+					zxvision_draw_window(ventana);
+					menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
+					zxvision_draw_window_contents(ventana);
+				}
 			}
 
 			//Si no hubera este menu_refresca_pantalla cuando multitask esta a off,
@@ -29311,6 +29313,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"- Click out of the window to put the focus on the emulated machine and send there keyboard presses\n"
 			"- Can also be moved with the keyboard: Shift+QAOP\n"
 			"- Can also be resized with the keyboard: Shift+WSKL\n"
+			"Note: non ZX-Vision windows are marked with a small pixel in the right of the title bar\n"
 
 			"\n"
 
