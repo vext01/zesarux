@@ -117,6 +117,8 @@ struct s_zxvision_window {
 	int width_before_minimize;
 	int can_use_all_width; //Si tenemos usable también la ultima columna derecha
 
+	//int applied_can_use_all_width; //Si la rutina de dibuja ventana ha visto el parametro can_use_all_width y ha dibujado segun eso
+
 	//Posicion del cursor y si esta visible
 	int visible_cursor;
 	int cursor_line;

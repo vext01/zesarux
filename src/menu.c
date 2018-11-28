@@ -4045,6 +4045,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->height_before_minimize=visible_height;	
 	w->width_before_minimize=visible_width;	
 	w->can_use_all_width=0;
+	//w->applied_can_use_all_width=0;
 
 	w->visible_cursor=0;
 	w->cursor_line=0;
@@ -4840,7 +4841,10 @@ int zxvision_get_effective_height(zxvision_window *w)
 
 int zxvision_if_vertical_scroll_bar(zxvision_window *w)
 {
-	if (w->can_use_all_width==1) return 0;
+	if (w->can_use_all_width==1) {
+		//w->applied_can_use_all_width=1;
+		return 0;
+	}
 	int effective_height=zxvision_get_effective_height(w);
 	if (w->total_height>effective_height && w->visible_height>=6) return 1;
 
@@ -6842,7 +6846,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 		//Asumimos por si acaso que no hay ninguna activa
 		texto_opcion_activa[0]=0;
 
-		int se_ha_llegado_limite=0; //Si se llega a escribir puntos suspensivos
+		//int se_ha_llegado_limite=0; //Si se llega a escribir puntos suspensivos
 
 
         for (i=0;i<max_opciones;i++) {
@@ -7273,6 +7277,45 @@ int menu_calcular_ancho_string_item(char *texto)
 	return ancho_calculado;
 }
 
+//Decir si usamos hasta la ultima columna, pues no se muestra barra scroll,
+//o bien se muestra barra scroll y no usamos hasta ultima columna
+//Si hemos cambiado la ventana, retornar no 0
+int menu_dibuja_menu_adjust_last_column(zxvision_window *w,int ancho,int alto)
+{
+			//Si no hay barra scroll vertical, usamos hasta la ultima columna
+		int incremento_por_columna=0;
+		//printf ("visible height: %d alto %d\n",w->visible_height,alto);
+		if (w->visible_height>=alto) {
+			incremento_por_columna=1;
+		}							
+
+		if (incremento_por_columna) {
+			if (w->can_use_all_width==0) {
+				//printf ("Usamos hasta la ultima columna\n");
+				w->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+				w->total_width=ancho-1+1;
+				return 1;
+			}
+		}
+		else {
+			//printf ("NO usamos hasta la ultima columna\n");
+			if (w->can_use_all_width) {
+				w->can_use_all_width=0; 
+				w->total_width=ancho-1;
+				return 1;
+			}
+		}
+
+		/*printf ("total width: %d ancho: %d\n",ventana_menu.total_width,ancho);
+		ventana_menu.total_width=10;
+		printf ("total width: %d ancho: %d\n",ventana_menu.total_width,ancho);*/
+		//ventana_menu.total_width=
+		//printf ("total width: %d visible width %d\n",ventana_menu.total_width,ventana_menu.visible_width);
+		//ventana_menu.can_use_all_width=1;  //Esto falla porque en algun momento despues se pierde este parametro
+
+	return 0;
+
+}
 
 z80_int menu_mouse_frame_counter=0;
 z80_int menu_mouse_frame_counter_anterior=0;
@@ -7288,7 +7331,6 @@ z80_int menu_mouse_frame_counter_anterior=0;
 
 //opcion_inicial contiene la opcion seleccionada.
 //asigna en item_seleccionado valores de: tipo_opcion, menu_funcion (debe ser una estructura ya asignada)
-
 
  
 
@@ -7419,28 +7461,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 		//Si no hay barra scroll vertical, usamos hasta la ultima columna
-		int incremento_por_columna=0;
-		printf ("visible height: %d alto %d\n",ventana_menu.visible_height,alto);
-		if (ventana_menu.visible_height==alto) {
-			incremento_por_columna=1;
-		}							
+		menu_dibuja_menu_adjust_last_column(&ventana_menu,ancho,alto);
 
-		if (incremento_por_columna) {
-			printf ("Usamos hasta la ultima columna\n");
-			ventana_menu.can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
-			ventana_menu.total_width=ancho-1+1;
-		}
-		else {
-			printf ("NO usamos hasta la ultima columna\n");
-			ventana_menu.can_use_all_width=0; 
-			ventana_menu.total_width=ancho-1;
-		}
-		/*printf ("total width: %d ancho: %d\n",ventana_menu.total_width,ancho);
-		ventana_menu.total_width=10;
-		printf ("total width: %d ancho: %d\n",ventana_menu.total_width,ancho);*/
-		//ventana_menu.total_width=
-		//printf ("total width: %d visible width %d\n",ventana_menu.total_width,ventana_menu.visible_width);
-		//ventana_menu.can_use_all_width=1;  //Esto falla porque en algun momento despues se pierde este parametro
+
 
 		ventana=&ventana_menu;
 
@@ -7514,6 +7537,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			zxvision_set_offset_y_visible(ventana,linea_seleccionada);
 		}
 
+
+
+
+
 		//escribir todas opciones
 		printf ("Escribiendo de nuevo las opciones\n");
 		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
@@ -7543,6 +7570,15 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		while (tecla==0 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
 
+
+			//Si no hay barra scroll vertical, usamos hasta la ultima columna
+			if (menu_dibuja_menu_adjust_last_column(ventana,ancho,alto)) {
+				printf ("Redibujar ventana pues hay cambio en columna final de scroll\n");
+				zxvision_draw_window(ventana);
+				menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
+				zxvision_draw_window_contents(ventana);
+			}
+
 			//Si no hubera este menu_refresca_pantalla cuando multitask esta a off,
 			//no se moverian las ventanas con refresco al mover raton
 			//el resto de cosas funcionaria bien
@@ -7571,6 +7607,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			else {
 				//printf ("no reset counter tecla %d\n",tecla);
 			}
+
+
 
 
 		
@@ -7727,7 +7765,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Si no se ha pulsado tecla de atajo:
 		if (!((tecla_leida>='a' && tecla_leida<='z') || (tecla_leida>='A' && tecla_leida<='Z')) ) {
 			menu_espera_no_tecla();
+
+		
+
 		}
+
+
 
         t_menu_funcion_activo sel_activo;
 
