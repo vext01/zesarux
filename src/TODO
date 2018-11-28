@@ -16,7 +16,7 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 --que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
 --que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
---rutina que decide si mostramos la ultima columna o no. lo gestiono con menu_dibuja_menu_adjust_last_column pero no va muy fina
+--rutina que decide si mostramos la ultima columna o no. lo gestiono con menu_dibuja_menu_adjust_last_column pero no va muy fina?
 
 
 

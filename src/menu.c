@@ -19,6 +19,22 @@
 
 */
 
+
+//prueba
+// export LDFLAGS="-O2 -Weverything"
+// export CFLAGS="-O2 -Weverything"
+/*#pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wembedded-directive"
+#pragma GCC diagnostic ignored "-Wunreachable-code-break"
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#pragma GCC diagnostic ignored "-Wpadded"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wused-but-marked-unused"*/
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -128,6 +144,8 @@
 #ifdef COMPILE_XWINDOWS
 	#include "scrxwindows.h"
 #endif
+
+
 
 
 
@@ -17663,13 +17681,9 @@ void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
 			menu_warn_message("File does not exist");
 			return;
 
-			/*if (menu_confirm_yesno_texto("File does not exist","Create?")==0) {
-                                dskplusthree_file_name[0]=0;
-                                return;
-                        }*/
-
 
 			//Crear archivo vacio
+			/*
 		        FILE *ptr_dskplusthreefile;
 			ptr_dskplusthreefile=fopen(dskplusthree_file_name,"wb");
 
@@ -17684,6 +17698,7 @@ void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
 				}
 		                fclose(ptr_dskplusthreefile);
 		        }
+				*/
 
 		}
 
@@ -28568,6 +28583,8 @@ void reset_splash_zesarux_logo(void)
 {
 	splash_zesarux_logo_active=0;
 }
+
+
 
 //Esta rutina estaba originalmente en screen.c pero dado que se ha modificado para usar rutinas auxiliares de aqui, mejor que este aqui
 void screen_print_splash_text(z80_byte y,z80_byte tinta,z80_byte papel,char *texto)
