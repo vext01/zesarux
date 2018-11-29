@@ -14,7 +14,7 @@
 --porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
 --que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
-
+--!! redimensionar ventanas menu muy rapido provoca mostrar texto mas alla de la ventana
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 
@@ -35,6 +35,9 @@ zxvision_draw_window para refrescar lo que habia debajo
 
 -dump assembler de direccion a direccion y que genere archivo o lo meta en clipboard, o abra ventana aparte para poder copiar si se quiere
 
+-poder hacer disassemble en debug cpu esta step mode. necesario? pues la propia ventana sirve de disassemble
+
+-migrar ventana debug cpu a zxvision
 
 //prueba
 // export LDFLAGS="-O2 -Weverything"
@@ -52,9 +55,7 @@ zxvision_draw_window para refrescar lo que habia debajo
 
 
 
---quiza caracteres de control para alterar color de tinta o papel, similar a ^^ o ~~
-para poder hacer por ejemplo el vu-meter en color rojo para los volumenes altos
-Ver "Temporal codigo control color tinta" -> como hacer compatible el color con el skin de gui?
+--volumenes canales sonido: el maximo se ve en color rojo, si hubiera algun skin con tinta roja por defecto, esto no se veria
  
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 

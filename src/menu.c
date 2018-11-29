@@ -3015,7 +3015,7 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
                         letra=texto[i];
 		}
 
-		//Temporal codigo control color tinta
+		//codigo control color tinta
 		if (menu_escribe_texto_si_cambio_tinta(texto,i)) {
 			tinta=texto[i+2]-'0';
 			i+=3;
@@ -3578,26 +3578,42 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 		if (rainbow_enabled.v==0) {
 
 			//parte inferior
-			for (x=x1;x<=x2;x++) scr_putpixel_gui_zoom(x*menu_gui_zoom,y2*menu_gui_zoom,color,menu_gui_zoom);
+			for (x=x1;x<=x2;x++) {
+				if (mouse_is_dragging && (x%2)==0) continue; //punteado cuando se mueve o redimensiona
+				scr_putpixel_gui_zoom(x*menu_gui_zoom,y2*menu_gui_zoom,color,menu_gui_zoom);
+			}
 
 			//izquierda
-			for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
+			for (y=y1;y<=y2;y++) {
+				if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+				scr_putpixel_gui_zoom(x1*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
+			}
+
 			if (menu_char_width!=8) {
 				//printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
 				for (;relleno_izquierda>0;relleno_izquierda--) {
-					for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom-relleno_izquierda,y*menu_gui_zoom,color,menu_gui_zoom);
+					for (y=y1;y<=y2;y++) {
+						if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+						scr_putpixel_gui_zoom(x1*menu_gui_zoom-relleno_izquierda,y*menu_gui_zoom,color,menu_gui_zoom);
+					}
 				}
 			}
 
 			//derecha
-			for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
+			for (y=y1;y<=y2;y++) {
+				if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+				scr_putpixel_gui_zoom(x2*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
+			}
 
 			//printf ("x: %d\n",x2*menu_gui_zoom);
 
                         if (menu_char_width!=8) {
                                 //printf ("Relleno der: %d %d\n",x2,relleno_derecha);
                                 for (;relleno_derecha>0;relleno_derecha--) {
-	                                for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom+relleno_derecha,y*menu_gui_zoom,color,menu_gui_zoom);
+	                                for (y=y1;y<=y2;y++) {
+										if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+										scr_putpixel_gui_zoom(x2*menu_gui_zoom+relleno_derecha,y*menu_gui_zoom,color,menu_gui_zoom);
+									}
                                 }
                         }
 
@@ -3623,22 +3639,7 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 			}
 
 			if (!ventana_activa_tipo_zxvision) {
-				
-				//printf ("Dibujando marca zxvision\n");
-
-				//Poner una marca de un "asterisco"
-				/*int marca_y;
-				for (marca_y=0;marca_y<longitud_marca_zxvision;marca_y++) {
-					scr_putpixel_gui_zoom((centro_marca_zxvison_x)*menu_gui_zoom,(centro_marca_zxvison_y-mitad_long_marca_zxvision+marca_y)*menu_gui_zoom,color_marca_zxvision,menu_gui_zoom);	
-				}
-
-				int marca_x;
-				for (marca_x=0;marca_x<longitud_marca_zxvision;marca_x++) {
-					scr_putpixel_gui_zoom((centro_marca_zxvison_x-mitad_long_marca_zxvision+marca_x)*menu_gui_zoom,(centro_marca_zxvison_y)*menu_gui_zoom,color_marca_zxvision,menu_gui_zoom);	
-				}*/
-				
-
-				//Poner solo un pixel
+				//Poner un pixel avisando que ventana no es zxvision
 				scr_putpixel_gui_zoom((centro_marca_zxvison_x)*menu_gui_zoom,(centro_marca_zxvison_y)*menu_gui_zoom,color_marca_zxvision,menu_gui_zoom);					
 			}				
 
@@ -3647,27 +3648,51 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 
 		else {
  	               //parte inferior
-        	        for (x=x1;x<=x2;x++) scr_putpixel_gui_zoom(x*menu_gui_zoom+margenx_izq,y2*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+        	        for (x=x1;x<=x2;x++) {
+						if (mouse_is_dragging && (x%2)==0) continue; //punteado cuando se mueve o redimensiona
+						scr_putpixel_gui_zoom(x*menu_gui_zoom+margenx_izq,y2*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+					}
 
 
 
 	                //izquierda
-        	        for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
-			if (menu_char_width!=8) {
-                                //printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
-                                for (;relleno_izquierda>0;relleno_izquierda--) {
-					for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq-relleno_izquierda,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
-                                }
+        	        for (y=y1;y<=y2;y++) {
+						if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+						scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+					}
+
+					if (menu_char_width!=8) {
+                        //printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
+                        for (;relleno_izquierda>0;relleno_izquierda--) {
+							for (y=y1;y<=y2;y++) {
+								if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+								scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq-relleno_izquierda,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+							}
                         }
+                    }
 
 	                //derecha
-        	        for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
-			if (menu_char_width!=8) {
-                                //printf ("Relleno der: %d %d\n",x2,relleno_derecha);
-                                for (;relleno_derecha>0;relleno_derecha--) {
-					scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq+relleno_derecha,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
-                                }
+        	        for (y=y1;y<=y2;y++) {
+						if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+						scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+					}
+
+					if (menu_char_width!=8) {
+                    	//printf ("Relleno der: %d %d\n",x2,relleno_derecha);
+                        for (;relleno_derecha>0;relleno_derecha--) {
+							for (y=y1;y<=y2;y++) {
+								if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+								scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq+relleno_derecha,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+							}
                         }
+                    }
+
+	                                /*for (y=y1;y<=y2;y++) {
+										if (mouse_is_dragging && (y%2)==0) continue; //punteado cuando se mueve o redimensiona
+										scr_putpixel_gui_zoom(x2*menu_gui_zoom+relleno_derecha,y*menu_gui_zoom,color,menu_gui_zoom);
+									}*/
+
+
 			//Marca redimensionado
 			if (cuadrado_activo_resize) {
 				//marca de redimensionado
@@ -8218,7 +8243,7 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 			texto[destino++]='=';
 
 
-			//Temporal codigo control color tinta
+			//Codigo control color tinta. Color rojo. TODO: si hubiera algun skin con tinta roja por defecto, esto no se veria
 			if (i==11) { 
 				texto[destino++]='$';
 				texto[destino++]='$';
@@ -8227,9 +8252,9 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 			}
 		}
 
-                for (;i<15;i++) {
-                        texto[destino++]=' ';
-                }
+        for (;i<15;i++) {
+        	texto[destino++]=' ';
+        }
 
 		texto[destino]=0;
 
