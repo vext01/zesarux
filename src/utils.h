@@ -35,6 +35,8 @@
 #define NAME_MAX MAX_PATH
 #endif
 
+
+
 extern void util_get_file_extension(char *filename,char *extension);
 extern void util_get_file_no_directory(char *filename,char *file_no_dir);
 extern void util_get_file_without_extension(char *filename,char *filename_without_extension);

@@ -33,6 +33,22 @@ zxvision_draw_window para refrescar lo que habia debajo
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
 
 
+-dump assembler de direccion a direccion y que genere archivo o lo meta en clipboard, o abra ventana aparte para poder copiar si se quiere
+
+
+//prueba
+// export LDFLAGS="-O2 -Weverything"
+// export CFLAGS="-O2 -Weverything"
+/*#pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wembedded-directive"
+#pragma GCC diagnostic ignored "-Wunreachable-code-break"
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#pragma GCC diagnostic ignored "-Wpadded"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wused-but-marked-unused"*/
 
 
 

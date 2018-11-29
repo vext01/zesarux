@@ -20,21 +20,6 @@
 */
 
 
-//prueba
-// export LDFLAGS="-O2 -Weverything"
-// export CFLAGS="-O2 -Weverything"
-/*#pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
-#pragma GCC diagnostic ignored "-Wmissing-prototypes"
-#pragma GCC diagnostic ignored "-Wconversion"
-#pragma GCC diagnostic ignored "-Wembedded-directive"
-#pragma GCC diagnostic ignored "-Wunreachable-code-break"
-#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-#pragma GCC diagnostic ignored "-Wpadded"
-#pragma GCC diagnostic ignored "-Wcast-qual"
-#pragma GCC diagnostic ignored "-Wshadow"
-#pragma GCC diagnostic ignored "-Wused-but-marked-unused"*/
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
