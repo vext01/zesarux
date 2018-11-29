@@ -6496,3 +6496,157 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 }
 
+
+
+
+
+void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
+{
+
+ 	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,0,1,32,20,
+							32-1,20-2,"Disassemble");
+	zxvision_draw_window(&ventana);			
+	//menu_dibuja_ventana(0,1,32,20,"Disassemble");
+
+    //Inicializar info de tamanyo zona
+	menu_debug_set_memory_zone_attr();
+
+
+
+        z80_byte tecla;
+
+        //menu_z80_moto_int direccion=get_pc_register();
+        menu_z80_moto_int direccion=menu_debug_disassemble_last_ptr;
+		
+
+        //int salir=0;
+
+        do {
+                int linea=0;
+
+                int lineas_disass=0;
+                //const int bytes_por_linea=8;
+                const int lineas_total=15;
+
+                //int bytes_por_ventana=bytes_por_linea*lineas_total;
+
+                char dumpassembler[64];
+
+		int longitud_opcode;
+		int longitud_opcode_primera_linea;
+
+		menu_z80_moto_int dir=direccion;
+
+                for (;lineas_disass<lineas_total;lineas_disass++,linea++) {
+
+			//Formato de texto en buffer:
+			//0123456789012345678901234567890
+			//DDDD AABBCCDD OPCODE-----------
+			//DDDD: Direccion
+			//AABBCCDD: Volcado hexa
+
+			//Metemos 30 espacios
+			/*
+			strcpy(dumpassembler,
+			 "                               ");
+
+
+			//Direccion
+			sprintf(dumpassembler,"%04X",dir);
+			//metemos espacio en 0 final
+			dumpassembler[4]=' ';
+
+
+			//Assembler
+			debugger_disassemble(&dumpassembler[14],17,&longitud_opcode,dir);
+
+
+
+			//Volcado hexa
+                        menu_debug_registers_dump_hex(&dumpassembler[5],dir,longitud_opcode);
+
+			//Poner espacio en 0 final
+			dumpassembler[5+longitud_opcode*2]=' ';
+			*/
+
+
+		 menu_debug_dissassemble_una_instruccion(dumpassembler,dir,&longitud_opcode);
+
+
+			if (lineas_disass==0) longitud_opcode_primera_linea=longitud_opcode;
+
+			dir +=longitud_opcode;
+
+                        //menu_escribe_linea_opcion(linea,-1,1,dumpassembler);
+						zxvision_print_string_defaults_fillspc(&ventana,1,linea,dumpassembler);
+                }
+
+
+                //menu_escribe_linea_opcion(linea++,-1,1,"");
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+
+
+                //menu_escribe_linea_opcion(linea++,-1,1,"M: Change pointer");
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea,"M: Change pointer");
+
+
+
+				tecla=zxvision_common_getkey_refresh();				
+
+
+
+                                
+
+				int i;
+
+                                switch (tecla) {
+
+                                        case 11:
+                                                //arriba
+						direccion=menu_debug_disassemble_subir(direccion);
+                                        break;
+
+                                        case 10:
+                                                //abajo
+                                                direccion +=longitud_opcode_primera_linea;
+                                        break;
+
+                                        case 24:
+                                                //PgUp
+						for (i=0;i<lineas_total;i++) direccion=menu_debug_disassemble_subir(direccion);
+                                        break;
+
+                                        case 25:
+                                                //PgDn
+						direccion=dir;
+                                        break;
+
+                                        case 'm':
+						//Usamos misma funcion de menu_debug_hexdump_change_pointer
+                                                direccion=menu_debug_hexdump_change_pointer(direccion);
+                                                //menu_debug_disassemble_ventana();
+												//zxvision_
+                                        break;
+
+			}
+
+
+		} while (tecla!=2); 
+
+	//restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);		
+
+    cls_menu_overlay();
+
+	zxvision_destroy_window(&ventana);		
+
+
+
+}
+
+

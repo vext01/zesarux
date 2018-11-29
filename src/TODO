@@ -4,8 +4,7 @@
 --zxvision:
 
 
--hacer que mouse left no envie tecla enter. sera mejor para todo...
-Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
+-Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 
 -Sin multitarea, primera pulsación de teclado no hace scroll. Seguramente debido a que hace un espera tecla al principio
 
@@ -13,18 +12,11 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 -menus zxvision:
 --porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
---que se pueda hacer en menus zxvision que linea de color llegue hasta derecha
 --que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
---rutina que decide si mostramos la ultima columna o no. lo gestiono con menu_dibuja_menu_adjust_last_column pero no va muy fina?
-
-
 
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
-
-
--osd text keyboard ya puedo hacer que ventana sea mucho mas grande, sin limite prácticamente
 
 -osd keyboard en zxvision
 
@@ -32,8 +24,6 @@ Quizá zxvision generic message ya no debería tener el límite de array de lín
 
 -zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
 Lo hace realmente con visible_width y visible_height
-
--cuando todo sean ventanas zxvision, quitar el "punto" que las identifica en barra de título
 
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 

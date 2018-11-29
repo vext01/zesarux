@@ -49,6 +49,9 @@ extern void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS);
 extern void menu_display_total_palette(MENU_ITEM_PARAMETERS);
 
 
+extern 
+
+
 
 #endif
 

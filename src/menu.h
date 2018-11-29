@@ -402,6 +402,12 @@ extern void menu_debug_sprites_get_palette_name(int paleta, char *s);
 
 extern int menu_debug_get_total_digits_dec(int valor);
 
+extern void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode);
+extern menu_z80_moto_int menu_debug_disassemble_last_ptr;
+
+extern menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial);
+extern menu_z80_moto_int menu_debug_disassemble_bajar(menu_z80_moto_int dir_inicial);
+
 //Fin funciones basicas que se suelen usar desde menu_items.c
 
 
