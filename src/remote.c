@@ -808,8 +808,8 @@ struct s_items_ayuda items_ayuda[]={
 	{"set-text-brightness",NULL,"brightness","Change text render brightness value (0-100)"},
 	{"set-verbose-level",NULL,NULL,"Sets verbose level for console output"},
 	{"set-window-zoom",NULL,"zoom","Sets window zoom"},
-  {"smartload","|sl","file","Smart-loads a file. Use with care, may produce unexpected behaviour when emulator is doing a machine reset for example"},
-  {"snapshot-load",NULL,"file","Loads a snapshot"},
+  {"smartload","|sl","file","Smart-loads a file. If the cpu is not in cpu-step mode, it will change to cpu-step before loading, and exit cpu-step mode after loading. Use with care, may produce unexpected behaviour when emulator is doing a machine reset for example"},
+  {"snapshot-load",NULL,"file","Loads a snapshot. If the cpu is not in cpu-step mode, it will change to cpu-step before loading, and exit cpu-step mode after loading"},
   {"snapshot-save",NULL,"file","Saves a snapshot"},
   {"speech-empty-fifo",NULL,NULL,"Empty speech fifo"},
   {"speech-send",NULL,"message","Sends message to speech"},
@@ -4238,30 +4238,53 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 
 	}
 
-  else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_parametros,"sl")) {
 
-    //Asegurarnos que congelamos el emulador: abrir menu con mutitarea desactivada
-    //Entramos en el mismo modo que cpu-step para poder congelar la emulacion
-    remote_cpu_enter_step(misocket);
-    if (menu_event_remote_protocol_enterstep.v==0) return;
+else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_parametros,"sl")) {
 
-    //remote_disable_multitask_enter_menu();
+		//Si estamos en cpu-step-mode, cargar tal cual y volver sin tocar modo
+		//Si no, entrar cpu-step-mode y luego quitar cpu-step-mode
+
+		z80_bit antes_menu_event_remote_protocol_enterstep;
+
+		antes_menu_event_remote_protocol_enterstep.v=menu_event_remote_protocol_enterstep.v;
+
+
+		if (antes_menu_event_remote_protocol_enterstep.v==0) {
+    	//Asegurarnos que congelamos el emulador: abrir menu con mutitarea desactivada
+    	//Entramos en el mismo modo que cpu-step para poder congelar la emulacion
+    	remote_cpu_enter_step(misocket);
+    	if (menu_event_remote_protocol_enterstep.v==0) return;
+		}
+
 
     if (quickload(parametros)) {
       escribir_socket (misocket,"Error. Unknown file format");
     }
 
-    //remote_send_esc_close_menu();
 
-    remote_cpu_exit_step(misocket);
-
+		if (antes_menu_event_remote_protocol_enterstep.v==0) {
+    	remote_cpu_exit_step(misocket);
+		}
   }
 
+
+
   else if (!strcmp(comando_sin_parametros,"snapshot-load") ) {
-    //Asegurarnos que congelamos el emulador: abrir menu con mutitarea desactivada
-    //Entramos en el mismo modo que cpu-step para poder congelar la emulacion
-    remote_cpu_enter_step(misocket);
-    if (menu_event_remote_protocol_enterstep.v==0) return;
+
+		//Si estamos en cpu-step-mode, cargar tal cual y volver sin tocar modo
+		//Si no, entrar cpu-step-mode y luego quitar cpu-step-mode
+
+		z80_bit antes_menu_event_remote_protocol_enterstep;
+
+		antes_menu_event_remote_protocol_enterstep.v=menu_event_remote_protocol_enterstep.v;
+
+
+		if (antes_menu_event_remote_protocol_enterstep.v==0) {
+    	//Asegurarnos que congelamos el emulador: abrir menu con mutitarea desactivada
+    	//Entramos en el mismo modo que cpu-step para poder congelar la emulacion
+    	remote_cpu_enter_step(misocket);
+    	if (menu_event_remote_protocol_enterstep.v==0) return;
+		}
 
 
     strcpy(snapshot_load_file,parametros);
@@ -4269,7 +4292,9 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
     snapshot_load();
 
 
-    remote_cpu_exit_step(misocket);
+		if (antes_menu_event_remote_protocol_enterstep.v==0) {
+    	remote_cpu_exit_step(misocket);
+		}
   }
 
   else if (!strcmp(comando_sin_parametros,"snapshot-save") ) {
