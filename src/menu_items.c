@@ -6503,6 +6503,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 {
 
+	printf ("Opening disassemble menu\n");
  	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
@@ -6594,7 +6595,7 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
                 //menu_escribe_linea_opcion(linea++,-1,1,"M: Change pointer");
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea,"M: Change pointer");
 
-
+				zxvision_draw_window_contents(&ventana);
 
 				tecla=zxvision_common_getkey_refresh();				
 
@@ -6630,16 +6631,14 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 						//Usamos misma funcion de menu_debug_hexdump_change_pointer
                                                 direccion=menu_debug_hexdump_change_pointer(direccion);
                                                 //menu_debug_disassemble_ventana();
-												//zxvision_
+												zxvision_draw_window(&ventana);
                                         break;
 
 			}
 
 
-		} while (tecla!=2); 
+	} while (tecla!=2); 
 
-	//restauramos modo normal de texto de menu
-    set_menu_overlay_function(normal_overlay_texto_menu);		
 
     cls_menu_overlay();
 

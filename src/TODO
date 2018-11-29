@@ -25,6 +25,9 @@
 -zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
 Lo hace realmente con visible_width y visible_height
 
+-quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
+zxvision_draw_window para refrescar lo que habia debajo
+
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
