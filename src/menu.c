@@ -4309,7 +4309,45 @@ void zxvision_generic_message_cursor_up(zxvision_window *ventana)
 
 
 
-}						
+}		
+
+//Funcion generica para guardar un archivo de texto a disco
+//Supondra que es de texto y por tanto pone filtro de "*.txt"
+//Ademas el tamaño del archivo a guardar se determina por el caracter 0 final
+void menu_save_text_to_file(char *puntero_memoria,char *titulo_ventana)
+{
+	char file_save[PATH_MAX];
+
+	char *filtros[2];
+
+	filtros[0]="txt";
+    filtros[1]=0;
+
+    int ret;
+
+	ret=menu_filesel(titulo_ventana,filtros,file_save);
+
+	if (ret==1) {
+
+		//Ver si archivo existe y preguntar
+		if (si_existe_archivo(file_save)) {
+
+			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+
+        }
+
+		int file_size=strlen(puntero_memoria);
+
+		util_save_file((z80_byte *)puntero_memoria,file_size,file_save);
+
+		menu_generic_message_splash(titulo_ventana,"OK File saved");
+
+		menu_espera_no_tecla();
+
+
+	}
+}
+
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto con estilo zxvision
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
@@ -4701,7 +4739,15 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 											zxvision_draw_window(&ventana);
 											zxvision_draw_window_contents(&ventana);
                                         break;
+
 						
+                         case 's':
+						 	menu_save_text_to_file(menu_generic_message_tooltip_text_initial,"Save Text");
+                 											zxvision_draw_window(&ventana);
+											zxvision_draw_window_contents(&ventana);
+                        break;
+
+
 						
 					//Buscar texto
 					case 'f':
@@ -29169,6 +29215,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"- Use cursors and PgDn/Up\n"
 			"- Use f and n to find text\n"
 			"- Use c to copy to ZEsarUX clipboard\n"
+			"- Use s to save contents to a text file\n"
 			"\n"
 			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or \"\")\n\n"
 			"Symbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "

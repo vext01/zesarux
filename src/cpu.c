@@ -6942,7 +6942,7 @@ init_randomize_noise_value();
 	printf ("Build number: " BUILDNUMBER "\n");
 
 	printf ("WARNING. This is a Snapshot version and not a stable one\n"
-			 "Some features may not work, can suffer random crashes, abnormal CPU use, or lots of debug messages on console\n\n");
+			 "Some features may not work, random crashes could happen, abnormal CPU use, or lots of debug messages on console\n\n");
 
 	//Si no coincide ese parametro, hacer pausa
 	if (strcmp(parameter_disablebetawarning,EMULATOR_VERSION)) {
