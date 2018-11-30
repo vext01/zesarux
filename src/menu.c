@@ -4784,7 +4784,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 							//printf ("mover cursor hasta linea: %d\n",ultima_linea_buscada);
 
 							//Mostramos cursor para poder indicar en que linea se ha encontrado el texto
-							//mostrar_cursor=1;
+							mostrar_cursor=1;
 
 							ventana.visible_cursor=1;
 
@@ -4833,6 +4833,9 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	if (retorno!=NULL) {
 		int linea_final;
+
+		printf ("mostrar cursor %d cursor_line %d ventana.offset_x %d\n",
+			mostrar_cursor,ventana.cursor_line,ventana.offset_x);
 
 		if (mostrar_cursor) linea_final=ventana.cursor_line;
 		else linea_final=ventana.offset_x;
@@ -29148,10 +29151,10 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
 	zxvision_generic_message_tooltip("About",0,0,0,&retorno_ventana,0,mensaje_about);
 
-
+	printf ("retorno ventana: %d\n",retorno_ventana.estado_retorno);
 
 	//Si se sale con ESC
-        if (retorno_ventana.estado_retorno==0) return;
+    if (retorno_ventana.estado_retorno==0) return;
 
 	//Linea seleccionada es 1? quiere decir que se selecciona texto "--- edition"
 /*
@@ -29160,6 +29163,9 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 	Como la que buscamos es la 1, no hay problema de falso positivo
 */
 	int linea=retorno_ventana.linea_seleccionada;
+
+	printf ("retorno ventana linea: %d\n",retorno_ventana.linea_seleccionada);
+
 	debug_printf(VERBOSE_INFO,"Closing window with Enter and selected line=%d",linea);
 	if (linea==1) {
 		if (si_existe_editionnamegame(NULL)) {
