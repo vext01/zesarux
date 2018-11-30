@@ -16,6 +16,13 @@
   de menu si el raton esta apuntando a alguna opcion
 --!! redimensionar ventanas menu muy rapido provoca mostrar texto mas alla de la ventana
 
+-Exportación de assembler a ventana de texto 
+-Quizá función que permita reducir ancho total de ventana y ajustar el contenido de la línea desplazando bytes
+-Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
+
+-ventanas zxvision que puedan salir parcialmente fuera de pantalla. de momento seria salir por debajo del border,
+pero cuando se puedan mostrar en border incluso, seria tenerlas por debajo del limite de la ventana
+
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 
 -osd keyboard en zxvision
