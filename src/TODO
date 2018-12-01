@@ -6,7 +6,7 @@
 
 -Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 
--Sin multitarea, primera pulsación de teclado no hace scroll. Seguramente debido a que hace un espera tecla al principio
+-Sin multitarea, primera pulsación de boton mouse no hace scroll. Seguramente debido a que hace un espera tecla al principio
 
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
 
