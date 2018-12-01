@@ -25,6 +25,10 @@ pero cuando se puedan mostrar en border incluso, seria tenerlas por debajo del l
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 
+-rueda de raton que haga scroll ventana en horizontal y vertical
+
+-Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
+
 -osd keyboard en zxvision
 
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?

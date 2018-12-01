@@ -4059,7 +4059,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 void zxvision_destroy_window(zxvision_window *w)
 {
 	zxvision_current_window=w->previous_window;
-	printf ("Setting current window to %p\n",zxvision_current_window);
+	//printf ("Setting current window to %p\n",zxvision_current_window);
 
 	free(w->memory);
 	ventana_tipo_activa=1;
@@ -4241,7 +4241,7 @@ void zxvision_generic_message_cursor_down(zxvision_window *ventana)
 
 		//Movemos el cursor si es que es posible
 		if (ventana->cursor_line<ventana->total_height-1) {
-			printf ("Incrementamos linea cursor\n");
+			//printf ("Incrementamos linea cursor\n");
 			ventana->cursor_line++;
 		}
 		else return;
@@ -4255,7 +4255,7 @@ void zxvision_generic_message_cursor_down(zxvision_window *ventana)
 		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
 			ventana->cursor_line=offset_y+ventana->visible_height-2;
 			zxvision_send_scroll_down(ventana);
-			printf ("Bajamos linea cursor y bajamos offset\n");
+			//printf ("Bajamos linea cursor y bajamos offset\n");
 		}
 		else {
 			//Redibujamos contenido
@@ -4279,7 +4279,7 @@ void zxvision_generic_message_cursor_up(zxvision_window *ventana)
 
 		//Movemos el cursor si es que es posible
 		if (ventana->cursor_line>0) {
-			printf ("Decrementamos linea cursor\n");
+			//printf ("Decrementamos linea cursor\n");
 			ventana->cursor_line--;
 		}
 		else return;
@@ -4293,11 +4293,11 @@ void zxvision_generic_message_cursor_up(zxvision_window *ventana)
 		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
 			if (offset_y>0) ventana->cursor_line=offset_y-1;
 			zxvision_send_scroll_up(ventana);
-			printf ("Subimos linea cursor y subimos offset\n");
+			//printf ("Subimos linea cursor y subimos offset\n");
 		}
 		else {
 			//Redibujamos contenido
-			printf ("Solo redibujamos\n");
+			//printf ("Solo redibujamos\n");
 			zxvision_draw_window_contents(ventana);
 			//zxvision_draw_scroll_bars(w);
 		}
@@ -4834,8 +4834,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	if (retorno!=NULL) {
 		int linea_final;
 
-		printf ("mostrar cursor %d cursor_line %d ventana.offset_x %d\n",
-			mostrar_cursor,ventana.cursor_line,ventana.offset_x);
+		//printf ("mostrar cursor %d cursor_line %d ventana.offset_x %d\n",mostrar_cursor,ventana.cursor_line,ventana.offset_x);
 
 		if (mostrar_cursor) linea_final=ventana.cursor_line;
 		else linea_final=ventana.offset_x;
@@ -4934,13 +4933,13 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 
 		//Caso especial arriba del todo
 		if (w->offset_y==0) {
-			printf ("Scroll vertical cursor is at the minimum\n");
+			//printf ("Scroll vertical cursor is at the minimum\n");
 			porcentaje=0;
 		}		
 
 		//Caso especial abajo del todo
 		if (w->offset_y+(w->visible_height)-2==w->total_height) { //-2 de perder linea titulo y linea scroll
-			printf ("Scroll vertical cursor is at the maximum\n");
+			//printf ("Scroll vertical cursor is at the maximum\n");
 			porcentaje=100;
 		}
 
@@ -4963,13 +4962,13 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 
 		//Caso especial izquierda del todo
 		if (w->offset_x==0) {
-			printf ("Scroll horizontal cursor is at the minimum\n");
+			//printf ("Scroll horizontal cursor is at the minimum\n");
 			porcentaje=0;
 		}		
 
 		//Caso especial derecha del todo
 		if (w->offset_x+(w->visible_width)-1==w->total_width) { //-1 de perder linea scroll
-			printf ("Scroll horizontal cursor is at the maximum\n");
+			//printf ("Scroll horizontal cursor is at the maximum\n");
 			porcentaje=100;
 		}
 
@@ -4992,11 +4991,11 @@ void zxvision_draw_window(zxvision_window *w)
 
 	//Si no hay barras de desplazamiento, alterar scroll horiz o vertical segun corresponda
 	if (!zxvision_if_horizontal_scroll_bar(w)) {
-		printf ("no hay barra scroll horizontal y por eso ponemos offset x a 0\n");
+		//printf ("no hay barra scroll horizontal y por eso ponemos offset x a 0\n");
 		w->offset_x=0;
 	}
 	if (!zxvision_if_vertical_scroll_bar(w)) {
-		printf ("no hay barra scroll vertical y por eso ponemos offset y a 0\n");
+		//printf ("no hay barra scroll vertical y por eso ponemos offset y a 0\n");
 		w->offset_y=0;
 	}
 
@@ -5062,7 +5061,7 @@ void zxvision_set_offset_y_visible(zxvision_window *w,int y)
 	//El cursor esta por arriba. Decimos que este lo mas arriba posible
 	if (y<w->offset_y) {
 		linea_final=y;
-		printf ("adjust verticall scroll por arriba to %d\n",linea_final);
+		//printf ("adjust verticall scroll por arriba to %d\n",linea_final);
 		
 	}
 
@@ -5075,7 +5074,7 @@ void zxvision_set_offset_y_visible(zxvision_window *w,int y)
 		//establecemos a linea 7
 		//linea_final=7-(10-2)+1 = 7-8+1=0
 
-		printf ("adjust verticall scroll por abajo to %d\n",linea_final);
+		//printf ("adjust verticall scroll por abajo to %d\n",linea_final);
 	}
 
 	else return;
@@ -5092,7 +5091,7 @@ void zxvision_set_offset_y_visible(zxvision_window *w,int y)
 	if (ultima_linea_scroll<0) ultima_linea_scroll=0;
 	if (linea_final>ultima_linea_scroll) linea_final=ultima_linea_scroll;
 
-	printf ("final scroll %d\n",linea_final);
+	//printf ("final scroll %d\n",linea_final);
 
 	zxvision_set_offset_y(w,linea_final);
 
@@ -5496,8 +5495,7 @@ void zxvision_handle_mouse_move_aux(zxvision_window *w)
 				int movimiento_x=menu_mouse_x-window_mouse_x_before_move;
 				int movimiento_y=menu_mouse_y-window_mouse_y_before_move;
 
-				printf ("Windows has been moved. menu_mouse_x: %d (%d) menu_mouse_y: %d (%d)\n",
-				menu_mouse_x,movimiento_x,menu_mouse_y,movimiento_y);
+				//printf ("Windows has been moved. menu_mouse_x: %d (%d) menu_mouse_y: %d (%d)\n",menu_mouse_x,movimiento_x,menu_mouse_y,movimiento_y);
 				
 
 
@@ -5515,7 +5513,7 @@ void zxvision_handle_mouse_resize_aux(zxvision_window *w)
 				int incremento_ancho=menu_mouse_x-(w->visible_width)+1;
 				int incremento_alto=menu_mouse_y-(w->visible_height)+1;
 
-				printf ("Incremento %d x %d\n",incremento_ancho,incremento_alto);
+				//printf ("Incremento %d x %d\n",incremento_ancho,incremento_alto);
 
 				int ancho_final=(w->visible_width)+incremento_ancho;
 				int alto_final=(w->visible_height)+incremento_alto;
@@ -5554,7 +5552,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	if (mouse_left && !mouse_is_dragging) {
 		//Si se pulsa dentro de ventana y no esta arrastrando
 	 	if (si_menu_mouse_en_ventana() && !zxvision_keys_event_not_send_to_machine) {
-			printf ("Clicked inside window. Events are not sent to emulated machine\n");
+			//printf ("Clicked inside window. Events are not sent to emulated machine\n");
 			zxvision_keys_event_not_send_to_machine=1;
 			ventana_tipo_activa=1;
 			zxvision_draw_window(w);
@@ -5563,7 +5561,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 		if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
 			//Si se pulsa fuera de ventana
-			printf ("Clicked outside window. Events are sent to emulated machine\n");
+			//printf ("Clicked outside window. Events are sent to emulated machine\n");
 			zxvision_keys_event_not_send_to_machine=0;
 			ventana_tipo_activa=0;
 			zxvision_draw_window(w);
@@ -5590,7 +5588,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 		if (!mouse_movido) {
 			if (!mouse_is_clicking) {
-				printf ("Mouse started clicking\n");
+				//printf ("Mouse started clicking\n");
 				mouse_is_clicking=1;
 				last_x_mouse_clicked=menu_mouse_x;
 				last_y_mouse_clicked=menu_mouse_y;
@@ -5599,7 +5597,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//Gestion doble click
 				if (menu_multitarea) {
 					if (menu_mouse_left_double_click_counter-menu_mouse_left_double_click_counter_initial<25) {
-						printf ("-IT is DOBLE click\n");
+						//printf ("-IT is DOBLE click\n");
 						mouse_is_double_clicking=1;
 					}
 					else {
@@ -5612,25 +5610,25 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	}
 
 	if (!mouse_left && mouse_is_clicking) {
-			printf ("Mouse stopped clicking\n");
+			//printf ("Mouse stopped clicking\n");
 			mouse_is_clicking=0;
 			//Pulsacion en sitios de ventana
 			//Si en barra titulo
 			if (si_menu_mouse_en_ventana() && last_y_mouse_clicked==0) {
-				printf ("Clicked on title\n");
+				//printf ("Clicked on title\n");
 				//Y si ha sido doble click
 				if (mouse_is_double_clicking) {
-					printf ("Doble clicked on title\n");
+					//printf ("Doble clicked on title\n");
 					
 					if (w->can_be_resized) {
 						if (w->is_minimized) {
-							printf ("Unminimize window\n");
+							//printf ("Unminimize window\n");
 							zxvision_set_visible_height(w,w->height_before_minimize);
 							zxvision_set_visible_width(w,w->width_before_minimize);
 							w->is_minimized=0;
 						}
 						else {
-							printf ("Minimize window\n");
+							//printf ("Minimize window\n");
 
 							//Cambiar alto
 							zxvision_set_visible_height(w,2);
@@ -5643,7 +5641,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 							//Espacio para las barras, si las hay
 							if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
 
-							printf ("ancho final: %d\n",ancho_ventana_final);
+							//printf ("ancho final: %d\n",ancho_ventana_final);
 							zxvision_set_visible_width(w,ancho_ventana_final);
 
 							w->is_minimized=1;
@@ -5661,7 +5659,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					//Flecha izquierda
 					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
-						printf ("Pulsado en scroll izquierda\n");
+						//printf ("Pulsado en scroll izquierda\n");
 						zxvision_send_scroll_left(w);
 						/*if (w->offset_x>0) {
 							zxvision_set_offset_x(w,w->offset_x-1);
@@ -5670,7 +5668,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					//Flecha derecha
 					if (last_x_mouse_clicked==posicion_flecha_derecha) {
-						printf ("Pulsado en scroll derecha\n");
+						//printf ("Pulsado en scroll derecha\n");
 						zxvision_send_scroll_right(w);
 						/*if (w->offset_x<(w->total_width-1)) {
 							zxvision_set_offset_x(w,w->offset_x+1);
@@ -5678,7 +5676,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					}
 
 					if (last_x_mouse_clicked>posicion_flecha_izquierda && last_x_mouse_clicked<posicion_flecha_derecha) {
-						printf ("Pulsado en zona scroll horizontal\n");
+						//printf ("Pulsado en zona scroll horizontal\n");
 						//Sacamos porcentaje
 						int total_ancho=posicion_flecha_derecha-posicion_flecha_izquierda;
 						if (total_ancho==0) total_ancho=1; //Evitar dividir por cero
@@ -5687,24 +5685,24 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 						int porcentaje=(parcial_ancho*100)/total_ancho;
 
-						printf ("Porcentaje: %d\n",porcentaje);
+						//printf ("Porcentaje: %d\n",porcentaje);
 
 						int offset_to_mult=w->total_width-w->visible_width+1; //+1 porque se pierde linea derecha por scroll
-						printf ("Multiplicando sobre %d\n",offset_to_mult);
+						//printf ("Multiplicando sobre %d\n",offset_to_mult);
 
 						//Establecemos offset horizontal
 						int offset=((offset_to_mult)*porcentaje)/100;
 
-						printf ("set offset: %d\n",offset);
+						//printf ("set offset: %d\n",offset);
 
 						//Casos especiales de izquierda del todo y derecha del todo
 						if (last_x_mouse_clicked==posicion_flecha_izquierda+1) {
-							printf ("Special case: clicked on the top left. Set offset 0\n");
+							//printf ("Special case: clicked on the top left. Set offset 0\n");
 							offset=0;
 						}
 
 						if (last_x_mouse_clicked==posicion_flecha_derecha-1) {
-							printf ("Special case: clicked on the top right. Set offset to maximum\n");
+							//printf ("Special case: clicked on the top right. Set offset to maximum\n");
 							offset=w->total_width-w->visible_width+1;
 						}
 
@@ -5724,7 +5722,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					//Flecha arriba
 					if (last_y_mouse_clicked==posicion_flecha_arriba) {
-						printf ("Pulsado en scroll arriba\n");
+						//printf ("Pulsado en scroll arriba\n");
 						zxvision_send_scroll_up(w);
 						/*if (w->offset_y>0) {
 							zxvision_set_offset_y(w,w->offset_y-1);
@@ -5733,7 +5731,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					//Flecha abajo
 					if (last_y_mouse_clicked==posicion_flecha_abajo) {
-						printf ("Pulsado en scroll abajo\n");
+						//printf ("Pulsado en scroll abajo\n");
 						zxvision_send_scroll_down(w);
 						/*if (w->offset_y<(w->total_height-1)) {
 							zxvision_set_offset_y(w,w->offset_y+1);
@@ -5741,7 +5739,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					}
 
 					if (last_y_mouse_clicked>posicion_flecha_arriba && last_y_mouse_clicked<posicion_flecha_abajo) {
-						printf ("Pulsado en zona scroll vertical\n");
+						//printf ("Pulsado en zona scroll vertical\n");
 						//Sacamos porcentaje
 						int total_alto=posicion_flecha_abajo-posicion_flecha_arriba;
 						if (total_alto==0) total_alto=1; //Evitar dividir por cero
@@ -5750,25 +5748,25 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 						int porcentaje=(parcial_alto*100)/total_alto;
 
-						printf ("Porcentaje: %d\n",porcentaje);
+						//printf ("Porcentaje: %d\n",porcentaje);
 
 
 						int offset_to_mult=w->total_height-w->visible_height+2; //+2 porque se pierde linea abajo de scroll y titulo
-						printf ("Multiplicando sobre %d\n",offset_to_mult);
+						//printf ("Multiplicando sobre %d\n",offset_to_mult);
 
 						//Establecemos offset vertical
 						int offset=((offset_to_mult)*porcentaje)/100;
 
-						printf ("set offset: %d\n",offset);
+						//printf ("set offset: %d\n",offset);
 
 						//Casos especiales de arriba del todo y abajo del todo
 						if (last_y_mouse_clicked==posicion_flecha_arriba+1) {
-							printf ("Special case: clicked on the top. Set offset 0\n");
+							//printf ("Special case: clicked on the top. Set offset 0\n");
 							offset=0;
 						}
 
 						if (last_y_mouse_clicked==posicion_flecha_abajo-1) {
-							printf ("Special case: clicked on the bottom. Set offset to maximum\n");
+							//printf ("Special case: clicked on the bottom. Set offset to maximum\n");
 							offset=w->total_height-w->visible_height+2;
 						}
 
@@ -5783,13 +5781,13 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (!mouse_is_dragging) {
 		if (mouse_left && mouse_movido) {
-			printf ("Mouse has begun to drag\n");
+			//printf ("Mouse has begun to drag\n");
 			mouse_is_dragging=1;
 
 			//Si estaba en titulo
 			if (si_menu_mouse_en_ventana()) {
 				if (menu_mouse_y==0) {
-					printf ("Arrastrando ventana\n");
+					//printf ("Arrastrando ventana\n");
 					window_is_being_moved=1;
 					window_mouse_x_before_move=menu_mouse_x;
 					window_mouse_y_before_move=menu_mouse_y;
@@ -5797,7 +5795,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 				//Si esta en esquina inferior derecha (donde se puede redimensionar) y se permite resize
 				if (zxvision_mouse_in_bottom_right(w) && w->can_be_resized) {
-					printf ("Mouse dragging in bottom right\n");
+					//printf ("Mouse dragging in bottom right\n");
 
 					window_is_being_resized=1;
 					window_mouse_x_before_move=menu_mouse_x;
@@ -5811,7 +5809,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (mouse_is_dragging) {
 		if (!mouse_left) {
-			printf ("Mouse has stopped to drag\n");
+			//printf ("Mouse has stopped to drag\n");
 			mouse_is_dragging=0;
 			if (window_is_being_moved) {
 
@@ -7298,7 +7296,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	do {
 		redibuja_ventana=0;
 
-		printf ("Entrada desde subventana aparte, como tooltip o ayuda\n");
+		//printf ("Entrada desde subventana aparte, como tooltip o ayuda\n");
 
 
 		menu_tooltip_counter=0;
@@ -7345,7 +7343,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Si menu tabulado, ajustamos scroll de zxvision
 		if (m->es_menu_tabulado) {
 			int linea_cursor=menu_retorna_item(m,linea_seleccionada)->menu_tabulado_y;
-			printf ("ajustar scroll a %d\n",linea_cursor);
+			//printf ("ajustar scroll a %d\n",linea_cursor);
 			zxvision_set_offset_y_visible(ventana,linea_cursor);
 		}
 
@@ -7358,7 +7356,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 		//escribir todas opciones
-		printf ("Escribiendo de nuevo las opciones\n");
+		//printf ("Escribiendo de nuevo las opciones\n");
 		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
 
 
@@ -7390,7 +7388,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			//Si no hay barra scroll vertical, usamos hasta la ultima columna, solo para menus no tabulados
 			if (m->es_menu_tabulado==0) {
 				if (menu_dibuja_menu_adjust_last_column(ventana,ancho,alto)) {
-					printf ("Redibujar ventana pues hay cambio en columna final de scroll\n");
+					//printf ("Redibujar ventana pues hay cambio en columna final de scroll\n");
 					zxvision_draw_window(ventana);
 					menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
 					zxvision_draw_window_contents(ventana);
@@ -29151,7 +29149,7 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
 	zxvision_generic_message_tooltip("About",0,0,0,&retorno_ventana,0,mensaje_about);
 
-	printf ("retorno ventana: %d\n",retorno_ventana.estado_retorno);
+	//printf ("retorno ventana: %d\n",retorno_ventana.estado_retorno);
 
 	//Si se sale con ESC
     if (retorno_ventana.estado_retorno==0) return;
@@ -29164,7 +29162,7 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 */
 	int linea=retorno_ventana.linea_seleccionada;
 
-	printf ("retorno ventana linea: %d\n",retorno_ventana.linea_seleccionada);
+	//printf ("retorno ventana linea: %d\n",retorno_ventana.linea_seleccionada);
 
 	debug_printf(VERBOSE_INFO,"Closing window with Enter and selected line=%d",linea);
 	if (linea==1) {
