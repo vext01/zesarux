@@ -4259,7 +4259,7 @@ void zxvision_generic_message_cursor_down(zxvision_window *ventana)
 		}
 		else {
 			//Redibujamos contenido
-			printf ("Solo redibujamos\n");
+			//printf ("Solo redibujamos\n");
 			zxvision_draw_window_contents(ventana);
 			//zxvision_draw_scroll_bars(w);
 		}
