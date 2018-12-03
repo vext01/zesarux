@@ -6563,7 +6563,7 @@ FILE *ptr_asmfile;
 
 			inicio +=longitud_opcode;
 			debug_printf (VERBOSE_DEBUG,"Exporting asm: %s",dumpassembler);
-			
+
 			//Agregar salto de linea
 			int longitud_linea=strlen(dumpassembler);
 			dumpassembler[longitud_linea++]='\n';
@@ -6639,11 +6639,25 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 		}
 
 
+	//Forzar a mostrar atajos
+	z80_bit antes_menu_writing_inverse_color;
+	antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+	menu_writing_inverse_color.v=1;
+
+
+
         zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
 
         zxvision_print_string_defaults_fillspc(&ventana,1,linea,"~~M: Ch. pointer ~~E: Export");
 
 		zxvision_draw_window_contents(&ventana);
+
+
+	//Restaurar comportamiento atajos
+	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+
+
 
 		tecla=zxvision_common_getkey_refresh();				
 
