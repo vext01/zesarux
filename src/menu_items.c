@@ -6496,7 +6496,56 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 }
 
+int menu_debug_disassemble_export(int p)
+{
 
+	char string_address[10];
+	sprintf (string_address,"%XH",p);
+
+
+    menu_ventana_scanf("Start?",string_address,10);
+
+	menu_z80_moto_int inicio=parse_string_to_number(string_address);
+
+	menu_ventana_scanf("End?",string_address,10);
+	menu_z80_moto_int final=parse_string_to_number(string_address);
+
+
+	char dumpassembler[64];
+
+	//menu_z80_moto_int dir=inicio;
+
+	int longitud_opcode;
+
+	//ponemos un final de un numero maximo de instrucciones
+	//sera igual al tamaño de la zona de memoria
+	int limite_instrucciones=menu_debug_memory_zone_size;
+
+	int instrucciones=0;
+
+		for (;inicio<=final && instrucciones<limite_instrucciones;instrucciones++) {
+
+			//Formato de texto en buffer:
+			//0123456789012345678901234567890
+			//DDDD AABBCCDD OPCODE-----------
+			//DDDD: Direccion
+			//AABBCCDD: Volcado hexa
+
+			//Metemos 30 espacios
+		
+
+
+			menu_debug_dissassemble_una_instruccion(dumpassembler,inicio,&longitud_opcode);
+
+
+			inicio +=longitud_opcode;
+			printf ("asm: %s\n",dumpassembler);
+			//zxvision_print_string_defaults_fillspc(&ventana,1,linea,dumpassembler);
+		}	
+
+	return p;
+
+}
 
 
 
@@ -6561,7 +6610,7 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
         zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
 
-        zxvision_print_string_defaults_fillspc(&ventana,1,linea,"M: Change pointer");
+        zxvision_print_string_defaults_fillspc(&ventana,1,linea,"~~M: Ch. pointer ~~E: Export");
 
 		zxvision_draw_window_contents(&ventana);
 
@@ -6595,6 +6644,11 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 			case 'm':
 				//Usamos misma funcion de menu_debug_hexdump_change_pointer
 				direccion=menu_debug_hexdump_change_pointer(direccion);
+				zxvision_draw_window(&ventana);
+			break;
+
+			case 'e':
+				menu_debug_disassemble_export(direccion);
 				zxvision_draw_window(&ventana);
 			break;
 

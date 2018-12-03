@@ -1,7 +1,7 @@
 --- Para esta version 7.2:
   
 
---zxvision:
+----zxvision----:
 
 
 -Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
@@ -16,7 +16,7 @@
   de menu si el raton esta apuntando a alguna opcion
 --!! redimensionar ventanas menu muy rapido provoca mostrar texto mas alla de la ventana
 
--Exportación de assembler a ventana de texto 
+
 -Quizá función que permita reducir ancho total de ventana y ajustar el contenido de la línea desplazando bytes
 -Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
 
@@ -26,8 +26,6 @@ pero cuando se puedan mostrar en border incluso, seria tenerlas por debajo del l
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 
 -rueda de raton que haga scroll ventana en horizontal y vertical
-
--Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
 
 -osd keyboard en zxvision
 
@@ -43,12 +41,13 @@ zxvision_draw_window para refrescar lo que habia debajo
 
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
 
-
--dump assembler de direccion a direccion y que genere archivo o lo meta en clipboard, o abra ventana aparte para poder copiar si se quiere
-
--poder hacer disassemble en debug cpu esta step mode. necesario? pues la propia ventana sirve de disassemble
+-quiza que al pulsar con raton en zona de scroll derecha y flechas, se vea en color inverso temporalmente, para indicar que se ha pulsado
 
 -migrar ventana debug cpu a zxvision
+
+
+----fin zxvision----
+
 
 //prueba
 // export LDFLAGS="-O2 -Weverything"
@@ -64,6 +63,13 @@ zxvision_draw_window para refrescar lo que habia debajo
 #pragma GCC diagnostic ignored "-Wshadow"
 #pragma GCC diagnostic ignored "-Wused-but-marked-unused"*/
 
+-Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
+
+-Exportación de assembler a ventana de texto. Mejor a archivo de texto.
+Que pida inicio y fin, y que haya limite de instrucciones (igual al tamaño de la zona memoria) por si acaso
+Dump assembler de direccion a direccion y que genere archivo o lo meta en clipboard, o abra ventana aparte para poder copiar si se quiere
+
+-poder hacer disassemble en debug cpu esta step mode. necesario? pues la propia ventana sirve de disassemble
 
 
 --volumenes canales sonido: el maximo se ve en color rojo, si hubiera algun skin con tinta roja por defecto, esto no se veria
@@ -90,7 +96,7 @@ Ouch, thank you for the response – this will require some hard studying to fig
 
 "
 
--quiza que al pulsar con raton en zona de scroll derecha y flechas, se vea en color inverso temporalmente, para indicar que se ha pulsado
+
 
 -buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
 y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en browser y luego pulsar continuamente. sin real beeper no pasa
