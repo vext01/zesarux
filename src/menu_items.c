@@ -6496,7 +6496,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 }
 
-int menu_debug_disassemble_export(int p)
+void menu_debug_disassemble_export(int p)
 {
 
 	char string_address[10];
@@ -6509,6 +6509,29 @@ int menu_debug_disassemble_export(int p)
 
 	menu_ventana_scanf("End?",string_address,10);
 	menu_z80_moto_int final=parse_string_to_number(string_address);
+
+	char file_save[PATH_MAX];	
+	int ret=menu_ask_file_to_save("Destination file","asm",file_save);
+
+	if (!ret) {
+		menu_warn_message("Export cancelled");
+		return;
+	}
+
+
+FILE *ptr_asmfile;
+                                  ptr_asmfile=fopen(file_save,"wb");
+                                  if (!ptr_asmfile)
+                                {
+                                      debug_printf (VERBOSE_ERR,"Unable to open asm file");
+									  return;
+                                  }
+                  
+                  
+                  
+
+                                       
+
 
 
 	char dumpassembler[64];
@@ -6539,11 +6562,19 @@ int menu_debug_disassemble_export(int p)
 
 
 			inicio +=longitud_opcode;
-			printf ("asm: %s\n",dumpassembler);
+			debug_printf (VERBOSE_DEBUG,"Exporting asm: %s",dumpassembler);
+			
+			//Agregar salto de linea
+			int longitud_linea=strlen(dumpassembler);
+			dumpassembler[longitud_linea++]='\n';
+			dumpassembler[longitud_linea]=0;
+			fwrite(&dumpassembler,1,longitud_linea,ptr_asmfile);
 			//zxvision_print_string_defaults_fillspc(&ventana,1,linea,dumpassembler);
 		}	
 
-	return p;
+	fclose(ptr_asmfile);
+
+	menu_generic_message_splash("Export disassembly","Ok process finished");
 
 }
 

@@ -487,6 +487,8 @@ extern int menu_speech_tecla_pulsada;
 extern char binary_file_load[];
 extern char binary_file_save[];
 
+extern int menu_ask_file_to_save(char *titulo_ventana,char *filtro,char *file_save);
+
 extern char menu_buffer_textspeech_filter_program[];
 
 extern char menu_buffer_textspeech_stop_filter_program[];

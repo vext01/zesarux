@@ -4348,6 +4348,37 @@ void menu_save_text_to_file(char *puntero_memoria,char *titulo_ventana)
 	}
 }
 
+//Funcion generica para preguntar por un archivo de texto a grabar, con un unico filtro de texto
+//Retorna 0 si se cancela
+int menu_ask_file_to_save(char *titulo_ventana,char *filtro,char *file_save)
+{
+	//char file_save[PATH_MAX];
+
+	char *filtros[2];
+
+	filtros[0]=filtro;
+    filtros[1]=0;
+
+    int ret;
+
+	ret=menu_filesel(titulo_ventana,filtros,file_save);
+
+	if (ret==1) {
+
+		//Ver si archivo existe y preguntar
+		if (si_existe_archivo(file_save)) {
+
+			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return 0;
+
+        }
+
+		return 1;
+
+	}
+
+	return 0;
+}
+
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto con estilo zxvision
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
