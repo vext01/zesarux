@@ -7143,8 +7143,8 @@ int menu_dibuja_menu_adjust_last_column(zxvision_window *w,int ancho,int alto)
 			}
 		}
 		else {
-			//printf ("NO usamos hasta la ultima columna\n");
 			if (w->can_use_all_width) {
+				//printf ("NO usamos hasta la ultima columna\n");
 				w->can_use_all_width=0; 
 				w->total_width=ancho-1;
 				return 1;
@@ -7361,14 +7361,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 		//desactivado en zxvision , tiene su propio scroll
-		/*int limite_scroll=alto-3;
-
-		//Esto solo debe saltar cuando tipo de menu no es tabulado, miramos el primer item
-		
-		if (linea_seleccionada>limite_scroll && m->es_menu_tabulado==0) {
-			printf ("beyond limit\n");
-			scroll_opciones=linea_seleccionada-limite_scroll;
-		}*/
+	
 
 
 		//Si menu tabulado, ajustamos scroll de zxvision
@@ -7420,8 +7413,20 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			if (m->es_menu_tabulado==0) {
 				if (menu_dibuja_menu_adjust_last_column(ventana,ancho,alto)) {
 					//printf ("Redibujar ventana pues hay cambio en columna final de scroll\n");
+
+					//Es conveniente llamar antes a zxvision_draw_window pues este establece parametros de ventana_ancho y alto,
+					//que se leen luego en menu_escribe_opciones_zxvision
+					//sin embargo, al llamar a menu_escribe_opciones_zxvision, el cursor sigue apareciendo como mas pequeño hasta que
+					//no se pulsa tecla
+					//printf ("ventana ancho antes: %d\n",ventana_ancho);
 					zxvision_draw_window(ventana);
+					//printf ("ventana ancho despues: %d\n",ventana_ancho);
+
+					//borrar contenido ventana despues de redimensionarla con espacios
+					int i;
+					for (i=0;i<ventana->total_height;i++) zxvision_print_string_defaults_fillspc(ventana,0,i,"");
 					menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
+					
 					zxvision_draw_window_contents(ventana);
 				}
 			}
