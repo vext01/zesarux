@@ -6510,6 +6510,11 @@ void menu_debug_disassemble_export(int p)
 	menu_ventana_scanf("End?",string_address,10);
 	menu_z80_moto_int final=parse_string_to_number(string_address);
 
+	if (final<inicio){
+		menu_warn_message("End address must be higher or equal than start address");
+		return;
+	}
+
 	char file_save[PATH_MAX];	
 	int ret=menu_ask_file_to_save("Destination file","asm",file_save);
 
@@ -6519,24 +6524,16 @@ void menu_debug_disassemble_export(int p)
 	}
 
 
-FILE *ptr_asmfile;
-                                  ptr_asmfile=fopen(file_save,"wb");
-                                  if (!ptr_asmfile)
-                                {
-                                      debug_printf (VERBOSE_ERR,"Unable to open asm file");
-									  return;
-                                  }
+	FILE *ptr_asmfile;
+    ptr_asmfile=fopen(file_save,"wb");
+    if (!ptr_asmfile) {
+		debug_printf (VERBOSE_ERR,"Unable to open asm file");
+		return;
+    }
                   
-                  
-                  
-
-                                       
-
-
-
+ 
 	char dumpassembler[64];
 
-	//menu_z80_moto_int dir=inicio;
 
 	int longitud_opcode;
 
@@ -6548,17 +6545,7 @@ FILE *ptr_asmfile;
 
 		for (;inicio<=final && instrucciones<limite_instrucciones;instrucciones++) {
 
-			//Formato de texto en buffer:
-			//0123456789012345678901234567890
-			//DDDD AABBCCDD OPCODE-----------
-			//DDDD: Direccion
-			//AABBCCDD: Volcado hexa
-
-			//Metemos 30 espacios
-		
-
-
-			menu_debug_dissassemble_una_instruccion(dumpassembler,inicio,&longitud_opcode);
+			menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,inicio,&longitud_opcode,0);
 
 
 			inicio +=longitud_opcode;

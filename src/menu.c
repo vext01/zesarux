@@ -12366,7 +12366,7 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 }
 
 
-void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode)
+void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa)
 {
 	//Formato de texto en buffer:
 	//0123456789012345678901234567890
@@ -12380,7 +12380,7 @@ void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_i
 
 	size_t longitud_opcode;
 
-	//Metemos 30 espacios
+	//Metemos 31 espacios
 	strcpy(dumpassembler,
 	//123456789012345678901234567890
 	 "                               ");
@@ -12389,13 +12389,6 @@ void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_i
 	//Direccion
 	//dir=adjust_address_space_cpu(dir);
 	dir=adjust_address_memory_size(dir);
-	/*int final_address=4;
-	if (CPU_IS_MOTOROLA) {
-		sprintf(dumpassembler,"%05X",dir);
-		final_address=5;
-	}
-
-	else sprintf(dumpassembler,"%04X",dir);*/
 
 	//printf ("%XH\n",dir);
 
@@ -12406,29 +12399,38 @@ void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_i
 	//metemos espacio en 0 final
 	dumpassembler[longitud_direccion]=' ';
 
+	int longitud_volcado_hexa=8+1;
+
+	if (!sino_hexa) longitud_volcado_hexa=0;
+
+	int inicio_opcode=longitud_direccion+1+longitud_volcado_hexa;
+
+	//32-6-9=26-9=17
+
+	int longitud_texto_opcode=32-MAX_LENGTH_ADDRESS_MEMORY_ZONE-longitud_volcado_hexa;
+
 
 	//Assembler
-	debugger_disassemble(&dumpassembler[longitud_direccion+8+2],17,&longitud_opcode,dir);
+	//debugger_disassemble(&dumpassembler[inicio_opcode],17,&longitud_opcode,dir);
+	printf ("texto maximo opcode=%d\n",longitud_texto_opcode);
+	debugger_disassemble(&dumpassembler[inicio_opcode],longitud_texto_opcode,&longitud_opcode,dir);
 
-		//Volcado hexa
+	//Volcado hexa, si esta habilitado
+	if (sino_hexa) {
 		char volcado_hexa[256];
-	//menu_debug_registers_dump_hex(&dumpassembler[5],dir,longitud_opcode);
-	menu_debug_registers_dump_hex(volcado_hexa,dir,longitud_opcode);
+		//menu_debug_registers_dump_hex(&dumpassembler[5],dir,longitud_opcode);
+		menu_debug_registers_dump_hex(volcado_hexa,dir,longitud_opcode);
 
-	//Copiar texto volcado hexa hasta llegar a maximo 8
-	int final_hexa_limite=longitud_opcode*2;
-	if (final_hexa_limite>10) {
-		final_hexa_limite=8;
-		dumpassembler[longitud_direccion+1+8]='+';
+		//Copiar texto volcado hexa hasta llegar a maximo 8
+		int final_hexa_limite=longitud_opcode*2;
+		if (final_hexa_limite>10) {
+			final_hexa_limite=8;
+			dumpassembler[longitud_direccion+1+8]='+';
+		}
+
+		int i;
+		for (i=0;i<final_hexa_limite;i++) dumpassembler[longitud_direccion+1+i]=volcado_hexa[i];
 	}
-
-	int i;
-	for (i=0;i<final_hexa_limite;i++) dumpassembler[longitud_direccion+1+i]=volcado_hexa[i];
-
-	//Poner espacio en 0 final
-	//dumpassembler[5+longitud_opcode*2]=' ';
-
-
 
 
 
@@ -12437,7 +12439,10 @@ void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_i
 }
 
 
-
+void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode)
+{
+	menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,longitud_final_opcode,1);
+}
 
 
 

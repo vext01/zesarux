@@ -1,53 +1,33 @@
 --- Para esta version 7.2:
 
-
--en export assembler, poder elegir si mostrar dump hexa con cada linea de export?
+-export asm que permita mayor ancho: agregando parametro menu_debug_dissassemble_una_inst_sino_hexa,
+al llamarlo desde menu_debug_dissassemble_una_instruccion se le envia 32
+esto: //Metemos 31 espacios debe ser un bucle metiendo espacios, en vez de strcpy fija
+-quiza ventana disassemble que permita mas ancho, mediante scroll. problema: no se cuanto necesita,
+quiza para Motorola tiene mas ancho por defecto. Y para otras cpu, mismo ancho que siempre
 
 ----zxvision----:
 
-
--Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
-
 -Sin multitarea, primera pulsación de boton mouse no hace scroll. Seguramente debido a que hace un espera tecla al principio
 
--quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
-
--menus zxvision:
---porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
---que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
+-menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
 
-
--Quizá función que permita reducir ancho total de ventana y ajustar el contenido de la línea desplazando bytes
--Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
-
--ventanas zxvision que puedan salir parcialmente fuera de pantalla. de momento seria salir por debajo del border,
-pero cuando se puedan mostrar en border incluso, seria tenerlas por debajo del limite de la ventana
-
 -acabar de migrar todas menu_dibuja_ventana a zxvision
-
--rueda de raton que haga scroll ventana en horizontal y vertical
 
 -osd keyboard en zxvision
 
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
--zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
-Lo hace realmente con visible_width y visible_height
-
--quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
-zxvision_draw_window para refrescar lo que habia debajo
-
--quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
-
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
 
--quiza que al pulsar con raton en zona de scroll derecha y flechas, se vea en color inverso temporalmente, para indicar que se ha pulsado
 
 -migrar ventana debug cpu a zxvision
 
 
 ----fin zxvision----
+
+-Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
 
 -soporte mas botones joystick/mas joystick de tbblue
 https://www.specnext.com/forum/viewtopic.php?f=6&t=1142
@@ -155,7 +135,33 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 
 -------- Fin cosas para la siguiente version
 
+--- ZX Vision
 
+
+-Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
+-quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
+
+-menus zxvision:
+--porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
+
+-ventanas zxvision que puedan salir parcialmente fuera de pantalla. de momento seria salir por debajo del border,
+pero cuando se puedan mostrar en border incluso, seria tenerlas por debajo del limite de la ventana
+
+-rueda de raton que haga scroll ventana en horizontal y vertical
+
+-zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
+Lo hace realmente con visible_width y visible_height
+
+-quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
+zxvision_draw_window para refrescar lo que habia debajo
+
+-quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
+
+-quiza que al pulsar con raton en zona de scroll derecha y flechas, se vea en color inverso temporalmente, para indicar que se ha pulsado
+
+
+
+--- FIN ZX Vision
 
 --- audio - fallos ---
 
