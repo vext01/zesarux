@@ -4615,14 +4615,17 @@ z80_byte envia_load_pp_spectrum(z80_byte puerto_h)
 
 
 
-//Enviar cursor arriba dos veces y enter para nextos
+//Enviar Espacio, cursor arriba dos veces y enter para nextos
 z80_byte envia_load_spectrum_nextos(z80_byte puerto_h)
 {
 
 #define DURA3_TECLA 30
 #define DURA3_SILENCIO 22
 
-#define SEQUENCE3_CURSOR1_MIN DURA3_SILENCIO
+#define SEQUENCE3_SPACE_MIN DURA3_SILENCIO
+#define SEQUENCE3_SPACE_MAX SEQUENCE3_SPACE_MIN+DURA3_TECLA*14
+
+#define SEQUENCE3_CURSOR1_MIN SEQUENCE3_SPACE_MAX+DURA3_SILENCIO*5
 #define SEQUENCE3_CURSOR1_MAX SEQUENCE3_CURSOR1_MIN+DURA3_TECLA
 
 //Dado que es la misma tecla dos veces, hay que dar mas pausa (*3) para que detecte dos teclas separadas, y no la misma pulsada
@@ -4632,9 +4635,14 @@ z80_byte envia_load_spectrum_nextos(z80_byte puerto_h)
 #define SEQUENCE3_ENTER_MIN SEQUENCE3_CURSOR2_MAX+DURA3_SILENCIO
 #define SEQUENCE3_ENTER_MAX SEQUENCE3_ENTER_MIN+DURA3_TECLA
 
+                        if (initial_tap_sequence>SEQUENCE3_SPACE_MIN && initial_tap_sequence<SEQUENCE3_SPACE_MAX && puerto_h==127)  {
+				//printf ("Enviando espacio\n");
+                                return 255-1; //espacio
+                        }
 
 
                         if (initial_tap_sequence>SEQUENCE3_CURSOR1_MIN && initial_tap_sequence<SEQUENCE3_CURSOR1_MAX && puerto_h==239)  {
+				//printf ("Enviando cursor arriba\n");
                                 return 255-8; //Cursor arriba
                         }
 

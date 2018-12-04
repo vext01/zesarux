@@ -72,7 +72,7 @@ z80_bit tape_any_flag_loading;
 //0: autoload con ENTER
 //1: autoload con LOAD(J) ""
 //2: autoload con L O A D "" (para spectrum 128k spanish y chloe)
-//3: autoload con cursor arriba dos veces y enter (para NextOS)
+//3: autoload con enter, cursor arriba dos veces y enter (para NextOS)
 int autoload_spectrum_loadpp_mode;
 
 
@@ -1326,7 +1326,7 @@ int tap_save_detect_ace(void)
 
 void gestionar_autoload_spectrum_start_cursorenter(void)
 {
-        debug_printf (VERBOSE_INFO,"Autoload tape with Cursor up (twice) and ENTER");
+        debug_printf (VERBOSE_INFO,"Autoload tape with Space, Cursor up (twice) and ENTER");
         initial_tap_sequence=1;
         autoload_spectrum_loadpp_mode=3;
 }
@@ -1609,34 +1609,23 @@ void gestionar_autoload_spectrum(void)
                         //Siempre que no este en la rom de arranque, 
                         //pues acaba creyendose 
                                 //que esta en la rom del basic pues entra en reg_pc==0x12a9
-                if (!tbblue_bootrom.v) {
-                                        if (
-                                          /*reg_pc==0x3683 ||
-                                          reg_pc==0x36a9 ||
-                                          reg_pc==0x36be ||
-                                          reg_pc==0x36bb ||
-                                          reg_pc==0x1875 ||
-                                          reg_pc==0x187a ||
-                                          reg_pc==0x1891*/
-                                          reg_pc==0x073f
-                                        ) {
-                                                //Solo envio de cursor arriba dos veces, enter , en menu NextOS
-                                                //printf ("Sending autoload cursor up (2) + enter\n");
-                                                gestionar_autoload_spectrum_start_cursorenter();
+                                if (tbblue_fast_boot_mode.v==0) {
+                                        if (!tbblue_bootrom.v) {
+                                                if (reg_pc==0x23f2) {
+                                                        //Solo envio de cursor arriba dos veces, enter , en menu NextOS
+                                                        //printf ("Sending autoload cursor up (2) + enter\n");
+                                                        gestionar_autoload_spectrum_start_cursorenter();
+                                                }
                                         }
+                                }
 
-                                        //para spanish 128k
-                                        /*else if (reg_pc==0x25a0) {
-                                                printf ("Sending l o a d ''\n");
-                                                gestionar_autoload_spectrum_start_loadpp();
-                                        }
+                                else {
+                                        //modo tbblue fast
+                                                //printf ("gestionar como spectrum 48k\n");
+                                                gestionar_autoload_spectrum_48kmode();
+                                }
 
-                                        //Para 48k
-                                        else {
-                                             printf ("Sending load'' 48k\n");
-                                             gestionar_autoload_spectrum_48kmode();
-                                        }*/
-                }
+                                
 
           break;
 
