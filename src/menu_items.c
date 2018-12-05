@@ -6565,7 +6565,7 @@ void menu_debug_disassemble_export(int p)
 
 }
 
-
+z80_bit menu_debug_disassemble_hexa_view={0};
 
 void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 {
@@ -6620,7 +6620,8 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 		
 
 
-			menu_debug_dissassemble_una_instruccion(dumpassembler,dir,&longitud_opcode);
+			//menu_debug_dissassemble_una_instruccion(dumpassembler,dir,&longitud_opcode);
+			menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,&longitud_opcode,menu_debug_disassemble_hexa_view.v,64);
 
 
 			if (lineas_disass==0) longitud_opcode_primera_linea=longitud_opcode;
@@ -6639,7 +6640,8 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
         zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
 
-        zxvision_print_string_defaults_fillspc(&ventana,1,linea,"~~M: Ch. pointer ~~E: Export");
+        zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"~~M: Ch. pointer ~~E: Export");
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"~~T: Toggle hexa");
 
 		zxvision_draw_window_contents(&ventana);
 
@@ -6705,6 +6707,10 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 			case 'e':
 				menu_debug_disassemble_export(direccion);
 				zxvision_draw_window(&ventana);
+			break;
+
+			case 't':
+				menu_debug_disassemble_hexa_view.v ^=1;
 			break;
 
 		}
