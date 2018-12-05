@@ -9092,7 +9092,7 @@ int menu_debug_registers_print_registers(int linea)
 
 	char dumpmemoria[33];
 
-	char dumpassembler[33];
+	char dumpassembler[65];
 
 	//size_t longitud_opcode;
 
@@ -12366,7 +12366,7 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 }
 
 
-void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa)
+void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa,int max_longitud_texto)
 {
 	//Formato de texto en buffer:
 	//0123456789012345678901234567890
@@ -12380,10 +12380,14 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 	size_t longitud_opcode;
 
-	//Metemos 31 espacios
-	strcpy(dumpassembler,
+	//Metemos max_longitud_texto espacios y luego final de texto
+	int i;
+	for (i=0;i<max_longitud_texto;i++) dumpassembler[i]=' ';
+
+	dumpassembler[i]=0;
+	/*strcpy(dumpassembler,
 	//123456789012345678901234567890
-	 "                               ");
+	 "                               ");*/
 
 
 	//Direccion
@@ -12407,12 +12411,13 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 	//32-6-9=26-9=17
 
-	int longitud_texto_opcode=32-MAX_LENGTH_ADDRESS_MEMORY_ZONE-longitud_volcado_hexa;
+	//int longitud_texto_opcode=32-MAX_LENGTH_ADDRESS_MEMORY_ZONE-longitud_volcado_hexa;
+	int longitud_texto_opcode=max_longitud_texto-MAX_LENGTH_ADDRESS_MEMORY_ZONE-longitud_volcado_hexa;
 
 
 	//Assembler
 	//debugger_disassemble(&dumpassembler[inicio_opcode],17,&longitud_opcode,dir);
-	printf ("texto maximo opcode=%d\n",longitud_texto_opcode);
+	//printf ("texto maximo opcode=%d\n",longitud_texto_opcode);
 	debugger_disassemble(&dumpassembler[inicio_opcode],longitud_texto_opcode,&longitud_opcode,dir);
 
 	//Volcado hexa, si esta habilitado
@@ -12441,7 +12446,7 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode)
 {
-	menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,longitud_final_opcode,1);
+	menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,longitud_final_opcode,1,64);
 }
 
 

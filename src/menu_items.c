@@ -6532,7 +6532,7 @@ void menu_debug_disassemble_export(int p)
     }
                   
  
-	char dumpassembler[64];
+	char dumpassembler[65];
 
 
 	int longitud_opcode;
@@ -6543,21 +6543,21 @@ void menu_debug_disassemble_export(int p)
 
 	int instrucciones=0;
 
-		for (;inicio<=final && instrucciones<limite_instrucciones;instrucciones++) {
+	for (;inicio<=final && instrucciones<limite_instrucciones;instrucciones++) {
 
-			menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,inicio,&longitud_opcode,0);
+		menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,inicio,&longitud_opcode,0,64);
 
 
-			inicio +=longitud_opcode;
-			debug_printf (VERBOSE_DEBUG,"Exporting asm: %s",dumpassembler);
+		inicio +=longitud_opcode;
+		debug_printf (VERBOSE_DEBUG,"Exporting asm: %s",dumpassembler);
 
-			//Agregar salto de linea
-			int longitud_linea=strlen(dumpassembler);
-			dumpassembler[longitud_linea++]='\n';
-			dumpassembler[longitud_linea]=0;
-			fwrite(&dumpassembler,1,longitud_linea,ptr_asmfile);
-			//zxvision_print_string_defaults_fillspc(&ventana,1,linea,dumpassembler);
-		}	
+		//Agregar salto de linea
+		int longitud_linea=strlen(dumpassembler);
+		dumpassembler[longitud_linea++]='\n';
+		dumpassembler[longitud_linea]=0;
+		fwrite(&dumpassembler,1,longitud_linea,ptr_asmfile);
+		//zxvision_print_string_defaults_fillspc(&ventana,1,linea,dumpassembler);
+	}	
 
 	fclose(ptr_asmfile);
 
@@ -6576,8 +6576,12 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
+	int ancho_total=32-1;
+
+	if (CPU_IS_MOTOROLA) ancho_total=64-1;
+
 	zxvision_new_window(&ventana,0,1,32,20,
-							32-1,20-2,"Disassemble");
+							ancho_total,20-2,"Disassemble");
 	zxvision_draw_window(&ventana);			
 
     //Inicializar info de tamanyo zona
@@ -6597,7 +6601,7 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 		int lineas_disass=0;
 		const int lineas_total=15;
 
-		char dumpassembler[64];
+		char dumpassembler[65];
 
 		int longitud_opcode;
 		int longitud_opcode_primera_linea;
