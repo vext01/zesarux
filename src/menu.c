@@ -12377,47 +12377,89 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 	//DDDD: Direccion
 	//AABBCCDD: Volcado hexa
 
+	char buf_temp_dir[65];
+	char buf_temp_hexa[65];
+	char buf_temp_opcode[65];
 
 	size_t longitud_opcode;
 
-	//Metemos max_longitud_texto espacios y luego final de texto
-	int i;
-	for (i=0;i<max_longitud_texto;i++) dumpassembler[i]=' ';
-
-	dumpassembler[i]=0;
-	/*strcpy(dumpassembler,
-	//123456789012345678901234567890
-	 "                               ");*/
-
+	
 
 	//Direccion
-	//dir=adjust_address_space_cpu(dir);
+
 	dir=adjust_address_memory_size(dir);
 
-	//printf ("%XH\n",dir);
 
-	menu_debug_print_address_memory_zone(dumpassembler,dir);
+	//Texto direccion
+	menu_debug_print_address_memory_zone(buf_temp_dir,dir);
 
 	int longitud_direccion=MAX_LENGTH_ADDRESS_MEMORY_ZONE;
 
 	//metemos espacio en 0 final
 	dumpassembler[longitud_direccion]=' ';
 
-	int longitud_volcado_hexa=8+1;
+	int max_longitud_volcado_hexa=8;
+	//if (CPU_IS_MOTOROLA) max_longitud_volcado_hexa=10;
 
-	if (!sino_hexa) longitud_volcado_hexa=0;
 
-	int inicio_opcode=longitud_direccion+1+longitud_volcado_hexa;
+	//Texto opcode
+	debugger_disassemble(buf_temp_opcode,64,&longitud_opcode,dir);
+
+
+	//Texto volcado hexa
+	//Primero meter espacios hasta limite 64
+	int i;
+	for (i=0;i<64;i++) {
+		buf_temp_hexa[i]=' ';
+	}
+
+	buf_temp_hexa[i]=0;
+
+	menu_debug_registers_dump_hex(buf_temp_hexa,dir,longitud_opcode);
+	int longitud_texto_hex=longitud_opcode*2;
+	//quitar el 0 final
+	buf_temp_hexa[longitud_texto_hex]=' ';
+
+
+	//agregar un espacio final para poder meter "+" en caso necesario, esto solo sucede en Motorola
+	/*if (CPU_IS_MOTOROLA) {
+		buf_temp_hexa[longitud_texto_hex++]=' ';
+		buf_temp_hexa[longitud_texto_hex]=0;
+	}*/
+
+
+	//Meter el 0 final donde diga el limite de volcado
+	buf_temp_hexa[max_longitud_volcado_hexa]=0;
+
+	//Si meter +
+	if (longitud_texto_hex>max_longitud_volcado_hexa) {
+		buf_temp_hexa[max_longitud_volcado_hexa]='+';
+	}
+
+
+	//Montar todo
+	if (sino_hexa) {
+		sprintf(dumpassembler,"%s %s %s",buf_temp_dir,buf_temp_hexa,buf_temp_opcode);
+	}
+
+	else {
+		sprintf(dumpassembler,"%s %s",buf_temp_dir,buf_temp_opcode);
+	}
+
+	*longitud_final_opcode=longitud_opcode;
+
+
+/*
+	int inicio_opcode=longitud_direccion+1+longitud_volcado_hexa+1;
 
 	//32-6-9=26-9=17
 
-	//int longitud_texto_opcode=32-MAX_LENGTH_ADDRESS_MEMORY_ZONE-longitud_volcado_hexa;
-	int longitud_texto_opcode=max_longitud_texto-MAX_LENGTH_ADDRESS_MEMORY_ZONE-longitud_volcado_hexa;
+	int longitud_texto_opcode=max_longitud_texto-longitud_direccion;
 
 
 	//Assembler
 	//debugger_disassemble(&dumpassembler[inicio_opcode],17,&longitud_opcode,dir);
-	//printf ("texto maximo opcode=%d\n",longitud_texto_opcode);
+	printf ("texto maximo opcode=%d\n",longitud_texto_opcode);
 	debugger_disassemble(&dumpassembler[inicio_opcode],longitud_texto_opcode,&longitud_opcode,dir);
 
 	//Volcado hexa, si esta habilitado
@@ -12428,16 +12470,17 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 		//Copiar texto volcado hexa hasta llegar a maximo 8
 		int final_hexa_limite=longitud_opcode*2;
-		if (final_hexa_limite>10) {
-			final_hexa_limite=8;
-			dumpassembler[longitud_direccion+1+8]='+';
+		//if (final_hexa_limite>10) {
+		if (final_hexa_limite>longitud_volcado_hexa) {
+			final_hexa_limite=longitud_volcado_hexa;
+			dumpassembler[longitud_direccion+longitud_volcado_hexa]='+';
 		}
 
 		int i;
-		for (i=0;i<final_hexa_limite;i++) dumpassembler[longitud_direccion+1+i]=volcado_hexa[i];
+		for (i=0;i<final_hexa_limite+1;i++) dumpassembler[longitud_direccion+1+i]=volcado_hexa[i];
 	}
 
-
+*/
 
 	*longitud_final_opcode=longitud_opcode;
 
