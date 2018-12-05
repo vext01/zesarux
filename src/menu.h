@@ -403,7 +403,7 @@ extern void menu_debug_sprites_get_palette_name(int paleta, char *s);
 extern int menu_debug_get_total_digits_dec(int valor);
 
 extern void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode);
-extern void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa);
+extern void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa,int full_hexa_dump_motorola);
 extern menu_z80_moto_int menu_debug_disassemble_last_ptr;
 
 extern menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial);

@@ -1,10 +1,5 @@
 --- Para esta version 7.2:
 
--export asm que permita mayor ancho: agregando parametro menu_debug_dissassemble_una_inst_sino_hexa,
-al llamarlo desde menu_debug_dissassemble_una_instruccion se le envia 32
-esto: //Metemos 31 espacios debe ser un bucle metiendo espacios, en vez de strcpy fija
--quiza ventana disassemble que permita mas ancho, mediante scroll. problema: no se cuanto necesita,
-quiza para Motorola tiene mas ancho por defecto. Y para otras cpu, mismo ancho que siempre
 
 ----zxvision----:
 

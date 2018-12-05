@@ -12366,16 +12366,8 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 }
 
 //Desensamblando usando un maximo de 64 caracteres
-void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa)
+void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa,int full_hexa_dump_motorola)
 {
-	//Formato de texto en buffer:
-	//0123456789012345678901234567890
-	//Para Z80
-	//DDDD AABBCCDD OPCODE-----------
-	//Para Motorola
-	//DDDDD AABBCCDD OPCODE----------
-	//DDDD: Direccion
-	//AABBCCDD: Volcado hexa
 
 	char buf_temp_dir[65];
 	char buf_temp_hexa[65];
@@ -12383,7 +12375,7 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 	size_t longitud_opcode;
 
-	
+	//int full_hexa_dump_motorola=1;
 
 	//Direccion
 
@@ -12399,7 +12391,11 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 	dumpassembler[longitud_direccion]=' ';
 
 	int max_longitud_volcado_hexa=8;
-	//if (CPU_IS_MOTOROLA) max_longitud_volcado_hexa=10;
+
+	//Hasta instrucciones de 8 bytes si se indica full dump
+	//Si no, como maximo mostrara 4 bytes (longitud hexa=8)
+	//El full dump solo aparece en menu disassemble, pero no en debug cpu
+	if (CPU_IS_MOTOROLA && full_hexa_dump_motorola) max_longitud_volcado_hexa=16;
 
 
 	//Texto opcode
@@ -12449,48 +12445,12 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 	*longitud_final_opcode=longitud_opcode;
 
-
-/*
-	int inicio_opcode=longitud_direccion+1+longitud_volcado_hexa+1;
-
-	//32-6-9=26-9=17
-
-	int longitud_texto_opcode=max_longitud_texto-longitud_direccion;
-
-
-	//Assembler
-	//debugger_disassemble(&dumpassembler[inicio_opcode],17,&longitud_opcode,dir);
-	printf ("texto maximo opcode=%d\n",longitud_texto_opcode);
-	debugger_disassemble(&dumpassembler[inicio_opcode],longitud_texto_opcode,&longitud_opcode,dir);
-
-	//Volcado hexa, si esta habilitado
-	if (sino_hexa) {
-		char volcado_hexa[256];
-		//menu_debug_registers_dump_hex(&dumpassembler[5],dir,longitud_opcode);
-		menu_debug_registers_dump_hex(volcado_hexa,dir,longitud_opcode);
-
-		//Copiar texto volcado hexa hasta llegar a maximo 8
-		int final_hexa_limite=longitud_opcode*2;
-		//if (final_hexa_limite>10) {
-		if (final_hexa_limite>longitud_volcado_hexa) {
-			final_hexa_limite=longitud_volcado_hexa;
-			dumpassembler[longitud_direccion+longitud_volcado_hexa]='+';
-		}
-
-		int i;
-		for (i=0;i<final_hexa_limite+1;i++) dumpassembler[longitud_direccion+1+i]=volcado_hexa[i];
-	}
-
-*/
-
-	*longitud_final_opcode=longitud_opcode;
-
 }
 
 
 void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode)
 {
-	menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,longitud_final_opcode,1);
+	menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,longitud_final_opcode,1,0);
 }
 
 
