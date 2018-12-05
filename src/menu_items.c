@@ -6667,6 +6667,25 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 				direccion +=longitud_opcode_primera_linea;
 			break;
 
+			//No llamamos a zxvision_handle_cursors_pgupdn para solo poder gestionar scroll ventana en horizontal,
+			//el resto de teclas (cursores, pgup, dn etc) las gestionamos desde aqui de manera diferente
+
+            //izquierda
+            case 8:
+				/*
+				//Decir que se ha pulsado tecla para que no se relea
+				menu_speech_tecla_pulsada=1;*/
+				zxvision_handle_cursors_pgupdn(&ventana,tecla);
+            break;
+
+            //derecha
+            case 9:
+				/*
+				//Decir que se ha pulsado tecla para que no se relea
+				menu_speech_tecla_pulsada=1;*/
+				zxvision_handle_cursors_pgupdn(&ventana,tecla);
+			break;					
+
 			case 24:
 				//PgUp
 				for (i=0;i<lineas_total;i++) direccion=menu_debug_disassemble_subir(direccion);
