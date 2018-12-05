@@ -6545,7 +6545,7 @@ void menu_debug_disassemble_export(int p)
 
 	for (;inicio<=final && instrucciones<limite_instrucciones;instrucciones++) {
 
-		menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,inicio,&longitud_opcode,0,64);
+		menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,inicio,&longitud_opcode,0);
 
 
 		inicio +=longitud_opcode;
@@ -6621,7 +6621,7 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
 
 			//menu_debug_dissassemble_una_instruccion(dumpassembler,dir,&longitud_opcode);
-			menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,&longitud_opcode,menu_debug_disassemble_hexa_view.v,64);
+			menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,&longitud_opcode,menu_debug_disassemble_hexa_view.v);
 
 
 			if (lineas_disass==0) longitud_opcode_primera_linea=longitud_opcode;

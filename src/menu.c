@@ -12365,8 +12365,8 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 }
 
-
-void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa,int max_longitud_texto)
+//Desensamblando usando un maximo de 64 caracteres
+void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode,int sino_hexa)
 {
 	//Formato de texto en buffer:
 	//0123456789012345678901234567890
@@ -12422,14 +12422,15 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 
 	//agregar un espacio final para poder meter "+" en caso necesario, esto solo sucede en Motorola
-	/*if (CPU_IS_MOTOROLA) {
-		buf_temp_hexa[longitud_texto_hex++]=' ';
-		buf_temp_hexa[longitud_texto_hex]=0;
-	}*/
+	if (CPU_IS_MOTOROLA) {
+		buf_temp_hexa[max_longitud_volcado_hexa]=' ';
+		buf_temp_hexa[max_longitud_volcado_hexa+1]=0;
+	}
 
-
-	//Meter el 0 final donde diga el limite de volcado
-	buf_temp_hexa[max_longitud_volcado_hexa]=0;
+	else {
+		//Meter el 0 final donde diga el limite de volcado
+		buf_temp_hexa[max_longitud_volcado_hexa]=0;
+	}
 
 	//Si meter +
 	if (longitud_texto_hex>max_longitud_volcado_hexa) {
@@ -12489,7 +12490,7 @@ void menu_debug_dissassemble_una_inst_sino_hexa(char *dumpassembler,menu_z80_mot
 
 void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_int dir,int *longitud_final_opcode)
 {
-	menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,longitud_final_opcode,1,64);
+	menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,longitud_final_opcode,1);
 }
 
 
