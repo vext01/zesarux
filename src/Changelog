@@ -6,7 +6,7 @@ Added key to save text windows contents to a file
 Added setting to send a final space after every word in the osd adventure keyboard
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now
--running in verbose or limit mode, or cpu-step command, now updates the display inmediately (having real video setting on)
+-running in verbose or limit mode, or cpu-step command, can now update the display inmediately (having real video setting on)
 Improved vu-meters: high volumes are shown in red
 Improved sprite viewer: you can view sprites up to 512x512
 
