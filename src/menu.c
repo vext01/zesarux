@@ -3856,6 +3856,26 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 }
 
 
+void menu_dibuja_ventana_botones(void)
+{
+
+	int x=ventana_x;
+	int y=ventana_y;
+	int ancho=ventana_ancho;
+	int alto=ventana_alto;
+
+			//Botones de cerrar y minimizar
+		if (ventana_activa_tipo_zxvision) {
+			if (ventana_tipo_activa) {
+				if (cuadrado_activo_resize) putchar_menu_overlay(x+ancho-1,y,'-',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+			}
+		}	
+
+
+
+		//putchar_menu_overlay(x+ancho-1,y,'-',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+}
+
 //dibuja ventana de menu, con:
 //titulo
 //contenido blanco
@@ -3933,6 +3953,8 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 			else putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
 
+
+
         //y las franjas de color
 	if (ESTILO_GUI_MUESTRA_RAINBOW && ventana_tipo_activa) {
 		//en el caso de drivers completos, hacerlo real
@@ -3954,6 +3976,8 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
         	        putchar_menu_overlay(x+ancho-3,y,'/',5+8,ESTILO_GUI_PAPEL_TITULO);
 	        }*/
 	}
+
+		menu_dibuja_ventana_botones();
 
 
         char buffer_titulo[100];
@@ -5032,6 +5056,9 @@ void zxvision_draw_window(zxvision_window *w)
 
 	zxvision_draw_scroll_bars(w);
 
+	//Mostrar botones de cerrar y minimizar
+	menu_dibuja_ventana_botones();
+
 
 
 }
@@ -5567,6 +5594,37 @@ int zxvision_mouse_in_bottom_right(zxvision_window *w)
 	return 0;
 }
 
+
+void zxvision_handle_minimize(zxvision_window *w)
+{
+if (w->can_be_resized) {
+						if (w->is_minimized) {
+							//printf ("Unminimize window\n");
+							zxvision_set_visible_height(w,w->height_before_minimize);
+							zxvision_set_visible_width(w,w->width_before_minimize);
+							w->is_minimized=0;
+						}
+						else {
+							//printf ("Minimize window\n");
+
+							//Cambiar alto
+							zxvision_set_visible_height(w,2);
+
+							//Cambiar ancho
+							//primero poner ancho inicial y luego reducir a ancho minimo para que quepa el titulo
+							zxvision_set_visible_width(w,w->width_before_minimize);
+							
+							int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
+							//Espacio para las barras, si las hay
+							if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
+
+							//printf ("ancho final: %d\n",ancho_ventana_final);
+							zxvision_set_visible_width(w,ancho_ventana_final);
+
+							w->is_minimized=1;
+						}
+					}
+}
 //int zxvision_mouse_events_counter=0;
 //int tempconta;
 void zxvision_handle_mouse_events(zxvision_window *w)
@@ -5650,8 +5708,10 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//Y si ha sido doble click
 				if (mouse_is_double_clicking) {
 					//printf ("Doble clicked on title\n");
+
+					zxvision_handle_minimize(w);
 					
-					if (w->can_be_resized) {
+					/*if (w->can_be_resized) {
 						if (w->is_minimized) {
 							//printf ("Unminimize window\n");
 							zxvision_set_visible_height(w,w->height_before_minimize);
@@ -5677,6 +5737,13 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 							w->is_minimized=1;
 						}
+					}*/
+				}
+				else {
+					//Simple click
+					//Si pulsa zona minimizar
+					if (last_x_mouse_clicked==w->visible_width-1) {
+						zxvision_handle_minimize(w);
 					}
 				}
 			}
