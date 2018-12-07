@@ -408,6 +408,7 @@ extern menu_z80_moto_int menu_debug_disassemble_last_ptr;
 
 extern menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial);
 extern menu_z80_moto_int menu_debug_disassemble_bajar(menu_z80_moto_int dir_inicial);
+extern void menu_debug_registers_show_scan_position(void);
 
 //Fin funciones basicas que se suelen usar desde menu_items.c
 

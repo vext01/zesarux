@@ -702,7 +702,7 @@ struct s_items_ayuda items_ayuda[]={
   {"about",NULL,NULL,"Shows about message"},
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
-  {"cpu-step","|cs",NULL,"Run single opcode cpu step"},
+  {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if Real Video setting is on, display will be updated immediately"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
   {"disable-breakpoint","|db","index","Disable specific breakpoint"},
   {"disable-breakpoints",NULL,NULL,"Disable all breakpoints"},
@@ -773,8 +773,12 @@ struct s_items_ayuda items_ayuda[]={
 																				"If specify address but not lenght, only 1 byte is read"
 	},
   {"reset-cpu",NULL,NULL,"Resets CPU"},
-  {"run","|r","[verbose] [limit] [no-stop-on-data]","Run cpu when on cpu step mode. Returns when a breakpoint is fired, data sent (for example keypress) or any other event which opens the menu. Set verbose parameter to get verbose output. limit parameter is a number of opcodes to run before returning. no-stop-on-data tells that the command will not return if data is sent to the socket (for example keypress on telnet client). verbose or limit or no-stop-on-data parameters can be written in different order, for example:\nrun verbose\nor\nrun 100\nor\nrun verbose 100\n"
-   "Notice this command does not run the usual cpu loop, instead it is controlled from ZRCP. If you close the connection, the run loop will die"},
+  {"run","|r","[verbose] [limit] [no-stop-on-data]","Run cpu when on cpu step mode. Returns when a breakpoint is fired, data sent (for example keypress) or any other event which opens the menu. Set verbose parameter to get verbose output. "
+			"limit parameter is a number of opcodes to run before returning. no-stop-on-data tells that the command will not return if data is sent to the socket (for example keypress on telnet client). "
+			"verbose or limit or no-stop-on-data parameters can be written in different order, for example:\nrun verbose\nor\nrun 100\nor\nrun verbose 100\n"
+   "Notice this command does not run the usual cpu loop, instead it is controlled from ZRCP. If you close the connection, the run loop will die\n"
+	 "Note: if you set any of parameters verbose or limit and Real Video setting is on, display will be updated immediately"
+	 },
 	{"save-binary-internal",NULL,"pointer lenght file [offset]","Dumps internal memory to file for a given memory pointer. "
 				"Pointer can be any of the hexdump-internal command\n"
 				"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
@@ -1469,6 +1473,18 @@ void remote_cpu_after_core_loop(void)
   }
 }
 
+
+//Ejecuta core_loop y si parametro update esta activo, actualiza pantalla al momento y muestra electron si conviene
+void remote_core_loop_if_update_immediately(int update)
+{
+		if (update) screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
+	  cpu_core_loop();
+		if (update) {
+			menu_debug_registers_show_scan_position();
+			menu_refresca_pantalla();
+		}
+}
+
 void remote_cpu_step(int misocket) {
   //char buffer_retorno[1024];
   //Ejecutar una instruccion
@@ -1477,7 +1493,8 @@ void remote_cpu_step(int misocket) {
     return;
   }
   debug_core_lanzado_inter.v=0;
-  cpu_core_loop();
+  //cpu_core_loop();
+	remote_core_loop_if_update_immediately(1);
 
   if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
 	  debug_run_until_return_interrupt();
@@ -1547,35 +1564,14 @@ void remote_cpu_step_over(int misocket) {
 
 debug_cpu_step_over();
 
-/*
-  unsigned int direccion=get_pc_register();
-  int longitud_opcode=remote_get_opcode_length(direccion);
-
-  unsigned int direccion_final=direccion+longitud_opcode;
-  direccion_final=adjust_address_space_cpu(direccion_final);
-
-
-  //Parar hasta volver de la instruccion actual o cuando se produzca algun evento de apertura de menu, como un breakpoint
-  menu_abierto=0;
-  int salir=0;
-  while (get_pc_register()!=direccion_final && !salir) {
-    debug_core_lanzado_inter.v=0;
-    cpu_core_loop();
-
-    if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
-    	debug_run_until_return_interrupt();
-    }
-
-    if (menu_abierto) salir=1;
-  }
-*/
-
   remote_cpu_after_core_loop();
 
   remote_get_regs_disassemble(misocket);
 
 
 }
+
+
 
 void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 {
@@ -1606,28 +1602,31 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 	    escribir_socket(misocket,"\n");
 	  }
 	  debug_core_lanzado_inter.v=0;
-	  cpu_core_loop();
+
+		int actualiza_al_momento=0;
+		if (verbose || limite) actualiza_al_momento=1;
+		remote_core_loop_if_update_immediately(actualiza_al_momento);
+
 	  if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
-		debug_run_until_return_interrupt();
+			debug_run_until_return_interrupt();
 	  }
 
-
-	//Si se vuelve cuando hay datos en el socket. Con esto, usa mucha mas cpu (46% respecto a un 19% si no se esta mirando el socket)
-	if (datos_vuelve) {
-	#ifdef MINGW
-		int leidos=recv(sock_conectat,buf,30,0);
-		//int leidos = read(sock_conectat, buf, 30);
-		if (leidos>0) {
-			salir=1;      	
+		//Si se vuelve cuando hay datos en el socket. Con esto, usa mucha mas cpu (46% respecto a un 19% si no se esta mirando el socket)
+		if (datos_vuelve) {
+			#ifdef MINGW
+				int leidos=recv(sock_conectat,buf,30,0);
+				//int leidos = read(sock_conectat, buf, 30);
+				if (leidos>0) {
+					salir=1;      	
+				}
+			#else
+				//int leidos = read(sock_conectat, buf, 30);
+				int leidos=recv(sock_conectat,buf,30,0);
+				if (leidos>0) {
+					salir=1;      	
+				}
+			#endif
 		}
-	#else
-		//int leidos = read(sock_conectat, buf, 30);
-		int leidos=recv(sock_conectat,buf,30,0);
-		if (leidos>0) {
-			salir=1;      	
-		}
-	#endif
-	}
 
 
 	  total_instrucciones++;
