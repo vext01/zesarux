@@ -702,7 +702,7 @@ struct s_items_ayuda items_ayuda[]={
   {"about",NULL,NULL,"Shows about message"},
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
-  {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if Real Video setting is on, display will be updated immediately"},
+  {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
   {"disable-breakpoint","|db","index","Disable specific breakpoint"},
   {"disable-breakpoints",NULL,NULL,"Disable all breakpoints"},
@@ -776,8 +776,8 @@ struct s_items_ayuda items_ayuda[]={
   {"run","|r","[verbose] [limit] [no-stop-on-data] [update-immediately]","Run cpu when on cpu step mode. Returns when a breakpoint is fired, data sent (for example keypress) or any other event which opens the menu.\n"
 	"Set verbose parameter to get verbose output\n"
 	"limit parameter is a number of opcodes to run before returning\n"
-	"no-stop-on-data tells that the command will not return if data is sent to the socket (for example keypress on telnet client)n"
-	"update-immediately tells that the display must be updated after every opcode run; this requires real video setting enabled\n"
+	"no-stop-on-data tells that the command will not return if data is sent to the socket (for example keypress on telnet client)\n"
+	"update-immediately tells that the display must be updated after every opcode run; this requires 'real video' and 'shows electron on debug' settings enabled\n"
 	"The parameters can be written in different order, for example:\nrun verbose\nor\nrun 100\nor\nrun verbose 100\n"
    "Notice this command does not run the usual cpu loop, instead it is controlled from ZRCP. If you close the connection, the run loop will die\n"
 	 },
