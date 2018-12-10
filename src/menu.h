@@ -113,8 +113,13 @@ struct s_zxvision_window {
 
 	int can_be_resized;
 	int is_minimized;
+
 	int height_before_minimize;
 	int width_before_minimize;
+	int x_before_minimize;
+	int y_before_minimize;
+
+
 	int can_use_all_width; //Si tenemos usable también la ultima columna derecha
 
 	//int applied_can_use_all_width; //Si la rutina de dibuja ventana ha visto el parametro can_use_all_width y ha dibujado segun eso
@@ -588,6 +593,9 @@ extern void set_charset(void);
 #define ESTILO_GUI_MUESTRA_RECUADRO (definiciones_estilos_gui[estilo_gui_activo].muestra_recuadro)
 #define ESTILO_GUI_MUESTRA_RAINBOW (definiciones_estilos_gui[estilo_gui_activo].muestra_rainbow)
 #define ESTILO_GUI_SOLO_MAYUSCULAS (definiciones_estilos_gui[estilo_gui_activo].solo_mayusculas)
+
+
+#define MENU_ANCHO_FRANJAS_TITULO 6
 
 //extern z80_bit menu_espera_tecla_no_cpu_loop_flag_salir;
 extern int salir_todos_menus;

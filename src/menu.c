@@ -3846,7 +3846,7 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 	        //y luego el texto. titulo mostrar solo lo que cabe de ancho
 		int ancho_disponible_titulo=ancho;
 		//Y si muestra las franjas, quitar ancho de titulo
-		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=6;
+		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=MENU_ANCHO_FRANJAS_TITULO;
 
 		//el ancho del texto mostrado del titulo tiene que ser el que quepa 
 		int ancho_mostrar_titulo=strlen(titulo);
@@ -3864,10 +3864,14 @@ void menu_dibuja_ventana_botones(void)
 	int ancho=ventana_ancho;
 	int alto=ventana_alto;
 
-			//Botones de cerrar y minimizar
+		//Botones de cerrar y minimizar
 		if (ventana_activa_tipo_zxvision) {
 			if (ventana_tipo_activa) {
-				if (cuadrado_activo_resize) putchar_menu_overlay(x+ancho-1,y,'-',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+				if (cuadrado_activo_resize) {
+					z80_byte caracter_mostrar='-';
+					if (zxvision_current_window->is_minimized) caracter_mostrar='+';
+					putchar_menu_overlay(x+ancho-1,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+				}
 			}
 		}	
 
@@ -4070,6 +4074,10 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->is_minimized=0;
 	w->height_before_minimize=visible_height;	
 	w->width_before_minimize=visible_width;	
+
+	w->x_before_minimize=x;	
+	w->y_before_minimize=y;	
+
 	w->can_use_all_width=0;
 	//w->applied_can_use_all_width=0;
 
@@ -5597,33 +5605,48 @@ int zxvision_mouse_in_bottom_right(zxvision_window *w)
 
 void zxvision_handle_minimize(zxvision_window *w)
 {
-if (w->can_be_resized) {
-						if (w->is_minimized) {
-							//printf ("Unminimize window\n");
-							zxvision_set_visible_height(w,w->height_before_minimize);
-							zxvision_set_visible_width(w,w->width_before_minimize);
-							w->is_minimized=0;
-						}
-						else {
-							//printf ("Minimize window\n");
 
-							//Cambiar alto
-							zxvision_set_visible_height(w,2);
+	if (w->can_be_resized) {
 
-							//Cambiar ancho
-							//primero poner ancho inicial y luego reducir a ancho minimo para que quepa el titulo
-							zxvision_set_visible_width(w,w->width_before_minimize);
+		//Para cualquiera de los dos casos, la ponemos como minimizada
+		//Luego en maximizar, restauramos valores originales
+		//Se hace asi para que se pueda partir de un tamaño minimo y poder restaurar a su tamaño original
+		//Si no, las funciones de establecer x,y, ancho, alto, podrian detectar fuera de rango de pantalla y no restaurar
+
+		//Cambiar alto
+		zxvision_set_visible_height(w,2);
+
+		//Cambiar ancho
+		//primero poner ancho inicial y luego reducir a ancho minimo para que quepa el titulo
+		zxvision_set_visible_width(w,w->width_before_minimize);
 							
-							int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
-							//Espacio para las barras, si las hay
-							if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
+		int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
+		//Espacio para las barras, si las hay
+		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=MENU_ANCHO_FRANJAS_TITULO;
 
-							//printf ("ancho final: %d\n",ancho_ventana_final);
-							zxvision_set_visible_width(w,ancho_ventana_final);
+		//printf ("ancho final: %d\n",ancho_ventana_final);
+		zxvision_set_visible_width(w,ancho_ventana_final);
 
-							w->is_minimized=1;
-						}
-					}
+		if (w->is_minimized) {
+			//Des-minimizar. Dejar posicion y tamaño original
+			//printf ("Unminimize window\n");
+			zxvision_set_x_position(w,w->x_before_minimize);
+			zxvision_set_y_position(w,w->y_before_minimize);
+			zxvision_set_visible_height(w,w->height_before_minimize);
+			zxvision_set_visible_width(w,w->width_before_minimize);
+			w->is_minimized=0;
+		}
+		
+		else {
+			//Ya la hemos minimizado antes. solo indicarlo
+			//printf ("Minimize window\n");
+			w->is_minimized=1;
+		}
+
+		zxvision_draw_window(w);
+		zxvision_draw_window_contents(w);
+	}
+
 }
 //int zxvision_mouse_events_counter=0;
 //int tempconta;
@@ -5694,6 +5717,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						mouse_is_double_clicking=0;
 					}
 				}
+
+				else {
+					//Sin multitarea nunca hay doble click
+					mouse_is_double_clicking=0;
+				}
 			}
 		}
 	}
@@ -5711,33 +5739,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					zxvision_handle_minimize(w);
 					
-					/*if (w->can_be_resized) {
-						if (w->is_minimized) {
-							//printf ("Unminimize window\n");
-							zxvision_set_visible_height(w,w->height_before_minimize);
-							zxvision_set_visible_width(w,w->width_before_minimize);
-							w->is_minimized=0;
-						}
-						else {
-							//printf ("Minimize window\n");
-
-							//Cambiar alto
-							zxvision_set_visible_height(w,2);
-
-							//Cambiar ancho
-							//primero poner ancho inicial y luego reducir a ancho minimo para que quepa el titulo
-							zxvision_set_visible_width(w,w->width_before_minimize);
-							
-							int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
-							//Espacio para las barras, si las hay
-							if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=6;
-
-							//printf ("ancho final: %d\n",ancho_ventana_final);
-							zxvision_set_visible_width(w,ancho_ventana_final);
-
-							w->is_minimized=1;
-						}
-					}*/
+					
 				}
 				else {
 					//Simple click
@@ -5746,6 +5748,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						zxvision_handle_minimize(w);
 					}
 				}
+
+				
 			}
 
 			//Scroll horizontal
@@ -29345,7 +29349,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On ZX-Vision windows:\n"
 			"- Use mouse to move windows dragging from the title bar\n"
 			"- Drag mouse from the bottom-right part of the window to resize it\n"
-			"- Doble click on the title bar to minimize\n"
+			"- Doble click on the title bar to minimize/restore\n"
 			"- Click out of the window to put the focus on the emulated machine and send there keyboard presses\n"
 			"- Can also be moved with the keyboard: Shift+QAOP\n"
 			"- Can also be resized with the keyboard: Shift+WSKL\n"
