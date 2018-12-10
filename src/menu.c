@@ -3626,8 +3626,8 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 		//Y si muestra las franjas, quitar ancho de titulo
 		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=MENU_ANCHO_FRANJAS_TITULO;
 
-		//el ancho del texto mostrado del titulo tiene que ser el que quepa 
-		int ancho_mostrar_titulo=strlen(titulo);
+		//el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando un caracter para boton de cerrado
+		int ancho_mostrar_titulo=strlen(titulo)+1;
 		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
 
 	return ancho_mostrar_titulo;
@@ -3710,6 +3710,9 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 	menu_establece_cuadrado(xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1,ESTILO_GUI_PAPEL_TITULO);
 
 
+	
+
+
         //titulo
         //primero franja toda negra normalmente en estilo ZEsarUX
         for (i=0;i<ancho;i++) {
@@ -3730,9 +3733,27 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 		int ancho_mostrar_titulo=strlen(titulo);
 		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;*/
 
-        for (i=0;i<ancho_mostrar_titulo;i++) {
-			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-			else putchar_menu_overlay(x+i,y,titulo[i],ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+
+	//Boton de cerrado
+
+		int mostrar_boton_cerrado=0;
+
+		mostrar_boton_cerrado=1;
+
+
+		//if (mostrar_boton_cerrado && i==0) caracter_mostrar='*';
+
+		if (mostrar_boton_cerrado) {
+			if (ventana_tipo_activa) putchar_menu_overlay(x,y,'*',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+			else putchar_menu_overlay(x,y,'*',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);		
+		}
+
+
+        for (i=0;i<ancho_mostrar_titulo && titulo[i];i++) {
+			char caracter_mostrar=titulo[i];
+			
+			if (ventana_tipo_activa) putchar_menu_overlay(x+i+mostrar_boton_cerrado,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+			else putchar_menu_overlay(x+i+mostrar_boton_cerrado,y,caracter_mostrar,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
 
 

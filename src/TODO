@@ -4,6 +4,7 @@
 ----zxvision----:
 
 -Sin multitarea, primera pulsación de boton mouse no hace scroll. Seguramente debido a que hace un espera tecla al principio
+-boton de cerrar no lo lee en menu_dibuja_menu
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
