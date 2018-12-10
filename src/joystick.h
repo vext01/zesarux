@@ -83,7 +83,7 @@ extern int gunstick_range_x,gunstick_range_y,gunstick_y_offset,gunstick_solo_bri
 
 extern int mouse_x,mouse_y;
 extern z80_bit kempston_mouse_emulation;
-extern int mouse_left,mouse_right;
+extern int mouse_left,mouse_right,mouse_pressed_close_window;
 
 extern z80_byte kempston_mouse_x,kempston_mouse_y;
 

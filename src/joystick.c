@@ -69,6 +69,8 @@ int gunstick_solo_brillo=0;
 //por defecto, 80x32
 int mouse_x=0,mouse_y=0;
 
+int mouse_pressed_close_window=0;
+
 //si esta activa la emulacion de kempston mouse
 z80_bit kempston_mouse_emulation;
 

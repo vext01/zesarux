@@ -1109,27 +1109,6 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 }
 
 
-//Retorna si left shift o right shift de z88 pulsado
-/*int menu_if_z88_shift(void)
-{
-	if ( (blink_kbd_a14&64)==0 || (blink_kbd_a15&128)==0 ) return 1;
-	return 0;
-}
-
-//Retorna si shift de cpc pulsado
-int menu_if_cpc_shift(void)
-{
-	if ( (cpc_keyboard_table[2]&32)==0 ) return 1;
-        return 0;
-}
-
-
-//Retorna si shift de sam pulsado
-int menu_if_sam_shift(void)
-{
-        if ( (puerto_65278 & 1)==0 ) return 1;
-        return 0;
-}*/
 
 
 z80_bit menu_symshift={0};
@@ -1142,7 +1121,10 @@ z80_byte menu_get_pressed_key(void)
 {
 
 	//Ver tambien eventos de mouse de zxvision
+	//int pulsado_boton_cerrar=
 	zxvision_handle_mouse_events(zxvision_current_window);
+
+	//if (mouse_pressed_close_window) return 2; //Como ESC
 
 	z80_byte tecla;
 
@@ -1167,27 +1149,7 @@ z80_byte menu_get_pressed_key(void)
 		if ((puerto_especial_joystick&16)) return 13;
 	}
 
-
-	//Quiza estas dos teclas se podrian gestionar desde menu_get_pressed_key_no_modifier??
-	//No estoy seguro , quiza esta aqui para que se interpreten antes que cualquier otra cosa de dentro de esa funcion
-	//Mejor no mover ya que funciona....
-	/*if (MACHINE_IS_SAM) {
-		//TAB en sam coupe
-		if ( (puerto_teclado_sam_f7f9 & 64)==0 ) {
-			return 15;
-		}
-
-		//DEL en sam coupe
-		if ( (puerto_teclado_sam_eff9 & 128)==0 ) {
-			return 12;
-		}
-
-		//. en sam coupe
-		//if ( (puerto_teclado_sam_7ff9 & 64)==0 ) {
-		//	return '.';
-		//}
-
-	}*/
+	
 
 	if (menu_tab.v) {
 		//printf ("Pulsado TAB\n");
@@ -1200,57 +1162,9 @@ z80_byte menu_get_pressed_key(void)
 	tecla=menu_get_pressed_key_no_modifier();
 
 
-	//Teclas < > = _, que al pulsarlas en Z88, como generan de tabla spectrum shift + symbol + m o n , se cree que es tab, y hay que leerlo antes
-	//if (MACHINE_IS_Z88 && (blink_kbd_a14&64)==0 ) {
-
-	//Z88 y shift
-	/*if (MACHINE_IS_Z88 && menu_if_z88_shift() ) {
-		if (tecla==',') return '<';
-		if (tecla=='.') return '>';
-		if (tecla=='=') return '+';
-		if (tecla=='-') return '_';
-		if (tecla=='/') return '?';
-		if (tecla=='9') return '(';
-		if (tecla=='0') return ')';
-		if (tecla==';') return ':';
-		if (tecla=='\'') return '"';
-	}
-
-	//CPC y shift
-	if (MACHINE_IS_CPC && menu_if_cpc_shift() ) {
-		if (tecla==';') return '+';
-		if (tecla==',') return '<';
-		if (tecla=='.') return '>';
-		if (tecla=='-') return '=';
-		if (tecla=='7') return '\'';
-		if (tecla=='8') return '(';
-		if (tecla=='9') return ')';
-		if (tecla=='2') return '"';
-	}
-
-	//Sam coupe y shift
-	if (MACHINE_IS_SAM && menu_if_sam_shift() ) {
-		if (tecla=='-') return '/';
-		if (tecla=='7') return '\'';
-		if (tecla=='8') return '(';
-		if (tecla=='9') return ')';
-	}
-
-	//Sam coupe y symbol
-	if (MACHINE_IS_SAM && (puerto_32766 & 2)==0) {
-		if (tecla=='q') return '<';
-		if (tecla=='w') return '>';
-	}
-	*/
-
-	//cuando es symbol + shift juntos, TAB->codigo 15
-	//if ( (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) return 15;
-
-
 
 	if (tecla==0) return 0;
 
-	//if (menu_backspace.v) return 12;
 
 	//ver si hay algun modificador
 
@@ -1260,19 +1174,7 @@ z80_byte menu_get_pressed_key(void)
 	//if ( (puerto_65278&1)==0) {
 	if (menu_capshift.v) {
 
-		//En modo zx80/81, teclas con shift
-		/*if (MACHINE_IS_ZX8081) {
-			if (tecla=='z') return ':';
-			if (tecla=='v') return '/';
-			if (tecla=='j') return '-';
-			if (tecla=='k') return '+';
-			if (tecla=='l') return '=';
-			if (tecla=='n') return '<';
-			if (tecla=='m') return '>';
-			if (tecla=='i') return '(';
-			if (tecla=='o') return ')';
-			if (tecla=='p') return '"';
-		}*/
+	
 
 		//si son letras, ponerlas en mayusculas
 		if (tecla>='a' && tecla<='z') {
@@ -1288,24 +1190,7 @@ z80_byte menu_get_pressed_key(void)
 				return 12;
 			break;
 
-			/*
-			//cursores
-			case '5':
-				return 8;
-			break;
-
-			case '6':
-				return 10;
-			break;
-
-			case '7':
-				return 11;
-			break;
-
-			case '8':
-				return 9;
-			break;
-			*/
+			
 		}
 
 	}
@@ -4005,6 +3890,13 @@ z80_byte zxvision_read_keyboard(void)
 		tecla=0; 
 	}
 
+	//Si pulsado boton cerrar ventana, enviar ESC
+	if (mouse_pressed_close_window) {
+		//printf ("Retornamos ESC pues se ha pulsado boton de cerrar ventana\n");
+		//mouse_pressed_close_window=0;
+		return 2;
+	}
+
 	return tecla;
 }
 
@@ -5543,14 +5435,16 @@ void zxvision_handle_minimize(zxvision_window *w)
 }
 //int zxvision_mouse_events_counter=0;
 //int tempconta;
+//Retorna 1 si pulsado boton de cerrar ventana
 void zxvision_handle_mouse_events(zxvision_window *w)
 {
 
-	if (w==NULL) return;
+	if (w==NULL) return; // 0; 
 
-	if (!si_menu_mouse_activado()) return;
+	if (!si_menu_mouse_activado()) return; // 0;
 
 	//printf ("zxvision_handle_mouse_events %d\n",tempconta++);
+	//int pulsado_boton_cerrar=0;
 
 	menu_calculate_mouse_xy();
 
@@ -5619,6 +5513,20 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 		}
 	}
 
+	//Si empieza a pulsar
+	if (mouse_left && mouse_is_clicking) {
+		if (si_menu_mouse_en_ventana() && last_y_mouse_clicked==0) {
+			if (!mouse_is_double_clicking) {
+						//Si pulsa boton cerrar ventana
+					if (last_x_mouse_clicked==0) {
+						//printf ("pulsado boton cerrar\n");
+						//pulsado_boton_cerrar=1;
+						mouse_pressed_close_window=1;
+					}
+			}
+		}
+	}
+
 	if (!mouse_left && mouse_is_clicking) {
 			//printf ("Mouse stopped clicking\n");
 			mouse_is_clicking=0;
@@ -5640,6 +5548,13 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_x_mouse_clicked==w->visible_width-1) {
 						zxvision_handle_minimize(w);
 					}
+					//Si pulsa boton cerrar ventana
+					/*if (last_x_mouse_clicked==0) {
+						printf ("pulsado boton cerrar\n");
+						//pulsado_boton_cerrar=1;
+						mouse_pressed_close_window=1;
+					}*/
+
 				}
 
 				
@@ -5851,6 +5766,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	}
 
 	//if (mouse_left && mouse_movido) printf ("Mouse is dragging\n");
+	//return pulsado_boton_cerrar;
 }
 
 //Funcion comun que usan algunas ventanas para movimiento de cursores y pgup/dn
@@ -5977,8 +5893,6 @@ z80_byte zxvision_common_getkey_refresh(void)
 			menu_refresca_pantalla();
 		}					
 
-		//temp
-		//menu_refresca_pantalla();
 		
 	            menu_cpu_core_loop();
 
@@ -6226,7 +6140,8 @@ z80_byte menu_da_todas_teclas(void)
 {
 
 	//Ver tambien eventos de mouse de zxvision
-    zxvision_handle_mouse_events(zxvision_current_window);
+    //int pulsado_boton_cerrar=
+	zxvision_handle_mouse_events(zxvision_current_window);
 
     //On screen keyboard desde el propio menu. Necesita multitask
     if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu && menu_multitarea) {
@@ -6255,6 +6170,10 @@ z80_byte menu_da_todas_teclas(void)
 	acumulado=acumulado & (puerto_65278 | 1) & puerto_65022 & puerto_64510 & puerto_63486 & puerto_61438 & puerto_57342 & puerto_49150 & (puerto_32766 |2) & puerto_especial1 & puerto_especial2 & puerto_especial3 & puerto_especial4;
 
 
+	//Boton cerrar de ventana
+	if (mouse_pressed_close_window) acumulado |=1;
+
+
 	//no ignorar disparo
 	z80_byte valor_joystick=(puerto_especial_joystick&31)^255;
 	acumulado=acumulado & valor_joystick;
@@ -6272,6 +6191,7 @@ z80_byte menu_da_todas_teclas(void)
 	//Contar también algunas teclas solo menu:
 	z80_byte valor_teclas_menus=(menu_backspace.v|menu_tab.v)^255;
 	acumulado=acumulado & valor_teclas_menus;
+
 
 
   
