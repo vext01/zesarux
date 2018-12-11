@@ -4,8 +4,6 @@
 ----zxvision----:
 
 -Sin multitarea, primera pulsación de boton mouse no hace scroll. Seguramente debido a que hace un espera tecla al principio
--boton de cerrar no lo lee en menu_dibuja_menu
--al pulsar boton de cerrar deberia esperar a liberar 
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
@@ -17,7 +15,6 @@
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
-
 
 -migrar ventana debug cpu a zxvision
 
