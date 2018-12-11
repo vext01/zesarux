@@ -5424,9 +5424,9 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
         }
 
         mouse_left=0;
-        printf ("reseteamos mouse_pressed_close_window desde utils ventana\n");
+        //printf ("reseteamos mouse_pressed_close_window desde utils ventana\n");
         //puerto_especial1 |=1;
-        //mouse_pressed_close_window=0;
+        mouse_pressed_close_window=0;
 
       }
     break;

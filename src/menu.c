@@ -1141,7 +1141,7 @@ z80_byte menu_get_pressed_key(void)
 	zxvision_handle_mouse_events(zxvision_current_window);
 
 	if (mouse_pressed_close_window) {
-		mouse_pressed_close_window=0;
+		//mouse_pressed_close_window=0;
 		return 2; //Como ESC
 	}
 
@@ -3952,7 +3952,7 @@ z80_byte zxvision_read_keyboard(void)
 	//Si pulsado boton cerrar ventana, enviar ESC
 	if (mouse_pressed_close_window) {
 		printf ("Retornamos ESC pues se ha pulsado boton de cerrar ventana\n");
-		mouse_pressed_close_window=0;
+		//mouse_pressed_close_window=0;
 		return 2;
 	}
 
@@ -5577,11 +5577,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 		if (si_menu_mouse_en_ventana() && last_y_mouse_clicked==0) {
 			if (!mouse_is_double_clicking) {
 						//Si pulsa boton cerrar ventana
-					/*if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {
+					if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {
 						//printf ("pulsado boton cerrar\n");
 						//pulsado_boton_cerrar=1;
 						mouse_pressed_close_window=1;
-					}*/
+					}
 			}
 		}
 	}
@@ -5608,11 +5608,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						zxvision_handle_minimize(w);
 					}
 					//Si pulsa boton cerrar ventana
-					if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {
+					/*if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {
 						printf ("pulsado boton cerrar\n");
 						//pulsado_boton_cerrar=1;
 						mouse_pressed_close_window=1;
-					}
+					}*/
 
 				}
 
@@ -6230,7 +6230,10 @@ z80_byte menu_da_todas_teclas(void)
 
 
 	//Boton cerrar de ventana
-	if (mouse_pressed_close_window) acumulado |=1;
+	if (mouse_pressed_close_window) {
+		acumulado |=1;
+		//mouse_pressed_close_window=0;
+	}
 
 
 	//no ignorar disparo
