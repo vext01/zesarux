@@ -3548,8 +3548,28 @@ debug_printf (VERBOSE_INFO,"Showing pending error message on menu");
 
 
 //x,y origen ventana, ancho ventana
+void menu_dibuja_ventana_franja_arcoiris_oscuro(int x, int y, int ancho,int indice)
+{
+
+	//temp
+	int cr[]={2+8,6+8,4+8,5+8};
+
+	//int indice=4-franjas;
+
+	if (indice>=0 && indice<=3) {
+		cr[indice]-=8;
+	}
+		                	putchar_menu_overlay(x+ancho-6,y,128,cr[0],ESTILO_GUI_PAPEL_TITULO);
+        	        	putchar_menu_overlay(x+ancho-5,y,128,cr[1],cr[0]);
+                		putchar_menu_overlay(x+ancho-4,y,128,cr[2],cr[1]);
+	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],cr[2]);
+        	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
+}
+
+//x,y origen ventana, ancho ventana
 void menu_dibuja_ventana_franja_arcoiris_trozo(int x, int y, int ancho,int franjas)
 {
+
 
 	int cr[]={2+8,6+8,4+8,5+8};
 
@@ -3636,6 +3656,12 @@ void menu_dibuja_ventana_franja_arcoiris_trozo_current(int trozos)
 {
 
 	menu_dibuja_ventana_franja_arcoiris_trozo(ventana_x,ventana_y,ventana_ancho,trozos);
+}
+
+void menu_dibuja_ventana_franja_arcoiris_oscuro_current(int indice)
+{
+
+	menu_dibuja_ventana_franja_arcoiris_oscuro(ventana_x,ventana_y,ventana_ancho,indice);
 }
 
 int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
@@ -3935,7 +3961,7 @@ void zxvision_destroy_window(zxvision_window *w)
 z80_byte zxvision_read_keyboard(void)
 {
 
-	printf ("antes menu_get_pressed_key\n");
+	//printf ("antes menu_get_pressed_key\n");
     z80_byte tecla;
 	
 	if (!mouse_pressed_close_window) {
@@ -4257,6 +4283,7 @@ int menu_ask_file_to_save(char *titulo_ventana,char *filtro,char *file_save)
 
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto con estilo zxvision
+//volver_timeout: si vale 1, significa timeout normal como ventanas splash. Si vale 2, no finaliza, muestra franjas de color continuamente
 void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
 
@@ -4516,7 +4543,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 		}*/
 
 		if (volver_timeout) {
-			zxvision_espera_tecla_timeout_window_splash();
+			zxvision_espera_tecla_timeout_window_splash(volver_timeout);
 		}
 		else {
 			//printf ("Antes espera tecla\n");
@@ -6352,7 +6379,7 @@ void menu_espera_tecla_timeout_tooltip(void)
 
 }
 
-
+/*
 void menu_espera_tecla_timeout_window_splash(void)
 {
 	//printf ("espera splash\n");
@@ -6397,11 +6424,15 @@ void menu_espera_tecla_timeout_window_splash(void)
 
 	} while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && menu_window_splash_counter<WINDOW_SPLASH_SECONDS);
 
-}
+}*/
 
-void zxvision_espera_tecla_timeout_window_splash(void)
+//tipo: 1 volver timeout normal como ventanas splash. 2. no finaliza, franjas continuamente moviendose
+void zxvision_espera_tecla_timeout_window_splash(int tipo)
 {
+
+	z80_byte tecla;
 	//printf ("espera splash\n");
+	do {
 
         //Esperar a pulsar una tecla o timeout de window splash
         //z80_byte acumulado;
@@ -6418,10 +6449,12 @@ void zxvision_espera_tecla_timeout_window_splash(void)
         int intervalo=tiempototal/5; //5 pasos
         //printf ("intervalo: %d\n",intervalo);
 
+		int indice_apagado=0;
 
-		z80_byte tecla;
 
-        do {
+	
+
+    do {
                 menu_cpu_core_loop();
 
 
@@ -6439,8 +6472,11 @@ void zxvision_espera_tecla_timeout_window_splash(void)
                 	contador_antes=menu_window_splash_counter_ms;
                 	//printf ("dibujar franjas trozos: %d\n",trozos);
                 	if (trozos>=0) {		
-                		menu_dibuja_ventana_franja_arcoiris_trozo_current(trozos);
+                		if (tipo==1) menu_dibuja_ventana_franja_arcoiris_trozo_current(trozos);
                 	}
+
+					if (tipo==2) menu_dibuja_ventana_franja_arcoiris_oscuro_current(indice_apagado);
+					indice_apagado++;
                 }
 
 
@@ -6449,6 +6485,8 @@ void zxvision_espera_tecla_timeout_window_splash(void)
 		
 
 	} while (tecla==0 && menu_window_splash_counter<WINDOW_SPLASH_SECONDS);
+
+	} while (tipo==2 && tecla==0);
 
 }
 
@@ -28221,13 +28259,13 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
 
 void menu_warn_message(char *texto)
 {
-	menu_generic_message("Warning",texto);
+	menu_generic_message_warn("Warning",texto);
 
 }
 
 void menu_error_message(char *texto)
 {
-	menu_generic_message("Error",texto);
+	menu_generic_message_warn("Error",texto);
 
 }
 
@@ -28881,6 +28919,12 @@ void menu_generic_message_splash(char *titulo, const char * texto)
 		zxvision_generic_message_tooltip(titulo, 1, 0, 0, NULL, 0, "%s", texto);
 }
 
+void menu_generic_message_warn(char *titulo, const char * texto)
+{
+
+        //menu_generic_message_tooltip(titulo, 1, 0, 0, NULL, "%s", texto);
+		zxvision_generic_message_tooltip(titulo, 2, 0, 0, NULL, 0, "%s", texto);
+}
 
 int menu_confirm_yesno(char *texto_ventana)
 {

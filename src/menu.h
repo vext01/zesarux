@@ -171,7 +171,8 @@ extern z80_byte zxvision_common_getkey_refresh_noesperatecla(void);
 extern zxvision_window *zxvision_current_window;
 
 extern int zxvision_keys_event_not_send_to_machine;
-extern void zxvision_espera_tecla_timeout_window_splash(void);
+//extern void zxvision_espera_tecla_timeout_window_splash(void);
+extern void zxvision_espera_tecla_timeout_window_splash(int tipo);
 extern int zxvision_key_not_sent_emulated_mach(void);
 extern void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color);
 extern void zxvision_fill_width_spaces(zxvision_window *w,int y);
@@ -379,6 +380,7 @@ extern void menu_error_message(char *texto);
 extern void menu_generic_message(char *titulo, const char * texto);
 extern void menu_generic_message_format(char *titulo, const char * format , ...);
 extern void menu_generic_message_splash(char *titulo, const char * texto);
+extern void menu_generic_message_warn(char *titulo, const char * texto);
 
 
 
