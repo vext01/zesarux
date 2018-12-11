@@ -4544,6 +4544,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 		if (volver_timeout) {
 			zxvision_espera_tecla_timeout_window_splash(volver_timeout);
+			if (volver_timeout==2) menu_espera_no_tecla();
 		}
 		else {
 			//printf ("Antes espera tecla\n");
