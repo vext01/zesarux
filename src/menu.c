@@ -286,6 +286,12 @@ int menu_multitarea=1;
 //Si se oculta la barra vertical en la zona de porcentaje de ventanas de texto o selector de archivos
 z80_bit menu_hide_vertical_percentaje_bar={0};
 
+//Si se oculta boton de minimizar ventana
+z80_bit menu_hide_minimize_button={0};
+
+//Si se oculta boton de cerrar ventana
+z80_bit menu_hide_close_button={0};
+
 //indica que se ha pulsado ESC y por tanto debe aparecer el menu, o gestion de breakpoints, osd, etc
 //y tambien, la lectura de puertos de teclado (254) no devuelve nada
 int menu_abierto=0;
@@ -426,7 +432,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		0,7+8,        	//Colores para el titulo y linea recuadro ventana
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
-		2,7+8		//Color para opcion marcada
+		2,7+8,		//Color para opcion marcada
+		'*'
 		},
 	{"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
@@ -435,7 +442,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		6,1,		//Colores para el titulo y linea recuadro ventana
 		6,		//Color waveform
 		0,               //Color para zona no usada en visualmem
-		2,7+8		//Color para opcion marcada
+		2,7+8,		//Color para opcion marcada
+		'*'
 		},
 
         {"ZX80/81",7+8,0,
@@ -445,7 +453,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,7+8,          //Colores para el titulo y linea recuadro ventana
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
-                7,0		//Color para opcion marcada
+                7,0,		//Color para opcion marcada
+		'.'
                 },
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
@@ -458,7 +467,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,7,          //Colores para el titulo y linea recuadro ventana
                 4,              //Color waveform
                 4,               //Color para zona no usada en visualmem
-                2,7+8		//Color para opcion marcada
+                2,7+8,		//Color para opcion marcada
+		'*'
                 },
 
 
@@ -469,7 +479,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 6+8,1,            //Colores para el titulo y linea recuadro ventana
                 6+8,              //Color waveform
                 0,               //Color para zona no usada en visualmem
-                2,7+8		//Color para opcion marcada
+                2,7+8,		//Color para opcion marcada
+		'*'
                 },
 
         {"Sam",7+8,0,
@@ -479,7 +490,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,7+8,          //Colores para el titulo y linea recuadro ventana
                 1,              //Color waveform
                 7,               //Color para zona no usada en visualmem
-                2,7+8		//Color para opcion marcada
+                2,7+8,		//Color para opcion marcada
+		'#'
                 },
 
 						{"ManSoftware",7+8,0,
@@ -489,7 +501,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							0,7+8,        	//Colores para el titulo y linea recuadro ventana
 							1,		//Color waveform
 							7,		//Color para zona no usada en visualmem
-							2,7+8		//Color para opcion marcada
+							2,7+8,		//Color para opcion marcada
+							'#'
 							},
 
 
@@ -500,7 +513,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					2,7+8,        	//Colores para el titulo y linea recuadro ventana
 					4,		//Color waveform
 					7,		//Color para zona no usada en visualmem
-					2,7+8		//Color para opcion marcada
+					2,7+8,		//Color para opcion marcada
+					'*'
 								},
 
         {"Clean",7,0,
@@ -510,7 +524,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,7,          //Colores para el titulo y linea recuadro ventana
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
-                7,0		//Color para opcion marcada
+                7,0,		//Color para opcion marcada
+		'X'
                 },
 
         {"CleanInverse",0,7,
@@ -520,7 +535,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,0,          //Colores para el titulo y linea recuadro ventana
                 7,              //Color waveform
                 0,               //Color para zona no usada en visualmem
-                0,7		//Color para opcion marcada
+                0,7,		//Color para opcion marcada
+		'X'
                 },
 
 
@@ -1124,7 +1140,10 @@ z80_byte menu_get_pressed_key(void)
 	//int pulsado_boton_cerrar=
 	zxvision_handle_mouse_events(zxvision_current_window);
 
-	//if (mouse_pressed_close_window) return 2; //Como ESC
+	if (mouse_pressed_close_window) {
+		mouse_pressed_close_window=0;
+		return 2; //Como ESC
+	}
 
 	z80_byte tecla;
 
@@ -3626,8 +3645,12 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 		//Y si muestra las franjas, quitar ancho de titulo
 		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=MENU_ANCHO_FRANJAS_TITULO;
 
+		int ancho_boton_cerrar=2;
+
+		if (menu_hide_close_button.v) ancho_boton_cerrar=0;
+
 		//el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando un caracter para boton de cerrado
-		int ancho_mostrar_titulo=strlen(titulo)+1;
+		int ancho_mostrar_titulo=strlen(titulo)+ancho_boton_cerrar;
 		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
 
 	return ancho_mostrar_titulo;
@@ -3645,7 +3668,7 @@ void menu_dibuja_ventana_botones(void)
 		//Botones de cerrar y minimizar
 		if (ventana_activa_tipo_zxvision) {
 			if (ventana_tipo_activa) {
-				if (cuadrado_activo_resize) {
+				if (cuadrado_activo_resize && menu_hide_minimize_button.v==0) {
 					z80_byte caracter_mostrar='-';
 					if (zxvision_current_window->is_minimized) caracter_mostrar='+';
 					putchar_menu_overlay(x+ancho-1,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
@@ -3720,40 +3743,49 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 			else putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
 
+
 		int ancho_mostrar_titulo=menu_dibuja_ventana_ret_ancho_titulo(ancho,titulo);
 
+		char titulo_mostrar[64];
+		char caracter_cerrar=ESTILO_GUI_BOTON_CERRAR;
+
+		if (menu_hide_close_button.v) strcpy(titulo_mostrar,titulo);
+		else sprintf (titulo_mostrar,"%c %s",caracter_cerrar,titulo);
+
+
         //y luego el texto. titulo mostrar solo lo que cabe de ancho
-		/*int ancho_disponible_titulo=ancho;
-		//Y si muestra las franjas, quitar ancho de titulo
-		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=6;
-
-		
-
-		//el ancho del texto mostrado del titulo tiene que ser el que quepa 
-		int ancho_mostrar_titulo=strlen(titulo);
-		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;*/
 
 
 	//Boton de cerrado
 
-		int mostrar_boton_cerrado=0;
+		/*
 
-		mostrar_boton_cerrado=1;
+		int mostrar_boton_cerrado=2;
+
+		if (menu_hide_close_button.v) mostrar_boton_cerrado=0;
 
 
 		//if (mostrar_boton_cerrado && i==0) caracter_mostrar='*';
 
 		if (mostrar_boton_cerrado) {
-			if (ventana_tipo_activa) putchar_menu_overlay(x,y,'*',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-			else putchar_menu_overlay(x,y,'*',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);		
+			if (ventana_tipo_activa) {
+				putchar_menu_overlay(x,y,'X',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+				putchar_menu_overlay(x+1,y,' ',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+			}
+			else {
+				putchar_menu_overlay(x,y,'X',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);		
+				putchar_menu_overlay(x+1,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);		
+			}
 		}
 
+		*/
 
-        for (i=0;i<ancho_mostrar_titulo && titulo[i];i++) {
-			char caracter_mostrar=titulo[i];
+
+        for (i=0;i<ancho_mostrar_titulo && titulo_mostrar[i];i++) {
+			char caracter_mostrar=titulo_mostrar[i];
 			
-			if (ventana_tipo_activa) putchar_menu_overlay(x+i+mostrar_boton_cerrado,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-			else putchar_menu_overlay(x+i+mostrar_boton_cerrado,y,caracter_mostrar,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+			else putchar_menu_overlay(x+i,y,caracter_mostrar,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 		}
 
 
@@ -3902,19 +3934,25 @@ void zxvision_destroy_window(zxvision_window *w)
 
 z80_byte zxvision_read_keyboard(void)
 {
-    z80_byte tecla=menu_get_pressed_key();
+
+	printf ("antes menu_get_pressed_key\n");
+    z80_byte tecla;
+	
+	if (!mouse_pressed_close_window) {
+		tecla=menu_get_pressed_key();
 
 
-	//Si ventana inactiva y se ha pulsado tecla, excepto ESC, no leer dicha tecla
-	if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
-		//printf ("no leemos tecla en ventana pues esta inactiva\n");
-		tecla=0; 
+		//Si ventana inactiva y se ha pulsado tecla, excepto ESC, no leer dicha tecla
+		if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
+			//printf ("no leemos tecla en ventana pues esta inactiva\n");
+			tecla=0; 
+		}
 	}
 
 	//Si pulsado boton cerrar ventana, enviar ESC
 	if (mouse_pressed_close_window) {
-		//printf ("Retornamos ESC pues se ha pulsado boton de cerrar ventana\n");
-		//mouse_pressed_close_window=0;
+		printf ("Retornamos ESC pues se ha pulsado boton de cerrar ventana\n");
+		mouse_pressed_close_window=0;
 		return 2;
 	}
 
@@ -5539,11 +5577,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 		if (si_menu_mouse_en_ventana() && last_y_mouse_clicked==0) {
 			if (!mouse_is_double_clicking) {
 						//Si pulsa boton cerrar ventana
-					if (last_x_mouse_clicked==0) {
+					/*if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {
 						//printf ("pulsado boton cerrar\n");
 						//pulsado_boton_cerrar=1;
 						mouse_pressed_close_window=1;
-					}
+					}*/
 			}
 		}
 	}
@@ -5566,15 +5604,15 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				else {
 					//Simple click
 					//Si pulsa zona minimizar
-					if (last_x_mouse_clicked==w->visible_width-1) {
+					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0) {
 						zxvision_handle_minimize(w);
 					}
 					//Si pulsa boton cerrar ventana
-					/*if (last_x_mouse_clicked==0) {
+					if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {
 						printf ("pulsado boton cerrar\n");
 						//pulsado_boton_cerrar=1;
 						mouse_pressed_close_window=1;
-					}*/
+					}
 
 				}
 
@@ -7143,8 +7181,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Para permitir menus mas grandes verticalmente de lo que cabe en ventana.
 	int scroll_opciones=0;
 
-	//como minimo, lo que ocupa el titulo: texto + franjas de colores + margen
-	ancho=strlen(titulo)+7;
+	//como minimo, lo que ocupa el titulo: texto + franjas de colores + margen + botones
+
+	int ancho_boton_cerrar=2;
+	if (menu_hide_close_button.v) ancho_boton_cerrar=0;
+
+	ancho=strlen(titulo)+MENU_ANCHO_FRANJAS_TITULO+1+ancho_boton_cerrar;
 
 	max_opciones=0;
 	do {
@@ -25883,6 +25925,23 @@ void menu_interface_hide_vertical_perc_bar(MENU_ITEM_PARAMETERS)
 		menu_hide_vertical_percentaje_bar.v ^=1;
 }
 
+
+
+void menu_interface_hide_minimize_button(MENU_ITEM_PARAMETERS)
+{
+	menu_hide_minimize_button.v ^=1;
+}
+
+void menu_interface_hide_close_button(MENU_ITEM_PARAMETERS)
+{
+	menu_hide_close_button.v ^=1;
+}
+
+
+
+
+
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -25947,6 +26006,11 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_window_settings,'p');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
+
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"Minimize button: %s",(menu_hide_minimize_button.v ? "No" : "Yes") );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"Close button: %s",(menu_hide_close_button.v ? "No" : "Yes") );
+
 
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

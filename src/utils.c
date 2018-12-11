@@ -3407,6 +3407,11 @@ int util_write_configfile(void)
 
   if (menu_hide_vertical_percentaje_bar.v) ADD_STRING_CONFIG,"--hide-menu-percentage-bar");
 
+
+  if (menu_hide_minimize_button.v)           ADD_STRING_CONFIG,"--hide-menu-minimize-button");
+  if (menu_hide_close_button.v)              ADD_STRING_CONFIG,"--hide-menu-close-button");
+
+
   if (rainbow_enabled.v)                      ADD_STRING_CONFIG,"--realvideo");
 
   if (autodetect_rainbow.v==0)                ADD_STRING_CONFIG,"--no-detect-realvideo");
@@ -5421,7 +5426,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
         mouse_left=0;
         printf ("reseteamos mouse_pressed_close_window desde utils ventana\n");
         //puerto_especial1 |=1;
-        mouse_pressed_close_window=0;
+        //mouse_pressed_close_window=0;
 
       }
     break;

@@ -432,6 +432,8 @@ extern int menu_multitarea;
 extern int menu_abierto;
 
 extern z80_bit menu_hide_vertical_percentaje_bar;
+extern z80_bit menu_hide_minimize_button;
+extern z80_bit menu_hide_close_button;
 
 extern int if_pending_error_message;
 extern char pending_error_message[];
@@ -547,6 +549,8 @@ struct s_estilos_gui {
 
 	int papel_opcion_marcada; //Color para opcion marcada, de momento solo usado en osd keyboard
 	int tinta_opcion_marcada; 
+
+	char boton_cerrar; //caracter de cerrado de ventana
 };
 
 typedef struct s_estilos_gui estilos_gui;
@@ -593,6 +597,8 @@ extern void set_charset(void);
 #define ESTILO_GUI_MUESTRA_RECUADRO (definiciones_estilos_gui[estilo_gui_activo].muestra_recuadro)
 #define ESTILO_GUI_MUESTRA_RAINBOW (definiciones_estilos_gui[estilo_gui_activo].muestra_rainbow)
 #define ESTILO_GUI_SOLO_MAYUSCULAS (definiciones_estilos_gui[estilo_gui_activo].solo_mayusculas)
+
+#define ESTILO_GUI_BOTON_CERRAR (definiciones_estilos_gui[estilo_gui_activo].boton_cerrar)
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 6

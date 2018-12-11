@@ -1578,7 +1578,9 @@ printf (
 
 	
 
-		"--hide-menu-percentage-bar Hides vertical percentaje bar on the right of text windows and file selector\n"
+		"--hide-menu-percentage-bar  Hides vertical percentaje bar on the right of text windows and file selector\n"
+		"--hide-menu-minimize-button Hides minimize button on the title window\n"
+		"--hide-menu-close-button    Hides close button on the title window\n"
 
 		"--nowelcomemessage         Disable welcome message\n"
 		"--red                      Force display mode with red colour\n"
@@ -5909,6 +5911,14 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--hide-menu-percentage-bar")) {
                                 menu_hide_vertical_percentaje_bar.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--hide-menu-minimize-button")) {
+                                menu_hide_minimize_button.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--hide-menu-close-button")) {
+                                menu_hide_close_button.v=1;
 			}
 
 
