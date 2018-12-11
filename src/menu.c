@@ -6486,6 +6486,9 @@ void zxvision_espera_tecla_timeout_window_splash(int tipo)
 
 	} while (tecla==0 && menu_window_splash_counter<WINDOW_SPLASH_SECONDS);
 
+	menu_window_splash_counter=0;
+	menu_window_splash_counter_ms=0;
+
 	} while (tipo==2 && tecla==0);
 
 }
