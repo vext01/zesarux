@@ -3709,7 +3709,7 @@ void menu_dibuja_ventana_botones(void)
 	int x=ventana_x;
 	int y=ventana_y;
 	int ancho=ventana_ancho;
-	int alto=ventana_alto;
+	//int alto=ventana_alto;
 
 		//Botones de cerrar y minimizar
 		if (ventana_activa_tipo_zxvision) {
@@ -7458,7 +7458,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			tecla_leida=zxvision_read_keyboard();
 
-			printf ("Despues tecla leida: %d\n",tecla_leida);
+			//printf ("Despues tecla leida: %d\n",tecla_leida);
 
 			mouse_movido=antes_mouse_movido;
 
@@ -7544,7 +7544,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			// no enviamos enter si pulsamos boton
 			if (menu_mouse_x==ventana_ancho-1 || menu_mouse_y==0 || menu_mouse_y==ventana_alto-1) mouse_en_zona_opciones=0;
 
-printf ("Despues tecla leida2: %d\n",tecla_leida);
+			//printf ("Despues tecla leida2: %d\n",tecla_leida);
 
 			if (si_menu_mouse_en_ventana() && mouse_left && mouse_en_zona_opciones) {
 				//printf ("Enviamos enter\n");
@@ -7564,7 +7564,7 @@ printf ("Despues tecla leida2: %d\n",tecla_leida);
 			else if (tecla_leida==2) {
 				//tecla=2; //ESC que viene de cerrar ventana al pulsar con raton boton de cerrar en titulo
 				tecla=MENU_RETORNO_ESC;
-				printf ("tecla final es ESC\n");
+				//printf ("tecla final es ESC\n");
 			}
 
 
@@ -7629,7 +7629,7 @@ printf ("Despues tecla leida2: %d\n",tecla_leida);
 
 
 			else {
-				printf ("Final ponemos tecla a 0. Era %d\n",tecla);
+				//printf ("Final ponemos tecla a 0. Era %d\n",tecla);
 				tecla=0;
 			}
 

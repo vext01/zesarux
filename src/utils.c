@@ -5410,7 +5410,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
         }
 
         mouse_left=1;
-        printf ("left button pressed\n");
+        //printf ("left button pressed\n");
 
       }
       else {
