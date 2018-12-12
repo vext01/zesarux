@@ -4,6 +4,7 @@
 ----zxvision----:
 
 -Sin multitarea, primera pulsación de boton mouse no hace scroll. Seguramente debido a que hace un espera tecla al principio
+-al invertir botones de scroll, que no lo haga si estan en el limite-> si no, lo que sucede es que no se borra el boton invertido 
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
