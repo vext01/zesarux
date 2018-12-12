@@ -3551,25 +3551,45 @@ debug_printf (VERBOSE_INFO,"Showing pending error message on menu");
 void menu_dibuja_ventana_franja_arcoiris_oscuro(int x, int y, int ancho,int indice)
 {
 
-	//temp
-	int cr[]={2+8,6+8,4+8,5+8};
+	if (!ventana_tipo_activa) return;
+
+	int cr[]={2,6,4,5};
 
 	//int indice=4-franjas;
 
 	if (indice>=0 && indice<=3) {
-		cr[indice]-=8;
+		cr[indice]+=8;
 	}
+
+
+	if (ESTILO_GUI_MUESTRA_RAINBOW) {
+
+		if (si_complete_video_driver() ) {
 		                	putchar_menu_overlay(x+ancho-6,y,128,cr[0],ESTILO_GUI_PAPEL_TITULO);
         	        	putchar_menu_overlay(x+ancho-5,y,128,cr[1],cr[0]);
                 		putchar_menu_overlay(x+ancho-4,y,128,cr[2],cr[1]);
 	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],cr[2]);
         	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
+		}
+
+             //en caso de curses o caca, hacerlo con lineas de colores
+                if (!strcmp(scr_driver_name,"curses") || !strcmp(scr_driver_name,"caca") ) {
+
+
+                                putchar_menu_overlay(x+ancho-5,y,'/',cr[0],ESTILO_GUI_PAPEL_TITULO);
+                                putchar_menu_overlay(x+ancho-4,y,'/',cr[1],ESTILO_GUI_PAPEL_TITULO);
+                                putchar_menu_overlay(x+ancho-3,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
+                                putchar_menu_overlay(x+ancho-2,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+		}
+
+	}
 }
 
 //x,y origen ventana, ancho ventana
 void menu_dibuja_ventana_franja_arcoiris_trozo(int x, int y, int ancho,int franjas)
 {
 
+	if (!ventana_tipo_activa) return;
 
 	int cr[]={2+8,6+8,4+8,5+8};
 
@@ -6432,7 +6452,7 @@ void zxvision_espera_tecla_timeout_window_splash(int tipo)
 {
 
 	z80_byte tecla;
-	//printf ("espera splash\n");
+	printf ("espera splash\n");
 	do {
 
         //Esperar a pulsar una tecla o timeout de window splash
