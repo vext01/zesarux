@@ -603,7 +603,7 @@ extern void set_charset(void);
 #define ESTILO_GUI_BOTON_CERRAR (definiciones_estilos_gui[estilo_gui_activo].boton_cerrar)
 
 
-#define MENU_ANCHO_FRANJAS_TITULO 6
+#define MENU_ANCHO_FRANJAS_TITULO 5
 
 //extern z80_bit menu_espera_tecla_no_cpu_loop_flag_salir;
 extern int salir_todos_menus;

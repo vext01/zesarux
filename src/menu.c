@@ -3695,13 +3695,20 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 
 		if (menu_hide_close_button.v) ancho_boton_cerrar=0;
 
-		//el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando un caracter para boton de cerrado
-		int ancho_mostrar_titulo=strlen(titulo)+ancho_boton_cerrar;
+		//el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando dos caracter para boton de cerrado y espacio derecha para boton minimizar
+		int ancho_mostrar_titulo=strlen(titulo)+ancho_boton_cerrar+1;
 		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
 
 	return ancho_mostrar_titulo;
 }
 
+z80_byte menu_retorna_caracter_minimizar(zxvision_window *w)
+{
+	z80_byte caracter_mostrar='-';
+	if (w->is_minimized) caracter_mostrar='+';
+
+	return caracter_mostrar;
+}
 
 void menu_dibuja_ventana_botones(void)
 {
@@ -3715,8 +3722,8 @@ void menu_dibuja_ventana_botones(void)
 		if (ventana_activa_tipo_zxvision) {
 			if (ventana_tipo_activa) {
 				if (cuadrado_activo_resize && menu_hide_minimize_button.v==0) {
-					z80_byte caracter_mostrar='-';
-					if (zxvision_current_window->is_minimized) caracter_mostrar='+';
+					z80_byte caracter_mostrar=menu_retorna_caracter_minimizar(zxvision_current_window);
+					//if (zxvision_current_window->is_minimized) caracter_mostrar='+';
 					putchar_menu_overlay(x+ancho-1,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 				}
 			}
@@ -3997,7 +4004,7 @@ z80_byte zxvision_read_keyboard(void)
 
 	//Si pulsado boton cerrar ventana, enviar ESC
 	if (mouse_pressed_close_window) {
-		printf ("Retornamos ESC pues se ha pulsado boton de cerrar ventana\n");
+		//printf ("Retornamos ESC pues se ha pulsado boton de cerrar ventana\n");
 		//mouse_pressed_close_window=0;
 		return 2;
 	}
@@ -5620,20 +5627,46 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 		}
 	}
 
-	//Si empieza a pulsar
+	//Si empieza a pulsar botón izquierdo
 	if (mouse_left && mouse_is_clicking) {
-		if (si_menu_mouse_en_ventana() && last_y_mouse_clicked==0) {
-			if (!mouse_is_double_clicking) {
+
+		if (si_menu_mouse_en_ventana()) {
+			//Pulsado en barra titulo
+			if (last_y_mouse_clicked==0) {
+				if (!mouse_is_double_clicking) {
 						//Si pulsa boton cerrar ventana
 					if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {
 						//printf ("pulsado boton cerrar\n");
 						//pulsado_boton_cerrar=1;
 						mouse_pressed_close_window=1;
+						//Mostrar boton cerrar pulsado
+						putchar_menu_overlay(w->x,w->y,ESTILO_GUI_BOTON_CERRAR,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 					}
+
+					//Si se pulsa en boton minimizar, indicar que se esta pulsando
+					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0) {
+						putchar_menu_overlay(w->x+w->visible_width-1,w->y,menu_retorna_caracter_minimizar(w),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+					}
+				}
 			}
+
+		//Scroll horizontal
+		/*	if (zxvision_if_horizontal_scroll_bar(w)) {
+				if (last_y_mouse_clicked==w->visible_height-1) {
+					//Linea scroll horizontal
+					int posicion_flecha_izquierda=1;
+					int posicion_flecha_derecha=w->visible_width-2;
+
+					//Flecha izquierda
+					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
+						//printf ("Pulsado en scroll izquierda\n");
+						zxvision_send_scroll_left(w);
+
+					}*/
 		}
 	}
 
+	//Liberación boton izquierdo
 	if (!mouse_left && mouse_is_clicking) {
 			//printf ("Mouse stopped clicking\n");
 			mouse_is_clicking=0;
@@ -5653,6 +5686,10 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					//Simple click
 					//Si pulsa zona minimizar
 					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0) {
+						//Mostrar boton minimizar pulsado
+						//printf ("minimizar\n");
+						//putchar_menu_overlay(w->x+w->visible_width-2,w->y,'X',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+						//menu_refresca_pantalla();
 						zxvision_handle_minimize(w);
 					}
 					//Si pulsa boton cerrar ventana
@@ -5678,18 +5715,14 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
 						//printf ("Pulsado en scroll izquierda\n");
 						zxvision_send_scroll_left(w);
-						/*if (w->offset_x>0) {
-							zxvision_set_offset_x(w,w->offset_x-1);
-						}*/
+				
 					}
 
 					//Flecha derecha
 					if (last_x_mouse_clicked==posicion_flecha_derecha) {
 						//printf ("Pulsado en scroll derecha\n");
 						zxvision_send_scroll_right(w);
-						/*if (w->offset_x<(w->total_width-1)) {
-							zxvision_set_offset_x(w,w->offset_x+1);
-						}*/
+					
 					}
 
 					if (last_x_mouse_clicked>posicion_flecha_izquierda && last_x_mouse_clicked<posicion_flecha_derecha) {
@@ -6452,7 +6485,7 @@ void zxvision_espera_tecla_timeout_window_splash(int tipo)
 {
 
 	z80_byte tecla;
-	printf ("espera splash\n");
+	//printf ("espera splash\n");
 	do {
 
         //Esperar a pulsar una tecla o timeout de window splash
