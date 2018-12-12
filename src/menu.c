@@ -4871,15 +4871,10 @@ int zxvision_if_horizontal_scroll_bar(zxvision_window *w)
 	return 0;
 }
 
-void zxvision_draw_scroll_bars(zxvision_window *w)
+void zxvision_draw_vertical_scroll_bar(zxvision_window *w,int estilo_invertido)
 {
-	//Barras de desplazamiento
-	//Si hay que dibujar barra derecha de desplazamiento vertical
-	int effective_height=zxvision_get_effective_height(w);
-	//int effective_width=zxvision_get_effective_width(w);
-	int effective_width=w->visible_width-1;
 
-	if (zxvision_if_vertical_scroll_bar(w)) {
+	int effective_height=zxvision_get_effective_height(w);
 		//Dibujar barra vertical
 		int valor_parcial=w->offset_y+effective_height;
 		if (valor_parcial<0) valor_parcial=0;
@@ -4905,11 +4900,14 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 			porcentaje=100;
 		}
 
-		menu_ventana_draw_vertical_perc_bar(w->x,w->y,w->visible_width,w->visible_height-1,porcentaje);
-	}
+		menu_ventana_draw_vertical_perc_bar(w->x,w->y,w->visible_width,w->visible_height-1,porcentaje,estilo_invertido);	
+}
 
-	if (zxvision_if_horizontal_scroll_bar(w)) {
-		//Dibujar barra horizontal
+void zxvision_draw_horizontal_scroll_bar(zxvision_window *w,int estilo_invertido)
+{
+
+	int effective_width=w->visible_width-1;
+	//Dibujar barra horizontal
 		int valor_parcial=w->offset_x+effective_width;
 		if (valor_parcial<0) valor_parcial=0;
 
@@ -4934,9 +4932,23 @@ void zxvision_draw_scroll_bars(zxvision_window *w)
 			porcentaje=100;
 		}
 
+		menu_ventana_draw_horizontal_perc_bar(w->x,w->y,effective_width,w->visible_height,porcentaje,estilo_invertido);
+}
 
+void zxvision_draw_scroll_bars(zxvision_window *w)
+{
+	//Barras de desplazamiento
+	//Si hay que dibujar barra derecha de desplazamiento vertical
+	//int effective_height=zxvision_get_effective_height(w);
+	//int effective_width=zxvision_get_effective_width(w);
+	//int effective_width=w->visible_width-1;
 
-		menu_ventana_draw_horizontal_perc_bar(w->x,w->y,effective_width,w->visible_height,porcentaje);
+	if (zxvision_if_vertical_scroll_bar(w)) {
+		zxvision_draw_vertical_scroll_bar(w,0);
+	}
+
+	if (zxvision_if_horizontal_scroll_bar(w)) {
+		zxvision_draw_horizontal_scroll_bar(w,0);
 	}	
 }
 
@@ -5660,14 +5672,21 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					//Flecha izquierda
 					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
 						//printf ("Pulsado en scroll izquierda\n");
-						putchar_menu_overlay(w->x+posicion_flecha_izquierda,w->y+w->visible_height-1,'<',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						//putchar_menu_overlay(w->x+posicion_flecha_izquierda,w->y+w->visible_height-1,'<',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						zxvision_draw_horizontal_scroll_bar(w,1);
 
 					}
 					//Flecha derecha
 					if (last_x_mouse_clicked==posicion_flecha_derecha) {
 						//printf ("Pulsado en scroll derecha\n");
-						putchar_menu_overlay(w->x+posicion_flecha_derecha,w->y+w->visible_height-1,'>',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						//putchar_menu_overlay(w->x+posicion_flecha_derecha,w->y+w->visible_height-1,'>',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						zxvision_draw_horizontal_scroll_bar(w,2);
 					
+					}
+
+					if (last_x_mouse_clicked>posicion_flecha_izquierda && last_x_mouse_clicked<posicion_flecha_derecha) {
+						//printf ("Pulsado en zona scroll horizontal\n");
+						zxvision_draw_horizontal_scroll_bar(w,3);
 					}
 
 				}
@@ -5683,14 +5702,22 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					//Flecha arriba
 					if (last_y_mouse_clicked==posicion_flecha_arriba) {
 						//printf ("Pulsado en scroll arriba\n");
-						putchar_menu_overlay(w->x+w->visible_width-1,w->y+posicion_flecha_arriba,'^',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						//putchar_menu_overlay(w->x+w->visible_width-1,w->y+posicion_flecha_arriba,'^',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						zxvision_draw_vertical_scroll_bar(w,1);
 					}
 
 					//Flecha abajo
 					if (last_y_mouse_clicked==posicion_flecha_abajo) {
 						//printf ("Pulsado en scroll abajo\n");
-						putchar_menu_overlay(w->x+w->visible_width-1,w->y+posicion_flecha_abajo,'v',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						//putchar_menu_overlay(w->x+w->visible_width-1,w->y+posicion_flecha_abajo,'v',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+						zxvision_draw_vertical_scroll_bar(w,2);
 					}
+
+					if (last_y_mouse_clicked>posicion_flecha_arriba && last_y_mouse_clicked<posicion_flecha_abajo) {
+						//printf ("Pulsado en zona scroll vertical\n");
+						zxvision_draw_vertical_scroll_bar(w,3);
+					}
+
 				}
 			}
 
@@ -28592,7 +28619,12 @@ void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, 
 
 }
 
-void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje)
+//estilo_invertido:
+//0: no invertir colores
+//1: invertir color boton arriba
+//2: invertir color boton abajo
+//3: invertir color barra
+void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje,int estilo_invertido)
 {
 		if (porcentaje<0) porcentaje=0;
 		if (porcentaje>100) porcentaje=100;
@@ -28600,17 +28632,48 @@ void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int po
 		// mostrar * abajo para indicar donde estamos en porcentaje
 		int xbase=x+2;
 
+		int tinta_boton_arriba=ESTILO_GUI_TINTA_NORMAL;
+		int tinta_boton_abajo=ESTILO_GUI_TINTA_NORMAL;
+		int tinta_barra=ESTILO_GUI_TINTA_NORMAL;
+
+		int papel_boton_arriba=ESTILO_GUI_PAPEL_NORMAL;
+		int papel_boton_abajo=ESTILO_GUI_PAPEL_NORMAL;
+		int papel_barra=ESTILO_GUI_PAPEL_NORMAL;	
+
+		int tinta_aux;
+
+		switch (estilo_invertido) {
+			case 1:
+				tinta_aux=tinta_boton_arriba;
+				tinta_boton_arriba=papel_boton_arriba;
+				papel_boton_arriba=tinta_aux;
+			break;
+
+			case 2:
+				tinta_aux=tinta_boton_abajo;
+				tinta_boton_abajo=papel_boton_abajo;
+				papel_boton_abajo=tinta_aux;
+			break;	
+
+			case 3:
+				tinta_aux=tinta_barra;
+				tinta_barra=papel_barra;
+				papel_barra=tinta_aux;
+			break;
+
+		}			
+
 
 			//mostrar cursores izquierda y derecha
-		putchar_menu_overlay(xbase-1,y+alto-1,'<',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-		putchar_menu_overlay(xbase+ancho-3,y+alto-1,'>',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+		putchar_menu_overlay(xbase-1,y+alto-1,'<',tinta_boton_arriba,papel_boton_arriba);
+		putchar_menu_overlay(xbase+ancho-3,y+alto-1,'>',tinta_boton_abajo,papel_boton_abajo);
 
 		//mostrar linea horizontal para indicar que es zona de porcentaje
 		z80_byte caracter_barra='-';
 		if (menu_hide_vertical_percentaje_bar.v) caracter_barra=' ';
 
 		int i;
-		for (i=0;i<ancho-3;i++) putchar_menu_overlay(xbase+i,y+alto-1,caracter_barra,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		for (i=0;i<ancho-3;i++) putchar_menu_overlay(xbase+i,y+alto-1,caracter_barra,tinta_barra,papel_barra);	
 
 		
 		int sumarancho=((ancho-4)*porcentaje)/100;
@@ -28618,7 +28681,12 @@ void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int po
 		putchar_menu_overlay(xbase+sumarancho,y+alto-1,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 }
 
-void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porcentaje)
+//estilo_invertido:
+//0: no invertir colores
+//1: invertir color boton arriba
+//2: invertir color boton abajo
+//3: invertir color barra
+void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porcentaje,int estilo_invertido)
 {
 		if (porcentaje<0) porcentaje=0;
 		if (porcentaje>100) porcentaje=100;
@@ -28626,10 +28694,41 @@ void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porc
 		// mostrar * a la derecha para indicar donde estamos en porcentaje
 		int ybase=y+2;
 
+		int tinta_boton_arriba=ESTILO_GUI_TINTA_NORMAL;
+		int tinta_boton_abajo=ESTILO_GUI_TINTA_NORMAL;
+		int tinta_barra=ESTILO_GUI_TINTA_NORMAL;
 
-			//mostrar cursores arriba y abajo
-		putchar_menu_overlay(x+ancho-1,ybase-1,'^',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-		putchar_menu_overlay(x+ancho-1,ybase+alto-3,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+		int papel_boton_arriba=ESTILO_GUI_PAPEL_NORMAL;
+		int papel_boton_abajo=ESTILO_GUI_PAPEL_NORMAL;
+		int papel_barra=ESTILO_GUI_PAPEL_NORMAL;	
+
+		int tinta_aux;
+
+		switch (estilo_invertido) {
+			case 1:
+				tinta_aux=tinta_boton_arriba;
+				tinta_boton_arriba=papel_boton_arriba;
+				papel_boton_arriba=tinta_aux;
+			break;
+
+			case 2:
+				tinta_aux=tinta_boton_abajo;
+				tinta_boton_abajo=papel_boton_abajo;
+				papel_boton_abajo=tinta_aux;
+			break;	
+
+			case 3:
+				tinta_aux=tinta_barra;
+				tinta_barra=papel_barra;
+				papel_barra=tinta_aux;
+			break;
+
+		}	
+
+
+		//mostrar cursores arriba y abajo
+		putchar_menu_overlay(x+ancho-1,ybase-1,'^',tinta_boton_arriba,papel_boton_arriba);
+		putchar_menu_overlay(x+ancho-1,ybase+alto-3,'v',tinta_boton_abajo,papel_boton_abajo);
 
 		//mostrar linea vertical para indicar que es zona de porcentaje
 		z80_byte caracter_barra='|';
@@ -28637,7 +28736,7 @@ void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porc
 
 		//mostrar linea vertical para indicar que es zona de porcentaje
 		int i;
-		for (i=0;i<alto-3;i++) 	putchar_menu_overlay(x+ancho-1,ybase+i,caracter_barra,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);	
+		for (i=0;i<alto-3;i++) 	putchar_menu_overlay(x+ancho-1,ybase+i,caracter_barra,tinta_barra,papel_barra);	
 		
 		
 		int sumaralto=((alto-4)*porcentaje)/100;

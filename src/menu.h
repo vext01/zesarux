@@ -53,8 +53,8 @@ extern void normal_overlay_texto_menu(void);
 extern int si_menu_mouse_en_ventana(void);
 extern void menu_calculate_mouse_xy(void);
 
-extern void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porcentaje);
-extern void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje);
+extern void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porcentaje,int estilo_invertido);
+extern void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje,int estilo_invertido);
 
 extern void menu_espera_tecla(void);
 extern void menu_espera_no_tecla_con_repeticion(void);
