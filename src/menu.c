@@ -5650,8 +5650,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				}
 			}
 
-		//Scroll horizontal
-		/*	if (zxvision_if_horizontal_scroll_bar(w)) {
+			//Pulsado en botones Scroll horizontal
+			if (zxvision_if_horizontal_scroll_bar(w)) {
 				if (last_y_mouse_clicked==w->visible_height-1) {
 					//Linea scroll horizontal
 					int posicion_flecha_izquierda=1;
@@ -5660,9 +5660,40 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					//Flecha izquierda
 					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
 						//printf ("Pulsado en scroll izquierda\n");
-						zxvision_send_scroll_left(w);
+						putchar_menu_overlay(w->x+posicion_flecha_izquierda,w->y+w->visible_height-1,'<',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
 
-					}*/
+					}
+					//Flecha derecha
+					if (last_x_mouse_clicked==posicion_flecha_derecha) {
+						//printf ("Pulsado en scroll derecha\n");
+						putchar_menu_overlay(w->x+posicion_flecha_derecha,w->y+w->visible_height-1,'>',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+					
+					}
+
+				}
+			}
+
+			//Pulsado en botones Scroll vertical
+			if (zxvision_if_vertical_scroll_bar(w)) {
+				if (last_x_mouse_clicked==w->visible_width-1) {
+					//Linea scroll vertical
+					int posicion_flecha_arriba=1;
+					int posicion_flecha_abajo=w->visible_height-2;
+
+					//Flecha arriba
+					if (last_y_mouse_clicked==posicion_flecha_arriba) {
+						//printf ("Pulsado en scroll arriba\n");
+						putchar_menu_overlay(w->x+w->visible_width-1,w->y+posicion_flecha_arriba,'^',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+					}
+
+					//Flecha abajo
+					if (last_y_mouse_clicked==posicion_flecha_abajo) {
+						//printf ("Pulsado en scroll abajo\n");
+						putchar_menu_overlay(w->x+w->visible_width-1,w->y+posicion_flecha_abajo,'v',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+					}
+				}
+			}
+
 		}
 	}
 
@@ -5774,18 +5805,12 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_y_mouse_clicked==posicion_flecha_arriba) {
 						//printf ("Pulsado en scroll arriba\n");
 						zxvision_send_scroll_up(w);
-						/*if (w->offset_y>0) {
-							zxvision_set_offset_y(w,w->offset_y-1);
-						}*/
 					}
 
 					//Flecha abajo
 					if (last_y_mouse_clicked==posicion_flecha_abajo) {
 						//printf ("Pulsado en scroll abajo\n");
 						zxvision_send_scroll_down(w);
-						/*if (w->offset_y<(w->total_height-1)) {
-							zxvision_set_offset_y(w,w->offset_y+1);
-						}*/
 					}
 
 					if (last_y_mouse_clicked>posicion_flecha_arriba && last_y_mouse_clicked<posicion_flecha_abajo) {
