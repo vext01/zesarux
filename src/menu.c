@@ -3968,6 +3968,9 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->visible_cursor=0;
 	w->cursor_line=0;
 
+	w->upper_margin=0;
+	w->lower_margin=0;
+
 	zxvision_set_draw_window_parameters(w);
 
 }
@@ -5175,13 +5178,17 @@ void zxvision_draw_window_contents(zxvision_window *w)
 	//Alto del contenido es 2 menos, por el titulo de ventana y la linea por debajo de margen
 	height=zxvision_get_effective_height(w);
 
+	//Restarle margen inferior y superior
+	height-=w->upper_margin;
+	height-=w->lower_margin;
+
 	int x,y;
 
 	for (y=0;y<height;y++) {
 		for (x=0;x<width;x++) {
 		
 			int xdestination=w->x+x;
-			int ydestination=(w->y)+1+y; //y +1 porque empezamos a escribir debajo del titulo
+			int ydestination=(w->y)+1+y+w->upper_margin; //y +1 porque empezamos a escribir debajo del titulo
 
 			//obtener caracter
 			int out_of_bonds=0;
@@ -5656,7 +5663,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					}
 
 					//Si se pulsa en boton minimizar, indicar que se esta pulsando
-					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0) {
+					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0 && w->can_be_resized) {
 						putchar_menu_overlay(w->x+w->visible_width-1,w->y,menu_retorna_caracter_minimizar(w),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 					}
 				}

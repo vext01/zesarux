@@ -1751,6 +1751,10 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
                 retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );*/
 
 
+	ventana.upper_margin=2;
+	ventana.lower_margin=1;
+
+
 	menu_espera_tecla();
 	menu_espera_no_tecla();
 

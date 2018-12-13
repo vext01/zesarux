@@ -106,6 +106,9 @@ struct s_zxvision_window {
 	int visible_width,visible_height;
 	int x,y;
 
+	int upper_margin;
+	int lower_margin;
+
 	int offset_x,offset_y;
 
 	int total_width,total_height;

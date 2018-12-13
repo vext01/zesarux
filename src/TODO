@@ -4,12 +4,9 @@
 ----zxvision----:
 
 -Sin multitarea, primera pulsación de boton mouse no hace scroll. Seguramente debido a que hace un espera tecla al principio
--al invertir botones de scroll, que no lo haga si estan en el limite-> si no, lo que sucede es que no se borra el boton invertido 
--boton minimizar no debe aparecer e invertir al pulsar en su zona cuando ventana no permite minimizar -> ejemplo con ventana about
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
-
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 
