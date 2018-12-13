@@ -3971,6 +3971,9 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	w->upper_margin=0;
 	w->lower_margin=0;
 
+	//Y textos margen nulos
+	//w->text_margin[0]=NULL;
+
 	zxvision_set_draw_window_parameters(w);
 
 }
@@ -5023,7 +5026,7 @@ void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 	if (offset_y<0) return;
 
 	//Si se pasa por abajo
-	if (offset_y+w->visible_height-2>w->total_height) return; //-2 porque se pierde 2 linea scroll y la linea titulo
+	if (offset_y+w->visible_height-2 > (w->total_height - w->upper_margin - w->lower_margin) ) return; //-2 porque se pierde 2 linea scroll y la linea titulo
 
 	w->offset_y=offset_y;	
 
@@ -5166,7 +5169,18 @@ void zxvision_set_visible_height(zxvision_window *w,int visible_height)
 
 }
 
+/*char *zxvision_get_text_margin(zxvision_window *w,int linea)
+{
+	int i;
+	char *text_margin;
+	for (i=0;i<linea;i++) {
+		text_margin=w->text_margin[linea];
+		if (text_margin==NULL) return NULL;
+	}
 
+	return text_margin;
+
+}*/
 
 void zxvision_draw_window_contents(zxvision_window *w)
 {
@@ -5179,8 +5193,8 @@ void zxvision_draw_window_contents(zxvision_window *w)
 	height=zxvision_get_effective_height(w);
 
 	//Restarle margen inferior y superior
-	height-=w->upper_margin;
-	height-=w->lower_margin;
+	//height-=w->upper_margin;
+	//height-=w->lower_margin;
 
 	int x,y;
 
@@ -5188,7 +5202,7 @@ void zxvision_draw_window_contents(zxvision_window *w)
 		for (x=0;x<width;x++) {
 		
 			int xdestination=w->x+x;
-			int ydestination=(w->y)+1+y+w->upper_margin; //y +1 porque empezamos a escribir debajo del titulo
+			int ydestination=(w->y)+1+y; //y +1 porque empezamos a escribir debajo del titulo
 
 			//obtener caracter
 			int out_of_bonds=0;
@@ -5200,25 +5214,44 @@ void zxvision_draw_window_contents(zxvision_window *w)
 			if (offset_y_final>=w->total_height) out_of_bonds=1;
 
 			if (!out_of_bonds) {
-			int offset_caracter=(offset_y_final*w->total_width)+offset_x_final;
 
-			overlay_screen *caracter;
-			caracter=w->memory;
-			caracter=&caracter[offset_caracter];
+				//Origen de donde obtener el texto
+				int offset_caracter;
+				
 
-			z80_byte caracter_escribir=caracter->caracter;
+				int lower_margin_starts_at=height-(w->lower_margin);
+				
+				//Texto leyenda parte superior
+				if (y<w->upper_margin) {
+					offset_caracter=(y*w->total_width)+offset_x_final;
+				}
+				//Texto leyenda parte inferior
+				else if (y>=lower_margin_starts_at) {
+					int effective_height=height-w->upper_margin-w->lower_margin;
+					int final_y=y-effective_height;
+					offset_caracter=(final_y*w->total_width)+offset_x_final;
+				}
+				else {
+					offset_caracter=((offset_y_final+w->upper_margin+w->lower_margin)*w->total_width)+offset_x_final;
+				}
 
-			int tinta=caracter->tinta;
-			int papel=caracter->papel;
+				overlay_screen *caracter;
+				caracter=w->memory;
+				caracter=&caracter[offset_caracter];
 
-			//Si esta linea cursor visible
-			if (w->visible_cursor && w->cursor_line==offset_y_final) {
-				tinta=ESTILO_GUI_TINTA_SELECCIONADO;
-				papel=ESTILO_GUI_PAPEL_SELECCIONADO;
-			} 
+				z80_byte caracter_escribir=caracter->caracter;
+
+				int tinta=caracter->tinta;
+				int papel=caracter->papel;
+
+				//Si esta linea cursor visible
+				if (w->visible_cursor && w->cursor_line==offset_y_final) {
+					tinta=ESTILO_GUI_TINTA_SELECCIONADO;
+					papel=ESTILO_GUI_PAPEL_SELECCIONADO;
+				} 
 			
-			putchar_menu_overlay_parpadeo(xdestination,ydestination,
-				caracter_escribir,tinta,papel,caracter->parpadeo);
+				putchar_menu_overlay_parpadeo(xdestination,ydestination,
+					caracter_escribir,tinta,papel,caracter->parpadeo);
 			}
 
 			//Fuera de rango. Metemos espacio
@@ -5226,16 +5259,10 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
 				' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);
 			}
-/*
-struct s_overlay_screen {
-	z80_byte tinta,papel,parpadeo;
-	z80_byte caracter;
-};
-*/
+
 		}
 	}
 
-	//putchar_menu_overlay_parpadeo(xdestination,ydestination,'X',0,7,0);
 
 }
 

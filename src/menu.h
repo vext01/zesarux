@@ -109,6 +109,8 @@ struct s_zxvision_window {
 	int upper_margin;
 	int lower_margin;
 
+	//char *text_margin[20]; //Hasta 20 lineas de texto que se usan como texto que no se mueve. La ultima finaliza con 0
+
 	int offset_x,offset_y;
 
 	int total_width,total_height;
@@ -124,8 +126,6 @@ struct s_zxvision_window {
 
 
 	int can_use_all_width; //Si tenemos usable también la ultima columna derecha
-
-	//int applied_can_use_all_width; //Si la rutina de dibuja ventana ha visto el parametro can_use_all_width y ha dibujado segun eso
 
 	//Posicion del cursor y si esta visible
 	int visible_cursor;
