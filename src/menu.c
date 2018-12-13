@@ -5192,10 +5192,6 @@ void zxvision_draw_window_contents(zxvision_window *w)
 	//Alto del contenido es 2 menos, por el titulo de ventana y la linea por debajo de margen
 	height=zxvision_get_effective_height(w);
 
-	//Restarle margen inferior y superior
-	//height-=w->upper_margin;
-	//height-=w->lower_margin;
-
 	int x,y;
 
 	for (y=0;y<height;y++) {
@@ -5233,6 +5229,7 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				}
 				else {
 					offset_caracter=((offset_y_final+w->upper_margin+w->lower_margin)*w->total_width)+offset_x_final;
+					//offset_caracter=((offset_y_final)*w->total_width)+offset_x_final;
 				}
 
 				overlay_screen *caracter;

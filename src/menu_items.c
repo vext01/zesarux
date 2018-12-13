@@ -1856,10 +1856,10 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 
 */
-	zxvision_print_string(&ventana,2,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Use cursors ");
-	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to move offset ");	
-	zxvision_print_string(&ventana,2,7,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," QAOP size");	
-	zxvision_print_string(&ventana,2,8,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," ESC exit ");	
+	zxvision_print_string(&ventana,2,3,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," Use cursors ");
+	zxvision_print_string(&ventana,2,4,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," to move offset ");	
+	zxvision_print_string(&ventana,2,5,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," QAOP size");	
+	zxvision_print_string(&ventana,2,6,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,1," ESC exit ");	
 
 
 	//Rebotar
@@ -2883,14 +2883,10 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
 	puntero_tilemap_orig=puntero_tilemap;
 
-	//int limite_vertical=DEBUG_TSCONF_TILENAV_MAX_TILES;
-	//if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2;
 
 	int limite_vertical=menu_debug_tsconf_tbblue_tilenav_total_vert();
 
-	//int current_tile_x=0;
 
-	//int linea_color=0;
 	int offset_vertical=0;
 
 	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
@@ -2901,7 +2897,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 		//dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+3]=0;  //3 espacios al inicio
 
 		//menu_escribe_linea_opcion(linea++,-1,1,&dumpmemoria[current_tile_x]); //Mostrar regla superior
-		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,0,dumpmemoria);
 	}
 	else {
 		//Aumentarlo en cuanto al offset que estamos (si modo lista)
@@ -2912,9 +2908,21 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 		offset_vertical=offset_y/2;
 		linea=offset_vertical*2;
 
+
+
 		limite_vertical=offset_vertical+((24-2)/2)+1; //El maximo que cabe en pantalla, +1 para cuando se baja 1 posicion con cursor
 
 	}
+
+	//linea destino es +3, pues las tres primeras son de leyenda
+	linea +=3;	
+
+
+	//zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,3,"HOLA");
+	//zxvision_draw_window_contents(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window); 
+	//return;
+
+	//printf ("inicio linea en %d\n",linea);
 
 		//printf ("Init drawing tiles from vertical offset %d to %d. line print starts at %d\n",offset_vertical,limite_vertical,linea);
 		/*for (linea_color=0;linea_color<limite_vertical &&
@@ -2969,13 +2977,13 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 				if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
 					//Modo lista tiles
 					sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
-					//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
 					zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
 					sprintf (dumpmemoria," Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
 						(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
 						tpal );
-					//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
 					zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 				}
 				else {
@@ -3048,22 +3056,44 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 
 		char titulo[33];
 		
+		char linea_leyenda[64];
+		sprintf (titulo,"Tile Navigator");
 
 		int total_height=menu_debug_tsconf_tbblue_tilenav_total_vert();
 		int total_width=31;
 		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-			sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			//sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			//sprintf (titulo,"Tile Navigator");
+			sprintf (linea_leyenda,"M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
-			total_height++; //uno mas pues hay la primera linea con la regla de columnas
+			//total_height++; //uno mas pues hay la primera linea con la regla de columnas
+
 		}
 
 		else {
-			sprintf (titulo,"Tiles M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+		   //sprintf (titulo,"Tiles M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			sprintf (linea_leyenda,"M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 			total_height*=2;
 		}
 
+		//tres mas para ubicar las lineas de leyenda
+		total_height+=3;
+
 		zxvision_new_window(ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
 							total_width,total_height,titulo);
+
+
+		//Establecer leyenda en la parte de abajo
+		ventana->lower_margin=2;
+		//Texto sera el de la primera linea
+		ventana->upper_margin=1;
+
+
+		
+		//Leyenda inferior
+		zxvision_print_string_defaults_fillspc(ventana,1,1,"-----");
+		zxvision_print_string_defaults_fillspc(ventana,1,2,linea_leyenda);
 
 		zxvision_draw_window(ventana);										
 }
