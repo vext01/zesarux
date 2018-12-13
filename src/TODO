@@ -7,7 +7,7 @@
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
--no gestiona bien inicio de imprimir texto zona central - no margen
+-no gestiona bien inicio de imprimir texto zona central - no margen -> parece que ya va. revisar
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 

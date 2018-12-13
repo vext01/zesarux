@@ -5207,6 +5207,24 @@ void zxvision_draw_window_contents(zxvision_window *w)
 			if (offset_x_final>=w->total_width) out_of_bonds=1;
 
 			int offset_y_final=y+w->offset_y;
+
+			int lower_margin_starts_at=height-(w->lower_margin);
+				
+				//Texto leyenda parte superior
+				if (y<w->upper_margin) {
+					offset_y_final=y;
+				}
+				//Texto leyenda parte inferior
+				else if (y>=lower_margin_starts_at) {
+					int effective_height=height-w->upper_margin-w->lower_margin;
+					int final_y=y-effective_height;
+					offset_y_final=final_y;
+				}
+				else {
+					offset_y_final +=w->lower_margin; //Dado que ya hemos pasado la parte superior, saltar la inferior
+				}
+
+
 			if (offset_y_final>=w->total_height) out_of_bonds=1;
 
 			if (!out_of_bonds) {
@@ -5214,23 +5232,7 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				//Origen de donde obtener el texto
 				int offset_caracter;
 				
-
-				int lower_margin_starts_at=height-(w->lower_margin);
-				
-				//Texto leyenda parte superior
-				if (y<w->upper_margin) {
-					offset_caracter=(y*w->total_width)+offset_x_final;
-				}
-				//Texto leyenda parte inferior
-				else if (y>=lower_margin_starts_at) {
-					int effective_height=height-w->upper_margin-w->lower_margin;
-					int final_y=y-effective_height;
-					offset_caracter=(final_y*w->total_width)+offset_x_final;
-				}
-				else {
-					offset_caracter=((offset_y_final+w->upper_margin+w->lower_margin)*w->total_width)+offset_x_final;
-					//offset_caracter=((offset_y_final)*w->total_width)+offset_x_final;
-				}
+				offset_caracter=((offset_y_final)*w->total_width)+offset_x_final;
 
 				overlay_screen *caracter;
 				caracter=w->memory;
