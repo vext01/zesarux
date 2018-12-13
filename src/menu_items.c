@@ -2797,7 +2797,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 		//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
 		//esto solo es necesario para ventanas que usan overlay
 	    if (!menu_multitarea) {
-			printf ("refresca pantalla inicial\n");
+			//printf ("refresca pantalla inicial\n");
 			menu_refresca_pantalla();
 		}			
 
@@ -3064,7 +3064,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
 			//sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 			//sprintf (titulo,"Tile Navigator");
-			sprintf (linea_leyenda,"M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			sprintf (linea_leyenda,"~~Mode: Visual ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
 			//total_height++; //uno mas pues hay la primera linea con la regla de columnas
@@ -3073,7 +3073,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 
 		else {
 		   //sprintf (titulo,"Tiles M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			sprintf (linea_leyenda,"M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			sprintf (linea_leyenda,"~~Mode: List ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 			total_height*=2;
 		}
 
@@ -3092,7 +3092,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 
 		
 		//Leyenda inferior
-		zxvision_print_string_defaults_fillspc(ventana,1,1,"-----");
+		//zxvision_print_string_defaults_fillspc(ventana,1,1,"-----");
 		zxvision_print_string_defaults_fillspc(ventana,1,2,linea_leyenda);
 
 		zxvision_draw_window(ventana);										

@@ -5026,7 +5026,8 @@ void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 	if (offset_y<0) return;
 
 	//Si se pasa por abajo
-	if (offset_y+w->visible_height-2 > (w->total_height - w->upper_margin - w->lower_margin) ) return; //-2 porque se pierde 2 linea scroll y la linea titulo
+	//if (offset_y+w->visible_height-2 > (w->total_height - w->upper_margin - w->lower_margin) ) return; //-2 porque se pierde 2 linea scroll y la linea titulo
+	if (offset_y+w->visible_height-2 > (w->total_height ) ) return; //-2 porque se pierde 2 linea scroll y la linea titulo
 
 	w->offset_y=offset_y;	
 
