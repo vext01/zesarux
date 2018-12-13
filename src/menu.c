@@ -5684,6 +5684,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					
 					}
 
+					//Zona porcentaje
 					if (last_x_mouse_clicked>posicion_flecha_izquierda && last_x_mouse_clicked<posicion_flecha_derecha) {
 						//printf ("Pulsado en zona scroll horizontal\n");
 						zxvision_draw_horizontal_scroll_bar(w,3);
@@ -5773,6 +5774,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
 						//printf ("Pulsado en scroll izquierda\n");
 						zxvision_send_scroll_left(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_horizontal_scroll_bar(w,0);
 				
 					}
 
@@ -5780,6 +5786,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_x_mouse_clicked==posicion_flecha_derecha) {
 						//printf ("Pulsado en scroll derecha\n");
 						zxvision_send_scroll_right(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_horizontal_scroll_bar(w,0);						
 					
 					}
 
@@ -5832,12 +5843,23 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_y_mouse_clicked==posicion_flecha_arriba) {
 						//printf ("Pulsado en scroll arriba\n");
 						zxvision_send_scroll_up(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_vertical_scroll_bar(w,0);
+
 					}
 
 					//Flecha abajo
 					if (last_y_mouse_clicked==posicion_flecha_abajo) {
 						//printf ("Pulsado en scroll abajo\n");
 						zxvision_send_scroll_down(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_vertical_scroll_bar(w,0);						
 					}
 
 					if (last_y_mouse_clicked>posicion_flecha_arriba && last_y_mouse_clicked<posicion_flecha_abajo) {
