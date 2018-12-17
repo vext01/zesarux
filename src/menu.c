@@ -18141,7 +18141,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 							
 
 
-     		if (MACHINE_IS_SPECTRUM && !MACHINE_IS_ZXUNO) {
+     		if ( (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) && !MACHINE_IS_ZXUNO) {
 
                         menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_dandanator,NULL,"ZX D~~andanator");
                         menu_add_item_menu_shortcut(array_menu_storage_settings,'a');

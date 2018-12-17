@@ -1051,6 +1051,8 @@ void instruccion_ddfd_112 ()
 
         poke_byte_desp(*registro_ixiy,desp,reg_b);
 
+
+
 }
 
 void instruccion_ddfd_113 ()

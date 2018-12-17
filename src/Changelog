@@ -9,6 +9,8 @@ Improved menu environment:
 
 Added key to save text windows contents to a file
 Added setting to send a final space after every word in the osd adventure keyboard
+Added Dandanator CPC emulation
+
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now
 -running in verbose or limit mode, or cpu-step command, can now update the display inmediately (having real video setting on)

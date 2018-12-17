@@ -64,6 +64,39 @@ int dandanator_nested_id_poke_byte_no_time;
 int dandanator_nested_id_peek_byte;
 int dandanator_nested_id_peek_byte_no_time;
 
+
+z80_byte dandanator_cpc_config_1;
+/*
+when bit 7=0:
+b4-b3: FollowRomEnable zone 0 slot lower bits: slots 28,29,30 and 31
+bit 2: Out bit to USB (Serial Bitbanging): “1” Idle.
+bit 1: EEprom write enable “1” or disable “0”
+bit 0: Serial port ena/dis - When enabled, LD A,(HL) returns serial RX in bit 0.
+
+
+*/
+
+
+z80_byte dandanator_cpc_config_2;
+/*
+when bit 7=1:
+bit 6: Wait for "RET" (0xC9) to execute actions
+bit 5: Disable Further Dandanator commands until reset
+bit 4: Enable FollowRomEn on RET (only read if bit 6 = 1)
+b3-b2: A15 values for zone 1 and zone 0. Zone 0 can be at 0x0000 or 0x8000, zone 1 can be at 0x4000 or 0xC000
+b1-b0: Status of EEPROM_CE for zone 1 and zone 0. “0”: Enabled, “1” Disabled.
+*/
+
+z80_bit dandanator_cpc_received_preffix;
+
+/*
+Bits 4-0: Slot to assign to zone
+Bit 5: Eeprom Chip Enable for zone. ‘0’ is enabled, ‘1’ is disabled.
+Other bits: ignored.
+*/
+z80_byte dandanator_cpc_zone_slots[2];
+
+
 /*
 El Dandanator tiene tres formas de comportarse ante peticiones del Spectrum (las escrituras a rom):
   	A) Deshabilitado : Pasa de ellas.
@@ -277,7 +310,7 @@ void dandanator_set_pending_run_command(void)
 	debug_printf (VERBOSE_DEBUG,"Dandanator: Schedule pending command %d after %d t-states. PC=%d",dandanator_received_command,dandanator_needed_t_states_command,reg_pc);
 }
 
-void dandanator_write_byte(z80_int dir,z80_byte valor)
+void dandanator_write_byte_spectrum(z80_int dir,z80_byte valor)
 {
 	if (dandanator_state!=Commands_Disabled) {
 		//printf ("Escribiendo dir %d valor %d PC=%d\n",dir,valor,reg_pc);
@@ -354,7 +387,7 @@ int dandanator_check_if_rom_area(z80_int dir)
 	return 0;
 }
 
-z80_byte dandanator_read_byte(z80_int dir)
+z80_byte dandanator_read_byte_spectrum(z80_int dir)
 {
 	//Si banco apunta a 32, es la rom interna
 	//if (dandanator_active_bank==32) return dandanator_original_peek_byte_no_time(dir);
@@ -366,7 +399,7 @@ z80_byte dandanator_read_byte(z80_int dir)
 }
 
 
-z80_byte dandanator_poke_byte(z80_int dir,z80_byte valor)
+z80_byte dandanator_poke_byte_spectrum(z80_int dir,z80_byte valor)
 {
 
 	//dandanator_original_poke_byte(dir,valor);
@@ -374,7 +407,7 @@ z80_byte dandanator_poke_byte(z80_int dir,z80_byte valor)
         debug_nested_poke_byte_call_previous(dandanator_nested_id_poke_byte,dir,valor);
 
 	if (dandanator_check_if_rom_area(dir)) {
-		dandanator_write_byte(dir,valor);
+		dandanator_write_byte_spectrum(dir,valor);
 	}
 
 	//temp
@@ -388,7 +421,7 @@ z80_byte dandanator_poke_byte(z80_int dir,z80_byte valor)
 
 }
 
-z80_byte dandanator_poke_byte_no_time(z80_int dir,z80_byte valor)
+z80_byte dandanator_poke_byte_spectrum_no_time(z80_int dir,z80_byte valor)
 {
         //dandanator_original_poke_byte_no_time(dir,valor);
         //Llamar a anterior
@@ -396,13 +429,9 @@ z80_byte dandanator_poke_byte_no_time(z80_int dir,z80_byte valor)
 
 
 	if (dandanator_check_if_rom_area(dir)) {
-                dandanator_write_byte(dir,valor);
+                dandanator_write_byte_spectrum(dir,valor);
         }
 
-	//temp
-	//if (dir<16384 && !dandanator_check_if_rom_area(dir)) {
-	//	printf ("Recibido write en %d valor %d con dandanator desactivado\n",dir,valor);
-	//}
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -410,47 +439,158 @@ z80_byte dandanator_poke_byte_no_time(z80_int dir,z80_byte valor)
 
 }
 
-z80_byte dandanator_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
+z80_byte dandanator_peek_byte_spectrum(z80_int dir,z80_byte value GCC_UNUSED)
 {
 
 	z80_byte valor_leido=debug_nested_peek_byte_call_previous(dandanator_nested_id_peek_byte,dir);
 
 	if (dandanator_check_if_rom_area(dir)) {
        		//t_estados +=3;
-		return dandanator_read_byte(dir);
+		return dandanator_read_byte_spectrum(dir);
 	}
 
 	//return dandanator_original_peek_byte(dir);
 	return valor_leido;
 }
 
-z80_byte dandanator_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
+z80_byte dandanator_peek_byte_spectrum_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 {
 
 	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(dandanator_nested_id_peek_byte_no_time,dir);
 
 	if (dandanator_check_if_rom_area(dir)) {
-                return dandanator_read_byte(dir);
+                return dandanator_read_byte_spectrum(dir);
         }
 
 	//else return debug_nested_peek_byte_no_time_call_previous(dandanator_nested_id_peek_byte_no_time,dir);
 	return valor_leido;
 }
 
+z80_byte dandanator_cpc_zone(z80_int dir)
+{
+	z80_byte mask=dir & 0xC000;
+
+	if (mask==0x0000 || mask==0x8000) return 0;
+	else return 1;
+}
+
+
+//-1 si no mapeado. Otro valor: retorna zona
+int dandanator_cpc_is_mapped(z80_int dir)
+{
+	//zone 0 may be mapped to 0x0000 or to 0x8000 and zone 1 to 0x4000 or 0xC000.
+	z80_byte zone=dandanator_cpc_zone(dir);
+
+	//Ver si esa zona esta mapeado dandanator
+	if (dandanator_cpc_zone_slots[zone] & 32) {
+		//Bit 5: Eeprom Chip Enable for zone. ‘0’ is enabled, ‘1’ is disabled.
+		return zone;
+	}
+
+	else return -1;
+
+}
+
+
+void dandanator_write_byte_cpc(z80_int dir,z80_byte valor)
+{
+	
+}
+
+
+z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)
+{
+
+	z80_byte slot=dandanator_cpc_zone_slots[zone] & 31;
+
+	int puntero=slot*16384+dir;
+	return dandanator_memory_pointer[puntero];
+}
+
+
+z80_byte dandanator_poke_byte_cpc(z80_int dir,z80_byte valor)
+{
+
+	//dandanator_original_poke_byte(dir,valor);
+        //Llamar a anterior
+        debug_nested_poke_byte_call_previous(dandanator_nested_id_poke_byte,dir,valor);
+
+
+        //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+        return 0;
+
+
+}
+
+z80_byte dandanator_poke_byte_cpc_no_time(z80_int dir,z80_byte valor)
+{
+        //dandanator_original_poke_byte_no_time(dir,valor);
+        //Llamar a anterior
+        debug_nested_poke_byte_no_time_call_previous(dandanator_nested_id_poke_byte_no_time,dir,valor);
+
+
+        //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+        return 0;
+
+
+}
+
+z80_byte dandanator_peek_byte_cpc(z80_int dir,z80_byte value GCC_UNUSED)
+{
+
+	z80_byte valor_leido=debug_nested_peek_byte_call_previous(dandanator_nested_id_peek_byte,dir);
+
+	z80_byte zone=dandanator_cpc_is_mapped(dir);
+
+	if (zone!=-1) {
+       		//t_estados +=3;
+		return dandanator_read_byte_cpc(dir,zone);
+	}
+
+	return valor_leido;
+}
+
+z80_byte dandanator_peek_byte_cpc_no_time(z80_int dir,z80_byte value GCC_UNUSED)
+{
+
+	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(dandanator_nested_id_peek_byte_no_time,dir);
+
+	z80_byte zone=dandanator_cpc_is_mapped(dir);
+
+	if (zone!=-1) {
+       		//t_estados +=3;
+		return dandanator_read_byte_cpc(dir,zone);
+	}
+
+	return valor_leido;
+}
 
 
 //Establecer rutinas propias
 void dandanator_set_peek_poke_functions(void)
 {
-                debug_printf (VERBOSE_DEBUG,"Setting dandanator poke / peek functions");
-               
 
+	if (MACHINE_IS_SPECTRUM) {
+   		debug_printf (VERBOSE_DEBUG,"Setting dandanator poke / peek Spectrum functions");
+   
+		//Asignar mediante nuevas funciones de core anidados
+		dandanator_nested_id_poke_byte=debug_nested_poke_byte_add(dandanator_poke_byte_spectrum,"Dandanator poke_byte");
+		dandanator_nested_id_poke_byte_no_time=debug_nested_poke_byte_no_time_add(dandanator_poke_byte_spectrum_no_time,"Dandanator poke_byte_no_time");
+		dandanator_nested_id_peek_byte=debug_nested_peek_byte_add(dandanator_peek_byte_spectrum,"Dandanator peek_byte");
+		dandanator_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(dandanator_peek_byte_spectrum_no_time,"Dandanator peek_byte_no_time");
 
-	//Asignar mediante nuevas funciones de core anidados
-	dandanator_nested_id_poke_byte=debug_nested_poke_byte_add(dandanator_poke_byte,"Dandanator poke_byte");
-	dandanator_nested_id_poke_byte_no_time=debug_nested_poke_byte_no_time_add(dandanator_poke_byte_no_time,"Dandanator poke_byte_no_time");
-	dandanator_nested_id_peek_byte=debug_nested_peek_byte_add(dandanator_peek_byte,"Dandanator peek_byte");
-	dandanator_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(dandanator_peek_byte_no_time,"Dandanator peek_byte_no_time");
+	}
+
+	else {
+		debug_printf (VERBOSE_DEBUG,"Setting dandanator poke / peek CPC functions");
+   
+		//Asignar mediante nuevas funciones de core anidados
+		dandanator_nested_id_poke_byte=debug_nested_poke_byte_add(dandanator_poke_byte_cpc,"Dandanator poke_byte");
+		dandanator_nested_id_poke_byte_no_time=debug_nested_poke_byte_no_time_add(dandanator_poke_byte_cpc_no_time,"Dandanator poke_byte_no_time");
+		dandanator_nested_id_peek_byte=debug_nested_peek_byte_add(dandanator_peek_byte_cpc,"Dandanator peek_byte");
+		dandanator_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(dandanator_peek_byte_cpc_no_time,"Dandanator peek_byte_no_time");
+
+	}
 
 }
 
@@ -473,12 +613,14 @@ void dandanator_restore_peek_poke_functions(void)
 
 
 
-z80_byte cpu_core_loop_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
+z80_byte cpu_core_loop_spectrum_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
+
 	//Llamar a anterior
 	debug_nested_core_call_previous(dandanator_nested_id_core);
 
-        if (dandanator_state==Pending_Executing_Command) {
+
+    if (dandanator_state==Pending_Executing_Command) {
                 if (debug_t_estados_parcial>dandanator_needed_t_states_command) {
                         debug_printf (VERBOSE_DEBUG,"Dandanator: Run command after needed %d t-states",dandanator_needed_t_states_command);
                         dandanator_run_command();
@@ -493,13 +635,74 @@ z80_byte cpu_core_loop_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNU
 }
 
 
+z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
+{
+
+    if (dandanator_enabled.v && dandanator_cpc_received_preffix.v) {
+		//Gestion opcodes
+		/*
+		- Zone 0 Command: Trigger + LD (IY+0),B
+		- Zone 1 Command: Trigger + LD (IY+0),C		
+		*/
+		z80_byte preffix=peek_byte_no_time(dir);
+		z80_byte opcode=peek_byte_no_time(dir+1);
+
+
+		if (preffix==0xFD) {
+			if (opcode==0xFD) dandanator_cpc_received_preffix.v=1;
+			else {
+				switch (opcode) {
+				case 112:
+					//LD (IX+d),B
+					//Zone 0 Command: Trigger + LD (IY+0),B
+					dandanator_cpc_zone_slots[0]=reg_b;
+					printf ("Setting zone 0 slot %d\n",dandanator_cpc_zone_slots[0]);
+				break;
+
+				case 113:
+					//LD (IX+d),C
+					//Zone 1 Command: Trigger + LD (IY+0),C		
+					dandanator_cpc_zone_slots[1]=reg_c;
+					printf ("Setting zone 1 slot %d\n",dandanator_cpc_zone_slots[1]);
+				break;
+
+				case 119:
+					//LD (IX+d),A
+					if (reg_a & 128) {
+						dandanator_cpc_config_2=reg_a;
+					}
+					else {
+						dandanator_cpc_config_1=reg_a;
+					}
+				}
+
+			}
+
+		}
+    }
+
+
+	//Llamar a anterior
+	debug_nested_core_call_previous(dandanator_nested_id_core);
+
+
+	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+	return 0;
+
+}
 
 
 void dandanator_set_core_function(void)
 {
 	debug_printf (VERBOSE_DEBUG,"Setting dandanator Core loop");
+
 	//Asignar mediante nuevas funciones de core anidados
-	dandanator_nested_id_core=debug_nested_core_add(cpu_core_loop_dandanator,"Dandanator core");
+	if (MACHINE_IS_SPECTRUM) {
+		dandanator_nested_id_core=debug_nested_core_add(cpu_core_loop_spectrum_dandanator,"Dandanator Spectrum core");
+	}
+	else {
+		dandanator_nested_id_core=debug_nested_core_add(cpu_core_loop_cpc_dandanator,"Dandanator CPC core");
+	}
 }
 
 
@@ -562,8 +765,8 @@ int dandanator_load_rom(void)
 void dandanator_enable(void)
 {
 
-  if (!MACHINE_IS_SPECTRUM) {
-    debug_printf(VERBOSE_INFO,"Can not enable dandanator on non Spectrum machine");
+  if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_CPC) {
+    debug_printf(VERBOSE_INFO,"Can not enable dandanator on non Spectrum or CPC machine");
     return;
   }
 
@@ -635,6 +838,13 @@ void dandanator_press_button(void)
 	dandanator_active_bank=0;
 	dandanator_state=Wait_Normal;
 	//dandanator_status_blocked.v=0;
+
+
+	dandanator_cpc_config_1=0;
+	dandanator_cpc_config_2=0;
+	dandanator_cpc_received_preffix.v=0;
+	dandanator_cpc_zone_slots[0]=0;
+	dandanator_cpc_zone_slots[1]=0;
 
 	reset_cpu();
 
