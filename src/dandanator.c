@@ -500,7 +500,7 @@ int dandanator_cpc_is_mapped(z80_int dir)
 		//return zone;
 	}
 
-	else return -1;
+	return -1;
 
 }
 
@@ -518,7 +518,7 @@ z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)
 
 	z80_byte slot=dandanator_cpc_zone_slots[zone] & 31;
 
-	printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
+	//printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
 
 	int puntero=slot*16384+dir;
 	return dandanator_memory_pointer[puntero];
