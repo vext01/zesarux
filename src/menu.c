@@ -5861,6 +5861,12 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 						zxvision_set_offset_x(w,offset);
 
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+                                                //al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+                                                //se quedaria el color del boton invertido
+                                                zxvision_draw_horizontal_scroll_bar(w,0);
+
 					}
 				}
 			} 
@@ -5929,6 +5935,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						}
 
 						zxvision_set_offset_y(w,offset);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+                                                //al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+                                                //se quedaria el color del boton invertido
+                                                zxvision_draw_vertical_scroll_bar(w,0);
 
 					}
 				}
@@ -18323,7 +18334,7 @@ int menu_onscreen_keyboard_return_index_cursor(void)
 
 
 //Comun para dibujar cursor y senyalar teclas activas
-void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y,int escursor)
+void menu_onscreen_keyboard_dibuja_cursor_aux(zxvision_window *ventana,char *s,int x,int y,int escursor)
 {
 	char *textocursor;
 	char textospeech[32];
@@ -18337,9 +18348,16 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y,int escursor)
 
 
         //Si es teclas activas, texto inverso. Si es cursor, texto papel de color seleccion no disponible (rojo por defecto)
-        if (escursor) menu_escribe_texto_ventana(x,y,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,textocursor);
+        if (escursor) {
+		//menu_escribe_texto_ventana(x,y,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,textocursor);	
+		//void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto)
+		zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,textocursor);
+	}
 
-	else menu_escribe_texto_ventana(x,y,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,textocursor);
+	else {
+		//menu_escribe_texto_ventana(x,y,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,textocursor);	
+		zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0,textocursor);
+	}
 
 	
 
@@ -18360,7 +18378,7 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y,int escursor)
 	menu_textspeech_send_text(textospeech);
 }
 
-void menu_onscreen_keyboard_dibuja_cursor(void)
+void menu_onscreen_keyboard_dibuja_cursor(zxvision_window *ventana)
 {
 
 
@@ -18378,14 +18396,14 @@ void menu_onscreen_keyboard_dibuja_cursor(void)
 
 	//Si en stick
 	if (osd_keyboard_cursor_y==4) {
-		if (indice==40) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+y,1);
-		else menu_onscreen_keyboard_dibuja_cursor_aux("Send",offset_x+6,offset_y+y,1);
+		if (indice==40) menu_onscreen_keyboard_dibuja_cursor_aux(ventana,"Stick",offset_x,offset_y+y,1);
+		else menu_onscreen_keyboard_dibuja_cursor_aux(ventana,"Send",offset_x+6,offset_y+y,1);
 		return;
 	}
 
 	x=teclas_osd[indice].x;
 
-	menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[indice].tecla,offset_x+x,offset_y+y,1);
+	menu_onscreen_keyboard_dibuja_cursor_aux(ventana,teclas_osd[indice].tecla,offset_x+x,offset_y+y,1);
 
 	
 
@@ -18400,7 +18418,7 @@ z80_byte menu_osd_teclas_pulsadas[40];
 int menu_onscreen_keyboard_sticky=0;
 
 
-void menu_onscreen_keyboard_dibuja_teclas_activas(void)
+void menu_onscreen_keyboard_dibuja_teclas_activas(zxvision_window *ventana)
 {
 	int i,x,y;
 
@@ -18412,11 +18430,11 @@ void menu_onscreen_keyboard_dibuja_teclas_activas(void)
 		y=(i/10)*2;
 		if (menu_osd_teclas_pulsadas[i]) {
 			x=teclas_osd[i].x;
-			menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[i].tecla,offset_x+x,offset_y+y,0);
+			menu_onscreen_keyboard_dibuja_cursor_aux(ventana,teclas_osd[i].tecla,offset_x+x,offset_y+y,0);
 		}
 	}
 
-	if (menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+(40/10)*2,0);
+	if (menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_dibuja_cursor_aux(ventana,"Stick",offset_x,offset_y+(40/10)*2,0);
 }
 
 void menu_onscreen_keyboard_reset_pressed_keys(void)
@@ -18531,10 +18549,19 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 	if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
 
+
+	zxvision_window ventana;
+
 	
 
-	menu_dibuja_ventana(OSD_KEYBOARD_X_VENTANA,OSD_KEYBOARD_Y_VENTANA,
-				OSD_KEYBOARD_ANCHO_VENTANA,OSD_KEYBOARD_ALTO_VENTANA,"On Screen Keyboard");
+	//menu_dibuja_ventana(OSD_KEYBOARD_X_VENTANA,OSD_KEYBOARD_Y_VENTANA,
+	//			OSD_KEYBOARD_ANCHO_VENTANA,OSD_KEYBOARD_ALTO_VENTANA,"On Screen Keyboard");
+
+        zxvision_new_window(&ventana,OSD_KEYBOARD_X_VENTANA,OSD_KEYBOARD_Y_VENTANA,OSD_KEYBOARD_ANCHO_VENTANA,OSD_KEYBOARD_ALTO_VENTANA,
+				OSD_KEYBOARD_ANCHO_VENTANA-1,OSD_KEYBOARD_ALTO_VENTANA-2,"On Screen Keyboard");
+
+        zxvision_draw_window(&ventana);
+
 	z80_byte tecla;
 
 	int salir=0;
@@ -18592,7 +18619,8 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 			old_textspeech_also_send_menu.v=textspeech_also_send_menu.v;
 			textspeech_also_send_menu.v=0;
 
-	        	menu_escribe_linea_opcion(linea++,-1,1,textoventana);
+	        	//menu_escribe_linea_opcion(linea++,-1,1,textoventana);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoventana);
 
 
 			//Restaurar parametro speech
@@ -18605,21 +18633,31 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 		z80_bit old_textspeech_also_send_menu;
 		old_textspeech_also_send_menu.v=textspeech_also_send_menu.v;
 		textspeech_also_send_menu.v=0;
-		menu_escribe_linea_opcion(linea++,-1,1,"Stick Send");
+
+		//menu_escribe_linea_opcion(linea++,-1,1,"Stick Send");
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Stick Send");
+
 		//Restaurar parametro speech
 		textspeech_also_send_menu.v=old_textspeech_also_send_menu.v;
 
 
-		menu_onscreen_keyboard_dibuja_teclas_activas();
+		menu_onscreen_keyboard_dibuja_teclas_activas(&ventana);
 
-		menu_onscreen_keyboard_dibuja_cursor();
+		menu_onscreen_keyboard_dibuja_cursor(&ventana);
 
-       		if (menu_multitarea==0) menu_refresca_pantalla();
+
+		zxvision_draw_window_contents(&ventana);
+
+
+
+       		/*if (menu_multitarea==0) menu_refresca_pantalla();
 		menu_espera_tecla();
 
 		tecla=menu_get_pressed_key();
 
-		menu_espera_no_tecla_con_repeticion();
+		menu_espera_no_tecla_con_repeticion();*/
+
+		tecla=zxvision_common_getkey_refresh();
 
 		//tambien permitir mover con joystick aunque no este mapeado a cursor key
 		switch (tecla) {
@@ -18681,6 +18719,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 	}
 
 	cls_menu_overlay();
+        zxvision_destroy_window(&ventana);
 
 	//Si no se ha salido con escape, hacer que vuelva y quitar pulsaciones de caps y symbol
 	if (tecla!=2) {
