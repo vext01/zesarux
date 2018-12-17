@@ -484,7 +484,20 @@ int dandanator_cpc_is_mapped(z80_int dir)
 	//Ver si esa zona esta mapeado dandanator
 	if ((dandanator_cpc_zone_slots[zone] & 32)==0) {
 		//Bit 5: Eeprom Chip Enable for zone. ‘0’ is enabled, ‘1’ is disabled.
-		return zone;
+		//b3-b2: A15 values for zone 1 and zone 0.
+		//Zone 0 can be at 0x0000 or 0x8000, zone 1 can be at 0x4000 or 0xC000
+		z80_int value_a15;
+		if (zone==0) {
+			value_a15=((dandanator_cpc_config_2 & 4) >>2)*0x8000;
+		}
+		else value_a15=(dandanator_cpc_config_2 & 8) >>3*0x8000;
+
+		if ( (dir&0x8000) == value_a15) return zone;
+
+
+
+		
+		//return zone;
 	}
 
 	else return -1;
@@ -650,7 +663,7 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 		z80_byte preffix=peek_byte_no_time(reg_pc);
 		z80_byte opcode=peek_byte_no_time(reg_pc+1);
 
-		printf ("%04X %02X %02X\n",reg_pc,preffix,opcode);
+		//printf ("%04X %02X %02X\n",reg_pc,preffix,opcode);
 
 
 		if (preffix==0xFD) {
