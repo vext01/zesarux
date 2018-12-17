@@ -468,7 +468,7 @@ z80_byte dandanator_peek_byte_spectrum_no_time(z80_int dir,z80_byte value GCC_UN
 
 z80_byte dandanator_cpc_zone(z80_int dir)
 {
-	z80_byte mask=dir & 0xC000;
+	z80_int mask=dir & 0xC000;
 
 	if (mask==0x0000 || mask==0x8000) return 0;
 	else return 1;
@@ -505,7 +505,7 @@ z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)
 
 	z80_byte slot=dandanator_cpc_zone_slots[zone] & 31;
 
-	//printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
+	printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
 
 	int puntero=slot*16384+dir;
 	return dandanator_memory_pointer[puntero];
@@ -642,14 +642,15 @@ z80_byte cpu_core_loop_spectrum_dandanator(z80_int dir GCC_UNUSED, z80_byte valu
 z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
 
-    if (dandanator_enabled.v && dandanator_cpc_received_preffix.v) {
 		//Gestion opcodes
 		/*
 		- Zone 0 Command: Trigger + LD (IY+0),B
 		- Zone 1 Command: Trigger + LD (IY+0),C		
 		*/
-		z80_byte preffix=peek_byte_no_time(dir);
-		z80_byte opcode=peek_byte_no_time(dir+1);
+		z80_byte preffix=peek_byte_no_time(reg_pc);
+		z80_byte opcode=peek_byte_no_time(reg_pc+1);
+
+		printf ("%04X %02X %02X\n",reg_pc,preffix,opcode);
 
 
 		if (preffix==0xFD) {
@@ -675,8 +676,23 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 
 				case 119:
 					//LD (IX+d),A
+					printf ("Setting config value reg_a = %02XH\n",reg_a);
 					if (reg_a & 128) {
+
 						dandanator_cpc_config_2=reg_a;
+
+						//Escribir en los dos bits bajos es lo mismo que escribir en bit 5 de los dos slots
+						//b1-b0: Status of EEPROM_CE for zone 1 and zone 0. “0”: Enabled, “1” Disabled.
+						z80_byte slot_enabled_zone0=reg_a&1;
+						z80_byte slot_enabled_zone1=(reg_a&2)>>1;
+
+						dandanator_cpc_zone_slots[0] &=31;
+						dandanator_cpc_zone_slots[0] |= (32*slot_enabled_zone0);
+
+						dandanator_cpc_zone_slots[1] &=31;
+						dandanator_cpc_zone_slots[1] |= (32*slot_enabled_zone1);
+
+
 					}
 					else {
 						dandanator_cpc_config_1=reg_a;
@@ -688,7 +704,6 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 			}
 
 		}
-    }
 
 
 	//Llamar a anterior
@@ -849,11 +864,24 @@ void dandanator_press_button(void)
 	//dandanator_status_blocked.v=0;
 
 
+/*
+Dandanator CPC:
+Normal boot:
+• Zone 0 enabled on slot0 and segment 0x0000.
+• Zone 1 disabled on slot0 and segment 0x4000.
+• USB RX off.
+• USB TX on idle state : ‘1’.
+• Eeprom writes off.
+• FollowRomEnable off.
+*/
+
 	dandanator_cpc_config_1=0;
 	dandanator_cpc_config_2=0;
+
+
 	dandanator_cpc_received_preffix.v=0;
 	dandanator_cpc_zone_slots[0]=0;
-	dandanator_cpc_zone_slots[1]=0;
+	dandanator_cpc_zone_slots[1]=32;
 
 	reset_cpu();
 
