@@ -482,7 +482,7 @@ int dandanator_cpc_is_mapped(z80_int dir)
 	z80_byte zone=dandanator_cpc_zone(dir);
 
 	//Ver si esa zona esta mapeado dandanator
-	if (dandanator_cpc_zone_slots[zone] & 32) {
+	if ((dandanator_cpc_zone_slots[zone] & 32)==0) {
 		//Bit 5: Eeprom Chip Enable for zone. ‘0’ is enabled, ‘1’ is disabled.
 		return zone;
 	}
@@ -501,7 +501,11 @@ void dandanator_write_byte_cpc(z80_int dir,z80_byte valor)
 z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)
 {
 
+	//printf ("Reading dir %04XH zone %d\n",dir,zone);
+
 	z80_byte slot=dandanator_cpc_zone_slots[zone] & 31;
+
+	//printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
 
 	int puntero=slot*16384+dir;
 	return dandanator_memory_pointer[puntero];
@@ -540,7 +544,7 @@ z80_byte dandanator_peek_byte_cpc(z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor_leido=debug_nested_peek_byte_call_previous(dandanator_nested_id_peek_byte,dir);
 
-	z80_byte zone=dandanator_cpc_is_mapped(dir);
+	int zone=dandanator_cpc_is_mapped(dir);
 
 	if (zone!=-1) {
        		//t_estados +=3;
@@ -555,7 +559,7 @@ z80_byte dandanator_peek_byte_cpc_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(dandanator_nested_id_peek_byte_no_time,dir);
 
-	z80_byte zone=dandanator_cpc_is_mapped(dir);
+	int zone=dandanator_cpc_is_mapped(dir);
 
 	if (zone!=-1) {
        		//t_estados +=3;
@@ -649,7 +653,10 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 
 
 		if (preffix==0xFD) {
-			if (opcode==0xFD) dandanator_cpc_received_preffix.v=1;
+			if (opcode==0xFD) {
+				printf ("Recibido FDFD\n");
+				dandanator_cpc_received_preffix.v=1;
+			}
 			else {
 				switch (opcode) {
 				case 112:
@@ -675,6 +682,8 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 						dandanator_cpc_config_1=reg_a;
 					}
 				}
+
+				dandanator_cpc_received_preffix.v=0;
 
 			}
 
