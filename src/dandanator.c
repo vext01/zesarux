@@ -502,9 +502,6 @@ int dandanator_cpc_is_mapped(z80_int dir)
 		if ( (dir&0x8000) == value_a15) return zone;
 
 
-
-		
-		//return zone;
 	}
 
 	return -1;
@@ -525,9 +522,9 @@ z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)
 
 	z80_byte slot=dandanator_cpc_zone_slots[zone] & 31;
 
-	if (slot!=0) printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
+	//if (slot!=0) printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
 
-	int puntero=slot*16384+dir;
+	int puntero=slot*16384+(dir & 16383);
 	return dandanator_memory_pointer[puntero];
 }
 
@@ -661,6 +658,7 @@ z80_byte cpu_core_loop_spectrum_dandanator(z80_int dir GCC_UNUSED, z80_byte valu
 //Cambio de parametros cuando hay delayed RET pero estos settings no son delayed
 void dandanator_cpc_execute_ret_nondelayed_config(z80_byte value)
 {
+	printf ("Changing non delayed config parameters on delayed execution\n");
                                         if (reg_a & 128) {
 
 						//O sea, solo cambiar bits 7 y 6, resto eliminar
@@ -690,6 +688,8 @@ O sea, conservar bits 7 y 6, resto eliminar
 
 */
 
+	printf ("Changing delayed config parameters on delayed execution\n");
+
                                         if (reg_a & 128) {
 
 						dandanator_cpc_config_2 &=(128+64);
@@ -714,7 +714,7 @@ O sea, conservar bits 7 y 6, resto eliminar
 void dandanator_cpc_execute_ret_config(z80_byte value)
 {
 
-	printf ("Executing config change\n");
+	//printf ("Executing immediate config change\n");
 
 
 
@@ -747,6 +747,8 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 
 	z80_byte preffix=peek_byte_no_time(reg_pc);
 	z80_byte opcode=peek_byte_no_time(reg_pc+1);
+	z80_byte opcode2=peek_byte_no_time(reg_pc+2);
+	z80_int reg_pc_previous=reg_pc;
 
 	//Llamar a anterior core
 	debug_nested_core_call_previous(dandanator_nested_id_core);
@@ -774,30 +776,32 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 
 
 		if (preffix==0xFD) {
-			if (opcode==0xFD) {
-				printf ("Recibido FDFD\n");
-				dandanator_cpc_received_preffix.v=1;
+			if (opcode==0xFD) { // && opcode2==0xFD) {
+				if (opcode2==0xFD) {
+ 					printf ("Recibido FDFDFD on PC=%04XH\n",reg_pc_previous);
+					dandanator_cpc_received_preffix.v=1;
+				}
 			}
 			else {
 				if (dandanator_cpc_received_preffix.v) {
 					switch (opcode) {
 					case 112:
-						//LD (IX+d),B
+						//LD (IY+d),B
 						//Zone 0 Command: Trigger + LD (IY+0),B
 						dandanator_cpc_zone_slots[0]=reg_b;
-						printf ("Setting zone 0 slot %d\n",dandanator_cpc_zone_slots[0]);
+						printf ("Setting zone 0 slot %d PC=%04XH\n",dandanator_cpc_zone_slots[0],reg_pc_previous);
 					break;
 
 					case 113:
-						//LD (IX+d),C
+						//LD (IY+d),C
 						//Zone 1 Command: Trigger + LD (IY+0),C		
 						dandanator_cpc_zone_slots[1]=reg_c;
-						printf ("Setting zone 1 slot %d\n",dandanator_cpc_zone_slots[1]);
+						printf ("Setting zone 1 slot %d PC=%04XH\n",dandanator_cpc_zone_slots[1],reg_pc_previous);
 					break;
 
 					case 119:
-						//LD (IX+d),A
-						printf ("Setting config value reg_a = %02XH\n",reg_a);
+						//LD (IY+d),A
+						printf ("Setting config value reg_a = %02XH PC=%04XH\n",reg_a,reg_pc_previous);
 
 						//Esto se ve afectado por el setting "wait for ret"
 						if (dandanator_cpc_config_2 & 64) {

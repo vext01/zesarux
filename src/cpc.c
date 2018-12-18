@@ -336,7 +336,7 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 		break;
 
 		case 3:
-			//printf ("Memory management only on cpc 6128\n");
+			//printf ("Memory management only on cpc 6128. Setting value %02XH\n",value);
 		break;
 	}
 }
