@@ -526,6 +526,7 @@ z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)
 
 	int puntero=slot*16384+(dir & 16383);
 	return dandanator_memory_pointer[puntero];
+
 }
 
 
@@ -659,7 +660,7 @@ z80_byte cpu_core_loop_spectrum_dandanator(z80_int dir GCC_UNUSED, z80_byte valu
 void dandanator_cpc_execute_ret_nondelayed_config(z80_byte value)
 {
 	printf ("Changing non delayed config parameters on delayed execution\n");
-                                        if (reg_a & 128) {
+                                        if (value & 128) {
 
 						//O sea, solo cambiar bits 7 y 6, resto eliminar
 
@@ -690,7 +691,7 @@ O sea, conservar bits 7 y 6, resto eliminar
 
 	printf ("Changing delayed config parameters on delayed execution\n");
 
-                                        if (reg_a & 128) {
+                                        if (value & 128) {
 
 						dandanator_cpc_config_2 &=(128+64);
                                                 dandanator_cpc_config_2 |= (value&63);
@@ -718,7 +719,8 @@ void dandanator_cpc_execute_ret_config(z80_byte value)
 
 
 
-                                        if (reg_a & 128) {
+                                        if (value & 128) {
+												printf ("Setting config 2 to %02XH\n",value);
 
                                                 dandanator_cpc_config_2=value;
 
@@ -736,6 +738,8 @@ void dandanator_cpc_execute_ret_config(z80_byte value)
 
                                         }
                                         else {
+											printf ("Setting config 1 to %02XH\n",value);
+
                                                 dandanator_cpc_config_1=value;
                                         }
 
