@@ -525,7 +525,7 @@ z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)
 
 	z80_byte slot=dandanator_cpc_zone_slots[zone] & 31;
 
-	//printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
+	if (slot!=0) printf ("Reading dir %04XH zone %d slot %d\n",dir,zone,slot);
 
 	int puntero=slot*16384+dir;
 	return dandanator_memory_pointer[puntero];
@@ -744,7 +744,11 @@ void dandanator_cpc_execute_ret_config(z80_byte value)
 
 z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
-	//Llamar a anterior
+
+	z80_byte preffix=peek_byte_no_time(reg_pc);
+	z80_byte opcode=peek_byte_no_time(reg_pc+1);
+
+	//Llamar a anterior core
 	debug_nested_core_call_previous(dandanator_nested_id_core);
 
 
@@ -758,8 +762,7 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 		- Zone 0 Command: Trigger + LD (IY+0),B
 		- Zone 1 Command: Trigger + LD (IY+0),C		
 		*/
-		z80_byte preffix=peek_byte_no_time(reg_pc);
-		z80_byte opcode=peek_byte_no_time(reg_pc+1);
+
 
 		//printf ("%04X %02X %02X\n",reg_pc,preffix,opcode);
 
@@ -776,53 +779,55 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 				dandanator_cpc_received_preffix.v=1;
 			}
 			else {
-				switch (opcode) {
-				case 112:
-					//LD (IX+d),B
-					//Zone 0 Command: Trigger + LD (IY+0),B
-					dandanator_cpc_zone_slots[0]=reg_b;
-					printf ("Setting zone 0 slot %d\n",dandanator_cpc_zone_slots[0]);
-				break;
+				if (dandanator_cpc_received_preffix.v) {
+					switch (opcode) {
+					case 112:
+						//LD (IX+d),B
+						//Zone 0 Command: Trigger + LD (IY+0),B
+						dandanator_cpc_zone_slots[0]=reg_b;
+						printf ("Setting zone 0 slot %d\n",dandanator_cpc_zone_slots[0]);
+					break;
 
-				case 113:
-					//LD (IX+d),C
-					//Zone 1 Command: Trigger + LD (IY+0),C		
-					dandanator_cpc_zone_slots[1]=reg_c;
-					printf ("Setting zone 1 slot %d\n",dandanator_cpc_zone_slots[1]);
-				break;
+					case 113:
+						//LD (IX+d),C
+						//Zone 1 Command: Trigger + LD (IY+0),C		
+						dandanator_cpc_zone_slots[1]=reg_c;
+						printf ("Setting zone 1 slot %d\n",dandanator_cpc_zone_slots[1]);
+					break;
 
-				case 119:
-					//LD (IX+d),A
-					printf ("Setting config value reg_a = %02XH\n",reg_a);
+					case 119:
+						//LD (IX+d),A
+						printf ("Setting config value reg_a = %02XH\n",reg_a);
 
-					//Esto se ve afectado por el setting "wait for ret"
-					if (dandanator_cpc_config_2 & 64) {
+						//Esto se ve afectado por el setting "wait for ret"
+						if (dandanator_cpc_config_2 & 64) {
 
-						/*
-						Delayed configuration parameters are:
-						- Disable further commands until reset.
-						- Trigger FollowRomEnable, so Dandanator will only be enabled if a Rom is selected
-						in the CPC. Useful for low-high rom substitution (poor-man rombox).
-						- A15 values for Zone 0 and Zone 1 so you can change them between segments
-						- Enable status for Zone 0 and Zone 1 -> Zones may remain enabled or get disabled.
+							/*
+							Delayed configuration parameters are:
+							- Disable further commands until reset.
+							- Trigger FollowRomEnable, so Dandanator will only be enabled if a Rom is selected
+							in the CPC. Useful for low-high rom substitution (poor-man rombox).
+							- A15 values for Zone 0 and Zone 1 so you can change them between segments
+							- Enable status for Zone 0 and Zone 1 -> Zones may remain enabled or get disabled.
 
-						*/
+							*/
 
-						//wait for ret
-						dandanator_cpc_change_ret_config=reg_a;
-						dandanator_cpc_pending_wait_ret.v=1;
-						printf ("Delaying some config change until ret\n");
+							//wait for ret
+							dandanator_cpc_change_ret_config=reg_a;
+							dandanator_cpc_pending_wait_ret.v=1;
+							printf ("Delaying some config change until ret\n");
 
-						dandanator_cpc_execute_ret_nondelayed_config(reg_a);
+							dandanator_cpc_execute_ret_nondelayed_config(reg_a);
 						
+						}
+
+						else {
+							printf ("Running config change inmmediately\n");
+							dandanator_cpc_execute_ret_config(reg_a);
+						}
+
+
 					}
-
-					else {
-						printf ("Running config change inmmediately\n");
-						dandanator_cpc_execute_ret_config(reg_a);
-					}
-
-
 				}
 
 				dandanator_cpc_received_preffix.v=0;
