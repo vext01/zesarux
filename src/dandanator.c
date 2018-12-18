@@ -807,8 +807,8 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 						//LD (IY+d),A
 						printf ("Setting config value reg_a = %02XH PC=%04XH\n",reg_a,reg_pc_previous);
 
-						//Esto se ve afectado por el setting "wait for ret"
-						if (dandanator_cpc_config_2 & 64) {
+						//Esto se ve afectado por el setting "wait for ret", que se lee del valor enviado actual
+						if (reg_a & 64) {
 
 							/*
 							Delayed configuration parameters are:
