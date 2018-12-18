@@ -717,7 +717,7 @@ extern void menu_copy_clipboard(char *texto);
 "A condition breakpoint has the following format: \n" \
 "[EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR]  [EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR] ... where: \n" \
 "[EXPRESSION] can be a COMPLEXVARIABLE or a VALUE  \n" \
-"[COMPLEXVARIABLE] is formed by [VARIABLE][VOP][CONDITION][VALUE] \n" \
+"[COMPLEXVARIABLE] is formed by [VARIABLE][VOP] \n" \
 "[VARIABLE] can be a CPU register or some pseudo variables: A,B,C,D,E,F,H,L,AF,BC,DE,HL,A',B',C',D',E',F',H',L',AF',BC',DE',HL',I,R,SP,PC,IX,IY\n" \
 "FS,FZ,FP,FV,FH,FN,FC: Flags\n" \
 "(BC),(DE),(HL),(SP),(PC),(IX),(IY), (NN), IFF1, IFF2, OPCODE,\n" \

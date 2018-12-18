@@ -97,6 +97,13 @@ Other bits: ignored.
 z80_byte dandanator_cpc_zone_slots[2];
 
 
+
+z80_bit dandanator_cpc_pending_wait_ret;
+
+
+z80_byte dandanator_cpc_change_ret_config;
+
+
 /*
 El Dandanator tiene tres formas de comportarse ante peticiones del Spectrum (las escrituras a rom):
   	A) Deshabilitado : Pasa de ellas.
@@ -490,7 +497,7 @@ int dandanator_cpc_is_mapped(z80_int dir)
 		if (zone==0) {
 			value_a15=((dandanator_cpc_config_2 & 4) >>2)*0x8000;
 		}
-		else value_a15=(dandanator_cpc_config_2 & 8) >>3*0x8000;
+		else value_a15=((dandanator_cpc_config_2 & 8) >>3)*0x8000;
 
 		if ( (dir&0x8000) == value_a15) return zone;
 
@@ -651,9 +658,100 @@ z80_byte cpu_core_loop_spectrum_dandanator(z80_int dir GCC_UNUSED, z80_byte valu
 
 }
 
+//Cambio de parametros cuando hay delayed RET pero estos settings no son delayed
+void dandanator_cpc_execute_ret_nondelayed_config(z80_byte value)
+{
+                                        if (reg_a & 128) {
+
+						//O sea, solo cambiar bits 7 y 6, resto eliminar
+
+						dandanator_cpc_config_2 &=63;
+                                                dandanator_cpc_config_2 |=(value&(128+64));
+
+
+                                        }
+                                        else {
+                                                dandanator_cpc_config_1=value;
+                                        }
+}
+
+//Cambio de parametros que se ven retrasados hasta un RET
+void dandanator_cpc_execute_ret_delayed_config(z80_byte value)
+{
+/*
+Delayed configuration parameters are:
+- Disable further commands until reset ->  dandanator_cpc_config_2 bit 5  
+- Trigger FollowRomEnable, so Dandanator will only be enabled if a Rom is selected
+in the CPC. Useful for low-high rom substitution (poor-man rombox).  -> dandanator_cpc_config_2 bit 4
+- A15 values for Zone 0 and Zone 1 so you can change them between segments  -> dandanator_cpc_config_2 bit 3-2
+- Enable status for Zone 0 and Zone 1 -> Zones may remain enabled or get disabled. -> dandanator_cpc_config_2 bits 1-0
+
+O sea, conservar bits 7 y 6, resto eliminar
+
+*/
+
+                                        if (reg_a & 128) {
+
+						dandanator_cpc_config_2 &=(128+64);
+                                                dandanator_cpc_config_2 |= (value&63);
+
+                                                //Escribir en los dos bits bajos es lo mismo que escribir en bit 5 de los dos slots
+                                                //b1-b0: Status of EEPROM_CE for zone 1 and zone 0. “0”: Enabled, “1” Disabled.
+                                                z80_byte slot_enabled_zone0=value&1;
+                                                z80_byte slot_enabled_zone1=(value&2)>>1;
+
+                                                dandanator_cpc_zone_slots[0] &=31;
+                                                dandanator_cpc_zone_slots[0] |= (32*slot_enabled_zone0);
+
+                                                dandanator_cpc_zone_slots[1] &=31;
+                                                dandanator_cpc_zone_slots[1] |= (32*slot_enabled_zone1);
+
+
+                                        }
+
+}
+
+void dandanator_cpc_execute_ret_config(z80_byte value)
+{
+
+	printf ("Executing config change\n");
+
+
+
+                                        if (reg_a & 128) {
+
+                                                dandanator_cpc_config_2=value;
+
+                                                //Escribir en los dos bits bajos es lo mismo que escribir en bit 5 de los dos slots
+                                                //b1-b0: Status of EEPROM_CE for zone 1 and zone 0. “0”: Enabled, “1” Disabled.
+                                                z80_byte slot_enabled_zone0=value&1;
+                                                z80_byte slot_enabled_zone1=(value&2)>>1;
+
+                                                dandanator_cpc_zone_slots[0] &=31;
+                                                dandanator_cpc_zone_slots[0] |= (32*slot_enabled_zone0);
+
+                                                dandanator_cpc_zone_slots[1] &=31;
+                                                dandanator_cpc_zone_slots[1] |= (32*slot_enabled_zone1);
+
+
+                                        }
+                                        else {
+                                                dandanator_cpc_config_1=value;
+                                        }
+
+}
+
 
 z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
+	//Llamar a anterior
+	debug_nested_core_call_previous(dandanator_nested_id_core);
+
+
+	//Ver bit config Disable Further Dandanator commands until reset
+	//bit 5: Disable Further Dandanator commands until reset
+	if ((dandanator_cpc_config_2 & 32)==0) {
+
 
 		//Gestion opcodes
 		/*
@@ -664,6 +762,12 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 		z80_byte opcode=peek_byte_no_time(reg_pc+1);
 
 		//printf ("%04X %02X %02X\n",reg_pc,preffix,opcode);
+
+
+		if (preffix==201 && dandanator_cpc_pending_wait_ret.v) { 
+			dandanator_cpc_execute_ret_delayed_config(dandanator_cpc_change_ret_config);
+			dandanator_cpc_pending_wait_ret.v=0;
+		}
 
 
 		if (preffix==0xFD) {
@@ -690,26 +794,35 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 				case 119:
 					//LD (IX+d),A
 					printf ("Setting config value reg_a = %02XH\n",reg_a);
-					if (reg_a & 128) {
 
-						dandanator_cpc_config_2=reg_a;
+					//Esto se ve afectado por el setting "wait for ret"
+					if (dandanator_cpc_config_2 & 64) {
 
-						//Escribir en los dos bits bajos es lo mismo que escribir en bit 5 de los dos slots
-						//b1-b0: Status of EEPROM_CE for zone 1 and zone 0. “0”: Enabled, “1” Disabled.
-						z80_byte slot_enabled_zone0=reg_a&1;
-						z80_byte slot_enabled_zone1=(reg_a&2)>>1;
+						/*
+						Delayed configuration parameters are:
+						- Disable further commands until reset.
+						- Trigger FollowRomEnable, so Dandanator will only be enabled if a Rom is selected
+						in the CPC. Useful for low-high rom substitution (poor-man rombox).
+						- A15 values for Zone 0 and Zone 1 so you can change them between segments
+						- Enable status for Zone 0 and Zone 1 -> Zones may remain enabled or get disabled.
 
-						dandanator_cpc_zone_slots[0] &=31;
-						dandanator_cpc_zone_slots[0] |= (32*slot_enabled_zone0);
+						*/
 
-						dandanator_cpc_zone_slots[1] &=31;
-						dandanator_cpc_zone_slots[1] |= (32*slot_enabled_zone1);
+						//wait for ret
+						dandanator_cpc_change_ret_config=reg_a;
+						dandanator_cpc_pending_wait_ret.v=1;
+						printf ("Delaying some config change until ret\n");
 
-
+						dandanator_cpc_execute_ret_nondelayed_config(reg_a);
+						
 					}
+
 					else {
-						dandanator_cpc_config_1=reg_a;
+						printf ("Running config change inmmediately\n");
+						dandanator_cpc_execute_ret_config(reg_a);
 					}
+
+
 				}
 
 				dandanator_cpc_received_preffix.v=0;
@@ -719,9 +832,11 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 		}
 
 
-	//Llamar a anterior
-	debug_nested_core_call_previous(dandanator_nested_id_core);
+	}
 
+	else {
+		//printf ("Dandanator is disabled until reset\n");
+	}
 
 	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
 	return 0;
@@ -895,6 +1010,9 @@ Normal boot:
 	dandanator_cpc_received_preffix.v=0;
 	dandanator_cpc_zone_slots[0]=0;
 	dandanator_cpc_zone_slots[1]=32;
+
+
+	dandanator_cpc_pending_wait_ret.v=0;
 
 	reset_cpu();
 
