@@ -195,7 +195,7 @@ void cpc_set_memory_pages()
 	if (MACHINE_IS_CPC_4128) {
 		z80_byte ram_config=cpc_gate_registers[3] & 7;
 
-		printf ("Setting 128k ram config value %d\n",ram_config);
+		//printf ("Setting 128k ram config value %d\n",ram_config);
 
 
 /*
@@ -269,7 +269,7 @@ The Video RAM is always located in the first 64K, VRAM is in no way affected by 
 	}
 
 
-	printf ("paginas que entran: %d %d %d %d\n",pages_array[0],pages_array[1],pages_array[2],pages_array[3]);
+	//printf ("paginas que entran: %d %d %d %d\n",pages_array[0],pages_array[1],pages_array[2],pages_array[3]);
 
 	//Escritura siempre en RAM
 	int i;

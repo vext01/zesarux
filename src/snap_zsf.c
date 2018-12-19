@@ -274,6 +274,21 @@ Byte Fields:
 6 and next bytes: data bytes
 
 
+-Block ID 19: ZSF_CPC_CONF
+Ports and internal registers of CPC machine
+Byte fields:
+0-3: Gate registers
+4-19: Palette
+20-23: PPI ports
+24-55: CRTC registers
+56: Border color
+57: last crtc selected register
+
+
+
+
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -868,6 +883,36 @@ Byte fields:
   ulaplus_set_extended_mode(zxuno_ports[0x40]);
 }
 
+void load_zsf_cpc_conf(z80_byte *header)
+{
+/*
+-Block ID 19: ZSF_CPC_CONF
+Ports and internal registers of CPC machine
+Byte fields:
+
+0-3: Gate registers
+4-19: Palette
+20-23: PPI ports
+24-55: CRTC registers
+56: Border color
+57: last crtc selected register
+
+
+  */
+
+  int i;
+
+  for (i=0;i<4;i++)   cpc_gate_registers[i]=header[i];
+  for (i=0;i<16;i++)  cpc_palette_table[i]=header[4+i];
+  for (i=0;i<4;i++)   cpc_ppi_ports[i]=header[20+i];
+  for (i=0;i<32;i++)  cpc_crtc_registers[i]=header[24+i];
+                      cpc_border_color=header[56];
+                      cpc_crtc_last_selected_register=header[57];                      
+
+  cpc_set_memory_pages();
+}
+
+
 void load_zsf_tsconf_conf(z80_byte *header)
 {
 /*
@@ -1056,7 +1101,11 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_CPC_RAMBLOCK:
         load_zsf_cpc_snapshot_block_data(block_data,block_lenght);
-      break;         
+      break;   
+
+      case ZSF_CPC_CONF:
+        load_zsf_cpc_conf(block_data);
+      break;      
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1183,12 +1232,17 @@ void save_zsf_snapshot(char *filename)
 
 
 
- //Ula block
-  z80_byte ulablock[1];
+ //Ula block. En caso de Spectrum
+  if (MACHINE_IS_SPECTRUM) {
+    z80_byte ulablock[1];
 
-  ulablock[0]=out_254 & 7;
+    ulablock[0]=out_254 & 7;
 
-  zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
+    zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
+
+  }
+
+
 
   //ULAPlus block. Mejor que este esto hacia el principio, asi si por ejemplo se carga zxuno y esta un modo ulaplus extendido,
   //como radastan, no hay problema en que el modo ulaplus estandard esté desactivado
@@ -1500,6 +1554,35 @@ Byte Fields:
 
 if (MACHINE_IS_CPC) {
   //Configuracion
+
+  z80_byte cpcconfblock[58];
+
+/*
+-Block ID 19: ZSF_CPC_CONF
+Ports and internal registers of CPC machine
+Byte fields:
+
+0-3: Gate registers
+4-19: Palette
+20-23: PPI ports
+24-55: CRTC registers
+56: Border color
+57: last crtc selected register
+
+*/    
+
+
+  int i;
+  for (i=0;i<4;i++)   cpcconfblock[i]=cpc_gate_registers[i];
+  for (i=0;i<16;i++)  cpcconfblock[4+i]=cpc_palette_table[i];
+  for (i=0;i<4;i++)   cpcconfblock[20+i]=cpc_ppi_ports[i];
+  for (i=0;i<32;i++)  cpcconfblock[24+i]=cpc_crtc_registers[i];
+                      cpcconfblock[56]=cpc_border_color;
+                      cpcconfblock[57]=cpc_crtc_last_selected_register;
+
+
+  zsf_write_block(ptr_zsf_file, cpcconfblock,ZSF_CPC_CONF, 58);
+
 
 
   //Paginas de memoria
