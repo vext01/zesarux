@@ -22,6 +22,8 @@
 
 ----fin zxvision----
 
+-emulacion de los 128kb del cpc? sin mas, solo eso. algo asi como un inexistente CPC4128
+
 -Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
 
 -soporte mas botones joystick/mas joystick de tbblue
@@ -1830,9 +1832,48 @@ no gestiona bien nombres con espacios
 *** Debug ***
 
 
+-Idea para mejorar el parser de breakpoints:
+//Operadores AND, OR, XOR que ya esten calculados antes su indice (BREAKPOINT_CONDITION_OP_OR, BREAKPOINT_CONDITION_OP_AND, BREAKPOINT_CONDITION_OP_XOR) y no tener que hacer strcmp cada vez
+//Registros DE, PC etc no tener que hacer strcmp cada vez, interpretarlos antes
+
+
+Habria que hacer un parseo previo, evitando strcmp que convierta esto:
+
+"[EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR]  [EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR] ... where: \n" \
+"[EXPRESSION] can be a COMPLEXVARIABLE or a VALUE  \n" \
+"[COMPLEXVARIABLE] is formed by [VARIABLE][VOP] \n" \
+"[VARIABLE] can be a CPU register or some pseudo variables: A,B,C,D,E,F,H,L,AF,BC,DE,HL,A',B',C',D',E',F',H',L',AF',BC',DE',HL',I,R,SP,PC,IX,IY\n" \
+"FS,FZ,FP,FV,FH,FN,FC: Flags\n" \
+"(BC),(DE),(HL),(SP),(PC),(IX),(IY), (NN), IFF1, IFF2, OPCODE,\n" \
+..
+"[VOP] is optional is made of a Variable Operator and Variable Value, joined together with no space. Variable Operator can be:\n" \
+"& : bitwise AND\n" \
+"| : bitwise OR\n" \
+"^ : bitwise XOR\n" \
+"Variable Value is any value you want to apply with the operator\n" \
+"Examples of [VOP]: \n" \
+"|3 : Makes a bitwise OR with 3 to the Variable value\n" \
+"&FH : Makes a bitwise AND with FH to the Variable value\n" \
+"\n" \
+"[CONDITION] must be one of: <,>,=,/  (/ means not equal)\n" \
+"[VALUE] must be a numeric value\n" \
+"[OPERATOR] must be one of the following: and, or, xor\n" \
+
+
+En indices a cada expresion:
+-Si expression es value, que tenga el valor int ya calculado
+-Si expression es complex variable: que tenga el id de variable, el id de vop,y el valor int ya calculado
+-Condition tiene que estar tambien indexado
+-Operator también indexado
+
+Haciendo estos cambios y eliminando funciones de strcmp , debería ser mas rápido
+
+
+
+
+
 Menu debugger:
-1) imposibilidad de abrir el debugger y usar el teclado para spectrum
-2) Doble ptr, uno para codigo y otro para memoria
+-Doble ptr, uno para codigo y otro para memoria
 
 -posicion electron no va bien en: zx81, tsconf. Revisar otras maquinas. En 48k funciona bien
 

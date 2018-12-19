@@ -1139,6 +1139,7 @@ char *string_machines_list_description=
 					    " ACE      Jupiter Ace\n"
 
 							" CPC464   Amstrad CPC 464\n"
+							" CPC4128  Amstrad CPC 4128\n"
 							;
 
 
@@ -2229,7 +2230,8 @@ struct s_machine_names machine_names[]={
                                             {"ZX-81",  				121},
 					    {"Jupiter Ace",  			122},
 					    {"Z88",  				130},
-				            {"CPC 464",  			140},
+				            {"CPC 464",  			MACHINE_ID_CPC_464},
+							{"CPC 4128",  			MACHINE_ID_CPC_4128},
 					    {"Sam Coupe", 			150},
 					    {"QL",				160},
 							{"MK14", MACHINE_ID_MK14_STANDARD},
@@ -2240,20 +2242,7 @@ struct s_machine_names machine_names[]={
 };
 
 
-/*char *get_machine_name(z80_byte m)
-{
-	if (m>=2 && m<=29) {
-		if (m==20) m=2;
-		else m++;
-	}
-	else if (m==120) m=21; //ZX80
-	else if (m==121) m=22; //ZX81
-	else if (m==122) m=23; //Jupiter ace
-	else if (m==130) m=24;  //Z88
-	else if (m==140) m=25; //CPC
-	else if (m==150) m=26; //SAM
-	return machine_names[m];
-}*/
+
 
 char *get_machine_name(z80_byte machine)
 {
@@ -2562,13 +2551,13 @@ void malloc_mem_machine(void) {
 
         }
 
-	else if (MACHINE_IS_CPC_464) {
+	else if (MACHINE_IS_CPC_464 || MACHINE_IS_CPC_4128) {
 
 		//32 kb rom
-		//64 kb ram
+		//128 kb ram. Asignamos 128kb ram aunque maquina sea de 64 kb de ram->Facilita las funciones
 
-                malloc_machine(96*1024);
-                random_ram(memoria_spectrum,96*1024);
+                malloc_machine(160*1024);
+                random_ram(memoria_spectrum,160*1024);
 
                 cpc_init_memory_tables();
                 cpc_set_memory_pages();
@@ -2648,7 +2637,8 @@ void set_machine_params(void)
 121=zx81 (old 21)
 122=jupiter ace (old 22)
 130=z88 (old 30)
-140=amstrad cpc464 (old 40)
+140=amstrad cpc464 
+141=amstrad cpc4128 
 150=Sam Coupe (old 50)
 151-59 reservado para otros sam (old 51-59)
 160=QL Standard
@@ -3060,7 +3050,7 @@ You don't need timings for H/V sync =)
                 }
 
 
-		else if (MACHINE_IS_CPC_464) {
+		else if (MACHINE_IS_CPC_464 || MACHINE_IS_CPC_4128) {
                         contend_read=contend_read_cpc;
                         contend_read_no_mreq=contend_read_no_mreq_cpc;
                         contend_write_no_mreq=contend_write_no_mreq_cpc;
@@ -3461,7 +3451,7 @@ You don't need timings for H/V sync =)
 
 
 		//CPC464
-                case 140:
+                case MACHINE_ID_CPC_464:
                 poke_byte=poke_byte_cpc;
                 peek_byte=peek_byte_cpc;
                 peek_byte_no_time=peek_byte_no_time_cpc;
@@ -3477,6 +3467,23 @@ You don't need timings for H/V sync =)
 		//screen_testados_linea=228;
                 break;
 
+
+		//CPC4128
+                case MACHINE_ID_CPC_4128:
+                poke_byte=poke_byte_cpc;
+                peek_byte=peek_byte_cpc;
+                peek_byte_no_time=peek_byte_no_time_cpc;
+                poke_byte_no_time=poke_byte_no_time_cpc;
+                lee_puerto=lee_puerto_cpc;
+		out_port=out_port_cpc;
+                ay_chip_present.v=1;
+                fetch_opcode=fetch_opcode_cpc;
+		//4Mhz
+		screen_testados_linea=256;
+
+		//temp
+		//screen_testados_linea=228;
+                break;
 
 		case 150:
                 poke_byte=poke_byte_sam;
@@ -3926,9 +3933,13 @@ void rom_load(char *romfilename)
 		break;
 
 
-		case 140:
+		case MACHINE_ID_CPC_464:
 		romfilename="cpc464.rom";
 		break;
+
+		case MACHINE_ID_CPC_4128:
+		romfilename="cpc464.rom";
+		break;		
 
 		case 150:
 		if (atomlite_enabled.v) romfilename="atomlite.rom";
@@ -4169,7 +4180,7 @@ Total 20 pages=320 Kb
 		}
 
 
-	      else if (MACHINE_IS_CPC_464) {
+	      else if (MACHINE_IS_CPC_464 || MACHINE_IS_CPC_4128) {
                         //32k rom
 
                                 leidos=fread(cpc_rom_mem_table[0],1,32768,ptr_romfile);

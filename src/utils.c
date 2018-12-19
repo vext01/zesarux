@@ -458,7 +458,7 @@ int array_maquinas_microdigital_electronica[]={
 };
 
 int array_maquinas_amstrad[]={
-	8,9,10,11,12,13,MACHINE_ID_SPECTRUM_P3_40,MACHINE_ID_SPECTRUM_P3_41,MACHINE_ID_SPECTRUM_P3_SPA,140,255
+	8,9,10,11,12,13,MACHINE_ID_SPECTRUM_P3_40,MACHINE_ID_SPECTRUM_P3_41,MACHINE_ID_SPECTRUM_P3_SPA,MACHINE_ID_CPC_464,MACHINE_ID_CPC_4128,255
 };
 
 int array_maquinas_jupiter_cantab[]={
@@ -629,7 +629,8 @@ int return_fabricante_maquina(int maquina)
 		case MACHINE_ID_SPECTRUM_P3_40:
 		case MACHINE_ID_SPECTRUM_P3_41:
 		case MACHINE_ID_SPECTRUM_P3_SPA:
-		case 140:
+		case MACHINE_ID_CPC_464:
+                case MACHINE_ID_CPC_4128:
 			return FABRICANTE_AMSTRAD;
 		break;
 
@@ -2877,6 +2878,9 @@ int get_rom_size(int machine)
 
 	//CPC 464
 	else if (machine==MACHINE_ID_CPC_464) return 32768;
+
+	//CPC 4128
+	else if (machine==MACHINE_ID_CPC_4128) return 32768;        
 
 	//SAM
 	else if (machine==150) return 32768;
@@ -8162,7 +8166,8 @@ int get_machine_id_by_name(char *machine_name)
                                 else if (!strcasecmp(machine_name,"ZX81")) return_machine=121;
                                 else if (!strcasecmp(machine_name,"ACE")) return_machine=122;
                                 else if (!strcasecmp(machine_name,"Z88")) return_machine=130;
-                                else if (!strcasecmp(machine_name,"CPC464")) return_machine=140;
+                                else if (!strcasecmp(machine_name,"CPC464")) return_machine=MACHINE_ID_CPC_464;
+                                else if (!strcasecmp(machine_name,"CPC4128")) return_machine=MACHINE_ID_CPC_4128;
                                 else if (!strcasecmp(machine_name,"SAM")) return_machine=150;
                                 else if (!strcasecmp(machine_name,"QL")) return_machine=160;
                                 else if (!strcasecmp(machine_name,"MK14")) return_machine=MACHINE_ID_MK14_STANDARD;
@@ -8323,8 +8328,12 @@ case 130:
 strcpy(machine_name,"Z88");
 break;
 
-case 140:
+case MACHINE_ID_CPC_464:
 strcpy(machine_name,"CPC464");
+break;
+
+case MACHINE_ID_CPC_4128:
+strcpy(machine_name,"CPC4128");
 break;
 
 case 150:
@@ -9477,6 +9486,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         size=65536;
       }
 
+      if (MACHINE_IS_CPC_4128) {
+        size=131072;
+      }      
+
       if (MACHINE_IS_INVES) {
 	size=65536;
       }
@@ -9533,6 +9546,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       if (MACHINE_IS_CPC_464) {
         size=32768;
       }
+
+      if (MACHINE_IS_CPC_4128) {
+        size=32768;
+      }      
 
       if (MACHINE_IS_SAM) {
 	size=32768;
@@ -9753,6 +9770,11 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         z80_byte *start=cpc_ram_mem_table[0];
         p=&start[address];
       }
+
+      if (MACHINE_IS_CPC_4128) {
+        z80_byte *start=cpc_ram_mem_table[0];
+        p=&start[address];
+      }      
 
       if (MACHINE_IS_INVES) {
 	p=&memoria_spectrum[address];

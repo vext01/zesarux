@@ -345,6 +345,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_ID_Z88				130
 
 #define MACHINE_ID_CPC_464			140
+#define MACHINE_ID_CPC_4128			141
 #define MACHINE_ID_SAM				150
 #define MACHINE_ID_QL_STANDARD			160
 #define MACHINE_ID_MK14_STANDARD		180
@@ -395,6 +396,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_IS_Z88 (current_machine_type==MACHINE_ID_Z88)
 
 #define MACHINE_IS_CPC_464 (current_machine_type==MACHINE_ID_CPC_464)
+#define MACHINE_IS_CPC_4128 (current_machine_type==MACHINE_ID_CPC_4128)
 #define MACHINE_IS_CPC (current_machine_type>=MACHINE_ID_CPC_464 && current_machine_type<=149)
 #define MACHINE_IS_SAM (current_machine_type==MACHINE_ID_SAM)
 

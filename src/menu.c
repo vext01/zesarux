@@ -16519,8 +16519,8 @@ void menu_dandanator(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_dandanator,"ROM Emulation file");
 
 
-                        			menu_add_item_menu_format(array_menu_dandanator,MENU_OPCION_NORMAL,menu_storage_dandanator_emulation,menu_storage_dandanator_emulation_cond,"~~ZX Dandanator Enabled: %s", (dandanator_enabled.v ? "Yes" : "No"));
-                        menu_add_item_menu_shortcut(array_menu_dandanator,'d');
+                        menu_add_item_menu_format(array_menu_dandanator,MENU_OPCION_NORMAL,menu_storage_dandanator_emulation,menu_storage_dandanator_emulation_cond,"Dandanator ~~Enabled: %s", (dandanator_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_dandanator,'e');
                         menu_add_item_menu_tooltip(array_menu_dandanator,"Enable dandanator");
                         menu_add_item_menu_ayuda(array_menu_dandanator,"Enable dandanator");
 
@@ -16535,7 +16535,11 @@ void menu_dandanator(MENU_ITEM_PARAMETERS)
 
                 menu_add_ESC_item(array_menu_dandanator);
 
-                retorno_menu=menu_dibuja_menu(&dandanator_opcion_seleccionada,&item_seleccionado,array_menu_dandanator,"ZX Dandanator" );
+				char titulo_menu[32];
+				if (MACHINE_IS_SPECTRUM) strcpy(titulo_menu,"ZX Dandanator");
+				else strcpy(titulo_menu,"CPC Dandanator");
+
+                retorno_menu=menu_dibuja_menu(&dandanator_opcion_seleccionada,&item_seleccionado,array_menu_dandanator,titulo_menu);
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -18143,10 +18147,11 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
      		if ( (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) && !MACHINE_IS_ZXUNO) {
 
-                        menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_dandanator,NULL,"ZX D~~andanator");
+	                    menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_dandanator,NULL,
+							"%s D~~andanator",(MACHINE_IS_SPECTRUM ? "ZX" : "CPC")  );
                         menu_add_item_menu_shortcut(array_menu_storage_settings,'a');
-                        menu_add_item_menu_tooltip(array_menu_storage_settings,"ZX Dandanator settings");
-                        menu_add_item_menu_ayuda(array_menu_storage_settings,"ZX Dandanator settings");
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Dandanator settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Dandanator settings");
 
                 }
 
@@ -27738,6 +27743,13 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu(array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
+			//maquinas cpc
+			if (MACHINE_IS_CPC) {
+				hotswap_machine_opcion_seleccionada=current_machine_type-MACHINE_ID_CPC_464;
+	                        menu_add_item_menu_inicial(&array_menu_machine_selection,"Amstrad CPC 464",MENU_OPCION_NORMAL,NULL,NULL);
+        	                menu_add_item_menu(array_menu_machine_selection,"Amstrad CPC 4128",MENU_OPCION_NORMAL,NULL,NULL);
+			}			
+
                         //maquinas zxuno
                         if (MACHINE_IS_ZXUNO) {
                                 hotswap_machine_opcion_seleccionada=current_machine_type-14;
@@ -27904,6 +27916,16 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
                                         salir_todos_menus=1;
 					return; //Para evitar saltar a otro if
                                 }
+
+				if (MACHINE_IS_CPC) {
+					current_machine_type=MACHINE_ID_CPC_464+hotswap_machine_opcion_seleccionada;
+					set_machine_params();
+                	post_set_machine(NULL);
+                    //Y salimos de todos los menus
+                    salir_todos_menus=1;
+					return; //Para evitar saltar a otro if
+
+				}
 
 				if (MACHINE_IS_ZX8081) {
 					current_machine_type=hotswap_machine_opcion_seleccionada+120;
@@ -28250,6 +28272,7 @@ int menu_hotswap_machine_cond(void) {
 	if (MACHINE_IS_TBBLUE)  return 1;
 	if (MACHINE_IS_CHROME)  return 1;
 	if (MACHINE_IS_ZXEVO)  return 1;
+	if (MACHINE_IS_CPC)  return 1;
 
 
 	return 0;

@@ -10,6 +10,7 @@ Improved menu environment:
 Added key to save text windows contents to a file
 Added setting to send a final space after every word in the osd adventure keyboard
 Added Dandanator CPC emulation
+Added machine Amstrad CPC 4128
 
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now
