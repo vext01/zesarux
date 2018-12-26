@@ -10984,8 +10984,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		//
 		else {
 
-
-	                //menu_debug_registers_ventana();
 			menu_debug_registers_set_title(&ventana);
 			zxvision_draw_window(&ventana);
 
@@ -10993,43 +10991,32 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			menu_debug_registers_adjust_ptr_on_follow();
 	
-        	        linea=0;
-	                linea=menu_debug_registers_show_ptr_text(&ventana,linea);
+   	        linea=0;
+	        linea=menu_debug_registers_show_ptr_text(&ventana,linea);
 
-        	        linea++;
+        	linea++;
 
-
-			//menu_debug_registers_ventana();		
 
 			int si_ejecuta_una_instruccion=1;
 
-                        linea=menu_debug_registers_print_registers(&ventana,linea);
+            linea=menu_debug_registers_print_registers(&ventana,linea);
 
-						linea=19;
-                       	//menu_escribe_linea_opcion(linea++,-1,1,"");
+			linea=19;
 
-                	//Forzar a mostrar atajos
-	                z80_bit antes_menu_writing_inverse_color;
-	                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-        	        menu_writing_inverse_color.v=1;
-
-
-		
+        	//Forzar a mostrar atajos
+	        z80_bit antes_menu_writing_inverse_color;
+	        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+        	menu_writing_inverse_color.v=1;
 
 
 
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
-
-
 				linea=menu_debug_registers_print_legend(&ventana,linea);
-
 																	// ~~1-~~5 View
 			}
 			else {
 				//Mostrar progreso
-
-
 
 				if (menu_debug_registers_current_view!=7) {
 					char buffer_progreso[32];
@@ -11053,9 +11040,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				//Pausa
 				//0= pausa de 0.5
-//1= pausa de 0.1
-//2= pausa de 0.02
-//3= sin pausa
+				//1= pausa de 0.1
+				//2= pausa de 0.02
+				//3= sin pausa
 
 				if (menu_debug_continuous_speed==0) usleep(500000); //0.5 segundo
 				else if (menu_debug_continuous_speed==1) usleep(100000); //0.1 segundo
@@ -11085,9 +11072,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
 				if (tecla==0) {
-							acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-							//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-							si_ejecuta_una_instruccion=0;
+					acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+					si_ejecuta_una_instruccion=0;
 				}
 
 				else {
@@ -11104,367 +11091,262 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					continuous_step=1;
 				}
 
-                                if (tecla=='o') {
-                                        //cls_menu_overlay();
-                                        menu_debug_cpu_step_over();
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-
-					if (tecla=='z') {
-
-					//cls_menu_overlay();
-
-				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
-
-                                        menu_debug_registers_change_memory_zone();
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					//menu_debug_registers_ventana();
-
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-					si_ejecuta_una_instruccion=0;
-
-
-                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
-                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
-
-																}								
-
-                                if (tecla=='b') {
-                                        //cls_menu_overlay();
-
-				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
-
-                                        menu_breakpoints(0);
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					//menu_debug_registers_ventana();
-
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-					si_ejecuta_una_instruccion=0;
-
-
-                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
-                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
-					
-                                }
-
-                                if (tecla=='w') {
-                                        //cls_menu_overlay();
-
-				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
-
-									
-
-                                        menu_watches(0);
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-
-                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
-                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
-                                }
-
-
-                  if (tecla=='i') {
-                                        //cls_menu_overlay();
-
-				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
-
-									
-										last_debug_poke_dir=menu_debug_memory_pointer;
-                                        menu_debug_poke(0);
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-
-                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
-                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
-                                }
-
-
-	
-
-				if (tecla=='m' && menu_debug_registers_current_view==1) {
-		                           //cls_menu_overlay();
-                                        menu_debug_next_dis_show_hexa();
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-											//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-
-		                    if (tecla=='l' && menu_debug_registers_current_view==1) {
-                                           //cls_menu_overlay();
-                                        menu_debug_toggle_breakpoint();
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-								
-				if (tecla=='u' && menu_debug_registers_current_view==1) {
-		                           //cls_menu_overlay();
-                                        menu_debug_runto();
-                                        //tecla=2; //Simular ESC
-
-										//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-
-										salir_todos_menus=1;
-
-										cpu_step_mode.v=0;
-										acumulado=0; //teclas pulsadas
-
-										//Con esto saldremos
-                                }	
-
-
-                                if (tecla=='p') {
-                                        //cls_menu_overlay();
-					debug_t_estados_parcial=0;
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-
-	//Vista. Entre 1 y 6
-				if (tecla>='1' && tecla<='7') {
-                                        //cls_menu_overlay();
-					menu_debug_registers_set_view(&ventana,tecla-'0');
-				
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-				}
-
-				if (tecla=='f') {
-                                        //cls_menu_overlay();
-										menu_debug_switch_follow_pc();
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-				}
-
-
-					
-
-		                  if (tecla=='t') {
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
-				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
-
-                                        menu_debug_registers_change_ptr();
-
-
-
-
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-
-                                        //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
-                                        //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
-                                }
-
-                                if (tecla=='r') {
-                                        //cls_menu_overlay();
-
+                if (tecla=='o') {
+                    menu_debug_cpu_step_over();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }
+
+				if (tecla=='z') {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
-                                        menu_debug_change_registers();
+                    menu_debug_registers_change_memory_zone();
 
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-
-					//Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
-					//de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
-                                }
-
-
-			       if (tecla==11) {
-                                        //arriba
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
-                                        menu_debug_cursor_up();
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-
-                                if (tecla==10) {
-                                        //abajo
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
-                                        menu_debug_cursor_down();
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-
-                                //24 pgup
-                                if (tecla==24) {
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
-                                        menu_debug_cursor_pgup();
-
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-                                //25 pgwn
-                                if (tecla==25) {
-                                        //PgDn
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
-                                        menu_debug_cursor_pgdn();
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-
-                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-                                }
-
-
-
-				if (tecla=='v') {
-					//cls_menu_overlay();
-				        menu_espera_no_tecla_no_cpu_loop();
-
-				        //para que no se vea oscuro
-				        menu_set_menu_abierto(0);
-
-
-					menu_cls_refresh_emulated_screen();
-
-				        menu_espera_tecla_no_cpu_loop();
-					menu_espera_no_tecla_no_cpu_loop();
-
-					//vuelta a oscuro
-				        menu_set_menu_abierto(1);
-
-
-
-					menu_cls_refresh_emulated_screen();
-
-					//menu_debug_registers_ventana();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
 
+					//Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+
+				}								
+
+                if (tecla=='b') {
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+                    menu_breakpoints(0);
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+					si_ejecuta_una_instruccion=0;
+
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+					
+                }
+
+                if (tecla=='w') {
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+                    menu_watches(0);
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+                }
+
+
+                if (tecla=='i') {
+                	//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+				
+					last_debug_poke_dir=menu_debug_memory_pointer;
+                    menu_debug_poke(0);
+
+                	//Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+                }
+
+
+				if (tecla=='m' && menu_debug_registers_current_view==1) {
+		            menu_debug_next_dis_show_hexa();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }
+
+		        if (tecla=='l' && menu_debug_registers_current_view==1) {
+                    menu_debug_toggle_breakpoint();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }
+								
+				if (tecla=='u' && menu_debug_registers_current_view==1) {
+                    menu_debug_runto();
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+					salir_todos_menus=1;
+					cpu_step_mode.v=0;
+					acumulado=0; //teclas pulsadas
+					//Con esto saldremos
+                }	
+
+
+                if (tecla=='p') {
+					debug_t_estados_parcial=0;
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }
+
+				//Vista. Entre 1 y 6
+				if (tecla>='1' && tecla<='7') {
+                	menu_debug_registers_set_view(&ventana,tecla-'0');
+				    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+				}
+
+				if (tecla=='f') {
+					menu_debug_switch_follow_pc();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+				}
+
+		        if (tecla=='t') {
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+                    menu_debug_registers_change_ptr();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+                }
+
+                if (tecla=='r') {
+                	//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+                    menu_debug_change_registers();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+
+					//Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+					//de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+                }
+
+
+			    if (tecla==11) {
+                	//arriba
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
+                    menu_debug_cursor_up();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }
+
+                if (tecla==10) {
+                	//abajo
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
+                    menu_debug_cursor_down();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                	si_ejecuta_una_instruccion=0;
+                }
+
+                //24 pgup
+                if (tecla==24) {
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
+                    menu_debug_cursor_pgup();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }
+                
+				//25 pgdn
+                if (tecla==25) {
+                    //PgDn
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
+                    menu_debug_cursor_pgdn();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }
+
+
+				if (tecla=='v') {
+					menu_espera_no_tecla_no_cpu_loop();
+				    //para que no se vea oscuro
+				    menu_set_menu_abierto(0);
+					menu_cls_refresh_emulated_screen();
+				    menu_espera_tecla_no_cpu_loop();
+					menu_espera_no_tecla_no_cpu_loop();
+
+					//vuelta a oscuro
+				    menu_set_menu_abierto(1);
+
+					menu_cls_refresh_emulated_screen();
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+					si_ejecuta_una_instruccion=0;
 
 					//Y redibujar ventana
 					zxvision_draw_window(&ventana);
 				}
 
-				//if (tecla==2) { //ESC
 				if (tecla=='s') { 
 					cpu_step_mode.v=0;
-
 					//Decimos que no hay tecla pulsada
 					acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-
-					//menu_debug_registers_ventana();
-
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
-
-
 				}
 
 				if (tecla==2) { //ESC
-
 					cpu_step_mode.v=0;
-
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                                        si_ejecuta_una_instruccion=0;
-
-                                                                                cpu_step_mode.v=0;
-                                                                                acumulado=0; //teclas pulsadas
-
-                                                                                //Con esto saldremos
+                    si_ejecuta_una_instruccion=0;
+                    acumulado=0; //teclas pulsadas
+                    //Con esto saldremos
 
 				}
 
 				//Cualquier tecla no enter, no ejecuta instruccion
 				if (tecla!=13) si_ejecuta_una_instruccion=0;
-
 
 			}
 
@@ -11485,12 +11367,11 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 					//Si tecla no es 0->0 se suele producir al mover el raton.
 					if (tecla!=0) {
-
 						continuous_step=0;
 						//printf ("cont step: %d\n",continuous_step);
 
-            //Decimos que no hay tecla pulsada
-            acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+            			//Decimos que no hay tecla pulsada
+            			acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 
 						menu_espera_no_tecla_no_cpu_loop();
 					}
@@ -11521,15 +11402,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			if (menu_breakpoint_exception.v) {
 				//Si accion nula o menu o break
 				if (debug_if_breakpoint_action_menu(catch_breakpoint_index)) {
-				  menu_debug_registers_gestiona_breakpoint();
-				  //Y redibujar ventana para reflejar breakpoint cond
-				  //menu_debug_registers_ventana();
+					menu_debug_registers_gestiona_breakpoint();
+				  	//Y redibujar ventana para reflejar breakpoint cond
+					//menu_debug_registers_ventana();
 				}
 
 				else {
 					menu_breakpoint_exception.v=0;
-				  //Gestion acciones
-				  debug_run_action_breakpoint(debug_breakpoints_actions_array[catch_breakpoint_index]);
+					//Gestion acciones
+					debug_run_action_breakpoint(debug_breakpoints_actions_array[catch_breakpoint_index]);
 				}
 			}
 
@@ -11537,9 +11418,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	//Hacer mientras step mode este activo o no haya tecla pulsada
 	//printf ("acumulado %d cpu_ste_mode: %d\n",acumulado,cpu_step_mode.v);
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1);
+    } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1);
 
-        cls_menu_overlay();
+    cls_menu_overlay();
 
 	zxvision_destroy_window(&ventana);
 
