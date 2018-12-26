@@ -10747,15 +10747,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	if (menu_multitarea==0) cpu_step_mode.v=1;
 
 
-
-	//menu_debug_registers_ventana();
 	zxvision_window ventana;
 	menu_debug_registers_zxvision_ventana(&ventana);
 	menu_debug_registers_set_title(&ventana);
-
-	//zxvision_draw_window(&ventana);
-
-
 
 
 	do {
@@ -10770,16 +10764,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			//Cuadrarlo cada 1/16 de segundo, justo lo mismo que el flash, asi
 			//el valor de flash se ve coordinado
         	        //if ( (contador_segundo%(16*20)) == 0 || menu_multitarea==0) {
-									if ( ((contador_segundo%(16*20)) == 0 && valor_contador_segundo_anterior!=contador_segundo ) || menu_multitarea==0) {
-										//printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
-										valor_contador_segundo_anterior=contador_segundo;
+			if ( ((contador_segundo%(16*20)) == 0 && valor_contador_segundo_anterior!=contador_segundo ) || menu_multitarea==0) {
+				//printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
+				valor_contador_segundo_anterior=contador_segundo;
 
 
-		//menu_debug_registers_ventana();
-		menu_debug_registers_set_title(&ventana);
-		zxvision_draw_window(&ventana);
+				menu_debug_registers_set_title(&ventana);
+				zxvision_draw_window(&ventana);
 
-		menu_debug_registers_adjust_ptr_on_follow();
+				menu_debug_registers_adjust_ptr_on_follow();
 
                 linea=0;
                 linea=menu_debug_registers_show_ptr_text(&ventana,linea);
@@ -10792,33 +10785,24 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
                 menu_writing_inverse_color.v=1;
 
-
                         
 				linea=menu_debug_registers_print_registers(&ventana,linea);
-
-                        	//menu_escribe_linea_opcion(linea++,-1,1,"");
-
-							linea=19;
-
-
+				linea=19;
 				linea=menu_debug_registers_print_legend(&ventana,linea);
 
 
-
-
-
-//Restaurar estado mostrar atajos
-menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+				//Restaurar estado mostrar atajos
+				menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
 				zxvision_draw_window_contents(&ventana);
 
-                        	if (menu_multitarea==0) menu_refresca_pantalla();
+                if (menu_multitarea==0) menu_refresca_pantalla();
 
 
-	                }
+	        }
 
-        	        menu_cpu_core_loop();
+        	menu_cpu_core_loop();
 
 			if (menu_breakpoint_exception.v) {
 				//Si accion nula o menu o break
@@ -10830,218 +10814,160 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				else {
 					menu_breakpoint_exception.v=0;
-				  //Gestion acciones
-				  debug_run_action_breakpoint(debug_breakpoints_actions_array[catch_breakpoint_index]);
+					//Gestion acciones
+					debug_run_action_breakpoint(debug_breakpoints_actions_array[catch_breakpoint_index]);
 				}
 			}
 
 
 
-                	acumulado=menu_da_todas_teclas();
+            acumulado=menu_da_todas_teclas();
 
-	                //si no hay multitarea, esperar tecla y salir
-        	        if (menu_multitarea==0) {
-                	        menu_espera_tecla();
-
-                        	acumulado=0;
-	                }
+	    	//si no hay multitarea, esperar tecla y salir
+        	if (menu_multitarea==0) {
+            	menu_espera_tecla();
+               	acumulado=0;
+	        }
 
 			//Hay tecla pulsada
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
-                                //tecla=menu_get_pressed_key();
 				tecla=zxvision_common_getkey_refresh();
 
-                                //Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
-                                if (tecla==0) {
-                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                }
+            	//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
+                if (tecla==0) {
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }
 
-                                else {
-                                        //printf ("tecla: %d\n",tecla);
-                                        //A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
-                                        menu_debug_registers_if_cls();
-
-                                        menu_espera_no_tecla_no_cpu_loop();
-                                }
-
+                else {
+                    //printf ("tecla: %d\n",tecla);
+                    //A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
+                    menu_debug_registers_if_cls();
+                    menu_espera_no_tecla_no_cpu_loop();
+                }
 
 
 
-                                if (tecla=='s') {
+
+                if (tecla=='s') {
 					cpu_step_mode.v=1;
 					menu_debug_follow_pc.v=1; //se sigue pc
 				}
 
-																if (tecla=='z') {
-																	menu_debug_registers_change_memory_zone();
-																	//menu_debug_registers_ventana();
-
-																	//menu_debug_change_memory_zone();
-																}
+				if (tecla=='z') {
+					menu_debug_registers_change_memory_zone();
+				}
 
 
 				if (tecla=='d') {
-					//cls_menu_overlay();
 					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
 					menu_debug_disassemble(0);
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					//menu_debug_registers_ventana();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
 				if (tecla=='b') {
-					//cls_menu_overlay();
-
-
-					
 					menu_breakpoints(0);
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					//menu_debug_registers_ventana();
-					//zxvision_draw_window(&ventana); //TODO tempppp
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
-				
-
 				if (tecla=='m' && menu_debug_registers_current_view==1) {
-		                           //cls_menu_overlay();
-                                        menu_debug_next_dis_show_hexa();
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
+                    menu_debug_next_dis_show_hexa();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }
 
 				if (tecla=='l' && menu_debug_registers_current_view==1) {
-		                           //cls_menu_overlay();
-                                        menu_debug_toggle_breakpoint();
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
+                    menu_debug_toggle_breakpoint();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+				}
 
 				if (tecla=='u' && menu_debug_registers_current_view==1) {
-		                           //cls_menu_overlay();
-                                        menu_debug_runto();
-                                        tecla=2; //Simular ESC
-
-										salir_todos_menus=1;
-                                }								
+					menu_debug_runto();
+                    tecla=2; //Simular ESC
+					salir_todos_menus=1;
+                }								
 
 				if (tecla=='w') {
-                                        //cls_menu_overlay();
-                                        menu_watches(0);
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
+                    menu_watches(0);
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }
 
 								
 								
 				if (tecla=='i') {
-										last_debug_poke_dir=menu_debug_memory_pointer;
-                                        //cls_menu_overlay();
-                                        menu_debug_poke(0);
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }								
+					last_debug_poke_dir=menu_debug_memory_pointer;
+                    menu_debug_poke(0);
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }								
 
-                                if (tecla=='p') {
-                                        //cls_menu_overlay();
+                if (tecla=='p') {
 					debug_t_estados_parcial=0;
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }
 
 				//Vista. Entre 1 y 6
 				if (tecla>='1' && tecla<='7') {
-                                        //cls_menu_overlay();
 					menu_debug_registers_set_view(&ventana,tecla-'0');
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
 				if (tecla=='f') {
-                                        //cls_menu_overlay();
 					menu_debug_switch_follow_pc();
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
 				if (tecla=='t') {
-                                        //cls_menu_overlay();
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_registers_change_ptr();
-
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
+					//Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
-                                if (tecla=='r') {
-                                        //cls_menu_overlay();
+               	if (tecla=='r') {
 					menu_debug_change_registers();
-
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+            	}
 
 				if (tecla==11) {
-                                        //arriba
-					//cls_menu_overlay();
+                    //arriba
 					menu_debug_follow_pc.v=0; //se deja de seguir pc
-
 					menu_debug_cursor_up();
-			
 					//Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }
 
 				if (tecla==10) {
-                                        //abajo
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
+                    //abajo
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_cursor_down();
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }
 
 				//24 pgup
-                                if (tecla==24) {
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
+                if (tecla==24) {
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_cursor_pgup();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }
 
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
-                                }
 				//25 pgwn
 				if (tecla==25) {
 					//PgDn
-                                        //cls_menu_overlay();
-                                        menu_debug_follow_pc.v=0; //se deja de seguir pc
-
+                    menu_debug_follow_pc.v=0; //se deja de seguir pc
 					menu_debug_cursor_pgdn();
-
-                                        //Decimos que no hay tecla pulsada
-                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        //menu_debug_registers_ventana();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
-
-
 
 				//Si tecla no es ESC, no salir
 				if (tecla!=2) acumulado=MENU_PUERTO_TECLADO_NINGUNA;
