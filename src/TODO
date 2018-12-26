@@ -3,6 +3,12 @@
 
 ----zxvision----:
 
+ok -quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
+zxvision_draw_window para refrescar lo que habia debajo
+->pero por ejemplo cuando salen de menu_dibuja_menu, todo dios hace cls_menu_overlay, y no deberian hacerlo
+->hay que quitar los dos cls_menu_overlay de cada retorno_menu=menu_dibuja_menu
+
+
 -Sin multitarea, primera pulsación de boton mouse no hace scroll. Seguramente debido a que hace un espera tecla al principio
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
@@ -20,7 +26,10 @@
 -migrar ventana debug cpu a zxvision
 
 
+
 ----fin zxvision----
+
+-speech: sin multitask, a veces se descuadra la linea de menu que lee. ejemplo: ir a accessibility settings, y cuando este leyendo "active item..." pulsar tecla. Creo que esto pasa desde siempre
 
 -view waveform en cpc sale desplazado. en general todo lo que es pixel 
 -en debug paginas memoria, que muestre correctamente paginas dandanator cpc
@@ -139,6 +148,12 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 -Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
 
+-recordar posicion ventanas: quiza teniendo los punteros a ventana en global,
+inicializados a null, y llamando a funcion diferente al crearlas (para que detecte si no es null, y no crearlas),
+y el destroy que no libere memoria
+
+-al mover o redimensionar ventana, redibujar las de debajo en cascada, empezando por la mas antigua y subiendo
+
 -menus zxvision:
 --porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
 
@@ -150,8 +165,6 @@ pero cuando se puedan mostrar en border incluso, seria tenerlas por debajo del l
 -zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
 Lo hace realmente con visible_width y visible_height
 
--quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
-zxvision_draw_window para refrescar lo que habia debajo
 
 -quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 

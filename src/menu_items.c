@@ -292,14 +292,14 @@ void menu_mem_breakpoints(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_mem_breakpoints);
                 retorno_menu=menu_dibuja_menu(&mem_breakpoints_opcion_seleccionada,&item_seleccionado,array_menu_mem_breakpoints,"Memory Breakpoints" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -479,7 +479,7 @@ void menu_debug_poke_pok_file(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&debug_pok_file_opcion_seleccionada,&item_seleccionado,array_menu_debug_pok_file,"Select Poke" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -564,14 +564,14 @@ void menu_poke(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&poke_opcion_seleccionada,&item_seleccionado,array_menu_poke,"Poke" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -803,14 +803,14 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_debug_opcion_seleccionada,&item_seleccionado,array_menu_settings_debug,"Debug Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
                         }
                 }
 
@@ -900,14 +900,14 @@ void menu_change_audio_driver(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&change_audio_driver_opcion_seleccionada,&item_seleccionado,array_menu_change_audio_driver,"Change Audio Driver" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -1428,14 +1428,14 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_audio_opcion_seleccionada,&item_seleccionado,array_menu_settings_audio,"Audio Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 	                //llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
         	        }
 		}
 
@@ -3457,13 +3457,15 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
     	retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
 
 
+		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 		cls_menu_overlay();
         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
         	//llamamos por valor de funcion
             if (item_seleccionado.menu_funcion!=NULL) {
                 //printf ("actuamos por funcion\n");
                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                cls_menu_overlay();
+		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                //cls_menu_overlay();
             }
         }
 
@@ -3943,13 +3945,15 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
                 retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Visual memory" );
 
 
+	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 	cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -4515,13 +4519,15 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
                 retorno_menu=menu_dibuja_menu(&audio_new_ayplayer_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_ayplayer,"AY Player" );
 
 
+	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 	cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -5483,7 +5489,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 				    menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,texto_opcion);
         		    menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
 					menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,i);
-					printf ("Agregando palabra %s en %d,%d\n",texto_opcion,last_x,last_y);
+					//printf ("Agregando palabra %s en %d,%d\n",texto_opcion,last_x,last_y);
 
 					if (tiene_hotkey) {
 						menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,hotkey);
@@ -5517,6 +5523,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
         retorno_menu=menu_dibuja_menu(&osd_adventure_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_osd_adventure_keyboard,"OSD Adventure KB" );
 
 
+	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
         cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -5527,7 +5534,8 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 	                        salir_todos_menus=1;
 
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -5838,13 +5846,15 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
                 retorno_menu=menu_dibuja_menu(&debug_tsconf_dma_opcion_seleccionada,&item_seleccionado,array_menu_debug_dma_tsconf_zxuno,"TSConf DMA" );
 
 
+	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 	cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -6158,6 +6168,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
         retorno_menu=menu_dibuja_menu(&tsconf_layer_settings_opcion_seleccionada,&item_seleccionado,array_menu_tsconf_layer_settings,"TSConf Layers" );
 
+	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
         cls_menu_overlay();
 
 				//Nombre de ventana solo aparece en el caso de stdout
@@ -6166,7 +6177,8 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                                //cls_menu_overlay();
                         }
                 }
 

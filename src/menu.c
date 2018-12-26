@@ -2888,13 +2888,24 @@ void menu_escribe_texto_ventana(z80_byte x,z80_byte y,z80_byte tinta,z80_byte pa
 
 }
 
+int menu_if_speech_enabled(void)
+{
+        if (textspeech_filter_program==NULL) return 0;
+        if (textspeech_also_send_menu.v==0) return 0;
+        if (menu_speech_tecla_pulsada) return 0;
+
+	return 1;
+}
+
 
 void menu_textspeech_send_text(char *texto)
 {
 
-	if (textspeech_filter_program==NULL) return;
-	if (textspeech_also_send_menu.v==0) return;
-	if (menu_speech_tecla_pulsada) return;
+	if (!menu_if_speech_enabled() ) return;
+
+	//if (textspeech_filter_program==NULL) return;
+	//if (textspeech_also_send_menu.v==0) return;
+	//if (menu_speech_tecla_pulsada) return;
 
 	debug_printf (VERBOSE_DEBUG,"Send text to speech: %s",texto);
 
@@ -3163,7 +3174,16 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,z80_byte indice
 			}
 		}
 	}
+                     if (menu_if_speech_enabled() ) {
+                                //printf ("redibujar ventana\n");
+                                zxvision_draw_window_contents_no_speech(ventana);
+                                //menu_refresca_pantalla();
+                        }
+
 	menu_textspeech_send_text(texto);
+
+
+
 
 }
 
@@ -3978,6 +3998,18 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 }
 
+//Borrar contenido ventana con espacios
+void zxvision_clear_window_contents(zxvision_window *w)
+{
+
+	int y;
+
+	for (y=0;y<w->total_height;y++) {
+		zxvision_fill_width_spaces(w,y);
+	}
+
+}
+
 void zxvision_destroy_window(zxvision_window *w)
 {
 	zxvision_current_window=w->previous_window;
@@ -3987,7 +4019,14 @@ void zxvision_destroy_window(zxvision_window *w)
 	ventana_tipo_activa=1;
 	zxvision_keys_event_not_send_to_machine=1;
 
-	if (zxvision_current_window!=NULL) zxvision_set_draw_window_parameters(zxvision_current_window);
+	if (zxvision_current_window!=NULL) {
+		zxvision_set_draw_window_parameters(zxvision_current_window);
+
+		//Dibujar ventana que habia debajo
+		zxvision_draw_window(zxvision_current_window);
+		zxvision_draw_window_contents(zxvision_current_window);
+		//printf ("Dibujando ventana de debajo\n");
+	}
 }
 
 
@@ -4170,8 +4209,11 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 }
 
 
-void zxvision_generic_message_cursor_down(zxvision_window *ventana)
+int zxvision_generic_message_cursor_down(zxvision_window *ventana)
 {
+
+	//int linea_retornar;
+
 	if (ventana->visible_cursor) {
 
 		//Movemos el cursor si es que es posible
@@ -4179,7 +4221,10 @@ void zxvision_generic_message_cursor_down(zxvision_window *ventana)
 			//printf ("Incrementamos linea cursor\n");
 			ventana->cursor_line++;
 		}
-		else return;
+		else {
+			
+			return ventana->cursor_line;
+		}
 
 		//Ver en que offset estamos
 		int offset_y=ventana->offset_y;
@@ -4198,17 +4243,20 @@ void zxvision_generic_message_cursor_down(zxvision_window *ventana)
 			zxvision_draw_window_contents(ventana);
 			//zxvision_draw_scroll_bars(w);
 		}
+
+		return ventana->cursor_line;
 	}
 
 	else {	
 		zxvision_send_scroll_down(ventana);
+		return (ventana->offset_y + ventana->visible_height-3);
 	}
 
 
 
 }
 
-void zxvision_generic_message_cursor_up(zxvision_window *ventana)
+int zxvision_generic_message_cursor_up(zxvision_window *ventana)
 {
 	if (ventana->visible_cursor) {
 
@@ -4217,7 +4265,7 @@ void zxvision_generic_message_cursor_up(zxvision_window *ventana)
 			//printf ("Decrementamos linea cursor\n");
 			ventana->cursor_line--;
 		}
-		else return;
+		else return ventana->cursor_line;;
 
 		//Ver en que offset estamos
 		int offset_y=ventana->offset_y;
@@ -4236,10 +4284,13 @@ void zxvision_generic_message_cursor_up(zxvision_window *ventana)
 			zxvision_draw_window_contents(ventana);
 			//zxvision_draw_scroll_bars(w);
 		}
+
+		return ventana->cursor_line;
 	}
 
 	else {	
 		zxvision_send_scroll_up(ventana);
+		return ventana->offset_y;
 	}
 
 
@@ -4453,8 +4504,10 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 
 	debug_printf (VERBOSE_INFO,"Read %d lines (word wrapped)",indice_linea);
-	int primera_linea_a_speech=0;
-	int ultima_linea_a_speech=0;
+	//int primera_linea_a_speech=0;
+	//int ultima_linea_a_speech=0;
+	int linea_a_speech=0;
+	int enviar_linea_a_speech=0;
 
 	//do {
 
@@ -4518,10 +4571,18 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	//Enviar primera linea o ultima a speech
 
 	//La primera linea puede estar oculta por .., aunque para speech mejor que diga esa primera linea oculta
-	/*debug_printf (VERBOSE_DEBUG,"First line: %s",buffer_lineas[primera_linea]);
-	debug_printf (VERBOSE_DEBUG,"Last line: %s",buffer_lineas[i+primera_linea-1]);
+	//debug_printf (VERBOSE_DEBUG,"First line: %s",buffer_lineas[primera_linea]);
+	//debug_printf (VERBOSE_DEBUG,"Last line: %s",buffer_lineas[i+primera_linea-1]);
 
-	if (!mostrar_cursor) {
+	//printf ("Line to speech: %s\n",buffer_lineas[linea_a_speech]);
+
+	if (enviar_linea_a_speech) {
+		menu_speech_tecla_pulsada=0;
+		enviar_linea_a_speech=0;
+		menu_textspeech_send_text(buffer_lineas[linea_a_speech]);
+	}
+
+	/*if (!mostrar_cursor) {
 		if (primera_linea_a_speech) {
 			menu_speech_tecla_pulsada=0;
 			menu_textspeech_send_text(buffer_lineas[primera_linea]);
@@ -4538,9 +4599,10 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	}*/
 
 
-	primera_linea_a_speech=0;
-	ultima_linea_a_speech=0;
+	//primera_linea_a_speech=0;
+	//ultima_linea_a_speech=0;
 	menu_speech_tecla_pulsada=1;
+	enviar_linea_a_speech=0;
 
 
 	//Escribir cursores en linea inferior
@@ -4641,23 +4703,24 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
                         //abajo
                         case 10:
 						//primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
-						zxvision_generic_message_cursor_down(&ventana);
+						linea_a_speech=zxvision_generic_message_cursor_down(&ventana);
 						//zxvision_send_scroll_down(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
-						ultima_linea_a_speech=1;
+						enviar_linea_a_speech=1;
                         break;
 
                         //arriba
                         case 11:
 						//primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
 						//zxvision_send_scroll_up(&ventana);
-						zxvision_generic_message_cursor_up(&ventana);
+						linea_a_speech=zxvision_generic_message_cursor_up(&ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
-						primera_linea_a_speech=1;
+						//primera_linea_a_speech=1;
+						enviar_linea_a_speech=1;
                         break;
 
 
@@ -4668,7 +4731,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;*/
 						zxvision_handle_cursors_pgupdn(&ventana,tecla);
-						ultima_linea_a_speech=1;
+						//ultima_linea_a_speech=1;
                         break;
 
                         //derecha
@@ -4678,7 +4741,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;*/
 						zxvision_handle_cursors_pgupdn(&ventana,tecla);
-						primera_linea_a_speech=1;
+						//primera_linea_a_speech=1;
                         break;						
 
 						//PgUp
@@ -4772,6 +4835,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 						}
 
 						else {
+							menu_speech_tecla_pulsada=0; //para decir que siempre se escuchara el mensaje
 							menu_warn_message("Text not found");
 						}
 
@@ -4819,12 +4883,12 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	}
 
+    	cls_menu_overlay();
 	zxvision_destroy_window(&ventana);
-    cls_menu_overlay();
 
         if (tooltip_enabled==0) menu_espera_no_tecla_con_repeticion();
 
-	cls_menu_overlay();
+	//cls_menu_overlay();
 
 
 	if (menu_generic_message_tooltip_text_initial!=NULL) {
@@ -5183,8 +5247,59 @@ void zxvision_set_visible_height(zxvision_window *w,int visible_height)
 
 }*/
 
+void zxvision_draw_window_contents_stdout(zxvision_window *w)
+{
+	//Simple. Mostrarlo todo
+	int y,x;
+
+	
+	//Simple. Mostrar todas lineas
+	char buffer_linea[MAX_BUFFER_SPEECH+1];
+
+
+	for (y=0;y<w->total_height;y++) {
+		int offset_caracter=y*w->total_width;
+
+
+
+		for (x=0;x<w->total_width && x<MAX_BUFFER_SPEECH;x++) {
+
+                                overlay_screen *caracter;
+                                caracter=w->memory;
+                                caracter=&caracter[offset_caracter];
+
+                                z80_byte caracter_escribir=caracter->caracter;
+
+			buffer_linea[x]=caracter_escribir;
+			offset_caracter++;
+		}
+
+		buffer_linea[x]=0;
+
+
+                printf ("%s\n",buffer_linea);
+
+                scrstdout_menu_print_speech_macro(buffer_linea);
+
+        }
+
+
+	//menu_espera_no_tecla();
+	//menu_espera_tecla();
+}
+
 void zxvision_draw_window_contents(zxvision_window *w)
 {
+
+	if (!strcmp(scr_driver_name,"stdout")) {
+		zxvision_draw_window_contents_stdout(w);
+		return;
+	}
+
+	//menu_textspeech_send_text(texto);
+
+	//Buffer para speech
+	char buffer_linea[MAX_BUFFER_SPEECH+1];
 
 	int width,height;
 
@@ -5196,6 +5311,7 @@ void zxvision_draw_window_contents(zxvision_window *w)
 	int x,y;
 
 	for (y=0;y<height;y++) {
+		int indice_speech=0;
 		for (x=0;x<width;x++) {
 		
 			int xdestination=w->x+x;
@@ -5252,6 +5368,10 @@ void zxvision_draw_window_contents(zxvision_window *w)
 			
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
 					caracter_escribir,tinta,papel,caracter->parpadeo);
+
+				if (indice_speech<MAX_BUFFER_SPEECH) {
+					buffer_linea[indice_speech++]=caracter_escribir;
+				}
 			}
 
 			//Fuera de rango. Metemos espacio
@@ -5260,9 +5380,25 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);
 			}
 
+
 		}
+
+		buffer_linea[indice_speech]=0;
+		menu_textspeech_send_text(buffer_linea);
 	}
 
+
+}
+
+
+void zxvision_draw_window_contents_no_speech(zxvision_window *ventana)
+{
+                //No queremos que el speech vuelva a leer la ventana, solo cargar ventana
+		int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
+                menu_speech_tecla_pulsada=1;
+                zxvision_draw_window_contents(ventana);
+
+		menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
 
 }
 
@@ -7072,6 +7208,8 @@ int menu_retorna_atajo(menu_item *m,z80_byte tecla)
 
 int menu_active_item_primera_vez=1;
 
+
+
 void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int linea_seleccionada,int max_opciones)
 {
 
@@ -7151,6 +7289,8 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 			menu_speech_tecla_pulsada=0;
 
 			menu_textspeech_send_text(texto_opcion_activa);
+
+
 
 			//Restauro estado
 			//Pero si se ha pulsado tecla, no restaurar estado
@@ -7550,7 +7690,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	
 		//printf ("Linea seleccionada: %d\n",linea_seleccionada);
-		zxvision_draw_window_contents(ventana);
+		//No queremos que el speech vuelva a leer la ventana
+		//menu_speech_tecla_pulsada=1;
+		zxvision_draw_window_contents_no_speech(ventana);
 
 
         menu_refresca_pantalla();
@@ -8013,8 +8155,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	menu_speech_tecla_pulsada=0;
 
 
-	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+	//En caso de menus tabulados, es responsabilidad de este de borrar con cls y liberar ventana 
 	if (m->es_menu_tabulado==0) {
+		cls_menu_overlay();
 		zxvision_destroy_window(ventana);
 	}
 
@@ -8696,14 +8839,14 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_breakpoints);
                 retorno_menu=menu_dibuja_menu(&breakpoints_opcion_seleccionada,&item_seleccionado,array_menu_breakpoints,"Breakpoints" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -8836,11 +8979,12 @@ menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 const int menu_debug_num_lineas_full=14;
 
 
-void menu_debug_registers_print_register_aux_moto(char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
+void menu_debug_registers_print_register_aux_moto(zxvision_window *w,char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
 {
 
 	sprintf (textoregistros,"A%d: %08X D%d: %08X",numero,m68k_get_reg(NULL, registro_direccion),numero,m68k_get_reg(NULL, registro_dato) );
-	menu_escribe_linea_opcion(*linea,-1,1,textoregistros);
+	//menu_escribe_linea_opcion(*linea,-1,1,textoregistros);
+	zxvision_print_string_defaults_fillspc(w,1,*linea,textoregistros);
 	(*linea)++;
 
 }
@@ -9260,7 +9404,7 @@ char buffer_registros[33];
                                         }
 }
 
-int menu_debug_registers_print_registers(int linea)
+int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 {
 	//printf("linea: %d\n",linea);
 	char textoregistros[33];
@@ -9303,10 +9447,12 @@ int menu_debug_registers_print_registers(int linea)
 			//debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
                         menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
 
-                        menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+                        //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,dumpassembler);
 
 			sprintf (textoregistros,"TSTATES: %05d SCANL: %03dX%03d",t_estados,(t_estados % screen_testados_linea),t_scanline_draw);
-			menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 		}
 
 
@@ -9315,33 +9461,41 @@ int menu_debug_registers_print_registers(int linea)
 			debugger_disassemble(dumpassembler,32,&menu_debug_registers_print_registers_longitud_opcode,menu_debug_memory_pointer_copia );
 			menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia+menu_debug_registers_print_registers_longitud_opcode;
 
-			menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+			//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,dumpassembler);
+
 
 			if (CPU_IS_SCMP) {
 				menu_debug_registers_dump_hex(dumpmemoria,get_pc_register(),8);
 	      sprintf (textoregistros,"PC: %04X : %s",get_pc_register(),dumpmemoria);
-	      menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+	      //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 				menu_debug_registers_dump_hex(dumpmemoria,scmp_m_P1.w.l,8);
 				sprintf (textoregistros,"P1: %04X : %s",scmp_m_P1.w.l,dumpmemoria);
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 				menu_debug_registers_dump_hex(dumpmemoria,scmp_m_P2.w.l,8);
 				sprintf (textoregistros,"P2: %04X : %s",scmp_m_P2.w.l,dumpmemoria);
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 				menu_debug_registers_dump_hex(dumpmemoria,scmp_m_P3.w.l,8);
 				sprintf (textoregistros,"P3: %04X : %s",scmp_m_P3.w.l,dumpmemoria);
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 				sprintf (textoregistros,"AC: %02X ER: %02XH",scmp_m_AC, scmp_m_ER);
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 				char buffer_flags[9];
 				scmp_get_flags_letters(scmp_m_SR,buffer_flags);
 
 				sprintf (textoregistros,"SR: %02X %s",scmp_m_SR,buffer_flags);
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 
 
@@ -9359,7 +9513,8 @@ int menu_debug_registers_print_registers(int linea)
 				USP muestra: en modo supervisor, SSP. En modo no supervisor, SP/A7
 				*/
 
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 				unsigned int registro_sr=m68k_get_reg(NULL, M68K_REG_SR);
 
@@ -9367,16 +9522,17 @@ int menu_debug_registers_print_registers(int linea)
 				motorola_get_flags_string(buffer_flags);
 				sprintf (textoregistros,"SR: %04X : %s",registro_sr,buffer_flags);
 
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,0,M68K_REG_A0,M68K_REG_D0);
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,1,M68K_REG_A1,M68K_REG_D1);
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,2,M68K_REG_A2,M68K_REG_D2);
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,3,M68K_REG_A3,M68K_REG_D3);
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,4,M68K_REG_A4,M68K_REG_D4);
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,5,M68K_REG_A5,M68K_REG_D5);
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,6,M68K_REG_A6,M68K_REG_D6);
-				menu_debug_registers_print_register_aux_moto(textoregistros,&linea,7,M68K_REG_A7,M68K_REG_D7);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,0,M68K_REG_A0,M68K_REG_D0);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,1,M68K_REG_A1,M68K_REG_D1);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,2,M68K_REG_A2,M68K_REG_D2);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,3,M68K_REG_A3,M68K_REG_D3);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,4,M68K_REG_A4,M68K_REG_D4);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,5,M68K_REG_A5,M68K_REG_D5);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,6,M68K_REG_A6,M68K_REG_D6);
+				menu_debug_registers_print_register_aux_moto(w,textoregistros,&linea,7,M68K_REG_A7,M68K_REG_D7);
 
 
 
@@ -9387,27 +9543,34 @@ int menu_debug_registers_print_registers(int linea)
 			menu_debug_registers_dump_hex(dumpmemoria,get_pc_register(),8);
 
                         sprintf (textoregistros,"PC: %04X : %s",get_pc_register(),dumpmemoria);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 
 			menu_debug_registers_dump_hex(dumpmemoria,reg_sp,8);
                         sprintf (textoregistros,"SP: %04X : %s",reg_sp,dumpmemoria);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
                         sprintf (textoregistros,"A: %02X F: %c%c%c%c%c%c%c%c",reg_a,DEBUG_STRING_FLAGS);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
                         sprintf (textoregistros,"A':%02X F':%c%c%c%c%c%c%c%c",reg_a_shadow,DEBUG_STRING_FLAGS_SHADOW);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
                         sprintf (textoregistros,"HL: %04X DE: %04X BC: %04X",HL,DE,BC);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
                         sprintf (textoregistros,"HL':%04X DE':%04X BC':%04X",(reg_h_shadow<<8)|reg_l_shadow,(reg_d_shadow<<8)|reg_e_shadow,(reg_b_shadow<<8)|reg_c_shadow);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 	                        sprintf (textoregistros,"IX: %04X IY: %04X",reg_ix,reg_iy);
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 			char texto_nmi[10];
 			if (MACHINE_IS_ZX81) {
@@ -9431,7 +9594,8 @@ int menu_debug_registers_print_registers(int linea)
 			// R: 84 I: 1E IFF1 IFF2 IM1 NMI: Off
 			// R:84 I:1E IFF1 IFF2 IM1 NMI:Off
 
-			menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 		}
 
@@ -9448,7 +9612,8 @@ int menu_debug_registers_print_registers(int linea)
 
 				for (i=0;i<limite;i++) {
 					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
-					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+					//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+					zxvision_print_string_defaults_fillspc(w,1,linea++,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_op;
 
 					//Almacenar longitud del primer opcode mostrado
@@ -9557,8 +9722,18 @@ int menu_debug_registers_subview_type=0;
 
 
 
-                                        menu_escribe_linea_opcion(linea,opcion_actual,opcion_activada,buffer_linea);
+                                        //menu_escribe_linea_opcion(linea,opcion_actual,opcion_activada,buffer_linea);
+				
+
+					//zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
+
+					//De los pocos usos de menu_escribe_linea_opcion_zxvision,
+					//solo se usa en menus y aqui: para poder mostrar linea activada o en rojo
+					menu_escribe_linea_opcion_zxvision(w,linea,opcion_actual,opcion_activada,buffer_linea);
+
 										linea++;
+
+
                                         menu_debug_memory_pointer_copia +=longitud_op;
 
                                         //Almacenar longitud del primer opcode mostrado
@@ -9580,7 +9755,8 @@ int menu_debug_registers_subview_type=0;
                                         //Si tiene contenido
                                         if (buffer_linea[columna_registros]!=' ' && buffer_linea[columna_registros]!=0) {
                                                 //Agregamos linea perdiendo la linea en blanco de margen
-						menu_escribe_linea_opcion(linea,-1,1,buffer_linea);
+						//menu_escribe_linea_opcion(linea,-1,1,buffer_linea);
+						zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
 
 					}
 
@@ -9596,7 +9772,8 @@ int menu_debug_registers_subview_type=0;
 						int valores=5;
 						if (CPU_IS_MOTOROLA) valores=3;
 						debug_get_stack_values(valores,&buffer_linea[5]);
-						menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+						//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 					}
 
 					if (CPU_IS_MOTOROLA) {
@@ -9604,7 +9781,8 @@ int menu_debug_registers_subview_type=0;
 						sprintf(buffer_linea,"(USP) ");
 
 						debug_get_user_stack_values(valores,&buffer_linea[5]);
-						menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+						//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 					}
 
 
@@ -9624,7 +9802,8 @@ int menu_debug_registers_subview_type=0;
 			for (i=0;i<limite;i++) {
 					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea,0);
 					//menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
-					menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+					//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
+					zxvision_print_string_defaults_fillspc(w,1,linea++,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_linea;
 			}
 
@@ -9640,14 +9819,16 @@ int menu_debug_registers_subview_type=0;
 		if (menu_debug_registers_current_view==2 || menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) {
             //Separador
         	sprintf (textoregistros," ");
-            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+            //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+		zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 
 			//
 			// MEMPTR y T-Estados
 			//
             sprintf (textoregistros,"MEMPTR: %04X TSTATES: %05d",memptr,t_estados);
-            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+            //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+		zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 
 			//
@@ -9662,7 +9843,8 @@ int menu_debug_registers_subview_type=0;
 
 
             sprintf (textoregistros,"TSTATL: %03d TSTATP: %s",(t_estados % screen_testados_linea),buffer_estadosparcial );
-            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+            //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+		zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 			//
 			// FPS y Scanline
@@ -9674,7 +9856,8 @@ int menu_debug_registers_subview_type=0;
 			else {
 	            sprintf (textoregistros,"SCANLINE: %03d FPS: %03d",t_scanline_draw,ultimo_fps);
 			}
-            menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+            //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+		zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 
 
@@ -9723,7 +9906,8 @@ int menu_debug_registers_subview_type=0;
 	            sprintf (textoregistros,"%s%s%s",feporttext,flashtext,idleporttext );
 
 				autodetect_rainbow.v=copia_autodetect_rainbow.v;
-    	        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+    	        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+		zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 
 
 			}
@@ -9734,7 +9918,8 @@ int menu_debug_registers_subview_type=0;
 			//
 			if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
                         sprintf (textoregistros,"AUDIO: BEEPER: %03d AY: %03d", (MACHINE_IS_ZX8081 ? da_amplitud_speaker_zx8081() :  value_beeper),da_output_ay() );
-                        menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 			}						
 
 
@@ -9754,7 +9939,8 @@ int menu_debug_registers_subview_type=0;
 						sprintf (textoregistros,"VRAM0 SRAM10 SRAM11 not apert.");
 				}
 
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 			}
 
 
@@ -9765,7 +9951,8 @@ int menu_debug_registers_subview_type=0;
 			if (MACHINE_IS_Z88) {
 				z80_byte srunsbit=blink_com >> 6;
 				sprintf (textoregistros,"SRUN: %01d SBIT: %01d SNZ: %01d COM: %01d",(srunsbit>>1)&1,srunsbit&1,z88_snooze.v,z88_coma.v);
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 			}
 
 
@@ -9775,7 +9962,8 @@ int menu_debug_registers_subview_type=0;
 
 			if (MACHINE_IS_TBBLUE) {
 				sprintf (textoregistros,"COPPER PC: %04XH CTRL: %02XH",tbblue_copper_pc,tbblue_copper_get_control_bits() );
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 			}
 
 
@@ -9785,7 +9973,8 @@ int menu_debug_registers_subview_type=0;
 			if (MACHINE_IS_ZX8081) {
 				sprintf (textoregistros,"LNCTR: %x LCNTR %s ULAV: %s",(video_zx8081_linecntr &7),(video_zx8081_linecntr_enabled.v ? "On" : "Off"),
 					(video_zx8081_ula_video_output == 0 ? "+5V" : "0V"));
-				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				//menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,textoregistros);
 			}
 
 
@@ -9811,7 +10000,8 @@ int menu_debug_registers_subview_type=0;
 
 
 			textopaginasmem[max_longitud]=0;
-    		menu_escribe_linea_opcion(linea++,-1,1,textopaginasmem);
+    		//menu_escribe_linea_opcion(linea++,-1,1,textopaginasmem);
+		zxvision_print_string_defaults_fillspc(w,1,linea++,textopaginasmem);
 
 
 
@@ -9830,7 +10020,7 @@ int continuous_step=0;
 
 
 
-void menu_debug_registers_ventana(void)
+void old_delete_menu_debug_registers_ventana(void)
 {
 	char titulo[33];
 
@@ -9858,6 +10048,80 @@ void menu_debug_registers_ventana(void)
 	if (menu_debug_registers_current_view==7) menu_dibuja_ventana(0,0,32,5,titulo);
 
 	else menu_dibuja_ventana(0,0,32,24,titulo);
+}
+
+
+void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
+{
+
+	int alto_ventana;
+
+        if (menu_debug_registers_current_view==7) {
+                alto_ventana=5;
+        }
+
+        else {
+                alto_ventana=24;
+        }
+
+	zxvision_set_visible_height(w,alto_ventana);
+}
+
+void menu_debug_registers_set_title(zxvision_window *w)
+{
+        char titulo[33];
+
+        //menu_debug_registers_current_view
+
+        //Por defecto
+                                   //0123456789012345678901
+        sprintf (titulo,"Debug CPU             V");
+
+        if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) {
+                                           //0123456789012345678901
+                sprintf (titulo,"Debug CPU (brk cond)  V");
+                //printf ("breakpoint pending show\n");
+        }
+        else {
+                                                                                        //0123456789012345678901
+                if (cpu_step_mode.v) sprintf (titulo,"Debug CPU (step)      V");
+                //printf ("no breakpoint pending show\n");
+        }
+
+        //Poner numero de vista siempre en posicion 23
+        sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
+
+	strcpy(w->window_title,titulo);
+}
+
+
+void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
+{
+	int ancho_ventana=32;
+	int alto_ventana=24;
+
+
+	/*
+        if (menu_debug_registers_current_view==7) {
+		alto_ventana=5;
+		//menu_dibuja_ventana(0,0,32,5,titulo);
+	}
+
+        else {
+		alto_ventana=24;
+		//menu_dibuja_ventana(0,0,32,24,titulo);	
+	}
+	*/
+
+	zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,
+                                                        ancho_ventana-1,alto_ventana-2,"Debug CPU");
+
+
+	//Cambiar el ancho visible segun la vista actual
+	menu_debug_registers_zxvision_ventana_set_height(ventana);
+
+	
+
 }
 
 
@@ -9952,14 +10216,14 @@ void menu_watches(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_watches);
                 retorno_menu=menu_dibuja_menu(&watches_opcion_seleccionada,&item_seleccionado,array_menu_watches,"Watches" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -9976,11 +10240,17 @@ void menu_watches(MENU_ITEM_PARAMETERS)
 	if (menu_debug_registers_current_view==7) menu_debug_registers_current_view=1;
 }*/
 
-void menu_debug_registers_set_view(int vista)
+void menu_debug_registers_set_view(zxvision_window *ventana,int vista)
 {
+
+	zxvision_clear_window_contents(ventana);
+
 	if (vista<1 || vista>7) vista=1;
 
 	menu_debug_registers_current_view=vista;
+
+
+	menu_debug_registers_zxvision_ventana_set_height(ventana);
 }
 
 void menu_debug_registers_splash_memory_zone(void)
@@ -10156,7 +10426,7 @@ void menu_debug_runto(void)
 	//Y salir
 }
 
-int menu_debug_registers_show_ptr_text(int linea)
+int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 {
 
 	debug_printf (VERBOSE_DEBUG,"Refreshing ptr");
@@ -10181,7 +10451,8 @@ int menu_debug_registers_show_ptr_text(int linea)
                                 //sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
 								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~7:View",
                                         string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
-                                menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
 
 				}
 
@@ -10429,6 +10700,33 @@ printf ("\n");
 }
 
 
+int menu_debug_registers_print_legend(zxvision_window *w,int linea)
+{
+
+
+
+     if (menu_debug_registers_current_view!=7) {
+		char buffer_mensaje[64];
+
+                                menu_debug_get_legend(0,buffer_mensaje);
+                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
+
+                                menu_debug_get_legend(1,buffer_mensaje);
+                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
+
+                                menu_debug_get_legend(2,buffer_mensaje);
+                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
+
+      }
+
+	return linea;
+
+}
+
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -10463,7 +10761,12 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 
-	menu_debug_registers_ventana();
+	//menu_debug_registers_ventana();
+	zxvision_window ventana;
+	menu_debug_registers_zxvision_ventana(&ventana);
+	menu_debug_registers_set_title(&ventana);
+
+	//zxvision_draw_window(&ventana);
 
 
 
@@ -10485,12 +10788,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 										valor_contador_segundo_anterior=contador_segundo;
 
 
-		menu_debug_registers_ventana();
+		//menu_debug_registers_ventana();
+		menu_debug_registers_set_title(&ventana);
+		zxvision_draw_window(&ventana);
 
 		menu_debug_registers_adjust_ptr_on_follow();
 
                 linea=0;
-                linea=menu_debug_registers_show_ptr_text(linea);
+                linea=menu_debug_registers_show_ptr_text(&ventana,linea);
 
                 linea++;
 
@@ -10502,27 +10807,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
                         
-				linea=menu_debug_registers_print_registers(linea);
+				linea=menu_debug_registers_print_registers(&ventana,linea);
 
                         	//menu_escribe_linea_opcion(linea++,-1,1,"");
 
 							linea=19;
 
 
+				linea=menu_debug_registers_print_legend(&ventana,linea);
 
-
-				if (menu_debug_registers_current_view!=7) {
-
-				menu_debug_get_legend(0,buffer_mensaje);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-
-				menu_debug_get_legend(1,buffer_mensaje);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-
-				menu_debug_get_legend(2,buffer_mensaje);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-
-				}
 
 
 
@@ -10531,13 +10824,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
+				zxvision_draw_window_contents(&ventana);
+
                         	if (menu_multitarea==0) menu_refresca_pantalla();
 
-				//tecla=menu_get_pressed_key();
-
-				//printf ("tecla: %d\n",tecla);
-
-				//if (tecla=='s') cpu_step_mode.v=1;
 
 	                }
 
@@ -10548,7 +10838,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				if (debug_if_breakpoint_action_menu(catch_breakpoint_index)) {
 				  menu_debug_registers_gestiona_breakpoint();
 				  //Y redibujar ventana para reflejar breakpoint cond
-				  menu_debug_registers_ventana();
+				  //menu_debug_registers_ventana();
 				}
 
 				else {
@@ -10571,7 +10861,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			//Hay tecla pulsada
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
-                                tecla=menu_get_pressed_key();
+                                //tecla=menu_get_pressed_key();
+				tecla=zxvision_common_getkey_refresh();
 
                                 //Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
                                 if (tecla==0) {
@@ -10596,30 +10887,31 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 																if (tecla=='z') {
 																	menu_debug_registers_change_memory_zone();
-																	menu_debug_registers_ventana();
+																	//menu_debug_registers_ventana();
 
 																	//menu_debug_change_memory_zone();
 																}
 
 
 				if (tecla=='d') {
-					cls_menu_overlay();
+					//cls_menu_overlay();
 					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
 					menu_debug_disassemble(0);
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					menu_debug_registers_ventana();
+					//menu_debug_registers_ventana();
 				}
 
 				if (tecla=='b') {
-					cls_menu_overlay();
+					//cls_menu_overlay();
 
 
 					
 					menu_breakpoints(0);
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					menu_debug_registers_ventana();
+					//menu_debug_registers_ventana();
+					//zxvision_draw_window(&ventana); //TODO tempppp
 				}
 
 				
@@ -10629,7 +10921,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_next_dis_show_hexa();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 
 				if (tecla=='l' && menu_debug_registers_current_view==1) {
@@ -10637,11 +10929,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_toggle_breakpoint();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 
 				if (tecla=='u' && menu_debug_registers_current_view==1) {
-		                           cls_menu_overlay();
+		                           //cls_menu_overlay();
                                         menu_debug_runto();
                                         tecla=2; //Simular ESC
 
@@ -10649,22 +10941,22 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                 }								
 
 				if (tecla=='w') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_watches(0);
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 
 								
 								
 				if (tecla=='i') {
 										last_debug_poke_dir=menu_debug_memory_pointer;
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                         menu_debug_poke(0);
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }								
 
                                 if (tecla=='p') {
@@ -10672,16 +10964,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					debug_t_estados_parcial=0;
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 
 				//Vista. Entre 1 y 6
 				if (tecla>='1' && tecla<='7') {
-                                        cls_menu_overlay();
-					menu_debug_registers_set_view(tecla-'0');
+                                        //cls_menu_overlay();
+					menu_debug_registers_set_view(&ventana,tecla-'0');
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 				}
 
 				if (tecla=='f') {
@@ -10689,7 +10981,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					menu_debug_switch_follow_pc();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 				}
 
 				if (tecla=='t') {
@@ -10700,7 +10992,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 				}
 
                                 if (tecla=='r') {
@@ -10710,7 +11002,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 
 				if (tecla==11) {
@@ -10722,7 +11014,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			
 					//Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 
 				if (tecla==10) {
@@ -10734,7 +11026,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 
 				//24 pgup
@@ -10747,7 +11039,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
                                 }
 				//25 pgwn
 				if (tecla==25) {
@@ -10759,7 +11051,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 				}
 
 
@@ -10780,13 +11072,16 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 		else {
 
 
-	                menu_debug_registers_ventana();
+	                //menu_debug_registers_ventana();
+			menu_debug_registers_set_title(&ventana);
+			zxvision_draw_window(&ventana);
+
 			menu_breakpoint_exception_pending_show.v=0;
 
 			menu_debug_registers_adjust_ptr_on_follow();
 	
         	        linea=0;
-	                linea=menu_debug_registers_show_ptr_text(linea);
+	                linea=menu_debug_registers_show_ptr_text(&ventana,linea);
 
         	        linea++;
 
@@ -10795,7 +11090,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			int si_ejecuta_una_instruccion=1;
 
-                        linea=menu_debug_registers_print_registers(linea);
+                        linea=menu_debug_registers_print_registers(&ventana,linea);
 
 						linea=19;
                        	//menu_escribe_linea_opcion(linea++,-1,1,"");
@@ -10806,23 +11101,15 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
         	        menu_writing_inverse_color.v=1;
 
 
+		
+
+
 
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
 
-				if (menu_debug_registers_current_view!=7) {
 
-				menu_debug_get_legend(0,buffer_mensaje);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-
-				menu_debug_get_legend(1,buffer_mensaje);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-
-				menu_debug_get_legend(2,buffer_mensaje);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-
-
-				}
+				linea=menu_debug_registers_print_legend(&ventana,linea);
 
 																	// ~~1-~~5 View
 			}
@@ -10835,14 +11122,24 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				char buffer_progreso[32];
 				menu_debug_cont_speed_progress(buffer_progreso);
 				sprintf (buffer_mensaje,"~~C: Speed %d %s",menu_debug_continuous_speed,buffer_progreso);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				//menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_mensaje);
 
-				menu_escribe_linea_opcion(linea++,-1,1,"Any other key: Stop cont step");
+				//menu_escribe_linea_opcion(linea++,-1,1,"Any other key: Stop cont step");
+													  //0123456789012345678901234567890
+
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Any other key: Stop cont step");
 													  //0123456789012345678901234567890
 
 				//si lento, avisar
-				if (menu_debug_continuous_speed<=1) menu_escribe_linea_opcion(linea++,-1,1,"Note: Do long key presses");
-				else menu_escribe_linea_opcion(linea++,-1,1,"                         "); 
+				if (menu_debug_continuous_speed<=1) {
+					//menu_escribe_linea_opcion(linea++,-1,1,"Note: Do long key presses");
+					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Note: Do long key presses");
+				}
+				else {
+					//menu_escribe_linea_opcion(linea++,-1,1,"                         "); 
+					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"                         ");
+				}
 
 				}
 
@@ -10863,6 +11160,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 			//Actualizamos pantalla
+			//zxvision_draw_window(&ventana);
+			zxvision_draw_window_contents(&ventana);
 			menu_refresca_pantalla();
 
 
@@ -10870,7 +11169,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			if (continuous_step==0)
 			{
 				menu_espera_tecla_no_cpu_loop();
-			        tecla=menu_get_pressed_key();
+			        //tecla=menu_get_pressed_key();
+				tecla=zxvision_common_getkey_refresh();
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
 				if (tecla==0) {
@@ -10910,7 +11210,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         menu_debug_cpu_step_over();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -10918,7 +11218,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					if (tecla=='z') {
 
-cls_menu_overlay();
+					//cls_menu_overlay();
 
 				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
@@ -10928,7 +11228,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					menu_debug_registers_ventana();
+					//menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
@@ -10941,7 +11241,7 @@ cls_menu_overlay();
 																}								
 
                                 if (tecla=='b') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
 
 				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
@@ -10951,7 +11251,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					menu_debug_registers_ventana();
+					//menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
@@ -10964,7 +11264,7 @@ cls_menu_overlay();
                                 }
 
                                 if (tecla=='w') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
 
 				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
@@ -10976,7 +11276,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -10988,7 +11288,7 @@ cls_menu_overlay();
 
 
                   if (tecla=='i') {
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
 
 				//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
@@ -11000,7 +11300,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11018,7 +11318,7 @@ cls_menu_overlay();
                                         menu_debug_next_dis_show_hexa();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
 											//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11029,14 +11329,14 @@ cls_menu_overlay();
                                         menu_debug_toggle_breakpoint();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
                                 }
 								
 				if (tecla=='u' && menu_debug_registers_current_view==1) {
-		                           cls_menu_overlay();
+		                           //cls_menu_overlay();
                                         menu_debug_runto();
                                         //tecla=2; //Simular ESC
 
@@ -11058,7 +11358,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11066,13 +11366,13 @@ cls_menu_overlay();
 
 	//Vista. Entre 1 y 6
 				if (tecla>='1' && tecla<='7') {
-                                        cls_menu_overlay();
-					menu_debug_registers_set_view(tecla-'0');
+                                        //cls_menu_overlay();
+					menu_debug_registers_set_view(&ventana,tecla-'0');
 				
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11083,7 +11383,7 @@ cls_menu_overlay();
 										menu_debug_switch_follow_pc();
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11108,7 +11408,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11130,7 +11430,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11150,7 +11450,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11165,7 +11465,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11181,7 +11481,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11196,7 +11496,7 @@ cls_menu_overlay();
 
                                         //Decimos que no hay tecla pulsada
                                         acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                        menu_debug_registers_ventana();
+                                        //menu_debug_registers_ventana();
 
                                         //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                                         si_ejecuta_una_instruccion=0;
@@ -11205,7 +11505,7 @@ cls_menu_overlay();
 
 
 				if (tecla=='v') {
-					cls_menu_overlay();
+					//cls_menu_overlay();
 				        menu_espera_no_tecla_no_cpu_loop();
 
 				        //para que no se vea oscuro
@@ -11224,10 +11524,14 @@ cls_menu_overlay();
 
 					menu_cls_refresh_emulated_screen();
 
-					menu_debug_registers_ventana();
+					//menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
+
+
+					//Y redibujar ventana
+					zxvision_draw_window(&ventana);
 				}
 
 				//if (tecla==2) { //ESC
@@ -11237,7 +11541,7 @@ cls_menu_overlay();
 					//Decimos que no hay tecla pulsada
 					acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 
-					menu_debug_registers_ventana();
+					//menu_debug_registers_ventana();
 
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
 					si_ejecuta_una_instruccion=0;
@@ -11271,7 +11575,8 @@ cls_menu_overlay();
 				acumulado=menu_da_todas_teclas();
 				if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) != MENU_PUERTO_TECLADO_NINGUNA) {
 
-					tecla=menu_get_pressed_key();
+					//tecla=menu_get_pressed_key();
+					tecla=zxvision_common_getkey_refresh();
 
 					if (tecla=='c') {
 						menu_debug_registers_next_cont_speed();
@@ -11319,7 +11624,7 @@ cls_menu_overlay();
 				if (debug_if_breakpoint_action_menu(catch_breakpoint_index)) {
 				  menu_debug_registers_gestiona_breakpoint();
 				  //Y redibujar ventana para reflejar breakpoint cond
-				  menu_debug_registers_ventana();
+				  //menu_debug_registers_ventana();
 				}
 
 				else {
@@ -11336,6 +11641,8 @@ cls_menu_overlay();
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1);
 
         cls_menu_overlay();
+
+	zxvision_destroy_window(&ventana);
 
 }
 
@@ -13637,14 +13944,14 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&audio_settings_opcion_seleccionada,&item_seleccionado,array_menu_audio_settings,"Audio" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 	                //llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-							cls_menu_overlay();
+							//cls_menu_overlay();
         	        }
 		}
 
@@ -13701,14 +14008,14 @@ int menu_z88_eprom_size(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_eprom_size_opcion_seleccionada,&item_seleccionado,array_menu_z88_eprom_size,"Eprom Size" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
 
 			//Devolver tamanyo eprom
@@ -13878,14 +14185,14 @@ int menu_z88_flash_intel_size(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_flash_intel_size_opcion_seleccionada,&item_seleccionado,array_menu_z88_flash_intel_size,"Flash Size" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
 
                         //Devolver tamanyo flash_intel
@@ -14208,14 +14515,14 @@ void menu_z88_slot_insert(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_slot_insert_opcion_seleccionada,&item_seleccionado,array_menu_z88_slot_insert,texto_titulo);
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -14797,14 +15104,14 @@ void menu_z88_slots(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_slots_opcion_seleccionada,&item_seleccionado,array_menu_z88_slots,"Z88 Memory Slots" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -15006,14 +15313,14 @@ void menu_ula_advanced(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_advanced_opcion_seleccionada,&item_seleccionado,array_menu_hardware_advanced,"Advanced Timing Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -15176,14 +15483,14 @@ void menu_hardware_printers(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_printers_opcion_seleccionada,&item_seleccionado,array_menu_hardware_printers,"Printing emulation" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -15304,7 +15611,7 @@ void menu_hardware_redefine_keys(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_redefine_keys_opcion_seleccionada,&item_seleccionado,array_menu_hardware_redefine_keys,"Redefine keys" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 
 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -15312,7 +15619,7 @@ if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -15529,7 +15836,7 @@ int menu_joystick_event_list(void)
 
                 retorno_menu=menu_dibuja_menu(&joystick_event_list_opcion_seleccionada,&item_seleccionado,array_menu_joystick_event_list,"Select event" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 
 								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -15673,14 +15980,14 @@ void menu_hardware_realjoystick_keys(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_realjoystick_keys_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_keys,"Joystick to key" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -15738,14 +16045,14 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_realjoystick_event_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_event,"Joystick to event" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -15994,14 +16301,14 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_realjoystick_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick,"Real joystick emulation" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -16541,13 +16848,13 @@ void menu_dandanator(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&dandanator_opcion_seleccionada,&item_seleccionado,array_menu_dandanator,titulo_menu);
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -16663,13 +16970,13 @@ void menu_kartusho(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&kartusho_opcion_seleccionada,&item_seleccionado,array_menu_kartusho,"Kartusho" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -16872,13 +17179,13 @@ menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
 
                 retorno_menu=menu_dibuja_menu(&betadisk_opcion_seleccionada,&item_seleccionado,array_menu_betadisk,"Betadisk" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -16992,13 +17299,13 @@ void menu_superupgrade(MENU_ITEM_PARAMETERS)
 
 retorno_menu=menu_dibuja_menu(&superupgrade_opcion_seleccionada,&item_seleccionado,array_menu_superupgrade,"Superupgrade" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -17052,14 +17359,14 @@ void menu_timexcart(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&timexcart_opcion_seleccionada,&item_seleccionado,array_menu_timexcart,"Timex Cartridge" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -17232,13 +17539,13 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&mmc_divmmc_opcion_seleccionada,&item_seleccionado,array_menu_mmc_divmmc,"MMC" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -17589,13 +17896,13 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&ide_divide_opcion_seleccionada,&item_seleccionado,array_menu_ide_divide,"IDE" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -17767,13 +18074,13 @@ void menu_esxdos_traps(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&esxdos_traps_opcion_seleccionada,&item_seleccionado,array_menu_esxdos_traps,"ESXDOS handler" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -17976,13 +18283,13 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&plusthreedisk_opcion_seleccionada,&item_seleccionado,array_menu_plusthreedisk,"+3 Disk" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -18183,13 +18490,13 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&storage_settings_opcion_seleccionada,&item_seleccionado,array_menu_storage_settings,"Storage" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -18276,13 +18583,13 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&ula_settings_opcion_seleccionada,&item_seleccionado,array_menu_ula_settings,"ULA Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -18894,13 +19201,13 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&multiface_opcion_seleccionada,&item_seleccionado,array_menu_multiface,"Multiface settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -19005,13 +19312,13 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&cpu_settings_opcion_seleccionada,&item_seleccionado,array_menu_cpu_settings,"CPU Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -19063,7 +19370,7 @@ void menu_hardware_set_f_func_action(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_set_f_func_action_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_func_action,"Set F keys" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 
 								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -19123,7 +19430,7 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_set_f_functions_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_functions,"Set F keys" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 
 								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -19131,7 +19438,7 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -19274,13 +19581,13 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&keyboard_settings_opcion_seleccionada,&item_seleccionado,array_menu_keyboard_settings,"Keyboard Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
 	                if (item_seleccionado.menu_funcion!=NULL) {
         	                //printf ("actuamos por funcion\n");
                 	        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
 	                }
 		}
 
@@ -19431,13 +19738,13 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_settings_opcion_seleccionada,&item_seleccionado,array_menu_hardware_settings,"Hardware Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
 	                if (item_seleccionado.menu_funcion!=NULL) {
         	                //printf ("actuamos por funcion\n");
                 	        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
 	                }
 		}
 
@@ -19561,13 +19868,13 @@ void menu_hardware_memory_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_memory_settings_opcion_seleccionada,&item_seleccionado,array_menu_hardware_memory_settings,"Memory Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -22724,14 +23031,14 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&tape_settings_opcion_seleccionada,&item_seleccionado,array_menu_tape_settings,"Tape" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
         	        }
 		}
 
@@ -23219,14 +23526,14 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&snapshot_opcion_seleccionada,&item_seleccionado,array_menu_snapshot,"Snapshot" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
                         }
                 }
 
@@ -23969,14 +24276,14 @@ void menu_debug_cpu_stats(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_cpu_stats);
 
                 retorno_menu=menu_dibuja_menu(&cpu_stats_opcion_seleccionada,&item_seleccionado,array_menu_cpu_stats,"CPU Statistics" );
-		cls_menu_overlay();
+		//cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -24232,14 +24539,14 @@ void menu_find_bytes(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&find_bytes_opcion_seleccionada,&item_seleccionado,array_menu_find_bytes,"Find bytes" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -24299,14 +24606,14 @@ void menu_debug_input_file_keyboard(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_input_file_keyboard);
 
                 retorno_menu=menu_dibuja_menu(&input_file_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_input_file_keyboard,"Input File Spooling" );
-		cls_menu_overlay();
+		//cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -24412,14 +24719,14 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&cpu_transaction_log_opcion_seleccionada,&item_seleccionado,array_menu_cpu_transaction_log,"CPU Transaction Log" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -24931,14 +25238,14 @@ void menu_find_lives(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&find_lives_opcion_seleccionada,&item_seleccionado,array_menu_find_lives,"Find lives" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -24973,14 +25280,14 @@ void menu_find(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&find_opcion_seleccionada,&item_seleccionado,array_menu_find,"Find" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -25042,14 +25349,14 @@ void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue,titulo_ventana);
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
                         }
                 }
 
@@ -25297,14 +25604,14 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&debug_settings_opcion_seleccionada,&item_seleccionado,array_menu_debug_settings,"Debug" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
                         }
                 }
 
@@ -25593,14 +25900,14 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&textspeech_opcion_seleccionada,&item_seleccionado,array_menu_textspeech,"Text to Speech" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -25838,14 +26145,14 @@ void menu_external_tools_config(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&external_tools_config_opcion_seleccionada,&item_seleccionado,array_menu_external_tools_config,"External tools paths" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -25971,14 +26278,14 @@ void menu_change_video_driver(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&change_video_driver_opcion_seleccionada,&item_seleccionado,array_menu_change_video_driver,"Change Video Driver" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -26137,14 +26444,14 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&colour_settings_opcion_seleccionada,&item_seleccionado,array_menu_colour_settings,"Colour Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -26280,14 +26587,14 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"Window Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -26346,14 +26653,14 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&osd_settings_opcion_seleccionada,&item_seleccionado,array_menu_osd_settings,"OSD Settings");
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -26416,14 +26723,14 @@ void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&accessibility_settings_opcion_seleccionada,&item_seleccionado,array_menu_accessibility_settings,"Accessibility Settings");
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -26551,14 +26858,14 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&interface_settings_opcion_seleccionada,&item_seleccionado,array_menu_interface_settings,"GUI Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -26845,14 +27152,14 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&chardetection_settings_opcion_seleccionada,&item_seleccionado,array_menu_chardetection_settings,"Print char traps" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -27420,7 +27727,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&display_settings_opcion_seleccionada,&item_seleccionado,array_menu_display_settings,"Display" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		//NOTA: no llamar por numero de opcion dado que hay opciones que ocultamos (relacionadas con real video)
 
@@ -27430,7 +27737,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
         	        }
 		}
 
@@ -27803,7 +28110,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 
 			retorno_menu=menu_dibuja_menu(&hotswap_machine_opcion_seleccionada,&item_seleccionado,array_menu_machine_selection,"Hotswap Machine" );
 
-	                cls_menu_overlay();
+	                //cls_menu_overlay();
 
 
                         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -28243,14 +28550,14 @@ void menu_custom_machine(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&custom_machine_opcion_seleccionada,&item_seleccionado,array_menu_custom_machine,"Custom Machine" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -28342,7 +28649,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
 
                         //printf ("Opcion seleccionada: %d\n",machine_selection_por_fabricante_opcion_seleccionada);
 
-                        cls_menu_overlay();
+                        //cls_menu_overlay();
 
                         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 
@@ -28447,7 +28754,7 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
 
                         //printf ("Opcion seleccionada: %d\n",machine_selection_opcion_seleccionada);
 
-                        cls_menu_overlay();
+                        //cls_menu_overlay();
 
                         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 
@@ -28467,7 +28774,7 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
                                 if (item_seleccionado.menu_funcion!=NULL) {
                                         //printf ("actuamos por funcion\n");
                                         item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                 }
 
 
@@ -29016,7 +29323,7 @@ int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior)
 
                 retorno_menu=menu_dibuja_menu(&confirm_yes_no_opcion_seleccionada,&item_seleccionado,array_menu_confirm_yes_no,texto_ventana);
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -29064,7 +29371,7 @@ int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcio
 
                 retorno_menu=menu_dibuja_menu(&simple_two_choices_opcion_seleccionada,&item_seleccionado,array_menu_simple_two_choices,texto_ventana);
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -29115,7 +29422,7 @@ int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
 
                 retorno_menu=menu_dibuja_menu(&ask_no_append_truncate_opcion_seleccionada,&item_seleccionado,array_menu_ask_no_append_truncate,texto_ventana);
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -29170,7 +29477,7 @@ int menu_ask_list_texto(char *texto_ventana,char *texto_interior,char *entradas_
 
                 retorno_menu=menu_dibuja_menu(&ask_list_texto_opcion_seleccionada,&item_seleccionado,array_menu_ask_list,texto_ventana);
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         return ask_list_texto_opcion_seleccionada-1;
@@ -29719,14 +30026,14 @@ void menu_about(MENU_ITEM_PARAMETERS)
 
             retorno_menu=menu_dibuja_menu(&about_opcion_seleccionada,&item_seleccionado,array_menu_about,"Help" );
 
-			cls_menu_overlay();
+			//cls_menu_overlay();
 
             if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
             	//llamamos por valor de funcion
                 if (item_seleccionado.menu_funcion!=NULL) {
                 	//printf ("actuamos por funcion\n");
                     item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                    cls_menu_overlay();
+                    //cls_menu_overlay();
                 }
             }
 
@@ -29826,14 +30133,14 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_tape_opcion_seleccionada,&item_seleccionado,array_menu_settings_tape,"Tape Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
         	        }
 		}
 
@@ -29892,13 +30199,13 @@ void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&zxuno_spi_flash_opcion_seleccionada,&item_seleccionado,array_menu_zxuno_spi_flash,"ZX-Uno Flash" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -29968,13 +30275,13 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_storage_opcion_seleccionada,&item_seleccionado,array_menu_settings_storage,"Storage Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -30107,14 +30414,14 @@ if (menu_display_aa_cond() ) {
 
                 retorno_menu=menu_dibuja_menu(&textdrivers_settings_opcion_seleccionada,&item_seleccionado,array_menu_textdrivers_settings,"Text Driver Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
+                                //cls_menu_overlay();
                         }
                 }
 
@@ -30531,7 +30838,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_display_opcion_seleccionada,&item_seleccionado,array_menu_settings_display,"Display Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		//NOTA: no llamar por numero de opcion dado que hay opciones que ocultamos (relacionadas con real video)
 
@@ -30541,7 +30848,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
         	        }
 		}
 
@@ -30686,14 +30993,14 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_snapshot_opcion_seleccionada,&item_seleccionado,array_menu_settings_snapshot,"Snapshot Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
                         }
                 }
 
@@ -30783,14 +31090,14 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_config_file_opcion_seleccionada,&item_seleccionado,array_menu_settings_config_file,"Configuration file" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
                         }
                 }
 
@@ -30880,14 +31187,14 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_opcion_seleccionada,&item_seleccionado,array_menu_settings,"Settings" );
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 	                //llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
         	        }
 		}
 
@@ -31021,7 +31328,7 @@ void menu_inicio_bucle(void)
 		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
 		//printf ("Retorno menu: %d\n",retorno_menu);
 
-		cls_menu_overlay();
+		//cls_menu_overlay();
 
 		//opcion 11 es F10 salir del emulador
 		//if ( (retorno_menu!=MENU_RETORNO_ESC && retorno_menu!=MENU_RETORNO_F2) &&  (menu_inicio_opcion_seleccionada==15 || retorno_menu==MENU_RETORNO_F10)) {
@@ -31038,7 +31345,7 @@ void menu_inicio_bucle(void)
                 	        //printf ("actuamos por funcion\n");
 				//cls_menu_overlay();
                         	item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
+				//cls_menu_overlay();
 
 				//si ha generado error, no salir
 				if (if_pending_error_message) salir_todos_menus=0;

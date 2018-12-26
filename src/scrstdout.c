@@ -173,7 +173,7 @@ void scrtextspeech_filter_welcome_message(void)
 	textspeech_print_speech(texto_welcome);
 
 	
-	textspeech_print_speech("Press opening curly bracket to manual redraw screen. Press closing curly bracket to automatic redraw screen. Write 'menu' to open the menu");
+	textspeech_print_speech("Press opening curly bracket to manual redraw screen. Press closing curly bracket to automatic redraw screen. Write 'menu' to open the menu. Write 'esc' to simulate scape key on some menu dialogs");
 	
 	
 	char *mensaje_stop="You can stop listening to menu entries by pressing ENTER.";
@@ -195,7 +195,7 @@ int scrstdout_init (void){
 	debug_printf (VERBOSE_INFO,"Init stdout Video Driver"); 
 	
 	
-	printf ("Press { to manual redraw screen. Press } to automatic redraw screen\nWrite 'menu' to open the menu\n");
+	printf ("Press { to manual redraw screen. Press } to automatic redraw screen\nWrite 'menu' to open the menu\nWrite 'esc' to simulate ESC key on some menu dialogs\n");
 	
 	
 	//Mismos mensajes de bienvenida a traves de filtro texto
@@ -402,6 +402,11 @@ void scrstdout_actualiza_tablas_teclado(void){
 					if (!strcmp(buffer_tecla_comando,"menu")) {
 						menu_fire_event_open_menu();
 					}
+
+
+					if (!strcmp(buffer_tecla_comando,"esc")) {
+						anterior_tecla=2;
+					}
 					
 					if (!strcmp(buffer_tecla_comando,"stoptext")) {
 						//Vaciamos cola speech
@@ -481,7 +486,13 @@ void scrstdout_establece_tablas_teclado(int c)
 	scrstdout_reset_teclas();
 	
 	if (c!=0) {
-		ascii_to_keyboard_port(c);
+
+		//tecla ESC
+		if (c==2) {
+			puerto_especial1 &=(255-1);
+		}
+
+		else ascii_to_keyboard_port(c);
 	}
 	
 }
