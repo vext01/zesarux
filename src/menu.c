@@ -3146,14 +3146,12 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,z80_byte indice
 
 	//linea entera con espacios
 	for (i=0;i<ventana_ancho;i++) {
-		//menu_escribe_texto_ventana(i,indice,0,papel," ");
 		zxvision_print_string(ventana,i,indice,0,papel,0," ");
 	}
 
 	//y texto propiamente
 	int startx=menu_escribe_linea_startx;
-        //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
-		zxvision_print_string(ventana,startx,indice,tinta,papel,0,texto);
+	zxvision_print_string(ventana,startx,indice,tinta,papel,0,texto);
 
 	//Si tiene dos colores
 	if (encontrado>=0) {
@@ -3174,11 +3172,11 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,z80_byte indice
 			}
 		}
 	}
-                     if (menu_if_speech_enabled() ) {
-                                //printf ("redibujar ventana\n");
-                                zxvision_draw_window_contents_no_speech(ventana);
-                                //menu_refresca_pantalla();
-                        }
+	if (menu_if_speech_enabled() ) {
+    	//printf ("redibujar ventana\n");
+        zxvision_draw_window_contents_no_speech(ventana);
+        //menu_refresca_pantalla();
+    }
 
 	menu_textspeech_send_text(texto);
 
@@ -9677,7 +9675,7 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
         menu_escribe_linea_startx=0;
 					
 				char buffer_linea[64];
-                                for (i=0;i<limite;i++) {
+                for (i=0;i<limite;i++) {
 
 					//Por si acaso
 					//buffer_registros[0]=0;
@@ -9719,7 +9717,7 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 					
 
-                       			debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
+                    debugger_disassemble(dumpassembler,32,&longitud_op,menu_debug_memory_pointer_copia);
 
 /*
 //Si desensamblado en menu view registers muestra:
@@ -9749,7 +9747,7 @@ int menu_debug_registers_subview_type=0;
 
 
 
-                                        //menu_escribe_linea_opcion(linea,opcion_actual,opcion_activada,buffer_linea);
+                    //menu_escribe_linea_opcion(linea,opcion_actual,opcion_activada,buffer_linea);
 				
 
 					//zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
@@ -9783,7 +9781,13 @@ int menu_debug_registers_subview_type=0;
                                         if (buffer_linea[columna_registros]!=' ' && buffer_linea[columna_registros]!=0) {
                                                 //Agregamos linea perdiendo la linea en blanco de margen
 						//menu_escribe_linea_opcion(linea,-1,1,buffer_linea);
-						zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
+						//zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
+
+					//De los pocos usos de menu_escribe_linea_opcion_zxvision,
+					//solo se usa en menus y dos veces en esta funcion
+					//en este caso, es para poder procesar los caracteres "||"
+					menu_escribe_linea_opcion_zxvision(w,linea,-1,1,buffer_linea);
+
 
 					}
 

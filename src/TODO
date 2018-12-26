@@ -17,14 +17,9 @@ zxvision_draw_window para refrescar lo que habia debajo
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision
 
--osd keyboard en zxvision
-
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
-
--migrar ventana debug cpu a zxvision
-
 
 
 ----fin zxvision----
