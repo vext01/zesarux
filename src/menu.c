@@ -6309,6 +6309,33 @@ z80_byte zxvision_common_getkey_refresh(void)
 	return tecla;
 }
 
+
+//Igual que zxvision_common_getkey_refresh pero sin esperar a no tecla
+z80_byte zxvision_common_getkey_refresh_noesperanotec(void)
+{
+	z80_byte tecla;
+
+	     if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+		}					
+
+		
+	            menu_cpu_core_loop();
+
+
+				menu_espera_tecla();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}
+
+	return tecla;
+}
+
 z80_byte zxvision_common_getkey_refresh_noesperatecla(void)
 //Igual que zxvision_common_getkey_refresh pero sin esperar tecla cuando multitarea activa
 {
@@ -10535,14 +10562,27 @@ void menu_debug_registers_next_cont_speed(void)
 //Si borra el menu a cada pulsacion y muestra la pantalla de la maquina emulada debajo
 void menu_debug_registers_if_cls(void)
 {
-                                 
+                                
 	//A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
 	if (debug_settings_show_screen.v) {
 		cls_menu_overlay();
-
 		menu_refresca_pantalla();
 
+		//Y forzar en este momento a mostrar pantalla
+		//scr_refresca_pantalla_solo_driver();
+		//printf ("refrescando pantalla\n");
 	}
+
+
+	if (cpu_step_mode.v==1 || menu_multitarea==0) {
+		//printf ("Esperamos tecla NO cpu loop\n");
+		menu_espera_no_tecla_no_cpu_loop();
+	}
+	else {
+		//printf ("Esperamos tecla SI cpu loop\n");
+		menu_espera_no_tecla();
+	}
+
 
 }
 
@@ -10831,7 +10871,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			//Hay tecla pulsada
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
-				tecla=zxvision_common_getkey_refresh();
+				//tecla=zxvision_common_getkey_refresh();
+				tecla=zxvision_common_getkey_refresh_noesperanotec();
 
             	//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
                 if (tecla==0) {
@@ -10842,7 +10883,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //printf ("tecla: %d\n",tecla);
                     //A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
                     menu_debug_registers_if_cls();
-                    menu_espera_no_tecla_no_cpu_loop();
+                    //menu_espera_no_tecla_no_cpu_loop();
                 }
 
 
@@ -11061,13 +11102,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			//Esperamos tecla
 			if (continuous_step==0)
-			{
+			{ 
 				menu_espera_tecla_no_cpu_loop();
 					
 				//No quiero que se llame a core loop si multitarea esta activo pero aqui estamos en cpu step
 				int antes_menu_multitarea=menu_multitarea;
 				menu_multitarea=0;
-				tecla=zxvision_common_getkey_refresh();
+				//tecla=zxvision_common_getkey_refresh();
+				tecla=zxvision_common_getkey_refresh_noesperanotec();
 				menu_multitarea=antes_menu_multitarea;
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
@@ -11082,8 +11124,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 					//A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
 					menu_debug_registers_if_cls();
-
-					menu_espera_no_tecla_no_cpu_loop();
+					//menu_espera_no_tecla_no_cpu_loop();
 				}
 
 
