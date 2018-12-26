@@ -10101,21 +10101,8 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 	int alto_ventana=24;
 
 
-	/*
-        if (menu_debug_registers_current_view==7) {
-		alto_ventana=5;
-		//menu_dibuja_ventana(0,0,32,5,titulo);
-	}
-
-        else {
-		alto_ventana=24;
-		//menu_dibuja_ventana(0,0,32,24,titulo);	
-	}
-	*/
-
 	zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,
                                                         ancho_ventana-1,alto_ventana-2,"Debug CPU");
-
 
 	//Cambiar el ancho visible segun la vista actual
 	menu_debug_registers_zxvision_ventana_set_height(ventana);
@@ -11119,27 +11106,21 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
 				if (menu_debug_registers_current_view!=7) {
-				char buffer_progreso[32];
-				menu_debug_cont_speed_progress(buffer_progreso);
-				sprintf (buffer_mensaje,"~~C: Speed %d %s",menu_debug_continuous_speed,buffer_progreso);
-				//menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_mensaje);
+					char buffer_progreso[32];
+					menu_debug_cont_speed_progress(buffer_progreso);
+					sprintf (buffer_mensaje,"~~C: Speed %d %s",menu_debug_continuous_speed,buffer_progreso);
+					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_mensaje);
 
-				//menu_escribe_linea_opcion(linea++,-1,1,"Any other key: Stop cont step");
+					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Any other key: Stop cont step");
 													  //0123456789012345678901234567890
 
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Any other key: Stop cont step");
-													  //0123456789012345678901234567890
-
-				//si lento, avisar
-				if (menu_debug_continuous_speed<=1) {
-					//menu_escribe_linea_opcion(linea++,-1,1,"Note: Do long key presses");
-					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Note: Do long key presses");
-				}
-				else {
-					//menu_escribe_linea_opcion(linea++,-1,1,"                         "); 
-					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"                         ");
-				}
+					//si lento, avisar
+					if (menu_debug_continuous_speed<=1) {
+						zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Note: Do long key presses");
+					}
+					else {
+						zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"                         ");
+					}
 
 				}
 
@@ -11169,8 +11150,12 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 			if (continuous_step==0)
 			{
 				menu_espera_tecla_no_cpu_loop();
-			        //tecla=menu_get_pressed_key();
+					
+				//No quiero que se llame a core loop si multitarea esta activo pero aqui estamos en cpu step
+				int antes_menu_multitarea=menu_multitarea;
+				menu_multitarea=0;
 				tecla=zxvision_common_getkey_refresh();
+				menu_multitarea=antes_menu_multitarea;
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
 				if (tecla==0) {
@@ -11188,18 +11173,6 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					menu_espera_no_tecla_no_cpu_loop();
 				}
 
-
-				//y mostramos ventana de nuevo
-				//NOTA: Si no se hace este cls_menu_overlay, en modos zx80/81, se queda en color oscuro el texto de la ventana
-				//porque? no estoy seguro, pero es necesario este cls_menu_overlay
-
-				//printf ("clear putpixel cache\n");
-				//cls_menu_overlay();
-
-				//menu_debug_registers_ventana();
-
-        		
-        	
 
 				if (tecla=='c') {
 					continuous_step=1;
