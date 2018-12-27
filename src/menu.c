@@ -4000,6 +4000,9 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	zxvision_set_draw_window_parameters(w);
 
+	//Redibujar las de debajo
+	zxvision_draw_below_windows(w);
+
 }
 
 //Borrar contenido ventana con espacios
@@ -5205,6 +5208,9 @@ void zxvision_draw_below_windows(zxvision_window *w)
 		pointer_window=pointer_window->previous_window;
 	}
 
+	int antes_ventana_tipo_activa=ventana_tipo_activa;
+	ventana_tipo_activa=0; //Redibujar las de debajo como inactivas
+
 	//Y ahora de ahi hacia arriba
 	while (pointer_window!=w) {
 		printf ("window from bottom to top %p\n",pointer_window);
@@ -5214,6 +5220,8 @@ void zxvision_draw_below_windows(zxvision_window *w)
 
 		pointer_window=pointer_window->next_window;
 	}
+
+	ventana_tipo_activa=antes_ventana_tipo_activa;
 }
 
 

@@ -166,6 +166,8 @@ extern void zxvision_send_scroll_down(zxvision_window *w);
 extern void zxvision_send_scroll_left(zxvision_window *w);
 extern void zxvision_send_scroll_right(zxvision_window *w);
 
+extern void zxvision_draw_below_windows(zxvision_window *w);
+
 extern void zxvision_set_not_resizable(zxvision_window *w);
 extern void zxvision_set_resizable(zxvision_window *w);
 
