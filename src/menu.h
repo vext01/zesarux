@@ -133,6 +133,9 @@ struct s_zxvision_window {
 
 	//Ventana anterior. Se van poniendo una encima de otra
 	struct s_zxvision_window *previous_window;
+
+	//Ventana siguiente.
+	struct s_zxvision_window *next_window;
 };
 
 typedef struct s_zxvision_window zxvision_window;
