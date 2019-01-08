@@ -8364,7 +8364,7 @@ int scandir_mingw(const char *dir, struct dirent ***namelist,
               int (*compar)(const struct dirent **, const struct dirent **))
 {
 
-	#define MAX_ARCHIVOS_SCANDIR_MINGW 10000
+	#define MAX_ARCHIVOS_SCANDIR_MINGW 20000
         int archivos=0;
 
         //Puntero a cada archivo leido

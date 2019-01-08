@@ -18,6 +18,7 @@ Improved ZRCP:
 -running in verbose or limit mode, or cpu-step command, can now update the display inmediately (having real video setting on)
 Improved vu-meters: high volumes are shown in red
 Improved sprite viewer: you can view sprites up to 512x512
+Improved file selector in Windows: now you can use up to 20000 files in the same directory
 
 Improved disassemble window: 
 *now you can export the disassemble to text file
