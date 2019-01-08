@@ -4254,7 +4254,7 @@ int zxvision_generic_message_cursor_up(zxvision_window *ventana)
 			//printf ("Decrementamos linea cursor\n");
 			ventana->cursor_line--;
 		}
-		else return ventana->cursor_line;;
+		else return ventana->cursor_line;
 
 		//Ver en que offset estamos
 		int offset_y=ventana->offset_y;
@@ -5387,7 +5387,11 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				int papel=caracter->papel;
 
 				//Si esta linea cursor visible
-				if (w->visible_cursor && w->cursor_line==offset_y_final) {
+				int linea_cursor=w->cursor_line;
+				//tener en cuenta desplazamiento de margenes superior e inferior
+				linea_cursor +=w->lower_margin;
+				linea_cursor +=w->upper_margin;
+				if (w->visible_cursor && linea_cursor==offset_y_final) {
 					tinta=ESTILO_GUI_TINTA_SELECCIONADO;
 					papel=ESTILO_GUI_PAPEL_SELECCIONADO;
 				} 
