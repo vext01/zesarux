@@ -33552,7 +33552,7 @@ void menu_filesel_change_to_tmp(char *tmpdir)
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
-int menu_filesel(char *titulo,char *filtros[],char *archivo)
+int old_menu_filesel(char *titulo,char *filtros[],char *archivo)
 {
 
 	//En el caso de stdout es mucho mas simple
@@ -34402,7 +34402,8 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 		if (i<mostrados_en_pantalla) {
 		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,i);
 
-		if (filesel_linea_seleccionada==i) {
+		//if (filesel_linea_seleccionada==i) {
+		if (ventana->cursor_line==i) {
 			char buffer[50],buffer2[50];
 			//primero borrar con espacios
 
@@ -34504,7 +34505,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
-int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
+int menu_filesel(char *titulo,char *filtros[],char *archivo)
 {
 
 	//En el caso de stdout es mucho mas simple
@@ -34730,61 +34731,6 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 				tecla=zxvision_common_getkey_refresh();
 
 
-				if (mouse_movido) {
-					//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
-					//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
-					if (si_menu_mouse_en_ventana() ) {
-						//printf ("dentro ventana\n");
-						//Ver en que zona esta
-						int inicio_y_dir=1+FILESEL_INICIO_DIR;
-						if (si_mouse_zona_archivos()) {
-							//if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
-							//printf ("Dentro lista archivos\n");
-
-							//Ver si linea dentro de rango
-							int linea_final=menu_mouse_y-inicio_y_dir;
-
-							//Si esta en la zona derecha de selector de porcentaje no hacer nada
-							//if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
-							if (menu_mouse_x==FILESEL_ANCHO-1) break;
-
-							//filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
-
-							if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
-								filesel_linea_seleccionada=linea_final;
-								menu_speech_tecla_pulsada=1;
-							}
-							else {
-								//printf ("Cursor mas alla del ultimo item\n");
-							}
-
-						}
-
-						//Ya no tiene sentido hacer scroll al poner arriba o abajo de la zona de archivos el raton,
-						//pues ya se puede seleccionar porcentaje visible con el indicador derecho '*'
-						/*else if (menu_mouse_y==inicio_y_dir-1) {
-								//Justo en la linea superior del directorio
-								menu_filesel_cursor_arriba();
-								menu_speech_tecla_pulsada=1;
-							}
-							else if (menu_mouse_y==inicio_y_dir+FILESEL_ALTO_DIR) {
-								//Justo en la linea inferior del directorio
-								menu_filesel_cursor_abajo();
-								menu_speech_tecla_pulsada=1;
-							}
-						*/
-						
-						else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
-								//En la linea de filtros
-								//nada en especial
-								//printf ("En linea de filtros\n");
-						}
-				  	}
-					else {
-						//printf ("fuera ventana\n");
-					}
-
-				}
 
 				switch (tecla) {
 					//abajo
@@ -35128,7 +35074,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 						//Redibujar ventana
 						//releer_directorio=1;
-						menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
+						//menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
 						zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 						zxvision_menu_filesel_print_legend(ventana);
 

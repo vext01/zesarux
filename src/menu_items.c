@@ -1641,7 +1641,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 	nombredestino[0]=0;
 
 
-	int retorno=zxvision_menu_filesel("Select Target File",filtros,nombredestino);
+	int retorno=menu_filesel("Select Target File",filtros,nombredestino);
 	printf ("retorno: %d nombredestino: [%s]\n",retorno,nombredestino);
 	return;
 
