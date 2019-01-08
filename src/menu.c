@@ -32233,11 +32233,22 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
         //menu_escribe_texto_ventana(1,FILESEL_ALTO-3,0,7+8,buffer_filtros);
 
         //si esta filesel_zona_pantalla=2, lo ponemos en otro color. TODO
-        int activo=-1;
-        //if (filesel_zona_pantalla==2) activo=FILESEL_POS_FILTER;
+        int inverso=0;
+        if (filesel_zona_pantalla==2) inverso=1;
 
         //menu_escribe_linea_opcion(FILESEL_POS_FILTER,activo,1,buffer_filtros);
-	zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_filtros);
+	//zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_filtros);
+
+	int tinta=ESTILO_GUI_TINTA_NORMAL;
+	int papel=ESTILO_GUI_PAPEL_NORMAL;
+
+	if (inverso) {
+		tinta=ESTILO_GUI_PAPEL_NORMAL;
+		papel=ESTILO_GUI_TINTA_NORMAL;
+	}
+
+
+	zxvision_print_string(ventana,1,posicion_filtros,tinta,papel,0,buffer_filtros);
 }
 
 void menu_filesel_print_legend(void)
@@ -34550,6 +34561,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 			switch (filesel_zona_pantalla) {
 				case 0:
 				//zona superior de nombre de archivo
+				ventana->visible_cursor=0;
 		                zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
 				zxvision_draw_window_contents(ventana);
                 //para que haga lectura del edit box
@@ -34654,6 +34666,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//zona selector de archivos
 
 				debug_printf (VERBOSE_DEBUG,"Read directory. menu_speech_tecla_pulsada=%d",menu_speech_tecla_pulsada);
+				ventana->visible_cursor=1;
 				zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
 				zxvision_draw_window_contents(ventana);
 				//Para no releer todas las entradas
@@ -35077,6 +35090,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 			case 2:
 				//zona filtros
+				ventana->visible_cursor=0;
                                 zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
 
                                 //para que haga lectura de los filtros
