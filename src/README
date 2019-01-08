@@ -25,7 +25,7 @@ And also:
 * ZX-Evolution TS-Conf
 * TBBlue/ZX Spectrum Next
 * Jupiter Ace
-* Amstrad CPC 464
+* Amstrad CPC 464, CPC 4128
 
 ZEsarUX source code and binaries are distributed under GNU GPL license. 
 ZEsarUX also includes a folder, "my_soft", which has some programs and data made by me. The entire folder is also covered by the GNU GPL license.
