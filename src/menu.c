@@ -394,6 +394,9 @@ z80_byte cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color;
 int cuadrado_activo_resize=0;
 int ventana_activa_tipo_zxvision=0;
 
+//Si estamos dibujando las ventanas de debajo de la del frente, y por tanto no muestra boton de cerrar por ejemplo
+int ventana_es_background=0;
+
 int draw_bateria_contador=0;
 int draw_cpu_use=0;
 int draw_cpu_temp=0;
@@ -3736,7 +3739,7 @@ void menu_dibuja_ventana_botones(void)
 	int ancho=ventana_ancho;
 	//int alto=ventana_alto;
 
-		//Botones de cerrar y minimizar
+		//Boton de minimizar
 		if (ventana_activa_tipo_zxvision) {
 			if (ventana_tipo_activa) {
 				if (cuadrado_activo_resize && menu_hide_minimize_button.v==0) {
@@ -3820,7 +3823,7 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 		char titulo_mostrar[64];
 		char caracter_cerrar=ESTILO_GUI_BOTON_CERRAR;
 
-		if (menu_hide_close_button.v) strcpy(titulo_mostrar,titulo);
+		if (menu_hide_close_button.v || ventana_es_background ) strcpy(titulo_mostrar,titulo);
 		else sprintf (titulo_mostrar,"%c %s",caracter_cerrar,titulo);
 
 
@@ -3829,27 +3832,6 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 
 	//Boton de cerrado
 
-		/*
-
-		int mostrar_boton_cerrado=2;
-
-		if (menu_hide_close_button.v) mostrar_boton_cerrado=0;
-
-
-		//if (mostrar_boton_cerrado && i==0) caracter_mostrar='*';
-
-		if (mostrar_boton_cerrado) {
-			if (ventana_tipo_activa) {
-				putchar_menu_overlay(x,y,'X',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-				putchar_menu_overlay(x+1,y,' ',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-			}
-			else {
-				putchar_menu_overlay(x,y,'X',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);		
-				putchar_menu_overlay(x+1,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);		
-			}
-		}
-
-		*/
 
 
         for (i=0;i<ancho_mostrar_titulo && titulo_mostrar[i];i++) {
@@ -5052,7 +5034,7 @@ void zxvision_draw_window(zxvision_window *w)
 
 	zxvision_draw_scroll_bars(w);
 
-	//Mostrar botones de cerrar y minimizar
+	//Mostrar boton de minimizar
 	menu_dibuja_ventana_botones();
 
 
@@ -5211,6 +5193,9 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	int antes_ventana_tipo_activa=ventana_tipo_activa;
 	ventana_tipo_activa=0; //Redibujar las de debajo como inactivas
 
+	//Redibujar diciendo que estan por debajo
+	ventana_es_background=1;
+
 	//Y ahora de ahi hacia arriba
 	while (pointer_window!=w) {
 		printf ("window from bottom to top %p\n",pointer_window);
@@ -5221,6 +5206,7 @@ void zxvision_draw_below_windows(zxvision_window *w)
 		pointer_window=pointer_window->next_window;
 	}
 
+	ventana_es_background=0;
 	ventana_tipo_activa=antes_ventana_tipo_activa;
 }
 
