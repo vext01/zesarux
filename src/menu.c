@@ -3561,10 +3561,11 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 void menu_muestra_pending_error_message(void)
 {
 	if (if_pending_error_message) {
-					if_pending_error_message=0;
-debug_printf (VERBOSE_INFO,"Showing pending error message on menu");
-					menu_generic_message("ERROR",pending_error_message);
-}
+		if_pending_error_message=0;
+		debug_printf (VERBOSE_INFO,"Showing pending error message on menu");
+		//menu_generic_message("ERROR",pending_error_message);
+		menu_error_message(pending_error_message);
+	}
 }
 
 
@@ -16540,7 +16541,7 @@ void menu_storage_zxpand_root_dir(MENU_ITEM_PARAMETERS)
 	menu_filesel_chdir(zxpand_root_dir);
 
 
-        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
 
 
 	//Si sale con ESC
@@ -17821,7 +17822,7 @@ void menu_storage_string_root_dir(char *string_root_dir)
 	menu_filesel_chdir(string_root_dir);
 
 
-        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
 
 
 	//Si sale con ESC
@@ -17897,7 +17898,7 @@ void menu_esxdos_traps_root_dir(MENU_ITEM_PARAMETERS)
 	menu_filesel_chdir(esxdos_handler_root_dir);
 
 
-        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
 
 
 	//Si sale con ESC
@@ -23152,7 +23153,7 @@ void menu_snapshot_autosave_at_interval_directory(MENU_ITEM_PARAMETERS)
 	menu_filesel_chdir(snapshot_autosave_interval_quicksave_directory);
 
 
-        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
 
 
 	//Si sale con ESC
@@ -28685,7 +28686,7 @@ void menu_warn_message(char *texto)
 
 void menu_error_message(char *texto)
 {
-	menu_generic_message_warn("Error",texto);
+	menu_generic_message_warn("ERROR",texto);
 
 }
 
@@ -30789,7 +30790,7 @@ void menu_snapshot_autosnap_path(MENU_ITEM_PARAMETERS)
         menu_filesel_chdir(autosave_snapshot_path_buffer);
 
 
-        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
 
 
         //Si sale con ESC
@@ -33015,7 +33016,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
         	//Ocultar utilidades
         	menu_filesel_show_utils.v=0;
-        	ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+        	ret=menu_filesel("Enter dir & press ESC",filtros,nada);
         	//Volver a mostrar utilidades
         	menu_filesel_show_utils.v=1;
 
@@ -33085,7 +33086,7 @@ void file_utils_paste_clipboard(void)
 
 
 	nombre_sin_dir[0]=0;
-	menu_ventana_scanf("Filename for clipboard",nombre_sin_dir,PATH_MAX);
+	menu_ventana_scanf("Filename?",nombre_sin_dir,PATH_MAX);
 	sprintf(nombre_final,"%s/%s",directorio_actual,nombre_sin_dir);
 
 	menu_paste_clipboard_to_file(nombre_final);
@@ -35128,11 +35129,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 				zxvision_draw_window_contents(ventana);
-		                //menu_refresca_pantalla();
-
-				//menu_espera_tecla();
-				//tecla=menu_get_pressed_key();
-				//menu_espera_no_tecla();
+	
 
 				tecla=zxvision_common_getkey_refresh();
 
@@ -35147,7 +35144,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 }
 
 				//cambiar de zona con tab
-				//if (tecla==15 || tecla==13) {
 				if (tecla==15) {
 					menu_reset_counters_tecla_repeticion();
 					filesel_zona_pantalla=0;
@@ -35175,8 +35171,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 	//Aqui no se va a llegar nunca
-	//cls_menu_overlay();
-        //menu_espera_no_tecla();
 
 
 }
