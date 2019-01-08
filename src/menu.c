@@ -32643,6 +32643,29 @@ void menu_filesel_localiza_letra(char letra)
 
 }
 
+void zxvision_menu_filesel_localiza_letra(zxvision_window *ventana,char letra)
+{
+
+        int i;
+        filesel_item *p;
+        p=primer_filesel_item;
+
+        for (i=0;i<filesel_total_items;i++) {
+                if (menu_minus_letra(p->d_name[0])>=menu_minus_letra(letra)) {
+                        filesel_linea_seleccionada=0;
+                        filesel_archivo_seleccionado=i;
+			ventana->cursor_line=i;
+			zxvision_set_offset_y(ventana,i);
+			printf ("linea seleccionada: %d\n",i);
+                        return;
+                }
+
+
+                p=p->next;
+        }
+
+}
+
 void menu_filesel_localiza_archivo(char *nombrebuscar)
 {
 	debug_printf (VERBOSE_DEBUG,"Searching last file %s",nombrebuscar);
@@ -32659,6 +32682,31 @@ void menu_filesel_localiza_archivo(char *nombrebuscar)
 					debug_printf (VERBOSE_DEBUG,"Found at position %d",i);
 			return;
 		}
+
+
+                p=p->next;
+        }
+
+}
+
+void zxvision_menu_filesel_localiza_archivo(zxvision_window *ventana,char *nombrebuscar)
+{
+        debug_printf (VERBOSE_DEBUG,"Searching last file %s",nombrebuscar);
+        int i;
+        filesel_item *p;
+        p=primer_filesel_item;
+
+        for (i=0;i<filesel_total_items;i++) {
+                debug_printf (VERBOSE_DEBUG,"File number: %d Name: %s",i,p->d_name);
+                //if (menu_minus_letra(p->d_name[0])>=menu_minus_letra(letra)) {
+                if (strcasecmp(nombrebuscar,p->d_name)<=0) {
+                        filesel_linea_seleccionada=0;
+                        filesel_archivo_seleccionado=i;
+			ventana->cursor_line=i;
+			zxvision_set_offset_y(ventana,i);
+                                        debug_printf (VERBOSE_DEBUG,"Found at position %d",i);
+                        return;
+                }
 
 
                 p=p->next;
@@ -34549,7 +34597,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 		if (menu_filesel_posicionar_archivo.v) {
-			menu_filesel_localiza_archivo(menu_filesel_posicionar_archivo_nombre);
+			zxvision_menu_filesel_localiza_archivo(ventana,menu_filesel_posicionar_archivo_nombre);
 
 			menu_filesel_posicionar_archivo.v=0;
 		}
@@ -34954,7 +35002,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				//entre a y z y numeros
 				if ( (tecla>='a' && tecla<='z') || (tecla>='0' && tecla<='9') ) {
-					menu_filesel_localiza_letra(tecla);
+					zxvision_menu_filesel_localiza_letra(ventana,tecla);
 				}
 
 				//Si esta filesel, opciones en mayusculas
