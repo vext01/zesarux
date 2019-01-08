@@ -5191,6 +5191,58 @@ void zxvision_send_scroll_right(zxvision_window *w)
 	}
 }
 
+
+//Retorna 1 si ha reajustado el cursor
+int zxvision_adjust_cursor_bottom(zxvision_window *ventana)
+{
+
+	//int linea_retornar;
+
+	if (ventana->visible_cursor) {
+
+		//Ver en que offset estamos
+		int offset_y=ventana->offset_y;
+		//Y donde esta el cursor
+		int cursor=ventana->cursor_line;
+
+		//Y si cursor no esta visible, lo ponemos para que este abajo del todo (hemos de suponer que estaba abajo y ha bajado 1 mas)
+		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
+			printf ("Reajustar cursor\n");
+			ventana->cursor_line=offset_y+ventana->visible_height-2-ventana->upper_margin-ventana->lower_margin;
+			return 1;
+		}
+	}
+
+	return 0;
+
+}
+
+//Retorna 1 si ha reajustado el cursor
+int zxvision_adjust_cursor_top(zxvision_window *ventana)
+{
+	if (ventana->visible_cursor) {
+
+		//Ver en que offset estamos
+		int offset_y=ventana->offset_y;
+		//Y donde esta el cursor
+		int cursor=ventana->cursor_line;
+
+		//Y si cursor no esta visible, lo ponemos para que este arriba del todo (hemos de suponer que estaba arriba i ha subido 1 mas)
+		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
+			if (offset_y>0) {
+				printf ("Reajustar cursor\n");
+				ventana->cursor_line=offset_y-1;
+				return 1;
+			}
+		}
+
+	}
+
+	return 0;
+
+
+}
+
 int zxvision_out_bonds(int x,int y,int ancho,int alto)
 {
 	if (x<0 || y<0) return 1;
@@ -32268,8 +32320,8 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 	int papel=ESTILO_GUI_PAPEL_NORMAL;
 
 	if (inverso) {
-		tinta=ESTILO_GUI_PAPEL_NORMAL;
-		papel=ESTILO_GUI_TINTA_NORMAL;
+		tinta=ESTILO_GUI_TINTA_SELECCIONADO;
+		papel=ESTILO_GUI_PAPEL_SELECCIONADO;
 	}
 
 
@@ -33113,24 +33165,7 @@ void menu_filesel_cursor_abajo(void)
 
 }
 
-void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
-{
 
-
-//ver que no sea ultimo archivo
-        if (si_menu_filesel_no_mas_alla_ultimo_item(filesel_linea_seleccionada)) {
-	ventana->cursor_line++;
-                                                //ver si es final de pantalla
-                                                if (filesel_linea_seleccionada==FILESEL_ALTO_DIR-1) {
-                                                        filesel_archivo_seleccionado++;
-							zxvision_send_scroll_down(ventana);
-                                                }
-                                                else {
-                                                        filesel_linea_seleccionada++;
-                                                }
-                                        }
-
-}
 
 void menu_filesel_cursor_arriba(void)
 {
@@ -33160,6 +33195,38 @@ void zxvision_menu_filesel_cursor_arriba(zxvision_window *ventana)
                                                         filesel_linea_seleccionada--;
                                                 }
                                         }
+
+	if (zxvision_adjust_cursor_top(ventana)) {
+		zxvision_send_scroll_up(ventana);
+		filesel_linea_seleccionada=0;
+		filesel_archivo_seleccionado=ventana->cursor_line;
+	}
+}
+
+
+void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
+{
+
+
+//ver que no sea ultimo archivo
+        if (si_menu_filesel_no_mas_alla_ultimo_item(filesel_linea_seleccionada)) {
+	ventana->cursor_line++;
+                                                //ver si es final de pantalla
+                                                if (filesel_linea_seleccionada==FILESEL_ALTO_DIR-1) {
+                                                        filesel_archivo_seleccionado++;
+							zxvision_send_scroll_down(ventana);
+                                                }
+                                                else {
+                                                        filesel_linea_seleccionada++;
+                                                }
+                                        }
+										
+	if (zxvision_adjust_cursor_bottom(ventana)) {
+		zxvision_send_scroll_down(ventana);
+		filesel_linea_seleccionada=FILESEL_ALTO_DIR-1;
+		filesel_archivo_seleccionado=ventana->cursor_line-filesel_linea_seleccionada;
+	}
+
 }
 
 
@@ -34634,6 +34701,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 		do {
 			//printf ("\nReleer directorio\n");
+			printf ("cursor_line: %d\n",ventana->cursor_line);
 
 			switch (filesel_zona_pantalla) {
 				case 0:
