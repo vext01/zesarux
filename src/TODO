@@ -7,13 +7,11 @@ ok -quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que l
 zxvision_draw_window para refrescar lo que habia debajo
 ->pero por ejemplo cuando salen de menu_dibuja_menu, todo dios hace cls_menu_overlay, y no deberian hacerlo
 ->hay que quitar los dos cls_menu_overlay de cada retorno_menu=menu_dibuja_menu
+-Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls 
 
 -Ya no redimensiona ancho de línea selección de menú al ampliar ventana
 
 -Gestión flecha abajo/arriba en menús tabulados
-
-
--Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls 
 
 -Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
 
@@ -28,13 +26,13 @@ zxvision_draw_window para refrescar lo que habia debajo
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
 -lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
+->Ok. necesita logicamente multitarea on
 
 -Puntero en zxvision window a función que actualice ventana o quizá función de entrada a esa ventana?
 
 -Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls
 
--Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
-
+-en menu debug, en tbblue, si cambia modo con letra M, quedan rastros de la ultima linea donde se muestra segmentos de paginación. Corregido ya?
 
 
 ----fin zxvision----
@@ -52,23 +50,14 @@ Versión sin pthreads casi no se oye click
 
 -Osd keyboard sin multitarea en ZX81 no va fino
 
--Rwa de entrada en ZEsarUX que lee? Mono o estéreo?
-
 -Salida de texto en simpletext y otros drivers texto: carácter 127 no es imprimible
 
 -Misma tecla F definida como ocr que en ZX Vision haga ocr+speech también. Así se pueden leer siempre los menus
 
 
--en menu debug, en tbblue, si cambia modo con letra M, quedan rastros de la ultima linea donde se muestra segmentos de paginación. Corregido ya?
-
--Speech al moverse por líneas de menú se escucha antes de que se mueva el cursor. Por que?
-
 -Grabar vídeo text speech completo
 
-
-
-
-
+-Speech al moverse por líneas de menú se escucha antes de que se mueva el cursor. Por que?
 -speech: sin multitask, a veces se descuadra la linea de menu que lee. ejemplo: ir a accessibility settings, y cuando este leyendo "active item..." pulsar tecla. Creo que esto pasa desde siempre
 
 -view waveform en cpc sale desplazado. en general todo lo que es pixel 
