@@ -34209,6 +34209,10 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 		int alto_total=filesel_total_items+8; //Sumarle las leyendas, etc
 		zxvision_new_window(ventana,FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,FILESEL_ANCHO-1,alto_total,titulo);
+
+	        ventana->upper_margin=4;
+	        ventana->lower_margin=4;
+
 		zxvision_draw_window(ventana);
 
 		menu_filesel_print_filters(filesel_filtros);
@@ -34238,7 +34242,8 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 			switch (filesel_zona_pantalla) {
 				case 0:
 				//zona superior de nombre de archivo
-                menu_print_dir(filesel_archivo_seleccionado);
+		                menu_print_dir(filesel_archivo_seleccionado);
+				zxvision_draw_window_contents(ventana);
                 //para que haga lectura del edit box
                 menu_speech_tecla_pulsada=0;
 
@@ -34342,6 +34347,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				debug_printf (VERBOSE_DEBUG,"Read directory. menu_speech_tecla_pulsada=%d",menu_speech_tecla_pulsada);
 				menu_print_dir(filesel_archivo_seleccionado);
+				zxvision_draw_window_contents(ventana);
 				//Para no releer todas las entradas
 				menu_speech_tecla_pulsada=1;
 
@@ -34897,6 +34903,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 menu_speech_tecla_pulsada=0;
 
 				menu_filesel_print_filters(filesel_filtros);
+				zxvision_draw_window_contents(ventana);
 		                menu_refresca_pantalla();
 
 				menu_espera_tecla();
