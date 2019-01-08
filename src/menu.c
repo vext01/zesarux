@@ -34321,7 +34321,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	//Imprimir directorio actual
 	//primero borrar con espacios
 
-    menu_escribe_texto_ventana(14,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"               ");
+    //menu_escribe_texto_ventana(14,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"               ");
 
 
 	char current_dir[PATH_MAX];
@@ -34575,9 +34575,11 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//Para no releer todas las entradas
 				menu_speech_tecla_pulsada=1;
 
-		        menu_refresca_pantalla();
-				menu_espera_tecla();
-				tecla=menu_get_pressed_key();
+		        //menu_refresca_pantalla();
+				//menu_espera_tecla();
+				//tecla=menu_get_pressed_key();
+
+				tecla=zxvision_common_getkey_refresh();
 
 
 				if (mouse_movido) {
@@ -35128,11 +35130,13 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 				zxvision_draw_window_contents(ventana);
-		                menu_refresca_pantalla();
+		                //menu_refresca_pantalla();
 
-				menu_espera_tecla();
-				tecla=menu_get_pressed_key();
-				menu_espera_no_tecla();
+				//menu_espera_tecla();
+				//tecla=menu_get_pressed_key();
+				//menu_espera_no_tecla();
+
+				tecla=zxvision_common_getkey_refresh();
 
 		                //ESC
                                 if (tecla==2) {
