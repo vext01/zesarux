@@ -106,7 +106,7 @@ __FEATURES__
 * ZX-Evolution TS-Conf
 * TBBlue/ZX Spectrum Next
 * Jupiter Ace
-* Amstrad CPC 464
+* Amstrad CPC 464, CPC 4128
 
 * Is the only emulator for machines: ZX-Uno, Chloe 140/280, Prism, TBBlue and Chrome
 
@@ -184,7 +184,7 @@ __FEATURES__
 
 * Emulates ZXPand MMC Interface on ZX80 and ZX81
 
-* Emulates ZX Dandanator! Mini
+* Emulates ZX Dandanator! Mini, CPC Dandanator! Mini
 
 * Emulates Speccy Superupgrade
 
