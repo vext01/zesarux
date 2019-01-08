@@ -33379,6 +33379,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		menu_filesel_print_filters(filesel_filtros);
 		menu_filesel_print_legend();
 		menu_filesel_readdir();
+		printf ("Total archivos en directorio: %d\n",filesel_total_items);
 		//printf ("despues leer directorio\n");
 
 		int releer_directorio=0;
@@ -34132,3 +34133,818 @@ void set_charset(void)
 	else if (estilo_gui_activo==ESTILO_GUI_QL) char_set=char_set_ql;
 	else char_set=char_set_spectrum;
 }
+
+
+//Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
+//Si seleccionado archivo, lo guarda en variable *archivo
+//Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
+int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
+{
+
+	//En el caso de stdout es mucho mas simple
+    if (!strcmp(scr_driver_name,"stdout")) {
+		printf ("%s :\n",titulo);
+		scrstdout_menu_print_speech_macro(titulo);
+		scanf("%s",archivo);
+		return 1;
+    }
+
+
+
+	menu_reset_counters_tecla_repeticion();
+
+	int tecla;
+
+
+	filesel_zona_pantalla=1;
+
+	getcwd(filesel_directorio_inicial,PATH_MAX);
+
+
+    //printf ("confirm\n");
+
+	menu_espera_no_tecla();
+    	//menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
+	zxvision_window ventana_filesel;
+	zxvision_window *ventana;
+
+	//Inicialmente a NULL
+	ventana=NULL;
+/*
+	zxvision_new_window(&ventana,x,y,ancho,alto,
+							ancho-1,alto-2,"Video Layers");
+*/
+
+	//guardamos filtros originales
+	filesel_filtros_iniciales=filtros;
+
+
+
+    filtros_todos_archivos[0]="";
+    filtros_todos_archivos[1]=0;
+
+	//menu_filesel_print_text_contents();
+	filesel_filtros=filtros;
+
+	filesel_item *item_seleccionado;
+
+	int aux_pgdnup;
+	//menu_active_item_primera_vez=1;
+
+	//Decir directorio activo
+	menu_textspeech_say_current_directory();
+
+	do {
+		menu_speech_tecla_pulsada=0;
+		menu_active_item_primera_vez=1;
+		filesel_linea_seleccionada=0;
+		filesel_archivo_seleccionado=0;
+		//leer todos archivos
+		menu_filesel_readdir();
+		printf ("Total archivos en directorio: %d\n",filesel_total_items);
+		//printf ("despues leer directorio\n");
+		//Crear ventana. Si ya existia, borrarla
+		if (ventana!=NULL) zxvision_destroy_window(ventana);
+		ventana=&ventana_filesel;
+
+		int alto_total=filesel_total_items+8; //Sumarle las leyendas, etc
+		zxvision_new_window(ventana,FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,FILESEL_ANCHO-1,alto_total,titulo);
+		zxvision_draw_window(ventana);
+
+		menu_filesel_print_filters(filesel_filtros);
+		menu_filesel_print_legend();
+		int releer_directorio=0;
+
+
+
+		//El menu_print_dir aqui no hace falta porque ya entrara en el switch (filesel_zona_pantalla) inicialmente cuando filesel_zona_pantalla vale 1
+		//menu_print_dir(filesel_archivo_seleccionado);
+
+		zxvision_draw_window_contents(ventana);
+
+		menu_refresca_pantalla();
+
+
+		if (menu_filesel_posicionar_archivo.v) {
+			menu_filesel_localiza_archivo(menu_filesel_posicionar_archivo_nombre);
+
+			menu_filesel_posicionar_archivo.v=0;
+		}
+
+
+		do {
+			//printf ("\nReleer directorio\n");
+
+			switch (filesel_zona_pantalla) {
+				case 0:
+				//zona superior de nombre de archivo
+                menu_print_dir(filesel_archivo_seleccionado);
+                //para que haga lectura del edit box
+                menu_speech_tecla_pulsada=0;
+
+				tecla=menu_scanf(filesel_nombre_archivo_seleccionado,PATH_MAX,22,FILESEL_X+7,FILESEL_Y+2);
+
+				if (tecla==15) {
+					//printf ("TAB. siguiente seccion\n");
+					menu_reset_counters_tecla_repeticion();
+					filesel_zona_pantalla=1;
+					//no releer todos archivos
+					menu_speech_tecla_pulsada=1;
+				}
+
+				//ESC
+                if (tecla==2) {
+                	menu_filesel_exist_ESC();
+                    return 0;
+				}
+
+				if (tecla==13) {
+
+					//Si es Windows y se escribe unidad: (ejemplo: "D:") hacer chdir
+					int unidadwindows=0;
+#ifdef MINGW
+					if (filesel_nombre_archivo_seleccionado[0] &&
+						filesel_nombre_archivo_seleccionado[1]==':' &&
+						filesel_nombre_archivo_seleccionado[2]==0 )
+						{
+						debug_printf (VERBOSE_INFO,"%s is a Windows drive",filesel_nombre_archivo_seleccionado);
+						unidadwindows=1;
+					}
+#endif
+
+
+					//si es directorio, cambiamos
+					struct stat buf_stat;
+					int stat_valor;
+					stat_valor=stat(filesel_nombre_archivo_seleccionado, &buf_stat);
+					if (
+						(stat_valor==0 && S_ISDIR(buf_stat.st_mode) ) ||
+						(unidadwindows)
+						) {
+						debug_printf (VERBOSE_DEBUG,"%s Is a directory or windows drive. Change",filesel_nombre_archivo_seleccionado);
+                                                menu_filesel_chdir(filesel_nombre_archivo_seleccionado);
+						menu_filesel_free_mem();
+                                                releer_directorio=1;
+						filesel_zona_pantalla=1;
+
+					        //Decir directorio activo
+						//Esperar a liberar tecla si no la tecla invalida el speech
+						menu_espera_no_tecla();
+					        menu_textspeech_say_current_directory();
+
+
+					}
+
+
+					//sino, devolvemos nombre con path, siempre que extension sea conocida
+					else {
+                    	cls_menu_overlay();
+                        menu_espera_no_tecla();
+
+						if (menu_avisa_si_extension_no_habitual(filtros,filesel_nombre_archivo_seleccionado)) {
+
+                        //unimos directorio y nombre archivo. siempre que inicio != '/'
+						if (filesel_nombre_archivo_seleccionado[0]!='/') {
+                        	getcwd(archivo,PATH_MAX);
+                            sprintf(&archivo[strlen(archivo)],"/%s",filesel_nombre_archivo_seleccionado);
+						}
+
+						else sprintf(archivo,"%s",filesel_nombre_archivo_seleccionado);
+
+
+                        menu_filesel_chdir(filesel_directorio_inicial);
+						menu_filesel_free_mem();
+
+						//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+						return 1;
+
+						}
+
+						else {
+							//Extension no conocida. No modificar variable archivo
+							//printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+							return 0;
+						}
+						
+
+
+
+						//Volver con OK
+                        //return 1;
+
+					}
+				}
+
+				break;
+			
+			case 1:
+				//zona selector de archivos
+
+				debug_printf (VERBOSE_DEBUG,"Read directory. menu_speech_tecla_pulsada=%d",menu_speech_tecla_pulsada);
+				menu_print_dir(filesel_archivo_seleccionado);
+				//Para no releer todas las entradas
+				menu_speech_tecla_pulsada=1;
+
+		        menu_refresca_pantalla();
+				menu_espera_tecla();
+				tecla=menu_get_pressed_key();
+
+
+				if (mouse_movido) {
+					//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
+					//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
+					if (si_menu_mouse_en_ventana() ) {
+						//printf ("dentro ventana\n");
+						//Ver en que zona esta
+						int inicio_y_dir=1+FILESEL_INICIO_DIR;
+						if (si_mouse_zona_archivos()) {
+							//if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
+							//printf ("Dentro lista archivos\n");
+
+							//Ver si linea dentro de rango
+							int linea_final=menu_mouse_y-inicio_y_dir;
+
+							//Si esta en la zona derecha de selector de porcentaje no hacer nada
+							//if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+							if (menu_mouse_x==FILESEL_ANCHO-1) break;
+
+							//filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
+
+							if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
+								filesel_linea_seleccionada=linea_final;
+								menu_speech_tecla_pulsada=1;
+							}
+							else {
+								//printf ("Cursor mas alla del ultimo item\n");
+							}
+
+						}
+
+						//Ya no tiene sentido hacer scroll al poner arriba o abajo de la zona de archivos el raton,
+						//pues ya se puede seleccionar porcentaje visible con el indicador derecho '*'
+						/*else if (menu_mouse_y==inicio_y_dir-1) {
+								//Justo en la linea superior del directorio
+								menu_filesel_cursor_arriba();
+								menu_speech_tecla_pulsada=1;
+							}
+							else if (menu_mouse_y==inicio_y_dir+FILESEL_ALTO_DIR) {
+								//Justo en la linea inferior del directorio
+								menu_filesel_cursor_abajo();
+								menu_speech_tecla_pulsada=1;
+							}
+						*/
+						
+						else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
+								//En la linea de filtros
+								//nada en especial
+								//printf ("En linea de filtros\n");
+						}
+				  	}
+					else {
+						//printf ("fuera ventana\n");
+					}
+
+				}
+
+				switch (tecla) {
+					//abajo
+					case 10:
+						menu_filesel_cursor_abajo();
+						//Para no releer todas las entradas
+						menu_speech_tecla_pulsada=1;
+					break;
+
+					//arriba
+					case 11:
+						menu_filesel_cursor_arriba();
+						//Para no releer todas las entradas
+						menu_speech_tecla_pulsada=1;
+					break;
+
+					//PgDn
+					case 25:
+						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
+							menu_filesel_cursor_abajo();
+						//releer todas entradas
+						menu_speech_tecla_pulsada=0;
+						//y decir active item
+						menu_active_item_primera_vez=1;
+                    break;
+
+					//PgUp
+					case 24:
+						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
+							menu_filesel_cursor_arriba();
+						//releer todas entradas
+						menu_speech_tecla_pulsada=0;
+						//y decir active item
+						menu_active_item_primera_vez=1;
+                    break;
+
+
+					case 15:
+					//tabulador
+						menu_reset_counters_tecla_repeticion();
+						if (menu_filesel_show_utils.v==0) filesel_zona_pantalla=2;
+						else filesel_zona_pantalla=0; //Si hay utils, cursor se va arriba
+					break;
+
+					//ESC
+					case 2:
+						//meter en menu_filesel_last_directory_seen nombre directorio
+						//getcwd(archivo,PATH_MAX);
+						getcwd(menu_filesel_last_directory_seen,PATH_MAX);
+						//printf ("salimos con ESC. nombre directorio: %s\n",archivo);
+                        menu_filesel_exist_ESC();
+
+                        return 0;
+
+					break;
+
+					//Expandir archivos
+					case 32:
+
+                                                item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
+                                                menu_reset_counters_tecla_repeticion();
+
+                                                //printf ("despues de get filesel item. item_seleccionado=%p\n",item_seleccionado);
+
+                                                if (item_seleccionado==NULL) {
+                                                        //Esto pasa en las carpetas vacias, como /home en Mac OS
+                                                                        menu_filesel_exist_ESC();
+                                                                        return 0;
+
+
+                                                }
+
+						if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)==2) {
+							debug_printf(VERBOSE_INFO,"Can't expand directories");
+						}
+
+						else {
+								debug_printf(VERBOSE_DEBUG,"Expanding file %s",item_seleccionado->d_name);
+                                                                char tmpdir[PATH_MAX];
+
+                                                                if (menu_filesel_expand(item_seleccionado->d_name,tmpdir) ) {
+									//TODO: Si lanzo este warning se descuadra el dibujado de ventana
+									//menu_warn_message("Don't know how to expand that file");
+									debug_printf(VERBOSE_INFO,"Don't know how to expand that file");
+                                                                }
+
+                                                                else {
+                                                                        menu_filesel_change_to_tmp(tmpdir);
+									releer_directorio=1;
+                                                                }
+						}
+
+
+					break;
+
+					case 13:
+						//Si se ha pulsado boton de raton
+						if (mouse_left){
+							//printf ("Boton pulsado\n");
+							//Si en linea de filtros
+							if (menu_mouse_y==FILESEL_POS_FILTER+1) {
+								/*menu_reset_counters_tecla_repeticion();
+								filesel_zona_pantalla=2;
+								break;*/
+							}
+
+							//Si en linea de "File"
+							if (menu_mouse_y==2) {
+								menu_reset_counters_tecla_repeticion();
+								filesel_zona_pantalla=0;
+								break;
+							}
+
+						//Si en zona derecha donde hay flechas arriba y abajo
+						if (menu_mouse_x==FILESEL_ANCHO-1 && menu_mouse_y==FILESEL_INICIO_DIR) {
+							debug_printf (VERBOSE_DEBUG,"Pressed cursor up button");
+
+							menu_filesel_cursor_arriba();
+						
+							//Para no releer todas las entradas
+							menu_speech_tecla_pulsada=1;
+
+							break;
+						}
+
+						//Si en zona derecha donde hay flechas arriba y abajo
+						if (menu_mouse_x==FILESEL_ANCHO-1 && menu_mouse_y==FILESEL_INICIO_DIR+FILESEL_ALTO_DIR+1) {
+							debug_printf (VERBOSE_DEBUG,"Pressed cursor down button");
+
+							menu_filesel_cursor_abajo();
+						
+							//Para no releer todas las entradas
+							menu_speech_tecla_pulsada=1;
+
+							break;
+						}
+
+
+							//Si se ha pulsado boton pero fuera de la zona de archivos, no hacer nada
+							if (!si_mouse_zona_archivos() ) break;
+						
+
+
+
+							//if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) return 1;
+
+							//Si zona derecha (de indicador de porcentaje) y hay indicador de porcentaje activo
+							if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+								debug_printf (VERBOSE_DEBUG,"Mouse clicked percentage bar zone");
+								//printf ("Posicion: %d inicio_dir: %d\n",menu_mouse_y,FILESEL_INICIO_DIR);
+
+
+								int porcentaje_seleccionado=((menu_mouse_y-FILESEL_INICIO_DIR-1)*100)/FILESEL_ALTO_DIR;
+								//printf ("Porcentaje seleccionado: %d actual: %d\n",porcentaje_seleccionado,filesel_porcentaje_visible);	
+
+								debug_printf (VERBOSE_DEBUG,"Current percentage: %d Percentage clicked: %d",filesel_porcentaje_visible,porcentaje_seleccionado);
+						
+
+								//Si esta arriba del todo, cambiamos directamente la posicion
+								if (menu_mouse_y==FILESEL_INICIO_DIR+1) {
+									debug_printf (VERBOSE_DEBUG,"Forcing to first position");
+									filesel_linea_seleccionada=0;
+									filesel_archivo_seleccionado=0;
+									break;
+								}
+
+								if (menu_mouse_y==FILESEL_INICIO_DIR+FILESEL_ALTO_DIR) {
+									debug_printf (VERBOSE_DEBUG,"Forcing to last position");
+									//printf ("Forzamos a ultima posicion. Primero visible: %d. linea seleccionada: %d total: %d\n",filesel_archivo_seleccionado,filesel_linea_seleccionada,filesel_total_archivos);
+								
+									filesel_linea_seleccionada=FILESEL_ALTO_DIR-1;
+									filesel_archivo_seleccionado=filesel_total_archivos-1-filesel_linea_seleccionada;
+									//printf ("Archivo seleccionado: %d. Primero visible: %d\n",filesel_archivo_seleccionado,filesel_linea_seleccionada);
+
+									break;
+								}
+
+
+
+								int diferencia_porcentaje=porcentaje_seleccionado-filesel_porcentaje_visible;
+                            	if (diferencia_porcentaje>0) {
+			                        //Bajar cursor. cuanto?
+            	                    //indice_linea es el total de lineas
+                	                int lineas_bajar=(filesel_total_archivos*diferencia_porcentaje)/100;
+									 debug_printf (VERBOSE_DEBUG,"Going down %d lines",lineas_bajar);
+
+
+                        	        for (;lineas_bajar;lineas_bajar--) {
+                            	      menu_filesel_cursor_abajo();
+									}
+								//releer todas entradas
+								menu_speech_tecla_pulsada=0;
+								//y decir active item
+								menu_active_item_primera_vez=1;
+                                        
+               
+               		         	}
+							
+								if (diferencia_porcentaje<0) {
+    	                            //Subir cursor. cuanto?
+        	                        //indice_linea es el total de lineas
+									diferencia_porcentaje=-diferencia_porcentaje;
+                	                int lineas_subir=(filesel_total_archivos*diferencia_porcentaje)/100;
+									 debug_printf (VERBOSE_DEBUG,"Going up %d lines",lineas_subir);
+
+
+                        	        for (;lineas_subir;lineas_subir--) {
+                            	      menu_filesel_cursor_arriba();
+									}
+								//releer todas entradas
+								menu_speech_tecla_pulsada=0;
+								//y decir active item
+								menu_active_item_primera_vez=1;
+                                        
+               
+	           		        	}
+
+								break;
+
+							} 
+
+
+							//Si zona derecha (de indicador de porcentaje) aunque no hay indicador de porcentaje activo, no hacer nada
+							if (menu_mouse_x==FILESEL_ANCHO-1) break;
+
+						}
+
+						//si seleccion es directorio
+						item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
+						menu_reset_counters_tecla_repeticion();
+
+						//printf ("despues de get filesel item. item_seleccionado=%p\n",item_seleccionado);
+
+						if (item_seleccionado==NULL) {
+							//Esto pasa en las carpetas vacias, como /home en Mac OS
+                                                                        menu_filesel_exist_ESC();
+                                                                        return 0;
+
+
+						}
+
+						if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)==2) {
+							debug_printf (VERBOSE_DEBUG,"Is a directory. Change");
+							char *directorio_a_cambiar;
+
+							//suponemos esto:
+							directorio_a_cambiar=item_seleccionado->d_name;
+							char last_directory[PATH_MAX];
+
+							//si es "..", ver si directorio actual contiene archivo que indica ultimo directorio
+							//en caso de descompresiones
+							if (!strcmp(item_seleccionado->d_name,"..")) {
+								debug_printf (VERBOSE_DEBUG,"Is directory ..");
+								if (si_existe_archivo(MENU_LAST_DIR_FILE_NAME)) {
+									debug_printf (VERBOSE_DEBUG,"Directory has file " MENU_LAST_DIR_FILE_NAME " Changing "
+											"to previous directory");
+
+									if (menu_filesel_read_file_last_dir(last_directory)==0) {
+										debug_printf (VERBOSE_DEBUG,"Previous directory was: %s",last_directory);
+
+										directorio_a_cambiar=last_directory;
+									}
+
+								}
+							}
+
+							debug_printf (VERBOSE_DEBUG,"Changing to directory %s",directorio_a_cambiar);
+
+							menu_filesel_chdir(directorio_a_cambiar);
+
+
+							menu_filesel_free_mem();
+							releer_directorio=1;
+
+						        //Decir directorio activo
+							//Esperar a liberar tecla si no la tecla invalida el speech
+							menu_espera_no_tecla();
+						        menu_textspeech_say_current_directory();
+
+						}
+
+						else {
+
+							//Si seleccion es archivo comprimido
+							if (menu_util_file_is_compressed(item_seleccionado->d_name) ) {
+								debug_printf (VERBOSE_DEBUG,"Is a compressed file");
+
+								char tmpdir[PATH_MAX];
+
+								if (menu_filesel_uncompress(item_seleccionado->d_name,tmpdir) ) {
+									menu_filesel_exist_ESC();
+									return 0;
+								}
+
+								else {
+									menu_filesel_change_to_tmp(tmpdir);
+                        	                                        releer_directorio=1;
+								}
+
+							}
+
+							else {
+								//Enter. No es directorio ni archivo comprimido
+								//Si estan las file utils, enter no hace nada
+								if (menu_filesel_show_utils.v==0) { 
+
+					                cls_menu_overlay();
+        	                        menu_espera_no_tecla();
+
+									if (menu_avisa_si_extension_no_habitual(filtros,filesel_nombre_archivo_seleccionado)) {
+
+									//unimos directorio y nombre archivo
+									getcwd(archivo,PATH_MAX);
+									sprintf(&archivo[strlen(archivo)],"/%s",item_seleccionado->d_name);
+
+									menu_filesel_chdir(filesel_directorio_inicial);
+									menu_filesel_free_mem();
+
+									//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+									return 1;
+
+									}
+
+                                    else {
+                                                        //Extension no conocida. No modificar variable archivo
+                                                        //printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+                                                        return 0;
+                                    }
+
+
+									//Volver con OK
+									//return 1;
+								}
+							}
+
+						}
+					break;
+				}
+
+				//entre a y z y numeros
+				if ( (tecla>='a' && tecla<='z') || (tecla>='0' && tecla<='9') ) {
+					menu_filesel_localiza_letra(tecla);
+				}
+
+				//Si esta filesel, opciones en mayusculas
+				if (menu_filesel_show_utils.v) {
+					
+					if ( (tecla>='A' && tecla<='Z') ) {
+						menu_espera_no_tecla();
+						//TODO: Si no se pone espera_no_tecla,
+						//al aparecer menu de, por ejemplo truncate, el texto se fusiona con el fondo de manera casi transparente,
+						//como si no borrase el putpixel cache
+						//esto también sucede en otras partes del código del menú pero no se por que es
+
+						menu_reset_counters_tecla_repeticion();
+						
+						//Comun para acciones que usan archivo seleccionado
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I') {
+							
+							//Obtener nombre del archivo al que se apunta
+							char file_utils_file_selected[PATH_MAX]="";
+							item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
+							if (item_seleccionado!=NULL) {
+								//Esto pasa en las carpetas vacias, como /home en Mac OS
+									//unimos directorio y nombre archivo
+									getcwd(file_utils_file_selected,PATH_MAX);
+									sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);								
+								//Info para cualquier tipo de archivo
+								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
+
+								//Si no es directorio
+								if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)!=2) {
+									//unimos directorio y nombre archivo
+									//getcwd(file_utils_file_selected,PATH_MAX);
+									//sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
+									
+									//Visor de archivos
+									if (tecla=='V') menu_file_viewer_read_file("Text file view",file_utils_file_selected);
+
+									//Truncate
+									if (tecla=='T') {
+										if (menu_confirm_yesno_texto("Truncate","Sure?")) util_truncate_file(file_utils_file_selected);
+									}
+
+									//Delete
+									if (tecla=='D') {
+										if (menu_confirm_yesno_texto("Delete","Sure?")) {
+											util_delete(file_utils_file_selected);
+											//unlink(file_utils_file_selected);
+											releer_directorio=1;
+										}
+
+									}
+									//Move
+									if (tecla=='M') {
+										file_utils_move_rename_copy_file(file_utils_file_selected,0);
+										//Restaurar variables globales que se alteran al llamar al otro filesel
+										//TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
+										filesel_filtros_iniciales=filtros;
+										filesel_filtros=filtros;
+		
+										releer_directorio=1;
+
+									}
+
+									//Rename
+									if (tecla=='R') {
+										file_utils_move_rename_copy_file(file_utils_file_selected,1);
+										releer_directorio=1;
+									}
+
+									//Filemem
+									if (tecla=='F') {
+										file_utils_file_mem_load(file_utils_file_selected);
+									}
+
+									//Convert
+									if (tecla=='O') {
+										file_utils_file_convert(file_utils_file_selected);
+										releer_directorio=1;
+									}
+
+						
+
+									//Copy
+									if (tecla=='C') {
+										file_utils_move_rename_copy_file(file_utils_file_selected,2);
+										//Restaurar variables globales que se alteran al llamar al otro filesel
+										//TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
+										filesel_filtros_iniciales=filtros;
+										filesel_filtros=filtros;
+										
+										releer_directorio=1;
+									}
+
+									
+
+								}
+							}
+
+							
+						}
+
+						//Mkdir
+						if (tecla=='K') {
+							char string_carpeta[200];
+							string_carpeta[0]=0;
+							menu_ventana_scanf("Folder name",string_carpeta,200);
+							if (string_carpeta[0]) {
+								menu_filesel_mkdir(string_carpeta);
+								releer_directorio=1;
+							}
+						}
+
+
+						//Paste text
+						if (tecla=='P') {
+							file_utils_paste_clipboard();
+										
+										
+							releer_directorio=1;
+						}
+			
+						
+
+						//Redibujar ventana
+						//releer_directorio=1;
+						menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
+						menu_filesel_print_filters(filesel_filtros);
+						menu_filesel_print_legend();
+
+						menu_filesel_print_text_contents();
+					}
+					
+				}
+
+				//menu_espera_no_tecla();
+				menu_espera_no_tecla_con_repeticion();
+
+
+
+
+			break;
+
+			case 2:
+				//zona filtros
+                                menu_print_dir(filesel_archivo_seleccionado);
+
+                                //para que haga lectura de los filtros
+                                menu_speech_tecla_pulsada=0;
+
+				menu_filesel_print_filters(filesel_filtros);
+		                menu_refresca_pantalla();
+
+				menu_espera_tecla();
+				tecla=menu_get_pressed_key();
+				menu_espera_no_tecla();
+
+		                //ESC
+                                if (tecla==2) {
+                                                cls_menu_overlay();
+                                                menu_espera_no_tecla();
+                                                menu_filesel_chdir(filesel_directorio_inicial);
+						menu_filesel_free_mem();
+                                                return 0;
+                                }
+
+				//cambiar de zona con tab
+				//if (tecla==15 || tecla==13) {
+				if (tecla==15) {
+					menu_reset_counters_tecla_repeticion();
+					filesel_zona_pantalla=0;
+					menu_filesel_print_filters(filesel_filtros);
+					//no releer todos archivos
+					menu_speech_tecla_pulsada=1;
+				}
+
+				else {
+
+					//printf ("conmutar filtros\n");
+
+					//conmutar filtros
+					menu_filesel_switch_filters();
+
+				        menu_filesel_print_filters(filesel_filtros);
+					releer_directorio=1;
+				}
+
+			break;
+			}
+
+		} while (releer_directorio==0);
+	} while (1);
+
+
+	//Aqui no se va a llegar nunca
+	//cls_menu_overlay();
+        //menu_espera_no_tecla();
+
+
+}
+
+

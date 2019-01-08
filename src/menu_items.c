@@ -1631,6 +1631,22 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
         menu_espera_no_tecla();
 
 
+	//Prueba filesel
+        char *filtros[2];
+
+        filtros[0]="";
+        filtros[1]=0;
+
+        char nombredestino[PATH_MAX];
+	nombredestino[0]=0;
+
+
+	int retorno=zxvision_menu_filesel("Select Target File",filtros,nombredestino);
+	printf ("retorno: %d nombredestino: [%s]\n",retorno,nombredestino);
+	return;
+
+
+
 		//zxvision_generic_message_tooltip("pruebas", 30, 0, 0, generic_message_tooltip_return *retorno, const char * texto_format , ...)
 		zxvision_generic_message_tooltip("Pruebas", 0, 0, 0, NULL, 0, "Hola que tal como estas esto es una prueba de escribir texto. "
 					"No se que mas poner pero me voy a empezar a repetir, " 
