@@ -5073,20 +5073,44 @@ void zxvision_set_offset_x(zxvision_window *w,int offset_x)
 	zxvision_draw_scroll_bars(w);
 }
 
+int zxvision_maximum_offset_y(zxvision_window *w)
+{
+	return w->total_height+2-w->visible_height;
+}
+
 void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 {
 	//Si se pasa por arriba
 	if (offset_y<0) return;
 
 	//Si se pasa por abajo
-	//if (offset_y+w->visible_height-2 > (w->total_height - w->upper_margin - w->lower_margin) ) return; //-2 porque se pierde 2 linea scroll y la linea titulo
-	if (offset_y+w->visible_height-2 > (w->total_height ) ) return; //-2 porque se pierde 2 linea scroll y la linea titulo
+
+	//if (offset_y+w->visible_height-2 > (w->total_height ) ) return; //-2 porque se pierde 2 linea scroll y la linea titulo
+	int maximum_offset=zxvision_maximum_offset_y(w);
+
+	if (offset_y>maximum_offset) {
+		printf ("Maximum offset y reached\n");
+		return;
+	}
 
 	w->offset_y=offset_y;	
 
 	zxvision_draw_window_contents(w);
 	zxvision_draw_scroll_bars(w);
 }
+
+void zxvision_set_offset_y_or_maximum(zxvision_window *w,int offset_y)
+{
+        int maximum_offset=zxvision_maximum_offset_y(w);
+
+        if (offset_y>maximum_offset) {
+                printf ("Maximum offset y reached. Setting maximum\n");
+		offset_y=maximum_offset;
+        }
+
+	zxvision_set_offset_y(w,offset_y);
+}
+
 
 
 //Si no esta visible, cambiamos offset
@@ -32655,8 +32679,8 @@ void zxvision_menu_filesel_localiza_letra(zxvision_window *ventana,char letra)
                         filesel_linea_seleccionada=0;
                         filesel_archivo_seleccionado=i;
 			ventana->cursor_line=i;
-			zxvision_set_offset_y(ventana,i);
-			printf ("linea seleccionada: %d\n",i);
+			zxvision_set_offset_y_or_maximum(ventana,i);
+			printf ("linea seleccionada en localizacion: %d\n",i);
                         return;
                 }
 
@@ -32703,7 +32727,7 @@ void zxvision_menu_filesel_localiza_archivo(zxvision_window *ventana,char *nombr
                         filesel_linea_seleccionada=0;
                         filesel_archivo_seleccionado=i;
 			ventana->cursor_line=i;
-			zxvision_set_offset_y(ventana,i);
+			zxvision_set_offset_y_or_maximum(ventana,i);
                                         debug_printf (VERBOSE_DEBUG,"Found at position %d",i);
                         return;
                 }
