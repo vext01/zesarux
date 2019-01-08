@@ -32298,6 +32298,29 @@ void menu_filesel_print_file(char *s,unsigned char  d_type,unsigned int max_leng
 }
 
 
+//Margen de 8 lineas (4+4) de leyendas
+#define ZXVISION_FILESEL_INITIAL_MARGIN 8
+
+void zxvision_menu_filesel_print_file(zxvision_window *ventana,char *s,unsigned char  d_type,unsigned int max_length_shown,int y)
+{
+
+        char buffer[PATH_MAX];
+
+        //int linea_seleccionada;
+
+        //linea_seleccionada=FILESEL_INICIO_DIR+filesel_linea_seleccionada;
+
+        menu_filesel_print_file_get(buffer, s, d_type, max_length_shown);
+
+        //si estamos en esa zona, destacar archivo seleccionado
+        //int activo=linea_seleccionada;
+
+        //if (filesel_zona_pantalla!=1) activo=-1;
+        //menu_escribe_linea_opcion(y,activo,1,buffer);
+	zxvision_print_string_defaults_fillspc(ventana,1,y+ZXVISION_FILESEL_INITIAL_MARGIN,buffer);	
+}
+
+
 void menu_print_dir(int inicial)
 {
 	//printf ("\nmenu_print_dir\n");
@@ -34134,6 +34157,141 @@ void set_charset(void)
 	else char_set=char_set_spectrum;
 }
 
+void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
+{
+
+	//TODO: no tiene sentido usar variable "inicial"
+	inicial=0;
+
+	//printf ("\nmenu_print_dir\n");
+
+	//escribir en ventana directorio de archivos
+
+	//Para speech
+	char texto_opcion_activa[PATH_MAX+100]; //Dado que hay que meter aqui el nombre del archivo y un poquito mas de texto
+	//Asumimos por si acaso que no hay ninguna activa
+	texto_opcion_activa[0]=0;
+
+
+
+	filesel_item *p;
+	int i;
+
+	int mostrados_en_pantalla=FILESEL_ALTO_DIR;
+	//trucar el maximo en pantalla. dado que somos zxvision, se pueden mostar ya todos en resolucion virtual de ventana
+	mostrados_en_pantalla=999999;
+
+	p=menu_get_filesel_item(inicial);
+
+	//Para calcular total de archivos de ese directorio, siguiendo el filtro. Util para mostrar indicador de porcentaje '*'
+	//int total_archivos=inicial;
+
+	filesel_total_archivos=inicial;
+
+	for (i=0;p!=NULL;i++,filesel_total_archivos++) {
+		//printf ("file: %s\n",p->d_name);
+
+		//Solo hacer esto si es visible en pantalla
+		if (i<mostrados_en_pantalla) {
+		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,FILESEL_Y+3+i);
+
+		if (filesel_linea_seleccionada==i) {
+			char buffer[50],buffer2[50];
+			//primero borrar con espacios
+
+			menu_escribe_texto_ventana(7,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"                      ");
+
+
+			strcpy(filesel_nombre_archivo_seleccionado,p->d_name);
+
+			menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,22);
+			sprintf (buffer2,"File: %s",buffer);
+			menu_escribe_texto_ventana(1,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer2);
+
+
+				debug_printf (VERBOSE_DEBUG,"Selected: %s. filesel_zona_pantalla: %d",p->d_name,filesel_zona_pantalla);
+				//Para speech
+				//Si estamos en zona central del selector de archivos, decirlo
+				if (filesel_zona_pantalla==1) {
+
+	                                if (menu_active_item_primera_vez) {
+						//menu_filesel_print_file_get(texto_opcion_activa,p->d_name,p->d_type,FILESEL_ANCHO-2);
+
+        	                                sprintf (texto_opcion_activa,"Active item: %s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
+                	                        menu_active_item_primera_vez=0;
+                        	        }
+
+                                	else {
+	                                        sprintf (texto_opcion_activa,"%s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
+        	                        }
+
+				}
+
+
+		}
+		}
+
+		p=p->next;
+
+    }
+
+	//espacios al final.
+    /*for (;i<mostrados_en_pantalla;i++) {
+                //printf ("espacios\n");
+                menu_filesel_print_file(" ",DT_REG,FILESEL_ANCHO-2,FILESEL_Y+3+i);
+    }*/
+
+	//int texto_no_cabe=0;
+	filesel_no_cabe_todo=0;
+
+	debug_printf (VERBOSE_DEBUG,"Total files read (applying filters): %d",filesel_total_archivos);
+	if (filesel_total_archivos>mostrados_en_pantalla) {
+		filesel_no_cabe_todo=1;
+	}
+
+
+
+
+	//Imprimir directorio actual
+	//primero borrar con espacios
+
+    menu_escribe_texto_ventana(14,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"               ");
+
+
+	char current_dir[PATH_MAX];
+	char buffer_dir[50];
+	char buffer3[50];
+	getcwd(current_dir,PATH_MAX);
+
+	menu_tape_settings_trunc_name(current_dir,buffer_dir,16);
+	sprintf (buffer3,"Current dir: %s",buffer_dir);
+	//menu_escribe_texto_ventana(1,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer3);
+	zxvision_print_string_defaults_fillspc(ventana,1,0,buffer3);
+
+
+                if (texto_opcion_activa[0]!=0) {
+
+			debug_printf (VERBOSE_DEBUG,"Send active line to speech: %s",texto_opcion_activa);
+                        //Active item siempre quiero que se escuche
+
+                        //Guardamos estado actual
+                        int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
+                        menu_speech_tecla_pulsada=0;
+
+                        menu_textspeech_send_text(texto_opcion_activa);
+
+                        //Restauro estado
+                        //Pero si se ha pulsado tecla, no restaurar estado
+                        //Esto sino provocaria que , por ejemplo, en la ventana de confirmar yes/no,
+                        //se entra con menu_speech_tecla_pulsada=0, se pulsa tecla mientras se esta leyendo el item activo,
+                        //y luego al salir de aqui, se pierde el valor que se habia metido (1) y se vuelve a poner el 0 del principio
+                        //provocando que cada vez que se mueve el cursor, se relea la ventana entera
+                        if (menu_speech_tecla_pulsada==0) menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
+                }
+
+
+}
+
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -34207,7 +34365,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 		if (ventana!=NULL) zxvision_destroy_window(ventana);
 		ventana=&ventana_filesel;
 
-		int alto_total=filesel_total_items+8; //Sumarle las leyendas, etc
+		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
 		zxvision_new_window(ventana,FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,FILESEL_ANCHO-1,alto_total,titulo);
 
 	        ventana->upper_margin=4;
@@ -34242,7 +34400,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 			switch (filesel_zona_pantalla) {
 				case 0:
 				//zona superior de nombre de archivo
-		                menu_print_dir(filesel_archivo_seleccionado);
+		                zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
 				zxvision_draw_window_contents(ventana);
                 //para que haga lectura del edit box
                 menu_speech_tecla_pulsada=0;
@@ -34346,7 +34504,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//zona selector de archivos
 
 				debug_printf (VERBOSE_DEBUG,"Read directory. menu_speech_tecla_pulsada=%d",menu_speech_tecla_pulsada);
-				menu_print_dir(filesel_archivo_seleccionado);
+				zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
 				zxvision_draw_window_contents(ventana);
 				//Para no releer todas las entradas
 				menu_speech_tecla_pulsada=1;
@@ -34897,7 +35055,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 			case 2:
 				//zona filtros
-                                menu_print_dir(filesel_archivo_seleccionado);
+                                zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
 
                                 //para que haga lectura de los filtros
                                 menu_speech_tecla_pulsada=0;
