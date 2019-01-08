@@ -34632,7 +34632,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 		do {
-			printf ("\nReleer directorio\n");
+			//printf ("\nReleer directorio\n");
 
 			switch (filesel_zona_pantalla) {
 				case 0:
