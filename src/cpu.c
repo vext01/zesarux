@@ -2137,22 +2137,15 @@ void random_ram(z80_byte *puntero,int longitud)
 
 		//valor=randomize_noise & 0xFF;
 
-		//hacemos xor con los dos
-		valor=valor_h ^ valor_l;
+		//Solo hacemos random en determinadas maquinas
+		if (MACHINE_IS_SPECTRUM_16_48) {
+			//hacemos xor con los dos
+			valor=valor_h ^ valor_l;
+		}
 
-		//Si es Jupiter Ace, como la maquina no inicializa la RAM a 0, la inicializamos nosotros
-		//Ademas esto beneficia al grabar snapshots, para no guardar datos aleatorios que no se usan
-		if (MACHINE_IS_ACE) valor=0;
-
-		//Lo mismo para ZX-Uno
-		if (MACHINE_IS_ZXUNO) valor=0;
-
-		//Lo mismo para Chloe
-		if (MACHINE_IS_CHLOE) valor=0;
-
-		//Si es Timex, tambien inicializamos a 0
-		//if (MACHINE_IS_TIMEX_TS2068) valor=0;
-
+		else {
+			valor=0;
+		}
 
 		//printf ("random:%d\n",valor);
 		*puntero=valor;
