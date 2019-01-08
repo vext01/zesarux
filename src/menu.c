@@ -32168,6 +32168,71 @@ void menu_filesel_print_filters(char *filtros[])
 	menu_escribe_linea_opcion(FILESEL_POS_FILTER,activo,1,buffer_filtros);
 }
 
+
+void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[])
+{
+
+
+        if (menu_filesel_show_utils.v) return; //Si hay utilidades activas, no mostrar filtros
+
+        //texto para mostrar filtros. darle bastante margen aunque no quepa en pantalla
+        char buffer_filtros[200];
+
+
+        char *f;
+
+        int i,p;
+        p=0;
+        sprintf(buffer_filtros,"Filter: ");
+
+        p=p+8;
+
+
+        for (i=0;filtros[i];i++) {
+                //si filtro es "", significa todo (*)
+
+                f=filtros[i];
+                if (f[0]==0) f="*";
+
+                //copiamos
+                //sprintf(&buffer_filtros[p],"*.%s ",f);
+                sprintf(&buffer_filtros[p],"%s ",f);
+                p=p+strlen(f)+1;
+
+        }
+
+//Si texto filtros pasa del tope, rellenar con "..."
+        if (p>FILESEL_ANCHO-2) {
+                p=FILESEL_ANCHO-2;
+                buffer_filtros[p-1]='.';
+                buffer_filtros[p-2]='.';
+                buffer_filtros[p-3]='.';
+        }
+
+
+        buffer_filtros[p]=0;
+
+
+        //borramos primero con espacios
+        //menu_escribe_texto_ventana(9,FILESEL_ALTO-3,0,7+8,"               ");
+
+	int posicion_filtros=7;
+
+        //menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"               ");
+	zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"               ");
+
+
+        //y luego escribimos
+        //menu_escribe_texto_ventana(1,FILESEL_ALTO-3,0,7+8,buffer_filtros);
+
+        //si esta filesel_zona_pantalla=2, lo ponemos en otro color
+        int activo=-1;
+        if (filesel_zona_pantalla==2) activo=FILESEL_POS_FILTER;
+
+        //menu_escribe_linea_opcion(FILESEL_POS_FILTER,activo,1,buffer_filtros);
+	zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_filtros);
+}
+
 void menu_filesel_print_legend(void)
 {
 	menu_escribe_linea_opcion(FILESEL_POS_LEYENDA,-1,1,"TAB: Changes section");
@@ -34193,20 +34258,21 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 
 		//Solo hacer esto si es visible en pantalla
 		if (i<mostrados_en_pantalla) {
-		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,FILESEL_Y+3+i);
+		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,i);
 
 		if (filesel_linea_seleccionada==i) {
 			char buffer[50],buffer2[50];
 			//primero borrar con espacios
 
-			menu_escribe_texto_ventana(7,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"                      ");
+			//menu_escribe_texto_ventana(7,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"                      ");
 
 
 			strcpy(filesel_nombre_archivo_seleccionado,p->d_name);
 
 			menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,22);
 			sprintf (buffer2,"File: %s",buffer);
-			menu_escribe_texto_ventana(1,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer2);
+			//menu_escribe_texto_ventana(1,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer2);
+			zxvision_print_string_defaults_fillspc(ventana,1,1,buffer2);
 
 
 				debug_printf (VERBOSE_DEBUG,"Selected: %s. filesel_zona_pantalla: %d",p->d_name,filesel_zona_pantalla);
@@ -34373,7 +34439,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 		zxvision_draw_window(ventana);
 
-		menu_filesel_print_filters(filesel_filtros);
+		zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 		menu_filesel_print_legend();
 		int releer_directorio=0;
 
@@ -35037,7 +35103,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//Redibujar ventana
 						//releer_directorio=1;
 						menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
-						menu_filesel_print_filters(filesel_filtros);
+						zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 						menu_filesel_print_legend();
 
 						menu_filesel_print_text_contents();
@@ -35060,7 +35126,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 //para que haga lectura de los filtros
                                 menu_speech_tecla_pulsada=0;
 
-				menu_filesel_print_filters(filesel_filtros);
+				zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 				zxvision_draw_window_contents(ventana);
 		                menu_refresca_pantalla();
 
@@ -35082,7 +35148,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 				if (tecla==15) {
 					menu_reset_counters_tecla_repeticion();
 					filesel_zona_pantalla=0;
-					menu_filesel_print_filters(filesel_filtros);
+					zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 					//no releer todos archivos
 					menu_speech_tecla_pulsada=1;
 				}
@@ -35094,7 +35160,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 					//conmutar filtros
 					menu_filesel_switch_filters();
 
-				        menu_filesel_print_filters(filesel_filtros);
+				        zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 					releer_directorio=1;
 				}
 
