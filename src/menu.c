@@ -34568,9 +34568,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		//leer todos archivos
 		menu_filesel_readdir();
 		printf ("Total archivos en directorio: %d\n",filesel_total_items);
-		//printf ("despues leer directorio\n");
+		printf ("despues leer directorio\n");
 		//Crear ventana. Si ya existia, borrarla
-		if (ventana!=NULL) zxvision_destroy_window(ventana);
+		if (ventana!=NULL) {
+			printf ("Destroy previous filesel window\n");
+			zxvision_destroy_window(ventana);
+		}
 		ventana=&ventana_filesel;
 
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
@@ -34605,7 +34608,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 		do {
-			//printf ("\nReleer directorio\n");
+			printf ("\nReleer directorio\n");
 
 			switch (filesel_zona_pantalla) {
 				case 0:
