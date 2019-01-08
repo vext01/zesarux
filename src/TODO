@@ -5,7 +5,6 @@
 
 -filesel:
 --seleccion de archivos con raton
---mover scroll con raton descuadra el cursor
 
 ok -quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
 zxvision_draw_window para refrescar lo que habia debajo

@@ -33183,8 +33183,8 @@ void menu_filesel_cursor_arriba(void)
 
 void zxvision_menu_filesel_cursor_arriba(zxvision_window *ventana)
 {
-//ver que no sea primer archivo
-                                        if (filesel_archivo_seleccionado+filesel_linea_seleccionada!=0) {
+	//ver que no sea primer archivo
+    if (filesel_archivo_seleccionado+filesel_linea_seleccionada!=0) {
 	 ventana->cursor_line--;
                                                 //ver si es principio de pantalla
                                                 if (filesel_linea_seleccionada==0) {
@@ -33196,6 +33196,7 @@ void zxvision_menu_filesel_cursor_arriba(zxvision_window *ventana)
                                                 }
                                         }
 
+	//Por si el cursor no esta visible en pantalla (al haberse hecho scroll con raton)	
 	if (zxvision_adjust_cursor_top(ventana)) {
 		zxvision_send_scroll_up(ventana);
 		filesel_linea_seleccionada=0;
@@ -33206,11 +33207,9 @@ void zxvision_menu_filesel_cursor_arriba(zxvision_window *ventana)
 
 void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
 {
-
-
-//ver que no sea ultimo archivo
-        if (si_menu_filesel_no_mas_alla_ultimo_item(filesel_linea_seleccionada)) {
-	ventana->cursor_line++;
+	//ver que no sea ultimo archivo
+	if (si_menu_filesel_no_mas_alla_ultimo_item(filesel_linea_seleccionada)) {
+		ventana->cursor_line++;
                                                 //ver si es final de pantalla
                                                 if (filesel_linea_seleccionada==FILESEL_ALTO_DIR-1) {
                                                         filesel_archivo_seleccionado++;
@@ -33220,7 +33219,7 @@ void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
                                                         filesel_linea_seleccionada++;
                                                 }
                                         }
-										
+	//Por si el cursor no esta visible en pantalla (al haberse hecho scroll con raton)									
 	if (zxvision_adjust_cursor_bottom(ventana)) {
 		zxvision_send_scroll_down(ventana);
 		filesel_linea_seleccionada=FILESEL_ALTO_DIR-1;
@@ -34664,6 +34663,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		//Crear ventana. Si ya existia, borrarla
 		if (ventana!=NULL) {
 			printf ("Destroy previous filesel window\n");
+			cls_menu_overlay();
 			zxvision_destroy_window(ventana);
 		}
 		ventana=&ventana_filesel;
