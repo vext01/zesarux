@@ -34580,6 +34580,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//ESC
                 if (tecla==2) {
                 	menu_filesel_exist_ESC();
+			zxvision_destroy_window(ventana);
                     return 0;
 				}
 
@@ -34641,6 +34642,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_filesel_free_mem();
 
 						//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+						zxvision_destroy_window(ventana);
 						return 1;
 
 						}
@@ -34648,6 +34650,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 						else {
 							//Extension no conocida. No modificar variable archivo
 							//printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+							zxvision_destroy_window(ventana);
 							return 0;
 						}
 						
@@ -34786,6 +34789,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//printf ("salimos con ESC. nombre directorio: %s\n",archivo);
                         menu_filesel_exist_ESC();
 
+			zxvision_destroy_window(ventana);
                         return 0;
 
 					break;
@@ -34801,6 +34805,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                 if (item_seleccionado==NULL) {
                                                         //Esto pasa en las carpetas vacias, como /home en Mac OS
                                                                         menu_filesel_exist_ESC();
+									zxvision_destroy_window(ventana);
                                                                         return 0;
 
 
@@ -34840,6 +34845,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 						if (item_seleccionado==NULL) {
 							//Esto pasa en las carpetas vacias, como /home en Mac OS
                                                                         menu_filesel_exist_ESC();
+									zxvision_destroy_window(ventana);
                                                                         return 0;
 
 
@@ -34895,6 +34901,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 								if (menu_filesel_uncompress(item_seleccionado->d_name,tmpdir) ) {
 									menu_filesel_exist_ESC();
+									zxvision_destroy_window(ventana);
 									return 0;
 								}
 
@@ -34923,6 +34930,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
 									menu_filesel_free_mem();
 
 									//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+									zxvision_destroy_window(ventana);
 									return 1;
 
 									}
@@ -34930,6 +34938,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
                                     else {
                                                         //Extension no conocida. No modificar variable archivo
                                                         //printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+							zxvision_destroy_window(ventana);
                                                         return 0;
                                     }
 
@@ -35112,6 +35121,7 @@ int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                 menu_espera_no_tecla();
                                                 menu_filesel_chdir(filesel_directorio_inicial);
 						menu_filesel_free_mem();
+						zxvision_destroy_window(ventana);
                                                 return 0;
                                 }
 
