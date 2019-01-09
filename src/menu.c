@@ -5191,6 +5191,28 @@ void zxvision_send_scroll_right(zxvision_window *w)
 	}
 }
 
+int zxvision_cursor_out_view(zxvision_window *ventana)
+{
+
+        //int linea_retornar;
+
+        if (ventana->visible_cursor) {
+
+                //Ver en que offset estamos
+                int offset_y=ventana->offset_y;
+                //Y donde esta el cursor
+                int cursor=ventana->cursor_line;
+
+                //Y si cursor no esta visible, lo ponemos para que este abajo del todo (hemos de suponer que estaba abajo y ha bajado 1 mas)
+                if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
+			return 1;
+                }
+        }
+
+        return 0;
+
+}
+
 
 //Retorna 1 si ha reajustado el cursor
 int zxvision_adjust_cursor_bottom(zxvision_window *ventana)
@@ -5198,19 +5220,16 @@ int zxvision_adjust_cursor_bottom(zxvision_window *ventana)
 
 	//int linea_retornar;
 
-	if (ventana->visible_cursor) {
+	if (zxvision_cursor_out_view(ventana)) {
 
 		//Ver en que offset estamos
 		int offset_y=ventana->offset_y;
 		//Y donde esta el cursor
 		int cursor=ventana->cursor_line;
 
-		//Y si cursor no esta visible, lo ponemos para que este abajo del todo (hemos de suponer que estaba abajo y ha bajado 1 mas)
-		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
 			printf ("Reajustar cursor\n");
 			ventana->cursor_line=offset_y+ventana->visible_height-2-ventana->upper_margin-ventana->lower_margin;
 			return 1;
-		}
 	}
 
 	return 0;
@@ -5220,21 +5239,19 @@ int zxvision_adjust_cursor_bottom(zxvision_window *ventana)
 //Retorna 1 si ha reajustado el cursor
 int zxvision_adjust_cursor_top(zxvision_window *ventana)
 {
-	if (ventana->visible_cursor) {
+
+	if (zxvision_cursor_out_view(ventana)) {
 
 		//Ver en que offset estamos
 		int offset_y=ventana->offset_y;
 		//Y donde esta el cursor
 		int cursor=ventana->cursor_line;
 
-		//Y si cursor no esta visible, lo ponemos para que este arriba del todo (hemos de suponer que estaba arriba i ha subido 1 mas)
-		if (cursor<offset_y || cursor>=offset_y+ventana->visible_height-2) {
 			if (offset_y>0) {
 				printf ("Reajustar cursor\n");
 				ventana->cursor_line=offset_y-1;
 				return 1;
 			}
-		}
 
 	}
 
@@ -34868,7 +34885,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                         if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
 
 								//Ajustar cursor ventana
-								ventana->cursor_line -=filesel_linea_seleccionada;
+
+								//if (zxvision_cursor_out_view(ventana)) {
+								filesel_archivo_seleccionado=ventana->offset_y;
+								ventana->cursor_line=filesel_archivo_seleccionado;
+								//}
+
+								//ventana->cursor_line -=filesel_linea_seleccionada;
 	
 								printf ("Seleccionamos item %d\n",linea_final);
                                                                 filesel_linea_seleccionada=linea_final;
