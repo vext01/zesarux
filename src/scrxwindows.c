@@ -1594,6 +1594,15 @@ void scrxwindows_actualiza_tablas_teclado(void)
 				util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,1);
 			}
 
+			//Botones 4 y 5 en X11 es scroll arriba y abajo... ciertamente un tanto confuso
+     		if ( event.xbutton.button == 4 ) {
+                mouse_wheel_vertical=1;
+            }
+
+            if ( event.xbutton.button == 5 ) {
+                mouse_wheel_vertical=-1;
+            }			
+
 			gunstick_x=event.xbutton.x;
 			gunstick_y=event.xbutton.y;
 			gunstick_x=gunstick_x/zoom_x;
