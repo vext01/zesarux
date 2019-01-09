@@ -3416,6 +3416,9 @@ int util_write_configfile(void)
   if (menu_hide_close_button.v)              ADD_STRING_CONFIG,"--hide-menu-close-button");
 
 
+  if (menu_invert_mouse_scroll.v)             ADD_STRING_CONFIG,"--invert-menu-mouse-scroll");
+
+
   if (rainbow_enabled.v)                      ADD_STRING_CONFIG,"--realvideo");
 
   if (autodetect_rainbow.v==0)                ADD_STRING_CONFIG,"--no-detect-realvideo");

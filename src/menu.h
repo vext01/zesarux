@@ -446,6 +446,7 @@ extern int menu_abierto;
 extern z80_bit menu_hide_vertical_percentaje_bar;
 extern z80_bit menu_hide_minimize_button;
 extern z80_bit menu_hide_close_button;
+extern z80_bit menu_invert_mouse_scroll;
 
 extern int if_pending_error_message;
 extern char pending_error_message[];

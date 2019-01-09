@@ -292,6 +292,9 @@ z80_bit menu_hide_minimize_button={0};
 //Si se oculta boton de cerrar ventana
 z80_bit menu_hide_close_button={0};
 
+//Si se invierte sentido movimiento scroll raton
+z80_bit menu_invert_mouse_scroll={0};
+
 //indica que se ha pulsado ESC y por tanto debe aparecer el menu, o gestion de breakpoints, osd, etc
 //y tambien, la lectura de puertos de teclado (254) no devuelve nada
 int menu_abierto=0;
@@ -6228,15 +6231,20 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	}
 
 	if (mouse_wheel_vertical) {
-		printf ("Read mouse vertical wheel from zxvision_handle_mouse_events : %d\n",mouse_wheel_vertical);
-		while (mouse_wheel_vertical<0) {
+		int leido_mouse_wheel_vertical=mouse_wheel_vertical;
+		printf ("Read mouse vertical wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_vertical);
+
+		//Si invertir movimiento
+		if (menu_invert_mouse_scroll.v) leido_mouse_wheel_vertical=-leido_mouse_wheel_vertical;
+
+		while (leido_mouse_wheel_vertical<0) {
 			zxvision_send_scroll_down_and_draw(w);
-			mouse_wheel_vertical++;
+			leido_mouse_wheel_vertical++;
 		}
 
-		while (mouse_wheel_vertical>0) {
+		while (leido_mouse_wheel_vertical>0) {
 			zxvision_send_scroll_up_and_draw(w);
-			mouse_wheel_vertical--;
+			leido_mouse_wheel_vertical--;
 		}
 		
 		//Y resetear a 0. importante
@@ -6244,15 +6252,22 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	}
 
 	if (mouse_wheel_horizontal) {
-		printf ("Read mouse horizontal wheel from zxvision_handle_mouse_events : %d\n",mouse_wheel_horizontal);
-		while (mouse_wheel_horizontal<0) {
+		int leido_mouse_wheel_horizontal=mouse_wheel_horizontal;
+		printf ("Read mouse horizontal wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_horizontal);
+	
+
+		//Si invertir movimiento
+		if (menu_invert_mouse_scroll.v) leido_mouse_wheel_horizontal=-leido_mouse_wheel_horizontal;		
+
+
+		while (leido_mouse_wheel_horizontal<0) {
 			zxvision_send_scroll_right_and_draw(w);
-			mouse_wheel_horizontal++;
+			leido_mouse_wheel_horizontal++;
 		}
 
-		while (mouse_wheel_horizontal>0) {
+		while (leido_mouse_wheel_horizontal>0) {
 			zxvision_send_scroll_left_and_draw(w);
-			mouse_wheel_horizontal--;
+			leido_mouse_wheel_horizontal--;
 		}
 		
 		//Y resetear a 0. importante
@@ -26511,7 +26526,10 @@ void menu_interface_hide_close_button(MENU_ITEM_PARAMETERS)
 	menu_hide_close_button.v ^=1;
 }
 
-
+void menu_interface_invert_mouse_scroll(MENU_ITEM_PARAMETERS)
+{
+	menu_invert_mouse_scroll.v ^=1;
+}
 
 
 
@@ -26584,7 +26602,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"Minimize button: %s",(menu_hide_minimize_button.v ? "No" : "Yes") );
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"Close button: %s",(menu_hide_close_button.v ? "No" : "Yes") );
-
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"Invert mouse scroll: %s",(menu_invert_mouse_scroll.v ? "Yes" : "No") );
 
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

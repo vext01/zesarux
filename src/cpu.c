@@ -1582,6 +1582,7 @@ printf (
 		"--hide-menu-percentage-bar  Hides vertical percentaje bar on the right of text windows and file selector\n"
 		"--hide-menu-minimize-button Hides minimize button on the title window\n"
 		"--hide-menu-close-button    Hides close button on the title window\n"
+		"--invert-menu-mouse-scroll  Inverts mouse scroll movement\n"
 
 		"--nowelcomemessage         Disable welcome message\n"
 		"--red                      Force display mode with red colour\n"
@@ -5925,6 +5926,9 @@ int parse_cmdline_options(void) {
                                 menu_hide_close_button.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--invert-menu-mouse-scroll")) {
+                                menu_invert_mouse_scroll.v=1;
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--realvideo")) {
 				enable_rainbow();
