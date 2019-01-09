@@ -839,6 +839,13 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
 	util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,0);
 }
 
+- (void)scrollWheel:(NSEvent *)event
+{
+	printf ("Scroll wheel scrolled %f horizontally and %f vertically\n", [event deltaX], [event deltaY]);
+        mouse_wheel_horizontal=[event deltaX];
+        mouse_wheel_vertical=[event deltaY];
+}
+
 - (void)leftrightmouseDown:(int)x y:(int)y
 {
                         gunstick_x=x;

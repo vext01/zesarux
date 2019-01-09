@@ -79,6 +79,12 @@ int mouse_left=0;
 //pulsado boton derecho raton
 int mouse_right=0;
 
+//accionado wheel vertical. Positivo: scroll arriba. Negativo: scroll abajo
+int mouse_wheel_vertical=0;
+
+//accionado wheel horizontal. Positivo: scroll izquierda. Negativo: scroll derecha
+int mouse_wheel_horizontal=0;
+
 //Coordenadas x,y de retorno a puerto kempston
 //Entre 0 y 255 las dos. Coordenada Y hacia abajo resta
 //se toma como base el mismo formato que gunstick x e y pero con modulo % 256

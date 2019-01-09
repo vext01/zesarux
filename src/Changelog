@@ -4,6 +4,7 @@ Added setting to specify configuration file
 
 Improved menu environment:
 * Added new menu window type: ZX Vision. GUI Windows can be moved, resized, scrolled, minimized, closed, and change the focus to the background
+* Windows can be scrolled using mouse wheel
 * Warning and Error window messages now show an animation
 
 

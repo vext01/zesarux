@@ -1360,7 +1360,18 @@ void scrsdl_actualiza_tablas_teclado(void)
 				//mouse_right=0;
 			}
 
+                        if ( event.button.button == SDL_BUTTON_WHEELUP ) {
+                                mouse_wheel_vertical=1;
+                        }
+
+                        if ( event.button.button == SDL_BUTTON_WHEELDOWN ) {
+                                mouse_wheel_vertical=-1;
+                        }
+
+
 		}
+
+
 
 		if (event.type==SDL_QUIT) {
 	                debug_printf (VERBOSE_INFO,"Received window close event");

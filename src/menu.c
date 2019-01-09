@@ -5854,6 +5854,51 @@ void zxvision_handle_minimize(zxvision_window *w)
 	}
 
 }
+
+void zxvision_send_scroll_right_and_draw(zxvision_window *w)
+{
+						//printf ("Pulsado en scroll derecha\n");
+						zxvision_send_scroll_right(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_horizontal_scroll_bar(w,0);	
+}
+
+void zxvision_send_scroll_left_and_draw(zxvision_window *w)
+{
+						//printf ("Pulsado en scroll izquierda\n");
+						zxvision_send_scroll_left(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_horizontal_scroll_bar(w,0);
+}
+
+void zxvision_send_scroll_up_and_draw(zxvision_window *w)
+{
+						//printf ("Pulsado en scroll arriba\n");
+						zxvision_send_scroll_up(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_vertical_scroll_bar(w,0);
+}
+
+void zxvision_send_scroll_down_and_draw(zxvision_window *w)
+{
+						//printf ("Pulsado en scroll abajo\n");
+						zxvision_send_scroll_down(w);
+
+						//Redibujar botones scroll. Esto es necesario solo en el caso que,
+						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
+						//se quedaria el color del boton invertido
+						zxvision_draw_vertical_scroll_bar(w,0);	
+}
+
 //int zxvision_mouse_events_counter=0;
 //int tempconta;
 //Retorna 1 si pulsado boton de cerrar ventana
@@ -6067,26 +6112,12 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					//Flecha izquierda
 					if (last_x_mouse_clicked==posicion_flecha_izquierda) {
-						//printf ("Pulsado en scroll izquierda\n");
-						zxvision_send_scroll_left(w);
-
-						//Redibujar botones scroll. Esto es necesario solo en el caso que,
-						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
-						//se quedaria el color del boton invertido
-						zxvision_draw_horizontal_scroll_bar(w,0);
-				
+						zxvision_send_scroll_left_and_draw(w);			
 					}
 
 					//Flecha derecha
 					if (last_x_mouse_clicked==posicion_flecha_derecha) {
-						//printf ("Pulsado en scroll derecha\n");
-						zxvision_send_scroll_right(w);
-
-						//Redibujar botones scroll. Esto es necesario solo en el caso que,
-						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
-						//se quedaria el color del boton invertido
-						zxvision_draw_horizontal_scroll_bar(w,0);						
-					
+						zxvision_send_scroll_right_and_draw(w);			
 					}
 
 					if (last_x_mouse_clicked>posicion_flecha_izquierda && last_x_mouse_clicked<posicion_flecha_derecha) {
@@ -6142,25 +6173,12 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					//Flecha arriba
 					if (last_y_mouse_clicked==posicion_flecha_arriba) {
-						//printf ("Pulsado en scroll arriba\n");
-						zxvision_send_scroll_up(w);
-
-						//Redibujar botones scroll. Esto es necesario solo en el caso que,
-						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
-						//se quedaria el color del boton invertido
-						zxvision_draw_vertical_scroll_bar(w,0);
-
+						zxvision_send_scroll_up_and_draw(w);
 					}
 
 					//Flecha abajo
 					if (last_y_mouse_clicked==posicion_flecha_abajo) {
-						//printf ("Pulsado en scroll abajo\n");
-						zxvision_send_scroll_down(w);
-
-						//Redibujar botones scroll. Esto es necesario solo en el caso que,
-						//al empezar a pulsar boton, este se invierte el color, y si está el scroll en el limite y no actua,
-						//se quedaria el color del boton invertido
-						zxvision_draw_vertical_scroll_bar(w,0);						
+						zxvision_send_scroll_down_and_draw(w);					
 					}
 
 					if (last_y_mouse_clicked>posicion_flecha_arriba && last_y_mouse_clicked<posicion_flecha_abajo) {
@@ -6208,6 +6226,38 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 
 	}
+
+	if (mouse_wheel_vertical) {
+		printf ("Read mouse vertical wheel from zxvision_handle_mouse_events : %d\n",mouse_wheel_vertical);
+		while (mouse_wheel_vertical<0) {
+			zxvision_send_scroll_down_and_draw(w);
+			mouse_wheel_vertical++;
+		}
+
+		while (mouse_wheel_vertical>0) {
+			zxvision_send_scroll_up_and_draw(w);
+			mouse_wheel_vertical--;
+		}
+		
+		//Y resetear a 0. importante
+		mouse_wheel_vertical=0;
+	}
+
+	if (mouse_wheel_horizontal) {
+		printf ("Read mouse horizontal wheel from zxvision_handle_mouse_events : %d\n",mouse_wheel_horizontal);
+		while (mouse_wheel_horizontal<0) {
+			zxvision_send_scroll_right_and_draw(w);
+			mouse_wheel_horizontal++;
+		}
+
+		while (mouse_wheel_horizontal>0) {
+			zxvision_send_scroll_left_and_draw(w);
+			mouse_wheel_horizontal--;
+		}
+		
+		//Y resetear a 0. importante
+		mouse_wheel_horizontal=0;
+	}	
 
 	if (!mouse_is_dragging) {
 		if (mouse_left && mouse_movido) {
@@ -34732,6 +34782,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 	//Decir directorio activo
 	menu_textspeech_say_current_directory();
+
+	//Inicializar mouse wheel a 0, por si acaso
+	mouse_wheel_vertical=mouse_wheel_horizontal=0;
 
 	do {
 		menu_speech_tecla_pulsada=0;
