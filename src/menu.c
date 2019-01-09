@@ -33601,6 +33601,17 @@ int si_mouse_zona_archivos(void)
 	return 0;
 }
 
+int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
+{
+        int inicio_y_dir=1+FILESEL_INICIO_DIR;
+
+        if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR && menu_mouse_x<ventana->visible_width-1) {
+		printf ("Mouse en zona de archivos\n");
+		return 1;
+	}
+        return 0;
+}
+
 void menu_filesel_print_text_contents(void)
 {
 	menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
@@ -34851,16 +34862,21 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					printf ("Pulsado boton raton izquierdo\n");
 
 					 //Si en linea de "File"
-                                        if (menu_mouse_y==2) {
+                                        if (menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
 						printf ("Pulsado zona File\n");
                                                                 menu_reset_counters_tecla_repeticion();
                                                                 filesel_zona_pantalla=0;
                                                                 tecla=0;
                                         }
+
+					if (si_menu_mouse_en_ventana() && zxvision_si_mouse_zona_archivos(ventana) ) {
+						//Como pulsar enter
+						tecla=13;
+					}
 				}
 
 
-				//Si se ha movido raton
+				//Si se ha movido raton. Asumimos que ha vuelto de leer tecla, tecla=0 y no se ha pulsado mouse
 				if (!tecla && !mouse_left) {
 				 //if (mouse_movido) {
                                         printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
@@ -34869,7 +34885,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                 printf ("dentro ventana\n");
                                                 //Ver en que zona esta
                                                 int inicio_y_dir=1+FILESEL_INICIO_DIR;
-                                                if (si_mouse_zona_archivos()) {
+                                                if (zxvision_si_mouse_zona_archivos(ventana)) {
                                                         //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
                                                         printf ("Dentro lista archivos\n");
 
