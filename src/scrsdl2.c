@@ -1410,6 +1410,8 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 				util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,1);
                         }
 
+                        //TODO: soporte rueda raton. Ya no se trata como un boton en SDL2, sino que es  SDL_MOUSEWHEEL  event
+
                         gunstick_x=event.button.x;
                         gunstick_y=event.button.y;
                         gunstick_x=gunstick_x/zoom_x;
