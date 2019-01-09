@@ -1196,6 +1196,12 @@ char *menu_stereo_positions[]={
 	"          Right"
 };
 
+
+void menu_silence_detector(MENU_ITEM_PARAMETERS)
+{
+	silence_detector_setting.v ^=1;
+}
+
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_settings_audio;
@@ -1418,7 +1424,9 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
                 menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"Change Audio Driver");
 
-
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_silence_detector,NULL,"Silence detector: %s",(silence_detector_setting.v ? "Yes" : "No" ));
+				menu_add_item_menu_tooltip(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
+				menu_add_item_menu_ayuda(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
 
                 menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
