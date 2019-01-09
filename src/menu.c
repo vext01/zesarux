@@ -34701,7 +34701,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 		do {
 			//printf ("\nReleer directorio\n");
-			printf ("cursor_line: %d\n",ventana->cursor_line);
+			printf ("cursor_line: %d filesel_linea_seleccionada: %d filesel_archivo_seleccionado %d\n",
+				ventana->cursor_line,filesel_linea_seleccionada,filesel_archivo_seleccionado);
 
 			switch (filesel_zona_pantalla) {
 				case 0:
