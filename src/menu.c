@@ -33226,6 +33226,11 @@ int zxvision_get_filesel_alto_dir(zxvision_window *ventana)
 	return ventana->visible_height - ventana->upper_margin - ventana->lower_margin - 2;
 }
 
+int zxvision_get_filesel_pos_filters(zxvision_window *ventana)
+{
+	return ventana->visible_height - 3;
+}
+
 
 void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
 {
@@ -34630,14 +34635,41 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
               //Si en linea de "File"
 int menu_filesel_change_zone_if_file(zxvision_window *ventana,int *filesel_zona_pantalla,int *tecla)
 {
-                                        if (mouse_left && menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
-                                                printf ("Pulsado zona File\n");
-                                                                menu_reset_counters_tecla_repeticion();
-                                                                *filesel_zona_pantalla=0;
-                                                                *tecla=0;
+     if (!si_menu_mouse_en_ventana() ) return 0;
+	if (!mouse_left) return 0;
 
-						return 1;
+	int futura_zona=-1;
+                                        if (menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
+                                                printf ("Pulsado zona File\n");
+						futura_zona=0;
                                         }
+
+                //Si en linea de filtros
+                                                        if (menu_mouse_y==zxvision_get_filesel_pos_filters(ventana)  && menu_mouse_x<ventana->visible_width-1) {
+								printf ("Pulsado zona Filtros\n");
+                                                                futura_zona=2;
+                                                        }
+
+
+		//En zona seleccion archivos
+                                                if (zxvision_si_mouse_zona_archivos(ventana)) {	
+							printf ("En zona seleccion archivos\n");
+							futura_zona=1;
+						}
+
+
+	if (futura_zona!=-1) {
+		if (futura_zona!=*filesel_zona_pantalla) {
+			//Cambio de zona
+			menu_reset_counters_tecla_repeticion();
+			*filesel_zona_pantalla=futura_zona;
+			*tecla=0;
+			return 1;
+		}
+	}
+
+
+
 
 	return 0;
 }
