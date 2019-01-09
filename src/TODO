@@ -3,10 +3,12 @@
 
 ----zxvision----:
 
+
+
 -filesel:
 -si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
 
--lectura de rueda de desplazamiento de raton
+-SDL_BUTTON_WHEELLEFT, SDL_BUTTON_WHEELRIGHT. Y botones left y right de X11??
 
 ok -quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
 zxvision_draw_window para refrescar lo que habia debajo
