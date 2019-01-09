@@ -1414,18 +1414,9 @@ printf (
 
 		"--noreset-audiobuffer-full Do not reset audio buffer when it's full. By default it does reset the buffer when full, it helps reducing latency\n"
 
-/*
-#ifdef USE_PTHREADS
-		"--enable-silencedetector   Enable silence detector. Silence detector is disabled by default as this is a pthreads version\n"
-		"--disable-silencedetector  Disable silence detector. Silence detector is disabled by default as this is a pthreads version\n"
-#else 
-		"--enable-silencedetector   Enable silence detector. Silence detector is enabled by default as this is a no-pthreads version\n"
-		"--disable-silencedetector  Disable silence detector. Silence detector is enabled by default as this is a no-pthreads version\n"		
-#endif
-*/
 
-		"--enable-silencedetector   Enable silence detector. Silence detector is enabled by default\n"
-		"--disable-silencedetector  Disable silence detector. Silence detector is enabled by default\n"
+		"--enable-silencedetector   Enable silence detector. Silence detector is disabled by default\n"
+		"--disable-silencedetector  Disable silence detector. Silence detector is disabled by default\n"
 
 
 
@@ -6120,7 +6111,6 @@ int parse_cmdline_options(void) {
 				audio_noreset_audiobuffer_full.v=1;
 			}
 
-			//--enable-silencedetector
 
 			else if (!strcmp(argv[puntero_parametro],"--enable-silencedetector")) {
 				silence_detector_setting.v=1;
@@ -6748,19 +6738,16 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 	input_file_keyboard_playing.v=0;
 	input_file_keyboard_send_pause.v=1;
 
-/*
-#ifdef USE_PTHREADS
-	silence_detector_setting.v=0;
-#else
-	silence_detector_setting.v=1;
-#endif
-*/
+
 	/*
-		Activado por defecto. La versión de windows, tanto pthreads, como sin threads, y validado en 5.0, 6.0 y 6,1.
+		OLD : Activado por defecto. La versión de windows, tanto pthreads, como sin threads, y validado en 5.0, 6.0 y 6,1.
 		hace un clic continuo a veces. Y activando el detector, como se apaga el audio, se deja de escuchar
+
+		Desactivado por defecto: Version windows sin pthreads, no hace click continuo aun sin tener detector de silencio
+		Version windows con pthreads, hace clicks independientemente del detector de silencio
 	*/
 
-	silence_detector_setting.v=1;
+	silence_detector_setting.v=0;
 
 
 
