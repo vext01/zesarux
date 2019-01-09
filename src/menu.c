@@ -34627,6 +34627,22 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 }
 
 
+              //Si en linea de "File"
+int menu_filesel_change_zone_if_file(zxvision_window *ventana,int *filesel_zona_pantalla,int *tecla)
+{
+                                        if (mouse_left && menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
+                                                printf ("Pulsado zona File\n");
+                                                                menu_reset_counters_tecla_repeticion();
+                                                                *filesel_zona_pantalla=0;
+                                                                *tecla=0;
+
+						return 1;
+                                        }
+
+	return 0;
+}
+
+
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
@@ -34871,12 +34887,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					printf ("Pulsado boton raton izquierdo\n");
 
 					 //Si en linea de "File"
-                                        if (menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
+					menu_filesel_change_zone_if_file(ventana,&filesel_zona_pantalla,&tecla);
+                                        /*if (menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
 						printf ("Pulsado zona File\n");
                                                                 menu_reset_counters_tecla_repeticion();
                                                                 filesel_zona_pantalla=0;
                                                                 tecla=0;
-                                        }
+                                        }*/
 
 					if (si_menu_mouse_en_ventana() && zxvision_si_mouse_zona_archivos(ventana) ) {
 						//Como pulsar enter
@@ -35317,8 +35334,16 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				tecla=zxvision_common_getkey_refresh();
 
+
+				if (menu_filesel_change_zone_if_file(ventana,&filesel_zona_pantalla,&tecla)) {
+					zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
+                                         releer_directorio=1;
+
+                                                menu_espera_no_tecla();
+				}
+
 		                //ESC
-                                if (tecla==2) {
+                                else if (tecla==2) {
                                                 cls_menu_overlay();
                                                 menu_espera_no_tecla();
                                                 menu_filesel_chdir(filesel_directorio_inicial);
@@ -35328,7 +35353,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 }
 
 				//cambiar de zona con tab
-				if (tecla==15) {
+				else if (tecla==15) {
 					menu_reset_counters_tecla_repeticion();
 					filesel_zona_pantalla=0;
 					zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
@@ -35336,15 +35361,20 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					menu_speech_tecla_pulsada=1;
 				}
 
+
 				else {
 
 					//printf ("conmutar filtros\n");
+					if (tecla || (tecla==0 && mouse_left)) { 
 
-					//conmutar filtros
-					menu_filesel_switch_filters();
+						//conmutar filtros
+						menu_filesel_switch_filters();
 
-				        zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
-					releer_directorio=1;
+					        zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
+						releer_directorio=1;
+
+						menu_espera_no_tecla();
+					}
 				}
 
 			break;
