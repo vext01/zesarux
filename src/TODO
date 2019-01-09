@@ -4,7 +4,7 @@
 ----zxvision----:
 
 -filesel:
---seleccion de archivos con raton
+-si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
 
 ok -quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
 zxvision_draw_window para refrescar lo que habia debajo
