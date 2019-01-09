@@ -34843,16 +34843,17 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 				//Si se ha movido raton
- if (mouse_movido) {
+				if (!tecla && !mouse_left) {
+				 //if (mouse_movido) {
                                         printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
                                         printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
                                         if (si_menu_mouse_en_ventana() ) {
-                                                //printf ("dentro ventana\n");
+                                                printf ("dentro ventana\n");
                                                 //Ver en que zona esta
                                                 int inicio_y_dir=1+FILESEL_INICIO_DIR;
                                                 if (si_mouse_zona_archivos()) {
                                                         //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
-                                                        //printf ("Dentro lista archivos\n");
+                                                        printf ("Dentro lista archivos\n");
 
                                                         //Ver si linea dentro de rango
                                                         int linea_final=menu_mouse_y-inicio_y_dir;
@@ -34864,7 +34865,14 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                         //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
 
                                                         if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
+
+								//Ajustar cursor ventana
+								ventana->cursor_line -=filesel_linea_seleccionada;
+	
+								printf ("Seleccionamos item %d\n",linea_final);
                                                                 filesel_linea_seleccionada=linea_final;
+
+								ventana->cursor_line +=filesel_linea_seleccionada;
                                                                 menu_speech_tecla_pulsada=1;
                                                         }
                                                         else {
