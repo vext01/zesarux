@@ -33221,6 +33221,11 @@ void zxvision_menu_filesel_cursor_arriba(zxvision_window *ventana)
 	}
 }
 
+int zxvision_get_filesel_alto_dir(zxvision_window *ventana)
+{
+	return ventana->visible_height - ventana->upper_margin - ventana->lower_margin - 2;
+}
+
 
 void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
 {
@@ -33228,7 +33233,7 @@ void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
 	if (si_menu_filesel_no_mas_alla_ultimo_item(filesel_linea_seleccionada)) {
 		ventana->cursor_line++;
                                                 //ver si es final de pantalla
-                                                if (filesel_linea_seleccionada==FILESEL_ALTO_DIR-1) {
+                                                if (filesel_linea_seleccionada==zxvision_get_filesel_alto_dir(ventana)-1) {
                                                         filesel_archivo_seleccionado++;
 							zxvision_send_scroll_down(ventana);
                                                 }
@@ -33239,7 +33244,7 @@ void zxvision_menu_filesel_cursor_abajo(zxvision_window *ventana)
 	//Por si el cursor no esta visible en pantalla (al haberse hecho scroll con raton)									
 	if (zxvision_adjust_cursor_bottom(ventana)) {
 		zxvision_send_scroll_down(ventana);
-		filesel_linea_seleccionada=FILESEL_ALTO_DIR-1;
+		filesel_linea_seleccionada=zxvision_get_filesel_alto_dir(ventana)-1;
 		filesel_archivo_seleccionado=ventana->cursor_line-filesel_linea_seleccionada;
 	}
 
@@ -33601,11 +33606,12 @@ int si_mouse_zona_archivos(void)
 	return 0;
 }
 
+
 int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
 {
         int inicio_y_dir=1+FILESEL_INICIO_DIR;
 
-        if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR && menu_mouse_x<ventana->visible_width-1) {
+        if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+zxvision_get_filesel_alto_dir(ventana) && menu_mouse_x<ventana->visible_width-1) {
 		printf ("Mouse en zona de archivos\n");
 		return 1;
 	}
@@ -34732,6 +34738,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 			printf ("cursor_line: %d filesel_linea_seleccionada: %d filesel_archivo_seleccionado %d\n",
 				ventana->cursor_line,filesel_linea_seleccionada,filesel_archivo_seleccionado);
 
+
+			printf ("FILESEL_ALTO_DIR: %d zxvision_get_filesel_alto_dir: %d\n",FILESEL_ALTO_DIR,zxvision_get_filesel_alto_dir(ventana) );
+
 			switch (filesel_zona_pantalla) {
 				case 0:
 				//zona superior de nombre de archivo
@@ -34952,7 +34961,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 					//PgDn
 					case 25:
-						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
+						for (aux_pgdnup=0;aux_pgdnup<zxvision_get_filesel_alto_dir(ventana);aux_pgdnup++)
 							zxvision_menu_filesel_cursor_abajo(ventana);
 						//releer todas entradas
 						menu_speech_tecla_pulsada=0;
@@ -34962,7 +34971,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 					//PgUp
 					case 24:
-						for (aux_pgdnup=0;aux_pgdnup<FILESEL_ALTO_DIR;aux_pgdnup++)
+						for (aux_pgdnup=0;aux_pgdnup<zxvision_get_filesel_alto_dir(ventana);aux_pgdnup++)
 							zxvision_menu_filesel_cursor_arriba(ventana);
 						//releer todas entradas
 						menu_speech_tecla_pulsada=0;
