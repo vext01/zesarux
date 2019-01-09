@@ -34825,6 +34825,65 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//tecla=menu_get_pressed_key();
 
 				tecla=zxvision_common_getkey_refresh();
+				printf ("Despues lee tecla\n");
+
+
+				//Si se ha pulsado boton de raton
+                                if (mouse_left) {
+					printf ("Pulsado boton raton izquierdo\n");
+
+					 //Si en linea de "File"
+                                        if (menu_mouse_y==2) {
+						printf ("Pulsado zona File\n");
+                                                                menu_reset_counters_tecla_repeticion();
+                                                                filesel_zona_pantalla=0;
+                                                                tecla=0;
+                                        }
+				}
+
+
+				//Si se ha movido raton
+ if (mouse_movido) {
+                                        printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
+                                        printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
+                                        if (si_menu_mouse_en_ventana() ) {
+                                                //printf ("dentro ventana\n");
+                                                //Ver en que zona esta
+                                                int inicio_y_dir=1+FILESEL_INICIO_DIR;
+                                                if (si_mouse_zona_archivos()) {
+                                                        //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
+                                                        //printf ("Dentro lista archivos\n");
+
+                                                        //Ver si linea dentro de rango
+                                                        int linea_final=menu_mouse_y-inicio_y_dir;
+
+                                                        //Si esta en la zona derecha de selector de porcentaje no hacer nada
+                                                        //if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+                                                        if (menu_mouse_x==FILESEL_ANCHO-1) break;
+
+                                                        //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
+
+                                                        if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
+                                                                filesel_linea_seleccionada=linea_final;
+                                                                menu_speech_tecla_pulsada=1;
+                                                        }
+                                                        else {
+                                                                printf ("Cursor mas alla del ultimo item\n");
+                                                        }
+
+                                                }
+
+                                                else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
+                                                                //En la linea de filtros
+                                                                //nada en especial
+                                                                printf ("En linea de filtros\n");
+                                                }
+                                        }
+                                        else {
+                                                printf ("fuera ventana\n");
+                                        }
+
+                                }
 
 
 
