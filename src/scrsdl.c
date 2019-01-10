@@ -1368,6 +1368,8 @@ void scrsdl_actualiza_tablas_teclado(void)
                                 mouse_wheel_vertical=-1;
                         }
 
+//Parchecillo para usar scroll izquierdo y derecho. No viene por defecto en sdl 1.2
+
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
 #endif
