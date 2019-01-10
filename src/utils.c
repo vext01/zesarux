@@ -37,6 +37,12 @@
 #endif
 
 
+#ifdef MINGW
+//Para usar GetLogicalDrives
+#include <winbase.h>
+#endif
+
+
 #include "cpu.h"
 #include "utils.h"
 #include "debug.h"
@@ -13043,4 +13049,35 @@ int util_is_digit(char c)
 {
         if (c>='0' && c<='9') return 1;
         return 0;
+}
+
+
+int util_get_available_drives(char *texto)
+{
+#ifdef MINGW
+	int bitmask_unidades=GetLogicalDrives(); //Mascara de bits. bit inferior si unidad A disponible, etc
+#else
+	int bitmask_unidades=0;
+#endif 
+
+	//int maximas_unidades=26;
+	int unidades_detectadas=0;
+
+	char letra_actual='A';
+
+	for (;letra_actual<='Z';letra_actual++) {
+		//Ver bit inferior
+		if (bitmask_unidades&1) {
+			texto[unidades_detectadas++]=letra_actual;
+		}
+
+		bitmask_unidades >>=1;
+	}
+
+	//y final de texto
+	texto[unidades_detectadas]=0;
+	
+
+	texto[0]=0;
+	return unidades_detectadas;
 }

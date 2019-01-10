@@ -34,6 +34,7 @@
 #include <errno.h>
 
 
+
 #include "menu.h"
 #include "menu_items.h"
 #include "screen.h"
@@ -32444,26 +32445,35 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 #define FILESEL_POS_LEYENDA (FILESEL_ALTO-3)
 #define FILESEL_INICIO_DIR 4
 */
-
-	int posicion_leyenda=ZXVISION_POS_LEYENDA;
-	int posicion_filtros=ZXVISION_POS_FILTER;
-
-        //menu_escribe_linea_opcion(FILESEL_POS_LEYENDA,-1,1,"TAB: Changes section");
-	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,"TAB: Changes section");
-        if (menu_filesel_show_utils.v) {
                 //Forzar a mostrar atajos
                 z80_bit antes_menu_writing_inverse_color;
                 antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
                 menu_writing_inverse_color.v=1;
+
+	int posicion_leyenda=ZXVISION_POS_LEYENDA;
+	int posicion_filtros=ZXVISION_POS_FILTER;
+
+	char leyenda_inferior[64];
+#ifdef MINGW
+	sprintf (leyenda_inferior,"~~T~~A~~B: Changes section ~~U: Unit");
+#else
+	sprintf (leyenda_inferior,"~~T~~A~~B: Changes section");
+#endif
+
+	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
+
+
+        if (menu_filesel_show_utils.v) {
 
 
                                                                 //    01234  567890  12345  678901  2345678901
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~~View ~~Trunc ~~Del m~~Kdr c~~Onv ~~Inf");
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
 
+        }
+
                 //Restaurar comportamiento mostrar atajos
                 menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
-        }
 }
 
 
@@ -34743,6 +34753,22 @@ int menu_filesel_change_zone_if_clicked(zxvision_window *ventana,int *filesel_zo
 }
 
 
+//Cambiar unidad Windows
+//Retorna 0 si cancelado
+char menu_filesel_cambiar_unidad(void)
+{
+
+	char buffer_unidades[100]; //Aunque son 26 maximo, pero por si acaso
+	int unidades=util_get_available_drives(buffer_unidades);
+	if (unidades==0) {
+		menu_error_message("No available drives");
+		return 0;
+	}
+
+	return 'c';
+}
+
+
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
@@ -34805,11 +34831,16 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 	mouse_wheel_vertical=mouse_wheel_horizontal=0;
 
 
+//Esto lo hago para poder debugar facilmente la opcion de cambio de unidad
 #ifdef MINGW
-//#include <winbase.h>
-//int logical_drives=GetLogicalDrives();
-//printf ("Available drives: %X\n",logical_drives);
+	int we_are_windows=1;
+#else
+	int we_are_windows=0;
+	
 #endif
+
+	//temp
+		we_are_windows=1;
 
 	do {
 		menu_speech_tecla_pulsada=0;
@@ -34873,8 +34904,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				ventana->visible_cursor=0;
 		                zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
 				zxvision_draw_window_contents(ventana);
-                //para que haga lectura del edit box
-                menu_speech_tecla_pulsada=0;
+                		//para que haga lectura del edit box
+		                menu_speech_tecla_pulsada=0;
 
 				tecla=menu_scanf(filesel_nombre_archivo_seleccionado,PATH_MAX,22,FILESEL_X+7,FILESEL_Y+2);
 
@@ -35288,6 +35319,33 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//entre a y z y numeros
 				if ( (tecla>='a' && tecla<='z') || (tecla>='0' && tecla<='9') ) {
 					zxvision_menu_filesel_localiza_letra(ventana,tecla);
+				}
+
+
+				if (tecla=='U' && we_are_windows) {
+					char letra=menu_filesel_cambiar_unidad();
+					if (letra!=0) {
+						char directorio[3];
+						sprintf (directorio,"%c:",letra);
+
+						printf ("Changing to unit %s\n",directorio);
+
+						menu_filesel_chdir(directorio);
+						releer_directorio=1;
+						
+/*
+                                                debug_printf (VERBOSE_DEBUG,"%s Is a directory or windows drive. Change",filesel_nombre_archivo_seleccionado);
+                                                menu_filesel_chdir(filesel_nombre_archivo_seleccionado);
+                                                menu_filesel_free_mem();
+                                                releer_directorio=1;
+                                                filesel_zona_pantalla=1;
+
+                                                //Decir directorio activo
+                                                //Esperar a liberar tecla si no la tecla invalida el speech
+                                                menu_espera_no_tecla();
+                                                menu_textspeech_say_current_directory();
+*/
+					}
 				}
 
 				//Si esta filesel, opciones en mayusculas
