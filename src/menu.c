@@ -34782,6 +34782,7 @@ char menu_filesel_cambiar_unidad(void)
 	for (i=0;i<unidades;i++) {
 		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"%c:",buffer_unidades[i]);
 		menu_add_item_menu_shortcut(array_menu_filesel_unidad,buffer_unidades[i]);
+		menu_add_item_menu_valor_opcion(array_menu_filesel_unidad,buffer_unidades[i]);
 	}
 
                 menu_add_item_menu(array_menu_filesel_unidad,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -34789,8 +34790,9 @@ char menu_filesel_cambiar_unidad(void)
                 retorno_menu=menu_dibuja_menu(&menu_filesel_unidad_opcion_seleccionada,&item_seleccionado,array_menu_filesel_unidad,"Select Unit" );
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+				printf ("Texto opcion: %s\n",item_seleccionado.texto_opcion);
 				//Sacamos la letra del texto mismo
-				char unidad=item_seleccionado.texto_opcion[0];
+				char unidad=item_seleccionado.valor_opcion;
 				printf ("Leida unidad de menu: %c\n",unidad);
 				return unidad;
                 }
@@ -34871,8 +34873,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 	
 #endif
 
-	//temp
-		we_are_windows=1;
 
 	do {
 		menu_speech_tecla_pulsada=0;
