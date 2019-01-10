@@ -34806,7 +34806,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 #ifdef MINGW
-DWORD logical_drives=GetLogicalDrives();
+int logical_drives=GetLogicalDrives();
 printf ("Available drives: %X\n",logical_drives);
 #endif
 
