@@ -34780,9 +34780,10 @@ char menu_filesel_cambiar_unidad(void)
 	int i;
 
 	for (i=0;i<unidades;i++) {
-		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"%c:",buffer_unidades[i]);
-		menu_add_item_menu_shortcut(array_menu_filesel_unidad,buffer_unidades[i]);
-		menu_add_item_menu_valor_opcion(array_menu_filesel_unidad,buffer_unidades[i]);
+		char letra=buffer_unidades[i];
+		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"~~%c:",letra);
+		menu_add_item_menu_shortcut(array_menu_filesel_unidad,letra_minuscula(letra));
+		menu_add_item_menu_valor_opcion(array_menu_filesel_unidad,letra);
 	}
 
                 menu_add_item_menu(array_menu_filesel_unidad,"",MENU_OPCION_SEPARADOR,NULL,NULL);
