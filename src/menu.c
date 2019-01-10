@@ -32455,7 +32455,7 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
 	char leyenda_inferior[64];
 #ifdef MINGW
-	sprintf (leyenda_inferior,"~~T~~A~~B: Section ~~U: Unit");
+	sprintf (leyenda_inferior,"~~T~~A~~B: Section ~~D: Drive");
 #else
 	sprintf (leyenda_inferior,"~~T~~A~~B: Section");
 #endif
@@ -32467,7 +32467,7 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
 
                                                                 //    01234  567890  12345  678901  2345678901
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~~View ~~Trunc ~~Del m~~Kdr c~~Onv ~~Inf");
+                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~~View ~~Trunc d~~El m~~Kdr c~~Onv ~~Inf");
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
 
         }
@@ -34788,7 +34788,7 @@ char menu_filesel_cambiar_unidad(void)
 
                 menu_add_item_menu(array_menu_filesel_unidad,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 menu_add_ESC_item(array_menu_filesel_unidad);
-                retorno_menu=menu_dibuja_menu(&menu_filesel_unidad_opcion_seleccionada,&item_seleccionado,array_menu_filesel_unidad,"Select Unit" );
+                retorno_menu=menu_dibuja_menu(&menu_filesel_unidad_opcion_seleccionada,&item_seleccionado,array_menu_filesel_unidad,"Select Drive" );
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 				//Sacamos la letra del texto mismo
@@ -35354,7 +35354,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				}
 
 
-				if (tecla=='U' && we_are_windows) {
+				if (tecla=='D' && we_are_windows) {
 					char letra=menu_filesel_cambiar_unidad();
 					printf ("letra: %d\n",letra);
 					if (letra!=0) {
@@ -35394,7 +35394,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I') {
+						if (tecla=='V' || tecla=='T' || tecla=='E' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -35422,7 +35422,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									}
 
 									//Delete
-									if (tecla=='D') {
+									if (tecla=='E') {
 										if (menu_confirm_yesno_texto("Delete","Sure?")) {
 											util_delete(file_utils_file_selected);
 											//unlink(file_utils_file_selected);
