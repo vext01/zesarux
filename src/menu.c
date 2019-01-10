@@ -34765,7 +34765,7 @@ char menu_filesel_cambiar_unidad(void)
 		return 0;
 	}
 
-	printf ("total unidades: %d string Unidades: %s 0 %d 1 %d 2 %d 3 %d\n",unidades,buffer_unidades,buffer_unidades[0],buffer_unidades[1],buffer_unidades[2],buffer_unidades[3]);
+	//printf ("total unidades: %d string Unidades: %s 0 %d 1 %d 2 %d 3 %d\n",unidades,buffer_unidades,buffer_unidades[0],buffer_unidades[1],buffer_unidades[2],buffer_unidades[3]);
 
 
         menu_item *array_menu_filesel_unidad;
@@ -34791,7 +34791,6 @@ char menu_filesel_cambiar_unidad(void)
                 retorno_menu=menu_dibuja_menu(&menu_filesel_unidad_opcion_seleccionada,&item_seleccionado,array_menu_filesel_unidad,"Select Unit" );
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-				printf ("Texto opcion: %s\n",item_seleccionado.texto_opcion);
 				//Sacamos la letra del texto mismo
 				char unidad=item_seleccionado.valor_opcion;
 				printf ("Leida unidad de menu: %c\n",unidad);
