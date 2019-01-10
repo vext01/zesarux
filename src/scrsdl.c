@@ -1368,6 +1368,14 @@ void scrsdl_actualiza_tablas_teclado(void)
                                 mouse_wheel_vertical=-1;
                         }
 
+                        if ( event.button.button == SDL_BUTTON_WHEELLEFT ) {
+                                mouse_wheel_horizontal=1;
+                        }
+
+                        if ( event.button.button == SDL_BUTTON_WHEELRIGHT ) {
+                                mouse_wheel_horizontal=-1;
+                        }                        
+
 
 		}
 
