@@ -7,7 +7,6 @@ Improved menu environment:
 * Windows can be scrolled using mouse wheel
 * Warning and Error window messages now show an animation
 
-
 Added key to save text windows contents to a file
 Added setting to send a final space after every word in the osd adventure keyboard
 Added Dandanator CPC emulation
@@ -17,9 +16,14 @@ Added CPC machines support to ZSF snapshots
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now
 -running in verbose or limit mode, or cpu-step command, can now update the display inmediately (having real video setting on)
+
 Improved vu-meters: high volumes are shown in red
 Improved sprite viewer: you can view sprites up to 512x512
-Improved file selector in Windows: now you can use up to 20000 files in the same directory
+
+Improved file selector in Windows: 
+*now you can use up to 20000 files in the same directory
+*added drive selector 
+
 Improved audio: silence detector is disabled by default. That should fix some Windows audio problems. Check Settings->Audio->Silence detector if you have configuration autosaving enabled
 
 Improved disassemble window: 
