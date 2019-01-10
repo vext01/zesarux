@@ -29921,7 +29921,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"- Press the initial letter\n"
 			"  for faster searching\n"
 			"When using fileselector from file utilities menu:\n"
-			"- Press shift+key to select functions, like shift+v to view files\n"
+			"- Press shift+key to select functions, like shift+v to view files or shift+d to select Windows drive\n"
 			"\n"
 			"On message windows:\n"
 			"- Use cursors and PgDn/Up\n"

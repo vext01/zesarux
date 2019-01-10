@@ -6,9 +6,10 @@
 -ancho ventana deberia dejar 1 caracter de margen en titulo, sino se pega a las franjas: probar metiendo nombre edicion a "ZEsarUX-7.2"
 
 -filesel:
--si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
+--si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
+--seccion file no tiene en cuenta posicion relativa ventana
 
--SDL_BUTTON_WHEELLEFT, SDL_BUTTON_WHEELRIGHT. Y botones left y right de X11??
+-botones left y right de X11??
 
 ok -quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
 zxvision_draw_window para refrescar lo que habia debajo
