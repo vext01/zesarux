@@ -32455,9 +32455,9 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
 	char leyenda_inferior[64];
 #ifdef MINGW
-	sprintf (leyenda_inferior,"~~T~~A~~B: Changes section ~~U: Unit");
+	sprintf (leyenda_inferior,"~~T~~A~~B: Section ~~U: Unit");
 #else
-	sprintf (leyenda_inferior,"~~T~~A~~B: Changes section");
+	sprintf (leyenda_inferior,"~~T~~A~~B: Section");
 #endif
 
 	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
