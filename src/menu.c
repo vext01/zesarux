@@ -6231,7 +6231,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	}
 
-	if (mouse_wheel_vertical) {
+	if (mouse_wheel_vertical && zxvision_if_vertical_scroll_bar(w)) {
 		int leido_mouse_wheel_vertical=mouse_wheel_vertical;
 		printf ("Read mouse vertical wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_vertical);
 
@@ -6252,7 +6252,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 		mouse_wheel_vertical=0;
 	}
 
-	if (mouse_wheel_horizontal) {
+	if (mouse_wheel_horizontal && zxvision_if_horizontal_scroll_bar(w)) {
 		int leido_mouse_wheel_horizontal=mouse_wheel_horizontal;
 		printf ("Read mouse horizontal wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_horizontal);
 	
