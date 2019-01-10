@@ -34804,6 +34804,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 	//Inicializar mouse wheel a 0, por si acaso
 	mouse_wheel_vertical=mouse_wheel_horizontal=0;
 
+
+#ifdef MINGW
+DWORD logical_drives=GetLogicalDrives();
+printf ("Available drives: %X\n",logical_drives);
+#endif
+
 	do {
 		menu_speech_tecla_pulsada=0;
 		menu_active_item_primera_vez=1;
