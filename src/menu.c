@@ -34765,6 +34765,8 @@ char menu_filesel_cambiar_unidad(void)
 		return 0;
 	}
 
+	printf ("total unidades: %d string Unidades: %s 0 %d 1 %d 2 %d 3 %d\n",unidades,buffer_unidades,buffer_unidades[0],buffer_unidades[1],buffer_unidades[2],buffer_unidades[3]);
+
 
         menu_item *array_menu_filesel_unidad;
         menu_item item_seleccionado;
@@ -34780,20 +34782,18 @@ char menu_filesel_cambiar_unidad(void)
 	for (i=0;i<unidades;i++) {
 		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"%c:",buffer_unidades[i]);
 		menu_add_item_menu_shortcut(array_menu_filesel_unidad,buffer_unidades[i]);
+	}
 
                 menu_add_item_menu(array_menu_filesel_unidad,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 menu_add_ESC_item(array_menu_filesel_unidad);
                 retorno_menu=menu_dibuja_menu(&menu_filesel_unidad_opcion_seleccionada,&item_seleccionado,array_menu_filesel_unidad,"Select Unit" );
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
+				//Sacamos la letra del texto mismo
 				char unidad=item_seleccionado.texto_opcion[0];
+				printf ("Leida unidad de menu: %c\n",unidad);
 				return unidad;
-                        }
                 }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 

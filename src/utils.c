@@ -13060,7 +13060,6 @@ int util_get_available_drives(char *texto)
 	int bitmask_unidades=1+4+8;
 #endif 
 
-	//int maximas_unidades=26;
 	int unidades_detectadas=0;
 
 	char letra_actual='A';
@@ -13068,7 +13067,9 @@ int util_get_available_drives(char *texto)
 	for (;letra_actual<='Z';letra_actual++) {
 		//Ver bit inferior
 		if (bitmask_unidades&1) {
-			texto[unidades_detectadas++]=letra_actual;
+			//printf ("letra actual: %d unidades_detectadas: %d\n",letra_actual,unidades_detectadas);
+			texto[unidades_detectadas]=letra_actual;
+			unidades_detectadas++;
 		}
 
 		bitmask_unidades >>=1;
@@ -13078,6 +13079,5 @@ int util_get_available_drives(char *texto)
 	texto[unidades_detectadas]=0;
 	
 
-	texto[0]=0;
 	return unidades_detectadas;
 }

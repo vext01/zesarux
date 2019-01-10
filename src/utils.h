@@ -701,6 +701,8 @@ extern int util_unpawsetc_dump_words(char *mensaje);
 
 extern int util_is_digit(char c);
 
+extern int util_get_available_drives(char *texto);
+
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 #define MEMORY_ZONE_NUM_TIMEX_EXROM 18
