@@ -35329,6 +35329,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									menu_filesel_free_mem();
 
 									//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+									cls_menu_overlay();
 									zxvision_destroy_window(ventana);
 									return 1;
 
@@ -35337,6 +35338,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                     else {
                                                         //Extension no conocida. No modificar variable archivo
                                                         //printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+														cls_menu_overlay();
 							zxvision_destroy_window(ventana);
                                                         return 0;
                                     }
