@@ -34765,7 +34765,39 @@ char menu_filesel_cambiar_unidad(void)
 		return 0;
 	}
 
-	return 'c';
+
+        menu_item *array_menu_filesel_unidad;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+	int menu_filesel_unidad_opcion_seleccionada=0;
+
+
+	menu_add_item_menu_inicial(&array_menu_filesel_unidad,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+	int i;
+
+	for (i=0;i<unidades;i++) {
+		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"%c:",buffer_unidades[i]);
+		menu_add_item_menu_shortcut(array_menu_filesel_unidad,buffer_unidades[i]);
+
+                menu_add_item_menu(array_menu_filesel_unidad,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                menu_add_ESC_item(array_menu_filesel_unidad);
+                retorno_menu=menu_dibuja_menu(&menu_filesel_unidad_opcion_seleccionada,&item_seleccionado,array_menu_filesel_unidad,"Select Unit" );
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+				char unidad=item_seleccionado.texto_opcion[0];
+				return unidad;
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+	return 0;
 }
 
 
@@ -35324,6 +35356,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				if (tecla=='U' && we_are_windows) {
 					char letra=menu_filesel_cambiar_unidad();
+					printf ("letra: %d\n",letra);
 					if (letra!=0) {
 						char directorio[3];
 						sprintf (directorio,"%c:",letra);

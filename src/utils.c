@@ -13057,7 +13057,7 @@ int util_get_available_drives(char *texto)
 #ifdef MINGW
 	int bitmask_unidades=GetLogicalDrives(); //Mascara de bits. bit inferior si unidad A disponible, etc
 #else
-	int bitmask_unidades=0;
+	int bitmask_unidades=1+4+8;
 #endif 
 
 	//int maximas_unidades=26;
