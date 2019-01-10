@@ -841,7 +841,7 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
 
 - (void)scrollWheel:(NSEvent *)event
 {
-	printf ("Scroll wheel scrolled %f horizontally and %f vertically\n", [event deltaX], [event deltaY]);
+	debug_printf (VERBOSE_DEBUG,"Scroll wheel scrolled %f horizontally and %f vertically", [event deltaX], [event deltaY]);
         mouse_wheel_horizontal=[event deltaX];
         mouse_wheel_vertical=[event deltaY];
 }

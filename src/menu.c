@@ -34939,7 +34939,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                 		//para que haga lectura del edit box
 		                menu_speech_tecla_pulsada=0;
 
-				tecla=menu_scanf(filesel_nombre_archivo_seleccionado,PATH_MAX,22,FILESEL_X+7,FILESEL_Y+2);
+				//tecla=menu_scanf(filesel_nombre_archivo_seleccionado,PATH_MAX,22,FILESEL_X+7,FILESEL_Y+2);
+				tecla=zxvision_scanf(ventana,filesel_nombre_archivo_seleccionado,PATH_MAX,22,7,1);
 
 				if (tecla==15) {
 					//printf ("TAB. siguiente seccion\n");
