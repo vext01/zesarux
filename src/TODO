@@ -5,7 +5,7 @@
 
 -ancho ventana deberia dejar 1 caracter de margen en titulo, sino se pega a las franjas: probar metiendo nombre edicion a "ZEsarUX-7.2"
 
--filesel:
+-filesel: 
 --si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
 
 -botones left y right de X11??
@@ -28,7 +28,7 @@ zxvision_draw_window para refrescar lo que habia debajo
   de menu si el raton esta apuntando a alguna opcion
 -no gestiona bien inicio de imprimir texto zona central - no margen -> parece que ya va. revisar
 
--acabar de migrar todas menu_dibuja_ventana a zxvision
+-acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redifinir joystick y poco mas
 
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
@@ -36,6 +36,11 @@ zxvision_draw_window para refrescar lo que habia debajo
 ->Ok. necesita logicamente multitarea on
 
 -Puntero en zxvision window a función que actualice ventana o quizá función de entrada a esa ventana?
+Para poder hacer que funciones futuras puedan gestionar pulsaciones de ratón en ventana:
+La ventana tendrá una función de callback donde se llamara cuando se pulse en zonas que no son barras de scroll
+Además de llamar a ese callback, se debe salir de la función de espera tecla zxvision, para poder gestionar eventos que haya avisado dicho callback. Creo que ahora mismo no se sale de función de espera tecla en esos casos
+->No se si es necesario pues en filesel lo hacemos de otra  manera
+Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que botón se ha pulsado, donde, etc
 
 -Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls
 

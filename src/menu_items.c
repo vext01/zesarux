@@ -1640,7 +1640,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 
 	//Prueba filesel
-        char *filtros[2];
+       /* char *filtros[2];
 
         filtros[0]="";
         filtros[1]=0;
@@ -1651,7 +1651,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 	int retorno=menu_filesel("Select Target File",filtros,nombredestino);
 	printf ("retorno: %d nombredestino: [%s]\n",retorno,nombredestino);
-	return;
+	return;*/
 
 
 

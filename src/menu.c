@@ -34881,11 +34881,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		filesel_archivo_seleccionado=0;
 		//leer todos archivos
 		menu_filesel_readdir();
-		printf ("Total archivos en directorio: %d\n",filesel_total_items);
-		printf ("despues leer directorio\n");
+		//printf ("Total archivos en directorio: %d\n",filesel_total_items);
+		//printf ("despues leer directorio\n");
 		//Crear ventana. Si ya existia, borrarla
 		if (ventana!=NULL) {
-			printf ("Destroy previous filesel window\n");
+			//printf ("Destroy previous filesel window\n");
 			cls_menu_overlay();
 			zxvision_destroy_window(ventana);
 		}
@@ -34924,11 +34924,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 		do {
 			//printf ("\nReleer directorio\n");
-			printf ("cursor_line: %d filesel_linea_seleccionada: %d filesel_archivo_seleccionado %d\n",
-				ventana->cursor_line,filesel_linea_seleccionada,filesel_archivo_seleccionado);
+			//printf ("cursor_line: %d filesel_linea_seleccionada: %d filesel_archivo_seleccionado %d\n",
+			//	ventana->cursor_line,filesel_linea_seleccionada,filesel_archivo_seleccionado);
 
 
-			printf ("FILESEL_ALTO_DIR: %d zxvision_get_filesel_alto_dir: %d\n",FILESEL_ALTO_DIR,zxvision_get_filesel_alto_dir(ventana) );
+			//printf ("FILESEL_ALTO_DIR: %d zxvision_get_filesel_alto_dir: %d\n",FILESEL_ALTO_DIR,zxvision_get_filesel_alto_dir(ventana) );
 
 			switch (filesel_zona_pantalla) {
 				case 0:
@@ -35055,12 +35055,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//tecla=menu_get_pressed_key();
 
 				tecla=zxvision_common_getkey_refresh();
-				printf ("Despues lee tecla\n");
+				//printf ("Despues lee tecla\n");
 
 
 				//Si se ha pulsado boton de raton
                                 if (mouse_left) {
-					printf ("Pulsado boton raton izquierdo\n");
+					//printf ("Pulsado boton raton izquierdo\n");
 
 					 //Si en linea de "File"
 					menu_filesel_change_zone_if_clicked(ventana,&filesel_zona_pantalla,&tecla);
@@ -35361,28 +35361,16 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				if (tecla=='D' && we_are_windows) {
 					char letra=menu_filesel_cambiar_unidad();
-					printf ("letra: %d\n",letra);
+					//printf ("letra: %d\n",letra);
 					if (letra!=0) {
 						char directorio[3];
 						sprintf (directorio,"%c:",letra);
 
-						printf ("Changing to unit %s\n",directorio);
+						//printf ("Changing to unit %s\n",directorio);
 
 						menu_filesel_chdir(directorio);
 						releer_directorio=1;
 						
-/*
-                                                debug_printf (VERBOSE_DEBUG,"%s Is a directory or windows drive. Change",filesel_nombre_archivo_seleccionado);
-                                                menu_filesel_chdir(filesel_nombre_archivo_seleccionado);
-                                                menu_filesel_free_mem();
-                                                releer_directorio=1;
-                                                filesel_zona_pantalla=1;
-
-                                                //Decir directorio activo
-                                                //Esperar a liberar tecla si no la tecla invalida el speech
-                                                menu_espera_no_tecla();
-                                                menu_textspeech_say_current_directory();
-*/
 					}
 				}
 
