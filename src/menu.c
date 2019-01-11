@@ -3721,7 +3721,9 @@ int menu_da_ancho_titulo(char *titulo)
 
 		if (!ESTILO_GUI_MUESTRA_RAINBOW) ancho_franjas_color=0;
 
-		int ancho_total=strlen(titulo)+ancho_boton_cerrar+ancho_franjas_color+1; //+1 de margen, para que no se pegue el titulo
+		int margen_adicional=2; //1 para que no se pegue el titulo a la derecha, otro mas para el caracter de minimizar
+
+		int ancho_total=strlen(titulo)+ancho_boton_cerrar+ancho_franjas_color+margen_adicional; //+1 de margen, para que no se pegue el titulo
 
 		return ancho_total;
 }
@@ -5859,7 +5861,7 @@ void zxvision_handle_minimize(zxvision_window *w)
 							
 		int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
 		//Espacio para las barras, si las hay
-		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=MENU_ANCHO_FRANJAS_TITULO;
+		//if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=MENU_ANCHO_FRANJAS_TITULO;
 
 		//printf ("ancho final: %d\n",ancho_ventana_final);
 		zxvision_set_visible_width(w,ancho_ventana_final);
@@ -7797,6 +7799,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	*/
 
 	ancho=menu_dibuja_ventana_ret_ancho_titulo(MAX_ANCHO_VENTANA,titulo);
+
 
 
 
