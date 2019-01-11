@@ -5,7 +5,7 @@
 
 -controlar que pasa con ventanas de ancho visible > 32. falla
 
--ancho ventana deberia dejar 1 caracter de margen en titulo, sino se pega a las franjas: probar metiendo nombre edicion a "ZEsarUX-7.2"
+-ancho ventana deberia dejar 1 caracter de margen en titulo, sino se pega a las franjas: probar metiendo nombre edicion a "ZEsarUX-7.2". ok. acabar de probar
 
 -filesel: 
 --si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
