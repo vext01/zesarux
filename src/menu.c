@@ -3710,7 +3710,23 @@ void menu_dibuja_ventana_franja_arcoiris_oscuro_current(int indice)
 	menu_dibuja_ventana_franja_arcoiris_oscuro(ventana_x,ventana_y,ventana_ancho,indice);
 }
 
-int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
+//Da ancho titulo de ventana segun el texto titulo, boton cerrado si/no, y franjas de color
+int menu_da_ancho_titulo(char *titulo)
+{
+		int ancho_boton_cerrar=2;
+
+                if (menu_hide_close_button.v) ancho_boton_cerrar=0;
+
+		int ancho_franjas_color=MENU_ANCHO_FRANJAS_TITULO;
+
+		if (!ESTILO_GUI_MUESTRA_RAINBOW) ancho_franjas_color=0;
+
+		int ancho_total=strlen(titulo)+ancho_boton_cerrar+ancho_franjas_color+1; //+1 de margen, para que no se pegue el titulo
+
+		return ancho_total;
+}
+
+int old_menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 {
 	        //y luego el texto. titulo mostrar solo lo que cabe de ancho
 		int ancho_disponible_titulo=ancho;
@@ -3724,6 +3740,17 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 		//el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando dos caracter para boton de cerrado y espacio derecha para boton minimizar
 		int ancho_mostrar_titulo=strlen(titulo)+ancho_boton_cerrar+1;
 		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
+
+	return ancho_mostrar_titulo;
+}
+
+int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
+{
+	int ancho_mostrar_titulo=menu_da_ancho_titulo(titulo);
+
+	int ancho_disponible_titulo=ancho;
+
+	if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
 
 	return ancho_mostrar_titulo;
 }
@@ -7760,12 +7787,40 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Para permitir menus mas grandes verticalmente de lo que cabe en ventana.
 	int scroll_opciones=0;
 
-	//como minimo, lo que ocupa el titulo: texto + franjas de colores + margen + botones
 
+	/*
+	//como minimo, lo que ocupa el titulo: texto + franjas de colores + margen + botones
 	int ancho_boton_cerrar=2;
 	if (menu_hide_close_button.v) ancho_boton_cerrar=0;
 
 	ancho=strlen(titulo)+MENU_ANCHO_FRANJAS_TITULO+1+ancho_boton_cerrar;
+	*/
+
+	ancho=menu_dibuja_ventana_ret_ancho_titulo(MAX_ANCHO_VENTANA,titulo);
+
+
+
+/*
+int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
+{
+                //y luego el texto. titulo mostrar solo lo que cabe de ancho
+                int ancho_disponible_titulo=ancho;
+                //Y si muestra las franjas, quitar ancho de titulo
+                if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=MENU_ANCHO_FRANJAS_TITULO;
+
+                int ancho_boton_cerrar=2;
+
+                if (menu_hide_close_button.v) ancho_boton_cerrar=0;
+
+                //el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando dos caracter para boton de cerrado y espacio derecha para boton minimizar
+                int ancho_mostrar_titulo=strlen(titulo)+ancho_boton_cerrar+1;
+                if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
+
+        return ancho_mostrar_titulo;
+}
+*/
+
+
 
 	max_opciones=0;
 	do {

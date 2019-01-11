@@ -98,6 +98,8 @@ typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 #define OVERLAY_SCREEN_WIDTH 32
 #define OVERLAY_SCREEN_HEIGTH 24
 
+#define MAX_ANCHO_VENTANA 32
+
 typedef struct s_overlay_screen overlay_screen;
 
 //Nuevas ventanas zxvision
