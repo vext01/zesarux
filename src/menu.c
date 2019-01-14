@@ -3776,8 +3776,12 @@ void menu_dibuja_ventana_botones(void)
 		//Boton de minimizar
 		if (ventana_activa_tipo_zxvision) {
 			if (ventana_tipo_activa) {
-				if (cuadrado_activo_resize && menu_hide_minimize_button.v==0) {
+				if (cuadrado_activo_resize) {
 					z80_byte caracter_mostrar=menu_retorna_caracter_minimizar(zxvision_current_window);
+					if (menu_hide_minimize_button.v) caracter_mostrar=' ';
+					//Si no mostrar, meter solo espacio. es importante esto, si no hay boton, y no escribieramos espacio,
+					//se veria el texto de titulo en caso de que ancho de ventana la hagamos pequeña
+
 					//if (zxvision_current_window->is_minimized) caracter_mostrar='+';
 					putchar_menu_overlay(x+ancho-1,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 				}
