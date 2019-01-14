@@ -5336,12 +5336,12 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	//Primero ir a buscar la de abajo del todo
 	zxvision_window *pointer_window;
 
-	printf ("original window: %p\n",w);
+	//printf ("original window: %p\n",w);
 
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-		printf ("below window: %p\n",pointer_window->previous_window);
+		//printf ("below window: %p\n",pointer_window->previous_window);
 		pointer_window=pointer_window->previous_window;
 	}
 
@@ -5353,7 +5353,7 @@ void zxvision_draw_below_windows(zxvision_window *w)
 
 	//Y ahora de ahi hacia arriba
 	while (pointer_window!=w) {
-		printf ("window from bottom to top %p\n",pointer_window);
+		//printf ("window from bottom to top %p\n",pointer_window);
 
 		zxvision_draw_window(pointer_window);
 	        zxvision_draw_window_contents(pointer_window);
@@ -6290,7 +6290,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (mouse_wheel_vertical && zxvision_if_vertical_scroll_bar(w)) {
 		int leido_mouse_wheel_vertical=mouse_wheel_vertical;
-		printf ("Read mouse vertical wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_vertical);
+		//printf ("Read mouse vertical wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_vertical);
 
 		//Si invertir movimiento
 		if (menu_invert_mouse_scroll.v) leido_mouse_wheel_vertical=-leido_mouse_wheel_vertical;
@@ -6311,7 +6311,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (mouse_wheel_horizontal && zxvision_if_horizontal_scroll_bar(w)) {
 		int leido_mouse_wheel_horizontal=mouse_wheel_horizontal;
-		printf ("Read mouse horizontal wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_horizontal);
+		//printf ("Read mouse horizontal wheel from zxvision_handle_mouse_events : %d\n",leido_mouse_wheel_horizontal);
 	
 
 		//Si invertir movimiento
@@ -6366,7 +6366,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			mouse_is_dragging=0;
 			if (window_is_being_moved) {
 
-				printf ("Handle moved window\n");
+				//printf ("Handle moved window\n");
 				zxvision_handle_mouse_move_aux(w);
 				window_is_being_moved=0;
 
@@ -6374,7 +6374,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			if (window_is_being_resized) {
 
-				printf ("Handle resized window\n");
+				//printf ("Handle resized window\n");
 				zxvision_handle_mouse_resize_aux(w);
 				
 
@@ -6386,7 +6386,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			if (window_is_being_moved) {
 				//Si se ha movido un poco
 				if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
-					printf ("Handle moved window\n");
+					//printf ("Handle moved window\n");
 					zxvision_handle_mouse_move_aux(w);
 				
 					//Hay que recalcular menu_mouse_x y menu_mouse_y dado que son relativos a la ventana que justo se ha movido
@@ -6402,7 +6402,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			if (window_is_being_resized) {
 				//Si se ha redimensionado un poco
 				if (menu_mouse_y!=window_mouse_y_before_move || menu_mouse_x!=window_mouse_x_before_move) {
-					printf ("Handle resized window\n");
+					//printf ("Handle resized window\n");
 					zxvision_handle_mouse_resize_aux(w);
 
 					window_mouse_y_before_move=menu_mouse_y;

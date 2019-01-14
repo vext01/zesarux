@@ -40,7 +40,8 @@ Además de llamar a ese callback, se debe salir de la función de espera tecla z
 ->No se si es necesario pues en filesel lo hacemos de otra  manera
 Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que botón se ha pulsado, donde, etc
 
--Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls
+-Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls->parece que borra despues de tooltip,
+probar abrir menu debug cpu, luego breakpoints
 
 -en menu debug, en tbblue, si cambia modo con letra M, quedan rastros de la ultima linea donde se muestra segmentos de paginación. Corregido ya?
 
