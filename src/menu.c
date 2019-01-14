@@ -25497,10 +25497,14 @@ void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
 
 void menu_write_message(MENU_ITEM_PARAMETERS)
 {
-	char buffer_texto_buscado[256];
+	char buffer_texto[256];
 
-	buffer_texto_buscado[0]=0;
-    menu_ventana_scanf("Just write...",buffer_texto_buscado,256);
+	buffer_texto[0]=0;
+    menu_ventana_scanf("Just write...",buffer_texto,256);
+
+	menu_generic_message("Your message",buffer_texto);
+
+
 }
 
 
