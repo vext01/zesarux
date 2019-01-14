@@ -98,7 +98,10 @@ typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 #define OVERLAY_SCREEN_WIDTH 32
 #define OVERLAY_SCREEN_HEIGTH 24
 
-#define MAX_ANCHO_VENTANA 32
+#define ZXVISION_MAX_ANCHO_VENTANA 32
+#define ZXVISION_MAX_ALTO_VENTANA 24
+#define ZXVISION_MAX_X_VENTANA 31
+#define ZXVISION_MAX_Y_VENTANA 23
 
 typedef struct s_overlay_screen overlay_screen;
 

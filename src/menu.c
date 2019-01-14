@@ -3935,6 +3935,30 @@ void zxvision_set_draw_window_parameters(zxvision_window *w)
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
 
+	//Controlar rangos. Cualquier valor que se salga de rango, hacemos ventana del total de pantalla
+	if (
+
+	 (x<0               || x>ZXVISION_MAX_X_VENTANA) ||
+	 (y<0               || y>ZXVISION_MAX_Y_VENTANA) ||
+	 (visible_width<=0  || visible_width>ZXVISION_MAX_ANCHO_VENTANA) ||
+	 (visible_height<=0 || visible_height>ZXVISION_MAX_ALTO_VENTANA) ||
+
+	//Rangos de final de ventana. ZXVISION_MAX_X_VENTANA normalmente vale 31. ZXVISION_MAX_Y_VENTANA normalmente vale 23. Si esta en ancho 31 y le suma 1, es ok. Si suma 2, es error
+	 (x+visible_width>ZXVISION_MAX_X_VENTANA+1) ||
+	 (y+visible_height>ZXVISION_MAX_Y_VENTANA+1) 
+
+	)
+		{
+                debug_printf (VERBOSE_DEBUG,"zxvision_new_window: window out of range: %d,%d %dx%d",x,y,visible_width,visible_height);
+                x=0;
+                y=0;
+                visible_width=ZXVISION_MAX_ANCHO_VENTANA;
+                visible_height=ZXVISION_MAX_ALTO_VENTANA;
+
+		}
+
+
+
 	//Alto visible se reduce en 1 - por el titulo de ventana
 	
 	w->x=x;
@@ -7798,30 +7822,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	ancho=strlen(titulo)+MENU_ANCHO_FRANJAS_TITULO+1+ancho_boton_cerrar;
 	*/
 
-	ancho=menu_dibuja_ventana_ret_ancho_titulo(MAX_ANCHO_VENTANA,titulo);
+	ancho=menu_dibuja_ventana_ret_ancho_titulo(ZXVISION_MAX_ANCHO_VENTANA,titulo);
 
 
 
-
-/*
-int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
-{
-                //y luego el texto. titulo mostrar solo lo que cabe de ancho
-                int ancho_disponible_titulo=ancho;
-                //Y si muestra las franjas, quitar ancho de titulo
-                if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=MENU_ANCHO_FRANJAS_TITULO;
-
-                int ancho_boton_cerrar=2;
-
-                if (menu_hide_close_button.v) ancho_boton_cerrar=0;
-
-                //el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando dos caracter para boton de cerrado y espacio derecha para boton minimizar
-                int ancho_mostrar_titulo=strlen(titulo)+ancho_boton_cerrar+1;
-                if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
-
-        return ancho_mostrar_titulo;
-}
-*/
 
 
 
@@ -7874,6 +7878,8 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 	//Si es tabulado, usamos current_window (pues ya alguien la ha creado antes)
 	zxvision_window *ventana;
 	zxvision_window ventana_menu;
+
+
 
 	if (m->es_menu_tabulado==0) {
 		
