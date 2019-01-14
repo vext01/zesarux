@@ -3775,13 +3775,17 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 
 		//Mantener el offset y en 0..191
-		z80_byte tbblue_reg_23=tbblue_registers[23];
+		z80_byte tbblue_reg_23=tbblue_registers[23]; 
+
+		int offset_scroll=tbblue_reg_23+scanline_copia;
+		offset_scroll %=192;
 
 
-		tbblue_reg_23 +=scanline_copia;
-		tbblue_reg_23=tbblue_reg_23 % 192;
+		//tbblue_reg_23 +=scanline_copia;
+		//tbblue_reg_23=tbblue_reg_23 % 192;
+		//tbblue_layer2_offset +=tbblue_reg_23*256;
 
-		tbblue_layer2_offset +=tbblue_reg_23*256;
+		tbblue_layer2_offset +=offset_scroll*256;
 
 		z80_byte tbblue_reg_22=tbblue_registers[22];
 
