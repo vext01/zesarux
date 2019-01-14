@@ -3715,7 +3715,7 @@ int menu_da_ancho_titulo(char *titulo)
 {
 		int ancho_boton_cerrar=2;
 
-                if (menu_hide_close_button.v) ancho_boton_cerrar=0;
+        if (menu_hide_close_button.v) ancho_boton_cerrar=0;
 
 		int ancho_franjas_color=MENU_ANCHO_FRANJAS_TITULO;
 
@@ -25491,6 +25491,14 @@ void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
 */
 }
 
+void menu_write_message(MENU_ITEM_PARAMETERS)
+{
+	char buffer_texto_buscado[256];
+
+	buffer_texto_buscado[0]=0;
+    menu_ventana_scanf("Just write...",buffer_texto_buscado,256);
+}
+
 
 //menu debug settings
 void menu_debug_settings(MENU_ITEM_PARAMETERS)
@@ -25648,8 +25656,12 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-					menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
-		
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
+
+
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_write_message,NULL,"Write message");
+		menu_add_item_menu_tooltip(array_menu_debug_settings,"Just lets you write text in a window, useful if you want to record the display and you want to say something");
+		menu_add_item_menu_ayuda(array_menu_debug_settings,"Just lets you write text in a window, useful if you want to record the display and you want to say something");
 
 	/*	menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'e');

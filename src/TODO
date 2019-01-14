@@ -3,10 +3,6 @@
 
 ----zxvision----:
 
--controlar que pasa con ventanas de ancho visible > 32. falla
-
--ancho ventana deberia dejar 1 caracter de margen en titulo, sino se pega a las franjas: probar metiendo nombre edicion a "ZEsarUX-7.2". ok. acabar de probar
- 
 -filesel: 
 --si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
 
@@ -30,7 +26,7 @@ zxvision_draw_window para refrescar lo que habia debajo
   de menu si el raton esta apuntando a alguna opcion
 -no gestiona bien inicio de imprimir texto zona central - no margen -> parece que ya va. revisar
 
--acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redifinir joystick y poco mas
+-acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redefinir joystick y poco mas
 
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
 
