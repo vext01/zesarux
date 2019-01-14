@@ -5151,7 +5151,7 @@ void zxvision_set_offset_y(zxvision_window *w,int offset_y)
 	int maximum_offset=zxvision_maximum_offset_y(w);
 
 	if (offset_y>maximum_offset) {
-		printf ("Maximum offset y reached\n");
+		//printf ("Maximum offset y reached\n");
 		return;
 	}
 
@@ -5166,7 +5166,7 @@ void zxvision_set_offset_y_or_maximum(zxvision_window *w,int offset_y)
         int maximum_offset=zxvision_maximum_offset_y(w);
 
         if (offset_y>maximum_offset) {
-                printf ("Maximum offset y reached. Setting maximum\n");
+                //printf ("Maximum offset y reached. Setting maximum\n");
 		offset_y=maximum_offset;
         }
 
