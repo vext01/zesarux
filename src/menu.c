@@ -13690,16 +13690,16 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
+					ancho_ventana=14;
+
 					if (total_chips==1) {
 						xventana=9;
-						yventana=7;
-						ancho_ventana=14;
+						yventana=7;					
 						alto_ventana=11;
 					}
           			else if (total_chips==2) {
 						xventana=9;
 						yventana=2;
-						ancho_ventana=14;
 						alto_ventana=20;						  
 						  
 					}
@@ -13707,7 +13707,6 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 					else {
 						xventana=9;
 						yventana=1;
-						ancho_ventana=14;
 						alto_ventana=22;						
 					}
 
@@ -13740,10 +13739,15 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 					}
 				}
 
+		char *titulo_ventana="AY Piano";
+		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+
+		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
+
 		zxvision_window ventana;
 
 		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,alto_ventana-2,"AY Piano");
+							ancho_ventana-1,alto_ventana-2,titulo_ventana);
 
 		zxvision_draw_window(&ventana);						
 
@@ -13922,7 +13926,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 					xventana=7;
 					yventana=7;
-					ancho_ventana=18;
+					ancho_ventana=19;
 					alto_ventana=11;
 
 				}
@@ -13935,17 +13939,20 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 					xventana=PIANO_GRAPHIC_BASE_X-2;
 					yventana=piano_graphic_base_y;
-					ancho_ventana=AY_PIANO_ANCHO_VENTANA+4;
+					ancho_ventana=AY_PIANO_ANCHO_VENTANA;
 					alto_ventana=8;
 
-
-
 				}
+
+		char *titulo_ventana="Wave Piano";
+		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+
+		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;				
 
 		zxvision_window ventana;
 
 		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,alto_ventana-2,"Wave Piano");
+							ancho_ventana-1,alto_ventana-2,titulo_ventana);
 
 		zxvision_draw_window(&ventana);						
 

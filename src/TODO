@@ -152,6 +152,8 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 
 -botones/wheel left y right de X11??
 
+-quiza que al crear ventana, si ancho visible no permite caber titulo, hacer mas ancho visible para que quepa
+
 -Puntero en zxvision window a función que actualice ventana o quizá función de entrada a esa ventana?
 Para poder hacer que funciones futuras puedan gestionar pulsaciones de ratón en ventana:
 La ventana tendrá una función de callback donde se llamara cuando se pulse en zonas que no son barras de scroll
