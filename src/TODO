@@ -5,6 +5,7 @@
 
 -filesel: 
 --si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
+->esto implica saber a que item esta pulsando realmente
 
 -botones/wheel left y right de X11??
 

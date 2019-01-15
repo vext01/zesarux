@@ -509,10 +509,7 @@ int dandanator_cpc_is_mapped(z80_int dir)
 }
 
 
-void dandanator_write_byte_cpc(z80_int dir,z80_byte valor)
-{
-	
-}
+
 
 
 z80_byte dandanator_read_byte_cpc(z80_int dir,z80_byte zone)

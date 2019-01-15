@@ -394,7 +394,7 @@ void menu_debug_poke_pok_file(MENU_ITEM_PARAMETERS)
 
         if (ret==1) {
 
-                cls_menu_overlay();
+                //cls_menu_overlay();
 		int total=util_parse_pok_file(pokfile,punteros_pokes);
 
 		if (total<1) {
@@ -506,7 +506,7 @@ void menu_debug_poke_pok_file(MENU_ITEM_PARAMETERS)
 				}
 
 
-                        //        cls_menu_overlay();
+                      
 
 			}
 			if (result_poke==0) menu_generic_message("Poke","OK. Poke applied");
@@ -1998,11 +1998,12 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 		//zxvision_handle_mouse_events(&ventana);
 	} 
 
+    cls_menu_overlay();
 	zxvision_destroy_window(&ventana);
             
 
 
-        cls_menu_overlay();
+
 
 }
 
@@ -2142,7 +2143,6 @@ Calculando ese tiempo: 12% cpu
 		} while (tecla!=2);
 
         cls_menu_overlay();
-
 		zxvision_destroy_window(&ventana);
 
 
@@ -2400,8 +2400,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
      set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-    cls_menu_overlay();
-		
+    cls_menu_overlay();	
 	zxvision_destroy_window(&ventana);		
 }
 
@@ -2607,7 +2606,6 @@ z80_byte clip_window_ula[4];
 		} while (tecla!=2);
 
         cls_menu_overlay();
-
 		zxvision_destroy_window(&ventana);
 
 
@@ -2836,7 +2834,6 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
     set_menu_overlay_function(normal_overlay_texto_menu);		
 
     cls_menu_overlay();
-
 	zxvision_destroy_window(&ventana);
 }
 
@@ -3204,7 +3201,6 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
     set_menu_overlay_function(normal_overlay_texto_menu);		
 
     cls_menu_overlay();
-
 	zxvision_destroy_window(&ventana);		
 
 
@@ -6806,7 +6802,6 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
 
     cls_menu_overlay();
-
 	zxvision_destroy_window(&ventana);		
 
  

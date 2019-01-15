@@ -3940,6 +3940,10 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 {
 
 	//Controlar rangos. Cualquier valor que se salga de rango, hacemos ventana del total de pantalla
+
+	//TODO: controlar rangos teniendo en cuenta driver video, o sea:
+	//curses, aa, cacalib etc: solo 32x24
+	//drivers de video completos: mayor tamaño 
 	if (
 
 	 (x<0               || x>ZXVISION_MAX_X_VENTANA) ||
@@ -5294,9 +5298,9 @@ int zxvision_adjust_cursor_bottom(zxvision_window *ventana)
 		//Ver en que offset estamos
 		int offset_y=ventana->offset_y;
 		//Y donde esta el cursor
-		int cursor=ventana->cursor_line;
+		//int cursor=ventana->cursor_line;
 
-			printf ("Reajustar cursor\n");
+			//printf ("Reajustar cursor\n");
 			ventana->cursor_line=offset_y+ventana->visible_height-2-ventana->upper_margin-ventana->lower_margin;
 			return 1;
 	}
@@ -5314,10 +5318,10 @@ int zxvision_adjust_cursor_top(zxvision_window *ventana)
 		//Ver en que offset estamos
 		int offset_y=ventana->offset_y;
 		//Y donde esta el cursor
-		int cursor=ventana->cursor_line;
+		//int cursor=ventana->cursor_line;
 
 			if (offset_y>0) {
-				printf ("Reajustar cursor\n");
+				//printf ("Reajustar cursor\n");
 				ventana->cursor_line=offset_y-1;
 				return 1;
 			}
@@ -10431,35 +10435,6 @@ int continuous_step=0;
 
 
 
-void old_delete_menu_debug_registers_ventana(void)
-{
-	char titulo[33];
-
-	//menu_debug_registers_current_view
-
-	//Por defecto
-				   //0123456789012345678901
-	sprintf (titulo,"Debug CPU             V");
-
-	if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) {
-					   //0123456789012345678901
-		sprintf (titulo,"Debug CPU (brk cond)  V");
-		//printf ("breakpoint pending show\n");
-	}
-	else {
-											//0123456789012345678901
-		if (cpu_step_mode.v) sprintf (titulo,"Debug CPU (step)      V");
-		//printf ("no breakpoint pending show\n");
-	}
-
-	//Poner numero de vista siempre en posicion 23
-	sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
-
-
-	if (menu_debug_registers_current_view==7) menu_dibuja_ventana(0,0,32,5,titulo);
-
-	else menu_dibuja_ventana(0,0,32,24,titulo);
-}
 
 
 void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
@@ -28909,7 +28884,6 @@ void menu_machine_selection_for_manufacturer(int fabricante)
                                 if (item_seleccionado.menu_funcion!=NULL) {
                                         //printf ("actuamos por funcion\n");
                                         item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                        //cls_menu_overlay();
                                 }
 
 
@@ -33027,7 +33001,7 @@ void zxvision_menu_filesel_localiza_letra(zxvision_window *ventana,char letra)
                         filesel_archivo_seleccionado=i;
 			ventana->cursor_line=i;
 			zxvision_set_offset_y_or_maximum(ventana,i);
-			printf ("linea seleccionada en localizacion: %d\n",i);
+			//printf ("linea seleccionada en localizacion: %d\n",i);
                         return;
                 }
 
