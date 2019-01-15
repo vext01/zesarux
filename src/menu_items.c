@@ -4141,7 +4141,7 @@ void menu_audio_new_ayplayer_overlay(void)
 	int vol_A,vol_B,vol_C;
 
 
-    	if (menu_audio_new_ayplayer_si_mostrar()) {
+    if (menu_audio_new_ayplayer_si_mostrar()) {
     	//Los volumenes mostrarlos siempre a cada refresco
 	char volumen[32];
 	char textovolumen[35]; //32+3 de posible color rojo del maximo
@@ -4226,6 +4226,12 @@ void menu_audio_new_ayplayer_overlay(void)
 
 	}
 
+	else {
+		//Borrar lineas
+		int i;
+		linea=0;
+		for (i=0;i<11;i++) zxvision_print_string_defaults_fillspc(menu_audio_new_ayplayer_overlay_window,1,linea++,"");
+	}
 
     //esto hara ejecutar esto 2 veces por segundo
     if ( ((contador_segundo%500) == 0 && menu_ayplayer_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
@@ -4478,13 +4484,15 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+5);
 
-			if (menu_audio_new_ayplayer_si_mostrar() ) {
 				//Vamos a borrar con espacios para que no quede rastro de opciones anteriores, como Yes/No 
 				//Si no, pasaria que mostraria "Nos" como parte de la s final de Yes
 				int i;
-				for (i=13;i<=16;i++) {
+				for (i=12;i<=16;i++) {
 					zxvision_fill_width_spaces(&ventana,i);
-				}
+				}			
+
+			if (menu_audio_new_ayplayer_si_mostrar() ) {
+
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_prev,NULL,"~~Prev");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'p');
