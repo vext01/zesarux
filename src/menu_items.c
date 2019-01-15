@@ -3083,6 +3083,11 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		char linea_leyenda[64];
 		sprintf (titulo,"Tile Navigator");
 
+        //Forzar a mostrar atajos
+        z80_bit antes_menu_writing_inverse_color;
+        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+        menu_writing_inverse_color.v=1;		
+
 		int total_height=menu_debug_tsconf_tbblue_tilenav_total_vert();
 		int total_width=31;
 		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
@@ -3119,7 +3124,15 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		//zxvision_print_string_defaults_fillspc(ventana,1,1,"-----");
 		zxvision_print_string_defaults_fillspc(ventana,1,2,linea_leyenda);
 
-		zxvision_draw_window(ventana);										
+		zxvision_draw_window(ventana);	
+
+        //Restaurar comportamiento atajos
+        menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+		//Nota: los atajos se "pintan" en la memoria de la ventana ya con el color inverso
+		//por tanto con meter al principio la variable de inverse_color es suficiente
+		//y no hay que activar inverse color cada vez que se redibuja ventana,
+		//pues al redibujar ventana está leyendo el contenido de la memoria de la ventana, y ahí ya está con color inverso		
+
 }
 
 void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
@@ -3148,7 +3161,7 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 		//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
 		//esto solo es necesario para ventanas que usan overlay
 	    if (!menu_multitarea) {
-			printf ("refresca pantalla inicial\n");
+			//printf ("refresca pantalla inicial\n");
 			menu_refresca_pantalla();
 		}				
 

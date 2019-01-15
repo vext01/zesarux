@@ -7637,6 +7637,10 @@ int menu_dibuja_menu_cursor_abajo(int linea_seleccionada,int max_opciones,menu_i
 int menu_dibuja_menu_cursor_abajo_tabulado(int linea_seleccionada,int max_opciones,menu_item *m)
 {
 
+	if (linea_seleccionada==max_opciones-1) linea_seleccionada=0;
+
+	else {
+
 	//Ubicarnos primero en el item de menu seleccionado
 	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
 
@@ -7667,6 +7671,7 @@ int menu_dibuja_menu_cursor_abajo_tabulado(int linea_seleccionada,int max_opcion
 
 	//Si no estamos en misma posicion y, volver a posicion
 	if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
+	}
 
 	//Decir que se ha pulsado tecla
 	menu_speech_tecla_pulsada=1;
@@ -7676,6 +7681,10 @@ int menu_dibuja_menu_cursor_abajo_tabulado(int linea_seleccionada,int max_opcion
 
 int menu_dibuja_menu_cursor_arriba_tabulado(int linea_seleccionada,int max_opciones,menu_item *m)
 {
+
+	if (linea_seleccionada==0) linea_seleccionada=max_opciones-1;
+
+	else {
 
 	//Ubicarnos primero en el item de menu seleccionado
 	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
@@ -7707,6 +7716,8 @@ int menu_dibuja_menu_cursor_arriba_tabulado(int linea_seleccionada,int max_opcio
 
 	//Si no estamos en misma posicion y, volver a posicion
 	if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
+
+	}
 
 	//Decir que se ha pulsado tecla
 	menu_speech_tecla_pulsada=1;
