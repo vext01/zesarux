@@ -10127,11 +10127,6 @@ int menu_debug_registers_subview_type=0;
 					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
 
 
-
-
-                    //menu_escribe_linea_opcion(linea,opcion_actual,opcion_activada,buffer_linea);
-				
-
 					//zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
 
 					//De los pocos usos de menu_escribe_linea_opcion_zxvision,
@@ -10158,6 +10153,9 @@ int menu_debug_registers_subview_type=0;
                                         for (j=0;j<64;j++) buffer_linea[j]=32;
 
                                         menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
+
+										//primero borramos esa linea, por si cambiamos de subvista con M y hay "restos" ahi
+										zxvision_print_string_defaults_fillspc(w,1,linea,"");
 
                                         //Si tiene contenido
                                         if (buffer_linea[columna_registros]!=' ' && buffer_linea[columna_registros]!=0) {
@@ -10414,7 +10412,7 @@ int menu_debug_registers_subview_type=0;
 
 			textopaginasmem[max_longitud]=0;
     		//menu_escribe_linea_opcion(linea++,-1,1,textopaginasmem);
-		zxvision_print_string_defaults_fillspc(w,1,linea++,textopaginasmem);
+			zxvision_print_string_defaults_fillspc(w,1,linea++,textopaginasmem);
 
 
 

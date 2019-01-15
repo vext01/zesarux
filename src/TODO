@@ -6,15 +6,7 @@
 -filesel: 
 --si click en zona de archivos pero donde no hay (por ejemplo con 4 archivos en la lista y pulsar debajo) no hacer enter tal cual
 
--botones left y right de X11??
-
-ok -quiza cuando hay un zxvision_destroy_window y hay otra ventana debajo, que la misma accion de destroy, haga luego un 
-zxvision_draw_window para refrescar lo que habia debajo
-->pero por ejemplo cuando salen de menu_dibuja_menu, todo dios hace cls_menu_overlay, y no deberian hacerlo
-->hay que quitar los dos cls_menu_overlay de cada retorno_menu=menu_dibuja_menu
--Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls 
-
-OK -Gestión flecha abajo/arriba en menús tabulados
+-botones/wheel left y right de X11??
 
 -Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
 
@@ -22,26 +14,10 @@ OK -Gestión flecha abajo/arriba en menús tabulados
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
--no gestiona bien inicio de imprimir texto zona central - no margen -> parece que ya va. revisar
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redefinir joystick y poco mas
 
 -cuando ay player acaba de reproducir cancion, y no hay opcion repeat, debe borrar ventana?
-
--lectura de teclado de otras maquinas diferentes a spectrum (como z88, etc) cuando ventana no tiene el foco. probarlas todas, ya deberia funcionar
-->Ok. necesita logicamente multitarea on
-
--Puntero en zxvision window a función que actualice ventana o quizá función de entrada a esa ventana?
-Para poder hacer que funciones futuras puedan gestionar pulsaciones de ratón en ventana:
-La ventana tendrá una función de callback donde se llamara cuando se pulse en zonas que no son barras de scroll
-Además de llamar a ese callback, se debe salir de la función de espera tecla zxvision, para poder gestionar eventos que haya avisado dicho callback. Creo que ahora mismo no se sale de función de espera tecla en esos casos
-->No se si es necesario pues en filesel lo hacemos de otra  manera
-Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que botón se ha pulsado, donde, etc
-
--Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls->parece que borra despues de tooltip,
-probar abrir menu debug cpu, luego breakpoints
-
--en menu debug, en tbblue, si cambia modo con letra M, quedan rastros de la ultima linea donde se muestra segmentos de paginación. Corregido ya?
 
 
 ----fin zxvision----
@@ -182,6 +158,13 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 
 --- ZX Vision
 
+
+-Puntero en zxvision window a función que actualice ventana o quizá función de entrada a esa ventana?
+Para poder hacer que funciones futuras puedan gestionar pulsaciones de ratón en ventana:
+La ventana tendrá una función de callback donde se llamara cuando se pulse en zonas que no son barras de scroll
+Además de llamar a ese callback, se debe salir de la función de espera tecla zxvision, para poder gestionar eventos que haya avisado dicho callback. Creo que ahora mismo no se sale de función de espera tecla en esos casos
+->No se si es necesario pues en filesel lo hacemos de otra  manera
+Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que botón se ha pulsado, donde, etc
 
 -Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
