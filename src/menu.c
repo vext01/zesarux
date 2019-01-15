@@ -2059,7 +2059,7 @@ void disable_footer(void)
 
         menu_footer=0;
 
-        //cls_menu_overlay();
+        
 
 }
 
@@ -4071,13 +4071,19 @@ void zxvision_destroy_window(zxvision_window *w)
 	zxvision_keys_event_not_send_to_machine=1;
 
 	if (zxvision_current_window!=NULL) {
+		//Dibujar las de detras
+		//printf ("Dibujando ventanas por detras\n");
+		zxvision_draw_below_windows(w);
+
 		zxvision_set_draw_window_parameters(zxvision_current_window);
 
 		//Dibujar ventana que habia debajo
 		zxvision_draw_window(zxvision_current_window);
 		zxvision_draw_window_contents(zxvision_current_window);
-		//printf ("Dibujando ventana de debajo\n");
+		//printf ("Dibujando ventana de debajo que ahora es de frente\n");
 	}
+
+
 }
 
 
@@ -4934,12 +4940,14 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	}
 
-    	cls_menu_overlay();
+    cls_menu_overlay();
 	zxvision_destroy_window(&ventana);
+
+
 
         if (tooltip_enabled==0) menu_espera_no_tecla_con_repeticion();
 
-	//cls_menu_overlay();
+	
 
 
 	if (menu_generic_message_tooltip_text_initial!=NULL) {
@@ -7772,9 +7780,8 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 	
 		else menu_generic_message("Help",texto);
 
-
-                                        //Restauramos funcion anterior de overlay
-                                        set_menu_overlay_function(previous_function);
+        //Restauramos funcion anterior de overlay
+        set_menu_overlay_function(previous_function);
 
 		if (zxvision_current_window!=NULL) {
 			zxvision_draw_window(zxvision_current_window);
@@ -9239,14 +9246,14 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_breakpoints);
                 retorno_menu=menu_dibuja_menu(&breakpoints_opcion_seleccionada,&item_seleccionado,array_menu_breakpoints,"Breakpoints" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -10609,14 +10616,14 @@ void menu_watches(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_watches);
                 retorno_menu=menu_dibuja_menu(&watches_opcion_seleccionada,&item_seleccionado,array_menu_watches,"Watches" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -14144,14 +14151,14 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&audio_settings_opcion_seleccionada,&item_seleccionado,array_menu_audio_settings,"Audio" );
 
-                //cls_menu_overlay();
+                
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 	                //llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-							//cls_menu_overlay();
+							
         	        }
 		}
 
@@ -14208,14 +14215,14 @@ int menu_z88_eprom_size(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_eprom_size_opcion_seleccionada,&item_seleccionado,array_menu_z88_eprom_size,"Eprom Size" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
 
 			//Devolver tamanyo eprom
@@ -14385,14 +14392,14 @@ int menu_z88_flash_intel_size(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_flash_intel_size_opcion_seleccionada,&item_seleccionado,array_menu_z88_flash_intel_size,"Flash Size" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
 
                         //Devolver tamanyo flash_intel
@@ -14715,14 +14722,14 @@ void menu_z88_slot_insert(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_slot_insert_opcion_seleccionada,&item_seleccionado,array_menu_z88_slot_insert,texto_titulo);
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -15304,14 +15311,14 @@ void menu_z88_slots(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&z88_slots_opcion_seleccionada,&item_seleccionado,array_menu_z88_slots,"Z88 Memory Slots" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -15513,14 +15520,14 @@ void menu_ula_advanced(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_advanced_opcion_seleccionada,&item_seleccionado,array_menu_hardware_advanced,"Advanced Timing Settings" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -15683,14 +15690,14 @@ void menu_hardware_printers(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_printers_opcion_seleccionada,&item_seleccionado,array_menu_hardware_printers,"Printing emulation" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -15811,7 +15818,7 @@ void menu_hardware_redefine_keys(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_redefine_keys_opcion_seleccionada,&item_seleccionado,array_menu_hardware_redefine_keys,"Redefine keys" );
 
-                //cls_menu_overlay();
+                
 
 
 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -15819,7 +15826,7 @@ if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -16036,7 +16043,7 @@ int menu_joystick_event_list(void)
 
                 retorno_menu=menu_dibuja_menu(&joystick_event_list_opcion_seleccionada,&item_seleccionado,array_menu_joystick_event_list,"Select event" );
 
-                //cls_menu_overlay();
+                
 
 
 								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -16180,14 +16187,14 @@ void menu_hardware_realjoystick_keys(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_realjoystick_keys_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_keys,"Joystick to key" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -16245,14 +16252,14 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_realjoystick_event_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_event,"Joystick to event" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -16501,14 +16508,14 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_realjoystick_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick,"Real joystick emulation" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -17048,13 +17055,13 @@ void menu_dandanator(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&dandanator_opcion_seleccionada,&item_seleccionado,array_menu_dandanator,titulo_menu);
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -17170,13 +17177,13 @@ void menu_kartusho(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&kartusho_opcion_seleccionada,&item_seleccionado,array_menu_kartusho,"Kartusho" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -17379,13 +17386,13 @@ menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
 
                 retorno_menu=menu_dibuja_menu(&betadisk_opcion_seleccionada,&item_seleccionado,array_menu_betadisk,"Betadisk" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -17499,13 +17506,13 @@ void menu_superupgrade(MENU_ITEM_PARAMETERS)
 
 retorno_menu=menu_dibuja_menu(&superupgrade_opcion_seleccionada,&item_seleccionado,array_menu_superupgrade,"Superupgrade" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -17559,14 +17566,14 @@ void menu_timexcart(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&timexcart_opcion_seleccionada,&item_seleccionado,array_menu_timexcart,"Timex Cartridge" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -17739,13 +17746,13 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&mmc_divmmc_opcion_seleccionada,&item_seleccionado,array_menu_mmc_divmmc,"MMC" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -18096,13 +18103,13 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&ide_divide_opcion_seleccionada,&item_seleccionado,array_menu_ide_divide,"IDE" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -18274,13 +18281,13 @@ void menu_esxdos_traps(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&esxdos_traps_opcion_seleccionada,&item_seleccionado,array_menu_esxdos_traps,"ESXDOS handler" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -18483,13 +18490,13 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&plusthreedisk_opcion_seleccionada,&item_seleccionado,array_menu_plusthreedisk,"+3 Disk" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -18690,13 +18697,13 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&storage_settings_opcion_seleccionada,&item_seleccionado,array_menu_storage_settings,"Storage" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -18783,13 +18790,13 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&ula_settings_opcion_seleccionada,&item_seleccionado,array_menu_ula_settings,"ULA Settings" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -19401,13 +19408,13 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&multiface_opcion_seleccionada,&item_seleccionado,array_menu_multiface,"Multiface settings" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -19512,13 +19519,13 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&cpu_settings_opcion_seleccionada,&item_seleccionado,array_menu_cpu_settings,"CPU Settings" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -19570,7 +19577,7 @@ void menu_hardware_set_f_func_action(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_set_f_func_action_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_func_action,"Set F keys" );
 
-                //cls_menu_overlay();
+                
 
 
 								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -19630,7 +19637,7 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_set_f_functions_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_functions,"Set F keys" );
 
-                //cls_menu_overlay();
+                
 
 
 								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -19638,7 +19645,7 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -19781,13 +19788,13 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&keyboard_settings_opcion_seleccionada,&item_seleccionado,array_menu_keyboard_settings,"Keyboard Settings" );
 
-                //cls_menu_overlay();
+                
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
 	                if (item_seleccionado.menu_funcion!=NULL) {
         	                //printf ("actuamos por funcion\n");
                 	        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
 	                }
 		}
 
@@ -19938,13 +19945,13 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_settings_opcion_seleccionada,&item_seleccionado,array_menu_hardware_settings,"Hardware Settings" );
 
-                //cls_menu_overlay();
+                
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
 	                if (item_seleccionado.menu_funcion!=NULL) {
         	                //printf ("actuamos por funcion\n");
                 	        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
 	                }
 		}
 
@@ -20068,13 +20075,13 @@ void menu_hardware_memory_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&hardware_memory_settings_opcion_seleccionada,&item_seleccionado,array_menu_hardware_memory_settings,"Memory Settings" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -23231,14 +23238,14 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&tape_settings_opcion_seleccionada,&item_seleccionado,array_menu_tape_settings,"Tape" );
 
-                //cls_menu_overlay();
+                
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
         	        }
 		}
 
@@ -23726,14 +23733,14 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&snapshot_opcion_seleccionada,&item_seleccionado,array_menu_snapshot,"Snapshot" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
                         }
                 }
 
@@ -24476,14 +24483,14 @@ void menu_debug_cpu_stats(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_cpu_stats);
 
                 retorno_menu=menu_dibuja_menu(&cpu_stats_opcion_seleccionada,&item_seleccionado,array_menu_cpu_stats,"CPU Statistics" );
-		//cls_menu_overlay();
+		
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -24739,14 +24746,14 @@ void menu_find_bytes(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&find_bytes_opcion_seleccionada,&item_seleccionado,array_menu_find_bytes,"Find bytes" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -24806,14 +24813,14 @@ void menu_debug_input_file_keyboard(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_input_file_keyboard);
 
                 retorno_menu=menu_dibuja_menu(&input_file_keyboard_opcion_seleccionada,&item_seleccionado,array_menu_input_file_keyboard,"Input File Spooling" );
-		//cls_menu_overlay();
+		
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -24919,14 +24926,14 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&cpu_transaction_log_opcion_seleccionada,&item_seleccionado,array_menu_cpu_transaction_log,"CPU Transaction Log" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -25438,14 +25445,14 @@ void menu_find_lives(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&find_lives_opcion_seleccionada,&item_seleccionado,array_menu_find_lives,"Find lives" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -25480,14 +25487,14 @@ void menu_find(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&find_opcion_seleccionada,&item_seleccionado,array_menu_find,"Find" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -25549,14 +25556,14 @@ void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue,titulo_ventana);
 
-                //cls_menu_overlay();
+                
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
                         }
                 }
 
@@ -25820,14 +25827,14 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&debug_settings_opcion_seleccionada,&item_seleccionado,array_menu_debug_settings,"Debug" );
 
-                //cls_menu_overlay();
+                
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
                         }
                 }
 
@@ -26116,14 +26123,14 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&textspeech_opcion_seleccionada,&item_seleccionado,array_menu_textspeech,"Text to Speech" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -26361,14 +26368,14 @@ void menu_external_tools_config(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&external_tools_config_opcion_seleccionada,&item_seleccionado,array_menu_external_tools_config,"External tools paths" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -26494,14 +26501,14 @@ void menu_change_video_driver(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&change_video_driver_opcion_seleccionada,&item_seleccionado,array_menu_change_video_driver,"Change Video Driver" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -26530,7 +26537,7 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 
         else {
                 disable_footer();
-                //cls_menu_overlay();
+                
         }
 
 
@@ -26660,14 +26667,14 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&colour_settings_opcion_seleccionada,&item_seleccionado,array_menu_colour_settings,"Colour Settings" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -26806,14 +26813,14 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"Window Settings" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -26872,14 +26879,14 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&osd_settings_opcion_seleccionada,&item_seleccionado,array_menu_osd_settings,"OSD Settings");
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -26942,14 +26949,14 @@ void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&accessibility_settings_opcion_seleccionada,&item_seleccionado,array_menu_accessibility_settings,"Accessibility Settings");
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -27077,14 +27084,14 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&interface_settings_opcion_seleccionada,&item_seleccionado,array_menu_interface_settings,"GUI Settings" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -27371,14 +27378,14 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&chardetection_settings_opcion_seleccionada,&item_seleccionado,array_menu_chardetection_settings,"Print char traps" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -27946,7 +27953,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&display_settings_opcion_seleccionada,&item_seleccionado,array_menu_display_settings,"Display" );
 
-                //cls_menu_overlay();
+                
 
 		//NOTA: no llamar por numero de opcion dado que hay opciones que ocultamos (relacionadas con real video)
 
@@ -27956,7 +27963,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
         	        }
 		}
 
@@ -28329,7 +28336,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 
 			retorno_menu=menu_dibuja_menu(&hotswap_machine_opcion_seleccionada,&item_seleccionado,array_menu_machine_selection,"Hotswap Machine" );
 
-	                //cls_menu_overlay();
+	                
 
 
                         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -28769,14 +28776,14 @@ void menu_custom_machine(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&custom_machine_opcion_seleccionada,&item_seleccionado,array_menu_custom_machine,"Custom Machine" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -28868,7 +28875,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
 
                         //printf ("Opcion seleccionada: %d\n",machine_selection_por_fabricante_opcion_seleccionada);
 
-                        //cls_menu_overlay();
+                        
 
                         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 
@@ -28904,7 +28911,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
                                 if (item_seleccionado.menu_funcion!=NULL) {
                                         //printf ("actuamos por funcion\n");
                                         item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                        cls_menu_overlay();
+                                        //cls_menu_overlay();
                                 }
 
 
@@ -28973,7 +28980,7 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
 
                         //printf ("Opcion seleccionada: %d\n",machine_selection_opcion_seleccionada);
 
-                        //cls_menu_overlay();
+                        
 
                         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 
@@ -28993,7 +29000,7 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
                                 if (item_seleccionado.menu_funcion!=NULL) {
                                         //printf ("actuamos por funcion\n");
                                         item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                        //cls_menu_overlay();
+                                        
                                 }
 
 
@@ -29542,7 +29549,7 @@ int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior)
 
                 retorno_menu=menu_dibuja_menu(&confirm_yes_no_opcion_seleccionada,&item_seleccionado,array_menu_confirm_yes_no,texto_ventana);
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -29590,7 +29597,7 @@ int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcio
 
                 retorno_menu=menu_dibuja_menu(&simple_two_choices_opcion_seleccionada,&item_seleccionado,array_menu_simple_two_choices,texto_ventana);
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -29641,7 +29648,7 @@ int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
 
                 retorno_menu=menu_dibuja_menu(&ask_no_append_truncate_opcion_seleccionada,&item_seleccionado,array_menu_ask_no_append_truncate,texto_ventana);
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
@@ -29696,7 +29703,7 @@ int menu_ask_list_texto(char *texto_ventana,char *texto_interior,char *entradas_
 
                 retorno_menu=menu_dibuja_menu(&ask_list_texto_opcion_seleccionada,&item_seleccionado,array_menu_ask_list,texto_ventana);
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         return ask_list_texto_opcion_seleccionada-1;
@@ -30245,14 +30252,14 @@ void menu_about(MENU_ITEM_PARAMETERS)
 
             retorno_menu=menu_dibuja_menu(&about_opcion_seleccionada,&item_seleccionado,array_menu_about,"Help" );
 
-			//cls_menu_overlay();
+			
 
             if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
             	//llamamos por valor de funcion
                 if (item_seleccionado.menu_funcion!=NULL) {
                 	//printf ("actuamos por funcion\n");
                     item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                    //cls_menu_overlay();
+                    
                 }
             }
 
@@ -30352,14 +30359,14 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_tape_opcion_seleccionada,&item_seleccionado,array_menu_settings_tape,"Tape Settings" );
 
-                //cls_menu_overlay();
+                
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			//llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
         	        }
 		}
 
@@ -30418,13 +30425,13 @@ void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&zxuno_spi_flash_opcion_seleccionada,&item_seleccionado,array_menu_zxuno_spi_flash,"ZX-Uno Flash" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -30494,13 +30501,13 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_storage_opcion_seleccionada,&item_seleccionado,array_menu_settings_storage,"Storage Settings" );
 
-                //cls_menu_overlay();
+                
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -30633,14 +30640,14 @@ if (menu_display_aa_cond() ) {
 
                 retorno_menu=menu_dibuja_menu(&textdrivers_settings_opcion_seleccionada,&item_seleccionado,array_menu_textdrivers_settings,"Text Driver Settings" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                //cls_menu_overlay();
+                                
                         }
                 }
 
@@ -31057,7 +31064,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_display_opcion_seleccionada,&item_seleccionado,array_menu_settings_display,"Display Settings" );
 
-                //cls_menu_overlay();
+                
 
 		//NOTA: no llamar por numero de opcion dado que hay opciones que ocultamos (relacionadas con real video)
 
@@ -31067,7 +31074,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
         	        }
 		}
 
@@ -31212,14 +31219,14 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_snapshot_opcion_seleccionada,&item_seleccionado,array_menu_settings_snapshot,"Snapshot Settings" );
 
-                //cls_menu_overlay();
+                
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
                         }
                 }
 
@@ -31309,14 +31316,14 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_config_file_opcion_seleccionada,&item_seleccionado,array_menu_settings_config_file,"Configuration file" );
 
-                //cls_menu_overlay();
+                
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
                         }
                 }
 
@@ -31406,14 +31413,14 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 
                 retorno_menu=menu_dibuja_menu(&settings_opcion_seleccionada,&item_seleccionado,array_menu_settings,"Settings" );
 
-                //cls_menu_overlay();
+                
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 	                //llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
 	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
         	        }
 		}
 
@@ -31547,7 +31554,7 @@ void menu_inicio_bucle(void)
 		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
 		//printf ("Retorno menu: %d\n",retorno_menu);
 
-		//cls_menu_overlay();
+		
 
 		//opcion 11 es F10 salir del emulador
 		//if ( (retorno_menu!=MENU_RETORNO_ESC && retorno_menu!=MENU_RETORNO_F2) &&  (menu_inicio_opcion_seleccionada==15 || retorno_menu==MENU_RETORNO_F10)) {
@@ -31562,9 +31569,9 @@ void menu_inicio_bucle(void)
 			//llamamos por valor de funcion
         	        if (item_seleccionado.menu_funcion!=NULL) {
                 	        //printf ("actuamos por funcion\n");
-				//cls_menu_overlay();
+				
                         	item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//cls_menu_overlay();
+				
 
 				//si ha generado error, no salir
 				if (if_pending_error_message) salir_todos_menus=0;
@@ -34739,7 +34746,7 @@ int old_menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 	//Aqui no se va a llegar nunca
-	//cls_menu_overlay();
+	
         //menu_espera_no_tecla();
 
 
