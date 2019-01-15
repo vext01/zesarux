@@ -14,8 +14,6 @@ zxvision_draw_window para refrescar lo que habia debajo
 ->hay que quitar los dos cls_menu_overlay de cada retorno_menu=menu_dibuja_menu
 -Ventanas de tooltip, ayuda, avisos y errores no deberían borrar con cls 
 
--Ya no redimensiona ancho de línea selección de menú al ampliar ventana
-
 -Gestión flecha abajo/arriba en menús tabulados
 
 -Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?

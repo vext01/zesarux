@@ -7634,9 +7634,109 @@ int menu_dibuja_menu_cursor_abajo(int linea_seleccionada,int max_opciones,menu_i
 }
 
 
+int menu_dibuja_menu_cursor_abajo_tabulado(int linea_seleccionada,int max_opciones,menu_item *m)
+{
+
+	//Ubicarnos primero en el item de menu seleccionado
+	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
+
+	//Su coordenada y original
+	int orig_tabulado_y=m_aux->menu_tabulado_y;
+	int orig_tabulado_x=m_aux->menu_tabulado_x;
 
 
+	//Y vamos hacia abajo hasta que coordenada y sea diferente
+	do {
+		printf ("antes vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+		m_aux=menu_retorna_item(m,linea_seleccionada);
+		printf ("despues vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+	} while (m_aux->menu_tabulado_y==orig_tabulado_y);
 
+	int posible_posicion=linea_seleccionada;
+	int final_y=m_aux->menu_tabulado_y;
+
+	//Y ahora buscar la que tenga misma coordenada x o mas a la derecha, si la hubiera
+	while (m_aux->menu_tabulado_y==final_y && m_aux->menu_tabulado_x<orig_tabulado_x) {
+		posible_posicion=linea_seleccionada;
+		printf ("antes horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+		m_aux=menu_retorna_item(m,linea_seleccionada);
+		printf ("despues horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+	};
+
+	//Si no estamos en misma posicion y, volver a posicion
+	if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
+
+	//Decir que se ha pulsado tecla
+	menu_speech_tecla_pulsada=1;
+
+	return linea_seleccionada;
+}
+
+int menu_dibuja_menu_cursor_arriba_tabulado(int linea_seleccionada,int max_opciones,menu_item *m)
+{
+
+	//Ubicarnos primero en el item de menu seleccionado
+	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
+
+	//Su coordenada y original
+	int orig_tabulado_y=m_aux->menu_tabulado_y;
+	int orig_tabulado_x=m_aux->menu_tabulado_x;
+
+
+	//Y vamos hacia arriba hasta que coordenada y sea diferente
+	do {
+		printf ("antes vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+		m_aux=menu_retorna_item(m,linea_seleccionada);
+		printf ("despues vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+	} while (m_aux->menu_tabulado_y==orig_tabulado_y);
+
+	int posible_posicion=linea_seleccionada;
+	int final_y=m_aux->menu_tabulado_y;
+
+	//Y ahora buscar la que tenga misma coordenada x o mas a la derecha, si la hubiera
+	while (m_aux->menu_tabulado_y==final_y && m_aux->menu_tabulado_x>orig_tabulado_x) {
+		posible_posicion=linea_seleccionada;
+		printf ("antes horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+		m_aux=menu_retorna_item(m,linea_seleccionada);
+		printf ("despues horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+	};
+
+	//Si no estamos en misma posicion y, volver a posicion
+	if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
+
+	//Decir que se ha pulsado tecla
+	menu_speech_tecla_pulsada=1;
+
+	return linea_seleccionada;
+}
+
+
+int old_menu_dibuja_menu_cursor_arriba_tabulado(int linea_seleccionada,int max_opciones,menu_item *m)
+{
+
+	//Ubicarnos primero en el item de menu seleccionado
+	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
+
+	//Su coordenada y original
+	int orig_tabulado_y=m_aux->menu_tabulado_y;
+
+	//Y vamos hacia arriba hasta que coordenada y sea diferente
+	do {
+		printf ("antes orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+		m_aux=menu_retorna_item(m,linea_seleccionada);
+		printf ("despues orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+	} while (m_aux->menu_tabulado_y==orig_tabulado_y);
+
+	//Decir que se ha pulsado tecla
+	menu_speech_tecla_pulsada=1;
+
+	return linea_seleccionada;
+}
 
 
 void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
@@ -7708,7 +7808,7 @@ int menu_dibuja_menu_adjust_last_column(zxvision_window *w,int ancho,int alto)
 {
 			//Si no hay barra scroll vertical, usamos hasta la ultima columna
 		int incremento_por_columna=0;
-		//printf ("visible height: %d alto %d\n",w->visible_height,alto);
+		//printf ("visible height: %d ancho %d alto %d\n",w->visible_height,ancho,alto);
 		if (w->visible_height>=alto) {
 			incremento_por_columna=1;
 		}							
@@ -7817,14 +7917,6 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Para permitir menus mas grandes verticalmente de lo que cabe en ventana.
 	int scroll_opciones=0;
 
-
-	/*
-	//como minimo, lo que ocupa el titulo: texto + franjas de colores + margen + botones
-	int ancho_boton_cerrar=2;
-	if (menu_hide_close_button.v) ancho_boton_cerrar=0;
-
-	ancho=strlen(titulo)+MENU_ANCHO_FRANJAS_TITULO+1+ancho_boton_cerrar;
-	*/
 
 	ancho=menu_dibuja_ventana_ret_ancho_titulo(ZXVISION_MAX_ANCHO_VENTANA,titulo);
 
@@ -8021,6 +8113,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 					//borrar contenido ventana despues de redimensionarla con espacios
 					int i;
 					for (i=0;i<ventana->total_height;i++) zxvision_print_string_defaults_fillspc(ventana,0,i,"");
+
 					menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
 					
 					zxvision_draw_window_contents(ventana);
@@ -8249,27 +8342,33 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                         break;
 
 
-			//Mover abajo
+			//Mover Derecha, solo en tabulados
 			case '8':
-				//en menus tabulados, misma funcion que abajo
+				//en menus tabulados, misma funcion que abajo para un no tabulado
 				if (m->es_menu_tabulado==0) break;
 
-				//Si es tabulado, seguira hasta la opcion '6'
-			case '6':
 				linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+			break;
 
-
+			//Mover abajo
+			case '6':
+				if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+				else linea_seleccionada=menu_dibuja_menu_cursor_abajo_tabulado(linea_seleccionada,max_opciones,m);
 			break;
 
 
-			//Mover arriba
-                        case '5':
-                                //en menus tabulados, misma funcion que arriba
-                                if (m->es_menu_tabulado==0) break;
+			//Mover Izquierda, solo en tabulados
+            case '5':
+            	//en menus tabulados, misma funcion que arriba para un no tabulado
+                if (m->es_menu_tabulado==0) break;
 
-                                //Si es tabulado, seguira hasta la opcion '7'
-			case '7':
+                //Si es tabulado, seguira hasta la opcion '7'
 				linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+			break; 
+
+			case '7':
+				if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+				else linea_seleccionada=menu_dibuja_menu_cursor_arriba_tabulado(linea_seleccionada,max_opciones,m);
 
 			break;
 
