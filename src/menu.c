@@ -35306,42 +35306,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                         //Ver en que zona esta
                         
                         if (zxvision_si_mouse_zona_archivos(ventana)) {
-							menu_filesel_set_cursor_at_mouse(ventana);
-
-							/*
-							int inicio_y_dir=1+FILESEL_INICIO_DIR;
-                            //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
-                            printf ("Dentro lista archivos\n");
-
-                            //Ver si linea dentro de rango
-                            int linea_final=menu_mouse_y-inicio_y_dir;
-
-                            //Si esta en la zona derecha de selector de porcentaje no hacer nada
-                            //if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
-                            if (menu_mouse_x==FILESEL_ANCHO-1) break;
-
-                            //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
-
-                            if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
-
-								//Ajustar cursor ventana
-
-								//if (zxvision_cursor_out_view(ventana)) {
-								filesel_archivo_seleccionado=ventana->offset_y;
-								ventana->cursor_line=filesel_archivo_seleccionado;
-								//}
-
-								//ventana->cursor_line -=filesel_linea_seleccionada;
-	
-								printf ("Seleccionamos item %d\n",linea_final);
-                                filesel_linea_seleccionada=linea_final;
-
-								ventana->cursor_line +=filesel_linea_seleccionada;
-                                menu_speech_tecla_pulsada=1;
-                            }
-                            else {
-                                printf ("Cursor mas alla del ultimo item\n");
-                            }*/
+							menu_filesel_set_cursor_at_mouse(ventana);						
 
                         }
 
