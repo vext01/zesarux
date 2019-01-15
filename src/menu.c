@@ -7639,38 +7639,38 @@ int menu_dibuja_menu_cursor_abajo_tabulado(int linea_seleccionada,int max_opcion
 
 	if (linea_seleccionada==max_opciones-1) linea_seleccionada=0;
 
-	else {
+		else {
 
-	//Ubicarnos primero en el item de menu seleccionado
-	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
+		//Ubicarnos primero en el item de menu seleccionado
+		menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
 
-	//Su coordenada y original
-	int orig_tabulado_y=m_aux->menu_tabulado_y;
-	int orig_tabulado_x=m_aux->menu_tabulado_x;
+		//Su coordenada y original
+		int orig_tabulado_y=m_aux->menu_tabulado_y;
+		int orig_tabulado_x=m_aux->menu_tabulado_x;
 
 
-	//Y vamos hacia abajo hasta que coordenada y sea diferente
-	do {
-		printf ("antes vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-		linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
-		m_aux=menu_retorna_item(m,linea_seleccionada);
-		printf ("despues vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-	} while (m_aux->menu_tabulado_y==orig_tabulado_y);
+		//Y vamos hacia abajo hasta que coordenada y sea diferente
+		do {
+			//printf ("antes vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+			linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+			m_aux=menu_retorna_item(m,linea_seleccionada);
+			//printf ("despues vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		} while (m_aux->menu_tabulado_y==orig_tabulado_y);
 
-	int posible_posicion=linea_seleccionada;
-	int final_y=m_aux->menu_tabulado_y;
+		int posible_posicion=linea_seleccionada;
+		int final_y=m_aux->menu_tabulado_y;
 
-	//Y ahora buscar la que tenga misma coordenada x o mas a la derecha, si la hubiera
-	while (m_aux->menu_tabulado_y==final_y && m_aux->menu_tabulado_x<orig_tabulado_x) {
-		posible_posicion=linea_seleccionada;
-		printf ("antes horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-		linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
-		m_aux=menu_retorna_item(m,linea_seleccionada);
-		printf ("despues horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-	};
+		//Y ahora buscar la que tenga misma coordenada x o mas a la derecha, si la hubiera
+		while (m_aux->menu_tabulado_y==final_y && m_aux->menu_tabulado_x<orig_tabulado_x) {
+			posible_posicion=linea_seleccionada;
+			//printf ("antes horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+			linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+			m_aux=menu_retorna_item(m,linea_seleccionada);
+			//printf ("despues horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		};
 
-	//Si no estamos en misma posicion y, volver a posicion
-	if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
+		//Si no estamos en misma posicion y, volver a posicion
+		if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
 	}
 
 	//Decir que se ha pulsado tecla
@@ -7686,36 +7686,36 @@ int menu_dibuja_menu_cursor_arriba_tabulado(int linea_seleccionada,int max_opcio
 
 	else {
 
-	//Ubicarnos primero en el item de menu seleccionado
-	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
+		//Ubicarnos primero en el item de menu seleccionado
+		menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
 
-	//Su coordenada y original
-	int orig_tabulado_y=m_aux->menu_tabulado_y;
-	int orig_tabulado_x=m_aux->menu_tabulado_x;
+		//Su coordenada y original
+		int orig_tabulado_y=m_aux->menu_tabulado_y;
+		int orig_tabulado_x=m_aux->menu_tabulado_x;
 
 
-	//Y vamos hacia arriba hasta que coordenada y sea diferente
-	do {
-		printf ("antes vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-		linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
-		m_aux=menu_retorna_item(m,linea_seleccionada);
-		printf ("despues vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-	} while (m_aux->menu_tabulado_y==orig_tabulado_y);
+		//Y vamos hacia arriba hasta que coordenada y sea diferente
+		do {
+			//printf ("antes vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+			linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+			m_aux=menu_retorna_item(m,linea_seleccionada);
+			//printf ("despues vert orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		} while (m_aux->menu_tabulado_y==orig_tabulado_y);
 
-	int posible_posicion=linea_seleccionada;
-	int final_y=m_aux->menu_tabulado_y;
+		int posible_posicion=linea_seleccionada;
+		int final_y=m_aux->menu_tabulado_y;
 
-	//Y ahora buscar la que tenga misma coordenada x o mas a la derecha, si la hubiera
-	while (m_aux->menu_tabulado_y==final_y && m_aux->menu_tabulado_x>orig_tabulado_x) {
-		posible_posicion=linea_seleccionada;
-		printf ("antes horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-		linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
-		m_aux=menu_retorna_item(m,linea_seleccionada);
-		printf ("despues horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-	};
+		//Y ahora buscar la que tenga misma coordenada x o mas a la derecha, si la hubiera
+		while (m_aux->menu_tabulado_y==final_y && m_aux->menu_tabulado_x>orig_tabulado_x) {
+			posible_posicion=linea_seleccionada;
+			//printf ("antes horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+			linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+			m_aux=menu_retorna_item(m,linea_seleccionada);
+			//printf ("despues horiz orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
+		};
 
-	//Si no estamos en misma posicion y, volver a posicion
-	if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
+		//Si no estamos en misma posicion y, volver a posicion
+		if (m_aux->menu_tabulado_y!=final_y) linea_seleccionada=posible_posicion;
 
 	}
 
