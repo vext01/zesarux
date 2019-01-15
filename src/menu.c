@@ -34975,6 +34975,48 @@ char menu_filesel_cambiar_unidad(void)
 	return 0;
 }
 
+//Retorna 1 si ha realizado cambio cursor. 0 si no
+int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
+{
+								int inicio_y_dir=1+FILESEL_INICIO_DIR;
+                            //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
+                            printf ("Dentro lista archivos\n");
+
+                            //Ver si linea dentro de rango
+                            int linea_final=menu_mouse_y-inicio_y_dir;
+
+                            //Si esta en la zona derecha de selector de porcentaje no hacer nada
+                            //if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+                            if (menu_mouse_x==FILESEL_ANCHO-1) return 0;
+
+                            //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
+
+                            if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
+
+								//Ajustar cursor ventana
+
+								//if (zxvision_cursor_out_view(ventana)) {
+								filesel_archivo_seleccionado=ventana->offset_y;
+								ventana->cursor_line=filesel_archivo_seleccionado;
+								//}
+
+								//ventana->cursor_line -=filesel_linea_seleccionada;
+	
+								printf ("Seleccionamos item %d\n",linea_final);
+                                filesel_linea_seleccionada=linea_final;
+
+								ventana->cursor_line +=filesel_linea_seleccionada;
+                                menu_speech_tecla_pulsada=1;
+								return 1;
+                            }
+                            else {
+                                printf ("Cursor mas alla del ultimo item\n");
+                            }
+
+	return 0;
+
+}
+
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -35245,8 +35287,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                         }*/
 
 					if (si_menu_mouse_en_ventana() && zxvision_si_mouse_zona_archivos(ventana) ) {
-						//Como pulsar enter
-						tecla=13;
+						//Ubicamos cursor donde indica raton
+						if (menu_filesel_set_cursor_at_mouse(ventana)) {
+							//Como pulsar enter
+							tecla=13;
+						}
 					}
 				}
 
@@ -35254,26 +35299,30 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//Si se ha movido raton. Asumimos que ha vuelto de leer tecla, tecla=0 y no se ha pulsado mouse
 				if (!tecla && !mouse_left) {
 				 //if (mouse_movido) {
-                                        printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
-                                        printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
-                                        if (si_menu_mouse_en_ventana() ) {
-                                                printf ("dentro ventana\n");
-                                                //Ver en que zona esta
-                                                int inicio_y_dir=1+FILESEL_INICIO_DIR;
-                                                if (zxvision_si_mouse_zona_archivos(ventana)) {
-                                                        //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
-                                                        printf ("Dentro lista archivos\n");
+                    printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
+                    printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
+                    if (si_menu_mouse_en_ventana() ) {
+                        printf ("dentro ventana\n");
+                        //Ver en que zona esta
+                        
+                        if (zxvision_si_mouse_zona_archivos(ventana)) {
+							menu_filesel_set_cursor_at_mouse(ventana);
 
-                                                        //Ver si linea dentro de rango
-                                                        int linea_final=menu_mouse_y-inicio_y_dir;
+							/*
+							int inicio_y_dir=1+FILESEL_INICIO_DIR;
+                            //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
+                            printf ("Dentro lista archivos\n");
 
-                                                        //Si esta en la zona derecha de selector de porcentaje no hacer nada
-                                                        //if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
-                                                        if (menu_mouse_x==FILESEL_ANCHO-1) break;
+                            //Ver si linea dentro de rango
+                            int linea_final=menu_mouse_y-inicio_y_dir;
 
-                                                        //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
+                            //Si esta en la zona derecha de selector de porcentaje no hacer nada
+                            //if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+                            if (menu_mouse_x==FILESEL_ANCHO-1) break;
 
-                                                        if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
+                            //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
+
+                            if (si_menu_filesel_no_mas_alla_ultimo_item(linea_final-1)) {
 
 								//Ajustar cursor ventana
 
@@ -35285,28 +35334,28 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								//ventana->cursor_line -=filesel_linea_seleccionada;
 	
 								printf ("Seleccionamos item %d\n",linea_final);
-                                                                filesel_linea_seleccionada=linea_final;
+                                filesel_linea_seleccionada=linea_final;
 
 								ventana->cursor_line +=filesel_linea_seleccionada;
-                                                                menu_speech_tecla_pulsada=1;
-                                                        }
-                                                        else {
-                                                                printf ("Cursor mas alla del ultimo item\n");
-                                                        }
+                                menu_speech_tecla_pulsada=1;
+                            }
+                            else {
+                                printf ("Cursor mas alla del ultimo item\n");
+                            }*/
 
-                                                }
+                        }
 
-                                                else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
-                                                                //En la linea de filtros
-                                                                //nada en especial
-                                                                printf ("En linea de filtros\n");
-                                                }
-                                        }
-                                        else {
-                                                printf ("fuera ventana\n");
-                                        }
+                        else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
+                            //En la linea de filtros
+                            //nada en especial
+                            printf ("En linea de filtros\n");
+                        }
+                    }
+                else {
+                    printf ("fuera ventana\n");
+                }
 
-                                }
+        }
 
 
 
