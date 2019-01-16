@@ -1,6 +1,6 @@
 --- Para esta version 7.2:
  
-
+ 
 ----zxvision----:
 
 -Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
