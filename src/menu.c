@@ -26724,35 +26724,35 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
         do {
 
 
-        	menu_add_item_menu_inicial_format(&array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_fullscreen,NULL,"~~Full Screen: %s",(ventana_fullscreen ? "On" : "Off") );
+        	menu_add_item_menu_inicial_format(&array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_fullscreen,NULL,"[%c] ~~Full Screen",(ventana_fullscreen ? 'X' : ' ' ) );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'f');
 
 		if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF) {
-	                menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,"~~Border enabled: %s", (border_enabled.v==1 ? "On" : "Off") );
+	                menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,"[%c] ~~Border enabled", (border_enabled.v==1 ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_window_settings,'b');
 		}
 
 		if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") || !strcmp(scr_driver_name,"cocoa") ) {
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"~~Mouse pointer: %s", (mouse_pointer_shown.v==1 ? "On" : "Off") );
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] ~~Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_window_settings,'m');
 		}
 
 
                 if (si_complete_video_driver() ) {
-                        menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_zoom,menu_interface_zoom_cond,"Window Size ~~Zoom: %d",zoom_x);
+                        menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_zoom,menu_interface_zoom_cond,"[%d] Window Size ~~Zoom",zoom_x);
 			menu_add_item_menu_shortcut(array_menu_window_settings,'z');
                         menu_add_item_menu_tooltip(array_menu_window_settings,"Change Window Zoom");
                         menu_add_item_menu_ayuda(array_menu_window_settings,"Changes Window Size Zoom (width and height)");
                 }
 
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075,NULL,"Reduce to 0.75: %s",(screen_reduce_075.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075,NULL,"[%c] Reduce to 0.75",(screen_reduce_075.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Reduce machine display output by 0.75. Enables realvideo and forces watermark");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Reduce machine display output by 0.75. Enables realvideo and forces watermark. This feature has been used on a large bulb display for the RunZX 2018 event");
 
 		if (screen_reduce_075.v) {
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofx,NULL,"Reduce offset x: %d",screen_reduce_offset_x);
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofy,NULL,"Reduce offset y: %d",screen_reduce_offset_y);
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofx,NULL,"[%d] Reduce offset x",screen_reduce_offset_x);
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofy,NULL,"[%d] Reduce offset y",screen_reduce_offset_y);
 		}
 		
 
@@ -26762,7 +26762,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_footer,NULL,"Window F~~ooter: %s",(menu_footer ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_footer,NULL,"[%c] Window F~~ooter",(menu_footer ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'o');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Show on footer some machine information");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Show on footer some machine information, like tape loading");
@@ -26770,21 +26770,21 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 		//Uso cpu no se ve en windows
 #ifndef MINGW
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"Show CPU usage: %s",(screen_show_cpu_usage.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"[%c] Show CPU usage",(screen_show_cpu_usage.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Show CPU usage on footer");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"It tells you how much host cpu machine is using ZEsarUX. So it's better to have it low. "
 														"Higher values mean you need a faster host machine to use ZEsarUX");
 #endif
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"~~Percentage bar: %s",(menu_hide_vertical_percentaje_bar.v ? "No" : "Yes") );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] ~~Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'p');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
 
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"Minimize button: %s",(menu_hide_minimize_button.v ? "No" : "Yes") );
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"Close button: %s",(menu_hide_close_button.v ? "No" : "Yes") );
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"Invert mouse scroll: %s",(menu_invert_mouse_scroll.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] Minimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"[%c] Close button",(menu_hide_close_button.v ? ' ' : 'X') );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] Invert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
 
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
