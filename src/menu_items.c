@@ -704,11 +704,11 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
       
 
 
-		menu_add_item_menu_inicial_format(&array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
+		menu_add_item_menu_inicial_format(&array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"[%c] Show r~~egisters in console",(debug_registers==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'e');
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_shows_invalid_opcode,NULL,"Show ~~invalid opcode: %s",
-			(debug_shows_invalid_opcode.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_shows_invalid_opcode,NULL,"[%c] Show ~~invalid opcode",
+			(debug_shows_invalid_opcode.v ? 'X' : ' ') ); 
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'i');
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes)");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes). "
@@ -719,19 +719,6 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
-
-
-        menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"Step ~~over interrupt: %s",(remote_debug_settings&32 ? "Yes" : "No") );
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'o');
-
-
-
-
 
 
 		char show_fired_breakpoint_type[30];
@@ -745,16 +732,33 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 								"Possible values:\n"
 								"Always: always shows the condition\n"
 								"NoPC: only shows conditions that are not like PC=XXXX\n"
-								"Never: never shows conditions\n" );
+								"Never: never shows conditions\n" );		
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_screen,NULL,"Show display on debug: %s",
-			( debug_settings_show_screen.v ? "Yes" : "No") );
+
+        menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"[%c] Step ~~over interrupt",(remote_debug_settings&32 ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'o');
+
+
+
+
+
+
+
+
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_screen,NULL,"[%c] Show display on debug",
+			( debug_settings_show_screen.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
 
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"Shows electron on debug: %s",
-			( menu_debug_registers_if_showscan.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"[%c] Shows electron on debug",
+			( menu_debug_registers_if_showscan.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 
@@ -772,7 +776,7 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'r');
 
 		if (remote_protocol_enabled.v) {
-			menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto_port,NULL,"Remote protocol ~~port: %d",remote_protocol_port );
+			menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto_port,NULL,"[%d] Remote protocol ~~port",remote_protocol_port );
 			menu_add_item_menu_tooltip(array_menu_settings_debug,"Changes remote command protocol port");
 			menu_add_item_menu_ayuda(array_menu_settings_debug,"Changes remote command protocol port");
 			menu_add_item_menu_shortcut(array_menu_settings_debug,'p');
@@ -781,7 +785,7 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 #endif
 
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_hardware_debug_port,NULL,"Hardware ~~debug ports: %s",(hardware_debug_port.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_hardware_debug_port,NULL,"[%c] Hardware ~~debug ports",(hardware_debug_port.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"If hardware debug ports are enabled");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"It shows a ASCII character or a number on console sending some OUT sequence to ports. "
 														"Read file docs/zesarux_zxi_registers.txt for more information");
@@ -1338,7 +1342,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_ZX8081) {
 			//sound on zx80/81
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_zx8081_detect_vsync_sound,menu_cond_zx8081,"Detect VSYNC Sound: %s",(zx8081_detect_vsync_sound.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_zx8081_detect_vsync_sound,menu_cond_zx8081,"[%c] Detect VSYNC Sound",(zx8081_detect_vsync_sound.v ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Tries to detect when vsync sound is played. This feature is experimental");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Tries to detect when vsync sound is played. This feature is experimental");
 
@@ -1373,7 +1377,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"Audio filter on ROM SAVE: %s",(output_beep_filter_on_rom_save.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"[%c] Audio filter on ROM SAVE",(output_beep_filter_on_rom_save.v ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Apply filter on ROM save routines");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"It detects when on ROM save routines and alter audio output to use only "
 					"the MIC bit of the FEH port");
@@ -1382,8 +1386,8 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 //extern char output_beep_filter_volume;
 
 			if (output_beep_filter_on_rom_save.v) {
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_alter_volume,NULL,"Alter beeper volume: %s",
-				(output_beep_filter_alter_volume.v ? "Yes" : "No") );
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_alter_volume,NULL,"[%c] Alter beeper volume",
+				(output_beep_filter_alter_volume.v ? 'X' : ' ') );
 
 				menu_add_item_menu_tooltip(array_menu_settings_audio,"Alter output beeper volume");
 				menu_add_item_menu_ayuda(array_menu_settings_audio,"Alter output beeper volume. You can set to a maximum to "
@@ -1418,13 +1422,13 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_aofile_insert,menu_aofile_cond,"Audio file ~~inserted: %s",(aofile_inserted.v ? "Yes" : "No" ));
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_aofile_insert,menu_aofile_cond,"[%c] Audio file ~~inserted",(aofile_inserted.v ? 'X' : ' ' ));
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'i');
 
 
                 menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"Change Audio Driver");
 
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_silence_detector,NULL,"Silence detector: %s",(silence_detector_setting.v ? "Yes" : "No" ));
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_silence_detector,NULL,"[%c] Silence detector",(silence_detector_setting.v ? 'X' : ' ' ));
 				menu_add_item_menu_tooltip(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
 				menu_add_item_menu_ayuda(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
 
@@ -4509,16 +4513,16 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Next song");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,11,lin);
 
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,"~~Repeat: %s",
-					(ay_player_repeat_file.v ? "Yes" : "No"));
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,"[%c] Repeat",
+					(ay_player_repeat_file.v ? 'X' : ' '));
 
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'r');
 				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Repeat from the beginning when finished all songs");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+1);	
 
 				
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_exitend,NULL,"~~Exit end: %s",
-					(ay_player_exit_emulator_when_finish.v ? "Yes" : "No") );
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_exitend,NULL,"[%c] Exit end",
+					(ay_player_exit_emulator_when_finish.v ? 'X' : ' ') );
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'e');
 				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Exit emulator when finished all songs");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,13,lin+1);	
@@ -4539,8 +4543,8 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Time limit for all songs");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+3);
 
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_cpcmode,NULL,"~~CPC mode: %s",
-					(ay_player_cpc_mode.v ? "Yes" : "No"));
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_cpcmode,NULL,"[%c] CPC mode",
+					(ay_player_cpc_mode.v ? 'X' : ' '));
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'c');
 				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Switch to AY CPC mode");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+4);		
@@ -4550,7 +4554,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 /*
 
 
-			sprintf(textoplayer,"~~CPC mode: %s",(ay_player_cpc_mode.v ? "Yes" : "No"));
+			sprintf(textoplayer,"~~CPC mode: %s",(ay_player_cpc_mode.v ? 'X' : ' '));
 			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
 */
 
@@ -6476,7 +6480,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-		sprintf (buffer_linea,"M: Mapped palette: %s",(menu_display_total_palette_show_mapped ? "Yes" : "No") );
+		sprintf (buffer_linea,"[%c] ~~Mapped palette",(menu_display_total_palette_show_mapped ? 'X' : ' ') );
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
