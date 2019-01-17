@@ -31266,17 +31266,15 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 
 
 
-
-		menu_add_item_menu_inicial_format(&array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_config,NULL,"    ~~Save configuration");
-		menu_add_item_menu_shortcut(array_menu_settings_config_file,'s');
-		menu_add_item_menu_tooltip(array_menu_settings_config_file,"Overwrite your configuration file with current settings");
-		menu_add_item_menu_ayuda(array_menu_settings_config_file,"Overwrite your configuration file with current settings");
-
-
-		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_on_exit,NULL,"[%c] ~~Autosave on exit",(save_configuration_file_on_exit.v ? 'X' : ' '));
+		menu_add_item_menu_inicial_format(&array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_on_exit,NULL,"[%c] ~~Autosave on exit",(save_configuration_file_on_exit.v ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_config_file,'a');
 		menu_add_item_menu_tooltip(array_menu_settings_config_file,"Auto save configuration on exit emulator");
 		menu_add_item_menu_ayuda(array_menu_settings_config_file,"Auto save configuration on exit emulator and overwrite it. Note: not all settings are saved");
+
+		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_config,NULL,"    ~~Save configuration");
+		menu_add_item_menu_shortcut(array_menu_settings_config_file,'s');
+		menu_add_item_menu_tooltip(array_menu_settings_config_file,"Overwrite your configuration file with current settings");
+		menu_add_item_menu_ayuda(array_menu_settings_config_file,"Overwrite your configuration file with current settings");
 
 
 		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_show,NULL,"    ~~View config file");
