@@ -12,6 +12,8 @@
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redefinir joystick y poco mas
 
+-menu: cuando habilita scroll vertical porque no caben opciones, aparece tambien scroll horizontal
+
 ----fin zxvision----
 
 

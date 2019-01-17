@@ -1293,19 +1293,19 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
 			else strcpy(ay3_stereo_string,"Mono");
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY Stereo mode: %s",
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY Stereo: %s",
 				ay3_stereo_string);
 
 			if (ay3_stereo_mode==4) {	
 
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
-					"Channel A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
+					"    Ch. A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
 
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
-					"Channel B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
+					"    Ch. B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
 
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
-					"Channel C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
+					"    Ch. C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
 
 				//menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
@@ -1322,16 +1322,16 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			char string_audiodac[32];
 
 				if (audiodac_enabled.v) {
-					sprintf (string_audiodac,". %s",audiodac_types[audiodac_selected_type].name);
+					sprintf (string_audiodac,": %s",audiodac_types[audiodac_selected_type].name);
 				}
 				else {
 					strcpy(string_audiodac,"");
 				}
 
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_type,NULL,"DAC: %s%s",(audiodac_enabled.v ? "On" : "Off" ),
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_type,NULL,"[%c] DAC%s",(audiodac_enabled.v ? 'X' : ' ' ),
 						string_audiodac);
 				if (audiodac_enabled.v) {
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_set_port,NULL,"[%02XH] Port",audiodac_types[audiodac_selected_type].port);
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_set_port,NULL,"[%02XH] DAC port",audiodac_types[audiodac_selected_type].port);
 				}
 
 
@@ -1344,7 +1344,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 		if (!MACHINE_IS_ZX8081) {
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"[%c] Beeper: %s",(beeper_enabled.v==1 ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"[%c] Beeper",(beeper_enabled.v==1 ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable beeper output");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Enable or disable beeper output");
 
@@ -1390,7 +1390,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"[%c] Audio filter on ROM SAVE",(output_beep_filter_on_rom_save.v ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"[%c] Audio filter ROM SAVE",(output_beep_filter_on_rom_save.v ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Apply filter on ROM save routines");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"It detects when on ROM save routines and alter audio output to use only "
 					"the MIC bit of the FEH port");
