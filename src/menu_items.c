@@ -746,34 +746,20 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 
 
-		menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour: %s",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"[%d] Verbose ~~level",verbose_level);
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');		
 
 
-		char show_fired_breakpoint_type[30];
-		if (debug_show_fired_breakpoints_type==0) strcpy(show_fired_breakpoint_type,"Always");
-		else if (debug_show_fired_breakpoints_type==1) strcpy(show_fired_breakpoint_type,"NoPC");
-		else strcpy(show_fired_breakpoint_type,"Never");																	//						   OnlyNonPC
-																															//  01234567890123456789012345678901
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint: %s",show_fired_breakpoint_type);
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired. "
-								"Possible values:\n"
-								"Always: always shows the condition\n"
-								"NoPC: only shows conditions that are not like PC=XXXX\n"
-								"Never: never shows conditions\n" );				
+					
 
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"Verbose ~~level: %d",verbose_level);
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');
+
+
+		menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);		
 
 
 #ifdef USE_PTHREADS
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"~~Remote protocol: %s",(remote_protocol_enabled.v ? "Enabled" : "Disabled") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"[%c] Remote protocol",(remote_protocol_enabled.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'r');
@@ -797,11 +783,35 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 		if (hardware_debug_port.v) {
 			menu_tape_settings_trunc_name(zesarux_zxi_hardware_debug_file,string_zesarux_zxi_hardware_debug_file_shown,18);
-        	menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_zesarux_zxi_hardware_debug_file,NULL,"Byte ~~file: %s",string_zesarux_zxi_hardware_debug_file_shown);
+        	menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_zesarux_zxi_hardware_debug_file,NULL,"Byte ~~file [%s]",string_zesarux_zxi_hardware_debug_file_shown);
 			menu_add_item_menu_tooltip(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");		
 			menu_add_item_menu_ayuda(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");	
 			menu_add_item_menu_shortcut(array_menu_settings_debug,'f');							
 		}
+
+
+		menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour: %s",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
+
+
+		char show_fired_breakpoint_type[30];
+		if (debug_show_fired_breakpoints_type==0) strcpy(show_fired_breakpoint_type,"Always");
+		else if (debug_show_fired_breakpoints_type==1) strcpy(show_fired_breakpoint_type,"NoPC");
+		else strcpy(show_fired_breakpoint_type,"Never");																	//						   OnlyNonPC
+																															//  01234567890123456789012345678901
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint: %s",show_fired_breakpoint_type);
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired. "
+								"Possible values:\n"
+								"Always: always shows the condition\n"
+								"NoPC: only shows conditions that are not like PC=XXXX\n"
+								"Never: never shows conditions\n" );			
 
 
                 menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -1220,12 +1230,12 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"Audio Output ~~Volume: %d %%", audiovolume);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"Autoenable AY Chip: %s",(autoenable_ay_chip.v==1 ? "On" : "Off"));
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"[%c] Autoenable AY Chip",(autoenable_ay_chip.v==1 ? 'X' : ' '));
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"This option is usefor for example on Spectrum 48k games that uses AY Chip "
 					"and for some ZX80/81 games that also uses it (Bi-Pak ZON-X81, but not Quicksilva QS Sound board)");		
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip,NULL,"~~AY Chip: %s", (ay_chip_present.v==1 ? "On" : "Off"));
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip,NULL,"[%c] ~~AY Chip", (ay_chip_present.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'a');
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip on this machine");
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"It enables the AY Chip for the machine, by activating the following hardware:\n"
@@ -1237,11 +1247,11 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,menu_cond_ay_chip,"Total AY Chips: %d%s",total_ay_chips,
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,menu_cond_ay_chip,"    AY Chips: %d%s",total_ay_chips,
 				(total_ay_chips>1 ? ". Turbosound" : "") );
 
 		if (si_complete_video_driver() ) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"Show ~~Piano: %s",
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"    Show ~~Piano: %s",
 					(setting_mostrar_ay_piano_grafico.v ? "Graphic" : "Text") );
 			menu_add_item_menu_shortcut(array_menu_settings_audio,'p');
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Shows AY/Beeper Piano menu with graphic or with text");
@@ -1250,12 +1260,12 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		}
 
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_envelopes,menu_cond_ay_chip,"AY ~~Envelopes: %s", (ay_envelopes_enabled.v==1 ? "On" : "Off"));
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_envelopes,menu_cond_ay_chip,"[%c] AY ~~Envelopes", (ay_envelopes_enabled.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'e');
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable volume envelopes for the AY Chip");
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"Enable or disable volume envelopes for the AY Chip");
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_speech,menu_cond_ay_chip,"AY ~~Speech: %s", (ay_speech_enabled.v==1 ? "On" : "Off"));
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_speech,menu_cond_ay_chip,"[%c] AY ~~Speech", (ay_speech_enabled.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'s');
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable AY Speech effects");
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"These effects are used, for example, in Chase H.Q.");
@@ -1283,7 +1293,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
 			else strcpy(ay3_stereo_string,"Mono");
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"AY Stereo mode: %s",
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY Stereo mode: %s",
 				ay3_stereo_string);
 
 			if (ay3_stereo_mode==4) {	
@@ -1321,7 +1331,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_type,NULL,"DAC: %s%s",(audiodac_enabled.v ? "On" : "Off" ),
 						string_audiodac);
 				if (audiodac_enabled.v) {
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_set_port,NULL,"Port: %02XH",audiodac_types[audiodac_selected_type].port);
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_set_port,NULL,"[%02XH] Port",audiodac_types[audiodac_selected_type].port);
 				}
 
 
@@ -1334,7 +1344,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 		if (!MACHINE_IS_ZX8081) {
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"Beeper: %s",(beeper_enabled.v==1 ? "On" : "Off"));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"[%c] Beeper: %s",(beeper_enabled.v==1 ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable beeper output");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Enable or disable beeper output");
 
@@ -1350,7 +1360,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Tries to detect when vsync sound is played. This feature is experimental");
 
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_sound_zx8081,menu_cond_zx8081,"VSYNC Sound on zx80/81: %s", (zx8081_vsync_sound.v==1 ? "On" : "Off"));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_sound_zx8081,menu_cond_zx8081,"[%c] VSYNC Sound on zx80/81", (zx8081_vsync_sound.v==1 ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enables or disables VSYNC sound on ZX80 and ZX81");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"This method uses the VSYNC signal on the TV to make sound");
 
@@ -1372,7 +1382,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 		if (mostrar_real_beeper) {
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper_real,NULL,"Real ~~Beeper: %s",(beeper_real_enabled==1 ? "On" : "Off"));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper_real,NULL,"[%c] Real ~~Beeper",(beeper_real_enabled==1 ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_settings_audio,'b');
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable Real Beeper enhanced sound. ");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Real beeper produces beeper sound more realistic but uses a bit more cpu. Needs beeper enabled (or vsync sound on zx80/81)");
@@ -1398,26 +1408,19 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 				if (output_beep_filter_alter_volume.v) {
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_volume,NULL,"Volume: %d",output_beep_filter_volume);
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_volume,NULL,"[%d] Volume",output_beep_filter_volume);
 				}
 			}
 
 		}
 
-		//if (si_complete_video_driver() ) {
-			//menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_espectro_sonido,NULL,"View ~~Waveform");
-			//menu_add_item_menu_shortcut(array_menu_settings_audio,'w');
-        //	        menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-		//}
-
-
-
+	
 		menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
 		char string_aofile_shown[10];
 		menu_tape_settings_trunc_name(aofilename,string_aofile_shown,10);
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_aofile,NULL,"Audio ~~out to file: %s",string_aofile_shown);
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_aofile,NULL,"Audio ~~out to file [%s]",string_aofile_shown);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'o');
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Saves the generated sound to a file");
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"You can save .raw format and if compiled with sndfile, to .wav format. "
@@ -1429,11 +1432,13 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'i');
 
 
-                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"Change Audio Driver");
-
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_silence_detector,NULL,"[%c] Silence detector",(silence_detector_setting.v ? 'X' : ' ' ));
 				menu_add_item_menu_tooltip(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
 				menu_add_item_menu_ayuda(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
+
+                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"Change Audio Driver");
+
+
 
                 menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
