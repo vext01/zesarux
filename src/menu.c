@@ -26956,7 +26956,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"M~~ultitask menu: %s", (menu_multitarea==1 ? "On" : "Off"));
+		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"[%c] M~~ultitask menu", (menu_multitarea==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'u');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable menu with multitask");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Setting multitask on makes the emulation does not stop when the menu is active");
@@ -26973,39 +26973,35 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		*/
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~Window settings");
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'w');
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"~~OSD settings");
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');
 
 
 		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"[%d] Menu char width",menu_char_width);
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"Tooltips: %s",(tooltip_enabled.v ? "Enabled" : "Disabled") );
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"[%c] Tooltips",(tooltip_enabled.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"Force visible hotkeys: %s",(menu_force_writing_inverse_color.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
                 menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
                 menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"F~~rameskip: %d",frameskip);
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"[%d] F~~rameskip",frameskip);
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'r');
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
 			menu_add_item_menu_ayuda(array_menu_interface_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"Auto Frameskip: %s",
-				(autoframeskip.v ? "Yes" : "No"));
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"[%c] Auto Frameskip",
+				(autoframeskip.v ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Let ZEsarUX decide when to skip frames");
 			menu_add_item_menu_ayuda(array_menu_interface_settings,"ZEsarUX skips frames when the host cpu use is too high. Then skiping frames the cpu use decreases");
 
@@ -27013,9 +27009,37 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"GUI ~~style: %s",
+
+
+
+		//Con driver cocoa, no permitimos cambiar a otro driver
+		if (strcmp(scr_driver_name,"cocoa")) {
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"    Change Video Driver");
+		}
+
+
+
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"[%c] Limit menu opening",
+			(menu_limit_menu_open.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"[%c] Quick exit",
+			(quickexit.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");			
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"[%c] Hide dirs in filesel",
+			(menu_filesel_hide_dirs.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Hide directories from file selector menus");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
+								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    GUI ~~style: %s",
 						definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'s');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Change GUI Style");
@@ -27033,30 +27057,16 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					
 					);
 
-		//Con driver cocoa, no permitimos cambiar a otro driver
-		if (strcmp(scr_driver_name,"cocoa")) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"Change Video Driver");
-		}
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"External tools paths");
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~Window settings");
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'w');
 
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"~~OSD settings");
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');		
 
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"    Colour settings");		
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"Limit menu opening: %s",
-			(menu_limit_menu_open.v ? "Yes" : "No") );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"Quick exit: %s",
-			(quickexit.v ? "Yes" : "No") );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");			
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"Hide dirs in filesel: %s",
-			(menu_filesel_hide_dirs.v ? "Yes" : "No") );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Hide directories from file selector menus");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
-								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"    External tools paths");								
 
                 menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_interface_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
