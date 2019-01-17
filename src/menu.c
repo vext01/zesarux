@@ -26625,17 +26625,17 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_red,NULL,"Red display: %s",(screen_gray_mode & 4 ? "On" : "Off") );
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_green,NULL,"Green display: %s",(screen_gray_mode & 2 ? "On" : "Off") );
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"Blue display: %s",(screen_gray_mode & 1 ? "On" : "Off") );
+		menu_add_item_menu_inicial_format(&array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_red,NULL,"[%c] Red display",(screen_gray_mode & 4 ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_green,NULL,"[%c] Green display",(screen_gray_mode & 2 ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"[%c] Blue display",(screen_gray_mode & 1 ? 'X' : ' ') );
 
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"Inverse video: %s",(inverse_video.v==1 ? "On" : "Off") );
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] Inverse video",(inverse_video.v==1 ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_colour_settings,"Inverse Color Palette");
 		menu_add_item_menu_ayuda(array_menu_colour_settings,"Inverses all the colours used on the emulator, including menu");
 
 
 		if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
-			menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_real_1648_palette,NULL,"Real palette: %s",(spectrum_1648_use_real_palette.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_real_1648_palette,NULL,"[%c] Real palette",(spectrum_1648_use_real_palette.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette");
 			menu_add_item_menu_ayuda(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette. "
 				"In fact, this palette is the same as a Spectrum issue 3, and almost the same as issue 1 and 2");
