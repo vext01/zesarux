@@ -30697,8 +30697,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 					);
 
 			if (menu_vofile_cond() ) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_fps,menu_vofile_cond,"FPS Video file: %d",50/vofile_fps);
-	        	menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"Video file enabled: %s",(vofile_inserted.v ? "Yes" : "No" ));
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_fps,menu_vofile_cond,"[%d] FPS Video file",50/vofile_fps);
+	        	menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"[%c] Video file enabled",(vofile_inserted.v ? 'X' : ' ' ));
 			}
 
 			else {
@@ -30861,12 +30861,12 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
-        	        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_x_offset,menu_cond_zx8081_realvideo,"Video x_offset: %d",offset_zx8081_t_coordx);
+        	        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_x_offset,menu_cond_zx8081_realvideo,"[%d] Video x_offset",offset_zx8081_t_coordx);
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Video horizontal image offset");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Video horizontal image offset, usually you don't need to change this");
 
 
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_minimo_vsync,menu_cond_zx8081_realvideo,"Video min. vsync lenght: %d",minimo_duracion_vsync);
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_minimo_vsync,menu_cond_zx8081_realvideo,"[%d] Video min. vsync lenght",minimo_duracion_vsync);
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Video minimum vsync lenght in t-states");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Video minimum vsync lenght in t-states");
 
@@ -30991,15 +30991,16 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 					"This mode is not supported with real video enabled");
 
 
-
+			if (menu_display_emulate_zx8081_cond() ){
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_emulate_zx8081_thres,menu_display_emulate_zx8081_cond,"[%d] Pixel threshold",umbral_simulate_screen_zx8081);
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
 					   "when ZX80/81 Display on Speccy enabled");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
 					   "when ZX80/81 Display on Speccy enabled");
+			}
 
 
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_refresca_sin_colores,NULL,"[%c] Colours enabled",(scr_refresca_sin_colores.v ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_refresca_sin_colores,NULL,"[%c] Colours enabled",(scr_refresca_sin_colores.v==0 ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Disables colours for Spectrum display");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Disables colours for Spectrum display");
 
@@ -31266,19 +31267,19 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_config,NULL,"~~Save configuration");
+		menu_add_item_menu_inicial_format(&array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_config,NULL,"    ~~Save configuration");
 		menu_add_item_menu_shortcut(array_menu_settings_config_file,'s');
 		menu_add_item_menu_tooltip(array_menu_settings_config_file,"Overwrite your configuration file with current settings");
 		menu_add_item_menu_ayuda(array_menu_settings_config_file,"Overwrite your configuration file with current settings");
 
 
-		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_on_exit,NULL,"~~Autosave on exit: %s",(save_configuration_file_on_exit.v ? "Yes" : "No"));
+		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_save_on_exit,NULL,"[%c] ~~Autosave on exit",(save_configuration_file_on_exit.v ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_config_file,'a');
 		menu_add_item_menu_tooltip(array_menu_settings_config_file,"Auto save configuration on exit emulator");
 		menu_add_item_menu_ayuda(array_menu_settings_config_file,"Auto save configuration on exit emulator and overwrite it. Note: not all settings are saved");
 
 
-		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_show,NULL,"~~View config file");
+		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_show,NULL,"    ~~View config file");
 		menu_add_item_menu_shortcut(array_menu_settings_config_file,'v');
 		menu_add_item_menu_tooltip(array_menu_settings_config_file,"View configuration file");
 		menu_add_item_menu_ayuda(array_menu_settings_config_file,"View configuration file");
