@@ -19810,11 +19810,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
         do {
 
-		//Keyboard settings
-		menu_add_item_menu_inicial_format(&array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_keyboard_settings,NULL,"~~Keyboard settings");
-		menu_add_item_menu_shortcut(array_menu_hardware_settings,'k');
-		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Hardware settings");
-		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Hardware settings");
+			menu_add_item_menu_inicial(&array_menu_hardware_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+
 
 
 
@@ -19828,9 +19826,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			);
 
 
-	                if (joystick_autofire_frequency==0) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,menu_hardware_autofire_cond,"~~Autofire: Off");
+	                if (joystick_autofire_frequency==0) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,menu_hardware_autofire_cond,"[ ] Autofire");
         	        else {
-                	        menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,NULL,"~~Autofire frequency: %d Hz",50/joystick_autofire_frequency);
+                	        menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,NULL,"[%d Hz] Autofire",50/joystick_autofire_frequency);
 	                }
 
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'a');
@@ -19841,16 +19839,12 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
                                         "autofire because this function can interfiere with the menu (it might think a key is pressed)");
 
 
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_realjoystick,menu_hardware_realjoystick_cond,"~~Real joystick emulation");
-			menu_add_item_menu_shortcut(array_menu_hardware_settings,'r');
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Settings for the real joystick");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Settings for the real joystick");
-
+		
 		}
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"~~Lightgun emulate: %s",gunstick_texto[gunstick_emulation]);
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"~~Lightgun emulate [%s]",gunstick_texto[gunstick_emulation]);
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'l');
 			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Decide which kind of lightgun is emulated with the mouse");
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Lightgun emulation supports the following two models:\n\n"
@@ -19871,7 +19865,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'s');
 
 			if (kempston_mouse_emulation.v) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse_sensibilidad,NULL," Mouse Sensitivity: %d",kempston_mouse_factor_sensibilidad);
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse_sensibilidad,NULL,"    Mouse Sensitivity: %d",kempston_mouse_factor_sensibilidad);
 			}
 
 		}
@@ -19895,6 +19889,26 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		"Also changes audio frequency");		
 
 		menu_add_item_menu(array_menu_hardware_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		//Keyboard settings
+		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_keyboard_settings,NULL,"~~Keyboard settings");
+		menu_add_item_menu_shortcut(array_menu_hardware_settings,'k');
+		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Hardware settings");
+		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Hardware settings");		
+
+
+
+	if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_SAM) {
+	
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_realjoystick,menu_hardware_realjoystick_cond,"~~Real joystick emulation");
+			menu_add_item_menu_shortcut(array_menu_hardware_settings,'r');
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Settings for the real joystick");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Settings for the real joystick");
+
+		}
+
+
+
 
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX81) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_printers,NULL,"~~Printing emulation");
