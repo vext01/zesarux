@@ -19817,7 +19817,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_SAM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_joystick,NULL,"~~Joystick type: %s",joystick_texto[joystick_emulation]);
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_joystick,NULL,"~~Joystick type [%s]",joystick_texto[joystick_emulation]);
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'j');
         	        menu_add_item_menu_tooltip(array_menu_hardware_settings,"Decide which joystick type is emulated");
                 	menu_add_item_menu_ayuda(array_menu_hardware_settings,"Joystick is emulated with:\n"
@@ -19844,7 +19844,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"~~Lightgun emulate [%s]",gunstick_texto[gunstick_emulation]);
+
+			if (gunstick_emulation==0) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"[ ] Lightgun");
+			else menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"[%s] Lightgun",gunstick_texto[gunstick_emulation]);
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'l');
 			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Decide which kind of lightgun is emulated with the mouse");
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Lightgun emulation supports the following two models:\n\n"
