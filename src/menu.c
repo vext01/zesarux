@@ -19866,7 +19866,8 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse,NULL,"Kempston Mou~~se emulation: %s",(kempston_mouse_emulation.v==1 ? "On" : "Off"));
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse,NULL,"[%c] Kempston Mou~~se emulation",(kempston_mouse_emulation.v==1 ? 'X' : ' '));
+
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'s');
 
 			if (kempston_mouse_emulation.v) {
@@ -19875,8 +19876,25 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 		}
 
-		
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_datagear_dma,NULL,"[%c] Datagear DMA emulation",(datagear_dma_emulation.v==1 ? 'X' : ' '));
+		}		
 
+
+  		if (MACHINE_IS_TBBLUE) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_tbblue_fast_boot_mode,NULL,"[%c] TBBlue fast boot mode",
+			(tbblue_fast_boot_mode.v ? 'X' : ' ') );
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
+		}
+
+		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator Spee~~d: %d%%",porcentaje_velocidad_emulador);
+		menu_add_item_menu_shortcut(array_menu_hardware_settings,'d');
+		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Change the emulator Speed");
+		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes all the emulator speed by setting a different interval between display frames. "
+		"Also changes audio frequency");		
+
+		menu_add_item_menu(array_menu_hardware_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX81) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_printers,NULL,"~~Printing emulation");
@@ -19891,23 +19909,12 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_memory_settings,NULL,"~~Memory Settings");
 		menu_add_item_menu_shortcut(array_menu_hardware_settings,'m');
 
-  		if (MACHINE_IS_TBBLUE) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_tbblue_fast_boot_mode,NULL,"TBBlue fast boot mode: %s",
-			(tbblue_fast_boot_mode.v ? "Yes" : "No") );
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
-		}
 
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_datagear_dma,NULL,"Datagear DMA emulation: %s",(datagear_dma_emulation.v==1 ? "On" : "Off"));
-		}
+
+
 	
 
-		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator Spee~~d: %d%%",porcentaje_velocidad_emulador);
-		menu_add_item_menu_shortcut(array_menu_hardware_settings,'d');
-		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Change the emulator Speed");
-		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes all the emulator speed by setting a different interval between display frames. "
-		"Also changes audio frequency");
+
 
 
 		/* De momento esto desactivado
