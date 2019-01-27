@@ -19853,10 +19853,10 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 			if (menu_hardware_gunstick_aychip_cond()) {
-				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_range_x,NULL,"X Range: %d",gunstick_range_x);
-				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_range_y,NULL,"Y Range: %d",gunstick_range_y);
-				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_y_offset,NULL,"Y Offset: %s%d",(gunstick_y_offset ? "-" : "" ), gunstick_y_offset);
-				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_solo_brillo,NULL,"Detect only white bright: %s",(gunstick_solo_brillo ? "On" : "Off"));
+				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_range_x,NULL," X Range: %d",gunstick_range_x);
+				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_range_y,NULL," Y Range: %d",gunstick_range_y);
+				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_y_offset,NULL," Y Offset: %s%d",(gunstick_y_offset ? "-" : "" ), gunstick_y_offset);
+				menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick_solo_brillo,NULL," Detect only white bright: %s",(gunstick_solo_brillo ? "On" : "Off"));
 		}
 
 
