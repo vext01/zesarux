@@ -1367,7 +1367,7 @@ printf (
 		"--simulaterealload         Simulate real tape loading\n"
 		"--simulaterealloadfast     Enable fast real tape loading\n"
 		"--smartloadpath path       Select initial smartload path\n"
-		"--quicksavepath path       Select path for quicksave\n"
+		"--quicksavepath path       Select path for quicksave & continous autosave\n" 
 		"--autoloadsnap             Load last snapshot on start\n"
 		"--autosavesnap             Save snapshot on exit\n"
 		"--autosnappath path        Folder to save/load automatic snapshots\n"
