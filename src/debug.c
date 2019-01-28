@@ -5424,3 +5424,13 @@ void debug_get_user_stack_values(int items, char *texto)
 
 
 }
+
+
+void debug_get_t_estados_parcial(char *buffer_estadosparcial)
+{
+
+			int estadosparcial=debug_t_estados_parcial;
+
+			if (estadosparcial>999999999) sprintf (buffer_estadosparcial,"%s","OVERFLOW");
+			else sprintf (buffer_estadosparcial,"%09u",estadosparcial);
+}

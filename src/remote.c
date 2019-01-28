@@ -742,6 +742,8 @@ struct s_items_ayuda items_ayuda[]={
   {"get-paging-state",NULL,NULL,"Shows paging state on Spectrum 128k machines: if using screen 5/7 and if paging enabled"},
   {"get-registers","|gr",NULL,"Get CPU registers"},
 	{"get-stack-backtrace",NULL,"[items]","Get last 16-bit values from the stack. If no items parameter, it shows 5 by default"},
+	{"get-tstates",NULL,NULL,"Get the t-states counter"},
+	{"get-tstates-partial",NULL,NULL,"Get the t-states partial counter. Shows text OVERFLOW if value overflows"},
 	  {"get-version",NULL,NULL,"Shows emulator version"},
 
 	{"get-video-driver",NULL,NULL,"Shows current video driver"},
@@ -752,6 +754,7 @@ struct s_items_ayuda items_ayuda[]={
   {"get-visualmem-opcode-dump","|gvmod","[compact]","Dumps all the visual memory executed positions and values. Then, clear its contents. If parameter compact, will compress non zero values on the same line, for a maximum of 16"},
 #endif
   {"hard-reset-cpu",NULL,NULL,"Hard resets the machine"},
+	{"reset-tstates-partial",NULL,NULL,"Resets the t-states partial counter"},
   {"help","|?","[command]","Shows help screen or command help"},
 	{"hexdump","|h","pointer lenght","Dumps memory at address, showing hex and ascii."},
 	{"hexdump-internal",NULL,"pointer lenght [offset]","Dumps internal memory (hexadecimal and ascii) for a given memory pointer. "
@@ -3738,10 +3741,22 @@ char buffer_retorno[2048];
 		}
 	}
 
+	else if (!strcmp(comando_sin_parametros,"get-tstates")) {
+		escribir_socket_format (misocket,"%d",t_estados);
+	}
+
+	else if (!strcmp(comando_sin_parametros,"get-tstates-partial")) {
+		char buffer_partial[32];
+		debug_get_t_estados_parcial(buffer_partial);
+		escribir_socket (misocket,buffer_partial);
+	}
+
 
 	else if (!strcmp(comando_sin_parametros,"get-version")) {
 		escribir_socket (misocket,EMULATOR_VERSION);
 	}
+
+
 
 
 	else if (!strcmp(comando_sin_parametros,"get-video-driver")) {
@@ -3928,6 +3943,10 @@ char buffer_retorno[2048];
   else if (!strcmp(comando_sin_parametros,"reset-cpu")) {
           reset_cpu();
   }
+
+	else if (!strcmp(comando_sin_parametros,"reset-tstates-partial")) {
+		debug_t_estados_parcial=0;
+	}
 
   else if (!strcmp(comando_sin_parametros,"run") || !strcmp(comando_sin_parametros,"r")) {
     int verbose=0;

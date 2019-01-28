@@ -10250,12 +10250,14 @@ int menu_debug_registers_subview_type=0;
 			// Mas T-Estados y parcial
 			//
 
-			int estadosparcial=debug_t_estados_parcial;
 			char buffer_estadosparcial[32];
+			/*int estadosparcial=debug_t_estados_parcial;
+			
 
 			if (estadosparcial>999999999) sprintf (buffer_estadosparcial,"%s","OVERFLOW");
-			else sprintf (buffer_estadosparcial,"%09u",estadosparcial);
+			else sprintf (buffer_estadosparcial,"%09u",estadosparcial);*/
 
+			debug_get_t_estados_parcial(buffer_estadosparcial);
 
             sprintf (textoregistros,"TSTATL: %03d TSTATP: %s",(t_estados % screen_testados_linea),buffer_estadosparcial );
             //menu_escribe_linea_opcion(linea++,-1,1,textoregistros);

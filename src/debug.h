@@ -335,5 +335,7 @@ typedef struct s_optimized_breakpoint optimized_breakpoint;
 
 extern optimized_breakpoint optimized_breakpoint_array[];
 
+extern void debug_get_t_estados_parcial(char *buffer_estadosparcial);
+
 
 #endif
