@@ -4,7 +4,7 @@
 ----zxvision----:
 
 -Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
-
+ 
 -Sin multitarea, pulsaciones sobre la zona de scroll, hace efectivo el scroll cuando se mueve el raton o se pulsa boton o tecla
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
