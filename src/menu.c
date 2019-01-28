@@ -23243,7 +23243,7 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Start playing the audio tape");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Start playing the audio tape");
 
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser_real,menu_realtape_inserted_cond,"Tape Bro~~wser");
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser_real,menu_realtape_cond,"Tape Bro~~wser");
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'w');
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Browse Real tape");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Browse Real tape");				
@@ -23687,11 +23687,7 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
         int retorno_menu;
 
         do {
-					char string_autosave_interval_prefix[16];
-					menu_tape_settings_trunc_name(snapshot_autosave_interval_quicksave_name,string_autosave_interval_prefix,16);
 
-					char string_autosave_interval_path[16];
-					menu_tape_settings_trunc_name(snapshot_autosave_interval_quicksave_directory,string_autosave_interval_path,16);
 
                 menu_add_item_menu_inicial(&array_menu_snapshot,"~~Load snapshot",MENU_OPCION_NORMAL,menu_snapshot_load,NULL);
 		menu_add_item_menu_shortcut(array_menu_snapshot,'l');
@@ -23720,25 +23716,9 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_ayuda(array_menu_snapshot,"Save a snapshot quickly. Name prefix and directory to save are indicated on settings below");
 
 
-					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_prefix,NULL,"Snap Prefix: %s",string_autosave_interval_prefix);
-					menu_add_item_menu_tooltip(array_menu_snapshot,"Name prefix for quicksave and autosave snapshots");
-					menu_add_item_menu_ayuda(array_menu_snapshot,"Name prefix for quicksave and autosave snapshots. The final name will be: prefix-date-hour.zx");
-
-						menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_directory,NULL,"Snap Path: %s",string_autosave_interval_path);
-						menu_add_item_menu_tooltip(array_menu_snapshot,"Path to save quicksave & autosnapshots");
-						menu_add_item_menu_ayuda(array_menu_snapshot,"Path to save quicksave & autosnapshots. If not set, will use current directory");
+			
 
 
-
-
-					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval,NULL,"Autosave at interval: %s",
-									(snapshot_autosave_interval_enabled.v ? "Yes" : "No") );
-					menu_add_item_menu_tooltip(array_menu_snapshot,"Autosave snapshot every fixed interval");
-					menu_add_item_menu_ayuda(array_menu_snapshot,"Autosave snapshot every fixed interval");
-
-					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_seconds,NULL," Seconds: %d",snapshot_autosave_interval_seconds);
-					menu_add_item_menu_tooltip(array_menu_snapshot,"Save snapshot every desired interval");
-					menu_add_item_menu_ayuda(array_menu_snapshot,"Save snapshot every desired interval");
 
 
 				menu_add_item_menu(array_menu_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -31187,7 +31167,11 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
         do {
 
+					char string_autosave_interval_prefix[16];
+					menu_tape_settings_trunc_name(snapshot_autosave_interval_quicksave_name,string_autosave_interval_prefix,16);
 
+					char string_autosave_interval_path[16];
+					menu_tape_settings_trunc_name(snapshot_autosave_interval_quicksave_directory,string_autosave_interval_path,16);
 
 
 		menu_add_item_menu_inicial_format(&array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_permitir_versiones_desconocidas,NULL,"[%c] Allow Unknown ZX versions",(snap_zx_permitir_versiones_desconocidas.v ? 'X' : ' '));
@@ -31244,6 +31228,32 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 		
 
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_prefix,NULL,"Snap Prefix: %s",string_autosave_interval_prefix);
+					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Name prefix for quicksave and autosave snapshots");
+					menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Name prefix for quicksave and autosave snapshots. The final name will be: prefix-date-hour.zx");
+
+						menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_directory,NULL,"Snap Path: %s",string_autosave_interval_path);
+						menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Path to save quicksave & autosnapshots");
+						menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Path to save quicksave & autosnapshots. If not set, will use current directory");
+
+
+
+
+					menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval,NULL,"Autosave at interval: %s",
+									(snapshot_autosave_interval_enabled.v ? "Yes" : "No") );
+					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Autosave snapshot every fixed interval");
+					menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Autosave snapshot every fixed interval");
+
+					menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_seconds,NULL," Seconds: %d",snapshot_autosave_interval_seconds);
+					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Save snapshot every desired interval");
+					menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Save snapshot every desired interval");
+
+
+					menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+
 		menu_add_ESC_item(array_menu_settings_snapshot);
 
                 retorno_menu=menu_dibuja_menu(&settings_snapshot_opcion_seleccionada,&item_seleccionado,array_menu_settings_snapshot,"Snapshot Settings" );
