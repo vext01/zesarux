@@ -43,7 +43,7 @@ extern void autosave_snapshot(void);
 
 extern void autoload_snapshot(void);
 
-extern z80_bit snapshot_autosave_interval_enabled;
+extern z80_bit snapshot_contautosave_interval_enabled;
 
 extern char snapshot_autosave_interval_quicksave_name[];
 

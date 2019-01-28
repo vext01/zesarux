@@ -84,7 +84,7 @@ z80_bit snap_zx_permitir_versiones_desconocidas={0};
 
 
 //Autoguardar un snapshot a intervalos fijos
-z80_bit snapshot_autosave_interval_enabled={0};
+z80_bit snapshot_contautosave_interval_enabled={0};
 
 
 //Prefijos y directorios de autosave y de quicksave
@@ -5003,7 +5003,7 @@ void snapshot_quick_save(char *nombre)
 
 void autosave_snapshot_at_fixed_interval(void)
 {
-  if (snapshot_autosave_interval_enabled.v==0) return;
+  if (snapshot_contautosave_interval_enabled.v==0) return;
 
   snapshot_autosave_interval_current_counter++;
   if (snapshot_autosave_interval_current_counter>=snapshot_autosave_interval_seconds) {

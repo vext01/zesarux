@@ -23437,7 +23437,7 @@ void menu_snapshot_permitir_versiones_desconocidas(MENU_ITEM_PARAMETERS)
 
 void menu_snapshot_autosave_at_interval(MENU_ITEM_PARAMETERS)
 {
-	snapshot_autosave_interval_enabled.v ^=1;
+	snapshot_contautosave_interval_enabled.v ^=1;
 
 	//resetear contador
 	snapshot_autosave_interval_current_counter=0;
@@ -23713,7 +23713,7 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_quicksave,NULL,"~~Quicksave");
 					menu_add_item_menu_shortcut(array_menu_snapshot,'q');
 					menu_add_item_menu_tooltip(array_menu_snapshot,"Save a snapshot quickly");
-					menu_add_item_menu_ayuda(array_menu_snapshot,"Save a snapshot quickly. Name prefix and directory to save are indicated on settings below");
+					menu_add_item_menu_ayuda(array_menu_snapshot,"Save a snapshot quickly. Name prefix and directory to save are configured on settings->Snapshot");
 
 
 			
@@ -31240,10 +31240,10 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
 
 
-					menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval,NULL,"Autosave at interval: %s",
-									(snapshot_autosave_interval_enabled.v ? "Yes" : "No") );
-					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Autosave snapshot every fixed interval");
-					menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Autosave snapshot every fixed interval");
+					menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval,NULL,"Contsave at interval: %s",
+									(snapshot_contautosave_interval_enabled.v ? "Yes" : "No") );
+					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Continuous autosave snapshot every fixed interval");
+					menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Continuous autosave snapshot every fixed interval");
 
 					menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_seconds,NULL," Seconds: %d",snapshot_autosave_interval_seconds);
 					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Save snapshot every desired interval");
