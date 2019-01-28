@@ -754,7 +754,6 @@ struct s_items_ayuda items_ayuda[]={
   {"get-visualmem-opcode-dump","|gvmod","[compact]","Dumps all the visual memory executed positions and values. Then, clear its contents. If parameter compact, will compress non zero values on the same line, for a maximum of 16"},
 #endif
   {"hard-reset-cpu",NULL,NULL,"Hard resets the machine"},
-	{"reset-tstates-partial",NULL,NULL,"Resets the t-states partial counter"},
   {"help","|?","[command]","Shows help screen or command help"},
 	{"hexdump","|h","pointer lenght","Dumps memory at address, showing hex and ascii."},
 	{"hexdump-internal",NULL,"pointer lenght [offset]","Dumps internal memory (hexadecimal and ascii) for a given memory pointer. "
@@ -776,6 +775,7 @@ struct s_items_ayuda items_ayuda[]={
 																				"If specify address but not lenght, only 1 byte is read"
 	},
   {"reset-cpu",NULL,NULL,"Resets CPU"},
+	{"reset-tstates-partial",NULL,NULL,"Resets the t-states partial counter"},
   {"run","|r","[verbose] [limit] [no-stop-on-data] [update-immediately]","Run cpu when on cpu step mode. Returns when a breakpoint is fired, data sent (for example keypress) or any other event which opens the menu.\n"
 	"Set verbose parameter to get verbose output\n"
 	"limit parameter is a number of opcodes to run before returning\n"
