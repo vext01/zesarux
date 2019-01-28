@@ -23156,6 +23156,11 @@ void menu_tape_browser_output(MENU_ITEM_PARAMETERS)
 	menu_tape_browser_show(tape_out_file);
 }
 
+void menu_tape_browser_real(MENU_ITEM_PARAMETERS)
+{
+	menu_tape_browser_show(realtape_name);
+}
+
 //menu tape settings
 void menu_tape_settings(MENU_ITEM_PARAMETERS)
 {
@@ -23237,6 +23242,11 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'p');
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Start playing the audio tape");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Start playing the audio tape");
+
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser_real,menu_realtape_inserted_cond,"Tape Bro~~wser");
+		menu_add_item_menu_shortcut(array_menu_tape_settings,'w');
+		menu_add_item_menu_tooltip(array_menu_tape_settings,"Browse Real tape");
+		menu_add_item_menu_ayuda(array_menu_tape_settings,"Browse Real tape");				
 
 
 
