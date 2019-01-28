@@ -15475,15 +15475,15 @@ void menu_ula_advanced(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
         do {
-                menu_add_item_menu_inicial_format(&array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_hidden_top_border,NULL,"Hidden Top Border: %d",screen_invisible_borde_superior);
+                menu_add_item_menu_inicial_format(&array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_hidden_top_border,NULL,"[%2d] Hidden Top Border",screen_invisible_borde_superior);
 
-                menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_visible_top_border,NULL,"Visible Top Border: %d",screen_borde_superior);
-                menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_visible_bottom_border,NULL,"Visible Bottom Border: %d",screen_total_borde_inferior);
+                menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_visible_top_border,NULL,"[%d] Visible Top Border",screen_borde_superior);
+                menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_visible_bottom_border,NULL,"[%d] Visible Bottom Border",screen_total_borde_inferior);
 
-		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_borde_izquierdo,NULL,"Left Border TLength: %d",screen_total_borde_izquierdo/2);
-		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_borde_derecho,NULL,"Right Border TLength: %d",screen_total_borde_derecho/2);
+		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_borde_izquierdo,NULL,"[%d] Left Border TLength",screen_total_borde_izquierdo/2);
+		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_borde_derecho,NULL,"[%d] Right Border TLength",screen_total_borde_derecho/2);
 
-		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_hidden_borde_derecho,NULL,"Right Hidden B. TLength: %d",screen_invisible_borde_derecho/2);
+		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,menu_hardware_advanced_hidden_borde_derecho,NULL,"[%d] Right Hidden B. TLength",screen_invisible_borde_derecho/2);
 
 
                 menu_add_item_menu(array_menu_hardware_advanced,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -18716,31 +18716,33 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
         do {
 
 
-		menu_add_item_menu_inicial_format(&array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_advanced,menu_cond_realvideo,"~~Advanced timing settings");
-                menu_add_item_menu_shortcut(array_menu_ula_settings,'a');
-                menu_add_item_menu_tooltip(array_menu_ula_settings,"Advanced timing settings. Requires realvideo");
-                menu_add_item_menu_ayuda(array_menu_ula_settings,"Change and view some timings for the machine. Requires realvideo");
+		menu_add_item_menu_inicial(&array_menu_ula_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
 
 #ifdef EMULATE_CONTEND
 
                 if (MACHINE_IS_SPECTRUM) {
+                        menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_late_timings,NULL,"ULA ~~timing [%s]",(ula_late_timings.v ? "Late" : "Early"));
+                        menu_add_item_menu_shortcut(array_menu_ula_settings,'t');
+                        menu_add_item_menu_tooltip(array_menu_ula_settings,"Use ULA early or late timings");
+                        menu_add_item_menu_ayuda(array_menu_ula_settings,"Late timings have the contended memory table start one t-state later");
 
-                        menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_contend,NULL,"~~Contended memory: %s", (contend_enabled.v==1 ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_contend,NULL,"[%c] ~~Contended memory", (contend_enabled.v==1 ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_ula_settings,'c');
                         menu_add_item_menu_tooltip(array_menu_ula_settings,"Enable contended memory & ports emulation");
                         menu_add_item_menu_ayuda(array_menu_ula_settings,"Contended memory & ports is the native way of some of the emulated machines");
 
-                        menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_late_timings,NULL,"ULA ~~timing: %s",(ula_late_timings.v ? "Late" : "Early"));
-                        menu_add_item_menu_shortcut(array_menu_ula_settings,'t');
-                        menu_add_item_menu_tooltip(array_menu_ula_settings,"Use ULA early or late timings");
-                        menu_add_item_menu_ayuda(array_menu_ula_settings,"Late timings have the contended memory table start one t-state later");
-				}
+
+
+		
+		
+		}
 
 #endif
 
 			if (MACHINE_IS_SPECTRUM) {
 
-			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_im2_slow,NULL,"ULA IM2 slow: %s",(ula_im2_slow.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_im2_slow,NULL,"[%c] ULA IM2 slow",(ula_im2_slow.v ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_ula_settings,"Add one t-state when an IM2 is fired");
 			menu_add_item_menu_ayuda(array_menu_ula_settings,"It improves visualization on some demos, like overscan, ula128 and scroll2017");
                 }
@@ -18750,7 +18752,7 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_SPECTRUM) {
 
-                        menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_pentagon_timing,NULL,"~~Pentagon timing: %s",(pentagon_timing.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_pentagon_timing,NULL,"[%c] ~~Pentagon timing",(pentagon_timing.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_ula_settings,'p');
                         menu_add_item_menu_tooltip(array_menu_ula_settings,"Enable Pentagon timings");
                         menu_add_item_menu_ayuda(array_menu_ula_settings,"Pentagon does not have contended memory/ports and have different display timings");
@@ -18759,9 +18761,16 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
-			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_rom_paging,NULL,"ROM Paging: %s",(ula_disabled_rom_paging.v==0 ? "Yes" : "No"));
-			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_ram_paging,NULL,"RAM Paging: %s",(ula_disabled_ram_paging.v==0 ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_rom_paging,NULL,"[%c] ROM Paging",(ula_disabled_rom_paging.v==0 ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_ram_paging,NULL,"[%c] RAM Paging",(ula_disabled_ram_paging.v==0 ? 'X' : ' '));
 		}
+
+                menu_add_item_menu(array_menu_ula_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_advanced,menu_cond_realvideo,"~~Advanced timing settings");
+                menu_add_item_menu_shortcut(array_menu_ula_settings,'a');
+                menu_add_item_menu_tooltip(array_menu_ula_settings,"Advanced timing settings. Requires realvideo");
+                menu_add_item_menu_ayuda(array_menu_ula_settings,"Change and view some timings for the machine. Requires realvideo");
 
 
                 menu_add_item_menu(array_menu_ula_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -19884,7 +19893,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
 		}
 
-		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator Spee~~d: %d%%",porcentaje_velocidad_emulador);
+		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator Spee~~d [%d%%]",porcentaje_velocidad_emulador);
 		menu_add_item_menu_shortcut(array_menu_hardware_settings,'d');
 		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Change the emulator Speed");
 		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes all the emulator speed by setting a different interval between display frames. "
@@ -30472,7 +30481,7 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
 
 
-                menu_add_item_menu_inicial_format(&array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_autoloadtape,NULL,"~~Autoload medium: %s", (noautoload.v==0 ? "On" : "Off"));
+                menu_add_item_menu_inicial_format(&array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_autoloadtape,NULL,"[%c] ~~Autoload medium", (noautoload.v==0 ? 'X' : ' '));
                             menu_add_item_menu_shortcut(array_menu_settings_storage,'a');
 
                             menu_add_item_menu_tooltip(array_menu_settings_storage,"Autoload medium and set machine");
@@ -30482,15 +30491,15 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
 
 			if (noautoload.v==0) {
-				menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_settings_fast_autoload,NULL,"~~Fast autoload: %s",
-					(fast_autoload.v ? "Yes" : "No" ) );
+				menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_settings_fast_autoload,NULL,"[%c] ~~Fast autoload",
+					(fast_autoload.v ? 'X' : ' ' ) );
 				menu_add_item_menu_shortcut(array_menu_settings_storage,'f');
 				menu_add_item_menu_tooltip(array_menu_settings_storage,"Do the autoload process at top speed");
 				menu_add_item_menu_ayuda(array_menu_settings_storage,"Do the autoload process at top speed");
 			}
 
 
-                            menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_autoselectfileopt,NULL,"A~~utoselect medium opts: %s", (autoselect_snaptape_options.v==1 ? "On" : "Off"));
+                            menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_tape_autoselectfileopt,NULL,"[%c] A~~utoselect medium opts", (autoselect_snaptape_options.v==1 ? 'X' : ' ' ));
                             menu_add_item_menu_shortcut(array_menu_settings_storage,'u');
                             menu_add_item_menu_tooltip(array_menu_settings_storage,"Detect options for the selected medium file and the needed machine");
                             menu_add_item_menu_ayuda(array_menu_settings_storage,"The emulator uses a database for different included programs "
@@ -30499,6 +30508,7 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
 
 							if (!MACHINE_IS_Z88) {
+                						menu_add_item_menu(array_menu_settings_storage,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 								menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_settings_tape,NULL,"~~Tape");
 								menu_add_item_menu_shortcut(array_menu_settings_storage,'t');
 						}
@@ -31170,24 +31180,24 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_permitir_versiones_desconocidas,NULL,"Allow Unknown ZX versions: %s",(snap_zx_permitir_versiones_desconocidas.v ? "Yes" : "No"));
+		menu_add_item_menu_inicial_format(&array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_permitir_versiones_desconocidas,NULL,"[%c] Allow Unknown ZX versions",(snap_zx_permitir_versiones_desconocidas.v ? 'X' : ' '));
 		menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Allow loading ZX Snapshots of unknown versions");
 		menu_add_item_menu_ayuda(array_menu_settings_snapshot,"This setting permits loading of ZX Snapshots files of unknown versions. "
 					"It can be used to load snapshots saved on higher emulator versions than this one");
 
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_version,NULL,"Save ZX Snapshot version: %d",snap_zx_version_save);
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_version,NULL,"[%d] Save ZX Snapshot version",snap_zx_version_save);
                 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Decide which kind of .ZX version file is saved");
                 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Version 1,2,3 works on ZEsarUX and ZXSpectr\n"
 					"Version 4 works on ZEsarUX V1.3 and higher\n"
 					"Version 5 works on ZEsarUX V2 and higher\n"
 				);
 
-                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_settings_compressed_zsf,NULL,"Compressed ZSF: %s",(zsf_force_uncompressed ? "No" : "Yes") );
+                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_settings_compressed_zsf,NULL,"[%c] Compressed ZSF",(zsf_force_uncompressed ? ' ' : 'X') );
                 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not"); 
                 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not"); 
 
-                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_sna_set_machine,NULL,"Set machine sna load: %s",(sna_setting_no_change_machine.v ? "No" : "Yes"));
+                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_sna_set_machine,NULL,"[%c] Set machine sna load",(sna_setting_no_change_machine.v ? ' ' : 'X'));
                 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"If machine is reset to 48k/128k when loading a .sna snapshot file");
                 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"If machine is reset to 48k/128k when loading a .sna snapshot file.\n"
 					"Disabling it, the .sna snapshot is loaded but the machine is not changed, so it allows to load, for example, a 48k snapshot on a Prism machine, or TBBlue, or any Spectrum machine different than 48/128.\n"
@@ -31199,15 +31209,15 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_exit,NULL,"Autosave on exit: %s",
-			(autosave_snapshot_on_exit.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_exit,NULL,"[%c] Autosave on exit",
+			(autosave_snapshot_on_exit.v ? 'X' : ' ' ) );
 		 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Saves a snapshot with the machine state when exiting ZEsarUX. Saved file is " AUTOSAVE_NAME);
 		 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Saves a snapshot with the machine state when exiting ZEsarUX. Saved file is " AUTOSAVE_NAME);
 
 
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"Autoload on start: %s",
-			(autoload_snapshot_on_start.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"[%c] Autoload on start",
+			(autoload_snapshot_on_start.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Loads the snapshot saved when starting ZEsarUX (previous menu item)");
 		menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Loads the snapshot saved when starting ZEsarUX (previous menu item)");
 
@@ -31216,7 +31226,7 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 		if (autosave_snapshot_on_exit.v || autoload_snapshot_on_start.v) {
                 	char string_autosnap_path[14];
 	                menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,14);
-			menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap path: %s",string_autosnap_path);
+			menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap path [%s]",string_autosnap_path);
 			menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Where to save/load automatic snapshot. If not set, uses current directory");
 			menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Where to save/load automatic snapshot. If not set, uses current directory");
 		}
