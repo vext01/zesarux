@@ -17007,13 +17007,13 @@ void menu_dandanator(MENU_ITEM_PARAMETERS)
 
 
                         menu_tape_settings_trunc_name(dandanator_rom_file_name,string_dandanator_file_shown,13);
-                        menu_add_item_menu_inicial_format(&array_menu_dandanator,MENU_OPCION_NORMAL,menu_dandanator_rom_file,NULL,"~~ROM File: %s",string_dandanator_file_shown);
+                        menu_add_item_menu_inicial_format(&array_menu_dandanator,MENU_OPCION_NORMAL,menu_dandanator_rom_file,NULL,"~~ROM File [%s]",string_dandanator_file_shown);
                         menu_add_item_menu_shortcut(array_menu_dandanator,'r');
                         menu_add_item_menu_tooltip(array_menu_dandanator,"ROM Emulation file");
                         menu_add_item_menu_ayuda(array_menu_dandanator,"ROM Emulation file");
 
 
-                        menu_add_item_menu_format(array_menu_dandanator,MENU_OPCION_NORMAL,menu_storage_dandanator_emulation,menu_storage_dandanator_emulation_cond,"Dandanator ~~Enabled: %s", (dandanator_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_dandanator,MENU_OPCION_NORMAL,menu_storage_dandanator_emulation,menu_storage_dandanator_emulation_cond,"[%c] Dandanator ~~Enabled", (dandanator_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_dandanator,'e');
                         menu_add_item_menu_tooltip(array_menu_dandanator,"Enable dandanator");
                         menu_add_item_menu_ayuda(array_menu_dandanator,"Enable dandanator");
@@ -17308,25 +17308,25 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
 						
 
 menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
-                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
+                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File [%s]",string_trd_file_shown);
                         menu_add_item_menu_shortcut(array_menu_betadisk,'t');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation file");
 
 
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_emulation,menu_storage_trd_emulation_cond,"TRD ~~Emulation: %s", (trd_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_emulation,menu_storage_trd_emulation_cond,"[%c] TRD ~~Emulation", (trd_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_betadisk,'e');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
 
 
-			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_write_protect,NULL,"~~Write protect: %s", (trd_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_write_protect,NULL,"[%c] ~~Write protect", (trd_write_protection.v ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_betadisk,'w');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"If TRD disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"If TRD disk is write protected");
 
 
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_persistent_writes,NULL,"Persistent Writes: %s",(trd_persistent_writes.v ? "Yes" : "No") );
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_persistent_writes,NULL,"[%c] Persistent Writes",(trd_persistent_writes.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_betadisk,"Tells if TRD writes are saved to disk");
 			menu_add_item_menu_ayuda(array_menu_betadisk,"Tells if TRD writes are saved to disk. "
 			"Note: all writing operations to TRD are always saved to internal memory (unless you disable write permission), but this setting "
@@ -17345,13 +17345,13 @@ menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
                         menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"[%c] ~~Betadisk Enabled", (betadisk_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_betadisk,'k');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"Enable betadisk");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Enable betadisk");
 
 
-			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_allow_boot,NULL,"~~Allow Boot: %s", (betadisk_allow_boot_48k.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_allow_boot,NULL,"[%c] ~~Allow Boot", (betadisk_allow_boot_48k.v ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_betadisk,'a');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"Allow autoboot on 48k machines");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Allow autoboot on 48k machines");
@@ -17460,19 +17460,19 @@ void menu_superupgrade(MENU_ITEM_PARAMETERS)
 
 
                         menu_tape_settings_trunc_name(superupgrade_rom_file_name,string_superupgrade_file_shown,13);
-                        menu_add_item_menu_inicial_format(&array_menu_superupgrade,MENU_OPCION_NORMAL,menu_superupgrade_rom_file,NULL,"~~Flash File: %s",string_superupgrade_file_shown);
+                        menu_add_item_menu_inicial_format(&array_menu_superupgrade,MENU_OPCION_NORMAL,menu_superupgrade_rom_file,NULL,"~~Flash File [%s]",string_superupgrade_file_shown);
                         menu_add_item_menu_shortcut(array_menu_superupgrade,'f');
                         menu_add_item_menu_tooltip(array_menu_superupgrade,"Flash Emulation file");
                         menu_add_item_menu_ayuda(array_menu_superupgrade,"Flash Emulation file");
 
 
-                        menu_add_item_menu_format(array_menu_superupgrade,MENU_OPCION_NORMAL,menu_storage_superupgrade_emulation,menu_storage_superupgrade_emulation_cond,"~~Superupgrade Enabled: %s", (superupgrade_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_superupgrade,MENU_OPCION_NORMAL,menu_storage_superupgrade_emulation,menu_storage_superupgrade_emulation_cond,"[%c] ~~Superupgrade Enabled", (superupgrade_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_superupgrade,'s');
                         menu_add_item_menu_tooltip(array_menu_superupgrade,"Enable superupgrade");
                         menu_add_item_menu_ayuda(array_menu_superupgrade,"Enable superupgrade");
 
 
-												menu_add_item_menu_format(array_menu_superupgrade,MENU_OPCION_NORMAL,menu_storage_superupgrade_internal_rom,menu_storage_superupgrade_emulation_cond,"Show ~~internal ROM: %s", (si_superupgrade_muestra_rom_interna() ? "Yes" : "No"));
+												menu_add_item_menu_format(array_menu_superupgrade,MENU_OPCION_NORMAL,menu_storage_superupgrade_internal_rom,menu_storage_superupgrade_emulation_cond,"[%c] Show ~~internal ROM", (si_superupgrade_muestra_rom_interna() ? 'X' : ' '));
 												menu_add_item_menu_shortcut(array_menu_superupgrade,'i');
 												menu_add_item_menu_tooltip(array_menu_superupgrade,"Show internal ROM instead of Superupgrade flash");
 												menu_add_item_menu_ayuda(array_menu_superupgrade,"Show internal ROM instead of Superupgrade flash");
@@ -18062,7 +18062,7 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 			if (MACHINE_IS_SPECTRUM) {
 				menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 				
-				menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_eightbitsimple_enable,menu_storage_ide_if_enabled_cond,"8-bit simple IDE: %s",(eight_bit_simple_ide_enabled.v ? "Yes" : "No") );
+				menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_eightbitsimple_enable,menu_storage_ide_if_enabled_cond,"[%c] 8-bit simple IDE",(eight_bit_simple_ide_enabled.v ? 'X' : ' ') );
 			}
 
 
@@ -18230,7 +18230,7 @@ void menu_esxdos_traps(MENU_ITEM_PARAMETERS)
                 char string_esxdos_traps_root_dir_shown[18];
 
 
-                menu_add_item_menu_inicial_format(&array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_storage_esxdos_traps_emulation,NULL,"~~Enabled: %s", (esxdos_handler_enabled.v ? "Yes" : "No"));
+                menu_add_item_menu_inicial_format(&array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_storage_esxdos_traps_emulation,NULL,"[%c] ~~Enabled", (esxdos_handler_enabled.v ? 'X' : ' ' ));
           menu_add_item_menu_shortcut(array_menu_esxdos_traps,'e');
           menu_add_item_menu_tooltip(array_menu_esxdos_traps,"Enable ESXDOS handler");
           menu_add_item_menu_ayuda(array_menu_esxdos_traps,"Enable ESXDOS handler");
