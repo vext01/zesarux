@@ -17133,13 +17133,13 @@ void menu_kartusho(MENU_ITEM_PARAMETERS)
 
 
                         menu_tape_settings_trunc_name(kartusho_rom_file_name,string_kartusho_file_shown,13);
-                        menu_add_item_menu_inicial_format(&array_menu_kartusho,MENU_OPCION_NORMAL,menu_kartusho_rom_file,NULL,"~~ROM File: %s",string_kartusho_file_shown);
+                        menu_add_item_menu_inicial_format(&array_menu_kartusho,MENU_OPCION_NORMAL,menu_kartusho_rom_file,NULL,"~~ROM File [%s]",string_kartusho_file_shown);
                         menu_add_item_menu_shortcut(array_menu_kartusho,'r');
                         menu_add_item_menu_tooltip(array_menu_kartusho,"ROM Emulation file");
                         menu_add_item_menu_ayuda(array_menu_kartusho,"ROM Emulation file");
 
 
-                        			menu_add_item_menu_format(array_menu_kartusho,MENU_OPCION_NORMAL,menu_storage_kartusho_emulation,menu_storage_kartusho_emulation_cond,"~~Kartusho Enabled: %s", (kartusho_enabled.v ? "Yes" : "No"));
+                        			menu_add_item_menu_format(array_menu_kartusho,MENU_OPCION_NORMAL,menu_storage_kartusho_emulation,menu_storage_kartusho_emulation_cond,"[%c] ~~Kartusho Enabled", (kartusho_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_kartusho,'k');
                         menu_add_item_menu_tooltip(array_menu_kartusho,"Enable kartusho");
                         menu_add_item_menu_ayuda(array_menu_kartusho,"Enable kartusho");
@@ -23179,11 +23179,11 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 
 
 		menu_tape_settings_trunc_name(tapefile,string_tape_load_shown,20);
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_open,NULL,"~~Input: %s",string_tape_load_shown);
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_open,NULL,"~~Input [%s]",string_tape_load_shown);
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'i');
 
 
-		sprintf (string_tape_load_inserted,"Input tape inserted: %s",((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0 ? "Yes" : "No"));
+		sprintf (string_tape_load_inserted,"[%c] Input tape inserted",((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0 ? 'X' : ' '));
 		menu_add_item_menu(array_menu_tape_settings,string_tape_load_inserted,MENU_OPCION_NORMAL,menu_tape_input_insert,menu_tape_input_insert_cond);
 
 		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser,menu_tape_input_insert_cond,"Tape ~~Browser");
@@ -23196,10 +23196,10 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 
 
                 menu_tape_settings_trunc_name(tape_out_file,string_tape_save_shown,20);
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_out_open,NULL,"~~Output: %s",string_tape_save_shown);
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_out_open,NULL,"~~Output [%s]",string_tape_save_shown);
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'o');
 
-                sprintf (string_tape_save_inserted,"Output tape inserted: %s",((tape_loadsave_inserted & TAPE_SAVE_INSERTED)!=0 ? "Yes" : "No"));
+                sprintf (string_tape_save_inserted,"[%c] Output tape inserted",((tape_loadsave_inserted & TAPE_SAVE_INSERTED)!=0 ? 'X' : ' '));
                 menu_add_item_menu(array_menu_tape_settings,string_tape_save_inserted,MENU_OPCION_NORMAL,menu_tape_output_insert,menu_tape_output_insert_cond);
 
 		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_tape_browser_output,menu_tape_output_insert_cond,"Tape B~~rowser");
@@ -23221,19 +23221,19 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 
 
                 menu_tape_settings_trunc_name(realtape_name,string_realtape_shown,23);
-                menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_open,NULL,"~~File: %s",string_realtape_shown);
+                menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_open,NULL,"~~File [%s]",string_realtape_shown);
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'f');
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Audio file to use as the input audio");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Audio file to use as the input audio");
 
 
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_insert,menu_realtape_cond,"Inserted: %s", (realtape_inserted.v==1 ? "Yes" : "No"));
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_insert,menu_realtape_cond,"[%c] Inserted", (realtape_inserted.v==1 ? 'X' : ' '));
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Insert the audio file");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Insert the audio file");
 
 
 
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_play,menu_realtape_inserted_cond,"~~Playing: %s", (realtape_playing.v==1 ? "Yes" : "No"));
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_play,menu_realtape_inserted_cond,"[%c] ~~Playing", (realtape_playing.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'p');
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Start playing the audio tape");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Start playing the audio tape");
