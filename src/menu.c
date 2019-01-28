@@ -17633,13 +17633,13 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
 
                         menu_tape_settings_trunc_name(mmc_file_name,string_mmc_file_shown,17);
-                        menu_add_item_menu_inicial_format(&array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_file,NULL,"~~MMC File: %s",string_mmc_file_shown);
+                        menu_add_item_menu_inicial_format(&array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_file,NULL,"~~MMC File [%s]",string_mmc_file_shown);
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'m');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"MMC Emulation file");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Emulation file");
 
 
-                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_emulation,menu_storage_mmc_emulation_cond,"MMC ~~Emulation: %s", (mmc_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_emulation,menu_storage_mmc_emulation_cond,"[%c] MMC ~~Emulation", (mmc_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'e');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"MMC Emulation");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Emulation");
@@ -17647,13 +17647,13 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
 
 
-                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_write_protect,NULL,"~~Write protect: %s", (mmc_write_protection.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_write_protect,NULL,"[%c] ~~Write protect", (mmc_write_protection.v ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'w');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"If MMC disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"If MMC disk is write protected");
 
 
-			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_persistent_writes,NULL,"Persistent Writes: %s",(mmc_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_persistent_writes,NULL,"[%c] Persistent Writes",(mmc_persistent_writes.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Tells if MMC writes are saved to disk");
 			menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Tells if MMC writes are saved to disk. "
 			"Note: all writing operations to MMC are always saved to internal memory (unless you disable write permission), but this setting "
@@ -17676,13 +17676,13 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_mmc_divmmc,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface,NULL,"~~DIVMMC paging: %s",(divmmc_diviface_enabled.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface,NULL,"[%c] ~~DIVMMC paging",(divmmc_diviface_enabled.v ? 'X' : ' ') );
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'d');
 			menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Enables DIVMMC paging and firmware, and DIVMMC access ports if MMC emulation is enabled");
 			menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Enables DIVMMC paging and firmware, and DIVMMC access ports if MMC emulation is enabled");
 
 			if (divmmc_diviface_enabled.v) {
-				menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface_total_ram,NULL,"DIVMMC RAM: %d KB",get_diviface_total_ram() );
+				menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface_total_ram,NULL,"DIVMMC RAM [%d KB]",get_diviface_total_ram() );
 				menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Changes DIVMMC RAM");
 				menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Changes DIVMMC RAM");
 
@@ -17691,20 +17691,20 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
 			if (divmmc_rom_name[0]==0) sprintf (string_divmmc_rom_file_shown,"Default");
 			else menu_tape_settings_trunc_name(divmmc_rom_name, string_divmmc_rom_file_shown,10);
-			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_divmmc_rom_file,NULL,"DIVMMC EPROM File: %s", string_divmmc_rom_file_shown);
+			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_divmmc_rom_file,NULL,"DIVMMC EPROM File [%s]", string_divmmc_rom_file_shown);
 
 			menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Changes DIVMMC firmware eprom file");
 			menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Changes DIVMMC firmware eprom file");
 
 
 			if (divmmc_diviface_enabled.v) {
-				menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_diviface_eprom_write_jumper,NULL,"Firmware writeable: %s",
-				(diviface_eprom_write_jumper.v ? "Yes" : "No") );
+				menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_diviface_eprom_write_jumper,NULL,"[%c] Firmware writeable",
+				(diviface_eprom_write_jumper.v ? 'X' : ' ') );
 				menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Allows writing to DivIDE/DivMMC eprom");
 				menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Allows writing to DivIDE/DivMMC eprom. Changes are lost when you exit the emulator");
 			}
 
-                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_mmc_ports_emulation,menu_storage_mmc_if_enabled_cond,"DIVMMC ~~ports: %s",(divmmc_mmc_ports_enabled.v ? "Yes" : "No") );
+                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_mmc_ports_emulation,menu_storage_mmc_if_enabled_cond,"[%c] DIVMMC ~~ports",(divmmc_mmc_ports_enabled.v ? 'X' : ' ') );
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'p');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Enables DIVMMC access ports");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Enables DIVMMC access ports. Requires enabling MMC Emulation");
@@ -17713,7 +17713,7 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu(array_menu_mmc_divmmc,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_zxmmc_emulation,menu_storage_mmc_if_enabled_cond,"~~ZXMMC Enabled: %s",(zxmmc_emulation.v ? "Yes" : "No") );
+                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_zxmmc_emulation,menu_storage_mmc_if_enabled_cond,"[%c] ~~ZXMMC Enabled",(zxmmc_emulation.v ? 'X' : ' ') );
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'z');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Access MMC using ZXMMC");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Enables ZXMMC ports to access MMC");
@@ -17976,25 +17976,25 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 
 
                         menu_tape_settings_trunc_name(ide_file_name,string_ide_file_shown,17);
-                        menu_add_item_menu_inicial_format(&array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_file,NULL,"~~IDE File: %s",string_ide_file_shown);
+                        menu_add_item_menu_inicial_format(&array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_file,NULL,"~~IDE File [%s]",string_ide_file_shown);
                         menu_add_item_menu_shortcut(array_menu_ide_divide,'i');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"IDE Emulation file");
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"IDE Emulation file");
 
 
-                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_emulation,menu_storage_ide_emulation_cond,"IDE ~~Emulation: %s", (ide_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_emulation,menu_storage_ide_emulation_cond,"[%c] IDE ~~Emulation", (ide_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_ide_divide,'e');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"IDE Emulation");
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"IDE Emulation");
 
 
-                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_write_protect,NULL,"~~Write protect: %s", (ide_write_protection.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_write_protect,NULL,"[%c] ~~Write protect", (ide_write_protection.v ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_ide_divide,'w');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"If IDE disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"If IDE disk is write protected");
 
 
-			menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_persistent_writes,NULL,"Persistent Writes: %s",(ide_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_persistent_writes,NULL,"[%c] Persistent Writes",(ide_persistent_writes.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_ide_divide,"Tells if IDE writes are saved to disk");
 			menu_add_item_menu_ayuda(array_menu_ide_divide,"Tells if IDE writes are saved to disk. "
 			"Note: all writing operations to IDE are always saved to internal memory (unless you disable write permission), but this setting "
@@ -18022,13 +18022,13 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 
 				menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-	                       menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_divide_diviface,NULL,"~~DIVIDE paging: %s",(divide_diviface_enabled.v ? "Yes" : "No") );
+	                       menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_divide_diviface,NULL,"[%c] ~~DIVIDE paging",(divide_diviface_enabled.v ? 'X' : ' ') );
         	                menu_add_item_menu_shortcut(array_menu_ide_divide,'d');
         	                menu_add_item_menu_tooltip(array_menu_ide_divide,"Enables DIVIDE paging and firmware, and DIVIDE access ports if IDE emulation is enabled");
         	                menu_add_item_menu_ayuda(array_menu_ide_divide,"Enables DIVIDE paging and firmware, and DIVIDE access ports if IDE emulation is enabled");
 
 	                        if (divide_diviface_enabled.v) {
-	                                menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface_total_ram,NULL,"DIVIDE RAM: %d KB",get_diviface_total_ram() );
+	                                menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface_total_ram,NULL,"DIVIDE RAM [%d KB]",get_diviface_total_ram() );
         	                        menu_add_item_menu_tooltip(array_menu_ide_divide,"Changes DIVIDE RAM");
                 	                menu_add_item_menu_ayuda(array_menu_ide_divide,"Changes DIVIDE RAM");
 
@@ -18037,21 +18037,21 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
                		         }
 													 if (divide_rom_name[0]==0) sprintf (string_divide_rom_file_shown,"Default");
 													 else menu_tape_settings_trunc_name(divide_rom_name, string_divide_rom_file_shown,10);
-													 menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_divide_rom_file,NULL,"DIVIDE EPROM File: %s", string_divide_rom_file_shown);
+													 menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_divide_rom_file,NULL,"DIVIDE EPROM File [%s]", string_divide_rom_file_shown);
 
 													 menu_add_item_menu_tooltip(array_menu_ide_divide,"Changes DIVIDE firmware eprom file");
 													 menu_add_item_menu_ayuda(array_menu_ide_divide,"Changes DIVIDE firmware eprom file");
 
 													 if (divide_diviface_enabled.v) {
-										 				menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_diviface_eprom_write_jumper,NULL,"Firmware writeable: %s",
-										 				(diviface_eprom_write_jumper.v ? "Yes" : "No") );
+										 				menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_diviface_eprom_write_jumper,NULL,"[%c] Firmware writeable",
+										 				(diviface_eprom_write_jumper.v ? 'X' : ' ') );
 										 				menu_add_item_menu_tooltip(array_menu_ide_divide,"Allows writing to DivIDE/DivMMC eprom");
 										 				menu_add_item_menu_ayuda(array_menu_ide_divide,"Allows writing to DivIDE/DivMMC eprom. Changes are lost when you exit the emulator");
 										 			}
 
 
 
-	                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_divide_ide_ports_emulation,menu_storage_ide_if_enabled_cond,"DIVIDE ~~ports: %s",(divide_ide_ports_enabled.v ? "Yes" : "No") );
+	                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_divide_ide_ports_emulation,menu_storage_ide_if_enabled_cond,"[%c] DIVIDE ~~ports",(divide_ide_ports_enabled.v ? 'X' : ' ') );
         	                menu_add_item_menu_shortcut(array_menu_ide_divide,'p');
                 	        menu_add_item_menu_tooltip(array_menu_ide_divide,"Enables DIVIDE access ports");
                         	menu_add_item_menu_ayuda(array_menu_ide_divide,"Enables DIVIDE access ports. Requires enabling IDE Emulation");
@@ -18069,7 +18069,7 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
         if (MACHINE_IS_SAM) {
         		menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_atomlite_enable,NULL,"~~Atom Lite enabled: %s",(atomlite_enabled.v ? "Yes" : "No" ) );
+                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_atomlite_enable,NULL,"[%c] ~~Atom Lite",(atomlite_enabled.v ? 'X' : ' ' ) );
                         menu_add_item_menu_shortcut(array_menu_ide_divide,'a');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"Enable Atom Lite");
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"Enable Atom Lite");
