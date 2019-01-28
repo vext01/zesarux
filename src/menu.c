@@ -19460,27 +19460,27 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 			buffer_velocidad[0]=0;
 		}
 
-		menu_add_item_menu_inicial_format(&array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo: %dX %s",cpu_turbo_speed,buffer_velocidad);
+		menu_add_item_menu_inicial_format(&array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo [%dX %s]",cpu_turbo_speed,buffer_velocidad);
 		menu_add_item_menu_tooltip(array_menu_cpu_settings,"Changes only the Z80 speed");
 		menu_add_item_menu_ayuda(array_menu_cpu_settings,"Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. "
 					"Some machines, like ZX-Uno or Chloe, change this setting");
 
 		if (MACHINE_IS_ZXUNO) {
-					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"Deny turbo on boot: %s",
-							(zxuno_deny_turbo_bios_boot.v ? "Yes" : "No") );
+					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"[%c] Deny turbo on boot",
+							(zxuno_deny_turbo_bios_boot.v ? 'X' : ' ') );
 					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
 					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
 	  }
 
 		if (MACHINE_IS_TBBLUE) {
-					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"Deny turbo on ROM: %s",
-							(tbblue_deny_turbo_rom.v ? "Yes" : "No") );
+					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"[%c] Deny turbo on ROM",
+							(tbblue_deny_turbo_rom.v ? 'X' : ' ') );
 					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
 					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
 	  }	  
 
 		if (!MACHINE_IS_Z88) {
-			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_hardware_top_speed,NULL,"~~Top Speed: %s",(top_speed_timer.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_hardware_top_speed,NULL,"[%c] ~~Top Speed",(top_speed_timer.v ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_cpu_settings,'t');
 			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Runs at maximum speed, when menu closed. Not available on Z88");
 			menu_add_item_menu_ayuda(array_menu_cpu_settings,"Runs at maximum speed, using 100% of CPU of host machine, when menu closed. "
@@ -19490,7 +19490,7 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 		}	  
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum core: %s",
+			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum core [%s]",
 			(core_spectrum_uses_reduced.v ? "Reduced" : "Normal") );
 			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Switches between the normal Spectrum core or the reduced core");
 			menu_add_item_menu_ayuda(array_menu_cpu_settings,"When using the Spectrum reduced core, the following features are NOT available or are NOT properly emulated:\n"
@@ -27071,7 +27071,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    GUI ~~style: %s",
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    GUI ~~style [%s]",
 						definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'s');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Change GUI Style");
@@ -30303,7 +30303,7 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_settings_tape,MENU_OPCION_NORMAL,NULL,NULL,"--Standard Tape--");
 
 
-		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_standard_to_real_tape_fallback,NULL,"Fa~~llback to real tape: %s",(standard_to_real_tape_fallback.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_standard_to_real_tape_fallback,NULL,"[%c] Fa~~llback to real tape",(standard_to_real_tape_fallback.v ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_settings_tape,'l');
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"If this standard tape is detected as real tape, reinsert tape as real tape");
 		menu_add_item_menu_ayuda(array_menu_settings_tape,"While loading the standard tape, if a custom loading routine is detected, "
@@ -30311,7 +30311,7 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 					"the machine will be resetted and loaded the tape from the beginning");
 
 
-		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_any_flag,NULL,"A~~ny flag loading: %s", (tape_any_flag_loading.v==1 ? "On" : "Off"));
+		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_any_flag,NULL,"[%c] A~~ny flag loading", (tape_any_flag_loading.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_tape,'n');
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"Enables tape load routine to load without knowing block flag");
 		menu_add_item_menu_ayuda(array_menu_settings_tape,"Enables tape load routine to load without knowing block flag. You must enable it on Tape Copy programs");
@@ -30321,12 +30321,12 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_settings_tape,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_simulate_real_load,NULL,"~~Simulate real load: %s", (tape_loading_simulate.v==1 ? "On" : "Off"));
+			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_simulate_real_load,NULL,"[%c] ~~Simulate real load", (tape_loading_simulate.v==1 ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_settings_tape,'s');
 			menu_add_item_menu_tooltip(array_menu_settings_tape,"Simulate sound and loading stripes");
 			menu_add_item_menu_ayuda(array_menu_settings_tape,"Simulate sound and loading stripes. You can skip simulation pressing any key (and the data is loaded)");
 
-			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_simulate_real_load_fast,menu_tape_simulate_real_load_cond,"Fast Simulate real load: %s", (tape_loading_simulate_fast.v==1 ? "On" : "Off"));
+			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_simulate_real_load_fast,menu_tape_simulate_real_load_cond,"[%c] Fast Simulate real load", (tape_loading_simulate_fast.v==1 ? 'X' : ' '));
                         menu_add_item_menu_tooltip(array_menu_settings_tape,"Simulate sound and loading stripes at faster speed");
                         menu_add_item_menu_ayuda(array_menu_settings_tape,"Simulate sound and loading stripes at faster speed");
 
@@ -30338,13 +30338,13 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_loading_sound,NULL,"Loading sound: %s", (realtape_loading_sound.v==1 ? "Yes" : "No"));
+		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_loading_sound,NULL,"[%c] Loading sound", (realtape_loading_sound.v==1 ? 'X' : ' '));
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"Enable loading sound");
 		menu_add_item_menu_ayuda(array_menu_settings_tape,"Enable loading sound. With sound disabled, the tape is also loaded");
 
 
 
-		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_volumen,NULL,"Volume bit 1 range: %s%d",(realtape_volumen>0 ? "+" : ""),realtape_volumen);
+		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_volumen,NULL,"[%s%d] Volume bit 1 range",(realtape_volumen>0 ? "+" : ""),realtape_volumen);
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"Volume bit 1 starting range value");
 		menu_add_item_menu_ayuda(array_menu_settings_tape,"The input audio value read (considering range from -128 to +127) is treated "
 					"normally as 1 if the value is in range 0...+127, and 0 if it is in range -127...-1. This setting "
@@ -30353,14 +30353,14 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_wave_offset,NULL,"Level Offset: %d",realtape_wave_offset);
+		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_wave_offset,NULL,"[%d] Level Offset",realtape_wave_offset);
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"Apply offset to sound value read");
 		menu_add_item_menu_ayuda(array_menu_settings_tape,"Indicates some value (positive or negative) to sum to the raw value read "
 					"(considering range from -128 to +127) to the input audio value read");
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_accelerate_loaders,NULL,"A~~ccelerate loaders: %s",
-				(accelerate_loaders.v==1 ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_accelerate_loaders,NULL,"[%c] A~~ccelerate loaders",
+				(accelerate_loaders.v==1 ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_settings_tape,'c');
 			menu_add_item_menu_tooltip(array_menu_settings_tape,"Set top speed setting when loading a real tape");
 			menu_add_item_menu_ayuda(array_menu_settings_tape,"Set top speed setting when loading a real tape");
