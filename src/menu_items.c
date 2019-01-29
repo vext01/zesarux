@@ -4821,17 +4821,7 @@ void menu_debug_hexdump_aviso_edit_filezone(zxvision_window *w)
 
 void menu_debug_hexdump_info_subzones(void)
 {
-	/*
-	//Busca la subzona de memoria en la tabla indicada, retorna indice
-int machine_seach_memory_subzone_name(subzone_info *tabla,int address)
-{
-        int i;
-
-        for (i=0;tabla[i].nombre[0]!=0;i++) if (address>=tabla[i].inicio && address<=tabla[i].fin) break;
-
-        return i; 
-}*/
-
+	
 		int x=1;
 		int y=1;
 		int ancho=30;
@@ -4864,13 +4854,6 @@ int machine_seach_memory_subzone_name(subzone_info *tabla,int address)
 		zxvision_draw_window_contents(&ventana);
 
 		zxvision_wait_until_esc(&ventana);
-
-		/*z80_byte tecla;
-
-		do {
-			tecla=zxvision_common_getkey_refresh();
-			zxvision_handle_cursors_pgupdn(&ventana,tecla);
-		} while (tecla!=2);*/
 
         cls_menu_overlay();
 
