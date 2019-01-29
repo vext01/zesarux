@@ -25802,7 +25802,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
+		//menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
 
 
 		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_write_message,NULL,"Write message");
@@ -33966,7 +33966,7 @@ int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
         int inicio_y_dir=1+FILESEL_INICIO_DIR;
 
         if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+zxvision_get_filesel_alto_dir(ventana) && menu_mouse_x<ventana->visible_width-1) {
-		printf ("Mouse en zona de archivos\n");
+		//printf ("Mouse en zona de archivos\n");
 		return 1;
 	}
         return 0;
@@ -34988,23 +34988,23 @@ int menu_filesel_change_zone_if_clicked(zxvision_window *ventana,int *filesel_zo
 	if (!mouse_left) return 0;
 
 	int futura_zona=-1;
-                                        if (menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
-                                                printf ("Pulsado zona File\n");
+    if (menu_mouse_y==2 && menu_mouse_x<ventana->visible_width-1) {
+                //printf ("Pulsado zona File\n");
 						futura_zona=0;
-                                        }
+    }
 
                 //Si en linea de filtros
-                                                        if (menu_mouse_y==zxvision_get_filesel_pos_filters(ventana)  && menu_mouse_x<ventana->visible_width-1) {
-								printf ("Pulsado zona Filtros\n");
+    if (menu_mouse_y==zxvision_get_filesel_pos_filters(ventana)  && menu_mouse_x<ventana->visible_width-1) {
+								//printf ("Pulsado zona Filtros\n");
                                                                 futura_zona=2;
-                                                        }
+    }
 
 
 		//En zona seleccion archivos
-                                                if (zxvision_si_mouse_zona_archivos(ventana)) {	
-							printf ("En zona seleccion archivos\n");
+    if (zxvision_si_mouse_zona_archivos(ventana)) {	
+							//printf ("En zona seleccion archivos\n");
 							futura_zona=1;
-						}
+		}
 
 
 	if (futura_zona!=-1) {
@@ -35064,7 +35064,7 @@ char menu_filesel_cambiar_unidad(void)
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 				//Sacamos la letra del texto mismo
 				char unidad=item_seleccionado.valor_opcion;
-				printf ("Leida unidad de menu: %c\n",unidad);
+				//printf ("Leida unidad de menu: %c\n",unidad);
 				return unidad;
                 }
 
@@ -35078,7 +35078,7 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 {
 								int inicio_y_dir=1+FILESEL_INICIO_DIR;
                             //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
-                            printf ("Dentro lista archivos\n");
+                            //printf ("Dentro lista archivos\n");
 
                             //Ver si linea dentro de rango
                             int linea_final=menu_mouse_y-inicio_y_dir;
@@ -35100,7 +35100,7 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 
 								//ventana->cursor_line -=filesel_linea_seleccionada;
 	
-								printf ("Seleccionamos item %d\n",linea_final);
+								//printf ("Seleccionamos item %d\n",linea_final);
                                 filesel_linea_seleccionada=linea_final;
 
 								ventana->cursor_line +=filesel_linea_seleccionada;
@@ -35108,7 +35108,7 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 								return 1;
                             }
                             else {
-                                printf ("Cursor mas alla del ultimo item\n");
+                                //printf ("Cursor mas alla del ultimo item\n");
                             }
 
 	return 0;
@@ -35397,10 +35397,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//Si se ha movido raton. Asumimos que ha vuelto de leer tecla, tecla=0 y no se ha pulsado mouse
 				if (!tecla && !mouse_left) {
 				 //if (mouse_movido) {
-                    printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
-                    printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
+                    //printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
+                    //printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
                     if (si_menu_mouse_en_ventana() ) {
-                        printf ("dentro ventana\n");
+                        //printf ("dentro ventana\n");
                         //Ver en que zona esta
                         
                         if (zxvision_si_mouse_zona_archivos(ventana)) {
@@ -35411,11 +35411,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                         else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
                             //En la linea de filtros
                             //nada en especial
-                            printf ("En linea de filtros\n");
+                            //printf ("En linea de filtros\n");
                         }
                     }
                 else {
-                    printf ("fuera ventana\n");
+                    //printf ("fuera ventana\n");
                 }
 
         }
