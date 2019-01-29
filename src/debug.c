@@ -1167,6 +1167,7 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 
 	if (!strcasecmp(registro,"opcode")) {
 		*si_cond_opcode=1;
+		//printf ("es opcode\n");
 		//el valor de retorno aqui da igual. se evalua despues
 		return 0;
 	}
@@ -1335,6 +1336,8 @@ unsigned int cpu_core_loop_debug_registro(char *registro,int *si_cond_opcode)
 		//Obtener valor registro
 		unsigned int v_reg=cpu_core_loop_debug_registro(buffer_registro,si_cond_opcode);
 
+		//printf ("es opcode: %d\n",*si_cond_opcode);
+
 		if (v_reg==0xFFFFFFFF) {
 			return 0;
 		}
@@ -1453,6 +1456,8 @@ unsigned int debug_parse_value_register_etc(char *texto,int *si_cond_opcode)
 
 	valor=cpu_core_loop_debug_registro(texto,si_cond_opcode);
 
+	//printf ("es opcode: %d\n",*si_cond_opcode);
+
         if (valor!=0xFFFFFFFF) {
 		return valor;
         }
@@ -1519,7 +1524,8 @@ int debug_breakpoint_condition(char *texto_total,int debug)
                 return 0;
         }
 
-	int si_cond_opcode;
+	int si_cond_left_opcode;
+	int si_cond_right_opcode;
 
 
 	/* Metodo antiguo de obtener parte izquierda y derecha 
@@ -1552,9 +1558,11 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 	}
 
 	//Parte izquierda
-	unsigned int valor_registro=debug_parse_value_register_etc(registro,&si_cond_opcode);
+	unsigned int valor_registro=debug_parse_value_register_etc(registro,&si_cond_left_opcode);
 	//Parte derecha
-	valor=debug_parse_value_register_etc(texto,&si_cond_opcode);
+	valor=debug_parse_value_register_etc(texto,&si_cond_right_opcode);
+
+	//printf ("es opcode: %d %d\n",si_cond_left_opcode,si_cond_right_opcode);
 
 	//TODO: comprobar condicion OPCODE a ver si va
 	if (debug) {
@@ -1572,13 +1580,21 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 
 	switch (operador) {
 		case '=':
-			//Ver si es condicion de opcode, que es especial
-			if (si_cond_opcode) {
+			//Ver si es condicion de opcode en la izquierda del igual, que es especial
+			if (si_cond_left_opcode) {
 				//Ver longitud de valor (o sea, ignorando ceros a la izquierda)
 				//Con esto saber cuantos bytes representa dicho valor de condicion
 				//y comparar tantos bytes desde reg_pc
 				return debug_breakpoint_cond_opcode(valor);
 			}
+
+			//Ver si es condicion de opcode en la derecha del igual, que es especial
+			else if (si_cond_right_opcode) {
+				//Ver longitud de valor (o sea, ignorando ceros a la izquierda)
+				//Con esto saber cuantos bytes representa dicho valor de condicion
+				//y comparar tantos bytes desde reg_pc
+				return debug_breakpoint_cond_opcode(valor_registro);
+			}			
 
 			else {
 				//resto de condiciones

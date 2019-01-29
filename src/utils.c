@@ -9962,6 +9962,128 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 
 }
 
+subzone_info subzone_info_zxuno[]={
+        {0x000000,0x01FFFF,"ZX Spectrum RAM"},
+        {0x020000,0x02FFFF,"ZX Spectrum ROM"},
+        {0x030000,0x033FFF,"ESXDOS ROM"},
+        {0x034000,0x03FFFF,"Unassigned"},
+        {0x040000,0x05FFFF,"divMMC RAM"}, //y spectranet flash rom
+        {0x060000,0x06FFFF,"Chloe EXT"}, //y spectranet ram
+        {0x070000,0x07FFFF,"Chloe DOC"}, //y spectranet ram
+  {0,0,""}
+
+};
+
+subzone_info subzone_info_tbblue[]={
+        {0x000000,0x00FFFF,"ZX Spectrum ROM"},
+        {0x010000,0x013FFF,"ESXDOS ROM"},
+        {0x014000,0x017FFF,"Multiface ROM"},
+        {0x018000,0x01BFFF,"Multiface extra ROM"},
+        {0x01c000,0x01FFFF,"Multiface RAM"},
+        {0x020000,0x03FFFF,"divMMC RAM"},
+        {0x040000,0x05FFFF,"ZX Spectrum RAM"},
+        {0x060000,0x07FFFF,"Extra RAM"},
+        {0x080000,0x0FFFFF,"1st Extra IC RAM"},
+        {0x100000,0x17FFFF,"2nd Extra IC RAM"},
+        {0x180000,0xFFFFFF,"3rd Extra IC RAM"},
+  {0,0,""}
+/*
+    0x000000 – 0x00FFFF (64K) => ZX Spectrum ROM
+    0x010000 – 0x013FFF (16K) => ESXDOS ROM
+    0x014000 – 0x017FFF (16K) => Multiface ROM
+
+    0x018000 – 0x01BFFF (16K) => Multiface extra ROM
+    0x01c000 – 0x01FFFF (16K) => Multiface RAM
+    0x020000 – 0x03FFFF (128K) => divMMC RAM
+    0x040000 – 0x05FFFF (128K) => ZX Spectrum RAM
+    0x060000 – 0x07FFFF (128K) => Extra RAM
+
+    0x080000 – 0x0FFFFF (512K) => 1st Extra IC RAM (if present)
+    0x100000 – 0x17FFFF (512K) => 2nd Extra IC RAM (if present)
+    0x180000 – 0xFFFFFF (512K) => 3rd Extra IC RAM (if present)
+    */  
+};
+
+//Busca la subzona de memoria en la tabla indicada, retorna indice
+int machine_seach_memory_subzone_name(subzone_info *tabla,int address)
+{
+        int i;
+
+        for (i=0;tabla[i].nombre[0]!=0;i++) if (address>=tabla[i].inicio && address<=tabla[i].fin) break;
+
+        return i; 
+}
+
+
+subzone_info *machine_get_memory_subzone_array(int zone, int machine_id)
+{
+
+
+  switch (machine_id) {
+          case MACHINE_ID_TBBLUE:
+                if (zone==0) {
+                        return subzone_info_tbblue;
+
+                }
+          break;
+
+
+        case MACHINE_ID_ZXUNO:
+                if (zone==0) {
+                        return subzone_info_zxuno;
+
+                }
+          break;
+
+  }
+
+        return NULL;
+
+}
+
+
+//Maximo texto: 32 de longitud
+void machine_get_memory_subzone_name(int zone, int machine_id, int address, char *name)
+{
+
+  //Por defecto
+  strcpy(name,"");
+
+        subzone_info *puntero;
+        puntero=machine_get_memory_subzone_array(zone,machine_id);
+        if (puntero==NULL) return;
+
+        int indice=machine_seach_memory_subzone_name(puntero,address);
+        strcpy(name,puntero[indice].nombre);
+
+  /*switch (machine_id) {
+          case MACHINE_ID_TBBLUE:
+                if (zone==0) {
+        
+                        int indice=machine_seach_memory_subzone_name(subzone_info_tbblue,address);
+                        strcpy(name,subzone_info_tbblue[indice].nombre);
+                }
+          break;
+
+
+        case MACHINE_ID_ZXUNO:
+                if (zone==0) {
+                        //Toda la ram
+                        int indice=machine_seach_memory_subzone_name(subzone_info_zxuno,address);
+                        strcpy(name,subzone_info_zxuno[indice].nombre);
+
+                }
+          break;
+
+  }*/
+
+
+
+}
+
+
+
+
 //Maximo texto: 15 de longitud
 
 void machine_get_memory_zone_name(int zone, char *name)

@@ -794,7 +794,7 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 		
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour: %s",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour [%s]",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
@@ -805,7 +805,7 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		else if (debug_show_fired_breakpoints_type==1) strcpy(show_fired_breakpoint_type,"NoPC");
 		else strcpy(show_fired_breakpoint_type,"Never");																	//						   OnlyNonPC
 																															//  01234567890123456789012345678901
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint: %s",show_fired_breakpoint_type);
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint [%s]",show_fired_breakpoint_type);
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired. "
 								"Possible values:\n"
@@ -4609,7 +4609,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 #define DEBUG_HEXDUMP_WINDOW_X 0
 #define DEBUG_HEXDUMP_WINDOW_Y 1
 #define DEBUG_HEXDUMP_WINDOW_ANCHO 32
-#define DEBUG_HEXDUMP_WINDOW_ALTO 22
+#define DEBUG_HEXDUMP_WINDOW_ALTO 23
 
 
 
@@ -4819,7 +4819,32 @@ void menu_debug_hexdump_aviso_edit_filezone(zxvision_window *w)
 	zxvision_draw_window(w);
 }
 
+void menu_debug_hexdump_info_subzones(void)
+{
+	/*
+	//Busca la subzona de memoria en la tabla indicada, retorna indice
+int machine_seach_memory_subzone_name(subzone_info *tabla,int address)
+{
+        int i;
 
+        for (i=0;tabla[i].nombre[0]!=0;i++) if (address>=tabla[i].inicio && address<=tabla[i].fin) break;
+
+        return i; 
+}*/
+
+        subzone_info *puntero;
+        puntero=machine_get_memory_subzone_array(menu_debug_memory_zone,current_machine_type);
+        if (puntero==NULL) return;
+
+        int i;
+
+        for (i=0;puntero[i].nombre[0]!=0;i++) {
+
+			printf ("inicio: %d fin: %d texto: %s\n",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
+			
+		}
+
+}
 
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
@@ -5034,12 +5059,20 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				//menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,memory_zone_text);
 
-				sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
+				sprintf (textoshow," Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 				//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
 
 		
-
+				char subzone_info[33];
+				machine_get_memory_subzone_name(menu_debug_memory_zone,current_machine_type, menu_debug_hexdump_direccion, subzone_info);
+				if (subzone_info[0]!=0) {
+					sprintf(buffer_linea," S~~ubzone info: %s",subzone_info);
+					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+				}
+				else {
+					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+				}
 
 
 //Restaurar comportamiento atajos
@@ -5136,7 +5169,12 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_NUM_FILE_ZONE) {
 							menu_debug_hexdump_aviso_edit_filezone(&ventana);				
 						}
-					break;					
+					break;	
+
+					case 'u':
+						//Ver info subzonas
+						menu_debug_hexdump_info_subzones();
+					break;				
 
 					//case 'l':
 					//	menu_debug_hex_shows_inves_low_ram.v ^=1;
@@ -6434,6 +6472,11 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
     do {
 
 		//Borramos lista de colores con espacios por si hay estos de antes
+
+        //Forzar a mostrar atajos
+        z80_bit antes_menu_writing_inverse_color;
+        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+        menu_writing_inverse_color.v=1;		
 		
 		int i;
 		for (i=0;i<16;i++) zxvision_print_string_defaults_fillspc(&ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
@@ -6492,7 +6535,8 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-
+        //Restaurar comportamiento atajos
+        menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 		zxvision_draw_window_contents(&ventana);
 			

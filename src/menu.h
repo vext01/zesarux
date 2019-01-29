@@ -191,7 +191,7 @@ extern int zxvision_key_not_sent_emulated_mach(void);
 extern void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color);
 extern void zxvision_fill_width_spaces(zxvision_window *w,int y);
 
-#define MAX_F_FUNCTIONS 19
+#define MAX_F_FUNCTIONS 20
 
 enum defined_f_function_ids {
 	//reset, hard-reset, nmi, open menu, ocr, smartload, osd keyboard, exitemulator.
@@ -209,11 +209,12 @@ enum defined_f_function_ids {
 	F_FUNCION_OSDKEYBOARD,
 	F_FUNCION_OSDTEXTKEYBOARD,
     F_FUNCION_SWITCHBORDER,
-	F_FUNCION_RELOADMMC, //15
+	F_FUNCION_SWITCHFULLSCREEN,
+	F_FUNCION_RELOADMMC, //16
 	F_FUNCION_REINSERTTAPE, 
 	F_FUNCION_DEBUGCPU,   
 	F_FUNCION_PAUSE,      
- 	F_FUNCION_EXITEMULATOR
+ 	F_FUNCION_EXITEMULATOR //20
 };
 
 //Define teclas F que se pueden mapear a acciones

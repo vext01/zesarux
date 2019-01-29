@@ -359,7 +359,7 @@ segmento 0 pagina 0
                 //baseconf_shadow_ports |=1;
 
                 //ram
-                baseconf_memory_segments[3]=valor%7;
+                baseconf_memory_segments[3]=valor&7;
                 baseconf_memory_segments_type[3]=1;
 
                 //rom
@@ -369,6 +369,10 @@ segmento 0 pagina 0
 
 
                 puerto_32765=valor;
+
+                baseconf_set_memory_pages();
+
+                //printf ("mapping segun puerto 32765\n");
         }
 
         //Puertos NVRAM. 

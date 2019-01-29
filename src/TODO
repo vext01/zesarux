@@ -14,6 +14,39 @@
 
 -menu: cuando habilita scroll vertical porque no caben opciones, aparece tambien scroll horizontal
 
+-Mostrar sub zona de memory zone: en zxuno por ejemplo, zona de memoria divmmc, Chloe, páginas 128kb etc
+->completar mas subzonas...
+->tecla para mostrar subzonas
+
+-Agregar teclado mk14 a carpeta de imágenes teclado
+
+-Rueda ratón sin multitarea no se mueve muy fino: parece que actualiza tarde la ventana
+
+-En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
+
+
+-Baseconf. corregido
+Esto está mal:
+
+/ram
+baseconf_memory_segments[3]=valor%7;
+baseconf_memory_segments_type[3]=1;
+
+
+Debería ser:
+/ram
+baseconf_memory_segments[3]=valor&7;
+baseconf_memory_segments_type[3]=1;
+
+Luego también después de cambiar puerto 32765 se debería llamar a 
+baseconf_set_memory_pages()
+?
+
+Luego también hay dos tarjetas según:
+Which card is activated, sets bit 4 port # 7FFD.?? -> pendiente
+
+
+
 ----fin zxvision----
 
 

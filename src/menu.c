@@ -173,6 +173,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD},
 	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD},
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER},
+	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN},
 	{"ReloadMMC",F_FUNCION_RELOADMMC},
 	{"ReinsertTape",F_FUNCION_REINSERTTAPE},
 	{"DebugCPU",F_FUNCION_DEBUGCPU},
@@ -15629,14 +15630,14 @@ void menu_hardware_printers(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
         do {
-                menu_add_item_menu_inicial_format(&array_menu_hardware_printers,MENU_OPCION_NORMAL,menu_hardware_printers_zxprinter_enable,NULL,"ZX Printer: %s",(zxprinter_enabled.v==1 ? "On" : "Off"));
+                menu_add_item_menu_inicial_format(&array_menu_hardware_printers,MENU_OPCION_NORMAL,menu_hardware_printers_zxprinter_enable,NULL,"[%c] ZX Printer",(zxprinter_enabled.v==1 ? 'X' : ' ' ));
 		menu_add_item_menu_tooltip(array_menu_hardware_printers,"Enables or disables ZX Printer emulation");
 		menu_add_item_menu_ayuda(array_menu_hardware_printers,"You must set it to off when finishing printing to close generated files");
 
                 char string_bitmapfile_shown[16];
                 menu_tape_settings_trunc_name(zxprinter_bitmap_filename,string_bitmapfile_shown,16);
 
-                menu_add_item_menu_format(array_menu_hardware_printers,MENU_OPCION_NORMAL,menu_hardware_zxprinter_bitmapfile,menu_hardware_zxprinter_cond,"Bitmap file: %s",string_bitmapfile_shown);
+                menu_add_item_menu_format(array_menu_hardware_printers,MENU_OPCION_NORMAL,menu_hardware_zxprinter_bitmapfile,menu_hardware_zxprinter_cond,"Bitmap file [%s]",string_bitmapfile_shown);
 
                 menu_add_item_menu_tooltip(array_menu_hardware_printers,"Sends printer output to image file");
                 menu_add_item_menu_ayuda(array_menu_hardware_printers,"Printer output is saved to a image file. Supports pbm file format, and "
@@ -15648,7 +15649,7 @@ void menu_hardware_printers(MENU_ITEM_PARAMETERS)
 		char string_ocrfile_shown[19];
 		menu_tape_settings_trunc_name(zxprinter_ocr_filename,string_ocrfile_shown,19);
 
-                menu_add_item_menu_format(array_menu_hardware_printers,MENU_OPCION_NORMAL,menu_hardware_zxprinter_ocrfile,menu_hardware_zxprinter_cond,"OCR file: %s",string_ocrfile_shown);
+                menu_add_item_menu_format(array_menu_hardware_printers,MENU_OPCION_NORMAL,menu_hardware_zxprinter_ocrfile,menu_hardware_zxprinter_cond,"OCR file [%s]",string_ocrfile_shown);
 
                 menu_add_item_menu_tooltip(array_menu_hardware_printers,"Sends printer output to text file using OCR method");
                 menu_add_item_menu_ayuda(array_menu_hardware_printers,"Printer output is saved to a text file using OCR method to guess text. "
@@ -16140,8 +16141,8 @@ void menu_hardware_realjoystick_keys(MENU_ITEM_PARAMETERS)
 				menu_print_text_axis(buffer_texto_boton,realjoystick_keys_array[i].button_type,realjoystick_keys_array[i].button);
 
 				z80_byte c=realjoystick_keys_array[i].caracter;
-				if (c>=32 && c<=127) sprintf (buffer_texto,"Button %s sends: %c",buffer_texto_boton,c);
-				else sprintf (buffer_texto,"Button %s sends: (%d)",buffer_texto_boton,c);
+				if (c>=32 && c<=126) sprintf (buffer_texto,"Button %s sends [%c]",buffer_texto_boton,c);
+				else sprintf (buffer_texto,"Button %s sends [(%d)]",buffer_texto_boton,c);
                         }
 
                         else {
@@ -16213,7 +16214,7 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
                                 sprintf(buffer_texto_boton,"None");
                         }
 
-                        sprintf (buffer_texto,"Button for %s: %s",realjoystick_event_names[i],buffer_texto_boton);
+                        sprintf (buffer_texto,"Button for %s [%s]",realjoystick_event_names[i],buffer_texto_boton);
 
 
                         if (i==0) menu_add_item_menu_inicial_format(&array_menu_hardware_realjoystick_event,MENU_OPCION_NORMAL,menu_hardware_realjoystick_event_button,NULL,buffer_texto);
@@ -16306,24 +16307,24 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
 
         menu_espera_no_tecla();
-        menu_dibuja_ventana(REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,"Joystick test");
+        //menu_dibuja_ventana(REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,"Joystick test");
 
-        //Damos un margen para escribir texto de tecla y valores average
-                //menu_escribe_linea_opcion(0,-1,1,"S: Change wave Shape");
+
+
+	//menu_dibuja_ventana(2,6,27,alto,texto_ventana);
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,
+							REALJOYSTICK_TEST_ANCHO-1,REALJOYSTICK_TEST_ALTO+3-2,"Joystick test");
+	zxvision_draw_window(&ventana);			
+
 
 
         z80_byte acumulado;
 
 
-	//int realjoystick_ultimo_indice=-1; //ultimo indice leido
 
-
-
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de onda + texto
-        //set_menu_overlay_function(menu_audio_draw_sound_wave);
-
-                                int valor_contador_segundo_anterior;
+                               int valor_contador_segundo_anterior;
 
                                 valor_contador_segundo_anterior=contador_segundo;
 
@@ -16337,17 +16338,11 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 		menu_cpu_core_loop();
                 acumulado=menu_da_todas_teclas();
 
-		//si no hay multitarea, pausitar
+		//si no hay multitarea, pausar
 		if (menu_multitarea==0) {
 			usleep(20000); //20 ms
-		//	menu_espera_tecla();
-		//	acumulado=0;
 		}
 
-                //esto hara ejecutar esto 10 veces por segundo
-                //if ( (contador_segundo%100) == 0 || menu_multitarea==0) {
-		//
-		//
 
 		//Si es evento de salir, forzar el mostrar la info y luego salir
 		if (realjoystick_last_button>=0 && realjoystick_last_index==REALJOYSTICK_EVENT_ESC_MENU) {
@@ -16355,7 +16350,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			salir_por_boton=1;
 		}
 
-                                                                if ( ((contador_segundo%100) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0 || salir_por_boton) {
+        if ( ((contador_segundo%100) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0 || salir_por_boton) {
                                                                         valor_contador_segundo_anterior=contador_segundo;
                                                                         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
                        if (menu_multitarea==0) menu_refresca_pantalla();
@@ -16369,7 +16364,8 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 			int linea=0;
 			//int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
-				menu_escribe_linea_opcion(linea++,-1,1,"Last joystick button/axis:");
+				//menu_escribe_linea_opcion(linea++,-1,1,"Last joystick button/axis:");
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Last joystick button/axis:");
 				linea++;
 
 
@@ -16392,10 +16388,12 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 				else strcpy(buffer_type,"Unknown");
 
 				sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
 				sprintf (buffer_texto_medio,"Type: %d (%s)",realjoystick_last_type,buffer_type);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
 
 				//type JS_EVENT_BUTTON, JS_EVENT_AXIS
@@ -16411,21 +16409,27 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 	
 				sprintf (buffer_texto_medio,"Value: %6d %s",realjoystick_last_value,fill_bars);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
 				sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
 
 				//realjoystick_ultimo_indice=-1;
 				menu_hardware_realjoystick_test_reset_last_values();
 
+				zxvision_draw_window_contents(&ventana);
+
 
 			}
-                }
+        }
 
-                        //Hay tecla pulsada
-                        if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
+		
+
+        //Hay tecla pulsada
+            if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
                                 int tecla=menu_get_pressed_key();
 
                                                                                                                                 
@@ -16448,11 +16452,9 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
 
-       //restauramos modo normal de texto de menu
-       //set_menu_overlay_function(normal_overlay_texto_menu);
 
-
-        cls_menu_overlay();
+	cls_menu_overlay();
+	zxvision_destroy_window(&ventana);
 
 }
 
@@ -19371,20 +19373,20 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
 					if (!MACHINE_IS_TBBLUE) {
                         menu_tape_settings_trunc_name(multiface_rom_file_name,string_multiface_file_shown,13);
-                        menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_multiface_rom_file,NULL,"~~ROM File: %s",string_multiface_file_shown);
+                        menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_multiface_rom_file,NULL,"~~ROM File [%s]",string_multiface_file_shown);
                         menu_add_item_menu_shortcut(array_menu_multiface,'r');
                         menu_add_item_menu_tooltip(array_menu_multiface,"ROM Emulation file");
                         menu_add_item_menu_ayuda(array_menu_multiface,"ROM Emulation file");
 					}
 
 
-                        menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_hardware_multiface_type,menu_hardware_multiface_type_cond,"~~Type: %s",multiface_types_string[multiface_type]);
+                        menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_hardware_multiface_type,menu_hardware_multiface_type_cond,"~~Type [%s]",multiface_types_string[multiface_type]);
                   menu_add_item_menu_shortcut(array_menu_multiface,'t');
                   menu_add_item_menu_tooltip(array_menu_multiface,"Multiface type. You must first disable it if you want to change type");
                   menu_add_item_menu_ayuda(array_menu_multiface,"Multiface type. You must first disable it if you want to change type");
 
 
-                        			menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_hardware_multiface_enable,NULL,"~~Multiface Enabled: %s", (multiface_enabled.v ? "Yes" : "No"));
+                        			menu_add_item_menu_format(array_menu_multiface,MENU_OPCION_NORMAL,menu_hardware_multiface_enable,NULL,"[%c] ~~Multiface Enabled", (multiface_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_multiface,'m');
                         menu_add_item_menu_tooltip(array_menu_multiface,"Enable multiface");
                         menu_add_item_menu_ayuda(array_menu_multiface,"Enable multiface");
@@ -19605,7 +19607,8 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
 
                   enum defined_f_function_ids accion=defined_f_functions_keys_array[i];
 
-                  sprintf (buffer_texto,"Key F%d : %s",i+1,defined_f_functions_array[accion].texto_funcion);
+					//tabulado todo a misma columna, agregamos un espacio con F entre 1 y 9
+                  sprintf (buffer_texto,"Key F%d %s[%s]",i+1,(i+1<=9 ? " " : ""),defined_f_functions_array[accion].texto_funcion);
 
 
 
@@ -19668,15 +19671,13 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
         do {
 
-        	//Redefine keys
-		menu_add_item_menu_inicial_format(&array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_redefine_keys,NULL,"~~Redefine keys");
-		menu_add_item_menu_shortcut(array_menu_keyboard_settings,'r');
-		menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Redefine one key to another");
-		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Redefine one key to another");
+		menu_add_item_menu_inicial(&array_menu_keyboard_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);	
+
+
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keyboard_issue,menu_hardware_keyboard_issue_cond,"Keyboard ~~Issue %s", (keyboard_issue2.v==1 ? "2" : "3"));
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keyboard_issue,menu_hardware_keyboard_issue_cond,"[%c] Keyboard ~~Issue", (keyboard_issue2.v==1 ? '2' : '3'));
 			menu_add_item_menu_shortcut(array_menu_keyboard_settings,'i');
 			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Type of Spectrum keyboard emulated");
 			menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Changes the way the Spectrum keyboard port returns its value: Issue 3 returns bit 6 off, and Issue 2 has bit 6 on");
@@ -19686,7 +19687,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 		//Soporte para Azerty keyboard
 
 		if (!strcmp(scr_driver_name,"xwindows")) {
-			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_azerty,NULL,"~~Azerty keyboard: %s",(azerty_keyboard.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_azerty,NULL,"[%c] ~~Azerty keyboard",(azerty_keyboard.v ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_keyboard_settings,'a');
 			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Enables azerty keyboard");
 			menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Only used on xwindows driver by now. Enables to use numeric keys on Azerty keyboard, without having "
@@ -19694,8 +19695,8 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_recreated_keyboard,NULL,"ZX Recreated support: %s",
-			(recreated_zx_keyboard_support.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_recreated_keyboard,NULL,"[%c] ZX Recreated support",
+			(recreated_zx_keyboard_support.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Enables ZX Recreated support. Press F1 to see details");
 		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Enables ZX Recreated support. You have to consider the following:\n"
 						"- It supports Game Mode/Layer A on ZX Recreated. QWERTY mode/Layer B works like a normal keyboard\n"
@@ -19713,8 +19714,8 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
 #ifdef COMPILE_SDL
 		if (!strcmp(scr_driver_name,"sdl")) {
-			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_sdl_raw_read,NULL,"SDL Raw keyboard: %s",
-				(sdl_raw_keyboard_read.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_sdl_raw_read,NULL,"[%c] SDL Raw keyboard",
+				(sdl_raw_keyboard_read.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Read the keyboard using raw mode. Needed for ZX Recreated to work");
 				menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Read the keyboard using raw mode. Needed for ZX Recreated to work");
 		}
@@ -19722,12 +19723,12 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_chloe_keyboard,NULL,"Chloe Keyboard: %s",(chloe_keyboard.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_chloe_keyboard,NULL,"[%c] Chloe Keyboard",(chloe_keyboard.v ? 'X' : ' ') );
 		}
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ~~ghosting: %s",
-					(keyboard_matrix_error.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"[%c] Speccy keyb. ~~ghosting",
+					(keyboard_matrix_error.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Enables real keyboard emulation, even with the keyboard matrix error");
 			menu_add_item_menu_shortcut(array_menu_keyboard_settings,'g');
 			menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Enables real keyboard emulation, even with the keyboard matrix error.\n"
@@ -19741,12 +19742,12 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL)  {
 			//keymap solo hace falta con xwindows y sdl. fbdev y cocoa siempre leen en raw como teclado english
 			if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") ) {
-				if (MACHINE_IS_Z88) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Z88 K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_CPC) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"CPC K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_SAM) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SAM K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_QL) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"QL K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				if (MACHINE_IS_Z88) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Z88 K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else if (MACHINE_IS_CPC) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"CPC K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else if (MACHINE_IS_SAM) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SAM K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else if (MACHINE_IS_QL) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"QL K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 
-				else menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Chloe K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Chloe K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 				menu_add_item_menu_shortcut(array_menu_keyboard_settings,'e');
 				menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Keyboard Layout");
 				menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Used on Z88, CPC, Sam and Chloe machines, needed to map symbol keys. "
@@ -19758,8 +19759,13 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
+                menu_add_item_menu(array_menu_keyboard_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-
+        	//Redefine keys
+		menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_redefine_keys,NULL,"~~Redefine keys");
+		menu_add_item_menu_shortcut(array_menu_keyboard_settings,'r');
+		menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Redefine one key to another");
+		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Redefine one key to another");
 
 
 		//Set F keys functions
@@ -20005,39 +20011,39 @@ void menu_hardware_memory_settings(MENU_ITEM_PARAMETERS)
         do {
 
 
-		menu_add_item_menu_inicial_format(&array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_allow_write_rom,menu_cond_allow_write_rom,"Allow ~~write in ROM: %s",
-			(allow_write_rom.v ? "Yes" : "No") );
+		menu_add_item_menu_inicial_format(&array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_allow_write_rom,menu_cond_allow_write_rom,"[%c] Allow ~~write in ROM",
+			(allow_write_rom.v ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_hardware_memory_settings,'w');
 		menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"Allow write in ROM");
 		menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"Allow write in ROM. Only allowed on Spectrum 48k/16k models, ZX80, ZX81, Sam Coupe and Jupiter Ace (and not on Inves)");
 
 		if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
-			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_memory_128k_multiplier,NULL,"RAM size: %d KB",128*mem128_multiplicador);
+			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_memory_128k_multiplier,NULL,"RAM size [%d KB]",128*mem128_multiplicador);
 			menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"Allows setting more than 128k RAM on a 128k type machine");
 			menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"Allows setting more than 128k RAM on a 128k type machine");
 		}
 
 		if (MACHINE_IS_TBBLUE) {
-			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_tbblue_ram,NULL,"RAM size: %d KB",tbblue_get_current_ram() );
+			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_tbblue_ram,NULL,"RAM size [%d KB]",tbblue_get_current_ram() );
 		}
 
 		if (menu_cond_zx8081() ) {
 
                         //int ram_zx8081=(ramtop_zx8081-16383)/1024;
 												int ram_zx8081=zx8081_get_standard_ram();
-                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ramtop,menu_cond_zx8081,"ZX80/81 Standard RAM: %d KB",ram_zx8081);
+                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ramtop,menu_cond_zx8081,"ZX80/81 Standard RAM [%d KB]",ram_zx8081);
                         menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"Standard RAM for the ZX80/81");
                         menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"Standard RAM for the ZX80/81");
 
 
-                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ram_in_8192,menu_cond_zx8081,"ZX80/81 8K RAM in 2000H: %s", (ram_in_8192.v ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ram_in_8192,menu_cond_zx8081,"[%c] ZX80/81 8K RAM in 2000H", (ram_in_8192.v ? 'X' : ' '));
                         menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"8KB RAM at address 2000H");
                         menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"8KB RAM at address 2000H. Used on some wrx games");
 
-                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ram_in_32768,menu_cond_zx8081,"ZX80/81 16K RAM in 8000H: %s", (ram_in_32768.v ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ram_in_32768,menu_cond_zx8081,"[%c] ZX80/81 16K RAM in 8000H", (ram_in_32768.v ? 'X' : ' '));
                         menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"16KB RAM at address 8000H");
                         menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"16KB RAM at address 8000H");
-                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ram_in_49152,menu_cond_zx8081,"ZX80/81 16K RAM in C000H: %s", (ram_in_49152.v ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_zx8081_ram_in_49152,menu_cond_zx8081,"[%c] ZX80/81 16K RAM in C000H", (ram_in_49152.v ? 'X' : ' '));
                         menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"16KB RAM at address C000H");
                         menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"16KB RAM at address C000H. It requires the previous RAM at 8000H");
 
@@ -20046,20 +20052,20 @@ void menu_hardware_memory_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SAM) {
-			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_sam_ram,NULL,"Sam Coupe RAM: %d KB",(sam_memoria_total_mascara==15 ? 256 : 512) );
+			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_sam_ram,NULL,"Sam Coupe RAM [%d KB]",(sam_memoria_total_mascara==15 ? 256 : 512) );
 		}
 
 
 		if (MACHINE_IS_ACE) {
 			//int ram_ace=((ramtop_ace-16383)/1024)+3;
 			int ram_ace=get_ram_ace();
-			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_ace_ramtop,NULL,"Jupiter Ace RAM: %d KB",ram_ace);
+			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_ace_ramtop,NULL,"Jupiter Ace RAM [%d KB]",ram_ace);
 		}
 
 
 
       if (MACHINE_IS_SPECTRUM_48) {
-                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_memory_refresh,NULL,"RAM Refresh emulation: %s", (machine_emulate_memory_refresh==1 ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_memory_refresh,NULL,"[%c] RAM Refresh emulation", (machine_emulate_memory_refresh==1 ? 'X' : ' '));
                         menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"Enable RAM R~~efresh emulation");
                         menu_add_item_menu_shortcut(array_menu_hardware_memory_settings,'e');
                         menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"RAM Refresh emulation consists, in a real Spectrum 48k, "
@@ -26068,7 +26074,7 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
                 }
 
 
-                        menu_add_item_menu_inicial_format(&array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_program,NULL,"~~Speech program: %s",string_filterprogram_shown);
+                        menu_add_item_menu_inicial_format(&array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_program,NULL,"~~Speech program [%s]",string_filterprogram_shown);
 			menu_add_item_menu_shortcut(array_menu_textspeech,'s');
         	        menu_add_item_menu_tooltip(array_menu_textspeech,"Specify which program to send generated text");
         	        menu_add_item_menu_ayuda(array_menu_textspeech,"Specify which program to send generated text. Text is send to the program "
@@ -26080,15 +26086,16 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
 
 			if (textspeech_filter_program!=NULL) {
 
-				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_stop_filter_program,NULL,"Stop program: %s",string_stop_filterprogram_shown);
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_stop_filter_program,NULL,"Stop program [%s]",string_stop_filterprogram_shown);
 
         	                menu_add_item_menu_tooltip(array_menu_textspeech,"Specify a path to a program or script in charge of stopping the running speech program");
                 	        menu_add_item_menu_ayuda(array_menu_textspeech,"Specify a path to a program or script in charge of stopping the running speech program. If not specified, the current speech script can't be stopped");
 
 
+				menu_add_item_menu(array_menu_textspeech,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_timeout,NULL,"~~Timeout no enter: %d",textspeech_timeout_no_enter);
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_timeout,NULL,"[%d] ~~Timeout no enter",textspeech_timeout_no_enter);
 				menu_add_item_menu_shortcut(array_menu_textspeech,'t');
 				menu_add_item_menu_tooltip(array_menu_textspeech,"After some seconds the text will be sent to the Speech program when no "
 						"new line is sent");
@@ -26097,20 +26104,20 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
 
 
 
-				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_program_wait,NULL,"~~Wait program to exit: %s",(textspeech_filter_program_wait.v ? "Yes" : "No") );
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_program_wait,NULL,"[%c] ~~Wait program to exit",(textspeech_filter_program_wait.v ? 'X' : ' ' ) );
 				menu_add_item_menu_shortcut(array_menu_textspeech,'w');
                 	        menu_add_item_menu_tooltip(array_menu_textspeech,"Wait and pause the emulator until the Speech program returns");
                         	menu_add_item_menu_ayuda(array_menu_textspeech,"Wait and pause the emulator until the Speech program returns");
 
 
-				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_send_menu,NULL,"Also send ~~menu: %s",(textspeech_also_send_menu.v ? "Yes" : "No" ));
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_send_menu,NULL,"[%c] Also send ~~menu",(textspeech_also_send_menu.v ? 'X' : ' ' ));
 				menu_add_item_menu_shortcut(array_menu_textspeech,'m');
 				menu_add_item_menu_tooltip(array_menu_textspeech,"Also send text menu entries to Speech program");
 				menu_add_item_menu_ayuda(array_menu_textspeech,"Also send text menu entries to Speech program");
 
 #ifdef COMPILE_STDOUT
 				if (menu_cond_stdout() ) {
-							menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_display_stdout_send_speech_debug,NULL,"Also send debug messages: %s", (scrstdout_also_send_speech_debug_messages.v==1 ? "On" : "Off"));
+							menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_display_stdout_send_speech_debug,NULL,"[%c] Also send debug messages", (scrstdout_also_send_speech_debug_messages.v==1 ? 'X' : ' '));
 							menu_add_item_menu_tooltip(array_menu_textspeech,"Also send debug messages to speech");
 							menu_add_item_menu_ayuda(array_menu_textspeech,"Also send debug messages to speech");
 
@@ -27195,7 +27202,7 @@ void menu_chardetection_settings_stdout_line_width(MENU_ITEM_PARAMETERS)
 
         sprintf (string_width,"%d",chardetect_line_width);
 
-        menu_ventana_scanf("Line width (0=no limit)",string_width,3);
+        menu_ventana_scanf("Line width 0=no limit",string_width,3);
 
         width=parse_string_to_number(string_width);
 
@@ -27287,7 +27294,7 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-                        menu_add_item_menu_inicial_format(&array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_trap_rst16,NULL,"~~Trap print: %s", (chardetect_printchar_enabled.v==1 ? "On" : "Off"));
+                        menu_add_item_menu_inicial_format(&array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_trap_rst16,NULL,"[%c] ~~Trap print", (chardetect_printchar_enabled.v==1 ? 'X' : ' ' ));
 			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'t');
                         menu_add_item_menu_tooltip(array_menu_chardetection_settings,"It enables the emulator to show the text sent to standard rom print call routines and non standard, generated from some games, specially text adventures");
                         menu_add_item_menu_ayuda(array_menu_chardetection_settings,"It enables the emulator to show the text sent to standard rom print call routines and generated from some games, specially text adventures. "
@@ -27297,23 +27304,25 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 			if (chardetect_printchar_enabled.v) {
 
 
-	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap,NULL,"~~Second trap address: %d",chardetect_second_trap_char_dir);
+	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap,NULL,"~~Second trap address [%d]",chardetect_second_trap_char_dir);
 				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'s');
         	                menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Address of the second print routine");
                 	        menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Address of the second print routine");
 
-	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_sum32,NULL,"Second trap s~~um 32: %s",(chardetect_second_trap_sum32.v ? "Yes" : "No"));
+	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_sum32,NULL,"[%c] Second trap s~~um 32",(chardetect_second_trap_sum32.v ? 'X' : ' '));
 				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'u');
 				menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Sums 32 to the ASCII value read");
 				menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Sums 32 to the ASCII value read");
 
 
-        	                menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_third_trap,NULL,"T~~hird trap address: %d",chardetect_third_trap_char_dir);
+        	                menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_third_trap,NULL,"T~~hird trap address [%d]",chardetect_third_trap_char_dir);
 				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'h');
                 	        menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Address of the third print routine");
                         	menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Address of the third print routine");
 
-                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_width,NULL,"Line ~~width: %d",chardetect_line_width);
+       menu_add_item_menu(array_menu_chardetection_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);							
+
+                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_width,NULL,"[%d] Line ~~width",chardetect_line_width);
 			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'w');
 			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Line width");
 			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Line width. Setting 0 means no limit, so "
@@ -27321,13 +27330,13 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 						"key is pressed or when timeout no enter no text to speech is reached\n");
 
 
-                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_witdh_space,NULL,"Line width w~~ait space: %s",(chardetect_line_width_wait_space.v==1 ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_witdh_space,NULL,"[%c] Line width w~~ait space",(chardetect_line_width_wait_space.v==1 ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'a');
 			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Wait for a space before jumping to a new line");
 			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Wait for a space before jumping to a new line");
 
 
-                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_chardetect_char_filter,NULL,"Char ~~filter: %s",chardetect_char_filter_names[chardetect_char_filter]);
+                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_chardetect_char_filter,NULL,"Char ~~filter [%s]",chardetect_char_filter_names[chardetect_char_filter]);
 			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'f');
 			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Send characters to an internal filter");
 			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Send characters to an internal filter");
@@ -27339,7 +27348,7 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
 
 
-			menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_enable,NULL,"Enable 2nd trap ~~detection: %s",(chardetect_detect_char_enabled.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_enable,NULL,"[%c] Enable 2nd trap ~~detection",(chardetect_detect_char_enabled.v ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'d');
 			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Enable char detection method to guess Second Trap address");
 			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Enable char detection method to guess Second Trap address");
@@ -27351,7 +27360,7 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 			if (chardetect_detect_char_enabled.v) {
 
 
-	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_trap_detection,NULL,"Detect ~~routine: %s",trap_char_detection_routines_texto[trap_char_detection_routine_number]);
+	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_trap_detection,NULL,"Detect ~~routine [%s]",trap_char_detection_routines_texto[trap_char_detection_routine_number]);
 				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'r');
         			 menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Selects method for second trap character routine detection");
 	                        menu_add_item_menu_ayuda(array_menu_chardetection_settings,"This function enables second trap character routine detection for programs "
@@ -27366,13 +27375,13 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
 
         	                if (trap_char_detection_routine_number!=TRAP_CHAR_DETECTION_ROUTINE_AUTOMATIC && trap_char_detection_routine_number!=TRAP_CHAR_DETECTION_ROUTINE_NONE)  {
-                        	        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_range_min,NULL,"Detection routine mi~~n: %d",chardetect_second_trap_detect_pc_min);
+                        	        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_range_min,NULL,"Detection routine mi~~n [%d]",chardetect_second_trap_detect_pc_min);
 					menu_add_item_menu_shortcut(array_menu_chardetection_settings,'n');
 					menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Lower address limit to find character routine");
 					menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Lower address limit to find character routine");
 
 
-                	                menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_range_max,NULL,"Detection routine ma~~x: %d",chardetect_second_trap_detect_pc_max);
+                	                menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_range_max,NULL,"Detection routine ma~~x [%d]",chardetect_second_trap_detect_pc_max);
 					menu_add_item_menu_shortcut(array_menu_chardetection_settings,'x');
 					menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Higher address limit to find character routine");
 					menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Higher address limit to find character routine");
@@ -29790,9 +29799,9 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 		return;
 	}
 
-	int scanf_x=2;
+	int scanf_x=1;
 	int scanf_y=10;
-	int scanf_ancho=28;
+	int scanf_ancho=30;
 	int scanf_alto=3;
 
         menu_espera_no_tecla();
@@ -31771,6 +31780,10 @@ void menu_process_f_functions_by_action(int accion)
 		case F_FUNCION_SWITCHBORDER:
 			if (menu_interface_border_cond() ) menu_interface_border(0);
 		break;
+
+		case F_FUNCION_SWITCHFULLSCREEN:
+			menu_interface_fullscreen(0);
+		break;		
 
 		case F_FUNCION_RELOADMMC:
 			mmc_read_file_to_memory();

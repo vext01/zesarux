@@ -523,6 +523,17 @@ struct s_tecla_redefinida
 
 typedef struct s_tecla_redefinida tecla_redefinida;
 
+
+//Tabla para subzonas. Se usa en array y un elemento de 0,0,"" indica el ultimo elemento
+struct s_subzone_info
+{
+	int inicio;
+	int fin;
+	char nombre[33];
+};
+
+typedef struct s_subzone_info subzone_info;
+
 #define MAX_TECLAS_REDEFINIDAS 10
 extern tecla_redefinida lista_teclas_redefinidas[];
 
@@ -597,6 +608,8 @@ extern z80_byte *machine_get_memory_zone_pointer(int zone, int address);
 extern unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite);
 extern void machine_get_memory_zone_name(int zone, char *name);
 extern int machine_get_next_available_memory_zone(int zone);
+extern void machine_get_memory_subzone_name(int zone, int machine_id, int address, char *name);
+extern subzone_info *machine_get_memory_subzone_array(int zone, int machine_id);
 
 extern void util_delete(char *filename);
 
