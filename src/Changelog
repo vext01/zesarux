@@ -16,6 +16,7 @@ Added CPC machines support to ZSF snapshots
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now
 -running in verbose or limit mode, or cpu-step command, can now update the display inmediately (having real video setting on)
+-added commands: get-cpu-frequency, get-cpu-turbo-speed, get-tstates, get-tstates-partial, reset-tstates-partial
 
 Improved vu-meters: high volumes are shown in red
 Improved sprite viewer: you can view sprites up to 512x512

@@ -19459,7 +19459,7 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 		char buffer_velocidad[16];
 
 		if (CPU_IS_Z80 && !MACHINE_IS_Z88) {
-			int cpu_hz=screen_testados_total*50;
+			int cpu_hz=get_cpu_frequency();
 			int cpu_khz=cpu_hz/1000;
 
 			//Obtener decimales

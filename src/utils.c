@@ -13200,3 +13200,10 @@ int util_get_available_drives(char *texto)
 
 	return unidades_detectadas;
 }
+
+int get_cpu_frequency(void)
+{
+        int cpu_hz=screen_testados_total*50;
+
+        return cpu_hz;
+}

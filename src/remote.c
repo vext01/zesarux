@@ -726,6 +726,8 @@ struct s_items_ayuda items_ayuda[]={
 	{"get-breakpoints-optimized",NULL,"[index] [items]","Show which breakpoints are optimized or not. If set index, returns item at index. If set items, returns number of items list starting from index parameter"},	
 	  {"get-buildnumber",NULL,NULL,"Shows build number. Useful on beta version, this build number is the compilation date of ZEsarUX in Unix time format"},
 	{"get-cpu-core-name",NULL,NULL,"Get emulation cpu core name"},
+	{"get-cpu-frequency",NULL,NULL,"Get cpu frequency in HZ"},
+	{"get-cpu-turbo-speed",NULL,NULL,"Get cpu turbo speed"},
   {"get-crc32",NULL,"start_address length","Calculate crc32 checksum starting at address for defined length. It uses current memory zone"},
   {"get-current-machine","|gcm",NULL,"Returns current machine name"},
 	{"get-current-memory-zone","|gcmz",NULL,"Returns current memory zone"},
@@ -3539,6 +3541,15 @@ char buffer_retorno[2048];
 		if (cpu_core_loop_name!=NULL) escribir_socket(misocket,cpu_core_loop_name);
 	}
 
+	else if (!strcmp(comando_sin_parametros,"get-cpu-frequency")) {
+		escribir_socket_format(misocket,"%d",get_cpu_frequency() );
+	}
+
+	else if (!strcmp(comando_sin_parametros,"get-cpu-turbo-speed")) {
+		escribir_socket_format(misocket,"%d",cpu_turbo_speed );
+	}
+
+	
 
   else if (!strcmp(comando_sin_parametros,"get-crc32")) {
 
