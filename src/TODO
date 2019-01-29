@@ -10,13 +10,9 @@
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
 
--acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redefinir joystick y poco mas
+-acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redefinir joystick (estas ya está) y poco mas
 
 -menu: cuando habilita scroll vertical porque no caben opciones, aparece tambien scroll horizontal
-
--Mostrar sub zona de memory zone: en zxuno por ejemplo, zona de memoria divmmc, Chloe, páginas 128kb etc
-->completar mas subzonas...
-->tecla para mostrar subzonas
 
 -Agregar teclado mk14 a carpeta de imágenes teclado
 

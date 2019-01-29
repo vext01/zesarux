@@ -152,6 +152,7 @@ extern void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *c
 extern void zxvision_print_char_simple(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,z80_byte caracter);
 extern void zxvision_draw_window_contents(zxvision_window *w);
 extern void zxvision_draw_window_contents_no_speech(zxvision_window *ventana);
+extern void zxvision_wait_until_esc(zxvision_window *w);
 
 extern void zxvision_set_offset_x(zxvision_window *w,int offset_x);
 extern void zxvision_set_offset_y(zxvision_window *w,int offset_y);

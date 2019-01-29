@@ -10004,6 +10004,20 @@ subzone_info subzone_info_tbblue[]={
     */  
 };
 
+
+subzone_info subzone_info_tsconf_fmaps[]={
+        {0x000000,0x0001ff,"CRAM: Color Palette RAM"},
+        {0x000200,0x0003ff,"SFILE: Sprite Descriptors"},
+
+/*
+TSConf fmaps
+#000	000x	CRAM	Color Palette RAM, 256 cells 16 bit wide, 16 bit access
+#200	001x	SFILE	Sprite Descriptors, 85 cells 48 bit wide, 16 bit access
+#400	0100	REGS	TS-Conf Registers, 8 bit access, adressing is the same as by #nnAF port
+*/
+  {0,0,""}
+};
+
 //Busca la subzona de memoria en la tabla indicada, retorna indice
 int machine_seach_memory_subzone_name(subzone_info *tabla,int address)
 {
@@ -10033,7 +10047,13 @@ subzone_info *machine_get_memory_subzone_array(int zone, int machine_id)
                         return subzone_info_zxuno;
 
                 }
-          break;
+        break;
+
+        case MACHINE_ID_TSCONF:
+                if (zone==5) {
+                        return subzone_info_tsconf_fmaps;
+                }
+        break;
 
   }
 
@@ -10055,29 +10075,6 @@ void machine_get_memory_subzone_name(int zone, int machine_id, int address, char
 
         int indice=machine_seach_memory_subzone_name(puntero,address);
         strcpy(name,puntero[indice].nombre);
-
-  /*switch (machine_id) {
-          case MACHINE_ID_TBBLUE:
-                if (zone==0) {
-        
-                        int indice=machine_seach_memory_subzone_name(subzone_info_tbblue,address);
-                        strcpy(name,subzone_info_tbblue[indice].nombre);
-                }
-          break;
-
-
-        case MACHINE_ID_ZXUNO:
-                if (zone==0) {
-                        //Toda la ram
-                        int indice=machine_seach_memory_subzone_name(subzone_info_zxuno,address);
-                        strcpy(name,subzone_info_zxuno[indice].nombre);
-
-                }
-          break;
-
-  }*/
-
-
 
 }
 

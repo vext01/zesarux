@@ -4832,17 +4832,50 @@ int machine_seach_memory_subzone_name(subzone_info *tabla,int address)
         return i; 
 }*/
 
+		int x=1;
+		int y=1;
+		int ancho=30;
+		int alto=22;
+
+
+
         subzone_info *puntero;
         puntero=machine_get_memory_subzone_array(menu_debug_memory_zone,current_machine_type);
         if (puntero==NULL) return;
 
+		zxvision_window ventana;
+
+                zxvision_new_window(&ventana,x,y,ancho,alto,
+                                                        64,alto-2,"Memory subzones");
+
+                zxvision_draw_window(&ventana);		
+
         int i;
 
+		char buffer_linea[64];
         for (i=0;puntero[i].nombre[0]!=0;i++) {
 
-			printf ("inicio: %d fin: %d texto: %s\n",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
+			//printf ("inicio: %d fin: %d texto: %s\n",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
+			sprintf (buffer_linea,"%06X-%06X %s",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
+			zxvision_print_string_defaults_fillspc(&ventana,1,i,buffer_linea);
 			
 		}
+
+		zxvision_draw_window_contents(&ventana);
+
+		zxvision_wait_until_esc(&ventana);
+
+		/*z80_byte tecla;
+
+		do {
+			tecla=zxvision_common_getkey_refresh();
+			zxvision_handle_cursors_pgupdn(&ventana,tecla);
+		} while (tecla!=2);*/
+
+        cls_menu_overlay();
+
+                zxvision_destroy_window(&ventana);					
+
 
 }
 
