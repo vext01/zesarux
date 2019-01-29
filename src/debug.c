@@ -1564,7 +1564,6 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 
 	//printf ("es opcode: %d %d\n",si_cond_left_opcode,si_cond_right_opcode);
 
-	//TODO: comprobar condicion OPCODE a ver si va
 	if (debug) {
 		debug_printf (VERBOSE_DEBUG,"Parsing two members of condition. Left=%u Right=%u",valor_registro,valor);
 	}

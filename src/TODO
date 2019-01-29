@@ -14,12 +14,12 @@
 
 -menu: cuando habilita scroll vertical porque no caben opciones, aparece tambien scroll horizontal
 
--Agregar teclado mk14 a carpeta de imágenes teclado
-
 -Rueda ratón sin multitarea no se mueve muy fino: parece que actualiza tarde la ventana
 
--En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
+----fin zxvision----
 
+
+-En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 
 -Baseconf. corregido
 Esto está mal:
@@ -40,11 +40,6 @@ baseconf_set_memory_pages()
 
 Luego también hay dos tarjetas según:
 Which card is activated, sets bit 4 port # 7FFD.?? -> pendiente
-
-
-
-----fin zxvision----
-
 
 -detector de silencio solo activo por defecto para algunos como alsa y dsp sin threads
 -Quizá clicks de sonido en Windows se debe a reseteo de buffer que hago para compensar delay? Creo que no
