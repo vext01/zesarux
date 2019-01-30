@@ -803,10 +803,7 @@ void cpu_core_loop_spectrum(void)
 
 						//Caso Inves. Hacer poke (I*256+R) con 255
 						if (MACHINE_IS_INVES) {
-							//z80_byte reg_r_total=(reg_r&127) | (reg_r_bit7 &128);
-
-							//Se usan solo los 7 bits bajos del registro R
-							z80_byte reg_r_total=(reg_r&127);
+							z80_byte reg_r_total=(reg_r&127) | (reg_r_bit7 &128);
 
 							z80_int dir=reg_i*256+reg_r_total;
 
