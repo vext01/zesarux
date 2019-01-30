@@ -18,6 +18,7 @@
 
 ----fin zxvision----
 
+-corregir t-estados-parcial: en cada core, mover el debug_get_t_stados_parcial_post(); al final de la funcion core
 
 -En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 
