@@ -24,3 +24,6 @@ Renegade: plays slow, game hangs after losing one life
 
 * Games that flicker due to start of scanline
 Taipai
+
+* Games reseting or bad behaviour due to the Inves interrupt bug
+Ranarama (resets) - Erbe Edition, Players premiere edition
