@@ -67,6 +67,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Robin Verhagen-Guest, helping me with the MB02/Next DMA
 -Gari Biasillo, for reporting bugs in the esxdos handler
 -Thomas Busse, for bug reporting and the fast debug parser proposal
+-Jose Luis Rodriguez Godoy, testing Inves features and reporting bugs
 
 -Everyone at several forums about Spectrum, ZX80, ZX81, Z88, Raspberry Pi, etc for all the suggestions to my emulator
 -Everyone who test the beta and stable versions of the emulator and report bugs
