@@ -24800,27 +24800,27 @@ void menu_debug_input_file_keyboard(MENU_ITEM_PARAMETERS)
 
                 char string_input_file_keyboard_shown[16];
                 menu_tape_settings_trunc_name(input_file_keyboard_name,string_input_file_keyboard_shown,16);
-                menu_add_item_menu_inicial_format(&array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard,NULL,"Spool file: %s",string_input_file_keyboard_shown);
+                menu_add_item_menu_inicial_format(&array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard,NULL,"Spool file [%s]",string_input_file_keyboard_shown);
 
 
-                menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_insert,menu_input_file_keyboard_cond,"Spool file inserted: %s",(input_file_keyboard_inserted.v ? "Yes" : "No" ));
+                menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_insert,menu_input_file_keyboard_cond,"[%c] Spool file inserted",(input_file_keyboard_inserted.v ? 'X' : ' ' ));
                 if (input_file_keyboard_inserted.v) {
 
-					menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_play,NULL,"Spool file playing: %s",(input_file_keyboard_playing.v ? "Yes" : "No" ));	
+					menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_play,NULL,"[%c] Spool file playing",(input_file_keyboard_playing.v ? 'X' : ' ' ));	
 
 
-			menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_turbo,menu_input_file_keyboard_turbo_cond,"Turbo mode: %s",(input_file_keyboard_turbo.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_turbo,menu_input_file_keyboard_turbo_cond,"[%c] Turbo mode",(input_file_keyboard_turbo.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_input_file_keyboard,"Allow turbo mode on Spectrum models");
 			menu_add_item_menu_ayuda(array_menu_input_file_keyboard,"Allow turbo mode on Spectrum models. It traps calls to function ROMS when keyboard is read");
 
 
 			if (input_file_keyboard_turbo.v==0) {
 
-	                        menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_delay,NULL,"Key length: %d ms",input_file_keyboard_delay*1000/50);
+	                        menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_delay,NULL,"[%d ms] Key length",input_file_keyboard_delay*1000/50);
         	                menu_add_item_menu_tooltip(array_menu_input_file_keyboard,"Length of every key pressed");
                 	        menu_add_item_menu_ayuda(array_menu_input_file_keyboard,"I recommend 100 ms for entering lines on Spectrum BASIC. I also suggest to send some manual delays, using unhandled character, like \\, to assure entering lines is correct ");
 
-	                        menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_send_pause,NULL,"Delay after every key: %s",(input_file_keyboard_send_pause.v==1 ? "Yes" : "No") );
+	                        menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_send_pause,NULL,"[%c] Delay after every key",(input_file_keyboard_send_pause.v==1 ? 'X' : ' ') );
         	                menu_add_item_menu_tooltip(array_menu_input_file_keyboard,"Send or not a delay of the same duration after every key");
                 	        menu_add_item_menu_ayuda(array_menu_input_file_keyboard,"I recommend enabling this for entering lines on Spectrum BASIC");
 
@@ -24926,7 +24926,7 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
                 char string_transactionlog_shown[18];
                 menu_tape_settings_trunc_name(transaction_log_filename,string_transactionlog_shown,18);
 
-                menu_add_item_menu_inicial_format(&array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_file,NULL,"Log file: %s",string_transactionlog_shown );
+                menu_add_item_menu_inicial_format(&array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_file,NULL,"Log file [%s]",string_transactionlog_shown );
 
 
                 if (transaction_log_filename[0]!=0) {
