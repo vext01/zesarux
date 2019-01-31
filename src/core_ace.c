@@ -56,7 +56,6 @@ z80_byte byte_leido_core_ace;
 void cpu_core_loop_ace(void)
 {
   
-                debug_get_t_stados_parcial_post();
                 debug_get_t_stados_parcial_pre();
 
 
@@ -432,6 +431,7 @@ void cpu_core_loop_ace(void)
 
                 }
 
+                debug_get_t_stados_parcial_post();
 
 }
 

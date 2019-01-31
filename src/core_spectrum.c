@@ -252,7 +252,6 @@ tiempo de proceso en 10 segundos: user	0m1.239s
 void cpu_core_loop_spectrum(void)
 {
 
-		debug_get_t_stados_parcial_post();
 		debug_get_t_stados_parcial_pre();
 
 		timer_check_interrupt();
@@ -845,5 +844,6 @@ void cpu_core_loop_spectrum(void)
 			}
 
                 }
+		debug_get_t_stados_parcial_post();
 
 }

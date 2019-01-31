@@ -55,7 +55,6 @@ z80_byte byte_leido_core_sam;
 void cpu_core_loop_sam(void)
 {
 
-		debug_get_t_stados_parcial_post();
 		debug_get_t_stados_parcial_pre();
   
 		timer_check_interrupt();
@@ -467,6 +466,7 @@ void cpu_core_loop_sam(void)
 			}
 
                 }
+		debug_get_t_stados_parcial_post();
 
 }
 

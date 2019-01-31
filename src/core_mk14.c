@@ -55,7 +55,6 @@
 void cpu_core_loop_mk14(void)
 {
 
-  debug_get_t_stados_parcial_post();
   debug_get_t_stados_parcial_pre();
 
 
@@ -290,5 +289,6 @@ else printf ("   ");
 
   }
 
+  debug_get_t_stados_parcial_post();
 
 }

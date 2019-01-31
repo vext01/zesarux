@@ -270,7 +270,6 @@ void z88_gestionar_interrupcion(void)
 void cpu_core_loop_z88(void)
 {
 
-                debug_get_t_stados_parcial_post();
                 debug_get_t_stados_parcial_pre();
 
 
@@ -548,5 +547,6 @@ void cpu_core_loop_z88(void)
 
                 }
 
+                debug_get_t_stados_parcial_post();
 
 }

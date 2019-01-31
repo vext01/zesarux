@@ -64,7 +64,6 @@ int refresca=0;
 void cpu_core_loop_ql(void)
 {
 
-                debug_get_t_stados_parcial_post();
                 debug_get_t_stados_parcial_pre();
 
 
@@ -357,6 +356,7 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
 			}
 
   }
+                debug_get_t_stados_parcial_post();
 
 
 }
