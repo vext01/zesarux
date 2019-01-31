@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-main (int argc,char *argv[]) {
+int main (int argc,char *argv[]) {
         FILE *ptr_file;
         ptr_file=fopen(argv[1],"rb");
 
@@ -12,7 +12,7 @@ main (int argc,char *argv[]) {
 
 	while (!feof(ptr_file)) {
 		unsigned char byte_leido;
-	        int leidos=fread(byte_leido,1,1,ptr_file);
+	        int leidos=fread(&byte_leido,1,1,ptr_file);
 		printf ("%02X ",byte_leido);
 	}
 
