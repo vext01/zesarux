@@ -13258,3 +13258,42 @@ void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segu
         *segundo_op=0;
 
 }
+
+
+/*
+Tablas de opcodes para ensamblado:
+
+-Nombre opcode: LD, INC, HALT, etc
+-De cada tipo opcode, mascara opcode, tipo parametros que admite, cuantos parametros, y mascara parametro:
+Ejemplos:   LD r,n .  LD RR,NN.    o HALT (sin parametros).
+
+LD r,n. base opcode=6 (00000110). tipo parametros: r. mascara parametro 1: 00XXX000
+Por ejemplo, si LD A,33 -> A en tabla r vale 7. 
+Valor final:
+00000110  OR 00111000 = 00111110 = 62
+
+--Tipos parametros:
+n
+nn
+r
+rp (bc,de,hl,sp)
+rp2 (bc,de,hl,af)
+cc (nz,z,nc,c,po,pe,p,m)
+string tal cual (como "AF'" en "ex af,af'"), o como ("1" en "IM 1"), o como ("HL" en "JP HL")
+
+
+-Casos especiales: EX AF,AF' -> un solo opcode sin parametros. Quiza en estos casos decir: opcode=EX. parametro 1=string=AF, parametro 2=string=AF'
+
+-cada opcode en strings apartes:
+char *asm_opcode_ld="LD";
+char *asm_opcode_inc="INC",
+
+en tabla opcodes:
+{ asm_opcode_ld,r,n },
+{ asm_opcode_ld,rr,nn } ,
+{ asm_opcode_inc,r } ,
+{ asm_opcode_inc,rr }
+
+Para no tener que repetir strings (guardamos solo el char *)
+
+*/
