@@ -2111,19 +2111,42 @@ void instruccion_ed_182 ()
 
 void instruccion_ed_183 ()
 {
-        if (MACHINE_IS_TBBLUE) {
-                //LDPIRX ED B7 it's like LDIRX, but is for 8 byte patterend fills 
-                //basically the lower 3 bits of E are put into lower 3 bits of L
-                z80_byte lowbits=reg_e & 7;
+    if (!MACHINE_IS_TBBLUE) {
+        invalid_opcode_ed("237 183");
+        return;
+    }
 
-                reg_l &=(255-7);
-                reg_l |=lowbits;
+    //LDPIRX ED B7: do{t:=(HL&$FFF8+E&7)*; {if t!=A DE*:=t;} DE++; BC--}while(BC>0)
+    //LDPIRX is similar to LDIRX, but it's for 8 byte pattern fills
+    //basically the lower 3 bits of E are put into lower 3 bits of L, (but real HL is not modified!)
 
-                //Y llamar a ldirx
-                instruccion_ed_180(); 
-        }
+    z80_int source_adr = (reg_hl & ~7) | (reg_e & 7);
 
-        else invalid_opcode_ed("237 183");
+//Como instruccion ldirx excepto el HL incrementar...
+#ifdef EMULATE_MEMPTR
+    if (reg_b!=0 || reg_c!=1) set_memptr(reg_pc-1);
+#endif
+
+    z80_byte byte_leido = peek_byte(source_adr);
+    //if byte == A then skips byte.
+    if (reg_a!=byte_leido) poke_byte(DE,byte_leido);
+
+    contend_write_no_mreq( DE, 1 );
+    contend_write_no_mreq( DE, 1 );
+
+    BC--;
+    if (BC) {
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        reg_pc -=2;
+    }
+
+    DE++;
+
+    //LDPIRX does not affect flags
 }
 
 
