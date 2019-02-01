@@ -276,7 +276,16 @@ void instruccion_ed_39 ()
 
 void instruccion_ed_40 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 40");
+        return;
+    }
+
+    //BSLA DE,B   ED 28: DE = DE<<(B&31)
+    // barrel-shift left of DE, B (5 bits) times
+    int shift_amount = reg_b & 31;
+    if (0 == shift_amount) return;
+    DE = DE << shift_amount;
 }
 
 void instruccion_ed_41 ()
