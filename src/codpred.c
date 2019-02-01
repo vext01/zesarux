@@ -296,7 +296,19 @@ void instruccion_ed_43 ()
 
 void instruccion_ed_44 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 44");
+        return;
+    }
+
+    //BRLC DE,B   ED 2C: DE = DE<<(B&15) | DE>>(16-B&15), no flags
+    // barrel-roll left without carry of DE, B (4 bits) times
+    int rolls_amount = reg_b & 15;
+    if (0 < rolls_amount) {
+        z80_int de_upper_part = DE<<rolls_amount;
+        z80_int de_bottom_part = DE>>(16-rolls_amount);
+        DE = de_upper_part | de_bottom_part;
+    }
 }
 
 void instruccion_ed_45 ()
