@@ -3026,11 +3026,8 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 	z80_byte last_register_21=tbblue_registers[21];
 	z80_byte last_register_66=tbblue_registers[66];
 	z80_byte last_register_67=tbblue_registers[67];
-	
 
-    switch(index_position) {
-        case 3:
-        {
+	if (index_position==3) {
             //Controlar caso especial
             //(W) 0x03 (03) => Set machine type, only in IPL or config mode
             //   		bits 2-0 = Machine type:
@@ -3042,64 +3039,10 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
                 return;
             }
         }
-        break;
 
-        case 28:
-        /*
-        (W) 0x1C (28) => Clip Window control
-            bits 7-4 = Reserved, must be 0
-            bit 3 - reset the Tilemap clip index.
-            bit 2 - reset the ULA/LoRes clip index.
-            bit 1 - reset the sprite clip index.
-            bit 0 - reset the Layer 2 clip index.
-        */
-
-			if (value&1) tbblue_reset_clip_window_layer2_index();
-			if (value&2) tbblue_reset_clip_window_sprites_index();
-			if (value&4) tbblue_reset_clip_window_ula_index();
-			if (value&8) tbblue_reset_clip_window_tilemap_index();
-
-        return; // the tbblue_registers[28] is already updated here (do NOT write "value" directly into it)
-
-		case 24:
-			//(W) 0x18 (24) => Clip Window Layer 2
-			clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][tbblue_get_clip_window_layer2_index()]=value;
-            tbblue_inc_clip_window_layer2_index();
-
-			//debug
-			//printf ("layer2 %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]);
-		return; // the tbblue_registers[24] itself is not used (clip_windows array contains values)
-
-		case 25:
-			//((W) 0x19 (25) => Clip Window Sprites
-			clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][tbblue_get_clip_window_sprites_index()]=value;
-            tbblue_inc_clip_window_sprites_index();
-
-			//debug
-			//printf ("sprites %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][0],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][2],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3]);
-		return; // the tbblue_registers[25] itself is not used (clip_windows array contains values)
-
-		case 26:
-			//(W) 0x1A (26) => Clip Window ULA/LoRes
-			clip_windows[TBBLUE_CLIP_WINDOW_ULA][tbblue_get_clip_window_ula_index()]=value;
-            tbblue_inc_clip_window_ula_index();
-
-			//debug
-			//printf ("ula %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_ULA][0],clip_windows[TBBLUE_CLIP_WINDOW_ULA][1],clip_windows[TBBLUE_CLIP_WINDOW_ULA][2],clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]);
-		return; // the tbblue_registers[26] itself is not used (clip_windows array contains values)
-
-		case 27:
-			//(W) 0x1B (27) => Clip Window Tilemap
-			clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][tbblue_get_clip_window_tilemap_index()]=value;
-            tbblue_inc_clip_window_tilemap_index();
-
-			//debug
-			//printf ("tilemap %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
-		return; // the tbblue_registers[27] itself is not used (clip_windows array contains values)
-
-    } // switch(index_position)
 
 	tbblue_registers[index_position]=value;
+
 
 	switch(index_position)
 	{
@@ -3253,6 +3196,71 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 				else screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling lores video mode");
 			}
 		break;
+
+
+
+
+
+		case 24:
+			//(W) 0x18 (24) => Clip Window Layer 2
+			clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][tbblue_get_clip_window_layer2_index()]=value;
+            tbblue_inc_clip_window_layer2_index();
+
+			//debug
+			//printf ("layer2 %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]);
+		break;
+
+
+
+		case 25:
+			//((W) 0x19 (25) => Clip Window Sprites
+			clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][tbblue_get_clip_window_sprites_index()]=value;
+            tbblue_inc_clip_window_sprites_index();
+
+			//debug
+			//printf ("sprites %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][0],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][2],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3]);
+		break;
+
+
+
+		case 26:
+			//(W) 0x1A (26) => Clip Window ULA/LoRes
+			clip_windows[TBBLUE_CLIP_WINDOW_ULA][tbblue_get_clip_window_ula_index()]=value;
+            tbblue_inc_clip_window_ula_index();
+
+			//debug
+			//printf ("ula %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_ULA][0],clip_windows[TBBLUE_CLIP_WINDOW_ULA][1],clip_windows[TBBLUE_CLIP_WINDOW_ULA][2],clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]);
+		break;
+
+
+
+		case 27:
+			//(W) 0x1B (27) => Clip Window Tilemap
+			clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][tbblue_get_clip_window_tilemap_index()]=value;
+            tbblue_inc_clip_window_tilemap_index();
+
+			//debug
+			//printf ("tilemap %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
+		break;
+
+
+        case 28:
+        /*
+        (W) 0x1C (28) => Clip Window control
+            bits 7-4 = Reserved, must be 0
+            bit 3 - reset the Tilemap clip index.
+            bit 2 - reset the ULA/LoRes clip index.
+            bit 1 - reset the sprite clip index.
+            bit 0 - reset the Layer 2 clip index.
+        */
+
+			if (value&1) tbblue_reset_clip_window_layer2_index();
+			if (value&2) tbblue_reset_clip_window_sprites_index();
+			if (value&4) tbblue_reset_clip_window_ula_index();
+			if (value&8) tbblue_reset_clip_window_tilemap_index();
+
+	break;
+
 
 /*
 (W) 0x2D (45) => SoundDrive (SpecDrum) port 0xDF mirror
