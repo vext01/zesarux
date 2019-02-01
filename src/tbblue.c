@@ -3040,6 +3040,21 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
             }
         }
 
+	if (index_position==28) {
+        /*
+        (W) 0x1C (28) => Clip Window control
+            bits 7-4 = Reserved, must be 0
+            bit 3 - reset the Tilemap clip index.
+            bit 2 - reset the ULA/LoRes clip index.
+            bit 1 - reset the sprite clip index.
+            bit 0 - reset the Layer 2 clip index.
+        */
+			if (value&1) tbblue_reset_clip_window_layer2_index();
+			if (value&2) tbblue_reset_clip_window_sprites_index();
+			if (value&4) tbblue_reset_clip_window_ula_index();
+			if (value&8) tbblue_reset_clip_window_tilemap_index();
+            return;
+    }
 
 	tbblue_registers[index_position]=value;
 
@@ -3243,23 +3258,6 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 			//printf ("tilemap %d %d %d %d\n",clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
 		break;
 
-
-        case 28:
-        /*
-        (W) 0x1C (28) => Clip Window control
-            bits 7-4 = Reserved, must be 0
-            bit 3 - reset the Tilemap clip index.
-            bit 2 - reset the ULA/LoRes clip index.
-            bit 1 - reset the sprite clip index.
-            bit 0 - reset the Layer 2 clip index.
-        */
-
-			if (value&1) tbblue_reset_clip_window_layer2_index();
-			if (value&2) tbblue_reset_clip_window_sprites_index();
-			if (value&4) tbblue_reset_clip_window_ula_index();
-			if (value&8) tbblue_reset_clip_window_tilemap_index();
-
-	break;
 
 
 /*
