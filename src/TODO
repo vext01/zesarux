@@ -125,8 +125,6 @@ Ouch, thank you for the response – this will require some hard studying to fig
 y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en browser y luego pulsar continuamente. sin real beeper no pasa
 ->el por que lo sigue haciendo en next aunque hayas soltado la tecla de cursor abajo es un miesterio
 
--zrcp smartload y snapshot-load parametro para no tener que entrar en cpu step mode
-
 -tab en curses en menu filesel no lo lee
 
 -tecla delete en curses en menus no borra
@@ -1625,8 +1623,6 @@ Opcion desactivar colores que solo va en realvideo off:
 
 - Vídeo que muestre text to speech con aventura conversacional
 
--Al activar timing pentagon, no se ve bien audio waveform ni view sprites
-
 -Contador fps cuando speed es 200% debería mostrar 100 fps
 
 -Soportar azerty en Sdl, en Cocoa, fbdev
@@ -1785,9 +1781,6 @@ si el cursor esta en un separador, que haga bajar el cursor -> esto parece que y
 
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
 
--por que se entrecorta sonido al mover ratón con menu abierto?
-->porque hay mucho uso de cpu para cada evento de raton que mueve menu
-
 -Alternativa en los menús tabulares tipo como el de sprites o colores, que usan cursores y pgup y down
 -usar otras acciones / hotkeys para eso
 -agregar un handler especial para esas teclas. Pero entonces como se mueve uno por los ítems? Con tecla tab?
@@ -1823,14 +1816,12 @@ que son comunes para zx8081 (y modo simulado zx81 de spectrum) y menu
 -AY piano notas en pentagrama. maximo canales en pantalla? quiza 1 solo e ir conmutando con una tecla
 
 
--Más f funciones. Habrá que hacer lista de funciones con ventana en vez de menú con opciones
 -mejorar deteccion frecuencia sonido en audio wave form
 
 
--Otra mejora: poder mover ventanas menu con ratón 
-
 -Poder buscar cadenas de texto en find byte. Al estilo de strings de linux, es decir, indicarle un minimo de caracteres juntos y saque todas las cadenas de texto
 opcion tambien para bajar bit 7 final
+-Buscar bytes (mas de uno)
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
 
@@ -1849,10 +1840,7 @@ opcion tambien para bajar bit 7 final
 
 -menu_ventana_scanf deberia retornar un codigo de retorno en caso de pulsado ESC
 
--Buscar bytes (mas de uno)
-
 -visualmem podria tener en cuenta toda la ram de una maquina: 128kb en +2, Z88 etc.... aunque dificil para +2 y Z88.... y necesario?
-
 -visualmem que siga memory zone
 
 -lectura de nombre de archivo en fileselector para stdout no admite espacios
@@ -1985,8 +1973,6 @@ Este JR NZ deberia aparecer como 20004
 breakpoint y vuelve a entrar. Es normal->opcion para poder salir de ahi aun con breakpoint activo? tiene sentido?
 
 -menu debug keys. que muestre en pantalla las teclas que se pulsan
-
--Disassemble a txt
 
 -Set breakpoint en dirección vista en ZRCP
 
