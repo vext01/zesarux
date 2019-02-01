@@ -825,8 +825,8 @@ struct s_items_ayuda items_ayuda[]={
   {"speech-empty-fifo",NULL,NULL,"Empty speech fifo"},
   {"speech-send",NULL,"message","Sends message to speech"},
 
-  {"tbblue-get-clipwindow",NULL,"ula|layer2|sprite","Get clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
-  {"tbblue-set-clipwindow",NULL,"ula|layer2|sprite x1 x2 y1 y2","Set clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
+  {"tbblue-get-clipwindow",NULL,"ula|layer2|sprite|tilemap","Get clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
+  {"tbblue-set-clipwindow",NULL,"ula|layer2|sprite|tilemap x1 x2 y1 y2","Set clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
 
 
  {"tbblue-get-palette",NULL,"ula|layer2|sprite first|second index [items]","Get palette colours at index, if not specified items parameters, returns only one. You need to tell which palette. Returned values are in hexadecimal format. Only allowed on machine TBBlue"},
@@ -3071,29 +3071,23 @@ int return_internal_pointer(char *s,z80_byte **puntero)
 
 
 //Retorna puntero a array de clip window, segun 
-//tipo : ula|layer2|sprite
+//tipo : ula|layer2|sprite|tilemap
 //Retorna NULL si hay algun error
 z80_byte *remote_return_clipwindow(char *tipo)
 {
-
-  /*
-
-z80_byte clip_window_layer2[4];
-
-z80_byte clip_window_sprites[4];
-
-z80_byte clip_window_ula[4];
-
-*/
+//z80_byte clip_windows[4][4];
 
   if (!strcmp(tipo,"ula")) {
-    return clip_window_ula;
+    return clip_windows[TBBLUE_CLIP_WINDOW_ULA];
   }
   else   if (!strcmp(tipo,"layer2")) {
-    return clip_window_layer2;
+    return clip_windows[TBBLUE_CLIP_WINDOW_LAYER2];
   }
   else   if (!strcmp(tipo,"sprite")) {
-    return clip_window_sprites;
+    return clip_windows[TBBLUE_CLIP_WINDOW_SPRITES];
+  }
+  else   if (!strcmp(tipo,"tilemap")) {
+    return clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP];
   }
 
   return NULL;

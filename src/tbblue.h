@@ -173,9 +173,16 @@ extern z80_byte tbsprite_pattern_get_value_index(z80_byte sprite,z80_byte index_
 extern void tbsprite_pattern_put_value_index(z80_byte sprite,z80_byte index_in_sprite,z80_byte value);
 
 
-extern z80_byte clip_window_layer2[];
-extern z80_byte clip_window_sprites[];
-extern z80_byte clip_window_ula[];
+#define TBBLUE_CLIP_WINDOW_LAYER2   0
+#define TBBLUE_CLIP_WINDOW_SPRITES  1
+#define TBBLUE_CLIP_WINDOW_ULA      2
+#define TBBLUE_CLIP_WINDOW_TILEMAP  3
+extern z80_byte clip_windows[4][4];
+
+extern z80_byte tbblue_get_clip_window_layer2_index(void);
+extern z80_byte tbblue_get_clip_window_sprites_index(void);
+extern z80_byte tbblue_get_clip_window_ula_index(void);
+extern z80_byte tbblue_get_clip_window_tilemap_index(void);
 
 extern z80_bit tbblue_fast_boot_mode;
 
