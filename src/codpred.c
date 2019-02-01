@@ -314,7 +314,20 @@ void instruccion_ed_41 ()
 
 void instruccion_ed_42 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 42");
+        return;
+    }
+
+    //BSRL DE,B   ED 2A: DE = unsigned(DE)>>(B&31), no flags
+    // logical barrel-shift right of DE, B (5 bits) times
+    int shift_amount = reg_b & 31;
+    if (0 == shift_amount) return;
+    if (16 <= shift_amount) {           // 16+ shifts set DE to 0
+        DE = 0;
+    } else {                            // for shift amount 1..15 do the shifting
+        DE = DE >> shift_amount;        // DE is unsigned short, C shift is OK
+    }
 }
 
 void instruccion_ed_43 ()
