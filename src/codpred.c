@@ -285,7 +285,11 @@ void instruccion_ed_40 ()
     // barrel-shift left of DE, B (5 bits) times
     int shift_amount = reg_b & 31;
     if (0 == shift_amount) return;
-    DE = DE << shift_amount;
+    if (16 <= shift_amount) {           // 16+ shifts set DE to zero
+        DE = 0;
+    } else {
+        DE = DE << shift_amount;
+    }
 }
 
 void instruccion_ed_41 ()
