@@ -332,7 +332,22 @@ void instruccion_ed_42 ()
 
 void instruccion_ed_43 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 43");
+        return;
+    }
+
+    //BSRF DE,B   ED 2B: DE = ~(unsigned(~DE)>>(B&31)), no flags
+    // barrel-shift right of DE, B (5 bits) times, setting top bits with one
+    int shift_amount = reg_b & 31;
+    if (0 == shift_amount) return;
+    if (16 <= shift_amount) {           // 16+ shifts set DE to ~0
+        DE = ~0;
+    } else {                            // for shift amount 1..15 do the shifting and setting
+        z80_int de_bottom_part = DE >> shift_amount;
+        z80_int de_upper_part = 0xFFFF << (16-shift_amount);
+        DE = de_upper_part | de_bottom_part;
+    }
 }
 
 void instruccion_ed_44 ()
