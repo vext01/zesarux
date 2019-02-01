@@ -281,7 +281,7 @@ void instruccion_ed_40 ()
         return;
     }
 
-    //BSLA DE,B   ED 28: DE = DE<<(B&31)
+    //BSLA DE,B   ED 28: DE = DE<<(B&31), no flags
     // barrel-shift left of DE, B (5 bits) times
     int shift_amount = reg_b & 31;
     if (0 == shift_amount) return;
@@ -290,7 +290,26 @@ void instruccion_ed_40 ()
 
 void instruccion_ed_41 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 41");
+        return;
+    }
+
+    //BSRA DE,B   ED 29: DE = signed(DE)>>(B&31), no flags
+    // aritmetic barrel-shift right of DE, B (5 bits) times
+    int shift_amount = reg_b & 31;
+    int de_is_negative = (1<<15) & DE;  // extract top bit
+    if (0 == shift_amount) return;
+    if (15 <= shift_amount) {           // 15+ shifts set DE either to 0 or ~0
+        DE = de_is_negative ? ~0 : 0;
+    } else {                            // for shift amount 1..14 do the shifting
+        z80_int de_bottom_part = DE >> shift_amount;
+        z80_int de_upper_part = 0;      // 0 for positive/zero values
+        if (de_is_negative) {           // negative values have to fill vacant top bits with ones
+            de_upper_part = 0xFFFF << (15-shift_amount);
+        }
+        DE = de_upper_part | de_bottom_part;
+    }
 }
 
 void instruccion_ed_42 ()
