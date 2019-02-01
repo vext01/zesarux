@@ -381,6 +381,36 @@ void codetests_tbblue_layers(void)
 	}
 }
 
+void codetests_assembler_print(char *s1,char *s2,char *s3, char *s4)
+{
+	printf ("%s\nOpcode: [%s]\nFirst op: [%s]\nSecond op: [%s]\n\n",s1,s2,s3,s4);
+}
+
+void codetests_assembler(void)
+{
+	//void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
+
+	char buf_opcode[100];
+	char buf_primer_op[100];
+	char buf_segundo_op[100];
+
+	util_asm_return_op_ops("NOP",buf_opcode,buf_primer_op,buf_segundo_op);
+	codetests_assembler_print("NOP",buf_opcode,buf_primer_op,buf_segundo_op);
+
+	util_asm_return_op_ops("PUSH AF",buf_opcode,buf_primer_op,buf_segundo_op);
+	codetests_assembler_print("PUSH AF",buf_opcode,buf_primer_op,buf_segundo_op);
+
+	util_asm_return_op_ops("EX DE,HL",buf_opcode,buf_primer_op,buf_segundo_op);
+	codetests_assembler_print("EX DE,HL",buf_opcode,buf_primer_op,buf_segundo_op);
+
+	util_asm_return_op_ops("PUSH   AF",buf_opcode,buf_primer_op,buf_segundo_op);
+	codetests_assembler_print("PUSH   AF",buf_opcode,buf_primer_op,buf_segundo_op);
+
+	util_asm_return_op_ops("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
+	codetests_assembler_print("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
+
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -390,17 +420,20 @@ void codetests_main(int main_argc,char *main_argv[])
 		exit(0);
 	}
 
+	printf ("\nRunning assembler tests\n");
+	codetests_assembler();
+
 	//printf ("\nRunning tbblue layers strings\n");
 	//codetests_tbblue_layers();
 
 	printf ("\nRunning repetitions code\n");
-	codetests_repetitions();
+	//codetests_repetitions();
 
 	printf ("\nRunning compress repetitions code\n");
-	coretests_compress_repetitions();
+	//coretests_compress_repetitions();
 
 	printf ("\nRunning get raster tbblue horizontal\n");
-	codetests_tbblue_get_horizontal_raster();
+	//codetests_tbblue_get_horizontal_raster();
 
 	exit(0);
 }

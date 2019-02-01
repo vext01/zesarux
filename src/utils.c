@@ -13207,3 +13207,54 @@ int get_cpu_frequency(void)
 
         return cpu_hz;
 }
+
+
+//Assembler. Ver http://www.z80.info/decoding.htm
+
+//Retorna opcode y primer y segundo operador
+/*
+Formato entrada: 
+
+
+OPCODE 
+OPCODE OP1
+OPCODE OP1,OP2  
+*/
+void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
+{
+	//Primero asumimos todos nulos
+	*opcode=0;
+	*primer_op=0;
+	*segundo_op=0;
+	//Opcode empieza es hasta el espacio
+	int i;
+	for (i=0;origen[i] && origen[i]!=' ';i++) {
+		*opcode=origen[i];
+		opcode++;
+	}
+
+	*opcode=0;
+
+	//Buscamos hasta algo diferente de espacio
+	for (;origen[i]==' ';i++) {
+        }
+
+	//Primer operador es hasta la ,
+	for (;origen[i] && origen[i]!=',';i++) {
+                *primer_op=origen[i];
+                primer_op++;
+        }
+
+        *primer_op=0;
+	
+	if (origen[i]==',') i++;
+
+	//Y ya hasta final de cadena
+        for (;origen[i];i++) {
+                *segundo_op=origen[i];
+                segundo_op++;
+        }
+
+        *segundo_op=0;
+
+}

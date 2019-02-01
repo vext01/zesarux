@@ -718,6 +718,8 @@ extern int util_get_available_drives(char *texto);
 
 extern int get_cpu_frequency(void);
 
+extern void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op);
+
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 #define MEMORY_ZONE_NUM_TIMEX_EXROM 18
