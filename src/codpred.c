@@ -1596,7 +1596,23 @@ void instruccion_ed_151 ()
 
 void instruccion_ed_152 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 152");
+        return;
+    }
+
+    //JP (C)   ED 98: PC = PC&$C000 + IN(C)<<6, PC is "next-instruction" aka "$+2", no flags
+    // Jumps at one of 256 subroutines (64B long in 16kiB memory segment), selected by "IN (C)" value
+
+    // IN (C) part
+    z80_int in_valor = (z80_int)lee_puerto(reg_b,reg_c);    // read + extend to 16b
+
+    // combine it into new PC, keeping two top bits from current PC (pointing at next instruction)
+    in_valor <<= 6;
+    reg_pc = (reg_pc&0xC000) | in_valor;
+#ifdef EMULATE_MEMPTR
+    set_memptr(reg_pc);     // not sure how this actually works, needs Cesar review
+#endif
 }
 
 void instruccion_ed_153 ()
