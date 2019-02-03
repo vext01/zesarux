@@ -409,6 +409,12 @@ void codetests_assembler(void)
 	util_asm_return_op_ops("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
 	codetests_assembler_print("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
 
+
+	//int assemble_opcode(char *texto,z80_byte *destino)
+	z80_byte destino_ensamblado[256];
+
+	int longitud=assemble_opcode("NOP",destino_ensamblado);
+
 }
 
 void codetests_main(int main_argc,char *main_argv[])
@@ -422,6 +428,7 @@ void codetests_main(int main_argc,char *main_argv[])
 
 	printf ("\nRunning assembler tests\n");
 	codetests_assembler();
+
 
 	//printf ("\nRunning tbblue layers strings\n");
 	//codetests_tbblue_layers();

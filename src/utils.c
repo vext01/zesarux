@@ -13312,6 +13312,11 @@ Para no tener que repetir strings (guardamos solo el char *)
 
 */
 
+enum asm_tipo_parametro
+{
+        ASM_PARM_NONE
+};
+
 struct s_tabla_ensamblado {
         char *texto_opcode;
         int mascara_opcode;
@@ -13330,7 +13335,40 @@ typedef struct s_tabla_ensamblado tabla_ensamblado;
 //char *ensabmlado_opcode_ld="LD";
 
 tabla_ensamblado array_tabla_ensamblado[]={
-        {"NOP",0,0, 0,0,0,0},
+        {"NOP",0,0, ASM_PARM_NONE,0, ASM_PARM_NONE,0},
 
-        {NULL,0,0, 0,0, 0,0}
+        {NULL,0,0, ASM_PARM_NONE,0, ASM_PARM_NONE,0}
 };
+
+
+//Ensamblado de instruccion.
+//Retorna longitud de opcode. 0 si error
+//Lo ensambla en puntero indicado destino
+//Maximo 255 bytes 
+int assemble_opcode(char *texto,z80_byte *destino)
+{
+        int longitud_instruccion=0;
+        //Parsear opcode y parametros
+
+	char buf_opcode[256];
+	char buf_primer_op[256];
+	char buf_segundo_op[256];
+
+        util_asm_return_op_ops(texto,buf_opcode,buf_primer_op,buf_segundo_op);
+
+        int parametros=0;
+        if (buf_segundo_op[0]!=0) parametros++;
+        if (buf_primer_op[0]!=0) parametros++;       
+
+        //Aqui tenemos ya el numero de parametros
+        //Recorrer array de ensamblado
+        int i;
+
+        for (i=0;array_tabla_ensamblado[i].texto_opcode!=NULL;i++) {
+                printf ("%s\n",array_tabla_ensamblado[i].texto_opcode);
+        }
+
+
+        return longitud_instruccion;
+
+}
