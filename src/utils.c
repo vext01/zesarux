@@ -13364,6 +13364,9 @@ int assemble_opcode(char *texto,z80_byte *destino)
         if (buf_primer_op[0]!=0) parametros++;       
 
         //Aqui tenemos ya el numero de parametros
+
+        //TODO: tipo de parametros de la instruccion. Tener en cuenta que algunos pueden ser n y nn a la vez, o rp y rp2 a la vez, etc
+
         //Recorrer array de ensamblado
         int i;
 
@@ -13371,6 +13374,7 @@ int assemble_opcode(char *texto,z80_byte *destino)
                 printf ("%s\n",array_tabla_ensamblado[i].texto_opcode);
                 if (!strcasecmp(buf_opcode,array_tabla_ensamblado[i].texto_opcode)) {
                         printf ("Match opcode\n");
+                        //TODO: ver si hace match numero parametros y tipo
                         break;
                 }
         }
