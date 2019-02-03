@@ -13219,13 +13219,18 @@ Formato entrada:
 OPCODE 
 OPCODE OP1
 OPCODE OP1,OP2  
+
+Retorna puntero a primer parametro, util para comandos como DEFB 0,0,0,.....
 */
-void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
+char *util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
 {
 	//Primero asumimos todos nulos
 	*opcode=0;
 	*primer_op=0;
 	*segundo_op=0;
+
+        char *puntero_primer_parametro;
+
 	//Opcode empieza es hasta el espacio
 	int i;
 	for (i=0;origen[i] && origen[i]!=' ';i++) {
@@ -13238,6 +13243,9 @@ void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segu
 	//Buscamos hasta algo diferente de espacio
 	for (;origen[i]==' ';i++) {
         }
+
+
+        puntero_primer_parametro=&origen[i];
 
 	//Primer operador es hasta la ,
 	for (;origen[i] && origen[i]!=',';i++) {
@@ -13257,6 +13265,8 @@ void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segu
 
         *segundo_op=0;
 
+        return puntero_primer_parametro;
+
 }
 
 
@@ -13272,9 +13282,13 @@ Por ejemplo, si LD A,33 -> A en tabla r vale 7.
 Valor final:
 00000110  OR 00111000 = 00111110 = 62
 
+La mascara de operador no tiene mucho sentido el numero de bits en mascara, solo el primer bit de la derecha que esta a 1,
+dado que meteremos el valor del operador final ahí con un OR, rotando tantos bits a la izquierda como corresponda
+
 --Tipos parametros:
 n
 nn
+dis
 r
 rp (bc,de,hl,sp)
 rp2 (bc,de,hl,af)
@@ -13297,3 +13311,26 @@ en tabla opcodes:
 Para no tener que repetir strings (guardamos solo el char *)
 
 */
+
+struct s_tabla_ensamblado {
+        char *texto_opcode;
+        int mascara_opcode;
+        int prefijo;
+
+        int tipo_parametro_1;
+        int desplazamiento_mascara_p1;
+
+        int tipo_parametro_2;
+        int desplazamiento_mascara_p2;
+};
+
+typedef struct s_tabla_ensamblado tabla_ensamblado;
+
+//char *ensamblado_opcode_nop="NOP";
+//char *ensabmlado_opcode_ld="LD";
+
+tabla_ensamblado array_tabla_ensamblado[]={
+        {"NOP",0,0, 0,0,0,0},
+
+        {NULL,0,0, 0,0, 0,0}
+};
