@@ -414,6 +414,13 @@ void codetests_assembler(void)
 	z80_byte destino_ensamblado[256];
 
 	int longitud=assemble_opcode("NOP",destino_ensamblado);
+	printf ("Longitud opcode: %d\n",longitud);
+
+	longitud=assemble_opcode("LD A,2",destino_ensamblado);
+	printf ("Longitud opcode: %d\n",longitud);
+
+	longitud=assemble_opcode("EXX",destino_ensamblado);
+	printf ("Longitud opcode: %d\n",longitud);
 
 }
 

@@ -13347,6 +13347,9 @@ tabla_ensamblado array_tabla_ensamblado[]={
 //Maximo 255 bytes 
 int assemble_opcode(char *texto,z80_byte *destino)
 {
+
+        printf ("Assemble %s\n",texto);
+
         int longitud_instruccion=0;
         //Parsear opcode y parametros
 
@@ -13366,8 +13369,17 @@ int assemble_opcode(char *texto,z80_byte *destino)
 
         for (i=0;array_tabla_ensamblado[i].texto_opcode!=NULL;i++) {
                 printf ("%s\n",array_tabla_ensamblado[i].texto_opcode);
+                if (!strcasecmp(buf_opcode,array_tabla_ensamblado[i].texto_opcode)) {
+                        printf ("Match opcode\n");
+                        break;
+                }
         }
 
+        if (array_tabla_ensamblado[i].texto_opcode==NULL) {
+                printf ("No match\n");
+        }
+
+        printf ("Indice: %d\n\n",i);
 
         return longitud_instruccion;
 
