@@ -13354,17 +13354,31 @@ typedef struct s_tabla_ensamblado tabla_ensamblado;
 
 tabla_ensamblado array_tabla_ensamblado[]={
         {"NOP",0,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
-        {"EXX",217,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
-	{"LD",6,0,  ASM_PARM_R,3,NULL,  ASM_PARM_N,  0,NULL},   //LD r,n
-	{"LD",64,0, ASM_PARM_R,3,NULL,  ASM_PARM_R,  0,NULL},   //LD r,r
+	{"LD",1,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NN, 0,NULL},   //LD rp,NN        
+        {"LD",2,0,  ASM_PARM_CONST,0,"(BC)", ASM_PARM_CONST, 0,"A"},   //LD (BC),A
+        {"INC",3,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NONE, 0,NULL},   //INC rp        
+        {"INC",4,0,  ASM_PARM_R,4,NULL,  ASM_PARM_NONE,  0,NULL},   //INC r
+        {"DEC",5,0,  ASM_PARM_R,4,NULL,  ASM_PARM_NONE,  0,NULL},   //DEC r
+	{"LD",6,0,  ASM_PARM_R,3,NULL,  ASM_PARM_N,  0,NULL},   //LD r,n        
+        {"RLCA",7,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
+        {"EX",8,0,  ASM_PARM_CONST,0,"AF", ASM_PARM_CONST, 0,"AF'"},   //EX AF,AF'
+        {"ADD",9,0, ASM_PARM_CONST,0,"HL", ASM_PARM_RP,4,NULL}, //ADD HL,rp
+        {"LD",10,0,  ASM_PARM_CONST,0,"A", ASM_PARM_CONST, 0,"BC"},   //LD A,(BC)
 
-	{"LD",1,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NN, 0,NULL},   //LD rp,NN
+        {"DEC",12,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NONE, 0,NULL},   //DEC rp
+
+	{"LD",64,0, ASM_PARM_R,3,NULL,  ASM_PARM_R,  0,NULL},   //LD r,r        
+
+	{"PUSH",197,0,  ASM_PARM_RP2,4,NULL, ASM_PARM_NONE, 0,NULL},   //PUSH rp2        
+
+        {"EXX",217,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},        
+
 	{"LD",33,221,  ASM_PARM_CONST,4,"IX", ASM_PARM_NN, 0,NULL},   //LD IX,NN
 	{"LD",33,253,  ASM_PARM_CONST,4,"IY", ASM_PARM_NN, 0,NULL},   //LD IY,NN
 
 
-	{"EX",8,0,  ASM_PARM_CONST,0,"AF", ASM_PARM_CONST, 0,"AF'"},   //EX AF,AF'
-	{"PUSH",197,0,  ASM_PARM_RP2,4,NULL, ASM_PARM_NONE, 0,NULL},   //PUSH rp2
+
+
 
         {NULL,0,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}
 };
