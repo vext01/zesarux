@@ -38,6 +38,8 @@
 #include "screen.h"
 #include "tbblue.h"
 
+#include "disassemble.h"
+
 
 void codetests_repetitions(void)
 {
@@ -386,6 +388,25 @@ void codetests_assembler_print(char *s1,char *s2,char *s3, char *s4)
 	printf ("%s\nOpcode: [%s]\nFirst op: [%s]\nSecond op: [%s]\n\n",s1,s2,s3,s4);
 }
 
+void codetests_assemble_opcode(char *instruccion,z80_byte *destino)
+{
+	int longitud=assemble_opcode(instruccion,destino);
+        printf ("Longitud opcode: %d\n",longitud);
+	if (longitud) {
+		printf ("Codigo generado: ");
+	}
+
+	while (longitud) {
+		printf ("%02XH ",*destino);
+		destino++;
+		longitud--;
+	};
+
+	if (longitud) {
+                printf ("\n");
+	}
+}
+
 void codetests_assembler(void)
 {
 	//void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
@@ -410,17 +431,89 @@ void codetests_assembler(void)
 	codetests_assembler_print("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
 
 
+	printf ("Assembling\n");
+
 	//int assemble_opcode(char *texto,z80_byte *destino)
 	z80_byte destino_ensamblado[256];
 
-	int longitud=assemble_opcode("NOP",destino_ensamblado);
-	printf ("Longitud opcode: %d\n",longitud);
+	codetests_assemble_opcode("NOP",destino_ensamblado);
 
-	longitud=assemble_opcode("LD A,2",destino_ensamblado);
-	printf ("Longitud opcode: %d\n",longitud);
+	codetests_assemble_opcode("NOP 33",destino_ensamblado);
 
-	longitud=assemble_opcode("EXX",destino_ensamblado);
-	printf ("Longitud opcode: %d\n",longitud);
+	codetests_assemble_opcode("LD A,2",destino_ensamblado);
+	codetests_assemble_opcode("LD B,B",destino_ensamblado);
+	codetests_assemble_opcode("LD D,A",destino_ensamblado);
+	codetests_assemble_opcode("LD (HL),(HL)",destino_ensamblado); //TODO Incorrecto. debe salir error
+
+	codetests_assemble_opcode("LD BC,2",destino_ensamblado);
+	codetests_assemble_opcode("LD HL,260",destino_ensamblado);
+	codetests_assemble_opcode("LD IX,260",destino_ensamblado);
+	codetests_assemble_opcode("LD IY,260",destino_ensamblado);
+
+	codetests_assemble_opcode("EXX",destino_ensamblado);
+	codetests_assemble_opcode("EX AF,AF'",destino_ensamblado);
+	codetests_assemble_opcode("EX AF,BC",destino_ensamblado);
+	codetests_assemble_opcode("PUSH DE",destino_ensamblado);
+	codetests_assemble_opcode("PUSH DE,AF",destino_ensamblado);
+
+
+	//Prueba ensamblando todas instrucciones
+
+	//Primero sin opcode
+	int i;
+
+	z80_byte origen_ensamblado[256];
+
+
+	char texto_desensamblado[256];
+
+	for (i=0;i<256;i++) {
+		//Primero metemos 4 bytes y desensamblamos
+		//Evitar opcode
+		if (i==203 || i==221 || i==237 || i==253) continue;
+
+		//Metemos el primer byte con ese valor y 3 mas de relleno
+		disassemble_array[0]=i;
+
+		disassemble_array[1]=0; //0x3e;
+		disassemble_array[2]=0; //0x6e;
+		disassemble_array[3]=0; //0xab;
+
+		//Desensamblamos
+		size_t longitud_opcode_desensamblado;
+		debugger_disassemble_array(texto_desensamblado,255,&longitud_opcode_desensamblado,0);
+
+		printf ("Ensamblando Opcode %d : %s\n",i,texto_desensamblado);
+
+		//Ensamblar
+		int longitud_destino=assemble_opcode(texto_desensamblado,destino_ensamblado);
+
+		if (longitud_destino==0) {
+			printf ("Error longitud=0\n");
+			return;
+		}
+
+		else {
+			printf ("OK. Dump original and destination:\n");
+			int j;
+			for (j=0;j<longitud_opcode_desensamblado;j++) {
+				z80_byte byte_origen=disassemble_array[j];
+				z80_byte byte_destino=destino_ensamblado[j];
+				printf ("orig: %02XH dest: %02XH .  ",byte_origen,byte_destino);
+				if (byte_origen!=byte_destino) {
+					printf ("\nDo not match bytes\n");
+					return;
+				}
+			}
+
+			printf ("\n");
+		}
+		
+
+		sleep(1);
+	}
+
+		
 
 }
 
