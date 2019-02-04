@@ -507,6 +507,12 @@ void codetests_assembler(void)
 			strcpy(texto_desensamblado,"JR NZ,16382"); //16384+2-4;
 		}			
 
+		if (!strcmp(texto_desensamblado,"LD (NNNN),HL")) {
+			disassemble_array[1]=4;
+			disassemble_array[2]=64;
+			strcpy(texto_desensamblado,"LD (16388),HL"); 
+		}			
+
 		int longitud_destino=assemble_opcode(direccion_destino,texto_desensamblado,destino_ensamblado);
 
 		if (longitud_destino==0) {

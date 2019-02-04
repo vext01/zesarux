@@ -150,6 +150,8 @@ enum asm_tipo_parametro
 	ASM_PARM_RP,
 	ASM_PARM_RP2,
         ASM_PARM_CC,
+        ASM_PARM_PARENTHESIS_N,
+        ASM_PARM_PARENTHESIS_NN,
 	ASM_PARM_N,
 	ASM_PARM_NN,
 	ASM_PARM_DIS
@@ -162,6 +164,7 @@ enum asm_tipo_parametro_entrada
         ASM_PARM_IN_RP,
         ASM_PARM_IN_RP2,
         ASM_PARM_IN_CC,
+        ASM_PARN_IN_PARENTHESIS_NUMERO,
 	ASM_PARM_IN_NUMERO
 };
 
@@ -194,6 +197,7 @@ tabla_ensamblado array_tabla_ensamblado[]={
         {"LD",10,0,  ASM_PARM_CONST,0,"A", ASM_PARM_CONST, 0,"(BC)"},   //LD A,(BC)
         {"LD",18,0,  ASM_PARM_CONST,0,"(DE)", ASM_PARM_CONST, 0,"A"},   //LD (DE),A
         {"LD",26,0,  ASM_PARM_CONST,0,"A", ASM_PARM_CONST, 0,"(DE)"},   //LD A,(DE)
+        {"LD",34,0,  ASM_PARM_PARENTHESIS_NN,0,NULL, ASM_PARM_CONST, 0,"HL"},   //LD (NNNN),HL
 
         {"LD",64,0, ASM_PARM_R,3,NULL,  ASM_PARM_R,  0,NULL},   //LD r,r   
 
@@ -221,7 +225,9 @@ tabla_ensamblado array_tabla_ensamblado[]={
         {"JR",24,0, ASM_PARM_DIS,0,NULL, ASM_PARM_NONE,0,NULL},
         {"RRA",31,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
 
-        {"JR",32,0, ASM_PARM_DIS,0,NULL, ASM_PARM_CC,3,NULL},        
+        {"JR",32,0, ASM_PARM_CC,3,NULL, ASM_PARM_DIS,0,NULL},     
+
+        {"DAA",39,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
 
 	{"PUSH",197,0,  ASM_PARM_RP2,4,NULL, ASM_PARM_NONE, 0,NULL},   //PUSH rp2        
 
@@ -294,6 +300,9 @@ int assemble_find_param_type(char *buf_op,int *valor)
         tabla=assemble_find_array_params(buf_op,asm_parametros_tipo_cc,valor);
 	if (tabla!=NULL) return ASM_PARM_IN_CC;
 
+        //Tipo (NN)
+        if (buf_op[0]=='(') return ASM_PARN_IN_PARENTHESIS_NUMERO;
+
 	//final
 	return ASM_PARM_IN_NUMERO;
 }
@@ -325,7 +334,12 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 
                         //TODO caso registro C igual que condicion C
 			else return 0;
-		break;                
+		break;   
+
+		case ASM_PARN_IN_PARENTHESIS_NUMERO:
+			if (tipo_en_tabla==ASM_PARM_PARENTHESIS_N || tipo_en_tabla==ASM_PARM_PARENTHESIS_NN) return 1;
+			else return 0;
+		break;                             
 
 		case ASM_PARM_IN_NUMERO:
 			if (tipo_en_tabla==ASM_PARM_N || tipo_en_tabla==ASM_PARM_NN || tipo_en_tabla==ASM_PARM_DIS) return 1;
@@ -479,20 +493,26 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
 		if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1!=ASM_PARM_NONE) {
 			if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_NN
-                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_DIS
+                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_DIS || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_N
+                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_NN
                         ) {
 				//Parseamos valor
-				valor_parametro_1=parse_string_to_number(buf_primer_op);
+                                if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_NN) {
+                                        //Saltar el parentesis en (NN)
+                                        valor_parametro_1=parse_string_to_number(&buf_primer_op[1]);
+                                }
+                        
+				else valor_parametro_1=parse_string_to_number(buf_primer_op);
 
 				//Si es N
-				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N) {
+				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_N) {
 					//En destino+1
 					destino[1]=valor_parametro_1 & 0xFF;
 					longitud_instruccion++;
 				}
 
 				//Si es NN
-				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_NN) {
+				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_NN || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_NN) {
 					//En destino+1
 					destino[1]=valor_parametro_1 & 0xFF;
 					destino[2]=(valor_parametro_1>>8) & 0xFF;
@@ -525,20 +545,25 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
                 if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2!=ASM_PARM_NONE) {
                         if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_NN
-                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_DIS
+                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_DIS || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_PARENTHESIS_N
+                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_PARENTHESIS_NN
                         ) {
 				//Parseamos valor
-				valor_parametro_2=parse_string_to_number(buf_segundo_op);
+                                if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_PARENTHESIS_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_PARENTHESIS_NN) {
+                                        //Saltar el parentesis en (NN)
+                                        valor_parametro_1=parse_string_to_number(&buf_segundo_op[1]);
+                                }
+				else valor_parametro_2=parse_string_to_number(buf_segundo_op);
 
 				//Si es N
-                                if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_N) {
+                                if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_PARENTHESIS_N) {
                                         //En destino+1
                                         destino[1]=valor_parametro_2 & 0xFF;
                                         longitud_instruccion++;
                                 }
 
                                 //Si es NN
-                                if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_NN) {
+                                if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_NN  || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_PARENTHESIS_NN) {
                                         //En destino+1
                                         destino[1]=valor_parametro_2 & 0xFF;
                                         destino[2]=(valor_parametro_2>>8) & 0xFF;
