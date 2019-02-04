@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <string.h>
 
 #if defined(__APPLE__)
         #include <sys/syslimits.h>
@@ -391,7 +392,7 @@ void codetests_assembler_print(char *s1,char *s2,char *s3, char *s4)
 
 void codetests_assemble_opcode(char *instruccion,z80_byte *destino)
 {
-	int longitud=assemble_opcode(instruccion,destino);
+	int longitud=assemble_opcode(16384,instruccion,destino);
         printf ("Longitud opcode: %d\n",longitud);
 	if (longitud) {
 		printf ("Codigo generado: ");
@@ -437,7 +438,8 @@ void codetests_assembler(void)
 	//int assemble_opcode(char *texto,z80_byte *destino)
 	z80_byte destino_ensamblado[256];
 
-	codetests_assemble_opcode("NOP",destino_ensamblado);
+
+/*	codetests_assemble_opcode("NOP",destino_ensamblado);
 
 	codetests_assemble_opcode("NOP 33",destino_ensamblado);
 
@@ -456,7 +458,7 @@ void codetests_assembler(void)
 	codetests_assemble_opcode("EX AF,BC",destino_ensamblado);
 	codetests_assemble_opcode("PUSH DE",destino_ensamblado);
 	codetests_assemble_opcode("PUSH DE,AF",destino_ensamblado);
-
+*/
 
 	//Prueba ensamblando todas instrucciones
 
@@ -487,7 +489,25 @@ void codetests_assembler(void)
 		printf ("Ensamblando Opcode %d : %s\n",i,texto_desensamblado);
 
 		//Ensamblar
-		int longitud_destino=assemble_opcode(texto_desensamblado,destino_ensamblado);
+		int direccion_destino=16384;
+
+		//Casos especiales
+		if (!strcmp(texto_desensamblado,"DJNZ NNNN")) {
+			disassemble_array[1]=3;
+			strcpy(texto_desensamblado,"DJNZ 16389"); //16384+2+3;
+		}
+
+		if (!strcmp(texto_desensamblado,"JR NNNN")) {
+			disassemble_array[1]=256-4;
+			strcpy(texto_desensamblado,"JR 16382"); //16384+2-4;
+		}		
+
+		if (!strcmp(texto_desensamblado,"JR NZ,NNNN")) {
+			disassemble_array[1]=256-4;
+			strcpy(texto_desensamblado,"JR NZ,16382"); //16384+2-4;
+		}			
+
+		int longitud_destino=assemble_opcode(direccion_destino,texto_desensamblado,destino_ensamblado);
 
 		if (longitud_destino==0) {
 			printf ("Error longitud=0\n");
@@ -511,7 +531,7 @@ void codetests_assembler(void)
 		}
 		
 
-		sleep(1);
+		usleep(250000);
 	}
 
 		

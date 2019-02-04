@@ -27,6 +27,6 @@
 
 extern char *asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op);
 
-extern int assemble_opcode(char *texto,z80_byte *destino);
+extern int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino);
 
 #endif
