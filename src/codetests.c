@@ -534,13 +534,13 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("\nRunning tbblue layers strings\n");
 	//codetests_tbblue_layers();
 
-	printf ("\nRunning repetitions code\n");
+	//printf ("\nRunning repetitions code\n");
 	//codetests_repetitions();
 
-	printf ("\nRunning compress repetitions code\n");
+	//printf ("\nRunning compress repetitions code\n");
 	//coretests_compress_repetitions();
 
-	printf ("\nRunning get raster tbblue horizontal\n");
+	//printf ("\nRunning get raster tbblue horizontal\n");
 	//codetests_tbblue_get_horizontal_raster();
 
 	exit(0);

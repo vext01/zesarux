@@ -182,22 +182,34 @@ typedef struct s_tabla_ensamblado tabla_ensamblado;
 //char *ensamblado_opcode_nop="NOP";
 //char *ensabmlado_opcode_ld="LD";
 
+//Poner antes los que dependen de constantes que no registros variables
+//Poner antes que los nn, los registros
 tabla_ensamblado array_tabla_ensamblado[]={
         {"NOP",0,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
-	{"LD",1,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NN, 0,NULL},   //LD rp,NN        
+
+        //LD
         {"LD",2,0,  ASM_PARM_CONST,0,"(BC)", ASM_PARM_CONST, 0,"A"},   //LD (BC),A
+        {"LD",10,0,  ASM_PARM_CONST,0,"A", ASM_PARM_CONST, 0,"(BC)"},   //LD A,(BC)
+
+        {"LD",64,0, ASM_PARM_R,3,NULL,  ASM_PARM_R,  0,NULL},   //LD r,r   
+
+        {"LD",1,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NN, 0,NULL},   //LD rp,NN     
+        {"LD",6,0,  ASM_PARM_R,3,NULL,  ASM_PARM_N,  0,NULL},   //LD r,n           
+
+
         {"INC",3,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NONE, 0,NULL},   //INC rp        
-        {"INC",4,0,  ASM_PARM_R,4,NULL,  ASM_PARM_NONE,  0,NULL},   //INC r
-        {"DEC",5,0,  ASM_PARM_R,4,NULL,  ASM_PARM_NONE,  0,NULL},   //DEC r
-	{"LD",6,0,  ASM_PARM_R,3,NULL,  ASM_PARM_N,  0,NULL},   //LD r,n        
+        {"INC",4,0,  ASM_PARM_R,3,NULL,  ASM_PARM_NONE,  0,NULL},   //INC r
+        {"DEC",5,0,  ASM_PARM_R,3,NULL,  ASM_PARM_NONE,  0,NULL},   //DEC r
+     
+
         {"RLCA",7,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
         {"EX",8,0,  ASM_PARM_CONST,0,"AF", ASM_PARM_CONST, 0,"AF'"},   //EX AF,AF'
         {"ADD",9,0, ASM_PARM_CONST,0,"HL", ASM_PARM_RP,4,NULL}, //ADD HL,rp
-        {"LD",10,0,  ASM_PARM_CONST,0,"A", ASM_PARM_CONST, 0,"BC"},   //LD A,(BC)
 
-        {"DEC",12,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NONE, 0,NULL},   //DEC rp
 
-	{"LD",64,0, ASM_PARM_R,3,NULL,  ASM_PARM_R,  0,NULL},   //LD r,r        
+        {"DEC",11,0,    ASM_PARM_RP,4,NULL, ASM_PARM_NONE, 0,NULL},   //DEC rp
+
+        {"RRCA",15,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
 
 	{"PUSH",197,0,  ASM_PARM_RP2,4,NULL, ASM_PARM_NONE, 0,NULL},   //PUSH rp2        
 
@@ -272,6 +284,9 @@ int assemble_find_param_type(char *buf_op,int *valor)
 int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_entrada,enum asm_tipo_parametro tipo_en_tabla)
 {
 
+        //
+
+
 	//Para cada caso
 	switch (tipo_parametro_entrada) {
 		case ASM_PARM_IN_R:
@@ -337,8 +352,8 @@ int assemble_opcode(char *texto,z80_byte *destino)
 	int encontrado_indice=-1;
 
 
-	int valor_parametro_1=0; //Valor del parametro 1 cuando no es N ni NN
-	int valor_parametro_2=0; //Valor del parametro 2 cuando no es N ni NN
+	unsigned int valor_parametro_1=0; //Valor del parametro 1 cuando no es N ni NN
+	unsigned int valor_parametro_2=0; //Valor del parametro 2 cuando no es N ni NN
 
         for (i=0;array_tabla_ensamblado[i].texto_opcode!=NULL && !salir;i++) {
                 printf ("%s\n",array_tabla_ensamblado[i].texto_opcode);
@@ -358,7 +373,7 @@ int assemble_opcode(char *texto,z80_byte *destino)
 
 					//Parametros de tipo constante
 					if (array_tabla_ensamblado[i].tipo_parametro_1==ASM_PARM_CONST) {
-						if (strcmp(buf_primer_op,array_tabla_ensamblado[i].const_parm1)) {
+						if (strcasecmp(buf_primer_op,array_tabla_ensamblado[i].const_parm1)) {
 							printf ("No coincide tipo const\n");
 							continue;
 						}
@@ -382,7 +397,7 @@ int assemble_opcode(char *texto,z80_byte *destino)
 				if (array_tabla_ensamblado[i].tipo_parametro_2!=ASM_PARM_NONE) {
 					//Parametros de tipo constante
                                         if (array_tabla_ensamblado[i].tipo_parametro_2==ASM_PARM_CONST) {
-						if (strcmp(buf_segundo_op,array_tabla_ensamblado[i].const_parm2)) {
+						if (strcasecmp(buf_segundo_op,array_tabla_ensamblado[i].const_parm2)) {
                                                         printf ("No coincide tipo const\n");
                                                         continue;
                                                 }
@@ -438,7 +453,7 @@ int assemble_opcode(char *texto,z80_byte *destino)
 		if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1!=ASM_PARM_NONE) {
 			if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_NN) {
 				//Parseamos valor
-				unsigned int valor_parametro_1=parse_string_to_number(buf_primer_op);
+				valor_parametro_1=parse_string_to_number(buf_primer_op);
 
 				//Si es N
 				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N) {
@@ -458,6 +473,7 @@ int assemble_opcode(char *texto,z80_byte *destino)
 
 			else {
 				//Aqui se entra tambien cuando tipo es CONST. Pero como valor y desplazamiento valen 0, es un OR de 0
+                                printf ("OR con valor %d desplazado %d\n",valor_parametro_1,array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1);
 				valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
 				opcode_final |= valor_parametro_1;
 
@@ -468,7 +484,7 @@ int assemble_opcode(char *texto,z80_byte *destino)
                 if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2!=ASM_PARM_NONE) {
                         if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_NN) {
 				//Parseamos valor
-				unsigned int valor_parametro_2=parse_string_to_number(buf_segundo_op);
+				valor_parametro_2=parse_string_to_number(buf_segundo_op);
 
 				//Si es N
                                 if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_N) {
