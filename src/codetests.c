@@ -39,6 +39,7 @@
 #include "tbblue.h"
 
 #include "disassemble.h"
+#include "assemble.h"
 
 
 void codetests_repetitions(void)
@@ -409,25 +410,25 @@ void codetests_assemble_opcode(char *instruccion,z80_byte *destino)
 
 void codetests_assembler(void)
 {
-	//void util_asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
+	//void asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
 
 	char buf_opcode[100];
 	char buf_primer_op[100];
 	char buf_segundo_op[100];
 
-	util_asm_return_op_ops("NOP",buf_opcode,buf_primer_op,buf_segundo_op);
+	asm_return_op_ops("NOP",buf_opcode,buf_primer_op,buf_segundo_op);
 	codetests_assembler_print("NOP",buf_opcode,buf_primer_op,buf_segundo_op);
 
-	util_asm_return_op_ops("PUSH AF",buf_opcode,buf_primer_op,buf_segundo_op);
+	asm_return_op_ops("PUSH AF",buf_opcode,buf_primer_op,buf_segundo_op);
 	codetests_assembler_print("PUSH AF",buf_opcode,buf_primer_op,buf_segundo_op);
 
-	util_asm_return_op_ops("EX DE,HL",buf_opcode,buf_primer_op,buf_segundo_op);
+	asm_return_op_ops("EX DE,HL",buf_opcode,buf_primer_op,buf_segundo_op);
 	codetests_assembler_print("EX DE,HL",buf_opcode,buf_primer_op,buf_segundo_op);
 
-	util_asm_return_op_ops("PUSH   AF",buf_opcode,buf_primer_op,buf_segundo_op);
+	asm_return_op_ops("PUSH   AF",buf_opcode,buf_primer_op,buf_segundo_op);
 	codetests_assembler_print("PUSH   AF",buf_opcode,buf_primer_op,buf_segundo_op);
 
-	util_asm_return_op_ops("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
+	asm_return_op_ops("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
 	codetests_assembler_print("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
 
 
