@@ -472,7 +472,7 @@ void codetests_assembler(void)
 
 	int paso_prefijo;
 
-	for (paso_prefijo=0;paso_prefijo<4;paso_prefijo++) { //Si prefijo, 221, 253, 237
+	for (paso_prefijo=0;paso_prefijo<5;paso_prefijo++) { //Si prefijo, 221, 253, 237, 203
 		if (paso_prefijo) {
 			printf ("Paso prefijo %d\n----------------\n\n",paso_prefijo);
 		}
@@ -498,6 +498,11 @@ void codetests_assembler(void)
 			disassemble_array[inicio_array]=237;
 			inicio_array++;
 		}
+
+		if (paso_prefijo==4) {
+			disassemble_array[inicio_array]=203;
+			inicio_array++;
+		}		
 
 		disassemble_array[inicio_array]=i;
 

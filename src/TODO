@@ -1877,6 +1877,7 @@ no gestiona bien nombres con espacios
 *** Debug ***
 
 -Assembler para Motorola y MK14
+-Assembler para opcodes del Next
 
 -Idea para mejorar el parser de breakpoints:
 //Operadores AND, OR, XOR que ya esten calculados antes su indice (BREAKPOINT_CONDITION_OP_OR, BREAKPOINT_CONDITION_OP_AND, BREAKPOINT_CONDITION_OP_XOR) y no tener que hacer strcmp cada vez

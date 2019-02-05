@@ -154,6 +154,7 @@ enum asm_tipo_parametro
         ASM_PARM_PARENTHESIS_NN,
 	ASM_PARM_RST,
 	ASM_PARM_IM,
+	ASM_PARM_BIT,
 	ASM_PARM_N,
 	ASM_PARM_NN,
 	ASM_PARM_DIS
@@ -358,6 +359,19 @@ tabla_ensamblado array_tabla_ensamblado[]={
 	{"INDR",186,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
 	{"OTDR",187,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 	
 
+	//CB opcodes
+	{"RLC",0,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"RRC",8,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"RL",16,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"RR",24,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"SLA",32,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"SRA",40,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL}, 
+	{"SLL",48,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"SRL",56,203, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL}, 
+	{"BIT",64,203, ASM_PARM_BIT,3,NULL, ASM_PARM_R,  0,NULL }, //BIT x,r  
+	{"RES",128,203, ASM_PARM_BIT,3,NULL, ASM_PARM_R,  0,NULL }, //RES x,r  
+	{"SET",192,203, ASM_PARM_BIT,3,NULL, ASM_PARM_R,  0,NULL }, //RES x,r  
+
 
         {NULL,0,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}
 };
@@ -465,7 +479,7 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 		break;                             
 
 		case ASM_PARM_IN_NUMERO:
-			if (tipo_en_tabla==ASM_PARM_N || tipo_en_tabla==ASM_PARM_NN || tipo_en_tabla==ASM_PARM_DIS || tipo_en_tabla==ASM_PARM_RST || tipo_en_tabla==ASM_PARM_IM) return 1;
+			if (tipo_en_tabla==ASM_PARM_N || tipo_en_tabla==ASM_PARM_NN || tipo_en_tabla==ASM_PARM_DIS || tipo_en_tabla==ASM_PARM_RST || tipo_en_tabla==ASM_PARM_IM || tipo_en_tabla==ASM_PARM_BIT) return 1;
 			else return 0;
 		break;
 
@@ -830,7 +844,20 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
 						//valor_parametro_1 /=8;
 						 
-					}					
+					}			
+
+					//Si es BIT
+					if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_BIT) {
+						valor_parametro_1=parse_string_to_number(buf_primer_op);
+						//0,0,1,2,0,0,1,2 
+						//if (valor_parametro_1==1) valor_parametro_1=2;
+						//else if (valor_parametro_1==2) valor_parametro_1=3;
+						//Usamos los valores oficiales 0,0,1,2 (el "segundo" 0 corresponderia a im0 no documentado)
+
+						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
+						//valor_parametro_1 /=8;
+						 
+					}									
 
 					//En caso de IX+d
 					if (es_prefijo_ix_iy && !strcasecmp(buf_primer_op,"(HL)")) {
