@@ -152,6 +152,8 @@ enum asm_tipo_parametro
         ASM_PARM_CC,
         ASM_PARM_PARENTHESIS_N,
         ASM_PARM_PARENTHESIS_NN,
+	ASM_PARM_RST,
+	ASM_PARM_IM,
 	ASM_PARM_N,
 	ASM_PARM_NN,
 	ASM_PARM_DIS
@@ -198,6 +200,15 @@ tabla_ensamblado array_tabla_ensamblado[]={
         {"LD",18,0,  ASM_PARM_CONST,0,"(DE)", ASM_PARM_CONST, 0,"A"},   //LD (DE),A
         {"LD",26,0,  ASM_PARM_CONST,0,"A", ASM_PARM_CONST, 0,"(DE)"},   //LD A,(DE)
         {"LD",34,0,  ASM_PARM_PARENTHESIS_NN,0,NULL, ASM_PARM_CONST, 0,"HL"},   //LD (NNNN),HL
+		{"LD",42,0,  ASM_PARM_CONST, 0,"HL", ASM_PARM_PARENTHESIS_NN,0,NULL, },   //LD HL,(NNNN)
+
+		//Tiene que estar estos antes, si no, LD A,I lo interceptaria como LD A,N
+		{"LD",87,237, ASM_PARM_CONST,0,"A",   ASM_PARM_CONST,0,"I"},   //LD A,I
+		{"LD",95,237, ASM_PARM_CONST,0,"A", ASM_PARM_CONST,0,"R"  },   //LD A,R
+
+
+	{"LD",50,0,  ASM_PARM_PARENTHESIS_NN,0,NULL, ASM_PARM_CONST, 0,"A"},   //LD (NNNN),A
+	{"LD",58,0,  ASM_PARM_CONST, 0,"A", ASM_PARM_PARENTHESIS_NN,0,NULL },   //LD A,(NNNN)
 
         {"LD",64,0, ASM_PARM_R,3,NULL,  ASM_PARM_R,  0,NULL},   //LD r,r   
 
@@ -228,16 +239,124 @@ tabla_ensamblado array_tabla_ensamblado[]={
         {"JR",32,0, ASM_PARM_CC,3,NULL, ASM_PARM_DIS,0,NULL},     
 
         {"DAA",39,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"CPL",47,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},  
+	{"SCF",55,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"CCF",63,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 
 
-	{"PUSH",197,0,  ASM_PARM_RP2,4,NULL, ASM_PARM_NONE, 0,NULL},   //PUSH rp2        
+	{"HALT",118,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
 
-        {"EXX",217,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},        
+	{"ADD",128,0, ASM_PARM_CONST,0,"A",  ASM_PARM_R,  0,NULL},   //ADD A,r  
+	{"ADC",136,0, ASM_PARM_CONST,0,"A",  ASM_PARM_R,  0,NULL},   //ADC A,r   
 
-	{"LD",33,221,  ASM_PARM_CONST,4,"IX", ASM_PARM_NN, 0,NULL},   //LD IX,NN
-	{"LD",33,253,  ASM_PARM_CONST,4,"IY", ASM_PARM_NN, 0,NULL},   //LD IY,NN
+	{"SUB",144,0, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   //SUB r 
+	{"SBC",152,0, ASM_PARM_CONST,0,"A",  ASM_PARM_R,  0,NULL},   //SBC A,r   
+	{"AND",160,0, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   //AND r 
+	{"XOR",168,0, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   //XOR r 
+	{"OR",176,0, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   //OR r 
+	{"CP",184,0, ASM_PARM_R,  0,NULL, ASM_PARM_NONE,0,NULL},   //CP r 
+
+	{"RET",192,0, ASM_PARM_CC,  3,NULL, ASM_PARM_NONE,0,NULL},   //RET cc 
+	{"POP",193,0,  ASM_PARM_RP2,4,NULL, ASM_PARM_NONE, 0,NULL},   //POP rp2   
+	{"JP",194,0, ASM_PARM_CC,3,NULL, ASM_PARM_NN,0,NULL},    //JP CC,NN   
+	{"JP",195,0, ASM_PARM_NN,0,NULL, ASM_PARM_NONE, 0,NULL },    //JP NN  
+	{"CALL",196,0, ASM_PARM_CC,3,NULL, ASM_PARM_NN,0,NULL},    //CALL CC,NN    
+
+	{"PUSH",197,0,  ASM_PARM_RP2,4,NULL, ASM_PARM_NONE, 0,NULL},   //PUSH rp2  
+
+	{"ADD",198,0, ASM_PARM_CONST,0,"A",  ASM_PARM_N,  0,NULL},   //ADD A,N   
+
+	{"RST",199,0,  ASM_PARM_RST,3,NULL, ASM_PARM_NONE, 0,NULL},   //RST n   
+
+	{"RET",201,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},    //RET
+	{"CALL",205,0, ASM_PARM_NN,0,NULL, ASM_PARM_NONE,0,NULL},   //CALL NN
+	{"ADC",206,0, ASM_PARM_CONST,0,"A",  ASM_PARM_N,  0,NULL},   //ADC A,N  
+
+	//Este OUT tiene que estar antes del otro
+	{"OUT",65,237, ASM_PARM_CONST,0,"(C)",  ASM_PARM_R,  3,NULL},   //OUT (C),r
+	{"OUT",211,0,  ASM_PARM_PARENTHESIS_N,0,NULL, ASM_PARM_CONST, 0,"A"},   //OUT (N),A
+
+	{"SUB",214,0, ASM_PARM_N,  0,NULL, ASM_PARM_NONE,0,NULL  },   //SUB N  
+
+	{"EXX",217,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
 
 
+	//Este IN tiene que estar antes del otro
+	{"IN",64,237, ASM_PARM_R,  3,NULL, ASM_PARM_CONST,0,"(C)"},   //IN r,(C) 
 
+	{"IN",219,0,  ASM_PARM_CONST, 0,"A", ASM_PARM_PARENTHESIS_N,0,NULL },   //IN A,(N)
+
+
+	{"SBC",222,0, ASM_PARM_CONST,0,"A",  ASM_PARM_N,  0,NULL},   //SBC A,N 
+
+	{"EX",227,0,  ASM_PARM_CONST, 0,"(SP)", ASM_PARM_CONST,0,"HL" },   //EX (SP),HL
+
+	{"AND",230,0, ASM_PARM_N,  0,NULL, ASM_PARM_NONE,0,NULL  },   //AND N  	
+
+	{"JP",233,0, ASM_PARM_CONST,  0,"HL", ASM_PARM_NONE,0,NULL  },   //JP HL	
+	{"JP",233,0, ASM_PARM_CONST,  0,"(HL)", ASM_PARM_NONE,0,NULL  },   //JP (HL)
+
+	{"EX",235,0,  ASM_PARM_CONST, 0,"DE", ASM_PARM_CONST,0,"HL" },   //EX DE,HL	
+
+	{"XOR",238,0, ASM_PARM_N,  0,NULL, ASM_PARM_NONE,0,NULL  },   //XOR N  
+
+	{"DI",243,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},  //DI
+
+	{"OR",246,0, ASM_PARM_N,  0,NULL, ASM_PARM_NONE,0,NULL  },   //OR N  
+
+
+	{"LD",249,0,  ASM_PARM_CONST, 0,"SP", ASM_PARM_CONST,0,"HL" },   //LD SP,HL
+
+	{"EI",251,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},  //EI	
+
+	{"CP",254,0, ASM_PARM_N,  0,NULL, ASM_PARM_NONE,0,NULL  },   //CP N 
+
+
+	//IX/IX opcodes. TODO: hacerlo mas simple y que usen mismos de sin prefijo y con CB? Pero cambiando HL por IX o IY...?
+	//{"LD",33,221,  ASM_PARM_CONST,4,"IX", ASM_PARM_NN, 0,NULL},   //LD IX,NN
+	//{"LD",33,253,  ASM_PARM_CONST,4,"IY", ASM_PARM_NN, 0,NULL},   //LD IY,NN
+
+
+	//ED opcodes
+	{"SBC",66,237, ASM_PARM_CONST,0,"HL",  ASM_PARM_RP,  4,NULL},   //SBC HL,rp
+	{"LD",67,237, ASM_PARM_PARENTHESIS_NN,0,NULL,  ASM_PARM_RP,  4,NULL},   //LD (NN),rp
+
+	{"NEG",68,237, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   //NEG
+	{"RETN",69,237, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   //RETN
+	{"IM",70,237,  ASM_PARM_IM,3,NULL, ASM_PARM_NONE, 0,NULL},   //IM 0,1,2
+	{"LD",71,237, ASM_PARM_CONST,0,"I",  ASM_PARM_CONST,0,"A"},   //LD I,A 	
+
+	{"ADC",74,237, ASM_PARM_CONST,0,"HL",  ASM_PARM_RP,  4,NULL},   //ADC HL,rp
+	{"LD",75,237,  ASM_PARM_RP,  4,NULL,  ASM_PARM_PARENTHESIS_NN,0,NULL},   //LD rp,(NN)
+
+	{"RETI",77,237, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   //RETN
+	{"LD",79,237, ASM_PARM_CONST,0,"R",  ASM_PARM_CONST,0,"A"},   //LD R,A 	
+
+	{"RRD",103,237, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
+	{"RLD",111,237, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
+
+	{"IN",112,237, ASM_PARM_CONST,0,"F",  ASM_PARM_CONST,0,"(C)"},   //IN F,(C)
+	{"OUT",113,237, ASM_PARM_CONST,0,"(C)", ASM_PARM_CONST,0,"0"  },   //OUT (C),0
+	
+	{"LDI",160,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"CPI",161,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 
+	{"INI",162,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
+	{"OUTI",163,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
+
+	{"LDD",168,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"CPD",169,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 
+	{"IND",170,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
+	{"OUTD",171,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 	
+
+	{"LDIR",176,237, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 
+	{"CPIR",177,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 
+	{"INIR",178,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
+	{"OTIR",179,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
+
+
+	{"LDDR",184,237, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},   
+	{"CPDR",185,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 
+	{"INDR",186,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL},
+	{"OTDR",187,237,  ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}, 	
 
 
         {NULL,0,0, ASM_PARM_NONE,0,NULL, ASM_PARM_NONE,0,NULL}
@@ -319,6 +438,10 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 	switch (tipo_parametro_entrada) {
 		case ASM_PARM_IN_R:
 			if (tipo_en_tabla==ASM_PARM_R) return 1;
+
+			//caso registro C igual que condicion C. TODO habria que validar que es condicion C, no cualquier condicion
+			//else if (tipo_en_tabla=ASM_PARM_CC) return 1;
+
 			else return 0;
 		break;
 
@@ -332,7 +455,7 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 		case ASM_PARM_IN_CC:
 			if (tipo_en_tabla==ASM_PARM_CC) return 1;
 
-                        //TODO caso registro C igual que condicion C
+                        
 			else return 0;
 		break;   
 
@@ -342,7 +465,7 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 		break;                             
 
 		case ASM_PARM_IN_NUMERO:
-			if (tipo_en_tabla==ASM_PARM_N || tipo_en_tabla==ASM_PARM_NN || tipo_en_tabla==ASM_PARM_DIS) return 1;
+			if (tipo_en_tabla==ASM_PARM_N || tipo_en_tabla==ASM_PARM_NN || tipo_en_tabla==ASM_PARM_DIS || tipo_en_tabla==ASM_PARM_RST || tipo_en_tabla==ASM_PARM_IM) return 1;
 			else return 0;
 		break;
 
@@ -352,7 +475,128 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 
 }
 
+int assemble_sustituir_ixiy_despl_aux(int es_prefijo_ix_iy,char *buf_op,char *valor_desplazamiento)
+{
+	if (buf_op[0]=='(') {
+		if (letra_mayuscula(buf_op[1])=='I') {
+			if (letra_mayuscula(buf_op[2])!='X' && letra_mayuscula(buf_op[2])!='Y') return es_prefijo_ix_iy;
 
+			if (buf_op[3]!='+' && buf_op[3]!='-') return es_prefijo_ix_iy;
+
+			if (letra_mayuscula(buf_op[2])=='X') {
+				es_prefijo_ix_iy=221;
+			}
+			else if (letra_mayuscula(buf_op[2])=='Y') {
+				es_prefijo_ix_iy=253;
+			}			
+
+			else return es_prefijo_ix_iy;
+
+			//Es IX o IY. Leer desplazamiento. Guardamos valor desplazamiento en buffer aparte
+			char buffer_numero[256];
+			int i;
+
+			//numero empieza en buf_opn[3]
+			for (i=0;buf_op[i+3]!=0 && buf_op[i+3]!=')';i++) {
+				buffer_numero[i]=buf_op[i+3];
+			}
+
+			buffer_numero[i]=0;
+			//printf ("Parsear numero [%s] de desplazamiento ix/iy\n",buffer_numero);
+
+			int valor_desplazamiento_nochar=parse_string_to_number(buffer_numero);
+			*valor_desplazamiento=valor_desplazamiento_nochar;	
+
+			//Y cambiar por (HL)
+			strcpy(buf_op,"(HL)");	
+
+			//printf ("Es IX/IY+d\n");	
+
+		}
+	}
+
+	return es_prefijo_ix_iy;
+}
+
+int assemble_sustituir_ixiy_despl(int es_prefijo_ix_iy,char *buf_primer_op,char *buf_segundo_op,char *valor_desplazamiento)
+{
+
+	es_prefijo_ix_iy=assemble_sustituir_ixiy_despl_aux(es_prefijo_ix_iy,buf_primer_op,valor_desplazamiento);
+	es_prefijo_ix_iy=assemble_sustituir_ixiy_despl_aux(es_prefijo_ix_iy,buf_segundo_op,valor_desplazamiento);
+
+	return es_prefijo_ix_iy;
+
+}
+
+int assemble_sustituir_ixiy(int es_prefijo_ix_iy,char *buf_primer_op,char *buf_segundo_op)
+{
+
+	if (!strcasecmp(buf_primer_op,"IX")) {
+		es_prefijo_ix_iy=221;
+		strcpy(buf_primer_op,"HL");
+	}	
+
+	if (!strcasecmp(buf_segundo_op,"IX")) {
+		es_prefijo_ix_iy=221;
+		strcpy(buf_segundo_op,"HL");
+	}	
+
+	if (!strcasecmp(buf_primer_op,"IY")) {
+		es_prefijo_ix_iy=253;
+		strcpy(buf_primer_op,"HL");
+	}	
+
+	if (!strcasecmp(buf_segundo_op,"IY")) {
+		es_prefijo_ix_iy=253;
+		strcpy(buf_segundo_op,"HL");
+	}	
+
+
+	if (!strcasecmp(buf_primer_op,"IXL") || !strcasecmp(buf_primer_op,"IX_L")) {
+		es_prefijo_ix_iy=221;
+		strcpy(buf_primer_op,"L");
+	}	
+
+	if (!strcasecmp(buf_segundo_op,"IXL") || !strcasecmp(buf_segundo_op,"IX_L")) {
+		es_prefijo_ix_iy=221;
+		strcpy(buf_segundo_op,"L");
+	}	
+
+	if (!strcasecmp(buf_primer_op,"IXH") || !strcasecmp(buf_primer_op,"IX_H")) {
+		es_prefijo_ix_iy=221;
+		strcpy(buf_primer_op,"H");
+	}	
+
+	if (!strcasecmp(buf_segundo_op,"IXH") || !strcasecmp(buf_segundo_op,"IX_H")) {
+		es_prefijo_ix_iy=221;
+		strcpy(buf_segundo_op,"H");
+	}	
+
+
+	if (!strcasecmp(buf_primer_op,"IYL") || !strcasecmp(buf_primer_op,"IY_L")) {
+		es_prefijo_ix_iy=253;
+		strcpy(buf_primer_op,"L");
+	}	
+
+	if (!strcasecmp(buf_segundo_op,"IYL") || !strcasecmp(buf_segundo_op,"IY_L")) {
+		es_prefijo_ix_iy=253;
+		strcpy(buf_segundo_op,"L");
+	}		
+
+
+	if (!strcasecmp(buf_primer_op,"IYH") || !strcasecmp(buf_primer_op,"IY_H")) {
+		es_prefijo_ix_iy=253;
+		strcpy(buf_primer_op,"H");
+	}	
+
+	if (!strcasecmp(buf_segundo_op,"IYH") || !strcasecmp(buf_segundo_op,"IY_H")) {
+		es_prefijo_ix_iy=253;
+		strcpy(buf_segundo_op,"H");
+	}	
+
+	return es_prefijo_ix_iy;
+
+}
 
 //Ensamblado de instruccion.
 //Retorna longitud de opcode. 0 si error
@@ -361,6 +605,11 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 //direccion_destino es necesario para instrucciones tipo jr dis, djnz dis, etc
 int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 {
+
+	if (CPU_IS_MOTOROLA || CPU_IS_SCMP) {
+		debug_printf(VERBOSE_ERR,"Sorry, no assembler for that cpu yet");
+		return 0;
+	}
 
         printf ("\n\nAssemble %s\n",texto);
 
@@ -392,14 +641,24 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 	int salir=0;
 	int encontrado_indice=-1;
 
+	//Si registro IX o IY, alterar prefijo. Tener cuidado con instrucciones de DD/FD + CB
+	int es_prefijo_ix_iy=0;
+
+	es_prefijo_ix_iy=assemble_sustituir_ixiy(es_prefijo_ix_iy,buf_primer_op,buf_segundo_op);
+
+	//Si es IX+d	
 
 	unsigned int valor_parametro_1=0; //Valor del parametro 1 cuando no es N ni NN
 	unsigned int valor_parametro_2=0; //Valor del parametro 2 cuando no es N ni NN
 
+	char desplazamiento_ixiy; //El valor +d o -d de (IX+d)
+	es_prefijo_ix_iy=assemble_sustituir_ixiy_despl(es_prefijo_ix_iy,buf_primer_op,buf_segundo_op,&desplazamiento_ixiy);
+
+
         for (i=0;array_tabla_ensamblado[i].texto_opcode!=NULL && !salir;i++) {
-                printf ("%s\n",array_tabla_ensamblado[i].texto_opcode);
+                //printf ("%s\n",array_tabla_ensamblado[i].texto_opcode);
                 if (!strcasecmp(buf_opcode,array_tabla_ensamblado[i].texto_opcode)) {
-                        printf ("Match opcode\n");
+                        //printf ("Match opcode\n");
                         //TODO: ver si hace match numero parametros y tipo
 	
 			//Contar numero de parametros en array
@@ -415,7 +674,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 					//Parametros de tipo constante
 					if (array_tabla_ensamblado[i].tipo_parametro_1==ASM_PARM_CONST) {
 						if (strcasecmp(buf_primer_op,array_tabla_ensamblado[i].const_parm1)) {
-							printf ("No coincide tipo const\n");
+							//printf ("No coincide tipo const\n");
 							continue;
 						}
 					}
@@ -428,8 +687,14 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 				
 						//Que coincidan los tipos
 						if (!asm_check_parameter_in_table(tipo_parametro_entrada_1,array_tabla_ensamblado[i].tipo_parametro_1)) {
-							printf ("No coinciden los tipos en parm1\n");
-							continue;
+							//printf ("No coinciden los tipos en parm1\n");
+
+							//Ver si se ha detectado como registro C pero es condicion CC
+							if (!strcasecmp(buf_primer_op,"C") && array_tabla_ensamblado[i].tipo_parametro_1==ASM_PARM_CC) {
+								//printf ("Si que coincide. Condicion C\n");
+								valor_parametro_1=3; //cuarto operador en lista NZ,Z,NC,C,....
+							}
+							else continue;
 						}
 					}
 				}
@@ -439,7 +704,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 					//Parametros de tipo constante
                                         if (array_tabla_ensamblado[i].tipo_parametro_2==ASM_PARM_CONST) {
 						if (strcasecmp(buf_segundo_op,array_tabla_ensamblado[i].const_parm2)) {
-                                                        printf ("No coincide tipo const\n");
+                                                        //printf ("No coincide tipo const\n");
                                                         continue;
                                                 }
                                         }
@@ -452,13 +717,13 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
                 	                        //Que coincidan los tipos
                         	                if (!asm_check_parameter_in_table(tipo_parametro_entrada_2,array_tabla_ensamblado[i].tipo_parametro_2)) {
-                                	                printf ("No coinciden los tipos en parm2\n");
+                                	                //printf ("No coinciden los tipos en parm2\n");
                                                 	continue;
                                         	}
 					}
 				}
 
-                        	printf ("Match opcode and parameters type\n");
+                        	//printf ("Match opcode and parameters type\n");
 
 				longitud_instruccion=1;
 
@@ -470,10 +735,10 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
                 }
         }
 
-        printf ("Indice: %d\n\n",encontrado_indice);
+        //printf ("Indice: %d\n\n",encontrado_indice);
 
         if (encontrado_indice==-1) {
-                printf ("No match\n");
+                //printf ("No match\n");
         }
 
 	else {
@@ -482,13 +747,21 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 		longitud_instruccion=1;
 
 		//Ensamblarlo
+		//Prefijo ix o iy
+		if (es_prefijo_ix_iy) {
+			*destino=es_prefijo_ix_iy;
+			destino++;
+			longitud_instruccion++;		
+		}
+
+		//Prefijo
 		if (array_tabla_ensamblado[encontrado_indice].prefijo) {
 			*destino=array_tabla_ensamblado[encontrado_indice].prefijo;
 			destino++;
 			longitud_instruccion++;		
 		}
 
-		//TODO meter base opcode y mascara parametros
+		//meter base opcode y mascara parametros
 		z80_byte opcode_final=array_tabla_ensamblado[encontrado_indice].mascara_opcode;
 
 		if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1!=ASM_PARM_NONE) {
@@ -534,10 +807,42 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 			}
 
 			else {
-				//Aqui se entra tambien cuando tipo es CONST. Pero como valor y desplazamiento valen 0, es un OR de 0
-                                printf ("OR con valor %d desplazado %d\n",valor_parametro_1,array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1);
-				valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
-				opcode_final |= valor_parametro_1;
+				//NO: qui se entra tambien cuando tipo es CONST. Pero como valor y desplazamiento valen 0, es un OR de 0
+				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1!=ASM_PARM_CONST) {
+
+
+					//Si es RST
+					if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_RST) {
+						valor_parametro_1=parse_string_to_number(buf_primer_op);
+						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
+						valor_parametro_1 /=8;
+						 
+					}
+
+					//Si es IM
+					if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_IM) {
+						valor_parametro_1=parse_string_to_number(buf_primer_op);
+						//0,0,1,2,0,0,1,2 
+						if (valor_parametro_1==1) valor_parametro_1=2;
+						else if (valor_parametro_1==2) valor_parametro_1=3;
+						//Usamos los valores oficiales 0,0,1,2 (el "segundo" 0 corresponderia a im0 no documentado)
+
+						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
+						//valor_parametro_1 /=8;
+						 
+					}					
+
+					//En caso de IX+d
+					if (es_prefijo_ix_iy && !strcasecmp(buf_primer_op,"(HL)")) {
+						destino[1]=desplazamiento_ixiy;
+						longitud_instruccion++;
+						valor_parametro_1=6; //b,c,d,e,h,l,(hl),a ->numero de orden 6 para (hl)
+					}
+
+                                	//printf ("OR con valor %d desplazado %d\n",valor_parametro_1,array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1);
+					valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
+					opcode_final |= valor_parametro_1;
+				}
 
 				
 			}
@@ -586,9 +891,19 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
                         }
 
                         else {
-				//Aqui se entra tambien cuando tipo es CONST. Pero como valor y desplazamiento valen 0, es un OR de 0
-				valor_parametro_2 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p2;
-                                opcode_final |= valor_parametro_2;
+				//NO: qui se entra tambien cuando tipo es CONST. Pero como valor y desplazamiento valen 0, es un OR de 0
+				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2!=ASM_PARM_CONST) {
+
+					//En caso de IX+d
+					if (es_prefijo_ix_iy && !strcasecmp(buf_segundo_op,"(HL)")) {
+						destino[1]=desplazamiento_ixiy;
+						longitud_instruccion++;
+						valor_parametro_2=6; //b,c,d,e,h,l,(hl),a ->numero de orden 6 para (hl)
+					}
+
+					valor_parametro_2 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p2;
+                                	opcode_final |= valor_parametro_2;
+				}
                         }
                 }
 

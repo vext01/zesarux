@@ -96,6 +96,7 @@
 #include "compileoptions.h"
 #include "settings.h"
 #include "datagear.h"
+#include "assemble.h"
 
  
 #if defined(__APPLE__)
@@ -6920,3 +6921,133 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_debug_assemble(MENU_ITEM_PARAMETERS)
+{
+
+	//printf ("Opening disassemble menu\n");
+ 	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+	zxvision_window ventana;
+
+	int ancho_total=32-1;
+
+	if (CPU_IS_MOTOROLA) ancho_total=64-1;
+
+	zxvision_new_window(&ventana,0,1,32,20,
+							ancho_total,20-2,"Assemble");
+	zxvision_draw_window(&ventana);			
+
+    //Inicializar info de tamanyo zona
+	menu_debug_set_memory_zone_attr();
+
+
+
+	z80_byte tecla;
+
+    
+    menu_z80_moto_int direccion=menu_debug_disassemble_last_ptr;
+
+	menu_z80_moto_int direccion_ensamblado=direccion;
+
+	int salir=0;
+	int lineas_ensambladas=0;
+		
+
+	do {
+		int linea=0;
+
+		int lineas_disass=0;
+		const int lineas_total=15;
+
+		char dumpassembler[65];
+
+		int longitud_opcode;
+		int longitud_opcode_primera_linea;
+
+		menu_z80_moto_int dir=direccion;
+
+		for (;lineas_disass<lineas_total;lineas_disass++,linea++) {
+
+			//Formato de texto en buffer:
+			//0123456789012345678901234567890
+			//DDDD AABBCCDD OPCODE-----------
+			//DDDD: Direccion
+			//AABBCCDD: Volcado hexa
+
+			//Metemos 30 espacios
+		
+
+
+			//menu_debug_dissassemble_una_instruccion(dumpassembler,dir,&longitud_opcode);
+			menu_debug_dissassemble_una_inst_sino_hexa(dumpassembler,dir,&longitud_opcode,menu_debug_disassemble_hexa_view.v,1);
+
+
+			if (lineas_disass==0) longitud_opcode_primera_linea=longitud_opcode;
+
+			dir +=longitud_opcode;
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea,dumpassembler);
+		}
+
+
+		zxvision_draw_window_contents(&ventana);
+
+
+
+		char string_opcode[256];
+		string_opcode[0]=0;
+
+
+		char texto_titulo[256];
+		sprintf (texto_titulo,"Assemble at %XH",direccion_ensamblado);
+
+    	menu_ventana_scanf(texto_titulo,string_opcode,256);
+		zxvision_draw_window(&ventana);
+
+		if (string_opcode[0]==0) salir=1;
+		else {
+
+
+				z80_byte destino_ensamblado[256];
+
+
+				int longitud_destino=assemble_opcode(direccion_ensamblado,string_opcode,destino_ensamblado);
+
+				if (longitud_destino==0) {
+					menu_error_message("Error. Invalid opcode");
+					//escribir_socket_format(misocket,"Error. Invalid opcode: %s\n",texto);
+					salir=1;
+				}
+
+				else {
+					menu_debug_set_memory_zone_attr();
+					unsigned int direccion_escribir=direccion_ensamblado;
+					int i;
+					for (i=0;i<longitud_destino;i++) {
+						menu_debug_write_mapped_byte(direccion_escribir++,destino_ensamblado[i]);
+					}
+
+				}
+
+				direccion_ensamblado+=longitud_destino;
+
+				lineas_ensambladas++;
+
+				//Desensamblar desde la siguiente instruccion si conviene
+				if (lineas_ensambladas>5) {
+					direccion +=longitud_opcode_primera_linea;
+				}
+
+		}
+	
+	} while (!salir);
+
+
+		
+
+    cls_menu_overlay();
+	zxvision_destroy_window(&ventana);		
+
+ 
+
+}

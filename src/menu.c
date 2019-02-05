@@ -628,7 +628,6 @@ void menu_change_audio_driver(MENU_ITEM_PARAMETERS);
 
 void menu_chardetection_settings(MENU_ITEM_PARAMETERS);
 
-void menu_debug_disassemble(MENU_ITEM_PARAMETERS);
 
 void menu_tape_settings(MENU_ITEM_PARAMETERS);
 
@@ -10862,25 +10861,25 @@ void menu_debug_get_legend(int linea,char *s)
 			if (cpu_step_mode.v) {
 				if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
-							// StpM Ent:Step StOvr ContSt Mode
-					sprintf(s,"~~StpM ~~E~~n~~t:Step St~~Ovr ~~ContSt ~~Mode");
+							// StM DAsm En:Stp StOvr CntSt Md
+					sprintf(s,"~~StM ~~D~~Asm ~~E~~n:Stp St~~Ovr ~~CntSt ~~Md");
 				}
 				else {
 							//01234567890123456789012345678901
-							// Stepmode Ent:Step Stovr ContSt
-					sprintf(s,"~~StepMode ~~E~~n~~t:Step St~~Ovr ~~ContSt");
+							// StpM DAsm Ent:Stp Stovr ContSt
+					sprintf(s,"~~StpM ~~D~~Asm ~~E~~n~~t:Stp St~~Ovr ~~ContSt");
 				}
 			}
 			else {
 				if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
 							// Stepmode Disassemble Mode
-					sprintf(s,"~~StepMode ~~Disassemble ~~Mode");
+					sprintf(s,"~~StepMode ~~Disassem ~~Assem ~~Mode");
 				}
 				else {
 							//01234567890123456789012345678901
 							// Stepmode Disassemble 					
-					sprintf(s,"~~StepMode ~~Disassemble");
+					sprintf(s,"~~StepMode ~~Disassem ~~Assem");
 				}
 			}
 		break;
@@ -11279,6 +11278,13 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
+				if (tecla=='a') {
+					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
+					menu_debug_assemble(0);
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+				}				
+
 				if (tecla=='b') {
 					menu_breakpoints(0);
                     //Decimos que no hay tecla pulsada
@@ -11512,6 +11518,25 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                     si_ejecuta_una_instruccion=0;
                 }
+
+				if (tecla=='d') {
+					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
+					menu_debug_disassemble(0);
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+				}
+
+				if (tecla=='a') {
+					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
+					menu_debug_assemble(0);
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+				}		
+
 
 				if (tecla=='z') {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado

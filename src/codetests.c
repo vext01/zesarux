@@ -470,17 +470,40 @@ void codetests_assembler(void)
 
 	char texto_desensamblado[256];
 
+	int paso_prefijo;
+
+	for (paso_prefijo=0;paso_prefijo<4;paso_prefijo++) { //Si prefijo, 221, 253, 237
+		if (paso_prefijo) {
+			printf ("Paso prefijo %d\n----------------\n\n",paso_prefijo);
+		}
 	for (i=0;i<256;i++) {
 		//Primero metemos 4 bytes y desensamblamos
-		//Evitar opcode
+		//Evitar opcode prefijos
 		if (i==203 || i==221 || i==237 || i==253) continue;
 
 		//Metemos el primer byte con ese valor y 3 mas de relleno
-		disassemble_array[0]=i;
+		int inicio_array=0;
 
-		disassemble_array[1]=0; //0x3e;
-		disassemble_array[2]=0; //0x6e;
-		disassemble_array[3]=0; //0xab;
+		if (paso_prefijo==1) {
+			disassemble_array[inicio_array]=221;
+			inicio_array++;
+		}
+
+		if (paso_prefijo==2) {
+			disassemble_array[inicio_array]=253;
+			inicio_array++;
+		}
+
+		if (paso_prefijo==3) {
+			disassemble_array[inicio_array]=237;
+			inicio_array++;
+		}
+
+		disassemble_array[inicio_array]=i;
+
+		disassemble_array[inicio_array+1]=0; //0x3e;
+		disassemble_array[inicio_array+2]=0; //0x6e;
+		disassemble_array[inicio_array+3]=0; //0xab;
 
 		//Desensamblamos
 		size_t longitud_opcode_desensamblado;
@@ -488,30 +511,78 @@ void codetests_assembler(void)
 
 		printf ("Ensamblando Opcode %d : %s\n",i,texto_desensamblado);
 
+		//Evitar nop con prefijo
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"NOP")) continue;
+		//Evitar nop con prefijo
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"NOPD")) continue;	
+
+		//Evitar segundo y demas neg
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"NEG") && i>=76) continue;		
+
+		//Evitar segundo im0
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"IM 0") && i==78) continue;	
+
+		//Evitar segundo retn y demas
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"RETN") && i>=85) continue;	
+
+		//Evitar segundo LD (NN),HL	
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"LD (NNNN),HL") && i==99) continue;		
+
+		//Evitar instruccion sin IX o IY (Ejemplo: DD + LD BC,NNNNN)
+		if (paso_prefijo && paso_prefijo<=2 && !strstr(texto_desensamblado,"IX") && !strstr(texto_desensamblado,"IY")) continue;
+
+		//Evitar im0,1,2 >=102, que estan repetidos
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"IM 0") && (i==102 || i==110)) continue;		
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"IM 1") && (i==118)) continue;		
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"IM 2") && (i==126)) continue;		
+
+		//Evitar segundo LD HL,(NN)
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"LD HL,(NNNN)") && i==107) continue;				
+
 		//Ensamblar
 		int direccion_destino=16384;
 
 		//Casos especiales
 		if (!strcmp(texto_desensamblado,"DJNZ NNNN")) {
-			disassemble_array[1]=3;
+			disassemble_array[inicio_array+1]=3;
 			strcpy(texto_desensamblado,"DJNZ 16389"); //16384+2+3;
 		}
 
 		if (!strcmp(texto_desensamblado,"JR NNNN")) {
-			disassemble_array[1]=256-4;
+			disassemble_array[inicio_array+1]=256-4;
 			strcpy(texto_desensamblado,"JR 16382"); //16384+2-4;
 		}		
 
 		if (!strcmp(texto_desensamblado,"JR NZ,NNNN")) {
-			disassemble_array[1]=256-4;
+			disassemble_array[inicio_array+1]=256-4;
 			strcpy(texto_desensamblado,"JR NZ,16382"); //16384+2-4;
-		}			
+		}		
+
+		if (!strcmp(texto_desensamblado,"JR Z,NNNN")) {
+			disassemble_array[inicio_array+1]=256-4;
+			strcpy(texto_desensamblado,"JR Z,16382"); //16384+2-4;
+		}				
+
+		if (!strcmp(texto_desensamblado,"JR NC,NNNN")) {
+			disassemble_array[inicio_array+1]=3;
+			strcpy(texto_desensamblado,"JR NC,16389"); //16384+2+3;
+		}		
+
+		if (!strcmp(texto_desensamblado,"JR C,NNNN")) {
+			disassemble_array[inicio_array+1]=3;
+			strcpy(texto_desensamblado,"JR C,16389"); //16384+2+3;
+		}				
 
 		if (!strcmp(texto_desensamblado,"LD (NNNN),HL")) {
-			disassemble_array[1]=4;
-			disassemble_array[2]=64;
+			disassemble_array[inicio_array+1]=4;
+			disassemble_array[inicio_array+2]=64;
 			strcpy(texto_desensamblado,"LD (16388),HL"); 
-		}			
+		}	
+
+		if (strstr(texto_desensamblado,"RST")) { //al desensamblar lo mete como valor hexadecimal (RST 16->RST 10)
+			int rstvalor=((i>>3) & 7)*8;
+			sprintf(texto_desensamblado,"RST %d",rstvalor);
+		}		
 
 		int longitud_destino=assemble_opcode(direccion_destino,texto_desensamblado,destino_ensamblado);
 
@@ -537,9 +608,11 @@ void codetests_assembler(void)
 		}
 		
 
-		usleep(250000);
+		//usleep(50000);
+	}
 	}
 
+	printf ("Assemble tests OK\n");
 		
 
 }

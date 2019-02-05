@@ -50,6 +50,7 @@
 #include "zxevo.h"
 #include "settings.h"
 #include "esxdos_handler.h"
+#include "assemble.h"
 
 
 
@@ -104,6 +105,11 @@ int enviar_cr=0;
 
 
 int remote_find_label_source_code(char *label_to_find);
+
+
+//Usados en el prompt de ensamblado
+z80_bit remote_protocol_assembling={0};
+unsigned int direccion_assembling;
 
 
 //Crea un socket TCP per la connexio en xarxa
@@ -700,6 +706,8 @@ struct s_items_ayuda
 struct s_items_ayuda items_ayuda[]={
 
   {"about",NULL,NULL,"Shows about message"},
+  {"assemble","|a","[address] [instruction]","Assemble at address. If no instruction specified, "
+                                        "opens assemble prompt"},	
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
@@ -3132,6 +3140,33 @@ z80_int tbblue_palette_sprite_second[256];
 
 }
 
+int remote_assemble(int misocket,char *texto,unsigned int direccion)
+{
+	z80_byte destino_ensamblado[256];
+
+
+				int longitud_destino=assemble_opcode(direccion,texto,destino_ensamblado);
+
+				if (longitud_destino==0) {
+					escribir_socket_format(misocket,"Error. Invalid opcode: %s\n",texto);
+					return 0;
+				}
+
+				else {
+
+					menu_debug_set_memory_zone_attr();
+					unsigned int direccion_escribir=direccion;
+					int i;
+					for (i=0;i<longitud_destino;i++) {
+						menu_debug_write_mapped_byte(direccion_escribir++,destino_ensamblado[i]);
+					}
+
+					remote_disassemble(misocket,direccion,1,1);
+					escribir_socket(misocket,"\n");
+				}
+		return longitud_destino;
+}
+
 
 #ifdef EMULATE_VISUALMEM
 
@@ -3220,13 +3255,20 @@ char buffer_retorno[2048];
 		i++;
 	}
 
-	if (comando_ignorar) return;
+	if (comando_ignorar) {
+		//En caso de salir de assemble 
+		remote_protocol_assembling.v=0;
+		return;
+	}
 
 	if (comando[0]==0 || (comando[0]==10 && comando[1]==0) ) {
 		//debug_printf(VERBOSE_DEBUG,"Command is null");
 		//sleep (1);
 		return;
 	}
+
+
+
 
 
     //Interpretar comando hasta espacio o final de linea, o sea sin tener en cuenta parametros
@@ -3257,6 +3299,33 @@ char buffer_retorno[2048];
 	debug_printf (VERBOSE_DEBUG,"Remote command parameters: lenght: %d [%s]",strlen(parametros),parametros);
 
 
+	//Si en modo assembling. Juntamos comando y parametros
+	if (remote_protocol_assembling.v) {
+
+		//Si cadena vacia
+		//if (comando_sin_parametros[0]==0) {
+		//	remote_protocol_assembling.v=0;
+		//}
+
+		//else {
+			char comando_final[2048];
+			sprintf (comando_final,"%s %s",comando_sin_parametros,parametros);
+			int longitud=remote_assemble(misocket,comando_final,direccion_assembling);
+			//printf ("longitud ensamblado: %d\n",longitud);
+			if (longitud==0) {
+				//Error
+				remote_protocol_assembling.v=0;
+			}
+			else {
+				direccion_assembling +=longitud;
+			}
+		//}
+
+		return;
+	}
+
+
+
 	//Ver cada comando
 	if (!strcmp(comando_sin_parametros,"help") || !strcmp(comando_sin_parametros,"?")) {
 		if (parametros[0]==0) {
@@ -3277,6 +3346,36 @@ char buffer_retorno[2048];
 	else if (!strcmp(comando_sin_parametros,"about")) {
 		escribir_socket (misocket,"ZEsarUX remote command protocol");
 	}
+
+  else if (!strcmp(comando_sin_parametros,"assemble") || !strcmp(comando_sin_parametros,"a")) {
+
+		//No utilizo remote_parse_commands pues el parametro 2 en adelante puede contener espacios ("INC BC")
+	if (parametros[0]==0) {
+		escribir_socket(misocket,"ERROR. No parameters set");
+	}
+
+	/*else {
+
+		direccion=parse_string_to_number(parametros);
+
+		menu_debug_set_memory_zone_attr();
+
+		//Ver si hay espacio
+		char *s=find_space_or_end(parametros);
+		while (*s) {*/
+
+		else {
+			unsigned int direccion=parse_string_to_number(parametros);
+			char *s=find_space_or_end(parametros);
+      if (*s) {
+				remote_assemble(misocket,s,direccion);		
+			}
+			else {
+				direccion_assembling=direccion;
+				remote_protocol_assembling.v=1; //Entrar en modo assembly
+			}
+  	}
+	}	
 
   //ATDT easter egg
 	else if (comando_sin_parametros[0]=='A' && comando_sin_parametros[1]=='T' && comando_sin_parametros[2]=='D' && comando_sin_parametros[3]=='T') {
@@ -4939,6 +5038,7 @@ void *thread_remote_protocol_function(void *nada)
 
 						char prompt[1024];
             if (menu_event_remote_protocol_enterstep.v) sprintf (prompt,"%s","\ncommand@cpu-step> ");
+						else if (remote_protocol_assembling.v) sprintf (prompt,"assemble at %XH> ",direccion_assembling);
 						else sprintf (prompt,"%s","\ncommand> ");
 						if (escribir_socket(sock_conectat,prompt)<0) remote_salir_conexion=1;
 
