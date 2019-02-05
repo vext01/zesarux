@@ -537,7 +537,7 @@ void codetests_assembler(void)
 		size_t longitud_opcode_desensamblado;
 		debugger_disassemble_array(texto_desensamblado,255,&longitud_opcode_desensamblado,0);
 
-		printf ("Ensamblando Opcode %d : %s\n",i,texto_desensamblado);
+		//printf ("Ensamblando Opcode %d : %s\n",i,texto_desensamblado);
 
 		//Evitar nop con prefijo
 		if (paso_prefijo && !strcasecmp(texto_desensamblado,"NOP")) continue;
@@ -572,11 +572,15 @@ void codetests_assembler(void)
 
 		//Las otras raras de DD/FD+CB. Solo las que tienen 3 bits mas bajos a 6
 		if (paso_prefijo==5 || paso_prefijo==6) {	
-			printf ("%d\n",i&7);
+			//printf ("%d\n",i&7);
 			if ((i&7)!=6) continue;
 		}
 
+
+
+
 		//Ensamblar
+		printf ("Ensamblando Opcode %d : %s\n",i,texto_desensamblado);
 		int direccion_destino=16384;
 
 		//Casos especiales
