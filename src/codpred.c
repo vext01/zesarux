@@ -276,27 +276,99 @@ void instruccion_ed_39 ()
 
 void instruccion_ed_40 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 40");
+        return;
+    }
+
+    //BSLA DE,B   ED 28: DE = DE<<(B&31), no flags
+    // barrel-shift left of DE, B (5 bits) times
+    int shift_amount = reg_b & 31;
+    if (0 == shift_amount) return;
+    if (16 <= shift_amount) {           // 16+ shifts set DE to zero
+        DE = 0;
+    } else {
+        DE = DE << shift_amount;
+    }
 }
 
 void instruccion_ed_41 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 41");
+        return;
+    }
+
+    //BSRA DE,B   ED 29: DE = signed(DE)>>(B&31), no flags
+    // aritmetic barrel-shift right of DE, B (5 bits) times
+    int shift_amount = reg_b & 31;
+    int de_is_negative = (1<<15) & DE;  // extract top bit
+    if (0 == shift_amount) return;
+    if (15 <= shift_amount) {           // 15+ shifts set DE either to 0 or ~0
+        DE = de_is_negative ? ~0 : 0;
+    } else {                            // for shift amount 1..14 do the shifting
+        z80_int de_bottom_part = DE >> shift_amount;
+        z80_int de_upper_part = 0;      // 0 for positive/zero values
+        if (de_is_negative) {           // negative values have to fill vacant top bits with ones
+            de_upper_part = 0xFFFF << (15-shift_amount);
+        }
+        DE = de_upper_part | de_bottom_part;
+    }
 }
 
 void instruccion_ed_42 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 42");
+        return;
+    }
+
+    //BSRL DE,B   ED 2A: DE = unsigned(DE)>>(B&31), no flags
+    // logical barrel-shift right of DE, B (5 bits) times
+    int shift_amount = reg_b & 31;
+    if (0 == shift_amount) return;
+    if (16 <= shift_amount) {           // 16+ shifts set DE to 0
+        DE = 0;
+    } else {                            // for shift amount 1..15 do the shifting
+        DE = DE >> shift_amount;        // DE is unsigned short, C shift is OK
+    }
 }
 
 void instruccion_ed_43 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 43");
+        return;
+    }
+
+    //BSRF DE,B   ED 2B: DE = ~(unsigned(~DE)>>(B&31)), no flags
+    // barrel-shift right of DE, B (5 bits) times, setting top bits with one
+    int shift_amount = reg_b & 31;
+    if (0 == shift_amount) return;
+    if (16 <= shift_amount) {           // 16+ shifts set DE to ~0
+        DE = ~0;
+    } else {                            // for shift amount 1..15 do the shifting and setting
+        z80_int de_bottom_part = DE >> shift_amount;
+        z80_int de_upper_part = 0xFFFF << (16-shift_amount);
+        DE = de_upper_part | de_bottom_part;
+    }
 }
 
 void instruccion_ed_44 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 44");
+        return;
+    }
+
+    //BRLC DE,B   ED 2C: DE = DE<<(B&15) | DE>>(16-B&15), no flags
+    // barrel-roll left without carry of DE, B (4 bits) times
+    int rolls_amount = reg_b & 15;
+    if (0 < rolls_amount) {
+        z80_int de_upper_part = DE<<rolls_amount;
+        z80_int de_bottom_part = DE>>(16-rolls_amount);
+        DE = de_upper_part | de_bottom_part;
+    }
 }
 
 void instruccion_ed_45 ()
@@ -1524,7 +1596,23 @@ void instruccion_ed_151 ()
 
 void instruccion_ed_152 ()
 {
+    if (!MACHINE_IS_TBBLUE) {
         invalid_opcode_ed("237 152");
+        return;
+    }
+
+    //JP (C)   ED 98: PC = PC&$C000 + IN(C)<<6, PC is "next-instruction" aka "$+2", no flags
+    // Jumps at one of 256 subroutines (64B long in 16kiB memory segment), selected by "IN (C)" value
+
+    // IN (C) part
+    z80_int in_valor = (z80_int)lee_puerto(reg_b,reg_c);    // read + extend to 16b
+
+    // combine it into new PC, keeping two top bits from current PC (pointing at next instruction)
+    in_valor <<= 6;
+    reg_pc = (reg_pc&0xC000) | in_valor;
+#ifdef EMULATE_MEMPTR
+    set_memptr(reg_pc);     // not sure how this actually works, needs Cesar review
+#endif
 }
 
 void instruccion_ed_153 ()
@@ -2111,19 +2199,42 @@ void instruccion_ed_182 ()
 
 void instruccion_ed_183 ()
 {
-        if (MACHINE_IS_TBBLUE) {
-                //LDPIRX ED B7 it's like LDIRX, but is for 8 byte patterend fills 
-                //basically the lower 3 bits of E are put into lower 3 bits of L
-                z80_byte lowbits=reg_e & 7;
+    if (!MACHINE_IS_TBBLUE) {
+        invalid_opcode_ed("237 183");
+        return;
+    }
 
-                reg_l &=(255-7);
-                reg_l |=lowbits;
+    //LDPIRX ED B7: do{t:=(HL&$FFF8+E&7)*; {if t!=A DE*:=t;} DE++; BC--}while(BC>0)
+    //LDPIRX is similar to LDIRX, but it's for 8 byte pattern fills
+    //basically the lower 3 bits of E are put into lower 3 bits of L, (but real HL is not modified!)
 
-                //Y llamar a ldirx
-                instruccion_ed_180(); 
-        }
+    z80_int source_adr = (reg_hl & ~7) | (reg_e & 7);
 
-        else invalid_opcode_ed("237 183");
+//Como instruccion ldirx excepto el HL incrementar...
+#ifdef EMULATE_MEMPTR
+    if (reg_b!=0 || reg_c!=1) set_memptr(reg_pc-1);
+#endif
+
+    z80_byte byte_leido = peek_byte(source_adr);
+    //if byte == A then skips byte.
+    if (reg_a!=byte_leido) poke_byte(DE,byte_leido);
+
+    contend_write_no_mreq( DE, 1 );
+    contend_write_no_mreq( DE, 1 );
+
+    BC--;
+    if (BC) {
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        contend_write_no_mreq( DE, 1 );
+        reg_pc -=2;
+    }
+
+    DE++;
+
+    //LDPIRX does not affect flags
 }
 
 
