@@ -472,7 +472,7 @@ void codetests_assembler(void)
 
 	int paso_prefijo;
 
-	for (paso_prefijo=0;paso_prefijo<5;paso_prefijo++) { //Si prefijo, 221, 253, 237, 203
+	for (paso_prefijo=0;paso_prefijo<7;paso_prefijo++) { //Si prefijo, 221, 253, 237, 203, 221+203, 253+203
 		if (paso_prefijo) {
 			printf ("Paso prefijo %d\n----------------\n\n",paso_prefijo);
 		}
@@ -504,11 +504,34 @@ void codetests_assembler(void)
 			inicio_array++;
 		}		
 
-		disassemble_array[inicio_array]=i;
+		if (paso_prefijo==5) {
+			disassemble_array[inicio_array]=221;
+			disassemble_array[inicio_array+1]=203;
+			inicio_array+=2;
+		}	
 
-		disassemble_array[inicio_array+1]=0; //0x3e;
-		disassemble_array[inicio_array+2]=0; //0x6e;
-		disassemble_array[inicio_array+3]=0; //0xab;
+		if (paso_prefijo==6) {
+			disassemble_array[inicio_array]=253;
+			disassemble_array[inicio_array+1]=203;
+			inicio_array+=2;
+		}					
+
+
+
+		if (paso_prefijo==5 || paso_prefijo==6) {
+			disassemble_array[inicio_array]=0; //desplazamiento
+			disassemble_array[inicio_array+1]=i; //instruccion
+			disassemble_array[inicio_array+2]=0; //0x6e;
+			disassemble_array[inicio_array+3]=0; //0xab;			
+		}
+
+		else {
+			disassemble_array[inicio_array]=i;
+
+			disassemble_array[inicio_array+1]=0; //0x3e;
+			disassemble_array[inicio_array+2]=0; //0x6e;
+			disassemble_array[inicio_array+3]=0; //0xab;
+		}
 
 		//Desensamblamos
 		size_t longitud_opcode_desensamblado;
@@ -542,7 +565,16 @@ void codetests_assembler(void)
 		if (paso_prefijo && !strcasecmp(texto_desensamblado,"IM 2") && (i==126)) continue;		
 
 		//Evitar segundo LD HL,(NN)
-		if (paso_prefijo && !strcasecmp(texto_desensamblado,"LD HL,(NNNN)") && i==107) continue;				
+		if (paso_prefijo && !strcasecmp(texto_desensamblado,"LD HL,(NNNN)") && i==107) continue;		
+
+		//Evitar de momento instrucciones "raras" dd/fd+203 < 64		
+		//if ( (paso_prefijo==5 || paso_prefijo==6) && i<255) continue;	
+
+		//Las otras raras de DD/FD+CB. Solo las que tienen 3 bits mas bajos a 6
+		if (paso_prefijo==5 || paso_prefijo==6) {	
+			printf ("%d\n",i&7);
+			if ((i&7)!=6) continue;
+		}
 
 		//Ensamblar
 		int direccion_destino=16384;
@@ -594,6 +626,10 @@ void codetests_assembler(void)
 		if (longitud_destino==0) {
 			printf ("Error longitud=0\n");
 			return;
+		}
+
+		else if (longitud_destino!=longitud_opcode_desensamblado) {
+			printf ("Sizes do not match\n");
 		}
 
 		else {

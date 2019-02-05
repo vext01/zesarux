@@ -778,6 +778,9 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 		//meter base opcode y mascara parametros
 		z80_byte opcode_final=array_tabla_ensamblado[encontrado_indice].mascara_opcode;
 
+
+		//Para parametro 1. TODO unificar esto con lo de mas abajo para parametro 2
+
 		if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1!=ASM_PARM_NONE) {
 			if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_NN
                         || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_DIS || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_N
@@ -860,20 +863,44 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 					}									
 
 					//En caso de IX+d
+					int es_ddfd_cb=0;
 					if (es_prefijo_ix_iy && !strcasecmp(buf_primer_op,"(HL)")) {
-						destino[1]=desplazamiento_ixiy;
-						longitud_instruccion++;
-						valor_parametro_1=6; //b,c,d,e,h,l,(hl),a ->numero de orden 6 para (hl)
+						//En caso de IX/IY y prefijo CB. Desplazamiento va antes y luego va instruccion
+						if (array_tabla_ensamblado[encontrado_indice].prefijo==203) {
+							//printf ("Opcode con DD/FD+CB\n");
+							valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
+							opcode_final |= valor_parametro_1;							
+							//printf ("opcode_final: %02X %02X\n",desplazamiento_ixiy,opcode_final);
+							destino[1]=opcode_final;
+							//destino[2]=opcode_final;
+
+							opcode_final=desplazamiento_ixiy; //Acabara escribiendo esto mas abajo
+							longitud_instruccion++;
+
+							es_ddfd_cb=1; //Para que esto mas abajo no haga OR con nada
+
+						}
+
+						else {
+							destino[1]=desplazamiento_ixiy;
+							longitud_instruccion++;
+							valor_parametro_1=6; //b,c,d,e,h,l,(hl),a ->numero de orden 6 para (hl)
+						}
 					}
 
-                                	//printf ("OR con valor %d desplazado %d\n",valor_parametro_1,array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1);
-					valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
-					opcode_final |= valor_parametro_1;
+					if (!es_ddfd_cb) {
+                        //printf ("OR con valor %d desplazado %d\n",valor_parametro_1,array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1);
+						valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
+						opcode_final |= valor_parametro_1;
+					}
 				}
 
 				
 			}
 		}
+
+
+		//Para parametro 2
 
                 if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2!=ASM_PARM_NONE) {
                         if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_NN
@@ -922,20 +949,42 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2!=ASM_PARM_CONST) {
 
 					//En caso de IX+d
+					int es_ddfd_cb=0;
 					if (es_prefijo_ix_iy && !strcasecmp(buf_segundo_op,"(HL)")) {
+					//En caso de IX/IY y prefijo CB. Desplazamiento va antes y luego va instruccion
+						if (array_tabla_ensamblado[encontrado_indice].prefijo==203) {
+							//printf ("Opcode con DD/FD+CB\n");
+							valor_parametro_2 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p2;
+							opcode_final |= valor_parametro_2;							
+							//printf ("opcode_final: %02X %02X\n",desplazamiento_ixiy,opcode_final);
+							destino[1]=opcode_final;
+							//destino[2]=opcode_final;
+
+							opcode_final=desplazamiento_ixiy; //Acabara escribiendo esto mas abajo
+							longitud_instruccion++;
+
+							es_ddfd_cb=1; //Para que esto mas abajo no haga OR con nada
+
+						}
+
+						else {						
 						destino[1]=desplazamiento_ixiy;
 						longitud_instruccion++;
 						valor_parametro_2=6; //b,c,d,e,h,l,(hl),a ->numero de orden 6 para (hl)
+						}
 					}
 
-					valor_parametro_2 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p2;
-                                	opcode_final |= valor_parametro_2;
+					if (!es_ddfd_cb) {
+						valor_parametro_2 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p2;
+                         	opcode_final |= valor_parametro_2;
+					}
 				}
                         }
                 }
 
 
 		*destino=opcode_final;
+		//printf ("opcode final: %d\n",opcode_final);
 
 
 		//TODO Sumar longitud segun parametros
