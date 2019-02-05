@@ -784,6 +784,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 		int tipo_parametro_tabla=array_tabla_ensamblado[encontrado_indice].tipo_parametro_1;
 		int desplazamiento_mascara_tabla=array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
 		char *buffer_operador=buf_primer_op;
+		unsigned int valor_parametro=valor_parametro_1;
 
 		if (tipo_parametro_tabla!=ASM_PARM_NONE) {
 			if (tipo_parametro_tabla==ASM_PARM_N || tipo_parametro_tabla==ASM_PARM_NN
@@ -793,23 +794,23 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 				//Parseamos valor
                                 if (tipo_parametro_tabla==ASM_PARM_PARENTHESIS_N || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_NN) {
                                         //Saltar el parentesis en (NN)
-                                        valor_parametro_1=parse_string_to_number(&buffer_operador[1]);
+                                        valor_parametro=parse_string_to_number(&buffer_operador[1]);
                                 }
                         
-				else valor_parametro_1=parse_string_to_number(buffer_operador);
+				else valor_parametro=parse_string_to_number(buffer_operador);
 
 				//Si es N
 				if (tipo_parametro_tabla==ASM_PARM_N || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_N) {
 					//En destino+1
-					destino[1]=valor_parametro_1 & 0xFF;
+					destino[1]=valor_parametro & 0xFF;
 					longitud_instruccion++;
 				}
 
 				//Si es NN
 				if (tipo_parametro_tabla==ASM_PARM_NN || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_NN) {
 					//En destino+1
-					destino[1]=valor_parametro_1 & 0xFF;
-					destino[2]=(valor_parametro_1>>8) & 0xFF;
+					destino[1]=valor_parametro & 0xFF;
+					destino[2]=(valor_parametro>>8) & 0xFF;
 					longitud_instruccion+=2;
 				}
 
@@ -818,7 +819,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 					//En destino+1
                                         //Calcular desplazamiento
                                         int dir_final=direccion_destino+2;
-                                        int incremento=valor_parametro_1-dir_final;
+                                        int incremento=valor_parametro-dir_final;
                                         char incremento_8bit=incremento;
 
 
@@ -834,18 +835,18 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
 					//Si es RST
 					if (tipo_parametro_tabla==ASM_PARM_RST) {
-						valor_parametro_1=parse_string_to_number(buffer_operador);
+						valor_parametro=parse_string_to_number(buffer_operador);
 						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
-						valor_parametro_1 /=8;
+						valor_parametro /=8;
 						 
 					}
 
 					//Si es IM
 					if (tipo_parametro_tabla==ASM_PARM_IM) {
-						valor_parametro_1=parse_string_to_number(buffer_operador);
+						valor_parametro=parse_string_to_number(buffer_operador);
 						//0,0,1,2,0,0,1,2 
-						if (valor_parametro_1==1) valor_parametro_1=2;
-						else if (valor_parametro_1==2) valor_parametro_1=3;
+						if (valor_parametro==1) valor_parametro=2;
+						else if (valor_parametro==2) valor_parametro=3;
 						//Usamos los valores oficiales 0,0,1,2 (el "segundo" 0 corresponderia a im0 no documentado)
 
 						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
@@ -855,7 +856,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
 					//Si es BIT
 					if (tipo_parametro_tabla==ASM_PARM_BIT) {
-						valor_parametro_1=parse_string_to_number(buffer_operador);
+						valor_parametro=parse_string_to_number(buffer_operador);
 						//0,0,1,2,0,0,1,2 
 						//if (valor_parametro_1==1) valor_parametro_1=2;
 						//else if (valor_parametro_1==2) valor_parametro_1=3;
@@ -872,8 +873,8 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 						//En caso de IX/IY y prefijo CB. Desplazamiento va antes y luego va instruccion
 						if (array_tabla_ensamblado[encontrado_indice].prefijo==203) {
 							//printf ("Opcode con DD/FD+CB\n");
-							valor_parametro_1 <<= desplazamiento_mascara_tabla;
-							opcode_final |= valor_parametro_1;							
+							valor_parametro <<= desplazamiento_mascara_tabla;
+							opcode_final |= valor_parametro;							
 							//printf ("opcode_final: %02X %02X\n",desplazamiento_ixiy,opcode_final);
 							destino[1]=opcode_final;
 							//destino[2]=opcode_final;
@@ -888,14 +889,14 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 						else {
 							destino[1]=desplazamiento_ixiy;
 							longitud_instruccion++;
-							valor_parametro_1=6; //b,c,d,e,h,l,(hl),a ->numero de orden 6 para (hl)
+							valor_parametro=6; //b,c,d,e,h,l,(hl),a ->numero de orden 6 para (hl)
 						}
 					}
 
 					if (!es_ddfd_cb) {
                         //printf ("OR con valor %d desplazado %d\n",valor_parametro_1,array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1);
-						valor_parametro_1 <<= desplazamiento_mascara_tabla;
-						opcode_final |= valor_parametro_1;
+						valor_parametro <<= desplazamiento_mascara_tabla;
+						opcode_final |= valor_parametro;
 					}
 				}
 
