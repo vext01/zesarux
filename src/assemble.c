@@ -779,12 +779,29 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 		z80_byte opcode_final=array_tabla_ensamblado[encontrado_indice].mascara_opcode;
 
 
-		//Para parametro 1. TODO unificar esto con lo de mas abajo para parametro 2
+		//Para parametro 1 y 2
+		int paso_parametro;
 
-		int tipo_parametro_tabla=array_tabla_ensamblado[encontrado_indice].tipo_parametro_1;
-		int desplazamiento_mascara_tabla=array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
-		char *buffer_operador=buf_primer_op;
-		unsigned int valor_parametro=valor_parametro_1;
+		int tipo_parametro_tabla;
+		int desplazamiento_mascara_tabla;
+		char *buffer_operador;
+		unsigned int valor_parametro;
+
+		for (paso_parametro=1;paso_parametro<=2;paso_parametro++) {
+
+		if (paso_parametro==1) {
+			tipo_parametro_tabla=array_tabla_ensamblado[encontrado_indice].tipo_parametro_1;
+			desplazamiento_mascara_tabla=array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
+			buffer_operador=buf_primer_op;
+			valor_parametro=valor_parametro_1;
+		}
+
+		else {
+			tipo_parametro_tabla=array_tabla_ensamblado[encontrado_indice].tipo_parametro_2;
+			desplazamiento_mascara_tabla=array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p2;
+			buffer_operador=buf_segundo_op;
+			valor_parametro=valor_parametro_2;
+		}		
 
 		if (tipo_parametro_tabla!=ASM_PARM_NONE) {
 			if (tipo_parametro_tabla==ASM_PARM_N || tipo_parametro_tabla==ASM_PARM_NN
@@ -848,23 +865,12 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 						if (valor_parametro==1) valor_parametro=2;
 						else if (valor_parametro==2) valor_parametro=3;
 						//Usamos los valores oficiales 0,0,1,2 (el "segundo" 0 corresponderia a im0 no documentado)
-
-						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
-						//valor_parametro_1 /=8;
 						 
 					}			
 
 					//Si es BIT
 					if (tipo_parametro_tabla==ASM_PARM_BIT) {
 						valor_parametro=parse_string_to_number(buffer_operador);
-						//0,0,1,2,0,0,1,2 
-						//if (valor_parametro_1==1) valor_parametro_1=2;
-						//else if (valor_parametro_1==2) valor_parametro_1=3;
-						//Usamos los valores oficiales 0,0,1,2 (el "segundo" 0 corresponderia a im0 no documentado)
-
-						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
-						//valor_parametro_1 /=8;
-						 
 					}									
 
 					//En caso de IX+d
@@ -904,9 +910,10 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 			}
 		}
 
+		} //for paso parametro
 
 		//Para parametro 2
-
+/*
                 if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2!=ASM_PARM_NONE) {
                         if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_NN
                         || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_DIS || array_tabla_ensamblado[encontrado_indice].tipo_parametro_2==ASM_PARM_PARENTHESIS_N
@@ -986,13 +993,13 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 				}
                         }
                 }
+				*/
 
 
 		*destino=opcode_final;
 		//printf ("opcode final: %d\n",opcode_final);
 
 
-		//TODO Sumar longitud segun parametros
 	}
         return longitud_instruccion;
 
