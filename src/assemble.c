@@ -781,28 +781,32 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
 		//Para parametro 1. TODO unificar esto con lo de mas abajo para parametro 2
 
-		if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1!=ASM_PARM_NONE) {
-			if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_NN
-                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_DIS || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_N
-                        || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_NN
+		int tipo_parametro_tabla=array_tabla_ensamblado[encontrado_indice].tipo_parametro_1;
+		int desplazamiento_mascara_tabla=array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
+		char *buffer_operador=buf_primer_op;
+
+		if (tipo_parametro_tabla!=ASM_PARM_NONE) {
+			if (tipo_parametro_tabla==ASM_PARM_N || tipo_parametro_tabla==ASM_PARM_NN
+                        || tipo_parametro_tabla==ASM_PARM_DIS || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_N
+                        || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_NN
                         ) {
 				//Parseamos valor
-                                if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_NN) {
+                                if (tipo_parametro_tabla==ASM_PARM_PARENTHESIS_N || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_NN) {
                                         //Saltar el parentesis en (NN)
-                                        valor_parametro_1=parse_string_to_number(&buf_primer_op[1]);
+                                        valor_parametro_1=parse_string_to_number(&buffer_operador[1]);
                                 }
                         
-				else valor_parametro_1=parse_string_to_number(buf_primer_op);
+				else valor_parametro_1=parse_string_to_number(buffer_operador);
 
 				//Si es N
-				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_N || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_N) {
+				if (tipo_parametro_tabla==ASM_PARM_N || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_N) {
 					//En destino+1
 					destino[1]=valor_parametro_1 & 0xFF;
 					longitud_instruccion++;
 				}
 
 				//Si es NN
-				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_NN || array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_PARENTHESIS_NN) {
+				if (tipo_parametro_tabla==ASM_PARM_NN || tipo_parametro_tabla==ASM_PARM_PARENTHESIS_NN) {
 					//En destino+1
 					destino[1]=valor_parametro_1 & 0xFF;
 					destino[2]=(valor_parametro_1>>8) & 0xFF;
@@ -810,7 +814,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 				}
 
                                 //Si es DIS
-				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_DIS) {
+				if (tipo_parametro_tabla==ASM_PARM_DIS) {
 					//En destino+1
                                         //Calcular desplazamiento
                                         int dir_final=direccion_destino+2;
@@ -825,20 +829,20 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
 			else {
 				//NO: qui se entra tambien cuando tipo es CONST. Pero como valor y desplazamiento valen 0, es un OR de 0
-				if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1!=ASM_PARM_CONST) {
+				if (tipo_parametro_tabla!=ASM_PARM_CONST) {
 
 
 					//Si es RST
-					if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_RST) {
-						valor_parametro_1=parse_string_to_number(buf_primer_op);
+					if (tipo_parametro_tabla==ASM_PARM_RST) {
+						valor_parametro_1=parse_string_to_number(buffer_operador);
 						//printf ("Valor parametro 1 en RST: %d\n",valor_parametro_1);
 						valor_parametro_1 /=8;
 						 
 					}
 
 					//Si es IM
-					if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_IM) {
-						valor_parametro_1=parse_string_to_number(buf_primer_op);
+					if (tipo_parametro_tabla==ASM_PARM_IM) {
+						valor_parametro_1=parse_string_to_number(buffer_operador);
 						//0,0,1,2,0,0,1,2 
 						if (valor_parametro_1==1) valor_parametro_1=2;
 						else if (valor_parametro_1==2) valor_parametro_1=3;
@@ -850,8 +854,8 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 					}			
 
 					//Si es BIT
-					if (array_tabla_ensamblado[encontrado_indice].tipo_parametro_1==ASM_PARM_BIT) {
-						valor_parametro_1=parse_string_to_number(buf_primer_op);
+					if (tipo_parametro_tabla==ASM_PARM_BIT) {
+						valor_parametro_1=parse_string_to_number(buffer_operador);
 						//0,0,1,2,0,0,1,2 
 						//if (valor_parametro_1==1) valor_parametro_1=2;
 						//else if (valor_parametro_1==2) valor_parametro_1=3;
@@ -864,11 +868,11 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
 					//En caso de IX+d
 					int es_ddfd_cb=0;
-					if (es_prefijo_ix_iy && !strcasecmp(buf_primer_op,"(HL)")) {
+					if (es_prefijo_ix_iy && !strcasecmp(buffer_operador,"(HL)")) {
 						//En caso de IX/IY y prefijo CB. Desplazamiento va antes y luego va instruccion
 						if (array_tabla_ensamblado[encontrado_indice].prefijo==203) {
 							//printf ("Opcode con DD/FD+CB\n");
-							valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
+							valor_parametro_1 <<= desplazamiento_mascara_tabla;
 							opcode_final |= valor_parametro_1;							
 							//printf ("opcode_final: %02X %02X\n",desplazamiento_ixiy,opcode_final);
 							destino[1]=opcode_final;
@@ -890,7 +894,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
 					if (!es_ddfd_cb) {
                         //printf ("OR con valor %d desplazado %d\n",valor_parametro_1,array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1);
-						valor_parametro_1 <<= array_tabla_ensamblado[encontrado_indice].desplazamiento_mascara_p1;
+						valor_parametro_1 <<= desplazamiento_mascara_tabla;
 						opcode_final |= valor_parametro_1;
 					}
 				}
