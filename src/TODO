@@ -20,6 +20,8 @@
 
 -En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 
+-quiza version threads de windows no va bien porque usleep en windows está deprecated....
+
 -Baseconf. corregido
 Esto está mal:
 

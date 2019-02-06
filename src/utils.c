@@ -3225,7 +3225,7 @@ int util_write_configfile(void)
 
   //Archivos recientes de smartload. Recorremos desde abajo hasta arriba
 	for (i=MAX_LAST_FILESUSED-1;i>=0;i--) {
-		if (last_files_used_array[i][0]!=0) ADD_STRING_CONFIG,"--addlastfile %s",last_files_used_array[i]);
+		if (last_files_used_array[i][0]!=0) ADD_STRING_CONFIG,"--addlastfile \"%s\"",last_files_used_array[i]);
 	}
 
 
