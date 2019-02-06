@@ -198,8 +198,21 @@ extern int zxvision_key_not_sent_emulated_mach(void);
 extern void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color);
 extern void zxvision_fill_width_spaces(zxvision_window *w,int y);
 
+struct s_first_aid_list
+{
+	//enum first_aid_number_list indice_setting; //numero
+	char config_name[100]; //nombre en la config
+	int *puntero_setting;
+	char *texto_opcion;
+};
+
+#define MAX_MENU_FIRST_AID 100
+
+extern struct s_first_aid_list first_aid_list[];
+
 extern z80_bit menu_disable_first_aid;
 extern void menu_first_aid_disable(char *texto);
+extern int total_first_aid;
 
 #define MAX_F_FUNCTIONS 20
 

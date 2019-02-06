@@ -3484,6 +3484,16 @@ int util_write_configfile(void)
   if (tooltip_enabled.v==0)                   ADD_STRING_CONFIG,"--disabletooltips");
 
 
+  if (menu_disable_first_aid.v)               ADD_STRING_CONFIG,"--disable-all-first-aid");
+
+	for (i=0;i<total_first_aid;i++) {
+                int *opcion;
+                opcion=first_aid_list[i].puntero_setting;
+
+                if (*opcion) ADD_STRING_CONFIG,"--no-first-aid %s",first_aid_list[i].config_name);
+	}
+
+ 
   if (menu_limit_menu_open.v)                 ADD_STRING_CONFIG,"--limitopenmenu");
 
   if (menu_filesel_hide_dirs.v)         ADD_STRING_CONFIG,"--hide-dirs");

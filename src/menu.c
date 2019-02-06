@@ -26614,6 +26614,11 @@ void menu_interface_tooltip(MENU_ITEM_PARAMETERS)
 	menu_tooltip_counter=0;
 }
 
+void menu_interface_first_aid(MENU_ITEM_PARAMETERS)
+{
+	menu_disable_first_aid.v ^=1;
+}
+
 void menu_interface_force_atajo(MENU_ITEM_PARAMETERS)
 {
         menu_force_writing_inverse_color.v ^=1;
@@ -27052,6 +27057,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"[%c] Tooltips",(tooltip_enabled.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable First Aid help");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable First Aid help");		
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
                 menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
@@ -34451,24 +34460,9 @@ char *menu_filesel_recent_files(void)
 
 }
 
-/*enum first_aid_number_list {
-	FIRST_AID_FILESEL_UPPERCASE_KEYS,
-	FIRST_AID_TESTING,
 
-	FIRST_AID_END
-};*/
 
-struct s_first_aid_list
-{
-	//enum first_aid_number_list indice_setting; //numero
-	char config_name[100]; //nombre en la config
-	int *puntero_setting;
-	char *texto_opcion;
-};
-
-#define MAX_MENU_FIRST_AID 100
-struct s_first_aid_list first_aid_list[100];
-
+struct s_first_aid_list first_aid_list[MAX_MENU_FIRST_AID];
 
 
 int total_first_aid=0;
@@ -34517,12 +34511,7 @@ int menu_first_aid_get_setting(char *texto)
 		return -1;
 	}
 
-	/*for (i=0;i<total_first_aid && first_aid_list[i].indice_setting!=FIRST_AID_END && strcasecmp(texto,first_aid_list[i].config_name);i++);
 
-	if (first_aid_list[i].indice_setting==FIRST_AID_END) {
-		printf ("no encontrado setting %s\n",texto);
-		return -1;
-	}*/
 
 	printf ("setting indice %d nombre [%s]\n",encontrado,first_aid_list[encontrado].config_name);
 
