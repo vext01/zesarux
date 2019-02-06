@@ -35146,50 +35146,59 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 
 }
 
+void menu_filesel_recent_files_clear(MENU_ITEM_PARAMETERS)
+{
+	last_filesused_clear();
+	menu_generic_message("Clear List","OK. List cleared");
+}
+
 char *menu_filesel_recent_files(void)
 {
-        menu_item *array_menu_recent_files;
-        menu_item item_seleccionado;
-        int retorno_menu;
+	menu_item *array_menu_recent_files;
+    menu_item item_seleccionado;
+    int retorno_menu;
 
 
 	menu_add_item_menu_inicial(&array_menu_recent_files,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
+    char string_last_file_shown[29];
 
-                        char string_last_file_shown[30];
 
-
-                char buffer_texto[40];
-
-                int i;
-                for (i=0;i<MAX_F_FUNCTIONS;i++) {
-
-                  sprintf (buffer_texto,"%s",defined_f_functions_array[i].texto_funcion);
-
-			if (last_files_used_array[i][0]!=0) {
-                                menu_tape_settings_trunc_name(last_files_used_array[i],string_last_file_shown,30);
-				menu_add_item_menu_format(array_menu_recent_files,MENU_OPCION_NORMAL,NULL,NULL,string_last_file_shown);
-			}
+    int i;
+	int hay_alguno=0;
+    for (i=0;i<MAX_F_FUNCTIONS;i++) {
+		if (last_files_used_array[i][0]!=0) {
+            menu_tape_settings_trunc_name(last_files_used_array[i],string_last_file_shown,29);
+			menu_add_item_menu_format(array_menu_recent_files,MENU_OPCION_NORMAL,NULL,NULL,string_last_file_shown);
+			hay_alguno=1;
 		}
+	}
 
+	if (!hay_alguno) menu_add_item_menu_format(array_menu_recent_files,MENU_OPCION_NORMAL,NULL,NULL,"<Empty List>");
 
+	menu_add_item_menu(array_menu_recent_files,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+	menu_add_item_menu_format(array_menu_recent_files,MENU_OPCION_NORMAL,menu_filesel_recent_files_clear,NULL,"Clear List");
 
-                menu_add_item_menu(array_menu_recent_files,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                menu_add_ESC_item(array_menu_recent_files);
+    menu_add_item_menu(array_menu_recent_files,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+    menu_add_ESC_item(array_menu_recent_files);
 
-                retorno_menu=menu_dibuja_menu(&menu_recent_files_opcion_seleccionada,&item_seleccionado,array_menu_recent_files,"Recent files" );
+    retorno_menu=menu_dibuja_menu(&menu_recent_files_opcion_seleccionada,&item_seleccionado,array_menu_recent_files,"Recent files" );
 
+    if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 
+		//Seleccion de borrar lista
+		if (item_seleccionado.menu_funcion!=NULL) {
+            item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+        }
 
+		//Seleccion de un archivo
+		else if (hay_alguno) {
+        	int indice=menu_recent_files_opcion_seleccionada;
+			return last_files_used_array[indice];
+		}
+	}
 
-                                                                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-
-                                                                                                //Si se pulsa Enter
-                                                                                                int indice=menu_recent_files_opcion_seleccionada;
-									return last_files_used_array[indice];
-								}
-
-								else return NULL;
+	return NULL;
 
 }
 
