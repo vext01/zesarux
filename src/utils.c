@@ -3223,6 +3223,13 @@ int util_write_configfile(void)
  	ADD_STRING_CONFIG,"--smartloadpath \"%s\"",buffer_temp);
   }
 
+  //Archivos recientes de smartload. Recorremos desde abajo hasta arriba
+	for (i=MAX_LAST_FILESUSED-1;i>=0;i--) {
+		if (last_files_used_array[i][0]!=0) ADD_STRING_CONFIG,"--addlastfile %s",last_files_used_array[i]);
+	}
+
+
+
   if (snapshot_autosave_interval_quicksave_directory[0]!=0) {
         //Rutas que son directorios, llamar a util_copy_path_delete_last_slash 
         //Rutas que apuntan a archivos (o directorios por linea de comandos pero que en menu almacenan archivos), llamar a util_get_dir

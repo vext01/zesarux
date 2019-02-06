@@ -22,6 +22,12 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include <dirent.h>
+#if defined(__APPLE__)
+        #include <sys/syslimits.h>
+#endif
+
+
 #include "cpu.h"
 
 //Valor para ninguna tecla pulsada
@@ -723,6 +729,13 @@ extern void menu_debug_cpu_stats_diss_complete_no_print (z80_byte opcode,char *b
 extern void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae);
 
 extern void menu_copy_clipboard(char *texto);
+
+#define MAX_LAST_FILESUSED 20
+
+
+extern void last_filesused_clear(void);
+extern void last_filesused_insert(char *s);
+extern char last_files_used_array[MAX_LAST_FILESUSED][PATH_MAX];
 
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 

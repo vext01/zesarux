@@ -711,7 +711,7 @@ int esxdos_traps_opcion_seleccionada=0;
 int colour_settings_opcion_seleccionada=0;
 int zxuno_spi_flash_opcion_seleccionada=0;
 
-
+int menu_recent_files_opcion_seleccionada=0;
 
 
 
@@ -784,6 +784,9 @@ char file_utils_file_name[PATH_MAX]="";
 char *quickfile=NULL;
 //quickload seleccionada. quickfile apuntara aqui
 char quickload_file[PATH_MAX];
+
+//Ultimos archivos cargados desde smartload
+char last_files_used_array[MAX_LAST_FILESUSED][PATH_MAX];
 
 //archivo zxprinter bitmap
 char zxprinter_bitmap_filename_buffer[PATH_MAX];
@@ -32751,9 +32754,12 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
 	char leyenda_inferior[64];
 #ifdef MINGW
-	sprintf (leyenda_inferior,"~~T~~A~~B: Section ~~D: Drive");
+
+			//01234567890123456789012345678901
+			// TAB: Section R: Recent D: Drive
+	sprintf (leyenda_inferior,"~~T~~A~~B:Section ~~Recent ~~Drive");
 #else
-	sprintf (leyenda_inferior,"~~T~~A~~B: Section");
+	sprintf (leyenda_inferior,"~~T~~A~~B: Section ~~R: Recent");
 #endif
 
 	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
@@ -35140,6 +35146,53 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 
 }
 
+char *menu_filesel_recent_files(void)
+{
+        menu_item *array_menu_recent_files;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+
+	menu_add_item_menu_inicial(&array_menu_recent_files,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+
+                        char string_last_file_shown[30];
+
+
+                char buffer_texto[40];
+
+                int i;
+                for (i=0;i<MAX_F_FUNCTIONS;i++) {
+
+                  sprintf (buffer_texto,"%s",defined_f_functions_array[i].texto_funcion);
+
+			if (last_files_used_array[i][0]!=0) {
+                                menu_tape_settings_trunc_name(last_files_used_array[i],string_last_file_shown,30);
+				menu_add_item_menu_format(array_menu_recent_files,MENU_OPCION_NORMAL,NULL,NULL,string_last_file_shown);
+			}
+		}
+
+
+
+                menu_add_item_menu(array_menu_recent_files,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                menu_add_ESC_item(array_menu_recent_files);
+
+                retorno_menu=menu_dibuja_menu(&menu_recent_files_opcion_seleccionada,&item_seleccionado,array_menu_recent_files,"Recent files" );
+
+
+
+
+                                                                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+
+                                                                                                //Si se pulsa Enter
+                                                                                                int indice=menu_recent_files_opcion_seleccionada;
+									return last_files_used_array[indice];
+								}
+
+								else return NULL;
+
+}
+
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -35355,6 +35408,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//return menu_avisa_si_extension_no_habitual(filtros,archivo);
 						cls_menu_overlay();
 						zxvision_destroy_window(ventana);
+						last_filesused_insert(archivo);
 						return 1;
 
 						}
@@ -35641,6 +35695,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//return menu_avisa_si_extension_no_habitual(filtros,archivo);
 									cls_menu_overlay();
 									zxvision_destroy_window(ventana);
+									last_filesused_insert(archivo);
 									return 1;
 
 									}
@@ -35681,6 +35736,24 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_filesel_chdir(directorio);
 						releer_directorio=1;
 						
+					}
+				}
+
+				if (tecla=='R') {	
+					//Archivos recientes
+					char *archivo_reciente=menu_filesel_recent_files();
+					if (archivo_reciente!=NULL) {
+						//printf ("Loading file %s\n",archivo_reciente);
+						strcpy(archivo,archivo_reciente);
+
+                                                                      menu_filesel_chdir(filesel_directorio_inicial);
+                                                                        menu_filesel_free_mem();
+
+                                                                        //return menu_avisa_si_extension_no_habitual(filtros,archivo);
+                                                                        cls_menu_overlay();
+                                                                        zxvision_destroy_window(ventana);
+                                                                        return 1;
+
 					}
 				}
 
@@ -35894,3 +35967,35 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 }
 
 
+
+//Inicializar vacio
+void last_filesused_clear(void)
+{
+
+	int i;
+	for (i=0;i<MAX_LAST_FILESUSED;i++) {
+		last_files_used_array[i][0]=0;
+	}
+}
+
+//Insertar entrada en last smartload
+void last_filesused_insert(char *s)
+{
+	//Desplazar todos hacia abajo e insertar en posicion 0
+	//Desde abajo a arriba
+
+	int i;
+	for (i=MAX_LAST_FILESUSED-1;i>=1;i--) {
+		strcpy(last_files_used_array[i],last_files_used_array[i-1]);
+	}
+
+
+	//Meter en posicion 0
+	strcpy(last_files_used_array[0],s);
+
+	//printf ("Dump smartload:\n");
+
+	//for (i=0;i<MAX_LAST_FILESUSED;i++) {
+	//	printf ("Entry %d: [%s]\n",i,last_files_used_array[i]);
+	//}
+}

@@ -22,9 +22,10 @@ Improved ZRCP:
 Improved vu-meters: high volumes are shown in red
 Improved sprite viewer: you can view sprites up to 512x512
 
-Improved file selector in Windows: 
-*now you can use up to 20000 files in the same directory
-*added drive selector (press shift-u)
+Improved file selector:
+*now it remembers the last files used
+*Windows: now you can use up to 20000 files in the same directory
+*Windows: added drive selector (press shift-u)
 
 Improved audio: silence detector is disabled by default. That should fix some Windows audio problems. Check Settings->Audio->Silence detector if you have configuration autosaving enabled
 

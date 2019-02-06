@@ -1367,6 +1367,7 @@ printf (
 		"--simulaterealload         Simulate real tape loading\n"
 		"--simulaterealloadfast     Enable fast real tape loading\n"
 		"--smartloadpath path       Select initial smartload path\n"
+		"--addlastfile file     Add a file to the last files used\n"
 		"--quicksavepath path       Select path for quicksave & continous autosave\n" 
 		"--autoloadsnap             Load last snapshot on start\n"
 		"--autosavesnap             Save snapshot on exit\n"
@@ -5148,6 +5149,11 @@ int parse_cmdline_options(void) {
                                 quickfile=quickload_file;
                         }
 
+                        else if (!strcmp(argv[puntero_parametro],"--addlastfile")) {
+                                siguiente_parametro_argumento();
+				last_filesused_insert(argv[puntero_parametro]);
+                        }
+
 			else if (!strcmp(argv[puntero_parametro],"--quicksavepath")) {
                                 siguiente_parametro_argumento();
 				sprintf(snapshot_autosave_interval_quicksave_directory,"%s/",argv[puntero_parametro]);
@@ -6859,6 +6865,7 @@ tooltip_enabled.v=1;
 	init_breakpoints_table();
 
 
+	last_filesused_clear();
 
 	//estos dos se inicializan para que al hacer set_emulator_speed, que se ejecuta antes de init audio,
 	//si no hay driver inicializado, no llamarlos
