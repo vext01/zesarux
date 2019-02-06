@@ -1584,7 +1584,8 @@ printf (
 		"--inversevideo             Inverse display colours\n"
 		"--realpalette              Use real Spectrum colour palette according to info by Richard Atkinson\n"
 		"--disabletooltips          Disable tooltips on menu\n"
-		"--no-first-aid s           Disable first aid message\n"
+		"--no-first-aid s           Disable first aid message s. Do not throw any error if invalid\n"
+		"--disable-all-first-aid    Disable all first aid messages\n" 
 		"--forcevisiblehotkeys      Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed\n"
 		"--forceconfirmyes          Force confirmation dialogs yes/no always to yes\n"
 		"--gui-style s              Set GUI style. Available: ");
@@ -6260,6 +6261,15 @@ int parse_cmdline_options(void) {
 				tooltip_enabled.v=0;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--disable-all-first-aid")) {
+				menu_disable_first_aid.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--no-first-aid")) {
+				siguiente_parametro_argumento();
+				menu_first_aid_disable(argv[puntero_parametro]);
+			}
+
 			else if (!strcmp(argv[puntero_parametro],"--disablemenu")) {
 				menu_desactivado.v=1;
 			}
@@ -6867,6 +6877,7 @@ tooltip_enabled.v=1;
 
 
 	last_filesused_clear();
+	menu_first_aid_init();
 
 	//estos dos se inicializan para que al hacer set_emulator_speed, que se ejecuta antes de init audio,
 	//si no hay driver inicializado, no llamarlos

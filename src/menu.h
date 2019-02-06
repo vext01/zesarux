@@ -198,6 +198,9 @@ extern int zxvision_key_not_sent_emulated_mach(void);
 extern void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color);
 extern void zxvision_fill_width_spaces(zxvision_window *w,int y);
 
+extern z80_bit menu_disable_first_aid;
+extern void menu_first_aid_disable(char *texto);
+
 #define MAX_F_FUNCTIONS 20
 
 enum defined_f_function_ids {

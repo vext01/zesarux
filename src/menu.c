@@ -34451,17 +34451,108 @@ char *menu_filesel_recent_files(void)
 
 }
 
-enum first_aid_list {
-	FIRST_AID_FILESEL_UPPERCASE_KEYS
+/*enum first_aid_number_list {
+	FIRST_AID_FILESEL_UPPERCASE_KEYS,
+	FIRST_AID_TESTING,
+
+	FIRST_AID_END
+};*/
+
+struct s_first_aid_list
+{
+	//enum first_aid_number_list indice_setting; //numero
+	char config_name[100]; //nombre en la config
+	int *puntero_setting;
+	char *texto_opcion;
 };
+
+#define MAX_MENU_FIRST_AID 100
+struct s_first_aid_list first_aid_list[100];
+
+
+
+int total_first_aid=0;
+ 
+void menu_first_aid_add(/*enum first_aid_number_list indice_aid,*/char *key_string,int *puntero_setting,char *texto_opcion)
+{
+
+	if (total_first_aid==MAX_MENU_FIRST_AID) return; //error
+
+	//first_aid_list[total_first_aid].indice_setting=indice_aid;
+	strcpy(first_aid_list[total_first_aid].config_name,key_string);
+	first_aid_list[total_first_aid].puntero_setting=puntero_setting;
+	first_aid_list[total_first_aid].texto_opcion=texto_opcion;
+
+	total_first_aid++;
+}
+
 
 //No mostrar la opcion. por defecto a 0 (mostrarla)
 int first_aid_no_filesel_uppercase_keys=0;
+char *first_aid_string_filesel_uppercase_keys="If you want to select a file by its initial letter, please press the letter as it is. "
+							"If you want to execute actions shown in the bottom of the window, in inverted colour, please press shift+letter";
+
+void menu_first_aid_init(void)
+{
+	total_first_aid=0;
+	menu_first_aid_add("filesel_uppercase_keys",&first_aid_no_filesel_uppercase_keys,first_aid_string_filesel_uppercase_keys);
+
+}
+
+
+
+//Retornar indice a opcion implicada. -1 si no
+int menu_first_aid_get_setting(char *texto)
+{
+	//if (!strcasecmp(texto,"filesel_uppercase_keys")) first_aid_no_filesel_uppercase_keys=1;
+	//buscar texto en array
+	int i;
+	int encontrado=-1;
+	for (i=0;i<total_first_aid && encontrado==-1;i++) {
+		if (!strcasecmp(texto,first_aid_list[i].config_name)) encontrado=i;
+	}
+
+	if (encontrado==-1) {
+		printf ("no encontrado setting %s\n",texto);
+		return -1;
+	}
+
+	/*for (i=0;i<total_first_aid && first_aid_list[i].indice_setting!=FIRST_AID_END && strcasecmp(texto,first_aid_list[i].config_name);i++);
+
+	if (first_aid_list[i].indice_setting==FIRST_AID_END) {
+		printf ("no encontrado setting %s\n",texto);
+		return -1;
+	}*/
+
+	printf ("setting indice %d nombre [%s]\n",encontrado,first_aid_list[encontrado].config_name);
+
+	//return first_aid_list[i].puntero_setting;
+
+	return encontrado;
+
+}
+
+//Deshabilitar first aid de lectura de config
+void menu_first_aid_disable(char *texto)
+{
+	int indice;
+	
+	indice=menu_first_aid_get_setting(texto);
+	if (indice<0) return;
+
+	int *opcion;
+	opcion=first_aid_list[indice].puntero_setting;
+
+	*opcion=1; //desactivarla
+
+}
+
+
 
 z80_bit menu_disable_first_aid={0};
 
 //Mostrar first aid si conviene
-void menu_first_aid(enum first_aid_list indice)
+void menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
 {
 
 	//Si no hay autoguardado de config, no mostrarlo (pues no se podria desactivar)
@@ -34470,17 +34561,30 @@ void menu_first_aid(enum first_aid_list indice)
 	//Si desactivadas ayudas first aid
 	if (menu_disable_first_aid.v) return;
 
-	int *valor_opcion;
-	char *texto_opcion;
+	int indice=menu_first_aid_get_setting(key_setting);
+	if (indice<0) return;
 
-	switch (indice) {
+	int *valor_opcion;
+	char *texto_opcion;	
+
+	valor_opcion=first_aid_list[indice].puntero_setting;
+	texto_opcion=first_aid_list[indice].texto_opcion;
+
+
+
+	/*switch (indice) {
 		case FIRST_AID_FILESEL_UPPERCASE_KEYS:
 			valor_opcion=&first_aid_no_filesel_uppercase_keys; 
 			texto_opcion="If you want to select a file by its initial letter, please press the letter as it is. "
 							"If you want to execute actions shown in the bottom of the window, in inverted colour, please press shift+letter";
 		break;
 
-	}
+		case FIRST_AID_END: 
+			//nada, aqui no deberia entrar
+			return;
+		break;		
+
+	}*/
 
 	//Esta desmarcada. no mostrar nada
 	if (*valor_opcion) return;
@@ -34491,11 +34595,9 @@ void menu_first_aid(enum first_aid_list indice)
 
 }
 
-//Deshabilitar first aid de lectura de config
-void menu_first_aid_disable(char *texto)
-{
-	if (!strcasecmp(texto,"filesel_uppercase_keys")) *first_aid_no_filesel_uppercase_keys=1;
-}
+ 
+
+
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -35023,7 +35125,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				//entre a y z y numeros
 				if ( (tecla>='a' && tecla<='z') || (tecla>='0' && tecla<='9') ) {
-					menu_first_aid(FIRST_AID_FILESEL_UPPERCASE_KEYS);
+					menu_first_aid("filesel_uppercase_keys");
 					zxvision_menu_filesel_localiza_letra(ventana,tecla);
 				}
 
