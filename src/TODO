@@ -18,15 +18,7 @@
 
 ----fin zxvision----
 
--que muestre ayudas de primera vez, solo si hay habilitado guardar configuracion.
-asi en ese caso se pueden desactivar y guardar un setting
-settings de config tipo:
---no-first-aid texto
-
-donde texto es la ayuda a desactivar, por ejemplo:
---no-first-aid uppercase-fileselector   (para que no diga la primera vez que al pulsar en minusculas se selecciona item, y para utilidad, mayusculas)
--como hacer que no la muestre otra vez? tendria que ser ventana con texto y boton->problema: boton(opcion) solo aparece en menus enteros, no puedo
-hacer cosas mixtas ....
+-opcion para reactivar todas first aid de golpe
 
 -En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 

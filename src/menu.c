@@ -20543,6 +20543,8 @@ int menu_avisa_si_extension_no_habitual(char *filtros[],char *archivo)
 void menu_quickload(MENU_ITEM_PARAMETERS)
 {
 
+	menu_first_aid("smartload");
+
         char *filtros[28];
 
         filtros[0]="zx";
@@ -34486,10 +34488,16 @@ int first_aid_no_filesel_uppercase_keys=0;
 char *first_aid_string_filesel_uppercase_keys="If you want to select a file by its initial letter, please press the letter as it is. "
 							"If you want to execute actions shown in the bottom of the window, in inverted colour, please press shift+letter";
 
+
+int first_aid_no_smartload=0;
+char *first_aid_string_smartload="This quickload window allows you to load any known file type by the emulator. Just select it and go! "
+							"Press TAB to change between areas in the file selector";
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
 	menu_first_aid_add("filesel_uppercase_keys",&first_aid_no_filesel_uppercase_keys,first_aid_string_filesel_uppercase_keys);
+	menu_first_aid_add("smartload",&first_aid_no_smartload,first_aid_string_smartload);
 
 }
 
@@ -34507,13 +34515,13 @@ int menu_first_aid_get_setting(char *texto)
 	}
 
 	if (encontrado==-1) {
-		printf ("no encontrado setting %s\n",texto);
+		debug_printf (VERBOSE_DEBUG,"Can not find first aid setting %s",texto);
 		return -1;
 	}
 
 
 
-	printf ("setting indice %d nombre [%s]\n",encontrado,first_aid_list[encontrado].config_name);
+	//printf ("setting indice %d nombre [%s]\n",encontrado,first_aid_list[encontrado].config_name);
 
 	//return first_aid_list[i].puntero_setting;
 
