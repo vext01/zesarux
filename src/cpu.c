@@ -1584,6 +1584,7 @@ printf (
 		"--inversevideo             Inverse display colours\n"
 		"--realpalette              Use real Spectrum colour palette according to info by Richard Atkinson\n"
 		"--disabletooltips          Disable tooltips on menu\n"
+		"--no-first-aid s           Disable first aid message\n"
 		"--forcevisiblehotkeys      Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed\n"
 		"--forceconfirmyes          Force confirmation dialogs yes/no always to yes\n"
 		"--gui-style s              Set GUI style. Available: ");

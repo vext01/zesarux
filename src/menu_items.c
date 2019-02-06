@@ -1669,7 +1669,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 
 		//zxvision_generic_message_tooltip("pruebas", 30, 0, 0, generic_message_tooltip_return *retorno, const char * texto_format , ...)
-		zxvision_generic_message_tooltip("Pruebas", 0, 0, 0, NULL, 0, "Hola que tal como estas esto es una prueba de escribir texto. "
+		zxvision_generic_message_tooltip("Pruebas" , 0 , 0, 0, 0, NULL, 0, "Hola que tal como estas esto es una prueba de escribir texto. "
 					"No se que mas poner pero me voy a empezar a repetir, " 
 					"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore "
 					"et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip"

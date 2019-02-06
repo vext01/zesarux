@@ -4443,7 +4443,10 @@ int menu_ask_file_to_save(char *titulo_ventana,char *filtro,char *file_save)
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto con estilo zxvision
 //volver_timeout: si vale 1, significa timeout normal como ventanas splash. Si vale 2, no finaliza, muestra franjas de color continuamente
-void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
+//return_after_print_text se usa para que vuelva a la funcion que llama justo despues de escribir texto,
+//usado en opciones de mostrar First Aid y luego agregarle opciones de menu tabladas,
+//por lo que agrega cierta altura a la ventana
+void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
 
 	//Buffer de entrada
@@ -4588,7 +4591,19 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	//printf ("primera_linea: %d\n",primera_linea);
 
+
+
+
 	int alto_ventana=indice_linea+2;
+
+	int alto_total_ventana=indice_linea;
+
+	if (return_after_print_text) {
+		//Darle mas altura	
+		alto_ventana +=2;
+		alto_total_ventana +=2;
+	}
+
 	if (alto_ventana-2>MAX_LINEAS_VENTANA_GENERIC_MESSAGE) {
 		alto_ventana=MAX_LINEAS_VENTANA_GENERIC_MESSAGE+2;
 		texto_no_cabe=1;
@@ -4610,7 +4625,7 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 	zxvision_window ventana;
 	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,indice_linea,titulo);	
+							ancho_ventana-1,alto_total_ventana,titulo);	
 
 	if (!resizable) zxvision_set_not_resizable(&ventana);	
 
@@ -4635,6 +4650,8 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 	}
 
 	zxvision_draw_window_contents(&ventana);
+
+	if (return_after_print_text) return;
 
 	do {
 
@@ -4694,14 +4711,6 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 
 
-	//arriba
-	//if (primera_linea>0) cursores[21]='U';
-	//Meter puntos suspensivos en la primera linea indicando que hay mas arriba
-
-	//if (primera_linea>0) menu_escribe_linea_opcion(0,-1,1,"... ");
-
-	
-
 
         if (!menu_multitarea) {
 			//printf ("refresca pantalla\n");
@@ -4730,27 +4739,12 @@ void zxvision_generic_message_tooltip(char *titulo, int volver_timeout, int tool
 
 				tecla=zxvision_read_keyboard();
 
-                /*tecla=menu_get_pressed_key();
-				//printf ("tecla: %d\n",tecla);
-
-				//menu_cpu_core_loop();
-
-			//Si ventana inactiva y se ha pulsado tecla, excepto ESC, no leer dicha tecla
-			if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
-				//printf ("no leemos tecla en ventana pues esta inactiva\n");
-				tecla=0; 
-			}*/
+             
 
 				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
 				//if (tecla==13 && mouse_left && zxvision_keys_event_not_send_to_machine && !mouse_is_dragging) {
 				if (tecla==13 && mouse_left) {	
 					tecla=0;
-					//menu_refresca_pantalla();
-					//printf ("ejecutando core\n");
-
-					//y quitar la tecla enter del puerto
-					//util_set_reset_key(UTIL_KEY_ENTER,0);
-					//menu_cpu_core_loop();
 				}
 
 
@@ -7793,7 +7787,7 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 
         if (si_tooltip) {
 			//menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto);
-			zxvision_generic_message_tooltip("Tooltip",0,1,0,NULL,0,"%s",texto);
+			zxvision_generic_message_tooltip("Tooltip" , 0 ,0,1,0,NULL,0,"%s",texto);
 		}
 	
 		else menu_generic_message("Help",texto);
@@ -14969,7 +14963,7 @@ void menu_z88_new_ptr_card_browser(char *archivo)
         texto_buffer[indice_buffer]=0;
 
 	//menu_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, "%s", texto_buffer);
-	zxvision_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, 1, "%s", texto_buffer);
+	zxvision_generic_message_tooltip("Z88 Card Browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_buffer);
 
         free(flash_file_memory);
 
@@ -15031,7 +15025,7 @@ void menu_z88_slot_card_browser(MENU_ITEM_PARAMETERS)
 
         //menu_generic_message_tooltip("Card browser", 0, 0, 1, NULL, "%s", texto_buffer);
 
-	zxvision_generic_message_tooltip("Card Browser", 0, 0, 1, NULL, 1, "%s", texto_buffer);		
+	zxvision_generic_message_tooltip("Card Browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_buffer);		
 
 }
 
@@ -15056,7 +15050,7 @@ void menu_z88_slot_copy_from_eprom(MENU_ITEM_PARAMETERS)
 	//printf ("archivos: %s\n",texto_buffer);
 	generic_message_tooltip_return retorno_archivo;
 	//menu_generic_message_tooltip("Select file", 0, 0, 1, &retorno_archivo, "%s", texto_buffer);
-	zxvision_generic_message_tooltip("Select file", 0, 0, 1, &retorno_archivo, 1,"%s", texto_buffer);
+	zxvision_generic_message_tooltip("Select file" , 0 , 0, 0, 1, &retorno_archivo, 1,"%s", texto_buffer);
 
 	//Si se sale con ESC
 	if (retorno_archivo.estado_retorno==0) return;
@@ -20990,7 +20984,7 @@ void menu_file_p_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("P file browser", 0, 0, 1, NULL, "%s", texto_browser);
-  zxvision_generic_message_tooltip("P file Browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+  zxvision_generic_message_tooltip("P file Browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -21044,7 +21038,7 @@ void menu_file_o_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("O file browser", 0, 0, 1, NULL, "%s", texto_browser);
-  zxvision_generic_message_tooltip("O file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+  zxvision_generic_message_tooltip("O file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tao_get_info(z80_byte *tape,char *texto)
 
@@ -21104,7 +21098,7 @@ void menu_file_sp_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("SP file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("SP file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("SP file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -21348,7 +21342,7 @@ Bytes   Content
 	char titulo_ventana[32];
 	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
 	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip(titulo_ventana , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -21509,7 +21503,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	char titulo_ventana[32];
 	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
 	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip(titulo_ventana , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -21836,7 +21830,7 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 
 
 	//  menu_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("DSK file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 
 	free(dsk_file_memory);
@@ -21966,7 +21960,7 @@ After these 6 bytes, the data for the block comes.
 	texto_browser[indice_buffer]=0;
 
 	//  menu_generic_message_tooltip("ZSF file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("ZSF file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("ZSF file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 	free(zsf_file_memory);
@@ -22096,7 +22090,7 @@ Bitstreams
 
 
 	//  menu_generic_message_tooltip("ZX-Uno Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("ZX-Uno Flash browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("ZX-Uno Flash browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -22214,7 +22208,7 @@ void menu_file_superupgrade_flash_browser_show(char *filename)
 
 
 	//menu_generic_message_tooltip("Superupgrade Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("Superupgrade Flash browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Superupgrade Flash browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 
 	free(superupgrade_flash_file_memory);
@@ -22377,7 +22371,7 @@ void menu_file_hexdump_browser_show(char *filename)
 	texto_browser[indice_buffer]=0;
 
 	//menu_generic_message_tooltip("Hex viewer", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("Hex viewer", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Hex viewer" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	free(hexdump_file_memory);
 
@@ -22451,7 +22445,7 @@ void menu_file_sna_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("SNA file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("SNA file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("SNA file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -22700,7 +22694,7 @@ void menu_file_spg_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("SPG file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -22782,7 +22776,7 @@ void menu_file_zx_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("ZEsarUX ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("ZEsarUX ZX file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("ZEsarUX ZX file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -22879,7 +22873,7 @@ void menu_file_z80_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Z80 file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -23093,7 +23087,7 @@ void menu_file_tzx_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("TZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("TZX file browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("TZX file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	free(tzx_file_mem);
 
@@ -23183,7 +23177,7 @@ void menu_tape_browser_show(char *filename)
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", texto_browser);
-	zxvision_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, 1, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Tape browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -25125,7 +25119,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 		//util_tape_tap_get_info((z80_byte *)file_read_memory,buffer_texto);
 		//menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", buffer_texto);
-		zxvision_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, 1, "%s", buffer_texto);
+		zxvision_generic_message_tooltip("Tape browser" , 0 , 0, 0, 1, NULL, 1, "%s", buffer_texto);
 
 		
 		return;
@@ -29789,7 +29783,7 @@ void menu_generic_message_format(char *titulo, const char * texto_format , ...)
 
 
 	//menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
-	zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, 1, "%s", texto);
+	zxvision_generic_message_tooltip(titulo , 0 , 0, 0, 0, NULL, 1, "%s", texto);
 
 
 	//En Linux esto funciona bien sin tener que hacer las funciones va_ previas:
@@ -29801,7 +29795,57 @@ void menu_generic_message(char *titulo, const char * texto)
 {
 
         //menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
-		zxvision_generic_message_tooltip(titulo, 0, 0, 0, NULL, 1, "%s", texto);
+		zxvision_generic_message_tooltip(titulo , 0 , 0, 0, 0, NULL, 1, "%s", texto);
+}
+
+//Mensaje con setting para marcar
+void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char *texto_opcion, int *valor_opcion)
+{
+	zxvision_generic_message_tooltip(titulo , 1 , 0, 0, 0, NULL, 1, "%s", texto);
+
+	zxvision_window *ventana;
+
+	//Nuestra ventana sera la actual
+	ventana=zxvision_current_window;
+
+	int posicion_y_opcion=ventana->visible_height-3;
+	//printf ("%d %d\n",posicion_y_opcion,ventana->visible_height);
+
+
+		menu_item *array_menu_generic_message_setting;
+        menu_item item_seleccionado;
+		int array_menu_generic_message_setting_opcion_seleccionada=0;
+        int retorno_menu;
+    do {
+
+
+		menu_add_item_menu_inicial_format(&array_menu_generic_message_setting,MENU_OPCION_NORMAL,NULL,NULL,"[%c] %s",(*valor_opcion ? 'X' : ' ' ),texto_opcion);
+		menu_add_item_menu_tabulado(array_menu_generic_message_setting,1,posicion_y_opcion);
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+    	retorno_menu=menu_dibuja_menu(&array_menu_generic_message_setting_opcion_seleccionada,&item_seleccionado,array_menu_generic_message_setting,titulo);
+
+
+		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+		//cls_menu_overlay();
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+        	//llamamos por valor de funcion
+            //if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+			
+				//Conmutar valor
+				*valor_opcion ^=1;
+                
+            //}
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+	cls_menu_overlay();
+	zxvision_destroy_window(ventana);
 }
 
 
@@ -29809,14 +29853,14 @@ void menu_generic_message_splash(char *titulo, const char * texto)
 {
 
         //menu_generic_message_tooltip(titulo, 1, 0, 0, NULL, "%s", texto);
-		zxvision_generic_message_tooltip(titulo, 1, 0, 0, NULL, 0, "%s", texto);
+		zxvision_generic_message_tooltip(titulo , 0 , 1, 0, 0, NULL, 0, "%s", texto);
 }
 
 void menu_generic_message_warn(char *titulo, const char * texto)
 {
 
         //menu_generic_message_tooltip(titulo, 1, 0, 0, NULL, "%s", texto);
-		zxvision_generic_message_tooltip(titulo, 2, 0, 0, NULL, 0, "%s", texto);
+		zxvision_generic_message_tooltip(titulo , 0 , 2, 0, 0, NULL, 0, "%s", texto);
 }
 
 int menu_confirm_yesno(char *texto_ventana)
@@ -30117,7 +30161,7 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 */
 	generic_message_tooltip_return retorno_ventana;
 	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
-	zxvision_generic_message_tooltip("About",0,0,0,&retorno_ventana,0,mensaje_about);
+	zxvision_generic_message_tooltip("About" , 0 ,0,0,0,&retorno_ventana,0,mensaje_about);
 
 	//printf ("retorno ventana: %d\n",retorno_ventana.estado_retorno);
 
@@ -34407,6 +34451,51 @@ char *menu_filesel_recent_files(void)
 
 }
 
+enum first_aid_list {
+	FIRST_AID_FILESEL_UPPERCASE_KEYS
+};
+
+//No mostrar la opcion. por defecto a 0 (mostrarla)
+int first_aid_no_filesel_uppercase_keys=0;
+
+z80_bit menu_disable_first_aid={0};
+
+//Mostrar first aid si conviene
+void menu_first_aid(enum first_aid_list indice)
+{
+
+	//Si no hay autoguardado de config, no mostrarlo (pues no se podria desactivar)
+	if (save_configuration_file_on_exit.v==0) return;
+
+	//Si desactivadas ayudas first aid
+	if (menu_disable_first_aid.v) return;
+
+	int *valor_opcion;
+	char *texto_opcion;
+
+	switch (indice) {
+		case FIRST_AID_FILESEL_UPPERCASE_KEYS:
+			valor_opcion=&first_aid_no_filesel_uppercase_keys; 
+			texto_opcion="If you want to select a file by its initial letter, please press the letter as it is. "
+							"If you want to execute actions shown in the bottom of the window, in inverted colour, please press shift+letter";
+		break;
+
+	}
+
+	//Esta desmarcada. no mostrar nada
+	if (*valor_opcion) return;
+
+	cls_menu_overlay();
+	zxvision_menu_generic_message_setting("First aid",texto_opcion,"Do not show again",valor_opcion);
+		
+
+}
+
+//Deshabilitar first aid de lectura de config
+void menu_first_aid_disable(char *texto)
+{
+	if (!strcasecmp(texto,"filesel_uppercase_keys")) *first_aid_no_filesel_uppercase_keys=1;
+}
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -34934,6 +35023,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				//entre a y z y numeros
 				if ( (tecla>='a' && tecla<='z') || (tecla>='0' && tecla<='9') ) {
+					menu_first_aid(FIRST_AID_FILESEL_UPPERCASE_KEYS);
 					zxvision_menu_filesel_localiza_letra(ventana,tecla);
 				}
 
@@ -34954,6 +35044,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				}
 
 				if (tecla=='R') {	
+
 					//Archivos recientes
 					char *archivo_reciente=menu_filesel_recent_files();
 					if (archivo_reciente!=NULL) {
