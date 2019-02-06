@@ -32770,7 +32770,7 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
                                                                 //    01234  567890  12345  678901  2345678901
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~~View ~~Trunc d~~El m~~Kdr c~~Onv ~~Inf");
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
+                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~~Copy ~~Move re~~N ~~Paste ~~Filemem");
 
         }
 
@@ -35779,7 +35779,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='E' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I') {
+						if (tecla=='V' || tecla=='T' || tecla=='E' || tecla=='M' || tecla=='N' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -35828,7 +35828,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									}
 
 									//Rename
-									if (tecla=='R') {
+									if (tecla=='N') {
 										file_utils_move_rename_copy_file(file_utils_file_selected,1);
 										releer_directorio=1;
 									}
