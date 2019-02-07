@@ -34534,12 +34534,12 @@ char *first_aid_string_filesel_uppercase_keys="If you want to select a file by i
 
 
 int first_aid_no_smartload=0;
-char *first_aid_string_smartload="This smartload window allows you to load any known file type by the emulator. Just select it and go! "
+char *first_aid_string_smartload="This smartload window allows you to load any file known by the emulator. Just select it and go! "
 							"Press TAB to change between areas in the file selector";
 
 
 int first_aid_no_initial_menu=0;
-char *first_aid_string_initial_menu="This is the Main Menu. You can select item by using cursor keys and mouse. Most of them have help, "
+char *first_aid_string_initial_menu="This is the Main Menu. You can select an item by using cursor keys and mouse. Most of them have help, "
 	"try pressing F1. Also, many have tooltip help, that means if you don't press a key, it will appear a tooltip "
 	"about what the item does. ESC or right mouse button closes a menu, you can also close it by pressing the top-left button in the window. "
 	"You can also use your mouse to resize or move windows";
