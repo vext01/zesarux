@@ -18,6 +18,8 @@
 
 ----fin zxvision----
 
+-secuenciador AY: linea para cada canal de audio que haga scroll horizontal de cada linea cuando nota cambie (teniendo en cuenta nota y octava, por ejemplo F#4)
+
 -quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
 es la de sin phtreads
 

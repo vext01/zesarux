@@ -312,9 +312,7 @@ tabla_ensamblado array_tabla_ensamblado[]={
 	{"CP",254,0, ASM_PARM_N,  0,NULL, ASM_PARM_NONE,0,NULL  },   //CP N 
 
 
-	//IX/IX opcodes. TODO: hacerlo mas simple y que usen mismos de sin prefijo y con CB? Pero cambiando HL por IX o IY...?
-	//{"LD",33,221,  ASM_PARM_CONST,4,"IX", ASM_PARM_NN, 0,NULL},   //LD IX,NN
-	//{"LD",33,253,  ASM_PARM_CONST,4,"IY", ASM_PARM_NN, 0,NULL},   //LD IY,NN
+
 
 
 	//ED opcodes
@@ -453,8 +451,6 @@ int asm_check_parameter_in_table(enum asm_tipo_parametro_entrada tipo_parametro_
 		case ASM_PARM_IN_R:
 			if (tipo_en_tabla==ASM_PARM_R) return 1;
 
-			//caso registro C igual que condicion C. TODO habria que validar que es condicion C, no cualquier condicion
-			//else if (tipo_en_tabla=ASM_PARM_CC) return 1;
 
 			else return 0;
 		break;
@@ -642,12 +638,9 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 
         //Aqui tenemos ya el numero de parametros
 
-        //TODO: tipo de parametros de la instruccion. Tener en cuenta que algunos pueden ser n y nn a la vez, o rp y rp2 a la vez, etc
+        //tipo de parametros de la instruccion. Tener en cuenta que algunos pueden ser n y nn a la vez, o rp y rp2 a la vez, etc
 	//Si coincide con algun tipo de parametro conocido, y si no, se trata como numero
 
-	if (parametros_entrada) {
-		//TODO
-	}
 
         //Recorrer array de ensamblado
         int i;
@@ -673,7 +666,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
                 //printf ("%s\n",array_tabla_ensamblado[i].texto_opcode);
                 if (!strcasecmp(buf_opcode,array_tabla_ensamblado[i].texto_opcode)) {
                         //printf ("Match opcode\n");
-                        //TODO: ver si hace match numero parametros y tipo
+                        
 	
 			//Contar numero de parametros en array
 			int parametros_array=0;
