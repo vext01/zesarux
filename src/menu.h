@@ -749,7 +749,7 @@ extern void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice
 
 extern void menu_copy_clipboard(char *texto);
 
-#define MAX_LAST_FILESUSED 20
+#define MAX_LAST_FILESUSED 18
 
 
 extern void last_filesused_clear(void);
