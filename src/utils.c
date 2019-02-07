@@ -5473,9 +5473,10 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
             //Si esta menu abierto, es como enviar ESC
             if (zxvision_keys_event_not_send_to_machine) {
                     //y si se pulsa dentro de ventana
-                    if (si_menu_mouse_en_ventana() ) {
+                    //no ver dentro ventana
+                    //if (si_menu_mouse_en_ventana() ) {
                     util_set_reset_key(UTIL_KEY_ESC,1);
-                    }
+                    //}
             }
           }
         }

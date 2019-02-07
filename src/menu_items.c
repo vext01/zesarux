@@ -2093,7 +2093,7 @@ Calculando ese tiempo: 12% cpu
 				if (valor_mostrar>999999) valor_mostrar=999999;
                                 //01234567890123456789012345678901
                                  // Last core frame: 999999 us
-                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
+                                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
                                 //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
@@ -2112,7 +2112,7 @@ Calculando ese tiempo: 12% cpu
                                 if (valor_mostrar>999999) valor_mostrar=999999;
                                 //01234567890123456789012345678901
                                  // Last core refresca_pantalla: 999999 us
-                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
+                                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
                                 //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
@@ -2131,12 +2131,12 @@ Calculando ese tiempo: 12% cpu
                                 if (valor_mostrar>999999) valor_mostrar=999999;
                                 //01234567890123456789012345678901
                                  // Last core each_frame: 999999 us
-                                sprintf (texto_buffer," Average: %6ld us",valor_mostrar);
+                                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
                                 //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 								 //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
-								 zxvision_print_string_defaults(&ventana,1,linea++," (ideal):  20000 us");
+								 zxvision_print_string_defaults(&ventana,1,linea++," (expected): 20000 us");
 
 
 								zxvision_draw_window_contents(&ventana);
