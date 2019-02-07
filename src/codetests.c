@@ -412,7 +412,7 @@ void codetests_assemble_opcode(char *instruccion,z80_byte *destino)
 void codetests_assembler(void)
 {
 	//void asm_return_op_ops(char *origen,char *opcode,char *primer_op,char *segundo_op)
-
+	/* 
 	char buf_opcode[100];
 	char buf_primer_op[100];
 	char buf_segundo_op[100];
@@ -430,7 +430,7 @@ void codetests_assembler(void)
 	codetests_assembler_print("PUSH   AF",buf_opcode,buf_primer_op,buf_segundo_op);
 
 	asm_return_op_ops("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
-	codetests_assembler_print("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);
+	codetests_assembler_print("EX     DE,HL   ",buf_opcode,buf_primer_op,buf_segundo_op);*/
 
 
 	printf ("Assembling\n");
@@ -465,7 +465,7 @@ void codetests_assembler(void)
 	//Primero sin opcode
 	int i;
 
-	z80_byte origen_ensamblado[256];
+	//z80_byte origen_ensamblado[256];
 
 
 	char texto_desensamblado[256];
@@ -632,14 +632,14 @@ void codetests_assembler(void)
 			return;
 		}
 
-		else if (longitud_destino!=longitud_opcode_desensamblado) {
+		else if (longitud_destino!=(int)longitud_opcode_desensamblado) {
 			printf ("Sizes do not match\n");
 		}
 
 		else {
 			printf ("OK. Dump original and destination:\n");
 			int j;
-			for (j=0;j<longitud_opcode_desensamblado;j++) {
+			for (j=0;j<(int)longitud_opcode_desensamblado;j++) {
 				z80_byte byte_origen=disassemble_array[j];
 				z80_byte byte_destino=destino_ensamblado[j];
 				printf ("orig: %02XH dest: %02XH .  ",byte_origen,byte_destino);

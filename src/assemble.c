@@ -162,7 +162,7 @@ enum asm_tipo_parametro
 
 enum asm_tipo_parametro_entrada
 {
-	ASM_PARM_IN_NONE,
+	//ASM_PARM_IN_NONE,
         ASM_PARM_IN_R,
         ASM_PARM_IN_RP,
         ASM_PARM_IN_RP2,
@@ -395,7 +395,7 @@ char *asm_parametros_tipo_cc[]={
 };
 
 //Buscar en el array de char* de parametros si coincide y su valor
-char *assemble_find_array_params(char *texto_buscar,char *tabla[],int *valor)
+char *assemble_find_array_params(char *texto_buscar,char *tabla[],unsigned int *valor)
 {
 	int i;
 
@@ -414,7 +414,7 @@ char *assemble_find_array_params(char *texto_buscar,char *tabla[],int *valor)
 
 //Devuelve tipo de parametro en entrada, de enum asm_tipo_parametro_entrada
 //Si no es de ninguna tabla, retornara numero (N o NN)
-int assemble_find_param_type(char *buf_op,int *valor)
+int assemble_find_param_type(char *buf_op,unsigned int *valor)
 {
 	char *tabla;
 

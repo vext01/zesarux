@@ -6942,9 +6942,6 @@ void menu_debug_assemble(MENU_ITEM_PARAMETERS)
 	menu_debug_set_memory_zone_attr();
 
 
-
-	z80_byte tecla;
-
     
     menu_z80_moto_int direccion=menu_debug_disassemble_last_ptr;
 
