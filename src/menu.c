@@ -4443,9 +4443,9 @@ int menu_ask_file_to_save(char *titulo_ventana,char *filtro,char *file_save)
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto con estilo zxvision
 //volver_timeout: si vale 1, significa timeout normal como ventanas splash. Si vale 2, no finaliza, muestra franjas de color continuamente
-//return_after_print_text se usa para que vuelva a la funcion que llama justo despues de escribir texto,
+//return_after_print_text, si no es 0, se usa para que vuelva a la funcion que llama justo despues de escribir texto,
 //usado en opciones de mostrar First Aid y luego agregarle opciones de menu tabladas,
-//por lo que agrega cierta altura a la ventana
+//por lo que agrega cierta altura a la ventana. Se agregan tantas lineas como diga el parametro return_after_print_text
 void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
 
@@ -4600,8 +4600,8 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 	if (return_after_print_text) {
 		//Darle mas altura	
-		alto_ventana +=2;
-		alto_total_ventana +=2;
+		alto_ventana +=return_after_print_text;
+		alto_total_ventana +=return_after_print_text;
 	}
 
 	if (alto_ventana-2>MAX_LINEAS_VENTANA_GENERIC_MESSAGE) {
@@ -26621,6 +26621,13 @@ void menu_interface_first_aid(MENU_ITEM_PARAMETERS)
 	menu_disable_first_aid.v ^=1;
 }
 
+void menu_interface_restore_first_aid(MENU_ITEM_PARAMETERS)
+{
+	menu_first_aid_restore_all();
+
+	menu_generic_message("Restore messages","OK. Restored all first aid messages");
+}
+
 void menu_interface_force_atajo(MENU_ITEM_PARAMETERS)
 {
         menu_force_writing_inverse_color.v ^=1;
@@ -27063,6 +27070,12 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable First Aid help");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable First Aid help");		
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_first_aid,NULL,"    Restore all 1st aid mess.");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all First Aid help messages");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all First Aid help messages");
+
+
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
                 menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
@@ -29812,47 +29825,75 @@ void menu_generic_message(char *titulo, const char * texto)
 //Mensaje con setting para marcar
 void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char *texto_opcion, int *valor_opcion)
 {
-	zxvision_generic_message_tooltip(titulo , 1 , 0, 0, 0, NULL, 1, "%s", texto);
+
+	int lineas_agregar=4;
+
+	//Asumimos opcion ya marcada
+	*valor_opcion=1;
+	
+	zxvision_generic_message_tooltip(titulo , lineas_agregar , 0, 0, 0, NULL, 1, "%s", texto);
 
 	zxvision_window *ventana;
 
 	//Nuestra ventana sera la actual
 	ventana=zxvision_current_window;
 
-	int posicion_y_opcion=ventana->visible_height-3;
+	int posicion_y_opcion=ventana->visible_height-lineas_agregar-1;
 	//printf ("%d %d\n",posicion_y_opcion,ventana->visible_height);
+
+	int ancho_ventana=ventana->visible_width;
+	int posicion_centro_x=ancho_ventana/2-2;
+
+	if (posicion_centro_x<0) posicion_centro_x=0;
 
 
 		menu_item *array_menu_generic_message_setting;
         menu_item item_seleccionado;
-		int array_menu_generic_message_setting_opcion_seleccionada=0;
+		int array_menu_generic_message_setting_opcion_seleccionada=1;
         int retorno_menu;
+
+	int salir=0;
     do {
 
 
-		menu_add_item_menu_inicial_format(&array_menu_generic_message_setting,MENU_OPCION_NORMAL,NULL,NULL,"[%c] %s",(*valor_opcion ? 'X' : ' ' ),texto_opcion);
-		menu_add_item_menu_tabulado(array_menu_generic_message_setting,1,posicion_y_opcion);
+		char buffer_texto_opcion[64];
+		char buffer_texto_ok[64];
+
+		sprintf (buffer_texto_opcion,"[%c] %s",(*valor_opcion ? 'X' : ' ' ),texto_opcion);
+		strcpy(buffer_texto_ok,"<OK>");
+
+		//Tengo antes los textos para sacar longitud y centrarlos
+
+		int posicion_x_opcion=posicion_centro_x-strlen(buffer_texto_opcion)/2;
+		int posicion_x_ok=posicion_centro_x-strlen(buffer_texto_ok)/2;
+
+
+		menu_add_item_menu_inicial_format(&array_menu_generic_message_setting,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto_opcion);
+		menu_add_item_menu_tabulado(array_menu_generic_message_setting,posicion_x_opcion,posicion_y_opcion);
+
+
+		menu_add_item_menu_format(array_menu_generic_message_setting,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto_ok);
+		menu_add_item_menu_tabulado(array_menu_generic_message_setting,posicion_x_ok,posicion_y_opcion+2);
 
 
 		//Nombre de ventana solo aparece en el caso de stdout
     	retorno_menu=menu_dibuja_menu(&array_menu_generic_message_setting_opcion_seleccionada,&item_seleccionado,array_menu_generic_message_setting,titulo);
 
 
-		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
-		//cls_menu_overlay();
         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-        	//llamamos por valor de funcion
-            //if (item_seleccionado.menu_funcion!=NULL) {
-                //printf ("actuamos por funcion\n");
-                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-			
+	
+				//Si opcion 1, conmutar valor		
 				//Conmutar valor
-				*valor_opcion ^=1;
+				if (array_menu_generic_message_setting_opcion_seleccionada==0) *valor_opcion ^=1;
+
+				//Si opcion 2, volver
+				if (array_menu_generic_message_setting_opcion_seleccionada==1) {
+					salir=1;
+				}
                 
-            //}
         }
 
-    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && !salir);
 
 
 	cls_menu_overlay();
@@ -31618,6 +31659,9 @@ int menu_tape_settings_cond(void)
 
 void menu_inicio_bucle(void)
 {
+
+		menu_first_aid("initial_menu");
+
 		int retorno_menu;
 
 		menu_item *array_menu_principal;
@@ -34493,11 +34537,19 @@ int first_aid_no_smartload=0;
 char *first_aid_string_smartload="This quickload window allows you to load any known file type by the emulator. Just select it and go! "
 							"Press TAB to change between areas in the file selector";
 
+
+int first_aid_no_initial_menu=0;
+char *first_aid_string_initial_menu="This is the Main Menu. You can select item by using cursor keys and mouse. Most of them have help, "
+	"try pressing F1. Also, many have tooltip help, that means if you don't press a key, it will appear a tooltip "
+	"about what the item does. ESC or left mouse button closes a menu, you can also close it by pressing the top-left button in the window. "
+	"You can also use your mouse to resize or move windows";
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
 	menu_first_aid_add("filesel_uppercase_keys",&first_aid_no_filesel_uppercase_keys,first_aid_string_filesel_uppercase_keys);
 	menu_first_aid_add("smartload",&first_aid_no_smartload,first_aid_string_smartload);
+	menu_first_aid_add("initial_menu",&first_aid_no_initial_menu,first_aid_string_initial_menu);
 
 }
 
@@ -34527,6 +34579,17 @@ int menu_first_aid_get_setting(char *texto)
 
 	return encontrado;
 
+}
+
+//Restaurar todos mensages first aid
+void menu_first_aid_restore_all(void)
+{
+	int i;
+	for (i=0;i<total_first_aid;i++) {
+		int *opcion;
+		opcion=first_aid_list[i].puntero_setting;
+		*opcion=0;
+        }
 }
 
 //Deshabilitar first aid de lectura de config

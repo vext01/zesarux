@@ -214,6 +214,7 @@ extern z80_bit menu_disable_first_aid;
 extern void menu_first_aid_disable(char *texto);
 extern int total_first_aid;
 extern void menu_first_aid(char *key_setting);
+extern void menu_first_aid_restore_all(void);
 
 #define MAX_F_FUNCTIONS 20
 
