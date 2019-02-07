@@ -1,4 +1,5 @@
 ZEsarUX - ZX Second-Emulator And Released for UniX 
+Created by Cesar Hernandez Bano
 
 https://github.com/chernandezba/zesarux
 
@@ -232,7 +233,7 @@ __FEATURES__
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 
-* Powerful debug features: Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
+* Powerful debug features: Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
 
 * File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc
 

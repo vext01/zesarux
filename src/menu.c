@@ -26375,33 +26375,33 @@ void menu_external_tools_config(MENU_ITEM_PARAMETERS)
 		menu_tape_settings_trunc_name(external_tool_tar,string_tar,20);
 		menu_tape_settings_trunc_name(external_tool_unrar,string_unrar,20);
 
-                menu_add_item_menu_inicial_format(&array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_sox,NULL,"~~Sox: %s",string_sox);
+                menu_add_item_menu_inicial_format(&array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_sox,NULL,"~~Sox [%s]",string_sox);
 		menu_add_item_menu_shortcut(array_menu_external_tools_config,'s');
                 menu_add_item_menu_tooltip(array_menu_external_tools_config,"Change Sox Path");
                 menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Sox Path. Path can not include spaces");
 
 
-                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_unzip,NULL,"Un~~zip: %s",string_unzip);
+                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_unzip,NULL,"Un~~zip [%s]",string_unzip);
 		menu_add_item_menu_shortcut(array_menu_external_tools_config,'z');
                 menu_add_item_menu_tooltip(array_menu_external_tools_config,"Change Unzip Path");
                 menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Unzip Path. Path can not include spaces");
 
 
 
-                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_gunzip,NULL,"~~Gunzip: %s",string_gunzip);
+                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_gunzip,NULL,"~~Gunzip [%s]",string_gunzip);
 		menu_add_item_menu_shortcut(array_menu_external_tools_config,'g');
                 menu_add_item_menu_tooltip(array_menu_external_tools_config,"Change Gunzip Path");
                 menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Gunzip Path. Path can not include spaces");
 
 
 
-                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_tar,NULL,"~~Tar: %s",string_tar);
+                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_tar,NULL,"~~Tar [%s]",string_tar);
 		menu_add_item_menu_shortcut(array_menu_external_tools_config,'t');
                 menu_add_item_menu_tooltip(array_menu_external_tools_config,"Change Tar Path");
                 menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Tar Path. Path can not include spaces");
 
 
-                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_unrar,NULL,"Un~~rar: %s",string_unrar);
+                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_unrar,NULL,"Un~~rar [%s]",string_unrar);
 		menu_add_item_menu_shortcut(array_menu_external_tools_config,'r');
                 menu_add_item_menu_tooltip(array_menu_external_tools_config,"Change Unrar Path");
                 menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Unrar Path. Path can not include spaces");

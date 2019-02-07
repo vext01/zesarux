@@ -18,7 +18,8 @@
 
 ----fin zxvision----
 
--opcion para reactivar todas first aid de golpe
+-quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
+es la de sin phtreads
 
 -En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 

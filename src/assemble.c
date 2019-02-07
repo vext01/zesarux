@@ -625,7 +625,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 		return 0;
 	}
 
-        printf ("\n\nAssemble %s\n",texto);
+        //printf ("\n\nAssemble %s\n",texto);
 
         int longitud_instruccion=0;
         //Parsear opcode y parametros
