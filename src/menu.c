@@ -34470,7 +34470,7 @@ char *menu_filesel_recent_files(void)
 
     int i;
 	int hay_alguno=0;
-    for (i=0;i<MAX_F_FUNCTIONS;i++) {
+    for (i=0;i<MAX_LAST_FILESUSED;i++) {
 		if (last_files_used_array[i][0]!=0) {
 
 			//Mostrar solo nombre de archivo sin path
