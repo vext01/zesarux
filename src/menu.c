@@ -34472,7 +34472,12 @@ char *menu_filesel_recent_files(void)
 	int hay_alguno=0;
     for (i=0;i<MAX_F_FUNCTIONS;i++) {
 		if (last_files_used_array[i][0]!=0) {
-            menu_tape_settings_trunc_name(last_files_used_array[i],string_last_file_shown,29);
+
+			//Mostrar solo nombre de archivo sin path
+			char archivo_sin_dir[PATH_MAX];
+			util_get_file_no_directory(last_files_used_array[i],archivo_sin_dir);
+
+            menu_tape_settings_trunc_name(archivo_sin_dir,string_last_file_shown,29);
 			menu_add_item_menu_format(array_menu_recent_files,MENU_OPCION_NORMAL,NULL,NULL,string_last_file_shown);
 			hay_alguno=1;
 		}
