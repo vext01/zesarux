@@ -29842,7 +29842,7 @@ void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char
 	//printf ("%d %d\n",posicion_y_opcion,ventana->visible_height);
 
 	int ancho_ventana=ventana->visible_width;
-	int posicion_centro_x=ancho_ventana/2-2;
+	int posicion_centro_x=ancho_ventana/2-1; //un poco mas a la izquierda
 
 	if (posicion_centro_x<0) posicion_centro_x=0;
 
@@ -34534,14 +34534,14 @@ char *first_aid_string_filesel_uppercase_keys="If you want to select a file by i
 
 
 int first_aid_no_smartload=0;
-char *first_aid_string_smartload="This quickload window allows you to load any known file type by the emulator. Just select it and go! "
+char *first_aid_string_smartload="This smartload window allows you to load any known file type by the emulator. Just select it and go! "
 							"Press TAB to change between areas in the file selector";
 
 
 int first_aid_no_initial_menu=0;
 char *first_aid_string_initial_menu="This is the Main Menu. You can select item by using cursor keys and mouse. Most of them have help, "
 	"try pressing F1. Also, many have tooltip help, that means if you don't press a key, it will appear a tooltip "
-	"about what the item does. ESC or left mouse button closes a menu, you can also close it by pressing the top-left button in the window. "
+	"about what the item does. ESC or right mouse button closes a menu, you can also close it by pressing the top-left button in the window. "
 	"You can also use your mouse to resize or move windows";
 
 void menu_first_aid_init(void)
@@ -34650,7 +34650,7 @@ void menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
 	if (*valor_opcion) return;
 
 	cls_menu_overlay();
-	zxvision_menu_generic_message_setting("First aid",texto_opcion,"Do not show again",valor_opcion);
+	zxvision_menu_generic_message_setting("First aid",texto_opcion,"Do not show it again",valor_opcion);
 		
 
 }
