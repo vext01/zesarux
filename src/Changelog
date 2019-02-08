@@ -14,6 +14,7 @@ Added setting to send a final space after every word in the osd adventure keyboa
 Added Dandanator CPC emulation
 Added machine Amstrad CPC 4128
 Added CPC machines support to ZSF snapshots
+Added tape to wav converter (tap, tzx, o, p to wav)
 
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now

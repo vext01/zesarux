@@ -7197,6 +7197,41 @@ int convert_wav_to_rwa(char *origen, char *destino)
 
 }
 
+int convert_rwa_to_wav(char *origen, char *destino)
+{
+
+
+
+        char sox_command[PATH_MAX];
+
+        char sox_program[PATH_MAX];
+
+
+
+        sprintf (sox_program,"%s",external_tool_sox);
+        //sprintf (sox_command,"%s \"%s\" -t .raw -r %d -b 8 -e unsigned -c 1 \"%s\"",external_tool_sox,origen,FRECUENCIA_SONIDO_RWA_FILES,destino);
+        sprintf (sox_command,"%s -t .raw -r %d -b 8 -e unsigned -c 1 \"%s\" \"%s\"",external_tool_sox,FRECUENCIA_SONIDO_RWA_FILES,origen,destino);
+
+
+
+
+        if (!si_existe_archivo(sox_program)) {
+                debug_printf(VERBOSE_ERR,"Unable to find sox program: %s",sox_program);
+                return 1;
+        }
+
+
+        debug_printf (VERBOSE_DEBUG,"Running %s command",sox_command);
+
+        if (system (sox_command)==-1) {
+                debug_printf (VERBOSE_DEBUG,"Error running command %s",sox_command);
+                return 1;
+        }
+
+        return 0;
+
+}
+
 char tzx_frecuencia_sonido[10];
 
 int convert_tzx_to_rwa(char *origen, char *destino)
@@ -7642,6 +7677,85 @@ Spectrum Cassette Blocks
 
         return 0;
 }
+
+int convert_any_to_wav(char *origen, char *destino)
+{
+        //Primero pasar a rwa y luego a wav
+        char rwa_temp_file[PATH_MAX];
+
+	int result_first_convert;
+
+	if (!util_compare_file_extension(origen,"tap")) result_first_convert=convert_tap_to_rwa_tmpdir(origen,rwa_temp_file);
+	else if (!util_compare_file_extension(origen,"tzx")) result_first_convert=convert_tzx_to_rwa_tmpdir(origen,rwa_temp_file);
+	else if (!util_compare_file_extension(origen,"smp")) result_first_convert=convert_smp_to_rwa_tmpdir(origen,rwa_temp_file);
+	else if (!util_compare_file_extension(origen,"o")) result_first_convert=convert_o_to_rwa_tmpdir(origen,rwa_temp_file);
+	else if (!util_compare_file_extension(origen,"p")) result_first_convert=convert_p_to_rwa_tmpdir(origen,rwa_temp_file);
+	else return 1;
+
+         if (result_first_convert) {
+			//Error
+                        return 1;
+                }
+
+                if (!si_existe_archivo(rwa_temp_file)) {
+                        //debug_printf(VERBOSE_ERR,"Error converting input file. Target file not found");
+                        return 1;
+                }
+
+        if (convert_rwa_to_wav(rwa_temp_file,destino)) {
+                return 1;
+        }
+
+
+        return 0;
+}
+
+
+/*
+int convert_tap_to_wav(char *origen, char *destino)
+{
+	//Primero pasar a rwa y luego a wav
+	char rwa_temp_file[PATH_MAX];
+
+	 if (convert_tap_to_rwa_tmpdir(origen,rwa_temp_file)) {
+                        return 1;
+                }
+
+                if (!si_existe_archivo(rwa_temp_file)) {
+                        //debug_printf(VERBOSE_ERR,"Error converting input file. Target file not found");
+                        return 1;
+                }
+
+	if (convert_rwa_to_wav(rwa_temp_file,destino)) {
+		return 1;
+	}
+
+
+	return 0;
+}
+
+int convert_tzx_to_wav(char *origen, char *destino)
+{
+        //Primero pasar a rwa y luego a wav
+        char rwa_temp_file[PATH_MAX];
+
+         if (convert_tzx_to_rwa_tmpdir(origen,rwa_temp_file)) {
+                        return 1;
+                }
+
+                if (!si_existe_archivo(rwa_temp_file)) {
+                        //debug_printf(VERBOSE_ERR,"Error converting input file. Target file not found");
+                        return 1;
+                }
+
+        if (convert_rwa_to_wav(rwa_temp_file,destino)) {
+                return 1;
+        }
+
+
+        return 0;
+}
+*/
 
 //Crea carpeta temporal y asigna nombre para archivo temporal rwa
 void convert_to_rwa_common_tmp(char *origen, char *destino)

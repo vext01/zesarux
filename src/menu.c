@@ -33315,6 +33315,7 @@ void file_utils_file_convert(char *fullpath)
 		char *opciones[]={
 			"TAP to TZX",
 			"TAP to RWA",
+			"TAP to WAV",
 			NULL};
 
 		int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -33334,6 +33335,11 @@ void file_utils_file_convert(char *fullpath)
 				convert_tap_to_rwa(fullpath,archivo_destino);
 			break;
 
+			case 2:
+				sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
+				convert_any_to_wav(fullpath,archivo_destino);
+			break;
+
 		}
 	}
 
@@ -33341,6 +33347,7 @@ void file_utils_file_convert(char *fullpath)
                 char *opciones[]={
 						"TZX to TAP",
                         "TZX to RWA",
+			"TZX to WAV",
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -33359,6 +33366,11 @@ void file_utils_file_convert(char *fullpath)
                                 convert_tzx_to_rwa(fullpath,archivo_destino);
                         break;
 
+                        case 2:
+                                sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
+                                convert_any_to_wav(fullpath,archivo_destino);
+                        break;
+
                 }
         }
 /*
@@ -33371,6 +33383,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
         else if (!util_compare_file_extension(archivo,"smp")) {
                 char *opciones[]={
                         "SMP to RWA",
+			"SMP to WAV",
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -33382,6 +33395,11 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
                                 convert_smp_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
+                                convert_any_to_wav(fullpath,archivo_destino);
                         break;
 
                 }
@@ -33409,6 +33427,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
         else if (!util_compare_file_extension(archivo,"o")) {
                 char *opciones[]={
                         "O to RWA",
+			"O to WAV",
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -33422,12 +33441,18 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                                 convert_o_to_rwa(fullpath,archivo_destino);
                         break;
 
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
+                                convert_any_to_wav(fullpath,archivo_destino);
+                        break;
+
                 }
         }
 
         else if (!util_compare_file_extension(archivo,"p")) {
                 char *opciones[]={
                         "P to RWA",
+			"P to WAV",
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -33439,6 +33464,11 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
                                 convert_p_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
+                                convert_any_to_wav(fullpath,archivo_destino);
                         break;
 
                 }
