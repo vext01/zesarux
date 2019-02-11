@@ -2940,7 +2940,7 @@ int menu_debug_tsconf_tbblue_tilenav_total_vert(void)
 	else  { //TBBLUE
 		limite_vertical=tbblue_get_tilemap_width()*32;
 
-		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
+		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=32;	
 	}
 
 	return limite_vertical;
@@ -3232,7 +3232,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
-						sprintf (dumpmemoria," Tile: %2d %s %s %s %s P:%2d",tnum,
+						sprintf (dumpmemoria," Tile: %3d %s %s %s %s P:%2d ",tnum,
 							(xmirror ? "MX" : "  "),(ymirror ? "MY": "  "),
 							(rotate ? "R" : " "),(ula_over_tilemap ? "U": " "),
 							tpal );
