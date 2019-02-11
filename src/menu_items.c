@@ -2548,10 +2548,10 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 					sprintf (texto_buffer,"Layer 2 shadow addr: %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[19]) );					
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-					sprintf (texto_buffer,"Tilemap base addr:     %02X00H",0x40+((tbblue_registers[110])&63) );					
+					sprintf (texto_buffer,"Tilemap base addr:     %02X00H",0x40+tbblue_get_offset_start_tilemap() );					
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-					sprintf (texto_buffer,"Tile definitions addr: %02X00H",0x40+((tbblue_registers[111])&63) );					
+					sprintf (texto_buffer,"Tile definitions addr: %02X00H",0x40+tbblue_get_offset_start_tiledef() );					
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);					
 
 					/*
@@ -2988,16 +2988,6 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	linea +=3;	
 
 
-	//zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,3,"HOLA");
-	//zxvision_draw_window_contents(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window); 
-	//return;
-
-	//printf ("inicio linea en %d\n",linea);
-
-		//printf ("Init drawing tiles from vertical offset %d to %d. line print starts at %d\n",offset_vertical,limite_vertical,linea);
-		/*for (linea_color=0;linea_color<limite_vertical &&
-				menu_debug_tsconf_tbblue_tilenav_current_tile+linea_color<limite;
-				linea_color++) {*/
 
 		for (;offset_vertical<limite_vertical;offset_vertical++) {
 
@@ -3064,15 +3054,12 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 						caracter_final=' '; 
 					}
 					else {
-						//int caracteres_totales=50; //127-33;
-						//caracter_final=33+(tnum%caracteres_totales);
 						caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
 					}
 
 					dumpmemoria[mapa_tile_x++]=caracter_final;
 				}
 
-				//puntero_tilemap+=2;
 				current_tile++;
 
 				repetir_ancho--;

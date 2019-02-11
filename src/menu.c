@@ -25607,7 +25607,7 @@ void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_spritenav,NULL,"~~Sprite navigator");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'s');
 
-		if (MACHINE_IS_TSCONF) {
+		if (MACHINE_IS_TSCONF || MACHINE_IS_TSCONF) {
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_tilenav,NULL,"~~Tile navigator");
 			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'t');
 		}

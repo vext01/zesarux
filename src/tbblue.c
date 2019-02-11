@@ -1022,6 +1022,17 @@ int tbblue_get_offset_start_layer2(void)
 
 }
 
+int tbblue_get_offset_start_tilemap(void)
+{
+	return tbblue_registers[110]&63;
+}
+
+
+int tbblue_get_offset_start_tiledef(void)
+{
+	return tbblue_registers[111]&63;
+}
+
 void tbblue_reset_sprites(void)
 {
 
