@@ -2951,7 +2951,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 {
 
 	//Suficientemente grande para almacenar regla superior en modo visual
-	char dumpmemoria[68]; //64 + 3 espacios izquierda + 0 final
+	char dumpmemoria[84]; //80 + 3 espacios izquierda + 0 final
 
 	
 	int limite;
@@ -2971,7 +2971,31 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	else {  //TBBLUE
 		//puntero_tilemap=tbblue_ram_mem_table[5]+tbblue_get_offset_start_tilemap();
 			//Siempre saldra de ram 5
-		puntero_tilemap=tbblue_ram_memory_pages[5*2]+tbblue_get_offset_start_tilemap();	
+		puntero_tilemap=tbblue_ram_memory_pages[5*2]+(256*tbblue_get_offset_start_tilemap());	
+		//printf ("%XH\n",tbblue_get_offset_start_tilemap() );
+
+	}
+
+	z80_byte tbblue_tilemap_control;
+	int tilemap_width;
+
+
+	int tbblue_bytes_per_tile=2;
+
+	if (MACHINE_IS_TBBLUE) {
+					/*
+					(R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+  bit 6    = 0 for 40x32, 1 for 80x32
+  bit 5    = 1 to eliminate the attribute entry in the tilemap
+  bit 4    = palette select
+  bits 3-0 = Reserved set to 0
+					*/
+					tbblue_tilemap_control=tbblue_registers[107];
+
+					if (tbblue_tilemap_control&32) tbblue_bytes_per_tile=1;
+
+					tilemap_width=tbblue_get_tilemap_width();
 
 	}
 
@@ -2983,9 +3007,22 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	int offset_vertical=0;
 
 	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-		//TODO tbblue
+		if (MACHINE_IS_TSCONF) {
 				  //0123456789012345678901234567890123456789012345678901234567890123
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
+		}
+
+		else { //TBBLUE
+			if (tilemap_width==40) {
+				             //0123456789012345678901234567890123456789012345678901234567890123
+		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   ");
+			}
+			else {
+				             //01234567890123456789012345678901234567890123456789012345678901234567890123456789
+		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60   65   70   75   ");
+			}
+
+		}
 
 		//Indicar codigo 0 de final
 		//dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+3]=0;  //3 espacios al inicio
@@ -3024,13 +3061,25 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 			else {
 				//Modo mapa tiles
-				current_tile=offset_vertical*64;
-				repetir_ancho=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW;
+				if (MACHINE_IS_TSCONF) {
+					current_tile=offset_vertical*64;
+					repetir_ancho=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW;
 
-				//poner regla vertical
-				int linea_tile=current_tile/64;
-				if ( (linea_tile%5)==0) sprintf (dumpmemoria,"%2d ",linea_tile);
-				else sprintf (dumpmemoria,"   ");
+					//poner regla vertical
+					int linea_tile=current_tile/64;
+					if ( (linea_tile%5)==0) sprintf (dumpmemoria,"%2d ",linea_tile);
+					else sprintf (dumpmemoria,"   ");
+				}
+
+				else { //TBBLUE
+					current_tile=offset_vertical*tilemap_width;
+					repetir_ancho=tilemap_width;
+
+					//poner regla vertical
+					int linea_tile=current_tile/tilemap_width;
+					if ( (linea_tile%5)==0) sprintf (dumpmemoria,"%2d ",linea_tile);
+					else sprintf (dumpmemoria,"   ");				
+				}
 			}
 
 			//printf ("linea: %3d current tile: %10d puntero: %10d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
@@ -3087,24 +3136,11 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 				}
 
 				if (MACHINE_IS_TBBLUE) {
-					int tilemap_width=tbblue_get_tilemap_width();
+
 					int y=current_tile/tilemap_width;
 					int x=current_tile%tilemap_width; 
 
-					int bytes_per_tile=2;
-					/*
-					(R/W) 0x6B (107) => Tilemap Control
-  bit 7    = 1 to enable the tilemap
-  bit 6    = 0 for 40x32, 1 for 80x32
-  bit 5    = 1 to eliminate the attribute entry in the tilemap
-  bit 4    = palette select
-  bits 3-0 = Reserved set to 0
-					*/
-					z80_byte tbblue_tilemap_control=tbblue_registers[107];
-
-					if (tbblue_tilemap_control&32) bytes_per_tile=1;
-
-					int offset=(tilemap_width*bytes_per_tile*y)+(x*bytes_per_tile);
+					int offset=(tilemap_width*tbblue_bytes_per_tile*y)+(x*tbblue_bytes_per_tile);
 					/*
 					 bits 15-12 : palette offset
   bit     11 : x mirror
@@ -3128,7 +3164,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 					z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
-					if (bytes_per_tile==1) {
+					if (tbblue_bytes_per_tile==1) {
 						/*
 						(R/W) 0x6C (108) => Default Tilemap Attribute
   bits 7-4 = Palette Offset
@@ -3187,6 +3223,8 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 					}
 
+					//printf ("tnum: %d\n",tnum);
+
 
 					if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
 						//Modo lista tiles
@@ -3196,7 +3234,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 						sprintf (dumpmemoria," Tile: %2d %s %s %s %s P:%2d",tnum,
 							(xmirror ? "MX" : "  "),(ymirror ? "MY": "  "),
-							(rotate ? "R" : "  "),(ula_over_tilemap ? "U": "  "),
+							(rotate ? "R" : " "),(ula_over_tilemap ? "U": " "),
 							tpal );
 
 						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
@@ -3224,12 +3262,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 			} while (repetir_ancho);
 
 			if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-				//dumpmemoria[mapa_tile_x++]=0;
-				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
-
-				//Siguiente linea de tiles (saltar 64 posiciones, 2 layers, 2 bytes por tile)
-				//puntero_tilemap_orig +=64*2*2;
 				puntero_tilemap=puntero_tilemap_orig;
 			}
 					
@@ -3286,7 +3319,13 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 			//sprintf (titulo,"Tile Navigator");
 			sprintf (linea_leyenda,"~~Mode: Visual ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
 
+			if (MACHINE_IS_TSCONF) {
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
+			}
+			else {
+				//TBBLUE
+				total_width=tbblue_get_tilemap_width()+4;
+			}
 			//total_height++; //uno mas pues hay la primera linea con la regla de columnas
 
 		}
