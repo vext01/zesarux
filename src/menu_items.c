@@ -2913,6 +2913,8 @@ zxvision_window *menu_debug_tsconf_tbblue_tilenav_lista_tiles_window;
 
 
 #define DEBUG_TSCONF_TILENAV_MAX_TILES (64*64)
+//#define DEBUG_TBBLUE_TILENAV_MAX_TILES_8032 (80*32)
+//#define DEBUG_TBBLUE_TILENAV_MAX_TILES_4032 (40*32)
 
 
 char menu_debug_tsconf_tbblue_tiles_retorna_visualchar(int tnum)
@@ -2927,8 +2929,19 @@ char menu_debug_tsconf_tbblue_tiles_retorna_visualchar(int tnum)
 
 int menu_debug_tsconf_tbblue_tilenav_total_vert(void)
 {
-	int limite_vertical=DEBUG_TSCONF_TILENAV_MAX_TILES;
-	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
+
+	int limite_vertical;
+
+	if (MACHINE_IS_TSCONF) {
+		limite_vertical=DEBUG_TSCONF_TILENAV_MAX_TILES;
+		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
+	}
+
+	else  { //TBBLUE
+		limite_vertical=tbblue_get_tilemap_width()*32;
+
+		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
+	}
 
 	return limite_vertical;
 }
@@ -2950,9 +2963,17 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 	z80_byte *puntero_tilemap;
 	z80_byte *puntero_tilemap_orig;
-	puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
-	puntero_tilemap_orig=puntero_tilemap;
 
+	if (MACHINE_IS_TSCONF) {
+		puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
+	}
+
+	else {  //TBBLUE
+		puntero_tilemap=tsconf_ram_mem_table[5]+tbblue_get_offset_start_tilemap();
+
+	}
+
+	puntero_tilemap_orig=puntero_tilemap;
 
 	int limite_vertical=menu_debug_tsconf_tbblue_tilenav_total_vert();
 
@@ -2960,6 +2981,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	int offset_vertical=0;
 
 	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+		//TODO tbblue
 				  //0123456789012345678901234567890123456789012345678901234567890123
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 
@@ -3012,52 +3034,169 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 			//printf ("linea: %3d current tile: %10d puntero: %10d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
 
 			do {
-				int y=current_tile/64;
-				int x=current_tile%64; 
+				if (MACHINE_IS_TSCONF) {
+					int y=current_tile/64;
+					int x=current_tile%64; 
 
-				//printf ("x: %d y: %d\n",x,y);
+					//printf ("x: %d y: %d\n",x,y);
 				
 
-				int offset=(256*y)+(x*2);
+					int offset=(256*y)+(x*2);
 
-				offset+=menu_debug_tsconf_tbblue_tilenav_current_tilelayer*128;
+					offset+=menu_debug_tsconf_tbblue_tilenav_current_tilelayer*128;
 
-				int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
+					int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
 
-				//printf ("Current tile: %d  x: %d y: %d  tnum: %d\n",current_tile,x,y,tnum);
+					//printf ("Current tile: %d  x: %d y: %d  tnum: %d\n",current_tile,x,y,tnum);
 
-				z80_byte tnum_x=tnum&63;
-				z80_byte tnum_y=(tnum>>6)&63;
+					z80_byte tnum_x=tnum&63;
+					z80_byte tnum_y=(tnum>>6)&63;
 
-		    	z80_byte tpal=(puntero_tilemap[offset+1]>>4)&3;
+		    		z80_byte tpal=(puntero_tilemap[offset+1]>>4)&3;
 
-				z80_byte tile_xf=puntero_tilemap[offset+1]&64;
-				z80_byte tile_yf=puntero_tilemap[offset+1]&128;
+					z80_byte tile_xf=puntero_tilemap[offset+1]&64;
+					z80_byte tile_yf=puntero_tilemap[offset+1]&128;
 
-				if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
-					//Modo lista tiles
-					sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
+					if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+						//Modo lista tiles
+						sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
 
-					zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
-					sprintf (dumpmemoria," Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
-						(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
-						tpal );
+						sprintf (dumpmemoria," Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
+							(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
+							tpal );
 
-					zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
-				}
-				else {
-					//Modo mapa tiles
-					z80_byte caracter_final;
-
-					if (tnum==0) {
-						caracter_final=' '; 
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 					}
 					else {
-						caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
+						//Modo mapa tiles
+						z80_byte caracter_final;
+
+						if (tnum==0) {
+							caracter_final=' '; 
+						}
+						else {
+							caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
+						}
+
+						dumpmemoria[mapa_tile_x++]=caracter_final;
+					}
+				}
+
+				if (MACHINE_IS_TBBLUE) {
+					int tilemap_width=tbblue_get_tilemap_width();
+					int y=current_tile/tilemap_width;
+					int x=current_tile%tilemap_width; 
+
+					int bytes_per_tile=2;
+					/*
+					(R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+  bit 6    = 0 for 40x32, 1 for 80x32
+  bit 5    = 1 to eliminate the attribute entry in the tilemap
+  bit 4    = palette select
+  bits 3-0 = Reserved set to 0
+					*/
+					z80_byte tbblue_tilemap_control=tbblue_registers[107];
+
+					if (tbblue_tilemap_control&32) bytes_per_tile=1;
+
+					int offset=(tilemap_width*bytes_per_tile*y)+(x*2);
+					/*
+					 bits 15-12 : palette offset
+  bit     11 : x mirror
+  bit     10 : y mirror
+  bit      9 : rotate
+  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+  bits   7-0 : tile number
+					*/
+
+					int xmirror,ymirror,rotate;
+					z80_byte tpal;
+
+					z80_byte byte_first=puntero_tilemap[offset];
+					z80_byte byte_second=puntero_tilemap[offset+1];
+
+					int tnum=byte_first;
+					int ula_over_tilemap;
+					if (tbblue_if_ula_is_enabled() ) {
+						//Meter bit 8
+						ula_over_tilemap=byte_second&1;  // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+						ula_over_tilemap=tbblue_registers[108]&1;
+						/*
+						(R/W) 0x6C (108) => Default Tilemap Attribute
+						  bit 0    = ULA over tilemap (bit 8 of tile id if the ULA is disabled)
+						*/
+					}
+					else {
+						//Meter bit 8
+						tnum |=(tbblue_registers[108]&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+						ula_over_tilemap=0; 
 					}
 
-					dumpmemoria[mapa_tile_x++]=caracter_final;
+					if (bytes_per_tile==1) {
+						/*
+						(R/W) 0x6C (108) => Default Tilemap Attribute
+  bits 7-4 = Palette Offset
+  bit 3    = X mirror
+  bit 2    = Y mirror
+  bit 1    = Rotate
+  bit 0    = ULA over tilemap
+             (bit 8 of tile id if the ULA is disabled)	
+			 			*/
+					 	tpal=(tbblue_tilemap_control>>4)&15;
+						xmirror=(tbblue_tilemap_control>>3)&1;
+						ymirror=(tbblue_tilemap_control>>2)&1;
+						rotate=(tbblue_tilemap_control>>1)&1;
+						ula_over_tilemap=tbblue_tilemap_control &1;
+					}
+
+					else {
+						/*
+							
+					 bits 15-12 : palette offset
+  bit     11 : x mirror
+  bit     10 : y mirror
+  bit      9 : rotate
+  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+					*/	
+					 	tpal=(byte_second>>4)&15;
+						xmirror=(byte_second>>3)&1;
+						ymirror=(byte_second>>2)&1;
+						rotate=(byte_second>>1)&1;
+						ula_over_tilemap=byte_second &1;
+					}
+
+
+					if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+						//Modo lista tiles
+						sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
+
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+
+						sprintf (dumpmemoria," Tile: %2d %s %s %s %s P:%2d",tnum,
+							(xmirror ? "MX" : "  "),(ymirror ? "MY": "  "),
+							(rotate ? "R" : "  "),(ula_over_tilemap ? "U": "  "),
+							tpal );
+
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+					}
+					else {
+						//Modo mapa tiles
+						int caracter_final;
+
+						if (tnum==0) {
+							caracter_final=' '; 
+						}
+						else {
+							caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
+						}
+
+						dumpmemoria[mapa_tile_x++]=caracter_final;
+					}					
+
+
 				}
 
 				current_tile++;

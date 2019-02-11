@@ -1033,6 +1033,29 @@ int tbblue_get_offset_start_tiledef(void)
 	return tbblue_registers[111]&63;
 }
 
+int tbblue_get_tilemap_width(void)
+{
+	if (tbblue_registers[107]&64) return 80;
+	else return 40;
+}
+
+int tbblue_if_ula_is_enabled(void)
+{
+	/*
+(R/W) 0x68 (104) => ULA Control
+  bit 7    = 1 to disable ULA output
+  bit 6    = 0 to select the ULA colour for blending in SLU modes 6 & 7
+           = 1 to select the ULA/tilemap mix for blending in SLU modes 6 & 7
+  bits 5-1 = Reserved must be 0
+  bit 0    = 1 to enable stencil mode when both the ULA and tilemap are enabled
+            (if either are transparent the result is transparent otherwise the
+             result is a logical AND of both colours)
+						 */
+
+	if (tbblue_registers[104]&128) return 0;
+	else return 1;
+}
+
 void tbblue_reset_sprites(void)
 {
 
