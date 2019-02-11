@@ -2969,7 +2969,9 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	}
 
 	else {  //TBBLUE
-		puntero_tilemap=tsconf_ram_mem_table[5]+tbblue_get_offset_start_tilemap();
+		//puntero_tilemap=tbblue_ram_mem_table[5]+tbblue_get_offset_start_tilemap();
+			//Siempre saldra de ram 5
+		puntero_tilemap=tbblue_ram_memory_pages[5*2]+tbblue_get_offset_start_tilemap();	
 
 	}
 
@@ -3102,7 +3104,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 					if (tbblue_tilemap_control&32) bytes_per_tile=1;
 
-					int offset=(tilemap_width*bytes_per_tile*y)+(x*2);
+					int offset=(tilemap_width*bytes_per_tile*y)+(x*bytes_per_tile);
 					/*
 					 bits 15-12 : palette offset
   bit     11 : x mirror
@@ -3115,25 +3117,16 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 					int xmirror,ymirror,rotate;
 					z80_byte tpal;
 
-					z80_byte byte_first=puntero_tilemap[offset];
-					z80_byte byte_second=puntero_tilemap[offset+1];
+					z80_byte byte_first;
+					z80_byte byte_second;
+
+					byte_first=puntero_tilemap[offset];
+					byte_second=puntero_tilemap[offset+1];					
 
 					int tnum=byte_first;
 					int ula_over_tilemap;
-					if (tbblue_if_ula_is_enabled() ) {
-						//Meter bit 8
-						ula_over_tilemap=byte_second&1;  // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-						ula_over_tilemap=tbblue_registers[108]&1;
-						/*
-						(R/W) 0x6C (108) => Default Tilemap Attribute
-						  bit 0    = ULA over tilemap (bit 8 of tile id if the ULA is disabled)
-						*/
-					}
-					else {
-						//Meter bit 8
-						tnum |=(tbblue_registers[108]&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-						ula_over_tilemap=0; 
-					}
+
+					z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
 					if (bytes_per_tile==1) {
 						/*
@@ -3145,11 +3138,24 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
   bit 0    = ULA over tilemap
              (bit 8 of tile id if the ULA is disabled)	
 			 			*/
-					 	tpal=(tbblue_tilemap_control>>4)&15;
-						xmirror=(tbblue_tilemap_control>>3)&1;
-						ymirror=(tbblue_tilemap_control>>2)&1;
-						rotate=(tbblue_tilemap_control>>1)&1;
-						ula_over_tilemap=tbblue_tilemap_control &1;
+					 	tpal=(tbblue_default_tilemap_attr>>4)&15;
+						xmirror=(tbblue_default_tilemap_attr>>3)&1;
+						ymirror=(tbblue_default_tilemap_attr>>2)&1;
+						rotate=(tbblue_default_tilemap_attr>>1)&1;
+
+						if (tbblue_if_ula_is_enabled() ) {
+						/*
+						108
+						  bit 0    = ULA over tilemap
+             (bit 8 of tile id if the ULA is disabled)
+						*/							
+							ula_over_tilemap=tbblue_default_tilemap_attr &1;
+						}
+
+						else {
+							tnum |=(tbblue_default_tilemap_attr&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+						}
+						
 					}
 
 					else {
@@ -3165,7 +3171,20 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 						xmirror=(byte_second>>3)&1;
 						ymirror=(byte_second>>2)&1;
 						rotate=(byte_second>>1)&1;
-						ula_over_tilemap=byte_second &1;
+						//ula_over_tilemap=byte_second &1;
+
+					if (tbblue_if_ula_is_enabled() ) {
+						/*
+						  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+						*/							
+							ula_over_tilemap=byte_second &1;
+						}
+
+						else {
+							tnum |=(byte_second&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+						}
+
+
 					}
 
 
