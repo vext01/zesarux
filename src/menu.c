@@ -11978,11 +11978,13 @@ int menu_debug_sprites_total_colors_mapped_palette(int paleta)
 		case 10:
 		case 11:
 		case 12:
+		case 13:
+		case 14:
 			return 256;
 		break;
 
 		//TSConf
-		case 13:
+		case 15:
 			return 256;
 		break;
 
@@ -12040,11 +12042,13 @@ int menu_debug_sprites_max_value_mapped_palette(int paleta)
 		case 10:
 		case 11:
 		case 12:
+		case 13:
+		case 14:
 			return RGB9_TOTAL_PALETTE_COLOURS;
 		break;
 
 		//TSConf
-		case 13:
+		case 15:
 			return TSCONF_TOTAL_PALETTE_COLOURS;
 		break;
 
@@ -12127,6 +12131,16 @@ int menu_debug_sprites_return_index_palette(int paleta, z80_byte color)
 		break;
 
 		case 13:
+			//TBBlue tilemap paleta 1
+			return tbblue_palette_tilemap_first[color];
+		break;		
+
+		case 14:
+			//TBBlue tilemap paleta 2
+			return tbblue_palette_tilemap_second[color];
+		break;	
+
+		case 15:
 			//TSConf
 			return tsconf_return_cram_color(color);
 		break;
@@ -12179,10 +12193,12 @@ int menu_debug_sprites_return_color_palette(int paleta, z80_byte color)
 		case 10:
 		case 11:
 		case 12:
+		case 13:
+		case 14:
 			return RGB9_INDEX_FIRST_COLOR+index;
 		break;
 
-		case 13:
+		case 15:
 			return TSCONF_INDEX_FIRST_COLOR+index;
 		break;
 
@@ -12255,6 +12271,14 @@ void menu_debug_sprites_get_palette_name(int paleta, char *s)
 		break;			
 
 		case 13:
+			strcpy(s,"TBBlue Tilemap 1");
+		break;
+
+		case 14:
+			strcpy(s,"TBBlue Tilemap 2");
+		break;	
+
+		case 15:
 			strcpy(s,"TSConf");
 		break;
 

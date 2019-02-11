@@ -133,6 +133,8 @@ extern z80_int tbblue_palette_layer2_first[];
 extern z80_int tbblue_palette_layer2_second[];
 extern z80_int tbblue_palette_sprite_first[];
 extern z80_int tbblue_palette_sprite_second[];
+extern z80_int tbblue_palette_tilemap_first[];
+extern z80_int tbblue_palette_tilemap_second[];
 
 extern void tbblue_out_port_sprite_index(z80_byte value);
 //extern void tbblue_out_sprite_palette(z80_byte value);

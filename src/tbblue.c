@@ -551,6 +551,8 @@ int tbblue_get_current_raster_horiz_position(void)
 //    101 = Layer 2 secondary palette
 //     010 = Sprites first palette 
 //     110 = Sprites secondary palette
+//     011 = Tilemap first palette
+//     111 = Tilemap second palette
 //Paletas de 256 colores formato RGB9 RRRGGGBBB
 //Valores son de 9 bits por tanto lo definimos con z80_int que es de 16 bits
 z80_int tbblue_palette_ula_first[256];
@@ -559,6 +561,8 @@ z80_int tbblue_palette_layer2_first[256];
 z80_int tbblue_palette_layer2_second[256];
 z80_int tbblue_palette_sprite_first[256];
 z80_int tbblue_palette_sprite_second[256];
+z80_int tbblue_palette_tilemap_first[256];
+z80_int tbblue_palette_tilemap_second[256];
 
 
 //Diferentes layers a componer la imagen final
@@ -759,6 +763,14 @@ z80_int *tbblue_get_palette_rw(void)
 		case 6:
 			return tbblue_palette_sprite_second;
 		break;
+
+		case 3:
+			return tbblue_palette_tilemap_first;
+		break;		
+
+		case 7:
+			return tbblue_palette_tilemap_second;
+		break;				
 
 		//por defecto retornar siempre ULA first palette
 		default:
