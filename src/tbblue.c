@@ -2727,6 +2727,16 @@ void tbblue_reset_common(void)
 	tbblue_registers[67]=0;
 	tbblue_registers[74]=0;
 	tbblue_registers[75]=0xE3;
+
+/*
+(R/W) 0x4C (76) => Transparency index for the tilemap
+  bits 7-4 = Reserved, must be 0
+  bits 3-0 = Set the index value (0xF after reset)
+	*/
+
+	tbblue_registers[76]=0xF;
+
+
 	tbblue_registers[97]=0;
 	tbblue_registers[98]=0;
 
@@ -3880,6 +3890,26 @@ z80_int tbblue_tile_return_color_index(z80_byte index)
         return color_final;
 }
 
+void tbblue_do_tile_putpixel(z80_byte pixel_izq,z80_byte transparent_colour,z80_byte tpal,z80_int *puntero_a_layer)
+{
+
+		
+
+				//Pixel izquierdo
+			if (pixel_izq==transparent_colour) {
+
+			}
+			else {
+				pixel_izq |=tpal;
+
+				//Vemos lo que hay en la capa
+				z80_int color_previo_capa;
+				color_previo_capa=*puntero_a_layer;
+				if (tbblue_si_transparent(color_previo_capa)) {
+				*puntero_a_layer=tbblue_tile_return_color_index(pixel_izq);
+				}
+			}
+}
 
 void tbblue_do_tile_overlay(int scanline)
 {
@@ -4071,8 +4101,10 @@ if (tbblue_if_ula_is_enabled() ) {
 			pixel_der=tiledef  & 0xF;
 			z80_int color_previo_capa;
 
+			tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
+
 			//Pixel izquierdo
-			if (pixel_izq==transparent_colour) {
+			/*if (pixel_izq==transparent_colour) {
 
 			}
 			else {
@@ -4083,9 +4115,12 @@ if (tbblue_if_ula_is_enabled() ) {
 				if (tbblue_si_transparent(color_previo_capa)) {
 				*puntero_a_layer=tbblue_tile_return_color_index(pixel_izq);
 				}
-			}
+			}*/
 			puntero_a_layer++;
+			tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
 
+
+			/*
 			//Pixel derecho
 			if (pixel_der==transparent_colour) {
 
@@ -4100,6 +4135,7 @@ if (tbblue_if_ula_is_enabled() ) {
 				}
 
 			}
+			*/
 			puntero_a_layer++;
 
 
