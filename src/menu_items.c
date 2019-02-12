@@ -6272,6 +6272,11 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
 					linea +=3;
 
+	                sprintf (texto_layer,"Tiles:     %s",menu_tsconf_layer_aux_usedunused(tbblue_if_tilemap_enabled()) ); 
+    	            //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;					
+
                 	sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tbblue_if_sprites_enabled() ));
                 	//menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
@@ -6391,6 +6396,11 @@ void menu_tbblue_layer_settings_ula(MENU_ITEM_PARAMETERS)
 	tbblue_force_disable_layer_ula.v ^=1;
 }
 
+void menu_tbblue_layer_settings_tilemap(MENU_ITEM_PARAMETERS)
+{
+	tbblue_force_disable_layer_tilemap.v ^=1;
+}
+
 void menu_tbblue_layer_settings_layer_two(MENU_ITEM_PARAMETERS)
 {
 	tbblue_force_disable_layer_layer_two.v ^=1;
@@ -6407,12 +6417,12 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	int x=7;
 	int y=1;
 
-	int ancho=19;
+	int ancho=20;
 	int alto=22;
 
 	if (MACHINE_IS_TBBLUE) {
-		alto=15;
-		y=4;
+		alto=18;
+		y=2;
 	}
     //menu_dibuja_ventana(x,y,ancho,alto,"Video Layers");
 
@@ -6481,6 +6491,10 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
  			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_ula,NULL,"%s",(tbblue_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;			
+
+ 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_tilemap,NULL,"%s",(tbblue_force_disable_layer_tilemap.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;					
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_sprites,NULL,"%s",(tbblue_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);

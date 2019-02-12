@@ -715,6 +715,7 @@ void tbblue_reset_clip_window_tilemap_index(void) {
 
 //Forzar desde menu a desactivar capas 
 z80_bit tbblue_force_disable_layer_ula={0};
+z80_bit tbblue_force_disable_layer_tilemap={0};
 z80_bit tbblue_force_disable_layer_sprites={0};
 z80_bit tbblue_force_disable_layer_layer_two={0};
 
@@ -847,6 +848,24 @@ z80_int tbblue_get_palette_active_ula(z80_byte index)
 	else return tbblue_palette_ula_first[index];
 
 }
+
+
+//Damos el valor del color de la paleta que se esta mostrando en pantalla para tiles
+z80_int tbblue_get_palette_active_tilemap(z80_byte index)
+{
+/*
+(R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+  bit 6    = 0 for 40x32, 1 for 80x32
+  bit 5    = 1 to eliminate the attribute entry in the tilemap
+  bit 4    = palette select
+  bits 3-0 = Reserved set to 0
+*/
+	if (tbblue_registers[0x6B] & 16) return tbblue_palette_tilemap_second[index];
+        else return tbblue_palette_tilemap_first[index];
+
+}
+
 
 //64 patterns de Sprites
 /*
@@ -1511,6 +1530,14 @@ int tbblue_if_sprites_enabled(void)
 {
 
 	return tbblue_registers[21]&1;
+
+}
+
+
+int tbblue_if_tilemap_enabled(void) 
+{
+
+	return tbblue_registers[107]&128;
 
 }
 
@@ -3847,6 +3874,219 @@ void get_pixel_color_tbblue(z80_byte attribute,z80_int *tinta_orig, z80_int *pap
 
 }
 
+z80_int tbblue_tile_return_color_index(z80_byte index)
+{
+        z80_int color_final=tbblue_get_palette_active_tilemap(index);
+        return color_final;
+}
+
+
+void tbblue_do_tile_overlay(int scanline)
+{
+	//Renderizar en array tbblue_layer_ula el scanline indicado
+	int posicion_y=scanline/8;
+
+	int linea_en_tile=scanline %8;
+
+        int tbblue_bytes_per_tile=2;
+
+/*
+//borde izquierdo + pantalla + borde derecho
+#define TBBLUE_LAYERS_PIXEL_WIDTH (48+256+48)
+
+z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
+*/
+
+	z80_int *puntero_a_layer;
+	puntero_a_layer=&tbblue_layer_ula[48-32]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
+
+                                        /*
+                                        (R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+  bit 6    = 0 for 40x32, 1 for 80x32
+  bit 5    = 1 to eliminate the attribute entry in the tilemap
+  bit 4    = palette select
+  bits 3-0 = Reserved set to 0
+                                        */
+                                        z80_byte tbblue_tilemap_control=tbblue_registers[107];
+
+                                        if (tbblue_tilemap_control&32) tbblue_bytes_per_tile=1;
+
+                                        int tilemap_width=tbblue_get_tilemap_width();
+
+	z80_byte *puntero_tilemap;	
+	z80_byte *puntero_tiledef;
+
+
+
+	//Inicio del tilemap
+	puntero_tilemap=tbblue_ram_memory_pages[5*2]+(256*tbblue_get_offset_start_tilemap());
+
+	//Obtener offset sobre tilemap
+	int offset_tilemap=tbblue_bytes_per_tile*tilemap_width*posicion_y;
+
+
+	puntero_tilemap +=offset_tilemap;  //Esto apuntara al primer tile de esa posicion y y con x=0
+
+
+	//Inicio del tiledef
+	puntero_tiledef=tbblue_ram_memory_pages[5*2]+(256*tbblue_get_offset_start_tiledef());
+
+
+	int x;
+
+                                        int xmirror,ymirror,rotate;
+                                        z80_byte tpal;
+
+                                        z80_byte byte_first;
+                                        z80_byte byte_second;
+
+                                        //byte_first=puntero_tilemap[offset];
+                                        //byte_second=puntero_tilemap[offset+1];
+
+
+                                        int ula_over_tilemap;
+
+	//TODO: forzamos esto a 40 columnas, dado que hay que tener ventana de 512 de ancho
+	tilemap_width=40;
+
+
+	for (x=0;x<tilemap_width;x++) {
+		//TODO rotacion
+		//TODO mirror
+		//TODO paleta
+		//TODO overlay
+		//TODO scroll
+		//TODO clipwindow
+		byte_first=*puntero_tilemap;
+		if (tbblue_bytes_per_tile==2) {
+			byte_second=*puntero_tilemap;
+			puntero_tilemap++;
+		}
+                                        
+		int tnum=byte_first;
+
+
+
+
+
+/*
+                                         bits 15-12 : palette offset
+  bit     11 : x mirror
+  bit     10 : y mirror
+  bit      9 : rotate
+  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+  bits   7-0 : tile number
+  */                                      
+
+
+                                        //int ula_over_tilemap;
+
+                                        z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
+
+                                        if (tbblue_bytes_per_tile==1) {
+                                        
+/*
+                                                (R/W) 0x6C (108) => Default Tilemap Attribute
+  bits 7-4 = Palette Offset
+  bit 3    = X mirror
+  bit 2    = Y mirror
+  bit 1    = Rotate
+  bit 0    = ULA over tilemap
+             (bit 8 of tile id if the ULA is disabled)
+  */                                              
+                                                tpal=(tbblue_default_tilemap_attr)&0xF0;
+
+                                                xmirror=(tbblue_default_tilemap_attr>>3)&1;
+                                                ymirror=(tbblue_default_tilemap_attr>>2)&1;
+                                                rotate=(tbblue_default_tilemap_attr>>1)&1;
+
+
+
+if (tbblue_if_ula_is_enabled() ) {
+    
+/*                                            
+                                                108
+                                                  bit 0    = ULA over tilemap
+             (bit 8 of tile id if the ULA is disabled)*/
+                                                
+                                                        ula_over_tilemap=tbblue_default_tilemap_attr &1;
+                                                }
+
+                                                else {
+                                                        tnum |=(tbblue_default_tilemap_attr&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+                                                }
+
+                                        }
+
+                                        else {
+                                                
+/*
+                                         bits 15-12 : palette offset
+  bit     11 : x mirror
+  bit     10 : y mirror
+  bit      9 : rotate
+  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+  */                                      
+                                                tpal=(byte_second)&0xF0;
+                                                xmirror=(byte_second>>3)&1;
+                                                ymirror=(byte_second>>2)&1;
+                                                rotate=(byte_second>>1)&1;
+                                                //ula_over_tilemap=byte_second &1;
+
+                                        if (tbblue_if_ula_is_enabled() ) {
+                                               /* 
+                                                  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number) */
+                                                
+                                                        ula_over_tilemap=byte_second &1;
+                                                }
+
+                                                else {
+                                                        tnum |=(byte_second&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+                                                }
+					}
+
+		//Sacar puntero a principio tiledef. cada tiledef ocupa 4 bytes * 8 = 32
+		int offset_tiledef=tnum*32;
+
+		//sumar posicion y
+		offset_tiledef += linea_en_tile*4;
+
+		//tiledef
+
+		//printf ("tpal %d\n",tpal);		
+
+		//Renderizar los 8 pixeles del tile
+		int pixel_tile;
+		z80_byte *puntero_this_tiledef;
+		puntero_this_tiledef=&puntero_tiledef[offset_tiledef];
+		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
+			z80_byte tiledef=*puntero_this_tiledef; //Aqui hay 2 pixeles
+			z80_byte pixel_izq,pixel_der;
+			pixel_izq=(tiledef>>4) & 0xF;
+			pixel_der=tiledef  & 0xF;
+
+			//Aumentar segun paleta
+			pixel_izq |=tpal;
+			pixel_der |=tpal;
+
+			*puntero_a_layer=tbblue_tile_return_color_index(pixel_izq);
+			puntero_a_layer++;
+
+			*puntero_a_layer=tbblue_tile_return_color_index(pixel_der);
+			puntero_a_layer++;
+
+			puntero_this_tiledef++;
+		}
+
+
+		puntero_tilemap++;
+
+  }
+
+}
+
+
 
 //Guardar en buffer rainbow la linea actual. Para Spectrum. solo display
 //Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
@@ -4166,6 +4406,25 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 		//printf ("posicion_array_layer: %d\n",posicion_array_layer);
 
+
+
+        //Capa de tiles. Mezclarla directamente a la capa de ula tbblue_layer_ula
+        //temp
+	/*printf ("y %d scanline_copia %d\n",y,scanline_copia);
+        if (scanline_copia==0) {
+                tbblue_layer_ula[50]=255;
+                tbblue_layer_ula[51]=255;
+                tbblue_layer_ula[52]=255;
+        }*/
+
+	/*
+(R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+	*/
+	if ( tbblue_if_tilemap_enabled() && scanline_copia>=0 && scanline_copia<=191 && tbblue_force_disable_layer_tilemap.v==0) tbblue_do_tile_overlay(scanline_copia);
+//
+
+
 	}
 
 	else {
@@ -4173,6 +4432,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 	}
 
 	//Aqui puede ser borde superior o inferior
+
 
 	//capa sprites. Si clip window y corresponde:
 	z80_byte sprites_over_border=tbblue_registers[21]&2;
