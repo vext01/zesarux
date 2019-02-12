@@ -3949,26 +3949,30 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 	//TODO: forzamos esto a 40 columnas, dado que hay que tener ventana de 512 de ancho
 	tilemap_width=40;
+/*
+(R/W) 0x4C (76) => Transparency index for the tilemap
+  bits 7-4 = Reserved, must be 0
+  bits 3-0 = Set the index value (0xF after reset)
+Defines the transparent colour index for tiles. The 4-bit pixels of a tile definition are compared to this value to determine if they are transparent.
+*/
+z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 
 
 	for (x=0;x<tilemap_width;x++) {
 		//TODO rotacion
 		//TODO mirror
-		//TODO paleta
 		//TODO overlay
 		//TODO scroll
 		//TODO clipwindow
+		//TODO stencil mode
 		byte_first=*puntero_tilemap;
+		puntero_tilemap++;
 		if (tbblue_bytes_per_tile==2) {
 			byte_second=*puntero_tilemap;
 			puntero_tilemap++;
 		}
                                         
 		int tnum=byte_first;
-
-
-
-
 
 /*
                                          bits 15-12 : palette offset
@@ -3978,9 +3982,6 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
   bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
   bits   7-0 : tile number
   */                                      
-
-
-                                        //int ula_over_tilemap;
 
                                         z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
@@ -4020,6 +4021,7 @@ if (tbblue_if_ula_is_enabled() ) {
                                         }
 
                                         else {
+																				
                                                 
 /*
                                          bits 15-12 : palette offset
@@ -4033,6 +4035,8 @@ if (tbblue_if_ula_is_enabled() ) {
                                                 ymirror=(byte_second>>2)&1;
                                                 rotate=(byte_second>>1)&1;
                                                 //ula_over_tilemap=byte_second &1;
+
+																									//printf ("Color independiente. tpal:%d byte_second: %02XH\n",tpal,byte_second);
 
                                         if (tbblue_if_ula_is_enabled() ) {
                                                /* 
@@ -4065,22 +4069,46 @@ if (tbblue_if_ula_is_enabled() ) {
 			z80_byte pixel_izq,pixel_der;
 			pixel_izq=(tiledef>>4) & 0xF;
 			pixel_der=tiledef  & 0xF;
+			z80_int color_previo_capa;
 
-			//Aumentar segun paleta
-			pixel_izq |=tpal;
-			pixel_der |=tpal;
+			//Pixel izquierdo
+			if (pixel_izq==transparent_colour) {
 
-			*puntero_a_layer=tbblue_tile_return_color_index(pixel_izq);
+			}
+			else {
+				pixel_izq |=tpal;
+
+				//Vemos lo que hay en la capa
+				color_previo_capa=*puntero_a_layer;
+				if (tbblue_si_transparent(color_previo_capa)) {
+				*puntero_a_layer=tbblue_tile_return_color_index(pixel_izq);
+				}
+			}
 			puntero_a_layer++;
 
-			*puntero_a_layer=tbblue_tile_return_color_index(pixel_der);
+			//Pixel derecho
+			if (pixel_der==transparent_colour) {
+
+			}
+			else {
+				pixel_der |=tpal;
+
+				//Vemos lo que hay en la capa
+				color_previo_capa=*puntero_a_layer;
+				if (tbblue_si_transparent(color_previo_capa)) {
+				*puntero_a_layer=tbblue_tile_return_color_index(pixel_der);
+				}
+
+			}
 			puntero_a_layer++;
+
+
 
 			puntero_this_tiledef++;
 		}
 
 
-		puntero_tilemap++;
+		//puntero_tilemap++;
 
   }
 

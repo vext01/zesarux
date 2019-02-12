@@ -6267,7 +6267,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				}
 
 				if (MACHINE_IS_TBBLUE) {
-	                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(1) ); //ULA siempre activo
+	                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(tbblue_if_ula_is_enabled()) ); 
     	            //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
 					linea +=3;
