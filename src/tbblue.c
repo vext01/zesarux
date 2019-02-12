@@ -3890,25 +3890,29 @@ z80_int tbblue_tile_return_color_index(z80_byte index)
         return color_final;
 }
 
-void tbblue_do_tile_putpixel(z80_byte pixel_izq,z80_byte transparent_colour,z80_byte tpal,z80_int *puntero_a_layer)
+void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z80_byte tpal,z80_int *puntero_a_layer)
 {
-
 		
-
-				//Pixel izquierdo
-			if (pixel_izq==transparent_colour) {
+			if (pixel_color==transparent_colour) {
 
 			}
 			else {
-				pixel_izq |=tpal;
+				pixel_color |=tpal;
 
 				//Vemos lo que hay en la capa
 				z80_int color_previo_capa;
 				color_previo_capa=*puntero_a_layer;
-				if (tbblue_si_transparent(color_previo_capa)) {
-				*puntero_a_layer=tbblue_tile_return_color_index(pixel_izq);
+				if (tbblue_si_transparent(color_previo_capa) ) { 
+				//if (tbblue_si_transparent(color_previo_capa) || color_previo_capa==0x145) { //TODO parche 0x145
+ 					//printf ("color transp %02XH\n",color_previo_capa);  //1C6h border aparentemente. 145h paper aparentemente esto en tiledemo
+				*puntero_a_layer=tbblue_tile_return_color_index(pixel_color);
+				}
+				else {
+					//printf ("color no transp %02XH\n",color_previo_capa);
 				}
 			}
+
+
 }
 
 void tbblue_do_tile_overlay(int scanline)
@@ -3930,14 +3934,14 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 	z80_int *puntero_a_layer;
 	puntero_a_layer=&tbblue_layer_ula[48-32]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
 
-                                        /*
-                                        (R/W) 0x6B (107) => Tilemap Control
+  /*
+    (R/W) 0x6B (107) => Tilemap Control
   bit 7    = 1 to enable the tilemap
   bit 6    = 0 for 40x32, 1 for 80x32
   bit 5    = 1 to eliminate the attribute entry in the tilemap
   bit 4    = palette select
   bits 3-0 = Reserved set to 0
-                                        */
+   */
                                         z80_byte tbblue_tilemap_control=tbblue_registers[107];
 
                                         if (tbblue_tilemap_control&32) tbblue_bytes_per_tile=1;
@@ -3971,10 +3975,6 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
                                         z80_byte byte_first;
                                         z80_byte byte_second;
 
-                                        //byte_first=puntero_tilemap[offset];
-                                        //byte_second=puntero_tilemap[offset+1];
-
-
                                         int ula_over_tilemap;
 
 	//TODO: forzamos esto a 40 columnas, dado que hay que tener ventana de 512 de ancho
@@ -3991,7 +3991,7 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 	for (x=0;x<tilemap_width;x++) {
 		//TODO rotacion
 		//TODO mirror
-		//TODO overlay
+		//TODO overlay. completar
 		//TODO scroll
 		//TODO clipwindow
 		//TODO stencil mode
@@ -4034,7 +4034,7 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 
 
 
-if (tbblue_if_ula_is_enabled() ) {
+																								if (tbblue_if_ula_is_enabled() ) {
     
 /*                                            
                                                 108
@@ -4101,50 +4101,22 @@ if (tbblue_if_ula_is_enabled() ) {
 			pixel_der=tiledef  & 0xF;
 			z80_int color_previo_capa;
 
-			tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
-
 			//Pixel izquierdo
-			/*if (pixel_izq==transparent_colour) {
-
-			}
-			else {
-				pixel_izq |=tpal;
-
-				//Vemos lo que hay en la capa
-				color_previo_capa=*puntero_a_layer;
-				if (tbblue_si_transparent(color_previo_capa)) {
-				*puntero_a_layer=tbblue_tile_return_color_index(pixel_izq);
-				}
-			}*/
+			tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
 			puntero_a_layer++;
-			tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
 
-
-			/*
 			//Pixel derecho
-			if (pixel_der==transparent_colour) {
-
-			}
-			else {
-				pixel_der |=tpal;
-
-				//Vemos lo que hay en la capa
-				color_previo_capa=*puntero_a_layer;
-				if (tbblue_si_transparent(color_previo_capa)) {
-				*puntero_a_layer=tbblue_tile_return_color_index(pixel_der);
-				}
-
-			}
-			*/
+			tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
 			puntero_a_layer++;
 
 
+			//temp
+						//*puntero_a_layer=tbblue_tile_return_color_index(0x1c6);
+						//*puntero_a_layer=tbblue_tile_return_color_index(0x145);
 
 			puntero_this_tiledef++;
 		}
 
-
-		//puntero_tilemap++;
 
   }
 
