@@ -20,6 +20,9 @@
 
 -visor tiles tbblue: capa en modo visual no existe. Hace bien bit de over ula? 
 
+-tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
+color que tiene pantalla no es el que tiene el transparente
+
 -tipo letra man software no tiene [ ] . corregir 
 
 -imagen tbblue.mmc dice 4 gb libres?

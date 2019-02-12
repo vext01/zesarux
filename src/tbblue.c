@@ -4101,6 +4101,9 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 			pixel_der=tiledef  & 0xF;
 			z80_int color_previo_capa;
 
+			//temp
+			//if (x==0 || x==16) printf ("x %d : %XH\n",x,*puntero_a_layer);
+
 			//Pixel izquierdo
 			tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
 			puntero_a_layer++;
