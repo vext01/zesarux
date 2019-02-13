@@ -3783,25 +3783,41 @@ void get_pixel_color_tbblue(z80_byte attribute,z80_int *tinta_orig, z80_int *pap
 {
 
 	/*
+
 (R/W) 0x43 (67) => Palette Control
-  bit 0 = Disable the standard Spectrum flash feature to enable the extra colours.
-  (Reset to 0 after a reset)
+  bit 0 = Enabe ULANext mode if 1. (0 after a reset)
+
 	*/
 
 	z80_byte ink=*tinta_orig;
 	z80_byte paper=*papel_orig;
 
 	z80_byte palette_format=tbblue_registers[0x42];
-	z80_byte flash_disabled=tbblue_registers[0x43]&1;
+	z80_byte flash_disabled=tbblue_registers[0x43]&1; //flash_disabled se llamaba antes. ahora indica "enable ulanext"
 
 
         z80_byte bright,flash;
         z80_int aux;
 
+
+
 	if (!flash_disabled) {
 
+/*
+(R/W) 0x40 (64) => Palette Index
+  bits 7-0 = Select the palette index to change the associated colour.
+
+  For the ULA only, INKs are mapped to indices 0-7, Bright INKS to indices 8-15,
+   PAPERs to indices 16-23 and Bright PAPERs to indices 24-31.
+
+  In ULANext mode, INKs come from a subset of indices 0-127 and PAPERs come from
+   a subset of indices 128-255.  The number of active indices depends on the number
+   of attribute bits assigned to INK and PAPER out of the attribute byte.
+  The ULA always takes border colour from paper.
+*/
+
                         ink=attribute &7; 
-                        paper=((attribute>>3) &7)+128; //colores papel empiezan en 128
+                        paper=((attribute>>3) &7)+16; //colores papel empiezan en 16
                         bright=(attribute)&64; 
                         flash=(attribute)&128; 
                         if (flash) { 
@@ -3821,12 +3837,25 @@ void get_pixel_color_tbblue(z80_byte attribute,z80_int *tinta_orig, z80_int *pap
 
 	else {
       /*
+
+Nuevo:
+(R/W) 0x42 (66) => ULANext Attribute Byte Format
+  bits 7-0 = Mask indicating which bits of an attribute byte are used to
+             represent INK.  The rest will represent PAPER.  (15 on reset)
+             The mask can only indicate a solid sequence of bits on the right
+             side of the attribute byte (1, 3, 7, 15, 31, 63, 127 or 255).
+             The 255 value enables the full ink colour mode and all the the palette entries 
+             will be inks with all paper colours mapping to position 128.
+
+OLD:
 (R/W) 0x42 (66) => Palette Format
   bits 7-0 = Number of the last ink colour entry on palette. (Reset to 15 after a Reset)
   This number can be 1, 3, 7, 15, 31, 63, 127 or 255.
   The 255 value enables the full ink colour mode and
   all the the palette entries are inks but the paper will be the colour at position 128.
   (only applies to ULANext palette. Layer 2 and Sprite palettes works as "full ink")
+
+TODO: el significado es el mismo antes que ahora?
         */
 		int rotacion_papel=1;
 		int mascara_tinta=palette_format;
@@ -4099,7 +4128,6 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 			z80_byte pixel_izq,pixel_der;
 			pixel_izq=(tiledef>>4) & 0xF;
 			pixel_der=tiledef  & 0xF;
-			z80_int color_previo_capa;
 
 			//temp
 			//if (x==0 || x==16) printf ("x %d : %XH\n",x,*puntero_a_layer);
