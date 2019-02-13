@@ -3977,9 +3977,25 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 
                                         int tilemap_width=tbblue_get_tilemap_width();
 
+
 	z80_byte *puntero_tilemap;	
 	z80_byte *puntero_tiledef;
 
+	//Gestion scroll
+/*(R/W) 0x2F (47) => Tilemap Offset X MSB
+  bits 7-2 = Reserved, must be 0
+  bits 1-0 = MSB X Offset
+  Meaningful Range is 0-319 in 40 char mode, 0-639 in 80 char mode
+
+(R/W) 0x30 (48) => Tilemap Offset X LSB
+  bits 7-0 = LSB X Offset
+  Meaningful range is 0-319 in 40 char mode, 0-639 in 80 char mode
+
+(R/W) 0x31 (49) => Tilemap Offset Y
+  bits 7-0 = Y Offset (0-191)
+*/
+	int scroll_x=tbblue_registers[48]+256*(tbblue_registers[47] & 3);
+	
 
 
 	//Inicio del tilemap
@@ -3994,6 +4010,8 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 	//Inicio del tiledef
 	puntero_tiledef=tbblue_ram_memory_pages[5*2]+(256*tbblue_get_offset_start_tiledef());
+
+	//puntero_a_layer -=scroll_x; //temp chapuza
 
 
 	int x;
@@ -4015,6 +4033,8 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 Defines the transparent colour index for tiles. The 4-bit pixels of a tile definition are compared to this value to determine if they are transparent.
 */
 z80_byte transparent_colour=tbblue_registers[76] & 0xF;
+
+
 
 
 	for (x=0;x<tilemap_width;x++) {
