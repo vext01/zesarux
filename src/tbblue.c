@@ -4008,11 +4008,11 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
   bit 4    = palette select
   bits 3-0 = Reserved set to 0
    */
-                                        z80_byte tbblue_tilemap_control=tbblue_registers[107];
+	z80_byte tbblue_tilemap_control=tbblue_registers[107];
 
-                                        if (tbblue_tilemap_control&32) tbblue_bytes_per_tile=1;
+	if (tbblue_tilemap_control&32) tbblue_bytes_per_tile=1;
 
-                                        int tilemap_width=tbblue_get_tilemap_width();
+	int tilemap_width=tbblue_get_tilemap_width();
 
 
 	z80_byte *puntero_tilemap;	
@@ -4063,13 +4063,13 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 	int x;
 
-                                        int xmirror,ymirror,rotate;
-                                        z80_byte tpal;
+	int xmirror,ymirror,rotate;
+	z80_byte tpal;
 
-                                        z80_byte byte_first;
-                                        z80_byte byte_second;
+	z80_byte byte_first;
+	z80_byte byte_second;
 
-                                        int ula_over_tilemap;
+	int ula_over_tilemap;
 
 	//TODO: forzamos esto a 40 columnas, dado que hay que tener ventana de 512 de ancho
 	tilemap_width=40;
@@ -4079,12 +4079,12 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
   bits 3-0 = Set the index value (0xF after reset)
 Defines the transparent colour index for tiles. The 4-bit pixels of a tile definition are compared to this value to determine if they are transparent.
 */
-z80_byte transparent_colour=tbblue_registers[76] & 0xF;
+	z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 
 
 
-                                //printf ("y: %d t_scanline_draw: %d rainbowy:%d sprite_y: %d\n",y,t_scanline_draw,rainbowy,sprite_y);
-                                        z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
+	//printf ("y: %d t_scanline_draw: %d rainbowy:%d sprite_y: %d\n",y,t_scanline_draw,rainbowy,sprite_y);
+	z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
 	for (x=0;x<tilemap_width;x++) {
 		//TODO rotacion
@@ -4103,7 +4103,7 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 		int tnum=byte_first;
 
 /*
-                                         bits 15-12 : palette offset
+  bits 15-12 : palette offset
   bit     11 : x mirror
   bit     10 : y mirror
   bit      9 : rotate
@@ -4112,7 +4112,7 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
   */                                      
 
 
-                                        if (tbblue_bytes_per_tile==1) {
+		if (tbblue_bytes_per_tile==1) {
                                         
 /*
                                                 (R/W) 0x6C (108) => Default Tilemap Attribute
@@ -4123,31 +4123,29 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
   bit 0    = ULA over tilemap
              (bit 8 of tile id if the ULA is disabled)
   */                                              
-                                                tpal=(tbblue_default_tilemap_attr)&0xF0;
+			tpal=(tbblue_default_tilemap_attr)&0xF0;
 
-                                                xmirror=(tbblue_default_tilemap_attr>>3)&1;
-                                                ymirror=(tbblue_default_tilemap_attr>>2)&1;
-                                                rotate=(tbblue_default_tilemap_attr>>1)&1;
+			xmirror=(tbblue_default_tilemap_attr>>3)&1;
+			ymirror=(tbblue_default_tilemap_attr>>2)&1;
+			rotate=(tbblue_default_tilemap_attr>>1)&1;
 
-
-
-																								if (tbblue_if_ula_is_enabled() ) {
+			if (tbblue_if_ula_is_enabled() ) {
     
 /*                                            
                                                 108
                                                   bit 0    = ULA over tilemap
              (bit 8 of tile id if the ULA is disabled)*/
                                                 
-                                                        ula_over_tilemap=tbblue_default_tilemap_attr &1;
-                                                }
+				ula_over_tilemap=tbblue_default_tilemap_attr &1;
+			}
 
-                                                else {
-                                                        tnum |=(tbblue_default_tilemap_attr&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-                                                }
+			else {
+				tnum |=(tbblue_default_tilemap_attr&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+			}
 
-                                        }
+		}
 
-                                        else {
+		else {
 																				
                                                 
 /*
@@ -4157,25 +4155,25 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
   bit      9 : rotate
   bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
   */                                      
-                                                tpal=(byte_second)&0xF0;
-                                                xmirror=(byte_second>>3)&1;
-                                                ymirror=(byte_second>>2)&1;
-                                                rotate=(byte_second>>1)&1;
-                                                //ula_over_tilemap=byte_second &1;
+			tpal=(byte_second)&0xF0;
+			xmirror=(byte_second>>3)&1;
+			ymirror=(byte_second>>2)&1;
+			rotate=(byte_second>>1)&1;
+			//ula_over_tilemap=byte_second &1;
 
-																									//printf ("Color independiente. tpal:%d byte_second: %02XH\n",tpal,byte_second);
+			//printf ("Color independiente. tpal:%d byte_second: %02XH\n",tpal,byte_second);
 
-                                        if (tbblue_if_ula_is_enabled() ) {
-                                               /* 
-                                                  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number) */
+			if (tbblue_if_ula_is_enabled() ) {
+        /* 
+        bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number) */
                                                 
-                                                        ula_over_tilemap=byte_second &1;
-                                                }
+				ula_over_tilemap=byte_second &1;
+			}
 
-                                                else {
-                                                        tnum |=(byte_second&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-                                                }
-					}
+			else {
+				tnum |=(byte_second&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+			}
+		}
 
 		//Sacar puntero a principio tiledef. cada tiledef ocupa 4 bytes * 8 = 32
 		int offset_tiledef=tnum*32;
@@ -4193,30 +4191,28 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 		puntero_this_tiledef=&puntero_tiledef[offset_tiledef];
 
 
-                                                        //Incrementos de x e y
-                                                        int incx=+1;
-                                                        int incy=0;
+		//Incrementos de x e y
+		int incx=+1;
+		int incy=0;
 
-									z80_byte sx=0,sy=0; //Coordenadas x,y dentro del tile
-
-
-							//Aplicar mirror si conviene y situarnos en la ultima linea
-							if (ymirror) {
-								//sy=TBBLUE_TILE_HEIGHT-1-diferencia;
-								sy=TBBLUE_TILE_HEIGHT-1;
-							}
-							else {
-								//sy=diferencia;
-							}
-
-							//Cambiar offset si mirror x, ubicarlo a la derecha del todo
-							if (xmirror) {
-								//offset_pattern=offset_pattern+TBBLUE_SPRITE_WIDTH-1;
-								sx=TBBLUE_TILE_WIDTH-1;
-								incx=-1;
-							}
+		z80_byte sx=0,sy=0; //Coordenadas x,y dentro del tile
 
 
+		//Aplicar mirror si conviene y situarnos en la ultima linea
+		if (ymirror) {
+			//sy=TBBLUE_TILE_HEIGHT-1-diferencia;
+			sy=TBBLUE_TILE_HEIGHT-1;
+		}
+		else {
+			//sy=diferencia;
+		}
+
+		//Cambiar offset si mirror x, ubicarlo a la derecha del todo
+		if (xmirror) {
+			//offset_pattern=offset_pattern+TBBLUE_SPRITE_WIDTH-1;
+			sx=TBBLUE_TILE_WIDTH-1;
+			incx=-1;
+		}
 
 
 	//Rotacion. Mismo metodo que con sprites
@@ -4272,14 +4268,14 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 
 
 				
-            						if (rotate) {
-                                                                z80_byte sy_old=sy;
-                                                                sy=(TBBLUE_TILE_HEIGHT-1)-sx;
-                                                                sx=sy_old;
+		if (rotate) {
+			z80_byte sy_old=sy;
+			sy=(TBBLUE_TILE_HEIGHT-1)-sx;
+			sx=sy_old;
 
-                                                                incy=-incx;
-                                                                incx=0;
-                                                        }
+			incy=-incx;
+			incx=0;
+		}
 
 				
 
@@ -4287,15 +4283,9 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 			z80_byte pixel_izq,pixel_der;
-			/*z80_byte tiledef=*puntero_this_tiledef; //Aqui hay 2 pixeles
-			pixel_izq=(tiledef>>4) & 0xF;
-			pixel_der=tiledef  & 0xF;*/
-
-
-			pixel_izq=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
-
 
 			//Pixel izquierdo
+			pixel_izq=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
 			tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
 			puntero_a_layer++;
 			destino_x_pixel++;
@@ -4309,9 +4299,8 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 				puntero_a_layer=orig_puntero_a_layer;
 			}
 
-			pixel_der=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
-
 			//Pixel derecho
+			pixel_der=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
 			tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
 			puntero_a_layer++;
 			destino_x_pixel++;
@@ -4326,7 +4315,6 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 			}
 
 
-			//puntero_this_tiledef++;
 		}
 
 
