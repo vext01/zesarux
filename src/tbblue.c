@@ -3944,14 +3944,48 @@ void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z8
 
 }
 
+//Devuelve el color del pixel dentro de un tilemap
+z80_byte tbblue_get_pixel_tile_xy(int x,int y,z80_byte *puntero_this_tiledef)
+{
+	//4bpp
+	int offset_x=x/2;
+
+	int pixel_a_derecha=x%2;
+
+	int offset_y=y*4;
+
+	int ottset_final=offset_y+offset_x;
+
+
+	z80_byte byte_leido=puntero_this_tiledef[ottset_final];
+	if (pixel_a_derecha) {
+		return byte_leido & 0xF;
+	}
+
+	else {
+		return (byte_leido>>4) & 0xF;
+	}
+
+
+}
+
 void tbblue_do_tile_overlay(int scanline)
 {
-	//Renderizar en array tbblue_layer_ula el scanline indicado
-	int posicion_y=scanline/8;
+	//Gestion scroll vertical
+	int scroll_y=tbblue_registers[49];
 
-	int linea_en_tile=scanline %8;
+	//Renderizar en array tbblue_layer_ula el scanline indicado
+	//leemos del tile y indicado, sumando scroll vertical
+	int scanline_efectivo=scanline+scroll_y;
+	scanline_efectivo %=192; 
+	
+
+	int posicion_y=scanline_efectivo/8;
+
+	int linea_en_tile=scanline_efectivo %8;
 
         int tbblue_bytes_per_tile=2;
+
 
 /*
 //borde izquierdo + pantalla + borde derecho
@@ -3962,6 +3996,9 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 	z80_int *puntero_a_layer;
 	puntero_a_layer=&tbblue_layer_ula[48-32]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
+
+	z80_int *orig_puntero_a_layer;
+	orig_puntero_a_layer=puntero_a_layer;
 
   /*
     (R/W) 0x6B (107) => Tilemap Control
@@ -3995,7 +4032,17 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
   bits 7-0 = Y Offset (0-191)
 */
 	int scroll_x=tbblue_registers[48]+256*(tbblue_registers[47] & 3);
-	
+
+
+
+	//Llevar control de posicion x pixel en destino dentro del rango (0..40*8, 0..80*8)
+	int max_destino_x_pixel=tilemap_width*8;
+	int destino_x_pixel=0;
+	if (scroll_x) {
+		//Si hay scroll_x, no que hacemos es empezar a escribir por la parte final derecha
+		destino_x_pixel=max_destino_x_pixel-scroll_x;
+		puntero_a_layer=puntero_a_layer+destino_x_pixel;
+	}
 
 
 	//Inicio del tilemap
@@ -4036,6 +4083,8 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 
 
 
+                                //printf ("y: %d t_scanline_draw: %d rainbowy:%d sprite_y: %d\n",y,t_scanline_draw,rainbowy,sprite_y);
+                                        z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
 	for (x=0;x<tilemap_width;x++) {
 		//TODO rotacion
@@ -4062,7 +4111,6 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
   bits   7-0 : tile number
   */                                      
 
-                                        z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
                                         if (tbblue_bytes_per_tile==1) {
                                         
@@ -4143,29 +4191,120 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 		int pixel_tile;
 		z80_byte *puntero_this_tiledef;
 		puntero_this_tiledef=&puntero_tiledef[offset_tiledef];
-		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
-			z80_byte tiledef=*puntero_this_tiledef; //Aqui hay 2 pixeles
-			z80_byte pixel_izq,pixel_der;
-			pixel_izq=(tiledef>>4) & 0xF;
-			pixel_der=tiledef  & 0xF;
 
-			//temp
-			//if (x==0 || x==16) printf ("x %d : %XH\n",x,*puntero_a_layer);
+
+
+
+							/*
+                                                        Comparar bits rotacion con ejemplo en media/spectrum/tbblue/sprites/rotate_example.png
+                                                        */
+                                                        /*
+                                                        Basicamente sin rotar un sprite, se tiene (reduzco el tamaño a la mitad aqui para que ocupe menos)
+
+
+                                                        El sentido normal de dibujado viene por ->, aumentando coordenada X
+
+
+                                        ->  ---X----
+                                                        ---XX---
+                                                        ---XXX--
+                                                        ---XXXX-
+                                                        ---X----
+                                                        ---X----
+                                                        ---X----
+                                                        ---X----
+
+                                                        Luego cuando se rota 90 grados, en vez de empezar de arriba a la izquierda, se empieza desde abajo y reduciendo coordenada Y:
+
+                                                            ---X----
+                                                                        ---XX---
+                                                                        ---XXX--
+                                                                        ---XXXX-
+                                                                        ---X----
+                                                                        ---X----
+                                                        ^       ---X----
+                                                        |               ---X----
+
+                                                        Entonces, al dibujar empezando asi, la imagen queda rotada:
+
+                                                        --------
+                                                        --------
+                                                        XXXXXXXX
+                                                        ----XXX-
+                                                        ----XX--
+                                                        ----X---
+                                                        --------
+
+                                                        De ahi que el incremento y sea -incremento x , incremento x sera 0
+
+                                                        Aplicando tambien el comportamiento para mirror, se tiene el resto de combinaciones
+
+                                                        */
+
+							z80_byte sx=0,sy=0; //Coordenadas x,y dentro del pattern
+                                                        //offset_pattern=0;
+
+                                                        //Incrementos de x e y
+                                                        int incx=+1;
+                                                        int incy=0;
+
+
+				/*
+            						if (rotate) {
+                                                                z80_byte sy_old=sy;
+                                                                sy=(TBBLUE_SPRITE_HEIGHT-1)-sx;
+                                                                sx=sy_old;
+
+                                                                incy=-incx;
+                                                                incx=0;
+                                                        }
+
+				*/
+
+
+
+		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
+			z80_byte pixel_izq,pixel_der;
+			/*z80_byte tiledef=*puntero_this_tiledef; //Aqui hay 2 pixeles
+			pixel_izq=(tiledef>>4) & 0xF;
+			pixel_der=tiledef  & 0xF;*/
+
+
+			pixel_izq=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
+
 
 			//Pixel izquierdo
 			tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
 			puntero_a_layer++;
+			destino_x_pixel++;
+
+			sx=sx+incx;
+			sy=sy+incy;
+
+			//Controlar si se sale por la derecha (pues hay scroll)
+			if (destino_x_pixel==max_destino_x_pixel) {
+				destino_x_pixel=0;
+				puntero_a_layer=orig_puntero_a_layer;
+			}
+
+			pixel_der=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
 
 			//Pixel derecho
 			tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
 			puntero_a_layer++;
+			destino_x_pixel++;
+
+			sx=sx+incx;
+			sy=sy+incy;
+
+			//Controlar si se sale por la derecha (pues hay scroll)
+			if (destino_x_pixel==max_destino_x_pixel) {
+				destino_x_pixel=0;
+				puntero_a_layer=orig_puntero_a_layer;
+			}
 
 
-			//temp
-						//*puntero_a_layer=tbblue_tile_return_color_index(0x1c6);
-						//*puntero_a_layer=tbblue_tile_return_color_index(0x145);
-
-			puntero_this_tiledef++;
+			//puntero_this_tiledef++;
 		}
 
 
