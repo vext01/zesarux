@@ -119,6 +119,9 @@ extern void tbsprite_do_overlay(void);
 #define TBBLUE_SPRITE_HEIGHT 16
 #define TBBLUE_SPRITE_WIDTH 16
 
+#define TBBLUE_TILE_HEIGHT 8
+#define TBBLUE_TILE_WIDTH 8
+
 //extern z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][256];
 extern z80_byte tbsprite_new_patterns[TBBLUE_MAX_PATTERNS*256];
 

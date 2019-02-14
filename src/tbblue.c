@@ -4193,8 +4193,33 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 		puntero_this_tiledef=&puntero_tiledef[offset_tiledef];
 
 
+                                                        //Incrementos de x e y
+                                                        int incx=+1;
+                                                        int incy=0;
+
+									z80_byte sx=0,sy=0; //Coordenadas x,y dentro del tile
 
 
+							//Aplicar mirror si conviene y situarnos en la ultima linea
+							if (ymirror) {
+								//sy=TBBLUE_TILE_HEIGHT-1-diferencia;
+								sy=TBBLUE_TILE_HEIGHT-1;
+							}
+							else {
+								//sy=diferencia;
+							}
+
+							//Cambiar offset si mirror x, ubicarlo a la derecha del todo
+							if (xmirror) {
+								//offset_pattern=offset_pattern+TBBLUE_SPRITE_WIDTH-1;
+								sx=TBBLUE_TILE_WIDTH-1;
+								incx=-1;
+							}
+
+
+
+
+	//Rotacion. Mismo metodo que con sprites
 							/*
                                                         Comparar bits rotacion con ejemplo en media/spectrum/tbblue/sprites/rotate_example.png
                                                         */
@@ -4241,25 +4266,22 @@ z80_byte transparent_colour=tbblue_registers[76] & 0xF;
 
                                                         */
 
-							z80_byte sx=0,sy=0; //Coordenadas x,y dentro del pattern
+
                                                         //offset_pattern=0;
 
-                                                        //Incrementos de x e y
-                                                        int incx=+1;
-                                                        int incy=0;
 
 
-				/*
+				
             						if (rotate) {
                                                                 z80_byte sy_old=sy;
-                                                                sy=(TBBLUE_SPRITE_HEIGHT-1)-sx;
+                                                                sy=(TBBLUE_TILE_HEIGHT-1)-sx;
                                                                 sx=sy_old;
 
                                                                 incy=-incx;
                                                                 incx=0;
                                                         }
 
-				*/
+				
 
 
 
