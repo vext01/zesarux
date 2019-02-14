@@ -1598,11 +1598,6 @@ void tbsprite_do_overlay(void)
 		z80_byte sprites_over_border=tbblue_registers[21]&2;
 
 
-				//Inicializar linea a transparente
-				//for (i=0;i<MAX_X_SPRITE_LINE;i++) {
-				//	sprite_line[i]=TBBLUE_TRANSPARENT_COLOR;
-				//}
-
 				int rangoxmin, rangoxmax;
 
 				if (sprites_over_border) {
@@ -3948,14 +3943,14 @@ void tbblue_do_tile_overlay(int scanline)
 	//Renderizar en array tbblue_layer_ula el scanline indicado
 	//leemos del tile y indicado, sumando scroll vertical
 	int scanline_efectivo=scanline+scroll_y;
-	scanline_efectivo %=192; 
+	scanline_efectivo %=256; 
 	
 
 	int posicion_y=scanline_efectivo/8;
 
 	int linea_en_tile=scanline_efectivo %8;
 
-        int tbblue_bytes_per_tile=2;
+  int tbblue_bytes_per_tile=2;
 
 
 /*
@@ -4147,10 +4142,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		}
 
 		//Sacar puntero a principio tiledef. cada tiledef ocupa 4 bytes * 8 = 32
-		int offset_tiledef=tnum*32;
+		int offset_tiledef=tnum*(TBBLUE_TILE_WIDTH/2)*TBBLUE_TILE_HEIGHT;
 
 		//sumar posicion y
-		offset_tiledef += linea_en_tile*4;
+		//offset_tiledef += linea_en_tile*4;
 
 		//tiledef
 
@@ -4167,6 +4162,9 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		int incy=0;
 
 		z80_byte sx=0,sy=0; //Coordenadas x,y dentro del tile
+
+		//sumar posicion y
+		sy += linea_en_tile;		
 
 
 		//Aplicar mirror si conviene y situarnos en la ultima linea
@@ -4248,9 +4246,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 			z80_byte pixel_izq,pixel_der;
 
-			if (rotate && xmirror) {
-				//printf ("sx: %d sy: %d\n",sx,sy);
-			}
+			//if (rotate && xmirror) {
+			/*if (incx && incy) {
+				printf ("sx: %d sy: %d incx: %d incy: %d\n",sx,sy,incx,incy);
+			}*/
 
 			//Pixel izquierdo
 			pixel_izq=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
@@ -4265,10 +4264,6 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 			if (destino_x_pixel==max_destino_x_pixel) {
 				destino_x_pixel=0;
 				puntero_a_layer=orig_puntero_a_layer;
-			}
-
-			if (rotate) {
-				printf ("sx: %d sy: %d\n",sx,sy);
 			}
 
 			//Pixel derecho
