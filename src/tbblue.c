@@ -1715,9 +1715,6 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							}
 
 
-							//index_pattern ya apunta a pattern a pintar en pantalla
-							//z80_int *puntero_buf_rainbow_sprite;
-							//puntero_buf_rainbow_sprite=puntero_buf_rainbow+sprite_x;
 
 							//Dibujar linea x
 
@@ -1812,18 +1809,6 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 								//printf ("index color: %d\n",index_color);
 								
 
-
-								/*
-								if (mirror_x) {
-									//offset_pattern--;
-									sx--;
-								}
-								else {
-									//offset_pattern++;
-									sx++;
-								}*/
-								//z80_byte color=tbsprite_palette[index_color];
-								//tbsprite_put_color_line(sprite_x++,color,rangoxmin,rangoxmax);
 								tbsprite_put_color_line(sprite_x,index_color,rangoxmin,rangoxmax);
 
 								}
@@ -1844,20 +1829,6 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 
 				}
 			}
-
-			//Dibujar linea de sprites en pantalla ignorando color transparente
-
-			//Tener en cuenta que de 0..31 en x es el border
-			//Posicionar puntero rainbow en zona interior pantalla-32 pixels border
-
-			//puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
-
-			//puntero_buf_rainbow -=TBBLUE_SPRITE_BORDER;
-
-
-
-			//Inicializar linea a transparente
-
 
 
 }
@@ -3952,12 +3923,12 @@ z80_byte tbblue_get_pixel_tile_xy(int x,int y,z80_byte *puntero_this_tiledef)
 
 	int pixel_a_derecha=x%2;
 
-	int offset_y=y*4;
+	int offset_y=y*4; //Cada linea ocupa 4 bytes
 
-	int ottset_final=offset_y+offset_x;
+	int offset_final=offset_y+offset_x;
 
 
-	z80_byte byte_leido=puntero_this_tiledef[ottset_final];
+	z80_byte byte_leido=puntero_this_tiledef[offset_final];
 	if (pixel_a_derecha) {
 		return byte_leido & 0xF;
 	}
@@ -4209,7 +4180,6 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 		//Cambiar offset si mirror x, ubicarlo a la derecha del todo
 		if (xmirror) {
-			//offset_pattern=offset_pattern+TBBLUE_SPRITE_WIDTH-1;
 			sx=TBBLUE_TILE_WIDTH-1;
 			incx=-1;
 		}
@@ -4217,57 +4187,54 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 	//Rotacion. Mismo metodo que con sprites
 							/*
-                                                        Comparar bits rotacion con ejemplo en media/spectrum/tbblue/sprites/rotate_example.png
-                                                        */
-                                                        /*
-                                                        Basicamente sin rotar un sprite, se tiene (reduzco el tamaño a la mitad aqui para que ocupe menos)
+              Comparar bits rotacion con ejemplo en media/spectrum/tbblue/sprites/rotate_example.png
+              */
+              /*
+             Basicamente sin rotar un sprite, se tiene (reduzco el tamaño a la mitad aqui para que ocupe menos)
 
 
-                                                        El sentido normal de dibujado viene por ->, aumentando coordenada X
+            El sentido normal de dibujado viene por ->, aumentando coordenada X
 
 
-                                        ->  ---X----
-                                                        ---XX---
-                                                        ---XXX--
-                                                        ---XXXX-
-                                                        ---X----
-                                                        ---X----
-                                                        ---X----
-                                                        ---X----
+				->  ---X----
+						---XX---
+						---XXX--
+						---XXXX-
+						---X----
+						---X----
+						---X----
+						---X----
 
-                                                        Luego cuando se rota 90 grados, en vez de empezar de arriba a la izquierda, se empieza desde abajo y reduciendo coordenada Y:
+				Luego cuando se rota 90 grados, en vez de empezar de arriba a la izquierda, se empieza desde abajo y reduciendo coordenada Y:
 
-                                                            ---X----
-                                                                        ---XX---
-                                                                        ---XXX--
-                                                                        ---XXXX-
-                                                                        ---X----
-                                                                        ---X----
-                                                        ^       ---X----
-                                                        |               ---X----
+						---X----
+						---XX---
+						---XXX--
+						---XXXX-
+						---X----
+						---X----
+		^       ---X----
+		|     	---X----
 
-                                                        Entonces, al dibujar empezando asi, la imagen queda rotada:
+				Entonces, al dibujar empezando asi, la imagen queda rotada:
 
-                                                        --------
-                                                        --------
-                                                        XXXXXXXX
-                                                        ----XXX-
-                                                        ----XX--
-                                                        ----X---
-                                                        --------
+						--------
+						--------
+						XXXXXXXX
+						----XXX-
+						----XX--
+						----X---
+						--------
 
-                                                        De ahi que el incremento y sea -incremento x , incremento x sera 0
+				De ahi que el incremento y sea -incremento x , incremento x sera 0
 
-                                                        Aplicando tambien el comportamiento para mirror, se tiene el resto de combinaciones
+				Aplicando tambien el comportamiento para mirror, se tiene el resto de combinaciones
 
-                                                        */
-
-
-                                                        //offset_pattern=0;
+				*/
 
 
 
-				
+			
 		if (rotate) {
 			z80_byte sy_old=sy;
 			sy=(TBBLUE_TILE_HEIGHT-1)-sx;
@@ -4277,12 +4244,13 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 			incx=0;
 		}
 
-				
-
-
 
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 			z80_byte pixel_izq,pixel_der;
+
+			if (rotate && xmirror) {
+				//printf ("sx: %d sy: %d\n",sx,sy);
+			}
 
 			//Pixel izquierdo
 			pixel_izq=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
@@ -4297,6 +4265,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 			if (destino_x_pixel==max_destino_x_pixel) {
 				destino_x_pixel=0;
 				puntero_a_layer=orig_puntero_a_layer;
+			}
+
+			if (rotate) {
+				printf ("sx: %d sy: %d\n",sx,sy);
 			}
 
 			//Pixel derecho
