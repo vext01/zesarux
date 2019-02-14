@@ -83,6 +83,7 @@ extern void tbblue_set_timing_48k(void);
 #define MAX_SPRITES_PER_LINE 12
 
 #define TBBLUE_SPRITE_BORDER 32
+#define TBBLUE_TILES_BORDER 32
 
 #define MAX_X_SPRITE_LINE (TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER)
 

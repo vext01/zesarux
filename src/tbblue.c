@@ -4036,8 +4036,6 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 	z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
 	for (x=0;x<tilemap_width;x++) {
-		//TODO rotacion
-		//TODO mirror
 		//TODO overlay. completar
 		//TODO clipwindow
 		//TODO stencil mode
@@ -4622,7 +4620,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				*/
 	if ( tbblue_if_tilemap_enabled() && tbblue_force_disable_layer_tilemap.v==0) {
 		int y_tile=t_scanline_draw; //0..63 es border (8 no visibles)
-		int border_no_visible=screen_indice_inicio_pant-TBBLUE_SPRITE_BORDER;
+		int border_no_visible=screen_indice_inicio_pant-TBBLUE_TILES_BORDER;
 		y_tile-=border_no_visible;
 		if (y_tile>=0 && y_tile<=255) {
 

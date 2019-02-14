@@ -8,6 +8,7 @@ Improved menu environment:
 * Added first-aid help windows
 
 Added Z80 assembler
+Added TBBlue Tiles video mode
 Added setting to specify configuration file
 Added key to save text windows contents to a file
 Added setting to send a final space after every word in the osd adventure keyboard
