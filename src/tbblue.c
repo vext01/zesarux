@@ -4056,7 +4056,6 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		//TODO rotacion
 		//TODO mirror
 		//TODO overlay. completar
-		//TODO scroll
 		//TODO clipwindow
 		//TODO stencil mode
 		byte_first=*puntero_tilemap;
@@ -4170,7 +4169,7 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		//Aplicar mirror si conviene y situarnos en la ultima linea
 		if (ymirror) {
 			//sy=TBBLUE_TILE_HEIGHT-1-diferencia;
-			sy=TBBLUE_TILE_HEIGHT-1;
+			sy=TBBLUE_TILE_HEIGHT-1-linea_en_tile;
 		}
 		else {
 			//sy=diferencia;
