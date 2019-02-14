@@ -1544,8 +1544,6 @@ int tbblue_if_tilemap_enabled(void)
 void tbsprite_do_overlay(void)
 {
 
-        //spritechip activo o no?
-        //if ( (tbblue_registers[21]&1)==0) return;
 
 		if (!tbblue_if_sprites_enabled() ) return;
 
@@ -1566,25 +1564,10 @@ void tbsprite_do_overlay(void)
 				//Situamos el 0 32 pixeles por encima de dentro de pantalla, tal cual como funcionan las cordenadas de sprite de tbblue
 
 
-        //if (border_enabled.v==0) y=y-screen_borde_superior;
-        //z80_int *puntero_buf_rainbow;
-        //puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
-
-
 				//Calculos exclusivos para puntero buffer rainbow
 		    int rainbowy=t_scanline_draw-screen_invisible_borde_superior;
 		    if (border_enabled.v==0) rainbowy=rainbowy-screen_borde_superior;
-		    //z80_int *puntero_buf_rainbow;
-		    //puntero_buf_rainbow=&rainbow_buffer[ rainbowy*get_total_ancho_rainbow() ];
-
-		    //int puntero_array_layer=0;
-
-
-
-
-        //puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
-
-				//printf ("overlay t_scanline_draw: %d y: %d\n",t_scanline_draw,y);
+		 
 
 				//Aqui tenemos el y=0 arriba del todo del border
 
@@ -4610,21 +4593,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
 
-        //Capa de tiles. Mezclarla directamente a la capa de ula tbblue_layer_ula
-        //temp
-	/*printf ("y %d scanline_copia %d\n",y,scanline_copia);
-        if (scanline_copia==0) {
-                tbblue_layer_ula[50]=255;
-                tbblue_layer_ula[51]=255;
-                tbblue_layer_ula[52]=255;
-        }*/
 
-	/*
-(R/W) 0x6B (107) => Tilemap Control
-  bit 7    = 1 to enable the tilemap
-	*/
-	if ( tbblue_if_tilemap_enabled() && scanline_copia>=0 && scanline_copia<=191 && tbblue_force_disable_layer_tilemap.v==0) tbblue_do_tile_overlay(scanline_copia);
-//
 
 
 	}
@@ -4634,6 +4603,36 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 	}
 
 	//Aqui puede ser borde superior o inferior
+
+        //Capa de tiles. Mezclarla directamente a la capa de ula tbblue_layer_ula
+
+
+	/*
+(R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+	*/
+/*
+
+        //int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+        int y=t_scanline_draw; //0..63 es border (8 no visibles)
+
+				int border_no_visible=screen_indice_inicio_pant-TBBLUE_SPRITE_BORDER;
+
+				y -=border_no_visible;
+				*/
+	if ( tbblue_if_tilemap_enabled() && tbblue_force_disable_layer_tilemap.v==0) {
+		int y_tile=t_scanline_draw; //0..63 es border (8 no visibles)
+		int border_no_visible=screen_indice_inicio_pant-TBBLUE_SPRITE_BORDER;
+		y_tile-=border_no_visible;
+		if (y_tile>=0 && y_tile<=255) {
+
+	//if ( scanline_copia>=0 && scanline_copia<=191 && tbblue_force_disable_layer_tilemap.v==0) {
+			tbblue_do_tile_overlay(y_tile);
+		}
+	}
+//
+
+
 
 
 	//capa sprites. Si clip window y corresponde:
