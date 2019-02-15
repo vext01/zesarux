@@ -2689,6 +2689,17 @@ void tbblue_reset_common(void)
 	tbblue_registers[97]=0;
 	tbblue_registers[98]=0;
 
+	//Aunque no esté especificado como tal, ponemos este a 0
+	/*
+	(R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+  bit 6    = 0 for 40x32, 1 for 80x32
+  bit 5    = 1 to eliminate the attribute entry in the tilemap
+  bit 4    = palette select
+  bits 3-0 = Reserved set to 0
+	*/
+
+	tbblue_registers[107]=0;
 
 	clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0]=0;
 	clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1]=255;
@@ -3918,6 +3929,12 @@ z80_byte tbblue_get_pixel_tile_xy(int x,int y,z80_byte *puntero_this_tiledef)
 
 }
 
+/*int temp_tile_rebote_x=10;
+int temp_tile_rebote_y=10;
+int temp_tile_rebote_incx=+1;
+int temp_tile_rebote_incy=+1;
+int temp_tile_rebote_veces=0;*/
+
 void tbblue_do_tile_overlay(int scanline)
 {
 	//Gestion scroll vertical
@@ -3982,7 +3999,8 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 */
 	int scroll_x=tbblue_registers[48]+256*(tbblue_registers[47] & 3);
 
-
+	//TODO: forzamos esto a 40 columnas, dado que hay que tener ventana de 512 de ancho
+	tilemap_width=40;
 
 	//Llevar control de posicion x pixel en destino dentro del rango (0..40*8, 0..80*8)
 	int max_destino_x_pixel=tilemap_width*8;
@@ -3993,6 +4011,61 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 		puntero_a_layer=puntero_a_layer+destino_x_pixel;
 	}
 
+
+	//Clipwindow horizontal. Limites
+	
+				/*
+				The tilemap display surface extends 32 pixels around the central 256×192 display.
+The origin of the clip window is the top left corner of this area 32 pixels to the left and 32 pixels above 
+the central 256×192 display. The X coordinates are internally doubled to cover the full 320 pixel width of the surface.
+ The clip window indicates the portion of the tilemap display that is non-transparent and its indicated extent is inclusive; 
+ it will extend from X1*2 to X2*2+1 horizontally and from Y1 to Y2 vertically.
+			*/
+		/*
+			sprintf (texto_buffer,"Tilemap: X=%3d-%3d Y=%3d-%3d",
+					clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+					*/
+
+
+
+	//temp
+	//clipwindow_max_x=100;
+
+	/*temp_tile_rebote_veces++;
+	if (temp_tile_rebote_veces%(100)==0) {
+		temp_tile_rebote_x +=temp_tile_rebote_incx;
+		temp_tile_rebote_y +=temp_tile_rebote_incy;
+
+		if (temp_tile_rebote_x==100 || temp_tile_rebote_x==1) temp_tile_rebote_incx=-temp_tile_rebote_incx;
+		if (temp_tile_rebote_y==200 || temp_tile_rebote_y==1) temp_tile_rebote_incy=-temp_tile_rebote_incy;
+
+		//printf ("temp_tile_rebote_x %d   temp_tile_rebote_incx %d\n",temp_tile_rebote_x,temp_tile_rebote_incx);
+
+
+	//printf ("clip %d  %d\n",clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1]);
+
+
+	}
+	clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0]=temp_tile_rebote_x;
+	clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1]=temp_tile_rebote_x+50;
+	clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2]=temp_tile_rebote_y;
+	clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]=temp_tile_rebote_y+50;*/
+
+
+	int clipwindow_min_x=clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0]*2;
+	int clipwindow_max_x=clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1]*2+1;
+
+
+
+
+	//Para controlar clipwindow. Coordenadas de destino_x_pixel van de 0 a 319 en modo 40 columnas, o de 0 a 639 en modo 80 columnas
+	if (tilemap_width==80) {
+		clipwindow_min_x *=2;
+		clipwindow_max_x *=2;
+	}
+
+	//printf ("clipwindow_min_x %d clipwindow_max_x %d\n",clipwindow_min_x,clipwindow_max_x);
 
 	//Inicio del tilemap
 	puntero_tilemap=tbblue_ram_memory_pages[5*2]+(256*tbblue_get_offset_start_tilemap());
@@ -4020,8 +4093,7 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 	int ula_over_tilemap;
 
-	//TODO: forzamos esto a 40 columnas, dado que hay que tener ventana de 512 de ancho
-	tilemap_width=40;
+	//tilemap_width=40;
 /*
 (R/W) 0x4C (76) => Transparency index for the tilemap
   bits 7-4 = Reserved, must be 0
@@ -4035,9 +4107,12 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 	//printf ("y: %d t_scanline_draw: %d rainbowy:%d sprite_y: %d\n",y,t_scanline_draw,rainbowy,sprite_y);
 	z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
 
+
+
+		
+
 	for (x=0;x<tilemap_width;x++) {
 		//TODO overlay. completar
-		//TODO clipwindow
 		//TODO stencil mode
 		byte_first=*puntero_tilemap;
 		puntero_tilemap++;
@@ -4226,14 +4301,12 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 			z80_byte pixel_izq,pixel_der;
 
-			//if (rotate && xmirror) {
-			/*if (incx && incy) {
-				printf ("sx: %d sy: %d incx: %d incy: %d\n",sx,sy,incx,incy);
-			}*/
-
 			//Pixel izquierdo
 			pixel_izq=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
-			tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
+
+			if (destino_x_pixel>=clipwindow_min_x && destino_x_pixel<=clipwindow_max_x) {
+				tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
+			}
 			puntero_a_layer++;
 			destino_x_pixel++;
 
@@ -4248,7 +4321,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 			//Pixel derecho
 			pixel_der=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
-			tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
+
+			if (destino_x_pixel>=clipwindow_min_x && destino_x_pixel<=clipwindow_max_x) {
+				tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
+			}
 			puntero_a_layer++;
 			destino_x_pixel++;
 
@@ -4269,6 +4345,259 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 }
 
+void tbblue_fast_renfer_ula_layer(int bordesupinf,z80_int *puntero_final_rainbow)
+{
+
+	int i;
+		z80_int color;
+
+	for (i=0;i<get_total_ancho_rainbow();i++) {
+
+
+		//Primera capa
+		color=tbblue_layer_ula[i];
+		if (!tbblue_si_transparent(color) ) {
+			*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+		}
+
+		
+					
+				else {
+					if (bordesupinf) {
+						//Si estamos en borde inferior o superior, no hacemos nada, dibujar color borde
+					}
+
+					else {
+						//Borde izquierdo o derecho o pantalla. Ver si estamos en pantalla
+						if (i>=screen_total_borde_izquierdo*border_enabled.v &&
+							i<screen_total_borde_izquierdo*border_enabled.v+256) {
+							//Poner color indicado por registro:
+							
+							//(R/W) 0x4A (74) => Transparency colour fallback
+ 							//	bits 7-0 = Set the 8 bit colour.
+ 							//	(0 = black on reset on reset)
+							
+
+							//Suponemos que es un color tal cual, no un indice a paleta, multiplicado por 2
+							z80_int fallbackcolour=tbblue_registers[74];
+							fallbackcolour *=2;
+							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
+						}
+						else {
+							//Es borde. dejar ese color
+						}
+					
+					}
+				}
+			
+
+		
+
+		puntero_final_rainbow++;
+
+		
+	}
+
+}
+
+//int tempconta;
+
+void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites)
+{
+	//la copiamos a buffer rainbow
+    //z80_int *puntero_buf_rainbow;
+    //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+	int y;
+
+    y=t_scanline_draw-screen_invisible_borde_superior;
+    if (border_enabled.v==0) y=y-screen_borde_superior;
+
+	z80_int *puntero_final_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
+
+	//Por defecto
+	//sprites over the Layer 2, over the ULA graphics
+
+
+	tbblue_set_layer_priorities();
+
+	z80_int color;
+	
+	//printf ("ancho total: %d size layers: %d\n",get_total_ancho_rainbow(),TBBLUE_LAYERS_PIXEL_WIDTH );
+
+	int i;
+
+	//Si solo hay capa ula, hacer render mas rapido
+	//printf ("%d %d %d\n",capalayer2,capasprites,tbblue_get_layers_priorities());
+	//if (capalayer2==0 && capasprites==0 && tbblue_get_layers_priorities()==0) {  //prio 0=S L U
+	if (capalayer2==0 && capasprites==0 && 1==0) {  
+
+		//Hará fast render cuando no haya capa de layer2 o sprites, aunque tambien,
+		//estando esas capas, cuando este en zona de border o no visible de dichas capas
+		tbblue_fast_renfer_ula_layer(bordesupinf,puntero_final_rainbow);
+
+	}	
+
+
+
+	else {
+
+	for (i=0;i<get_total_ancho_rainbow();i++) {
+
+
+		//Primera capa
+		color=p_layer_first[i];
+		if (!tbblue_fn_pixel_layer_transp_first(color) ) {
+			*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+		}
+
+		else {
+			color=p_layer_second[i];
+			if (!tbblue_fn_pixel_layer_transp_second(color) ) {
+				*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+			}
+
+			else {
+				color=p_layer_third[i];
+				if (!tbblue_fn_pixel_layer_transp_third(color) ) {
+					*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+				}
+					
+				else {
+					if (bordesupinf) {
+						//Si estamos en borde inferior o superior, no hacemos nada, dibujar color borde
+					}
+
+					else {
+						//Borde izquierdo o derecho o pantalla. Ver si estamos en pantalla
+						if (i>=screen_total_borde_izquierdo*border_enabled.v &&
+							i<screen_total_borde_izquierdo*border_enabled.v+256) {
+							//Poner color indicado por registro:
+							
+							//(R/W) 0x4A (74) => Transparency colour fallback
+ 							//	bits 7-0 = Set the 8 bit colour.
+ 							//	(0 = black on reset on reset)
+							
+
+							//Suponemos que es un color tal cual, no un indice a paleta, multiplicado por 2
+							z80_int fallbackcolour=tbblue_registers[74];
+							fallbackcolour *=2;
+							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
+						}
+						else {
+							//Es borde. dejar ese color
+						}
+					
+					}
+				}
+			}
+
+		}
+
+		puntero_final_rainbow++;
+
+		
+	}
+
+	}
+}
+
+
+void tbblue_do_layer2_overlay(void)
+{
+
+
+        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+
+        //linea que se debe leer
+        int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+
+        //la copiamos a buffer rainbow
+        z80_int *puntero_buf_rainbow;
+        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+        int y;
+
+        y=t_scanline_draw-screen_invisible_borde_superior;
+        if (border_enabled.v==0) y=y-screen_borde_superior;
+
+        puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
+
+        puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
+
+
+        //int x,bit;
+
+        z80_byte byte_leido;
+
+
+
+
+        //direccion=screen_addr_table[(scanline_copia<<5)];
+
+		//Inicializar puntero a layer2 de tbblue, irlo incrementando a medida que se ponen pixeles
+		//Layer2 siempre se dibuja desde registro que indique pagina 18. Registro 19 es un backbuffer pero siempre se dibuja desde 18
+		//int tbblue_layer2_offset=tbblue_registers[18]&63;
+
+		//tbblue_layer2_offset*=16384;
+
+
+
+		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
+
+
+		//Mantener el offset y en 0..191
+		z80_byte tbblue_reg_23=tbblue_registers[23]; 
+
+		int offset_scroll=tbblue_reg_23+scanline_copia;
+		offset_scroll %=192;
+
+
+		tbblue_layer2_offset +=offset_scroll*256;
+
+		z80_byte tbblue_reg_22=tbblue_registers[22];
+
+/*
+(R/W) 22 => Layer2 Offset X
+  bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
+
+(R/W) 0x17 (23) => Layer2 Offset Y
+  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+*/
+
+
+
+		int posicion_array_layer=0;
+
+		posicion_array_layer +=screen_total_borde_izquierdo*border_enabled.v;
+
+		int posx;
+
+       	for (posx=0;posx<256;posx++) {
+				
+
+	
+				//Capa layer2
+				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
+					if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1] ) {
+
+						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
+						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
+						tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
+					}
+				}
+
+				posicion_array_layer++;
+
+           	    byte_leido=byte_leido<<1;
+				
+				tbblue_reg_22++;
+
+
+
+	    }
+
+
+	 
+}
 
 
 //Guardar en buffer rainbow la linea actual. Para Spectrum. solo display
@@ -4304,9 +4633,15 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 	int bordesupinf=0;
 
+	int capalayer2=0;
+	int capasprites=0;
+	//int capatiles=0;
+
   	//En zona visible pantalla (no borde superior ni inferior)
   	if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
 
+
+				//Render de capa ULA 
 
         //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
@@ -4342,15 +4677,6 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
         direccion=screen_addr_table[(scanline_copia<<5)];
 
-		//Inicializar puntero a layer2 de tbblue, irlo incrementando a medida que se ponen pixeles
-		//Layer2 siempre se dibuja desde registro que indique pagina 18. Registro 19 es un backbuffer pero siempre se dibuja desde 18
-		//int tbblue_layer2_offset=tbblue_registers[18]&63;
-
-		//tbblue_layer2_offset*=16384;
-
-
-
-		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
 
 
 		//Mantener el offset y en 0..191
@@ -4359,26 +4685,6 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 		int offset_scroll=tbblue_reg_23+scanline_copia;
 		offset_scroll %=192;
 
-
-		//tbblue_reg_23 +=scanline_copia;
-		//tbblue_reg_23=tbblue_reg_23 % 192;
-		//tbblue_layer2_offset +=tbblue_reg_23*256;
-
-		tbblue_layer2_offset +=offset_scroll*256;
-
-		z80_byte tbblue_reg_22=tbblue_registers[22];
-
-/*
-(R/W) 22 => Layer2 Offset X
-  bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
-
-(R/W) 0x17 (23) => Layer2 Offset Y
-  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
-*/
-
-
-        //fila=scanline_copia/8;
-        //dir_atributo=6144+(fila*32);
 
 
 		z80_byte *puntero_buffer_atributos;
@@ -4499,7 +4805,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
 		int posicion_array_pixeles_atributos=0;
-       	for (x=0;x<32;x++) {
+    for (x=0;x<32;x++) {
 
             byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
@@ -4529,19 +4835,13 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
 
-           	attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+      attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
                
 
 			get_pixel_color_tbblue(attribute,&ink,&paper);
 			
 
-			//int cambiada_tinta;
-			//int cambiada_paper;
-
-			//cambiada_tinta=0;
-			//cambiada_paper=0;
-
-            for (bit=0;bit<8;bit++) {
+      for (bit=0;bit<8;bit++) {
 				
 				color= ( byte_leido & 128 ? ink : paper ) ;
 
@@ -4568,30 +4868,28 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 					if (!tbblue_force_disable_layer_ula.v) tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
 				}
 
-				//Capa layer2
-				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
-					if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1] && scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]) {
-						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
-						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
-						tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
-					}
-				}
-
+		
 				posicion_array_layer++;
 
-           	    byte_leido=byte_leido<<1;
+        byte_leido=byte_leido<<1;
 				
-				tbblue_reg_22++;
-            }
+      }
 			direccion++;
 
-	    }
-
-		//printf ("posicion_array_layer: %d\n",posicion_array_layer);
+	  }
 
 
 
 
+			//Overlay de layer2
+							//Capa layer2
+				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
+					if (scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]) {
+						capalayer2=1;
+					
+						tbblue_do_layer2_overlay();
+					}
+				}
 
 
 	}
@@ -4602,33 +4900,31 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 	//Aqui puede ser borde superior o inferior
 
-        //Capa de tiles. Mezclarla directamente a la capa de ula tbblue_layer_ula
+    
+		
+		//Capa de tiles. Mezclarla directamente a la capa de ula tbblue_layer_ula
 
 
-	/*
-(R/W) 0x6B (107) => Tilemap Control
-  bit 7    = 1 to enable the tilemap
-	*/
-/*
-
-        //int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
-        int y=t_scanline_draw; //0..63 es border (8 no visibles)
-
-				int border_no_visible=screen_indice_inicio_pant-TBBLUE_SPRITE_BORDER;
-
-				y -=border_no_visible;
-				*/
 	if ( tbblue_if_tilemap_enabled() && tbblue_force_disable_layer_tilemap.v==0) {
 		int y_tile=t_scanline_draw; //0..63 es border (8 no visibles)
 		int border_no_visible=screen_indice_inicio_pant-TBBLUE_TILES_BORDER;
 		y_tile-=border_no_visible;
-		if (y_tile>=0 && y_tile<=255) {
 
-	//if ( scanline_copia>=0 && scanline_copia<=191 && tbblue_force_disable_layer_tilemap.v==0) {
+				/*
+				The tilemap display surface extends 32 pixels around the central 256×192 display.
+The origin of the clip window is the top left corner of this area 32 pixels to the left and 32 pixels above 
+the central 256×192 display. The X coordinates are internally doubled to cover the full 320 pixel width of the surface.
+ The clip window indicates the portion of the tilemap display that is non-transparent and its indicated extent is inclusive; 
+ it will extend from X1*2 to X2*2+1 horizontally and from Y1 to Y2 vertically.
+			*/
+
+			//Tener en cuenta clip window
+		if (y_tile>=clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2] && y_tile<=clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]) {
+			//capatiles=1;
 			tbblue_do_tile_overlay(y_tile);
 		}
 	}
-//
+
 
 
 
@@ -4644,86 +4940,17 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 	
 	if (mostrar_sprites && !tbblue_force_disable_layer_sprites.v) {
+		capasprites=1;
 		tbsprite_do_overlay();
 	}
 
 
-    //la copiamos a buffer rainbow
-    //z80_int *puntero_buf_rainbow;
-    //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-	int y;
-
-    y=t_scanline_draw-screen_invisible_borde_superior;
-    if (border_enabled.v==0) y=y-screen_borde_superior;
-
-	z80_int *puntero_final_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
-
-	//Por defecto
-	//sprites over the Layer 2, over the ULA graphics
 
 
-	tbblue_set_layer_priorities();
+  //Renderizamos las 3 capas buffer rainbow
+	tbblue_render_layers_rainbow(bordesupinf,capalayer2,capasprites);
 
 
-	z80_int color;
-	
-	//printf ("ancho total: %d size layers: %d\n",get_total_ancho_rainbow(),TBBLUE_LAYERS_PIXEL_WIDTH );
-
-	for (i=0;i<get_total_ancho_rainbow();i++) {
-
-		//Primera capa
-		color=p_layer_first[i];
-		if (!tbblue_fn_pixel_layer_transp_first(color) ) {
-			*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
-		}
-
-		else {
-			color=p_layer_second[i];
-			if (!tbblue_fn_pixel_layer_transp_second(color) ) {
-				*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
-			}
-
-			else {
-				color=p_layer_third[i];
-				if (!tbblue_fn_pixel_layer_transp_third(color) ) {
-					*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
-				}
-					
-				else {
-					if (bordesupinf) {
-						//Si estamos en borde inferior o superior, no hacemos nada, dibujar color borde
-					}
-
-					else {
-						//Borde izquierdo o derecho o pantalla. Ver si estamos en pantalla
-						if (i>=screen_total_borde_izquierdo*border_enabled.v &&
-							i<screen_total_borde_izquierdo*border_enabled.v+256) {
-							//Poner color indicado por registro:
-							/*
-							(R/W) 0x4A (74) => Transparency colour fallback
- 								bits 7-0 = Set the 8 bit colour.
- 								(0 = black on reset on reset)
-							*/
-
-							//Suponemos que es un color tal cual, no un indice a paleta, multiplicado por 2
-							z80_int fallbackcolour=tbblue_registers[74];
-							fallbackcolour *=2;
-							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
-						}
-						else {
-							//Es borde. dejar ese color
-						}
-					
-					}
-				}
-			}
-
-		}
-
-		puntero_final_rainbow++;
-
-		
-	}
 
 }
 

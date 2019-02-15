@@ -2608,7 +2608,7 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 
 					sprintf (texto_buffer,"Tilemap: X=%3d-%3d Y=%3d-%3d",
-					clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
+					clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0]*2,clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1]*2+1,clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 

@@ -17,6 +17,10 @@ Added machine Amstrad CPC 4128
 Added CPC machines support to ZSF snapshots
 Added tape to wav converter (tap, tzx, o, p to wav)
 
+Improved CPU usage in TBBlue:
+-Use 4% less cpu time (in my machine) when only ULA and/or Tiles enabled
+-Use 1% less cpu time (in my machine) when all layers enabled
+
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now
 -running in verbose or limit mode, or cpu-step command, can now update the display inmediately (having real video setting on)

@@ -18,7 +18,12 @@
 
 ----fin zxvision----
 
+-boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
+warhawk 36% en pantalla menu con fast render
+warhawk 37% en pantalla menu sin fast render
+
 -visor tiles tbblue: capa en modo visual no existe. Hace bien bit de over ula? 
+
 
 -tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
 color que tiene pantalla no es el que tiene el transparente
@@ -106,8 +111,6 @@ https://www.specnext.com/forum/viewtopic.php?f=6&t=1142
 -Exportación de assembler a ventana de texto. Mejor a archivo de texto.
 Que pida inicio y fin, y que haya limite de instrucciones (igual al tamaño de la zona memoria) por si acaso
 Dump assembler de direccion a direccion y que genere archivo o lo meta en clipboard, o abra ventana aparte para poder copiar si se quiere
-
--poder hacer disassemble en debug cpu esta step mode. necesario? pues la propia ventana sirve de disassemble
 
 
 --volumenes canales sonido: el maximo se ve en color rojo, si hubiera algun skin con tinta roja por defecto, esto no se veria
