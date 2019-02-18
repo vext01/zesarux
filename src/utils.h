@@ -726,7 +726,7 @@ extern int get_cpu_frequency(void);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
-#define MEMORY_ZONE_NUM_TIMEX_EXROM 18
+#define MEMORY_ZONE_NUM_TIMEX_EX 18
 #define MEMORY_ZONE_NUM_TIMEX_DOCK 19
 
 #endif

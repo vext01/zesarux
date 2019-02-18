@@ -204,6 +204,7 @@ struct s_first_aid_list
 	char config_name[100]; //nombre en la config
 	int *puntero_setting;
 	char *texto_opcion;
+	int si_startup; //Si mensaje puede aparecer en startup del emulador
 };
 
 #define MAX_MENU_FIRST_AID 100
@@ -213,9 +214,11 @@ extern struct s_first_aid_list first_aid_list[];
 extern z80_bit menu_disable_first_aid;
 extern void menu_first_aid_disable(char *texto);
 extern int total_first_aid;
-extern void menu_first_aid(char *key_setting);
+extern int menu_first_aid(char *key_setting);
 extern void menu_first_aid_restore_all(void);
 extern void menu_first_aid_init(void);
+extern void menu_first_aid_random_startup(void);
+extern int menu_first_aid_title(char *key_setting,char *title);
 
 #define MAX_F_FUNCTIONS 20
 

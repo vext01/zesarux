@@ -613,6 +613,12 @@ int menu_window_splash_counter_ms;
 
 z80_bit tooltip_enabled;
 
+//La primera vez que arranca, dispara evento de startup aid
+int menu_first_aid_startup=0;
+
+//El texto a disparar al startup
+char *string_config_key_aid_startup;
+
 
 //Si se refresca en color gris cuando menu abierto y multitask es off
 //z80_bit screen_bw_no_multitask_menu={1};
@@ -32064,6 +32070,10 @@ void menu_inicio(void)
 
 	int liberar_teclas_y_esperar=1; //Si se liberan teclas y se espera a liberar teclado
 
+
+	
+
+
 	if (menu_breakpoint_exception.v) {
 		if (!debug_if_breakpoint_action_menu(catch_breakpoint_index)) {
 			//Accion no es de abrir menu
@@ -32126,6 +32136,14 @@ void menu_inicio(void)
 
 	//Establecemos variable de salida de todos menus a 0
 	salir_todos_menus=0;
+
+
+	//Si first aid al inicio
+	if (menu_first_aid_startup) {
+		menu_first_aid_startup=0;
+		menu_first_aid_title(string_config_key_aid_startup,"First aid of the day");
+		//No mostrara nada mas que esto y luego volvera del menu
+	}	
 
 
 	if (menu_button_osdkeyboard.v) {
@@ -32675,6 +32693,11 @@ void reset_splash_text(void)
 				menu_footer_f5_menu();
 				first_time_menu_footer_f5_menu=0; //Solo mostrarlo una sola vez
 			}
+
+			//abrir el menu si hay first aid en startup disponible
+			//Para que aparezca el mensaje del dia, tiene que estar habilitado el setting de welcome message
+			//Si no, no llegara aqui nunca
+			menu_first_aid_random_startup();
 		}
 
 		else {
@@ -34572,7 +34595,7 @@ struct s_first_aid_list first_aid_list[MAX_MENU_FIRST_AID];
 
 int total_first_aid=0;
  
-void menu_first_aid_add(/*enum first_aid_number_list indice_aid,*/char *key_string,int *puntero_setting,char *texto_opcion)
+void menu_first_aid_add(char *key_string,int *puntero_setting,char *texto_opcion,int si_startup)
 {
 
 	if (total_first_aid==MAX_MENU_FIRST_AID) return; //error
@@ -34581,6 +34604,7 @@ void menu_first_aid_add(/*enum first_aid_number_list indice_aid,*/char *key_stri
 	strcpy(first_aid_list[total_first_aid].config_name,key_string);
 	first_aid_list[total_first_aid].puntero_setting=puntero_setting;
 	first_aid_list[total_first_aid].texto_opcion=texto_opcion;
+	first_aid_list[total_first_aid].si_startup=si_startup;
 
 	total_first_aid++;
 }
@@ -34603,16 +34627,84 @@ char *first_aid_string_initial_menu="This is the Main Menu. You can select an it
 	"about what the item does. ESC or right mouse button closes a menu, you can also close it by pressing the top-left button in the window. "
 	"You can also use your mouse to resize or move windows";
 
+int first_aid_no_startup_aid=0;
+char *first_aid_string_startup_aid="This is a first aid help message. You will be shown some of these at the emulator startup, but also "
+	"when opening some menus. All of them are suggestions, advice and pieces of help of ZEsarUX. You can disable entirely them by going to Settings-> "
+	"GUI Settings-> First aid help";
+
+int first_aid_no_multiplattform=0;
+char *first_aid_string_multiplattform="Do you know that ZEsarUX is multiplattform? There are main versions for Linux, Mac, Windows and Raspberry pi. "
+ "But also for Retropie/EmulationStation, Open Pandora, PocketCHIP and MorhpOS. "
+ "You can even compile it by yourself, you only need a compatible Unix environment to do that!";
+
+int first_aid_no_accessibility=0;
+char *first_aid_string_accessibility="Do you know ZEsarUX has accessibility settings? You can hear the menu or even hear text adventures games. "
+ "You will only need an external text-to-speech program to do that. Please read the FAQ to know more";
+
+int first_aid_no_documentation=0;
+char *first_aid_string_documentation="You can find a lot of info, videos, documentation, etc on:\n"
+  "-Menu entries with help (pressing F1 in most of them) and item tooltips when no key is pressed\n"
+  "-FAQ file\n"
+  "-docs folder (on the extra package)\n"
+  "-Youtube channel: https://www.youtube.com/user/chernandezba\n"
+  "-Twitter: @zesarux\n"
+  "-Facebook: ZEsarUX group\n";
+
+
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
-	menu_first_aid_add("filesel_uppercase_keys",&first_aid_no_filesel_uppercase_keys,first_aid_string_filesel_uppercase_keys);
-	menu_first_aid_add("smartload",&first_aid_no_smartload,first_aid_string_smartload);
-	menu_first_aid_add("initial_menu",&first_aid_no_initial_menu,first_aid_string_initial_menu);
+
+	//Items que se disparan en ciertos eventos, con parametro si_startup=0
+	menu_first_aid_add("filesel_uppercase_keys",&first_aid_no_filesel_uppercase_keys,first_aid_string_filesel_uppercase_keys,0);
+	menu_first_aid_add("smartload",&first_aid_no_smartload,first_aid_string_smartload,0);
+	menu_first_aid_add("initial_menu",&first_aid_no_initial_menu,first_aid_string_initial_menu,0);
+
+	//Items que se disparan en startup
+	menu_first_aid_add("startup_aid",&first_aid_no_startup_aid,first_aid_string_startup_aid,1);
+	menu_first_aid_add("multiplattform",&first_aid_no_multiplattform,first_aid_string_multiplattform,1);
+	menu_first_aid_add("accessibility",&first_aid_no_accessibility,first_aid_string_accessibility,1);
+	menu_first_aid_add("documentation",&first_aid_no_documentation,first_aid_string_documentation,1);
 
 }
 
+//Mostrar random ayuda al iniciar. No se activa si no hay multitask
+//Nota: realmente no son random, salen en orden de aparicion
+void menu_first_aid_random_startup(void)
+{
 
+	//printf ("menu_first_aid_random_startup\n");
+
+	//Si no hay autoguardado de config, no mostrarlo (pues no se podria desactivar)
+	if (save_configuration_file_on_exit.v==0) return;
+
+	//Si desactivadas ayudas first aid
+	if (menu_disable_first_aid.v) return;	
+
+	//Si desactivado multitask
+	if (!menu_multitarea) return;
+
+	//Lanzar la primera que este activa y sea de tipo si_startup=1
+	int i;
+	int encontrado=0;
+	for (i=0;i<total_first_aid && !encontrado;i++) {
+		int *valor_opcion;
+		if (first_aid_list[i].si_startup) {
+			valor_opcion=first_aid_list[i].puntero_setting;
+			if ((*valor_opcion)==0) {
+				string_config_key_aid_startup=first_aid_list[i].config_name;
+				//menu_first_aid(first_aid_list[i].config_name);
+				encontrado=1;
+				menu_abierto=1;
+				menu_first_aid_startup=1;
+			}
+		}
+	}	
+
+	debug_printf (VERBOSE_DEBUG,"Set first aid of the day to: %s",string_config_key_aid_startup);
+
+}
 
 //Retornar indice a opcion implicada. -1 si no
 int menu_first_aid_get_setting(char *texto)
@@ -34670,18 +34762,21 @@ void menu_first_aid_disable(char *texto)
 
 z80_bit menu_disable_first_aid={0};
 
-//Mostrar first aid si conviene
-void menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
+
+
+ 
+ //Mostrar first aid si conviene. Retorna 1 si se ha mostrado. 0 si no
+int menu_first_aid_title(char *key_setting,char *title) //(enum first_aid_number_list indice)
 {
 
 	//Si no hay autoguardado de config, no mostrarlo (pues no se podria desactivar)
-	if (save_configuration_file_on_exit.v==0) return;
+	if (save_configuration_file_on_exit.v==0) return 0;
 
 	//Si desactivadas ayudas first aid
-	if (menu_disable_first_aid.v) return;
+	if (menu_disable_first_aid.v) return 0;
 
 	int indice=menu_first_aid_get_setting(key_setting);
-	if (indice<0) return;
+	if (indice<0) return 0;
 
 	int *valor_opcion;
 	char *texto_opcion;	
@@ -34689,33 +34784,23 @@ void menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
 	valor_opcion=first_aid_list[indice].puntero_setting;
 	texto_opcion=first_aid_list[indice].texto_opcion;
 
-
-
-	/*switch (indice) {
-		case FIRST_AID_FILESEL_UPPERCASE_KEYS:
-			valor_opcion=&first_aid_no_filesel_uppercase_keys; 
-			texto_opcion="If you want to select a file by its initial letter, please press the letter as it is. "
-							"If you want to execute actions shown in the bottom of the window, in inverted colour, please press shift+letter";
-		break;
-
-		case FIRST_AID_END: 
-			//nada, aqui no deberia entrar
-			return;
-		break;		
-
-	}*/
-
 	//Esta desmarcada. no mostrar nada
-	if (*valor_opcion) return;
+	if (*valor_opcion) return 0;
 
 	cls_menu_overlay();
-	zxvision_menu_generic_message_setting("First aid",texto_opcion,"Do not show it again",valor_opcion);
+	zxvision_menu_generic_message_setting(title,texto_opcion,"Do not show it again",valor_opcion);
 		
+	return 1;
 
 }
 
- 
 
+//Mostrar first aid si conviene. Retorna 1 si se ha mostrado. 0 si no
+int menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
+{
+	return menu_first_aid_title(key_setting,"First aid");
+
+}
 
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC

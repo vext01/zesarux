@@ -100,6 +100,7 @@
 #include "pd765.h"
 #include "baseconf.h"
 #include "settings.h"
+#include "chloe.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -9601,6 +9602,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         size=131072*mem128_multiplicador;
       }
 
+      if (MACHINE_IS_CHLOE) {
+        size=131072;
+      }
+
       //Vigilar condiciones que pueden cumplir mas de una maquina a la vez
 
       if (MACHINE_IS_ZXUNO) {
@@ -9661,6 +9666,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       if (MACHINE_IS_SPECTRUM_P2A_P3) {
         size=65536;
       }
+
+	if (MACHINE_IS_CHLOE) {
+		size=32768;
+	}
 
       //Vigilar condiciones que pueden cumplir mas de una maquina a la vez
 
@@ -9835,10 +9844,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       }
     break;          
 
-    case MEMORY_ZONE_NUM_TIMEX_EXROM:
+    case MEMORY_ZONE_NUM_TIMEX_EX:
       if (MACHINE_IS_TIMEX_TS2068) {
         *readwrite=1;
         size=8192;
+      }
+      if (MACHINE_IS_CHLOE_280SE) {
+	*readwrite=1;
+	size=65536;
       }
     break;      
 
@@ -9847,7 +9860,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         *readwrite=1;
         size=65536;
       }
+      if (MACHINE_IS_CHLOE_280SE) {
+	*readwrite=1;
+	size=65536;
+      }
     break;     
+
+
+	
 
   }
 
@@ -9880,6 +9900,11 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         //Saltar los 64kb de rom
         p=&memoria_spectrum[address+65536];
       }
+
+	if (MACHINE_IS_CHLOE) {
+	z80_byte *start=chloe_home_ram_mem_table[0];
+	p=&start[address];
+	}
 
       //Vigilar condiciones que pueden cumplir mas de una maquina a la vez
 
@@ -10073,9 +10098,13 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
       }
     break;      
 
-    case MEMORY_ZONE_NUM_TIMEX_EXROM:
+    case MEMORY_ZONE_NUM_TIMEX_EX:
       if (MACHINE_IS_TIMEX_TS2068) {
         z80_byte *start=timex_ex_rom_mem_table[0];
+        p=&start[address];              
+      }
+      if (MACHINE_IS_CHLOE_280SE) {
+        z80_byte *start=chloe_ex_ram_mem_table[0];
         p=&start[address];              
       }
     break;      
@@ -10083,6 +10112,10 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     case MEMORY_ZONE_NUM_TIMEX_DOCK:
       if (MACHINE_IS_TIMEX_TS2068) {
         z80_byte *start=timex_dock_rom_mem_table[0];
+        p=&start[address];              
+      }
+      if (MACHINE_IS_CHLOE_280SE) {
+        z80_byte *start=chloe_dock_ram_mem_table[0];
         p=&start[address];              
       }
     break;        
@@ -10365,15 +10398,23 @@ void machine_get_memory_zone_name(int zone, char *name)
       }
     break;   
 
-    case MEMORY_ZONE_NUM_TIMEX_EXROM:
+    case MEMORY_ZONE_NUM_TIMEX_EX:
       if (MACHINE_IS_TIMEX_TS2068) {
         strcpy(name,"Timex EXROM");             
       }
+	
+      if (MACHINE_IS_CHLOE_280SE) {
+        strcpy(name,"Chloe EX");             
+      }
+	
     break;      
 
     case MEMORY_ZONE_NUM_TIMEX_DOCK:
       if (MACHINE_IS_TIMEX_TS2068) {
         strcpy(name,"Timex Dock");               
+      }
+      if (MACHINE_IS_CHLOE_280SE) {
+        strcpy(name,"Chloe Dock");             
       }
     break;             
 

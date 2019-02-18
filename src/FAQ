@@ -15,6 +15,8 @@ zesarux BSLEEZE1.TAP --enableprintchartrap --textspeechprogram speech_filters\wi
 Note: In Windows version, when you specify command line settings, the text console remains open. So speech programs start very fast.
 If you don't set command line settings, speech programs start slower.
 
+You can also set these settings in the menu, just go to Settings-> Accessibility
+
 
 You can find some different speech scripts on folder speech_filters. 
 For Mac OS X, you can find macos_say_filter.sh on folder app/Contents/Resources/speech_filters/
