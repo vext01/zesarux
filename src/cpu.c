@@ -7180,6 +7180,7 @@ struct sched_param sparam;
 	if (opcion_no_splash.v==0) set_splash_text();
 
 
+
 	//Algun parametro que se resetea con reset_cpu y/o set_machine y se puede haber especificado por linea de comandos
 	if (command_line_wrx.v) enable_wrx();
 

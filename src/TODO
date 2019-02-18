@@ -24,6 +24,10 @@ warhawk 37% en pantalla menu sin fast render
 
 -visor tiles tbblue: capa en modo visual no existe. Hace bien bit de over ula? 
 
+-random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
+En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay que cerrarlo dos veces, y la segunda vez, el 50% de las veces
+da segmentation fault-> quiza el problema viene del lector tzx
+
 
 -tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
 color que tiene pantalla no es el que tiene el transparente

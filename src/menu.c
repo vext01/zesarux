@@ -32694,6 +32694,8 @@ void reset_splash_text(void)
 				first_time_menu_footer_f5_menu=0; //Solo mostrarlo una sola vez
 			}
 
+
+
 			//abrir el menu si hay first aid en startup disponible
 			//Para que aparezca el mensaje del dia, tiene que estar habilitado el setting de welcome message
 			//Si no, no llegara aqui nunca
@@ -34650,6 +34652,18 @@ char *first_aid_string_documentation="You can find a lot of info, videos, docume
   "-Twitter: @zesarux\n"
   "-Facebook: ZEsarUX group\n";
 
+int first_aid_no_zrcp=0;
+char *first_aid_string_zrcp="You can connect to ZEsarUX by using a telnet client using the ZEsarUX Remote Control Protocol (ZRCP). "
+	"This protocol allows you to interact, debug and do a lot of internal actions to ZEsarUX. "
+	"Just enable it on Settings-> Debug and use a telnet client to port 10000. "
+	"Note: Windows users must use the pthreads version of ZEsarUX";
+
+int first_aid_no_votext=0;
+char *first_aid_string_votext="Do you know you can run ZEsarUX using a Text mode video driver? There are ncurses, aalib, cacalib, "
+ "stdout and simpletext drivers. They are not all compiled by default, only stdout, you maybe need to compile ZEsarUX by yourself to test all of them";	
+
+int first_aid_no_easteregg=0;
+char *first_aid_string_eastereg="ZEsarUX includes three easter eggs. Can you find them? :)";	
 
 
 void menu_first_aid_init(void)
@@ -34666,6 +34680,9 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("multiplattform",&first_aid_no_multiplattform,first_aid_string_multiplattform,1);
 	menu_first_aid_add("accessibility",&first_aid_no_accessibility,first_aid_string_accessibility,1);
 	menu_first_aid_add("documentation",&first_aid_no_documentation,first_aid_string_documentation,1);
+	menu_first_aid_add("zrcp",&first_aid_no_zrcp,first_aid_string_zrcp,1);
+	menu_first_aid_add("votext",&first_aid_no_votext,first_aid_string_votext,1);
+	menu_first_aid_add("easteregg",&first_aid_no_easteregg,first_aid_string_eastereg,1);
 
 }
 

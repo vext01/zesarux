@@ -190,7 +190,13 @@ a telnet client, or maybe you can create a external frontend (maybe an IDE) that
 It's disabled by default, you may enable it from Settings->Debug or from command line with --enable-remoteprotocol. The default port is 10000.
 It's supported on all emulator versions, but on Windows it's only supported on the ZEsarUX-pthreads version
 
-There is a good example on using ZRCP,
+There are two good examples which use ZRCP:
+1)
+https://github.com/maziac/z80-debug
+This plugin enables VSCode to debug ZEsarUX by using ZRCP
+Please read the documentation on its web site to know how it works
+
+2)
 https://github.com/Tenebrous/vscode-zx-debugger
 This plugin enables VSCode to debug ZEsarUX by using ZRCP
 
