@@ -3739,7 +3739,7 @@ void tbblue_set_layer_priorities(void)
 
 }
 
-unsigned int tbblue_get_border_color(unsigned int color)
+z80_int tbblue_get_border_color(z80_int color)
 {
     int flash_disabled = tbblue_registers[0x43]&1;  //flash_disabled se llamaba antes. ahora indica "enable ulanext"
     int is_timex_hires = timex_video_emulation.v && (6 == (timex_port_ff&7));
