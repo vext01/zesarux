@@ -100,7 +100,7 @@ z80_int tbblue_copper_get_write_position(void)
 //Establece posicion de escritura del copper
 void tbblue_copper_set_write_position(z80_int posicion)
 {
-	tbblue_registers[97]=posicion%0xFF;
+	tbblue_registers[97]=posicion&0xFF;
 
 	z80_byte msb=(posicion>>8)&7; //3 bits bajos
 
@@ -3913,9 +3913,11 @@ z80_int tbblue_tile_return_color_index(z80_byte index)
         return color_final;
 }
 
-void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z80_byte tpal,z80_int *puntero_a_layer)
+void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z80_byte tpal,z80_int *puntero_a_layer,int ula_over_tilemap)
 {
 		
+			
+
 			if (pixel_color==transparent_colour) {
 
 			}
@@ -3925,7 +3927,9 @@ void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z8
 				//Vemos lo que hay en la capa
 				z80_int color_previo_capa;
 				color_previo_capa=*puntero_a_layer;
-				if (tbblue_si_transparent(color_previo_capa) ) { 
+
+				//Poner pixel tile si color de ula era transparente o bien la ula está por debajo
+				if (tbblue_si_transparent(color_previo_capa) || !ula_over_tilemap) { 
 				//if (tbblue_si_transparent(color_previo_capa) || color_previo_capa==0x145) { //TODO parche 0x145
  					//printf ("color transp %02XH\n",color_previo_capa);  //1C6h border aparentemente. 145h paper aparentemente esto en tiledemo
 				*puntero_a_layer=tbblue_tile_return_color_index(pixel_color);
@@ -4146,7 +4150,6 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		
 
 	for (x=0;x<tilemap_width;x++) {
-		//TODO overlay. completar
 		//TODO stencil mode
 		byte_first=*puntero_tilemap;
 		puntero_tilemap++;
@@ -4339,7 +4342,7 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 			pixel_izq=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
 
 			if (destino_x_pixel>=clipwindow_min_x && destino_x_pixel<=clipwindow_max_x) {
-				tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer);
+				tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer,ula_over_tilemap);
 			}
 			puntero_a_layer++;
 			destino_x_pixel++;
@@ -4357,7 +4360,7 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 			pixel_der=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
 
 			if (destino_x_pixel>=clipwindow_min_x && destino_x_pixel<=clipwindow_max_x) {
-				tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer);
+				tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer,ula_over_tilemap);
 			}
 			puntero_a_layer++;
 			destino_x_pixel++;

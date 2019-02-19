@@ -221,6 +221,7 @@ extern z80_bit tbblue_force_disable_layer_sprites;
 extern z80_bit tbblue_force_disable_layer_layer_two;
 
 extern int tbblue_if_sprites_enabled(void);
+extern int tbblue_if_ula_is_enabled(void);
 
 extern char *tbblue_get_string_layer_prio(int layer,z80_byte prio);
 
@@ -229,6 +230,9 @@ extern void tbblue_get_string_palette_format(char *texto);
 extern int tbblue_get_offset_start_layer2_reg(z80_byte register_value);
 extern int tbblue_get_offset_start_tilemap(void);
 extern int tbblue_get_offset_start_tiledef(void);
+
+extern int tbblue_get_tilemap_width(void);
+extern int tbblue_if_tilemap_enabled(void);
 
 extern z80_byte tbblue_get_layers_priorities(void);
 

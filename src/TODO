@@ -16,13 +16,15 @@
 
 -Rueda ratón sin multitarea no se mueve muy fino: parece que actualiza tarde la ventana
 
+
 ----fin zxvision----
 
 -boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
 warhawk 37% en pantalla menu sin fast render
 
--visor tiles tbblue: capa en modo visual no existe. Hace bien bit de over ula? 
+
+
 
 -random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
 En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay que cerrarlo dos veces, y la segunda vez, el 50% de las veces
@@ -32,11 +34,7 @@ da segmentation fault-> quiza el problema viene del lector tzx
 -tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
 color que tiene pantalla no es el que tiene el transparente
 
--tipo letra man software no tiene [ ] . corregir 
-
 -imagen tbblue.mmc dice 4 gb libres?
-
--secuenciador AY: linea para cada canal de audio que haga scroll horizontal de cada linea cuando nota cambie (teniendo en cuenta nota y octava, por ejemplo F#4)
 
 -quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
 es la de sin phtreads
@@ -45,24 +43,8 @@ es la de sin phtreads
 
 -quiza version threads de windows no va bien porque usleep en windows está deprecated....
 
--Baseconf. corregido
-Esto está mal:
-
-/ram
-baseconf_memory_segments[3]=valor%7;
-baseconf_memory_segments_type[3]=1;
-
-
-Debería ser:
-/ram
-baseconf_memory_segments[3]=valor&7;
-baseconf_memory_segments_type[3]=1;
-
-Luego también después de cambiar puerto 32765 se debería llamar a 
-baseconf_set_memory_pages()
-?
-
-Luego también hay dos tarjetas según:
+-Baseconf:
+hay dos tarjetas según:
 Which card is activated, sets bit 4 port # 7FFD.?? -> pendiente
 
 -detector de silencio solo activo por defecto para algunos como alsa y dsp sin threads
@@ -87,7 +69,7 @@ Versión sin pthreads casi no se oye click
 -Speech al moverse por líneas de menú se escucha antes de que se mueva el cursor. Por que?
 -speech: sin multitask, a veces se descuadra la linea de menu que lee. ejemplo: ir a accessibility settings, y cuando este leyendo "active item..." pulsar tecla. Creo que esto pasa desde siempre
 
--view waveform en cpc sale desplazado. en general todo lo que es pixel 
+
 -en debug paginas memoria, que muestre correctamente paginas dandanator cpc
 
 -Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
@@ -585,6 +567,8 @@ Y montones de flags y parámetros de dma que de momento no gestiono
 -Tsconf render modo spectrum compatible debería leer de buffer atributos y pixeles ; para que demos como overscan se vean bien
 
 -tsconf y tr-dos no deberia hacer nested_core, solo detectar cuando se esta en core trdos
+
+-tsconf sin real video no borra border. al menos en demo carousel.spg
 
 -mmc. Esto tambien para baseconf. Parece que envia un comando FF invalido y luego se queda en un bucle
 
@@ -1799,6 +1783,9 @@ ver de momento workaround audio_using_sdl2
 aunque se definen de tipo normal. Tendrian que ser de tipo separador. Pero en ese caso, habria que hacer que cuando se abra el menu,
 si el cursor esta en un separador, que haga bajar el cursor -> esto parece que ya se intento, buscar comentario que dice:
 //Nota: el separador no puede ser final de menu
+
+
+-secuenciador AY: linea para cada canal de audio que haga scroll horizontal de cada linea cuando nota cambie (teniendo en cuenta nota y octava, por ejemplo F#4)
 
 
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo

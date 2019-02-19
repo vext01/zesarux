@@ -4047,6 +4047,8 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 
 			color_border=screen_store_scanline_border_si_incremento_real(color_border);
 
+			//if (indice_border!=0) printf ("cambio color en indice_border=%d color=%d\n",indice_border,last_color);
+
 			//screen_incremento_border_si_ulaplus();
 			screen_incremento_border_si_spectra();
 

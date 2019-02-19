@@ -1765,13 +1765,15 @@ void menu_scr_putpixel(int x,int y,int color)
 	int margenx_izq,margeny_arr;
 	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
 
+	x *=menu_gui_zoom;
+	y *=menu_gui_zoom;	
+
 	if (rainbow_enabled.v) {
 		x+=margenx_izq;
 		y+=margeny_arr;
 	}
 
-	x *=menu_gui_zoom;
-	y *=menu_gui_zoom;
+
 
 	scr_putpixel_gui_zoom(x,y,color,menu_gui_zoom);
 }
@@ -12555,27 +12557,28 @@ menu_z80_moto_int menu_debug_view_sprites_change_pointer(menu_z80_moto_int p)
 
 
 
-
-void menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alto, int ppb, int incremento)
+//Retorna 0 si ok
+int menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alto, int ppb, int incremento)
 {
 
 	char file_save[PATH_MAX];
 
-	char *filtros[2];
+	char *filtros[3];
 
 						 filtros[0]="pbm";
-						 filtros[1]=0;
+						 filtros[1]="c";
+						 filtros[2]=0;
 
 		int ret;
 
-		 ret=menu_filesel("Select PBM File",filtros,file_save);
+		 ret=menu_filesel("Select PBM/C File",filtros,file_save);
 
 		 if (ret==1) {
 
  		 		//Ver si archivo existe y preguntar
 			 if (si_existe_archivo(file_save)) {
 
-	 				if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+	 				if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return 0;
 
  				}
 
@@ -12600,12 +12603,24 @@ void menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alt
 					direccion +=incremento;
 				}
 
-				util_write_pbm_file(file_save,ancho,alto,ppb,buf_temp);
+
+				if (!util_compare_file_extension(file_save,"pbm")) {
+					util_write_pbm_file(file_save,ancho,alto,ppb,buf_temp);
+				}
+
+				else if (!util_compare_file_extension(file_save,"c")) {
+					util_write_sprite_c_file(file_save,ancho,alto,ppb,buf_temp);
+				}
+
+				else {
+					//debug_printf (VERBOSE_ERR,"Error. Unkown sprite file format");
+					return 1;
+				}
 
 				free(buf_temp);
 		}
 
-
+	return 0;
 
 }
 
@@ -12964,7 +12979,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 								set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-								menu_debug_view_sprites_save(view_sprites_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_ppb,view_sprite_incremento);
+								if (menu_debug_view_sprites_save(view_sprites_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_ppb,view_sprite_incremento)) {
+									menu_error_message("Unknown file format");
+								}
 
 								cls_menu_overlay();
 

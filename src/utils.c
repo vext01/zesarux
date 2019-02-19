@@ -9561,6 +9561,51 @@ int util_write_pbm_file(char *archivo, int ancho, int alto, int ppb, z80_byte *s
 }
 
 
+//Retorna 0 si ok. No 0 si error. Ancho expresado en pixeles. Alto expresado en pixeles
+//Source es en crudo bytes monocromos. ppb sera 8 siempre
+int util_write_sprite_c_file(char *archivo, int ancho, int alto, int ppb, z80_byte *source)
+{
+
+  FILE *ptr_destino;
+  ptr_destino=fopen(archivo,"wb");
+
+  if (ptr_destino==NULL) {
+    debug_printf (VERBOSE_ERR,"Error writing pbm file");
+    return 1;
+  }
+
+
+    //Escribir cabecera pbm
+        char *c_header="//Created by ZEsarUX emulator\n\nunsigned char mysprite[]={\n";
+        char *c_end_header="};\n";
+
+  	fwrite(c_header,1,strlen(c_header),ptr_destino);
+
+          char buffer_linea[30]; // "0xFF," (5 caracteres. Damos mas por si acaso extendemos)
+
+
+  int x,y;
+  for (y=0;y<alto;y++) {
+    for (x=0;x<ancho/ppb;x++) {
+            sprintf (buffer_linea,"0x%02X,",*source);
+        fwrite(buffer_linea,1,strlen(buffer_linea),ptr_destino);
+      source++;
+    }
+
+    //Meter salto de linea cada cambio de posicion y
+    char nl='\n';
+    fwrite(&nl,1,1,ptr_destino);
+
+  }
+
+        //final de archivo
+fwrite(c_end_header,1,strlen(c_end_header),ptr_destino);
+  fclose(ptr_destino);
+
+  return 0;
+}
+
+
 void util_truncate_file(char *filename)
 {
 

@@ -1,4 +1,4 @@
-Version 7.2. 15 January 2019 - Neula edition
+Version 7.2. 19 February 2019 - Neula edition
 
 
 Improved menu environment:
@@ -32,7 +32,9 @@ Improved ZRCP:
 -added commands: get-cpu-frequency, get-cpu-turbo-speed, get-tstates, get-tstates-partial, reset-tstates-partial
 
 Improved vu-meters: high volumes are shown in red
-Improved sprite viewer: you can view sprites up to 512x512
+Improved sprite viewer
+-you can view sprites up to 512x512
+-you can export sprites to C source code file
 
 Improved file selector:
 *now it remembers the last files used
