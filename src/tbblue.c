@@ -3751,10 +3751,13 @@ unsigned int tbblue_get_border_color(unsigned int color)
         else color += 8 + 16;                       // +8 for BRIGHT 1, +16 for PAPER color in ULANext OFF mode
 	}
     else if (flash_disabled) {   // ULANext mode ON
-        if (255 == tbblue_registers[0x42]) {    // full-ink mode takes border colour from "fallback"
-            // in this case this is final result, just return it (no further processing needed)
-            return RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[0x4A]);
-        }
+
+        //to-be-confirmed core2.00.27 change - commented at this moment
+        //if (255 == tbblue_registers[0x42]) {    // full-ink mode takes border colour from "fallback"
+        //    // in this case this is final result, just return it (no further processing needed)
+        //    return RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[0x4A]);
+        //}
+
         // other ULANext modes take border color from palette starting at 128..135
         color += 128;
     }
