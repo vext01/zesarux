@@ -3739,22 +3739,31 @@ void tbblue_set_layer_priorities(void)
 
 }
 
-z80_int tbblue_get_border_color(z80_int color)
+unsigned int tbblue_get_border_color(unsigned int color)
 {
-    // 1) pick correct color from active ULA palette (+16, +128 or fallback register)
     int flash_disabled = tbblue_registers[0x43]&1;  //flash_disabled se llamaba antes. ahora indica "enable ulanext"
-    if (flash_disabled) {   // ULANext mode ON
+    int is_timex_hires = timex_video_emulation.v && (6 == (timex_port_ff&7));
+    // 1) calculate correct color index into palette
+	if (is_timex_hires) {
+        // Timex HiRes 512x256 enforces border color by the FF port value, with priority over other methods
+        color=get_timex_paper_mode6_color();        //0..7 PAPER index
+        if (flash_disabled) color += 128;           // current HW does not bother with Bright in ULANext ON mode
+        else color += 8 + 16;                       // +8 for BRIGHT 1, +16 for PAPER color in ULANext OFF mode
+	}
+    else if (flash_disabled) {   // ULANext mode ON
         if (255 == tbblue_registers[0x42]) {    // full-ink mode takes border colour from "fallback"
-            color = tbblue_get_9bit_colour(tbblue_registers[0x4A]);
+            // in this case this is final result, just return it (no further processing needed)
+            return RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[0x4A]);
         }
-        else {  // other ULANext modes take border color from palette starting at 128
-            color = tbblue_get_palette_active_ula(color + 128);
-        }
+        // other ULANext modes take border color from palette starting at 128..135
+        color += 128;
     }
     else {  // ULANext mode OFF (border colors are 16..23)
-        color = tbblue_get_palette_active_ula(color + 16);
+        color += 16;
     }
-    // 2) check for transparent colour -> use fallback colour if border is "transparent"
+    // 2) convert index to actual color from palette
+    color = tbblue_get_palette_active_ula(color);
+    // 3) check for transparent colour -> use fallback colour if border is "transparent"
     if (tbblue_si_transparent(color)) {
         color = tbblue_get_9bit_colour(tbblue_registers[0x4A]);
     }
