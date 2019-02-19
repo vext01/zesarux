@@ -4035,9 +4035,9 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 	}
 
 	if (MACHINE_IS_TBBLUE) {
-		//En tbblue, color border empieza en 128
-		color_border=tbblue_get_palette_active_ula(color_border+128)+RGB9_INDEX_FIRST_COLOR;
-	}	
+		//En tbblue, color border depends on several machine settings
+		color_border = tbblue_get_border_color(color_border);
+	}
 
 
 	//Hay que recorrer el array del border para la linea actual
@@ -4069,9 +4069,10 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 			}
 
 
-		        if (MACHINE_IS_TBBLUE) {
-                		color_border=tbblue_get_palette_active_ula(color_border)+RGB9_INDEX_FIRST_COLOR;
-		        }
+			if (MACHINE_IS_TBBLUE) {
+					//En tbblue, color border depends on several machine settings
+					color_border = tbblue_get_border_color(color_border);
+			}
 
 
 

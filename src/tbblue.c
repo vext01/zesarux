@@ -3739,6 +3739,28 @@ void tbblue_set_layer_priorities(void)
 
 }
 
+z80_int tbblue_get_border_color(z80_int color)
+{
+    // 1) pick correct color from active ULA palette (+16, +128 or fallback register)
+    int flash_disabled = tbblue_registers[0x43]&1;  //flash_disabled se llamaba antes. ahora indica "enable ulanext"
+    if (flash_disabled) {   // ULANext mode ON
+        if (255 == tbblue_registers[0x42]) {    // full-ink mode takes border colour from "fallback"
+            color = tbblue_get_9bit_colour(tbblue_registers[0x4A]);
+        }
+        else {  // other ULANext modes take border color from palette starting at 128
+            color = tbblue_get_palette_active_ula(color + 128);
+        }
+    }
+    else {  // ULANext mode OFF (border colors are 16..23)
+        color = tbblue_get_palette_active_ula(color + 16);
+    }
+    // 2) check for transparent colour -> use fallback colour if border is "transparent"
+    if (tbblue_si_transparent(color)) {
+        color = tbblue_get_9bit_colour(tbblue_registers[0x4A]);
+    }
+    return color + RGB9_INDEX_FIRST_COLOR;
+}
+
 void get_pixel_color_tbblue(z80_byte attribute,z80_int *tinta_orig, z80_int *papel_orig)
 {
 
