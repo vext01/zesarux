@@ -645,14 +645,16 @@ void recalcular_get_total_ancho_rainbow(void)
         }
 
 	else if (MACHINE_IS_PRISM) {
-                //get_total_ancho_rainbow_cached=2*PRISM_LEFT_BORDER_NO_ZOOM*border_enabled.v+PRISM_DISPLAY_WIDTH;
 		get_total_ancho_rainbow_cached=(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+512;
         }
 
 	else if (MACHINE_IS_TSCONF) {
-		//get_total_ancho_rainbow_cached=(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+TSCONF_DISPLAY_WIDTH;
 		get_total_ancho_rainbow_cached=TSCONF_DISPLAY_WIDTH;
 	}
+
+	else if (MACHINE_IS_TBBLUE) {
+		get_total_ancho_rainbow_cached=(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+512;
+	}	
 
 	else if (MACHINE_IS_SAM) {
                 get_total_ancho_rainbow_cached=2*SAM_LEFT_BORDER_NO_ZOOM*border_enabled.v+SAM_DISPLAY_WIDTH;
@@ -691,8 +693,11 @@ void recalcular_get_total_alto_rainbow(void)
         }
 
 	else if (MACHINE_IS_TSCONF) {
-		//get_total_alto_rainbow_cached=(screen_borde_superior+screen_total_borde_inferior)*border_enabled.v+TSCONF_DISPLAY_HEIGHT;
 		get_total_alto_rainbow_cached=TSCONF_DISPLAY_HEIGHT;
+	}
+
+	else if (MACHINE_IS_TBBLUE) {
+		get_total_alto_rainbow_cached=(screen_borde_superior+screen_total_borde_inferior)*border_enabled.v+384;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -1481,13 +1486,27 @@ void screen_prism_refresca_pantalla(void) {
 
 
 			screen_prism_refresca_rainbow();
-			//TODO: de momento sin rainbow
-			//screen_prism_refresca_no_rainbow();
                 }
 
 }
 
 
+void screen_tbblue_refresca_pantalla(void) {
+
+                //modo clasico. sin rainbow
+                if (rainbow_enabled.v==0) {
+                        screen_tbblue_refresca_no_rainbow();
+                }
+
+                else {
+                        //modo rainbow - real video
+                        //en spectrum normal era: scr_refresca_pantalla_rainbow_comun();
+scr_refresca_pantalla_rainbow_comun();
+
+			//screen_tbblue_refresca_rainbow();
+                }
+
+}
 
 void clear_putpixel_cache(void)
 {
@@ -1661,6 +1680,10 @@ void scr_putpixel_zoom_mas_de_uno(int x,int y,unsigned int color)
 					indice_cache=(get_total_ancho_rainbow()*(TSCONF_TOP_BORDER_NO_ZOOM*border_enabled.v+y)) + TSCONF_LEFT_BORDER_NO_ZOOM*border_enabled.v+x;
 			        }
 
+				else if (MACHINE_IS_TBBLUE) {
+					indice_cache=(get_total_ancho_rainbow()*(TBBLUE_TOP_BORDER_NO_ZOOM*border_enabled.v+y)) + TBBLUE_LEFT_BORDER_NO_ZOOM*border_enabled.v+x;
+			        }							
+
 	else if (MACHINE_IS_SAM) {
                 indice_cache=(get_total_ancho_rainbow()*(SAM_TOP_BORDER_NO_ZOOM*border_enabled.v+y)) + SAM_LEFT_BORDER_NO_ZOOM*border_enabled.v+x;
         }
@@ -1702,6 +1725,11 @@ void scr_putpixel_zoom_mas_de_uno(int x,int y,unsigned int color)
 		offsetx=TSCONF_LEFT_BORDER*border_enabled.v;
                 offsety=TSCONF_TOP_BORDER*border_enabled.v;
 	}
+
+	else if (MACHINE_IS_TBBLUE) {
+		offsetx=TBBLUE_LEFT_BORDER*border_enabled.v;
+                offsety=TBBLUE_TOP_BORDER*border_enabled.v;
+	}	
 
         else if (MACHINE_IS_SAM) {
                 offsetx=SAM_LEFT_BORDER*border_enabled.v;
@@ -1766,6 +1794,11 @@ void scr_putpixel_zoom_uno(int x,int y,unsigned int color)
 
 	        }
 
+				else if (MACHINE_IS_TBBLUE) {
+            indice_cache=(get_total_ancho_rainbow()*(TBBLUE_TOP_BORDER_NO_ZOOM*border_enabled.v+y)) + TBBLUE_LEFT_BORDER_NO_ZOOM*border_enabled.v+x;
+
+	        }					
+
         else if (MACHINE_IS_SAM) {
                 indice_cache=(get_total_ancho_rainbow()*(SAM_TOP_BORDER_NO_ZOOM*border_enabled.v+y)) + SAM_LEFT_BORDER_NO_ZOOM*border_enabled.v+x;
                 //printf ("total ancho rainbow : %d\n",get_total_ancho_rainbow() );
@@ -1813,6 +1846,11 @@ void scr_putpixel_zoom_uno(int x,int y,unsigned int color)
 			                offsetx=TSCONF_LEFT_BORDER*border_enabled.v;
 			                offsety=TSCONF_TOP_BORDER*border_enabled.v;
 			        }
+
+				else if (MACHINE_IS_TBBLUE) {
+			                offsetx=TBBLUE_LEFT_BORDER*border_enabled.v;
+			                offsety=TBBLUE_TOP_BORDER*border_enabled.v;
+			        }							
 
         else if (MACHINE_IS_SAM) {
                 offsetx=SAM_LEFT_BORDER*border_enabled.v;
@@ -1900,6 +1938,11 @@ if (MACHINE_IS_Z88) {
 	else if (MACHINE_IS_TSCONF) {
 		*margenx_izq=TSCONF_LEFT_BORDER_NO_ZOOM*border_enabled.v;
 		*margeny_arr=TSCONF_TOP_BORDER_NO_ZOOM*border_enabled.v;
+	}
+
+	else if (MACHINE_IS_TBBLUE) {
+		*margenx_izq=TBBLUE_LEFT_BORDER_NO_ZOOM*border_enabled.v;
+		*margeny_arr=TBBLUE_TOP_BORDER_NO_ZOOM*border_enabled.v;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -6298,6 +6341,8 @@ void screen_store_scanline_rainbow_solo_border(void)
 
 	if (MACHINE_IS_PRISM) ancho_pantalla=PRISM_DISPLAY_WIDTH;
 
+	if (MACHINE_IS_TBBLUE) ancho_pantalla=TBBLUE_DISPLAY_WIDTH;
+
 	if (MACHINE_IS_TSCONF) {
 		//se gestiona todo desde el solo_display
 		return;
@@ -9919,6 +9964,10 @@ int screen_get_emulated_display_width_no_zoom(void)
         return TSCONF_DISPLAY_WIDTH;
 	}
 
+	else if (MACHINE_IS_TBBLUE) {
+        return TBBLUE_DISPLAY_WIDTH+TBBLUE_LEFT_BORDER_NO_ZOOM*2;
+	}	
+
         else if (MACHINE_IS_SAM) {
         return SAM_DISPLAY_WIDTH+SAM_LEFT_BORDER_NO_ZOOM*2;
         }
@@ -9950,6 +9999,10 @@ int screen_get_emulated_display_height_no_zoom(void)
 
 	else if (MACHINE_IS_TSCONF) {
         return TSCONF_DISPLAY_HEIGHT;
+	}
+
+	else if (MACHINE_IS_TBBLUE) {
+        return TBBLUE_DISPLAY_HEIGHT+TBBLUE_TOP_BORDER_NO_ZOOM+TBBLUE_BOTTOM_BORDER_NO_ZOOM;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -9990,6 +10043,10 @@ int screen_get_emulated_display_width_no_zoom_border_en(void)
 	return TSCONF_DISPLAY_WIDTH;
 	}
 
+	else if (MACHINE_IS_TBBLUE) {
+	return TBBLUE_DISPLAY_WIDTH+(TBBLUE_LEFT_BORDER_NO_ZOOM*2)*border_enabled.v;
+	}	
+
         else if (MACHINE_IS_SAM) {
         return SAM_DISPLAY_WIDTH+(SAM_LEFT_BORDER_NO_ZOOM*2)*border_enabled.v;
         }
@@ -10024,6 +10081,10 @@ int screen_get_emulated_display_height_no_zoom_bottomborder_en(void)
 	else if (MACHINE_IS_TSCONF) {
         return TSCONF_DISPLAY_HEIGHT;
         }
+
+	else if (MACHINE_IS_TBBLUE) {
+        return TBBLUE_DISPLAY_HEIGHT+(TBBLUE_BOTTOM_BORDER_NO_ZOOM)*border_enabled.v;
+        }				
 
         else if (MACHINE_IS_SAM) {
         return SAM_DISPLAY_HEIGHT+(SAM_TOP_BORDER_NO_ZOOM)*border_enabled.v;
@@ -10061,6 +10122,10 @@ int screen_get_emulated_display_height_no_zoom_border_en(void)
 	else if (MACHINE_IS_TSCONF) {
 	return TSCONF_DISPLAY_HEIGHT;
 	}
+
+	else if (MACHINE_IS_TBBLUE) {
+	return TBBLUE_DISPLAY_HEIGHT+(TBBLUE_TOP_BORDER_NO_ZOOM+TBBLUE_BOTTOM_BORDER_NO_ZOOM)*border_enabled.v;
+	}	
 
         else if (MACHINE_IS_SAM) {
         return SAM_DISPLAY_HEIGHT+(SAM_TOP_BORDER_NO_ZOOM*2)*border_enabled.v;

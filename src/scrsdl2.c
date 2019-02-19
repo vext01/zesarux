@@ -274,6 +274,10 @@ void scrsdl_refresca_pantalla(void)
                 screen_prism_refresca_pantalla();
         }
 
+        else if (MACHINE_IS_TBBLUE) {
+                screen_tbblue_refresca_pantalla();
+        }        
+
 
         else if (MACHINE_IS_SPECTRUM) {
 

@@ -111,6 +111,8 @@ void scrvideoname_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z
                 if (border_enabled.v) yorigen+=PRISM_TOP_BORDER_NO_ZOOM/8;
         }
 
+ 
+
         else {
                 //Spectrum o ZX80/81
                 if (border_enabled.v) yorigen=31;

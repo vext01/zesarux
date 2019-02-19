@@ -146,9 +146,7 @@ y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en brow
 TBBLUE: 
  
 
--tbblue extended opcodes
-https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
-Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar en grupo desarrollo
+
 
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
@@ -721,6 +719,9 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 -------------
 
 --- TBBlue ---
+
+-tbblue extended opcodes
+https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 
 -reloj deberia salir en nextos, ya que implementa el chip de reloj. Porque no aparece?
 -probar que pasa cuando llega a mas de 12 sprites en linea tbblue

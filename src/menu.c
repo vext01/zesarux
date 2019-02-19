@@ -3352,6 +3352,12 @@ margenx_izq=PRISM_LEFT_BORDER_NO_ZOOM*border_enabled.v;
 					margeny_arr=PRISM_TOP_BORDER_NO_ZOOM*border_enabled.v;
 	}
 
+	else if (MACHINE_IS_TBBLUE) {
+//margenes para realvideo
+margenx_izq=TBBLUE_LEFT_BORDER_NO_ZOOM*border_enabled.v;
+					margeny_arr=TBBLUE_TOP_BORDER_NO_ZOOM*border_enabled.v;
+	}	
+
 	else if (MACHINE_IS_SAM) {
 					//margenes para realvideo
 					margenx_izq=SAM_LEFT_BORDER_NO_ZOOM*border_enabled.v;

@@ -5014,3 +5014,167 @@ int tbblue_is_writable_segment_mmu_rom_space(z80_int dir)
 	else return 0;
 }
 
+
+
+
+void screen_tbblue_refresca_pantalla_comun_tbblue(int x,int y,unsigned int color)
+{
+
+        int dibujar=0;
+
+        //if (x>255) dibujar=1;
+        //else if (y>191) dibujar=1;
+        if (scr_ver_si_refrescar_por_menu_activo(x/8,y/8)) dibujar=1;
+
+        if (dibujar) {
+		scr_putpixel_zoom(x,y,color);
+                scr_putpixel_zoom(x,y+1,color);
+                scr_putpixel_zoom(x+1,y,color);
+                scr_putpixel_zoom(x+1,y+1,color);
+        }
+}
+
+
+//Refresco pantalla sin rainbow para tbblue
+void screen_tbblue_refresca_pantalla_comun(void)
+{
+        int x,y,bit;
+        z80_int direccion,dir_atributo;
+        z80_byte byte_leido;
+        int color=0;
+        int fila;
+        //int zx,zy;
+
+        z80_byte attribute,ink,paper,bright,flash,aux;
+
+
+       z80_byte *screen=get_base_mem_pantalla();
+
+        //printf ("dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
+        z80_byte x_hi;
+
+        for (y=0;y<192;y++) {
+                //direccion=16384 | devuelve_direccion_pantalla(0,y);
+
+                //direccion=16384 | screen_addr_table[(y<<5)];
+                direccion=screen_addr_table[(y<<5)];
+
+
+                fila=y/8;
+                dir_atributo=6144+(fila*32);
+                for (x=0,x_hi=0;x<32;x++,x_hi +=8) {
+
+
+
+                                byte_leido=screen[direccion];
+                                attribute=screen[dir_atributo];
+
+
+                                ink=attribute &7;
+                                paper=(attribute>>3) &7;
+											bright=(attribute) &64;
+                                flash=(attribute)&128;
+                                if (flash) {
+                                        //intercambiar si conviene
+                                        if (estado_parpadeo.v) {
+                                                aux=paper;
+                                                paper=ink;
+                                                ink=aux;
+                                        }
+                                }
+
+                                if (bright) {
+                                        ink +=8;
+                                        paper +=8;
+                                }
+
+                                for (bit=0;bit<8;bit++) {
+
+                                        color= ( byte_leido & 128 ? ink : paper );
+
+					//Por cada pixel, hacer *2s en ancho y alto.
+					//Esto es muy simple dado que no soporta modo rainbow y solo el estandard 256x192
+					screen_tbblue_refresca_pantalla_comun_tbblue((x_hi+bit)*2,y*2,color);
+		
+
+                                        byte_leido=byte_leido<<1;
+                                }
+                        
+
+     
+                        direccion++;
+                        dir_atributo++;
+                }
+
+        }
+
+}
+
+
+
+void screen_tbblue_refresca_no_rainbow_border(void)
+{
+	int color;
+
+	if (simulate_screen_zx8081.v==1) color=15;
+	else color=out_254 & 7;
+
+	if (scr_refresca_sin_colores.v) color=7;
+
+int x,y;
+
+
+
+       //parte superior
+        for (y=0;y<TBBLUE_TOP_BORDER;y++) {
+                for (x=0;x<TBBLUE_DISPLAY_WIDTH*zoom_x+TBBLUE_LEFT_BORDER*2;x++) {
+                                scr_putpixel(x,y,color);
+
+
+                }
+        }
+
+        //parte inferior
+        for (y=0;y<TBBLUE_TOP_BORDER;y++) {
+                for (x=0;x<TBBLUE_DISPLAY_WIDTH*zoom_x+TBBLUE_LEFT_BORDER*2;x++) {
+                                scr_putpixel(x,TBBLUE_TOP_BORDER+y+TBBLUE_DISPLAY_HEIGHT*zoom_y,color);
+
+
+                }
+        }
+
+
+        //laterales
+        for (y=0;y<TBBLUE_DISPLAY_HEIGHT*zoom_y;y++) {
+                for (x=0;x<TBBLUE_LEFT_BORDER;x++) {
+                        scr_putpixel(x,TBBLUE_TOP_BORDER+y,color);
+                        scr_putpixel(TBBLUE_LEFT_BORDER+TBBLUE_DISPLAY_WIDTH*zoom_x+x,TBBLUE_TOP_BORDER+y,color);
+                }
+
+        }
+
+
+
+}
+
+
+
+
+void screen_tbblue_refresca_no_rainbow(void)
+{
+                //modo clasico. sin rainbow
+                if (rainbow_enabled.v==0) {
+                        if (border_enabled.v) {
+                                //ver si hay que refrescar border
+                                if (modificado_border.v)
+                                {
+                                        //scr_refresca_border();
+																				screen_tbblue_refresca_no_rainbow_border();
+                                        modificado_border.v=0;
+                                }
+
+                        }
+
+                        screen_tbblue_refresca_pantalla_comun();
+                }
+}

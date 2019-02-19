@@ -205,6 +205,19 @@ extern z80_int tbblue_copper_pc;
 #define TBBLUE_RCCH_COPPER_RUN_VBI          0xc0
 
 
+//Hacer que estos valores de border sean multiples de 8
+#define TBBLUE_LEFT_BORDER_NO_ZOOM (48*2)
+#define TBBLUE_TOP_BORDER_NO_ZOOM (56*2)
+#define TBBLUE_BOTTOM_BORDER_NO_ZOOM (56*2)
+
+#define TBBLUE_LEFT_BORDER TBBLUE_LEFT_BORDER_NO_ZOOM*zoom_x
+#define TBBLUE_TOP_BORDER TBBLUE_TOP_BORDER_NO_ZOOM*zoom_y
+#define TBBLUE_BOTTOM_BORDER TBBLUE_BOTTOM_BORDER_NO_ZOOM*zoom_y
+
+#define TBBLUE_DISPLAY_WIDTH 512
+#define TBBLUE_DISPLAY_HEIGHT 384
+
+
 
 extern int tbblue_get_current_raster_horiz_position(void);
 extern int tbblue_get_current_raster_position(void);

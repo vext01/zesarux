@@ -3555,7 +3555,7 @@ void set_menu_gui_zoom(void)
 	//printf ("calling set_menu_gui_zoom. driver: %s\n",scr_driver_name);
 
 	if (si_complete_video_driver() ) {
-		if (MACHINE_IS_QL || MACHINE_IS_TSCONF || MACHINE_IS_CPC || MACHINE_IS_PRISM || MACHINE_IS_SAM) menu_gui_zoom=2;
+		if (MACHINE_IS_QL || MACHINE_IS_TSCONF || MACHINE_IS_CPC || MACHINE_IS_PRISM || MACHINE_IS_SAM || MACHINE_IS_TBBLUE) menu_gui_zoom=2;
 	}
 
 	debug_printf (VERBOSE_INFO,"Setting GUI menu zoom to %d",menu_gui_zoom);
@@ -3655,6 +3655,21 @@ void post_set_machine_no_rom_load_reopen_window(void)
 											}
 							}
 
+							//si se cambia de maquina TBBLUE o a maquina TBBLUE, redimensionar ventana
+
+							if (last_machine_type!=255) {
+
+											if ( (MACHINE_IS_TBBLUE && last_machine_type!=MACHINE_ID_TBBLUE)   || (last_machine_type==MACHINE_ID_TBBLUE && !(MACHINE_IS_TBBLUE)  ) ) {
+															debug_printf (VERBOSE_INFO,"Reopening window so machine has different size (changing TBBLUE to/from other machine)");
+
+															debug_printf(VERBOSE_INFO,"End Screen");
+															scr_end_pantalla();
+															debug_printf(VERBOSE_INFO,"Creating Screen");
+															//scr_init_pantalla();
+															screen_init_pantalla_and_others();
+															return;
+											}
+							}
 
 							//si se cambia de maquina TSconf o a maquina tsconf, redimensionar ventana
 
