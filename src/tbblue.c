@@ -3742,7 +3742,7 @@ void tbblue_set_layer_priorities(void)
 z80_int tbblue_get_border_color(z80_int color)
 {
     int flash_disabled = tbblue_registers[0x43]&1;  //flash_disabled se llamaba antes. ahora indica "enable ulanext"
-    int is_timex_hires = timex_video_emulation.v && (6 == (timex_port_ff&7));
+    int is_timex_hires = timex_video_emulation.v && ((timex_port_ff&7) == 6);
     // 1) calculate correct color index into palette
 	if (is_timex_hires) {
         // Timex HiRes 512x256 enforces border color by the FF port value, with priority over other methods
@@ -3753,7 +3753,7 @@ z80_int tbblue_get_border_color(z80_int color)
     else if (flash_disabled) {   // ULANext mode ON
 
         //to-be-confirmed core2.00.27 change - commented at this moment
-        //if (255 == tbblue_registers[0x42]) {    // full-ink mode takes border colour from "fallback"
+        //if (tbblue_registers[0x42] == 255) {    // full-ink mode takes border colour from "fallback"
         //    // in this case this is final result, just return it (no further processing needed)
         //    return RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[0x4A]);
         //}
