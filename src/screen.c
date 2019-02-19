@@ -653,7 +653,7 @@ void recalcular_get_total_ancho_rainbow(void)
 	}
 
 	else if (MACHINE_IS_TBBLUE) {
-		get_total_ancho_rainbow_cached=(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+512;
+		get_total_ancho_rainbow_cached=2*TBBLUE_LEFT_BORDER_NO_ZOOM*border_enabled.v+512;
 	}	
 
 	else if (MACHINE_IS_SAM) {
@@ -697,7 +697,7 @@ void recalcular_get_total_alto_rainbow(void)
 	}
 
 	else if (MACHINE_IS_TBBLUE) {
-		get_total_alto_rainbow_cached=(screen_borde_superior+screen_total_borde_inferior)*border_enabled.v+384;
+		get_total_alto_rainbow_cached=(TBBLUE_TOP_BORDER_NO_ZOOM+TBBLUE_BOTTOM_BORDER_NO_ZOOM)*border_enabled.v+384;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -3113,8 +3113,6 @@ void screen_add_watermark_no_rainbow(void)
 }
 
 //Refresco pantalla con rainbow
-
-
 void scr_refresca_pantalla_rainbow_comun(void)
 {
 
@@ -6341,7 +6339,11 @@ void screen_store_scanline_rainbow_solo_border(void)
 
 	if (MACHINE_IS_PRISM) ancho_pantalla=PRISM_DISPLAY_WIDTH;
 
-	if (MACHINE_IS_TBBLUE) ancho_pantalla=TBBLUE_DISPLAY_WIDTH;
+	if (MACHINE_IS_TBBLUE) {
+		ancho_pantalla=TBBLUE_DISPLAY_WIDTH;
+		//TODO: de momento no border
+		return;
+	}
 
 	if (MACHINE_IS_TSCONF) {
 		//se gestiona todo desde el solo_display

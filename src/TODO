@@ -19,6 +19,10 @@
 
 ----fin zxvision----
 
+-tbblue:
+--border rainbow
+--modo tile, etc
+
 -boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
 warhawk 37% en pantalla menu sin fast render

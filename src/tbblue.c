@@ -583,8 +583,8 @@ z80_int tbblue_palette_tilemap_second[256];
 //Si en zona pantalla y todo es transparente, se pone un 0
 //Layers con el indice al olor final en la paleta RGB9 (0..511)
 
-//borde izquierdo + pantalla + borde derecho
-#define TBBLUE_LAYERS_PIXEL_WIDTH (48+256+48)
+//borde izquierdo + pantalla + borde derecho, multiplicado por 2
+#define TBBLUE_LAYERS_PIXEL_WIDTH ((48+256+48)*2)
 
 z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 z80_int tbblue_layer_layer2[TBBLUE_LAYERS_PIXEL_WIDTH];
@@ -1491,6 +1491,8 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 	xfinal +=screen_total_borde_izquierdo*border_enabled.v;
 	xfinal -=TBBLUE_SPRITE_BORDER;
 
+	xfinal *=2; //doble de ancho
+
 
 	//Ver si habia un color y activar bit colision
 	z80_int color_antes=tbblue_layer_sprites[xfinal];
@@ -1505,6 +1507,7 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 
 	//sprite_line[x]=color;
 	tbblue_layer_sprites[xfinal]=color_final;
+	tbblue_layer_sprites[xfinal+1]=color_final; //doble de ancho
 
 	//if (xfinal<0 || xfinal>TBBLUE_LAYERS_PIXEL_WIDTH) printf ("out of range x sprites: %d\n",xfinal);
 
@@ -3999,7 +4002,8 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 */
 
 	z80_int *puntero_a_layer;
-	puntero_a_layer=&tbblue_layer_ula[48-32]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
+	puntero_a_layer=&tbblue_layer_ula[(48-32)*2]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
+																								//*2 porque es doble de ancho
 
 	z80_int *orig_puntero_a_layer;
 	orig_puntero_a_layer=puntero_a_layer;
@@ -4038,16 +4042,22 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 	int scroll_x=tbblue_registers[48]+256*(tbblue_registers[47] & 3);
 
 	//TODO: forzamos esto a 40 columnas, dado que hay que tener ventana de 512 de ancho
-	tilemap_width=40;
+	//tilemap_width=40;
 
 	//Llevar control de posicion x pixel en destino dentro del rango (0..40*8, 0..80*8)
 	int max_destino_x_pixel=tilemap_width*8;
 	int destino_x_pixel=0;
+
+	int offset_sumar=0;
 	if (scroll_x) {
 		//Si hay scroll_x, no que hacemos es empezar a escribir por la parte final derecha
 		destino_x_pixel=max_destino_x_pixel-scroll_x;
-		puntero_a_layer=puntero_a_layer+destino_x_pixel;
+		offset_sumar=destino_x_pixel;
 	}
+
+
+	if (tilemap_width==40) offset_sumar *=2;
+	puntero_a_layer +=offset_sumar;
 
 
 	//Clipwindow horizontal. Limites
@@ -4343,9 +4353,13 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 			if (destino_x_pixel>=clipwindow_min_x && destino_x_pixel<=clipwindow_max_x) {
 				tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer,ula_over_tilemap);
+				if (tilemap_width==40) tbblue_do_tile_putpixel(pixel_izq,transparent_colour,tpal,puntero_a_layer+1,ula_over_tilemap);
 			}
 			puntero_a_layer++;
+			if (tilemap_width==40) puntero_a_layer++;
 			destino_x_pixel++;
+
+
 
 			sx=sx+incx;
 			sy=sy+incy;
@@ -4356,13 +4370,17 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 				puntero_a_layer=orig_puntero_a_layer;
 			}
 
+
+
 			//Pixel derecho
 			pixel_der=tbblue_get_pixel_tile_xy(sx,sy,puntero_this_tiledef);
 
 			if (destino_x_pixel>=clipwindow_min_x && destino_x_pixel<=clipwindow_max_x) {
 				tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer,ula_over_tilemap);
+				if (tilemap_width==40) tbblue_do_tile_putpixel(pixel_der,transparent_colour,tpal,puntero_a_layer+1,ula_over_tilemap);
 			}
 			puntero_a_layer++;
+			if (tilemap_width==40) puntero_a_layer++;
 			destino_x_pixel++;
 
 			sx=sx+incx;
@@ -4395,6 +4413,7 @@ void tbblue_fast_renfer_ula_layer(int bordesupinf,z80_int *puntero_final_rainbow
 		color=tbblue_layer_ula[i];
 		if (!tbblue_si_transparent(color) ) {
 			*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+			puntero_final_rainbow++; 
 		}
 
 		
@@ -4449,7 +4468,12 @@ void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites
     y=t_scanline_draw-screen_invisible_borde_superior;
     if (border_enabled.v==0) y=y-screen_borde_superior;
 
-	z80_int *puntero_final_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
+		//Doble de alto
+		y *=2;
+
+		int ancho_rainbow=get_total_ancho_rainbow();
+
+	z80_int *puntero_final_rainbow=&rainbow_buffer[ y*ancho_rainbow ];
 
 	//Por defecto
 	//sprites over the Layer 2, over the ULA graphics
@@ -4466,7 +4490,7 @@ void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites
 	//Si solo hay capa ula, hacer render mas rapido
 	//printf ("%d %d %d\n",capalayer2,capasprites,tbblue_get_layers_priorities());
 	//if (capalayer2==0 && capasprites==0 && tbblue_get_layers_priorities()==0) {  //prio 0=S L U
-	if (capalayer2==0 && capasprites==0 && 1==0) {  
+	if (capalayer2==0 && capasprites==0 && 1==0) {  //TODO: desactivado fast render
 
 		//Hará fast render cuando no haya capa de layer2 o sprites, aunque tambien,
 		//estando esas capas, cuando este en zona de border o no visible de dichas capas
@@ -4485,18 +4509,24 @@ void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites
 		color=p_layer_first[i];
 		if (!tbblue_fn_pixel_layer_transp_first(color) ) {
 			*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+			//doble de alto
+			puntero_final_rainbow[ancho_rainbow]=RGB9_INDEX_FIRST_COLOR+color;
 		}
 
 		else {
 			color=p_layer_second[i];
 			if (!tbblue_fn_pixel_layer_transp_second(color) ) {
 				*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+				//doble de alto
+				puntero_final_rainbow[ancho_rainbow]=RGB9_INDEX_FIRST_COLOR+color;				
 			}
 
 			else {
 				color=p_layer_third[i];
 				if (!tbblue_fn_pixel_layer_transp_third(color) ) {
 					*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+color;
+					//doble de alto
+					puntero_final_rainbow[ancho_rainbow]=RGB9_INDEX_FIRST_COLOR+color;					
 				}
 					
 				else {
@@ -4519,6 +4549,8 @@ void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites
 							z80_int fallbackcolour=tbblue_registers[74];
 							fallbackcolour *=2;
 							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
+							//doble de alto
+							puntero_final_rainbow[ancho_rainbow]=RGB9_INDEX_FIRST_COLOR+fallbackcolour;					
 						}
 						else {
 							//Es borde. dejar ese color
@@ -4604,7 +4636,7 @@ void tbblue_do_layer2_overlay(void)
 
 		int posicion_array_layer=0;
 
-		posicion_array_layer +=screen_total_borde_izquierdo*border_enabled.v;
+		posicion_array_layer +=screen_total_borde_izquierdo*border_enabled.v*2; //doble de ancho
 
 		int posx;
 
@@ -4619,10 +4651,11 @@ void tbblue_do_layer2_overlay(void)
 						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
 						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
 						tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
+						tbblue_layer_layer2[posicion_array_layer+1]=final_color_layer2; //doble de ancho
 					}
 				}
 
-				posicion_array_layer++;
+				posicion_array_layer+=2; //doble de ancho
 
            	    byte_leido=byte_leido<<1;
 				
@@ -4653,9 +4686,6 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 	z80_int *clear_p_sprites=tbblue_layer_sprites;
 
 	for (i=0;i<TBBLUE_LAYERS_PIXEL_WIDTH;i++) {
-		/*tbblue_layer_ula[i]=TBBLUE_TRANSPARENT_REGISTER_9;
-		tbblue_layer_layer2[i]=TBBLUE_TRANSPARENT_REGISTER_9;
-		tbblue_layer_sprites[i]=TBBLUE_SPRITE_TRANS_FICT;*/
 
 		//Esto es un pelin mas rapido hacerlo asi, con punteros e incrementarlos, en vez de indices a array
 		*clear_p_ula=TBBLUE_TRANSPARENT_REGISTER_9;
@@ -4685,17 +4715,29 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
         //linea que se debe leer
         int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
+
+                //Dado que es 192, dividir linea entre dos para duplicar pixeles en altura
+                //printf ("dividir scanline copia\n");
+                //scanline_copia /=2;
+
+
         //la copiamos a buffer rainbow
-        z80_int *puntero_buf_rainbow;
+        //z80_int *puntero_buf_rainbow;
         //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
         int y;
 
         y=t_scanline_draw-screen_invisible_borde_superior;
         if (border_enabled.v==0) y=y-screen_borde_superior;
 
-        puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
+                //Dado que es 192, dividir linea entre dos para duplicar pixeles en altura
+                //printf ("dividir scanline copia\n");
+                //y /=2;				
 
-        puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
+				int ancho_rainbow=get_total_ancho_rainbow();
+
+        //puntero_buf_rainbow=&rainbow_buffer[ y*ancho_rainbow ];
+
+        //puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v*2; //doble de ancho
 
 
         int x,bit;
@@ -4838,7 +4880,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 		int posicion_array_layer=0;
 
-		posicion_array_layer +=screen_total_borde_izquierdo*border_enabled.v;
+		posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
 
 
 		int posicion_array_pixeles_atributos=0;
@@ -4902,11 +4944,18 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				
 				//(W) 0x1A (26) => Clip Window ULA/LoRes
 				if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][1] && scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]) {
-					if (!tbblue_force_disable_layer_ula.v) tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
+					if (!tbblue_force_disable_layer_ula.v) {
+						z80_int color_final=tbblue_get_palette_active_ula(color);
+						tbblue_layer_ula[posicion_array_layer]=color_final;
+						tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
+
+						//tbblue_layer_ula[posicion_array_layer+ancho_rainbow]=color_final; //doble de alto
+						//tbblue_layer_ula[posicion_array_layer+ancho_rainbow+1]=color_final; //doble de alto
+					}
 				}
 
 		
-				posicion_array_layer++;
+				posicion_array_layer+=2; //doble de ancho
 
         byte_leido=byte_leido<<1;
 				
