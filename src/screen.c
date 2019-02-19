@@ -4009,10 +4009,6 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 
 	z80_byte border_leido;
 
-	//Primer color siempre se define en el array posicion 0
-	//z80_int last_color;
-
-
 	//Para modo interlace
 	int y=t_scanline_draw;
 
@@ -4027,58 +4023,50 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 		color_border=screen_return_border_ulaplus_color();
 	}
 
-	if (timex_video_emulation.v) {
+	if (MACHINE_IS_TBBLUE) {
+		//En tbblue, color border depends on several machine settings, has also own Timex mode handling
+		color_border=tbblue_get_border_color(color_border);
+	}
+	else if (timex_video_emulation.v) {
 		z80_byte modo_timex=timex_port_ff&7;
 		if (modo_timex==4 || modo_timex==6) {
 			color_border=get_timex_border_mode6_color();
 		}
 	}
 
-	if (MACHINE_IS_TBBLUE) {
-		//En tbblue, color border empieza en 128
-		color_border=tbblue_get_palette_active_ula(color_border+128)+RGB9_INDEX_FIRST_COLOR;
-	}	
-
 
 	//Hay que recorrer el array del border para la linea actual
 	int final_border_linea=indice_border+screen_testados_linea;
 	for (;indice_border<final_border_linea;indice_border++) {
-                //obtenemos si hay cambio de border
-                border_leido=fullbuffer_border[indice_border];
-                if (border_leido!=255) {
-                        screen_border_last_color=border_leido;
+		//obtenemos si hay cambio de border
+		border_leido=fullbuffer_border[indice_border];
+		if (border_leido!=255) {
+
+			screen_border_last_color=border_leido;
 			color_border=screen_border_last_color;
 
 			color_border=screen_store_scanline_border_si_incremento_real(color_border);
 
-                        //if (indice_border!=0) printf ("cambio color en indice_border=%d color=%d\n",indice_border,last_color);
-
 			//screen_incremento_border_si_ulaplus();
 			screen_incremento_border_si_spectra();
 
-	                if (ulaplus_presente.v && ulaplus_enabled.v) {
-        	                //color_border=ulaplus_palette_table[screen_border_last_color+8]+ULAPLUS_INDEX_FIRST_COLOR;
-        	                color_border=screen_return_border_ulaplus_color();
-                	}
+			if (ulaplus_presente.v && ulaplus_enabled.v) {
+				//color_border=ulaplus_palette_table[screen_border_last_color+8]+ULAPLUS_INDEX_FIRST_COLOR;
+				color_border=screen_return_border_ulaplus_color();
+			}
 
-			if (timex_video_emulation.v) {
+			if (MACHINE_IS_TBBLUE) {
+					//En tbblue, color border depends on several machine settings, has also own Timex mode handling
+					color_border=tbblue_get_border_color(color_border);
+			}
+			else if (timex_video_emulation.v) {
 				z80_byte modo_timex=timex_port_ff&7;
 				if (modo_timex==4 || modo_timex==6) {
 					color_border=get_timex_border_mode6_color();
 				}
 			}
 
-
-		        if (MACHINE_IS_TBBLUE) {
-                		color_border=tbblue_get_palette_active_ula(color_border)+RGB9_INDEX_FIRST_COLOR;
-		        }
-
-
-
-
-                }
-
-
+		}
 
 
 		//Si estamos en x a partir del parametro inicial y Si no estamos en zona de retrace horizontal, dibujar border e incrementar posicion
