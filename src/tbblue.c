@@ -3993,7 +3993,10 @@ void tbblue_do_tile_overlay(int scanline)
 
   int tbblue_bytes_per_tile=2;
 
+	int tilemap_width=tbblue_get_tilemap_width();
 
+	int multiplicador_ancho=1;
+	if (tilemap_width==40) multiplicador_ancho=2;
 /*
 //borde izquierdo + pantalla + borde derecho
 #define TBBLUE_LAYERS_PIXEL_WIDTH (48+256+48)
@@ -4002,7 +4005,7 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 */
 
 	z80_int *puntero_a_layer;
-	puntero_a_layer=&tbblue_layer_ula[(48-32)*2]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
+	puntero_a_layer=&tbblue_layer_ula[(48-32)*multiplicador_ancho]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
 																								//*2 porque es doble de ancho
 
 	z80_int *orig_puntero_a_layer;
@@ -4020,7 +4023,7 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 	if (tbblue_tilemap_control&32) tbblue_bytes_per_tile=1;
 
-	int tilemap_width=tbblue_get_tilemap_width();
+
 
 
 	z80_byte *puntero_tilemap;	
@@ -4056,7 +4059,7 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 	}
 
 
-	if (tilemap_width==40) offset_sumar *=2;
+	offset_sumar *=multiplicador_ancho;
 	puntero_a_layer +=offset_sumar;
 
 

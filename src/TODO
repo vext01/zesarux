@@ -21,7 +21,7 @@
 
 -tbblue:
 --border rainbow
---modo tile, etc
+--modo tile, parece que falla scroll horiz y vert
 
 -boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
