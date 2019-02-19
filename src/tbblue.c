@@ -3919,8 +3919,6 @@ z80_int tbblue_tile_return_color_index(z80_byte index)
 void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z80_byte tpal,z80_int *puntero_a_layer,int ula_over_tilemap)
 {
 		
-			
-
 			if (pixel_color==transparent_colour) {
 
 			}
@@ -4005,7 +4003,7 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 */
 
 	z80_int *puntero_a_layer;
-	puntero_a_layer=&tbblue_layer_ula[(48-32)*multiplicador_ancho]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
+	puntero_a_layer=&tbblue_layer_ula[(48-32)*2]; //Inicio de pantalla es en offset 48, restamos 32 pixeles que es donde empieza el tile
 																								//*2 porque es doble de ancho
 
 	z80_int *orig_puntero_a_layer;
