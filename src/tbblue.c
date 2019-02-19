@@ -3918,7 +3918,7 @@ z80_int tbblue_tile_return_color_index(z80_byte index)
 
 void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z80_byte tpal,z80_int *puntero_a_layer,int ula_over_tilemap)
 {
-		
+
 			if (pixel_color==transparent_colour) {
 
 			}
@@ -3933,7 +3933,7 @@ void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z8
 				if (tbblue_si_transparent(color_previo_capa) || !ula_over_tilemap) { 
 				//if (tbblue_si_transparent(color_previo_capa) || color_previo_capa==0x145) { //TODO parche 0x145
  					//printf ("color transp %02XH\n",color_previo_capa);  //1C6h border aparentemente. 145h paper aparentemente esto en tiledemo
-				*puntero_a_layer=tbblue_tile_return_color_index(pixel_color);
+					*puntero_a_layer=tbblue_tile_return_color_index(pixel_color);
 				}
 				else {
 					//printf ("color no transp %02XH\n",color_previo_capa);
