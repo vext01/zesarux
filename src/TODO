@@ -20,9 +20,9 @@
 ----fin zxvision----
 
 -tbblue:
---border rainbow
 --fast render desactivado
---refresco con border desactivado
+--refresco con border desactivado que sucede?
+--border 1 linea vertical no sale bien
 -forzado ula_over_tilemap=0
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 

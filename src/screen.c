@@ -4142,6 +4142,22 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 		x+=t_estados_por_pixel;
 
 	}
+
+	if (MACHINE_IS_TBBLUE) {
+	//Debido a desajustes con estados por linea en tbblue, si no agregamos esto, se queda una zona en negro entre el borde izquierdo y la pantalla central
+	//Estos dos para zona donde hay borde izquierdo y derecho
+	//Sinceramente no se muy bien por que ocurre, esto pasaba en prism tambien
+	store_value_rainbow(puntero_buf_rainbow,color_border);
+	store_value_rainbow(puntero_buf_rainbow,color_border);
+
+	//Y estos para la primera linea de pantalla
+	store_value_rainbow(puntero_buf_rainbow,color_border);
+	store_value_rainbow(puntero_buf_rainbow,color_border);
+
+		
+	}
+
+
 }
 
 //Guardar en buffer rainbow linea actual de borde superior o inferior
@@ -6347,6 +6363,7 @@ void screen_store_scanline_rainbow_solo_border_tbblue(void)
 	   ) {
 
 		screen_store_scanline_rainbow_border_tbblue_supinf();
+		//printf ("borde superior o inferior\n");
         }
 
 

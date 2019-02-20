@@ -4484,7 +4484,7 @@ void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites
 		//que es la mas alta de todas las capas
 
 		//Calcular donde hay border
-		int final_border_superior=screen_indice_inicio_pant;
+		int final_border_superior=screen_indice_inicio_pant-screen_invisible_borde_superior;
 		int inicio_border_inferior=final_border_superior+192;
 
 		//Doble de alto
@@ -4710,6 +4710,8 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 	//si linea no coincide con entrelazado, volvemos
 	if (if_store_scanline_interlace(t_scanline_draw)==0) return;
+
+	
 
 	int i;
 
