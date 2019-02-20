@@ -4356,7 +4356,7 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 
 			//temp
-			//ula_over_tilemap=0;
+			ula_over_tilemap=0;
 
 			z80_byte pixel_izq,pixel_der;
 
@@ -4470,21 +4470,39 @@ void tbblue_fast_renfer_ula_layer(int bordesupinf,z80_int *puntero_final_rainbow
 
 //int tempconta;
 
+//Nos situamos en la linea justo donde empiezan los tiles
 void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites)
 {
-	//la copiamos a buffer rainbow
-    //z80_int *puntero_buf_rainbow;
-    //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+
 	int y;
+	int diferencia_border_tiles=screen_indice_inicio_pant-TBBLUE_TILES_BORDER;
 
     y=t_scanline_draw-screen_invisible_borde_superior;
     if (border_enabled.v==0) y=y-screen_borde_superior;
 
-		if (y<0 || y>=(TBBLUE_TILES_BORDER+192+TBBLUE_TILES_BORDER)) return; //Si estamos por encima o por debajo de la zona de tiles,
+		if (y<diferencia_border_tiles || y>=(screen_indice_inicio_pant+192+TBBLUE_TILES_BORDER)) return; //Si estamos por encima o por debajo de la zona de tiles,
 		//que es la mas alta de todas las capas
+
+		//Calcular donde hay border
+		int final_border_superior=screen_indice_inicio_pant;
+		int inicio_border_inferior=final_border_superior+192;
 
 		//Doble de alto
 		y *=2;
+
+		final_border_superior *=2;
+		inicio_border_inferior *=2;
+
+		//Vemos si linea esta en zona border
+		int estamos_borde_supinf=0;
+		if (y<final_border_superior || y>=inicio_border_inferior) estamos_borde_supinf=1;
+
+		//Zona borde izquierdo y derecho
+		int final_borde_izquierdo=2*screen_total_borde_izquierdo*border_enabled.v;
+		int inicio_borde_derecho=final_borde_izquierdo+TBBLUE_DISPLAY_WIDTH;
+
+
+
 
 		int ancho_rainbow=get_total_ancho_rainbow();
 
@@ -4545,14 +4563,13 @@ void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites
 				}
 					
 				else {
-					if (bordesupinf) {
+					if (estamos_borde_supinf) {
 						//Si estamos en borde inferior o superior, no hacemos nada, dibujar color borde
 					}
 
 					else {
 						//Borde izquierdo o derecho o pantalla. Ver si estamos en pantalla
-						if (i>=screen_total_borde_izquierdo*border_enabled.v &&
-							i<screen_total_borde_izquierdo*border_enabled.v+256) {
+						if (i>=final_borde_izquierdo && i<inicio_borde_derecho) {
 							//Poner color indicado por registro:
 							
 							//(R/W) 0x4A (74) => Transparency colour fallback

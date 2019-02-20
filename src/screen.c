@@ -4111,6 +4111,7 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 
 		}
 
+		int ancho_rainbow=get_total_ancho_rainbow();
 
 		//Si estamos en x a partir del parametro inicial y Si no estamos en zona de retrace horizontal, dibujar border e incrementar posicion
 		if (x>=xinicial) {
@@ -4119,7 +4120,18 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 			if ( (indice_border<inicio_retrace_horiz || indice_border>=final_retrace_horiz) ) {
 				//Por cada t_estado van 2 pixeles normalmente
 					int jj;
-					for (jj=0;jj<t_estados_por_pixel;jj++) store_value_rainbow(puntero_buf_rainbow,color_border);
+					for (jj=0;jj<t_estados_por_pixel;jj++) {
+						//temp
+						//color_border=2;
+						store_value_rainbow(puntero_buf_rainbow,color_border);
+						if (MACHINE_IS_TBBLUE) {
+							puntero_buf_rainbow[ancho_rainbow]=color_border;
+							puntero_buf_rainbow[ancho_rainbow+1]=color_border;
+							store_value_rainbow(puntero_buf_rainbow,color_border);
+						}
+							
+
+					}
 			}
 
 			//Se llega a siguiente linea
@@ -6296,6 +6308,107 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 }
 
+//Guardar en buffer rainbow linea actual de borde superior o inferior
+void screen_store_scanline_rainbow_border_tbblue_supinf(void)
+{
+
+	int scanline_copia=t_scanline_draw-screen_invisible_borde_superior;
+
+	z80_int *puntero_buf_rainbow;
+
+	int x=screen_total_borde_izquierdo*2;
+
+	//printf ("%d\n",scanline_copia*get_total_ancho_rainbow());
+	//esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+	puntero_buf_rainbow=&rainbow_buffer[scanline_copia*get_total_ancho_rainbow()*2+x]; //*2 porque es doble de alto
+
+	//Empezamos desde x en zona display, o sea, justo despues del ancho del borde izquierdo
+	screen_store_scanline_rainbow_border_comun(puntero_buf_rainbow,x );
+
+
+}
+
+
+
+
+
+void screen_store_scanline_rainbow_solo_border_tbblue(void)
+{
+
+
+	int ancho_pantalla=TBBLUE_DISPLAY_WIDTH;
+
+
+        //zona de border superior o inferior. Dibujar desde posicion x donde acaba el ancho izquierdo de borde, linea horizontal
+	//hasta derecha del todo, y luego trozo de ancho izquiero del borde de linea siguiente
+        if ( (t_scanline_draw>=screen_invisible_borde_superior && t_scanline_draw<screen_indice_inicio_pant) ||
+             (t_scanline_draw>=screen_indice_fin_pant && t_scanline_draw<screen_indice_fin_pant+screen_total_borde_inferior)
+	   ) {
+
+		screen_store_scanline_rainbow_border_tbblue_supinf();
+        }
+
+
+
+        //zona de border + pantalla + border
+	//Dibujar desde borde derecho hasta borde izquierdo de linea siguiente
+        else if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
+
+	        //linea que se debe leer
+	        //int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+
+        	z80_int *puntero_buf_rainbow;
+	        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+        	int y;
+
+	        y=t_scanline_draw-screen_invisible_borde_superior;
+
+		//nos situamos en borde derecho
+		//y se dibujara desde el borde derecho hasta el izquierdo de la siguiente linea
+		puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow()*2+screen_total_borde_izquierdo+ancho_pantalla ]; //*2 porque es doble de alto
+
+
+	        screen_store_scanline_rainbow_border_comun(puntero_buf_rainbow,screen_total_borde_izquierdo+ancho_pantalla);
+
+        }
+
+
+
+
+	//primera linea de border. Realmente empieza una linea atras y acaba la primera linea de borde
+	//con el borde izquierdo de la primera linea visible
+	//Esto solo sirve para dibujar primera linea de border (de ancho izquierdo solamente)
+
+	else if ( t_scanline_draw==screen_invisible_borde_superior-1 ) {
+		z80_int *puntero_buf_rainbow;
+
+		puntero_buf_rainbow=&rainbow_buffer[0];
+
+		int xinicial=screen_total_borde_izquierdo+ancho_pantalla+screen_total_borde_derecho+screen_invisible_borde_derecho;
+		//printf ("primera linea de borde: %d empezamos en xinicial: %d \n",t_scanline_draw,xinicial);
+
+
+		//si se ha cambiado el border en la zona superior invisible de border, actualizarlo
+		//Esto sucede en aquaplane
+		//Quiza habria que buscar en el array de border, en toda la zona inicial que corresponde a la parte no visible de border,
+		//el ultimo valor enviado. Pero esto seria muy lento. Basta con leer ultimo valor enviado (esto es aproximado,
+		//el valor que tenemos en out_254 es el del final de esta linea actual, que no tiene por que coincidir con el valor de la linea anterior,
+		//aunque seria un caso muy raro)
+
+		//screen_border_last_color=out_254 & 7;
+		screen_border_last_color=get_border_colour_from_out();
+
+
+		screen_store_scanline_rainbow_border_comun(puntero_buf_rainbow,xinicial);
+
+	}
+
+
+
+
+}
+
+
 
 /*
 
@@ -6340,8 +6453,7 @@ void screen_store_scanline_rainbow_solo_border(void)
 	if (MACHINE_IS_PRISM) ancho_pantalla=PRISM_DISPLAY_WIDTH;
 
 	if (MACHINE_IS_TBBLUE) {
-		ancho_pantalla=TBBLUE_DISPLAY_WIDTH;
-		//TODO: de momento no border
+		screen_store_scanline_rainbow_solo_border_tbblue();
 		return;
 	}
 

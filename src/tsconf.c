@@ -1507,14 +1507,7 @@ void tsconf_store_scanline_border_supinf_izqder(int tipo)
                 }
 		}
 
-        //laterales
-        /*for (y=0;y<tsconf_current_pixel_height;y++) {
-                for (x=0;x<tsconf_current_border_width;x++) {
-                        scr_tsconf_putpixel_zoom_border(x,y+tsconf_current_border_height,color);
-                        scr_tsconf_putpixel_zoom_border(x+tsconf_current_border_width+tsconf_current_pixel_width,y+tsconf_current_border_height,color);
-                }
-
-        }*/
+ 
 
 }
 
