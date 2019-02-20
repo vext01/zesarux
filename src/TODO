@@ -23,6 +23,8 @@
 --fast render desactivado
 --refresco con border desactivado que sucede?
 --border 1 linea vertical no sale bien
+--timex 512 de ancho. revisar si ok perfecto
+--si ula resulta color transparente, cambiarlo por el color ficticio. mismo para lores
 -forzado ula_over_tilemap=0
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 

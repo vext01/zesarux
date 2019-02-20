@@ -4805,12 +4805,12 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 		//Si modo timex 512x192 pero se hace modo escalado
 		//Si es modo timex 512x192, llamar a otra funcion
-        if (timex_si_modo_512_y_zoom_par() ) {
+        /*if (timex_si_modo_512_y_zoom_par() ) {
         	//Si zoom x par
             if (timex_mode_512192_real.v) {
             	return;
         	}
-        }
+        }*/
 
 
 		//temporal modo 6 timex 512x192 pero hacemos 256x192
@@ -4900,11 +4900,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				//De manera similar al buffer scanlines_buffer, hay pixel, atributo, pixel, atributo, etc
 				//por eso solo llenamos la parte que afecta al atributo
 
-				puntero_buffer_atributos=temp_prueba_modo6;
-				int i;
-				for (i=1;i<SCANLINEBUFFER_ONE_ARRAY_LENGTH;i+=2) {
-					temp_prueba_modo6[i]=col6;
-				}
+			
 				si_timex_hires.v=1;
 				break;
 
@@ -4918,37 +4914,26 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
 		int posicion_array_pixeles_atributos=0;
-    for (x=0;x<32;x++) {
+
+		int columnas=32;
+
+		if (si_timex_hires.v) {
+			columnas=64;
+		}
+
+    for (x=0;x<columnas;x++) {
 
             byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
-			//Timex. Reducir 512x192 a 256x192.
-			//Obtenemos los dos bytes implicados, metemos en variable de 16 bits,
-			//Y vamos comprimiendo cada 2 pixeles. De cada 2 pixeles, si los dos son 0, metemos 0. Si alguno o los dos son 1, metemos 1
-			//Esto es muy lento
+			      attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
 			if (si_timex_hires.v) {
 
-				//comprimir bytes
-				timexhires_resultante=0;
-				//timexhires_origen=byte_leido*256+screen[direccion+8192];
-				timexhires_origen=screen[direccion]*256+screen[direccion+8192];
+				if ((x&1)==0) byte_leido=screen[direccion];
+				else byte_leido=screen[direccion+8192];
 
-				//comprimir pixeles
-				int i;
-				for (i=0;i<8;i++) {
-					timexhires_resultante=timexhires_resultante<<1;
-					if ( (timexhires_origen&(32768+16384))   ) timexhires_resultante |=1;
-					timexhires_origen=timexhires_origen<<2;
-				}
-
-				byte_leido=timexhires_resultante;
-
-			}
-
-
-
-      attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+				attribute=col6;
+			}			
                
 
 			get_pixel_color_tbblue(attribute,&ink,&paper);
@@ -4971,7 +4956,9 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 					posicion_x_lores_pointer++; 
 				}
 
-				int posx=x*8+bit; //Posicion pixel. Para clip window registers							
+				int posx=x*8+bit; //Posicion pixel. Para clip window registers	
+				if (si_timex_hires.v) posx /=2;
+
 
 				//Capa ula
 				//Tener en cuenta valor clip window
@@ -4981,7 +4968,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 					if (!tbblue_force_disable_layer_ula.v) {
 						z80_int color_final=tbblue_get_palette_active_ula(color);
 						tbblue_layer_ula[posicion_array_layer]=color_final;
-						tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
+						if (si_timex_hires.v==0) tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
 
 						//tbblue_layer_ula[posicion_array_layer+ancho_rainbow]=color_final; //doble de alto
 						//tbblue_layer_ula[posicion_array_layer+ancho_rainbow+1]=color_final; //doble de alto
@@ -4989,12 +4976,19 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				}
 
 		
-				posicion_array_layer+=2; //doble de ancho
+				posicion_array_layer++;
+
+				if (si_timex_hires.v==0) posicion_array_layer++; //doble de ancho
 
         byte_leido=byte_leido<<1;
 				
       }
-			direccion++;
+
+			if (si_timex_hires.v) {
+					if (x&1) direccion++;
+			}
+
+			else direccion++;
 
 	  }
 

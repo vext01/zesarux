@@ -52,6 +52,7 @@ Improved hexadecimal editor:
 *now showing subzones information
 
 Fixed visual glitches in some menus when Pentagon machine and real video: audio wave, visualmem, ay piano, wave piano, view sprites
+Fixed timex hires mode 512x192 on tbblue
 Fixed visual glitches in some menus when interlaced enabled: audio wave, visualmem, ay piano, wave piano, view sprites
 Fixed audio bug: sending a sample to the DAC by using Next registers, it wasn't reseting the silence detection counter, so sound would probably be frozen (and repeated again, and again...)
 Fixed autoload on tbblue (on normal and also fast boot mode)
