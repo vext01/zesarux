@@ -1501,9 +1501,9 @@ void screen_tbblue_refresca_pantalla(void) {
                 else {
                         //modo rainbow - real video
                         //en spectrum normal era: scr_refresca_pantalla_rainbow_comun();
-scr_refresca_pantalla_rainbow_comun(); //Se puede usar esta funcion comun a todos
+//scr_refresca_pantalla_rainbow_comun(); //Se puede usar esta funcion comun a todos
 
-			//screen_tbblue_refresca_rainbow();
+			screen_tbblue_refresca_rainbow();
                 }
 
 }

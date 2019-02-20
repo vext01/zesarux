@@ -209,6 +209,7 @@ extern z80_bit gigascreen_enabled;
 extern z80_bit rainbow_enabled;
 extern z80_bit autodetect_rainbow;
 
+extern z80_int *new_scalled_rainbow_buffer;
 
 //normalmente a 8
 extern int screen_invisible_borde_superior;
