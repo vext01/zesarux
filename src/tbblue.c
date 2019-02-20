@@ -3682,6 +3682,7 @@ void tbblue_set_layer_priorities(void)
 			p_layer_third=tbblue_layer_ula;
 
 			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
 
 		break;
 
@@ -3691,6 +3692,7 @@ void tbblue_set_layer_priorities(void)
 			p_layer_third=tbblue_layer_ula;
 
 			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
 
 		break;
 
@@ -3701,6 +3703,7 @@ void tbblue_set_layer_priorities(void)
 			p_layer_third=tbblue_layer_layer2;
 
 			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
 
 		break;
 
@@ -3710,6 +3713,7 @@ void tbblue_set_layer_priorities(void)
 			p_layer_third=tbblue_layer_sprites;
 
 			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
 		break;
 
 		case 4:
@@ -3718,6 +3722,7 @@ void tbblue_set_layer_priorities(void)
 			p_layer_third=tbblue_layer_layer2;
 
 			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
 
 		break;
 
@@ -3727,6 +3732,7 @@ void tbblue_set_layer_priorities(void)
 			p_layer_third=tbblue_layer_sprites;
 
 			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
 		break;
 
 		default:
@@ -3735,6 +3741,7 @@ void tbblue_set_layer_priorities(void)
 			p_layer_third=tbblue_layer_ula;
 
 			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
+			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
 		break;	
 	}
 
@@ -4347,6 +4354,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
+
+			//temp
+			//ula_over_tilemap=0;
+
 			z80_byte pixel_izq,pixel_der;
 
 			//Pixel izquierdo
@@ -4468,6 +4479,9 @@ void tbblue_render_layers_rainbow(int bordesupinf,int capalayer2,int capasprites
 
     y=t_scanline_draw-screen_invisible_borde_superior;
     if (border_enabled.v==0) y=y-screen_borde_superior;
+
+		if (y<0 || y>=(TBBLUE_TILES_BORDER+192+TBBLUE_TILES_BORDER)) return; //Si estamos por encima o por debajo de la zona de tiles,
+		//que es la mas alta de todas las capas
 
 		//Doble de alto
 		y *=2;
@@ -4689,7 +4703,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 	for (i=0;i<TBBLUE_LAYERS_PIXEL_WIDTH;i++) {
 
 		//Esto es un pelin mas rapido hacerlo asi, con punteros e incrementarlos, en vez de indices a array
-		*clear_p_ula=TBBLUE_TRANSPARENT_REGISTER_9;
+		*clear_p_ula=TBBLUE_SPRITE_TRANS_FICT;
 		*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
 		*clear_p_sprites=TBBLUE_SPRITE_TRANS_FICT;
 

@@ -21,7 +21,14 @@
 
 -tbblue:
 --border rainbow
---modo tile, parece que falla scroll horiz y vert
+--fast render desactivado
+-forzado ula_over_tilemap=0
+		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
+
+			//temp
+			ula_over_tilemap=0;
+
+      
 
 -boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
