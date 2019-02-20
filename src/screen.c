@@ -6316,11 +6316,12 @@ void screen_store_scanline_rainbow_border_tbblue_supinf(void)
 
 	z80_int *puntero_buf_rainbow;
 
-	int x=screen_total_borde_izquierdo*2;
+	int x=screen_total_borde_izquierdo;
 
 	//printf ("%d\n",scanline_copia*get_total_ancho_rainbow());
 	//esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-	puntero_buf_rainbow=&rainbow_buffer[scanline_copia*get_total_ancho_rainbow()*2+x]; //*2 porque es doble de alto
+	//int offset=
+	puntero_buf_rainbow=&rainbow_buffer[scanline_copia*get_total_ancho_rainbow()*2+x*2]; //*2 porque es doble de alto
 
 	//Empezamos desde x en zona display, o sea, justo despues del ancho del borde izquierdo
 	screen_store_scanline_rainbow_border_comun(puntero_buf_rainbow,x );
@@ -6336,7 +6337,7 @@ void screen_store_scanline_rainbow_solo_border_tbblue(void)
 {
 
 
-	int ancho_pantalla=TBBLUE_DISPLAY_WIDTH;
+	int ancho_pantalla=256;
 
 
         //zona de border superior o inferior. Dibujar desde posicion x donde acaba el ancho izquierdo de borde, linea horizontal
@@ -6365,7 +6366,8 @@ void screen_store_scanline_rainbow_solo_border_tbblue(void)
 
 		//nos situamos en borde derecho
 		//y se dibujara desde el borde derecho hasta el izquierdo de la siguiente linea
-		puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow()*2+screen_total_borde_izquierdo+ancho_pantalla ]; //*2 porque es doble de alto
+		int offset_derecha=(screen_total_borde_izquierdo+ancho_pantalla)*2; //*2 porque es doble de ancho
+		puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow()*2+offset_derecha ]; //*2 porque es doble de alto
 
 
 	        screen_store_scanline_rainbow_border_comun(puntero_buf_rainbow,screen_total_borde_izquierdo+ancho_pantalla);
