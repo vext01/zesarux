@@ -24,27 +24,26 @@
 --refresco con border desactivado que sucede?
 --timex 512 de ancho. revisar si ok perfecto
 --si ula resulta color transparente, cambiarlo por el color ficticio. mismo para lores
--forzado ula_over_tilemap=0
+--forzado ula_over_tilemap=0
 		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
 
 			//temp
 			ula_over_tilemap=0;
-
--probar todos drivers nuevo tamaño ventana tbblue 
-
--Probar transparencia ula con Warhawk. Parte derecha hay zona transparente
-También demo doyoulove. tambien lores demo (parte de abajo tiene transparencia)
-
--al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
-cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
-
--chloe refresco modo texto. actualizar rom
-
--boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
+--probar todos drivers nuevo tamaño ventana tbblue 
+--Probar transparencia ula con Warhawk. Parte derecha hay zona transparente
+--También demo doyoulove. tambien lores demo (parte de abajo tiene transparencia)
+--boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
 warhawk 37% en pantalla menu sin fast render
 
 
+
+-al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
+cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
+
+-probar que cambios de rainbow no hayan afectado a maquinas no tbblue
+
+-chloe refresco modo texto. actualizar rom
 
 
 -random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
@@ -52,7 +51,7 @@ En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay 
 da segmentation fault-> quiza el problema viene del lector tzx
 
 
--tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
+-tbblue tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
 color que tiene pantalla no es el que tiene el transparente
 
 -imagen tbblue.mmc dice 4 gb libres?
