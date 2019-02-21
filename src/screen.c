@@ -4121,8 +4121,6 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 				//Por cada t_estado van 2 pixeles normalmente
 					int jj;
 					for (jj=0;jj<t_estados_por_pixel;jj++) {
-						//temp
-						//color_border=2;
 						store_value_rainbow(puntero_buf_rainbow,color_border);
 						if (MACHINE_IS_TBBLUE) {
 							puntero_buf_rainbow[ancho_rainbow]=color_border; //pixel de abajo a la derecha
@@ -4147,20 +4145,6 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 		//Por cada t_estado van 2 pixeles
 		x+=t_estados_por_pixel;
 
-	}
-
-	if (MACHINE_IS_TBBLUE) {
-	//Debido a desajustes con estados por linea en tbblue, si no agregamos esto, se queda una zona en negro entre el borde izquierdo y la pantalla central
-	//Estos dos para zona donde hay borde izquierdo y derecho
-	//Sinceramente no se muy bien por que ocurre, esto pasaba en prism tambien
-	/*store_value_rainbow(puntero_buf_rainbow,color_border);
-	store_value_rainbow(puntero_buf_rainbow,color_border);
-
-	//Y estos para la primera linea de pantalla
-	store_value_rainbow(puntero_buf_rainbow,color_border);
-	store_value_rainbow(puntero_buf_rainbow,color_border);*/
-
-		
 	}
 
 
