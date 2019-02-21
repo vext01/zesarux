@@ -2435,7 +2435,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 	if (MACHINE_IS_TBBLUE) {
 		yventana=1;
-		alto_ventana=22;
+		alto_ventana=23;
 	}
 
 	else {
@@ -2625,14 +2625,15 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-					sprintf (texto_buffer,"Layer2: X=%3d Y=%3d",tbblue_registers[22],tbblue_registers[23]);
-					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					sprintf (texto_buffer,"Layer2:    X=%3d Y=%3d",tbblue_registers[22],tbblue_registers[23]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
-					sprintf (texto_buffer,"LoRes:  X=%3d Y=%3d",tbblue_registers[50],tbblue_registers[51]);
-					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					sprintf (texto_buffer,"ULA/LoRes: X=%3d Y=%3d",tbblue_registers[50],tbblue_registers[51]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tilemap:   X=%3d Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);					
 
 				}
 
