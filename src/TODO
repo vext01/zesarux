@@ -30,10 +30,15 @@
 			//temp
 			ula_over_tilemap=0;
 
+-probar todos drivers nuevo tamaño ventana tbblue 
+
 -Probar transparencia ula con Warhawk. Parte derecha hay zona transparente
-También demo doyoulove
+También demo doyoulove. tambien lores demo (parte de abajo tiene transparencia)
 
+-al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
+cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
 
+-chloe refresco modo texto. actualizar rom
 
 -boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
