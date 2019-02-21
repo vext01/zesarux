@@ -7548,7 +7548,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 					sprintf (mensaje,"Setting Timex Video Mode 6 (512x192 monochrome)");
 				}
 
-				else if (MACHINE_IS_PRISM) {
+				else if (MACHINE_IS_PRISM || MACHINE_IS_TBBLUE) {
 					sprintf (mensaje,"Setting Timex Video Mode 6 (512x192 monochrome)");
                                 }
 

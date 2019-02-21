@@ -4803,14 +4803,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 		z80_byte *puntero_buffer_atributos;
 
 
-		//Si modo timex 512x192 pero se hace modo escalado
-		//Si es modo timex 512x192, llamar a otra funcion
-        /*if (timex_si_modo_512_y_zoom_par() ) {
-        	//Si zoom x par
-            if (timex_mode_512192_real.v) {
-            	return;
-        	}
-        }*/
+	
 
 
 		//temporal modo 6 timex 512x192 pero hacemos 256x192

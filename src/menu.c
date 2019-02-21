@@ -31020,15 +31020,17 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				}
 
 
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_gigascreen,NULL,"[%c] ~~Gigascreen",(gigascreen_enabled.v==1 ? 'X' : ' '));
-				menu_add_item_menu_shortcut(array_menu_settings_display,'g');
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Enable gigascreen colours");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Gigascreen enables more than 15 colours by combining pixels "
+				if (!MACHINE_IS_TBBLUE) {
+					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_gigascreen,NULL,"[%c] ~~Gigascreen",(gigascreen_enabled.v==1 ? 'X' : ' '));
+					menu_add_item_menu_shortcut(array_menu_settings_display,'g');
+					menu_add_item_menu_tooltip(array_menu_settings_display,"Enable gigascreen colours");
+					menu_add_item_menu_ayuda(array_menu_settings_display,"Gigascreen enables more than 15 colours by combining pixels "
 							"of even and odd frames. The total number of different colours is 102");
+				}
 
 
 
-				if (menu_cond_spectrum() && !MACHINE_IS_ZXEVO)  {
+				if (menu_cond_spectrum() && !MACHINE_IS_ZXEVO && !MACHINE_IS_TBBLUE)  {
 
 					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_snow_effect,NULL,"[%c] Snow effect support", (snow_effect_enabled.v==1 ? 'X' : ' '));
 					menu_add_item_menu_tooltip(array_menu_settings_display,"Enable snow effect on Spectrum");
@@ -31168,7 +31170,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 						"Mode 2: Multicolor mode: video data at address 16384 and 8x1 color attributes at address 24576\n"
 						"Mode 6: Hi-res mode 512x192, monochrome.");
 
-			if (timex_video_emulation.v) {
+			if (timex_video_emulation.v && !MACHINE_IS_TBBLUE) {
 				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video_512192,NULL,"[%c] Timex Real 512x192",(timex_mode_512192_real.v ? 'X' : ' '));
 				menu_add_item_menu_tooltip(array_menu_settings_display,"Selects between real 512x192 or scaled 256x192");
 				menu_add_item_menu_ayuda(array_menu_settings_display,"Real 512x192 does not support scanline effects (it draws the display at once). "
