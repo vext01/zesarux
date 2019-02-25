@@ -6278,7 +6278,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
 					linea +=3;			
 
-					//zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"ULA & Tiles:");
+					zxvision_print_string_defaults(menu_tsconf_layer_overlay_window,1,linea,"ULA&Tiles:");
 					linea +=2;									
 
                 	sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tbblue_if_sprites_enabled() ));
@@ -6534,8 +6534,8 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);			
 			lin+=2;
 
- 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_reveal_ula,NULL,"ULA&Tiles: %s",(tbblue_reveal_layer_ula.v ? "Reveal" : "Normal"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);	
+ 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_reveal_ula,NULL,"%s",(tbblue_reveal_layer_ula.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);	
 
 			lin+=3;					
 

@@ -30,13 +30,14 @@ Changelog--- Para esta version 7.2:
 			//temp
 			ula_over_tilemap=0;
 --probar todos drivers nuevo tamaño ventana tbblue 
+--tbblue tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
+color que tiene pantalla no es el que tiene el transparente
 
 --boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
 warhawk 37% en pantalla menu sin fast render
 
-
--Tener en cuenta tilemap width 40/80?? o ya esta bien asi:
+--Tener en cuenta tilemap width 40/80?? o ya esta bien asi:
 					sprintf (texto_buffer,"Tilemap:   X=%3d Y=%3d",tbblue_registers[47]+256*(tbblue_registers[49]&3),tbblue_registers[49]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);		
 
@@ -53,8 +54,7 @@ En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay 
 da segmentation fault-> quiza el problema viene del lector tzx
 
 
--tbblue tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
-color que tiene pantalla no es el que tiene el transparente
+
 
 -imagen tbblue.mmc dice 4 gb libres?
 
