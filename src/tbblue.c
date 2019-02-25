@@ -3645,15 +3645,9 @@ void tbblue_set_layer_priorities(void)
 
 
 
-
-
-//+int tbblue_si_sprite_transp_ficticio(z80_int color)
-
-//z80_byte (*peek_byte_no_time)(z80_int dir);
-
-	tbblue_fn_pixel_layer_transp_first=tbblue_si_transparent;
-	tbblue_fn_pixel_layer_transp_second=tbblue_si_transparent;
-	tbblue_fn_pixel_layer_transp_third=tbblue_si_transparent;
+	tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
+	tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
+	tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
 
 	/*
 	(R/W) 0x15 (21) => Sprite and Layers system
@@ -3681,18 +3675,12 @@ void tbblue_set_layer_priorities(void)
 			p_layer_second=tbblue_layer_layer2;
 			p_layer_third=tbblue_layer_ula;
 
-			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
-			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
-
 		break;
 
 		case 1:
 			p_layer_first=tbblue_layer_layer2;
 			p_layer_second=tbblue_layer_sprites;
 			p_layer_third=tbblue_layer_ula;
-
-			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
-			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
 
 		break;
 
@@ -3702,9 +3690,6 @@ void tbblue_set_layer_priorities(void)
 			p_layer_second=tbblue_layer_ula;
 			p_layer_third=tbblue_layer_layer2;
 
-			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
-			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
-
 		break;
 
 		case 3:
@@ -3712,17 +3697,12 @@ void tbblue_set_layer_priorities(void)
 			p_layer_second=tbblue_layer_ula;
 			p_layer_third=tbblue_layer_sprites;
 
-			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
-			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
 		break;
 
 		case 4:
 			p_layer_first=tbblue_layer_ula;
 			p_layer_second=tbblue_layer_sprites;
 			p_layer_third=tbblue_layer_layer2;
-
-			tbblue_fn_pixel_layer_transp_second=tbblue_si_sprite_transp_ficticio;
-			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
 
 		break;
 
@@ -3731,8 +3711,6 @@ void tbblue_set_layer_priorities(void)
 			p_layer_second=tbblue_layer_layer2;
 			p_layer_third=tbblue_layer_sprites;
 
-			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
-			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
 		break;
 
 		default:
@@ -3740,10 +3718,10 @@ void tbblue_set_layer_priorities(void)
 			p_layer_second=tbblue_layer_layer2;
 			p_layer_third=tbblue_layer_ula;
 
-			tbblue_fn_pixel_layer_transp_first=tbblue_si_sprite_transp_ficticio;
-			tbblue_fn_pixel_layer_transp_third=tbblue_si_sprite_transp_ficticio;
 		break;	
 	}
+
+
 
 
 
@@ -4682,6 +4660,11 @@ void tbblue_do_layer2_overlay(void)
 
 						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
 						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
+
+						//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+						if (tbblue_si_transparent(final_color_layer2)) final_color_layer2=TBBLUE_SPRITE_TRANS_FICT;
+
+
 						tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
 						tbblue_layer_layer2[posicion_array_layer+1]=final_color_layer2; //doble de ancho
 					}
@@ -4723,7 +4706,8 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 		//Esto es un pelin mas rapido hacerlo asi, con punteros e incrementarlos, en vez de indices a array
 		*clear_p_ula=TBBLUE_SPRITE_TRANS_FICT;
-		*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
+		//*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
+		*clear_p_layer2=TBBLUE_SPRITE_TRANS_FICT;
 		*clear_p_sprites=TBBLUE_SPRITE_TRANS_FICT;
 
 		clear_p_ula++;
@@ -4967,8 +4951,6 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 						tbblue_layer_ula[posicion_array_layer]=color_final;
 						if (si_timex_hires.v==0) tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
 
-						//tbblue_layer_ula[posicion_array_layer+ancho_rainbow]=color_final; //doble de alto
-						//tbblue_layer_ula[posicion_array_layer+ancho_rainbow+1]=color_final; //doble de alto
 					}
 				}
 

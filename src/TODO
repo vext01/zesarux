@@ -30,8 +30,7 @@ Changelog--- Para esta version 7.2:
 			//temp
 			ula_over_tilemap=0;
 --probar todos drivers nuevo tamaño ventana tbblue 
---Probar transparencia ula con Warhawk. Parte derecha hay zona transparente
---También demo doyoulove. tambien lores demo (parte de abajo tiene transparencia)
+
 --boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
 warhawk 36% en pantalla menu con fast render
 warhawk 37% en pantalla menu sin fast render
