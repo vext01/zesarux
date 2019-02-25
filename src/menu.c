@@ -34690,6 +34690,11 @@ char *first_aid_string_votext="Do you know you can run ZEsarUX using a Text mode
 int first_aid_no_easteregg=0;
 char *first_aid_string_eastereg="ZEsarUX includes three easter eggs. Can you find them? :)";	
 
+int first_aid_no_zxvision_clickout=0;
+char *first_aid_string_zxvision_clickout="If you have multitask enabled, with menu open, and you click out of a window menu (inside ZEsarUX windwow), "
+	"that menu window loses focus and the emulated machine gets the focus, so you can use the keyboard on the emulated machine and the menu window "
+	"is still alive";
+
 
 void menu_first_aid_init(void)
 {
@@ -34708,6 +34713,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("zrcp",&first_aid_no_zrcp,first_aid_string_zrcp,1);
 	menu_first_aid_add("votext",&first_aid_no_votext,first_aid_string_votext,1);
 	menu_first_aid_add("easteregg",&first_aid_no_easteregg,first_aid_string_eastereg,1);
+	menu_first_aid_add("zxvisionclickout",&first_aid_no_zxvision_clickout,first_aid_string_zxvision_clickout,1);
 
 }
 

@@ -325,9 +325,9 @@ void mmc_insert(void)
 	unsigned long int resultado=mmc_size/multiple;
 	unsigned long int multiplicado=resultado*multiple;
 	if (multiplicado!=mmc_size) {
-		debug_printf (VERBOSE_ERR,"Error. File must be multiple of %d KB",multiple/1024);
-		mmc_disable();
-		return;
+		debug_printf (VERBOSE_ERR,"Error. MMC file should be multiple of %d KB. Use at your own risk!",multiple/1024);
+		//mmc_disable();
+		//return;
 	}
 
 	if (mmc_read_file()) {

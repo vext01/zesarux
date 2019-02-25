@@ -1,4 +1,4 @@
---- Para esta version 7.2:
+Changelog--- Para esta version 7.2:
     
     
 ----zxvision----:
@@ -1165,29 +1165,6 @@ escritos: -2147483648
 It's also mapped instantly (100ns after /MREQ of that fetch is falling down) after executing opcode from area 3d00..3dffh.
 ->Debería paginar después de ejecutar opcode y en cambio lo está haciendo antes
 ->Pero realmente si lo cambio no funciona
-
--Tamanyos de tarjeta no estandar
-Tarjeta:             Bloques:   Capacidad:
---------             --------   ----------
-SanDisk 64 Mb          121856   59.5 Mb
-Dane-Elec 512 Mb      1000448   488.5 Mb
-SanDisk 2 Gb          3862528   1.9 Gb
-(sin marca) 2Gb       3911680   1.9 Gb
-SanDisk 8 Gb         15523840   7.4 Gb
-Samsung Evo 16Gb     31291392   14.9 Gb
-
-http://foro.speccy.org/viewtopic.php?f=11&t=4860&start=15
-que el emulador acepte esos tamaños de tarjetas extraños. Lo que hará en esos casos es, por una parte, avisar al usuario de que es un tamaño no habitual, y por otra, cuando acceda a dicha tarjeta, leerá "ceros" cuando vaya mas allá de su capacidad.
-Y todos los cambios de escritura en la tarjeta se harán con el tamaño real de tarjeta, no escribiendo en ningún caso esos ceros de mas
-
-
-Tener dos contadores, uno de tamaño al escribir tarjeta y otro tamaño asignado en memoria
-
-Quizá al leer la primera vez:
-*variable leídos se guarda en nueva variable de leidos_to_save o algo asi
-*luego variable leídos se incrementa hasta siguiente valor admitido. Controlar que si se sale de rango aceptado (2 GB?) no aceptarla
-*al hacer flush usar nueva variable leidos_to_save
-*resto de operaciones utilizan variable leídos tal cual como ahora
 
 
 ------------------

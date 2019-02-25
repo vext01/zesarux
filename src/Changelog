@@ -51,6 +51,8 @@ Improved disassemble window:
 Improved hexadecimal editor:
 *now showing subzones information
 
+Improved MMC emulation: allow non-standard mmc file sizes
+
 Fixed visual glitches in some menus when Pentagon machine and real video: audio wave, visualmem, ay piano, wave piano, view sprites
 Fixed timex hires mode 512x192 on tbblue
 Fixed visual glitches in some menus when interlaced enabled: audio wave, visualmem, ay piano, wave piano, view sprites
