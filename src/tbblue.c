@@ -3578,12 +3578,12 @@ struct s_tbblue_priorities_names {
 
 
 struct s_tbblue_priorities_names tbblue_priorities_names[8]={
-	{ { "Sprites" ,  "Layer 2"  ,  "ULA" } },
-	{ { "Layer 2" ,  "Sprites"  ,  "ULA" } },
-	{ { "Sprites" ,  "ULA"  ,  "Layer 2" } },
-	{ { "Layer 2" ,  "ULA"  ,  "Sprites" } },
-	{ { "ULA" ,  "Sprites"  ,  "Layer 2" } },
-	{ { "ULA" ,  "Layer 2"  ,  "Sprites" } },
+	{ { "Sprites" ,  "Layer 2"  ,  "ULA&Tiles" } },
+	{ { "Layer 2" ,  "Sprites"  ,  "ULA&Tiles" } },
+	{ { "Sprites" ,  "ULA&Tiles"  ,  "Layer 2" } },
+	{ { "Layer 2" ,  "ULA&Tiles"  ,  "Sprites" } },
+	{ { "ULA&Tiles" ,  "Sprites"  ,  "Layer 2" } },
+	{ { "ULA&Tiles" ,  "Layer 2"  ,  "Sprites" } },
 
 	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
 	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
@@ -4684,6 +4684,45 @@ void tbblue_do_layer2_overlay(void)
 	 
 }
 
+void tbblue_reveal_layer_draw(z80_int *layer)
+{
+	int i;
+
+	for (i=0;i<TBBLUE_LAYERS_PIXEL_WIDTH;i++) {
+		z80_int color=*layer;
+	
+		if (!tbblue_si_sprite_transp_ficticio(color)) {
+
+			//Color de revelado es blanco o negro segun cuadricula:
+			// Negro Blanco Negro ...
+			// Blanco Negro Blanco ...
+			// Negro Blanco Negro ....
+			// .....
+
+			//Por tanto tener en cuenta posicion x e y
+			int posx=i&1;
+			int posy=t_scanline_draw&1;
+
+			//0,0: 0
+			//0,1: 1
+			//1,0: 1
+			//1,0: 0
+			//Es un xor
+
+			int si_blanco_negro=posx ^ posy;
+
+			*layer=511*si_blanco_negro; //ultimo de los colores en paleta rgb9 de tbblue -> blanco, negro es 0
+		}
+
+		layer++;
+	}
+}
+
+
+//Forzar a dibujar capa con color fijo, para debug
+z80_bit tbblue_reveal_layer_ula={0};
+z80_bit tbblue_reveal_layer_layer2={0};
+z80_bit tbblue_reveal_layer_sprites={0};
 
 //Guardar en buffer rainbow la linea actual. Para Spectrum. solo display
 //Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
@@ -4981,6 +5020,9 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 						capalayer2=1;
 					
 						tbblue_do_layer2_overlay();
+						if (tbblue_reveal_layer_layer2.v) {
+								tbblue_reveal_layer_draw(tbblue_layer_layer2);
+						}
 					}
 				}
 
@@ -5019,6 +5061,9 @@ the central 256×192 display. The X coordinates are internally doubled to cover 
 	}
 
 
+						if (tbblue_reveal_layer_ula.v) {
+								tbblue_reveal_layer_draw(tbblue_layer_ula);
+						}
 
 
 
@@ -5035,6 +5080,11 @@ the central 256×192 display. The X coordinates are internally doubled to cover 
 	if (mostrar_sprites && !tbblue_force_disable_layer_sprites.v) {
 		capasprites=1;
 		tbsprite_do_overlay();
+
+						if (tbblue_reveal_layer_sprites.v) {
+								tbblue_reveal_layer_draw(tbblue_layer_sprites);
+						}
+
 	}
 
 

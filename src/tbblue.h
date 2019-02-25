@@ -217,6 +217,9 @@ extern z80_int tbblue_copper_pc;
 #define TBBLUE_DISPLAY_WIDTH 512
 #define TBBLUE_DISPLAY_HEIGHT 384
 
+extern z80_bit tbblue_reveal_layer_ula;
+extern z80_bit tbblue_reveal_layer_layer2;
+extern z80_bit tbblue_reveal_layer_sprites;
 
 
 extern int tbblue_get_current_raster_horiz_position(void);

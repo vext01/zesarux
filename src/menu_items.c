@@ -6276,7 +6276,10 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 	                sprintf (texto_layer,"Tiles:     %s",menu_tsconf_layer_aux_usedunused(tbblue_if_tilemap_enabled()) ); 
     	            //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
-					linea +=3;					
+					linea +=3;			
+
+					//zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"ULA & Tiles:");
+					linea +=2;									
 
                 	sprintf (texto_layer,"Sprites:   %s",menu_tsconf_layer_aux_usedunused(tbblue_if_sprites_enabled() ));
                 	//menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
@@ -6301,11 +6304,25 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 					for (i=0;i<3;i++) {
 						char nombre_capa[32];
 						strcpy(nombre_capa,tbblue_get_string_layer_prio(i,prio) );
-						if (!strcmp(nombre_capa,"ULA")) strcpy(nombre_capa,"  ULA  "); //meter espacios para centrarlo
+						//if (strcmp(nombre_capa,"ULA&Tiles")) strcpy(nombre_capa,"  ULA  "); //meter espacios para centrarlo
 						//las otras capas son "Sprites" y "Layer 2" y ocupan lo mismo
 
-						if (i!=2) sprintf (texto_layer,"|----%s----|",nombre_capa);
-						else sprintf (texto_layer,"v----%s----v",nombre_capa);
+													//     Sprites
+													//    ULA&Tiles
+						if (i!=2) strcpy (texto_layer,"|---------------|");
+						else      strcpy (texto_layer,"v---------------v");
+
+						//Centrar el nombre de capa
+						int longitud_medio=strlen(nombre_capa)/2;
+						int medio=strlen(texto_layer)/2;
+						int pos=medio-longitud_medio;
+						if (pos<0) pos=0;
+
+						//Meter texto centrado y quitar 0 del final
+						strcpy(&texto_layer[pos],nombre_capa);
+
+						int final=strlen(texto_layer);
+						texto_layer[final]='-';
 
 						//menu_escribe_linea_opcion(linea++,-1,1,texto_layer);
 						zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea++,texto_layer);
@@ -6407,6 +6424,26 @@ void menu_tbblue_layer_settings_layer_two(MENU_ITEM_PARAMETERS)
 	tbblue_force_disable_layer_layer_two.v ^=1;
 }
 
+void menu_tbblue_layer_reveal_ula(MENU_ITEM_PARAMETERS)
+{
+	tbblue_reveal_layer_ula.v ^=1;
+}
+
+void menu_tbblue_layer_reveal_layer2(MENU_ITEM_PARAMETERS)
+{
+	tbblue_reveal_layer_layer2.v ^=1;
+}
+
+void menu_tbblue_layer_reveal_sprites(MENU_ITEM_PARAMETERS)
+{
+	tbblue_reveal_layer_sprites.v ^=1;
+}
+
+
+
+
+
+
 
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 {
@@ -6422,8 +6459,8 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	int alto=22;
 
 	if (MACHINE_IS_TBBLUE) {
-		alto=18;
-		y=2;
+		alto=20;
+		y=1;
 	}
     //menu_dibuja_ventana(x,y,ancho,alto,"Video Layers");
 
@@ -6490,19 +6527,28 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_TBBLUE) {
  			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_ula,NULL,"%s",(tbblue_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);		
 			lin+=3;			
 
  			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_tilemap,NULL,"%s",(tbblue_force_disable_layer_tilemap.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);			
+			lin+=2;
+
+ 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_reveal_ula,NULL,"ULA&Tiles: %s",(tbblue_reveal_layer_ula.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);	
+
 			lin+=3;					
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_sprites,NULL,"%s",(tbblue_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+ 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_reveal_sprites,NULL,"%s",(tbblue_reveal_layer_sprites.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
 			lin+=3;
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_settings_layer_two,NULL,"%s",(tbblue_force_disable_layer_layer_two.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+ 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tbblue_layer_reveal_layer2,NULL,"%s",(tbblue_reveal_layer_layer2.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
 			lin+=3;				
 		}
 
