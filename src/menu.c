@@ -11010,17 +11010,14 @@ int menu_debug_registers_buffer_pre_y=-1;
 void menu_debug_showscan_putpixel(z80_int *destino,int x,int y,int ancho,int color)
 {
 
-	//Si maquina tbblue, doble de ancho y alto
-	if (MACHINE_IS_TBBLUE) {
+	//Si maquina tbblue, doble alto
+	/*if (MACHINE_IS_TBBLUE) {
 		screen_generic_putpixel_indexcolour(destino,x,y*2,ancho,color);	
-		//screen_generic_putpixel_indexcolour(destino,x*2+1,y*2,ancho,color);	
-		//screen_generic_putpixel_indexcolour(destino,x*2,y*2+1,ancho,color);	
-		//screen_generic_putpixel_indexcolour(destino,x*2+1,y*2+1,ancho,color);	
 	}
 
-	else {
+	else {*/
 		screen_generic_putpixel_indexcolour(destino,x,y,ancho,color);	
-	}
+	//}
 }
 
 void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
@@ -11037,28 +11034,33 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 	int x;
     int indice_color=0;
 
+	//printf ("inicial %d,%d\n",x_inicial,y);
+
+	//if (x_inicial<0 || y<0) return;
+
+	//TBBlue tiene doble de alto. El ancho ya lo viene multiplicado por 2 al entrar aqui
+	if (MACHINE_IS_TBBLUE) y *=2;		
+
 	//Restauramos lo que habia en la posicion anterior del cursor
-	/*if (menu_debug_registers_buffer_pre_x>=0 && menu_debug_registers_buffer_pre_y>=0) {
+	if (menu_debug_registers_buffer_pre_x>=0 && menu_debug_registers_buffer_pre_y>=0) {
 	        for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
-	                 int x_final=menu_debug_registers_buffer_pre_x+x;
+	            int x_final=menu_debug_registers_buffer_pre_x+x;
 
 
-			if (x_final<ancho) {
-				int color_antes=menu_debug_registers_buffer_precursor[x];
-				menu_debug_showscan_putpixel(rainbow_buffer,x_final,y,ancho,color_antes);
+				if (x_final<ancho) {
+					int color_antes=menu_debug_registers_buffer_precursor[x];
+					menu_debug_showscan_putpixel(rainbow_buffer,x_final,menu_debug_registers_buffer_pre_y,ancho,color_antes);
+				}
 			}
-		}
-	}*/
+	}
 
-	if (x_inicial<0) return;
 
 
 	menu_debug_registers_buffer_pre_x=x_inicial;
 	menu_debug_registers_buffer_pre_y=y;
 
-	//int ancho_visible=ancho;
 
-	//if (MACHINE_IS_TBBLUE) ancho_visible *=2;
+	if (x_inicial<0) return;
 
 	for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
 		int x_final=x_inicial+x;
@@ -11066,17 +11068,18 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 
 		//Guardamos lo que habia antes de poner el cursor
 		if (x_final<ancho) {
-			int color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
+			int color_anterior;
 
-			if (MACHINE_IS_TBBLUE) {
-				color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y*2,ancho);
-			}
-			else color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
+			//printf ("%d, %d\n",x_final,y);
 
-			menu_debug_registers_buffer_precursor[x]=color_anterior;
-
-			//Y ponemos pixel
 			if (y>=0 && y<alto && x>=0 && x<ancho) {
+
+				color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
+
+				menu_debug_registers_buffer_precursor[x]=color_anterior;
+
+				//Y ponemos pixel
+			
 	    		menu_debug_showscan_putpixel(rainbow_buffer,x_final,y,ancho,colores_rainbow[indice_color]);
 			}
 		}
