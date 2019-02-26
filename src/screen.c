@@ -13344,7 +13344,12 @@ int screen_invisible_borde_derecho;
 	estados_en_linea /=cpu_turbo_speed;
 
 	//Lo siguiente en t-estados
-	int inicio_borde_derecho=128;
+	int inicio_borde_derecho;
+
+	//inicio_borde_derecho=128;
+	inicio_borde_derecho=screen_testados_linea/cpu_turbo_speed-screen_total_borde_izquierdo/2-screen_total_borde_derecho/2-screen_invisible_borde_derecho/2;
+
+	//printf ("%d\n",inicio_borde_derecho);
 	int inicio_borde_derecho_invisible=inicio_borde_derecho+screen_total_borde_derecho/2;
 	int inicio_borde_izquierdo=inicio_borde_derecho_invisible+screen_invisible_borde_derecho/2;
 

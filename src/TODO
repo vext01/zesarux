@@ -23,10 +23,6 @@ Changelog--- Para esta version 7.2:
 --refresco con border desactivado que sucede?
 
 --probar todos drivers nuevo tamaño ventana tbblue 
---tbblue tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
-color que tiene pantalla no es el que tiene el transparente
-
--electron scan en tbblue no muestra bien
 
 --tbblue. Compilado con O2. 
 boot tbblue pantalla welcome sin real video: 41%. 
@@ -40,6 +36,8 @@ pogie 45% en pantalla inicial con fast render
 pogie 47% en pantalla inicial sin fast render
 
 
+
+-mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
 	
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover

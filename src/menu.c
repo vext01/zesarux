@@ -11010,14 +11010,8 @@ int menu_debug_registers_buffer_pre_y=-1;
 void menu_debug_showscan_putpixel(z80_int *destino,int x,int y,int ancho,int color)
 {
 
-	//Si maquina tbblue, doble alto
-	/*if (MACHINE_IS_TBBLUE) {
-		screen_generic_putpixel_indexcolour(destino,x,y*2,ancho,color);	
-	}
+	screen_generic_putpixel_indexcolour(destino,x,y,ancho,color);	
 
-	else {*/
-		screen_generic_putpixel_indexcolour(destino,x,y,ancho,color);	
-	//}
 }
 
 void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
@@ -11036,7 +11030,7 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 
 	//printf ("inicial %d,%d\n",x_inicial,y);
 
-	//if (x_inicial<0 || y<0) return;
+	if (x_inicial<0 || y<0) return;
 
 	//TBBlue tiene doble de alto. El ancho ya lo viene multiplicado por 2 al entrar aqui
 	if (MACHINE_IS_TBBLUE) y *=2;		
