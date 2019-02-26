@@ -62,6 +62,7 @@ Fixed autoload on tbblue (on normal and also fast boot mode)
 Fixed error managing TBBlue Layer 2 vertical scroll
 Fixed triggering "opcode" condition breakpoint
 Fixed emulating Inves interrupt bug
+Fixed segmentation fault when showing electron on debug
 
 
 Version 7.1. 24 September 2018 - 5th Anniversary edition
