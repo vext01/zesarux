@@ -58,6 +58,7 @@ da segmentation fault-> quiza el problema viene del lector tzx
 
 -imagen tbblue.mmc dice 4 gb libres?
 -imagen tbblue. actualizar, meter demos tiles
+-meter mas hotkeys en diferentes menus: gui settings por ejemplo
 
 -quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
 es la de sin phtreads
