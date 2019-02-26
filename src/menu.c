@@ -11007,21 +11007,35 @@ int menu_debug_registers_buffer_precursor[ANCHO_SCANLINE_CURSOR];
 int menu_debug_registers_buffer_pre_x=-1; //posicion anterior del cursor
 int menu_debug_registers_buffer_pre_y=-1;
 
+void menu_debug_showscan_putpixel(z80_int *destino,int x,int y,int ancho,int color)
+{
 
+	//Si maquina tbblue, doble de ancho y alto
+	if (MACHINE_IS_TBBLUE) {
+		screen_generic_putpixel_indexcolour(destino,x*2,y*2,ancho,color);	
+		screen_generic_putpixel_indexcolour(destino,x*2+1,y*2,ancho,color);	
+		screen_generic_putpixel_indexcolour(destino,x*2,y*2+1,ancho,color);	
+		screen_generic_putpixel_indexcolour(destino,x*2+1,y*2+1,ancho,color);	
+	}
+
+	else {
+		screen_generic_putpixel_indexcolour(destino,x,y,ancho,color);	
+	}
+}
 
 void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 {
 
-                int ancho,alto;
+	int ancho,alto;
 
-                ancho=get_total_ancho_rainbow();
-                alto=get_total_alto_rainbow();
+	ancho=get_total_ancho_rainbow();
+	alto=get_total_alto_rainbow();
 
     //rojo, amarillo, verde, cyan
     int colores_rainbow[]={2+8,6+8,4+8,5+8};
 
-                                                int x;
-                                                int indice_color=0;
+	int x;
+    int indice_color=0;
 
 	//Restauramos lo que habia en la posicion anterior del cursor
 	if (menu_debug_registers_buffer_pre_x>=0 && menu_debug_registers_buffer_pre_y>=0) {
@@ -11031,7 +11045,7 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 
 			if (x_final<ancho) {
 				int color_antes=menu_debug_registers_buffer_precursor[x];
-				screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,color_antes);
+				menu_debug_showscan_putpixel(rainbow_buffer,x_final,y,ancho,color_antes);
 			}
 		}
 	}
@@ -11042,32 +11056,37 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 	menu_debug_registers_buffer_pre_x=x_inicial;
 	menu_debug_registers_buffer_pre_y=y;
 
-                                                for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
-							int x_final=x_inicial+x;
+	for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
+		int x_final=x_inicial+x;
 
 
-							//Guardamos lo que habia antes de poner el cursor
-							if (x_final<ancho) {
-								int color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
-								menu_debug_registers_buffer_precursor[x]=color_anterior;
+		//Guardamos lo que habia antes de poner el cursor
+		if (x_final<ancho) {
+			int color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
 
-								//Y ponemos pixel
-								if (y>=0 && y<alto && x>=0 && x<ancho) {
-	                        	                                screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y,ancho,colores_rainbow[indice_color]);
-								}
-							}
+			if (MACHINE_IS_TBBLUE) {
+				color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final*2,y*2,ancho);
+			}
+			else color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
+
+			menu_debug_registers_buffer_precursor[x]=color_anterior;
+
+			//Y ponemos pixel
+			if (y>=0 && y<alto && x>=0 && x<ancho) {
+	    		menu_debug_showscan_putpixel(rainbow_buffer,x_final,y,ancho,colores_rainbow[indice_color]);
+			}
+		}
 
 
 
-                                                        //Trozos de colores de 4 pixeles de ancho
-                                                        if (x>0 && (x%8)==0) {
-                                                                indice_color++;
-                                                                if (indice_color==4) indice_color=0;
-                                                        }
+		//Trozos de colores de 4 pixeles de ancho
+		if (x>0 && (x%8)==0) {
+			indice_color++;
+			if (indice_color==4) indice_color=0;
+		}
 
-                                                        //Y quitar lo de antes
-                                                        //if (y>=1) screen_generic_putpixel_indexcolour(rainbow_buffer,x_final,y-1,ancho,7);
-                                                }
+
+    }
 }
 
 

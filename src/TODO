@@ -21,7 +21,6 @@ Changelog--- Para esta version 7.2:
 
 -tbblue:
 --refresco con border desactivado que sucede?
---timex 512 de ancho. revisar si ok perfecto
 
 --probar todos drivers nuevo tamaño ventana tbblue 
 --tbblue tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
