@@ -11012,10 +11012,10 @@ void menu_debug_showscan_putpixel(z80_int *destino,int x,int y,int ancho,int col
 
 	//Si maquina tbblue, doble de ancho y alto
 	if (MACHINE_IS_TBBLUE) {
-		screen_generic_putpixel_indexcolour(destino,x*2,y*2,ancho,color);	
-		screen_generic_putpixel_indexcolour(destino,x*2+1,y*2,ancho,color);	
-		screen_generic_putpixel_indexcolour(destino,x*2,y*2+1,ancho,color);	
-		screen_generic_putpixel_indexcolour(destino,x*2+1,y*2+1,ancho,color);	
+		screen_generic_putpixel_indexcolour(destino,x,y*2,ancho,color);	
+		//screen_generic_putpixel_indexcolour(destino,x*2+1,y*2,ancho,color);	
+		//screen_generic_putpixel_indexcolour(destino,x*2,y*2+1,ancho,color);	
+		//screen_generic_putpixel_indexcolour(destino,x*2+1,y*2+1,ancho,color);	
 	}
 
 	else {
@@ -11038,7 +11038,7 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
     int indice_color=0;
 
 	//Restauramos lo que habia en la posicion anterior del cursor
-	if (menu_debug_registers_buffer_pre_x>=0 && menu_debug_registers_buffer_pre_y>=0) {
+	/*if (menu_debug_registers_buffer_pre_x>=0 && menu_debug_registers_buffer_pre_y>=0) {
 	        for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
 	                 int x_final=menu_debug_registers_buffer_pre_x+x;
 
@@ -11048,13 +11048,17 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 				menu_debug_showscan_putpixel(rainbow_buffer,x_final,y,ancho,color_antes);
 			}
 		}
-	}
+	}*/
 
 	if (x_inicial<0) return;
 
 
 	menu_debug_registers_buffer_pre_x=x_inicial;
 	menu_debug_registers_buffer_pre_y=y;
+
+	//int ancho_visible=ancho;
+
+	//if (MACHINE_IS_TBBLUE) ancho_visible *=2;
 
 	for (x=0;x<ANCHO_SCANLINE_CURSOR;x++) {
 		int x_final=x_inicial+x;
@@ -11065,7 +11069,7 @@ void menu_debug_registers_show_scan_pos_putcursor(int x_inicial,int y)
 			int color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
 
 			if (MACHINE_IS_TBBLUE) {
-				color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final*2,y*2,ancho);
+				color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y*2,ancho);
 			}
 			else color_anterior=screen_generic_getpixel_indexcolour(rainbow_buffer,x_final,y,ancho);
 
@@ -11119,6 +11123,10 @@ printf ("\n");
 		x=screen_get_x_coordinate_tstates(&si_salta_linea);
 
 		y=screen_get_y_coordinate_tstates();
+
+		//En caso de TBBLUE, doble de ancho
+
+		if (MACHINE_IS_TBBLUE) x*=2;
 
 		menu_debug_registers_show_scan_pos_putcursor(x,y+si_salta_linea);
 
