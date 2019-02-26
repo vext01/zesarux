@@ -20,26 +20,28 @@ Changelog--- Para esta version 7.2:
 ----fin zxvision----
 
 -tbblue:
---fast render desactivado
 --refresco con border desactivado que sucede?
 --timex 512 de ancho. revisar si ok perfecto
 
---forzado ula_over_tilemap=0
-		for (pixel_tile=0;pixel_tile<8;pixel_tile+=2) { //Saltamos de dos en dos porque son 4bpp
-
-			//temp
-			ula_over_tilemap=0;
 --probar todos drivers nuevo tamaño ventana tbblue 
 --tbblue tiles: cuando en border, realmente escribe en array que esta vacio. por eso detecta transparente. En zona pantalla,
 color que tiene pantalla no es el que tiene el transparente
 
---boot tbblue pantalla welcome sin real video: 40%. con real video: 51%. Compilado con O2. 1 capa 47%. 
-warhawk 36% en pantalla menu con fast render
-warhawk 37% en pantalla menu sin fast render
+-electron scan en tbblue no muestra bien
 
---Tener en cuenta tilemap width 40/80?? o ya esta bien asi:
-					sprintf (texto_buffer,"Tilemap:   X=%3d Y=%3d",tbblue_registers[47]+256*(tbblue_registers[49]&3),tbblue_registers[49]);
-					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);		
+--tbblue. Compilado con O2. 
+boot tbblue pantalla welcome sin real video: 41%. 
+con real video y fast render 55%
+con real video y normal render 57%
+
+
+warhawk 43% en pantalla menu con fast render
+warhawk 45% en pantalla menu sin fast render
+pogie 45% en pantalla inicial con fast render 
+pogie 47% en pantalla inicial sin fast render
+
+
+	
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
 cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
@@ -48,6 +50,7 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 
 -chloe refresco modo texto. actualizar rom
 
+-quiza version mac tener dos versiones: una compilada con O2, otra sin
 
 -random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
 En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay que cerrarlo dos veces, y la segunda vez, el 50% de las veces

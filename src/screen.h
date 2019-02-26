@@ -211,6 +211,8 @@ extern z80_bit autodetect_rainbow;
 
 extern z80_int *new_scalled_rainbow_buffer;
 
+extern void screen_scale_075_function(int ancho,int alto);
+
 //normalmente a 8
 extern int screen_invisible_borde_superior;
 //normalmente a 56.
@@ -376,6 +378,8 @@ extern void scr_refresca_pantalla_y_border_ace(void);
 extern void screen_text_repinta_pantalla_ace(void);
 
 extern void scr_refresca_pantalla_ace(void);
+
+extern void screen_tbblue_refresca_pantalla(void);
 
 //extern void z88_return_character_atributes(z80_byte *sbr,int *ascii_caracter,int *ancho,int *inverse,int *subrallado,int *parpadeo,int *gris,int *null_caracter);
 

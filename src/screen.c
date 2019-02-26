@@ -1491,7 +1491,8 @@ void screen_prism_refresca_pantalla(void) {
 }
 
 
-void screen_tbblue_refresca_pantalla(void) {
+void screen_tbblue_refresca_pantalla(void)
+{
 
                 //modo clasico. sin rainbow
                 if (rainbow_enabled.v==0) {

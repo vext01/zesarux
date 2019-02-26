@@ -2434,8 +2434,8 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
     
 
 	if (MACHINE_IS_TBBLUE) {
-		yventana=1;
-		alto_ventana=23;
+		yventana=0;
+		alto_ventana=24;
 	}
 
 	else {
@@ -2553,6 +2553,9 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 					sprintf (texto_buffer,"Tile definitions addr: %02X00H",0x40+tbblue_get_offset_start_tiledef() );					
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);					
+
+					sprintf (texto_buffer,"Tile width: %d columns",tbblue_get_tilemap_width() );					
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);							
 
 					/*
 					z80_byte clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][4];
