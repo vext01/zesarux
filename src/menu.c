@@ -26882,7 +26882,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
         	menu_add_item_menu_inicial_format(&array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_fullscreen,NULL,"[%c] ~~Full Screen",(ventana_fullscreen ? 'X' : ' ' ) );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'f');
 
-		if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF) {
+		if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF && !MACHINE_IS_TBBLUE) {
 	                menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,"[%c] ~~Border enabled", (border_enabled.v==1 ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_window_settings,'b');
 		}

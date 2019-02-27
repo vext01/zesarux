@@ -19,8 +19,7 @@ Changelog--- Para esta version 7.2:
 
 ----fin zxvision----
 
--tbblue:
---refresco con border desactivado que sucede?
+
 
 --probar todos drivers nuevo tamaño ventana tbblue 
 
@@ -746,6 +745,10 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
+
+-tbblue: Permitir tener border desactivado:
+--esta en cpu.c forzado, en set_machine_params
+--en menu.c, no permitido en gui settings
 
 -reloj deberia salir en nextos, ya que implementa el chip de reloj. Porque no aparece?
 -probar que pasa cuando llega a mas de 12 sprites en linea tbblue

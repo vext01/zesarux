@@ -3277,6 +3277,9 @@ You don't need timings for H/V sync =)
 
 				multiface_type=MULTIFACE_TYPE_THREE;
 
+								//Si maquina destino es tbblue, forzar a activar border. De momento no se ve bien con border desactivado
+								border_enabled.v=1;				
+
                 break;
 
 
