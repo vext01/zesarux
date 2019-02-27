@@ -1,11 +1,8 @@
-Changelog--- Para esta version 7.2:
+Changelog
+--- Para esta version 7.2:
     
     
 ----zxvision----:
-
--Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
- 
--Sin multitarea, pulsaciones sobre la zona de scroll, hace efectivo el scroll cuando se mueve el raton o se pulsa boton o tecla
 
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
@@ -13,13 +10,13 @@ Changelog--- Para esta version 7.2:
 -acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
 
 
-
-
 ----fin zxvision----
 
+-meter mas hotkeys en diferentes menus: gui settings por ejemplo
 
+-parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 
---probar todos drivers nuevo tamaño ventana tbblue 
+--probar todos drivers nuevo tamaño ventana tbblue. ok cocoa, xwindow
 
 --tbblue. Compilado con O2. 
 boot tbblue pantalla welcome sin real video: 41%. 
@@ -33,10 +30,6 @@ pogie 45% en pantalla inicial con fast render
 pogie 47% en pantalla inicial sin fast render
 
 
-
--mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
-	
-
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
 cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
 
@@ -46,27 +39,20 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 
 -quiza version mac tener dos versiones: una compilada con O2, otra sin
 
+-quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
+es la de sin phtreads
+
+
 -random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
 En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay que cerrarlo dos veces, y la segunda vez, el 50% de las veces
 da segmentation fault-> quiza el problema viene del lector tzx
 
 
-
-
 -imagen tbblue.mmc dice 4 gb libres?
 -imagen tbblue. actualizar, meter demos tiles
--meter mas hotkeys en diferentes menus: gui settings por ejemplo
-
--quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
-es la de sin phtreads
-
--En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 
 -quiza version threads de windows no va bien porque usleep en windows está deprecated....
 
--Baseconf:
-hay dos tarjetas según:
-Which card is activated, sets bit 4 port # 7FFD.?? -> pendiente
 
 -detector de silencio solo activo por defecto para algunos como alsa y dsp sin threads
 -Quizá clicks de sonido en Windows se debe a reseteo de buffer que hago para compensar delay? Creo que no
@@ -76,9 +62,6 @@ Y si no las reconoce como command line, que las ignore (en casos de cambio de dr
 Fifosdlbuffersize 4 y sdlsamplesize 2048
 Versión sin pthreads casi no se oye click
 
--Color rojo de stick osd en tema clean, no se ve
-
--Osd keyboard sin multitarea en ZX81 no va fino
 
 -Salida de texto en simpletext y otros drivers texto: carácter 127 no es imprimible
 
@@ -95,9 +78,6 @@ Versión sin pthreads casi no se oye click
 
 -Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
 
--soporte mas botones joystick/mas joystick de tbblue
-https://www.specnext.com/forum/viewtopic.php?f=6&t=1142
-
 
 //prueba
 // export LDFLAGS="-O2 -Weverything"
@@ -113,16 +93,10 @@ https://www.specnext.com/forum/viewtopic.php?f=6&t=1142
 #pragma GCC diagnostic ignored "-Wshadow"
 #pragma GCC diagnostic ignored "-Wused-but-marked-unused"*/
 
+
 -Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
-
--Exportación de assembler a ventana de texto. Mejor a archivo de texto.
-Que pida inicio y fin, y que haya limite de instrucciones (igual al tamaño de la zona memoria) por si acaso
-Dump assembler de direccion a direccion y que genere archivo o lo meta en clipboard, o abra ventana aparte para poder copiar si se quiere
-
-
---volumenes canales sonido: el maximo se ve en color rojo, si hubiera algun skin con tinta roja por defecto, esto no se veria
  
--parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
+
 
 -arranco zxuno con zoom 2. cambio a zoom 1 desde menu y peta:
 
@@ -164,15 +138,6 @@ y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en brow
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
 
 
-TBBLUE: 
- 
-
-
-
-*eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
-*y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
-*Desactivar puertos viejos de establecer paleta sprites get/set
-
 -fix en compilacion en mac para sistemas antiguos
 
 -quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
@@ -195,7 +160,18 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 
 -------- Fin cosas para la siguiente version
 
+
+
+
+
+
 --- ZX Vision
+
+-Osd keyboard sin multitarea en ZX81 no va fino
+
+-Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
+ 
+-Sin multitarea, pulsaciones sobre la zona de scroll, hace efectivo el scroll cuando se mueve el raton o se pulsa boton o tecla
 
 -menu: cuando habilita scroll vertical porque no caben opciones, aparece tambien scroll horizontal
 
@@ -745,12 +721,27 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
 --- TBBlue ---
 
+
+TBBLUE: 
+*eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
+*y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
+*Desactivar puertos viejos de establecer paleta sprites get/set
+
+-soporte mas botones joystick/mas joystick de tbblue
+https://www.specnext.com/forum/viewtopic.php?f=6&t=1142
+
+
+
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 
 -tbblue: Permitir tener border desactivado:
 --esta en cpu.c forzado, en set_machine_params
 --en menu.c, no permitido en gui settings
+
+
+-mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
+	
 
 -reloj deberia salir en nextos, ya que implementa el chip de reloj. Porque no aparece?
 -probar que pasa cuando llega a mas de 12 sprites en linea tbblue
@@ -777,6 +768,18 @@ Ver registro 2:
 
 -PIXELUP/DN quiza pueda ir mas alla de coordenada 191
 https://www.specnext.com/forum/viewtopic.php?p=8226#p8226
+
+-------------
+
+
+--- Baseconf ---
+
+-Baseconf:
+hay dos tarjetas según:
+Which card is activated, sets bit 4 port # 7FFD.?? -> pendiente
+
+-No llega a arrancar la rom
+
 
 -------------
 
@@ -1051,15 +1054,16 @@ Mark Hutchings
 
 --- menu - mejoras ---
 
+-Color rojo de stick osd en tema clean, no se ve
+
+--volumenes canales sonido: el maximo se ve en color rojo, si hubiera algun skin con tinta roja por defecto, esto no se veria
+
+-En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 
 -entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
 ->ahora ya no da el cpu_panic de Window out of bounds
 ->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
 en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
-
--mostrar <exp> para archivos expandibles/comprimidos? gestionado por menu_util_file_is_compressed
-
-
 
 
 -Mouse: para que no haga framedrop al moverse sobre un menu, quiza se deberia considerar cada x frames de tiempo.
@@ -1071,11 +1075,6 @@ en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
 -Permitir teclas numericas como atajos. Para ello hay que reasignar gestion de teclas cursores que las convierte a '6' y '7'
 
 -Al insertar mmc o ide debe ir primero a rutas shared, tal y como hace smartload por ejemplo. y tambien ir a ultima ruta al abrir selector archivos
-
--Ventana selector archivos el máximo de grande?
-
--ver espectro en modo pentagon timing se ve mal
-
 
 
 -------------
