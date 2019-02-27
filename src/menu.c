@@ -27174,12 +27174,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		//Con driver cocoa, no permitimos cambiar a otro driver
-		if (strcmp(scr_driver_name,"cocoa")) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"    Change Video Driver");
-		}
-
-
 
 
 
@@ -27222,8 +27216,20 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~Window settings");
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'w');
 
+		//Con driver cocoa, no permitimos cambiar a otro driver
+		if (strcmp(scr_driver_name,"cocoa")) {
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"Change Video Driver");
+		}
+
+
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"~~OSD settings");
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');		
+
+
+
+
+
+
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");		
 
