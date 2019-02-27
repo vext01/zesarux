@@ -2394,9 +2394,9 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 		menu_ay_registers_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
-				int valor_contador_segundo_anterior;
+				//int valor_contador_segundo_anterior;
 
-				valor_contador_segundo_anterior=contador_segundo;
+				//valor_contador_segundo_anterior=contador_segundo;
 
 	z80_byte tecla;
 
@@ -2958,10 +2958,10 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 	char dumpmemoria[84]; //80 + 3 espacios izquierda + 0 final
 
 	
-	int limite;
+	//int limite;
 
 	int linea=0;
-	limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
+	//limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
 
 	int current_tile;
 

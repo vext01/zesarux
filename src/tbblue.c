@@ -4721,7 +4721,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 	}
 
-	int bordesupinf=0;
+	//int bordesupinf=0;
 
 	int capalayer2=0;
 	int capasprites=0;
@@ -4996,7 +4996,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 	}
 
 	else {
-		bordesupinf=1;
+		//bordesupinf=1;
 	}
 
 	//Aqui puede ser borde superior o inferior

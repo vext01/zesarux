@@ -906,8 +906,10 @@ Byte fields:
   for (i=0;i<16;i++)  cpc_palette_table[i]=header[4+i];
   for (i=0;i<4;i++)   cpc_ppi_ports[i]=header[20+i];
   for (i=0;i<32;i++)  cpc_crtc_registers[i]=header[24+i];
-                      cpc_border_color=header[56];
-                      cpc_crtc_last_selected_register=header[57];                      
+
+
+  cpc_border_color=header[56];
+  cpc_crtc_last_selected_register=header[57];                      
 
   cpc_set_memory_pages();
 }

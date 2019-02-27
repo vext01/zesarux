@@ -4478,7 +4478,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 		menu_window_splash_counter_ms=0;
 	}
 	//linea cursor en el caso que se muestre cursor
-	int linea_cursor=0;
+	//int linea_cursor=0;
 
 	//En caso de stdout, es mas simple, mostrar texto y esperar tecla
         if (!strcmp(scr_driver_name,"stdout")) {
@@ -4517,7 +4517,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	const int max_ancho_texto=30;
 
 	//Primera linea que mostramos en la ventana
-	int primera_linea=0;
+	//int primera_linea=0;
 
 	int indice_linea=0;  //Numero total de lineas??
 	int indice_texto=0;
@@ -4548,7 +4548,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 	//int indice_segunda_linea;
 
-	int texto_no_cabe=0;
+	//int texto_no_cabe=0;
 
 	do {
 		indice_texto+=max_ancho_texto;
@@ -4620,7 +4620,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 	if (alto_ventana-2>MAX_LINEAS_VENTANA_GENERIC_MESSAGE) {
 		alto_ventana=MAX_LINEAS_VENTANA_GENERIC_MESSAGE+2;
-		texto_no_cabe=1;
+		//texto_no_cabe=1;
 	}
 
 
@@ -4892,8 +4892,8 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 						if (encontrado) {
 							ultima_linea_buscada=i;
 							//mover cursor hasta ahi
-							primera_linea=0;
-							linea_cursor=0;
+							//primera_linea=0;
+							//linea_cursor=0;
 
 							//printf ("mover cursor hasta linea: %d\n",ultima_linea_buscada);
 
@@ -7959,7 +7959,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	int ancho_calculado=0;
 
 	//Para permitir menus mas grandes verticalmente de lo que cabe en ventana.
-	int scroll_opciones=0;
+	//int scroll_opciones=0;
 
 
 	ancho=menu_dibuja_ventana_ret_ancho_titulo(ZXVISION_MAX_ANCHO_VENTANA,titulo);
@@ -8087,7 +8087,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		//printf ("tecla desde bucle: %d\n",tecla);
 		//Ajustar scroll
-		scroll_opciones=0;
+		//scroll_opciones=0;
 
 
 		//desactivado en zxvision , tiene su propio scroll
@@ -13113,14 +13113,14 @@ menu_z80_moto_int menu_debug_disassemble_subir(menu_z80_moto_int dir_inicial)
 
 	dir=menu_debug_hexdump_adjusta_en_negativo(dir,1);
 
-	menu_z80_moto_int dir_anterior=dir;
+	//menu_z80_moto_int dir_anterior=dir;
 
 	int puntero_ficticio=0;
 
 
 	do {
 
-		dir_anterior=dir;
+		//dir_anterior=dir;
 
 		debugger_disassemble(buffer,30,&longitud_opcode,dir);
 		
