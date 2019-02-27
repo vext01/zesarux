@@ -16417,11 +16417,8 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
 
         menu_espera_no_tecla();
-        //menu_dibuja_ventana(REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,"Joystick test");
+    
 
-
-
-	//menu_dibuja_ventana(2,6,27,alto,texto_ventana);
 	zxvision_window ventana;
 
 	zxvision_new_window(&ventana,REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,
@@ -19176,8 +19173,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 	
 
-	//menu_dibuja_ventana(OSD_KEYBOARD_X_VENTANA,OSD_KEYBOARD_Y_VENTANA,
-	//			OSD_KEYBOARD_ANCHO_VENTANA,OSD_KEYBOARD_ALTO_VENTANA,"On Screen Keyboard");
+
 
         zxvision_new_window(&ventana,OSD_KEYBOARD_X_VENTANA,OSD_KEYBOARD_Y_VENTANA,OSD_KEYBOARD_ANCHO_VENTANA,OSD_KEYBOARD_ALTO_VENTANA,
 				OSD_KEYBOARD_ANCHO_VENTANA-1,OSD_KEYBOARD_ALTO_VENTANA-2,"On Screen Keyboard");
@@ -34904,7 +34900,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
     //printf ("confirm\n");
 
 	menu_espera_no_tecla();
-    	//menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
+    	
 	zxvision_window ventana_filesel;
 	zxvision_window *ventana;
 
@@ -35563,7 +35559,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 						//Redibujar ventana
 						//releer_directorio=1;
-						//menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
+						
 						zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 						zxvision_menu_filesel_print_legend(ventana);
 

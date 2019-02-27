@@ -10,11 +10,9 @@ Changelog--- Para esta version 7.2:
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
 
--acabar de migrar todas menu_dibuja_ventana a zxvision. faltan las de redefinir joystick (estas ya está) y poco mas
+-acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
 
--menu: cuando habilita scroll vertical porque no caben opciones, aparece tambien scroll horizontal
 
--Rueda ratón sin multitarea no se mueve muy fino: parece que actualiza tarde la ventana
 
 
 ----fin zxvision----
@@ -198,6 +196,10 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 -------- Fin cosas para la siguiente version
 
 --- ZX Vision
+
+-menu: cuando habilita scroll vertical porque no caben opciones, aparece tambien scroll horizontal
+
+-Rueda ratón sin multitarea no se mueve muy fino: parece que actualiza tarde la ventana
 
 -botones/wheel left y right de X11??
 
