@@ -614,7 +614,7 @@ int menu_window_splash_counter_ms;
 z80_bit tooltip_enabled;
 
 //La primera vez que arranca, dispara evento de startup aid
-int menu_first_aid_startup=0;
+int menu_first_aid_startup=1;
 
 //El texto a disparar al startup
 char *string_config_key_aid_startup;
@@ -32750,7 +32750,7 @@ void reset_splash_text(void)
 			//abrir el menu si hay first aid en startup disponible
 			//Para que aparezca el mensaje del dia, tiene que estar habilitado el setting de welcome message
 			//Si no, no llegara aqui nunca
-			menu_first_aid_random_startup();
+			if (menu_first_aid_startup) menu_first_aid_random_startup();
 		}
 
 		else {
@@ -34771,7 +34771,7 @@ void menu_first_aid_random_startup(void)
 				//menu_first_aid(first_aid_list[i].config_name);
 				encontrado=1;
 				menu_abierto=1;
-				menu_first_aid_startup=1;
+				//menu_first_aid_startup=1;
 			}
 		}
 	}	
