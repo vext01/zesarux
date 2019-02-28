@@ -17,6 +17,7 @@ Added Dandanator CPC emulation
 Added machine Amstrad CPC 4128
 Added CPC machines support to ZSF snapshots
 Added tape to wav converter (tap, tzx, o, p to wav)
+Added text driver (curses, stdout, simpletext) for Chloe 80x24 mode
 
 Improved Debugger:
 -Now you can disassemble on the Step-to-step mode from the Debug cpu menu

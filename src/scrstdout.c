@@ -579,6 +579,10 @@ void scrstdout_repinta_pantalla(void)
                 screen_text_repinta_pantalla_cpc();
         }
 
+	else if (MACHINE_IS_CHLOE) {
+		screen_text_repinta_pantalla_chloe();
+	}
+
 	else if (MACHINE_IS_TSCONF) {
 		//Si es modo texto, hacer este refresh:
 		z80_byte modo_video=tsconf_get_video_mode_display();

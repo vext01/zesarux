@@ -43,6 +43,7 @@
 #include "charset.h"
 #include "tsconf.h"
 #include "settings.h"
+#include "chloe.h"
 
 
 #define CURSES_IZQ_BORDER 4
@@ -612,6 +613,64 @@ void scrcurses_refresca_pantalla_no_rainbow(void)
 
 }
 
+
+void scrcurses_refresca_pantalla_chloe(void)
+{
+
+        z80_byte caracter;
+        int x,y;
+        unsigned char inv;
+
+        int valor_get_pixel;
+
+        int brillo,parpadeo;
+
+        char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
+	z80_byte *chloe_screen;
+
+          chloe_screen=chloe_home_ram_mem_table[7];
+
+	chloe_screen += (0xd800-0xc000); //text display in offset d800 in ram 7
+
+          for (y=0;y<24;y++) {
+                for (x=0;x<80;x++,chloe_screen++) {
+
+
+                        caracter=*chloe_screen; 
+
+			brillo=0;
+			inv=0;
+
+			/*
+
+                        if (colores) {
+                          asigna_color(x,y,&brillo,&parpadeo);
+                        }
+                        else {
+                          brillo=0;
+                        }
+			*/
+
+			if (caracter==0) {
+				//caracter='C'; //copyright character
+				caracter=' '; //blank space until it is fixed in the rom
+			}
+
+			if (caracter<32 || caracter>126) caracter='?';
+
+
+                                move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+
+                                if (inv) addch(caracter | WA_REVERSE | brillo );
+                                else addch(caracter|brillo);
+
+                }
+
+          }
+
+}
+
 void sam_temp_debug_char(z80_byte *buffer_letra)
 {
 	int i,j;
@@ -1021,6 +1080,10 @@ void scrcurses_refresca_pantalla(void)
 		  }
 
 
+	}
+
+	else if (MACHINE_IS_CHLOE) {
+		scrcurses_refresca_pantalla_chloe();
 	}
 
 

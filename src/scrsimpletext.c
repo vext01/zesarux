@@ -398,6 +398,10 @@ void scrsimpletext_repinta_pantalla(void)
                 screen_text_repinta_pantalla_cpc();
         }
 
+        else if (MACHINE_IS_CHLOE) {
+                screen_text_repinta_pantalla_chloe();
+        }
+
 
 	else if (MACHINE_IS_TSCONF) {
 
