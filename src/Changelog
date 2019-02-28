@@ -8,8 +8,6 @@ Improved menu environment:
 * Added first-aid help windows
 
 Added Z80 assembler
-Added TBBlue Tiles video mode
-Added TBBlue "reveal" setting to view which pixels use a layer
 Added setting to specify configuration file
 Added key to save text windows contents to a file
 Added setting to send a final space after every word in the osd adventure keyboard
@@ -24,9 +22,14 @@ Improved Debugger:
 -Now you can assemble from the Debug cpu menu
 -Added Chloe memory Zone
 
-Improved CPU usage in TBBlue:
--Use 4% less cpu time (in my machine) when only ULA and/or Tiles enabled
--Use 1% less cpu time (in my machine) when all layers enabled
+Improved TBBlue emulation:
+-Better CPU usage:
+--Use 4% less cpu time (in my machine) when only ULA and/or Tiles enabled
+--Use 1% less cpu time (in my machine) when all layers enabled
+-Added TBBlue Tiles video mode
+-Added TBBlue "reveal" setting to view which pixels use a layer
+-Resized display: now is twice bigger
+-Fixed Timex hi-res mode 512x192
 
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now

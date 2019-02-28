@@ -2628,14 +2628,15 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-					sprintf (texto_buffer,"Layer2:    X=%3d Y=%3d",tbblue_registers[22],tbblue_registers[23]);
+					sprintf (texto_buffer,"Layer2:     X=%4d  Y=%3d",tbblue_registers[22],tbblue_registers[23]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
-					sprintf (texto_buffer,"ULA/LoRes: X=%3d Y=%3d",tbblue_registers[50],tbblue_registers[51]);
+					sprintf (texto_buffer,"ULA/LoRes:  X=%4d  Y=%3d",tbblue_registers[50],tbblue_registers[51]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-					sprintf (texto_buffer,"Tilemap:   X=%3d Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
+					//Offset X puede llegar hasta 1023. Por tanto 4 cifras. El resto X solo 3 cifras, pero los dejamos a 4 para que formato quede igual en pantalla
+					sprintf (texto_buffer,"Tilemap:    X=%4d  Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);					
 
 				}
