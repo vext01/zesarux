@@ -11168,11 +11168,12 @@ void screen_text_repinta_pantalla_chloe(void)
         int x,y;
         unsigned char inv;
 
-        int valor_get_pixel;
+        //int valor_get_pixel;
 
-        int brillo,parpadeo;
+        //int parpadeo;
+				int brillo;
 
-        char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
         z80_byte *chloe_screen;
 

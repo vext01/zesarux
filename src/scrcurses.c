@@ -621,11 +621,13 @@ void scrcurses_refresca_pantalla_chloe(void)
         int x,y;
         unsigned char inv;
 
-        int valor_get_pixel;
+        //int valor_get_pixel;
 
-        int brillo,parpadeo;
+        //int parpadeo;
 
-        char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+	int brillo;
+
+        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 	z80_byte *chloe_screen;
 

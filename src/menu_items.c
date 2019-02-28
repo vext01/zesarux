@@ -6210,7 +6210,7 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 
 int menu_tsconf_layer_valor_contador_segundo_anterior;
 
-char *menu_tsconf_layer_aux_usedunused_used="Used";
+char *menu_tsconf_layer_aux_usedunused_used="In use";
 char *menu_tsconf_layer_aux_usedunused_unused="Unused";
 
 char *menu_tsconf_layer_aux_usedunused(int value)
