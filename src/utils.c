@@ -2992,7 +2992,7 @@ if (util_get_configfile_name(configfile)==0)  {
               }
 
   char *sample_config=
-    ";ZEsarUX sample configuration file\n"
+    ";ZEsarUX configuration file\n"
     ";\n"
     ";Lines beginning with ; or # are ignored\n"
     ";You can specify here the same options passed on command line, for example:\n"

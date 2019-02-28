@@ -6884,6 +6884,7 @@ tooltip_enabled.v=1;
 
 	audio_ay_player_mem=NULL;
 
+	menu_first_aid_startup=1;
 
 	clear_lista_teclas_redefinidas();
 

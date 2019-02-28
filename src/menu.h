@@ -211,6 +211,7 @@ struct s_first_aid_list
 
 extern struct s_first_aid_list first_aid_list[];
 
+extern int menu_first_aid_startup;
 extern z80_bit menu_disable_first_aid;
 extern void menu_first_aid_disable(char *texto);
 extern int total_first_aid;

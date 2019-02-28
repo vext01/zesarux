@@ -613,8 +613,11 @@ int menu_window_splash_counter_ms;
 
 z80_bit tooltip_enabled;
 
-//La primera vez que arranca, dispara evento de startup aid
-int menu_first_aid_startup=1;
+//La primera vez que arranca, dispara evento de startup aid. Se inicializa desde cpu.c
+int menu_first_aid_startup=0;
+
+
+int menu_first_aid_must_show_startup=0;
 
 //El texto a disparar al startup
 char *string_config_key_aid_startup;
@@ -32190,8 +32193,8 @@ void menu_inicio(void)
 
 
 	//Si first aid al inicio
-	if (menu_first_aid_startup) {
-		menu_first_aid_startup=0;
+	if (menu_first_aid_must_show_startup) {
+		menu_first_aid_must_show_startup=0;
 		menu_first_aid_title(string_config_key_aid_startup,"First aid of the day");
 		//No mostrara nada mas que esto y luego volvera del menu
 	}	
@@ -34749,6 +34752,7 @@ void menu_first_aid_random_startup(void)
 {
 
 	//printf ("menu_first_aid_random_startup\n");
+	menu_first_aid_startup=0;
 
 	//Si no hay autoguardado de config, no mostrarlo (pues no se podria desactivar)
 	if (save_configuration_file_on_exit.v==0) return;
@@ -34768,10 +34772,9 @@ void menu_first_aid_random_startup(void)
 			valor_opcion=first_aid_list[i].puntero_setting;
 			if ((*valor_opcion)==0) {
 				string_config_key_aid_startup=first_aid_list[i].config_name;
-				//menu_first_aid(first_aid_list[i].config_name);
 				encontrado=1;
 				menu_abierto=1;
-				//menu_first_aid_startup=1;
+				menu_first_aid_must_show_startup=1;
 			}
 		}
 	}	
@@ -34855,11 +34858,13 @@ int menu_first_aid_title(char *key_setting,char *title) //(enum first_aid_number
 	int *valor_opcion;
 	char *texto_opcion;	
 
+
 	valor_opcion=first_aid_list[indice].puntero_setting;
 	texto_opcion=first_aid_list[indice].texto_opcion;
 
 	//Esta desmarcada. no mostrar nada
 	if (*valor_opcion) return 0;
+
 
 	cls_menu_overlay();
 	zxvision_menu_generic_message_setting(title,texto_opcion,"Do not show it again",valor_opcion);
