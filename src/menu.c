@@ -34725,6 +34725,10 @@ char *first_aid_string_zxvision_clickout="If you have multitask enabled, with me
 	"is still alive";
 
 
+int first_aid_no_conversion=0;
+char *first_aid_string_conversion="You can convert some known file formats from the File utilities menu. For example, you can "
+	"convert a TAP to a TZX file";
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
@@ -34743,6 +34747,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("votext",&first_aid_no_votext,first_aid_string_votext,1);
 	menu_first_aid_add("easteregg",&first_aid_no_easteregg,first_aid_string_eastereg,1);
 	menu_first_aid_add("zxvisionclickout",&first_aid_no_zxvision_clickout,first_aid_string_zxvision_clickout,1);
+	menu_first_aid_add("conversion",&first_aid_no_conversion,first_aid_string_conversion,1);
 
 }
 
