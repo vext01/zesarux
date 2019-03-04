@@ -12,6 +12,21 @@ Changelog
 
 ----fin zxvision----
 
+-clicking en windows.pruebas:
+*con 3.1 antigua. mismos clicks
+*con pthreads o sin pthreads: mismos clicks
+*cambiando sdl_mixaudio por copia a mano: mismos clicks
+*si dejo que arranque sin mas: acaba generando clicks al cabo de unos segundos
+*si meto en buffer de audio todo 0: no hay clicks
+*si meto en buffer de audio todo 1: hay clicks
+*si meto en buffer de audio todo con valor 48: hay clicks
+*si meto en buffer de audio todo con valor 30: hay clicks
+*si meto en buffer de audio todo con valor 24: hay clicks
+*si meto en buffer de audio todo con valor 12: hay clicks
+
+*pongo solo sdl_pauseaudio(0) al inicio: hay clicks
+*sin multitask en menu: hay clicks 
+
 -meter mas hotkeys en diferentes menus: gui settings por ejemplo
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
