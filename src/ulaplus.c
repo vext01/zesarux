@@ -430,11 +430,19 @@ Implementations that support the Timex video modes use the #FF register as the p
 			//establecer color
 			ulaplus_change_palette_colour((ulaplus_last_send_BF3B&63),value);
 
+                        //Esto solo afecta en modo timex 512x192 con real 512x192 setting, dado 
+                        //que el border viene refrescado desde rutina normal sin real video
+                        modificado_border.v=1;
+
 		}
 
 		if ( (ulaplus_last_send_BF3B&(64+128))==64) {
 			//establecer modo
 			ulaplus_set_mode(value);
+
+                        //Esto solo afecta en modo timex 512x192 con real 512x192 setting, dado 
+                        //que el border viene refrescado desde rutina normal sin real video
+                        modificado_border.v=1;
 		}
 	}
 }

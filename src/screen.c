@@ -2467,20 +2467,25 @@ void scr_refresca_pantalla_timex_512x192(void)
 					//Colores en ulaplus en este modo son:
 					/*
 BITS INK PAPER BORDER
-000 24 31 31
-001 25 30 30
-010 26 29 29
-011 27 28 28
-100 28 27 27
-101 29 26 26
-110 30 25 25
-111 31 24 24
+000  24 31 31
+001  25 30 30
+010  26 29 29
+011  27 28 28
+100  28 27 27
+101  29 26 26
+110  30 25 25
+111  31 24 24
 					*/
 
 					tin6 +=16;
 					pap6 +=16;
+
+					//printf ("tin6: %d pap 6: %d\n",tin6,pap6);
+
 					tin6=ulaplus_palette_table[tin6]+ULAPLUS_INDEX_FIRST_COLOR;
 					pap6=ulaplus_palette_table[pap6]+ULAPLUS_INDEX_FIRST_COLOR;
+					//printf ("P tin6: %d pap 6: %d\n",tin6,pap6);
+
 				}
 
 				//Si tbblue

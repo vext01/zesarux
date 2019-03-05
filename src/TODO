@@ -12,37 +12,13 @@ Changelog
 
 ----fin zxvision----
 
--clicking en windows.pruebas:
-*con 3.1 antigua. mismos clicks
-*con pthreads o sin pthreads: mismos clicks
-*cambiando sdl_mixaudio por copia a mano: mismos clicks
-*si dejo que arranque sin mas: acaba generando clicks al cabo de unos segundos
-*si meto en buffer de audio todo 0: no hay clicks
-*si meto en buffer de audio todo 1: hay clicks
-*si meto en buffer de audio todo con valor 48: hay clicks
-*si meto en buffer de audio todo con valor 30: hay clicks
-*si meto en buffer de audio todo con valor 24: hay clicks
-*si meto en buffer de audio todo con valor 12: hay clicks
 
-*pongo solo sdl_pauseaudio(0) al inicio: hay clicks
-*sin multitask en menu: hay clicks 
 
 -meter mas hotkeys en diferentes menus: gui settings por ejemplo
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 
---probar todos drivers nuevo tamaño ventana tbblue. ok cocoa, xwindow
-
---tbblue. Compilado con O2. 
-boot tbblue pantalla welcome sin real video: 41%. 
-con real video y fast render 55%
-con real video y normal render 57%
-
-
-warhawk 43% en pantalla menu con fast render
-warhawk 45% en pantalla menu sin fast render
-pogie 45% en pantalla inicial con fast render 
-pogie 47% en pantalla inicial sin fast render
+--probar todos drivers nuevo tamaño ventana tbblue. ok cocoa, xwindow, sdl
 
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
@@ -67,19 +43,7 @@ En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay 
 da segmentation fault-> quiza el problema viene del lector tzx
 
 
--imagen tbblue.mmc dice 4 gb libres?
--imagen tbblue. actualizar, meter demos tiles
 
--quiza version threads de windows no va bien porque usleep en windows está deprecated....
-
-
--detector de silencio solo activo por defecto para algunos como alsa y dsp sin threads
--Quizá clicks de sonido en Windows se debe a reseteo de buffer que hago para compensar delay? Creo que no
--Parece que subiendo sdl sample size hace menos click
-Poner dichas opciones en menú para poderlas editar. Y que permita grabarlas en config
-Y si no las reconoce como command line, que las ignore (en casos de cambio de driver etc)
-Fifosdlbuffersize 4 y sdlsamplesize 2048
-Versión sin pthreads casi no se oye click
 
 
 -Salida de texto en simpletext y otros drivers texto: carácter 127 no es imprimible
@@ -780,6 +744,18 @@ Ver registro 2:
 			bit 1 = (R/W) if 1 Hard Reset
 			bit 0 = (R/W) if 1 Soft Reset
 
+-tbblue fast render:
+Compilado con O2. 
+boot tbblue pantalla welcome sin real video: 41%. 
+con real video y fast render 55%
+con real video y normal render 57%
+
+
+warhawk 43% en pantalla menu con fast render
+warhawk 45% en pantalla menu sin fast render
+pogie 45% en pantalla inicial con fast render 
+pogie 47% en pantalla inicial sin fast render
+
 
 
 *Contended en mmu tbblue. De momento la contencion la hace por bloques de 16 kb
@@ -1158,10 +1134,41 @@ http://stackoverflow.com/questions/708238/how-do-i-add-an-icon-to-a-mingw-gcc-co
 -rzx: eliminar dependencia de comando "cat"-> necesita ejecutarse en consola bash de mingw para que lo encuentre
 
 
--Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
-Se oye incluso en la 5.0 sin pthreads
-->lo que pasa es que el detector de silencio saltaba y dejaba de oirse
-En la 6.1 vuelvo a poner detector de silencio activado por defecto
+-quiza version threads de windows no va bien porque usleep en windows está deprecated....
+
+
+-detector de silencio solo activo por defecto para algunos como alsa y dsp sin threads
+-Quizá clicks de sonido en Windows se debe a reseteo de buffer que hago para compensar delay? Creo que no
+Poner dichas opciones en menú para poderlas editar. Y que permita grabarlas en config
+Y si no las reconoce como command line, que las ignore (en casos de cambio de driver etc)
+Fifosdlbuffersize 4 y sdlsamplesize 2048
+
+-audio clicking en windows.pruebas
+*esto con version sin pthreads. Con pthreads parece que lo hace mas
+
+*con 3.1 antigua. mismos clicks
+*con pthreads o sin pthreads: mismos clicks
+*cambiando sdl_mixaudio por copia a mano: mismos clicks
+*si dejo que arranque sin mas: acaba generando clicks al cabo de unos segundos
+*si meto en buffer de audio todo 0: no hay clicks
+*si meto en buffer de audio todo 1: hay clicks
+*si meto en buffer de audio todo con valor 48: hay clicks
+*si meto en buffer de audio todo con valor 30: hay clicks
+*si meto en buffer de audio todo con valor 24: hay clicks
+*si meto en buffer de audio todo con valor 12: hay clicks
+
+*pongo solo sdl_pauseaudio(0) al inicio: hay clicks
+*sin multitask en menu: hay clicks 
+*suele aparecer despues de 5-10 segundos de iniciar el emulador, pero no antes de esos 5
+*si desde el menu se cambia driver a null, y luego de nuevo a sdl, el click aparece despues de esos 5-10 segundos de habilitar driver
+
+*clicking con tarjeta audio intel hd de virtualbox
+*con virtualbox drivers: mismo efecto: clicking con tarjeta audio intel hd de virtualbox
+
+*cambio a driver ich ac97: con 44hz, 16 bits: no hay click. con 8 bits: no hay click.  con frecuencia 15600: no hay click
+*con este driver ich ac97: no hay clicking normalmente (solo quiza al cambiar de ventana o perder fps). BIEN
+
+*con driver audio intel hd (el que tenia antes): hay clicking normalmente . MAL
 
 
 -------------

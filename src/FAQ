@@ -237,12 +237,17 @@ A: You have two options to solve it:
 
 
 Q: How can I select files from other drives?
-A: On file selector window, you must switch to File name section (pressing TAB twice) and write letter number and ':', for example: C:
+A: On file selector window, press shift+D to select another drive.
+You can also switch to File name section (pressing TAB twice) and write letter number and ':', for example: C:
 Remember that : appears pressing symbol shift (Ctrl or Alt)+letter Z
 
 
 Q: I enabled the ZEsarUX remote command protocol, used a telnet client to client, but I only see the Welcome message and I can not type anything
 A: Try disabling Windows firewall
+
+
+Q: I hear some audio "clicking" when no sound is being generated from the emulated machine
+A: If you hear those annoying sounds, for example, in the copyright message of the Spectrum 48kb, without pressing any key, I'm sorry that problem doesn't have fix yet. The same audio libraries I use (SDL) works perfect on Linux or Mac, but not on Windows. Seems there's some kind of problem with Mingw+SDL+Windows and it doesn't happen always, it also depends on your sound card and the driver. You may reduce a bit this effect by enabling the Silence detector on Audio settings.
 
 
 ----------------------------------------------------------------------------
