@@ -12,8 +12,6 @@ Changelog
 
 ----fin zxvision----
 
-
-
 -meter mas hotkeys en diferentes menus: gui settings por ejemplo
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
@@ -25,8 +23,6 @@ Changelog
 cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
 
 -probar que cambios de rainbow no hayan afectado a maquinas no tbblue
-
--chloe refresco modo texto. actualizar rom
 
 -quiza version mac tener dos versiones: una compilada con O2, otra sin
 
@@ -41,9 +37,6 @@ Quizá version threads windows  llamarla :
 -random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
 En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay que cerrarlo dos veces, y la segunda vez, el 50% de las veces
 da segmentation fault-> quiza el problema viene del lector tzx
-
-
-
 
 
 -Salida de texto en simpletext y otros drivers texto: carácter 127 no es imprimible
@@ -79,8 +72,6 @@ da segmentation fault-> quiza el problema viene del lector tzx
 
 -Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
  
-
-
 -arranco zxuno con zoom 2. cambio a zoom 1 desde menu y peta:
 
 
@@ -104,7 +95,7 @@ Ouch, thank you for the response – this will require some hard studying to fig
 
 
 -buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
-y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en browser y luego pulsar continuamente. sin real beeper no pasa
+y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en tbblue browser y luego pulsar continuamente. sin real beeper no pasa
 ->el por que lo sigue haciendo en next aunque hayas soltado la tecla de cursor abajo es un miesterio
 
 -tab en curses en menu filesel no lo lee
@@ -119,7 +110,6 @@ y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en brow
 -poder cargar un .config sin mas, sin que cargue snapshot ni cinta ni nada, solo parseando el config. raro? en smartload estaran los dos, el juego y la config
 
 -Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
-
 
 -fix en compilacion en mac para sistemas antiguos
 

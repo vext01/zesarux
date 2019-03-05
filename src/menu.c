@@ -26779,24 +26779,30 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_red,NULL,"[%c] Red display",(screen_gray_mode & 4 ? 'X' : ' ') );
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_green,NULL,"[%c] Green display",(screen_gray_mode & 2 ? 'X' : ' ') );
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"[%c] Blue display",(screen_gray_mode & 1 ? 'X' : ' ') );
+		menu_add_item_menu_inicial_format(&array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_red,NULL,"[%c] ~~Red display",(screen_gray_mode & 4 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'r');
 
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] Inverse video",(inverse_video.v==1 ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_green,NULL,"[%c] ~~Green display",(screen_gray_mode & 2 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'g');
+		
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"[%c] ~~Blue display",(screen_gray_mode & 1 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'b');
+
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] ~~Inverse video",(inverse_video.v==1 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'i');
 		menu_add_item_menu_tooltip(array_menu_colour_settings,"Inverse Color Palette");
 		menu_add_item_menu_ayuda(array_menu_colour_settings,"Inverses all the colours used on the emulator, including menu");
 
 
 		if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
-			menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_real_1648_palette,NULL,"[%c] Real palette",(spectrum_1648_use_real_palette.v ? 'X' : ' ') );
+			menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_real_1648_palette,NULL,"[%c] R~~eal palette",(spectrum_1648_use_real_palette.v ? 'X' : ' ') );
+			menu_add_item_menu_shortcut(array_menu_colour_settings,'e');
 			menu_add_item_menu_tooltip(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette");
 			menu_add_item_menu_ayuda(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette. "
 				"In fact, this palette is the same as a Spectrum issue 3, and almost the same as issue 1 and 2");
 		}
 
-                menu_add_item_menu(array_menu_colour_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_colour_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+        menu_add_item_menu(array_menu_colour_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 		menu_add_ESC_item(array_menu_colour_settings);
 
                 retorno_menu=menu_dibuja_menu(&colour_settings_opcion_seleccionada,&item_seleccionado,array_menu_colour_settings,"Colour Settings" );
@@ -26878,6 +26884,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
         do {
 
 
+			//hotkeys usadas: fbmzropciln
+
         	menu_add_item_menu_inicial_format(&array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_fullscreen,NULL,"[%c] ~~Full Screen",(ventana_fullscreen ? 'X' : ' ' ) );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'f');
 
@@ -26900,7 +26908,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
                 }
 
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075,NULL,"[%c] Reduce to 0.75",(screen_reduce_075.v ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075,NULL,"[%c] ~~Reduce to 0.75",(screen_reduce_075.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'r');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Reduce machine display output by 0.75. Enables realvideo and forces watermark");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Reduce machine display output by 0.75. Enables realvideo and forces watermark. This feature has been used on a large bulb display for the RunZX 2018 event");
 
@@ -26924,7 +26933,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 		//Uso cpu no se ve en windows
 #ifndef MINGW
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"[%c] Show CPU usage",(screen_show_cpu_usage.v ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"[%c] Show ~~CPU usage",(screen_show_cpu_usage.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'c');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Show CPU usage on footer");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"It tells you how much host cpu machine is using ZEsarUX. So it's better to have it low. "
 														"Higher values mean you need a faster host machine to use ZEsarUX");
@@ -26936,9 +26946,12 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
 
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] Minimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"[%c] Close button",(menu_hide_close_button.v ? ' ' : 'X') );
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] Invert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] M~~inimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'i');
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"[%c] C~~lose button",(menu_hide_close_button.v ? ' ' : 'X') );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'l');
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] I~~nvert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'n');
 
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -26989,9 +27002,10 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_osd_settings,MENU_OPCION_NORMAL,menu_interface_show_splash_texts,NULL,"[%c] Show splash texts",(screen_show_splash_texts.v ? 'X' : ' ' ) );
+		menu_add_item_menu_inicial_format(&array_menu_osd_settings,MENU_OPCION_NORMAL,menu_interface_show_splash_texts,NULL,"[%c] ~~Show splash texts",(screen_show_splash_texts.v ? 'X' : ' ' ) );
 		menu_add_item_menu_tooltip(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
 		menu_add_item_menu_ayuda(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
+		menu_add_item_menu_shortcut(array_menu_osd_settings,'s');
 
 
 
@@ -26999,12 +27013,14 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark,NULL,"[%c] Watermark",(screen_watermark_enabled.v ? 'X' : ' ' ) );
+		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark,NULL,"[%c] ~~Watermark",(screen_watermark_enabled.v ? 'X' : ' ' ) );
 		menu_add_item_menu_tooltip(array_menu_osd_settings,"Adds a watermark to the display");
 		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. May produce flickering if not enabled realvideo. If using reduce window setting, it will be forced enabled");
+		menu_add_item_menu_shortcut(array_menu_osd_settings,'w');
 
 		//Esta posicion afecta tanto al watermark normal como al forzado de 0.75
-		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"[%d] Watermark position",screen_watermark_position);
+		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"[%d] Watermark ~~position",screen_watermark_position);
+		menu_add_item_menu_shortcut(array_menu_osd_settings,'p');
 		
 
                 menu_add_item_menu(array_menu_osd_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -27110,6 +27126,9 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
+		//hotkeys usados:
+		//ocewsruitfalqh
+
 		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"[%c] M~~ultitask menu", (menu_multitarea==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'u');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable menu with multitask");
@@ -27133,17 +27152,20 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"[%d] Menu char width",menu_char_width);
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"[%d] Menu char w~~idth",menu_char_width);
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'i');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"[%c] Tooltips",(tooltip_enabled.v ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"[%c] ~~Tooltips",(tooltip_enabled.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'t');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] ~~First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'f');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable First Aid help");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable First Aid help");		
 
@@ -27164,34 +27186,30 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_interface_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"[%c] Auto Frameskip",
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"[%c] ~~Auto Frameskip",
 				(autoframeskip.v ? 'X' : ' '));
+				menu_add_item_menu_shortcut(array_menu_interface_settings,'a');	
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Let ZEsarUX decide when to skip frames");
 			menu_add_item_menu_ayuda(array_menu_interface_settings,"ZEsarUX skips frames when the host cpu use is too high. Then skiping frames the cpu use decreases");
 
 
 
-		
 
-
-
-
-
-
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"[%c] Limit menu opening",
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"[%c] ~~Limit menu opening",
 			(menu_limit_menu_open.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'l');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"[%c] Quick exit",
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"[%c] ~~Quick exit",
 			(quickexit.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'q');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");			
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"[%c] Hide dirs in filesel",
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"[%c] ~~Hide dirs in filesel",
 			(menu_filesel_hide_dirs.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'h');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Hide directories from file selector menus");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
 								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
@@ -27234,9 +27252,11 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");		
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"~~Colour settings");
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'c');			
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"External tools paths");								
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"~~External tools paths");	
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'e');								
 
                 menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_interface_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -31032,7 +31052,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 			if (menu_cond_realvideo() ) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_interlace,menu_cond_realvideo,"[%c] Interlaced mode", (video_interlaced_mode.v==1 ? 'X' : ' '));
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_interlace,menu_cond_realvideo,"[%c] ~~Interlaced mode", (video_interlaced_mode.v==1 ? 'X' : ' '));
 				menu_add_item_menu_shortcut(array_menu_settings_display,'i');
 				menu_add_item_menu_tooltip(array_menu_settings_display,"Enable interlaced mode");
 				menu_add_item_menu_ayuda(array_menu_settings_display,"Interlaced mode draws the screen like the machine on a real TV: "

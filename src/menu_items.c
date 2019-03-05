@@ -1228,10 +1228,13 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
         do {
 
+		//hotkeys usadas: vapesboiuctdrf
+
 		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"    Output ~~Volume [%d %%]", audiovolume);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"[%c] Autoenable AY Chip",(autoenable_ay_chip.v==1 ? 'X' : ' '));
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"[%c] A~~utoenable AY Chip",(autoenable_ay_chip.v==1 ? 'X' : ' '));
+		menu_add_item_menu_shortcut(array_menu_settings_audio,'u');
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"This option is usefor for example on Spectrum 48k games that uses AY Chip "
 					"and for some ZX80/81 games that also uses it (Bi-Pak ZON-X81, but not Quicksilva QS Sound board)");		
@@ -1248,8 +1251,9 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,menu_cond_ay_chip,"[%d] AY Chips %s",total_ay_chips,
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,menu_cond_ay_chip,"[%d] AY ~~Chips %s",total_ay_chips,
 				(total_ay_chips>1 ? "(Turbosound)" : "") );
+			menu_add_item_menu_shortcut(array_menu_settings_audio,'c');
 
 		if (si_complete_video_driver() ) {
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"    Show ~~Piano: %s",
@@ -1273,19 +1277,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-	//		int ay3_stereo_mode=0;
-	/*
-    	      0=Mono
-        	  1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
-          	2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
-		  	3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
-	*/
 
-			/*if (ay3_stereo_mode==4) {
-				//Metemos separador, que queda mas bonito
-				menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-			}*/
 
 			char ay3_stereo_string[16];
 			if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
@@ -1294,8 +1286,9 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
 			else strcpy(ay3_stereo_string,"Mono");
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY Stereo: %s",
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY S~~tereo: %s",
 				ay3_stereo_string);
+			menu_add_item_menu_shortcut(array_menu_settings_audio,'t');
 
 			if (ay3_stereo_mode==4) {	
 
@@ -1308,7 +1301,6 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
 					"    Ch. C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
 
-				//menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 			}
 
@@ -1329,8 +1321,9 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 					strcpy(string_audiodac,"");
 				}
 
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_type,NULL,"[%c] DAC%s",(audiodac_enabled.v ? 'X' : ' ' ),
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_type,NULL,"[%c] ~~DAC%s",(audiodac_enabled.v ? 'X' : ' ' ),
 						string_audiodac);
+				menu_add_item_menu_shortcut(array_menu_settings_audio,'d');
 				if (audiodac_enabled.v) {
 					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_audiodac_set_port,NULL,"[%02XH] DAC port",audiodac_types[audiodac_selected_type].port);
 				}
@@ -1345,7 +1338,8 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 		if (!MACHINE_IS_ZX8081) {
 
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"[%c] Beeper",(beeper_enabled.v==1 ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"[%c] Beepe~~r",(beeper_enabled.v==1 ? 'X' : ' '));
+			menu_add_item_menu_shortcut(array_menu_settings_audio,'r');
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable beeper output");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Enable or disable beeper output");
 
@@ -1391,7 +1385,8 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"[%c] Audio filter ROM SAVE",(output_beep_filter_on_rom_save.v ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"[%c] Audio ~~filter ROM SAVE",(output_beep_filter_on_rom_save.v ? 'X' : ' '));
+			menu_add_item_menu_shortcut(array_menu_settings_audio,'f');
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Apply filter on ROM save routines");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"It detects when on ROM save routines and alter audio output to use only "
 					"the MIC bit of the FEH port");
@@ -1433,18 +1428,18 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'i');
 
 
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_silence_detector,NULL,"[%c] Silence detector",(silence_detector_setting.v ? 'X' : ' ' ));
+				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_silence_detector,NULL,"[%c] Si~~lence detector",(silence_detector_setting.v ? 'X' : ' ' ));
+				menu_add_item_menu_shortcut(array_menu_settings_audio,'l');
 				menu_add_item_menu_tooltip(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
 				menu_add_item_menu_ayuda(array_menu_settings_audio,"Change this setting if you are listening some audio 'clicks'");
 
-                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"    Change Audio Driver");
+                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"    C~~hange Audio Driver");
+				menu_add_item_menu_shortcut(array_menu_settings_audio,'h');
 
 
 
                 menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-
-                //menu_add_item_menu(array_menu_settings_audio,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_settings_audio);
 
                 retorno_menu=menu_dibuja_menu(&settings_audio_opcion_seleccionada,&item_seleccionado,array_menu_settings_audio,"Audio Settings" );
