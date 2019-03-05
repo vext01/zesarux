@@ -2,10 +2,10 @@ Version 7.2. 26 February 2019 - Neula edition
 
 
 Improved menu environment:
-* Added new menu window type: ZX Vision. GUI Windows can be moved, resized, scrolled, minimized, closed, and change the focus to the background
-* Windows can be scrolled using mouse wheel
-* Warning and Error window messages now show an animation
-* Added first-aid help windows
+-Added new menu window type: ZX Vision. GUI Windows can be moved, resized, scrolled, minimized, closed, and change the focus to the background
+-Windows can be scrolled using mouse wheel
+-Warning and Error window messages now show an animation
+-Added first-aid help windows
 
 Added Z80 assembler
 Added setting to specify configuration file
@@ -17,56 +17,59 @@ Added CPC machines support to ZSF snapshots
 Added tape to wav converter (tap, tzx, o, p to wav)
 Added text driver (curses, stdout, simpletext) for Chloe 80x24 mode
 
+
 Improved Debugger:
 -Now you can disassemble on the Step-to-step mode from the Debug cpu menu
 -Now you can assemble from the Debug cpu menu
 -Added Chloe memory Zone
-
-Improved TBBlue emulation:
--Better CPU usage:
---Use 4% less cpu time (in my machine) when only ULA and/or Tiles enabled
---Use 1% less cpu time (in my machine) when all layers enabled
--Added TBBlue Tiles video mode
--Added TBBlue "reveal" setting to view which pixels use a layer
--Resized display: now is twice bigger
--Fixed Timex hi-res mode 512x192
 
 Improved ZRCP:
 -commands smartload and snapshot-load are more intelligent now
 -running in verbose or limit mode, or cpu-step command, can now update the display inmediately (having real video setting on)
 -added commands: get-cpu-frequency, get-cpu-turbo-speed, get-tstates, get-tstates-partial, reset-tstates-partial
 
-Improved vu-meters: high volumes are shown in red
-Improved sprite viewer
+Improved sprite viewer:
 -you can view sprites up to 512x512
 -you can export sprites to C source code file
 
 Improved file selector:
-*now it remembers the last files used
-*Windows: now you can use up to 20000 files in the same directory
-*Windows: added drive selector (press shift-u)
-
-Improved audio: silence detector is disabled by default. That should fix some Windows audio problems. Check Settings->Audio->Silence detector if you have configuration autosaving enabled
+-now it remembers the last files used
+-Windows: now you can use up to 20000 files in the same directory
+-Windows: added drive selector (press shift-u)
 
 Improved disassemble window: 
-*now you can export the disassemble to text file
-*you can now see the full opcode when debugging Sinclair QL
-*you can now show/hide hexadecimal dump of every opcode
+-now you can export the disassemble to text file
+-you can now see the full opcode when debugging Sinclair QL
+-you can now show/hide hexadecimal dump of every opcode
 
 Improved hexadecimal editor:
-*now showing subzones information
+-now showing subzones information
 
+Improved audio: silence detector is disabled by default. That should fix some Windows audio problems. Check Settings->Audio->Silence detector if you have configuration autosaving enabled
+Improved vu-meters: high volumes are shown in red
 Improved MMC emulation: allow non-standard mmc file sizes
 
+
+
 Fixed visual glitches in some menus when Pentagon machine and real video: audio wave, visualmem, ay piano, wave piano, view sprites
-Fixed timex hires mode 512x192 on tbblue
 Fixed visual glitches in some menus when interlaced enabled: audio wave, visualmem, ay piano, wave piano, view sprites
 Fixed audio bug: sending a sample to the DAC by using Next registers, it wasn't reseting the silence detection counter, so sound would probably be frozen (and repeated again, and again...)
-Fixed autoload on tbblue (on normal and also fast boot mode)
-Fixed error managing TBBlue Layer 2 vertical scroll
 Fixed triggering "opcode" condition breakpoint
 Fixed emulating Inves interrupt bug
 Fixed segmentation fault when showing electron on debug
+
+
+Changes in TBBlue emulation:
+-Added TBBlue Tiles video mode
+-Added TBBlue "reveal" setting to view which pixels are used by a layer
+-Improved CPU usage:
+--Use 4% less cpu time (in my machine) when only ULA and/or Tiles enabled
+--Use 1% less cpu time (in my machine) when all layers enabled
+-Improved display emulation: now is twice bigger
+-Fixed Timex hi-res mode 512x192
+-Fixed autoload on tbblue (on normal and also fast boot mode)
+-Fixed error managing TBBlue Layer 2 vertical scroll
+
 
 
 Version 7.1. 24 September 2018 - 5th Anniversary edition
