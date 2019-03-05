@@ -18759,7 +18759,8 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 
 			if (MACHINE_IS_SPECTRUM) {
 
-			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_im2_slow,NULL,"[%c] ULA IM2 slow",(ula_im2_slow.v ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_im2_slow,NULL,"[%c] ULA IM2 ~~slow",(ula_im2_slow.v ? 'X' : ' '));
+			menu_add_item_menu_shortcut(array_menu_ula_settings,'s');
 			menu_add_item_menu_tooltip(array_menu_ula_settings,"Add one t-state when an IM2 is fired");
 			menu_add_item_menu_ayuda(array_menu_ula_settings,"It improves visualization on some demos, like overscan, ula128 and scroll2017");
                 }
@@ -19735,9 +19736,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			);
 
 
-	                if (joystick_autofire_frequency==0) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,menu_hardware_autofire_cond,"[ ] Autofire");
+	                if (joystick_autofire_frequency==0) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,menu_hardware_autofire_cond,"[ ] ~~Autofire");
         	        else {
-                	        menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,NULL,"[%d Hz] Autofire",50/joystick_autofire_frequency);
+                	        menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autofire,NULL,"[%d Hz] ~~Autofire",50/joystick_autofire_frequency);
 	                }
 
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'a');
@@ -19754,8 +19755,8 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_SPECTRUM) {
 
-			if (gunstick_emulation==0) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"[ ] Lightgun");
-			else menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"[%s] Lightgun",gunstick_texto[gunstick_emulation]);
+			if (gunstick_emulation==0) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"[ ] ~~Lightgun");
+			else menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_gunstick,NULL,"[%s] ~~Lightgun",gunstick_texto[gunstick_emulation]);
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'l');
 			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Decide which kind of lightgun is emulated with the mouse");
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Lightgun emulation supports the following two models:\n\n"
@@ -19827,17 +19828,13 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_multiface,NULL,"Multiface emulation"  );
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_multiface,NULL,"M~~ultiface emulation"  );
+			menu_add_item_menu_shortcut(array_menu_hardware_settings,'u');
 		}
 
 
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_memory_settings,NULL,"~~Memory Settings");
 		menu_add_item_menu_shortcut(array_menu_hardware_settings,'m');
-
-
-
-
-	
 
 
 
@@ -23618,13 +23615,11 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_ayuda(array_menu_snapshot,"Save a snapshot quickly. Name prefix and directory to save are configured on settings->Snapshot");
 
 
-			
-
-
-
-
 				menu_add_item_menu(array_menu_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-				menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_game_config,NULL,"Save autoconfig file");
+
+
+				menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_game_config,NULL,"Save a~~utoconfig file");
+				menu_add_item_menu_shortcut(array_menu_snapshot,'u');
 				menu_add_item_menu_tooltip(array_menu_snapshot,"Generate .config file with common settings");
 				menu_add_item_menu_ayuda(array_menu_snapshot,"Generate .config file with common settings. Used to define custom settings for games, "
 					"by default it asks to generate a .config file for the last smartloaded game");
@@ -30315,6 +30310,8 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
         do {
 
+
+			//hotkeys usados: uvctslpinrh
 					char string_autosave_interval_prefix[16];
 					menu_tape_settings_trunc_name(snapshot_autosave_interval_quicksave_name,string_autosave_interval_prefix,16);
 
@@ -30322,24 +30319,28 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 					menu_tape_settings_trunc_name(snapshot_autosave_interval_quicksave_directory,string_autosave_interval_path,16);
 
 
-		menu_add_item_menu_inicial_format(&array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_permitir_versiones_desconocidas,NULL,"[%c] Allow Unknown ZX versions",(snap_zx_permitir_versiones_desconocidas.v ? 'X' : ' '));
+		menu_add_item_menu_inicial_format(&array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_permitir_versiones_desconocidas,NULL,"[%c] Allow ~~Unknown .ZX versions",(snap_zx_permitir_versiones_desconocidas.v ? 'X' : ' '));
+		menu_add_item_menu_shortcut(array_menu_settings_snapshot,'u');
 		menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Allow loading ZX Snapshots of unknown versions");
 		menu_add_item_menu_ayuda(array_menu_settings_snapshot,"This setting permits loading of ZX Snapshots files of unknown versions. "
 					"It can be used to load snapshots saved on higher emulator versions than this one");
 
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_version,NULL,"[%d] Save ZX Snapshot version",snap_zx_version_save);
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_save_version,NULL,"[%d] Save ZX Snapshot ~~version",snap_zx_version_save);
+		menu_add_item_menu_shortcut(array_menu_settings_snapshot,'v');
                 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Decide which kind of .ZX version file is saved");
                 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Version 1,2,3 works on ZEsarUX and ZXSpectr\n"
 					"Version 4 works on ZEsarUX V1.3 and higher\n"
 					"Version 5 works on ZEsarUX V2 and higher\n"
 				);
 
-                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_settings_compressed_zsf,NULL,"[%c] Compressed ZSF",(zsf_force_uncompressed ? ' ' : 'X') );
+                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_settings_compressed_zsf,NULL,"[%c] ~~Compressed ZSF",(zsf_force_uncompressed ? ' ' : 'X') );
+				menu_add_item_menu_shortcut(array_menu_settings_snapshot,'c');
                 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not"); 
                 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not"); 
 
-                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_sna_set_machine,NULL,"[%c] Set machine sna load",(sna_setting_no_change_machine.v ? ' ' : 'X'));
+                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_sna_set_machine,NULL,"[%c] Se~~t machine sna load",(sna_setting_no_change_machine.v ? ' ' : 'X'));
+				menu_add_item_menu_shortcut(array_menu_settings_snapshot,'t');
                 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"If machine is reset to 48k/128k when loading a .sna snapshot file");
                 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"If machine is reset to 48k/128k when loading a .sna snapshot file.\n"
 					"Disabling it, the .sna snapshot is loaded but the machine is not changed, so it allows to load, for example, a 48k snapshot on a Prism machine, or TBBlue, or any Spectrum machine different than 48/128.\n"
@@ -30351,15 +30352,17 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_exit,NULL,"[%c] Autosave on exit",
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_exit,NULL,"[%c] Auto~~save on exit",
 			(autosave_snapshot_on_exit.v ? 'X' : ' ' ) );
+		menu_add_item_menu_shortcut(array_menu_settings_snapshot,'s');
 		 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Saves a snapshot with the machine state when exiting ZEsarUX. Saved file is " AUTOSAVE_NAME);
 		 menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Saves a snapshot with the machine state when exiting ZEsarUX. Saved file is " AUTOSAVE_NAME);
 
 
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"[%c] Autoload on start",
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autoload_start,NULL,"[%c] Auto~~load on start",
 			(autoload_snapshot_on_start.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_settings_snapshot,'l');
 		menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Loads the snapshot saved when starting ZEsarUX (previous menu item)");
 		menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Loads the snapshot saved when starting ZEsarUX (previous menu item)");
 
@@ -30368,7 +30371,8 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 		if (autosave_snapshot_on_exit.v || autoload_snapshot_on_start.v) {
                 	char string_autosnap_path[14];
 	                menu_tape_settings_trunc_name(autosave_snapshot_path_buffer,string_autosnap_path,14);
-			menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap path [%s]",string_autosnap_path);
+			menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosnap_path,NULL,"Autosnap ~~path [%s]",string_autosnap_path);
+			menu_add_item_menu_shortcut(array_menu_settings_snapshot,'p');
 			menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Where to save/load automatic snapshot. If not set, uses current directory");
 			menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Where to save/load automatic snapshot. If not set, uses current directory");
 		}
@@ -30379,29 +30383,30 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 
 
 
-					menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval,NULL,"[%c] Contsave at interval",
+					menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval,NULL,"[%c] Contsave at ~~interval",
 									(snapshot_contautosave_interval_enabled.v ? 'X' : ' ' ) );
+					menu_add_item_menu_shortcut(array_menu_settings_snapshot,'i');
 					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Enable continuous autosave snapshot every fixed interval");
 					menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Enable continuous autosave snapshot every fixed interval");
 
 
 					if (snapshot_contautosave_interval_enabled.v) {
-						menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_seconds,NULL,"[%d] Contsave Seconds",snapshot_autosave_interval_seconds);
+						menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_seconds,NULL,"[%d] Contsave Seco~~nds",snapshot_autosave_interval_seconds);
+						menu_add_item_menu_shortcut(array_menu_settings_snapshot,'n');
 						menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Save snapshot every desired interval");
 						menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Save snapshot every desired interval");
 					}
 
 
-		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_prefix,NULL,"QS&CA Prefix [%s]",string_autosave_interval_prefix);
+		menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_prefix,NULL,"QS&CA P~~refix [%s]",string_autosave_interval_prefix);
+		menu_add_item_menu_shortcut(array_menu_settings_snapshot,'r');
 					menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Name prefix for quicksave and continous autosave snapshots");
 					menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Name prefix for quicksave and continous autosave snapshots. The final name will be: prefix-date-hour.zsf");
 
-						menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_directory,NULL,"QS&CA Path [%s]",string_autosave_interval_path);
+						menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_autosave_at_interval_directory,NULL,"QS&CA Pat~~h [%s]",string_autosave_interval_path);
+						menu_add_item_menu_shortcut(array_menu_settings_snapshot,'h');
 						menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Path to save quicksave & continous autosave");
 						menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Path to save quicksave & continous autosave. If not set, will use current directory");
-
-
-
 
 
 

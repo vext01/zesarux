@@ -8068,6 +8068,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		//char string_aux[50],string_aux2[50],emulate_zx8081_disp[50],string_arttext[50],string_aaslow[50],emulate_zx8081_thres[50],string_arttext_threshold[50];
 		//char buffer_string[50];
 
+		//hotkeys usadas: ricglwmptez
+
 
                 char string_vofile_shown[10];
                 menu_tape_settings_trunc_name(vofilename,string_vofile_shown,10);
