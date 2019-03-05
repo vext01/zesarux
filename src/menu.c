@@ -698,7 +698,7 @@ int hardware_redefine_keys_opcion_seleccionada=0;
 int hardware_set_f_functions_opcion_seleccionada=0;
 int hardware_set_f_func_action_opcion_seleccionada=0;
 int ula_settings_opcion_seleccionada=0;
-int cpu_settings_opcion_seleccionada=0;
+
 //int debug_configuration_opcion_seleccionada=0;
 int dandanator_opcion_seleccionada=0;
 int kartusho_opcion_seleccionada=0;
@@ -710,7 +710,7 @@ int settings_opcion_seleccionada=0;
 
 int settings_snapshot_opcion_seleccionada=0;
 
-int settings_display_opcion_seleccionada=0;
+
 int settings_storage_opcion_seleccionada=0;
 int settings_tape_opcion_seleccionada=0;
 int settings_config_file_opcion_seleccionada=0;
@@ -729,7 +729,7 @@ int plusthreedisk_opcion_seleccionada=0;
 
 int window_settings_opcion_seleccionada=0;
 int osd_settings_opcion_seleccionada=0;
-int textdrivers_settings_opcion_seleccionada=0;
+
 
 int debug_tsconf_opcion_seleccionada;
 
@@ -775,8 +775,7 @@ char menu_realtape_name[PATH_MAX];
 
 
 
-//vofile. vofilename apuntara aqui
-char vofilename_file[PATH_MAX];
+
 
 
 //snapshot load. snapfile apuntara aqui
@@ -8847,45 +8846,9 @@ void menu_add_ESC_item(menu_item *array_menu_item)
 }
 
 
-void menu_display_emulate_fast_zx8081(MENU_ITEM_PARAMETERS)
-{
-	video_fast_mode_emulation.v ^=1;
-	modificado_border.v=1;
-}
 
-/*
-void menu_display_real_zx8081_display(void)
-{
-	beta_zx8081_video.v^=1;
-	modificado_border.v=1;
-}
-*/
 
-void menu_display_emulate_zx8081display_spec(MENU_ITEM_PARAMETERS)
-{
-	if (simulate_screen_zx8081.v==1) simulate_screen_zx8081.v=0;
-	else {
-		simulate_screen_zx8081.v=1;
-		umbral_simulate_screen_zx8081=4;
-	}
-	modificado_border.v=1;
-}
 
-int menu_display_emulate_zx8081_cond(void)
-{
-	return simulate_screen_zx8081.v;
-}
-
-int menu_display_arttext_cond(void)
-{
-
-	if (!menu_display_cursesstdout_cond()) return 0;
-
-	//en zx80 y 81 no hay umbral, no tiene sentido. ahora si. hay rainbow de zx8081
-	//if (machine_type>=20 && machine_type<=21) return 0;
-
-        return texto_artistico.v;
-}
 
 
 int menu_cond_zx81(void)
@@ -8960,41 +8923,7 @@ int menu_cond_simpletext(void)
         return 0;
 }
 
-int menu_display_curses_cond(void)
-{
-	if (!strcmp(scr_driver_name,"curses")) return 1;
 
-	else return 0;
-}
-
-int menu_display_aa_cond(void)
-{
-        if (!strcmp(scr_driver_name,"aa")) return 1;
-
-        else return 0;
-}
-
-int menu_display_cursesstdout_cond(void)
-{
-	if (menu_display_curses_cond() ) return 1;
-	if (menu_cond_stdout() ) return 1;
-
-	return 0;
-}
-
-int menu_cond_stdout_simpletext(void)
-{
-	if (menu_cond_stdout() || menu_cond_simpletext() ) return 1;
-	return 0;
-}
-
-int menu_display_cursesstdoutsimpletext_cond(void)
-{
-	if (menu_display_cursesstdout_cond() ) return 1;
-	if (menu_cond_simpletext() ) return 1;
-
-	return 0;
-}
 
 /*
 int menu_cond_no_stdout(void)
@@ -9023,11 +8952,11 @@ int menu_cond_zx8081_no_curses_no_stdout(void)
 
 }
 
-int menu_cond_spectrum(void)
+/*int menu_cond_spectrum(void)
 {
 	return (MACHINE_IS_SPECTRUM);
 	//return !menu_cond_zx8081();
-}
+}*/
 
 
 
@@ -16051,28 +15980,6 @@ void menu_hardware_zx8081_ram_in_32768(MENU_ITEM_PARAMETERS)
 
 
 
-void menu_display_zx8081_wrx(MENU_ITEM_PARAMETERS)
-{
-	if (wrx_present.v) {
-		disable_wrx();
-	}
-
-	else {
-		enable_wrx();
-	}
-	//wrx_present.v ^=1;
-}
-
-
-
-
-
-void menu_display_x_offset(MENU_ITEM_PARAMETERS)
-{
-	offset_zx8081_t_coordx +=8;
-        if (offset_zx8081_t_coordx>=30*8) offset_zx8081_t_coordx=-30*8;
-}
-
 
 
 //OLD: Solo permitimos autofire para Kempston, Fuller ,Zebra y mikrogen, para evitar que con cursor o con sinclair se este mandando una tecla y dificulte moverse por el menu
@@ -16743,11 +16650,7 @@ void menu_hardware_memory_refresh(MENU_ITEM_PARAMETERS)
 	}
 }
 
-void menu_spritechip(MENU_ITEM_PARAMETERS)
-{
-	if (spritechip_enabled.v) spritechip_disable();
-	else spritechip_enable();
-}
+
 
 void menu_zxuno_spi_persistent_writes(MENU_ITEM_PARAMETERS)
 {
@@ -19359,10 +19262,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 
 
-void menu_hardware_top_speed(MENU_ITEM_PARAMETERS)
-{
-	top_speed_timer.v ^=1;
-}
+
 
 void menu_hardware_sam_ram(MENU_ITEM_PARAMETERS)
 {
@@ -19372,13 +19272,7 @@ void menu_hardware_sam_ram(MENU_ITEM_PARAMETERS)
 
 
 
-void menu_turbo_mode(MENU_ITEM_PARAMETERS)
-{
-	if (cpu_turbo_speed==MAX_CPU_TURBO_SPEED) cpu_turbo_speed=1;
-	else cpu_turbo_speed *=2;
 
-	cpu_set_turbo_speed();
-}
 
 
 void menu_cpu_speed(MENU_ITEM_PARAMETERS)
@@ -19397,10 +19291,7 @@ void menu_cpu_speed(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_zxuno_deny_turbo_bios_boot(MENU_ITEM_PARAMETERS)
-{
-	zxuno_deny_turbo_bios_boot.v ^=1;
-}
+
 
 
 
@@ -19526,119 +19417,6 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
 
 }
-
-void menu_spectrum_core_reduced(MENU_ITEM_PARAMETERS)
-{
-	core_spectrum_uses_reduced.v ^=1;
-
-	set_cpu_core_loop();
-
-}
-
-void menu_tbblue_fast_boot_mode(MENU_ITEM_PARAMETERS)
-{
-	tbblue_fast_boot_mode.v ^=1;
-}
-
-void menu_tbblue_deny_turbo_rom(MENU_ITEM_PARAMETERS)
-{
-
-	tbblue_deny_turbo_rom.v ^=1;
-}
-
-//menu cpu settings
-void menu_cpu_settings(MENU_ITEM_PARAMETERS)
-{
-    menu_item *array_menu_cpu_settings;
-    menu_item item_seleccionado;
-    int retorno_menu;
-    do {
-
-		char buffer_velocidad[16];
-
-		if (CPU_IS_Z80 && !MACHINE_IS_Z88) {
-			int cpu_hz=get_cpu_frequency();
-			int cpu_khz=cpu_hz/1000;
-
-			//Obtener decimales
-			int mhz_enteros=cpu_khz/1000;
-			int decimal_mhz=cpu_khz-(mhz_enteros*1000);
-
-								//01234567890123456789012345678901
-								//           1234567890
-								//Turbo: 16X 99.999 MHz
-			sprintf(buffer_velocidad,"%d.%d MHz",mhz_enteros,decimal_mhz);
-		}
-		else {
-			buffer_velocidad[0]=0;
-		}
-
-		menu_add_item_menu_inicial_format(&array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo [%dX %s]",cpu_turbo_speed,buffer_velocidad);
-		menu_add_item_menu_tooltip(array_menu_cpu_settings,"Changes only the Z80 speed");
-		menu_add_item_menu_ayuda(array_menu_cpu_settings,"Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. "
-					"Some machines, like ZX-Uno or Chloe, change this setting");
-
-		if (MACHINE_IS_ZXUNO) {
-					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"[%c] Deny turbo on boot",
-							(zxuno_deny_turbo_bios_boot.v ? 'X' : ' ') );
-					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
-					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
-	  }
-
-		if (MACHINE_IS_TBBLUE) {
-					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"[%c] Deny turbo on ROM",
-							(tbblue_deny_turbo_rom.v ? 'X' : ' ') );
-					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
-					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
-	  }	  
-
-		if (!MACHINE_IS_Z88) {
-			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_hardware_top_speed,NULL,"[%c] ~~Top Speed",(top_speed_timer.v ? 'X' : ' ') );
-			menu_add_item_menu_shortcut(array_menu_cpu_settings,'t');
-			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Runs at maximum speed, when menu closed. Not available on Z88");
-			menu_add_item_menu_ayuda(array_menu_cpu_settings,"Runs at maximum speed, using 100% of CPU of host machine, when menu closed. "
-						"The display is refreshed 1 time per second. This mode is also entered when loading a real tape and "
-						"accelerate loaders setting is enabled. Not available on Z88");
-
-		}	  
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum core [%s]",
-			(core_spectrum_uses_reduced.v ? "Reduced" : "Normal") );
-			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Switches between the normal Spectrum core or the reduced core");
-			menu_add_item_menu_ayuda(array_menu_cpu_settings,"When using the Spectrum reduced core, the following features are NOT available or are NOT properly emulated:\n"
-				"Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, Multiface, RZX, Raster interrupts, ZX-Uno DMA, TBBlue DMA, Datagear DMA, TBBlue Copper, Audio DAC, Stereo AY, Video out to file, Last core frame statistics");
-		}
-
-
-
-
-
-
-                menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-                menu_add_ESC_item(array_menu_cpu_settings);
-
-                retorno_menu=menu_dibuja_menu(&cpu_settings_opcion_seleccionada,&item_seleccionado,array_menu_cpu_settings,"CPU Settings" );
-
-                
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-
-
-
-}
-
-
 
 
 
@@ -19926,6 +19704,11 @@ void menu_hardware_kempston_mouse_sensibilidad(MENU_ITEM_PARAMETERS)
 	sprintf (titulo_ventana,"Sensitivity (1-%d)",MAX_KMOUSE_SENSITIVITY);
 
 	menu_hardware_advanced_input_value(1,MAX_KMOUSE_SENSITIVITY,titulo_ventana,&kempston_mouse_factor_sensibilidad);
+}
+
+void menu_tbblue_fast_boot_mode(MENU_ITEM_PARAMETERS)
+{
+	tbblue_fast_boot_mode.v ^=1;
 }
 
 //menu hardware settings
@@ -27581,81 +27364,8 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
 
 
-int menu_display_settings_disp_zx8081_spectrum(void)
-{
-
-	//esto solo en spectrum y si el driver no es curses y si no hay rainbow
-	if (!strcmp(scr_driver_name,"curses")) return 0;
-	if (rainbow_enabled.v==1) return 0;
-
-	return !menu_cond_zx8081();
-}
 
 
-void menu_display_arttext(MENU_ITEM_PARAMETERS)
-{
-	texto_artistico.v ^=1;
-}
-
-
-
-#ifdef COMPILE_AA
-void menu_display_slowaa(MENU_ITEM_PARAMETERS)
-{
-	scraa_fast ^=1;
-}
-#else
-void menu_display_slowaa(MENU_ITEM_PARAMETERS){}
-#endif
-
-
-
-
-
-void menu_display_emulate_zx8081_thres(MENU_ITEM_PARAMETERS)
-{
-
-        char string_thres[3];
-
-        sprintf (string_thres,"%d",umbral_simulate_screen_zx8081);
-
-        menu_ventana_scanf("Pixel Threshold",string_thres,3);
-
-	umbral_simulate_screen_zx8081=parse_string_to_number(string_thres);
-	if (umbral_simulate_screen_zx8081<1 || umbral_simulate_screen_zx8081>16) umbral_simulate_screen_zx8081=4;
-
-}
-
-void menu_display_arttext_thres(MENU_ITEM_PARAMETERS)
-{
-
-        char string_thres[3];
-
-        sprintf (string_thres,"%d",umbral_arttext);
-
-        menu_ventana_scanf("Pixel Threshold",string_thres,3);
-
-        umbral_arttext=parse_string_to_number(string_thres);
-        if (umbral_arttext<1 || umbral_arttext>16) umbral_arttext=4;
-
-}
-
-
-void menu_display_text_brightness(MENU_ITEM_PARAMETERS)
-{
-
-        char string_bri[4];
-
-        sprintf (string_bri,"%d",screen_text_brightness);
-
-        menu_ventana_scanf("Brightness? (0-100)",string_bri,4);
-
-	int valor=parse_string_to_number(string_bri);
-	if (valor<0 || valor>100) debug_printf (VERBOSE_ERR,"Invalid brightness value %d",valor);
-
-	else screen_text_brightness=valor;
-
-}
 
 void menu_display_load_screen(MENU_ITEM_PARAMETERS)
 {
@@ -27743,13 +27453,7 @@ char screen_save_file[PATH_MAX];
 
 }
 
-void menu_display_rainbow(MENU_ITEM_PARAMETERS)
-{
-	if (rainbow_enabled.v==0) enable_rainbow();
-	else disable_rainbow();
 
-
-}
 
 /*
 void menu_display_shows_vsync_on_display(void)
@@ -27759,36 +27463,7 @@ void menu_display_shows_vsync_on_display(void)
 */
 
 
-void menu_display_slow_adjust(MENU_ITEM_PARAMETERS)
-{
-	video_zx8081_lnctr_adjust.v ^=1;
-}
 
-
-
-void menu_display_estabilizador_imagen(MENU_ITEM_PARAMETERS)
-{
-	video_zx8081_estabilizador_imagen.v ^=1;
-}
-
-void menu_display_interlace(MENU_ITEM_PARAMETERS)
-{
-	if (video_interlaced_mode.v) disable_interlace();
-	else enable_interlace();
-}
-
-
-void menu_display_interlace_scanlines(MENU_ITEM_PARAMETERS)
-{
-	if (video_interlaced_scanlines.v) disable_scanlines();
-	else enable_scanlines();
-}
-
-void menu_display_gigascreen(MENU_ITEM_PARAMETERS)
-{
-        if (gigascreen_enabled.v) disable_gigascreen();
-        else enable_gigascreen();
-}
 
 /*void menu_display_zx8081_wrx_first_column(void)
 {
@@ -27801,133 +27476,6 @@ int menu_cond_wrx(void)
 	return wrx_present.v;
 }
 
-void menu_vofile_insert(MENU_ITEM_PARAMETERS)
-{
-
-        if (vofile_inserted.v==0) {
-                init_vofile();
-                //Si todo ha ido bien
-                if (vofile_inserted.v) {
-                        menu_generic_message_format("File information","%s\n%s\n\n%s",
-												last_message_helper_aofile_vofile_file_format,last_message_helper_aofile_vofile_bytes_minute_video,last_message_helper_aofile_vofile_util);
-                }
-
-        }
-
-        else if (vofile_inserted.v==1) {
-                close_vofile();
-        }
-
-}
-
-
-int menu_vofile_cond(void)
-{
-        if (vofilename!=NULL) return 1;
-        else return 0;
-}
-
-void menu_vofile(MENU_ITEM_PARAMETERS)
-{
-
-        vofile_inserted.v=0;
-
-
-        char *filtros[2];
-
-        filtros[0]="rwv";
-        filtros[1]=0;
-
-
-        if (menu_filesel("Select Video File",filtros,vofilename_file)==1) {
-
-                 //Ver si archivo existe y preguntar
-                struct stat buf_stat;
-
-                if (stat(vofilename_file, &buf_stat)==0) {
-
-                        if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) {
-                                vofilename=NULL;
-                                return;
-                        }
-
-                }
-
-
-
-                vofilename=vofilename_file;
-        }
-
-        else {
-                vofilename=NULL;
-        }
-
-
-}
-
-void menu_vofile_fps(MENU_ITEM_PARAMETERS)
-{
-	if (vofile_fps==1) {
-		vofile_fps=50;
-		return;
-	}
-
-        if (vofile_fps==2) {
-                vofile_fps=1;
-                return;
-        }
-
-
-        if (vofile_fps==5) {
-                vofile_fps=2;
-                return;
-        }
-
-        if (vofile_fps==10) {
-                vofile_fps=5;
-                return;
-        }
-
-        if (vofile_fps==25) {
-                vofile_fps=10;
-                return;
-        }
-
-
-        if (vofile_fps==50) {
-                vofile_fps=25;
-                return;
-        }
-
-}
-
-void menu_display_autodetect_rainbow(MENU_ITEM_PARAMETERS)
-{
-	autodetect_rainbow.v ^=1;
-}
-
-void menu_display_autodetect_wrx(MENU_ITEM_PARAMETERS)
-{
-        autodetect_wrx.v ^=1;
-}
-
-
-void menu_display_snow_effect(MENU_ITEM_PARAMETERS)
-{
-	snow_effect_enabled.v ^=1;
-}
-
-void menu_display_stdout_simpletext_automatic_redraw(MENU_ITEM_PARAMETERS)
-{
-	stdout_simpletext_automatic_redraw.v ^=1;
-}
-
-
-
-void menu_display_send_ansi(MENU_ITEM_PARAMETERS)
-{
-	screen_text_accept_ansi ^=1;
-}
 
 
 
@@ -27938,17 +27486,6 @@ void menu_display_send_ansi(MENU_ITEM_PARAMETERS)
 
 
 
-
-
-//En curses y stdout solo se permite para zx8081
-int menu_cond_realvideo_curses_stdout_zx8081(void)
-{
-	if (menu_cond_stdout() || menu_cond_curses() ) {
-		if (menu_cond_spectrum() ) return 0;
-	}
-
-	return 1;
-}
 
 
 int menu_display_rainbow_cond(void)
@@ -27958,81 +27495,6 @@ int menu_display_rainbow_cond(void)
 }
 
 
-void menu_display_chroma81(MENU_ITEM_PARAMETERS)
-{
-        if (chroma81.v) disable_chroma81();
-        else enable_chroma81();
-}
-
-void menu_display_ulaplus(MENU_ITEM_PARAMETERS)
-{
-        if (ulaplus_presente.v) disable_ulaplus();
-        else enable_ulaplus();
-}
-
-
-void menu_display_autodetect_chroma81(MENU_ITEM_PARAMETERS)
-{
-	autodetect_chroma81.v ^=1;
-}
-
-
-void menu_display_spectra(MENU_ITEM_PARAMETERS)
-{
-	if (spectra_enabled.v) spectra_disable();
-	else spectra_enable();
-}
-
-void menu_display_snow_effect_margin(MENU_ITEM_PARAMETERS)
-{
-	snow_effect_min_value++;
-	if (snow_effect_min_value==8) snow_effect_min_value=1;
-}
-
-void menu_display_timex_video(MENU_ITEM_PARAMETERS)
-{
-	if (timex_video_emulation.v) disable_timex_video();
-	else enable_timex_video();
-}
-
-void menu_display_minimo_vsync(MENU_ITEM_PARAMETERS)
-{
-
-        menu_hardware_advanced_input_value(100,999,"Minimum vsync lenght",&minimo_duracion_vsync);
-}
-
-void menu_display_timex_video_512192(MENU_ITEM_PARAMETERS)
-{
-
-	timex_mode_512192_real.v ^=1;
-}
-
-void menu_display_cpc_force_mode(MENU_ITEM_PARAMETERS)
-{
-	if (cpc_forzar_modo_video.v==0) {
-		cpc_forzar_modo_video.v=1;
-		cpc_forzar_modo_video_modo=0;
-	}
-	else {
-		cpc_forzar_modo_video_modo++;
-		if (cpc_forzar_modo_video_modo==4) {
-			cpc_forzar_modo_video_modo=0;
-			cpc_forzar_modo_video.v=0;
-		}
-	}
-}
-
-void menu_display_refresca_sin_colores(MENU_ITEM_PARAMETERS)
-{
-	scr_refresca_sin_colores.v ^=1;
-	modificado_border.v=1;
-}
-
-
-void menu_display_inves_ula_bright_error(MENU_ITEM_PARAMETERS)
-{
-	inves_ula_bright_error.v ^=1;
-}
 
 
 
@@ -28049,12 +27511,7 @@ void menu_dibuja_rectangulo_relleno(zxvision_window *w,int x, int y, int ancho, 
 }
 
 
-void menu_display_tsconf_vdac(MENU_ITEM_PARAMETERS)
-{
-	tsconf_vdac_with_pwm.v ^=1;
 
-	menu_interface_rgb_inverse_common();
-}
 
 
 //menu display settings
@@ -28073,12 +27530,12 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
                 //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
                 menu_add_item_menu_inicial(&array_menu_display_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-		if (menu_cond_spectrum()) {
+		if (MACHINE_IS_SPECTRUM) {
 
-			menu_add_item_menu(array_menu_display_settings,"~~Load Screen",MENU_OPCION_NORMAL,menu_display_load_screen,menu_cond_spectrum);
+			menu_add_item_menu(array_menu_display_settings,"~~Load Screen",MENU_OPCION_NORMAL,menu_display_load_screen,NULL);
 			menu_add_item_menu_shortcut(array_menu_display_settings,'l');
 
-			menu_add_item_menu(array_menu_display_settings,"~~Save Screen",MENU_OPCION_NORMAL,menu_display_save_screen,menu_cond_spectrum);
+			menu_add_item_menu(array_menu_display_settings,"~~Save Screen",MENU_OPCION_NORMAL,menu_display_save_screen,NULL);
 			menu_add_item_menu_shortcut(array_menu_display_settings,'s');
 
 		}
@@ -30778,571 +30235,12 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_display_timex_force_line_512192(MENU_ITEM_PARAMETERS)
-{
-	if (timex_ugly_hack_last_hires==0) timex_ugly_hack_last_hires=198;
 
-	        char string_num[4];
 
-        sprintf (string_num,"%d",timex_ugly_hack_last_hires);
 
-        menu_ventana_scanf("Scanline",string_num,4);
 
-        timex_ugly_hack_last_hires=parse_string_to_number(string_num);
-}
 
-void menu_display_timex_ugly_hack(MENU_ITEM_PARAMETERS)
-{
-	timex_ugly_hack_enabled ^=1;
-}
 
-
-
-
-
-
-
-
-
-void menu_display_stdout_simpletext_fps(MENU_ITEM_PARAMETERS)
-{
-	    char string_fps[3];
-
-        sprintf (string_fps,"%d",50/scrstdout_simpletext_refresh_factor);
-
-        menu_ventana_scanf("FPS? (1-50)",string_fps,3);
-
-        int valor=parse_string_to_number(string_fps);
-		scr_set_fps_stdout_simpletext(valor);
-
-}
-
-
-void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_textdrivers_settings;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
-
-		char buffer_string[50];
-
-
-		//Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
-		//menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"---Text Driver Settings--",MENU_OPCION_UNASSIGNED,NULL,NULL);
-		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
-
-
-                //para stdout y simpletext
-                if (menu_cond_stdout_simpletext() ) {
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"Stdout automatic redraw: %s", (stdout_simpletext_automatic_redraw.v==1 ? "On" : "Off"));
-                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"It enables automatic display redraw");
-                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"It enables automatic display redraw");
-
-
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"Send ANSI Control Sequence: %s",(screen_text_accept_ansi==1 ? "On" : "Off"));
-
-						if (stdout_simpletext_automatic_redraw.v) {
-							menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_fps,NULL,"Redraw fps: %d", 50/scrstdout_simpletext_refresh_factor);
-						}
-
-                }
-
-		if (menu_display_cursesstdout_cond() ) {
-                        //solo en caso de curses o stdout
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
-                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
-                                        "on stdout and curses drivers");
-
-                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
-                                        "on curses, stdout and simpletext drivers. "
-                                        "If disabled, unknown characters are written with ?");
-
-
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"Pixel threshold: %d",umbral_arttext);
-                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-                                        "on curses, stdout and simpletext drivers with text artistic emulation enabled");
-                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-                                        "on curses, stdout and simpletext drivers with text artistic emulation enabled");
-
-                        if (rainbow_enabled.v) {
-                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"Text brightness: %d",screen_text_brightness);
-                                menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
-                                menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
-                        }
-
-                }
-
-
-
-
-
-
-if (menu_display_aa_cond() ) {
-
-#ifdef COMPILE_AA
-                        sprintf (buffer_string,"Slow AAlib emulation: %s", (scraa_fast==0 ? "On" : "Off"));
-#else
-                        sprintf (buffer_string,"Slow AAlib emulation: Off");
-#endif
-                        menu_add_item_menu(array_menu_textdrivers_settings,buffer_string,MENU_OPCION_NORMAL,menu_display_slowaa,menu_display_aa_cond);
-
-                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Enable slow aalib emulation; slow is a little better");
-                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Enable slow aalib emulation; slow is a little better");
-
-                }
-
-
-
-                menu_add_item_menu(array_menu_textdrivers_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_textdrivers_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_textdrivers_settings);
-
-                retorno_menu=menu_dibuja_menu(&textdrivers_settings_opcion_seleccionada,&item_seleccionado,array_menu_textdrivers_settings,"Text Driver Settings" );
-
-                
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-}
-
-void menu_display_tsconf_pal_depth(MENU_ITEM_PARAMETERS)
-{
-	tsconf_palette_depth--;
-	if (tsconf_palette_depth<2) tsconf_palette_depth=5;
-
-	menu_interface_rgb_inverse_common();
-
-}
-
-void menu_display_osd_word_kb_length(MENU_ITEM_PARAMETERS)
-{
-
-	char string_length[4];
-
-        sprintf (string_length,"%d",adventure_keyboard_key_length);
-
-        menu_ventana_scanf("Length? (10-100)",string_length,4);
-
-        int valor=parse_string_to_number(string_length);
-	if (valor<10 || valor>100) {
-		debug_printf (VERBOSE_ERR,"Invalid value");
-	}
-
-	else {
-		adventure_keyboard_key_length=valor;
-	}
-
-}
-
-
-void menu_display_osd_word_kb_finalspc(MENU_ITEM_PARAMETERS)
-{
-	adventure_keyboard_send_final_spc ^=1;
-}
-
-
-//menu display settings
-void menu_settings_display(MENU_ITEM_PARAMETERS)
-{
-
-	menu_item *array_menu_settings_display;
-	menu_item item_seleccionado;
-	int retorno_menu;
-	do {
-
-		//char string_aux[50],string_aux2[50],emulate_zx8081_disp[50],string_arttext[50],string_aaslow[50],emulate_zx8081_thres[50],string_arttext_threshold[50];
-		//char buffer_string[50];
-
-
-                char string_vofile_shown[10];
-                menu_tape_settings_trunc_name(vofilename,string_vofile_shown,10);
-
-
-	                menu_add_item_menu_inicial_format(&array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile,NULL,"Video out to file: %s",string_vofile_shown);
-        	        menu_add_item_menu_tooltip(array_menu_settings_display,"Saves the video output to a file");
-                	menu_add_item_menu_ayuda(array_menu_settings_display,"The generated file have raw format. You can see the file parameters "
-					"on the console enabling verbose debug level to 2 minimum.\n"
-					"A watermark is added to the final video, as you may see when you activate it\n"
-					"Note: Gigascreen, Interlaced effects or menu windows are not saved to file."
-
-					);
-
-			if (menu_vofile_cond() ) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_fps,menu_vofile_cond,"[%d] FPS Video file",50/vofile_fps);
-	        	menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"[%c] Video file enabled",(vofile_inserted.v ? 'X' : ' ' ));
-			}
-
-			else {
-                	  menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-			}
-
-
-
-                if (!MACHINE_IS_Z88) {
-
-
-                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_rainbow,NULL,"[%c] Autodetect Real Video",(autodetect_rainbow.v==1 ? 'X' : ' '));
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect the need to enable Real Video");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"This option detects whenever is needed to enable Real Video. "
-                                        "On Spectrum, it detects the reading of idle bus or repeated border changes. "
-                                        "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
-					"On all machines, it also detects when loading a real tape. "
-                                        );
-                }
-
-
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_rainbow,menu_display_rainbow_cond,"[%c] ~~Real Video",(rainbow_enabled.v==1 ? 'X' : ' '));
-			menu_add_item_menu_shortcut(array_menu_settings_display,'r');
-
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enable Real Video. Enabling it makes display as a real machine");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Real Video makes display works as in the real machine. It uses a bit more CPU than disabling it.\n\n"
-					"On Spectrum, display is drawn every scanline. "
-					"It enables hi-res colour (rainbow) on the screen and on the border, Gigascreen, Interlaced, ULAplus, Spectra, Timex Video, snow effect, idle bus reading and some other advanced features. "
-					"Also enables all the Inves effects.\n"
-					"Disabling it, the screen is drawn once per frame (1/50) and the previous effects "
-					"are not supported.\n\n"
-					"On ZX80/ZX81, enables hi-res display and loading/saving stripes on the screen, and the screen is drawn every scanline.\n"
-					"By disabling it, the screen is drawn once per frame, no hi-res display, and only text mode is supported.\n\n"
-					"On Z88, display is drawn the same way as disabling it; it is only used when enabling Video out to file.\n\n"
-					"Real Video can be enabled on all the video drivers, but on curses, stdout and simpletext (in Spectrum and Z88 machines), the display drawn is the same "
-					"as on non-Real Video, but you can have idle bus support on these drivers. "
-					"Curses, stdout and simpletext drivers on ZX80/81 machines do have Real Video display."
-					);
-
-                if (MACHINE_IS_TSCONF) {
-                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_vdac,NULL,"[%c] TSConf VDAC PWM",
-                        (tsconf_vdac_with_pwm.v ? 'X' : ' ')     );
-
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Enables full vdac colour palette or PWM style");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Full vdac colour palette gives you different colour levels for every 5 bit colour component.\n"
-					"With PWM mode it gives you 5 bit values different from 0..23, but from 24 to 31 are all set to value 255");
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_pal_depth,NULL,
-					 "[%d] TSConf palette depth",tsconf_palette_depth);
-
-
-
-
-                }
-
-
-		if (MACHINE_IS_CPC) {
-				if (cpc_forzar_modo_video.v==0)
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_force_mode,NULL,"[ ] Force Video Mode");
-				else
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_force_mode,NULL,"[%d] Force Video Mode",
-						cpc_forzar_modo_video_modo);
-		}
-
-
-		if (!MACHINE_IS_Z88) {
-
-
-			if (menu_cond_realvideo() ) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_interlace,menu_cond_realvideo,"[%c] ~~Interlaced mode", (video_interlaced_mode.v==1 ? 'X' : ' '));
-				menu_add_item_menu_shortcut(array_menu_settings_display,'i');
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Enable interlaced mode");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Interlaced mode draws the screen like the machine on a real TV: "
-					"Every odd frame, odd lines on TV are drawn; every even frame, even lines on TV are drawn. It can be used "
-					"to emulate twice the vertical resolution of the machine (384) or simulate different colours. "
-					"This effect is only emulated with vertical zoom multiple of two: 2,4,6... etc");
-
-
-				if (video_interlaced_mode.v) {
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_interlace_scanlines,NULL,"[%c] S~~canlines", (video_interlaced_scanlines.v==1 ? 'X' : ' '));
-					menu_add_item_menu_shortcut(array_menu_settings_display,'c');
-					menu_add_item_menu_tooltip(array_menu_settings_display,"Enable scanlines on interlaced mode");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"Scanlines draws odd lines a bit darker than even lines");
-				}
-
-
-				if (!MACHINE_IS_TBBLUE) {
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_gigascreen,NULL,"[%c] ~~Gigascreen",(gigascreen_enabled.v==1 ? 'X' : ' '));
-					menu_add_item_menu_shortcut(array_menu_settings_display,'g');
-					menu_add_item_menu_tooltip(array_menu_settings_display,"Enable gigascreen colours");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"Gigascreen enables more than 15 colours by combining pixels "
-							"of even and odd frames. The total number of different colours is 102");
-				}
-
-
-
-				if (menu_cond_spectrum() && !MACHINE_IS_ZXEVO && !MACHINE_IS_TBBLUE)  {
-
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_snow_effect,NULL,"[%c] Snow effect support", (snow_effect_enabled.v==1 ? 'X' : ' '));
-					menu_add_item_menu_tooltip(array_menu_settings_display,"Enable snow effect on Spectrum");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"Snow effect is a bug on some Spectrum models "
-						"(models except +2A and +3) that draws corrupted pixels when I register is pointed to "
-						"slow RAM.");
-						// Even on 48k models it resets the machine after some seconds drawing corrupted pixels");
-
-					if (snow_effect_enabled.v==1) {
-						menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_snow_effect_margin,NULL,"[%d] Snow effect threshold",snow_effect_min_value);
-					}
-				}
-
-
-				if (MACHINE_IS_INVES) {
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_inves_ula_bright_error,NULL,"[%c] Inves bright error",(inves_ula_bright_error.v ? 'X' : ' '));
-					menu_add_item_menu_tooltip(array_menu_settings_display,"Emulate Inves oddity when black colour and change from bright 0 to bright 1");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"Emulate Inves oddity when black colour and change from bright 0 to bright 1");
-
-				}
-
-
-
-			}
-		}
-
-		//para stdout
-
-		/*
-#ifdef COMPILE_STDOUT
-		if (menu_cond_stdout() ) {
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"Stdout automatic redraw: %s", (stdout_simpletext_automatic_redraw.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_settings_display,"It enables automatic display redraw");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"It enables automatic display redraw");
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"Send ANSI Control Sequence: %s",(screen_text_accept_ansi==1 ? "On" : "Off"));
-
-		}
-
-#endif
-
-		*/
-
-
-		if (menu_cond_zx8081_realvideo()) {
-
-		//z80_bit video_zx8081_estabilizador_imagen;
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_estabilizador_imagen,menu_cond_zx8081_realvideo,"[%c] Horizontal stabilization", (video_zx8081_estabilizador_imagen.v==1 ? 'X' : ' '));
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Horizontal image stabilization");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"Horizontal image stabilization. Usually enabled.");
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_slow_adjust,menu_cond_zx8081_realvideo,"[%c] ~~LNCTR video adjust", (video_zx8081_lnctr_adjust.v==1 ? 'X' : ' '));
-			//l repetida con load screen, pero como esa es de spectrum, no coinciden
-			menu_add_item_menu_shortcut(array_menu_settings_display,'l');
-			menu_add_item_menu_tooltip(array_menu_settings_display,"LNCTR video adjust");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"LNCTR video adjust change sprite offset when drawing video images. "
-				"If you see your hi-res image is not displayed well, try changing it");
-
-
-
-
-        	        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_x_offset,menu_cond_zx8081_realvideo,"[%d] Video x_offset",offset_zx8081_t_coordx);
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Video horizontal image offset");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Video horizontal image offset, usually you don't need to change this");
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_minimo_vsync,menu_cond_zx8081_realvideo,"[%d] Video min. vsync lenght",minimo_duracion_vsync);
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Video minimum vsync lenght in t-states");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Video minimum vsync lenght in t-states");
-
-
-                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_wrx,NULL,"[%c] Autodetect WRX",(autodetect_wrx.v==1 ? 'X' : ' '));
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect the need to enable WRX mode on ZX80/81");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"This option detects whenever is needed to enable WRX. "
-                                                "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
-						"In some cases, chr$128 and udg modes are detected incorrectly as WRX");
-
-
-	                menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_zx8081_wrx,menu_cond_zx8081_realvideo,"[%c] ~~WRX", (wrx_present.v ? 'X' : ' '));
-			menu_add_item_menu_shortcut(array_menu_settings_display,'w');
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables WRX hi-res mode");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables WRX hi-res mode");
-
-
-
-		}
-
-		else {
-
-			if (menu_cond_zx8081() ) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_emulate_fast_zx8081,menu_cond_zx8081_no_realvideo,"[%c] ZX80/81 detect fast mode", (video_fast_mode_emulation.v==1 ? 'X' : ' '));
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Detect fast mode and simulate it, on non-realvideo mode");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Detect fast mode and simulate it, on non-realvideo mode");
-			}
-
-		}
-
-		if (MACHINE_IS_ZX8081) {
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_chroma81,NULL,"[%c] Autodetect Chroma81",(autodetect_chroma81.v ? 'X' : ' '));
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect Chroma81");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Detects when Chroma81 video mode is needed and enable it");
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_chroma81,NULL,"[%c] Chro~~ma81 support",(chroma81.v ? 'X' : ' '));
-			menu_add_item_menu_shortcut(array_menu_settings_display,'m');
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Chroma81 colour video mode");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables Chroma81 colour video mode");
-
-		}
-
-
-		if (MACHINE_IS_SPECTRUM && !MACHINE_IS_TBBLUE) {
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_ulaplus,NULL,"[%c] ULA~~plus support",(ulaplus_presente.v ? 'X' : ' '));
-			menu_add_item_menu_shortcut(array_menu_settings_display,'p');
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables ULAplus support");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"The following ULAplus modes are supported:\n"
-						"Mode 1: Standard 256x192 64 colours\n"
-						"Mode 3: Linear mode 128x96, 16 colours per pixel (radastan mode)\n"
-						"Mode 5: Linear mode 256x96, 16 colours per pixel (ZEsarUX mode 0)\n"
-						"Mode 7: Linear mode 128x192, 16 colours per pixel (ZEsarUX mode 1)\n"
-						"Mode 9: Linear mode 256x192, 16 colours per pixel (ZEsarUX mode 2)\n"
-			);
-		}
-
-		if (MACHINE_IS_SPECTRUM) {
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video,NULL,"[%c] ~~Timex video support",(timex_video_emulation.v ? 'X' : ' '));
-                        menu_add_item_menu_shortcut(array_menu_settings_display,'t');
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Timex Video modes");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"The following Timex Video modes are emulated:\n"
-						"Mode 0: Video data at address 16384 and 8x8 color attributes at address 22528 (like on ordinary Spectrum)\n"
-						"Mode 1: Video data at address 24576 and 8x8 color attributes at address 30720\n"
-						"Mode 2: Multicolor mode: video data at address 16384 and 8x1 color attributes at address 24576\n"
-						"Mode 6: Hi-res mode 512x192, monochrome.");
-
-			if (timex_video_emulation.v && !MACHINE_IS_TBBLUE) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video_512192,NULL,"[%c] Timex Real 512x192",(timex_mode_512192_real.v ? 'X' : ' '));
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Selects between real 512x192 or scaled 256x192");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Real 512x192 does not support scanline effects (it draws the display at once). "
-							"If not enabled real, it draws scaled 256x192 but does support scanline effects");
-
-
-
-				if (timex_mode_512192_real.v==0) {
-
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_ugly_hack,NULL,"[%c] Ugly hack",(timex_ugly_hack_enabled ? 'X' : ' ') );
-					menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
-
-					if (timex_ugly_hack_enabled) {
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_force_line_512192,NULL,"[%d] Force 512x192 at",timex_ugly_hack_last_hires);
-					menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
-					}
-				}
-
-			}
-
-
-
-			if (!MACHINE_IS_ZXEVO) {
-
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_spectra,NULL,"[%c] Sp~~ectra support",(spectra_enabled.v ? 'X' : ' '));
-				menu_add_item_menu_shortcut(array_menu_settings_display,'e');
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Spectra video modes");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Enables Spectra video modes. All video modes are fully emulated");
-
-
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_spritechip,NULL,"[%c] ~~ZGX Sprite Chip",(spritechip_enabled.v ? 'X' : ' ') );
-				menu_add_item_menu_shortcut(array_menu_settings_display,'z');
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Enables ZGX Sprite Chip");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Enables ZGX Sprite Chip");
-			}
-
-
-		}
-
-
-
-
-		if (MACHINE_IS_SPECTRUM && rainbow_enabled.v==0) {
-	                menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_emulate_zx8081display_spec,menu_display_settings_disp_zx8081_spectrum,"[%c] ZX80/81 Display on Speccy", (simulate_screen_zx8081.v==1 ? 'X' : ' '));
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Simulates the resolution of ZX80/81 on the Spectrum");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"It makes the resolution of display on Spectrum like a ZX80/81, with no colour. "
-					"This mode is not supported with real video enabled");
-
-
-			if (menu_display_emulate_zx8081_cond() ){
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_emulate_zx8081_thres,menu_display_emulate_zx8081_cond,"[%d] Pixel threshold",umbral_simulate_screen_zx8081);
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
-					   "when ZX80/81 Display on Speccy enabled");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
-					   "when ZX80/81 Display on Speccy enabled");
-			}
-
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_refresca_sin_colores,NULL,"[%c] Colours enabled",(scr_refresca_sin_colores.v==0 ? 'X' : ' '));
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Disables colours for Spectrum display");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Disables colours for Spectrum display");
-
-
-
-		}
-
-
-
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_osd_word_kb_length,NULL,"[%d] OSD Adventure KB length",adventure_keyboard_key_length);
-
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Define the duration for every key press on the Adventure Text OSD Keyboard");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Define the duration for every key press on the Adventure Text OSD Keyboard, in 1/50 seconds (default 50)");
-
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_osd_word_kb_finalspc,NULL,"[%c] OSD Adv. final space",
-				(adventure_keyboard_send_final_spc ? 'X' : ' '));
-					
-
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Sends a space after every word on the Adventure Text OSD Keyboard");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Sends a space after every word on the Adventure Text OSD Keyboard");
-			
-
-		}
-
-
-		if (menu_display_cursesstdoutsimpletext_cond() || menu_display_aa_cond() ) {
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_textdrivers_settings,NULL,"Text driver settings");
-		}
-
-		
-
-
-                menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_settings_display,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_settings_display);
-
-                retorno_menu=menu_dibuja_menu(&settings_display_opcion_seleccionada,&item_seleccionado,array_menu_settings_display,"Display Settings" );
-
-                
-
-		//NOTA: no llamar por numero de opcion dado que hay opciones que ocultamos (relacionadas con real video)
-
-		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-
-			//llamamos por valor de funcion
-        	        if (item_seleccionado.menu_funcion!=NULL) {
-                	        //printf ("actuamos por funcion\n");
-	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				
-        	        }
-		}
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-
-
-
-}
 
 void menu_snapshot_sna_set_machine(MENU_ITEM_PARAMETERS)
 {

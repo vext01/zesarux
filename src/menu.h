@@ -72,6 +72,18 @@ extern void menu_espera_tecla_timeout_window_splash(void);
 extern void menu_cpu_core_loop(void);
 extern z80_byte menu_get_pressed_key(void);
 
+extern int menu_cond_zx8081(void);
+extern int menu_cond_zx8081_realvideo(void);
+extern int menu_cond_zx8081_no_realvideo(void);
+extern int menu_cond_realvideo(void);
+extern int menu_display_rainbow_cond(void);
+extern int menu_cond_stdout(void);
+extern int menu_cond_simpletext(void);
+extern int menu_cond_curses(void);
+
+extern int menu_hardware_advanced_input_value(int minimum,int maximum,char *texto,int *variable);
+extern void menu_interface_rgb_inverse_common(void);
+
 extern z80_bit menu_writing_inverse_color;
 extern int menu_dibuja_menu_permite_repeticiones_hotk;
 
@@ -80,7 +92,7 @@ extern z80_bit menu_capshift;
 extern z80_bit menu_backspace;
 extern z80_bit menu_tab;
 
-extern int menu_cond_zx8081(void);
+
 extern int menu_footer;
 
 extern void enable_footer(void);
