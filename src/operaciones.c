@@ -4125,6 +4125,8 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	debug_fired_in=1;
 	z80_byte valor;
 
+	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+
 	//xx1D Zebra Joystick                          - - - F R L D U   (0=Pressed)
 	if ( puerto_l==0x1d) {
 		 if (joystick_emulation==JOYSTICK_ZEBRA) {
@@ -4288,6 +4290,11 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 	}
 
+	//ZEsarUX ZXI ports
+	if (hardware_debug_port.v) {
+		if (puerto==ZESARUX_ZXI_ZX8081_PORT_REGISTER) return zesarux_zxi_read_last_register();
+		if (puerto==ZESARUX_ZXI_ZX8081_PORT_DATA)     return zesarux_zxi_read_register_value();
+    	}
 
 
 
