@@ -31189,6 +31189,9 @@ void menu_inicio(void)
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		quickfile=quickload_file;
 
+
+		last_filesused_insert(quickload_file); //Agregar a lista de archivos recientes
+
                 if (quickload(quickload_file)) {
                         debug_printf (VERBOSE_ERR,"Unknown file format");
 
