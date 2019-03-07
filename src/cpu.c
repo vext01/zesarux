@@ -1341,6 +1341,7 @@ printf(
 printf (
 	  "--set-mem-breakpoint a n   Set memory breakpoint at address a for type n\n"
 	  "--hardware-debug-ports     Enables hardware debug ports to be able to show on console numbers or ascii characters\n"
+	  "--hardware-debug-ports-byte-file f  Sets the file used on register HARDWARE_DEBUG_BYTE_FILE\n"
 	  "-—dump-ram-to-file f       Dump memory from 4000h to ffffh to a file, when exiting emulator\n"
 		"\n"
 		"\n"
@@ -6441,6 +6442,11 @@ int parse_cmdline_options(void) {
 
 		 else if (!strcmp(argv[puntero_parametro],"--hardware-debug-ports")) {
 			 hardware_debug_port.v=1;
+		 }
+
+		 else if (!strcmp(argv[puntero_parametro],"--hardware-debug-ports-byte-file")) {
+			siguiente_parametro_argumento();
+			strcpy(zesarux_zxi_hardware_debug_file,argv[puntero_parametro]);
 		 }
 
 		 else if (!strcmp(argv[puntero_parametro],"-—dump-ram-to-file")) {

@@ -3417,6 +3417,7 @@ int util_write_configfile(void)
 	}  
 
   if (hardware_debug_port.v)                  ADD_STRING_CONFIG,"--hardware-debug-ports");
+  if (zesarux_zxi_hardware_debug_file[0]!=0)  ADD_STRING_CONFIG,"--hardware-debug-ports-byte-file \"%s\"",zesarux_zxi_hardware_debug_file);
 
   if (autoselect_snaptape_options.v==0)       ADD_STRING_CONFIG,"--noautoselectfileopt");
   if (screen_show_splash_texts.v==0)          ADD_STRING_CONFIG,"--nosplash");

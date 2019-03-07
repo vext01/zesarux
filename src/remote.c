@@ -776,6 +776,7 @@ struct s_items_ayuda items_ayuda[]={
 							"\n"
 							"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
 	{"kartusho-press-button",NULL,NULL,"Press button on the Kartusho interface"},
+	{"load-binary",NULL,"file addr len","Load binary file \"file\" at address \"addr\" with length \"len\". Set ln to 0 to load the entire file in memory"},
 	{"load-source-code","|lsc","file","Load source file to be used on disassemble opcode functions"},
 	{"ls",NULL,NULL,"Minimal command list"},
 	{"noop",NULL,NULL,"This command does nothing"},
@@ -4009,6 +4010,35 @@ char buffer_retorno[2048];
 	else if (!strcmp(comando_sin_parametros,"kartusho-press-button")) {
 			kartusho_press_button();
 	}
+
+
+        else if (!strcmp(comando_sin_parametros,"load-binary")) {
+                remote_parse_commands_argvc(parametros);
+
+
+		
+
+                if (remote_command_argc<3) {
+                        escribir_socket(misocket,"ERROR. Needs three parameters");
+                        return;
+                }
+
+		//int load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
+
+		char *archivo;
+		archivo=remote_command_argv[0];
+
+		int valor_leido_direccion=parse_string_to_number(remote_command_argv[1]);
+
+		int valor_leido_longitud=parse_string_to_number(remote_command_argv[2]);
+
+		int retorno=load_binary_file(archivo,valor_leido_direccion,valor_leido_longitud);
+
+		if (retorno) escribir_socket(misocket,"ERROR loading file");
+
+
+	}
+
 
 	else if (!strcmp(comando_sin_parametros,"load-source-code") || !strcmp(comando_sin_parametros,"lsc")) {
 					remote_load_source_code(misocket,parametros);
