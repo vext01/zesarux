@@ -25626,7 +25626,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 
 		//menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_draw_background_windows,NULL,"ZXVision background windows");
+		if (menu_allow_background_windows) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_draw_background_windows,NULL,"ZXVision background windows");
+		}
 
 
 		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_write_message,NULL,"Write message");
