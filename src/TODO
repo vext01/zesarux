@@ -10,14 +10,17 @@ Changelog
 -acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
 
 
+Background windows
+-activarlas con: int menu_allow_background_windows=1;
+-Si ventana en background, no dejar volverla a llamar desde menu normal
+-Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
+-ultima ventana de arriba deberia salir como activa
+-poder conmutar ventana activa
+ 
+
 ----fin zxvision----
 
 
-//Background windows: activarlas con: int menu_allow_background_windows=1;
-//Si ventana en background, no dejar volverla a llamar desde menu normal
-//Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
-
-//
 
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?

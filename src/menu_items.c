@@ -1827,7 +1827,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 	do {
 		tecla=zxvision_common_getkey_refresh();		
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
-		printf ("tecla: %d\n",tecla);
+		//printf ("tecla: %d\n",tecla);
 	} while (tecla!=2 && tecla!=3);				
 
 	//Gestionar salir con tecla background
@@ -2638,7 +2638,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	do {
 		tecla=zxvision_common_getkey_refresh();		
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
-		printf ("tecla: %d\n",tecla);
+		//printf ("tecla: %d\n",tecla);
 	} while (tecla!=2 && tecla!=3);				
 
 	//Gestionar salir con tecla background

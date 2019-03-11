@@ -1095,7 +1095,7 @@ mayusculas + tecla ";"
 */
 
 //Si permitimos o no ventanas en background al pulsar F6
-int menu_allow_background_windows=1;
+int menu_allow_background_windows=0;
 
 z80_byte menu_get_pressed_key_no_modifier(void)
 {
@@ -4031,12 +4031,12 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	//Ventana anterior
 	w->previous_window=zxvision_current_window;
-	printf ("Previous window: %p\n",w->previous_window);
+	//printf ("Previous window: %p\n",w->previous_window);
 	w->next_window=NULL;
 
 	//Ventana siguiente, decir a la anterior, es la actual
 	if (zxvision_current_window!=NULL) {
-		printf ("Decimos que siguiente ventana es: %p\n",zxvision_current_window);
+		//printf ("Decimos que siguiente ventana es: %p\n",zxvision_current_window);
 		zxvision_current_window->next_window=w;
 	}
 
@@ -4102,7 +4102,7 @@ void zxvision_destroy_window(zxvision_window *w)
 	zxvision_current_window=w->previous_window;
 
 
-	printf ("Setting current window to %p\n",zxvision_current_window);
+	//printf ("Setting current window to %p\n",zxvision_current_window);
 
 	free(w->memory);
 	ventana_tipo_activa=1;
@@ -4110,7 +4110,7 @@ void zxvision_destroy_window(zxvision_window *w)
 
 	if (zxvision_current_window!=NULL) {
 		//Dibujar las de detras
-		printf ("Dibujando ventanas por detras\n");
+		//printf ("Dibujando ventanas por detras\n");
 		zxvision_draw_below_windows(w);
 
 		zxvision_set_draw_window_parameters(zxvision_current_window);
@@ -4118,7 +4118,7 @@ void zxvision_destroy_window(zxvision_window *w)
 		//Dibujar ventana que habia debajo
 		zxvision_draw_window(zxvision_current_window);
 		zxvision_draw_window_contents(zxvision_current_window);
-		printf ("Dibujando ventana de debajo que ahora es de frente\n");
+		//printf ("Dibujando ventana de debajo que ahora es de frente\n");
 	}
 
 	//Decir que esta ventana no tiene siguiente. 
@@ -5393,16 +5393,16 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	zxvision_window *pointer_window;
 
 	//printf ("original window: %p\n",w);
-        printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
+        //printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
 
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-		printf ("zxvision_draw_below_windows. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
+		//printf ("zxvision_draw_below_windows. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
 		pointer_window=pointer_window->previous_window;
 	}
 
-	printf ("after while pointer_window->previous_window!=NULL\n");
+	//printf ("after while pointer_window->previous_window!=NULL\n");
 
 	int antes_ventana_tipo_activa=ventana_tipo_activa;
 	ventana_tipo_activa=0; //Redibujar las de debajo como inactivas
@@ -5412,7 +5412,7 @@ void zxvision_draw_below_windows(zxvision_window *w)
 
 	//Y ahora de ahi hacia arriba
 	while (pointer_window!=w) {
-		printf ("window from bottom to top %p\n",pointer_window);
+		//printf ("window from bottom to top %p\n",pointer_window);
 
 		zxvision_draw_window(pointer_window);
 	        zxvision_draw_window_contents(pointer_window);
@@ -13749,7 +13749,7 @@ zxvision_window *menu_ay_pianokeyboard_overlay_window;
 void menu_ay_pianokeyboard_overlay(void)
 {
 
-	printf ("overlay de menu_ay_pianokeyboard_overlay\n");
+	//printf ("overlay de menu_ay_pianokeyboard_overlay\n");
 
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
