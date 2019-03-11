@@ -1652,40 +1652,37 @@ void menu_debug_cpu_stats(MENU_ITEM_PARAMETERS)
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
+int cpu_stats_valor_contador_segundo_anterior;
 
-void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
+zxvision_window *menu_debug_cpu_resumen_stats_overlay_window;
+
+void menu_debug_cpu_resumen_stats_overlay(void)
 {
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
-        char textostats[32];
+	    char textostats[32];
+	zxvision_window *ventana;
 
-	menu_espera_no_tecla();
-	menu_reset_counters_tecla_repeticion();		
+	ventana=menu_debug_cpu_resumen_stats_overlay_window;
 
-		zxvision_window ventana;
-
-	zxvision_new_window(&ventana,0,1,32,18,
-							31,16,"CPU Compact Statistics");
-	zxvision_draw_window(&ventana);
-		
-
-        //z80_byte acumulado;
 
         char dumpassembler[32];
 
         //Empezar con espacio
         dumpassembler[0]=' ';
 
-				int valor_contador_segundo_anterior;
+				//int valor_contador_segundo_anterior;
 
-				valor_contador_segundo_anterior=contador_segundo;
+
 
 		z80_byte tecla;
 
-        do {
+		//printf ("%d %d\n",contador_segundo,cpu_stats_valor_contador_segundo_anterior);
+     
 
 			//esto hara ejecutar esto 2 veces por segundo
-			if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-											valor_contador_segundo_anterior=contador_segundo;
+			if ( ((contador_segundo%500) == 0 && cpu_stats_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											cpu_stats_valor_contador_segundo_anterior=contador_segundo;
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 			int linea=0;
@@ -1693,25 +1690,25 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 			unsigned int sumatotal; 
                         sumatotal=util_stats_sum_all_counters();
-                        sprintf (textostats,"Total opcodes run: %u",sumatotal);
+                    	sprintf (textostats,"Total opcodes run: %u",sumatotal);
 						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
                         
 
 
 						//menu_escribe_linea_opcion(linea++,-1,1,"Most used op. for each preffix");
-						zxvision_print_string_defaults(&ventana,1,linea++,"Most used op. for each preffix");
+						zxvision_print_string_defaults(ventana,1,linea++,"Most used op. for each preffix");
 
                         opcode=util_stats_find_max_counter(stats_codsinpr);
                         sprintf (textostats,"Op nopref:    %02XH: %u",opcode,util_stats_get_counter(stats_codsinpr,opcode) );
 						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
                         
 
                         //Opcode
 						menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],0,0);
 						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
 						
 
 
@@ -1719,26 +1716,26 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
                         opcode=util_stats_find_max_counter(stats_codpred);
                         sprintf (textostats,"Op pref ED:   %02XH: %u",opcode,util_stats_get_counter(stats_codpred,opcode) );
 						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
                         
 
                         //Opcode
                         menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],237,0);
 						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
                         
 
 	
                         opcode=util_stats_find_max_counter(stats_codprcb);
                         sprintf (textostats,"Op pref CB:   %02XH: %u",opcode,util_stats_get_counter(stats_codprcb,opcode) );
 						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
 
 
                         //Opcode
                         menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],203,0);
 						//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
 
 
 
@@ -1746,67 +1743,118 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
                         opcode=util_stats_find_max_counter(stats_codprdd);
                         sprintf (textostats,"Op pref DD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprdd,opcode) );
                         //menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
 
                         //Opcode
                         menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,0);
                         //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
 
 
                         opcode=util_stats_find_max_counter(stats_codprfd);
                         sprintf (textostats,"Op pref FD:   %02XH: %u",opcode,util_stats_get_counter(stats_codprfd,opcode) );
                         //menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
 
                         //Opcode
                         menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,0);
                         //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
 
 
                         opcode=util_stats_find_max_counter(stats_codprddcb);
                         sprintf (textostats,"Op pref DDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprddcb,opcode) );
                         //menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
 
                         //Opcode
                         menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],221,203);
                         //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
 
 
 
                         opcode=util_stats_find_max_counter(stats_codprfdcb);
                         sprintf (textostats,"Op pref FDCB: %02XH: %u",opcode,util_stats_get_counter(stats_codprfdcb,opcode) );
                         //menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(&ventana,1,linea++,textostats);
+						zxvision_print_string_defaults(ventana,1,linea++,textostats);
 
                         //Opcode
                         menu_debug_cpu_stats_diss_complete_no_print(opcode,&dumpassembler[1],253,203);
                         //menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-						zxvision_print_string_defaults(&ventana,1,linea++,dumpassembler);
+						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
 
 
-						zxvision_draw_window_contents(&ventana);
+						zxvision_draw_window_contents(ventana);
 
 
                 }
 
-				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
-				//refrescar contenido de ventana, dado que aqui no llamamos a menu_espera_tecla
-				//(a no ser que este multitarea off)
-				tecla=zxvision_common_getkey_refresh_noesperatecla();
-               
-
-				zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
 
-		} while (tecla!=2);
+}
 
-        cls_menu_overlay();
+zxvision_window menu_debug_cpu_resumen_stats_ventana;
 
-		zxvision_destroy_window(&ventana);
+void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
+{
+
+    
+
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+		zxvision_window *ventana;
+		
+		ventana=&menu_debug_cpu_resumen_stats_ventana;
+
+	zxvision_new_window(ventana,0,1,32,18,
+							31,16,"CPU Compact Statistics");
+	zxvision_draw_window(ventana);
+		
+
+
+		menu_debug_cpu_resumen_stats_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+						cpu_stats_valor_contador_segundo_anterior=contador_segundo;
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de onda + texto
+        set_menu_overlay_function(menu_debug_cpu_resumen_stats_overlay);
+
+	z80_byte tecla;
+
+	do {
+		tecla=zxvision_common_getkey_refresh();		
+		zxvision_handle_cursors_pgupdn(ventana,tecla);
+		printf ("tecla: %d\n",tecla);
+	} while (tecla!=2 && tecla!=3);				
+
+	//Gestionar salir con tecla background
+ 
+	menu_espera_no_tecla(); //Si no, se va al menu anterior.
+	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
+
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    cls_menu_overlay();	
+
+
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		ventana->overlay_function=menu_debug_cpu_resumen_stats_overlay;
+		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		menu_generic_message("Background task","OK. Window put in background");
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}
+
+
+
 
 }
 
@@ -2609,6 +2657,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		//zxvision_ay_registers_overlay
 		ventana->overlay_function=menu_ay_registers_overlay;
 		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		menu_generic_message("Background task","OK. Window put in background");
 	}
 
 	else {

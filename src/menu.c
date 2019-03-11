@@ -5477,13 +5477,18 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
 
                 zxvision_draw_window(pointer_window);
 
+		//Dibujamos contenido anterior, ya que draw_window la borra con espacios
+		zxvision_draw_window_contents(pointer_window);
+		//Esto pasa en ventanas que por ejemplo actualizan no a cada frame, al menos refrescar aqui con ultimo valor				
+
 		if (overlay_function!=NULL) {
 			printf ("llamando a funcion overlay %p\n",overlay_function);
+			
 			overlay_function(); //llamar a funcion overlay
 		}
 
 
-		else zxvision_draw_window_contents(pointer_window);
+		//else zxvision_draw_window_contents(pointer_window);
 
                 pointer_window=pointer_window->next_window;
         }
@@ -13964,6 +13969,7 @@ valor_contador_segundo_anterior=contador_segundo;
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_ay_pianokeyboard_overlay;
                 printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+				menu_generic_message("Background task","OK. Window put in background");
         }
 
 	else {
@@ -14180,6 +14186,7 @@ z80_byte tecla=0;
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_beeper_pianokeyboard_overlay;
                 printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+				menu_generic_message("Background task","OK. Window put in background");
         }
 
         else {
