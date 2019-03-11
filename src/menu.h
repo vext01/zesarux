@@ -81,6 +81,8 @@ extern int menu_cond_stdout(void);
 extern int menu_cond_simpletext(void);
 extern int menu_cond_curses(void);
 
+extern int zxvision_drawing_in_background;
+
 extern int menu_hardware_advanced_input_value(int minimum,int maximum,char *texto,int *variable);
 extern void menu_interface_rgb_inverse_common(void);
 
@@ -162,6 +164,10 @@ struct s_zxvision_window {
 
 	//Ventana siguiente.
 	struct s_zxvision_window *next_window;
+
+
+	//Puntero a funcion de overlay
+	void (*overlay_function) (void);
 };
 
 typedef struct s_zxvision_window zxvision_window;
@@ -194,6 +200,7 @@ extern void zxvision_send_scroll_left(zxvision_window *w);
 extern void zxvision_send_scroll_right(zxvision_window *w);
 
 extern void zxvision_draw_below_windows(zxvision_window *w);
+extern void zxvision_draw_below_windows_with_overlay(zxvision_window *w);
 
 extern void zxvision_set_not_resizable(zxvision_window *w);
 extern void zxvision_set_resizable(zxvision_window *w);

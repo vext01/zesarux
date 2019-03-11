@@ -12,6 +12,8 @@ Changelog
 
 ----fin zxvision----
 
+int menu_allow_background_windows=1;
+
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 

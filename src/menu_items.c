@@ -2178,7 +2178,7 @@ void menu_ay_registers_overlay(void)
 
 	//NOTA: //Hemos de suponer que current window es esta de ay registers
 
-    normal_overlay_texto_menu();
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 	char volumen[32],textotono[32];
 	char textovolumen[35]; //32+3 de posible color rojo del maximo
@@ -2353,6 +2353,8 @@ void menu_ay_registers_overlay(void)
 }
 
 
+//Ventana como variable global
+zxvision_window zxvision_ay_registers_overlay;
 
 void menu_ay_registers(MENU_ITEM_PARAMETERS)
 {
@@ -2379,12 +2381,13 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 			alto_ventana=24;
 		}
 
-		zxvision_window ventana;
+		zxvision_window *ventana;
+		ventana=&zxvision_ay_registers_overlay;
 
-		zxvision_new_window(&ventana,1,yventana,30,alto_ventana,
+		zxvision_new_window(ventana,1,yventana,30,alto_ventana,
 							30-1,alto_ventana-2,"AY Registers");
 
-		zxvision_draw_window(&ventana);		
+		zxvision_draw_window(ventana);		
 
 
 
@@ -2393,19 +2396,18 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
         //Se establece a la de funcion de onda + texto
         set_menu_overlay_function(menu_ay_registers_overlay);
 
-		menu_ay_registers_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+		menu_ay_registers_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
-				//int valor_contador_segundo_anterior;
-
-				//valor_contador_segundo_anterior=contador_segundo;
 
 	z80_byte tecla;
 
 	do {
 		tecla=zxvision_common_getkey_refresh();		
-		zxvision_handle_cursors_pgupdn(&ventana,tecla);
-	} while (tecla!=2);				
+		zxvision_handle_cursors_pgupdn(ventana,tecla);
+		printf ("tecla: %d\n",tecla);
+	} while (tecla!=2 && tecla!=3);				
 
+	//Gestionar salir con tecla background
  
 	menu_espera_no_tecla(); //Si no, se va al menu anterior.
 	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
@@ -2415,9 +2417,75 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 
     cls_menu_overlay();	
-	zxvision_destroy_window(&ventana);		
+
+
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		ventana->overlay_function=menu_ay_registers_overlay;
+		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}
 }
 
+
+
+void menu_draw_background_windows_overlay(void)
+{
+
+	//menu_ay_registers_overlay();
+	//return;
+	normal_overlay_texto_menu();
+
+	zxvision_window *ventana;
+	ventana=zxvision_current_window;
+	zxvision_draw_below_windows_with_overlay(ventana);
+	printf ("overlay funcion desde menu_draw_background_windows_overlay\n");
+}
+
+void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
+{
+	menu_espera_no_tecla();
+        menu_reset_counters_tecla_repeticion();
+
+                if (!menu_multitarea) {
+                        menu_warn_message("This menu item needs multitask enabled");
+                        return;
+                }
+
+	if (zxvision_current_window==NULL) {
+		printf ("No windows in background\n");
+		return;
+	}
+
+                zxvision_window *ventana;
+                ventana=zxvision_current_window;
+
+	//Metemos funcion de overlay que se encarga de repintar ventanas de debajo con overlay
+	set_menu_overlay_function(menu_draw_background_windows_overlay);
+
+
+        z80_byte tecla;
+
+        do {
+                tecla=zxvision_common_getkey_refresh();
+
+                printf ("tecla: %d\n",tecla);
+        } while (tecla!=2);
+
+
+        menu_espera_no_tecla(); //Si no, se va al menu anterior.
+
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    cls_menu_overlay();
+
+
+}
 
 
 
@@ -3478,7 +3546,7 @@ zxvision_window *menu_audio_draw_sound_wave_window;
 void menu_audio_draw_sound_wave(void)
 {
 
-	normal_overlay_texto_menu();
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 	//workaround_pentagon_clear_putpixel_cache();
 

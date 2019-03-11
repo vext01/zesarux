@@ -1066,6 +1066,7 @@ static char menu_array_keys_32766[]="mnb";
 /*
 valores de teclas especiales:
 2  ESC
+3  Tecla de background
 8  cursor left
 9  cursor right
 10 cursor down
@@ -1093,6 +1094,9 @@ mayusculas + tecla ";"
 
 */
 
+//Si permitimos o no ventanas en background al pulsar F6
+int menu_allow_background_windows=1;
+
 z80_byte menu_get_pressed_key_no_modifier(void)
 {
 	z80_byte tecla;
@@ -1103,6 +1107,8 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	//ESC significa Shift+Space en ZX-Uno y tambien ESC puerto_especial para menu.
 	//Por tanto si se pulsa ESC, hay que leer como tal ESC antes que el resto de teclas (Espacio o Shift)
 	if ((puerto_especial1&1)==0) return 2;
+
+	if ((puerto_especial3&1)==0 && menu_allow_background_windows) return 3; //Tecla background F6
 
 	tecla=menu_get_key_array(puerto_65022,menu_array_keys_65022);
 	if (tecla) return tecla;
@@ -4029,6 +4035,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	//Ventana siguiente, decir a la anterior, es la actual
 	if (zxvision_current_window!=NULL) {
+		printf ("Decimos que siguiente ventana es: %p\n",zxvision_current_window);
 		zxvision_current_window->next_window=w;
 	}
 
@@ -4065,6 +4072,11 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	//Y textos margen nulos
 	//w->text_margin[0]=NULL;
 
+
+	//Funcion de overlay inicializada a NULL
+	w->overlay_function=NULL;
+
+
 	zxvision_set_draw_window_parameters(w);
 
 	//Redibujar las de debajo
@@ -4087,7 +4099,9 @@ void zxvision_clear_window_contents(zxvision_window *w)
 void zxvision_destroy_window(zxvision_window *w)
 {
 	zxvision_current_window=w->previous_window;
-	//printf ("Setting current window to %p\n",zxvision_current_window);
+
+
+	printf ("Setting current window to %p\n",zxvision_current_window);
 
 	free(w->memory);
 	ventana_tipo_activa=1;
@@ -4095,7 +4109,7 @@ void zxvision_destroy_window(zxvision_window *w)
 
 	if (zxvision_current_window!=NULL) {
 		//Dibujar las de detras
-		//printf ("Dibujando ventanas por detras\n");
+		printf ("Dibujando ventanas por detras\n");
 		zxvision_draw_below_windows(w);
 
 		zxvision_set_draw_window_parameters(zxvision_current_window);
@@ -4103,9 +4117,14 @@ void zxvision_destroy_window(zxvision_window *w)
 		//Dibujar ventana que habia debajo
 		zxvision_draw_window(zxvision_current_window);
 		zxvision_draw_window_contents(zxvision_current_window);
-		//printf ("Dibujando ventana de debajo que ahora es de frente\n");
+		printf ("Dibujando ventana de debajo que ahora es de frente\n");
 	}
 
+	//Decir que esta ventana no tiene siguiente. 
+	//TODO: solo podemos hacer destroy de la ultima ventana creada,
+	//habria que tener metodo para poder destruir ventana de en medio
+	//TODO2: si hacemos esto justo despues de zxvision_current_window=w->previous_window; acaba provocando segfault al redibujar. por que?
+	if (zxvision_current_window!=NULL) zxvision_current_window->next_window=NULL;
 
 }
 
@@ -5373,11 +5392,12 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	zxvision_window *pointer_window;
 
 	//printf ("original window: %p\n",w);
+        printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
 
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-		//printf ("below window: %p\n",pointer_window->previous_window);
+		printf ("below window: %p\n",pointer_window->previous_window);
 		pointer_window=pointer_window->previous_window;
 	}
 
@@ -5389,7 +5409,7 @@ void zxvision_draw_below_windows(zxvision_window *w)
 
 	//Y ahora de ahi hacia arriba
 	while (pointer_window!=w) {
-		//printf ("window from bottom to top %p\n",pointer_window);
+		printf ("window from bottom to top %p\n",pointer_window);
 
 		zxvision_draw_window(pointer_window);
 	        zxvision_draw_window_contents(pointer_window);
@@ -5399,6 +5419,79 @@ void zxvision_draw_below_windows(zxvision_window *w)
 
 	ventana_es_background=0;
 	ventana_tipo_activa=antes_ventana_tipo_activa;
+}
+
+
+int zxvision_drawing_in_background=0;
+
+//Dibujar todas las ventanas que hay debajo de esta en cascada, desde la mas antigua hasta arriba, pero llamando solo las que tienen overlay
+void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
+{
+
+	//zxvision_draw_below_windows(w);
+	//return;
+
+        //Primero ir a buscar la de abajo del todo
+        zxvision_window *pointer_window;
+
+	//zxvision_window *actual_current_window=zxvision_current_window;
+
+        if (w!=NULL) printf ("\nDraw with overlay. original window: %p. Title: %s\n",w,w->window_title);
+
+        pointer_window=w;
+
+        while (pointer_window->previous_window!=NULL) {
+                printf ("below window: %p\n",pointer_window->previous_window);
+                pointer_window=pointer_window->previous_window;
+        }
+
+        int antes_ventana_tipo_activa=ventana_tipo_activa;
+        ventana_tipo_activa=0; //Redibujar las de debajo como inactivas
+
+        //Redibujar diciendo que estan por debajo
+        ventana_es_background=1;
+
+        //Y ahora de ahi hacia arriba, incluido la ultima
+
+
+	printf ("\n");
+
+		zxvision_drawing_in_background=1;
+
+        while (pointer_window!=NULL) {
+        //while (pointer_window!=w) {
+                printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
+
+
+		void (*overlay_function)(void);
+		overlay_function=pointer_window->overlay_function;
+
+		printf ("Funcion overlay: %p\n",overlay_function);
+
+
+		//zxvision_current_window=pointer_window;
+
+
+                zxvision_draw_window(pointer_window);
+
+		if (overlay_function!=NULL) {
+			printf ("llamando a funcion overlay %p\n",overlay_function);
+			overlay_function(); //llamar a funcion overlay
+		}
+
+
+		else zxvision_draw_window_contents(pointer_window);
+
+                pointer_window=pointer_window->next_window;
+        }
+
+	//zxvision_current_window=actual_current_window;
+
+		zxvision_drawing_in_background=0;
+
+        ventana_es_background=0;
+        ventana_tipo_activa=antes_ventana_tipo_activa;
+
 }
 
 
@@ -13647,7 +13740,10 @@ zxvision_window *menu_ay_pianokeyboard_overlay_window;
 
 void menu_ay_pianokeyboard_overlay(void)
 {
-    normal_overlay_texto_menu();
+
+	printf ("overlay de menu_ay_pianokeyboard_overlay\n");
+
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 	//workaround_pentagon_clear_putpixel_cache();
 
@@ -13716,6 +13812,8 @@ void menu_ay_pianokeyboard_overlay(void)
 
 }
 
+
+zxvision_window zxvision_window_ay_piano;
 
 
 void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
@@ -13789,12 +13887,13 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
 
-		zxvision_window ventana;
+		zxvision_window *ventana;
+		ventana=&zxvision_window_ay_piano;
 
-		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
 
-		zxvision_draw_window(&ventana);						
+		zxvision_draw_window(ventana);						
 
         //z80_byte acumulado;
 
@@ -13804,7 +13903,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_pianokeyboard_overlay);
 
 
-		menu_ay_pianokeyboard_overlay_window=&ventana;
+		menu_ay_pianokeyboard_overlay_window=ventana;
 
 
 				int valor_contador_segundo_anterior;
@@ -13846,7 +13945,7 @@ valor_contador_segundo_anterior=contador_segundo;
 
         //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
-		} while (tecla!=2);				
+		} while (tecla!=2 && tecla!=3);				
 
 
 
@@ -13858,8 +13957,18 @@ valor_contador_segundo_anterior=contador_segundo;
 
         cls_menu_overlay();
 
-	zxvision_destroy_window(&ventana);			
+        if (tecla==3) {
+                //zxvision_ay_registers_overlay
+                ventana->overlay_function=menu_ay_pianokeyboard_overlay;
+                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+        }
 
+	else {
+
+	zxvision_destroy_window(ventana);			
+
+
+	}
 
 
 	//workaround_pentagon_clear_putpixel_cache();	
@@ -13890,7 +13999,7 @@ zxvision_window *menu_beeper_pianokeyboard_overlay_window;
 
 void menu_beeper_pianokeyboard_overlay(void)
 {
-    normal_overlay_texto_menu();
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 	//workaround_pentagon_clear_putpixel_cache();
 
@@ -13951,7 +14060,7 @@ void menu_beeper_pianokeyboard_overlay(void)
 
 
 
-
+zxvision_window zxvision_menu_beeper_pianokeyboard;
 
 void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 {
@@ -13994,12 +14103,13 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;				
 
-		zxvision_window ventana;
+		zxvision_window *ventana;	
+		ventana=&zxvision_menu_beeper_pianokeyboard;
 
-		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
 
-		zxvision_draw_window(&ventana);						
+		zxvision_draw_window(ventana);						
 
         //z80_byte acumulado;
 
@@ -14008,7 +14118,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
         //Se establece a la de funcion de piano + texto
         set_menu_overlay_function(menu_beeper_pianokeyboard_overlay);
 
-		menu_beeper_pianokeyboard_overlay_window=&ventana; 
+		menu_beeper_pianokeyboard_overlay_window=ventana; 
 
 
 				int valor_contador_segundo_anterior;
@@ -14051,7 +14161,7 @@ z80_byte tecla=0;
 
         //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
-		} while (tecla!=2);										
+		} while (tecla!=2 && tecla!=3);										
 
       
 
@@ -14062,9 +14172,21 @@ z80_byte tecla=0;
 
         cls_menu_overlay();
 
+
+        if (tecla==3) {
+                //zxvision_ay_registers_overlay
+                ventana->overlay_function=menu_beeper_pianokeyboard_overlay;
+                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+        }
+
+        else {
+
+		zxvision_destroy_window(ventana);
+
+	}
+
 	menu_espera_no_tecla();
 
-	zxvision_destroy_window(&ventana);
 
 	/* Nota:
 	Creo que este es de los pocos casos en que llamamos a menu_espera_no_tecla al salir,
@@ -25681,6 +25803,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 
 		//menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_zxvision_test,NULL,"ZXVision test");
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_draw_background_windows,NULL,"ZXVision background windows");
 
 
 		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_write_message,NULL,"Write message");
