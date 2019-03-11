@@ -12,7 +12,11 @@ Changelog
 
 ----fin zxvision----
 
-int menu_allow_background_windows=1;
+
+//Background windows: activarlas con: int menu_allow_background_windows=1;
+//Si ventana en background, no dejar volverla a llamar desde menu normal
+
+//
 
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?

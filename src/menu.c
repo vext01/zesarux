@@ -4031,6 +4031,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	//Ventana anterior
 	w->previous_window=zxvision_current_window;
+	printf ("Previous window: %p\n",w->previous_window);
 	w->next_window=NULL;
 
 	//Ventana siguiente, decir a la anterior, es la actual
@@ -5397,9 +5398,11 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-		printf ("below window: %p\n",pointer_window->previous_window);
+		printf ("zxvision_draw_below_windows. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
 		pointer_window=pointer_window->previous_window;
 	}
+
+	printf ("after while pointer_window->previous_window!=NULL\n");
 
 	int antes_ventana_tipo_activa=ventana_tipo_activa;
 	ventana_tipo_activa=0; //Redibujar las de debajo como inactivas
@@ -5441,7 +5444,7 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
         pointer_window=w;
 
         while (pointer_window->previous_window!=NULL) {
-                printf ("below window: %p\n",pointer_window->previous_window);
+                printf ("zxvision_draw_below_windows_with_overlay below window: %p\n",pointer_window->previous_window);
                 pointer_window=pointer_window->previous_window;
         }
 
