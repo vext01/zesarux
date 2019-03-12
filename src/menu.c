@@ -10273,7 +10273,7 @@ int menu_debug_registers_subview_type=0;
 					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea,0);
 					//menu_debug_registers_dump_hex(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea);
 					//menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
-					zxvision_print_string_defaults_fillspc(w,1,linea++,dumpassembler);
+					zxvision_print_string_defaults_fillspc(w,0,linea++,dumpassembler);
 					menu_debug_memory_pointer_copia +=longitud_linea;
 			}
 
@@ -10543,14 +10543,16 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 	int ancho_ventana=32;
 	int alto_ventana=24;
 
-
-	zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,
-                                                        ancho_ventana-1,alto_ventana-2,"Debug CPU");
+	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
+	zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,ancho_ventana,alto_ventana-2,"Debug CPU");
+	//zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Debug CPU");
 
 	//Cambiar el ancho visible segun la vista actual
 	menu_debug_registers_zxvision_ventana_set_height(ventana);
 
-	
+	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+
+
 
 }
 

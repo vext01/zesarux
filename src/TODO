@@ -42,6 +42,8 @@ Quizá version threads windows  llamarla :
 
 --- ZX Vision
 
+-en ventanas con can_use_all_width=1, no se habilita la barra de scroll vertical cuando hace falta
+
 -menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
   de menu si el raton esta apuntando a alguna opcion
 
