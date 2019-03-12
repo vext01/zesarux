@@ -19557,10 +19557,6 @@ void menu_hardware_set_f_func_action(MENU_ITEM_PARAMETERS)
 {
         hardware_set_f_func_action_opcion_seleccionada=defined_f_functions_keys_array[valor_opcion];
 
-				//printf ("valor opcion: %d linea menu: %d\n",valor_opcion,hardware_set_f_func_action_opcion_seleccionada);
-
-				//printf ("valor opcion: %d\n",valor_opcion);
-
 
         menu_item *array_menu_hardware_set_f_func_action;
         menu_item item_seleccionado;
@@ -19583,7 +19579,6 @@ void menu_hardware_set_f_func_action(MENU_ITEM_PARAMETERS)
 												}
 
 
-
                 menu_add_item_menu(array_menu_hardware_set_f_func_action,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_hardware_set_f_func_action,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_hardware_set_f_func_action);
@@ -19599,16 +19594,9 @@ void menu_hardware_set_f_func_action(MENU_ITEM_PARAMETERS)
 												int indice=hardware_set_f_func_action_opcion_seleccionada;
 												defined_f_functions_keys_array[valor_opcion]=indice;
 
-												/*
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                cls_menu_overlay();
-                        }*/
+												
                 }
 
-        //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
 
@@ -19924,6 +19912,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			(tbblue_fast_boot_mode.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
+
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_tbblue_machine_id,NULL,"[%d] TBBlue machine id",tbblue_machine_id); 
+
 		}
 
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator Spee~~d [%d%%]",porcentaje_velocidad_emulador);
@@ -23627,38 +23618,38 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
         //Obtenemos directorio de quickload, para generar el .config en la ultima ruta que se haya hecho smartload
         //si no hay directorio, vamos a rutas predefinidas
         if (quickfile!=NULL)  {
-		debug_printf (VERBOSE_INFO,"Last smartload file: %s",quickfile);
+			debug_printf (VERBOSE_INFO,"Last smartload file: %s",quickfile);
 
-		char nombre[PATH_MAX];
-		util_get_file_no_directory(quickfile,nombre);
+			char nombre[PATH_MAX];
+			util_get_file_no_directory(quickfile,nombre);
 
 
-		int usar_nombre_autodetectado;
+			int usar_nombre_autodetectado;
 		
      
 
-		//Si nombre vacio, no usar nombre autodetectado
-		if (nombre[0]==0) {
-			usar_nombre_autodetectado=0;
-		}
+			//Si nombre vacio, no usar nombre autodetectado
+			if (nombre[0]==0) {
+				usar_nombre_autodetectado=0;
+			}
 
-		else {
-			//Nombre previo. El usuario quiere usarlo?
-			char nombre_shown[25];
-			menu_tape_settings_trunc_name(nombre,nombre_shown,25);
-			usar_nombre_autodetectado=menu_confirm_yesno_texto("Generate config for",nombre_shown);
+			else {
+				//Nombre previo. El usuario quiere usarlo?
+				char nombre_shown[25];
+				menu_tape_settings_trunc_name(nombre,nombre_shown,25);
+				usar_nombre_autodetectado=menu_confirm_yesno_texto("Generate config for",nombre_shown);
 
-		}
+			}
 
-		if (usar_nombre_autodetectado) {
-			strcpy(source_file,quickfile);
-			ret=1;
-		}
+			if (usar_nombre_autodetectado) {
+				strcpy(source_file,quickfile);
+				ret=1;
+			}
 
 
-		else {
-			//No seleccionamos ultimo quickfile como source. Cambiar a directorio quickfile
-	                char directorio[PATH_MAX];
+			else {
+				//No seleccionamos ultimo quickfile como source. Cambiar a directorio quickfile
+	              char directorio[PATH_MAX];
         	        util_get_dir(quickfile,directorio);
                 	//printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
 
@@ -23666,12 +23657,12 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
         	        if (directorio[0]!=0) {
                 	        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
                         	menu_filesel_chdir(directorio);
-	                }
+	        }
 
 
 		}
 
-        }
+    }
 
 	//Si no se selecciona source_file como ultimo archivo cargado
 	if (source_file[0]==0) {
@@ -23684,7 +23675,7 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 
 	debug_printf (VERBOSE_INFO,"Source file: %s",source_file);
 
-        if (ret) {
+    if (ret) {
 
 		//Archivo final agregar .config, si es que no es ya el .config el que hemos seleccionado
 		if (!util_compare_file_extension(source_file,"config")) strcpy(game_config_file,source_file);
@@ -23706,7 +23697,7 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 		menu_generic_message("Save autoconfig","OK. File saved");
 
 
-        }
+    }
                 
 }
 
@@ -31829,6 +31820,8 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 	int posicion_filtros=ZXVISION_POS_FILTER;
 
 	char leyenda_inferior[64];
+
+	/*
 #ifdef MINGW
 
 			//01234567890123456789012345678901
@@ -31837,6 +31830,13 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 #else
 	sprintf (leyenda_inferior,"~~T~~A~~B: Section ~~R: Recent");
 #endif
+
+*/
+
+	//Drive también mostrado en Linux y Mac
+			//01234567890123456789012345678901
+			// TAB: Section R: Recent D: Drive
+	sprintf (leyenda_inferior,"~~T~~A~~B:Section ~~Recent ~~Drives");	
 
 	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
 
@@ -33368,7 +33368,7 @@ int menu_filesel_change_zone_if_clicked(zxvision_window *ventana,int *filesel_zo
 
 //Cambiar unidad Windows
 //Retorna 0 si cancelado
-char menu_filesel_cambiar_unidad(void)
+char menu_filesel_cambiar_unidad_windows(void)
 {
 
 	char buffer_unidades[100]; //Aunque son 26 maximo, pero por si acaso
@@ -33486,6 +33486,10 @@ char *menu_filesel_recent_files(void)
 
             menu_tape_settings_trunc_name(archivo_sin_dir,string_last_file_shown,29);
 			menu_add_item_menu_format(array_menu_recent_files,MENU_OPCION_NORMAL,NULL,NULL,string_last_file_shown);
+
+			//Agregar tooltip con ruta entera
+			menu_add_item_menu_tooltip(array_menu_recent_files,last_files_used_array[i]);
+
 			hay_alguno=1;
 		}
 	}
@@ -33603,6 +33607,17 @@ int first_aid_no_conversion=0;
 char *first_aid_string_conversion="You can convert some known file formats from the File utilities menu. For example, you can "
 	"convert a TAP to a TZX file";
 
+
+int first_aid_no_fileextensions=0;
+char *first_aid_string_fileextensions="If you save a file, for example, a snapshot, you must write the file with the desired extension, "
+	"for example test.z80 or test.zsf, so ZEsarUX will know what kind of file you want to save depending on the extension you write";	
+
+int first_aid_no_zsfextension=0;
+char *first_aid_string_zsfextension="ZEsarUX uses two native snapshot file formats: .zsf and .zx.\n.zsf, which means 'ZEsarUX Snapshot File', "
+	"is the preferred snapshot type, as it is supported on almost all emulated computers and can save things like: ZX-Uno memory, Divmmc status, etc.\n"
+	".zx is the old snapshot native file format, which was the default format for ZEsarUX previous versions and also used in my other "
+	"emulator, the ZXSpectr";	
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
@@ -33622,6 +33637,8 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("easteregg",&first_aid_no_easteregg,first_aid_string_eastereg,1);
 	menu_first_aid_add("zxvisionclickout",&first_aid_no_zxvision_clickout,first_aid_string_zxvision_clickout,1);
 	menu_first_aid_add("conversion",&first_aid_no_conversion,first_aid_string_conversion,1);
+	menu_first_aid_add("fileextensions",&first_aid_no_fileextensions,first_aid_string_fileextensions,1);
+	menu_first_aid_add("zsfextension",&first_aid_no_zsfextension,first_aid_string_zsfextension,1);
 
 }
 
@@ -33761,6 +33778,51 @@ int menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
 }
 
 
+int menu_filesel_cambiar_unidad_o_volumen(void)
+{
+
+	int releer_directorio=0;
+
+#ifdef MINGW
+	//Mostrar selector de unidades
+						char letra=menu_filesel_cambiar_unidad_windows();
+					//printf ("letra: %d\n",letra);
+					if (letra!=0) {
+						char directorio[3];
+						sprintf (directorio,"%c:",letra);
+
+						//printf ("Changing to unit %s\n",directorio);
+
+						menu_filesel_chdir(directorio);
+						releer_directorio=1;
+						
+					}
+#else
+
+//Cambiar a ruta /media (en linux) o a /Volumes en Mac
+
+	#if defined(__APPLE__)
+
+//En Mac
+		menu_filesel_chdir("/Volumes");
+		releer_directorio=1;
+
+	#else
+
+//En Linux
+
+		menu_filesel_chdir("/media");
+		releer_directorio=1;	
+
+	#endif
+
+
+#endif
+
+	return releer_directorio;
+}
+
+
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
@@ -33824,12 +33886,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 //Esto lo hago para poder debugar facilmente la opcion de cambio de unidad
-#ifdef MINGW
+/*#ifdef MINGW
 	int we_are_windows=1;
 #else
 	int we_are_windows=0;
 	
-#endif
+#endif*/
 
 
 	do {
@@ -34292,8 +34354,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				}
 
 
-				if (tecla=='D' && we_are_windows) {
-					char letra=menu_filesel_cambiar_unidad();
+				if (tecla=='D') {
+					releer_directorio=menu_filesel_cambiar_unidad_o_volumen();
+					/*
+					char letra=menu_filesel_cambiar_unidad_windows();
 					//printf ("letra: %d\n",letra);
 					if (letra!=0) {
 						char directorio[3];
@@ -34304,7 +34368,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_filesel_chdir(directorio);
 						releer_directorio=1;
 						
-					}
+					}*/
 				}
 
 				if (tecla=='R') {	

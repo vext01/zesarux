@@ -1340,8 +1340,10 @@ printf(
 
 printf (
 	  "--set-mem-breakpoint a n   Set memory breakpoint at address a for type n\n"
-	  "--hardware-debug-ports     Enables hardware debug ports to be able to show on console numbers or ascii characters\n"
+	  "--hardware-debug-ports     These ports are used to interact with ZEsarUX, for example showing a ASCII character on console, read ZEsarUX version, etc. "
+		"Read file extras/docs/zesarux_zxi_registers.txt for more information\n"
 	  "--hardware-debug-ports-byte-file f  Sets the file used on register HARDWARE_DEBUG_BYTE_FILE\n"
+
 	  "-—dump-ram-to-file f       Dump memory from 4000h to ffffh to a file, when exiting emulator\n"
 		"\n"
 		"\n"

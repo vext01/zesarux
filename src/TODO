@@ -1,27 +1,7 @@
-Changelog
+
 --- Para esta version 7.2:
-    
-    
-----zxvision----:
 
--menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
-  de menu si el raton esta apuntando a alguna opcion
-
--acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
-
-
-Background windows
--activarlas con: int menu_allow_background_windows=1;
--Si ventana en background, no dejar volverla a llamar desde menu normal
--Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
--ultima ventana de arriba deberia salir como activa
--poder conmutar ventana activa
- 
-
-----fin zxvision----
-
-
-
+-revisar menus con speech
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 
@@ -33,7 +13,7 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 
 -probar que cambios de rainbow no hayan afectado a maquinas no tbblue
 
--quiza version mac tener dos versiones: una compilada con O2, otra sin
+-quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 
 -quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
 es la de sin phtreads
@@ -42,102 +22,16 @@ Quizá version threads windows  llamarla :
 -debug
 -extendeddebug
 
+-defm, defb en assembler
 
--random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
-En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay que cerrarlo dos veces, y la segunda vez, el 50% de las veces
-da segmentation fault-> quiza el problema viene del lector tzx
+-Ver si remote debug funciona correctamente en Windows  después de los cambios en la gestión de apertura de menú
 
+--Para próxima versión:
 
--Salida de texto en simpletext y otros drivers texto: carácter 127 no es imprimible
-
--Misma tecla F definida como ocr que en ZX Vision haga ocr+speech también. Así se pueden leer siempre los menus
-
-
--Grabar vídeo text speech completo
-
--Speech al moverse por líneas de menú se escucha antes de que se mueva el cursor. Por que?
--speech: sin multitask, a veces se descuadra la linea de menu que lee. ejemplo: ir a accessibility settings, y cuando este leyendo "active item..." pulsar tecla. Creo que esto pasa desde siempre
-
-
--en debug paginas memoria, que muestre correctamente paginas dandanator cpc
-
--Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
-
-
-//prueba
-// export LDFLAGS="-O2 -Weverything"
-// export CFLAGS="-O2 -Weverything"
-/*#pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
-#pragma GCC diagnostic ignored "-Wmissing-prototypes"
-#pragma GCC diagnostic ignored "-Wconversion"
-#pragma GCC diagnostic ignored "-Wembedded-directive"
-#pragma GCC diagnostic ignored "-Wunreachable-code-break"
-#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-#pragma GCC diagnostic ignored "-Wpadded"
-#pragma GCC diagnostic ignored "-Wcast-qual"
-#pragma GCC diagnostic ignored "-Wshadow"
-#pragma GCC diagnostic ignored "-Wused-but-marked-unused"*/
-
-
--Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
- 
--arranco zxuno con zoom 2. cambio a zoom 1 desde menu y peta:
-
-
-Comentar los cambios de cocoa con llamadas al main thread, que son debidos a:
-
-"
-Info: resizeContentToWidth 352 X 328
-2018-09-28 20:53:10.714 zesarux[514:9037] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'NSWindow drag regions should only be invalidated on the Main Thread!'
-*** First throw call stack:
-
-https://discourse.libsdl.org/t/crash-on-macos-10-14-mojave-with-sdl-showmessagebox/25100/2
-
-Apple only allows native UI functionality to be used on the main thread in macOS and iOS. It sounds like they have more robust runtime checks for that in 10.14, which is probably a good thing if the alternative is hard-to-diagnose glitches and crashes due to memory corruption etc.
-
-See also: https://developer.apple.com/documentation/code_diagnostics/main_thread_checker 2
-
-Ouch, thank you for the response – this will require some hard studying to figure out how to pull this off properly. Unfortunately most of the code I’m playing with is dimensions beyond me, but fingers crossed that I’ll be able to get it functioning.  :stuck_out_tongue:
-
-"
-
-
-
--buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
-y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en tbblue browser y luego pulsar continuamente. sin real beeper no pasa
-->el por que lo sigue haciendo en next aunque hayas soltado la tecla de cursor abajo es un miesterio
-
--tab en curses en menu filesel no lo lee
-
--tecla delete en curses en menus no borra
-
--y copy bytes desde menu debug quiza deberia usar memory zone
-
+-cpuid ("zxid") según especificación de mcleod
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
-
--poder cargar un .config sin mas, sin que cargue snapshot ni cinta ni nada, solo parseando el config. raro? en smartload estaran los dos, el juego y la config
-
--Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
-
--fix en compilacion en mac para sistemas antiguos
-
--quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
-
--Buscar bytes en memory zone -> problema: ahora las direcciones en memory zone pueden ser > 65535
-En ql llega a buscar?
-
--Si hay error en config file no hace experthelp
-
--Modo solo recreated en menú
-
--Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
-Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
-
--Salida 16 bits sonido?
-
--revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
-o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
+-Revisar archivo install. En caso de Linux y otros binarios ya compilados, enseñarlo más fácilmente. Otro documento quizá que diga cómo compilarlo  
 
 
 -------- Fin cosas para la siguiente version
@@ -148,6 +42,24 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 
 
 --- ZX Vision
+
+-menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
+  de menu si el raton esta apuntando a alguna opcion
+
+-acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
+
+-Cuando se hace resize de ventana y desaparecen barras desplazamientos, habría que mover offset a 0?
+O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir siempre que offset sea mayor que 0, Y que quepa en pantalla
+
+Background windows
+-activarlas con: int menu_allow_background_windows=1;
+-Si ventana en background, no dejar volverla a llamar desde menu normal
+-Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
+-ultima ventana de arriba deberia salir como activa
+-poder conmutar ventana activa
+-Ventanas que se pueden enviar a background que tengan un botón  especial ? Quizá el &? 
+
+
 
 -Osd keyboard sin multitarea en ZX81 no va fino
 
@@ -195,6 +107,9 @@ Lo hace realmente con visible_width y visible_height
 
 
 --- FIN ZX Vision
+
+
+
 
 --- audio - fallos ---
 
@@ -371,7 +286,6 @@ no cierra la ventana sdl. si en cambio el driver audio no es sdl, al cambiar de 
 
 -opcion para reducir tamanyo border. Ahora solo se puede: completo o no visible. Se podria hacer algo para mostrar medio border o menos por ejemplo
 
-
 -stdout. opciones que se activan con espacio  (como activar/desactivar breakpoints), poderlas activar en stdout tambien
 
 -Opción en stdout para simular tecla edit o delete 
@@ -528,6 +442,17 @@ El ORG deberia estar ajustado para que acabe en 65536 el final
 
 
 tamanyo total sprites?
+
+
+
+Revisar que org de cursor draw no está Justo para que acabe en 65535
+Si fuera así habría que bajar el org para permitir bytes de más de la rutina de kempston mouse
+
+Kempston mouse tiene que leer incrementos de posición de posición anterior
+Sumar esa posición a la actual de cursor. Si hay acarreo, no sumar
+Y en caso de vertical, si es mayor que 191, no sumar. Tener en cuenta también Tecla symbol que limita bajar a zona inferior 
+
+Quizá control kempston mouse simplemente preguntar en cargador Basic y que éste haga un poke de alguna dirección fuera de codigo, y cursor draw lo lee al iniciar. Si está pokeado, arriba kempston mouse. Si no, no lo activa 
 
 -----------------------
 
@@ -704,6 +629,36 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 --- TBBlue ---
 
 
+Refresco de Tbblue para curses , stdout y simpletext en caso de:
+-rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
+
+Last of the incompatible changes to tilemap made.
+
+(R/W) 0x6B (107) => Tilemap Control
+  bit 7    = 1 to enable the tilemap
+  bit 6    = 0 for 40x32, 1 for 80x32
+  bit 5    = 1 to eliminate the attribute entry in the tilemap
+  bit 4    = palette select
+  bits 3-2 = Reserved set to 0
+  bit 1    = 1 to activate 512 tile mode
+  bit 0    = 1 to force tilemap on top of ULA
+
+512 tile mode is solely entered via bit 1.  Whether the ula is enabled or not makes no difference
+
+when in 512 tile mode, the ULA is on top of the tilemap.  You can change this by setting bit 0
+
+
+512 mode is its like the 256 tile mode, but with twice as many 
+
+The tile number is 9 bits instead of 8 bits.  The "ula on top" bit of the tilemap flags is take as bit 8.
+
+Before this update, 512 tile mode was automatically entered when the ula was disabled.  In this case "ula on top" was useless so was made bit 9 of the tile number.  Now we're getting rid of the requirement that the ULA be turned off to access 512 tiles
+
+"ULA over tilemap" was only bit 8 of the tile number if the ULA was disabled.  We're getting rid of that requirement by making it bit 8 when the 512 tile mode is enabled.  So no need to have the ULA disabled to get there anymore.
+
+
+
+
 TBBLUE: 
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
@@ -712,6 +667,9 @@ TBBLUE:
 -soporte mas botones joystick/mas joystick de tbblue
 https://www.specnext.com/forum/viewtopic.php?f=6&t=1142
 
+-buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
+y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en tbblue browser y luego pulsar continuamente. sin real beeper no pasa
+->el por que lo sigue haciendo en next aunque hayas soltado la tecla de cursor abajo es un miesterio
 
 
 -tbblue extended opcodes
@@ -723,6 +681,17 @@ https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9
 
 
 -mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
+
+-.nex files:
+NextOS (but not esxDOS) doesn’t check the length when it loads, so you can append anything you like onto the end of the 128K version. The responsibility is yours to seek, load, stream from it etc, as you like.
+
+For SNA files, you have to embed the file name into your loading code, and reopen the file, which means a user can’t easily rename the file.
+
+SNX files are identical to SNA, except NextOS leaves the file open for you to do stuff with. This is always handle no. 0.
+
+There are a couple of other large file formats in the works too. These will have dot commands that load the contents for you. It’s easy to integrate this into the browser by adding entries to browser.cfg.
+
+
 	
 
 -reloj deberia salir en nextos, ya que implementa el chip de reloj. Porque no aparece?
@@ -935,6 +904,8 @@ Luego en cpc con más de 64 kb se puede re mapear según registro 3 del gate arr
 -parece que hay juegos que apagan el motor cuando no deben: MEnfin, bubble bobble, cabal.
 temporalmente desactivamos comando de stop real tape cuando motor off
 
+-en debug paginas memoria, que muestre correctamente paginas dandanator cpc
+
 -Implementar registros 12 y 13 crtc del cpc para scroll y cambio de buffer video
 
 For a 16k screen:
@@ -1004,6 +975,11 @@ ver que hace zxpand aqui....
 
 Macros o lenguaje en ZEsarUX
 Que permita integrar con ZRCP y acciones...
+
+-Parseo de parámetros con comillas en ZRCP 
+
+-Que se puedan ver errores debug verbose etc pero en ZRCP, de manera que no se vean en consola pero si en ZRCP. Eso permitiría debugar remotamente en raspiboy por ejemplo
+
 
 -Protocolo remoto:
 Ver si la simulación de pulsado de escape desde smartload de remote protocol no se detecta como space-break en zxuno
@@ -1111,6 +1087,24 @@ y haciendo maximize desde ventana, hace full screen pero distorsionado
 
 -en mac, con driver cocoagl o no cocoagl, hace una especie de parpadeo abajo en el footer a veces. quiza solo es en el no-opengl?
 
+
+Comentar los cambios de cocoa con llamadas al main thread, que son debidos a:
+
+"
+Info: resizeContentToWidth 352 X 328
+2018-09-28 20:53:10.714 zesarux[514:9037] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'NSWindow drag regions should only be invalidated on the Main Thread!'
+*** First throw call stack:
+
+https://discourse.libsdl.org/t/crash-on-macos-10-14-mojave-with-sdl-showmessagebox/25100/2
+
+Apple only allows native UI functionality to be used on the main thread in macOS and iOS. It sounds like they have more robust runtime checks for that in 10.14, which is probably a good thing if the alternative is hard-to-diagnose glitches and crashes due to memory corruption etc.
+
+See also: https://developer.apple.com/documentation/code_diagnostics/main_thread_checker 2
+
+Ouch, thank you for the response – this will require some hard studying to figure out how to pull this off properly. Unfortunately most of the code I’m playing with is dimensions beyond me, but fingers crossed that I’ll be able to get it functioning.  :stuck_out_tongue:
+
+"
+
 ------------------
 
 
@@ -1179,6 +1173,8 @@ Fifosdlbuffersize 4 y sdlsamplesize 2048
 --- MMC y DIVMMC ---
 
 -Probar otros firmwares de divmmc, si es que los hay: fatware?
+
+-Mmap para acceso a mmc/ide 
 
 -TODO. Bit MAPRAM can be set to '1' only (when it's '1', only power-on can return it to '0').
 
@@ -1437,6 +1433,18 @@ pero parece que envia otra tecla diferente
 -acabar de probar putpixel cache con zoom 1, en raspberry, con o si putpixel cache. que es mas rapido?
 probar con over128
 
+-Documento de cómo se usa la putpixel cache
+
+Ampliar el que ya hay
+
+Tanto para realvideo como sin
+
+Con realvideo, cada vez que se refresca pantalla se lee de rainbow buffer. Se ahí, los putpixel que se hacen, si que pasan por la putpixel cache para ver si se envían a pantalla gráfica o no
+
+Sin realvideo, similar, pero no hay rainbow buffer sino que se hace putpixel a cada refresco y se mira si está en la cache putpizel 
+
+
+
 -detectar para cualquier tipo de carga si va mas alla de la ramtop
 
 -footer para cacalib, aalib
@@ -1463,6 +1471,14 @@ crear tambien metodos de deteccion de tercer trap? Aunque esto quiza solo sirve 
 O quizá setting configurable 
 
 -al leer lineas con varios hotkeys, solo lee el ultimo hotkey
+
+
+-Misma tecla F definida como ocr que en ZX Vision haga ocr+speech también. Así se pueden leer siempre los menus
+-Grabar vídeo text speech completo
+
+-Speech al moverse por líneas de menú se escucha antes de que se mueva el cursor. Por que?
+-speech: sin multitask, a veces se descuadra la linea de menu que lee. ejemplo: ir a accessibility settings, y cuando este leyendo "active item..." pulsar tecla. Creo que esto pasa desde siempre
+
 
 -------------
 
@@ -1502,6 +1518,8 @@ Quizá demo raster zxuno falla porque la interrupción tarda demasiado...
 
 
 -texto inverso en zx-80/81 con extension ansi y drivers de texto
+
+-No hace auto turbo para real tape ZX 80, 81
 
 -------------
 
@@ -1652,6 +1670,11 @@ eliminar warnings de funciones sin definir como extern
   http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
 *************
 
+-Revisar qué roms de +3e conviene incluir: la de ide no se como va. E igual se puede incluir la de divide (aunque parece no ir tampoco)
+
+
+
+
 
 
 *** Video ***
@@ -1664,6 +1687,7 @@ eliminar warnings de funciones sin definir como extern
 -poder hacer 50 FPS en carga top speed: problema, que al hacer top speed, ya no llevamos la cuenta de cuanto son 50 fps, pues no hay sleep de 
 final de frame. Y al no haberlo , si metemos un refresco de pantalla al final de cada supuesto frame, se estara lanzando muchos mas de 50 veces por segundo
 el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos a velocidad normal en vez de top speed
+
 
 
 -watermark sin realvideo no hace zoom. importante???
@@ -1719,11 +1743,19 @@ para lightgun la mayoria de puertos son teclado o kempston, en que ya se control
 
 -cacalib, en X windows pero haciendo export DISPLAY=, colores normales tienen parpadeo
 
+-Fallback de X11 a cacalib no va bien. El menú lo abre como si fuera pixel
+
 -funcion screen_print_splash_text que se pueda mostrar texto con menu abierto. Ideal por ejemplo para open flap del z88
 
 -realvideo en spectrum para curses, stdout, simpletext -> YA esta. hecho para tsconf. hay funcion generica para convertir rainbow a texto (blanco y negro)
 
 -Posibilidad de desactivar puntero raton para el resto de drivers: curses, cocoa
+
+-tab en curses en menu filesel no lo lee
+
+-tecla delete en curses en menus no borra
+-Salida de texto en simpletext y otros drivers texto: carácter 127 no es imprimible
+
 
 -Imagen estereoscopica. Tanto anaglifo (azul + rojo) como imagen separada en dos ventanas para dos ojos
 
@@ -1796,9 +1828,19 @@ Dizzy 3
 Demo covox
 Etc...
 
+-revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
+o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
+
+-Generador archivos .ay según lo enviado a chip de sonido. Soporte turbosound
+
+
 
 -detector de silencio en sdl2, en 48k, genera zumbido en Linux
 ver de momento workaround audio_using_sdl2
+
+-Exportar sonido generado por el chip AY hacia mid
+
+-Salida 16 bits sonido?
 
 -con vo stdout y speech habilitado, parece que cambiar entre maquinas zx81 y spectrum, vuelve a decir texto de bienvenida. normal??
 
@@ -1828,15 +1870,41 @@ ver de momento workaround audio_using_sdl2
 
 *** Menu  ***
 
+-Opcional cargar snapshot y no cerrar menú. Mismo para Smartload pero solo con snapshots?
 
 -Algunos items de menu, por ejemplo dentro del buscador de vidas, son lineas no seleccionables,
 aunque se definen de tipo normal. Tendrian que ser de tipo separador. Pero en ese caso, habria que hacer que cuando se abra el menu,
 si el cursor esta en un separador, que haga bajar el cursor -> esto parece que ya se intento, buscar comentario que dice:
 //Nota: el separador no puede ser final de menu
 
+-Quizá sugerencia siempre al iniciar, random? 
+
+-Estilo con tipo letra Chicago del Mac OS Classic 
+
+-copy bytes desde menu debug quiza deberia usar memory zone
+
+-Buscar bytes en memory zone -> problema: ahora las direcciones en memory zone pueden ser > 65535
+En ql llega a buscar?
+
+-Algo para poder generar mapas de todas pantallas
+Tipo:
+https://simonowen.com/spectrum/tilemap/
+
+Pero para cualquier juego
+
+Del estilo:
+Hacer captura. Luego hacer captura de la derecha, etc
+
+-Modo solo recreated en menú / Movimiento menus con 56780
+
+
+-Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
 
 -secuenciador AY: linea para cada canal de audio que haga scroll horizontal de cada linea cuando nota cambie (teniendo en cuenta nota y octava, por ejemplo F#4)
 
+-Convertir automático de cinta a wav, mediante uso de mantransfe
+
+-Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
 
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
 
@@ -1844,6 +1912,8 @@ si el cursor esta en un separador, que haga bajar el cursor -> esto parece que y
 -usar otras acciones / hotkeys para eso
 -agregar un handler especial para esas teclas. Pero entonces como se mueve uno por los ítems? Con tecla tab?
 Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En menú tabular, el tab sale?
+
+-F1 ayuda extensa en debug cpu, dentro de ventana y Antes en el ítem de menú 
 
 -menus tabulados:
 TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, que permita:
@@ -1935,7 +2005,11 @@ no gestiona bien nombres con espacios
 -Assembler para Motorola y MK14
 -Assembler para opcodes del Next
 -Assembler instrucciones DD/FD+CB no documentadas. ej: LD B,RLC (IX+dd)
+-Assembler defb, defm 
 -Detectar errores sintaxis en assembler
+
+-Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
+Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
 
 -Idea para mejorar el parser de breakpoints:
 //Operadores AND, OR, XOR que ya esten calculados antes su indice (BREAKPOINT_CONDITION_OP_OR, BREAKPOINT_CONDITION_OP_AND, BREAKPOINT_CONDITION_OP_XOR) y no tener que hacer strcmp cada vez
@@ -2146,6 +2220,7 @@ probado - Variable traps que se activa por si hay load o save- hará que vaya m�
 
 -Lec-80 rom y Soporte 80 kb
 
+
 ****************
 
 
@@ -2182,8 +2257,13 @@ Lo que pasa es que cuando asigno memoria vram hago los 32 k de golpe, por eso cu
 
 *** Tape ***
 
+-random crash al lanzar ./zesarux prueba.tzx con prueba.tzx siendo archivo random
+En este caso, sale error de tzx en menu, y al ir a cerrar mensaje de error, hay que cerrarlo dos veces, y la segunda vez, el 50% de las veces
+da segmentation fault-> quiza el problema viene del lector tzx
 
 -En real tape, iniciar carga a velocidad normal y poner carga acelerada en el momento que haya cargado la pantalla
+
+-quiza quitar el "simulate real load", no tiene sentido, pues se puede hacer mediante carga real tape
 
 -TZX. Segun tags detectar:
 *si es juego 48 o 128
@@ -2250,6 +2330,8 @@ de tal manera que en tzx buscaria el siguiente id, y en tap no haria nada
 * leer siempre cada bloque de bytes entero en un buffer
 * retornar a funcion que llama el numero de bytes leido, y teniendo en cuenta si es any flag loading
 * esto evitaria tener que ir haciendo seeks y similar y seria todo mas "limpio"
+
+-poder cargar un .config sin mas, sin que cargue snapshot ni cinta ni nada, solo parseando el config. raro? en smartload estaran los dos, el juego y la config
 
 
 ***********
@@ -2318,17 +2400,21 @@ me gusta tener el menu encima de misma ventana del emulador, quiza podria ser un
 
 *** Misc ***
 
--Ensamblador, tanto desde menu como con ZRCP
 -Convertir cintas paws
 -Otros componentes mas extraños, como "descubrir" puntuaciones actuales en un juego u otros parámetros,
 como descubrir rutinas de pintado de sprites
 *rutinas de pintado de sprites: quiza detectar cambios en pantalla al pulsar teclas. y ver desde donde se realizan esos cambios en pantalla
 * de momento hay algo preliminar: ver spritefinder
 
+-Extractor palabras paws gac etc que clasifique por verbos, nombres etc
+-Text keyboard editable desde menu?
 
 -Joystick en Mac,Win
 -quiza redibujar archivo logo tal cual con el boot logo
 -Posible ocr con traducción de cirílico?
+
+-Si hay error en config file no hace experthelp
+
 
 ***********
 
@@ -2431,6 +2517,8 @@ Segun MESS:
 -Inves. Ver que juegos se corrompe la memoria debido a interrupción. Quizá ver aquellos que no usan tabla entera de 257
 
 -Mejorar emulación teclado issue 2,3. Etc. Inves
+
+-Subir fotos pruebas inves reales al repo, comprimiendo imagenes?
 
 -Probar dispositivo depuración puerto ffh mad mix game
 

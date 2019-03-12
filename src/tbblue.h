@@ -260,4 +260,13 @@ extern void screen_tbblue_refresca_no_rainbow(void);
 
 extern void screen_tbblue_refresca_rainbow(void);
 
+extern z80_byte tbblue_machine_id;
+
+struct s_tbblue_machine_id_definition {
+    z80_byte id;
+    char nombre[32];
+};
+
+extern struct s_tbblue_machine_id_definition tbblue_machine_id_list[];
+
 #endif

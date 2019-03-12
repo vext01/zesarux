@@ -35,7 +35,7 @@ Improved sprite viewer:
 Improved file selector:
 -now it remembers the last files used
 -Windows: now you can use up to 20000 files in the same directory
--Windows: added drive selector (press shift-u)
+-added drive selector (press shift-d). On Windows, allows you to change drive unit. On Linux and Mac, changes to /media or /Volumes
 
 Improved disassemble window: 
 -now you can export the disassemble to text file
@@ -48,7 +48,7 @@ Improved hexadecimal editor:
 Improved audio: silence detector is disabled by default. That should fix some Windows audio problems. Check Settings->Audio->Silence detector if you have configuration autosaving enabled
 Improved vu-meters: high volumes are shown in red
 Improved MMC emulation: allow non-standard mmc file sizes
-
+Improved compiled Mac version: default version is faster than before (uses O2 optimization)
 
 
 Fixed visual glitches in some menus when Pentagon machine and real video: audio wave, visualmem, ay piano, wave piano, view sprites
@@ -60,15 +60,16 @@ Fixed segmentation fault when showing electron on debug
 
 
 Changes in TBBlue emulation:
--Added TBBlue Tiles video mode
--Added TBBlue "reveal" setting to view which pixels are used by a layer
+-Added Tiles video mode
+-Added "reveal" setting to view which pixels are used by a layer
+-Added setting to change machine id
 -Improved CPU usage:
 --Use 4% less cpu time (in my machine) when only ULA and/or Tiles enabled
 --Use 1% less cpu time (in my machine) when all layers enabled
 -Improved display emulation: now is twice bigger
 -Fixed Timex hi-res mode 512x192
 -Fixed autoload on tbblue (on normal and also fast boot mode)
--Fixed error managing TBBlue Layer 2 vertical scroll
+-Fixed error managing Layer 2 vertical scroll
 
 
 

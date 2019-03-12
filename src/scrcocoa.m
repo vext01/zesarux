@@ -995,61 +995,7 @@ CGImageRef imageRef;
 
 
 
-//Prueba otra funcion redibujar ventana
-//Tambien falla. ademas a veces da segmentation fault al redimensionar ventana
-//Lo curioso es que cuando deja de redibujar la pantalla, se sigue llamando a aqui
 
-
-/*
-- (void) newdrawRect:(NSRect) rect
-						{
-
-
-						if (pendingresize) {
-										debug_printf (VERBOSE_DEBUG,"drawRect with pendingresize active");
-						return;
-						}
-
-if (dataProviderRef) {
-	//printf ("Redibujando\n");
-//http://stackoverflow.com/questions/4356441/mac-os-cocoa-draw-a-simple-pixel-on-a-canvas
-
-							// Create a CGImage with the pixel data
-	//CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, dataProviderRef, dataLength, NULL);
-	CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-	CGImageRef image = CGImageCreate(
-screen_get_window_size_width_zoom_border_en(),screen_get_window_size_height_zoom_border_en(),
-
-			screen.bitsPerComponent,
-			screen.bitsPerPixel,
-
-
-			(screen_get_window_size_width_zoom_border_en() * (screen.bitsPerComponent/2)), //bytesPerRow
-
-			CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB), //colorspace for OS X >= 10.4
-			kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipFirst,
-			dataProviderRef, //provider
-			NULL, //decode
-			0, //interpolate
-			kCGRenderingIntentDefault //intent
-	);
-
-
-	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
-
-	CGContextDrawImage(ctx,
-			CGRectMake(0.0, 0.0, screen_get_window_size_width_zoom_border_en(),screen_get_window_size_height_zoom_border_en()),
-			image);
-
-	//Clean up
-	CGColorSpaceRelease(colorspace);
-	CGImageRelease (image);
-	//CGDataProviderRelease(provider);
-						}
-
-}
-
-*/
 
 //Redibujar ventana. No usado en OpenGL
 - (void) drawRect:(NSRect) rect
@@ -1141,11 +1087,11 @@ screen_get_window_size_width_zoom_border_en(),screen_get_window_size_height_zoom
                         );
                         CGContextDrawImage (viewContextRef, cgrect(rectList[0]), clipImageRef);
                         CGImageRelease (clipImageRef);
-												//CFRelease (clipImageRef);
+												
         }
 #endif
         CGImageRelease (imageRef);
-				//CFRelease (imageRef);
+				
     }
 }
 
@@ -1332,7 +1278,6 @@ screen_get_window_size_width_zoom_border_en(),screen_get_window_size_height_zoom
 }
 
 
-int temp_cocoa_contador=0;
 
 
 //Teclas de Z88 asociadas a cada tecla del teclado fisico
@@ -2479,8 +2424,19 @@ void scrcocoa_refresca_pantalla_solo_driver(void)
 // Prueba para cuando se redimensiona ventana desde el easter egg
 //if (pendingresize) scrcocoa_refresca_pantalla();
 #ifdef COCOA_OPENGL
+        //Con OpenGL
 	[cocoaView render];
 #else
+
+        //Sin OpenGL
+
+        /*
+             //Esto tiene que llamarlo desde el thread principal:
+        dispatch_async(dispatch_get_main_queue(), ^{
+   [cocoaView display ];
+        });
+        */
+
 	[cocoaView display];
 #endif
 

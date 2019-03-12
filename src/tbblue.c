@@ -89,6 +89,23 @@ z80_byte tbblue_copper_memory[TBBLUE_COPPER_MEMORY];
 //Indice al opcode copper a ejecutar
 z80_int tbblue_copper_pc=0;
 
+z80_byte tbblue_machine_id=8;
+
+struct s_tbblue_machine_id_definition tbblue_machine_id_list[]=
+{
+	{1,               "DE-1"},
+	{2,               "DE-2"},
+	{5,               "FBLabs"},
+	{6,               "VTrucco"},
+	{7,               "WXEDA"},
+	{8,               "Emulators"},
+	{10,              "ZX Spectrum Next"},
+	{11,              "Multicore"},
+	{250,             "ZX Spectrum Next Antibrick"},
+
+ 	{255,""}
+};
+
 //Obtiene posicion de escritura del copper
 z80_int tbblue_copper_get_write_position(void)
 {
@@ -3458,7 +3475,24 @@ z80_byte tbblue_get_value_port_register(z80_byte registro)
 	switch(registro)
 	{
 		case 0:
-			return 8;
+
+/*
+hardware numbers
+#define HWID_DE1A               1               DE-1 
+#define HWID_DE2A               2               DE-2  
+#define HWID_DE2N               3               DE-2 (new) 
+#define HWID_DE1N               4               DE-1 (new) 
+#define HWID_FBLABS             5               FBLabs 
+#define HWID_VTRUCCO   				 	6               VTrucco 
+#define HWID_WXEDA              7               WXEDA 
+#define HWID_EMULATORS  				8               Emulators 
+#define HWID_ZXNEXT             10              ZX Spectrum Next 
+#define HWID_MC                 11              Multicore 
+#define HWID_ZXNEXT_AB  				250             ZX Spectrum Next Anti-brick 
+*/
+
+
+			return tbblue_machine_id; //8;
 		break;
 
 

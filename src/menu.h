@@ -293,7 +293,7 @@ extern overlay_screen overlay_screen_array[];
 //extern overlay_screen second_overlay_screen_array[];
 
 //definiciones para funcion menu_generic_message
-#define MAX_LINEAS_VENTANA_GENERIC_MESSAGE 18
+#define MAX_LINEAS_VENTANA_GENERIC_MESSAGE 20
 
 //#define MAX_LINEAS_TOTAL_GENERIC_MESSAGE 1000
 

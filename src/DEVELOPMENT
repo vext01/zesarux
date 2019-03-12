@@ -129,10 +129,15 @@ make bintargz
 (Con O2, tarda 06:30 en compilar con 800MHz)
 
 ** Mac
-Generar versión Mac sin optimización, porque si no hay Mac donde no va (Daniel Leon)
+
+Generar versión opengl por defecto con optimización
 Generar dos binarios de Mac:
 ZEsarUX_macos_no_opengl-version.dmg.gz 
 con comandos:
+Versión sin optimizaciones:
+
+export CFLAGS=
+export LDFLAGS=
 
 ./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
 (Habilita drivers video: cocoa, stdout, simpletext y drivers audio: coreaudio. )
@@ -144,6 +149,10 @@ Y
 
 ZEsarUX_macos_opengl-version.dmg.gz
 con comandos:
+Versión con optimizaciones:
+
+export CFLAGS=-O2
+export LDFLAGS=-O2
 
 ./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile --enable-cocoa-opengl
 (Habilita drivers video: cocoa(GL), stdout, simpletext y drivers audio: coreaudio. )

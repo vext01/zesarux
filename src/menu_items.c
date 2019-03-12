@@ -155,6 +155,7 @@ int cpu_settings_opcion_seleccionada=0;
 int textdrivers_settings_opcion_seleccionada=0;
 int settings_display_opcion_seleccionada=0;
 int cpu_stats_opcion_seleccionada=0;
+int menu_tbblue_hardware_id_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -784,8 +785,8 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_hardware_debug_port,NULL,"[%c] Hardware ~~debug ports",(hardware_debug_port.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"If hardware debug ports are enabled");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"It shows a ASCII character or a number on console sending some OUT sequence to ports. "
-														"Read file docs/zesarux_zxi_registers.txt for more information");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"These ports are used to interact with ZEsarUX, for example showing a ASCII character on console, read ZEsarUX version, etc. "
+														"Read file extras/docs/zesarux_zxi_registers.txt for more information");
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'d');
 
 
@@ -1675,7 +1676,7 @@ void menu_debug_cpu_resumen_stats_overlay(void)
 
 
 
-		z80_byte tecla;
+		//z80_byte tecla;
 
 		//printf ("%d %d\n",contador_segundo,cpu_stats_valor_contador_segundo_anterior);
      
@@ -3623,10 +3624,16 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 
 		int total_height=menu_debug_tsconf_tbblue_tilenav_total_vert();
 		int total_width=31;
+
+		char texto_layer[32];
+
+		//En caso de tbblue, solo hay una capa
+		if (MACHINE_IS_TBBLUE) texto_layer[0]=0;
+
+		else sprintf (texto_layer,"~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+
 		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-			//sprintf (titulo,"Tiles M:Visual L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			//sprintf (titulo,"Tile Navigator");
-			sprintf (linea_leyenda,"~~Mode: Visual ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			sprintf (linea_leyenda,"~~Mode: Visual %s",texto_layer);
 
 			if (MACHINE_IS_TSCONF) {
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
@@ -3635,13 +3642,11 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 				//TBBLUE
 				total_width=tbblue_get_tilemap_width()+4;
 			}
-			//total_height++; //uno mas pues hay la primera linea con la regla de columnas
 
 		}
 
 		else {
-		   //sprintf (titulo,"Tiles M:List L:Lyr %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
-			sprintf (linea_leyenda,"~~Mode: List ~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+			sprintf (linea_leyenda,"~~Mode: List %s",texto_layer);
 			total_height*=2;
 		}
 
@@ -3707,6 +3712,8 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 	do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
+
+
 			
 
 		tecla=zxvision_common_getkey_refresh();				
@@ -3715,9 +3722,12 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 				switch (tecla) {
 
 					case 'l':
-						zxvision_destroy_window(&ventana);	
-						menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
-						menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+						//En caso de tbblue, hay una sola capa
+						if (!MACHINE_IS_TBBLUE) {					
+							zxvision_destroy_window(&ventana);	
+							menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
+							menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+						}
 					break;
 
 					case 'm':
@@ -8507,7 +8517,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				if (MACHINE_IS_INVES) {
 					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_inves_ula_bright_error,NULL,"[%c] Inves bright error",(inves_ula_bright_error.v ? 'X' : ' '));
 					menu_add_item_menu_tooltip(array_menu_settings_display,"Emulate Inves oddity when black colour and change from bright 0 to bright 1");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"Emulate Inves oddity when black colour and change from bright 0 to bright 1");
+					menu_add_item_menu_ayuda(array_menu_settings_display,"Emulate Inves oddity when black colour and change from bright 0 to bright 1. Seems it only happens with RF or RGB connection");
 
 				}
 
@@ -8751,5 +8761,76 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
+
+}
+
+
+
+
+void menu_tbblue_machine_id(MENU_ITEM_PARAMETERS)
+{
+
+        menu_item *array_menu_tbblue_hardware_id;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+		menu_add_item_menu_inicial(&array_menu_tbblue_hardware_id,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+                char buffer_texto[40];
+
+                int i;
+				int salir=0;
+                for (i=0;i<=255 && !salir;i++) {
+
+					z80_byte machine_id=tbblue_machine_id_list[i].id;
+					if (machine_id==255) salir=1;
+					else {
+
+                  		sprintf (buffer_texto,"%3d %s",machine_id,tbblue_machine_id_list[i].nombre);
+
+                        menu_add_item_menu_format(array_menu_tbblue_hardware_id,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
+
+						//Decir que no es custom 
+						menu_add_item_menu_valor_opcion(array_menu_tbblue_hardware_id,0);
+					}
+
+				}
+
+				menu_add_item_menu(array_menu_tbblue_hardware_id,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+				menu_add_item_menu_format(array_menu_tbblue_hardware_id,MENU_OPCION_NORMAL,NULL,NULL,"Custom");
+				//Decir que es custom 
+				menu_add_item_menu_valor_opcion(array_menu_tbblue_hardware_id,1);				
+
+                menu_add_item_menu(array_menu_tbblue_hardware_id,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_tbblue_hardware_id,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_tbblue_hardware_id);
+
+                retorno_menu=menu_dibuja_menu(&menu_tbblue_hardware_id_opcion_seleccionada,&item_seleccionado,array_menu_tbblue_hardware_id,"TBBlue machine id" );
+
+                
+
+
+				if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+
+					//Si se pulsa Enter
+					//Detectar si es la opcion de custom
+					if (item_seleccionado.valor_opcion) {
+        				char string_valor[4];
+						sprintf (string_valor,"%d",tbblue_machine_id);
+
+		                menu_ventana_scanf("ID?",string_valor,4);
+
+        				tbblue_machine_id=parse_string_to_number(string_valor);
+
+					}
+
+					else {
+						tbblue_machine_id=tbblue_machine_id_list[menu_tbblue_hardware_id_opcion_seleccionada].id;
+					}
+											
+
+												
+                }
 
 }
