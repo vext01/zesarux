@@ -8770,6 +8770,9 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 void menu_tbblue_machine_id(MENU_ITEM_PARAMETERS)
 {
 
+	menu_warn_message("Changing the machine id may show the Spectrum Next boot logo, which is NOT allowed. "
+		"Please read the License file: https://gitlab.com/thesmog358/tbblue/blob/master/LICENSE.md");
+
         menu_item *array_menu_tbblue_hardware_id;
         menu_item item_seleccionado;
         int retorno_menu;
