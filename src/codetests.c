@@ -671,21 +671,21 @@ void codetests_main(int main_argc,char *main_argv[])
 		exit(0);
 	}
 
-	printf ("\nRunning assembler tests\n");
+	//printf ("\nRunning assembler tests\n");
 	codetests_assembler();
 
 
 	//printf ("\nRunning tbblue layers strings\n");
-	//codetests_tbblue_layers();
+	codetests_tbblue_layers();
 
 	//printf ("\nRunning repetitions code\n");
-	//codetests_repetitions();
+	codetests_repetitions();
 
 	//printf ("\nRunning compress repetitions code\n");
-	//coretests_compress_repetitions();
+	coretests_compress_repetitions();
 
 	//printf ("\nRunning get raster tbblue horizontal\n");
-	//codetests_tbblue_get_horizontal_raster();
+	codetests_tbblue_get_horizontal_raster();
 
 	exit(0);
 }

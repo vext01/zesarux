@@ -14,6 +14,7 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 -probar que cambios de rainbow no hayan afectado a maquinas no tbblue
 
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
+Que hacemos con cocoa no opengl?
 
 -quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
 es la de sin phtreads
