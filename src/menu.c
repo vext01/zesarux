@@ -8627,6 +8627,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 				menu_dibuja_menu_help_tooltip(texto_tooltip,1);
 
+				//printf ("despues de mostrar tooltip\n");
+
 
 				//Esperar no tecla
 				menu_espera_no_tecla();
@@ -8640,6 +8642,15 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//zxvision_set_draw_window_parameters(ventana);
 
 	        }
+
+			else {
+				//printf ("no hay tooltip\n");
+
+				//No queremos que se vuelva a leer cuando tooltip es inexistente. si no, estaria todo el rato releyendo la linea
+				//TODO: esto no tiene efecto, sigue releyendo cuando estas sobre item que no tiene tooltip
+				//menu_speech_tecla_pulsada=1;	
+	
+			}
 
 		}
 

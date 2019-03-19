@@ -1474,6 +1474,11 @@ crear tambien metodos de deteccion de tercer trap? Aunque esto quiza solo sirve 
 -Tecla escape debería hacer break cuando se está escuchando speech
 O quizá setting configurable 
 
+-relee item menu cuando estas sobre item que no tiene tooltip. Ver codigo:
+-				//TODO: esto no tiene efecto, sigue releyendo cuando estas sobre item que no tiene tooltip
+				//menu_speech_tecla_pulsada=1;	
+
+
 -al leer lineas con varios hotkeys, solo lee el ultimo hotkey
 
 
