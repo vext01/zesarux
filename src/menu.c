@@ -3961,6 +3961,21 @@ void zxvision_set_draw_window_parameters(zxvision_window *w)
 
 }
 
+void zxvision_draw_below_windows_nospeech(zxvision_window *w)
+{
+	//Redibujar las de debajo
+	printf ("antes draw below\n");
+
+	int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
+	//No enviar a speech las ventanas por debajo
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+	
+	zxvision_draw_below_windows(w);
+
+	menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
+	printf ("despues draw below\n");
+}
+
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
 
@@ -4081,7 +4096,8 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	zxvision_set_draw_window_parameters(w);
 
 	//Redibujar las de debajo
-	zxvision_draw_below_windows(w);
+	zxvision_draw_below_windows_nospeech(w);
+
 
 }
 
@@ -4111,7 +4127,7 @@ void zxvision_destroy_window(zxvision_window *w)
 	if (zxvision_current_window!=NULL) {
 		//Dibujar las de detras
 		//printf ("Dibujando ventanas por detras\n");
-		zxvision_draw_below_windows(w);
+		zxvision_draw_below_windows_nospeech(w);
 
 		zxvision_set_draw_window_parameters(zxvision_current_window);
 
@@ -4660,14 +4676,19 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 
 	zxvision_window ventana;
+	//printf ("antes de zxvision_new_window\n");		
 	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_total_ventana,titulo);	
+
+	//printf ("despues de zxvision_new_window\n");							
 
 	if (!resizable) zxvision_set_not_resizable(&ventana);	
 
 	if (mostrar_cursor) ventana.visible_cursor=1;	
 
 	zxvision_draw_window(&ventana);
+
+	//printf ("despues de zxvision_draw_window\n");
 
 				//Decir que se ha pulsado tecla asi no se lee todo cuando el cursor esta visible
 				if (ventana.visible_cursor) menu_speech_tecla_pulsada=1;
@@ -5395,6 +5416,8 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	//printf ("original window: %p\n",w);
         //printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
 
+
+
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
@@ -5506,7 +5529,7 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
 void zxvision_redraw_window_on_move(zxvision_window *w)
 {
 	cls_menu_overlay();
-	zxvision_draw_below_windows(w);
+	zxvision_draw_below_windows_nospeech(w);
 	zxvision_draw_window(w);
 	zxvision_draw_window_contents(w);
 }
@@ -7904,6 +7927,7 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 
         if (si_tooltip) {
 			//menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto);
+			//printf ("justo antes de message tooltip\n");
 			zxvision_generic_message_tooltip("Tooltip" , 0 ,0,1,0,NULL,0,"%s",texto);
 		}
 	
@@ -7914,9 +7938,11 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
 
 		if (zxvision_current_window!=NULL) {
 			zxvision_draw_window(zxvision_current_window);
+			//printf ("antes draw windows contents\n");
 			zxvision_draw_window_contents(zxvision_current_window);
 		}
 
+		//printf ("antes refrescar pantalla\n");
         menu_refresca_pantalla();
 
 		
