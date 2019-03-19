@@ -4692,6 +4692,8 @@ void menu_audio_new_ayplayer_overlay(void)
 
 	int vol_A,vol_B,vol_C;
 
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
 
     if (menu_audio_new_ayplayer_si_mostrar()) {
     	//Los volumenes mostrarlos siempre a cada refresco

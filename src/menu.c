@@ -12454,6 +12454,9 @@ void menu_debug_draw_sprites(void)
 	normal_overlay_texto_menu();
 
 
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech	
+
+
 	int sx=SPRITES_X+1;
 	//int sy=SPRITES_Y+3;
 	
