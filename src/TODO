@@ -7,6 +7,7 @@
 
 --probar todos drivers nuevo tamaño ventana tbblue. ok cocoa, xwindow, sdl
 
+-Agregar Holy tower a imagen zxuno mmc
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
 cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
@@ -30,6 +31,7 @@ Quizá version threads windows  llamarla :
 
 --------Para próxima versión:
 
+-parece que ZSF no guarda estado ulaplus o timex. probar con view8x1.tap
 -cpuid ("zxid") según especificación de mcleod
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
