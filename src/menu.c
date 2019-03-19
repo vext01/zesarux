@@ -3964,7 +3964,7 @@ void zxvision_set_draw_window_parameters(zxvision_window *w)
 void zxvision_draw_below_windows_nospeech(zxvision_window *w)
 {
 	//Redibujar las de debajo
-	printf ("antes draw below\n");
+	//printf ("antes draw below\n");
 
 	int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
 	//No enviar a speech las ventanas por debajo
@@ -3973,7 +3973,7 @@ void zxvision_draw_below_windows_nospeech(zxvision_window *w)
 	zxvision_draw_below_windows(w);
 
 	menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
-	printf ("despues draw below\n");
+	//printf ("despues draw below\n");
 }
 
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
@@ -30775,6 +30775,8 @@ void menu_inicio_bucle(void)
 		if (retorno_menu==MENU_RETORNO_ESC) salir_menu=1;
 
 	} while (!salir_menu && !salir_todos_menus);
+
+	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
 
 
 	        //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
