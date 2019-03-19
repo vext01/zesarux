@@ -4712,10 +4712,9 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 	do {
 
-		/*if (mostrar_cursor) {
-			ventana.visible_cursor=1;
-			//ventana.cursor_line=ultima_linea_buscada;
-		}*/
+		//printf ("entrada bucle do\n");
+
+
 
 	//Enviar primera linea o ultima a speech
 
@@ -4731,40 +4730,11 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 		menu_textspeech_send_text(buffer_lineas[linea_a_speech]);
 	}
 
-	/*if (!mostrar_cursor) {
-		if (primera_linea_a_speech) {
-			menu_speech_tecla_pulsada=0;
-			menu_textspeech_send_text(buffer_lineas[primera_linea]);
-		}
-		if (ultima_linea_a_speech) {
-			menu_speech_tecla_pulsada=0;
-			menu_textspeech_send_text(buffer_lineas[i+primera_linea-1]);
-		}
-	}
-
-	else {
-		menu_speech_tecla_pulsada=0;
-		menu_textspeech_send_text(buffer_lineas[primera_linea+linea_cursor]);
-	}*/
 
 
-	//primera_linea_a_speech=0;
-	//ultima_linea_a_speech=0;
 	menu_speech_tecla_pulsada=1;
 	enviar_linea_a_speech=0;
 
-
-	//Escribir cursores en linea inferior
-	//26 espacios
-	//char cursores[]="                          ";
-	//abajo
-	//if (primera_linea<indice_linea-1) cursores[20]='D';
-	//Meter puntos suspensivos en la ultima linea indicando que hay mas abajo
-	/*if (primera_linea+alto_ventana-2<indice_linea) {
-		menu_escribe_linea_opcion(MAX_LINEAS_VENTANA_GENERIC_MESSAGE,-1,1,"...");
-	}*/
-
-	
 
 
 
@@ -4788,9 +4758,6 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
         	menu_espera_tecla();
 
 
-			//printf ("Despues espera tecla\n");
-			//printf ("zxvision_keys_event_not_send_to_machine: %d\n",zxvision_keys_event_not_send_to_machine);
-
 		}
 
 
@@ -4805,19 +4772,15 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 				}
 
 
-
 		if (volver_timeout) tecla=13;
 						
-
-								
+							
 
 		if (tooltip_enabled==0 && tecla) {
 			//printf ("Esperamos no tecla\n");
 			menu_espera_no_tecla_con_repeticion();
 		}
 
-		//Decir que no se ha pulsado tecla para que se relea esto cada vez
-		//menu_speech_tecla_pulsada=0;
 
 		int contador_pgdnup;
 
@@ -4877,6 +4840,9 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 							}
 							//Decir que no se ha pulsado tecla para que se relea
 							menu_speech_tecla_pulsada=0;
+
+							//Y recargar ventana para que la relea
+							zxvision_draw_window_contents(&ventana);
 						break;
 
                     	//PgDn
@@ -4887,6 +4853,9 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 							//Decir que no se ha pulsado tecla para que se relea
 							menu_speech_tecla_pulsada=0;
+
+							//Y recargar ventana para que la relea
+							zxvision_draw_window_contents(&ventana);
                     	break;
 						
                                         case 'c':
