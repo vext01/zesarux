@@ -1,8 +1,6 @@
 
 --- Para esta version 7.2:
 
--revisar menus con speech
-
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 
 --probar todos drivers nuevo tamaño ventana tbblue. ok cocoa, xwindow, sdl
