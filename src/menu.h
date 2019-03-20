@@ -31,7 +31,7 @@
 #include "cpu.h"
 
 //Por el tema de usar PATH_MAX en windows
-#include "menu.h"
+#include "utils.h"
 
 //Valor para ninguna tecla pulsada
 //Tener en cuenta que en spectrum y zx80/81 se usan solo 5 bits pero en Z88 se usan 8 bits
