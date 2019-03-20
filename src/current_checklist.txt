@@ -13,14 +13,6 @@ echo "Porcentaje=$PERCCOMPLETADO %"
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
 ok benchmark_mac
 
--ejecutar tests automatic_tests.sh
-
--ejecutar manual_tests.sh
-
-ok -ejecutar ./zesarux --codetests
-
-ok -ejecutar ./codetests.sh
-
 Drivers video:
 -probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
 *por cada driver (incluido null) y con y sin pthreads:
@@ -58,6 +50,8 @@ Drivers audio:
 ***usar testsound.sh
 ***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
 
+ok coreaudio
+
 -probar targets:
 * linux 32 bits
 * linux 64 bits
@@ -65,6 +59,8 @@ Drivers audio:
 * mac os x, con opengl y sin
 * windows mingw, con y sin pthreads
 * windows cygwin
+
+ok Mac con opengl
 
 -probar aofile raw y wav
 -probar con --disable-sndfile
