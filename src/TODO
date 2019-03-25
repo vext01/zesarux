@@ -2456,6 +2456,8 @@ Si es botón está también mapeado a un evento, entonces esa letra no se ve
 
 *** Otros ***
 
+-Nueva característica: adivinar temperatura de la cpu o del disipador del spectrum según que esté ejecutando y después de x horas de estar encendido
+
 -emulacion keypad spectrum 128
 
 -Código konami para Easter egg
