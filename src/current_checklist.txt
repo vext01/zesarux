@@ -142,19 +142,14 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -ver paletas de colores
 -probar expansiones de ram de zx80/81
 -probar a generar algun error y que aparezca en menu
--probar first aid
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
--probar tooltip y ayuda de opciones en menu
 -probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
--probar shortcuts en menu
 -probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
--probar opcion desactivar contended memory en menu
 -probar fuller audio box emulation
 -probar advanced timing settings 
 -probar menu de stdout
 -probar cargar/grabar pantalla en spectrum 48, 128, +2a, zxuno
 -probar cargar/grabar archivo binario. probar cargar binario desde linea comandos
--probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
 -probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx, y con realvideo on y off
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
 -probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
@@ -167,15 +162,12 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar exportar disassemble a archivo texto
 -probar assembler, desde menu y ZRCP
 -probar watches
--probar remote command protocol ZRCP, en linux, mac y windows
--probar zxi ports con extras/media/spectrum/tests/zesarux-zxi-ports.tap , extras/media/spectrum/tests/hardwaredebugport.tap
 -probar rzx files con extras/media/spectrum/rzx
 -probar quicksave, autosave at interval
 -probar todas opciones de menu en general, menus con mas opciones verticalmente de las visibles -> audio settings
 -probar fallback de drivers graficos y de sonido
 -probar impresora: en zx spectrum, zx81
 -probar COPY to printer
--probar --verbose 0 y que no aparezca ningun mensaje por consola...
 -probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
 -probar custom configuration file, con snap_tests/test_autoconfig.tap  (y hay snap_tests/test_autoconfig.tap.config) y snap_tests/test_autoconfig.p (y hay snap_tests/test_autoconfig.p.config)
 -probar footer cuando se carga cinta/snap detectado por autoselectoptions o custom configuration file:
@@ -190,9 +182,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 ** primer y segundo mensaje se desplazan, como voyage of peril
 ** FSCAPES.P, que no da tiempo a mostrar todo el segundo mensaje porque carga partes
 * Con y sin border enabled
--probar smartload. probar deteccion de tipo tzx (standard o turbo) en quickload
--probar recent files, drive
--probar autoload & autosave
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. autofire
 -probar on screen keyboard, con F8 y con joystick
 -probar asignar teclas f a funciones
@@ -202,7 +191,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar cambio driver audio desde menu
 -probar desactivar putpixel cache en compilacion
 -probar Setting putpixel functions to zoom 1, variable, interlace
--probar frameskip
 -probar easter eggs
 -probar repeticion de teclas en selector de archivos, ayuda, etc (en opciones de menu no hace repeticion)
 -probar ghosting
@@ -217,19 +205,14 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar opcion para desactivar paging en ram/rom
 -probar cpu transaction log
 -probar menu file utilities
--probar demos beeper
--probar real beeper activo/desactivado
 -probar tone generator --tonegenerator con 1,2 y 3 en spectrum 48k. Ver menu waveform
 -probar modo interlaced, scanlines y tapes/spectrum/tests/interlace-test.tap. interlaced zx81 con ilena. probar interlace y abrir menu visualmem y view sprites (debe desactivar interlace momentaneamente)
 -probar modo gigascreen. demos e imagenes
 -probar modos ULA Plus: rgb estandard, modo 3 radastan, modos ZEsarUX. modos ham (cambio rapido de paleta por interrupciones) multicolor demo, etc. hardware scroll radastan+zxuno
 -probar View Basic: ZX80, ZX81, Spectrum
--probar View Hexdump
--probar View Sprites
 -probar emulator speed
 -probar turbo mode. manual y en zxuno, prism, chloe y tbblue
 -probar top speed, con threads y sin threads
--probar accelerate loaders
 -probar mantransferv3
 -probar multiface
 -probar betadisk
@@ -245,7 +228,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -Probar Sam Coupe. Todas teclas. Probar atomlite
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS. Probar DMA
 -Probar demos Pentagon. Nota: confusio.tap requiere usr0
--Probar TSConf
 -Probar Baseconf
 -Probar Chrome
 -Probar MK14
