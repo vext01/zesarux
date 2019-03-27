@@ -78,7 +78,6 @@ Drivers audio:
 -probar desactivar colores pantalla spectrum
 -probar modos hi-res zx81: hrg, chr$128, udg, wrx, otros hi-res. probar xtricator, pacman 
 -probar autodetect WRX mode on ZX80/81
--probar chroma81 en zx81 -> migrado a automatic_tests.sh
 -probar chip sonido AY, en spectrum (ay y fuller) y zx81 (quicksilva(asteroids, defenda zx80)  y bi-pak (aydemo, pink panther...))
 -probar turbosound, 3 chips ay
 -probar specdrum, covox
@@ -144,12 +143,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar redefinir teclas, en menu y linea comandos
 -probar desactivando contended memory en compilacion
 
--probar z80tests.tap de spectrum. errores de flags normalmente en: BIT n,(HL). errores de memptr en ninguno -> migrado a manual_tests
--probar z80doc.tap. van todos  -> migrado a manual_tests
--probar fusetest.tap. en 48k, 128k. falla Floating bus. skipped read 3ffd, 7ffd. en +2a falla ademas LDIR, Floating bus skipped, bffd read failed. en 128k dado que lee puerto
-paginacion, se pone pantalla en negro -> migrado a manual_tests
-
--probar Timing_Tests-48k_v1.0.sna. errores normalmente en test 4 add etc, test 25 add etc, test 36 in a etc, test 37 in a etc -> migrado a manual_tests
 
 -probar desactivando memptr i pasar z80tests.tap de spectrum. probar activando memptr i pasar z80tests.tap
 -probar cpustats
@@ -160,7 +153,6 @@ paginacion, se pone pantalla en negro -> migrado a manual_tests
 -probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
 -probar paleta gris, roja, verde, azul, inverso, real, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
--probar ClckFreq.p de zx81 -> migrado a manual_tests
 -probar expansiones de ram de zx80/81
 -probar a generar algun error y que aparezca en menu
 -probar first aid
@@ -175,7 +167,6 @@ paginacion, se pone pantalla en negro -> migrado a manual_tests
 -probar menu de stdout
 -probar cargar/grabar pantalla en spectrum 48, 128, +2a, zxuno
 -probar cargar/grabar archivo binario. probar cargar binario desde linea comandos
--probar spool file -> migrado a manual_tests
 -probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
 -probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx, y con realvideo on y off
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
