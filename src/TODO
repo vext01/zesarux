@@ -26,6 +26,7 @@ Quizá version threads windows  llamarla :
 
 -zona en fileselector que muestre miniatura de: pantalla scr, snapshot, archivo de texto etc
 Quiza como ventana emergente al esperar unos segundos o bien a la derecha del selector, teniendo el filesel mas grande
+
 -parece que ZSF no guarda estado ulaplus o timex. probar con view8x1.tap
 -cpuid ("zxid") según especificación de mcleod
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
@@ -1309,6 +1310,8 @@ sistemas Unix no pasa nada, pero en Windows significa que una cinta que se haya 
 tap, por ejemplo desde el windows explorer, dira que el archivo esta bloqueado, hasta que se cierre el emulador
 Hacer que las funciones eject (y de cambio de cinta) realizen fclose...
 
+-En lectura de tap, usar tal cual como ahora fread etc para poder leer archivos tap muy grandes y no tener que cargarlos en memoria
+
 
 -a veces al salir con CTRL-C no se cierra. la ventana se queda en negro
 Dice llamando a aofile_close y vofile_close pero nada mas
@@ -2016,7 +2019,6 @@ no gestiona bien nombres con espacios
 -Assembler para Motorola y MK14
 -Assembler para opcodes del Next
 -Assembler instrucciones DD/FD+CB no documentadas. ej: LD B,RLC (IX+dd)
--Assembler defb, defm 
 -Detectar errores sintaxis en assembler
 
 -Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
