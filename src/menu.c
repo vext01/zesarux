@@ -33608,7 +33608,12 @@ char *first_aid_string_votext="Do you know you can run ZEsarUX using a Text mode
  "stdout and simpletext drivers. They are not all compiled by default, only stdout, you maybe need to compile ZEsarUX by yourself to test all of them";	
 
 int first_aid_no_easteregg=0;
-char *first_aid_string_eastereg="ZEsarUX includes three easter eggs. Can you find them? :)";	
+char *first_aid_string_eastereg="ZEsarUX includes three easter eggs. Can you find them? :)";
+
+
+int first_aid_no_multitask=0;
+char *first_aid_string_multitask="The multitask setting (enabled by default) tells ZEsarUX to continue running the emulation when you open the menu. "
+	"Sometimes, if you cpu is not fast enough, the emulation can be stopped or drop FPS when you open the menu. You can disable it on Settings->GUI";
 
 int first_aid_no_zxvision_clickout=0;
 char *first_aid_string_zxvision_clickout="If you have multitask enabled, with menu open, and you click out of a window menu (inside ZEsarUX windwow), "
@@ -33648,6 +33653,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("zrcp",&first_aid_no_zrcp,first_aid_string_zrcp,1);
 	menu_first_aid_add("votext",&first_aid_no_votext,first_aid_string_votext,1);
 	menu_first_aid_add("easteregg",&first_aid_no_easteregg,first_aid_string_eastereg,1);
+	menu_first_aid_add("multitask",&first_aid_no_multitask,first_aid_string_multitask,1);
 	menu_first_aid_add("zxvisionclickout",&first_aid_no_zxvision_clickout,first_aid_string_zxvision_clickout,1);
 	menu_first_aid_add("conversion",&first_aid_no_conversion,first_aid_string_conversion,1);
 	menu_first_aid_add("fileextensions",&first_aid_no_fileextensions,first_aid_string_fileextensions,1);
