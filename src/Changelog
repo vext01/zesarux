@@ -51,9 +51,7 @@ Improved MMC emulation: allow non-standard mmc file sizes
 Improved compiled Mac version: default version is faster than before (uses O2 optimization)
 
 
-Fixed visual glitches in some menus when Pentagon machine and real video: audio wave, visualmem, ay piano, wave piano, view sprites
-Fixed visual glitches in some menus when interlaced enabled: audio wave, visualmem, ay piano, wave piano, view sprites
-Fixed audio bug: sending a sample to the DAC by using Next registers, it wasn't reseting the silence detection counter, so sound would probably be frozen (and repeated again, and again...)
+Fixed visual glitches in some menus when Pentagon machine and real video, or when enabling interlaced: audio wave, visualmem, ay piano, wave piano, view sprites
 Fixed triggering "opcode" condition breakpoint
 Fixed emulating Inves interrupt bug
 Fixed segmentation fault when showing electron on debug
@@ -70,6 +68,10 @@ Changes in TBBlue emulation:
 -Fixed Timex hi-res mode 512x192
 -Fixed autoload on tbblue (on normal and also fast boot mode)
 -Fixed error managing Layer 2 vertical scroll
+-Fixed audio bug: sending a sample to the DAC by using Next registers, it wasn't reseting the silence detection counter, so sound would probably be frozen (and repeated again, and again...)
+
+
+Some other minor bugfixes and improvements
 
 
 
