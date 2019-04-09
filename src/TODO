@@ -5,9 +5,6 @@
 
 --probar todos drivers nuevo tamaño ventana tbblue. ok cocoa, xwindow, sdl
 
--al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
-cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
-
 -probar que cambios de rainbow no hayan afectado a maquinas no tbblue
 
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
@@ -25,6 +22,9 @@ Quizá version threads windows  llamarla :
 --------Para próxima versión:
 
 -"Reveal" viendo tiles, que esta en tbblue, tambien hacerlo para tsconf
+
+-al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
+cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
 
 -zona en fileselector que muestre miniatura de: pantalla scr, snapshot, archivo de texto etc
 Quiza como ventana emergente al esperar unos segundos o bien a la derecha del selector, teniendo el filesel mas grande

@@ -39,8 +39,6 @@ ok cocoa
 -probar desactivando xextensions en configure con --disable-xext
 -probar desactivando algun driver de video en compilacion, como x11, y ver que funcionan los otros
 
-ok coreaudio
-
 -probar targets:
 * linux 64 bits
 * raspberry. y activando extensiones raspberry
