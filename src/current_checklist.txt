@@ -25,7 +25,7 @@ ok probadas con driver cocoa opengl
 **probar ocultar raton
 **probar F6, F7 en curses, caca, aa en Z88 y en Spectrum
 **probar drag&drop en cocoa, sdl2 (a partir 2.0.5)
-ok cocoa
+ok cocoa,xwindow
 
 **probar desactivando border
 **probar desactivando footer
