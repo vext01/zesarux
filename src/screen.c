@@ -523,6 +523,20 @@ int si_complete_video_driver(void)
 }
 
 
+//Retorna 1 si el driver grafico permite menu normal
+int si_normal_menu_video_driver(void)
+{
+
+	//printf ("video driver: %s\n",scr_driver_name);
+
+	if (si_complete_video_driver() ) return 1;
+
+	//curses, aa, caca, pero ningun otro (ni stdout, ni simpletext, ni null... )
+        if (!strcmp(scr_driver_name,"curses")) return 1;
+        if (!strcmp(scr_driver_name,"aa")) return 1;
+        if (!strcmp(scr_driver_name,"caca")) return 1;
+        return 0;
+}
 
 //establece valor de screen_indice_inicio_pant y screen_indice_fin_pant
 void screen_set_video_params_indices(void)

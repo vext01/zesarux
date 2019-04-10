@@ -7314,8 +7314,11 @@ struct sched_param sparam;
 	if (save_configuration_file_on_exit.v && do_no_show_changelog_when_update.v==0) {
 		//if (strcmp(last_version_string,EMULATOR_VERSION)) {  //Si son diferentes
 		if (strcmp(last_version_string,BUILDNUMBER) && last_version_string[0]!=0) {  //Si son diferentes y last_version_string no es nula
-			menu_event_new_version_show_changes.v=1;
-			menu_abierto=1;
+			//Y si driver permite menu normal
+			if (si_normal_menu_video_driver()) {
+				menu_event_new_version_show_changes.v=1;
+				menu_abierto=1;
+			}
 		}
 	}
 

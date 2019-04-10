@@ -33767,6 +33767,9 @@ int menu_first_aid_title(char *key_setting,char *title) //(enum first_aid_number
 	//Si desactivadas ayudas first aid
 	if (menu_disable_first_aid.v) return 0;
 
+	//Si driver no permite menu normal
+	if (!si_normal_menu_video_driver()) return 0;
+
 	int indice=menu_first_aid_get_setting(key_setting);
 	if (indice<0) return 0;
 

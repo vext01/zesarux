@@ -340,6 +340,7 @@ extern z80_bit autoframeskip;
 extern void cpu_loop_refresca_pantalla(void);
 
 extern int si_complete_video_driver(void);
+extern int si_normal_menu_video_driver(void);
 
 extern void screen_print(int x,int y,z80_byte tinta,z80_byte papel,char *mensaje);
 

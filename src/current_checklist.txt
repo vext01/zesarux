@@ -11,7 +11,7 @@ echo "Porcentaje=$PERCCOMPLETADO %"
 )
 
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
-ok benchmark_mac
+ok benchmark_mac,linux
 
 Drivers video:
 -probar drivers video stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
@@ -23,9 +23,9 @@ Drivers video:
 **probar F6, F7 en curses, caca, aa en Z88 y en Spectrum
 ok cocoa,xwindow,sdl,
 caca,aa, curses (desde x11)
+desde consola: curses, caca, aa, fbdev
 
-falta fbdev, desde consola: curses, caca, aa
-stdout, simpletext
+falta stdout, simpletext
 
 **probar desactivando border
 **probar desactivando footer
