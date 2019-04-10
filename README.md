@@ -246,7 +246,7 @@ __FEATURES__
 
 * Other features: Visualmem menu, CPU Statistics
 
-* Includes three easter eggs: Can you find them? :)
+* Includes three easter eggs. Can you find them? :)
 
 
 

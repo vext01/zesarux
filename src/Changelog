@@ -1,4 +1,4 @@
-Version 7.2. 26 February 2019 - Neula edition
+Version 7.2. 10 April 2019 - Neula edition
 
 
 Improved menu environment:
@@ -35,7 +35,7 @@ Improved sprite viewer:
 Improved file selector:
 -now it remembers the last files used
 -Windows: now you can use up to 20000 files in the same directory
--added drive selector (press shift-d). On Windows, allows you to change drive unit. On Linux and Mac, changes to /media or /Volumes
+-added drive selector (press shift-d). On Windows, allows you to change drive unit. On Linux and Mac, changes to /media or /Volumes folder
 
 Improved disassemble window: 
 -now you can export the disassemble to text file
