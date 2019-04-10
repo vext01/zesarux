@@ -14,24 +14,7 @@ echo "Porcentaje=$PERCCOMPLETADO %"
 ok benchmark_mac,linux
 
 Drivers video:
--probar drivers video stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
-*por cada driver (incluido null) y con y sin pthreads:
-**probar redimensionar ventana
-**probar cambio zoom desde menu
-**probar fullscreen en aquellos que lo soportan: xwindows, fbdev, sdl, cocoa
-**probar todas maquinas. probar teclas mayus, ctrl, alt. en z88 mayus izq, der, ctrl, alt, f1, f2, f3
-**probar F6, F7 en curses, caca, aa en Z88 y en Spectrum
-ok cocoa,xwindow,sdl,
-caca,aa, curses (desde x11)
-desde consola: curses, caca, aa, fbdev
-
-falta stdout, simpletext
-
-**probar desactivando border
-**probar desactivando footer
-**en stdout, probar con modo traprst16 y modo autoredraw
 **en fbdev, probar tambien con --no-use-ttyfbdev y --no-use-ttyrawfbdev y --decimal-full-scale-fbdev
-**probar recreated
 
 -probar desactivando xextensions en configure con --disable-xext
 -probar desactivando algun driver de video en compilacion, como x11, y ver que funcionan los otros
