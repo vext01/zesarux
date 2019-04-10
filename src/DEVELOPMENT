@@ -164,9 +164,9 @@ make macapp
 
 **Windows
 Generar este binario de Windows, mingw:
-ZEsarUX_win-no-pthreads-version.zip
+ZEsarUX_win-version.zip  (version no pthreads)
 y
-ZEsarUX_win-pthreads-version.zip
+ZEsarUX_win-extra-ZRCP-version.zip (version con pthreads)
 
 Ver documento INSTALLWINDOWS, Native Windows (with mingw)
 
