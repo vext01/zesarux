@@ -13526,3 +13526,27 @@ char *get_spectrum_ula_string_video_mode(void)
 	return (char *)string_mode;
 
 }
+
+
+//Convertir paleta EGA de 16 colores a Spectrum
+int screen_ega_to_spectrum_colour(int ega_col)
+{
+//https://en.wikipedia.org/wiki/Enhanced_Graphics_Adapter
+	//Ega:      0 black, 1 blue, 2 green, 3 cyan,    4 red,   5 magenta, 6 brown,  7 white, bright black, bright blue, bright green, bright cyan, bright red, bright magenta, bright yellow, white, 
+	//Spectrum: 0 black, 1 blue, 2 red,   3 magenta, 4 green, 5 cyan,    6 yellow, 7 white, + brillos
+
+	int lookup_table[]={0,1,4,5,2,3,6,7};
+
+	int brillo=0;
+
+	if (ega_col>7) {
+		brillo=1;
+		ega_col -=8;
+	}
+	//Por si acaso
+
+	ega_col &=7;
+
+	int color_final=lookup_table[ega_col]+8*brillo;
+	return color_final;
+}

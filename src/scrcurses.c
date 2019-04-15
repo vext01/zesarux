@@ -44,6 +44,7 @@
 #include "tsconf.h"
 #include "settings.h"
 #include "chloe.h"
+#include "timex.h"
 
 
 #define CURSES_IZQ_BORDER 4
@@ -625,8 +626,6 @@ void scrcurses_refresca_pantalla_chloe(void)
 
         //int parpadeo;
 
-	int brillo;
-
         //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 	z80_byte *chloe_screen;
@@ -634,6 +633,29 @@ void scrcurses_refresca_pantalla_chloe(void)
           chloe_screen=chloe_home_ram_mem_table[7];
 
 	chloe_screen += (0xd800-0xc000); //text display in offset d800 in ram 7
+
+	//Colores chloe
+	//int papel=get_timex_paper_mode6_color();
+	//int tinta=get_timex_ink_mode6_color();
+	int brillo=0;
+	int parpadeo=0;
+
+	//unsigned char atributo=brillo*64+papel*8+tinta;
+
+	unsigned char atributo_ega=peek_byte_no_time(23693);
+	//High four bits are foreground, low four bits are background
+	int papel=atributo_ega&7;
+	int tinta=(atributo_ega>>4)&7;
+	//En curses solo tenemos 8 colores. Descartamos brillo pues no lo hace bien la consola
+
+
+
+	papel=screen_ega_to_spectrum_colour(papel);
+	tinta=screen_ega_to_spectrum_colour(tinta);
+
+	unsigned char atributo=tinta+papel*8;
+
+	//in normal video do OUT 255,6. and you can do COLOR f,b
 
           for (y=0;y<24;y++) {
                 for (x=0;x<80;x++,chloe_screen++) {
@@ -644,15 +666,16 @@ void scrcurses_refresca_pantalla_chloe(void)
 			brillo=0;
 			inv=0;
 
-			/*
+			
 
                         if (colores) {
-                          asigna_color(x,y,&brillo,&parpadeo);
+                          //(x,y,&brillo,&parpadeo);
+			  asigna_color_atributo(atributo,&brillo,&parpadeo);
                         }
                         else {
                           brillo=0;
                         }
-			*/
+			
 
 			if (caracter==0) {
 				//caracter='C'; //copyright character

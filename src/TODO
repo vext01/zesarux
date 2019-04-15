@@ -1,21 +1,21 @@
  
---- Para esta version 7.2:
+--- Para esta version 7.3:
+
+Para próxima versión ZEsarUX:
+-cpuid de Miguel Ángel
+
+-extender ventana emulador
+
+-Agregar manual Z88 a extras
+
+-Quizá también documentación de apis?
+
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 
---probar todos drivers nuevo tamaño ventana tbblue. ok cocoa, xwindow, sdl
-
--probar que cambios de rainbow no hayan afectado a maquinas no tbblue
 
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 Que hacemos con cocoa no opengl?
-
--quiza version Windows sin pthreads llamarla tal cual "windows", y la de threads algo como -threads o -zrcp, o algo que indique que la preferida
-es la de sin phtreads
-Quizá version threads windows  llamarla :
--remotedebug
--debug
--extendeddebug
 
 
 
