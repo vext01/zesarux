@@ -2,7 +2,7 @@
 --- Para esta version 7.3:
 
 Para próxima versión ZEsarUX:
--cpuid de Miguel Ángel
+-cpuid ("zxid") según especificación de mcleod
 
 -extender ventana emulador
 
@@ -17,7 +17,11 @@ Para próxima versión ZEsarUX:
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 Que hacemos con cocoa no opengl?
 
+-"overlay" esxdos handler: sobreponer una segunda carpeta sobre la principal
+Asi se puede tener una raiz por ejemplo para divmmc comun, y luego mapear carpetas adicionales para pruebas
+O quiza, en vez de overlay, una segunda unidad de disco
 
+-.nex files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
 
 --------Para próxima versión:
 
@@ -30,7 +34,7 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 Quiza como ventana emergente al esperar unos segundos o bien a la derecha del selector, teniendo el filesel mas grande
 
 -parece que ZSF no guarda estado ulaplus o timex. probar con view8x1.tap
--cpuid ("zxid") según especificación de mcleod
+
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 -Revisar archivo install. En caso de Linux y otros binarios ya compilados, enseñarlo más fácilmente. Otro documento quizá que diga cómo compilarlo  

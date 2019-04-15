@@ -3,6 +3,7 @@ Version 7.3. 15 April 2019 - xxx edition
 -Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
 -Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
 -Added colors to ncurses driver and Chloe machine
+-Changes in TSConf: Added "reveal" setting to view which pixels are used by a layer
 
 
 Version 7.2. 10 April 2019 - Neula edition

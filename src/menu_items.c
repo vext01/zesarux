@@ -6761,9 +6761,37 @@ void menu_tbblue_layer_reveal_sprites(MENU_ITEM_PARAMETERS)
 
 
 
+void menu_tsconf_layer_reveal_ula(MENU_ITEM_PARAMETERS)
+{
+	tsconf_reveal_layer_ula.v ^=1;
+}
+
+void menu_tsconf_layer_reveal_sprites_zero(MENU_ITEM_PARAMETERS)
+{
+	tsconf_reveal_layer_sprites_zero.v ^=1;
+}
+
+void menu_tsconf_layer_reveal_sprites_one(MENU_ITEM_PARAMETERS)
+{
+	tsconf_reveal_layer_sprites_one.v ^=1;
+}
 
 
+void menu_tsconf_layer_reveal_sprites_two(MENU_ITEM_PARAMETERS)
+{
+	tsconf_reveal_layer_sprites_two.v ^=1;
+}
 
+
+void menu_tsconf_layer_reveal_tiles_zero(MENU_ITEM_PARAMETERS)
+{
+	tsconf_reveal_layer_tiles_zero.v ^=1;
+}
+
+void menu_tsconf_layer_reveal_tiles_one(MENU_ITEM_PARAMETERS)
+{
+	tsconf_reveal_layer_tiles_one.v ^=1;
+}
 
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 {
@@ -6821,26 +6849,38 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_ula,NULL,"%s",(tsconf_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_reveal_ula,NULL,"%s",(tsconf_reveal_layer_ula.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);		
 			lin+=3;
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_zero,NULL,"%s",(tsconf_force_disable_layer_sprites_zero.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_reveal_sprites_zero,NULL,"%s",(tsconf_reveal_layer_sprites_zero.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
 			lin+=3;
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_zero,NULL,"%s",(tsconf_force_disable_layer_tiles_zero.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_reveal_tiles_zero,NULL,"%s",(tsconf_reveal_layer_tiles_zero.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);						
 			lin+=3;
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_one,NULL,"%s",(tsconf_force_disable_layer_sprites_one.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_reveal_sprites_one,NULL,"%s",(tsconf_reveal_layer_sprites_one.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);					
 			lin+=3;
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_one,NULL,"%s",(tsconf_force_disable_layer_tiles_one.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_reveal_tiles_one,NULL,"%s",(tsconf_reveal_layer_tiles_one.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
 			lin+=3;
 
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_two,NULL,"%s",(tsconf_force_disable_layer_sprites_two.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_reveal_sprites_two,NULL,"%s",(tsconf_reveal_layer_sprites_two.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);					
 			lin+=3;
 
 		}

@@ -184,6 +184,53 @@ z80_bit tsconf_force_disable_layer_sprites_one={0};
 z80_bit tsconf_force_disable_layer_sprites_two={0};
 z80_bit tsconf_force_disable_layer_border={0};
 
+
+//Forzar a dibujar capa con color fijo, para debug
+z80_bit tsconf_reveal_layer_ula={0};
+z80_bit tsconf_reveal_layer_sprites_zero={0};
+z80_bit tsconf_reveal_layer_sprites_one={0};
+z80_bit tsconf_reveal_layer_sprites_two={0};
+
+z80_bit tsconf_reveal_layer_tiles_zero={0};
+z80_bit tsconf_reveal_layer_tiles_one={0};
+
+
+void tsconf_reveal_layer_draw(z80_int *layer)
+{
+	int i;
+
+	for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) {
+		z80_int color=*layer;
+	
+		if (color!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+
+			//Color de revelado es blanco o negro segun cuadricula:
+			// Negro Blanco Negro ...
+			// Blanco Negro Blanco ...
+			// Negro Blanco Negro ....
+			// .....
+
+			//Por tanto tener en cuenta posicion x e y
+			int posx=i&1;
+			int posy=t_scanline_draw&1;
+
+			//0,0: 0
+			//0,1: 1
+			//1,0: 1
+			//1,0: 0
+			//Es un xor
+
+			int si_blanco_negro=posx ^ posy;
+
+			*layer=32767*si_blanco_negro; //ultimo de los colores en paleta rgb9 de tbblue -> blanco, negro es 0
+		}
+
+		layer++;
+	}
+}
+
+
+
 //Prueba ny17: Todo activado: 71-73 %
 //Sin ula: 66%
 //Sin sprites: 70%
@@ -2381,7 +2428,12 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
   //Dibujamos las capas
 	//Capa ULA
-	if (tsconf_if_ula_enabled() && tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
+	if (tsconf_if_ula_enabled() && tsconf_force_disable_layer_ula.v==0) {
+		tsconf_store_scanline_ula();
+				if (tsconf_reveal_layer_ula.v) {
+								tsconf_reveal_layer_draw(tsconf_layer_ula);
+				}
+	}
 
 
 //Si estamos en zona de superior o inferior, ni sprites ni tiles
@@ -2408,30 +2460,60 @@ int spritestiles=1;
 	  //if (tsconfig&128) {
 	  if (tsconf_if_sprites_enabled() ) {
         //printf ("Sprite layers enable ");
-        if (tsconf_force_disable_layer_sprites_zero.v==0) tsconf_store_scanline_sprites(0);
-		if (tsconf_force_disable_layer_sprites_one.v==0) tsconf_store_scanline_sprites(1);
-		if (tsconf_force_disable_layer_sprites_two.v==0) tsconf_store_scanline_sprites(2);
-	  }
+        if (tsconf_force_disable_layer_sprites_zero.v==0) {
+					tsconf_store_scanline_sprites(0);
+					if (tsconf_reveal_layer_sprites_zero.v) {
+								tsconf_reveal_layer_draw(tsconf_layer_sprites_zero);
+					}
+				}
+
+			if (tsconf_force_disable_layer_sprites_one.v==0) {
+			tsconf_store_scanline_sprites(1);
+					if (tsconf_reveal_layer_sprites_one.v) {
+								tsconf_reveal_layer_draw(tsconf_layer_sprites_one);
+					}
+			} 
+
+			if (tsconf_force_disable_layer_sprites_two.v==0) {
+			tsconf_store_scanline_sprites(2);
+					if (tsconf_reveal_layer_sprites_two.v) {
+								tsconf_reveal_layer_draw(tsconf_layer_sprites_two);
+					}
+	  	}
+
+		}
+
+
 
 	  //if (tsconfig&32) {
 	  if (tsconf_if_tiles_zero_enabled() ) {
 			//printf ("Tile layer 0 enable- ");
-		  if (tsconf_force_disable_layer_tiles_zero.v==0) tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
+		  if (tsconf_force_disable_layer_tiles_zero.v==0) {
+				tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
+					if (tsconf_reveal_layer_tiles_zero.v) {
+								tsconf_reveal_layer_draw(tsconf_layer_tiles_zero);
+					}				
+			}
 	 }
-
 
 
 
 	  //if (tsconfig&64) {
 	  if (tsconf_if_tiles_one_enabled() ) {
         	//printf ("Tile layer 1 enable- ");
-	    if (tsconf_force_disable_layer_tiles_one.v==0) tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
+	    if (tsconf_force_disable_layer_tiles_one.v==0) {
+				tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
+					if (tsconf_reveal_layer_tiles_one.v) {
+								tsconf_reveal_layer_draw(tsconf_layer_tiles_one);
+					}						
+			}
 	  }
 
 
   	}
   }
 
+	
 
 
 

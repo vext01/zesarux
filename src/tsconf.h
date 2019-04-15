@@ -168,4 +168,13 @@ extern void tsconf_set_default_basic_palette(void);
 
 extern void tsconf_set_emulador_settings(void);
 
+extern z80_bit tsconf_reveal_layer_ula;
+
+extern z80_bit tsconf_reveal_layer_sprites_zero;
+extern z80_bit tsconf_reveal_layer_sprites_one;
+extern z80_bit tsconf_reveal_layer_sprites_two;
+
+extern z80_bit tsconf_reveal_layer_tiles_zero;
+extern z80_bit tsconf_reveal_layer_tiles_one;
+
 #endif
