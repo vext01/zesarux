@@ -28146,7 +28146,7 @@ static char *custom_machine_names[]={
 		"Chloe 140 SE",
 		"Chloe 280 SE",
 		"Timex TS 2068",
-		"Prism",
+		"Prism 512",
 
                 "ZX80",
                 "ZX81",

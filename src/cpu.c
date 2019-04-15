@@ -1126,7 +1126,7 @@ char *string_machines_list_description=
 
 							" Chrome   Chrome\n"
 
-							" Prism    Prism\n"
+							" Prism    Prism 512\n"
 
 							" ZXUNO    ZX-Uno\n"
 
@@ -2203,7 +2203,7 @@ struct s_machine_names machine_names[]={
 					    {"Chloe 140SE",    			15},
 					    {"Chloe 280SE",    			16},
 			   		    {"Timex TS2068",   			17},
-					    {"Prism",       			18},
+					    {"Prism 512",       			18},
 					    {"TBBLue",   			19},
 					    {"Spectrum 48k (Spanish)",		20},
 					    {"Pentagon",		21},

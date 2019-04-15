@@ -385,7 +385,7 @@ Investronica
 Microdigital Eletronica
 Zxuno team
 Chloe Corporation
-Jeff Braine
+New Horizons (Jeff Braine)
 Cambridge computers
 Jupiter cantab
 Miles Gordon Tech
@@ -405,7 +405,7 @@ char *array_fabricantes[]={
   "Pentagon",
   "Chloe Corporation",
   "Mario Prato",
-  "Jeff Braine",
+  "New Horizons",
 	"ZXUno Team",
         "NedoPC",
   "TS Labs",
@@ -426,7 +426,7 @@ char *array_fabricantes_hotkey[]={
         "~~Pentagon",
         "~~Chloe Corporation",
         "Ma~~rio Prato",
-        "~~Jeff Braine",
+        "Ne~~w Horizons",
         "~~ZXUno Team",
         "N~~edoPC",
         "TS ~~Labs",
@@ -438,7 +438,7 @@ char *array_fabricantes_hotkey[]={
 };
 
 //Si letra es espacio->no hay letra
-char array_fabricantes_hotkey_letra[]="nsatimbgpcrjzelvu";
+char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvu";
 
 
 
