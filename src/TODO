@@ -25,7 +25,6 @@ O quiza, en vez de overlay, una segunda unidad de disco
 
 --------Para próxima versión:
 
--"Reveal" viendo tiles, que esta en tbblue, tambien hacerlo para tsconf
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
 cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
