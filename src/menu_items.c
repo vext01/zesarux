@@ -4102,6 +4102,7 @@ int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 //0=vemos visualmem write
 //1=vemos visualmem read
 //2=vemos visualmem opcode
+//3=vemos todos a la vez
 int menu_visualmem_donde=0;
 
 
@@ -4254,6 +4255,10 @@ void menu_debug_draw_visualmem(void)
                 int valores=max_valores;
 
 		int acumulado=0;
+
+		int acumulado_written,acumulado_read,acumulado_opcode;
+		acumulado_written=acumulado_read=acumulado_opcode=0; //Estos usados al visualizar los 3 a la vez
+
 		//si_modificado=0;
                 for (;valores>0;valores--,inicio_puntero_membuffer++) {
                         if (inicio_puntero_membuffer>=final_puntero_membuffer) {
@@ -4266,6 +4271,7 @@ void menu_debug_draw_visualmem(void)
                         }
 			else {
 				//Es en memoria direccionable. Sumar valor de visualmem y luego haremos valor medio
+				//0: written, 1: read, 2: opcode
 				if (menu_visualmem_donde==0) {
 					acumulado +=visualmem_buffer[inicio_puntero_membuffer];
 					clear_visualmembuffer(inicio_puntero_membuffer);
@@ -4276,10 +4282,19 @@ void menu_debug_draw_visualmem(void)
 					clear_visualmemreadbuffer(inicio_puntero_membuffer);
 				}
 
-				else {
+				else if (menu_visualmem_donde==2) {
 					acumulado +=visualmem_opcode_buffer[inicio_puntero_membuffer];
 					clear_visualmemopcodebuffer(inicio_puntero_membuffer);
 				}
+
+				else if (menu_visualmem_donde==3) {
+					acumulado_written +=visualmem_buffer[inicio_puntero_membuffer];
+					acumulado_read +=visualmem_read_buffer[inicio_puntero_membuffer];
+					acumulado_opcode +=visualmem_opcode_buffer[inicio_puntero_membuffer];
+					clear_visualmembuffer(inicio_puntero_membuffer);
+					clear_visualmemreadbuffer(inicio_puntero_membuffer);
+					clear_visualmemopcodebuffer(inicio_puntero_membuffer);
+				}				
 
 
 			}
@@ -4304,7 +4319,32 @@ void menu_debug_draw_visualmem(void)
 
 				//menu_scr_putpixel(x,y,ESTILO_GUI_TINTA_NORMAL);
 				//menu_scr_putpixel(x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
-				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
+				if (menu_visualmem_donde==3) {
+					//Los 3 a la vez. Combinamos color RGB sacando color de paleta tsconf (15 bits)
+					//Paleta es RGB R: 5 bits altos, G: 5 bits medios, B:5 bits bajos
+
+
+					//Sacar valor medio de los 3 componentes
+					int color_final_written=acumulado_written/max_valores;
+					color_final_written=color_final_written*visualmem_bright_multiplier;
+					if (color_final_written>31) color_final_written=31;
+
+					int color_final_read=acumulado_read/max_valores;
+					color_final_read=color_final_read*visualmem_bright_multiplier;
+					if (color_final_read>31) color_final_read=31;		
+
+					int color_final_opcode=acumulado_opcode/max_valores;
+					color_final_opcode=color_final_opcode*visualmem_bright_multiplier;
+					if (color_final_opcode>31) color_final_opcode=31;	
+
+					//Blue sera para los written
+					//Green sera para los read
+					//Red sera para los opcode
+					int color_final_rgb=(color_final_opcode<<10)|(color_final_read<<5)|color_final_written;
+					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,TSCONF_INDEX_FIRST_COLOR+color_final_rgb);
+
+				}
+				else zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
 			}
 
 			else {
@@ -4356,7 +4396,7 @@ void menu_debug_draw_visualmem(void)
 void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
 {
 	menu_visualmem_donde++;
-	if (menu_visualmem_donde==3) menu_visualmem_donde=0;
+	if (menu_visualmem_donde==4) menu_visualmem_donde=0;
 }
 
 
@@ -4457,7 +4497,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: Written Mem");
 	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~Looking: Read Mem");
-	else sprintf (texto_linea,"~~Looking: Opcode");
+	else if (menu_visualmem_donde == 2) sprintf (texto_linea,"~~Looking: Opcode");
+	else sprintf (texto_linea,"~~Looking: All");
 
 
 	//sprintf (texto_linea,"~~Looking: %s",(menu_visualmem_donde == 0 ? "Written Mem" : "Opcode") );
@@ -4474,36 +4515,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 //        sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
 //        menu_escribe_linea_opcion(VISUALMEM_Y,-1,1,texto_linea);
 
-/*
-                        menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_o,NULL,"~~O");
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'o');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window width");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Decrease window width");
-						//0123456789
-						// Size: OPQA
-						// Size: OPQA Bright: %d
-						// Looking
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,7,0);
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_p,NULL,"~~P");
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'p');
-                        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
-                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window width");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window width");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,8,0);
-
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_q,NULL,"~~Q");
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'q');
-                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window height");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Decrease window height");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,9,0);
-
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_a,NULL,"~~A");
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'a');
-                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window height");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window height");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,10,0);
-*/
 
 						menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
                         //menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
@@ -4516,12 +4528,14 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 			char texto_looking[32];
 	        	if (menu_visualmem_donde == 0) sprintf (texto_looking,"Written Mem");
         		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"Read Mem");
-		        else sprintf (texto_looking,"Opcode");
+		        else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
+				else sprintf (texto_looking,"All");
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
                         //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Which visualmem to look at");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at. If you select all, the final color will be a RGB color result of:\n"
+									"Blue component por Written Mem\nGreen component for Read mem\nRed componen por Opcode");
                         menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
 
 
