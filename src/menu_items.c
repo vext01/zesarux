@@ -4301,8 +4301,8 @@ void menu_debug_draw_visualmem(void)
                 }
 		//if (acumulado>0) printf ("final pixel %d %d (divisor: %d)\n",inicio_puntero_membuffer,acumulado,max_valores);
 
-                //dibujamos valor medio
-                if (acumulado>0) {
+            //dibujamos valor medio
+            if (acumulado>0 || acumulado_written>0 || acumulado_read>0 || acumulado_opcode>0) {
 
 			if (si_complete_video_driver() ) {
 
