@@ -6,9 +6,7 @@ Para próxima versión ZEsarUX:
 
 -extender ventana emulador
 
--Agregar manual Z88 a extras
-
--Quizá también documentación de apis?
+-Agregar manual Z88 a extras. Quizá también documentación de apis?
 
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
@@ -22,6 +20,23 @@ Asi se puede tener una raiz por ejemplo para divmmc comun, y luego mapear carpet
 O quiza, en vez de overlay, una segunda unidad de disco
 
 -.nex files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
+
+-Quitar soporte cinta Chloe? de storage-tape...
+
+-Incluir derby pro rom?
+
+-Modo mixto visual Mem. Todo junto lectura escritura y opcode com diferentes colores
+
+-Baseconf soporta ulaplus
+
+-Poner sondas de tiempo para saber que funciones tardan más en ejecutarse para poderlas optimizar 
+Que sea un tiempo que se acumule. Para hacer cálculos con más tiempo de muestreo
+Parecido a core statistics pero con más sondas 
+Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano en compileoptions.h
+
+-Lectura hdf. Simplemente ignorar cabecera. http://ramsoft.bbk.org.omegahg.com/hdfform.html. 
+        //0x09 DOFS WORD Image data offset This is the absolute offset in the HDF file where the actual hard-disk data dump starts.
+        //In HDF version 1.1 this is 0x216.
 
 --------Para próxima versión:
 
