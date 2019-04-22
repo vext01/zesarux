@@ -9758,6 +9758,7 @@ int menu_debug_get_main_list_view(void)
 
     if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
     if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=menu_debug_num_lineas_full;
+	if (menu_debug_registers_current_view==8) lineas=menu_debug_num_lineas_full-2;
 
 	return lineas;
 }
@@ -10096,11 +10097,15 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 		}
 
-                if (menu_debug_registers_current_view==1) {
+				//Vista 1 y la 8 son muy similares
+                if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==8) {
 
 
                                 size_t longitud_op;
                                 int limite=menu_debug_num_lineas_full;
+
+								//Quitar dos lineas para mostar el condact de daad
+								if (menu_debug_registers_current_view==8) limite -=2;
 
 				int columna_registros=19;
 				if (CPU_IS_MOTOROLA) columna_registros=20;
@@ -10239,6 +10244,29 @@ int menu_debug_registers_subview_type=0;
 					linea++;
 
 					menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
+
+
+					//Linea de condact de daad
+					if (menu_debug_registers_current_view==8) {
+						//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
+						int antes_menu_debug_memory_zone=menu_debug_memory_zone;
+
+						menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;
+
+						z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
+
+						debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
+
+
+						menu_debug_memory_zone=antes_menu_debug_memory_zone;
+
+						sprintf(buffer_linea,"%04X %s",direccion_desensamblar,dumpassembler);
+
+						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+
+						linea++;
+
+					}
 
 					//Linea de stack
 					//No mostrar stack en caso de scmp
@@ -10683,7 +10711,7 @@ void menu_debug_registers_set_view(zxvision_window *ventana,int vista)
 
 	zxvision_clear_window_contents(ventana);
 
-	if (vista<1 || vista>7) vista=1;
+	if (vista<1 || vista>8) vista=1;
 
 	menu_debug_registers_current_view=vista;
 
@@ -10887,7 +10915,7 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
                                 menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
 
                                 //sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
-								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~7:View",
+								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~8:View",
                                         string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
                                 //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
@@ -11407,7 +11435,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }
 
 				//Vista. Entre 1 y 6
-				if (tecla>='1' && tecla<='7') {
+				if (tecla>='1' && tecla<='8') {
 					menu_debug_registers_set_view(&ventana,tecla-'0');
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -11728,7 +11756,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }
 
 				//Vista. Entre 1 y 6
-				if (tecla>='1' && tecla<='7') {
+				if (tecla>='1' && tecla<='8') {
                 	menu_debug_registers_set_view(&ventana,tecla-'0');
 				    //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
