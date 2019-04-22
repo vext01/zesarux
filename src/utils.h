@@ -723,11 +723,15 @@ extern int util_get_available_drives(char *texto);
 
 extern int get_cpu_frequency(void);
 
+extern int util_daad_detect(void);
+
 
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 #define MEMORY_ZONE_NUM_TIMEX_EX 18
 #define MEMORY_ZONE_NUM_TIMEX_DOCK 19
+
+#define MEMORY_ZONE_NUM_DAAD_CONDACTS 20
 
 #endif

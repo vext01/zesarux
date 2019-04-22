@@ -9913,6 +9913,12 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     break;     
 
 
+        case MEMORY_ZONE_NUM_DAAD_CONDACTS:
+                if (MACHINE_IS_SPECTRUM) {
+                        if (util_daad_detect()) size=65536;
+                }
+
+        break;
 	
 
   }
@@ -10165,6 +10171,22 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         p=&start[address];              
       }
     break;        
+
+        case MEMORY_ZONE_NUM_DAAD_CONDACTS:
+                if (MACHINE_IS_SPECTRUM) {
+                        if (util_daad_detect()) {
+                                //La direccion está en la zona de memoria ram (zona 0)
+                                //No tiene sentido evaluar entre 0-16383. En ese caso sera igual que 16384-32767
+                                if (address<16384) address +=16384;
+                                z80_byte *start=machine_get_memory_zone_pointer(0,address-16384); 
+                                //Nota: la direccion dentro de la zona de memoria sera la misma que la direccion real en memoria mapeada
+                                //restamos 16384 pues la zona 0 de ram empieza a contar desde ahi
+                                p=start;
+                        }
+                }
+
+        break;
+	    
 
 
   }
@@ -10462,7 +10484,16 @@ void machine_get_memory_zone_name(int zone, char *name)
       if (MACHINE_IS_CHLOE_280SE) {
         strcpy(name,"Chloe Dock");             
       }
-    break;             
+    break;    
+
+
+        case MEMORY_ZONE_NUM_DAAD_CONDACTS:
+                if (MACHINE_IS_SPECTRUM) {
+                        strcpy(name,"Daad Condacts");
+                }
+
+        break;    
+
 
   }
 
@@ -13428,3 +13459,34 @@ int get_cpu_frequency(void)
         return cpu_hz;
 }
 
+
+//Detecta si juego cargado en memoria está hecho con daad
+//Condicion primera es que maquina actual sea spectrum
+int util_daad_detect(void)
+{
+
+        if (!MACHINE_IS_SPECTRUM) return 0;
+
+        /*
+        1) En la dirección 0x8400 ha de haber un 1 o un 2. Si son juegos DAAD hechos hoy en día habrá un 2, si son antiguos habrá un 1. 
+2) En la siguiente direccion debe conterner un 0x10 o un 0x11 (marca que es juego de spectrum en ingles la primera, juego de Spectrum en español la segunda)
+3) En la siguiente direccion lo normal es encontrar un 95 decimal. 
+
+        */
+
+       z80_int dir=0x8400;
+
+       z80_byte first_byte=peek_byte_no_time(dir);
+       z80_byte second_byte=peek_byte_no_time(dir+1);
+       z80_byte third_byte=peek_byte_no_time(dir+2);
+
+       if (first_byte==1 || first_byte==2) {
+               if (second_byte==0x10 || second_byte==0x11) {
+                       if (third_byte==95) {
+                               return 1;
+                       }
+               }
+       }
+
+       return 0;
+}
