@@ -11253,6 +11253,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	valor_contador_segundo_anterior=contador_segundo;
 
+	//menu_debug_registers_current_view
+	//Si estabamos antes en vista 8, pero ya no hay un programa daad en memoria, resetear a vista 1
+	if (menu_debug_registers_current_view==8 && !util_daad_detect()) menu_debug_registers_current_view=1;
+
 
 	//Inicializar info de tamanyo zona
 	menu_debug_set_memory_zone_attr();
