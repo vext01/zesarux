@@ -5,6 +5,7 @@ Version 7.3. 15 April 2019 - xxx edition
 -Added colors to ncurses driver and Chloe machine
 -Changes in TSConf: Added "reveal" setting to view which pixels are used by a layer
 -Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
+-Added DAAD debugger
 
 
 Version 7.2. 10 April 2019 - Neula edition

@@ -10713,6 +10713,9 @@ void menu_debug_registers_set_view(zxvision_window *ventana,int vista)
 
 	if (vista<1 || vista>8) vista=1;
 
+	//Si no es daad, no permite seleccionar vista 8
+	if (vista==8 && !util_daad_detect()) return;
+
 	menu_debug_registers_current_view=vista;
 
 
@@ -10914,9 +10917,13 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
                                 char string_direccion[10];
                                 menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
 
+				char maxima_vista='7';
+
+				if (util_daad_detect()) maxima_vista='8';
+
                                 //sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
-								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~8:View",
-                                        string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No") );
+								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~%c:View",
+                                        string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No"),maxima_vista );
                                 //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
 
