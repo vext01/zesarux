@@ -11038,6 +11038,13 @@ void menu_debug_get_legend(int linea,char *s)
 							// chReg Brkp. Toggle Runto Watch		
 				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch Togg~~le R~~unto ");
 			}
+			
+			else if (menu_debug_registers_current_view==8) {
+							//01234567890123456789012345678901
+							// chReg Brkp. Toggle Runto Watch		
+				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch Daadbrea~~kpnt");
+			}
+
 			else {
 							//01234567890123456789012345678901
 							// chReg Brkp. Watch					
