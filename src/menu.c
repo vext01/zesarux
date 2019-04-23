@@ -12016,6 +12016,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	//printf ("acumulado %d cpu_ste_mode: %d\n",acumulado,cpu_step_mode.v);
     } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1);
 
+	//Si no estamos haciendo stepping de daad, quitar breakpoint del parser
+	if (debug_stepping_daad.v==0) {
+		int posicion=debug_return_brk_pc_dir_condition(DAAD_PARSER_BREAKPOINT_PC);
+		if (posicion>=0) {
+			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
+			debug_clear_breakpoint(posicion);
+			//debug_set_breakpoint(posicion,"");
+			//debug_breakpoints_conditions_enabled[posicion]=0;
+		}
+	}
+
     cls_menu_overlay();
 
 	zxvision_destroy_window(&ventana);
