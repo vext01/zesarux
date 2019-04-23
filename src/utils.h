@@ -735,5 +735,6 @@ extern int util_daad_detect(void);
 #define MEMORY_ZONE_NUM_DAAD_CONDACTS 20
 
 #define DAAD_PARSER_BREAKPOINT_PC 0x617c
+#define DAAD_PARSER_CONDACT_BREAKPOINT 0xbc
 
 #endif

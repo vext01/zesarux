@@ -337,5 +337,8 @@ extern optimized_breakpoint optimized_breakpoint_array[];
 
 extern void debug_get_t_estados_parcial(char *buffer_estadosparcial);
 
+extern void debug_get_daad_breakpoint_string(char *texto);
+
+extern int debug_find_breakpoint(char *to_find);
 
 #endif

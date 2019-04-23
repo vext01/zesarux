@@ -1263,6 +1263,9 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 	//se acaba de generar una interrupcion
 	if (!strcasecmp(registro,"intfired")) return debug_fired_interrupt;	
 
+
+
+
 	//enterrom, exitrom
 /*
 //Avisa cuando se ha entrado o salido de rom. Solo salta una vez el breakpoint
@@ -5351,6 +5354,22 @@ int debug_find_free_breakpoint(void)
 	return -1;
 }
 
+//Retorna primera posicion en array que coindice con breakpoint y que este activado
+int debug_find_breakpoint(char *to_find)
+{
+
+	if (debug_breakpoints_enabled.v==0) return -1;
+
+	int i;
+	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+		if (debug_breakpoints_conditions_enabled[i]) {
+			if (!strcasecmp(debug_breakpoints_conditions_array[i],to_find)) return i;
+		}
+	}
+
+	return -1;
+}
+
 //Agrega un breakpoint, con action en la siguiente posicion libre. -1 si no hay
 //Retorna indice posicion si hay libre
 
@@ -5448,4 +5467,17 @@ void debug_get_t_estados_parcial(char *buffer_estadosparcial)
 
 			if (estadosparcial>999999999) sprintf (buffer_estadosparcial,"%s","OVERFLOW");
 			else sprintf (buffer_estadosparcial,"%09u",estadosparcial);
+}
+
+void debug_get_daad_breakpoint_string(char *texto)
+{
+	/*
+	Retorna cadena breakpoint tipo 	PC=617D si A=188
+	Debe detener justo despues del tipico LD A,(BC)
+
+	#define DAAD_PARSER_BREAKPOINT_PC 0x617c
+#define DAAD_PARSER_CONDACT_BREAKPOINT 0xbc
+	*/
+
+	sprintf (texto,"PC=%04XH AND A=%02XH",DAAD_PARSER_BREAKPOINT_PC+1,DAAD_PARSER_CONDACT_BREAKPOINT);
 }

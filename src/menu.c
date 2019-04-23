@@ -10920,6 +10920,30 @@ void menu_debug_daad_step(void)
 	//Y salir
 }
 
+void menu_debug_add_daad_breakpoint(void)
+{
+
+	char breakpoint_add[64];
+
+	debug_get_daad_breakpoint_string(breakpoint_add);
+
+	//Si no hay breakpoint ahi, ponerlo
+	int posicion=debug_find_breakpoint(breakpoint_add);
+	if (posicion<0) {
+
+        if (debug_breakpoints_enabled.v==0) {
+                debug_breakpoints_enabled.v=1;
+
+                breakpoints_enable();
+    	}
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",breakpoint_add);
+
+		debug_add_breakpoint_free(breakpoint_add,""); 
+	}
+
+	//Y salir
+}
+
 int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 {
 
@@ -11828,6 +11852,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
 					menu_multitarea=antes_menu_multitarea;
                 }
+
+				//Daad breakpoint
+		        if (tecla=='k') {
+                    menu_debug_add_daad_breakpoint();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }				
 
                 if (tecla=='r') {
                 	//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
