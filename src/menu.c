@@ -10944,6 +10944,16 @@ void menu_debug_add_daad_breakpoint(void)
 	//Y salir
 }
 
+int menu_debug_breakpoint_is_daad(char *texto)
+{
+	char breakpoint_add[64];
+
+	debug_get_daad_breakpoint_string(breakpoint_add);
+
+	if (!strcasecmp(texto,breakpoint_add)) return 1;
+	else return 0;
+}
+
 int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 {
 
@@ -11308,6 +11318,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	//menu_debug_registers_current_view
 	//Si estabamos antes en vista 8, pero ya no hay un programa daad en memoria, resetear a vista 1
 	if (menu_debug_registers_current_view==8 && !util_daad_detect()) menu_debug_registers_current_view=1;
+
+
 
 
 	//Inicializar info de tamanyo zona
@@ -11854,7 +11866,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }
 
 				//Daad breakpoint
-		        if (tecla=='k') {
+		        if (tecla=='k' && menu_debug_registers_current_view==8) {
                     menu_debug_add_daad_breakpoint();
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -31076,6 +31088,16 @@ int debug_show_fired_breakpoints_type=0;
 
 	//Forzar follow pc
 	menu_debug_follow_pc.v=1;
+
+
+
+	//Si breakpoint disparado es el de daad
+	if (menu_debug_breakpoint_is_daad(catch_breakpoint_message)) {
+		//Accion es decrementar PC e incrementar BC
+		debug_printf (VERBOSE_DEBUG,"Catch daad breakpoint. Decrementing PC and incrementing BC");
+		reg_pc --;
+		BC++;
+	}
 
 }
 
