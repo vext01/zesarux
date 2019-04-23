@@ -13590,7 +13590,7 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
                for (i=0;i<5;i++) {
                        caracter=peek_byte_no_time(puntero+i) ^255;
                        //Si hay espacio, fin
-                       if (caracter==32) break;
+                       //if (caracter==32) break;
                        buffer_palabra[i]=caracter;
                }
                buffer_palabra[i]=0;

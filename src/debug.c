@@ -5370,6 +5370,18 @@ int debug_find_breakpoint(char *to_find)
 	return -1;
 }
 
+//Retorna primera posicion en array que coindice con breakpoint,este activo o no
+int debug_find_breakpoint_activeornot(char *to_find)
+{
+
+	int i;
+	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+			if (!strcasecmp(debug_breakpoints_conditions_array[i],to_find)) return i;
+	}
+
+	return -1;
+}
+
 //Agrega un breakpoint, con action en la siguiente posicion libre. -1 si no hay
 //Retorna indice posicion si hay libre
 

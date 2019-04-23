@@ -10678,6 +10678,12 @@ void menu_debug_registers_set_title(zxvision_window *w)
 {
         char titulo[33];
 
+	//En vista daad, meter otro titulo
+	if (menu_debug_registers_current_view==8) {
+		strcpy(w->window_title,"Daad Debug");
+		return;
+	}
+
         //menu_debug_registers_current_view
 
         //Por defecto
@@ -11050,8 +11056,35 @@ void menu_debug_daad_step(void)
 	//Y salir
 }
 
+//Quitar todas las apariciones de dicho breakpoint, por si ha quedado alguno desactivado, y al agregar uno, aparecen dos
+void menu_debug_delete_daad_breakpoint(void)
+{
+
+	int posicion=0;
+
+	char breakpoint_add[64];
+
+	debug_get_daad_breakpoint_string(breakpoint_add);
+
+	do {
+		//Si hay breakpoint ahi, quitarlo
+		posicion=debug_find_breakpoint_activeornot(breakpoint_add);
+		if (posicion>=0) {
+			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
+			debug_clear_breakpoint(posicion);
+		}
+	} while (posicion>=0);
+
+	//Y salir
+}
+
+
+
 void menu_debug_add_daad_breakpoint(void)
 {
+
+	//Antes quitamos cualquier otra aparicion
+	menu_debug_delete_daad_breakpoint();
 
 	char breakpoint_add[64];
 
@@ -11073,6 +11106,38 @@ void menu_debug_add_daad_breakpoint(void)
 
 	//Y salir
 }
+
+
+
+
+
+/*void menu_debug_toggle_daad_breakpoint(void)
+{
+	char breakpoint_add[64];
+
+	debug_get_daad_breakpoint_string(breakpoint_add);
+
+	//Si no hay breakpoint ahi, ponerlo
+	int posicion=debug_find_breakpoint(breakpoint_add);
+	if (posicion>=0) {
+		debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
+		debug_clear_breakpoint(posicion);
+	}
+
+	else {
+
+        if (debug_breakpoints_enabled.v==0) {
+                debug_breakpoints_enabled.v=1;
+
+                breakpoints_enable();
+    	}
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",breakpoint_add);
+
+		debug_add_breakpoint_free(breakpoint_add,""); 
+	}
+
+	//Y salir
+}*/
 
 int menu_debug_breakpoint_is_daad(char *texto)
 {
@@ -11130,6 +11195,15 @@ void menu_debug_switch_follow_pc(void)
 	//if (follow_pc.v==0) menu_debug_memory_pointer=menu_debug_register_decrement_half(menu_debug_memory_pointer);
 }
 
+
+//Si estamos haciendo un step to step de daad
+z80_bit debug_stepping_daad={0};
+
+//Si hay metido un breakpoint de daad en el interprete y con registro A para el condact ficticio
+z80_bit debug_allow_daad_breakpoint={0};
+
+
+
 void menu_debug_get_legend(int linea,char *s)
 {
 	switch (linea) {
@@ -11139,7 +11213,7 @@ void menu_debug_get_legend(int linea,char *s)
 			if (menu_debug_registers_current_view==8) {
 							//01234567890123456789012345678901
 							// chReg Brkp. Toggle Runto Watch		
-				sprintf(s,"~~E~~n:Stp Daadbrea~~kpnt");
+				sprintf(s,"~~E~~n:Step Condact [%c] Daadbrea~~kpnt",(debug_allow_daad_breakpoint.v ? 'X' : ' '));
 				return;
 			}
 
@@ -11449,7 +11523,8 @@ int menu_debug_registers_print_legend(zxvision_window *w,int linea)
 
 }
 
-z80_bit debug_stepping_daad={0};
+
+
 
 int menu_debug_registers_get_line_legend(void)
 {
@@ -11458,7 +11533,9 @@ int menu_debug_registers_get_line_legend(void)
 	else return 11;
 
 
-}				
+}	
+
+
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
@@ -12036,7 +12113,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				//Daad breakpoint
 		        if (tecla=='k' && menu_debug_registers_current_view==8) {
-                    menu_debug_add_daad_breakpoint();
+					if (debug_allow_daad_breakpoint.v) {
+						//Quitarlo
+						menu_debug_delete_daad_breakpoint();
+					}
+                    else {
+						//Ponerlo
+						menu_debug_add_daad_breakpoint();
+					}
+
+					debug_allow_daad_breakpoint.v ^=1;
+
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
