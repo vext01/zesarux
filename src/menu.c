@@ -915,6 +915,12 @@ menu_z80_moto_int adjust_address_memory_size(menu_z80_moto_int direccion)
 }
 
 
+void menu_debug_set_memory_zone_mapped(void)
+{
+		menu_debug_memory_zone=-1;
+		menu_debug_show_memory_zones=0;	
+}
+
 void menu_debug_change_memory_zone(void)
 {
 
@@ -925,8 +931,9 @@ if (menu_debug_show_memory_zones) {
 	menu_debug_memory_zone++;
 	menu_debug_memory_zone=machine_get_next_available_memory_zone(menu_debug_memory_zone);
 	if (menu_debug_memory_zone<0)  {
-		menu_debug_memory_zone=-1;
-		menu_debug_show_memory_zones=0;
+		menu_debug_set_memory_zone_mapped();
+		//menu_debug_memory_zone=-1;
+		//menu_debug_show_memory_zones=0;
 	}
 }
 }
@@ -11589,7 +11596,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		//Si es la vista 8, siempre esta en cpu step mode, y zona de memoria es la mapped
 		if (menu_debug_registers_current_view==8) {
 			cpu_step_mode.v=1;
-			menu_debug_memory_zone=-1;
+			menu_debug_set_memory_zone_mapped();
 		}
 
 		//
