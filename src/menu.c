@@ -10162,7 +10162,7 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 				char buffer_nombre[6];
 
 				
-				zxvision_print_string_defaults_fillspc(w,1,linea++,"VERBO NOMBRE");
+				
 
 				z80_byte verbo=util_daad_get_flag_value(33);
 				z80_byte nombre=util_daad_get_flag_value(34);
@@ -10175,6 +10175,8 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 				if (nombre!=255) util_daad_locate_word(nombre,2,buffer_nombre);
 
 				sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
+
+				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
 
 /*
