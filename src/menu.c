@@ -11353,6 +11353,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	do {
 
 
+		//Si es la vista 8, siempre esta en cpu step mode
+		if (menu_debug_registers_current_view==8) cpu_step_mode.v=1;
+
 		//
 		//Si no esta el modo step de la cpu
 		//
@@ -25577,29 +25580,7 @@ void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
 		debug_printf (VERBOSE_ERR,mensaje);
 	}
 
-/*	
-	int palabras=util_paws_dump_vocabulary(&version);
 
-	//Es Paws?
-	if (version>=0) {
-		menu_generic_message_format("UnPAWS to OSD Text KB","OK. %s signature found. %d words added",
-			quillversions_strings[version],palabras);
-	}
-
-	else {
-		//No es paws. Probar con GAC
-		palabras=util_gac_dump_dictonary(&version);
-		if (version>=0) {
-			menu_generic_message_format("UnGAC to OSD Text KB","OK. %s signature found. %d words added",
-				gacversions_strings[version],palabras);
-		}	
-
-		else {
-			//Ni paws ni gac
-			debug_printf (VERBOSE_ERR,"It does not seem to be a Quill/PAW/GAC game");
-		}
-	}
-*/
 }
 
 void menu_write_message(MENU_ITEM_PARAMETERS)

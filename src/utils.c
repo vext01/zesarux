@@ -13388,6 +13388,12 @@ int util_unpawsetc_dump_words(char *mensaje)
 
         util_init_unpawsgac_hotkeys();
 
+        //Ver si es de daad
+        if (util_daad_detect()) {
+                util_daad_dump_vocabulary();
+                return 0;
+        }
+
         int version;
 
 	int palabras=util_paws_dump_vocabulary(&version);        
@@ -13489,4 +13495,45 @@ int util_daad_detect(void)
        }
 
        return 0;
+}
+
+
+z80_int util_dadd_get_start_vocabulary(void)
+{
+        z80_int dir=value_8_to_16(peek_byte_no_time(0x8417),peek_byte_no_time(0x8416));
+
+        return dir;
+}
+
+
+void util_daad_dump_vocabulary(void)
+{
+
+        debug_printf (VERBOSE_DEBUG,"Dumping Daad vocabulary");
+
+        z80_int puntero=util_dadd_get_start_vocabulary();
+
+        //Leer entradas de 7 bytes
+        /*
+        5 para 5 letras de la palabra (puede incluir espacios de padding al final si es más corta), con xor 255
+        1 byte para el número de palabra 
+        1 byte para el tipo de palabra 
+        */
+
+       char buffer_palabra[6];
+
+       int salir=0;
+
+       do {
+               //Copiar palabra a buffer
+               int i;
+               for (i=0;i<5;i++) buffer_palabra[i]=peek_byte_no_time(puntero++) ^255;
+               buffer_palabra[5]=0;
+
+               if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
+               else  printf ("palabra: %s\n",buffer_palabra);
+
+               puntero+=2;
+
+       } while (!salir);
 }
