@@ -2002,7 +2002,7 @@ int debug_breakpoint_condition_optimized(int indice)
 	}
 
 	if (valor_variable==valor) {
-		debug_printf (VERBOSE_DEBUG,"Fired optimized breakpoont. Optimizer type: %d value: %04XH",tipo_optimizacion,valor);
+		debug_printf (VERBOSE_DEBUG,"Fired optimized breakpoint. Optimizer type: %d value: %04XH",tipo_optimizacion,valor);
 		return 1;
 	}
 

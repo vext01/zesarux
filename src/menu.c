@@ -10895,6 +10895,31 @@ void menu_debug_runto(void)
 	//Y salir
 }
 
+void menu_debug_daad_step(void)
+{
+
+	z80_int breakpoint_dir=DAAD_PARSER_BREAKPOINT_PC;
+
+	//Si no hay breakpoint ahi, ponerlo
+	int posicion=debug_return_brk_pc_dir_condition(breakpoint_dir);
+	if (posicion<0) {
+
+		char condicion[30];
+		sprintf (condicion,"PC=%XH",breakpoint_dir);
+
+        if (debug_breakpoints_enabled.v==0) {
+                debug_breakpoints_enabled.v=1;
+
+                breakpoints_enable();
+    	}
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",condicion);
+
+		debug_add_breakpoint_free(condicion,""); 
+	}
+
+	//Y salir
+}
+
 int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 {
 
@@ -11236,6 +11261,7 @@ int menu_debug_registers_print_legend(zxvision_window *w,int linea)
 
 }
 
+z80_bit debug_stepping_daad={0};
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
@@ -11252,6 +11278,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	int valor_contador_segundo_anterior;
 
 	valor_contador_segundo_anterior=contador_segundo;
+
+	debug_stepping_daad.v=0;
 
 	//menu_debug_registers_current_view
 	//Si estabamos antes en vista 8, pero ya no hay un programa daad en memoria, resetear a vista 1
@@ -11766,7 +11794,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     si_ejecuta_una_instruccion=0;
                 }
 
-				//Vista. Entre 1 y 6
+				//Vista. Entre 1 y 8
 				if (tecla>='1' && tecla<='8') {
                 	menu_debug_registers_set_view(&ventana,tecla-'0');
 				    //Decimos que no hay tecla pulsada
@@ -11941,7 +11969,21 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				debug_core_lanzado_inter.v=0;
 
 				screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
-				cpu_core_loop();
+
+
+				//Si vista daad (8)
+				if (menu_debug_registers_current_view==8) {
+					//Poner breakpoint hasta parser
+
+					menu_debug_daad_step();
+                    tecla=2; //Simular ESC
+					cpu_step_mode.v=0;
+					salir_todos_menus=1;
+					acumulado=0;
+					debug_stepping_daad.v=1;
+                }					
+
+				else cpu_core_loop();
 
 				//Ver si se ha disparado interrupcion (nmi o maskable)
 				//if (debug_core_lanzado_inter.v && debug_core_evitamos_inter.v) {
@@ -30980,7 +31022,13 @@ int debug_show_fired_breakpoints_type=0;
 	if (debug_show_fired_breakpoints_type==0) mostrar=1;
 	if (debug_show_fired_breakpoints_type==1 && !es_pc_cond) mostrar=1;
 
-	if (mostrar) menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);
+	if (mostrar) {
+		//Si no era un breakpoint de daad
+		if (debug_stepping_daad.v && reg_pc==DAAD_PARSER_BREAKPOINT_PC) {
+
+		}
+		else menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);
+	}
 
 	//Forzar follow pc
 	menu_debug_follow_pc.v=1;
