@@ -13554,3 +13554,10 @@ int util_daad_dump_vocabulary(void)
 
        return palabras;
 }
+
+z80_byte util_daad_get_flag_value(z80_byte index)
+{
+        //7f1c
+
+        return peek_byte_no_time(0x7f1c+index);
+}

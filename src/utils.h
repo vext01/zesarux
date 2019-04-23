@@ -728,6 +728,8 @@ extern z80_int util_dadd_get_start_vocabulary(void);
 extern int util_daad_dump_vocabulary(void);
 
 
+extern z80_byte util_daad_get_flag_value(z80_byte index);
+
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 

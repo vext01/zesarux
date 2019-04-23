@@ -9524,6 +9524,50 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 	//Por defecto, cadena vacia
 	textoregistros[0]=0;
 
+	//En vista daad, mostrar flags de daad
+	if (menu_debug_registers_current_view==8) {
+		int linea_origen=linea-3;
+		if (linea_origen<0 || linea_origen>7) return;
+
+		z80_byte flag_leer=0;
+
+		switch (linea_origen) {
+			case 0:
+				flag_leer=0;
+			break;
+
+			case 1:
+				flag_leer=1;
+			break;
+
+			case 2:
+				flag_leer=33;
+			break;
+
+			case 3:
+				flag_leer=34;
+			break;
+
+			case 4:
+				flag_leer=35;
+			break;
+
+			case 5:
+				flag_leer=38;
+			break;
+
+			case 6:
+				flag_leer=51;
+			break;
+
+
+		}
+
+		sprintf (textoregistros,"F%2d %d",flag_leer,util_daad_get_flag_value(flag_leer));
+
+		return;
+	}
+
 	if (CPU_IS_Z80) {
 
 	switch (linea) {
@@ -10108,30 +10152,34 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				int i;
 
-				//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
-				int antes_menu_debug_memory_zone=menu_debug_memory_zone;
 
-				menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
 
 				z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);		
 
-				char buffer_linea[64];											
+				char buffer_linea[64];	
+
+				int columna_registros=23;										
 
 				for (i=0;i<total_lineas_debug;i++) {
 
+						//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
+						int antes_menu_debug_memory_zone=menu_debug_memory_zone;
+						menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
 						debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
+						menu_debug_memory_zone=antes_menu_debug_memory_zone;
 
-						sprintf(buffer_linea,"%04X %s",direccion_desensamblar,dumpassembler);
+						sprintf(buffer_linea,"%s",dumpassembler);
+
+						menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
 
 						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
-						linea++;
 
 						direccion_desensamblar +=longitud_op;
 
 				}
 
-				menu_debug_memory_zone=antes_menu_debug_memory_zone;
+				
 
 
 		}		
@@ -10987,7 +11035,7 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
                                 menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
 
 
-				if (menu_debug_registers_current_view!=7) {
+				if (menu_debug_registers_current_view!=7 && menu_debug_registers_current_view!=8) {
 
                                 char string_direccion[10];
                                 menu_debug_print_address_memory_zone(string_direccion,menu_debug_memory_pointer);
@@ -11020,6 +11068,15 @@ void menu_debug_get_legend(int linea,char *s)
 {
 	switch (linea) {
 		case 0:
+
+
+			if (menu_debug_registers_current_view==8) {
+							//01234567890123456789012345678901
+							// chReg Brkp. Toggle Runto Watch		
+				sprintf(s,"~~E~~n:Stp Daadbrea~~kpnt");
+				return;
+			}
+
 			if (cpu_step_mode.v) {
 				if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
@@ -11049,16 +11106,17 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 		case 1:
+
+
+			if (menu_debug_registers_current_view==8) {
+				sprintf(s,"");
+				return;
+			}
+
 			if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
 							// chReg Brkp. Toggle Runto Watch		
 				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch Togg~~le R~~unto ");
-			}
-			
-			else if (menu_debug_registers_current_view==8) {
-							//01234567890123456789012345678901
-							// chReg Brkp. Toggle Runto Watch		
-				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch Daadbrea~~kpnt");
 			}
 
 			else {
@@ -11069,6 +11127,13 @@ void menu_debug_get_legend(int linea,char *s)
 		break;
 
 		case 2:
+
+			if (menu_debug_registers_current_view==8) {
+				sprintf(s,"");
+				return;
+			}
+
+
 			if (cpu_step_mode.v) {
 							//01234567890123456789012345678901
 							// ClrTstPart 1-5:View ViewScr	
@@ -11320,6 +11385,15 @@ int menu_debug_registers_print_legend(zxvision_window *w,int linea)
 
 z80_bit debug_stepping_daad={0};
 
+int menu_debug_registers_get_line_legend(void)
+{
+
+	if (menu_debug_registers_current_view!=8) return 19;
+	else return 11;
+
+
+}				
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -11404,7 +11478,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                         
 				linea=menu_debug_registers_print_registers(&ventana,linea);
-				linea=19;
+				//linea=19;
+
+				linea=menu_debug_registers_get_line_legend();
 				linea=menu_debug_registers_print_legend(&ventana,linea);
 
 
@@ -11626,7 +11702,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
             linea=menu_debug_registers_print_registers(&ventana,linea);
 
-			linea=19;
+			//linea=19;
+			linea=menu_debug_registers_get_line_legend();
 
         	//Forzar a mostrar atajos
 	        z80_bit antes_menu_writing_inverse_color;
@@ -27663,7 +27740,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_shortcut(array_menu_display_settings,'e');
 				menu_add_item_menu_tooltip(array_menu_display_settings,"Runs the word extractor tool for adventure text games");
 				menu_add_item_menu_ayuda(array_menu_display_settings,"It runs the word extractor tool and insert these words on the On Screen Adventure Keyboard. "
-					"It can detect words on games written with Quill, Paws and GAC");
+					"It can detect words on games written with Quill, Paws, DAAD, and GAC");
 			}
 
                 }
