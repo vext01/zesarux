@@ -10097,15 +10097,51 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 		}
 
-				//Vista 1 y la 8 son muy similares
-                if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==8) {
+
+
+			//Linea de condact de daad
+			if (menu_debug_registers_current_view==8) {
+
+				int total_lineas_debug=6;
+
+				size_t longitud_op;
+
+				int i;
+
+				//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
+				int antes_menu_debug_memory_zone=menu_debug_memory_zone;
+
+				menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
+
+				z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);		
+
+				char buffer_linea[64];											
+
+				for (i=0;i<total_lineas_debug;i++) {
+
+						debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
+
+						sprintf(buffer_linea,"%04X %s",direccion_desensamblar,dumpassembler);
+
+						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+
+						linea++;
+
+						direccion_desensamblar +=longitud_op;
+
+				}
+
+				menu_debug_memory_zone=antes_menu_debug_memory_zone;
+
+
+		}		
+
+                if (menu_debug_registers_current_view==1) {
 
 
                                 size_t longitud_op;
                                 int limite=menu_debug_num_lineas_full;
 
-								//Quitar dos lineas para mostar el condact de daad
-								if (menu_debug_registers_current_view==8) limite -=2;
 
 				int columna_registros=19;
 				if (CPU_IS_MOTOROLA) columna_registros=20;
@@ -10246,27 +10282,7 @@ int menu_debug_registers_subview_type=0;
 					menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 
 
-					//Linea de condact de daad
-					if (menu_debug_registers_current_view==8) {
-						//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
-						int antes_menu_debug_memory_zone=menu_debug_memory_zone;
-
-						menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;
-
-						z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
-
-						debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
-
-
-						menu_debug_memory_zone=antes_menu_debug_memory_zone;
-
-						sprintf(buffer_linea,"%04X %s",direccion_desensamblar,dumpassembler);
-
-						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
-
-						linea++;
-
-					}
+					
 
 					//Linea de stack
 					//No mostrar stack en caso de scmp
