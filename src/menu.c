@@ -11586,8 +11586,11 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	do {
 
 
-		//Si es la vista 8, siempre esta en cpu step mode
-		if (menu_debug_registers_current_view==8) cpu_step_mode.v=1;
+		//Si es la vista 8, siempre esta en cpu step mode, y zona de memoria es la mapped
+		if (menu_debug_registers_current_view==8) {
+			cpu_step_mode.v=1;
+			menu_debug_memory_zone=-1;
+		}
 
 		//
 		//Si no esta el modo step de la cpu
