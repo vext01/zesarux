@@ -13543,7 +13543,7 @@ int util_daad_dump_vocabulary(void)
 
                if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
                else  {
-                       printf ("palabra: %s\n",buffer_palabra);
+                       debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
                        util_unpawsgac_add_word_kb(buffer_palabra);
                        palabras++;
                }
@@ -13560,4 +13560,63 @@ z80_byte util_daad_get_flag_value(z80_byte index)
         //7f1c
 
         return peek_byte_no_time(0x7f1c+index);
+}
+
+
+void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino)
+{
+        z80_int puntero=util_dadd_get_start_vocabulary();
+
+        //Leer entradas de 7 bytes
+        /*
+        5 para 5 letras de la palabra (puede incluir espacios de padding al final si es más corta), con xor 255
+        1 byte para el número de palabra 
+        1 byte para el tipo de palabra 
+        */
+
+       int palabras=0;
+
+       char buffer_palabra[6];
+
+       int salir=0;
+
+        //Por defecto asumimos no encontrado
+        strcpy(texto_destino,"?");
+
+       do {
+               //Copiar palabra a buffer
+               int i;
+               z80_byte caracter;
+               for (i=0;i<5;i++) {
+                       caracter=peek_byte_no_time(puntero+i) ^255;
+                       //Si hay espacio, fin
+                       if (caracter==32) break;
+                       buffer_palabra[i]=caracter;
+               }
+               buffer_palabra[i]=0;
+
+               if (buffer_palabra[0]<32 || buffer_palabra[0]>127) {
+                       //No encontrado
+                       return;
+               }
+               else  {
+                       z80_byte numero_palabra=peek_byte_no_time(puntero+5);
+                       z80_byte tipo_palabra=peek_byte_no_time(puntero+6);
+                       //debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
+                       //util_unpawsgac_add_word_kb(buffer_palabra);
+                       //palabras++;
+                       if (numero_palabra==numero_palabra_buscar && tipo_palabra==tipo_palabra_buscar) {
+                               strcpy(texto_destino,buffer_palabra);
+                               return;
+                       }
+               }
+
+               puntero+=7;
+               palabras++;
+
+               //Agregar un limite por si acaso
+               if (palabras==65535) salir=1;
+
+       } while (!salir);
+     
 }

@@ -9526,7 +9526,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 
 	//En vista daad, mostrar flags de daad
 	if (menu_debug_registers_current_view==8) {
-		int linea_origen=linea-3;
+		int linea_origen=linea;
 		if (linea_origen<0 || linea_origen>7) return;
 
 		z80_byte flag_leer=0;
@@ -9899,7 +9899,7 @@ void menu_debug_registers_adjust_ptr_on_follow(void)
 }
 
 
-void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna_registros)
+void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna_registros,int mostrar_separador)
 {
 
 char buffer_registros[33];
@@ -9917,7 +9917,8 @@ char buffer_registros[33];
                                                 if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
 
                                                 //Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador para quitar el color seleccionado
-                                                sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
+                                                if (mostrar_separador) sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
+												else sprintf(&buffer_linea[columna_registros],"%s",buffer_registros);
                                         }
 }
 
@@ -10146,31 +10147,90 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 			//Linea de condact de daad
 			if (menu_debug_registers_current_view==8) {
 
-				int total_lineas_debug=6;
+				int total_lineas_debug=7;
 
 				size_t longitud_op;
 
 				int i;
 
 
-
 				z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);		
 
 				char buffer_linea[64];	
 
-				int columna_registros=23;										
+				char buffer_verbo[6];
+				char buffer_nombre[6];
+
+				
+				zxvision_print_string_defaults_fillspc(w,1,linea++,"VERBO NOMBRE");
+
+				z80_byte verbo=util_daad_get_flag_value(33);
+				z80_byte nombre=util_daad_get_flag_value(34);
+
+				//Por defecto
+				strcpy(buffer_verbo,"-");
+				strcpy(buffer_nombre,"-");
+
+				if (verbo!=255) util_daad_locate_word(verbo,0,buffer_verbo);
+				if (nombre!=255) util_daad_locate_word(nombre,2,buffer_nombre);
+
+				sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
+
+
+/*
+Para sacar el verbo + nombre de la entrada:
+
+En el flag 33 está el código del verbo, el 34 el código del nombre. Si cualquiera de los dos vale 255 no buscas palabra y en su lugar pones un guion bajo (no-palabra)
+
+Si es otro valor, en 0x8416  está la dirección donde está el vocabulario, si tomas esa direccion irás a una tabla en memoria con bloques de 7 bytes:
+
+5 para 5 letras de la palabra (puede incluir espacios de padding al final si es más corta)
+1 byte para el número de palabra (el flag 33)
+1 byte para el tipo de palabra (verbo=0, nombre=2)
+
+Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de tipo 0 , y el código del flag 34 que sea de tipo 2
+*/
+
+				linea++;	
+
+				int columna_registros=23;		
+
+				int terminador=0; //Si se ha llegado a algun terminador de linea						
 
 				for (i=0;i<total_lineas_debug;i++) {
 
-						//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
-						int antes_menu_debug_memory_zone=menu_debug_memory_zone;
-						menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
-						debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
-						menu_debug_memory_zone=antes_menu_debug_memory_zone;
+					//Inicializamos linea a mostrar con espacios primero
+					int j; 
+					for (j=0;j<64;j++) buffer_linea[j]=32;
 
-						sprintf(buffer_linea,"%s",dumpassembler);
+						//$terminatorOpcodes = array(22, 23,103, 116,117,108);  //DONE/OK/NOTDONE/SKIP/RESTART/REDO
 
-						menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
+						int sera_terminador=0;
+
+						//Si se llega a algun terminador
+						if (!terminador) {
+							z80_byte opcode=peek_byte_no_time(direccion_desensamblar);
+							if (opcode==22 || opcode==23 || opcode==103 || opcode==116 || opcode==117 || opcode==108) sera_terminador=1;
+						}
+
+
+						if (!terminador) {
+							//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
+							int antes_menu_debug_memory_zone=menu_debug_memory_zone;
+							menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
+							debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
+							menu_debug_memory_zone=antes_menu_debug_memory_zone;
+
+							sprintf(buffer_linea,"%s",dumpassembler);
+
+							terminador=sera_terminador;
+						}
+
+
+
+						menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,0);
+
+						//printf ("linea: %s\n",buffer_linea);
 
 						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
@@ -10278,7 +10338,7 @@ int menu_debug_registers_subview_type=0;
 					//menu_debug_lines_addresses[i]=puntero_dir;
 
 
-					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
+					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1);
 
 
 					//zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
@@ -10306,7 +10366,7 @@ int menu_debug_registers_subview_type=0;
                                         int j;
                                         for (j=0;j<64;j++) buffer_linea[j]=32;
 
-                                        menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros);
+                                        menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1);
 
 										//primero borramos esa linea, por si cambiamos de subvista con M y hay "restos" ahi
 										zxvision_print_string_defaults_fillspc(w,1,linea,"");
@@ -10600,6 +10660,10 @@ void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
         if (menu_debug_registers_current_view==7) {
                 alto_ventana=5;
         }
+
+        else if (menu_debug_registers_current_view==8) {
+                alto_ventana=14;
+        }		
 
         else {
                 alto_ventana=24;

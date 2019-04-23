@@ -730,6 +730,8 @@ extern int util_daad_dump_vocabulary(void);
 
 extern z80_byte util_daad_get_flag_value(z80_byte index);
 
+extern void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino);
+
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
@@ -739,6 +741,6 @@ extern z80_byte util_daad_get_flag_value(z80_byte index);
 #define MEMORY_ZONE_NUM_DAAD_CONDACTS 20
 
 #define DAAD_PARSER_BREAKPOINT_PC 0x617c
-#define DAAD_PARSER_CONDACT_BREAKPOINT 0xbc
+#define DAAD_PARSER_CONDACT_BREAKPOINT 220
 
 #endif
