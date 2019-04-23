@@ -13390,7 +13390,8 @@ int util_unpawsetc_dump_words(char *mensaje)
 
         //Ver si es de daad
         if (util_daad_detect()) {
-                util_daad_dump_vocabulary();
+                int palabras=util_daad_dump_vocabulary();
+                sprintf(mensaje,"OK. DAAD signature found. %d words added",palabras);
                 return 0;
         }
 
@@ -13506,10 +13507,12 @@ z80_int util_dadd_get_start_vocabulary(void)
 }
 
 
-void util_daad_dump_vocabulary(void)
+int util_daad_dump_vocabulary(void)
 {
 
         debug_printf (VERBOSE_DEBUG,"Dumping Daad vocabulary");
+
+        util_clear_text_adventure_kdb();
 
         z80_int puntero=util_dadd_get_start_vocabulary();
 
@@ -13519,6 +13522,8 @@ void util_daad_dump_vocabulary(void)
         1 byte para el número de palabra 
         1 byte para el tipo de palabra 
         */
+
+       int palabras=0;
 
        char buffer_palabra[6];
 
@@ -13531,9 +13536,15 @@ void util_daad_dump_vocabulary(void)
                buffer_palabra[5]=0;
 
                if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
-               else  printf ("palabra: %s\n",buffer_palabra);
+               else  {
+                       printf ("palabra: %s\n",buffer_palabra);
+                       util_unpawsgac_add_word_kb(buffer_palabra);
+                       palabras++;
+               }
 
                puntero+=2;
 
        } while (!salir);
+
+       return palabras;
 }
