@@ -13532,8 +13532,14 @@ int util_daad_dump_vocabulary(void)
        do {
                //Copiar palabra a buffer
                int i;
-               for (i=0;i<5;i++) buffer_palabra[i]=peek_byte_no_time(puntero++) ^255;
-               buffer_palabra[5]=0;
+               z80_byte caracter;
+               for (i=0;i<5;i++) {
+                       caracter=peek_byte_no_time(puntero+i) ^255;
+                       //Si hay espacio, fin
+                       if (caracter==32) break;
+                       buffer_palabra[i]=caracter;
+               }
+               buffer_palabra[i]=0;
 
                if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
                else  {
@@ -13542,7 +13548,7 @@ int util_daad_dump_vocabulary(void)
                        palabras++;
                }
 
-               puntero+=2;
+               puntero+=7;
 
        } while (!salir);
 
