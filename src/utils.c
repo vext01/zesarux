@@ -13656,7 +13656,7 @@ caracteres con acentos etc códigos por debajo del 32
 z80_int util_dadd_get_start_objects_names(void)
 {
 
-        z80_int puntero=0x8400+26;
+        z80_int puntero=0x8400+12;
 
         z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
 
@@ -13672,4 +13672,28 @@ z80_int util_dadd_get_num_objects_description(void)
         z80_int dir=peek_byte_no_time(puntero);
 
         return dir;
+}
+
+void util_daad_get_object_description(z80_byte index,char *texto)
+{
+        z80_int offset_pointer=util_dadd_get_start_objects_names()+index*2;
+
+        z80_int dir=value_8_to_16(peek_byte_no_time(offset_pointer+1),peek_byte_no_time(offset_pointer));
+
+        //leer hasta byte valor 10, o maximo 255 longitud
+        int destino=0;
+
+        z80_byte caracter=0;
+
+        while (destino<255 && caracter!=10) {
+                caracter=peek_byte_no_time(dir++) ^255;
+                if (caracter!=10) {
+                        if (caracter<32 || caracter>127) caracter='?';
+                        texto[destino++]=caracter;
+                }
+
+                //printf ("destino %d caracter %d\n",destino,caracter);
+        }
+
+        texto[destino]=0;
 }

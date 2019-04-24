@@ -11323,7 +11323,7 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"~~Watch Wr~~ite");
+				sprintf(s,"~~Watch Wr~~ite Ob~~jects");
 				return;
 			}
 
@@ -11644,6 +11644,24 @@ void menu_debug_daad_edit_flagobject(void)
 }
 
 
+void menu_debug_daad_view_objects(void)
+{
+	//temporal
+	z80_int dir_objs=util_dadd_get_start_objects_names();
+	printf ("dir objs: %04XH\n",dir_objs);
+	printf ("total obj description: %d\n",util_dadd_get_num_objects_description() );
+
+	int total_objetos=util_dadd_get_num_objects_description();
+
+	int i;
+	for (i=0;i<total_objetos;i++) {
+
+		char buffer_temp[256];
+		util_daad_get_object_description(i,buffer_temp); printf ("object %d: %s\n",i,buffer_temp);
+
+	}
+}
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -11668,10 +11686,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		menu_debug_registers_current_view=1;
 	}
 
-	//temporal
-	z80_int dir_objs=util_dadd_get_start_objects_names();
-	printf ("dir objs: %04XH\n",dir_objs);
-	printf ("total obj description: %d\n",util_dadd_get_num_objects_description() );
+
 
 
 	//Inicializar info de tamanyo zona
@@ -11816,6 +11831,12 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
+
+				if (tecla=='j') {
+					menu_debug_daad_view_objects();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+				}				
 
 				if (tecla=='a') {
 					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
@@ -12070,6 +12091,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                     si_ejecuta_una_instruccion=0;
 				}
+
+				if (tecla=='j') {
+					menu_debug_daad_view_objects();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+				}				
 
 				if (tecla=='a') {
 					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
