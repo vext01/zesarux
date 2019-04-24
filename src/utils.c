@@ -13641,3 +13641,35 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
        } while (!salir);
      
 }
+
+
+//Listado de objetos daad
+/*
+En dirección 0x8400+26 está el puntero?
+En esa direccion hay una tabla lookup, 2 bytes por objeto, que son a su vez un puntero a la direccion donde empieza el texto de cada objeto
+el texto en sí, con XOR FF
+texto acaba con 0x0A (o 0xF5 antes de hacerle el XOR FF para devolverlo)
+caracteres con acentos etc códigos por debajo del 32
+*/
+
+
+z80_int util_dadd_get_start_objects_names(void)
+{
+
+        z80_int puntero=0x8400+26;
+
+        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+
+        return dir;
+}
+
+
+z80_int util_dadd_get_num_objects_description(void)
+{
+
+        z80_int puntero=0x8400+3;
+
+        z80_int dir=peek_byte_no_time(puntero);
+
+        return dir;
+}

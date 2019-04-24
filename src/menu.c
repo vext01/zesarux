@@ -11620,9 +11620,11 @@ void menu_debug_daad_edit_flagobject(void)
         if (tipo==0) return; //ESC	
 		tipo--; //tipo empieza en 0
 		
+		if (tipo==0) strcpy (buffer_titulo,"Flag to modify?");
+		else strcpy (buffer_titulo,"Object to modify?");
 
 		string_line[0]=0;
-		menu_ventana_scanf("Index to modify?",string_line,4);
+		menu_ventana_scanf(buffer_titulo,string_line,4);
 		int indice=parse_string_to_number(string_line);
 		if (indice<0 || indice>255) return;
 
@@ -11662,9 +11664,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	//menu_debug_registers_current_view
 	//Si estabamos antes en vista 8, pero ya no hay un programa daad en memoria, resetear a vista 1
-	if (menu_debug_registers_current_view==8 && !util_daad_detect()) menu_debug_registers_current_view=1;
+	if (menu_debug_registers_current_view==8 && !util_daad_detect()) {
+		menu_debug_registers_current_view=1;
+	}
 
-
+	//temporal
+	z80_int dir_objs=util_dadd_get_start_objects_names();
+	printf ("dir objs: %04XH\n",dir_objs);
+	printf ("total obj description: %d\n",util_dadd_get_num_objects_description() );
 
 
 	//Inicializar info de tamanyo zona
@@ -12138,7 +12145,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					menu_multitarea=0;
 				
 					last_debug_poke_dir=menu_debug_memory_pointer;
-                    menu_debug_poke(0);
+					if (menu_debug_registers_current_view==8) {
+						menu_debug_daad_edit_flagobject();
+					}
+                    else menu_debug_poke(0);					
 
                 	//Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;

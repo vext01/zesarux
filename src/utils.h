@@ -737,6 +737,9 @@ extern z80_byte util_daad_get_object_value(z80_byte index);
 extern void util_daad_put_flag_value(z80_byte index,z80_byte value);
 extern void util_daad_put_object_value(z80_byte index,z80_byte value);
 
+extern z80_int util_dadd_get_start_objects_names(void);
+extern z80_int util_dadd_get_num_objects_description(void);
+
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
