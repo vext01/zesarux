@@ -9540,6 +9540,8 @@ void menu_debug_daad_init_flagobject(void)
 	//todos tipo flag
 	int i;
 	for (i=0;i<MENU_DEBUG_NUMBER_FLAGS_OBJECTS;i++) 	debug_daad_flag_object[i].tipo=0;
+
+	debug_daad_flag_object[3].tipo=0;
 			
 }
 
@@ -10222,7 +10224,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 				linea++;	
 
-				int columna_registros=23;		
+				int columna_registros=22;		
 
 				int terminador=0; //Si se ha llegado a algun terminador de linea						
 
@@ -10691,7 +10693,7 @@ void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
         }
 
         else if (menu_debug_registers_current_view==8) {
-                alto_ventana=14;
+                alto_ventana=15;
         }		
 
         else {
@@ -10768,8 +10770,39 @@ void menu_debug_registers_gestiona_breakpoint(void)
 
 void menu_watches_view(MENU_ITEM_PARAMETERS)
 {
-	debug_watches_loop(debug_watches_text_to_watch,debug_watches_texto_destino);
-	menu_generic_message("Watch result",debug_watches_texto_destino);
+	//Si es modo debug daad
+	if (menu_debug_registers_current_view==8) {
+        char string_line[10];
+		char buffer_titulo[32];
+
+		sprintf (buffer_titulo,"Line? (1-%d)",MENU_DEBUG_NUMBER_FLAGS_OBJECTS);
+        menu_ventana_scanf(buffer_titulo,string_line,1);
+
+		int linea=parse_string_to_number(string_line);		
+		if (linea<1 || linea>MENU_DEBUG_NUMBER_FLAGS_OBJECTS) return;
+
+		linea--; //indice empieza en 0
+
+        int tipo=menu_simple_two_choices("Watch type","Type","Flag","Object");
+
+        if (tipo==0) return; //ESC	
+
+		tipo--; //tipo empieza en 0
+
+		menu_ventana_scanf("Index to watch?",string_line,4);
+		int indice=parse_string_to_number(string_line);
+
+		if (indice<0 || indice>255) return;
+
+
+		debug_daad_flag_object[linea].tipo=tipo;
+		debug_daad_flag_object[linea].indice=indice;
+
+	}
+	else {
+		debug_watches_loop(debug_watches_text_to_watch,debug_watches_texto_destino);
+		menu_generic_message("Watch result",debug_watches_texto_destino);
+	}
 }
 
 
@@ -11276,7 +11309,7 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"");
+				sprintf(s,"~~Watch");
 				return;
 			}
 
