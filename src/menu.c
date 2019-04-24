@@ -10768,11 +10768,9 @@ void menu_debug_registers_gestiona_breakpoint(void)
 
 }
 
-void menu_watches_view(MENU_ITEM_PARAMETERS)
+void menu_watches_daad(void)
 {
-	//Si es modo debug daad
-	if (menu_debug_registers_current_view==8) {
-        char string_line[10];
+		char string_line[10];
 		char buffer_titulo[32];
 
 		sprintf (buffer_titulo,"Line? (1-%d)",MENU_DEBUG_NUMBER_FLAGS_OBJECTS);
@@ -10796,13 +10794,15 @@ void menu_watches_view(MENU_ITEM_PARAMETERS)
 
 
 		debug_daad_flag_object[linea].tipo=tipo;
-		debug_daad_flag_object[linea].indice=indice;
+		debug_daad_flag_object[linea].indice=indice;	
+}
 
-	}
-	else {
-		debug_watches_loop(debug_watches_text_to_watch,debug_watches_texto_destino);
-		menu_generic_message("Watch result",debug_watches_texto_destino);
-	}
+void menu_watches_view(MENU_ITEM_PARAMETERS)
+{
+
+	debug_watches_loop(debug_watches_text_to_watch,debug_watches_texto_destino);
+	menu_generic_message("Watch result",debug_watches_texto_destino);
+	
 }
 
 
@@ -10833,8 +10833,16 @@ void menu_watches_y_position(MENU_ITEM_PARAMETERS)
 	else debug_watches_y_position=0;
 }
 
-void menu_watches(MENU_ITEM_PARAMETERS)
+//void menu_watches(MENU_ITEM_PARAMETERS)
+void menu_watches(void)
 {
+
+	//Si es modo debug daad
+	if (menu_debug_registers_current_view==8) {
+        menu_watches_daad();
+		return;
+	}
+
 
         menu_espera_no_tecla();
 
@@ -11797,7 +11805,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }								
 
 				if (tecla=='w') {
-                    menu_watches(0);
+                    menu_watches();
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
@@ -12070,7 +12078,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
-                    menu_watches(0);
+                    menu_watches();
 
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
