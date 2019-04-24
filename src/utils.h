@@ -742,6 +742,8 @@ extern z80_int util_dadd_get_num_objects_description(void);
 
 extern void util_daad_get_object_description(z80_byte index,char *texto);
 
+extern int util_concat_string(char *original,char *string_to_add,int limite);
+
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 

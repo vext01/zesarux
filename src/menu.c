@@ -11287,7 +11287,7 @@ void menu_debug_get_legend(int linea,char *s)
 			if (menu_debug_registers_current_view==8) {
 							//01234567890123456789012345678901
 							// chReg Brkp. Toggle Runto Watch		
-				sprintf(s,"~~E~~n:Step Condact [%c] Daadbrea~~kpnt",(debug_allow_daad_breakpoint.v ? 'X' : ' '));
+				sprintf(s,"~~E~~n:Step Condact [%c] Daadbr~~kpnt",(debug_allow_daad_breakpoint.v ? 'X' : ' '));
 				return;
 			}
 
@@ -11646,20 +11646,35 @@ void menu_debug_daad_edit_flagobject(void)
 
 void menu_debug_daad_view_objects(void)
 {
-	//temporal
-	z80_int dir_objs=util_dadd_get_start_objects_names();
-	printf ("dir objs: %04XH\n",dir_objs);
-	printf ("total obj description: %d\n",util_dadd_get_num_objects_description() );
+	//z80_int dir_objs=util_dadd_get_start_objects_names();
+	//printf ("dir objs: %04XH\n",dir_objs);
+	//printf ("total obj description: %d\n",util_dadd_get_num_objects_description() );
 
 	int total_objetos=util_dadd_get_num_objects_description();
 
+	char texto[MAX_TEXTO_GENERIC_MESSAGE];
+	texto[0]=0;
+
+	int resultado=0;
+
 	int i;
-	for (i=0;i<total_objetos;i++) {
+	for (i=0;i<total_objetos && !resultado;i++) {
 
 		char buffer_temp[256];
-		util_daad_get_object_description(i,buffer_temp); printf ("object %d: %s\n",i,buffer_temp);
+		util_daad_get_object_description(i,buffer_temp); 
+		//printf ("object %d: %s\n",i,buffer_temp);
+
+		char buffer_linea[300];
+		sprintf(buffer_linea,"Object %03d: %s\n",i,buffer_temp);
+
+		//Y concatenar a final
+		resultado=util_concat_string(texto,buffer_linea,MAX_TEXTO_GENERIC_MESSAGE);
 
 	}
+
+	if (resultado) menu_warn_message("Reached maximum text size. Showing only allowed text");
+
+	menu_generic_message("Daad Objects",texto);
 }
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)

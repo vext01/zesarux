@@ -10850,6 +10850,27 @@ int util_add_string_newline(char *destination,char *text_to_add)
 
 }
 
+
+//Agrega al texto "original" la cadena "string_to_add", comprobando que no se exceda el limite de longitud de original
+//limite hay que pasarlo como el total del buffer (incluyendo el 0 final)
+//Retorna 1 si no cabe
+int util_concat_string(char *original,char *string_to_add,int limite)
+{
+        int longitud_original=strlen(original);
+
+        int longitud_to_add=strlen(string_to_add);
+
+        int longitud_final=longitud_original+longitud_to_add+1; //el +1 del byte 0 final
+
+        if (longitud_final>limite) return 1;
+
+        char *offset_add;
+        offset_add=&original[longitud_original];
+        strcpy(offset_add,string_to_add);
+
+        return 0;
+}
+
 //De una cadena de bytes, lo muestra como hexadecimal, sin espacios. Retorna cadena acabada en 0
 //Completa con espacios hasta longitud
 void util_binary_to_hex(z80_byte *origen, char *destino, int longitud_max, int longitud)
