@@ -13569,6 +13569,21 @@ z80_byte util_daad_get_object_value(z80_byte index)
         return peek_byte_no_time(0x7f1c+256+index);
 }
 
+
+void util_daad_put_flag_value(z80_byte index,z80_byte value)
+{
+        //7f1c
+
+        poke_byte_no_time(0x7f1c+index,value);
+}
+
+void util_daad_put_object_value(z80_byte index,z80_byte value)
+{
+        //7f1c+256
+
+        poke_byte_no_time(0x7f1c+256+index,value);
+}
+
 void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino)
 {
         z80_int puntero=util_dadd_get_start_vocabulary();

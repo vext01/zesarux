@@ -734,6 +734,9 @@ extern void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_p
 
 extern z80_byte util_daad_get_object_value(z80_byte index);
 
+extern void util_daad_put_flag_value(z80_byte index,z80_byte value);
+extern void util_daad_put_object_value(z80_byte index,z80_byte value);
+
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 

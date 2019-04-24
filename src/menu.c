@@ -10773,29 +10773,35 @@ void menu_watches_daad(void)
 		char string_line[10];
 		char buffer_titulo[32];
 
-		sprintf (buffer_titulo,"Line? (1-%d)",MENU_DEBUG_NUMBER_FLAGS_OBJECTS);
-        menu_ventana_scanf(buffer_titulo,string_line,1);
+		
 
+		sprintf (buffer_titulo,"Line? (1-%d)",MENU_DEBUG_NUMBER_FLAGS_OBJECTS);
+		string_line[0]=0;
+        menu_ventana_scanf(buffer_titulo,string_line,2);
 		int linea=parse_string_to_number(string_line);		
 		if (linea<1 || linea>MENU_DEBUG_NUMBER_FLAGS_OBJECTS) return;
-
 		linea--; //indice empieza en 0
 
+
+
         int tipo=menu_simple_two_choices("Watch type","Type","Flag","Object");
-
         if (tipo==0) return; //ESC	
-
 		tipo--; //tipo empieza en 0
 
+
+		string_line[0]=0;
 		menu_ventana_scanf("Index to watch?",string_line,4);
 		int indice=parse_string_to_number(string_line);
-
 		if (indice<0 || indice>255) return;
 
 
 		debug_daad_flag_object[linea].tipo=tipo;
 		debug_daad_flag_object[linea].indice=indice;	
 }
+
+
+
+
 
 void menu_watches_view(MENU_ITEM_PARAMETERS)
 {
@@ -11317,7 +11323,7 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"~~Watch");
+				sprintf(s,"~~Watch Wr~~ite");
 				return;
 			}
 
@@ -11604,6 +11610,37 @@ int menu_debug_registers_get_line_legend(void)
 }	
 
 
+void menu_debug_daad_edit_flagobject(void)
+{
+		char string_line[10];
+		char buffer_titulo[32];
+
+		
+        int tipo=menu_simple_two_choices("Watch type","Type","Flag","Object");
+        if (tipo==0) return; //ESC	
+		tipo--; //tipo empieza en 0
+		
+
+		string_line[0]=0;
+		menu_ventana_scanf("Index to modify?",string_line,4);
+		int indice=parse_string_to_number(string_line);
+		if (indice<0 || indice>255) return;
+
+		string_line[0]=0;
+		menu_ventana_scanf("Value to set?",string_line,4);
+		int valor=parse_string_to_number(string_line);
+		if (valor<0 || valor>255) return;		
+
+		if (tipo==0) {
+			util_daad_put_flag_value(indice,valor);
+		}
+
+		else {
+			util_daad_put_object_value(indice,valor);
+		}
+
+}
+
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
@@ -11814,7 +11851,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 								
 				if (tecla=='i') {
 					last_debug_poke_dir=menu_debug_memory_pointer;
-                    menu_debug_poke(0);
+					if (menu_debug_registers_current_view==8) {
+						menu_debug_daad_edit_flagobject();
+					}
+                    else menu_debug_poke(0);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }								
