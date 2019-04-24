@@ -9513,6 +9513,58 @@ void menu_debug_registers_change_ptr(void)
 
 }
 
+#define MENU_DEBUG_NUMBER_FLAGS_OBJECTS 7
+
+//Estructura para guardar la parte derecha de la vista de daad, si muestra flag o objeto y cual
+
+struct s_debug_daad_flag_object {
+	int tipo; //0=flag, 1=object
+	z80_byte indice; //cual
+};
+
+struct s_debug_daad_flag_object debug_daad_flag_object[MENU_DEBUG_NUMBER_FLAGS_OBJECTS];
+
+//inicializar la lista de flags/objetos a una por defecto
+
+void menu_debug_daad_init_flagobject(void)
+{
+
+	debug_daad_flag_object[0].indice=0;
+	debug_daad_flag_object[1].indice=1;
+	debug_daad_flag_object[2].indice=33;
+	debug_daad_flag_object[3].indice=34;
+	debug_daad_flag_object[4].indice=35;
+	debug_daad_flag_object[5].indice=38;	
+	debug_daad_flag_object[6].indice=51;	
+
+	//todos tipo flag
+	int i;
+	for (i=0;i<MENU_DEBUG_NUMBER_FLAGS_OBJECTS;i++) 	debug_daad_flag_object[i].tipo=0;
+			
+}
+
+//Retornar el texto si es flag o objeto y valores:
+//FXXX XXX o OXXX XXX
+void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
+{
+	z80_byte valor;
+	char letra_mostrar;
+
+	z80_byte indice=debug_daad_flag_object[num_linea].indice;
+
+	if (debug_daad_flag_object[num_linea].tipo==0) {
+		letra_mostrar='F';
+		valor=util_daad_get_flag_value(indice);
+	}
+
+	else {
+		letra_mostrar='O';
+		valor=util_daad_get_object_value(indice);		
+	}
+
+	sprintf (destino,"%c%03d %d",letra_mostrar,indice,valor);
+}
+
                                          //Muestra el registro que le corresponde para esta linea
 void menu_debug_show_register_line(int linea,char *textoregistros)
 {
@@ -9534,43 +9586,11 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 	//En vista daad, mostrar flags de daad
 	if (menu_debug_registers_current_view==8) {
 		int linea_origen=linea;
-		if (linea_origen<0 || linea_origen>7) return;
+		if (linea_origen<0 || linea_origen>MENU_DEBUG_NUMBER_FLAGS_OBJECTS) return;
 
-		z80_byte flag_leer=0;
+		menu_debug_daad_string_flagobject(linea_origen,textoregistros);
 
-		switch (linea_origen) {
-			case 0:
-				flag_leer=0;
-			break;
-
-			case 1:
-				flag_leer=1;
-			break;
-
-			case 2:
-				flag_leer=33;
-			break;
-
-			case 3:
-				flag_leer=34;
-			break;
-
-			case 4:
-				flag_leer=35;
-			break;
-
-			case 5:
-				flag_leer=38;
-			break;
-
-			case 6:
-				flag_leer=51;
-			break;
-
-
-		}
-
-		sprintf (textoregistros,"F%2d %d",flag_leer,util_daad_get_flag_value(flag_leer));
+		//sprintf (textoregistros,"F%2d %d",flag_leer,util_daad_get_flag_value(flag_leer));
 
 		return;
 	}

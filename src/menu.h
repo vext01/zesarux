@@ -782,6 +782,8 @@ extern void last_filesused_clear(void);
 extern void last_filesused_insert(char *s);
 extern char last_files_used_array[MAX_LAST_FILESUSED][PATH_MAX];
 
+extern void menu_debug_daad_init_flagobject(void);
+
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

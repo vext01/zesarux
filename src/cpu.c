@@ -7051,6 +7051,8 @@ init_randomize_noise_value();
 	init_visualmembuffer();
 #endif
 
+	menu_debug_daad_init_flagobject();
+
 
 	debug_printf (VERBOSE_INFO,"Starting emulator");
 

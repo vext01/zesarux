@@ -13562,6 +13562,12 @@ z80_byte util_daad_get_flag_value(z80_byte index)
         return peek_byte_no_time(0x7f1c+index);
 }
 
+z80_byte util_daad_get_object_value(z80_byte index)
+{
+        //7f1c+256
+
+        return peek_byte_no_time(0x7f1c+256+index);
+}
 
 void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino)
 {
