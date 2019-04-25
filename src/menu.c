@@ -10248,7 +10248,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 							//Terminador de final y que no se mostrara
 							if (opcode==0xFF) {
-								printf ("Hay terminador FF\n");
+								//printf ("Hay terminador FF\n");
 								terminador=1;
 							}							
 						}
@@ -11116,41 +11116,10 @@ void menu_debug_runto(void)
 	//Y salir
 }
 
-void menu_debug_daad_step_breakpoint(void)
-{
-
-	//z80_int breakpoint_dir=DAAD_PARSER_BREAKPOINT_PC;
-
-	char breakpoint_add[64];
-	debug_get_daad_step_breakpoint_string(breakpoint_add);
-
-	//Si no hay breakpoint ahi, ponerlo
-	int posicion=debug_find_breakpoint(breakpoint_add);
-	if (posicion<0) {
-
-		//char condicion[30];
-		//sprintf (condicion,"PC=%XH AND (BC)/FFH",breakpoint_dir);
-		debug_get_daad_step_breakpoint_string(breakpoint_add);
-
-        if (debug_breakpoints_enabled.v==0) {
-                debug_breakpoints_enabled.v=1;
-
-                breakpoints_enable();
-    	}
-		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",breakpoint_add);
-
-		debug_add_breakpoint_free(breakpoint_add,""); 
-	}
-
-	//Y salir
-}
-
 
 //Quitar todas las apariciones de dicho breakpoint, por si ha quedado alguno desactivado, y al agregar uno, aparecen dos
 void menu_debug_delete_daad_step_breakpoint(void)
 {
-
-	//int posicion=0;
 
 	char breakpoint_add[64];
 
@@ -11158,16 +11127,67 @@ void menu_debug_delete_daad_step_breakpoint(void)
 
 	debug_delete_all_repeated_breakpoint(breakpoint_add);
 
-	/*do {
-		//Si hay breakpoint ahi, quitarlo
-		posicion=debug_find_breakpoint_activeornot(breakpoint_add);
-		if (posicion>=0) {
-			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
-			debug_clear_breakpoint(posicion);
-		}
-	} while (posicion>=0);*/
+}
 
+void menu_debug_daad_step_breakpoint(void)
+{
+
+
+	//Antes quitamos cualquier otra aparicion
+	menu_debug_delete_daad_step_breakpoint();	
+
+	char breakpoint_add[64];
+	debug_get_daad_step_breakpoint_string(breakpoint_add);
+
+	debug_add_breakpoint_ifnot_exists(breakpoint_add);
+
+	//Si no hay breakpoint ahi, ponerlo
+	/*int posicion=debug_find_breakpoint(breakpoint_add);
+	if (posicion<0) {
+
+		debug_get_daad_step_breakpoint_string(breakpoint_add);
+
+        if (debug_breakpoints_enabled.v==0) {
+                debug_breakpoints_enabled.v=1;
+                breakpoints_enable();
+    	}
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",breakpoint_add);
+
+		debug_add_breakpoint_free(breakpoint_add,""); 
+	}
+*/
 	//Y salir
+}
+
+
+//Quitar todas las apariciones de dicho breakpoint, por si ha quedado alguno desactivado, y al agregar uno, aparecen dos
+void menu_debug_delete_daad_parse_breakpoint(void)
+{
+
+	char breakpoint_add[64];
+
+	debug_get_daad_runto_parse_string(breakpoint_add);
+
+	debug_delete_all_repeated_breakpoint(breakpoint_add);
+
+}
+
+void menu_debug_daad_parse_breakpoint(void)
+{
+
+	//Antes quitamos cualquier otra aparicion
+	menu_debug_delete_daad_parse_breakpoint();	
+
+	char breakpoint_add[64];
+	debug_get_daad_runto_parse_string(breakpoint_add);
+
+	debug_add_breakpoint_ifnot_exists(breakpoint_add);
+
+}
+
+void menu_debug_daad_runto_parse(void)
+{
+	menu_debug_daad_parse_breakpoint();
 }
 
 
@@ -11175,25 +11195,12 @@ void menu_debug_delete_daad_step_breakpoint(void)
 void menu_debug_delete_daad_special_breakpoint(void)
 {
 
-	//int posicion=0;
-
 	char breakpoint_add[64];
 
 	debug_get_daad_breakpoint_string(breakpoint_add);
 
-
 	debug_delete_all_repeated_breakpoint(breakpoint_add);
 
-	/*do {
-		//Si hay breakpoint ahi, quitarlo
-		posicion=debug_find_breakpoint_activeornot(breakpoint_add);
-		if (posicion>=0) {
-			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
-			debug_clear_breakpoint(posicion);
-		}
-	} while (posicion>=0);*/
-
-	//Y salir
 }
 
 
@@ -11208,8 +11215,10 @@ void menu_debug_add_daad_special_breakpoint(void)
 
 	debug_get_daad_breakpoint_string(breakpoint_add);
 
+	debug_add_breakpoint_ifnot_exists(breakpoint_add);
+
 	//Si no hay breakpoint ahi, ponerlo
-	int posicion=debug_find_breakpoint(breakpoint_add);
+	/*int posicion=debug_find_breakpoint(breakpoint_add);
 	if (posicion<0) {
 
         if (debug_breakpoints_enabled.v==0) {
@@ -11220,7 +11229,7 @@ void menu_debug_add_daad_special_breakpoint(void)
 		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",breakpoint_add);
 
 		debug_add_breakpoint_free(breakpoint_add,""); 
-	}
+	}*/
 
 	//Y salir
 }
@@ -11367,7 +11376,7 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"~~Watch Wr~~ite Ob~~jects");
+				sprintf(s,"runto~~Parse ~~Watch Wr~~ite Ob~~jects");
 				return;
 			}
 
@@ -11947,9 +11956,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }								
 
                 if (tecla=='p') {
-					debug_t_estados_parcial=0;
-                    //Decimos que no hay tecla pulsada
-                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					if (menu_debug_registers_current_view==8) {
+						//Esto es run hasta Parse Daad
+						menu_debug_daad_runto_parse();
+                    	tecla=2; //Simular ESC
+						salir_todos_menus=1;						
+					}
+					else {
+						debug_t_estados_parcial=0;
+                    	//Decimos que no hay tecla pulsada
+                    	acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					}
                 }
 
 				//Vista. Entre 1 y 6
@@ -12278,12 +12295,27 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
                 if (tecla=='p') {
-					debug_t_estados_parcial=0;
-                    //Decimos que no hay tecla pulsada
-                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                    si_ejecuta_una_instruccion=0;
+					if (menu_debug_registers_current_view==8) {
+                    	menu_debug_daad_runto_parse();
+                    	//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    	si_ejecuta_una_instruccion=0;
+						salir_todos_menus=1;
+						cpu_step_mode.v=0;
+						acumulado=0; //teclas pulsadas
+						//Con esto saldremos						
+					}
+					else {
+						debug_t_estados_parcial=0;
+                    	//Decimos que no hay tecla pulsada
+                    	acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    	//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    	si_ejecuta_una_instruccion=0;
+					}
                 }
+
+
+
+
 
 				//Vista. Entre 1 y 8
 				if (tecla>='1' && tecla<='8') {

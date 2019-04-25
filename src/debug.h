@@ -250,6 +250,8 @@ extern void debug_set_breakpoint_action(int breakpoint_index,char *accion);
 
 extern void debug_delete_all_repeated_breakpoint(char *texto);
 
+extern void debug_add_breakpoint_ifnot_exists(char *breakpoint_add);
+
 extern void debug_view_basic(char *results_buffer);
 
 extern void debug_get_ioports(char *stats_buffer);
@@ -346,5 +348,7 @@ extern int debug_find_breakpoint(char *to_find);
 extern int debug_find_breakpoint_activeornot(char *to_find);
 
 extern void debug_get_daad_step_breakpoint_string(char *texto);
+
+extern void debug_get_daad_runto_parse_string(char *texto);
 
 #endif

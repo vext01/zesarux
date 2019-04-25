@@ -3700,6 +3700,25 @@ void debug_delete_all_repeated_breakpoint(char *texto)
 	//Y salir
 }
 
+//Poner un breakpoint si no estaba como existente y activo y ademas activar breakpoints
+//Nota: quiza tendria que haber otra funcion que detecte que existe pero si no esta activo, que solo lo active sin agregar otro repetido
+void debug_add_breakpoint_ifnot_exists(char *breakpoint_add)
+{
+	//Si no hay breakpoint ahi, ponerlo y 
+	int posicion=debug_find_breakpoint(breakpoint_add);
+	if (posicion<0) {
+
+        if (debug_breakpoints_enabled.v==0) {
+                debug_breakpoints_enabled.v=1;
+
+                breakpoints_enable();
+    	}
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",breakpoint_add);
+
+		debug_add_breakpoint_free(breakpoint_add,""); 
+	}
+}
+
 
 //tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
 void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,
@@ -5524,4 +5543,13 @@ void debug_get_daad_step_breakpoint_string(char *texto)
 	z80_int breakpoint_dir=DAAD_PARSER_BREAKPOINT_PC;
 
 	sprintf (texto,"PC=%XH AND (BC)/FFH",breakpoint_dir);
+}
+
+
+//Retorna cadena de breakpoint cuando va a leer condact PARSE
+void debug_get_daad_runto_parse_string(char *texto)
+{
+	z80_int breakpoint_dir=DAAD_PARSER_BREAKPOINT_PC;
+
+	sprintf (texto,"PC=%XH AND (BC)=73",breakpoint_dir);
 }
