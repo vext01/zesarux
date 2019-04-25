@@ -248,6 +248,8 @@ extern void debug_set_breakpoint(int breakpoint_index,char *condicion);
 
 extern void debug_set_breakpoint_action(int breakpoint_index,char *accion);
 
+extern void debug_delete_all_repeated_breakpoint(char *texto);
+
 extern void debug_view_basic(char *results_buffer);
 
 extern void debug_get_ioports(char *stats_buffer);

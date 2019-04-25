@@ -11150,20 +11150,22 @@ void menu_debug_daad_step_breakpoint(void)
 void menu_debug_delete_daad_step_breakpoint(void)
 {
 
-	int posicion=0;
+	//int posicion=0;
 
 	char breakpoint_add[64];
 
 	debug_get_daad_step_breakpoint_string(breakpoint_add);
 
-	do {
+	debug_delete_all_repeated_breakpoint(breakpoint_add);
+
+	/*do {
 		//Si hay breakpoint ahi, quitarlo
 		posicion=debug_find_breakpoint_activeornot(breakpoint_add);
 		if (posicion>=0) {
 			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
 			debug_clear_breakpoint(posicion);
 		}
-	} while (posicion>=0);
+	} while (posicion>=0);*/
 
 	//Y salir
 }
@@ -11173,20 +11175,23 @@ void menu_debug_delete_daad_step_breakpoint(void)
 void menu_debug_delete_daad_special_breakpoint(void)
 {
 
-	int posicion=0;
+	//int posicion=0;
 
 	char breakpoint_add[64];
 
 	debug_get_daad_breakpoint_string(breakpoint_add);
 
-	do {
+
+	debug_delete_all_repeated_breakpoint(breakpoint_add);
+
+	/*do {
 		//Si hay breakpoint ahi, quitarlo
 		posicion=debug_find_breakpoint_activeornot(breakpoint_add);
 		if (posicion>=0) {
 			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
 			debug_clear_breakpoint(posicion);
 		}
-	} while (posicion>=0);
+	} while (posicion>=0);*/
 
 	//Y salir
 }

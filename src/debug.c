@@ -3678,6 +3678,29 @@ void debug_set_breakpoint_action(int breakpoint_index,char *accion)
 }
 
 
+//Borra todas las apariciones de un breakpoint concreto
+void debug_delete_all_repeated_breakpoint(char *texto)
+{
+
+	int posicion=0;
+
+	//char breakpoint_add[64];
+
+	//debug_get_daad_breakpoint_string(breakpoint_add);
+
+	do {
+		//Si hay breakpoint ahi, quitarlo
+		posicion=debug_find_breakpoint_activeornot(texto);
+		if (posicion>=0) {
+			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
+			debug_clear_breakpoint(posicion);
+		}
+	} while (posicion>=0);
+
+	//Y salir
+}
+
+
 //tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
 void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,
 int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo )
