@@ -343,4 +343,6 @@ extern int debug_find_breakpoint(char *to_find);
 
 extern int debug_find_breakpoint_activeornot(char *to_find);
 
+extern void debug_get_daad_step_breakpoint_string(char *texto);
+
 #endif

@@ -5493,3 +5493,12 @@ void debug_get_daad_breakpoint_string(char *texto)
 
 	sprintf (texto,"PC=%04XH AND A=%02XH",DAAD_PARSER_BREAKPOINT_PC+1,DAAD_PARSER_CONDACT_BREAKPOINT);
 }
+
+
+//Retorna cadena de breakpoint de step to step para pararse en el parser de condacts, y siempre que condact no sea FFH
+void debug_get_daad_step_breakpoint_string(char *texto)
+{
+	z80_int breakpoint_dir=DAAD_PARSER_BREAKPOINT_PC;
+
+	sprintf (texto,"PC=%XH AND (BC)/FFH",breakpoint_dir);
+}

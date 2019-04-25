@@ -10238,11 +10238,22 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 						int sera_terminador=0;
 
+
 						//Si se llega a algun terminador
 						if (!terminador) {
 							z80_byte opcode=peek_byte_no_time(direccion_desensamblar);
-							if (opcode==22 || opcode==23 || opcode==103 || opcode==116 || opcode==117 || opcode==108) sera_terminador=1;
+							z80_byte opcode_res=opcode & 127;
+							if (opcode_res==22 || opcode_res==23 || opcode_res==103 || opcode_res==116 || opcode_res==117 || opcode_res==108) sera_terminador=1;
+
+
+							//Terminador de final y que no se mostrara
+							if (opcode==0xFF) {
+								printf ("Hay terminador FF\n");
+								terminador=1;
+							}							
 						}
+
+
 
 
 						if (!terminador) {
@@ -11105,33 +11116,61 @@ void menu_debug_runto(void)
 	//Y salir
 }
 
-void menu_debug_daad_step(void)
+void menu_debug_daad_step_breakpoint(void)
 {
 
-	z80_int breakpoint_dir=DAAD_PARSER_BREAKPOINT_PC;
+	//z80_int breakpoint_dir=DAAD_PARSER_BREAKPOINT_PC;
+
+	char breakpoint_add[64];
+	debug_get_daad_step_breakpoint_string(breakpoint_add);
 
 	//Si no hay breakpoint ahi, ponerlo
-	int posicion=debug_return_brk_pc_dir_condition(breakpoint_dir);
+	int posicion=debug_find_breakpoint(breakpoint_add);
 	if (posicion<0) {
 
-		char condicion[30];
-		sprintf (condicion,"PC=%XH",breakpoint_dir);
+		//char condicion[30];
+		//sprintf (condicion,"PC=%XH AND (BC)/FFH",breakpoint_dir);
+		debug_get_daad_step_breakpoint_string(breakpoint_add);
 
         if (debug_breakpoints_enabled.v==0) {
                 debug_breakpoints_enabled.v=1;
 
                 breakpoints_enable();
     	}
-		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",condicion);
+		debug_printf (VERBOSE_DEBUG,"Putting breakpoint [%s] at next free slot",breakpoint_add);
 
-		debug_add_breakpoint_free(condicion,""); 
+		debug_add_breakpoint_free(breakpoint_add,""); 
 	}
 
 	//Y salir
 }
 
+
 //Quitar todas las apariciones de dicho breakpoint, por si ha quedado alguno desactivado, y al agregar uno, aparecen dos
-void menu_debug_delete_daad_breakpoint(void)
+void menu_debug_delete_daad_step_breakpoint(void)
+{
+
+	int posicion=0;
+
+	char breakpoint_add[64];
+
+	debug_get_daad_step_breakpoint_string(breakpoint_add);
+
+	do {
+		//Si hay breakpoint ahi, quitarlo
+		posicion=debug_find_breakpoint_activeornot(breakpoint_add);
+		if (posicion>=0) {
+			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
+			debug_clear_breakpoint(posicion);
+		}
+	} while (posicion>=0);
+
+	//Y salir
+}
+
+
+//Quitar todas las apariciones de dicho breakpoint, por si ha quedado alguno desactivado, y al agregar uno, aparecen dos
+void menu_debug_delete_daad_special_breakpoint(void)
 {
 
 	int posicion=0;
@@ -11154,11 +11193,11 @@ void menu_debug_delete_daad_breakpoint(void)
 
 
 
-void menu_debug_add_daad_breakpoint(void)
+void menu_debug_add_daad_special_breakpoint(void)
 {
 
 	//Antes quitamos cualquier otra aparicion
-	menu_debug_delete_daad_breakpoint();
+	menu_debug_delete_daad_special_breakpoint();
 
 	char breakpoint_add[64];
 
@@ -12280,11 +12319,11 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		        if (tecla=='k' && menu_debug_registers_current_view==8) {
 					if (debug_allow_daad_breakpoint.v) {
 						//Quitarlo
-						menu_debug_delete_daad_breakpoint();
+						menu_debug_delete_daad_special_breakpoint();
 					}
                     else {
 						//Ponerlo
-						menu_debug_add_daad_breakpoint();
+						menu_debug_add_daad_special_breakpoint();
 					}
 
 					debug_allow_daad_breakpoint.v ^=1;
@@ -12441,7 +12480,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (menu_debug_registers_current_view==8) {
 					//Poner breakpoint hasta parser
 
-					menu_debug_daad_step();
+					menu_debug_daad_step_breakpoint();
                     tecla=2; //Simular ESC
 					cpu_step_mode.v=0;
 					salir_todos_menus=1;
@@ -12484,13 +12523,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	//Si no estamos haciendo stepping de daad, quitar breakpoint del parser
 	if (debug_stepping_daad.v==0) {
-		int posicion=debug_return_brk_pc_dir_condition(DAAD_PARSER_BREAKPOINT_PC);
-		if (posicion>=0) {
-			debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
-			debug_clear_breakpoint(posicion);
-			//debug_set_breakpoint(posicion,"");
-			//debug_breakpoints_conditions_enabled[posicion]=0;
-		}
+		menu_debug_delete_daad_step_breakpoint();
 	}
 
     cls_menu_overlay();
