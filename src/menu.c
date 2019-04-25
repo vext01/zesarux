@@ -11117,6 +11117,15 @@ void menu_debug_runto(void)
 }
 
 
+//Si estamos haciendo un step to step de daad
+z80_bit debug_stepping_daad={0};
+
+//Si estamos haciendo un runto parse daad
+z80_bit debug_stepping_daad_runto_parse={0};
+
+//Si hay metido un breakpoint de daad en el interprete y con registro A para el condact ficticio
+z80_bit debug_allow_daad_breakpoint={0};
+
 //Quitar todas las apariciones de dicho breakpoint, por si ha quedado alguno desactivado, y al agregar uno, aparecen dos
 void menu_debug_delete_daad_step_breakpoint(void)
 {
@@ -11188,6 +11197,7 @@ void menu_debug_daad_parse_breakpoint(void)
 void menu_debug_daad_runto_parse(void)
 {
 	menu_debug_daad_parse_breakpoint();
+	debug_stepping_daad_runto_parse.v=1;
 }
 
 
@@ -11323,11 +11333,7 @@ void menu_debug_switch_follow_pc(void)
 }
 
 
-//Si estamos haciendo un step to step de daad
-z80_bit debug_stepping_daad={0};
 
-//Si hay metido un breakpoint de daad en el interprete y con registro A para el condact ficticio
-z80_bit debug_allow_daad_breakpoint={0};
 
 
 
@@ -11747,6 +11753,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	valor_contador_segundo_anterior=contador_segundo;
 
 	debug_stepping_daad.v=0;
+	debug_stepping_daad_runto_parse.v=0;
 
 	//menu_debug_registers_current_view
 	//Si estabamos antes en vista 8, pero ya no hay un programa daad en memoria, resetear a vista 1
@@ -12562,6 +12569,11 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	if (debug_stepping_daad.v==0) {
 		menu_debug_delete_daad_step_breakpoint();
 	}
+
+	//Si no estamos haciendo runto Parse de daad, quitar breakpoint del parser
+	if (debug_stepping_daad_runto_parse.v==0) {
+		menu_debug_delete_daad_parse_breakpoint();
+	}	
 
     cls_menu_overlay();
 
@@ -31548,8 +31560,8 @@ int debug_show_fired_breakpoints_type=0;
 	if (debug_show_fired_breakpoints_type==1 && !es_pc_cond) mostrar=1;
 
 	if (mostrar) {
-		//Si no era un breakpoint de daad
-		if (debug_stepping_daad.v && reg_pc==DAAD_PARSER_BREAKPOINT_PC) {
+		//Si no era un breakpoint de daad de step-to-step o runtoparse
+		if ( (debug_stepping_daad.v || debug_stepping_daad_runto_parse.v) && reg_pc==DAAD_PARSER_BREAKPOINT_PC) {
 
 		}
 		else menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);
