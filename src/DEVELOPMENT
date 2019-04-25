@@ -139,7 +139,7 @@ Versión sin optimizaciones:
 export CFLAGS=
 export LDFLAGS=
 
-./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile --enable-cocoa-opengl
+./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
 (Habilita drivers video: cocoa(GL), stdout, simpletext y drivers audio: coreaudio. )
 make clean
 make
@@ -154,7 +154,7 @@ Versión con optimizaciones:
 export CFLAGS=-O2
 export LDFLAGS=-O2
 
-./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile --enable-cocoa-opengl
+./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
 (Habilita drivers video: cocoa(GL), stdout, simpletext y drivers audio: coreaudio. )
 make clean
 make

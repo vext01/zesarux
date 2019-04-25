@@ -11150,6 +11150,8 @@ void menu_debug_daad_step_breakpoint(void)
 
 	debug_add_breakpoint_ifnot_exists(breakpoint_add);
 
+	debug_stepping_daad.v=1;
+
 	//Si no hay breakpoint ahi, ponerlo
 	/*int posicion=debug_find_breakpoint(breakpoint_add);
 	if (posicion<0) {
@@ -11281,6 +11283,16 @@ int menu_debug_breakpoint_is_daad(char *texto)
 	char breakpoint_add[64];
 
 	debug_get_daad_breakpoint_string(breakpoint_add);
+
+	if (!strcasecmp(texto,breakpoint_add)) return 1;
+	else return 0;
+}
+
+int menu_debug_breakpoint_is_daad_runtoparse(char *texto)
+{
+	char breakpoint_add[64];
+
+	debug_get_daad_runto_parse_string(breakpoint_add);
 
 	if (!strcasecmp(texto,breakpoint_add)) return 1;
 	else return 0;
@@ -11736,8 +11748,23 @@ void menu_debug_daad_view_objects(void)
 	menu_generic_message("Daad Objects",texto);
 }
 
+z80_bit debug_daad_breakpoint_runtoparse_fired={0};
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
+
+	//Si se habia lanzado un runtoparse de daad
+	if (debug_daad_breakpoint_runtoparse_fired.v) {
+		debug_printf (VERBOSE_DEBUG,"Going back from a daad breakpoint runtoparse. Adding a step to step condact breakpoint and exiting window");
+		//Lo quitamos y metemos un breakpoint del step to step
+		debug_daad_breakpoint_runtoparse_fired.v=0;
+		debug_stepping_daad_runto_parse.v=0;
+		menu_debug_delete_daad_parse_breakpoint();
+		menu_debug_daad_step_breakpoint();
+		salir_todos_menus=1;
+		return;
+	}
+
 
 	z80_byte acumulado;
 
@@ -12529,7 +12556,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					cpu_step_mode.v=0;
 					salir_todos_menus=1;
 					acumulado=0;
-					debug_stepping_daad.v=1;
+					
                 }					
 
 				else cpu_core_loop();
@@ -31578,6 +31605,13 @@ int debug_show_fired_breakpoints_type=0;
 		debug_printf (VERBOSE_DEBUG,"Catch daad breakpoint. Decrementing PC and incrementing BC");
 		reg_pc --;
 		BC++;
+	}
+
+	//Si breakpoint disparado es el de daad runtoparse
+	if (menu_debug_breakpoint_is_daad_runtoparse(catch_breakpoint_message)) {
+		//Activamos un flag que se lee desde el menu debug cpu
+		debug_printf (VERBOSE_DEBUG,"Catch daad breakpoint runtoparse");
+		debug_daad_breakpoint_runtoparse_fired.v=1;
 	}
 
 }
