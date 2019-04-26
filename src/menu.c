@@ -10182,12 +10182,7 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				int i;
 
-				//Si no esta en zona de parser
-				if (!util_daad_is_in_parser()) {
-					zxvision_print_string_defaults_fillspc(w,1,linea++,"Not in condacts");
-				}
-
-				else {
+			
 
 				z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);		
 
@@ -10211,7 +10206,12 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
 
-				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+				//Si no esta en zona de parser
+				if (!util_daad_is_in_parser()) {
+					zxvision_print_string_defaults_fillspc(w,1,linea++,"Not in condacts");
+				}
+
+				else zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
 
 /*
@@ -10240,41 +10240,44 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 					int j; 
 					for (j=0;j<64;j++) buffer_linea[j]=32;
 
-						//$terminatorOpcodes = array(22, 23,103, 116,117,108);  //DONE/OK/NOTDONE/SKIP/RESTART/REDO
+						//Si esta en zona de parser
+						if (util_daad_is_in_parser()) {
 
-						int sera_terminador=0;
+							//$terminatorOpcodes = array(22, 23,103, 116,117,108);  //DONE/OK/NOTDONE/SKIP/RESTART/REDO
 
-
-						//Si se llega a algun terminador
-						if (!terminador) {
-							z80_byte opcode=peek_byte_no_time(direccion_desensamblar);
-							z80_byte opcode_res=opcode & 127;
-							if (opcode_res==22 || opcode_res==23 || opcode_res==103 || opcode_res==116 || opcode_res==117 || opcode_res==108) sera_terminador=1;
+							int sera_terminador=0;
 
 
-							//Terminador de final y que no se mostrara
-							if (opcode==0xFF) {
-								//printf ("Hay terminador FF\n");
-								terminador=1;
-							}							
+							//Si se llega a algun terminador
+							if (!terminador) {
+								z80_byte opcode=peek_byte_no_time(direccion_desensamblar);
+								z80_byte opcode_res=opcode & 127;
+								if (opcode_res==22 || opcode_res==23 || opcode_res==103 || opcode_res==116 || opcode_res==117 || opcode_res==108) sera_terminador=1;
+
+
+								//Terminador de final y que no se mostrara
+								if (opcode==0xFF) {
+									//printf ("Hay terminador FF\n");
+									terminador=1;
+								}							
+							}
+
+
+
+
+							if (!terminador) {
+								//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
+								int antes_menu_debug_memory_zone=menu_debug_memory_zone;
+								menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
+								debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
+								menu_debug_memory_zone=antes_menu_debug_memory_zone;
+
+								sprintf(buffer_linea,"%s",dumpassembler);
+
+								terminador=sera_terminador;
+							}
+
 						}
-
-
-
-
-						if (!terminador) {
-							//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
-							int antes_menu_debug_memory_zone=menu_debug_memory_zone;
-							menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
-							debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
-							menu_debug_memory_zone=antes_menu_debug_memory_zone;
-
-							sprintf(buffer_linea,"%s",dumpassembler);
-
-							terminador=sera_terminador;
-						}
-
-
 
 						menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,0);
 
@@ -10285,7 +10288,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 						direccion_desensamblar +=longitud_op;
 
-				}
+				
 				}
 
 				
