@@ -13792,6 +13792,7 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
                                 if (caracter>127) {
                                         //Meter token
                                         char buffer_temp[256];
+                                        //printf ("token %d\n",caracter & 127);
                                         util_daad_get_compressed_message(caracter & 127,buffer_temp);
                                         int i;
                                         for (i=0;i<strlen(buffer_temp) && destino<255;i++) {
@@ -13881,7 +13882,8 @@ void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
 
 void util_daad_get_compressed_message(z80_byte index,char *texto)
 {
-
+//fseek ($file, $pos_tokens + 1);  // It seems actual token table starts one byte after the one the header points to
         z80_int table_dir=util_dadd_get_start_compressed_messages();
+        table_dir++;
         util_daad_get_token_message(index,table_dir,texto);
 }

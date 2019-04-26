@@ -11773,7 +11773,7 @@ void menu_debug_daad_view_objects(void)
 	
 
 
-	for (i=0;i<30;i++) {
+	for (i=0;i<120;i++) {
 
 		char buffer_temp[256];
 		util_daad_get_compressed_message(i,buffer_temp); 
@@ -11812,6 +11812,55 @@ void menu_debug_daad_view_objects(void)
 }
 
 z80_bit debug_daad_breakpoint_runtoparse_fired={0};
+
+
+void menu_debug_daad_get_condact_message(void)
+{
+	//MES y MESSAGE a la tabla MTX (mensajes de usuario). SYSMES a STX (mensajes del sistema) y DESC a LTX (localidades)
+	/*
+  {1,"MES    "}, //  77 $4D
+
+  {1,"MESSAGE"}, //  38 $26
+
+
+  {1,"SYSMESS"}, //  54 $36
+
+
+  {1,"DESC   "}, //  19 $13
+
+
+	*/
+
+	z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
+
+	z80_byte opcode_daad=peek_byte_no_time(direccion_desensamblar);
+	z80_byte param_message=peek_byte_no_time(direccion_desensamblar+1);
+
+	int redireccion=0;
+	if (opcode_daad>127) {
+		redireccion=1;
+		opcode_daad -=128;
+	}
+
+	char buffer[256];
+	buffer[0]=0;
+
+	if (opcode_daad==77 || opcode_daad==38) {
+		util_daad_get_user_message(param_message,buffer);
+	} 
+
+	if (opcode_daad==54) {
+		util_daad_get_sys_message(param_message,buffer);
+	} 	
+
+	if (opcode_daad==19) {
+		util_daad_get_locat_message(param_message,buffer);
+	} 		
+
+	menu_generic_message("Message",buffer);
+
+
+}
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
@@ -12370,6 +12419,27 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                     si_ejecuta_una_instruccion=0;
+                }
+
+
+				//Mensaje al que apunta instruccion de condact
+				if (tecla=='m' && menu_debug_registers_current_view==8) {
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+                    menu_debug_daad_get_condact_message();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+
                 }
 
 		        if (tecla=='l' && menu_debug_registers_current_view==1) {
