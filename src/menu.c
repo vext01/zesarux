@@ -10188,30 +10188,32 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				char buffer_linea[64];	
 
-				char buffer_verbo[6];
-				char buffer_nombre[6];
-
-				
-				
-
-				z80_byte verbo=util_daad_get_flag_value(33);
-				z80_byte nombre=util_daad_get_flag_value(34);
-
-				//Por defecto
-				strcpy(buffer_verbo,"_");
-				strcpy(buffer_nombre,"_");
-
-				if (verbo!=255) util_daad_locate_word(verbo,0,buffer_verbo);
-				if (nombre!=255) util_daad_locate_word(nombre,2,buffer_nombre);
-
-				sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
 
 				//Si no esta en zona de parser
 				if (!util_daad_is_in_parser()) {
 					zxvision_print_string_defaults_fillspc(w,1,linea++,"Not in condacts");
 				}
 
-				else zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+				else {				
+
+					char buffer_verbo[6];
+					char buffer_nombre[6];		
+
+					z80_byte verbo=util_daad_get_flag_value(33);
+					z80_byte nombre=util_daad_get_flag_value(34);
+
+					//Por defecto
+					strcpy(buffer_verbo,"_");
+					strcpy(buffer_nombre,"_");
+
+					if (verbo!=255) util_daad_locate_word(verbo,0,buffer_verbo);
+					if (nombre!=255) util_daad_locate_word(nombre,2,buffer_nombre);
+
+					sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
+
+					zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+
+				}
 
 
 /*
