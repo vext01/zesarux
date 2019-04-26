@@ -11738,6 +11738,49 @@ void menu_debug_daad_edit_flagobject(void)
 
 void menu_debug_daad_view_objects(void)
 {
+
+	int i;
+
+//temp
+	int total_user_messages=util_daad_get_num_user_messages();
+
+	for (i=0;i<total_user_messages;i++) {
+
+		char buffer_temp[256];
+		util_daad_get_user_message(i,buffer_temp); 
+		printf ("message %d: %s\n",i,buffer_temp);
+	}
+
+
+	int total_sys_messages=util_daad_get_num_sys_messages();
+
+	for (i=0;i<total_sys_messages;i++) {
+
+		char buffer_temp[256];
+		util_daad_get_sys_message(i,buffer_temp); 
+		printf ("sys message %d: %s\n",i,buffer_temp);
+	}
+
+
+	int total_locat_messages=util_daad_get_num_locat_messages();
+
+	for (i=0;i<total_locat_messages;i++) {
+
+		char buffer_temp[256];
+		util_daad_get_locat_message(i,buffer_temp); 
+		printf ("locat message %d: %s\n",i,buffer_temp);
+	}	
+	
+
+
+	for (i=0;i<30;i++) {
+
+		char buffer_temp[256];
+		util_daad_get_compressed_message(i,buffer_temp); 
+		printf ("compressed %d: %s\n",i,buffer_temp);
+	}		
+
+
 	//z80_int dir_objs=util_dadd_get_start_objects_names();
 	//printf ("dir objs: %04XH\n",dir_objs);
 	//printf ("total obj description: %d\n",util_dadd_get_num_objects_description() );
@@ -11749,7 +11792,6 @@ void menu_debug_daad_view_objects(void)
 
 	int resultado=0;
 
-	int i;
 	for (i=0;i<total_objetos && !resultado;i++) {
 
 		char buffer_temp[256];

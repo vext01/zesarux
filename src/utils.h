@@ -746,6 +746,10 @@ extern int util_concat_string(char *original,char *string_to_add,int limite);
 
 extern int util_daad_is_in_parser(void);
 
+extern void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *texto);
+
+extern void util_daad_get_compressed_message(z80_byte index,char *texto);
+
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 

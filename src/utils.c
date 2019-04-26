@@ -13684,6 +13684,47 @@ z80_int util_dadd_get_start_objects_names(void)
         return dir;
 }
 
+z80_int util_dadd_get_start_locat_messages(void)
+{
+
+        z80_int puntero=0x8400+14;
+
+        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+
+        return dir;
+}
+
+
+
+z80_int util_dadd_get_start_user_messages(void)
+{
+
+        z80_int puntero=0x8400+16;
+
+        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+
+        return dir;
+}
+
+z80_int util_dadd_get_start_sys_messages(void)
+{
+
+        z80_int puntero=0x8400+18;
+
+        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+
+        return dir;
+}
+
+z80_int util_dadd_get_start_compressed_messages(void)
+{
+
+        z80_int puntero=0x8400+8;
+
+        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+
+        return dir;
+}
 
 z80_int util_dadd_get_num_objects_description(void)
 {
@@ -13695,9 +13736,47 @@ z80_int util_dadd_get_num_objects_description(void)
         return dir;
 }
 
-void util_daad_get_object_description(z80_byte index,char *texto)
+z80_int util_daad_get_num_locat_messages(void)
 {
-        z80_int offset_pointer=util_dadd_get_start_objects_names()+index*2;
+
+        z80_int puntero=0x8400+4;
+
+        z80_int dir=peek_byte_no_time(puntero);
+
+        return dir;
+}
+
+z80_int util_daad_get_num_user_messages(void)
+{
+
+        z80_int puntero=0x8400+5;
+
+        z80_int dir=peek_byte_no_time(puntero);
+
+        return dir;
+}
+
+z80_int util_daad_get_num_sys_messages(void)
+{
+
+        z80_int puntero=0x8400+6;
+
+        z80_int dir=peek_byte_no_time(puntero);
+
+        return dir;
+}
+
+int util_daad_is_in_parser(void)
+{
+        if (reg_pc==DAAD_PARSER_BREAKPOINT_PC) return 1;
+        else return 0;
+}
+
+//Retorna un mensaje de daad N, de la tabla indicada (tabla de punteros de 16 bits)
+//Mensajes con xor 255 y finaliza mensaje con F5 (o 10 despues de hacerle el xor)
+void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *texto)
+{
+        z80_int offset_pointer=table_dir+index*2;
 
         z80_int dir=value_8_to_16(peek_byte_no_time(offset_pointer+1),peek_byte_no_time(offset_pointer));
 
@@ -13709,8 +13788,23 @@ void util_daad_get_object_description(z80_byte index,char *texto)
         while (destino<255 && caracter!=10) {
                 caracter=peek_byte_no_time(dir++) ^255;
                 if (caracter!=10) {
-                        if (caracter<32 || caracter>127) caracter='?';
-                        texto[destino++]=caracter;
+                        if (caracter<32 || caracter>127) {
+                                if (caracter>127) {
+                                        //Meter token
+                                        char buffer_temp[256];
+                                        util_daad_get_compressed_message(caracter & 127,buffer_temp);
+                                        int i;
+                                        for (i=0;i<strlen(buffer_temp) && destino<255;i++) {
+                                                texto[destino++]=buffer_temp[i];
+                                        }
+                                }
+                                else {
+                                        caracter='?';
+                                        texto[destino++]=caracter;
+                                }
+                        }
+
+                        else texto[destino++]=caracter;
                 }
 
                 //printf ("destino %d caracter %d\n",destino,caracter);
@@ -13719,8 +13813,75 @@ void util_daad_get_object_description(z80_byte index,char *texto)
         texto[destino]=0;
 }
 
-int util_daad_is_in_parser(void)
+
+
+void util_daad_get_object_description(z80_byte index,char *texto)
 {
-        if (reg_pc==DAAD_PARSER_BREAKPOINT_PC) return 1;
-        else return 0;
+
+        z80_int table_dir=util_dadd_get_start_objects_names();
+        util_daad_get_message_table_lookup(index,table_dir,texto);
+
+}
+
+
+void util_daad_get_user_message(z80_byte index,char *texto)
+{
+
+        z80_int table_dir=util_dadd_get_start_user_messages();
+        util_daad_get_message_table_lookup(index,table_dir,texto);
+}
+
+
+void util_daad_get_sys_message(z80_byte index,char *texto)
+{
+
+        z80_int table_dir=util_dadd_get_start_sys_messages();
+        util_daad_get_message_table_lookup(index,table_dir,texto);
+}
+
+
+void util_daad_get_locat_message(z80_byte index,char *texto)
+{
+
+        z80_int table_dir=util_dadd_get_start_locat_messages();
+        util_daad_get_message_table_lookup(index,table_dir,texto);
+}
+
+
+
+//Retorna un mensaje token de daad, que finaliza con bit 7 alzado
+void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
+{
+
+        //Ir contando tokens hasta llegar al que interesa
+        int i;
+        z80_byte caracter;
+        for (i=0;i<index;) {
+                caracter=peek_byte_no_time(table_dir++);
+                if (caracter>127) i++;
+        }
+
+        int salir=0;
+        int destino=0;
+
+        do {
+                caracter=peek_byte_no_time(table_dir++);
+                if (caracter>127) {
+                        caracter -=128;
+                        salir=1;
+                }
+                texto[destino++]=caracter;
+
+                //printf ("destino %d caracter %d\n",destino,caracter);
+        } while (!salir && destino<255);
+
+        texto[destino]=0;
+}
+
+
+void util_daad_get_compressed_message(z80_byte index,char *texto)
+{
+
+        z80_int table_dir=util_dadd_get_start_compressed_messages();
+        util_daad_get_token_message(index,table_dir,texto);
 }
