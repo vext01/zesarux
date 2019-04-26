@@ -10182,6 +10182,12 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				int i;
 
+				//Si no esta en zona de parser
+				if (!util_daad_is_in_parser()) {
+					zxvision_print_string_defaults_fillspc(w,1,linea++,"Not in condacts");
+				}
+
+				else {
 
 				z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);		
 
@@ -10197,8 +10203,8 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 				z80_byte nombre=util_daad_get_flag_value(34);
 
 				//Por defecto
-				strcpy(buffer_verbo,"-");
-				strcpy(buffer_nombre,"-");
+				strcpy(buffer_verbo,"_");
+				strcpy(buffer_nombre,"_");
 
 				if (verbo!=255) util_daad_locate_word(verbo,0,buffer_verbo);
 				if (nombre!=255) util_daad_locate_word(nombre,2,buffer_nombre);
@@ -10279,6 +10285,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 						direccion_desensamblar +=longitud_op;
 
+				}
 				}
 
 				
@@ -11358,7 +11365,16 @@ void menu_debug_get_legend(int linea,char *s)
 			if (menu_debug_registers_current_view==8) {
 							//01234567890123456789012345678901
 							// chReg Brkp. Toggle Runto Watch		
-				sprintf(s,"~~E~~n:Step Condact [%c] Daadbr~~kpnt",(debug_allow_daad_breakpoint.v ? 'X' : ' '));
+
+				char step_condact_buffer[32];
+				if (!util_daad_is_in_parser()) {
+					strcpy(step_condact_buffer,"~~E~~n:runTo Condact");
+				}
+				else {
+					strcpy(step_condact_buffer,"~~E~~n:Step Condact");
+				}
+
+				sprintf(s,"%s [%c] Daadbr~~kpnt",step_condact_buffer,(debug_allow_daad_breakpoint.v ? 'X' : ' '));
 				return;
 			}
 

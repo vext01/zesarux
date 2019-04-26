@@ -13718,3 +13718,9 @@ void util_daad_get_object_description(z80_byte index,char *texto)
 
         texto[destino]=0;
 }
+
+int util_daad_is_in_parser(void)
+{
+        if (reg_pc==DAAD_PARSER_BREAKPOINT_PC) return 1;
+        else return 0;
+}
