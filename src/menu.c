@@ -11437,7 +11437,7 @@ void menu_debug_get_legend(int linea,char *s)
 		case 2:
 
 			if (menu_debug_registers_current_view==8) {
-				if (util_daad_condact_uses_message() ) sprintf(s,"cur~~Message");
+				if (util_daad_condact_uses_message() ) sprintf(s,"cond~~Message");
 				else sprintf(s,"");
 				return;
 			}
@@ -11744,6 +11744,7 @@ void menu_debug_daad_edit_flagobject(void)
 //2=System messages
 //3=Locations messages
 //4=Compressed messages
+//5=Vocabulary
 void menu_debug_daad_view_messages(int tipo)
 {
 
@@ -11779,7 +11780,11 @@ void menu_debug_daad_view_messages(int tipo)
 			funcion_mensajes=util_daad_get_compressed_message;
 			window_title="Daad Compressed Messages";
 			//entry_message="Compressed Message";
-		break;				
+		break;		
+
+		case 5:
+			window_title="Vocabulary";
+		break;		
 
 		default:
 			total_messages=util_dadd_get_num_objects_description();
@@ -11796,18 +11801,25 @@ void menu_debug_daad_view_messages(int tipo)
 
 	int resultado=0;
 
-	for (i=0;i<total_messages && !resultado;i++) {
+	if (tipo==5) {
+			util_daad_dump_vocabulary(1,texto,MAX_TEXTO_GENERIC_MESSAGE);
+	}
 
-		char buffer_temp[256];
-		funcion_mensajes(i,buffer_temp); 
-		//printf ("object %d: %s\n",i,buffer_temp);
+	else {
 
-		char buffer_linea[300];
-		sprintf(buffer_linea,"%03d: %s\n",i,buffer_temp);
+		for (i=0;i<total_messages && !resultado;i++) {
 
-		//Y concatenar a final
-		resultado=util_concat_string(texto,buffer_linea,MAX_TEXTO_GENERIC_MESSAGE);
+			char buffer_temp[256];
+			funcion_mensajes(i,buffer_temp); 
+			//printf ("object %d: %s\n",i,buffer_temp);
 
+			char buffer_linea[300];
+			sprintf(buffer_linea,"%03d: %s\n",i,buffer_temp);
+
+			//Y concatenar a final
+			resultado=util_concat_string(texto,buffer_linea,MAX_TEXTO_GENERIC_MESSAGE);
+
+		}
 	}
 
 	if (resultado) menu_warn_message("Reached maximum text size. Showing only allowed text");
@@ -11833,6 +11845,7 @@ void menu_debug_daad_view_messages_ask(void)
 		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"System");
 		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Locations");
 		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Compressed");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Vocabulary");
 
 
         menu_add_item_menu(array_menu_daad_tipo_mensaje,"",MENU_OPCION_SEPARADOR,NULL,NULL);

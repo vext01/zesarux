@@ -724,8 +724,8 @@ extern int util_get_available_drives(char *texto);
 extern int get_cpu_frequency(void);
 
 extern int util_daad_detect(void);
-extern z80_int util_dadd_get_start_vocabulary(void);
-extern int util_daad_dump_vocabulary(void);
+extern z80_int util_daad_get_start_vocabulary(void);
+extern int util_daad_dump_vocabulary(int tipo,char *texto,int max_string);
 
 
 extern z80_byte util_daad_get_flag_value(z80_byte index);

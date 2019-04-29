@@ -13411,7 +13411,7 @@ int util_unpawsetc_dump_words(char *mensaje)
 
         //Ver si es de daad
         if (util_daad_detect()) {
-                int palabras=util_daad_dump_vocabulary();
+                int palabras=util_daad_dump_vocabulary(0,NULL,0);
                 sprintf(mensaje,"OK. DAAD signature found. %d words added",palabras);
                 return 0;
         }
@@ -13520,22 +13520,23 @@ int util_daad_detect(void)
 }
 
 
-z80_int util_dadd_get_start_vocabulary(void)
+z80_int util_daad_get_start_vocabulary(void)
 {
         z80_int dir=value_8_to_16(peek_byte_no_time(0x8417),peek_byte_no_time(0x8416));
 
         return dir;
 }
 
-
-int util_daad_dump_vocabulary(void)
+//Volcar vocabulario para el extractor de palabras (teclado text adventure) o como un string con saltos de linea
+//tipo=0: para text adventure. 1:para string 
+int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
 {
 
         debug_printf (VERBOSE_DEBUG,"Dumping Daad vocabulary");
 
         util_clear_text_adventure_kdb();
 
-        z80_int puntero=util_dadd_get_start_vocabulary();
+        z80_int puntero=util_daad_get_start_vocabulary();
 
         //Leer entradas de 7 bytes
         /*
@@ -13547,6 +13548,8 @@ int util_daad_dump_vocabulary(void)
        int palabras=0;
 
        char buffer_palabra[6];
+
+       if (tipo) texto[0]=0;
 
        int salir=0;
 
@@ -13565,7 +13568,17 @@ int util_daad_dump_vocabulary(void)
                if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
                else  {
                        debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
-                       util_unpawsgac_add_word_kb(buffer_palabra);
+
+                       if (tipo==0) {
+                           util_unpawsgac_add_word_kb(buffer_palabra);
+                       }
+                       else {
+		        char buffer_linea[32];
+		        sprintf(buffer_linea,"%s\n",buffer_palabra);
+
+		        //Y concatenar a final
+		        salir=util_concat_string(texto,buffer_linea,max_string);
+                       }
                        palabras++;
                }
 
@@ -13575,6 +13588,9 @@ int util_daad_dump_vocabulary(void)
 
        return palabras;
 }
+
+
+
 
 z80_byte util_daad_get_flag_value(z80_byte index)
 {
@@ -13607,13 +13623,13 @@ void util_daad_put_object_value(z80_byte index,z80_byte value)
 
 void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino)
 {
-        z80_int puntero=util_dadd_get_start_vocabulary();
+        z80_int puntero=util_daad_get_start_vocabulary();
 
         //Leer entradas de 7 bytes
         /*
         5 para 5 letras de la palabra (puede incluir espacios de padding al final si es más corta), con xor 255
         1 byte para el número de palabra 
-        1 byte para el tipo de palabra 
+        1 byte para el tipo de palabra. Si 255, cualquiera. Si no, de 0 hasta: ("verb", "adverb", "noun", "adjective", "preposition","conjugation", "pronoun");
         */
 
        int palabras=0;
@@ -13647,7 +13663,7 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
                        //debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
                        //util_unpawsgac_add_word_kb(buffer_palabra);
                        //palabras++;
-                       if (numero_palabra==numero_palabra_buscar && tipo_palabra==tipo_palabra_buscar) {
+                       if (numero_palabra==numero_palabra_buscar && (tipo_palabra==tipo_palabra_buscar || tipo_palabra==255)) {
                                strcpy(texto_destino,buffer_palabra);
                                return;
                        }
