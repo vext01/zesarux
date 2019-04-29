@@ -11437,7 +11437,8 @@ void menu_debug_get_legend(int linea,char *s)
 		case 2:
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"cur~~Message");
+				if (util_daad_condact_uses_message() ) sprintf(s,"cur~~Message");
+				else sprintf(s,"");
 				return;
 			}
 
@@ -11749,42 +11750,42 @@ void menu_debug_daad_view_messages(int tipo)
 	int total_messages;
 	char *window_title;
 	void (*funcion_mensajes) (z80_byte index,char *texto);
-	char *entry_message;
+	//char *entry_message;
 
 	switch (tipo) {
 		case 1:
 			total_messages=util_daad_get_num_user_messages();
 			funcion_mensajes=util_daad_get_user_message;
 			window_title="Daad User Messages";
-			entry_message="Message";
+			//entry_message="Message";
 		break;
 
 		case 2:
 			total_messages=util_daad_get_num_sys_messages();
 			funcion_mensajes=util_daad_get_sys_message;
-			window_title="Daad Sys Messages";
-			entry_message="Sys Message";
+			window_title="Daad System Messages";
+			//entry_message="Sys Message";
 		break;		
 
 		case 3:
 			total_messages=util_daad_get_num_locat_messages();
 			funcion_mensajes=util_daad_get_locat_message;
 			window_title="Daad Locations Messages";
-			entry_message="Location Message";
+			//entry_message="Location Message";
 		break;		
 
 		case 4:
 			total_messages=128;
 			funcion_mensajes=util_daad_get_compressed_message;
 			window_title="Daad Compressed Messages";
-			entry_message="Compressed Message";
+			//entry_message="Compressed Message";
 		break;				
 
 		default:
 			total_messages=util_dadd_get_num_objects_description();
 			funcion_mensajes=util_daad_get_object_description;
 			window_title="Daad Objects";
-			entry_message="Object";
+			//entry_message="Object";
 		break;
 	}
 
@@ -11802,7 +11803,7 @@ void menu_debug_daad_view_messages(int tipo)
 		//printf ("object %d: %s\n",i,buffer_temp);
 
 		char buffer_linea[300];
-		sprintf(buffer_linea,"%s %03d: %s\n",entry_message,i,buffer_temp);
+		sprintf(buffer_linea,"%03d: %s\n",i,buffer_temp);
 
 		//Y concatenar a final
 		resultado=util_concat_string(texto,buffer_linea,MAX_TEXTO_GENERIC_MESSAGE);
@@ -11881,6 +11882,7 @@ void menu_debug_daad_get_condact_message(void)
 	if (opcode_daad>127) {
 		redireccion=1;
 		opcode_daad -=128;
+		param_message=util_daad_get_flag_value(param_message);
 	}
 
 	char buffer[256];
@@ -12452,7 +12454,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 				//Mensaje al que apunta instruccion de condact
-				if (tecla=='m' && menu_debug_registers_current_view==8) {
+				if (tecla=='m' && menu_debug_registers_current_view==8 && util_daad_condact_uses_message() ) {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;

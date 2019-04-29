@@ -13887,3 +13887,34 @@ void util_daad_get_compressed_message(z80_byte index,char *texto)
         table_dir++;
         util_daad_get_token_message(index,table_dir,texto);
 }
+
+
+int util_daad_condact_uses_message(void)
+{
+        //Retorna 1 si BC apunta a un condacto que usa mensaje como parametro:
+	//MES y MESSAGE a la tabla MTX (mensajes de usuario). SYSMES a STX (mensajes del sistema) y DESC a LTX (localidades)
+	/*
+  {1,"MES    "}, //  77 $4D
+
+  {1,"MESSAGE"}, //  38 $26
+
+
+  {1,"SYSMESS"}, //  54 $36
+
+
+  {1,"DESC   "}, //  19 $13
+
+
+	*/
+
+	z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
+
+	z80_byte opcode_daad=peek_byte_no_time(direccion_desensamblar) & 127;
+	
+
+	if (opcode_daad==77 || opcode_daad==38 || opcode_daad==54 || opcode_daad==19) {
+                return 1;
+	} 
+
+	else return 0;
+}
