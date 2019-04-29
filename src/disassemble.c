@@ -429,6 +429,11 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 		z80_byte arg1=disassemble_peek_byte(address+1);
     z80_byte arg2=disassemble_peek_byte(address+2);
 
+    //Palabra del vocabulario
+    char buffer_vocabulary[10];
+    //por defecto
+    buffer_vocabulary[0]=0;
+
     /*
     Por otro lado, el valor del opcode le tienes que hacer AND 0x7F, porque solo los 7 bits bajos son el opcode, el bit alto indica si el 
 primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te supone poner el parametro 1 entre corechetes o no.
@@ -444,18 +449,45 @@ primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te su
     int num_parametros=daad_contacts_array[op].parametros;
     char *nombre_condact=daad_contacts_array[op].nombre;
 
+  z80_byte arg_vocabulary=arg1;
+  if (indireccion) arg_vocabulary=util_daad_get_flag_value(arg_vocabulary);
+
+//Si parametros son vocabularios
+	//{1,"NOUN2  "}, //  69 $45
+	if (op==69) {
+		util_daad_locate_word(arg_vocabulary,2,buffer_vocabulary);
+	} 		
+
+  //{1,"ADJECT1"}, //  16 $10
+  //{1,"ADJECT2"}, //  70 $46
+  	if (op==16 || op==70) {
+		util_daad_locate_word(arg_vocabulary,3,buffer_vocabulary);
+	} 	
+
+
+  	//{1,"ADVERB "}, //  17 $11
+    if (op==17) {
+		util_daad_locate_word(arg_vocabulary,1,buffer_vocabulary);
+	} 
+
+    //{1,"PREP   "}, //  68 $44	
+	if (op==68) {
+		util_daad_locate_word(arg_vocabulary,4,buffer_vocabulary);
+	} 	
+
+
     if (num_parametros==0) {
       sprintf (buffer,"%s",nombre_condact);
     }
 
     else if (num_parametros==1) {
-      if (indireccion) sprintf (buffer,"%s [%d]",nombre_condact,arg1);
-      else sprintf (buffer,"%s %d",nombre_condact,arg1);
+      if (indireccion) sprintf (buffer,"%s [%3d]     %s",nombre_condact,arg1,buffer_vocabulary);
+      else sprintf (buffer,"%s %3d     %s",nombre_condact,arg1,buffer_vocabulary);
     }    
 
     else {
-      if (indireccion) sprintf (buffer,"%s [%d] %d",nombre_condact,arg1,arg2);
-      else sprintf (buffer,"%s %d %d",nombre_condact,arg1,arg2);
+      if (indireccion) sprintf (buffer,"%s [%3d] %3d %s",nombre_condact,arg1,arg2,buffer_vocabulary);
+      else sprintf (buffer,"%s %3d %3d %s",nombre_condact,arg1,arg2,buffer_vocabulary);
     }   
 
     *length=1+num_parametros; 
