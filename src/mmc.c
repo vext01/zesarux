@@ -407,7 +407,7 @@ void mmc_insert(void)
 
 	//Gestionar si archivo es tipo hdf
 	if (!util_compare_file_extension(mmc_file_name,"hdf")) {
-		
+		debug_printf (VERBOSE_INFO,"File has hdf header");
 		if (mmc_read_hdf_header()) {
 			mmc_disable();
                 	return;	
