@@ -13545,7 +13545,9 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
         1 byte para el tipo de palabra 
         */
 
-       char *word_types[]={"verb", "adverb", "noun", "adjective", "preposition","conjugation", "pronoun"};
+       //Rellenamos con espacio para que se vea centrado
+       char *word_types[]={"verb       ", "adverb     ", "noun       ", "adjective  ", "preposition","conjugation", "pronoun    "};
+       //char *word_types[]={"verb", "adverb", "noun", "adjective", "preposition","conjugation", "pronoun"};
 
 
 
@@ -13584,7 +13586,7 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                        }
                        else {
 		        char buffer_linea[32];
-		        sprintf(buffer_linea,"%d (%s) %s\n",num_palabra,(tipo_palabra>=6 ? word_types[tipo_palabra] : "unknown"),
+		        sprintf(buffer_linea,"%03d %s %s\n",num_palabra,(tipo_palabra<=6 ? word_types[tipo_palabra] : "unknown"),
                         buffer_palabra);
 
 		        //Y concatenar a final
@@ -13932,6 +13934,15 @@ int util_daad_condact_uses_message(void)
   {1,"DESC   "}, //  19 $13
 
 
+  {1,"NOUN2  "}, //  69 $45
+
+
+  {1,"ADJECT1"}, //  16 $10
+    {1,"ADJECT2"}, //  70 $46
+  {1,"ADVERB "}, //  17 $11
+    {1,"PREP   "}, //  68 $44
+
+
 	*/
 
 	z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
@@ -13939,7 +13950,7 @@ int util_daad_condact_uses_message(void)
 	z80_byte opcode_daad=peek_byte_no_time(direccion_desensamblar) & 127;
 	
 
-	if (opcode_daad==77 || opcode_daad==38 || opcode_daad==54 || opcode_daad==19) {
+	if (opcode_daad==77 || opcode_daad==38 || opcode_daad==54 || opcode_daad==19 || opcode_daad==69|| opcode_daad==16 || opcode_daad==70 || opcode_daad==17 || opcode_daad==68) {
                 return 1;
 	} 
 

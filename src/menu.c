@@ -11883,6 +11883,13 @@ void menu_debug_daad_get_condact_message(void)
 
   {1,"DESC   "}, //  19 $13
 
+    {1,"NOUN2  "}, //  69 $45
+
+
+  {1,"ADJECT1"}, //  16 $10
+    {1,"ADJECT2"}, //  70 $46
+  {1,"ADVERB "}, //  17 $11
+    {1,"PREP   "}, //  68 $44
 
 	*/
 
@@ -11912,6 +11919,30 @@ void menu_debug_daad_get_condact_message(void)
 	if (opcode_daad==19) {
 		util_daad_get_locat_message(param_message,buffer);
 	} 		
+
+	//{1,"NOUN2  "}, //  69 $45
+	if (opcode_daad==69) {
+		util_daad_locate_word(param_message,2,buffer);
+	} 		
+
+  //{1,"ADJECT1"}, //  16 $10
+  //{1,"ADJECT2"}, //  70 $46
+  	if (opcode_daad==16 || opcode_daad==70) {
+		util_daad_locate_word(param_message,3,buffer);
+	} 	
+
+
+
+  	//{1,"ADVERB "}, //  17 $11
+    if (opcode_daad==17) {
+		util_daad_locate_word(param_message,1,buffer);
+	} 
+
+    //{1,"PREP   "}, //  68 $44	
+	if (opcode_daad==68) {
+		util_daad_locate_word(param_message,4,buffer);
+	} 	
+
 
 	menu_generic_message("Message",buffer);
 
