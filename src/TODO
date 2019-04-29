@@ -38,7 +38,7 @@ Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano e
         //In HDF version 1.1 this is 0x216.
   Quiza para escritura hdf, simplemente tenerlo leido al cargar, en otra zona aparte, y al hacer flush grabarlo de ahi
 ->problema. mayoria de imagenes hdf parece que no tienen tamaños estandard. Como detectar geometria adecuada en casos ide por ejemplo?
-
+->quiza en mmc es menos puñetero
 
 --------Para próxima versión:
 
