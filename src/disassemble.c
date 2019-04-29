@@ -489,7 +489,7 @@ primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te su
 
     else if (num_parametros==1) {
       if (vocabulario_encontrado) sprintf (buffer,"%s %s (%s)",nombre_condact,buffer_vocabulary,buffer_parametro1);
-      else sprintf (buffer,"%s %s %s",nombre_condact,buffer_parametro1,buffer_vocabulary);
+      else sprintf (buffer,"%s %s",nombre_condact,buffer_parametro1);
     }    
 
     else {
