@@ -13545,6 +13545,10 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
         1 byte para el tipo de palabra 
         */
 
+       char *word_types[]={"verb", "adverb", "noun", "adjective", "preposition","conjugation", "pronoun"};
+
+
+
        int palabras=0;
 
        char buffer_palabra[6];
@@ -13557,6 +13561,8 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                //Copiar palabra a buffer
                int i;
                z80_byte caracter;
+               z80_byte tipo_palabra;
+               z80_byte num_palabra;
                for (i=0;i<5;i++) {
                        caracter=peek_byte_no_time(puntero+i) ^255;
                        //Si hay espacio, fin
@@ -13564,6 +13570,10 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                        buffer_palabra[i]=caracter;
                }
                buffer_palabra[i]=0;
+
+                num_palabra=peek_byte_no_time(puntero+5);
+
+               tipo_palabra=peek_byte_no_time(puntero+6);
 
                if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
                else  {
@@ -13574,7 +13584,8 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                        }
                        else {
 		        char buffer_linea[32];
-		        sprintf(buffer_linea,"%s\n",buffer_palabra);
+		        sprintf(buffer_linea,"%d (%s) %s\n",num_palabra,(tipo_palabra>=6 ? word_types[tipo_palabra] : "unknown"),
+                        buffer_palabra);
 
 		        //Y concatenar a final
 		        salir=util_concat_string(texto,buffer_linea,max_string);
