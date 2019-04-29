@@ -33360,6 +33360,32 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                 }
         }
 
+
+        else if (!util_compare_file_extension(archivo,"hdf")) {
+                char *opciones[]={
+                        "HDF to IDE",
+			"HDF to MMC",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.ide",directorio,archivo);
+                                convert_hdf_to_raw(fullpath,archivo_destino);
+                        break;
+
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.mmc",directorio,archivo);
+                                convert_hdf_to_raw(fullpath,archivo_destino);
+                        break;
+
+                }
+        }		
+
 	else {
 		menu_error_message("No conversion valid for this file type");
 		return;

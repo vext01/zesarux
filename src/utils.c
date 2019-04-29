@@ -7713,6 +7713,70 @@ int convert_any_to_wav(char *origen, char *destino)
 }
 
 
+int convert_hdf_to_raw(char *origen, char *destino)
+{
+
+	int leidos;
+
+	unsigned char buffer_lectura[1024];
+
+        FILE *ptr_inputfile;
+        ptr_inputfile=fopen(origen,"rb");
+
+        if (ptr_inputfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error opening %s",origen);
+                return 1;
+        }
+
+	FILE *ptr_outputfile;
+	ptr_outputfile=fopen(destino,"wb");
+
+        if (ptr_outputfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error opening %s",destino);
+                return 1;
+        }
+
+
+	// Leer offset a datos raw del byte de cabecera:
+	//0x09 DOFS WORD Image data offset This is the absolute offset in the HDF file where the actual hard-disk data dump starts.
+	//In HDF version 1.1 this is 0x216.
+
+	//Leemos 10 bytes de la cabecera
+        fread(buffer_lectura,1,10,ptr_inputfile);
+
+	int offset_raw=buffer_lectura[9]+256*buffer_lectura[10];
+
+	debug_printf (VERBOSE_DEBUG,"Offset to raw data: %d",offset_raw);
+
+
+	//Ya hemos leido 10 bytes del principio
+	int saltar_bytes=offset_raw-10;
+
+	//Saltar esos bytes
+	fread(buffer_lectura,1,saltar_bytes,ptr_inputfile);
+
+	//Y vamos leyendo bloques de 1024
+	int escritos=0;
+
+	do {
+	        leidos=fread(buffer_lectura,1,1024,ptr_inputfile);
+		if (leidos>0) {
+			fwrite(buffer_lectura,1,leidos,ptr_outputfile);
+			escritos +=leidos;
+			debug_printf (VERBOSE_DEBUG,"Writing data %dKB ",escritos/1024);
+			//put_progress_bar();
+			//printf ("\r");
+		}
+	} while (leidos>0);
+
+	fclose (ptr_inputfile);
+
+        fclose(ptr_outputfile);
+
+
+        return 0;
+}
+
 /*
 int convert_tap_to_wav(char *origen, char *destino)
 {

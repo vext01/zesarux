@@ -7,6 +7,7 @@ Version 7.3. 15 April 2019 - xxx edition
 -Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
 -Added DAAD debugger
 -Added DAAD vocabulary extractor
+-Added hdf to ide/mmc raw converter
 
 
 Version 7.2. 10 April 2019 - Neula edition

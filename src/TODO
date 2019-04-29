@@ -37,6 +37,8 @@ Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano e
         //0x09 DOFS WORD Image data offset This is the absolute offset in the HDF file where the actual hard-disk data dump starts.
         //In HDF version 1.1 this is 0x216.
   Quiza para escritura hdf, simplemente tenerlo leido al cargar, en otra zona aparte, y al hacer flush grabarlo de ahi
+->problema. mayoria de imagenes hdf parece que no tienen tamaños estandard. Como detectar geometria adecuada en casos ide por ejemplo?
+
 
 --------Para próxima versión:
 
