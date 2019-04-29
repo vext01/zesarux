@@ -475,19 +475,25 @@ primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te su
 		util_daad_locate_word(arg_vocabulary,4,buffer_vocabulary);
 	} 	
 
+  int vocabulario_encontrado=0;
+
+  if (buffer_vocabulary[0]!=0 && buffer_vocabulary[0]!='?') vocabulario_encontrado=1;
+
+      char buffer_parametro1[32];
+      if (indireccion) sprintf (buffer_parametro1,"@%d",arg1);
+      else sprintf (buffer_parametro1,"%d",arg1);     
 
     if (num_parametros==0) {
       sprintf (buffer,"%s",nombre_condact);
     }
 
     else if (num_parametros==1) {
-      if (indireccion) sprintf (buffer,"%s [%3d]     %s",nombre_condact,arg1,buffer_vocabulary);
-      else sprintf (buffer,"%s %3d     %s",nombre_condact,arg1,buffer_vocabulary);
+      if (vocabulario_encontrado) sprintf (buffer,"%s %s (%s)",nombre_condact,buffer_vocabulary,buffer_parametro1);
+      else sprintf (buffer,"%s %s %s",nombre_condact,buffer_parametro1,buffer_vocabulary);
     }    
 
     else {
-      if (indireccion) sprintf (buffer,"%s [%3d] %3d %s",nombre_condact,arg1,arg2,buffer_vocabulary);
-      else sprintf (buffer,"%s %3d %3d %s",nombre_condact,arg1,arg2,buffer_vocabulary);
+      sprintf (buffer,"%s %s %3d",nombre_condact,buffer_parametro1,arg2);
     }   
 
     *length=1+num_parametros; 
