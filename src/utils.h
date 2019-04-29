@@ -750,6 +750,13 @@ extern void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,
 
 extern void util_daad_get_compressed_message(z80_byte index,char *texto);
 
+extern z80_int util_daad_get_num_user_messages(void);
+extern z80_int util_daad_get_num_sys_messages(void);
+extern z80_int util_daad_get_num_locat_messages(void);
+
+extern void util_daad_get_user_message(z80_byte index,char *texto);
+extern void util_daad_get_sys_message(z80_byte index,char *texto);
+extern void util_daad_get_locat_message(z80_byte index,char *texto);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 

@@ -735,6 +735,8 @@ int debug_tsconf_opcion_seleccionada;
 
 int accessibility_settings_opcion_seleccionada=0;
 
+int daad_tipo_mensaje_opcion_seleccionada=0;
+
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -10716,7 +10718,7 @@ void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
         }
 
         else if (menu_debug_registers_current_view==8) {
-                alto_ventana=15;
+                alto_ventana=16;
         }		
 
         else {
@@ -11415,7 +11417,7 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"runto~~Parse ~~Watch Wr~~ite Ob~~jects");
+				sprintf(s,"runto~~Parse ~~Watch Wr~~ite M~~essages");
 				return;
 			}
 
@@ -11435,7 +11437,7 @@ void menu_debug_get_legend(int linea,char *s)
 		case 2:
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"");
+				sprintf(s,"cur~~Message");
 				return;
 			}
 
@@ -11735,71 +11737,72 @@ void menu_debug_daad_edit_flagobject(void)
 
 }
 
-
-void menu_debug_daad_view_objects(void)
+//Rutina para ver diferentes mensajes de Daad, segun tipo
+//0=Objects
+//1=User messages
+//2=System messages
+//3=Locations messages
+//4=Compressed messages
+void menu_debug_daad_view_messages(int tipo)
 {
 
+	int total_messages;
+	char *window_title;
+	void (*funcion_mensajes) (z80_byte index,char *texto);
+	char *entry_message;
+
+	switch (tipo) {
+		case 1:
+			total_messages=util_daad_get_num_user_messages();
+			funcion_mensajes=util_daad_get_user_message;
+			window_title="Daad User Messages";
+			entry_message="Message";
+		break;
+
+		case 2:
+			total_messages=util_daad_get_num_sys_messages();
+			funcion_mensajes=util_daad_get_sys_message;
+			window_title="Daad Sys Messages";
+			entry_message="Sys Message";
+		break;		
+
+		case 3:
+			total_messages=util_daad_get_num_locat_messages();
+			funcion_mensajes=util_daad_get_locat_message;
+			window_title="Daad Locations Messages";
+			entry_message="Location Message";
+		break;		
+
+		case 4:
+			total_messages=128;
+			funcion_mensajes=util_daad_get_compressed_message;
+			window_title="Daad Compressed Messages";
+			entry_message="Compressed Message";
+		break;				
+
+		default:
+			total_messages=util_dadd_get_num_objects_description();
+			funcion_mensajes=util_daad_get_object_description;
+			window_title="Daad Objects";
+			entry_message="Object";
+		break;
+	}
+
 	int i;
-
-//temp
-	int total_user_messages=util_daad_get_num_user_messages();
-
-	for (i=0;i<total_user_messages;i++) {
-
-		char buffer_temp[256];
-		util_daad_get_user_message(i,buffer_temp); 
-		printf ("message %d: %s\n",i,buffer_temp);
-	}
-
-
-	int total_sys_messages=util_daad_get_num_sys_messages();
-
-	for (i=0;i<total_sys_messages;i++) {
-
-		char buffer_temp[256];
-		util_daad_get_sys_message(i,buffer_temp); 
-		printf ("sys message %d: %s\n",i,buffer_temp);
-	}
-
-
-	int total_locat_messages=util_daad_get_num_locat_messages();
-
-	for (i=0;i<total_locat_messages;i++) {
-
-		char buffer_temp[256];
-		util_daad_get_locat_message(i,buffer_temp); 
-		printf ("locat message %d: %s\n",i,buffer_temp);
-	}	
-	
-
-
-	for (i=0;i<120;i++) {
-
-		char buffer_temp[256];
-		util_daad_get_compressed_message(i,buffer_temp); 
-		printf ("compressed %d: %s\n",i,buffer_temp);
-	}		
-
-
-	//z80_int dir_objs=util_dadd_get_start_objects_names();
-	//printf ("dir objs: %04XH\n",dir_objs);
-	//printf ("total obj description: %d\n",util_dadd_get_num_objects_description() );
-
-	int total_objetos=util_dadd_get_num_objects_description();
 
 	char texto[MAX_TEXTO_GENERIC_MESSAGE];
 	texto[0]=0;
 
 	int resultado=0;
 
-	for (i=0;i<total_objetos && !resultado;i++) {
+	for (i=0;i<total_messages && !resultado;i++) {
 
 		char buffer_temp[256];
-		util_daad_get_object_description(i,buffer_temp); 
+		funcion_mensajes(i,buffer_temp); 
 		//printf ("object %d: %s\n",i,buffer_temp);
 
 		char buffer_linea[300];
-		sprintf(buffer_linea,"Object %03d: %s\n",i,buffer_temp);
+		sprintf(buffer_linea,"%s %03d: %s\n",entry_message,i,buffer_temp);
 
 		//Y concatenar a final
 		resultado=util_concat_string(texto,buffer_linea,MAX_TEXTO_GENERIC_MESSAGE);
@@ -11808,8 +11811,46 @@ void menu_debug_daad_view_objects(void)
 
 	if (resultado) menu_warn_message("Reached maximum text size. Showing only allowed text");
 
-	menu_generic_message("Daad Objects",texto);
+	menu_generic_message(window_title,texto);
 }
+
+
+
+
+void menu_debug_daad_view_messages_ask(void)
+{
+
+	menu_item *array_menu_daad_tipo_mensaje;
+	menu_item item_seleccionado;
+	int retorno_menu;
+	do {
+
+		
+
+	    menu_add_item_menu_inicial_format(&array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Objects");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"User");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"System");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Locations");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Compressed");
+
+
+        menu_add_item_menu(array_menu_daad_tipo_mensaje,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		menu_add_ESC_item(array_menu_daad_tipo_mensaje);
+
+        retorno_menu=menu_dibuja_menu(&daad_tipo_mensaje_opcion_seleccionada,&item_seleccionado,array_menu_daad_tipo_mensaje,"Message type" );
+                
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+			menu_debug_daad_view_messages(daad_tipo_mensaje_opcion_seleccionada);
+
+		}
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+}
+
+
 
 z80_bit debug_daad_breakpoint_runtoparse_fired={0};
 
@@ -12046,11 +12087,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
-				if (tecla=='j') {
-					menu_debug_daad_view_objects();
-                    //Decimos que no hay tecla pulsada
-                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-				}				
 
 				if (tecla=='a') {
 					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
@@ -12314,13 +12350,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     si_ejecuta_una_instruccion=0;
 				}
 
-				if (tecla=='j') {
-					menu_debug_daad_view_objects();
-                    //Decimos que no hay tecla pulsada
-                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                    si_ejecuta_una_instruccion=0;
-				}				
 
 				if (tecla=='a') {
 					menu_debug_disassemble_last_ptr=menu_debug_memory_pointer;
@@ -12441,6 +12470,26 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					menu_multitarea=antes_menu_multitarea;
 
                 }
+
+				//Lista de todos mensajes
+				if (tecla=='e' && menu_debug_registers_current_view==8) {
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_multitarea=menu_multitarea;
+					menu_multitarea=0;
+
+                    menu_debug_daad_view_messages_ask();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_multitarea=antes_menu_multitarea;
+
+                }				
 
 		        if (tecla=='l' && menu_debug_registers_current_view==1) {
                     menu_debug_toggle_breakpoint();
