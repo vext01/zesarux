@@ -188,15 +188,18 @@ void mmc_flush_flash_to_disk(void)
         size=mmc_size;
 
 
-	//Si tiene cabecera hdf, grabarla
-	if (mmc_file_inserted_hdf.v) {
-		debug_printf (VERBOSE_DEBUG,"Writing hdf header");
-		fwrite(mmc_file_header_hdf_pointer,1,mmc_file_header_hdf_size,ptr_mmcfile);
 
-	}
 
 
         if (ptr_mmcfile!=NULL) {
+
+		//Si tiene cabecera hdf, grabarla
+		if (mmc_file_inserted_hdf.v) {
+			debug_printf (VERBOSE_DEBUG,"Writing hdf header");
+			fwrite(mmc_file_header_hdf_pointer,1,mmc_file_header_hdf_size,ptr_mmcfile);
+			debug_printf (VERBOSE_DEBUG,"Writing hdf data");
+		}
+
                 z80_byte *puntero;
                 puntero=mmc_memory_pointer;
 
@@ -369,7 +372,7 @@ int mmc_read_hdf_header(void)
           leidos=fread(mmc_file_header_hdf_pointer,1,mmc_file_header_hdf_size,ptr_inputfile);
           fclose(ptr_inputfile);
 
-  if (leidos!=mmc_size) {
+  if (leidos!=mmc_file_header_hdf_size) {
   debug_printf (VERBOSE_ERR,"Error reading mmc header. Asked: %ld Read: %d",mmc_file_header_hdf_size,leidos);
   return 1;
   }

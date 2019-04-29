@@ -17801,11 +17801,12 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
 
 	mmc_disable();
 
-        char *filtros[3];
+        char *filtros[4];
 
         filtros[0]="mmc";
 		filtros[1]="mmcide";
-        filtros[2]=0;
+		filtros[2]="hdf";
+        filtros[3]=0;
 
 
         if (menu_filesel("Select MMC File",filtros,mmc_file_name)==1) {
