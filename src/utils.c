@@ -13922,6 +13922,9 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
         while (destino<255 && caracter!=10) {
                 caracter=peek_byte_no_time(dir++) ^255;
                 if (caracter!=10) {
+
+                        caracter=chardetect_convert_daad_accents(caracter);
+
                         if (caracter<32 || caracter>127) {
                                 if (caracter>127) {
                                         //Meter token
@@ -14007,6 +14010,7 @@ void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
 
                 if (caracter>127) {
                         caracter -=128;
+                        caracter=chardetect_convert_daad_accents(caracter);
                         salir=1;
                 }
                 texto[destino++]=caracter;
