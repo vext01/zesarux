@@ -781,6 +781,7 @@ extern void menu_copy_clipboard(char *texto);
 extern void last_filesused_clear(void);
 extern void last_filesused_insert(char *s);
 extern char last_files_used_array[MAX_LAST_FILESUSED][PATH_MAX];
+extern void lastfilesuser_scrolldown(int posicion_up,int posicion_down);
 
 extern void menu_debug_daad_init_flagobject(void);
 

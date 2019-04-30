@@ -34451,6 +34451,26 @@ char *menu_filesel_recent_files(void)
 		//Seleccion de un archivo
 		else if (hay_alguno) {
         	int indice=menu_recent_files_opcion_seleccionada;
+
+//lastfilesuser_scrolldown
+//Quitar el que hay ahi, desplazando hacia abajo y ponerlo arriba del todo
+//Copiarlo temporamente a otro sitio
+		char buffer_recent[PATH_MAX];
+		strcpy(buffer_recent,last_files_used_array[indice]);
+
+		//Movemos el trozo desde ahi hasta arriba
+		lastfilesuser_scrolldown(0,indice);
+
+		//Y lo metemos arriba del todo
+		strcpy(last_files_used_array[0],buffer_recent);
+
+		//Por tanto el indice final sera 0
+		indice=0;
+
+		//Y cursor ponerloa arriba entonces tambien
+		menu_recent_files_opcion_seleccionada=0;
+
+			debug_printf (VERBOSE_INFO,"Returning recent file %s",last_files_used_array[indice]);
 			return last_files_used_array[indice];
 		}
 	}
@@ -35557,6 +35577,15 @@ void last_filesused_clear(void)
 	}
 }
 
+//Desplazar hacia abajo desde posicion superior indicada. La posicion indicada sera un duplicado de la siguiente posicion por tanto
+void lastfilesuser_scrolldown(int posicion_up,int posicion_down)
+{
+	int i;
+	for (i=posicion_down;i>=posicion_up+1;i--) {
+		strcpy(last_files_used_array[i],last_files_used_array[i-1]);
+	}	
+}
+
 //Insertar entrada en last smartload
 void last_filesused_insert(char *s)
 {
@@ -35564,13 +35593,17 @@ void last_filesused_insert(char *s)
 	//Desde abajo a arriba
 
 	int i;
-	for (i=MAX_LAST_FILESUSED-1;i>=1;i--) {
+	/*for (i=MAX_LAST_FILESUSED-1;i>=1;i--) {
 		strcpy(last_files_used_array[i],last_files_used_array[i-1]);
-	}
+	}*/
+
+	lastfilesuser_scrolldown(0,MAX_LAST_FILESUSED-1);
 
 
 	//Meter en posicion 0
 	strcpy(last_files_used_array[0],s);
+
+	debug_printf (VERBOSE_INFO,"Inserting recent file %s at position 0",s);
 
 	//printf ("Dump smartload:\n");
 
