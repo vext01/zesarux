@@ -13500,7 +13500,7 @@ int util_unpawsetc_dump_words(char *mensaje)
 
 		else {
 			//Ni paws ni gac
-			sprintf(mensaje,"It does not seem to be a Quill/PAW/GAC game");
+			sprintf(mensaje,"It does not seem to be a Quill/PAW/Daad/GAC game");
 		}
 	}
 
@@ -13674,21 +13674,30 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
        return palabras;
 }
 
+//Dice si aventura es spanish. Si no, english
+int util_daad_is_spanish(void)
+{
+        return (peek_byte_no_time(0x8401) & 1);
+}
 
-
+z80_int util_daad_get_start_flags(void)
+{
+        if (util_daad_is_spanish()) return 0x7f1c;
+        else return 0x7e55;
+}
 
 z80_byte util_daad_get_flag_value(z80_byte index)
 {
         //7f1c
 
-        return peek_byte_no_time(0x7f1c+index);
+        return peek_byte_no_time(util_daad_get_start_flags()+index);
 }
 
 z80_byte util_daad_get_object_value(z80_byte index)
 {
         //7f1c+256
 
-        return peek_byte_no_time(0x7f1c+256+index);
+        return peek_byte_no_time(util_daad_get_start_flags()+256+index);
 }
 
 

@@ -10221,7 +10221,8 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 /*
 Para sacar el verbo + nombre de la entrada:
 
-En el flag 33 está el código del verbo, el 34 el código del nombre. Si cualquiera de los dos vale 255 no buscas palabra y en su lugar pones un guion bajo (no-palabra)
+En el flag 33 está el código del verbo, el 34 el código del nombre. 
+Si cualquiera de los dos vale 255 no buscas palabra y en su lugar pones un guion bajo (no-palabra)
 
 Si es otro valor, en 0x8416  está la dirección donde está el vocabulario, si tomas esa direccion irás a una tabla en memoria con bloques de 7 bytes:
 
