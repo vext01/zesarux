@@ -6,6 +6,8 @@ Para próxima versión ZEsarUX:
 
 -extender ventana emulador
 
+-on screen adventura kb: parece que mas alla de 255 palabras no muestra el cursor
+
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
 
 

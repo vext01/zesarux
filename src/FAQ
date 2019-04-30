@@ -309,7 +309,7 @@ When you are using divmmc on other Spectrum models, the emulator loads esxdos 0.
 
 
 Q: Why using ZX-Uno some emulator settings on the menu are changed?
-A: Some settings on ZX-Uno are shared from the same ones on the menu. These are: DivMMC emulation, Keyboard Issue, Contended Memory and Timing (Timing can not be changed from the menu)
+A: Some settings on ZX-Uno are shared from the same ones on the menu. For example: DivMMC emulation, Keyboard Issue, Contended Memory, Timing (Timing can not be changed from the menu), ULAPlus, etc...
 So these settings on the emulator can be changed using the ZX-Uno bios, or even the ZX-Uno boot process changes them (specially divmmc emulation)
 
 

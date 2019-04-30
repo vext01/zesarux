@@ -13629,20 +13629,27 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                z80_byte caracter;
                z80_byte tipo_palabra;
                z80_byte num_palabra;
+
+                if (peek_byte_no_time(puntero)==0) salir=1;
+
+                else {
+
                for (i=0;i<5;i++) {
                        caracter=peek_byte_no_time(puntero+i) ^255;
                        //Si hay espacio, fin
                        if (caracter==32) break;
+
+                       if (caracter<32 || caracter>127) caracter='?';
                        buffer_palabra[i]=caracter;
                }
                buffer_palabra[i]=0;
 
-                num_palabra=peek_byte_no_time(puntero+5);
+               num_palabra=peek_byte_no_time(puntero+5);
 
                tipo_palabra=peek_byte_no_time(puntero+6);
 
-               if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
-               else  {
+               //if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
+               //else  {
                        debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
 
                        if (tipo==0) {
@@ -13657,9 +13664,10 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
 		        salir=util_concat_string(texto,buffer_linea,max_string);
                        }
                        palabras++;
-               }
+               //}
 
                puntero+=7;
+                }
 
        } while (!salir);
 
@@ -13722,19 +13730,25 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
                //Copiar palabra a buffer
                int i;
                z80_byte caracter;
+
+                if (peek_byte_no_time(puntero)==0) salir=1;
+                else {
+
                for (i=0;i<5;i++) {
                        caracter=peek_byte_no_time(puntero+i) ^255;
                        //Si hay espacio, fin
                        //if (caracter==32) break;
+
+                       if (caracter<32 || caracter>127) caracter='?';
                        buffer_palabra[i]=caracter;
                }
                buffer_palabra[i]=0;
 
-               if (buffer_palabra[0]<32 || buffer_palabra[0]>127) {
+               //if (buffer_palabra[0]<32 || buffer_palabra[0]>127) {
                        //No encontrado
-                       return;
-               }
-               else  {
+                //       return;
+               //}
+               //else  {
                        z80_byte numero_palabra=peek_byte_no_time(puntero+5);
                        z80_byte tipo_palabra=peek_byte_no_time(puntero+6);
                        //debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
@@ -13744,13 +13758,14 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
                                strcpy(texto_destino,buffer_palabra);
                                return;
                        }
-               }
+               //}
 
                puntero+=7;
                palabras++;
 
                //Agregar un limite por si acaso
                if (palabras==65535) salir=1;
+                }
 
        } while (!salir);
      
