@@ -88,7 +88,7 @@
 
 * Emulates Betadisk/TR-DOS
 
-* Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC
+* Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC. Support for raw (.mmc) files and hdf files
 
 * Emulates ZX Spectrum IDE Interface: DivIDE, 8-bit simple 
 
