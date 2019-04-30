@@ -13563,7 +13563,7 @@ int util_daad_detect(void)
         1) En la dirección 0x8400 ha de haber un 1 o un 2. Si son juegos DAAD hechos hoy en día habrá un 2, si son antiguos habrá un 1. 
 2) En la siguiente direccion debe conterner un 0x10 o un 0x11 (marca que es juego de spectrum en ingles la primera, juego de Spectrum en español la segunda)
 3) En la siguiente direccion lo normal es encontrar un 95 decimal. 
-
+ 
         */
 
        z80_int dir=0x8400;
@@ -13911,7 +13911,7 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
                                         char buffer_temp[256];
                                         //printf ("token %d\n",caracter & 127);
                                         util_daad_get_compressed_message(caracter & 127,buffer_temp);
-                                        int i;
+                                        unsigned int i;
                                         for (i=0;i<strlen(buffer_temp) && destino<255;i++) {
                                                 texto[destino++]=buffer_temp[i];
                                         }

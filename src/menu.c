@@ -11746,7 +11746,7 @@ void menu_debug_daad_edit_flagobject(void)
 //3=Locations messages
 //4=Compressed messages
 //5=Vocabulary
-void menu_debug_daad_view_messages(int tipo)
+void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 {
 
 	int total_messages;
@@ -11754,7 +11754,7 @@ void menu_debug_daad_view_messages(int tipo)
 	void (*funcion_mensajes) (z80_byte index,char *texto);
 	//char *entry_message;
 
-	switch (tipo) {
+	switch (valor_opcion) {
 		case 1:
 			total_messages=util_daad_get_num_user_messages();
 			funcion_mensajes=util_daad_get_user_message;
@@ -11802,7 +11802,7 @@ void menu_debug_daad_view_messages(int tipo)
 
 	int resultado=0;
 
-	if (tipo==5) {
+	if (valor_opcion==5) {
 			util_daad_dump_vocabulary(1,texto,MAX_TEXTO_GENERIC_MESSAGE);
 	}
 
@@ -11841,12 +11841,29 @@ void menu_debug_daad_view_messages_ask(void)
 
 		
 
-	    menu_add_item_menu_inicial_format(&array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Objects");
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"User");
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"System");
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Locations");
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Compressed");
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,NULL,NULL,"Vocabulary");
+	    menu_add_item_menu_inicial_format(&array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Objects");
+		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'o');
+		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,0);
+
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~User");
+		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'u');
+		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,1);
+
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~System");
+		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'s');
+		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,2);
+
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Locations");
+		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'l');
+		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,3);
+
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Compressed");
+		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'c');
+		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,4);
+
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Vocabulary");
+		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'v');
+		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,5);
 
 
         menu_add_item_menu(array_menu_daad_tipo_mensaje,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -11855,12 +11872,26 @@ void menu_debug_daad_view_messages_ask(void)
         retorno_menu=menu_dibuja_menu(&daad_tipo_mensaje_opcion_seleccionada,&item_seleccionado,array_menu_daad_tipo_mensaje,"Message type" );
                 
 
-		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+		/*if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 			menu_debug_daad_view_messages(daad_tipo_mensaje_opcion_seleccionada);
 
 		}
 
-    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);*/
+
+
+
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);	
 
 
 }
@@ -35592,7 +35623,7 @@ void last_filesused_insert(char *s)
 	//Desplazar todos hacia abajo e insertar en posicion 0
 	//Desde abajo a arriba
 
-	int i;
+	//int i;
 	/*for (i=MAX_LAST_FILESUSED-1;i>=1;i--) {
 		strcpy(last_files_used_array[i],last_files_used_array[i-1]);
 	}*/
