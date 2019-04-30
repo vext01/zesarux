@@ -3289,33 +3289,7 @@ void menu_escribe_linea_opcion(int indice,int opcion_actual,int opcion_activada,
 
 }
 
-//escribe opcion de texto tabulado
-//coordenadas "indice" relativa al interior de la ventana (0=inicio)
-//opcion_actual indica que numero de linea es la seleccionada
-//opcion activada indica a 1 que esa opcion es seleccionable
-void old_delete_menu_escribe_linea_opcion_tabulado(int indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
-{
 
-        if (!strcmp(scr_driver_name,"stdout")) {
-                printf ("%s\n",texto);
-                scrstdout_menu_print_speech_macro (texto);
-                return;
-        }
-
-
-        z80_byte papel,tinta;
-
-
-        menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
-
-
-
-        menu_escribe_texto_ventana(x,y,tinta,papel,texto);
-
-
-        menu_textspeech_send_text(texto);
-
-}
 
 
 //escribe opcion de texto tabulado
