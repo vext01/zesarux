@@ -3095,7 +3095,7 @@ void menu_textspeech_send_text(char *texto)
 
 }
 
-void menu_retorna_colores_linea_opcion(z80_byte indice,int opcion_actual,int opcion_activada,z80_byte *papel_orig,z80_byte *tinta_orig)
+void menu_retorna_colores_linea_opcion(int indice,int opcion_actual,int opcion_activada,z80_byte *papel_orig,z80_byte *tinta_orig)
 {
 	z80_byte papel,tinta;
 
@@ -3138,7 +3138,7 @@ void menu_retorna_colores_linea_opcion(z80_byte indice,int opcion_actual,int opc
 //coordenadas "indice" relativa al interior de la ventana (0=inicio)
 //opcion_actual indica que numero de linea es la seleccionada
 //opcion activada indica a 1 que esa opcion es seleccionable
-void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,z80_byte indice,int opcion_actual,int opcion_activada,char *texto_entrada)
+void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int opcion_actual,int opcion_activada,char *texto_entrada)
 {
 
 	char texto[64];
@@ -3225,7 +3225,7 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,z80_byte indice
 //coordenadas "indice" relativa al interior de la ventana (0=inicio)
 //opcion_actual indica que numero de linea es la seleccionada
 //opcion activada indica a 1 que esa opcion es seleccionable
-void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_activada,char *texto_entrada)
+void menu_escribe_linea_opcion(int indice,int opcion_actual,int opcion_activada,char *texto_entrada)
 {
 
 	char texto[64];
@@ -3293,7 +3293,7 @@ void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_acti
 //coordenadas "indice" relativa al interior de la ventana (0=inicio)
 //opcion_actual indica que numero de linea es la seleccionada
 //opcion activada indica a 1 que esa opcion es seleccionable
-void menu_escribe_linea_opcion_tabulado(z80_byte indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
+void old_delete_menu_escribe_linea_opcion_tabulado(int indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
 {
 
         if (!strcmp(scr_driver_name,"stdout")) {
@@ -3322,7 +3322,7 @@ void menu_escribe_linea_opcion_tabulado(z80_byte indice,int opcion_actual,int op
 //coordenadas "indice" relativa al interior de la ventana (0=inicio)
 //opcion_actual indica que numero de linea es la seleccionada
 //opcion activada indica a 1 que esa opcion es seleccionable
-void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,z80_byte indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
+void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,int indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
 {
 
         if (!strcmp(scr_driver_name,"stdout")) {
@@ -8504,7 +8504,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			//Mover abajo
 			case '6':
 				if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
-				else linea_seleccionada=menu_dibuja_menu_cursor_abajo_tabulado(linea_seleccionada,max_opciones,m);
+				else {
+					linea_seleccionada=menu_dibuja_menu_cursor_abajo_tabulado(linea_seleccionada,max_opciones,m);
+					//printf ("linea seleccionada: %d\n",linea_seleccionada);
+				}
 			break;
 
 
