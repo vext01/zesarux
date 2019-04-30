@@ -775,6 +775,20 @@ void chardetect_printchar_espacio_si_mayus(z80_byte c)
 	
 }
 
+z80_byte chardetect_convert_daad_accents(z80_byte c)
+{
+			if (c=='\x15') c='a';
+			if (c=='\x16') c='e';
+			if (c=='\x17') c='i';
+			if (c=='\x18') c='o';
+			if (c=='\x19') c='u';
+
+			//eñe
+			if (c=='\x1a') c='n';
+
+			return c;	
+}
+
 z80_byte chardetect_printchar_caracter_gestion_filtros(z80_byte c)
 {
 	
@@ -809,6 +823,7 @@ z80_byte chardetect_printchar_caracter_gestion_filtros(z80_byte c)
 			
 			
 			//Acentuadas. De momento las retornamos tal cual sin acentos
+			/*
 			if (c=='\x15') {
 				//printf ("antes: %d\n",temp_antes_c);
 				c='a';
@@ -822,6 +837,9 @@ z80_byte chardetect_printchar_caracter_gestion_filtros(z80_byte c)
 
 			//eñe
 			if (c=='\x1a') c='n';
+			*/
+
+			c=chardetect_convert_daad_accents(c);
 			
 			//ignorar "_"
 			if (c=='_') c=0;

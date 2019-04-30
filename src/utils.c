@@ -13639,7 +13639,16 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                        //Si hay espacio, fin
                        if (caracter==32) break;
 
-                       if (caracter<32 || caracter>127) caracter='?';
+                       caracter=chardetect_convert_daad_accents(caracter);
+
+                       //Pasar a mayusculas por si acaso
+                       caracter=letra_mayuscula(caracter);
+
+                       if (caracter<32 || caracter>127) {
+                               //printf ("%d\n",caracter);
+                               //21=á
+                               caracter='?';
+                       }
                        buffer_palabra[i]=caracter;
                }
                buffer_palabra[i]=0;
@@ -13747,6 +13756,14 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
                        caracter=peek_byte_no_time(puntero+i) ^255;
                        //Si hay espacio, fin
                        //if (caracter==32) break;
+
+
+                       caracter=chardetect_convert_daad_accents(caracter);
+
+                       //Pasar a mayusculas por si acaso
+                       caracter=letra_mayuscula(caracter);
+
+
 
                        if (caracter<32 || caracter>127) caracter='?';
                        buffer_palabra[i]=caracter;
@@ -13984,6 +14001,10 @@ void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
 
         do {
                 caracter=peek_byte_no_time(table_dir++);
+
+                       caracter=chardetect_convert_daad_accents(caracter);
+
+
                 if (caracter>127) {
                         caracter -=128;
                         salir=1;
