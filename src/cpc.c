@@ -178,6 +178,8 @@ z80_byte cpc_keyboard_table[16]={
 };
 
 
+z80_bit cpc_send_double_vsync={0};
+
 void cpc_set_memory_pages()
 {
 
@@ -535,7 +537,7 @@ z80_byte cpc_get_vsync_bit(void)
 		//O al obtener la linea actual, no deberia ser t_scanline, sino t_scanline quitando la duracion del ultimo vsync
 
 		//workaround para algunos juegos, como bubble bobble. Lo hacemos durar mas
-		//vsync_lenght *=2;		
+		if (cpc_send_double_vsync.v) vsync_lenght *=2;		
 
 
 		int linea_actual=t_scanline;

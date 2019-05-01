@@ -8428,6 +8428,11 @@ if (menu_display_aa_cond() ) {
 
 
 
+void menu_display_cpc_double_vsync(MENU_ITEM_PARAMETERS)
+{
+	cpc_send_double_vsync.v ^=1;
+}
+
 
 
 //menu display settings
@@ -8526,6 +8531,10 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				else
 					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_force_mode,NULL,"[%d] Force Video Mode",
 						cpc_forzar_modo_video_modo);
+
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_double_vsync,NULL,"[%c] Double Vsync",(cpc_send_double_vsync.v==1 ? 'X' : ' ') );
+				menu_add_item_menu_tooltip(array_menu_settings_display,"Workaround to avoid hang on some games");
+				menu_add_item_menu_ayuda(array_menu_settings_display,"Workaround to avoid hang on some games");
 		}
 
 
