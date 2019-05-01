@@ -520,22 +520,35 @@ z80_byte cpc_get_vsync_bit(void)
 		//esta en caracteres
 		vsync_position *=8;
 
-		int vertical_total=cpc_crtc_registers[4];
+		int vertical_total=cpc_crtc_registers[4]+1; //en R0 tambien se suma 1
 		vertical_total *=8;
 
 		int vertical_displayed=cpc_crtc_registers[6];
 		vertical_displayed *=8;
 
 
+
+		//Dynamite dan 1 se pone a comprobar bit de rsync en lineas:
+		//0,52,104,156,208,260
+		//y vsync empieza en linea 240 y dura 14 lineas... no se cumple nunca
+		//esto sera debido a que los timings los tengo mal o las lineas se empiezan a contar diferente... anyway
+		//O al obtener la linea actual, no deberia ser t_scanline, sino t_scanline quitando la duracion del ultimo vsync
+
+
+
+		//workaround para algunos juegos, como bubble bobble. Lo hacemos durar mas
+		vsync_lenght *=2;		
+
 		//Ver si esta en zona de vsync
-		//printf ("linea %d. lenght: %d vsync pos: %d vertical total: %d vertical displayed: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total,vertical_displayed);
+		printf ("linea %d. lenght: %d vsync pos: %d vertical total: %d vertical displayed: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total,vertical_displayed);
 			if (t_scanline>=vsync_position && t_scanline<=vsync_position+vsync_lenght-1) {
-				//printf ("Enviando vsync\n");
+			//if (t_scanline>=0 && t_scanline<=7) {
+				printf ("Enviando vsync\n");
 				return 1;
 			}
 
 			else {
-				//printf ("No Enviando vsync\n");
+				printf ("No Enviando vsync\n");
 				return 0;
 			}
 
