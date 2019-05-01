@@ -506,6 +506,38 @@ void init_cpc_line_display_table(void)
 //http://www.cpcwiki.eu/index.php/Programming:Keyboard_scanning
 //http://www.cpcwiki.eu/index.php/8255
 
+z80_byte cpc_get_vsync_bit(void)
+{
+				//Bit de vsync
+			//Duracion vsync
+			z80_byte vsync_lenght=cpc_crtc_registers[3]&15;
+
+			//Si es 0, en algunos chips significa 16
+			if (vsync_lenght==0) vsync_lenght=16;
+			//cpc_ppi_ports[1];
+
+		int vsync_position=cpc_crtc_registers[7]&127;
+		//esta en caracteres
+		vsync_position *=8;
+
+		int vertical_total=cpc_crtc_registers[4];
+		vertical_total *=8;
+
+
+		//Ver si esta en zona de vsync
+			if (t_scanline>=vsync_position && vsync_position<=vsync_position+vsync_lenght-1) {
+			//if (t_scanline>=0 && t_scanline<=7) {
+				//printf ("Enviando vsync en linea %d. lenght: %d vsync pos: %d vertical total: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total);
+				return 1;
+			}
+
+			else {
+				//printf ("NO enviando vsync en linea %d\n",t_scanline);
+				return 0;
+			}
+
+}
+
 z80_byte cpc_in_ppi(z80_byte puerto_h)
 {
 	
@@ -585,7 +617,9 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 			//Parallel, expansion port a 0
 			valor &=(255-64-32);
 
-			//Bit 0 (vsync) se actualiza en el core de cpc
+			//Bit 0 (vsync) 
+			valor &=(255-1);
+			valor |=cpc_get_vsync_bit();
 
  			if (realtape_inserted.v && realtape_playing.v) {
                         	if (realtape_last_value>=realtape_volumen) {
