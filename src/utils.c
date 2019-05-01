@@ -13572,8 +13572,11 @@ z80_byte daad_peek(z80_int dir)
 {
 
         if (MACHINE_IS_CPC) {
-                return 0;
+                z80_byte *start=cpc_ram_mem_table[0];
+                z80_byte *p=&start[dir];
+                return *p;
         }
+
 
         //Spectrum
         else {
@@ -13585,7 +13588,9 @@ void daad_poke(z80_int dir,z80_byte value)
 {
 
         if (MACHINE_IS_CPC) {
-                return;
+                z80_byte *start=cpc_ram_mem_table[0];
+                z80_byte *p=&start[dir];
+                *p=value;
         }
 
         //Spectrum
@@ -13594,41 +13599,53 @@ void daad_poke(z80_int dir,z80_byte value)
         }
 }
 
+z80_int util_daad_get_start_pointers(void)
+{
+        if (MACHINE_IS_CPC) return 0x2880;
+
+        else return 0x8400;
+}
+
 //Detecta si juego cargado en memoria está hecho con daad
 //Condicion primera es que maquina actual sea spectrum
 int util_daad_detect(void)
 {
 
-        if (!MACHINE_IS_SPECTRUM) return 0;
 
-        /*
-        1) En la dirección 0x8400 ha de haber un 1 o un 2. Si son juegos DAAD hechos hoy en día habrá un 2, si son antiguos habrá un 1. 
-2) En la siguiente direccion debe conterner un 0x10 o un 0x11 (marca que es juego de spectrum en ingles la primera, juego de Spectrum en español la segunda)
-3) En la siguiente direccion lo normal es encontrar un 95 decimal. 
+        if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
+                /*
+                1) En la dirección 0x8400 ha de haber un 1 o un 2. Si son juegos DAAD hechos hoy en día habrá un 2, si son antiguos habrá un 1. 
+                2) En la siguiente direccion debe conterner un 0x10 o un 0x11 (marca que es juego de spectrum en ingles la primera, juego de Spectrum en español la segunda)
+                Para Amstrad, 0x31/0x30 en el 0x2882 en lugar de 0x11/0x10
+                3) En la siguiente direccion lo normal es encontrar un 95 decimal. 
  
-        */
+                */
 
-       z80_int dir=0x8400;
+                z80_int dir=util_daad_get_start_pointers();
 
-       z80_byte first_byte=daad_peek(dir);
-       z80_byte second_byte=daad_peek(dir+1);
-       z80_byte third_byte=daad_peek(dir+2);
+                z80_byte first_byte=daad_peek(dir);
+                z80_byte second_byte=daad_peek(dir+1);
+                z80_byte third_byte=daad_peek(dir+2);
 
-       if (first_byte==1 || first_byte==2) {
-               if (second_byte==0x10 || second_byte==0x11) {
-                       if (third_byte==95) {
-                               return 1;
-                       }
-               }
-       }
+                if (first_byte==1 || first_byte==2) {
+                       if (second_byte==0x10 || second_byte==0x11 || second_byte==0x30 || second_byte==0x31) {
+                               if (third_byte==95) {
+                                       return 1;
+                                }
+                        }
+                }
 
-       return 0;
+                return 0;
+
+        }
+
+        return 0;
 }
 
 
 z80_int util_daad_get_start_vocabulary(void)
 {
-        z80_int dir=value_8_to_16(daad_peek(0x8417),daad_peek(0x8416));
+        z80_int dir=value_8_to_16(daad_peek(util_daad_get_start_pointers()+0x17),daad_peek(util_daad_get_start_pointers()+0x16));
 
         return dir;
 }
@@ -13728,7 +13745,7 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
 //Dice si aventura es spanish. Si no, english
 int util_daad_is_spanish(void)
 {
-        return (daad_peek(0x8401) & 1);
+        return (daad_peek(util_daad_get_start_pointers()+1) & 1);
 }
 
 z80_int util_daad_get_start_flags(void)
@@ -13853,7 +13870,7 @@ caracteres con acentos etc códigos por debajo del 32
 z80_int util_dadd_get_start_objects_names(void)
 {
 
-        z80_int puntero=0x8400+12;
+        z80_int puntero=util_daad_get_start_pointers()+12;
 
         z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
@@ -13863,7 +13880,7 @@ z80_int util_dadd_get_start_objects_names(void)
 z80_int util_dadd_get_start_locat_messages(void)
 {
 
-        z80_int puntero=0x8400+14;
+        z80_int puntero=util_daad_get_start_pointers()+14;
 
         z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
@@ -13875,7 +13892,7 @@ z80_int util_dadd_get_start_locat_messages(void)
 z80_int util_dadd_get_start_user_messages(void)
 {
 
-        z80_int puntero=0x8400+16;
+        z80_int puntero=util_daad_get_start_pointers()+16;
 
         z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
@@ -13885,7 +13902,7 @@ z80_int util_dadd_get_start_user_messages(void)
 z80_int util_dadd_get_start_sys_messages(void)
 {
 
-        z80_int puntero=0x8400+18;
+        z80_int puntero=util_daad_get_start_pointers()+18;
 
         z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
@@ -13895,7 +13912,7 @@ z80_int util_dadd_get_start_sys_messages(void)
 z80_int util_dadd_get_start_compressed_messages(void)
 {
 
-        z80_int puntero=0x8400+8;
+        z80_int puntero=util_daad_get_start_pointers()+8;
 
         z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
@@ -13905,7 +13922,7 @@ z80_int util_dadd_get_start_compressed_messages(void)
 z80_int util_dadd_get_num_objects_description(void)
 {
 
-        z80_int puntero=0x8400+3;
+        z80_int puntero=util_daad_get_start_pointers()+3;
 
         z80_int dir=daad_peek(puntero);
 
@@ -13915,7 +13932,7 @@ z80_int util_dadd_get_num_objects_description(void)
 z80_int util_daad_get_num_locat_messages(void)
 {
 
-        z80_int puntero=0x8400+4;
+        z80_int puntero=util_daad_get_start_pointers()+4;
 
         z80_int dir=daad_peek(puntero);
 
@@ -13925,7 +13942,7 @@ z80_int util_daad_get_num_locat_messages(void)
 z80_int util_daad_get_num_user_messages(void)
 {
 
-        z80_int puntero=0x8400+5;
+        z80_int puntero=util_daad_get_start_pointers()+5;
 
         z80_int dir=daad_peek(puntero);
 
@@ -13935,7 +13952,7 @@ z80_int util_daad_get_num_user_messages(void)
 z80_int util_daad_get_num_sys_messages(void)
 {
 
-        z80_int puntero=0x8400+6;
+        z80_int puntero=util_daad_get_start_pointers()+6;
 
         z80_int dir=daad_peek(puntero);
 
