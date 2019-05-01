@@ -534,21 +534,30 @@ z80_byte cpc_get_vsync_bit(void)
 		//esto sera debido a que los timings los tengo mal o las lineas se empiezan a contar diferente... anyway
 		//O al obtener la linea actual, no deberia ser t_scanline, sino t_scanline quitando la duracion del ultimo vsync
 
-
-
 		//workaround para algunos juegos, como bubble bobble. Lo hacemos durar mas
-		vsync_lenght *=2;		
+		//vsync_lenght *=2;		
+
+
+		int linea_actual=t_scanline;
+
+		//linea actual hay que evitar la zona no visible de arriba (precisamente el vsync)
+		linea_actual -=vsync_lenght;
+
+		if (linea_actual<0) {
+			//esta en vsync
+			return 1;
+		}
 
 		//Ver si esta en zona de vsync
-		printf ("linea %d. lenght: %d vsync pos: %d vertical total: %d vertical displayed: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total,vertical_displayed);
-			if (t_scanline>=vsync_position && t_scanline<=vsync_position+vsync_lenght-1) {
+		//printf ("linea %d. lenght: %d vsync pos: %d vertical total: %d vertical displayed: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total,vertical_displayed);
+			if (linea_actual>=vsync_position && linea_actual<=vsync_position+vsync_lenght-1) {
 			//if (t_scanline>=0 && t_scanline<=7) {
-				printf ("Enviando vsync\n");
+				//printf ("Enviando vsync\n");
 				return 1;
 			}
 
 			else {
-				printf ("No Enviando vsync\n");
+				//printf ("No Enviando vsync\n");
 				return 0;
 			}
 
