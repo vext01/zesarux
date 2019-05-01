@@ -10232,7 +10232,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 							//Si se llega a algun terminador
 							if (!terminador) {
-								z80_byte opcode=peek_byte_no_time(direccion_desensamblar);
+								z80_byte opcode=daad_peek(direccion_desensamblar);
 								z80_byte opcode_res=opcode & 127;
 								if (opcode_res==22 || opcode_res==23 || opcode_res==103 || opcode_res==116 || opcode_res==117 || opcode_res==108) sera_terminador=1;
 
@@ -11878,81 +11878,15 @@ void menu_debug_daad_view_messages_ask(void)
 z80_bit debug_daad_breakpoint_runtoparse_fired={0};
 
 
+//Muestra mensaje relacionado con condacto
 void menu_debug_daad_get_condact_message(void)
 {
-	//MES y MESSAGE a la tabla MTX (mensajes de usuario). SYSMES a STX (mensajes del sistema) y DESC a LTX (localidades)
-	/*
-  {1,"MES    "}, //  77 $4D
-
-  {1,"MESSAGE"}, //  38 $26
 
 
-  {1,"SYSMESS"}, //  54 $36
-
-
-  {1,"DESC   "}, //  19 $13
-
-    {1,"NOUN2  "}, //  69 $45
-
-
-  {1,"ADJECT1"}, //  16 $10
-    {1,"ADJECT2"}, //  70 $46
-  {1,"ADVERB "}, //  17 $11
-    {1,"PREP   "}, //  68 $44
-
-	*/
-
-	z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
-
-	z80_byte opcode_daad=peek_byte_no_time(direccion_desensamblar);
-	z80_byte param_message=peek_byte_no_time(direccion_desensamblar+1);
-
-	int redireccion=0;
-	if (opcode_daad>127) {
-		redireccion=1;
-		opcode_daad -=128;
-		param_message=util_daad_get_flag_value(param_message);
-	}
 
 	char buffer[256];
-	buffer[0]=0;
-
-	if (opcode_daad==77 || opcode_daad==38) {
-		util_daad_get_user_message(param_message,buffer);
-	} 
-
-	if (opcode_daad==54) {
-		util_daad_get_sys_message(param_message,buffer);
-	} 	
-
-	if (opcode_daad==19) {
-		util_daad_get_locat_message(param_message,buffer);
-	} 		
-
-	//{1,"NOUN2  "}, //  69 $45
-	if (opcode_daad==69) {
-		util_daad_locate_word(param_message,2,buffer);
-	} 		
-
-  //{1,"ADJECT1"}, //  16 $10
-  //{1,"ADJECT2"}, //  70 $46
-  	if (opcode_daad==16 || opcode_daad==70) {
-		util_daad_locate_word(param_message,3,buffer);
-	} 	
-
-
-
-  	//{1,"ADVERB "}, //  17 $11
-    if (opcode_daad==17) {
-		util_daad_locate_word(param_message,1,buffer);
-	} 
-
-    //{1,"PREP   "}, //  68 $44	
-	if (opcode_daad==68) {
-		util_daad_locate_word(param_message,4,buffer);
-	} 	
-
-
+	
+	util_daad_get_condact_message(buffer);
 	menu_generic_message("Message",buffer);
 
 

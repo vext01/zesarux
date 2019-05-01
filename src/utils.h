@@ -761,6 +761,11 @@ extern void util_daad_get_locat_message(z80_byte index,char *texto);
 
 extern int util_daad_condact_uses_message(void);
 
+extern void util_daad_get_condact_message(char *buffer);
+
+extern z80_byte daad_peek(z80_int dir);
+extern void daad_poke(z80_int dir,z80_byte value);
+
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 #define MEMORY_ZONE_NUM_TIMEX_EX 18

@@ -9982,6 +9982,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
                         if (util_daad_detect()) size=65536;
                 }
 
+                if (MACHINE_IS_CPC) {
+                        if (util_daad_detect()) size=65536;
+                }                
+
         break;
 	
 
@@ -10248,6 +10252,14 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
                                 p=start;
                         }
                 }
+
+                if (MACHINE_IS_CPC) {
+                        if (util_daad_detect()) {
+                                //La direccion está en la zona de memoria ram (zona 0)
+                                z80_byte *start=machine_get_memory_zone_pointer(0,address); 
+                                p=start;
+                        }
+                }                
 
         break;
 	    
@@ -10555,6 +10567,10 @@ void machine_get_memory_zone_name(int zone, char *name)
                 if (MACHINE_IS_SPECTRUM) {
                         strcpy(name,"Daad Condacts");
                 }
+
+                if (MACHINE_IS_CPC) {
+                        strcpy(name,"Daad Condacts");
+                }                
 
         break;    
 
@@ -13552,6 +13568,32 @@ int get_cpu_frequency(void)
 }
 
 
+z80_byte daad_peek(z80_int dir)
+{
+
+        if (MACHINE_IS_CPC) {
+                return 0;
+        }
+
+        //Spectrum
+        else {
+                return peek_byte_no_time(dir);
+        }
+}
+
+void daad_poke(z80_int dir,z80_byte value)
+{
+
+        if (MACHINE_IS_CPC) {
+                return;
+        }
+
+        //Spectrum
+        else {
+                poke_byte_no_time(dir,value);
+        }
+}
+
 //Detecta si juego cargado en memoria está hecho con daad
 //Condicion primera es que maquina actual sea spectrum
 int util_daad_detect(void)
@@ -13568,9 +13610,9 @@ int util_daad_detect(void)
 
        z80_int dir=0x8400;
 
-       z80_byte first_byte=peek_byte_no_time(dir);
-       z80_byte second_byte=peek_byte_no_time(dir+1);
-       z80_byte third_byte=peek_byte_no_time(dir+2);
+       z80_byte first_byte=daad_peek(dir);
+       z80_byte second_byte=daad_peek(dir+1);
+       z80_byte third_byte=daad_peek(dir+2);
 
        if (first_byte==1 || first_byte==2) {
                if (second_byte==0x10 || second_byte==0x11) {
@@ -13586,7 +13628,7 @@ int util_daad_detect(void)
 
 z80_int util_daad_get_start_vocabulary(void)
 {
-        z80_int dir=value_8_to_16(peek_byte_no_time(0x8417),peek_byte_no_time(0x8416));
+        z80_int dir=value_8_to_16(daad_peek(0x8417),daad_peek(0x8416));
 
         return dir;
 }
@@ -13630,12 +13672,12 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                z80_byte tipo_palabra;
                z80_byte num_palabra;
 
-                if (peek_byte_no_time(puntero)==0) salir=1;
+                if (daad_peek(puntero)==0) salir=1;
 
                 else {
 
                for (i=0;i<5;i++) {
-                       caracter=peek_byte_no_time(puntero+i) ^255;
+                       caracter=daad_peek(puntero+i) ^255;
                        //Si hay espacio, fin
                        if (caracter==32) break;
 
@@ -13653,9 +13695,9 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
                }
                buffer_palabra[i]=0;
 
-               num_palabra=peek_byte_no_time(puntero+5);
+               num_palabra=daad_peek(puntero+5);
 
-               tipo_palabra=peek_byte_no_time(puntero+6);
+               tipo_palabra=daad_peek(puntero+6);
 
                //if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
                //else  {
@@ -13686,7 +13728,7 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
 //Dice si aventura es spanish. Si no, english
 int util_daad_is_spanish(void)
 {
-        return (peek_byte_no_time(0x8401) & 1);
+        return (daad_peek(0x8401) & 1);
 }
 
 z80_int util_daad_get_start_flags(void)
@@ -13699,14 +13741,14 @@ z80_byte util_daad_get_flag_value(z80_byte index)
 {
         //7f1c
 
-        return peek_byte_no_time(util_daad_get_start_flags()+index);
+        return daad_peek(util_daad_get_start_flags()+index);
 }
 
 z80_byte util_daad_get_object_value(z80_byte index)
 {
         //7f1c+256
 
-        return peek_byte_no_time(util_daad_get_start_flags()+256+index);
+        return daad_peek(util_daad_get_start_flags()+256+index);
 }
 
 
@@ -13714,14 +13756,14 @@ void util_daad_put_flag_value(z80_byte index,z80_byte value)
 {
         //7f1c
 
-        poke_byte_no_time(0x7f1c+index,value);
+        daad_poke(0x7f1c+index,value);
 }
 
 void util_daad_put_object_value(z80_byte index,z80_byte value)
 {
         //7f1c+256
 
-        poke_byte_no_time(0x7f1c+256+index,value);
+        daad_poke(0x7f1c+256+index,value);
 }
 
 void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino)
@@ -13749,11 +13791,11 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
                int i;
                z80_byte caracter;
 
-                if (peek_byte_no_time(puntero)==0) salir=1;
+                if (daad_peek(puntero)==0) salir=1;
                 else {
 
                for (i=0;i<5;i++) {
-                       caracter=peek_byte_no_time(puntero+i) ^255;
+                       caracter=daad_peek(puntero+i) ^255;
                        //Si hay espacio, fin
                        //if (caracter==32) break;
 
@@ -13775,8 +13817,8 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
                 //       return;
                //}
                //else  {
-                       z80_byte numero_palabra=peek_byte_no_time(puntero+5);
-                       z80_byte tipo_palabra=peek_byte_no_time(puntero+6);
+                       z80_byte numero_palabra=daad_peek(puntero+5);
+                       z80_byte tipo_palabra=daad_peek(puntero+6);
                        //debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
                        //util_unpawsgac_add_word_kb(buffer_palabra);
                        //palabras++;
@@ -13813,7 +13855,7 @@ z80_int util_dadd_get_start_objects_names(void)
 
         z80_int puntero=0x8400+12;
 
-        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
         return dir;
 }
@@ -13823,7 +13865,7 @@ z80_int util_dadd_get_start_locat_messages(void)
 
         z80_int puntero=0x8400+14;
 
-        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
         return dir;
 }
@@ -13835,7 +13877,7 @@ z80_int util_dadd_get_start_user_messages(void)
 
         z80_int puntero=0x8400+16;
 
-        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
         return dir;
 }
@@ -13845,7 +13887,7 @@ z80_int util_dadd_get_start_sys_messages(void)
 
         z80_int puntero=0x8400+18;
 
-        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
         return dir;
 }
@@ -13855,7 +13897,7 @@ z80_int util_dadd_get_start_compressed_messages(void)
 
         z80_int puntero=0x8400+8;
 
-        z80_int dir=value_8_to_16(peek_byte_no_time(puntero+1),peek_byte_no_time(puntero));
+        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
 
         return dir;
 }
@@ -13865,7 +13907,7 @@ z80_int util_dadd_get_num_objects_description(void)
 
         z80_int puntero=0x8400+3;
 
-        z80_int dir=peek_byte_no_time(puntero);
+        z80_int dir=daad_peek(puntero);
 
         return dir;
 }
@@ -13875,7 +13917,7 @@ z80_int util_daad_get_num_locat_messages(void)
 
         z80_int puntero=0x8400+4;
 
-        z80_int dir=peek_byte_no_time(puntero);
+        z80_int dir=daad_peek(puntero);
 
         return dir;
 }
@@ -13885,7 +13927,7 @@ z80_int util_daad_get_num_user_messages(void)
 
         z80_int puntero=0x8400+5;
 
-        z80_int dir=peek_byte_no_time(puntero);
+        z80_int dir=daad_peek(puntero);
 
         return dir;
 }
@@ -13895,7 +13937,7 @@ z80_int util_daad_get_num_sys_messages(void)
 
         z80_int puntero=0x8400+6;
 
-        z80_int dir=peek_byte_no_time(puntero);
+        z80_int dir=daad_peek(puntero);
 
         return dir;
 }
@@ -13912,7 +13954,7 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
 {
         z80_int offset_pointer=table_dir+index*2;
 
-        z80_int dir=value_8_to_16(peek_byte_no_time(offset_pointer+1),peek_byte_no_time(offset_pointer));
+        z80_int dir=value_8_to_16(daad_peek(offset_pointer+1),daad_peek(offset_pointer));
 
         //leer hasta byte valor 10, o maximo 255 longitud
         int destino=0;
@@ -13920,7 +13962,7 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
         z80_byte caracter=0;
 
         while (destino<255 && caracter!=10) {
-                caracter=peek_byte_no_time(dir++) ^255;
+                caracter=daad_peek(dir++) ^255;
                 if (caracter!=10) {
 
                         caracter=chardetect_convert_daad_accents(caracter);
@@ -13995,7 +14037,7 @@ void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
         int i;
         z80_byte caracter;
         for (i=0;i<index;) {
-                caracter=peek_byte_no_time(table_dir++);
+                caracter=daad_peek(table_dir++);
                 if (caracter>127) i++;
         }
 
@@ -14003,7 +14045,7 @@ void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
         int destino=0;
 
         do {
-                caracter=peek_byte_no_time(table_dir++);
+                caracter=daad_peek(table_dir++);
 
                        caracter=chardetect_convert_daad_accents(caracter);
 
@@ -14060,7 +14102,7 @@ int util_daad_condact_uses_message(void)
 
 	z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
 
-	z80_byte opcode_daad=peek_byte_no_time(direccion_desensamblar) & 127;
+	z80_byte opcode_daad=daad_peek(direccion_desensamblar) & 127;
 	
 
 	if (opcode_daad==77 || opcode_daad==38 || opcode_daad==54 || opcode_daad==19 || opcode_daad==69|| opcode_daad==16 || opcode_daad==70 || opcode_daad==17 || opcode_daad==68) {
@@ -14068,4 +14110,85 @@ int util_daad_condact_uses_message(void)
 	} 
 
 	else return 0;
+}
+
+
+//Retorna mensaje relacionado con condacto
+void util_daad_get_condact_message(char *buffer)
+{
+	//MES y MESSAGE a la tabla MTX (mensajes de usuario). SYSMES a STX (mensajes del sistema) y DESC a LTX (localidades)
+	/*
+  {1,"MES    "}, //  77 $4D
+
+  {1,"MESSAGE"}, //  38 $26
+
+
+  {1,"SYSMESS"}, //  54 $36
+
+
+  {1,"DESC   "}, //  19 $13
+
+    {1,"NOUN2  "}, //  69 $45
+
+
+  {1,"ADJECT1"}, //  16 $10
+    {1,"ADJECT2"}, //  70 $46
+  {1,"ADVERB "}, //  17 $11
+    {1,"PREP   "}, //  68 $44
+
+	*/
+
+	z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);
+
+	z80_byte opcode_daad=daad_peek(direccion_desensamblar);
+	z80_byte param_message=daad_peek(direccion_desensamblar+1);
+
+	int redireccion=0;
+	if (opcode_daad>127) {
+		redireccion=1;
+		opcode_daad -=128;
+		param_message=util_daad_get_flag_value(param_message);
+	}
+
+	buffer[0]=0;
+
+	if (opcode_daad==77 || opcode_daad==38) {
+		util_daad_get_user_message(param_message,buffer);
+	} 
+
+	if (opcode_daad==54) {
+		util_daad_get_sys_message(param_message,buffer);
+	} 	
+
+	if (opcode_daad==19) {
+		util_daad_get_locat_message(param_message,buffer);
+	} 		
+
+	//{1,"NOUN2  "}, //  69 $45
+	if (opcode_daad==69) {
+		util_daad_locate_word(param_message,2,buffer);
+	} 		
+
+  //{1,"ADJECT1"}, //  16 $10
+  //{1,"ADJECT2"}, //  70 $46
+  	if (opcode_daad==16 || opcode_daad==70) {
+		util_daad_locate_word(param_message,3,buffer);
+	} 	
+
+
+
+  	//{1,"ADVERB "}, //  17 $11
+    if (opcode_daad==17) {
+		util_daad_locate_word(param_message,1,buffer);
+	} 
+
+    //{1,"PREP   "}, //  68 $44	
+	if (opcode_daad==68) {
+		util_daad_locate_word(param_message,4,buffer);
+	} 	
+
+
+	menu_generic_message("Message",buffer);
+
+
 }
