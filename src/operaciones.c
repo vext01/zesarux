@@ -2517,6 +2517,7 @@ z80_byte lee_puerto_cpc_no_time(z80_byte puerto_h,z80_byte puerto_l GCC_UNUSED)
 
 	//Controladora 8255 PPI
 	if ((puerto_h & 8)==0) {
+		//printf ("Leyendo puerto cpc %02XH\n",puerto_h);
 		return cpc_in_ppi(puerto_h);
 	}
 

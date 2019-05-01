@@ -319,8 +319,11 @@ void cpu_core_loop_cpc(void)
 			}
 
 			//Bit de vsync
+			//Duracion vsync
+			z80_byte vsync_lenght=cpc_ppi_ports[3]&15;
 			//cpc_ppi_ports[1];
-			if (t_scanline>=0 && t_scanline<=7) {
+			if (t_scanline>=0 && t_scanline<=vsync_lenght-1) {
+			//if (t_scanline>=0 && t_scanline<=7) {
 				//printf ("Enviando vsync en linea %d\n",t_scanline);
 				cpc_ppi_ports[1] |=1;
 			}
