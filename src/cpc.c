@@ -523,16 +523,19 @@ z80_byte cpc_get_vsync_bit(void)
 		int vertical_total=cpc_crtc_registers[4];
 		vertical_total *=8;
 
+		int vertical_displayed=cpc_crtc_registers[6];
+		vertical_displayed *=8;
+
 
 		//Ver si esta en zona de vsync
-			if (t_scanline>=vsync_position && vsync_position<=vsync_position+vsync_lenght-1) {
-			//if (t_scanline>=0 && t_scanline<=7) {
-				//printf ("Enviando vsync en linea %d. lenght: %d vsync pos: %d vertical total: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total);
+		//printf ("linea %d. lenght: %d vsync pos: %d vertical total: %d vertical displayed: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total,vertical_displayed);
+			if (t_scanline>=vsync_position && t_scanline<=vsync_position+vsync_lenght-1) {
+				//printf ("Enviando vsync\n");
 				return 1;
 			}
 
 			else {
-				//printf ("NO enviando vsync en linea %d\n",t_scanline);
+				//printf ("No Enviando vsync\n");
 				return 0;
 			}
 
