@@ -28324,8 +28324,9 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_display_settings,'k');
                         menu_add_item_menu_tooltip(array_menu_display_settings,"Open on screen keyboard");
                         menu_add_item_menu_ayuda(array_menu_display_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
+				}
 
-
+				if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_CPC) {
 
 			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen ~~Adventure KB");
                         menu_add_item_menu_shortcut(array_menu_display_settings,'a');
@@ -28333,8 +28334,10 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_display_settings,"Here you have an on screen keyboard but uses words instead of just letters. "
 				"It's useful to play Text Adventures, you can redefine your own words");
 
+				}
 
-			if (MACHINE_IS_SPECTRUM) {
+
+			if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
 				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_unpaws_ungac,NULL," ~~Extract words to Adv. Keyb.");
 				menu_add_item_menu_shortcut(array_menu_display_settings,'e');
 				menu_add_item_menu_tooltip(array_menu_display_settings,"Runs the word extractor tool for adventure text games");
@@ -28342,7 +28345,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 					"It can detect words on games written with Quill, Paws, DAAD, and GAC");
 			}
 
-                }
+                
 
 
 
