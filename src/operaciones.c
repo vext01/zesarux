@@ -2520,7 +2520,7 @@ z80_byte lee_puerto_cpc_no_time(z80_byte puerto_h,z80_byte puerto_l GCC_UNUSED)
 		return cpc_in_ppi(puerto_h);
 	}
 
-
+	//printf ("Returning unused cpc port %02X%02XH\n",puerto_h,puerto_l);
 	return 255;
 
 }

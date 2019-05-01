@@ -13750,8 +13750,15 @@ int util_daad_is_spanish(void)
 
 z80_int util_daad_get_start_flags(void)
 {
-        if (util_daad_is_spanish()) return 0x7f1c;
-        else return 0x7e55;
+
+        if (MACHINE_IS_CPC) return 0x23c9;
+
+        else  {
+                if (util_daad_is_spanish()) return 0x7f1c;
+                else return 0x7e55;
+        }
+
+        
 }
 
 z80_byte util_daad_get_flag_value(z80_byte index)
@@ -13959,9 +13966,16 @@ z80_int util_daad_get_num_sys_messages(void)
         return dir;
 }
 
+z80_int util_daad_get_pc_parser(void)
+{
+        if (MACHINE_IS_CPC) return DAAD_PARSER_BREAKPOINT_PC_CPC;
+        else return DAAD_PARSER_BREAKPOINT_PC_SPECTRUM;
+}
+
 int util_daad_is_in_parser(void)
 {
-        if (reg_pc==DAAD_PARSER_BREAKPOINT_PC) return 1;
+        if (reg_pc==util_daad_get_pc_parser() ) return 1;
+        
         else return 0;
 }
 

@@ -31760,7 +31760,7 @@ int debug_show_fired_breakpoints_type=0;
 
 	if (mostrar) {
 		//Si no era un breakpoint de daad de step-to-step o runtoparse
-		if ( (debug_stepping_daad.v || debug_stepping_daad_runto_parse.v) && reg_pc==DAAD_PARSER_BREAKPOINT_PC) {
+		if ( (debug_stepping_daad.v || debug_stepping_daad_runto_parse.v) && reg_pc==util_daad_get_pc_parser() ) {
 
 		}
 		else menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);

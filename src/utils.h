@@ -765,6 +765,7 @@ extern void util_daad_get_condact_message(char *buffer);
 
 extern z80_byte daad_peek(z80_int dir);
 extern void daad_poke(z80_int dir,z80_byte value);
+extern z80_int util_daad_get_pc_parser(void);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
@@ -773,7 +774,11 @@ extern void daad_poke(z80_int dir,z80_byte value);
 
 #define MEMORY_ZONE_NUM_DAAD_CONDACTS 20
 
-#define DAAD_PARSER_BREAKPOINT_PC 0x617c
+#define DAAD_PARSER_BREAKPOINT_PC_SPECTRUM 0x617c
+
+#define DAAD_PARSER_BREAKPOINT_PC_CPC 0x09b4 
+//0x14df
+
 #define DAAD_PARSER_CONDACT_BREAKPOINT 220
 
 #endif
