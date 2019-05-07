@@ -2072,6 +2072,7 @@ void scr_putchar_menu_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z
 
 
 //Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
+//Se utiliza solo al dibujar en zx81/81 y ace, y spectrum (simulado zx81) pero no en menu
 //entrada: puntero=direccion a tabla del caracter
 //x,y: coordenadas en x-0..31 e y 0..23 del zx81
 //inverse si o no
@@ -2095,9 +2096,6 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 
 
 	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
-
-	//temp
-	//margenx_izq=margeny_arr=0;
 
 	//Caso de pentagon y en footer
 	if (pentagon_timing.v && y>=31) margeny_arr=56*border_enabled.v;
@@ -2124,7 +2122,7 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 
 		if (rainbow_enabled.v==1) {
 			//xfinal=(((x*8)+bit)*zoom_level);
-			xfinal=(((x*menu_char_width)+bit)*zoom_level);
+			xfinal=(((x*8)+bit)*zoom_level);
 			xfinal +=margenx_izq;
 
 			yfinal=y*zoom_level;
@@ -2133,31 +2131,14 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 
 		else {
 			//xfinal=((x*8)+bit)*zoom_level;
-			xfinal=((x*menu_char_width)+bit)*zoom_level;
+			xfinal=((x*8)+bit)*zoom_level;
 			yfinal=y*zoom_level;
 		}
 
 
-		//Hacer zoom de ese pixel si conviene
+		//Hacer zoom de ese pixel si conviene		
+		scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
 
-		
-		//Ancho de caracter 8, 7 y 6 pixeles
-		if (menu_char_width==8) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
-
-		//Si 7, saltar primer pixel a la izquierda
-		else if (menu_char_width==7) {
-			if (bit!=0) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
-		}
-
-		//Si 6, saltar dos pixeles: primero izquierda y primero derecha
-		else if (menu_char_width==6) {
-			if (bit!=0 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
-		}
-
-		//Si 5, saltar tres pixeles: primero izquierda y centro y primero derecha
-		else if (menu_char_width==5) {
-			if (bit!=0 && bit!=6 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
-		}
 
 	
 
