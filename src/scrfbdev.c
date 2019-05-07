@@ -323,17 +323,17 @@ void scrfbdev_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80_byt
 {
 
 
-	z80_bit inverse,f;
+	z80_bit inverse;
 
 	//caracter=da_codigo81(caracter,&inverse);
 	//printf ("%c",caracter);
 
 	inverse.v=0;
-	f.v=0;
+
         //128 y 129 corresponden a franja de menu y a letra enye minuscula
         if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
 	//scr_putsprite_comun     (&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,f);
-        scr_putchar_menu_comun_zoom(&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,f,menu_gui_zoom);
+        scr_putchar_menu_comun_zoom(&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,menu_gui_zoom);
 
 
 }
@@ -350,13 +350,13 @@ void scrfbdev_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_b
 
 	//scr_putchar_menu(x,yorigen+y,caracter,tinta,papel);
         y +=yorigen;
-        z80_bit inverse,f;
+        z80_bit inverse;
 
         inverse.v=0;
-        f.v=0;
+
         //128 y 129 corresponden a franja de menu y a letra enye minuscula
         if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
-        scr_putchar_menu_comun_zoom(&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,f,1);
+        scr_putchar_menu_comun_zoom(&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,1);
 
 }
 

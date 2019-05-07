@@ -1973,14 +1973,14 @@ if (MACHINE_IS_Z88) {
 }
 
 
-//Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
+//Muestra un caracter en pantalla, usado en menu
 //entrada: puntero=direccion a tabla del caracter
 //x,y: coordenadas en x-0..31 e y 0..23 del zx81
 //inverse si o no
 //ink, paper
 //si emula fast mode o no
 //y valor de zoom
-void scr_putchar_menu_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode,int zoom_level)
+void scr_putchar_menu_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,int zoom_level)
 {
 
         z80_byte color;
@@ -2013,10 +2013,7 @@ void scr_putchar_menu_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z
                 if (byte_leido & 128 ) color=tinta;
                 else color=papel;
 
-                //simular modo fast para zx81
-		if (MACHINE_IS_ZX8081) {
-	                if (fast_mode.v==1 && video_fast_mode_emulation.v==1 && video_fast_mode_next_frame_black==LIMIT_FAST_FRAME_BLACK) color=0;
-		}
+   
 
                 byte_leido=(byte_leido&127)<<1;
 

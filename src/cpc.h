@@ -91,4 +91,6 @@ extern void cpc_splash_videomode_change(void);
 
 extern z80_bit cpc_send_double_vsync;
 
+extern void cpc_handle_vsync_state(void);
+
 #endif
