@@ -4,12 +4,6 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
--daad cpc
-para cpc 
-o sea, 0x2880 en lugar de 0x8400, 0x31/0x30 en el 0x2882 en lugar de 0x11/0x10, 
-
-y luego buscar el equivalete al 617c (o el que sea, que lo pongo de memoria)
-
 
 
 -cpc sin footer y zoom 2 peta en Mac
