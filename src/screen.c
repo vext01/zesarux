@@ -1972,6 +1972,7 @@ if (MACHINE_IS_Z88) {
 
 }
 
+
 //Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
 //entrada: puntero=direccion a tabla del caracter
 //x,y: coordenadas en x-0..31 e y 0..23 del zx81
@@ -1979,7 +1980,7 @@ if (MACHINE_IS_Z88) {
 //ink, paper
 //si emula fast mode o no
 //y valor de zoom
-void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode,int zoom_level)
+void scr_putchar_menu_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode,int zoom_level)
 {
 
         z80_byte color;
@@ -1996,6 +1997,9 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 
 
 	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+
+	//temp
+	//margenx_izq=margeny_arr=0;
 
 	//Caso de pentagon y en footer
 	if (pentagon_timing.v && y>=31) margeny_arr=56*border_enabled.v;
@@ -2057,14 +2061,105 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 			if (bit!=0 && bit!=6 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
 		}
 
-		/*int incx,incy;
-		for (incy=0;incy<zoom_level;incy++) {
-			for (incx=0;incx<zoom_level;incx++) {
-				if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(xfinal+incx,yfinal+incy,color);
+	
 
-				else scr_putpixel_zoom(xfinal+incx,yfinal+incy,color);
-			}
-		}*/
+
+
+           }
+        }
+}
+
+
+
+//Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
+//entrada: puntero=direccion a tabla del caracter
+//x,y: coordenadas en x-0..31 e y 0..23 del zx81
+//inverse si o no
+//ink, paper
+//si emula fast mode o no
+//y valor de zoom
+void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode,int zoom_level)
+{
+
+        z80_byte color;
+        z80_byte bit;
+        z80_byte line;
+        z80_byte byte_leido;
+
+        //printf ("tinta %d papel %d\n",tinta,papel);
+
+        //margenes de zona interior de pantalla. Para modo rainbow
+        int margenx_izq;
+        int margeny_arr;
+
+
+
+	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+
+	//temp
+	//margenx_izq=margeny_arr=0;
+
+	//Caso de pentagon y en footer
+	if (pentagon_timing.v && y>=31) margeny_arr=56*border_enabled.v;
+	
+        y=y*8;
+
+        for (line=0;line<8;line++,y++) {
+          byte_leido=*puntero++;
+          if (inverse.v==1) byte_leido = byte_leido ^255;
+          for (bit=0;bit<8;bit++) {
+                if (byte_leido & 128 ) color=tinta;
+                else color=papel;
+
+                //simular modo fast para zx81
+		if (MACHINE_IS_ZX8081) {
+	                if (fast_mode.v==1 && video_fast_mode_emulation.v==1 && video_fast_mode_next_frame_black==LIMIT_FAST_FRAME_BLACK) color=0;
+		}
+
+                byte_leido=(byte_leido&127)<<1;
+
+		//este scr_putpixel_zoom_rainbow tiene en cuenta los timings de la maquina (borde superior, por ejemplo)
+
+		int xfinal,yfinal;
+
+		if (rainbow_enabled.v==1) {
+			//xfinal=(((x*8)+bit)*zoom_level);
+			xfinal=(((x*menu_char_width)+bit)*zoom_level);
+			xfinal +=margenx_izq;
+
+			yfinal=y*zoom_level;
+			yfinal +=margeny_arr;
+		}
+
+		else {
+			//xfinal=((x*8)+bit)*zoom_level;
+			xfinal=((x*menu_char_width)+bit)*zoom_level;
+			yfinal=y*zoom_level;
+		}
+
+
+		//Hacer zoom de ese pixel si conviene
+
+		
+		//Ancho de caracter 8, 7 y 6 pixeles
+		if (menu_char_width==8) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+
+		//Si 7, saltar primer pixel a la izquierda
+		else if (menu_char_width==7) {
+			if (bit!=0) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+		}
+
+		//Si 6, saltar dos pixeles: primero izquierda y primero derecha
+		else if (menu_char_width==6) {
+			if (bit!=0 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+		}
+
+		//Si 5, saltar tres pixeles: primero izquierda y centro y primero derecha
+		else if (menu_char_width==5) {
+			if (bit!=0 && bit!=6 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+		}
+
+	
 
 
 
