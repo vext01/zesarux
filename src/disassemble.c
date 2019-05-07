@@ -479,9 +479,15 @@ primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te su
 
   if (buffer_vocabulary[0]!=0 && buffer_vocabulary[0]!='?') vocabulario_encontrado=1;
 
-      char buffer_parametro1[32];
-      if (indireccion) sprintf (buffer_parametro1,"@%d",arg1);
-      else sprintf (buffer_parametro1,"%d",arg1);     
+  char buffer_parametro1[32];
+  if (indireccion) sprintf (buffer_parametro1,"@%d",arg1);
+  else {
+    //Skip utiliza parametro en complemento a 2
+    if (op==116) sprintf (buffer_parametro1,"%d",(char) arg1);  
+    else sprintf (buffer_parametro1,"%d",arg1);  
+  }
+
+
 
     if (num_parametros==0) {
       sprintf (buffer,"%s",nombre_condact);

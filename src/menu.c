@@ -9543,7 +9543,7 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 		valor=util_daad_get_object_value(indice);		
 	}
 
-	sprintf (destino,"%c%03d %d",letra_mostrar,indice,valor);
+	sprintf (destino,"%d.%c%03d %d",num_linea+1,letra_mostrar,indice,valor);
 }
 
                                          //Muestra el registro que le corresponde para esta linea
@@ -10197,7 +10197,7 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
-				zxvision_print_string_defaults_fillspc(w,1,linea++,"                      Watches");
+				zxvision_print_string_defaults_fillspc(w,1,linea++,"                    Watches");
 
 
 /*
@@ -10217,7 +10217,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 				//linea++;	
 
-				int columna_registros=22;		
+				int columna_registros=20;		
 
 				int terminador=0; //Si se ha llegado a algun terminador de linea						
 
