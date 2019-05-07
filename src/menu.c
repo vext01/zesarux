@@ -10170,7 +10170,8 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				//Si no esta en zona de parser
 				if (!util_daad_is_in_parser()) {
-					zxvision_print_string_defaults_fillspc(w,1,linea++,"Not in condacts");
+					strcpy(buffer_linea,"Not in condacts");
+					//zxvision_print_string_defaults_fillspc(w,1,linea++,"Not in condacts");
 				}
 
 				else {				
@@ -10190,9 +10191,13 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 					sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
 
-					zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+					//zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
 				}
+
+				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+
+				zxvision_print_string_defaults_fillspc(w,1,linea++,"                      Watches");
 
 
 /*
@@ -10210,7 +10215,7 @@ Si es otro valor, en 0x8416  está la dirección donde está el vocabulario, si 
 Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de tipo 0 , y el código del flag 34 que sea de tipo 2
 */
 
-				linea++;	
+				//linea++;	
 
 				int columna_registros=22;		
 
