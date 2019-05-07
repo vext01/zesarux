@@ -1980,7 +1980,7 @@ if (MACHINE_IS_Z88) {
 //ink, paper
 //si emula fast mode o no
 //y valor de zoom
-void scr_putchar_menu_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,int zoom_level)
+void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,int zoom_level)
 {
 
         z80_byte color;
@@ -1994,6 +1994,8 @@ void scr_putchar_menu_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z
         int margenx_izq;
         int margeny_arr;
 
+				z80_byte *puntero;
+				puntero=&char_set[(caracter-32)*8];
 
 
 	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
@@ -2095,7 +2097,7 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
 
 	//Caso de pentagon y en footer
-	if (pentagon_timing.v && y>=31) margeny_arr=56*border_enabled.v;
+	//if (pentagon_timing.v && y>=31) margeny_arr=56*border_enabled.v;
 	
         y=y*8;
 
@@ -2118,7 +2120,6 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 		int xfinal,yfinal;
 
 		if (rainbow_enabled.v==1) {
-			//xfinal=(((x*8)+bit)*zoom_level);
 			xfinal=(((x*8)+bit)*zoom_level);
 			xfinal +=margenx_izq;
 
@@ -2127,7 +2128,6 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 		}
 
 		else {
-			//xfinal=((x*8)+bit)*zoom_level;
 			xfinal=((x*8)+bit)*zoom_level;
 			yfinal=y*zoom_level;
 		}
