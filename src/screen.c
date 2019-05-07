@@ -2305,33 +2305,22 @@ int scr_ver_si_refrescar_por_menu_activo(int x,int fila)
 
 
 
-                        //Ver en casos en que puede que haya menu activo y hay que hacer overlay
-                        if (screen_refresh_menu==1) {
-                                if (menu_overlay_activo==1) {
+	//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+  if (screen_refresh_menu==1) {
+		if (menu_overlay_activo==1) {
                                         //hay menu activo. no refrescar esa coordenada si hay texto del menu
-					int pos=fila*32+x;
+			int pos=fila*32+x;
 
-					if (overlay_usado_screen_array[pos]) {
+			if (overlay_usado_screen_array[pos]) {
                                         //if (overlay_screen_array[pos].caracter!=0) {
                                                 //no hay que repintar en esa zona
-						return 0;
-                                        }
+				return 0;
+			}
 
-					//segunda capa overlay. esto no hace falta. lo que haremos es que cada vez que se escribe en second_overlay,
-					//se copia al primero. cuando se hace cls tambien se copia al primero
-					//esto hace que sea mas rapido la llamada a esta funcion, porque asi solo hay que comprobar una capa
-					/*
-					if (menu_second_layer) {
-						if (second_overlay_screen_array[pos].caracter!=0) {
-                                            	    	//no hay que repintar en esa zona
-	                                                return 0;
-	                                        }
+			
 
-					}
-					*/
-
-                                }
-                        }
+		}
+	}
 	return 1;
 
 }
