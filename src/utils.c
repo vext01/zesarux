@@ -13983,6 +13983,12 @@ int util_daad_is_in_parser(void)
 //Mensajes con xor 255 y finaliza mensaje con F5 (o 10 despues de hacerle el xor)
 void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *texto,int limite_mensajes)
 {
+
+        if (index>limite_mensajes-1) {
+                strcpy(texto,"Message out of range");
+                return;
+        }
+
         z80_int offset_pointer=table_dir+index*2;
 
         z80_int dir=value_8_to_16(daad_peek(offset_pointer+1),daad_peek(offset_pointer));
