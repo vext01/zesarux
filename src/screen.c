@@ -1913,6 +1913,7 @@ void set_putpixel_zoom(void)
 	}
 }
 
+
 //Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
 void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 { 
@@ -2026,16 +2027,9 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 			yfinal=y*zoom_level;
 
 			if (rainbow_enabled.v==1) {
-				//xfinal=(((x*menu_char_width)+bit)*zoom_level);
 				xfinal +=margenx_izq;
 
-				//yfinal=y*zoom_level;
 				yfinal +=margeny_arr;
-			}
-
-			else {
-				//xfinal=((x*menu_char_width)+bit)*zoom_level;
-				//yfinal=y*zoom_level;
 			}
 
 
@@ -2059,8 +2053,6 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 			else if (menu_char_width==5) {
 				if (bit!=0 && bit!=6 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
 			}
-
-	
 
 
 
@@ -2123,17 +2115,12 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 		yfinal=y*zoom_level;
 
 		if (rainbow_enabled.v==1) {
-			//xfinal=(((x*8)+bit)*zoom_level);
 			xfinal +=margenx_izq;
 
-			//yfinal=y*zoom_level;
 			yfinal +=margeny_arr;
 		}
 
-		else {
-			//xfinal=((x*8)+bit)*zoom_level;
-			//yfinal=y*zoom_level;
-		}
+
 
 
 		//Hacer zoom de ese pixel si conviene		
@@ -2374,8 +2361,6 @@ int scr_ver_si_refrescar_por_menu_activo(int x,int fila)
 	x /=menu_gui_zoom;
 	fila /=menu_gui_zoom;
 
-	//menu_char_width
-	//x=(x*menu_char_width)/8;
 
 	if (x>31 || fila>23) return 1;
 

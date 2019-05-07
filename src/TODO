@@ -15,6 +15,9 @@ Pero putpixel de maquina emulada sin raibow tiene el 0,0 dentro de border. Como 
 y luego mezclarlos... problema: drivers como cocoa hace el render el solito, con la memoria de pantalla.
 fbdev pasa lo mismo. Habria que tener un buffer intermedio (cuando menu esta activo) y mezclarlos a cada final de frame
 ->esto implicaria alterar funcion de putpixel de driver de video por otro cuando se abre el menu. Demasiado complicado
+->habria que sumar scr_return_margenxy_rainbow a la llamada a scr_ver_si_refrescar_por_menu_activo cuando rainbow
+
+->ver cambios_menu_a_border.txt
 
 -cpc sin footer y zoom 2 peta en Mac
 
