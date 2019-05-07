@@ -5,6 +5,16 @@ Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
 
+-menus que puedan ir a border y mas alla de pantalla emulada:
+*putpixel sin rainbow siempre agrega margen de border. problema: es comun para menu y pantalla emulada.
+Habria que tener el 0,0 (arriba del todo izquierda) como referencia para putpixel de menu
+*funcion scr_ver_si_refrescar_por_menu_activo, trabajara como 0,0 como referencia esquina arriba izquierda
+Pero putpixel de maquina emulada sin raibow tiene el 0,0 dentro de border. Como hacer que tenga en cuenta el offset?
+
+->si es mucho lio, la solucion seria tener dos buffers de pixel: uno para pantalla, otro para menu
+y luego mezclarlos... problema: drivers como cocoa hace el render el solito, con la memoria de pantalla.
+fbdev pasa lo mismo. Habria que tener un buffer intermedio (cuando menu esta activo) y mezclarlos a cada final de frame
+->esto implicaria alterar funcion de putpixel de driver de video por otro cuando se abre el menu. Demasiado complicado
 
 -cpc sin footer y zoom 2 peta en Mac
 
