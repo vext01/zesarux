@@ -11756,7 +11756,7 @@ void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 		case 4:
 			total_messages=128;
 			funcion_mensajes=util_daad_get_compressed_message;
-			window_title="Daad Compressed Messages";
+			window_title="Daad Compression Tokens";
 			//entry_message="Compressed Message";
 		break;		
 
@@ -11822,11 +11822,11 @@ void menu_debug_daad_view_messages_ask(void)
 		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'o');
 		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,0);
 
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~User");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~User Messages");
 		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'u');
 		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,1);
 
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~System");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~System Messages");
 		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'s');
 		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,2);
 
@@ -11834,7 +11834,7 @@ void menu_debug_daad_view_messages_ask(void)
 		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'l');
 		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,3);
 
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Compressed");
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Compression Tokens");
 		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'c');
 		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,4);
 
