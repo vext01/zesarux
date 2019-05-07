@@ -11,13 +11,31 @@ Habria que tener el 0,0 (arriba del todo izquierda) como referencia para putpixe
 *funcion scr_ver_si_refrescar_por_menu_activo, trabajara como 0,0 como referencia esquina arriba izquierda
 Pero putpixel de maquina emulada sin raibow tiene el 0,0 dentro de border. Como hacer que tenga en cuenta el offset?
 
+->habria que sumar scr_return_margenxy_rainbow a la llamada a scr_ver_si_refrescar_por_menu_activo cuando rainbow
+->ver cambios_menu_a_border.txt
+
+
 ->si es mucho lio, la solucion seria tener dos buffers de pixel: uno para pantalla, otro para menu
 y luego mezclarlos... problema: drivers como cocoa hace el render el solito, con la memoria de pantalla.
 fbdev pasa lo mismo. Habria que tener un buffer intermedio (cuando menu esta activo) y mezclarlos a cada final de frame
 ->esto implicaria alterar funcion de putpixel de driver de video por otro cuando se abre el menu. Demasiado complicado
-->habria que sumar scr_return_margenxy_rainbow a la llamada a scr_ver_si_refrescar_por_menu_activo cuando rainbow
+->quiza putpixel tendria que ver si hay overlay de menu. 
+Si no esta, hacer putpixel normal
+Si esta, hacer pixel en buffer aparte. Y mezclarlo en algun momento
+->problema 2: buffer de menu y buffer de maquina emulada tienen que ser de tipos iguales: indexado 16 bits
+->quiza mezclarlo a buffer final despues de hacer el putpixel con menu activo
+->o mezclarlo en el mismo putpixel. no agrega incremento de uso de cpu. Metodo preferido
+->dos buffers, para cuando menu esta activo:
+->buffer pixeles menu
+->buffer pixeles maquina emulada
+->al hacer putpixel de driver video, meter primero pixel en buffer de pixeles maquina emulada.
+ver si pixeles menu esta por encima del de maquina emulada o no.
+->truco: hacer pixeles de menu transparentes para cuando se borra. y no usar mas el scr_ver_si_refrescar_por_menu_activo
+->color transparente, hacerlo ficticio por ejemplo 65535 u otro valor
+->esto permitira mezclar elementos de menu con fondo sin tener que ser de tamaño 8x8 necesariamente
+->cuando se hace pixel de texto menu, como se refrescará? vendra en la rutina de refrescar_pantalla. Pero todo menu que este
+fuera de ventana emulada, mas alla del border, no se refrescara....
 
-->ver cambios_menu_a_border.txt
 
 -cpc sin footer y zoom 2 peta en Mac
 
