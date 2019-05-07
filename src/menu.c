@@ -11770,7 +11770,7 @@ void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 		break;		
 
 		default:
-			total_messages=util_dadd_get_num_objects_description();
+			total_messages=util_daad_get_num_objects_description();
 			funcion_mensajes=util_daad_get_object_description;
 			window_title="Daad Objects";
 			//entry_message="Object";

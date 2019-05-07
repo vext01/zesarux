@@ -738,8 +738,8 @@ extern z80_byte util_daad_get_object_value(z80_byte index);
 extern void util_daad_put_flag_value(z80_byte index,z80_byte value);
 extern void util_daad_put_object_value(z80_byte index,z80_byte value);
 
-extern z80_int util_dadd_get_start_objects_names(void);
-extern z80_int util_dadd_get_num_objects_description(void);
+extern z80_int util_daad_get_start_objects_names(void);
+extern z80_int util_daad_get_num_objects_description(void);
 
 extern void util_daad_get_object_description(z80_byte index,char *texto);
 
@@ -747,7 +747,7 @@ extern int util_concat_string(char *original,char *string_to_add,int limite);
 
 extern int util_daad_is_in_parser(void);
 
-extern void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *texto);
+extern void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *texto,int limite_mensajes);
 
 extern void util_daad_get_compressed_message(z80_byte index,char *texto);
 

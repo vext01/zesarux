@@ -13874,7 +13874,7 @@ caracteres con acentos etc códigos por debajo del 32
 */
 
 
-z80_int util_dadd_get_start_objects_names(void)
+z80_int util_daad_get_start_objects_names(void)
 {
 
         z80_int puntero=util_daad_get_start_pointers()+12;
@@ -13884,7 +13884,7 @@ z80_int util_dadd_get_start_objects_names(void)
         return dir;
 }
 
-z80_int util_dadd_get_start_locat_messages(void)
+z80_int util_daad_get_start_locat_messages(void)
 {
 
         z80_int puntero=util_daad_get_start_pointers()+14;
@@ -13896,7 +13896,7 @@ z80_int util_dadd_get_start_locat_messages(void)
 
 
 
-z80_int util_dadd_get_start_user_messages(void)
+z80_int util_daad_get_start_user_messages(void)
 {
 
         z80_int puntero=util_daad_get_start_pointers()+16;
@@ -13906,7 +13906,7 @@ z80_int util_dadd_get_start_user_messages(void)
         return dir;
 }
 
-z80_int util_dadd_get_start_sys_messages(void)
+z80_int util_daad_get_start_sys_messages(void)
 {
 
         z80_int puntero=util_daad_get_start_pointers()+18;
@@ -13916,7 +13916,7 @@ z80_int util_dadd_get_start_sys_messages(void)
         return dir;
 }
 
-z80_int util_dadd_get_start_compressed_messages(void)
+z80_int util_daad_get_start_compressed_messages(void)
 {
 
         z80_int puntero=util_daad_get_start_pointers()+8;
@@ -13926,7 +13926,7 @@ z80_int util_dadd_get_start_compressed_messages(void)
         return dir;
 }
 
-z80_int util_dadd_get_num_objects_description(void)
+z80_int util_daad_get_num_objects_description(void)
 {
 
         z80_int puntero=util_daad_get_start_pointers()+3;
@@ -13981,7 +13981,7 @@ int util_daad_is_in_parser(void)
 
 //Retorna un mensaje de daad N, de la tabla indicada (tabla de punteros de 16 bits)
 //Mensajes con xor 255 y finaliza mensaje con F5 (o 10 despues de hacerle el xor)
-void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *texto)
+void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *texto,int limite_mensajes)
 {
         z80_int offset_pointer=table_dir+index*2;
 
@@ -14029,8 +14029,8 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
 void util_daad_get_object_description(z80_byte index,char *texto)
 {
 
-        z80_int table_dir=util_dadd_get_start_objects_names();
-        util_daad_get_message_table_lookup(index,table_dir,texto);
+        z80_int table_dir=util_daad_get_start_objects_names();
+        util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_objects_description() );
 
 }
 
@@ -14038,24 +14038,24 @@ void util_daad_get_object_description(z80_byte index,char *texto)
 void util_daad_get_user_message(z80_byte index,char *texto)
 {
 
-        z80_int table_dir=util_dadd_get_start_user_messages();
-        util_daad_get_message_table_lookup(index,table_dir,texto);
+        z80_int table_dir=util_daad_get_start_user_messages();
+        util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_user_messages() );
 }
 
 
 void util_daad_get_sys_message(z80_byte index,char *texto)
 {
 
-        z80_int table_dir=util_dadd_get_start_sys_messages();
-        util_daad_get_message_table_lookup(index,table_dir,texto);
+        z80_int table_dir=util_daad_get_start_sys_messages();
+        util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_sys_messages());
 }
 
 
 void util_daad_get_locat_message(z80_byte index,char *texto)
 {
 
-        z80_int table_dir=util_dadd_get_start_locat_messages();
-        util_daad_get_message_table_lookup(index,table_dir,texto);
+        z80_int table_dir=util_daad_get_start_locat_messages();
+        util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 }
 
 
@@ -14098,7 +14098,7 @@ void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
 void util_daad_get_compressed_message(z80_byte index,char *texto)
 {
 //fseek ($file, $pos_tokens + 1);  // It seems actual token table starts one byte after the one the header points to
-        z80_int table_dir=util_dadd_get_start_compressed_messages();
+        z80_int table_dir=util_daad_get_start_compressed_messages();
         table_dir++;
         util_daad_get_token_message(index,table_dir,texto);
 }
