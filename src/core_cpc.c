@@ -209,6 +209,8 @@ void cpu_core_loop_cpc(void)
 
 			t_scanline_next_line();
 
+			cpc_handle_vsync_state();
+
 
 			//CPC genera interrupciones a 300 hz
 			//Esto supone lanzar 6  (50*6=300) interrupciones en cada frame

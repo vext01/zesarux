@@ -178,7 +178,9 @@ z80_byte cpc_keyboard_table[16]={
 };
 
 
-z80_bit cpc_send_double_vsync={0};
+z80_bit cpc_send_double_vsync={1};
+
+z80_bit cpc_vsync_signal={0};
 
 void cpc_set_memory_pages()
 {
@@ -505,10 +507,59 @@ void init_cpc_line_display_table(void)
 
 
 
-//http://www.cpcwiki.eu/index.php/Programming:Keyboard_scanning
-//http://www.cpcwiki.eu/index.php/8255
+
+//Decir si vsync está activo o no, según en qué posición de pantalla estamos,
+//y resetear t_scanline_draw a 0 cuando finaliza dicha vsync
+//Ver http://www.cpcwiki.eu/index.php/CRTC#HSYNC_and_VSYNC
+/*
+The VSYNC is also modified before being sent to the monitor. It happens two lines* after the VSYNC from the CRTC 
+and stay two lines (same cut rule if VSYNC is lower than 4). PAL (50Hz) does need two lines VSYNC_width, and 4us HSYNC_width.
+*/
+void cpc_handle_vsync_state(void)
+{
+	//Duracion vsync
+	int vsync_lenght=cpc_crtc_registers[3]&15;
+
+	//Si es 0, en algunos chips significa 16
+	if (vsync_lenght==0) vsync_lenght=16;
+	//cpc_ppi_ports[1];
+
+	if (cpc_send_double_vsync.v) vsync_lenght *=2;	
+
+	int vsync_position=cpc_crtc_registers[7]&127;
+	//esta en caracteres
+	vsync_position *=8;
+
+
+	int final_vsync=vsync_position+vsync_lenght;
+
+	//Lo modificamos
+	//vsync_position +=2;
+
+	//final_vsync +=2;
+
+
+	if (t_scanline_draw>=vsync_position && t_scanline_draw<final_vsync) cpc_vsync_signal.v=1;
+	else cpc_vsync_signal.v=0;
+
+	//Y si está justo después, resetear posicion
+	if (t_scanline_draw==final_vsync) t_scanline_draw=0;
+
+	//printf ("vsync %d scanline %d scanline_draw %d\n",cpc_vsync_signal.v,t_scanline,t_scanline_draw);
+
+}
 
 z80_byte cpc_get_vsync_bit(void)
+{
+
+	//printf ("get vsync scanline %d scanline_draw %d : vsync %d\n",t_scanline,t_scanline_draw,cpc_vsync_signal.v);
+
+	//if (cpc_vsync_signal.v) printf ("1111111######\n");
+
+	return cpc_vsync_signal.v;
+}
+
+z80_byte old_cpc_get_vsync_bit(void)
 {
 				//Bit de vsync
 			//Duracion vsync
@@ -565,6 +616,8 @@ z80_byte cpc_get_vsync_bit(void)
 
 }
 
+//http://www.cpcwiki.eu/index.php/Programming:Keyboard_scanning
+//http://www.cpcwiki.eu/index.php/8255
 z80_byte cpc_in_ppi(z80_byte puerto_h)
 {
 	
