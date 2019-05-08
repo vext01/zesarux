@@ -2266,7 +2266,16 @@ if (!GetCurrentProcess(&psn))
 extern z80_int buffer_layer_menu[];
 
 
+void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
+{
+                int index = 4*(x+y*pixel_screen_width);
+		unsigned int *p;
+		p=(unsigned int *) &pixel_screen_data[index];
 
+		//agregar alpha
+		color_rgb |=0xFF000000;                   
+		*p=color_rgb;
+}
 
 void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 {
@@ -2276,37 +2285,25 @@ void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 		return;
 	}
 
-		unsigned char red,green,blue,alpha;
-		alpha=255;
+		//unsigned char red,green,blue,alpha;
+		//alpha=255;
 
-            int index = 4*(x+y*pixel_screen_width);
+                
 
 		//Tabla con los colores reales del Spectrum. Formato RGB
 
-		/*
-		// Escribir los 4 bytes por separado
-	    //no hace falta mascara &255 dado que son variables unsigned char
-	    int rgbcolor=spectrum_colortable[color];
-	    red=(rgbcolor>>16); //&255;
-	    green=(rgbcolor>>8); //&255;
-	    blue=(rgbcolor); //&255;
-
-
-            pixel_screen_data[index++]  =blue;
-            pixel_screen_data[index++]=green;
-            pixel_screen_data[index++]=red;
-            pixel_screen_data[index]=alpha;
-		*/
-
-
 		//prueba a escribir de golpe los 32 bits. no va mas rapido que con el metodo anterior
 		unsigned int color32=spectrum_colortable[color];
-		//agregar alpha
-		color32 |=0xFF000000;
+
 		//y escribir
+
+                scrcocoa_putpixel_final_rgb(x,y,color32);
+                /*int index = 4*(x+y*pixel_screen_width);
 		unsigned int *p;
 		p=(unsigned int *) &pixel_screen_data[index];
-		*p=color32;
+		//agregar alpha
+		color32 |=0xFF000000;                
+		*p=color32;*/
 
     //    }
     //}
@@ -2321,17 +2318,7 @@ extern int ancho_layer_menu_machine;
 			extern z80_int buffer_layer_machine[];
 			extern z80_int buffer_layer_menu[];
 
-void scrcocoa_putpixel_mix_layers(x,y)
-{
-        //Obtener los dos pixeles
-        z80_int color_menu=buffer_layer_menu[y*ancho_layer_menu_machine+x];
-        z80_int color_machine=buffer_layer_machine[y*ancho_layer_menu_machine+x];
 
-
-        //Si es transparente menu, poner machine
-        if (color_menu==65535) scrcocoa_putpixel_final(x,y,color_machine);
-        else scrcocoa_putpixel_final(x,y,color_menu);
-}
 
 
 
@@ -2347,7 +2334,7 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
 
         //Putpixel haciendo mix  
-        scrcocoa_putpixel_mix_layers(x,y);   
+        screen_putpixel_mix_layers(x,y);   
 }
 
 void scrcocoa_putchar_zx8081(int x,int y, z80_byte caracter)

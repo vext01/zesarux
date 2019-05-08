@@ -1935,7 +1935,7 @@ void scr_putpixel_layer_menu(int x,int y,int color)
 												buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
 
 												//Y hacer mix
-												scrcocoa_putpixel_mix_layers(xdestino,ydestino);   
+												screen_putpixel_mix_layers(xdestino,ydestino);   
                 }
         }
 }
@@ -1965,6 +1965,110 @@ void scr_redraw_machine_layer(void)
 	}
 
 
+}
+
+unsigned int screen_get_color_from_rgb(unsigned char red,unsigned char green,unsigned char blue)
+{
+	return (red<<16)|(green<<8)|blue;
+}
+
+void screen_get_rgb_components(unsigned int color_rgb,unsigned int *red,unsigned int *green,unsigned int *blue)
+{
+	*blue=color_rgb & 0xFF;
+	color_rgb >>=8;
+
+	*green=color_rgb & 0xFF;
+	color_rgb >>=8;
+
+	*red=color_rgb & 0xFF;
+
+}
+
+/*
+0=Menu por encima de maquina, si no es transparente
+1=Menu por encima de maquina, si no es transparente. Y Color Blanco con brillo es transparente
+2=Mix de los dos colores, con control de transparecnai
+4=Maquina bajar brillo, se combina con los anteriores
+*/
+int screen_menu_mix_method=0;
+int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
+
+//Mezclar dos pixeles de layer menu y layer maquina
+void screen_putpixel_mix_layers(int x,int y)
+{
+        //Obtener los dos pixeles
+        z80_int color_menu=buffer_layer_menu[y*ancho_layer_menu_machine+x];
+        z80_int color_machine=buffer_layer_machine[y*ancho_layer_menu_machine+x];
+
+
+				unsigned int color_rgb;
+
+				unsigned int color_rgb_menu,color_rgb_maquina;
+
+				unsigned int red_menu,green_menu,blue_menu;
+				unsigned int red_machine,green_machine,blue_machine;
+
+				unsigned char red_final,green_final,blue_final;
+
+				z80_int color_indexado;
+
+				int metodo_mix=screen_menu_mix_method & 3;
+				switch (metodo_mix) {
+
+
+					case 1:
+        		//Si es transparente menu, o color 15, poner machine
+        		if (color_menu==65535 || color_menu==15) color_indexado=color_machine;
+        		else color_indexado=color_menu;
+
+						color_rgb=spectrum_colortable[color_indexado];					
+					break;
+
+					case 2:
+
+						//Mezclar los dos con control de opacidad, siempre que color_menu no sea transparente
+						if (color_menu==65535) color_rgb=spectrum_colortable[color_machine];
+
+						else {
+							color_rgb_menu=spectrum_colortable[color_menu];
+							color_rgb_maquina=spectrum_colortable[color_machine];
+
+							screen_get_rgb_components(color_rgb_menu,&red_menu,&green_menu,&blue_menu);
+							screen_get_rgb_components(color_rgb_maquina,&red_machine,&green_machine,&blue_machine);
+
+
+							//Mezclarlos
+							int machine_transparency=100-screen_menu_mix_transparency;
+
+							red_menu=(red_menu*screen_menu_mix_transparency)/100;
+							green_menu=(green_menu*screen_menu_mix_transparency)/100;
+							blue_menu=(blue_menu*screen_menu_mix_transparency)/100;
+
+							red_machine=(red_machine*machine_transparency)/100;
+							green_machine=(green_machine*machine_transparency)/100;
+							blue_machine=(blue_machine*machine_transparency)/100;
+
+							red_final=red_menu+red_machine;
+							green_final=green_menu+green_machine;
+							blue_final=blue_menu+blue_machine;
+
+							color_rgb=screen_get_color_from_rgb(red_final,green_final,blue_final);
+						}
+
+					break;
+
+					default:
+				
+        		//Si es transparente menu, poner machine
+        		if (color_menu==65535) color_indexado=color_machine;
+        		else color_indexado=color_menu;
+
+						color_rgb=spectrum_colortable[color_indexado];
+					break;					
+
+				}
+
+				scrcocoa_putpixel_final_rgb(x,y,color_rgb);
 }
 
 

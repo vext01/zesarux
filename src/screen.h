@@ -746,5 +746,7 @@ extern char *get_spectrum_ula_string_video_mode(void);
 
 extern int screen_ega_to_spectrum_colour(int ega_col);
 
+extern void screen_putpixel_mix_layers(int x,int y);
+
 
 #endif
