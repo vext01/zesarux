@@ -4,6 +4,14 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
+-transparencia menu:
+
+*refresco no siempre parece que vaya bien en menu -> parece que ya va
+*testear bien en menu con y sin multitask
+*ancho buferes, reasignar al asignar ventana
+*funciones de driver, generalizar
+*sin realvideo, sale todo desplazado. mouse tampoco se ubica correctamente
+
 
 -menus que puedan ir a border y mas alla de pantalla emulada:
 *putpixel sin rainbow siempre agrega margen de border. problema: es comun para menu y pantalla emulada.

@@ -2034,7 +2034,7 @@ void screen_putpixel_mix_layers(int x,int y)
 
 					case 1:
         		//Si es transparente menu, o color 15, poner machine
-        		if (color_menu==65535 || color_menu==15) {
+        		if (color_menu==65535 || color_menu==ESTILO_GUI_PAPEL_NORMAL) {
 							color_indexado=color_machine;
 							color_rgb=spectrum_colortable[color_indexado];
 
@@ -2123,6 +2123,8 @@ void scr_clear_layer_menu(void)
 
 		int hh;
 		for (hh=0;hh<ancho_layer_menu_machine*alto_layer_menu_machine;hh++) buffer_layer_menu[hh]=65535; //color transparente	
+
+		clear_putpixel_cache();
 
 		//Y repintar todo buffer maquina
 		scr_redraw_machine_layer();

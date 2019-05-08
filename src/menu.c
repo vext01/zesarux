@@ -1719,8 +1719,6 @@ void reset_menu_overlay_function(void)
 
 	scr_clear_layer_menu();
 
-	//Necesario para que al quitar la capa de menu, se repinte todo
-	clear_putpixel_cache();
 }
 
 //funcion para escribir un caracter en el buffer de overlay
