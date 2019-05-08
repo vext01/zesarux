@@ -27443,11 +27443,11 @@ void menu_interface_mix_tranparency(MENU_ITEM_PARAMETERS)
 {
 
 
-	char string_trans[4];
+	char string_trans[3];
 
         sprintf (string_trans,"%d",100-screen_menu_mix_transparency);
 
-        menu_ventana_scanf("Transparency? (0-95)",string_trans,4);
+        menu_ventana_scanf("Transparency? (0-95)",string_trans,3);
 
         int valor=parse_string_to_number(string_trans);
 	if (valor<0 || valor>95) {
