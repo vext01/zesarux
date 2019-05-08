@@ -1701,6 +1701,9 @@ void set_menu_overlay_function(void (*funcion)(void) )
 	//para que al oscurecer la pantalla tambien refresque el border
 	modificado_border.v=1;
 	menu_overlay_activo=1;
+
+	//Necesario para que al poner la capa de menu, se repinte todo
+	clear_putpixel_cache();	
 }
 
 
@@ -27439,6 +27442,28 @@ void menu_interface_mix_menu(MENU_ITEM_PARAMETERS)
 void menu_interface_mix_tranparency(MENU_ITEM_PARAMETERS)
 {
 
+
+	char string_trans[4];
+
+        sprintf (string_trans,"%d",100-screen_menu_mix_transparency);
+
+        menu_ventana_scanf("Transparency? (0-95)",string_trans,4);
+
+        int valor=parse_string_to_number(string_trans);
+	if (valor<0 || valor>95) {
+		debug_printf (VERBOSE_ERR,"Invalid value");
+	}
+
+	else {
+		screen_menu_mix_transparency=100-valor;
+	}
+
+
+}
+
+void menu_interface_reduce_bright_menu(MENU_ITEM_PARAMETERS)
+{
+	screen_menu_reduce_bright_machine.v ^=1;
 }
 
 
@@ -27535,7 +27560,11 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
 			if (screen_menu_mix_method==2) {
 				//screen_menu_mix_transparency
-				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%3d%%] Tranparency",screen_menu_mix_transparency );
+				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%3d%%] Transparency",100-screen_menu_mix_transparency );
+			}
+
+			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
+				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_reduce_bright_menu,NULL,"[%c] Darken when menu",(screen_menu_reduce_bright_machine.v ? 'X' : ' ' ) );
 			}
 		}
 

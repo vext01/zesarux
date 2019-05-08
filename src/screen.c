@@ -1972,6 +1972,13 @@ unsigned int screen_get_color_from_rgb(unsigned char red,unsigned char green,uns
 	return (red<<16)|(green<<8)|blue;
 }
 
+void screen_reduce_color_rgb(int percent,unsigned int *red,unsigned int *green,unsigned int *blue)
+{
+	*red=((*red)*percent)/100;
+	*green=((*green)*percent)/100;
+	*blue=((*blue)*percent)/100;
+}
+
 void screen_get_rgb_components(unsigned int color_rgb,unsigned int *red,unsigned int *green,unsigned int *blue)
 {
 	*blue=color_rgb & 0xFF;
@@ -1994,6 +2001,9 @@ Otro setting=Maquina bajar brillo, se combina con los anteriores
 */
 int screen_menu_mix_method=0;
 int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
+
+//Si reducimos brillo de la maquina al abrir el menu, solo vale para metodos 0  y 1
+z80_bit screen_menu_reduce_bright_machine={0};
 
 char *screen_menu_mix_methods_strings[]={
 	"Over","Over2","Mix"
@@ -2044,15 +2054,21 @@ void screen_putpixel_mix_layers(int x,int y)
 
 
 							//Mezclarlos
+							
+
+							//red_menu=(red_menu*screen_menu_mix_transparency)/100;
+							//green_menu=(green_menu*screen_menu_mix_transparency)/100;
+							//blue_menu=(blue_menu*screen_menu_mix_transparency)/100;
+
+							screen_reduce_color_rgb(screen_menu_mix_transparency,&red_menu,&green_menu,&blue_menu);
+
+
 							int machine_transparency=100-screen_menu_mix_transparency;
+							//red_machine=(red_machine*machine_transparency)/100;
+							//green_machine=(green_machine*machine_transparency)/100;
+							//blue_machine=(blue_machine*machine_transparency)/100;
 
-							red_menu=(red_menu*screen_menu_mix_transparency)/100;
-							green_menu=(green_menu*screen_menu_mix_transparency)/100;
-							blue_menu=(blue_menu*screen_menu_mix_transparency)/100;
-
-							red_machine=(red_machine*machine_transparency)/100;
-							green_machine=(green_machine*machine_transparency)/100;
-							blue_machine=(blue_machine*machine_transparency)/100;
+							screen_reduce_color_rgb(machine_transparency,&red_machine,&green_machine,&blue_machine);
 
 							red_final=red_menu+red_machine;
 							green_final=green_menu+green_machine;
@@ -2066,12 +2082,28 @@ void screen_putpixel_mix_layers(int x,int y)
 					default:
 				
         		//Si es transparente menu, poner machine
-        		if (color_menu==65535) color_indexado=color_machine;
-        		else color_indexado=color_menu;
+        		if (color_menu==65535) {
+							color_indexado=color_machine;
+							color_rgb=spectrum_colortable[color_indexado];
+						}
 
-						color_rgb=spectrum_colortable[color_indexado];
+        		else {
+							color_indexado=color_menu;
+							color_rgb=spectrum_colortable[color_indexado];
+						}
+
+
 					break;					
 
+				}
+
+				//Oscurecer ligeramente la maquina
+				if (metodo_mix==0 || metodo_mix==1) {
+							if (screen_menu_reduce_bright_machine.v) {
+								screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
+								screen_reduce_color_rgb(10,&red_machine,&green_machine,&blue_machine);	
+								color_rgb=screen_get_color_from_rgb(red_machine,green_machine,blue_machine);						
+							}
 				}
 
 				scrcocoa_putpixel_final_rgb(x,y,color_rgb);

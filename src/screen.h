@@ -752,6 +752,7 @@ extern char *screen_menu_mix_methods_strings[];
 
 extern int screen_menu_mix_method;
 extern int screen_menu_mix_transparency; 
+extern z80_bit screen_menu_reduce_bright_machine;
 
 
 #endif
