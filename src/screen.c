@@ -1988,10 +1988,16 @@ void screen_get_rgb_components(unsigned int color_rgb,unsigned int *red,unsigned
 0=Menu por encima de maquina, si no es transparente
 1=Menu por encima de maquina, si no es transparente. Y Color Blanco con brillo es transparente
 2=Mix de los dos colores, con control de transparecnai
-4=Maquina bajar brillo, se combina con los anteriores
+
+
+Otro setting=Maquina bajar brillo, se combina con los anteriores
 */
 int screen_menu_mix_method=0;
 int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
+
+char *screen_menu_mix_methods_strings[]={
+	"Over","Over2","Mix"
+};
 
 //Mezclar dos pixeles de layer menu y layer maquina
 void screen_putpixel_mix_layers(int x,int y)
@@ -2076,7 +2082,7 @@ void screen_putpixel_mix_layers(int x,int y)
 void scr_clear_layer_menu(void)
 {
 
-		printf ("Clearing layer menu\n");
+		//printf ("Clearing layer menu\n");
 
 		int hh;
 		for (hh=0;hh<ancho_layer_menu_machine*alto_layer_menu_machine;hh++) buffer_layer_menu[hh]=65535; //color transparente	

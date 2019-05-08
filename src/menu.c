@@ -1715,6 +1715,9 @@ void reset_menu_overlay_function(void)
 	menu_overlay_activo=0;
 
 	scr_clear_layer_menu();
+
+	//Necesario para que al quitar la capa de menu, se repinte todo
+	clear_putpixel_cache();
 }
 
 //funcion para escribir un caracter en el buffer de overlay
@@ -27427,7 +27430,16 @@ void menu_interface_invert_mouse_scroll(MENU_ITEM_PARAMETERS)
 	menu_invert_mouse_scroll.v ^=1;
 }
 
+void menu_interface_mix_menu(MENU_ITEM_PARAMETERS)
+{
+	screen_menu_mix_method++;
+	if (screen_menu_mix_method==3) screen_menu_mix_method=0;
+}
 
+void menu_interface_mix_tranparency(MENU_ITEM_PARAMETERS)
+{
+
+}
 
 
 void menu_window_settings(MENU_ITEM_PARAMETERS)
@@ -27506,6 +27518,26 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_window_settings,'l');
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] I~~nvert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'n');
+
+/*
+
+0=Menu por encima de maquina, si no es transparente
+1=Menu por encima de maquina, si no es transparente. Y Color Blanco con brillo es transparente
+2=Mix de los dos colores, con control de transparecnai
+
+
+//int screen_menu_mix_method=0;
+//int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
+*/
+
+
+		if (si_complete_video_driver() ) {
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
+			if (screen_menu_mix_method==2) {
+				//screen_menu_mix_transparency
+				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%3d%%] Tranparency",screen_menu_mix_transparency );
+			}
+		}
 
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
