@@ -2034,16 +2034,31 @@ void screen_putpixel_mix_layers(int x,int y)
 
 					case 1:
         		//Si es transparente menu, o color 15, poner machine
-        		if (color_menu==65535 || color_menu==15) color_indexado=color_machine;
-        		else color_indexado=color_menu;
+        		if (color_menu==65535 || color_menu==15) {
+							color_indexado=color_machine;
+							color_rgb=spectrum_colortable[color_indexado];
 
-						color_rgb=spectrum_colortable[color_indexado];					
+
+							if (screen_menu_reduce_bright_machine.v) {
+								screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
+								screen_reduce_color_rgb(50,&red_machine,&green_machine,&blue_machine);	
+								color_rgb=screen_get_color_from_rgb(red_machine,green_machine,blue_machine);						
+							}							
+						}
+        		else {
+							color_indexado=color_menu;
+							color_rgb=spectrum_colortable[color_indexado];
+						}
+
+											
 					break;
 
 					case 2:
 
 						//Mezclar los dos con control de opacidad, siempre que color_menu no sea transparente
-						if (color_menu==65535) color_rgb=spectrum_colortable[color_machine];
+						if (color_menu==65535) {
+							color_rgb=spectrum_colortable[color_machine];
+						}							
 
 						else {
 							color_rgb_menu=spectrum_colortable[color_menu];
@@ -2053,21 +2068,12 @@ void screen_putpixel_mix_layers(int x,int y)
 							screen_get_rgb_components(color_rgb_maquina,&red_machine,&green_machine,&blue_machine);
 
 
-							//Mezclarlos
-							
-
-							//red_menu=(red_menu*screen_menu_mix_transparency)/100;
-							//green_menu=(green_menu*screen_menu_mix_transparency)/100;
-							//blue_menu=(blue_menu*screen_menu_mix_transparency)/100;
+							//Mezclarlos			
 
 							screen_reduce_color_rgb(screen_menu_mix_transparency,&red_menu,&green_menu,&blue_menu);
 
 
 							int machine_transparency=100-screen_menu_mix_transparency;
-							//red_machine=(red_machine*machine_transparency)/100;
-							//green_machine=(green_machine*machine_transparency)/100;
-							//blue_machine=(blue_machine*machine_transparency)/100;
-
 							screen_reduce_color_rgb(machine_transparency,&red_machine,&green_machine,&blue_machine);
 
 							red_final=red_menu+red_machine;
@@ -2085,6 +2091,13 @@ void screen_putpixel_mix_layers(int x,int y)
         		if (color_menu==65535) {
 							color_indexado=color_machine;
 							color_rgb=spectrum_colortable[color_indexado];
+
+							if (screen_menu_reduce_bright_machine.v) {
+								screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
+								screen_reduce_color_rgb(50,&red_machine,&green_machine,&blue_machine);	
+								color_rgb=screen_get_color_from_rgb(red_machine,green_machine,blue_machine);						
+							}
+
 						}
 
         		else {
@@ -2097,14 +2110,6 @@ void screen_putpixel_mix_layers(int x,int y)
 
 				}
 
-				//Oscurecer ligeramente la maquina
-				if (metodo_mix==0 || metodo_mix==1) {
-							if (screen_menu_reduce_bright_machine.v) {
-								screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
-								screen_reduce_color_rgb(10,&red_machine,&green_machine,&blue_machine);	
-								color_rgb=screen_get_color_from_rgb(red_machine,green_machine,blue_machine);						
-							}
-				}
 
 				scrcocoa_putpixel_final_rgb(x,y,color_rgb);
 }
