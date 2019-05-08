@@ -1713,6 +1713,8 @@ void reset_menu_overlay_function(void)
 
 
 	menu_overlay_activo=0;
+
+	scr_clear_layer_menu();
 }
 
 //funcion para escribir un caracter en el buffer de overlay
@@ -2039,6 +2041,8 @@ void cls_menu_overlay(void)
 
 	//Si es CPC, entonces aqui el border es variable y por tanto tenemos que redibujarlo, pues quiza el menu esta dentro de zona de border
 	modificado_border.v=1;
+
+	scr_clear_layer_menu();
 
 }
 

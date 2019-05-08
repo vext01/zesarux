@@ -35,6 +35,34 @@ ver si pixeles menu esta por encima del de maquina emulada o no.
 ->esto permitira mezclar elementos de menu con fondo sin tener que ser de tamaño 8x8 necesariamente
 ->cuando se hace pixel de texto menu, como se refrescará? vendra en la rutina de refrescar_pantalla. Pero todo menu que este
 fuera de ventana emulada, mas alla del border, no se refrescara....
+Otra función putpixel de driver para píxeles de menú. Que lo meta en su buffer y luego mezcle con píxeles de máquina emulada
+
+Píxeles de menús de waveform etc funcionan igual que textos de menús 
+
+Put pixel de menu ya no hace falta que tenga en cuenta border. Se podrá hacer que por defecto salga más o menos centrado el 0,0 pero no es necesario. De hecho, si hacemos que el total de ancho de menú sea el de la ventana, las ventanas ya saldrán centradas en ancho
+
+Buferes de píxeles deben tener mismo tamaño que el de la ventana. Redimensionar si redimensiona la ventana, lógicamente 
+
+Asignación de memoria de dichos buferes se hace desde los drivers de vídeo. Así los drivers de texto no lo harán.  Y son funciones comunes de asignación 
+
+
+Excepción? Footer como se gestiona?
+Para footer, otra función que escriba con putpixel, pero usando píxeles igual que capa de máquina emulada
+
+Al final se trata de tener dos capas:
+-arriba: píxeles menú
+-abajo: píxeles máquina emulada
+
+Quizá en vez de buffer de color indexado usar buffer de color rgb? Que ventaja tendría esto? Pues el color final se podría hacer como combinación de los dos, por ejemplo. Inconvenientes?
+Aunque también se pueden hacer mezclas de colores teniendo los buferes indexados 
+Se podría por ejemplo:
+-modo normal: menú encima de pantalla spectrum
+-modo menú transparente: fusionar los colores de ambos buferes. Se puede jugar con porcentaje de opacidad 
+-modo menú semi transparente: color papel blanco con brillo (el del fondo del menú) es totalmente transparente. Resto de colores están encima 
+
+Y podemos volver a hacer que al activar el menu la pantalla spectrum se vea ligeramente oscura (opción configurable)
+
+
 
 
 -cpc sin footer y zoom 2 peta en Mac

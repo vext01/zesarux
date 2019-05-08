@@ -1913,6 +1913,73 @@ void set_putpixel_zoom(void)
 	}
 }
 
+z80_int buffer_layer_machine[3000*3000];
+z80_int buffer_layer_menu[3000*3000];
+int ancho_layer_menu_machine=3000;
+int alto_layer_menu_machine=3000;
+
+void scr_putpixel_layer_menu(int x,int y,int color)
+{
+	        int xzoom=x*zoom_x;
+        int yzoom=y*zoom_y;
+
+				int zx,zy;
+
+
+        //Escalado a zoom indicado
+        for (zx=0;zx<zoom_x;zx++) {
+                for (zy=0;zy<zoom_y;zy++) {
+												int xdestino=xzoom+zx;
+												int ydestino=yzoom+zy;
+                        //scr_putpixel(xzoom+zx,yzoom+zy,color);
+												buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
+
+												//Y hacer mix
+												scrcocoa_putpixel_mix_layers(xdestino,ydestino);   
+                }
+        }
+}
+
+void scr_redraw_machine_layer(void)
+{
+
+	if (scr_putpixel==NULL) return;
+
+	int x,y;
+	//int posicion=0;
+
+	int ancho=ancho_layer_menu_machine;
+	int alto=alto_layer_menu_machine;
+
+	//Temporal
+	ancho=512;
+	alto=384;
+
+	for (y=0;y<alto;y++) {
+		for (x=0;x<ancho;x++) {
+			//printf ("x %d y %d\n",x,y);
+			int posicion=ancho_layer_menu_machine*y+x;
+			z80_int color=buffer_layer_machine[posicion];
+			scrcocoa_putpixel_final(x,y,color);
+		}
+	}
+
+
+}
+
+
+
+void scr_clear_layer_menu(void)
+{
+
+		printf ("Clearing layer menu\n");
+
+		int hh;
+		for (hh=0;hh<ancho_layer_menu_machine*alto_layer_menu_machine;hh++) buffer_layer_menu[hh]=65535; //color transparente	
+
+		//Y repintar todo buffer maquina
+		scr_redraw_machine_layer();
+}
 
 //Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
 void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
@@ -1922,9 +1989,10 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 	for (incy=0;incy<zoom_level;incy++) {
 		for (incx=0;incx<zoom_level;incx++) {
 			//printf("putpixel %d,%d\n",x+incx,y+incy);
-			if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x+incx,y+incy,color);
+			scr_putpixel_layer_menu(x+incx,y+incy,color);
+			//if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x+incx,y+incy,color);
 
-			else scr_putpixel_zoom(x+incx,y+incy,color);
+			//else scr_putpixel_zoom(x+incx,y+incy,color);
 		}
 	}
 }
@@ -2357,6 +2425,10 @@ for (y=0;y<192;y+=8) {
 //No incluiria cualquier otra funcion de overlay diferente del menu o el splash
 int scr_ver_si_refrescar_por_menu_activo(int x,int fila)
 {
+
+
+	//Esta funcion ya no tiene sentido. Escribir siempre 
+	return 1;
 
 	x /=menu_gui_zoom;
 	fila /=menu_gui_zoom;

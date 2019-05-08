@@ -2263,9 +2263,12 @@ if (!GetCurrentProcess(&psn))
 
 #pragma mark zesarux
 
+extern z80_int buffer_layer_menu[];
 
 
-void scrcocoa_putpixel(int x,int y,unsigned int color)
+
+
+void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 {
 
 	if (pendingresize) {
@@ -2311,6 +2314,41 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 
 }
 
+
+extern int ancho_layer_menu_machine;
+//extern //int alto_layer_menu=3000;	
+
+			extern z80_int buffer_layer_machine[];
+			extern z80_int buffer_layer_menu[];
+
+void scrcocoa_putpixel_mix_layers(x,y)
+{
+        //Obtener los dos pixeles
+        z80_int color_menu=buffer_layer_menu[y*ancho_layer_menu_machine+x];
+        z80_int color_machine=buffer_layer_machine[y*ancho_layer_menu_machine+x];
+
+
+        //Si es transparente menu, poner machine
+        if (color_menu==65535) scrcocoa_putpixel_final(x,y,color_machine);
+        else scrcocoa_putpixel_final(x,y,color_menu);
+}
+
+
+
+void scrcocoa_putpixel(int x,int y,unsigned int color)
+{
+        if (menu_overlay_activo==0) {
+                //Putpixel con menu cerrado
+                scrcocoa_putpixel_final(x,y,color);
+                return;
+        }          
+
+        //Metemos pixel en layer adecuado
+	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
+
+        //Putpixel haciendo mix  
+        scrcocoa_putpixel_mix_layers(x,y);   
+}
 
 void scrcocoa_putchar_zx8081(int x,int y, z80_byte caracter)
 {
