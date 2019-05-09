@@ -8,6 +8,7 @@ Para próxima versión ZEsarUX:
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 -pagina de panic se ve?
 -pixeles de waveform etc salen desplazados
+-opcion de poner en blanco y negro si multitask off y abre menu?
 
 -buffer de layer pixeles que se asignen y reasignen al redimensionar ventana
 
