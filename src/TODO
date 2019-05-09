@@ -7,6 +7,7 @@ Para próxima versión ZEsarUX:
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 -pagina de panic se ve?
+-pixeles de waveform etc salen desplazados
 
 -buffer de layer pixeles que se asignen y reasignen al redimensionar ventana
 
