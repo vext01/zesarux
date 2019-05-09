@@ -1898,6 +1898,9 @@ int scrfbdev_init (void){
 	//sin zoom escalado especial, y luego en raspberry (y/o con opcion adicional) cambiar previamente la resolucion a la similar a spectrum
 	scr_putpixel=scrfbdev_putpixel;
 
+    scr_putpixel_final=scrfbdev_putpixel_final;
+    scr_putpixel_final_rgb=scrfbdev_putpixel_final_rgb;	
+
 	if (ventana_fullscreen && fbdev_decimal_full_scale_fbdev) {
 
 
