@@ -5,8 +5,12 @@ Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
 -sprites save lo hace siempre de zona por defecto
+-sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
+-pagina de panic se ve?
 
 -buffer de layer pixeles que se asignen y reasignen al redimensionar ventana
+
+-quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 
 -transparencia menu:
 
