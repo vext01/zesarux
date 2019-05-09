@@ -2247,11 +2247,15 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 			xfinal=(((x*menu_char_width)+bit)*zoom_level);
 			yfinal=y*zoom_level;
 
-			if (rainbow_enabled.v==1) {
+
+			//No hay que sumar ya los margenes
+			/*if (rainbow_enabled.v==1) {
 				xfinal +=margenx_izq;
 
 				yfinal +=margeny_arr;
-			}
+			}*/
+
+
 
 
 			//Hacer zoom de ese pixel si conviene

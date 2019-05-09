@@ -2866,7 +2866,7 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 
 				if (caracter==0x87) {
 					if (si_complete_video_driver()) {
-						return 135; //ч
+						return 134; //ч
 					}
 					else {
 						return 'y';
@@ -3463,6 +3463,9 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 
 	//printf ("Cuadrado %d,%d - %d,%d\n",x1,y1,x2,y2);
 
+	//Ya no hace falta incrementar margenes
+	margenx_izq=margeny_arr=0;
+
 	//solo hacerlo en el caso de drivers completos
 	if (si_complete_video_driver() ) {
 
@@ -3538,6 +3541,8 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 		}
 
 		else {
+
+		
  	               //parte inferior
         	        for (x=x1;x<=x2;x++) {
 						if (mouse_is_dragging && (x%2)==0) continue; //punteado cuando se mueve o redimensiona
@@ -6943,6 +6948,9 @@ void menu_calculate_mouse_xy(void)
 				int margenx_izq;
 				int margeny_arr;
 				menu_retorna_margenes_border(&margenx_izq,&margeny_arr);
+
+	//Ya no hace falta restar margenes
+	margenx_izq=margeny_arr=0;
 
 	x -=margenx_izq;
 	y -=margeny_arr;

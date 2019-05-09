@@ -6,6 +6,8 @@ Para próxima versión ZEsarUX:
 
 -sprites save lo hace siempre de zona por defecto
 
+-buffer de layer pixeles que se asignen y reasignen al redimensionar ventana
+
 -transparencia menu:
 
 *refresco no siempre parece que vaya bien en menu -> parece que ya va
