@@ -67,6 +67,13 @@ int simpletext_x_position=0;
 char buffer_tecla_comando[256];
 
 
+void scrsimpletext_putpixel_final_rgb(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color_rgb GCC_UNUSED)
+{
+}
+
+void scrsimpletext_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color GCC_UNUSED)
+{
+}
 
 
 
@@ -134,6 +141,9 @@ int scrsimpletext_init (void){
 	
 	scr_putchar_menu=scrsimpletext_putchar_menu;
 	scr_putchar_footer=scrsimpletext_putchar_footer;
+
+	scr_putpixel_final=scrsimpletext_putpixel_final;
+	scr_putpixel_final_rgb=scrsimpletext_putpixel_final_rgb;
 	
 	
 	scr_set_fullscreen=scrsimpletext_set_fullscreen;

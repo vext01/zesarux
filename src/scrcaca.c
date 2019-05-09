@@ -138,6 +138,14 @@ modificado_border.v=1;
 
 }
 
+void scrcaca_putpixel_final_rgb(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color_rgb GCC_UNUSED)
+{
+}
+
+void scrcaca_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color GCC_UNUSED)
+{
+}
+
 
 
 void scrcaca_putpixel(int x,int y,unsigned int color)
@@ -659,6 +667,8 @@ debug_printf (VERBOSE_INFO,"Init cacalib Video Driver");
     //cucul_putstr(cv, 0, 0, "This is a message");
 
 scr_putpixel=scrcaca_putpixel;
+scr_putpixel_final=scrcaca_putpixel_final;
+scr_putpixel_final_rgb=scrcaca_putpixel_final_rgb;
 scr_putchar_zx8081=scrcaca_putchar_zx8081;
 scrcaca_get_image_params();
 

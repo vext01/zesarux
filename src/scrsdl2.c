@@ -158,7 +158,6 @@ void scrsdl_putpixel_final(int x,int y,unsigned int color)
 
 void scrsdl_putpixel(int x,int y,unsigned int color)
 {	
-
         if (menu_overlay_activo==0) {
                 //Putpixel con menu cerrado
                 scrsdl_putpixel_final(x,y,color);

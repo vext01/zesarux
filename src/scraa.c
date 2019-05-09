@@ -118,6 +118,14 @@ void scraa_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_byte
 	papel++;
 }
 
+void scraa_putpixel_final_rgb(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color_rgb GCC_UNUSED)
+{
+}
+
+void scraa_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color GCC_UNUSED)
+{
+}
+
 void scraa_putpixel(int x,int y,unsigned int color)
 {
 
@@ -695,6 +703,8 @@ int aa_kbdmode;
 
 
 scr_putpixel=scraa_putpixel;
+scr_putpixel_final=scraa_putpixel_final;
+scr_putpixel_final_rgb=scraa_putpixel_final_rgb;
 scr_putchar_zx8081=scraa_putchar_zx8081;
 scr_putchar_menu=scraa_putchar_menu;
 scr_putchar_footer=scraa_putchar_footer;

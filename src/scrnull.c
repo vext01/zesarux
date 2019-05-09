@@ -35,6 +35,15 @@ void scrnull_z88_cpc_load_keymap(void)
 	debug_printf (VERBOSE_INFO,"Loading keymap");
 }
 
+void scrnull_putpixel_final_rgb(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color_rgb GCC_UNUSED)
+{
+}
+
+void scrnull_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color GCC_UNUSED)
+{
+}
+
+
 
 //Rutina de putchar para menu
 void scrnull_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel)
@@ -91,6 +100,9 @@ debug_printf (VERBOSE_INFO,"Init Null Video Driver");
 
 	scr_putchar_menu=scrnull_putchar_menu;
 	scr_putchar_footer=scrnull_putchar_footer;
+
+	scr_putpixel_final=scrnull_putpixel_final;
+	scr_putpixel_final_rgb=scrnull_putpixel_final_rgb;
 
 	scr_driver_name="null";
 

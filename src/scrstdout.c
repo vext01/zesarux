@@ -118,6 +118,13 @@ void scrstdout_menu_print_speech(char *texto)
 
 
 
+void scrstdout_putpixel_final_rgb(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color_rgb GCC_UNUSED)
+{
+}
+
+void scrstdout_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color GCC_UNUSED)
+{
+}
 
 
 //Rutina de putchar para menu
@@ -215,6 +222,9 @@ int scrstdout_init (void){
 	
 	scr_putchar_menu=scrstdout_putchar_menu;
 	scr_putchar_footer=scrstdout_putchar_footer;
+
+	scr_putpixel_final=scrstdout_putpixel_final;
+	scr_putpixel_final_rgb=scrstdout_putpixel_final_rgb;
 	
 	
 	scr_set_fullscreen=scrstdout_set_fullscreen;

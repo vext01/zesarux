@@ -66,6 +66,15 @@ void scrcurses_z88_cpc_load_keymap(void)
 	debug_printf (VERBOSE_INFO,"Loading keymap");
 }
 
+void scrcurses_putpixel_final_rgb(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color_rgb GCC_UNUSED)
+{
+}
+
+void scrcurses_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color GCC_UNUSED)
+{
+}
+
+
 
 //no hacer nada
 //Aqui en teoria solo se llama desde opcion de view waveform
@@ -1427,6 +1436,8 @@ scr_putchar_menu=scrcurses_putchar_menu;
 scr_putchar_footer=scrcurses_putchar_footer;
 
 scr_putpixel=scrcurses_putpixel;
+scr_putpixel_final=scrcurses_putpixel_final;
+scr_putpixel_final_rgb=scrcurses_putpixel_final_rgb;
 
 
 scr_set_fullscreen=scrcurses_set_fullscreen;
