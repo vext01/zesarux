@@ -1511,23 +1511,46 @@ void putpixel_fbdev_lowlevel_16bpp(int x,int y,z80_byte r,z80_byte g,z80_byte b)
 
 }
 
+void scrfbdev_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
+{
+	z80_byte r,g,b;
 
-void scrfbdev_putpixel(int x,int y,unsigned int color)
+	b=color_rgb;
+	color_rgb=color_rgb>>8;
+
+	g=color_rgb;
+	color_rgb=color_rgb>>8;
+
+	r=color_rgb;
+
+	putpixel_fbdev_lowlevel(x,y,r,g,b);	
+}
+
+
+void scrfbdev_putpixel_final(int x,int y,unsigned int color)
 {
 
-	z80_byte r,g,b;
 	int c;
 	c=spectrum_colortable[color];
 
-	b=c;
-	c=c>>8;
+	scrfbdev_putpixel_final_rgb(x,y,c);
 
-	g=c;
-	c=c>>8;
+}
 
-	r=c;
 
-	putpixel_fbdev_lowlevel(x,y,r,g,b);
+void scrfbdev_putpixel(int x,int y,unsigned int color)
+{
+    if (menu_overlay_activo==0) {
+                //Putpixel con menu cerrado
+                scrfbdev_putpixel_final(x,y,color);
+                return;
+        }          
+
+        //Metemos pixel en layer adecuado
+	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
+
+        //Putpixel haciendo mix  
+        screen_putpixel_mix_layers(x,y);   
 }
 
 void scrfbdev_special_scale_putpixel(int x,int y,unsigned int color)
