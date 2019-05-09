@@ -2800,8 +2800,38 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 	if (prefijo_utf==0xD0) {
 		if (caracter==0x90) return 'A';
 		if (caracter==0x9C) return 'M'; //cyrillic capital letter em (U+041C)
+		if (caracter==0xA1) return 'C';
+		if (caracter==0xA8) { //Ш
+			if (si_complete_video_driver()) {
+				return 131;
+			}
+			else {
+				return 'W';
+			}
+		}
 		if (caracter==0xB0) return 'a';
 		if (caracter==0xB2) return 'B';
+
+		
+
+		if (caracter==0xB3) {
+			if (si_complete_video_driver()) {
+				return 133; //г
+			}
+			else {
+				return 'r';
+			}
+		}
+
+		if (caracter==0xB4) {
+			if (si_complete_video_driver()) {
+				return 135; //д
+			}
+			else {
+				return 'D';
+			}
+		}
+
 		if (caracter==0xB5) return 'e';
 		if (caracter==0xB8) {
 			if (si_complete_video_driver()) {
@@ -2811,15 +2841,38 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 				return 'N';
 			}
 		}
+		if (caracter==0xBA) return 'k';
+		if (caracter==0xBB) { //л
+			if (si_complete_video_driver()) {
+				return 132;
+			}
+			else {
+				return 'l';
+			}
+		}		
 		if (caracter==0xBC) return 'M';
 		if (caracter==0xBD) return 'H';
 		if (caracter==0xBE) return 'o';
 	}
 
 	if (prefijo_utf==0xD1) {
+				if (caracter==0x80) return 'p';
+				if (caracter==0x81) return 'c';
                 if (caracter==0x82) return 'T';
                 if (caracter==0x83) return 'y';
                 if (caracter==0x85) return 'x';
+
+
+
+				if (caracter==0x87) {
+					if (si_complete_video_driver()) {
+						return 135; //ч
+					}
+					else {
+						return 'y';
+					}
+				}
+
         }
 
 	return '?';

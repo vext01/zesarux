@@ -4,6 +4,8 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
+-sprites save lo hace siempre de zona por defecto
+
 -transparencia menu:
 
 *refresco no siempre parece que vaya bien en menu -> parece que ya va
