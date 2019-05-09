@@ -104,7 +104,11 @@ void (*scr_actualiza_tablas_teclado) (void);
 
 void (*scr_putpixel_zoom) (int x,int y,unsigned int color);
 void (*scr_putpixel_zoom_rainbow)(int x,int y,unsigned int color);
+
 void (*scr_putpixel) (int x,int y,unsigned int color);
+void (*scr_putpixel_final_rgb) (int x,int y,unsigned int color_rgb);
+void (*scr_putpixel_final) (int x,int y,unsigned int color);
+
 
 void (*scr_z88_cpc_load_keymap) (void);
 
@@ -1960,7 +1964,7 @@ void scr_redraw_machine_layer(void)
 			//printf ("x %d y %d\n",x,y);
 			int posicion=ancho_layer_menu_machine*y+x;
 			z80_int color=buffer_layer_machine[posicion];
-			scrcocoa_putpixel_final(x,y,color);
+			scr_putpixel_final(x,y,color);
 		}
 	}
 
@@ -1999,14 +2003,14 @@ void screen_get_rgb_components(unsigned int color_rgb,unsigned int *red,unsigned
 
 Otro setting=Maquina bajar brillo, se combina con los anteriores
 */
-int screen_menu_mix_method=0;
+int screen_menu_mix_method=2; //Por defecto, mezclar
 int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
 
 //Si reducimos brillo de la maquina al abrir el menu, solo vale para metodos 0  y 1
 z80_bit screen_menu_reduce_bright_machine={0};
 
 char *screen_menu_mix_methods_strings[]={
-	"Over","Over2","Mix"
+	"Over","Chroma","Mix"
 };
 
 //Mezclar dos pixeles de layer menu y layer maquina
@@ -2111,7 +2115,7 @@ void screen_putpixel_mix_layers(int x,int y)
 				}
 
 
-				scrcocoa_putpixel_final_rgb(x,y,color_rgb);
+				scr_putpixel_final_rgb(x,y,color_rgb);
 }
 
 

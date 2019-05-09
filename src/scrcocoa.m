@@ -2263,9 +2263,10 @@ if (!GetCurrentProcess(&psn))
 
 #pragma mark zesarux
 
-extern z80_int buffer_layer_menu[];
 
+	
 
+//Funcion de poner pixel en pantalla de driver, teniendo como entrada el color en RGB
 void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
                 int index = 4*(x+y*pixel_screen_width);
@@ -2273,10 +2274,12 @@ void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 		p=(unsigned int *) &pixel_screen_data[index];
 
 		//agregar alpha
-		color_rgb |=0xFF000000;                   
+		color_rgb |=0xFF000000;  
+                //Escribir de golpe los 32 bits                 
 		*p=color_rgb;
 }
 
+//Funcion de poner pixel en pantalla de driver, teniendo como entrada el color indexado de tabla de colores
 void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 {
 
@@ -2284,40 +2287,16 @@ void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 		//debug_printf (VERBOSE_DEBUG,"putpixel with pendingresize active");
 		return;
 	}
-
-		//unsigned char red,green,blue,alpha;
-		//alpha=255;
-
                 
 
-		//Tabla con los colores reales del Spectrum. Formato RGB
+        //Tabla con los colores reales del Spectrum. Formato RGB
+        unsigned int color32=spectrum_colortable[color];
 
-		//prueba a escribir de golpe los 32 bits. no va mas rapido que con el metodo anterior
-		unsigned int color32=spectrum_colortable[color];
-
-		//y escribir
-
-                scrcocoa_putpixel_final_rgb(x,y,color32);
-                /*int index = 4*(x+y*pixel_screen_width);
-		unsigned int *p;
-		p=(unsigned int *) &pixel_screen_data[index];
-		//agregar alpha
-		color32 |=0xFF000000;                
-		*p=color32;*/
-
-    //    }
-    //}
-
+        //y escribir
+        scrcocoa_putpixel_final_rgb(x,y,color32);
+               
 
 }
-
-
-extern int ancho_layer_menu_machine;
-//extern //int alto_layer_menu=3000;	
-
-			extern z80_int buffer_layer_machine[];
-			extern z80_int buffer_layer_menu[];
-
 
 
 
@@ -2707,6 +2686,9 @@ int scrcocoa_init (void) {
 
         //Inicializaciones necesarias
         scr_putpixel=scrcocoa_putpixel;
+        scr_putpixel_final=scrcocoa_putpixel_final;
+        scr_putpixel_final_rgb=scrcocoa_putpixel_final_rgb;
+
         scr_putchar_zx8081=scrcocoa_putchar_zx8081;
         scr_debug_registers=scrcocoa_debug_registers;
         scr_messages_debug=scrcocoa_messages_debug;

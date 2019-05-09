@@ -47,9 +47,34 @@ videoname with the video driver name in lowercase letters, like "xwindows"
 #include <stdio.h>
 
 
+//Funcion de poner pixel en pantalla de driver, teniendo como entrada el color en RGB
+void scrvideoname_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
+{
+	//Putpixel Call (x,y,color_rgb);
+}
+
+//Funcion de poner pixel en pantalla de driver, teniendo como entrada el color indexado
+void scrvideoname_putpixel_final(int x,int y,unsigned int color)
+{
+	//Putpixel Call (x,y,spectrum_colortable[color]);
+}
+
+
 void scrvideoname_putpixel(int x,int y,unsigned int color)
 {
-        //Putpixel Call (x,y,spectrum_colortable[color]);
+
+        if (menu_overlay_activo==0) {
+                //Putpixel con menu cerrado
+                scrvideoname_putpixel_final(x,y,color);
+                return;
+        }          
+
+        //Metemos pixel en layer adecuado
+	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
+
+        //Putpixel haciendo mix  
+        screen_putpixel_mix_layers(x,y);   
+
 }
 
 
@@ -256,6 +281,10 @@ int scrvideoname_init (void) {
 
         //Inicializaciones necesarias
         scr_putpixel=scrvideoname_putpixel;
+        scr_putpixel_final=scrvideoname_putpixel_final;
+        scr_putpixel_final_rgb=scrvideoname_putpixel_final_rgb;
+
+
         scr_putchar_zx8081=scrvideoname_putchar_zx8081;
         scr_debug_registers=scrvideoname_debug_registers;
         scr_messages_debug=scrvideoname_messages_debug;

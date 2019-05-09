@@ -61,6 +61,8 @@ extern void (*scr_debug_registers)(void);
 extern void (*scr_messages_debug)(char *mensaje);
 
 extern void (*scr_putpixel) (int x,int y,unsigned int color);
+extern void (*scr_putpixel_final_rgb) (int x,int y,unsigned int color_rgb);
+extern void (*scr_putpixel_final) (int x,int y,unsigned int color);
 
 extern void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr);
 
@@ -754,6 +756,14 @@ extern int screen_menu_mix_method;
 extern int screen_menu_mix_transparency; 
 extern z80_bit screen_menu_reduce_bright_machine;
 extern void scr_clear_layer_menu(void);
+
+extern z80_int buffer_layer_menu[];
+extern z80_int buffer_layer_machine[];
+
+extern int ancho_layer_menu_machine;
+extern int alto_layer_menu_machine;	
+
+			
 
 
 #endif

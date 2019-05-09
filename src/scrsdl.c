@@ -103,23 +103,46 @@ int scrsdl_crea_ventana(void)
 
 }
 
-
-
-void scrsdl_putpixel(int x,int y,unsigned int color)
+void scrsdl_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
-
 		Uint8 *p = (Uint8 *)sdl_screen->pixels + y * sdl_screen->pitch + x * 4;
 
 
                 //escribir de golpe los 32 bits.
-                unsigned int color32=spectrum_colortable[color];
+                
                 //agregar alpha
-                color32 |=0xFF000000;
+                color_rgb |=0xFF000000;
                 //y escribir
 
-		*(Uint32 *)p = color32;
+		*(Uint32 *)p = color_rgb;
 }
 
+
+void scrsdl_putpixel_final(int x,int y,unsigned int color)
+{
+
+        unsigned int color32=spectrum_colortable[color];
+
+        //y escribir
+        scrsdl_putpixel_final_rgb(x,y,color32);                
+
+
+}
+
+void scrsdl_putpixel(int x,int y,unsigned int color)
+{
+        if (menu_overlay_activo==0) {
+                //Putpixel con menu cerrado
+                scrsdl_putpixel_final(x,y,color);
+                return;
+        }          
+
+        //Metemos pixel en layer adecuado
+	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
+
+        //Putpixel haciendo mix  
+        screen_putpixel_mix_layers(x,y);   
+}
 
 void scrsdl_putchar_zx8081(int x,int y, z80_byte caracter)
 {
@@ -1428,6 +1451,10 @@ int scrsdl_init (void) {
 
         //Inicializaciones necesarias
         scr_putpixel=scrsdl_putpixel;
+        scr_putpixel_final=scrsdl_putpixel_final;
+        scr_putpixel_final_rgb=scrsdl_putpixel_final_rgb;
+
+
         scr_putchar_zx8081=scrsdl_putchar_zx8081;
         scr_debug_registers=scrsdl_debug_registers;
         scr_messages_debug=scrsdl_messages_debug;

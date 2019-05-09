@@ -689,14 +689,33 @@ The  top three bits ( 010 ) of the high byte don't change.
 
 */
 
+//Funcion de poner pixel en pantalla de driver, teniendo como entrada el color en RGB
+void scrxwindows_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
+{
+	XPutPixel(image,x,y,color_rgb);	
+}
+
+void scrxwindows_putpixel_final(int x,int y,unsigned int color)
+{
+	XPutPixel(image,x,y,spectrum_colortable[color]);
+}
+
 void scrxwindows_putpixel(int x,int y,unsigned int color)
 {
 
-	//Prueba dibujando solo la seccion modificada
-        //if (y>putpixel_max_y) putpixel_max_y=y;
-        //if (y<putpixel_min_y) putpixel_min_y=y;
+	if (menu_overlay_activo==0) {
+                //Putpixel con menu cerrado
+                scrxwindows_putpixel_final(x,y,color);
+                return;
+  }          
 
-	XPutPixel(image,x,y,spectrum_colortable[color]);
+  //Metemos pixel en layer adecuado
+	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
+
+  //Putpixel haciendo mix  
+  screen_putpixel_mix_layers(x,y);   
+
+
 }
 
 void scrxwindows_refresca_border(void)
@@ -1888,6 +1907,9 @@ int scrxwindows_init (void) {
 
 	//Inicializaciones necesarias
 	scr_putpixel=scrxwindows_putpixel;
+  scr_putpixel_final=scrxwindows_putpixel_final;
+  scr_putpixel_final_rgb=scrxwindows_putpixel_final_rgb;
+
 	scr_putchar_zx8081=scrxwindows_putchar_zx8081;
         scr_debug_registers=scrxwindows_debug_registers;
         scr_messages_debug=scrxwindows_messages_debug;
