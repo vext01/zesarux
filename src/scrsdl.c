@@ -105,16 +105,16 @@ int scrsdl_crea_ventana(void)
 
 void scrsdl_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
-		Uint8 *p = (Uint8 *)sdl_screen->pixels + y * sdl_screen->pitch + x * 4;
+        Uint8 *p = (Uint8 *)sdl_screen->pixels + y * sdl_screen->pitch + x * 4;
 
 
-                //escribir de golpe los 32 bits.
+        //escribir de golpe los 32 bits.
                 
-                //agregar alpha
-                color_rgb |=0xFF000000;
-                //y escribir
+        //agregar alpha
+        color_rgb |=0xFF000000;
+        //y escribir
 
-		*(Uint32 *)p = color_rgb;
+        *(Uint32 *)p = color_rgb;
 }
 
 

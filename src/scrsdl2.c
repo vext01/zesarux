@@ -131,27 +131,45 @@ void scrsdl_destruye_ventana(void)
   window=NULL;
 }
 
-void scrsdl_putpixel(int x,int y,unsigned int color)
+void scrsdl_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
+{	
+        Uint8 *p = (Uint8 *)scrsdl_pixeles + (y * SDL_ANCHO_VENTANA + x) * 4;
+
+
+        //escribir de golpe los 32 bits.
+
+        //agregar alpha
+        color_rgb |=0xFF000000;
+        //y escribir
+
+        *(Uint32 *)p = color_rgb;
+}
+
+void scrsdl_putpixel_final(int x,int y,unsigned int color)
 {
-	//if (x>=SDL_ANCHO_VENTANA || y>=SDL_ANCHO_VENTANA || x<0 || y<0) return;
-	/*unsigned int color32=spectrum_colortable[color];
-	SDL_SetRenderDrawColor(renderer,(color32>>16)&255,(color32>>8)&255,color32&255,SDL_ALPHA_OPAQUE);
-	//printf ("x: %d y: %d\n",x,y);
 
-	SDL_RenderDrawPoint(renderer,x,y);
+        unsigned int color32=spectrum_colortable[color];
 
-*/
-  Uint8 *p = (Uint8 *)scrsdl_pixeles + (y * SDL_ANCHO_VENTANA + x) * 4;
+        //y escribir
+        scrsdl_putpixel_final_rgb(x,y,color32);                
 
 
-              //escribir de golpe los 32 bits.
-              unsigned int color32=spectrum_colortable[color];
-              //agregar alpha
-              color32 |=0xFF000000;
-              //y escribir
+}
 
-  *(Uint32 *)p = color32;
+void scrsdl_putpixel(int x,int y,unsigned int color)
+{	
 
+        if (menu_overlay_activo==0) {
+                //Putpixel con menu cerrado
+                scrsdl_putpixel_final(x,y,color);
+                return;
+        }          
+
+        //Metemos pixel en layer adecuado
+	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
+
+        //Putpixel haciendo mix  
+        screen_putpixel_mix_layers(x,y);   
 
 }
 
@@ -1480,6 +1498,9 @@ int scrsdl_init (void) {
 
         //Inicializaciones necesarias
         scr_putpixel=scrsdl_putpixel;
+        scr_putpixel_final=scrsdl_putpixel_final;
+        scr_putpixel_final_rgb=scrsdl_putpixel_final_rgb;
+
         scr_putchar_zx8081=scrsdl_putchar_zx8081;
         scr_debug_registers=scrsdl_debug_registers;
         scr_messages_debug=scrsdl_messages_debug;
