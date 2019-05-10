@@ -1198,6 +1198,9 @@ CGImageRef imageRef;
 #ifdef COCOA_OPENGL
 	[self createTexture];
 #endif
+
+        scr_reallocate_layers_menu(w,h);
+
 }
 
 

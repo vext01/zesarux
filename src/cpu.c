@@ -2783,6 +2783,7 @@ void set_machine_params(void)
 			/*extern z80_int buffer_layer_menu[];
 		int hh;
 		for (hh=0;hh<3000*3000;hh++) buffer_layer_menu[hh]=65535; //color transparente*/
+		scr_init_layers_menu();
 		scr_clear_layer_menu();
 
 		screen_set_parameters_slow_machines();

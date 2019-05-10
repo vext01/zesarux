@@ -1917,10 +1917,43 @@ void set_putpixel_zoom(void)
 	}
 }
 
-z80_int buffer_layer_machine[3000*3000];
-z80_int buffer_layer_menu[3000*3000];
-int ancho_layer_menu_machine=3000;
-int alto_layer_menu_machine=3000;
+//z80_int buffer_layer_machine[3000*3000];
+//z80_int buffer_layer_menu[3000*3000];
+int ancho_layer_menu_machine=0;
+int alto_layer_menu_machine=0;
+
+
+z80_int *buffer_layer_machine=NULL;
+z80_int *buffer_layer_menu=NULL;
+
+
+void scr_reallocate_layers_menu(int ancho,int alto)
+{
+
+	//temporal. Tamaño inicial pequeño
+	ancho_layer_menu_machine=ancho;
+	alto_layer_menu_machine=alto;	
+	
+	//Liberar si conviene
+	if (buffer_layer_machine!=NULL) free (buffer_layer_machine);
+	if (buffer_layer_menu!=NULL) free(buffer_layer_menu);
+
+	//Asignar
+	int size_layers=ancho_layer_menu_machine*alto_layer_menu_machine*sizeof(z80_int);
+
+	buffer_layer_machine=malloc(size_layers);
+	buffer_layer_menu=malloc(size_layers);
+
+	if (buffer_layer_machine==NULL || buffer_layer_menu==NULL) cpu_panic("Cannot allocate memory for menu layers");	
+}
+
+void scr_init_layers_menu(void)
+{
+
+
+	scr_reallocate_layers_menu(300,300);
+
+}
 
 void scr_putpixel_layer_menu(int x,int y,int color)
 {
@@ -1956,8 +1989,8 @@ void scr_redraw_machine_layer(void)
 	int alto=alto_layer_menu_machine;
 
 	//Temporal
-	ancho=512;
-	alto=384;
+	//ancho=512;
+	//alto=384;
 
 	for (y=0;y<alto;y++) {
 		for (x=0;x<ancho;x++) {
