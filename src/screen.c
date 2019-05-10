@@ -1930,6 +1930,8 @@ z80_int *buffer_layer_menu=NULL;
 void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
+	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
+
 	//temporal. Tamaño inicial pequeño
 	ancho_layer_menu_machine=ancho;
 	alto_layer_menu_machine=alto;	
@@ -1949,9 +1951,12 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 void scr_init_layers_menu(void)
 {
+	int ancho,alto;
 
+	ancho=screen_get_window_size_width_zoom_border_en();
+  alto=screen_get_window_size_height_zoom_border_en();
 
-	scr_reallocate_layers_menu(300,300);
+	scr_reallocate_layers_menu(ancho,alto);
 
 }
 
