@@ -27275,8 +27275,9 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 		//temp
 		//buffer_layer_menu=NULL;
 		//buffer_layer_machine=NULL;
-		
+
         scr_end_pantalla();
+		clear_putpixel_cache();
 
 
         if (menu_footer==0) {

@@ -1945,8 +1945,12 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	if (buffer_layer_machine==NULL || buffer_layer_menu==NULL) cpu_panic("Cannot allocate memory for menu layers");	
 
+	//Inicializar layers
+	scr_clear_layer_menu();
+
 	//Dado que ha cambiado tamaño de dichos buffers, hacemos borrado de putpixel cache
-	clear_putpixel_cache();
+	//esto ya se hace al final de scr_clear_layer_menu
+	//clear_putpixel_cache();
 }
 
 void scr_init_layers_menu(void)
