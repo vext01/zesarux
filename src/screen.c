@@ -1945,7 +1945,8 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	if (buffer_layer_machine==NULL || buffer_layer_menu==NULL) cpu_panic("Cannot allocate memory for menu layers");	
 
-	//Inicializar layers
+	//Inicializar layers. Esto puede dar problemas si se llama aqui sin tener el driver de video inicializado del todo
+	//por esto hay que tener cuidado en que cuando se llama aqui, esta todo correcto
 	scr_clear_layer_menu();
 
 	//Dado que ha cambiado tamaño de dichos buffers, hacemos borrado de putpixel cache
@@ -2020,7 +2021,7 @@ void scr_redraw_machine_layer(void)
 
 	for (y=0;y<alto;y++) {
 		for (x=0;x<ancho;x++) {
-			//printf ("x %d y %d\n",x,y);
+			//printf ("x %d y %d p %p\n",x,y,scr_putpixel_final);
 			int posicion=ancho_layer_menu_machine*y+x;
 			z80_int color=buffer_layer_machine[posicion];
 			scr_putpixel_final(x,y,color);

@@ -2735,7 +2735,7 @@ int scrcocoa_init (void) {
     pixel_screen_width = screen_get_window_size_width_zoom_border_en();
     pixel_screen_height = screen_get_window_size_height_zoom_border_en();
 
-    scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);        
+   
 
 //screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en()
 
@@ -2743,6 +2743,7 @@ int scrcocoa_init (void) {
     //UInt8 *pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
     pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
 
+    scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);     
 
         //Esto tiene que llamarlo desde el thread principal:
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -6816,6 +6816,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 	border_enabled.v=1;
 
 	scr_putpixel=NULL;
+	//scr_putpixel_final=NULL;
 
 	simulate_screen_zx8081.v=0;
 	keyboard_issue2.v=0;
@@ -7200,7 +7201,7 @@ struct sched_param sparam;
 	//Capturar segterm
 	//signal(SIGTERM, segterm_signal_handler);
 
-	
+
 
 
   //Capturar sigbus. TODO probar en que casos salta

@@ -95,7 +95,7 @@ int scrsdl_crea_ventana(void)
                 return 1;
         }
 
-        scr_reallocate_layers_menu(ancho,alto);
+
 
         //SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 
@@ -114,6 +114,7 @@ int scrsdl_crea_ventana(void)
 
     if (scrsdl_pixeles==NULL) return 1;
 
+                scr_reallocate_layers_menu(ancho,alto);
 
 	if (mouse_pointer_shown.v==0) SDL_ShowCursor(0);
 
