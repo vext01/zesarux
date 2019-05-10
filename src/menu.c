@@ -1934,6 +1934,7 @@ void menu_clear_footer(void)
 {
 	if (!menu_footer) return;
 
+
 	debug_printf (VERBOSE_DEBUG,"Clearing Footer");
 
         //Borrar footer
@@ -1979,6 +1980,7 @@ void menu_footer_bottom_line(void)
 void menu_init_footer(void)
 {
 	if (!menu_footer) return;
+
 
 
         //int margeny_arr=screen_borde_superior*border_enabled.v;
@@ -27269,6 +27271,11 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 {
 
         debug_printf(VERBOSE_INFO,"End Screen");
+
+		//temp
+		//buffer_layer_menu=NULL;
+		//buffer_layer_machine=NULL;
+		
         scr_end_pantalla();
 
 

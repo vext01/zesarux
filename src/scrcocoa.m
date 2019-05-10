@@ -1158,6 +1158,9 @@ CGImageRef imageRef;
 
         printf ("resizeContentToWidth %d X %d\n",w,h);
 
+        printf ("allocate layers menu\n");
+        scr_reallocate_layers_menu(w,h);        
+
     // update screenBuffer
     if (dataProviderRef)
         CGDataProviderRelease(dataProviderRef);
@@ -1199,7 +1202,7 @@ CGImageRef imageRef;
 	[self createTexture];
 #endif
 
-        scr_reallocate_layers_menu(w,h);
+
 
 }
 
@@ -2316,8 +2319,15 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
                 return;
         }          
 
+
+        //if (buffer_layer_machine==NULL) {
+        //        printf ("buffer null\n");
+        //}
+
         //Metemos pixel en layer adecuado
-	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;        
+	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;   
+        
+        //if (buffer_layer_machine==NULL) printf ("despues buffer null\n");     
 
         //Putpixel haciendo mix  
         screen_putpixel_mix_layers(x,y);   
@@ -2679,6 +2689,8 @@ int scrcocoa_init (void) {
 #else
 	debug_printf (VERBOSE_INFO,"Init COCOA Video Driver");
 #endif
+
+        printf ("scrcocoa_init\n");
 
         int soyelmainthread;
 

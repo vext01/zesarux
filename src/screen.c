@@ -13134,6 +13134,8 @@ void scr_refresca_pantalla_cpc_text(void (*fun_color) (z80_byte color,int *brill
 }
 
 
+
+
 void screen_set_window_zoom(int z)
 {
 
@@ -13938,3 +13940,5 @@ int screen_ega_to_spectrum_colour(int ega_col)
 	int color_final=lookup_table[ega_col]+8*brillo;
 	return color_final;
 }
+
+

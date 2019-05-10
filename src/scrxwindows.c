@@ -602,6 +602,8 @@ void scrxwindows_resize(int width,int height)
 
 		modificado_border.v=1;
 
+	printf ("resize %d %d\n",width,height);
+	scr_reallocate_layers_menu(fullscreen_width,fullscreen_height);
 
                 debug_printf (VERBOSE_INFO,"Calling XResizeWindow on fullscreen");
 
@@ -618,6 +620,8 @@ void scrxwindows_resize(int width,int height)
 
 	}
 
+	printf ("resize %d %d\n",width,height);
+	scr_reallocate_layers_menu(width,height);
 
 	debug_printf (VERBOSE_INFO,"width: %d get_window_width: %d height: %d get_window_height: %d",width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
 
@@ -649,8 +653,7 @@ void scrxwindows_resize(int width,int height)
 
 	}
 
-	printf ("resize %d %d\n",width,height);
-	scr_reallocate_layers_menu(width,height);
+
 
 }
 
