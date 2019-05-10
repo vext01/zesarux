@@ -16,6 +16,8 @@ ok -probar pantalla cpu_panic
 
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 
+-menus de mas ancho. maximo 256x256?
+
 -transparencia menu:
 
 *refresco no siempre parece que vaya bien en menu -> parece que ya va

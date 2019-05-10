@@ -3961,7 +3961,6 @@ void menu_audio_draw_sound_wave(void)
 
 		//dibujamos valor actual
 		if (si_complete_video_driver() ) {
-			//menu_scr_putpixel(x,y,ESTILO_GUI_COLOR_WAVEFORM);
 			zxvision_putpixel(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_COLOR_WAVEFORM);
 		}
 
@@ -4317,8 +4316,7 @@ void menu_debug_draw_visualmem(void)
 
 
 
-				//menu_scr_putpixel(x,y,ESTILO_GUI_TINTA_NORMAL);
-				//menu_scr_putpixel(x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
+
 				if (menu_visualmem_donde==3) {
 					//Los 3 a la vez. Combinamos color RGB sacando color de paleta tsconf (15 bits)
 					//Paleta es RGB R: 5 bits altos, G: 5 bits medios, B:5 bits bajos
@@ -4356,7 +4354,6 @@ void menu_debug_draw_visualmem(void)
 		//color ficticio para indicar fuera de memoria y por tanto final de ventana... para saber donde acaba
 		else if (acumulado<0) {
 			if (si_complete_video_driver() ) {
-				//menu_scr_putpixel(x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
 				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
 			}
 			else {
@@ -4369,7 +4366,6 @@ void menu_debug_draw_visualmem(void)
 		//Valor 0
 		else {
 			if (si_complete_video_driver() ) {
-				//menu_scr_putpixel(x,y,ESTILO_GUI_PAPEL_NORMAL);
 				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL);
 			}
 			else {

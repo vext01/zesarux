@@ -1785,16 +1785,17 @@ void putchar_menu_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte 
 void menu_scr_putpixel(int x,int y,int color)
 {
 
-	int margenx_izq,margeny_arr;
-	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+	//int margenx_izq,margeny_arr;
+	//scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
 
 	x *=menu_gui_zoom;
 	y *=menu_gui_zoom;	
 
-	if (rainbow_enabled.v) {
+	//Esto ya no hace falta desde el uso de dos layers de menu y maquina
+	/*if (rainbow_enabled.v) {
 		x+=margenx_izq;
 		y+=margeny_arr;
-	}
+	}*/
 
 
 
@@ -13492,7 +13493,7 @@ void menu_debug_draw_sprites(void)
 
 				}
 
-	            //menu_scr_putpixel(finalx,yorigen+y,color);
+	            
 				zxvision_putpixel(menu_debug_draw_sprites_window,finalx,yorigen+y,color);
 			   }
 			}
@@ -14190,19 +14191,7 @@ void menu_debug_dissassemble_una_instruccion(char *dumpassembler,menu_z80_moto_i
 
 
 
-/*void workaround_pentagon_clear_putpixel_cache(void)
-{
 
-    //workaround para pentagon. En caso de pentagon+real video, deja "rastro" los pixeles
-    //la manera de arreglarlo es haciendo clear putpixel cache, pero realmente el problema
-    //esta en alguna parte de la putpixel cache
-
-	return; 
-
-	//ya no hace falta hacer nada, despues de corregir funcion menu_scr_putpixel para que use funciones rainbow de pixel cuando este activo rainbow
-    if (MACHINE_IS_PENTAGON && rainbow_enabled.v) clear_putpixel_cache();	
-
-}*/
 
 void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color)
 {
@@ -14224,7 +14213,6 @@ void menu_linea_zxvision(zxvision_window *ventana,int x,int y1,int y2,int color)
 
 
 	for (;yorigen<=ydestino;yorigen++) {
-		//menu_scr_putpixel(x,yorigen,color);
 		zxvision_putpixel(ventana,x,yorigen,color);
 	}
 }
@@ -28404,7 +28392,6 @@ void menu_dibuja_rectangulo_relleno(zxvision_window *w,int x, int y, int ancho, 
 
 	for (y1=y;y1<y+alto;y1++) {
 		for (x1=x;x1<=x+ancho;x1++) {
-			//menu_scr_putpixel(x1,y1,color);
 			zxvision_putpixel(w,x1,y1,color);
 		}
 	}
