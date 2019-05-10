@@ -356,7 +356,8 @@ void scrfbdev_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_b
 
         //128 y 129 corresponden a franja de menu y a letra enye minuscula
         if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
-        scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,1);
+        //scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,1);
+		scr_putchar_footer_comun_zoom(caracter,x,y,inverse,tinta,papel);
 
 }
 
@@ -2059,6 +2060,8 @@ int scrfbdev_init (void){
 	scr_driver_name="fbdev";
 
 	scr_z88_cpc_load_keymap();
+
+    scr_reallocate_layers_menu(fbdev_ancho,fbdev_alto);    	
 
 	return 0;
 
