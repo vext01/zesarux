@@ -2072,9 +2072,28 @@ int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 
 //Si reducimos brillo de la maquina al abrir el menu, solo vale para metodos 0  y 1
 z80_bit screen_menu_reduce_bright_machine={0};
 
+//Color en blanco de y negro de menu cuando multitask esta off
+z80_bit screen_menu_bw_no_multitask={1};
+
 char *screen_menu_mix_methods_strings[]={
 	"Over","Chroma","Mix"
 };
+
+unsigned int screen_convert_rgb_to_bw(unsigned int color_rgb)
+{
+					//blanco y negro
+				if (!menu_multitarea && screen_menu_bw_no_multitask.v) {
+unsigned int red_machine,green_machine,blue_machine;
+
+					screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
+					int color_gris=rgb_to_grey(red_machine,green_machine,blue_machine);
+					red_machine=green_machine=blue_machine=color_gris;
+					color_rgb=screen_get_color_from_rgb(red_machine,green_machine,blue_machine);
+				}
+
+
+	return color_rgb;
+}
 
 //Mezclar dos pixeles de layer menu y layer maquina
 void screen_putpixel_mix_layers(int x,int y)
@@ -2096,6 +2115,11 @@ void screen_putpixel_mix_layers(int x,int y)
 				z80_int color_indexado;
 
 				int metodo_mix=screen_menu_mix_method & 3;
+
+				//Si el pixel que mostramos es el de maquina
+
+				int pixel_maquina=0;
+
 				switch (metodo_mix) {
 
 
@@ -2105,6 +2129,7 @@ void screen_putpixel_mix_layers(int x,int y)
 							color_indexado=color_machine;
 							color_rgb=spectrum_colortable[color_indexado];
 
+							color_rgb=screen_convert_rgb_to_bw(color_rgb);
 
 							if (screen_menu_reduce_bright_machine.v) {
 								screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
@@ -2125,11 +2150,15 @@ void screen_putpixel_mix_layers(int x,int y)
 						//Mezclar los dos con control de opacidad, siempre que color_menu no sea transparente
 						if (color_menu==SCREEN_LAYER_TRANSPARENT_MENU) {
 							color_rgb=spectrum_colortable[color_machine];
+							color_rgb=screen_convert_rgb_to_bw(color_rgb);
 						}							
 
 						else {
 							color_rgb_menu=spectrum_colortable[color_menu];
+							
+
 							color_rgb_maquina=spectrum_colortable[color_machine];
+							color_rgb_maquina=screen_convert_rgb_to_bw(color_rgb_maquina);
 
 							screen_get_rgb_components(color_rgb_menu,&red_menu,&green_menu,&blue_menu);
 							screen_get_rgb_components(color_rgb_maquina,&red_machine,&green_machine,&blue_machine);
@@ -2159,6 +2188,8 @@ void screen_putpixel_mix_layers(int x,int y)
 							color_indexado=color_machine;
 							color_rgb=spectrum_colortable[color_indexado];
 
+							color_rgb=screen_convert_rgb_to_bw(color_rgb);
+
 							if (screen_menu_reduce_bright_machine.v) {
 								screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
 								screen_reduce_color_rgb(50,&red_machine,&green_machine,&blue_machine);	
@@ -2177,6 +2208,14 @@ void screen_putpixel_mix_layers(int x,int y)
 
 				}
 
+				//blanco y negro
+				//color_rgb=screen_convert_rgb_to_bw(color_rgb);
+				/*if (!menu_multitarea) {
+					screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	
+					int color_gris=rgb_to_grey(red_machine,green_machine,blue_machine);
+					red_machine=green_machine=blue_machine=color_gris;
+					color_rgb=screen_get_color_from_rgb(red_machine,green_machine,blue_machine);
+				}*/
 
 				scr_putpixel_final_rgb(x,y,color_rgb);
 }

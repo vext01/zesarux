@@ -27521,6 +27521,11 @@ void menu_interface_reduce_bright_menu(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_interface_bw_no_multitask(MENU_ITEM_PARAMETERS)
+{
+	screen_menu_bw_no_multitask.v ^=1;
+}
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -27624,6 +27629,13 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			}
 		}
 
+/*
+void menu_interface_bw_no_multitask(MENU_ITEM_PARAMETERS)
+{
+	screen_menu_bw_no_multitask.v ^=1;
+}
+*/
+				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_bw_no_multitask,NULL,"[%c] B&W menu no multitask",(screen_menu_bw_no_multitask.v ? 'X' : ' ' ) );
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_window_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
