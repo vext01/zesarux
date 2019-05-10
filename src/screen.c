@@ -1994,9 +1994,20 @@ void scr_redraw_machine_layer(void)
 	int x,y;
 	//int posicion=0;
 
-	int ancho=ancho_layer_menu_machine;
-	int alto=alto_layer_menu_machine;
+	int ancho_layer=ancho_layer_menu_machine;
+	int alto_layer=alto_layer_menu_machine;
 
+	int ancho_ventana=screen_get_window_size_width_zoom_border_en();
+  int alto_ventana=screen_get_window_size_height_zoom_border_en();	
+
+
+	//Obtener el tamaño menor
+	int ancho,alto;
+	if (ancho_layer<ancho_ventana) ancho=ancho_layer;
+	else ancho=ancho_ventana;
+
+	if (alto_layer<alto_ventana) alto=alto_layer;
+	else alto=alto_ventana;
 
 	for (y=0;y<alto;y++) {
 		for (x=0;x<ancho;x++) {
