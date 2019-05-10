@@ -27621,7 +27621,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
 			if (screen_menu_mix_method==2) {
 				//screen_menu_mix_transparency
-				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%3d%%] Transparency",100-screen_menu_mix_transparency );
+				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",100-screen_menu_mix_transparency );
 			}
 
 			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
