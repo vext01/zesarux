@@ -1890,10 +1890,13 @@ int scrxwindows_init (void) {
 	if ( xdisplay_find_visual() ) exit(1);
 
 
+int ancho,alto;
+ancho=screen_get_window_size_width_zoom_border_en();
+alto=screen_get_window_size_height_zoom_border_en();
 
-	scrxwindows_alloc_image(screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en());
+	scrxwindows_alloc_image(ancho, alto);
 
-
+scr_reallocate_layers_menu(ancho,alto);
 
 	if (!shm_used) debug_printf (VERBOSE_WARN,"No X11 Shared memory. Expect poor performance");
 

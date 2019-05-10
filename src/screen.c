@@ -1991,6 +1991,9 @@ void scr_redraw_machine_layer(void)
 
 	if (scr_putpixel==NULL) return;	
 
+		if (buffer_layer_machine==NULL) return;
+		if (!si_complete_video_driver() ) return;	
+
 	int x,y;
 	//int posicion=0;
 
@@ -2178,6 +2181,8 @@ void screen_putpixel_mix_layers(int x,int y)
 
 void scr_clear_layer_menu(void)
 {
+		if (buffer_layer_menu==NULL) return;
+		if (!si_complete_video_driver() ) return;
 
 		printf ("Clearing layer menu\n");
 

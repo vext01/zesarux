@@ -2326,7 +2326,7 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 
         //Metemos pixel en layer adecuado
 	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;   
-        
+
         //if (buffer_layer_machine==NULL) printf ("despues buffer null\n");     
 
         //Putpixel haciendo mix  
@@ -2734,6 +2734,8 @@ int scrcocoa_init (void) {
 
     pixel_screen_width = screen_get_window_size_width_zoom_border_en();
     pixel_screen_height = screen_get_window_size_height_zoom_border_en();
+
+    scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);        
 
 //screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en()
 

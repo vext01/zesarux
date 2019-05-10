@@ -75,8 +75,10 @@ int scrsdl_crea_ventana(void)
 		flags |=SDL_FULLSCREEN;
 	}
 
+        int ancho=screen_get_window_size_width_zoom_border_en();
+        int alto=screen_get_window_size_height_zoom_border_en();
 
-	debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",screen_get_window_size_width_zoom_border_en(),screen_get_window_size_height_zoom_border_en() );
+	debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",ancho,alto );
 
         sdl_screen = SDL_SetVideoMode(screen_get_window_size_width_zoom_border_en(),
                                       screen_get_window_size_height_zoom_border_en(),
@@ -85,6 +87,7 @@ int scrsdl_crea_ventana(void)
                 return 1;
         }
 
+        scr_reallocate_layers_menu(ancho,alto);
 
         //establecer titulo ventana
         SDL_WM_SetCaption("ZEsarUX " EMULATOR_VERSION , "ZEsarUX");

@@ -86,12 +86,16 @@ int scrsdl_crea_ventana(void)
 
    debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",SDL_ANCHO_VENTANA,SDL_ALTO_VENTANA );
 
-   if (SDL_CreateWindowAndRenderer(SDL_ANCHO_VENTANA,SDL_ALTO_VENTANA, flags, &window, &renderer)!=0) return 1;
+   int ancho=SDL_ANCHO_VENTANA;
+   int alto=SDL_ALTO_VENTANA;
+
+   if (SDL_CreateWindowAndRenderer(ancho,alto, flags, &window, &renderer)!=0) return 1;
 
         if ( window == NULL ) {
                 return 1;
         }
 
+        scr_reallocate_layers_menu(ancho,alto);
 
         //SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 
