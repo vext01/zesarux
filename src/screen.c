@@ -2072,8 +2072,8 @@ int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 
 //Si reducimos brillo de la maquina al abrir el menu, solo vale para metodos 0  y 1
 z80_bit screen_menu_reduce_bright_machine={0};
 
-//Color en blanco de y negro de menu cuando multitask esta off
-z80_bit screen_menu_bw_no_multitask={1};
+//Color en blanco de y negro de maquina con menu abierto cuando multitask esta off
+z80_bit screen_machine_bw_no_multitask={1};
 
 char *screen_menu_mix_methods_strings[]={
 	"Over","Chroma","Mix"
@@ -2082,7 +2082,7 @@ char *screen_menu_mix_methods_strings[]={
 unsigned int screen_convert_rgb_to_bw(unsigned int color_rgb)
 {
 					//blanco y negro
-				if (!menu_multitarea && screen_menu_bw_no_multitask.v) {
+				if (!menu_multitarea && screen_machine_bw_no_multitask.v) {
 unsigned int red_machine,green_machine,blue_machine;
 
 					screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	

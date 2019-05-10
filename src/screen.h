@@ -757,7 +757,7 @@ extern int screen_menu_mix_method;
 extern int screen_menu_mix_transparency; 
 extern z80_bit screen_menu_reduce_bright_machine;
 extern void scr_clear_layer_menu(void);
-extern z80_bit screen_menu_bw_no_multitask;
+extern z80_bit screen_machine_bw_no_multitask;
 
 extern z80_int *buffer_layer_machine;
 extern z80_int *buffer_layer_menu;
