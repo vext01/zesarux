@@ -6,11 +6,13 @@ Para próxima versión ZEsarUX:
 
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
--pagina de panic se ve?
+
 -pixeles de waveform etc salen desplazados
 -opcion de poner en blanco y negro si multitask off y abre menu?
 
--buffer de layer pixeles que se asignen y reasignen al redimensionar ventana
+-probar easter egg
+ok -probar pantalla cpu_panic 
+-Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 

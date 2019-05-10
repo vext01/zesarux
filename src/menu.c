@@ -2821,7 +2821,7 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 				return 133; //г
 			}
 			else {
-				return 'r';
+				return 'g';
 			}
 		}
 
@@ -2840,7 +2840,7 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 				return 130; //CYRILLIC SMALL LETTER I и
 			}
 			else {
-				return 'N';
+				return 'i';
 			}
 		}
 		if (caracter==0xBA) return 'k';
