@@ -227,7 +227,8 @@ void scrsdl_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_byt
 
         //128 y 129 corresponden a franja de menu y a letra enye minuscula
         if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
-        scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,1);
+        //scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,1);
+        scr_putchar_footer_comun_zoom(caracter,x,y,inverse,tinta,papel);
 }
 
 
@@ -1284,6 +1285,8 @@ if (ventana_fullscreen) return ; //No hacer resizes cuando este en pantalla comp
 
         debug_printf (VERBOSE_INFO,"width: %d get_window_width: %d height: %d get_window_height: %d",width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
 
+        printf ("allocate layers menu\n");
+        scr_reallocate_layers_menu(width,height);   
 
 	zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
 	zoom_y_calculado=height/screen_get_window_size_height_no_zoom_border_en();

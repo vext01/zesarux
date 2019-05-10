@@ -2002,6 +2002,12 @@ void scr_redraw_machine_layer(void)
 
 
 	//Obtener el tamaño menor
+	/*
+	Por que hacemos esto?
+	porque vamos a recorrer el layer de maquina, entero, y redibujar cada pixel en pantalla
+	Dado que puede haber diferencias de tamaños entre ambos (al redimensionar ventanas) nos limitamos
+	a la zona mas pequeña
+	*/
 	int ancho,alto;
 	if (ancho_layer<ancho_ventana) ancho=ancho_layer;
 	else ancho=ancho_ventana;
