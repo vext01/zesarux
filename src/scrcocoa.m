@@ -546,6 +546,8 @@ int pendiente_z88_draw_lower=0;
         [elview setFrame:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
    [ [ laventana contentView ] resizeContentToWidth:(int)(pixel_screen_width) height:(int)(pixel_screen_height) ];
 
+   //printf ("resize: %d X %d\n",width,height);
+
 }
 
 
@@ -1153,6 +1155,8 @@ CGImageRef imageRef;
 - (void) resizeContentToWidth:(int)w height:(int)h
 {
 	debug_printf (VERBOSE_INFO,"resizeContentToWidth %d X %d",w,h);
+
+        printf ("resizeContentToWidth %d X %d\n",w,h);
 
     // update screenBuffer
     if (dataProviderRef)
