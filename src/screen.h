@@ -765,6 +765,8 @@ extern z80_int *buffer_layer_menu;
 extern int ancho_layer_menu_machine;
 extern int alto_layer_menu_machine;	
 
+#define SCREEN_LAYER_TRANSPARENT_MENU 65535
+
 			
 
 

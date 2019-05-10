@@ -1917,8 +1917,6 @@ void set_putpixel_zoom(void)
 	}
 }
 
-//z80_int buffer_layer_machine[3000*3000];
-//z80_int buffer_layer_menu[3000*3000];
 int ancho_layer_menu_machine=0;
 int alto_layer_menu_machine=0;
 
@@ -1932,7 +1930,6 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
 
-	//temporal. Tamaño inicial pequeño
 	ancho_layer_menu_machine=ancho;
 	alto_layer_menu_machine=alto;	
 	
@@ -1947,6 +1944,9 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 	buffer_layer_menu=malloc(size_layers);
 
 	if (buffer_layer_machine==NULL || buffer_layer_menu==NULL) cpu_panic("Cannot allocate memory for menu layers");	
+
+	//Dado que ha cambiado tamaño de dichos buffers, hacemos borrado de putpixel cache
+	clear_putpixel_cache();
 }
 
 void scr_init_layers_menu(void)
@@ -1985,7 +1985,7 @@ void scr_putpixel_layer_menu(int x,int y,int color)
 void scr_redraw_machine_layer(void)
 {
 
-	if (scr_putpixel==NULL) return;
+	if (scr_putpixel==NULL) return;	
 
 	int x,y;
 	//int posicion=0;
@@ -1993,9 +1993,6 @@ void scr_redraw_machine_layer(void)
 	int ancho=ancho_layer_menu_machine;
 	int alto=alto_layer_menu_machine;
 
-	//Temporal
-	//ancho=512;
-	//alto=384;
 
 	for (y=0;y<alto;y++) {
 		for (x=0;x<ancho;x++) {
@@ -2076,7 +2073,7 @@ void screen_putpixel_mix_layers(int x,int y)
 
 					case 1:
         		//Si es transparente menu, o color 15, poner machine
-        		if (color_menu==65535 || color_menu==ESTILO_GUI_PAPEL_NORMAL) {
+        		if (color_menu==SCREEN_LAYER_TRANSPARENT_MENU || color_menu==ESTILO_GUI_PAPEL_NORMAL) {
 							color_indexado=color_machine;
 							color_rgb=spectrum_colortable[color_indexado];
 
@@ -2098,7 +2095,7 @@ void screen_putpixel_mix_layers(int x,int y)
 					case 2:
 
 						//Mezclar los dos con control de opacidad, siempre que color_menu no sea transparente
-						if (color_menu==65535) {
+						if (color_menu==SCREEN_LAYER_TRANSPARENT_MENU) {
 							color_rgb=spectrum_colortable[color_machine];
 						}							
 
@@ -2130,7 +2127,7 @@ void screen_putpixel_mix_layers(int x,int y)
 					default:
 				
         		//Si es transparente menu, poner machine
-        		if (color_menu==65535) {
+        		if (color_menu==SCREEN_LAYER_TRANSPARENT_MENU) {
 							color_indexado=color_machine;
 							color_rgb=spectrum_colortable[color_indexado];
 
@@ -2161,10 +2158,10 @@ void screen_putpixel_mix_layers(int x,int y)
 void scr_clear_layer_menu(void)
 {
 
-		//printf ("Clearing layer menu\n");
+		printf ("Clearing layer menu\n");
 
 		int hh;
-		for (hh=0;hh<ancho_layer_menu_machine*alto_layer_menu_machine;hh++) buffer_layer_menu[hh]=65535; //color transparente	
+		for (hh=0;hh<ancho_layer_menu_machine*alto_layer_menu_machine;hh++) buffer_layer_menu[hh]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente	
 
 		clear_putpixel_cache();
 
