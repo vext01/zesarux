@@ -1947,6 +1947,9 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	//Inicializar layers. Esto puede dar problemas si se llama aqui sin tener el driver de video inicializado del todo
 	//por esto hay que tener cuidado en que cuando se llama aqui, esta todo correcto
+	//Si esto da problemas, quiza quitar el scr_clear_layer_menu y hacerlo mas tarde
+	//o quiza scr_clear_layer_menu no deberia llamar a scr_redraw_machine_layer(); (y llamar a ahi desde otro sitio)
+
 	scr_clear_layer_menu();
 
 	//Dado que ha cambiado tamaño de dichos buffers, hacemos borrado de putpixel cache
