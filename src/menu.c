@@ -1807,7 +1807,7 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 }
 */
 
-void menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
+void new_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
 {
 
 	putchar_footer_array(x,y,caracter,tinta,papel,0);
@@ -1853,7 +1853,7 @@ void old_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_by
 void menu_putstring_footer(int x,int y,char *texto,z80_byte tinta,z80_byte papel)
 {
 	while ( (*texto)!=0) {
-		menu_putchar_footer(x++,y,*texto,tinta,papel);
+		new_menu_putchar_footer(x++,y,*texto,tinta,papel);
 		texto++;
 	}
 

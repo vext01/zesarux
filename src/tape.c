@@ -148,16 +148,7 @@ void draw_tape_text(void)
 
 void delete_tape_text(void)
 {
-	/*
-	int x=WINDOW_FOOTER_ELEMENT_X_TAPE;
-                                                //borrarlo, con caracter 0
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-	*/
+
 
 		menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_TAPE,1,"      ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }

@@ -79,17 +79,6 @@ void draw_print_text(void)
 
                 printing_counter=2;
 
-		/*
-                int x=WINDOW_FOOTER_ELEMENT_X_PRINTING;
-
-                menu_putchar_footer(x++,1,' ',7+8,0);
-                menu_putchar_footer(x++,1,'P',7+8,0);
-                menu_putchar_footer(x++,1,'R',7+8,0);
-                menu_putchar_footer(x++,1,'I',7+8,0);
-                menu_putchar_footer(x++,1,'N',7+8,0);
-                menu_putchar_footer(x++,1,'T',7+8,0);
-                menu_putchar_footer(x++,1,' ',7+8,0);
-		*/
 
 
 		//color inverso
@@ -99,17 +88,7 @@ void draw_print_text(void)
 
 void delete_print_text(void)
 {
-	/*
-        int x=WINDOW_FOOTER_ELEMENT_X_PRINTING;
-                                                //borrarlo, con caracter 0
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-                                                menu_putchar_footer(x++,1,' ',0,0);
-	*/
+	
 
 	menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_PRINTING,1,"       ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }

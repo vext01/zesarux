@@ -861,8 +861,6 @@ void realjoystick_print_char(z80_byte caracter)
 
 	sprintf (buffer_mensaje,"Key: %c",caracter);
 
-	//menu_putchar_footer(SECOND_OVERLAY_X_JOYSTICK,1,caracter,7+8,0);
-
 	screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 
 
