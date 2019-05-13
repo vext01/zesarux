@@ -13,6 +13,10 @@ Para próxima versión ZEsarUX:
 
 -probar numselect
 
+-redraw footer con intelace....
+
+-scr_putchar_footer_comun_zoom tiene que ir en capa de machine... debe usar scr_putpixel_zoom en vez de scr_putpixel_gui_zoom
+
 -scr_putsprite_comun_zoom, usado en zx80/81 sin realvideo y simulacion spectrum, no preserva borders
 
 -al borrar layer de machine, el footer de abajo tendria que ser color blanco brillante, 

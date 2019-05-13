@@ -2457,6 +2457,11 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse
 		//Hacer zoom de ese pixel si conviene		
 		scr_putpixel_gui_zoom(xfinal,yfinal,color,1);
 
+		//footer va en capa de machine
+
+		//printf ("%d %d\n",xfinal,yfinal);
+		//scr_putpixel_zoom(xfinal,yfinal,color);
+
 
            }
         }
