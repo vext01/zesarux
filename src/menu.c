@@ -1724,6 +1724,8 @@ void reset_menu_overlay_function(void)
 
 	scr_clear_layer_menu();
 
+	redraw_footer();
+
 }
 
 //funcion para escribir un caracter en el buffer de overlay
@@ -2045,15 +2047,6 @@ void menu_init_footer(void)
 	if (MACHINE_IS_ZXUNO) zxuno_footer_print_flash_operating();
 
 
-	//fps y cpu. Forzar
-	/*draw_fps=0;
-	draw_cpu_use=0;
-	draw_middle_footer();*/
-
-	//menu_draw_cpu_use_force();
-
-	//menu_draw_last_fps();
-	//menu_draw_cpu_use_last();
 
 }
 

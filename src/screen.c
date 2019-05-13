@@ -1993,6 +1993,8 @@ void scr_putpixel_layer_menu(int x,int y,int color)
 void scr_redraw_machine_layer(void)
 {
 
+	printf ("redraw machine layer\n");
+
 	if (scr_putpixel==NULL) return;	
 
 		if (buffer_layer_machine==NULL) return;
