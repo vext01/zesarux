@@ -119,7 +119,10 @@ extern void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level);
 
 extern int scr_tiene_colores;
 
-#define WINDOW_FOOTER_SIZE (8*3*menu_footer)
+
+#define WINDOW_FOOTER_LINES 3
+#define WINDOW_FOOTER_COLUMNS 32
+#define WINDOW_FOOTER_SIZE (8*WINDOW_FOOTER_LINES*menu_footer)
 #define WINDOW_FOOTER_PAPER (7+8)
 #define WINDOW_FOOTER_INK 0
 

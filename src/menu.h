@@ -787,6 +787,8 @@ extern void menu_debug_daad_init_flagobject(void);
 extern void menu_draw_last_fps(void);
 extern void menu_draw_cpu_use_last(void);
 
+extern void putchar_footer_array(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel,z80_byte parpadeo);
+
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

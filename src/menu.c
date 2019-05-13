@@ -261,6 +261,9 @@ void (*menu_overlay_function)(void);
 //buffer de escritura por pantalla
 overlay_screen overlay_screen_array[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
 
+//buffer de escritura de footer
+overlay_screen footer_screen_array[WINDOW_FOOTER_COLUMNS*WINDOW_FOOTER_LINES];
+
 
 //buffer de texto usado 
 int overlay_usado_screen_array[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
@@ -1753,22 +1756,6 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 
 	overlay_usado_screen_array[y*32+xusado]=1;
 
-
-	//Compatibilidad con char size menor que 8. Reservar caracter a la derecha
-	//TODO Revisar esto, esto puede ser el culpable porque la ultima columna de la derecha no se ve bien en las ventanas
-	/*	
-	if (menu_char_width!=8) {
-		if (x<31) {
-			int pos_siguiente=y*32+xusado+1;
-			if (!overlay_usado_screen_array[pos_siguiente]) {
-				overlay_usado_screen_array[pos_siguiente]=1;
-
-				//overlay_screen_array[pos_array+1].caracter=255; //255 no muestra nada, aunque ya lo hemos dejado reservado
-			}
-		}
-	}
-	*/
-
 	
 }
 
@@ -1821,6 +1808,15 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 */
 
 void menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
+{
+
+	putchar_footer_array(x,y,caracter,tinta,papel,0);
+
+
+}
+
+
+void old_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
 {
 	if (!menu_footer) return;
 
@@ -2068,7 +2064,103 @@ void cls_menu_overlay(void)
 
 
 
+//funcion para escribir un caracter en el buffer de footer
+//tinta y/o papel pueden tener brillo (color+8)
+void putchar_footer_array(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel,z80_byte parpadeo)
+{
 
+	if (!menu_footer) return;
+
+	//int xfinal=((x*menu_char_width)+menu_char_width-1)/8;
+
+	//Controlar limite
+	if (x<0 || y<0 || x>WINDOW_FOOTER_COLUMNS || y>WINDOW_FOOTER_LINES) {
+		//printf ("Out of range. X: %d Y: %d Character: %c\n",x,y,caracter);
+		return;
+	}
+
+	int pos_array=y*WINDOW_FOOTER_COLUMNS+x;
+	footer_screen_array[pos_array].tinta=tinta;
+	footer_screen_array[pos_array].papel=papel;
+	footer_screen_array[pos_array].parpadeo=parpadeo;
+	footer_screen_array[pos_array].caracter=caracter;
+
+	
+}
+
+
+void cls_footer(void)
+{
+	if (!menu_footer) return;
+
+	int x,y;
+	for (y=0;y<WINDOW_FOOTER_LINES;y++) {
+		for (x=0;x<WINDOW_FOOTER_COLUMNS;x++) {
+			putchar_footer_array(x,y,' ',0,7,0);
+		}
+	}
+	
+}
+
+void redraw_footer(void)
+{
+	if (!menu_footer) return;
+
+	int x,y;
+	z80_byte tinta,papel,caracter,parpadeo;
+	int pos_array=0;	
+	for (y=0;y<WINDOW_FOOTER_LINES;y++) {
+		for (x=0;x<WINDOW_FOOTER_COLUMNS;x++,pos_array++) {
+
+			caracter=footer_screen_array[pos_array].caracter;
+
+			tinta=footer_screen_array[pos_array].tinta;
+			papel=footer_screen_array[pos_array].papel;
+			parpadeo=footer_screen_array[pos_array].parpadeo;
+
+			//Si esta multitask, si es caracter con parpadeo y si el estado del contador del parpadeo indica parpadear
+			if (menu_multitarea && parpadeo && estado_parpadeo.v) caracter=' '; //si hay parpadeo y toca, meter espacio tal cual (se oculta)
+
+			scr_putchar_footer(x,y,caracter,tinta,papel);
+			
+		}
+	}
+
+	return;
+
+
+	if (!menu_footer) return;
+
+	//Sin interlaced
+	if (video_interlaced_mode.v==0) {
+		scr_putchar_footer(x,y,caracter,tinta,papel);
+		return;
+	}
+
+
+	//Con interlaced
+	//Queremos que el footer se vea bien, no haga interlaced y no haga scanlines
+	//Cuando se activa interlaced se cambia la funcion de putpixel, por tanto,
+	//desactivando aqui interlaced no seria suficiente para que el putpixel saliese bien
+
+
+	//No queremos que le afecte el scanlines
+	z80_bit antes_scanlines;
+	antes_scanlines.v=video_interlaced_scanlines.v;
+	video_interlaced_scanlines.v=0;
+
+	//Escribe texto pero como hay interlaced, lo hará en una linea de cada 2
+	scr_putchar_footer(x,y,caracter,tinta,papel);
+
+	//Dado que hay interlaced, simulamos que estamos en siguiente frame de pantalla para que dibuje la linea par/impar siguiente
+	interlaced_numero_frame++;
+	scr_putchar_footer(x,y,caracter,tinta,papel);
+	interlaced_numero_frame--;
+
+	//restaurar scanlines
+	video_interlaced_scanlines.v=antes_scanlines.v;	
+
+}
 
 
 void menu_set_menu_abierto(int valor)
@@ -2445,20 +2537,11 @@ void menu_draw_cpu_temp(void)
 
         //primero liberar esas zonas
         int x;
-        //for (x=WINDOW_FOOTER_ELEMENT_X_CPU_TEMP;x<WINDOW_FOOTER_ELEMENT_X_CPU_TEMP+5;x++) putchar_menu_second_overlay(x++,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,0,0,0);
-        //for (x=WINDOW_FOOTER_ELEMENT_X_CPU_TEMP;x<WINDOW_FOOTER_ELEMENT_X_CPU_TEMP+5;x++) menu_putchar_footer(x++,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,' ',0,0);
 
         //luego escribimos el texto
         x=WINDOW_FOOTER_ELEMENT_X_CPU_TEMP+5-strlen(buffer_temp);
-        //int i=0;
 
-	/*
-        while (buffer_temp[i]) {
-                //putchar_menu_second_overlay(x++,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp[i],7+8,0);
-                menu_putchar_footer(x++,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp[i],7+8,0);
-                i++;
-        }
-	*/
+
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
 
@@ -2705,16 +2788,7 @@ void normal_overlay_texto_menu(void)
 		//if (cuadrado_activo_resize) menu_dibuja_cuadrado_resize(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
 	}
 
-	//si hay segunda capa, escribirla. aqui normalmente solo se escriben dibujos que no se pueden meter como texto, como la bateria
-	/*
-	if (menu_second_layer) {
-		draw_second_layer_overlay();
-	}
-	*/
 
-	//if (menu_footer) {
-	//	draw_middle_footer();
-	//}
 
 
 }
