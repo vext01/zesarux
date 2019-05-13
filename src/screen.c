@@ -2082,7 +2082,7 @@ char *screen_menu_mix_methods_strings[]={
 unsigned int screen_convert_rgb_to_bw(unsigned int color_rgb)
 {
 					//blanco y negro
-				if (!menu_multitarea && screen_machine_bw_no_multitask.v) {
+				if (!menu_multitarea && menu_abierto && screen_machine_bw_no_multitask.v) {
 unsigned int red_machine,green_machine,blue_machine;
 
 					screen_get_rgb_components(color_rgb,&red_machine,&green_machine,&blue_machine);	

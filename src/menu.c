@@ -2437,10 +2437,13 @@ void menu_draw_cpu_use_last(void)
 	if (cpu_use>100) cpu_use=100;
 	if (cpu_use<0) cpu_use=0;
 
+	//temp
+	//cpu_use=100;
+
 	printf ("mostrando cpu use\n");
 
-	char buffer_perc[5];
-	sprintf (buffer_perc,"%3d%%",cpu_use);
+	char buffer_perc[9];
+	sprintf (buffer_perc,"%3d%% CPU",cpu_use);
 
 	int x;
 
@@ -2487,7 +2490,7 @@ void menu_draw_cpu_use(void)
 //Retorna -1 si hay algun error
 int menu_get_cpu_temp(void)
 {
-
+//return 9999999;
 	char procstat_buffer[10];
 	char *archivo_cputemp="/sys/class/thermal/thermal_zone0/temp";
 
@@ -2538,13 +2541,17 @@ void menu_draw_cpu_temp(void)
         //cpu_temp=100;
 
         char buffer_temp[6];
-        sprintf (buffer_temp,"%d.%dC",cpu_temp/1000,(cpu_temp%1000)/100 );
+
+		int grados_entero=cpu_temp/1000; //2 cifras
+		int grados_decimal=(cpu_temp%1000)/100; //1 cifra
+
+        sprintf (buffer_temp,"%2d.%dC",grados_entero,grados_decimal );
 
         //primero liberar esas zonas
         int x;
 
         //luego escribimos el texto
-        x=WINDOW_FOOTER_ELEMENT_X_CPU_TEMP+5-strlen(buffer_temp);
+        x=WINDOW_FOOTER_ELEMENT_X_CPU_TEMP;
 
 
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
@@ -2608,90 +2615,7 @@ int menu_get_bateria_perc(void)
 
 }
 
-void menu_draw_bateria(void)
-{
 
-	//solo redibujarla de vez en cuando
-	if (draw_bateria_contador!=0) {
-		draw_bateria_contador--;
-		return;
-	}
-
-	//cada 10 segundos
-	draw_bateria_contador=50*10;
-
-	//printf ("redibujamos bateria\n");
-
-	//int x,y;
-	//simulacion indicador de bateria
-        //ponemos esas zonas reservadas siempre
-        //putchar_menu_second_overlay(WINDOW_FOOTER_ELEMENT_X_BATERIA,0,1,0,0);
-        //putchar_menu_second_overlay(WINDOW_FOOTER_ELEMENT_X_BATERIA+1,0,1,0,0);
-        menu_putchar_footer(WINDOW_FOOTER_ELEMENT_X_BATERIA,1,1,0,0);
-        menu_putchar_footer(WINDOW_FOOTER_ELEMENT_X_BATERIA+1,1,1,0,0);
-
-        //dibujamos cuadrado en blanco, ancho 16
-        int ancho=16;
-        //int alto=8;
-
-        int bateriaperc=menu_get_bateria_perc();
-
-	//comprobaciones de rango
-	if (bateriaperc>100) bateriaperc=100;
-	if (bateriaperc<0) bateriaperc=0;
-
-
-
-        int anchobateria=(ancho*bateriaperc)/100;
-
-	//al menos un pixel de ancho
-	if (anchobateria==0) anchobateria=1;
-
-
-	//int colorbateria=0;
-	//if (bateriaperc<20) colorbateria=2;
-
-
-	//A continuacion se dibuja mediante putpixel
-	//Esto estaba pensado para la zona superior.
-	//Si se quiere volver a habilitar hay que recalcularlo para la zona de footer
-	/*
-
-        //Bateria disponible
-        for (x=256-ancho;x<256-ancho+anchobateria;x++) {
-                for (y=0;y<alto;y++) {
-                        scr_putpixel_zoom(x,y,colorbateria);
-                }
-        }
-
-        //Resto en blanco
-
-        for (;x<256;x++) {
-                for (y=0;y<alto;y++) {
-                        scr_putpixel_zoom(x,y,7);
-                }
-        }
-
-
-        //dibujo rectangulo
-
-	//arriba y abajo
-        for (x=256-ancho;x<256-2;x++) {
-                scr_putpixel_zoom(x,0,colorbateria);
-                scr_putpixel_zoom(x,alto-1,colorbateria);
-        }
-
-	//zona derecha
-	scr_putpixel_zoom(255,0,7);
-	for (y=1;y<alto-1;y++) {
-		scr_putpixel_zoom(255,y,colorbateria);
-	}
-	scr_putpixel_zoom(255,y,7);
-
-	*/
-
-
-}
 
 
 
@@ -2703,26 +2627,25 @@ void draw_middle_footer(void)
 
 	if (menu_footer==0) return;
 
+	//temp forzado
+	//menu_draw_cpu_temp();
+
 
 #ifdef EMULATE_RASPBERRY
-                menu_draw_cpu_temp();
+    menu_draw_cpu_temp();
 #endif
 
-				if (screen_show_cpu_usage.v) {
-        	menu_draw_cpu_use();
-				}
-        menu_draw_fps();
+	if (screen_show_cpu_usage.v) {
+		menu_draw_cpu_use();
+	}
+
+	menu_draw_fps();
 
 
-        //Escribir cualquier otra cosa que no sea texto, como dibujos o puntos, lineas, indicador de bateria, por ejemplo
-        if (si_complete_video_driver() ) {
-#ifdef EMULATE_RASPBERRY
+      
 
-                //De momento bateria solo en pruebas
-                //menu_draw_bateria();
-#endif
-        }
-
+//01234567890123456789012345678901
+//50 FPS 100% CPU 99.9C TEMP
 
 }
 
