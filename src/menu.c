@@ -2022,8 +2022,9 @@ void menu_init_footer(void)
 	if (MACHINE_IS_ZXUNO) zxuno_footer_print_flash_operating();
 
 
-	//fps
+	//fps y cpu. Forzar
 	draw_fps=0;
+	draw_cpu_use=0;
 	draw_middle_footer();
 
 }
@@ -2324,6 +2325,8 @@ void menu_draw_cpu_use(void)
                 return;
         }
 
+		printf ("mostrando cpu use\n");
+
         //cada 5 segundos
         draw_cpu_use=50*5;
 
@@ -2439,6 +2442,8 @@ void menu_draw_fps(void)
                 draw_fps--;
                 return;
         }
+
+			printf ("mostrando fps\n");
 
         //cada 1 segundo
         draw_fps=50*1;
@@ -2579,7 +2584,6 @@ void draw_middle_footer(void)
 
 	if (menu_footer==0) return;
 
-	printf ("mostrando linea media footer\n");
 
 #ifdef EMULATE_RASPBERRY
                 menu_draw_cpu_temp();
