@@ -305,7 +305,7 @@ if (caca_last_message_shown_timer) {
 	if (menu_overlay_activo) menu_overlay_function();
 
         //Escribir footer
-        draw_footer();
+        draw_middle_footer();
 
 
 

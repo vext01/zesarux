@@ -2021,6 +2021,11 @@ void menu_init_footer(void)
 	//en otros drivers de video en teoria no haria falta
 	if (MACHINE_IS_ZXUNO) zxuno_footer_print_flash_operating();
 
+
+	//fps
+	draw_fps=0;
+	draw_middle_footer();
+
 }
 
 
@@ -2070,6 +2075,8 @@ void menu_refresca_pantalla(void)
 
 	modificado_border.v=1;
     all_interlace_scr_refresca_pantalla();
+
+	menu_init_footer();
 
 }
 
@@ -2567,10 +2574,12 @@ void menu_draw_bateria(void)
 
 //Aqui se llama desde cada driver de video al refrescar la pantalla
 //Importante que lo que se muestre en footer se haga cada cierto tiempo y no siempre, sino saturaria la cpu probablemente
-void draw_footer(void)
+void draw_middle_footer(void)
 {
 
 	if (menu_footer==0) return;
+
+	printf ("mostrando linea media footer\n");
 
 #ifdef EMULATE_RASPBERRY
                 menu_draw_cpu_temp();
@@ -2669,7 +2678,7 @@ void normal_overlay_texto_menu(void)
 	*/
 
 	//if (menu_footer) {
-	//	draw_footer();
+	//	draw_middle_footer();
 	//}
 
 

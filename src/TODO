@@ -8,7 +8,9 @@ Para próxima versión ZEsarUX:
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 
 ok -pixeles de waveform etc salen desplazados
--opcion de poner en blanco y negro si multitask off y abre menu?
+ok -opcion de poner en blanco y negro si multitask off y abre menu?
+
+-para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
 
 -probar easter egg
 ok -probar pantalla cpu_panic 
@@ -24,7 +26,6 @@ ok -probar pantalla cpu_panic
 *testear bien en menu con y sin multitask
 *ancho buferes, reasignar al asignar ventana
 *funciones de driver, generalizar
-*sin realvideo, sale todo desplazado. mouse tampoco se ubica correctamente
 
 
 -menus que puedan ir a border y mas alla de pantalla emulada:

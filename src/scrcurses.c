@@ -1230,7 +1230,7 @@ void scrcurses_refresca_pantalla(void)
 
 
         //Escribir footer
-        draw_footer();
+        draw_middle_footer();
 
 
 	refresh();

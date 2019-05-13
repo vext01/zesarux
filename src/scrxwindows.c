@@ -903,7 +903,7 @@ void scrxwindows_refresca_pantalla(void)
         }
 
 	//Escribir footer
-	draw_footer();
+	draw_middle_footer();
 
 	scrxwindows_refresca_pantalla_solo_driver();
 
