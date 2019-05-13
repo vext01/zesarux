@@ -158,6 +158,8 @@ int menu_gui_zoom=1;
 //Ancho de caracter de menu
 int menu_char_width=8;
 
+int menu_last_cpu_use=0;
+
 defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Default",F_FUNCION_DEFAULT},
 	{"Nothing",F_FUNCION_NOTHING},
@@ -2027,7 +2029,10 @@ void menu_init_footer(void)
 	draw_cpu_use=0;
 	draw_middle_footer();*/
 
-	menu_draw_cpu_use_force();
+	//menu_draw_cpu_use_force();
+
+	menu_draw_last_fps();
+	menu_draw_cpu_use_last();
 
 }
 
@@ -2273,7 +2278,7 @@ long menu_get_cpu_use_idle(void)
 
 }
 
-int menu_get_cpu_use_perc(void)
+void menu_get_cpu_use_perc(void)
 {
 
 	int usocpu=0;
@@ -2285,7 +2290,10 @@ int menu_get_cpu_use_perc(void)
 
 	menu_cpu_use_idle_ahora=menu_get_cpu_use_idle();
 
-	if (menu_cpu_use_idle_ahora<0) return -1;
+	if (menu_cpu_use_idle_ahora<0) {
+		menu_last_cpu_use=-1;
+		return;
+	}
 
 	if (menu_cpu_use_seconds_antes!=0) {
 		long dif_segundos=menu_cpu_use_seconds_ahora-menu_cpu_use_seconds_antes;
@@ -2313,21 +2321,16 @@ int menu_get_cpu_use_perc(void)
 	menu_cpu_use_seconds_antes=menu_cpu_use_seconds_ahora;
 	menu_cpu_use_idle_antes=menu_cpu_use_idle_ahora;
 
-	return usocpu;
+	menu_last_cpu_use=usocpu;
 }
 
 int cpu_use_total_acumulado=0;
 int cpu_use_total_acumulado_medidas=0;
 
-void menu_draw_cpu_use_force(void)
+void menu_draw_cpu_use_last(void)
 {
 
-		printf ("mostrando cpu use\n");
-
-        //cada 5 segundos
-        draw_cpu_use=50*5;
-
-	int cpu_use=menu_get_cpu_use_perc();
+	int cpu_use=menu_last_cpu_use;
 	debug_printf (VERBOSE_DEBUG,"cpu: %d",cpu_use );
 
 	//error
@@ -2337,19 +2340,13 @@ void menu_draw_cpu_use_force(void)
 	if (cpu_use>100) cpu_use=100;
 	if (cpu_use<0) cpu_use=0;
 
-	//temp forzar
-	//cpu_use=100;
+	printf ("mostrando cpu use\n");
 
 	char buffer_perc[5];
 	sprintf (buffer_perc,"%3d%%",cpu_use);
 
-	cpu_use_total_acumulado +=cpu_use;
-	cpu_use_total_acumulado_medidas++;
-
 	int x;
 
-	//escribimos el texto
-	//x=WINDOW_FOOTER_ELEMENT_X_CPU_USE+4-strlen(buffer_perc);
 	x=WINDOW_FOOTER_ELEMENT_X_CPU_USE;
 
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_USE,buffer_perc,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
@@ -2358,14 +2355,36 @@ void menu_draw_cpu_use_force(void)
 
 void menu_draw_cpu_use(void)
 {
+
         //solo redibujarla de vez en cuando
         if (draw_cpu_use!=0) {
                 draw_cpu_use--;
                 return;
         }
 
-	menu_draw_cpu_use_force();
+        //cada 5 segundos
+        draw_cpu_use=50*5;
+
+	menu_get_cpu_use_perc();
+
+	int cpu_use=menu_last_cpu_use;
+	debug_printf (VERBOSE_DEBUG,"cpu: %d",cpu_use );
+
+	//error
+	if (cpu_use<0) return;
+
+	//control de rango
+	if (cpu_use>100) cpu_use=100;
+	if (cpu_use<0) cpu_use=0;
+
+
+	cpu_use_total_acumulado +=cpu_use;
+	cpu_use_total_acumulado_medidas++;	
+
+	menu_draw_cpu_use_last();
+
 }
+
 
 
 //Retorna -1 si hay algun error
@@ -2443,13 +2462,9 @@ void menu_draw_cpu_temp(void)
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
 
-void menu_draw_fps_force(void)
+void menu_draw_last_fps(void)
 {
 
-			printf ("mostrando fps\n");
-
-        //cada 1 segundo
-        draw_fps=50*1;
 
         int fps=ultimo_fps;
         debug_printf (VERBOSE_DEBUG,"FPS: %d",fps);
@@ -2462,38 +2477,41 @@ void menu_draw_fps_force(void)
 
 	const int ancho_maximo=6;
 
+			printf ("mostrando fps\n");	
+
         char buffer_fps[ancho_maximo+1];
         sprintf (buffer_fps,"%02d FPS",fps);
 
         //primero liberar esas zonas
         int x;
-        //for (x=WINDOW_FOOTER_ELEMENT_X_FPS;x<WINDOW_FOOTER_ELEMENT_X_FPS+ancho_maximo-1;x++) putchar_menu_second_overlay(x++,0,0,0,0);
-        //for (x=WINDOW_FOOTER_ELEMENT_X_FPS;x<WINDOW_FOOTER_ELEMENT_X_FPS+ancho_maximo-1;x++) menu_putchar_footer(x++,1,' ',0,0);
+
 
         //luego escribimos el texto
         x=WINDOW_FOOTER_ELEMENT_X_FPS;
-        //int i=0;
 
-        /*while (buffer_fps[i]) {
-                //putchar_menu_second_overlay(x++,0,buffer_fps[i],7+8,0);
-                menu_putchar_footer(x++,1,buffer_fps[i],7+8,0);
-                i++;
-        }
-	*/
 
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_FPS,buffer_fps,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
 
 void menu_draw_fps(void)
 {
-        //solo redibujarla de vez en cuando
+
+	        //solo redibujarla de vez en cuando
         if (draw_fps!=0) {
                 draw_fps--;
                 return;
         }
 
-	menu_draw_fps_force();
+
+
+        //cada 1 segundo
+        draw_fps=50*1;
+
+		menu_draw_last_fps();
+
 }
+
+
 
 int menu_get_bateria_perc(void)
 {

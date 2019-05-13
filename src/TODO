@@ -11,6 +11,7 @@ ok -pixeles de waveform etc salen desplazados
 ok -opcion de poner en blanco y negro si multitask off y abre menu?
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
+-probar cpu use footer en maquinas que no muestran (como windows)
 
 -probar easter egg
 ok -probar pantalla cpu_panic 

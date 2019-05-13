@@ -784,8 +784,8 @@ extern char last_files_used_array[MAX_LAST_FILESUSED][PATH_MAX];
 extern void lastfilesuser_scrolldown(int posicion_up,int posicion_down);
 
 extern void menu_debug_daad_init_flagobject(void);
-
-extern void menu_draw_cpu_use_force(void);
+extern void menu_draw_last_fps(void);
+extern void menu_draw_cpu_use_last(void);
 
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
