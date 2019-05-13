@@ -2438,7 +2438,7 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse
 
                 if (rainbow_enabled.v==1) {
                         //xfinal=(((x*8)+bit)*zoom_level);
-                        xfinal=(((x*menu_char_width)+bit)*zoom_level);
+                        xfinal=(((x*8)+bit)*zoom_level);
                         xfinal +=margenx_izq;
 
                         yfinal=y*zoom_level;
@@ -2447,7 +2447,7 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse
 
                 else {
                         //xfinal=((x*8)+bit)*zoom_level;
-                        xfinal=((x*menu_char_width)+bit)*zoom_level;
+                        xfinal=((x*8)+bit)*zoom_level;
                         yfinal=y*zoom_level;
                 }
 
@@ -2456,7 +2456,7 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse
 
 
                 //Ancho de caracter 8, 7 y 6 pixeles
-                if (menu_char_width==8) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+                /*if (menu_char_width==8) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
 
                 //Si 7, saltar primer pixel a la izquierda
                 else if (menu_char_width==7) {
@@ -2471,7 +2471,11 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse
                 //Si 5, saltar tres pixeles: primero izquierda y centro y primero derecha
                 else if (menu_char_width==5) {
                         if (bit!=0 && bit!=6 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
-                }
+                }*/
+
+	                                if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(xfinal,yfinal,color);
+
+                                else scr_putpixel_zoom(xfinal,yfinal,color);							
 
                 /*int incx,incy;
                 for (incy=0;incy<zoom_level;incy++) {

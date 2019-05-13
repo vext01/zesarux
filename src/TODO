@@ -15,7 +15,7 @@ Para próxima versión ZEsarUX:
 
 -redraw footer con intelace....
 
--scr_putchar_footer_comun_zoom tiene que ir en capa de machine... debe usar scr_putpixel_zoom en vez de scr_putpixel_gui_zoom
+-scr_putchar_footer_comun_zoom tiene que ir en capa de machine... debe usar scr_putpixel_zoom en vez de scr_putpixel_gui_zoom ok
 
 -scr_putsprite_comun_zoom, usado en zx80/81 sin realvideo y simulacion spectrum, no preserva borders
 
