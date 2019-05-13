@@ -1724,7 +1724,6 @@ void reset_menu_overlay_function(void)
 
 	scr_clear_layer_menu();
 
-	redraw_footer();
 
 }
 
@@ -2077,6 +2076,7 @@ void cls_menu_overlay(void)
 	modificado_border.v=1;
 
 	scr_clear_layer_menu();
+
 
 }
 
@@ -31802,7 +31802,12 @@ void menu_inicio_pre_retorno(void)
 
     timer_reset();
 
-	//Y refrescar footer
+	//Y refrescar footer. Hacer esto para que redibuje en pantalla y no en layer de mezcla de menu
+	menu_init_footer();  
+/*
+menu_init_footer hace falta pues el layer de menu se borra y se queda negro en las zonas izquierda y derecha del footer
+*/
+
 	redraw_footer();
 
 }
@@ -32101,6 +32106,9 @@ void menu_inicio(void)
     set_menu_overlay_function(normal_overlay_texto_menu);
 
 
+	//Y refrescar footer. Hacer esto para que redibuje en pantalla y no en layer de mezcla de menu
+	//menu_init_footer();
+	redraw_footer();
 
 	//Establecemos variable de salida de todos menus a 0
 	salir_todos_menus=0;

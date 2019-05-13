@@ -7,8 +7,16 @@ Para próxima versión ZEsarUX:
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 
-ok -pixeles de waveform etc salen desplazados
-ok -opcion de poner en blanco y negro si multitask off y abre menu?
+-en smartload, se borra zona footer izquierda y derecha en negro
+
+-watches ok aunque no sale centrado. Normal?
+
+-probar numselect
+
+-scr_putsprite_comun_zoom, usado en zx80/81 sin realvideo y simulacion spectrum, no preserva borders
+
+-al borrar layer de machine, el footer de abajo tendria que ser color blanco brillante, 
+para que se mezcle bien con footer
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
 -probar cpu use footer en maquinas que no muestran (como windows)

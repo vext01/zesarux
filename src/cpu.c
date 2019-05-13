@@ -3751,9 +3751,10 @@ void post_set_machine_no_rom_load(void)
 		post_set_machine_no_rom_load_reopen_window();
 
 
-
 		last_machine_type=current_machine_type;
 		menu_init_footer();
+
+
 
 }
 

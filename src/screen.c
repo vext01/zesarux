@@ -2238,6 +2238,9 @@ void scr_clear_layer_menu(void)
 
 		//Y repintar todo buffer maquina
 		scr_redraw_machine_layer();
+
+		//menu_clear_footer();
+
 }
 
 //Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
@@ -2392,7 +2395,7 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 }
 
 
-//Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
+//Muestra un caracter en footer
 //Se utiliza solo al dibujar en zx81/81 y ace, y spectrum (simulado zx81) pero no en menu
 //entrada: puntero=direccion a tabla del caracter
 //x,y: coordenadas en x-0..31 e y 0..23 del zx81
@@ -2451,14 +2454,8 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse
 		//}
 
 
-
-
 		//Hacer zoom de ese pixel si conviene		
 		scr_putpixel_gui_zoom(xfinal,yfinal,color,1);
-
-
-	
-
 
 
            }
@@ -13964,6 +13961,9 @@ int screen_init_pantalla_and_others(void)
 	int retorno=scr_init_pantalla();
         //Siempre que se redimensiona tamanyo ventana (sin contar zoom) o se reinicia driver video hay que reiniciar cache putpixel
         init_cache_putpixel();
+
+printf ("screen_init_pantalla_and_others\n");
+	//menu_init_footer();
 
 	return retorno;
 }
