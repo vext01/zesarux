@@ -13453,6 +13453,15 @@ void generic_footertext_print_operating_aux(char *s)
 {
 
         if (generic_footertext_operating_counter) {
+        			
+								menu_footer_activity(s);
+        }
+}
+
+void old_delete_generic_footertext_print_operating_aux(char *s)
+{
+
+        if (generic_footertext_operating_counter) {
         			//01234567
         	char string_aux[]="        "; //2 espacios, 6 caracteres y 0 final
         	int longitud=strlen(s);
@@ -13473,6 +13482,7 @@ void generic_footertext_print_operating_aux(char *s)
 
                 //		      					       01234567
                 //menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,string_aux,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+								
 								menu_footer_activity(string_aux);
         }
 }
