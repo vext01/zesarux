@@ -641,6 +641,8 @@ extern int generic_footertext_operating_counter;
 extern void generic_footertext_print_operating(char *s);
 extern void delete_generic_footertext(void);
 
+extern int rgb_to_grey(int r,int g,int b);
+
 
 
 /*

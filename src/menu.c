@@ -1856,6 +1856,9 @@ void menu_putstring_footer(int x,int y,char *texto,z80_byte tinta,z80_byte papel
 		menu_putchar_footer(x++,y,*texto,tinta,papel);
 		texto++;
 	}
+
+	//Solo en putstring actualizamos el footer. En putchar, no
+	redraw_footer();
 }
 
 //Escribir info tarjetas memoria Z88
@@ -1981,7 +1984,6 @@ void menu_init_footer(void)
 	if (!menu_footer) return;
 
 
-
         //int margeny_arr=screen_borde_superior*border_enabled.v;
 
         if (MACHINE_IS_Z88) {
@@ -1997,8 +1999,11 @@ void menu_init_footer(void)
 	//Al iniciar emulador, si aun no hay definidas funciones putpixel, volver
 
 
-	//Borrar footer
+	//Borrar footer con pixeles blancos
 	menu_clear_footer();
+
+	//Inicializar array footer
+	cls_footer();
 
 
 	//Borrar zona con espacios
@@ -2027,8 +2032,8 @@ void menu_init_footer(void)
 
 	//menu_draw_cpu_use_force();
 
-	menu_draw_last_fps();
-	menu_draw_cpu_use_last();
+	//menu_draw_last_fps();
+	//menu_draw_cpu_use_last();
 
 }
 
@@ -2096,7 +2101,7 @@ void cls_footer(void)
 	int x,y;
 	for (y=0;y<WINDOW_FOOTER_LINES;y++) {
 		for (x=0;x<WINDOW_FOOTER_COLUMNS;x++) {
-			putchar_footer_array(x,y,' ',0,7,0);
+			putchar_footer_array(x,y,' ',WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER,0);
 		}
 	}
 	
@@ -2176,7 +2181,7 @@ void menu_refresca_pantalla(void)
 	modificado_border.v=1;
     all_interlace_scr_refresca_pantalla();
 
-	menu_init_footer();
+	redraw_footer();
 
 }
 
