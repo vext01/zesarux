@@ -1390,7 +1390,6 @@ void z88_open_flap(void)
 	//screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Opening Flap");
 
 	generic_footertext_print_operating("FLAP");
-	//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_FLAP,1," FLAP ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);	
 
 	/*
         if (((blink_int & BM_INTFLAP) == BM_INTFLAP) & ((blink_int & BM_INTGINT) == BM_INTGINT)) {
@@ -1423,7 +1422,6 @@ void z88_close_flap(void)
 	//Notificar cierre tapa
 	blink_sta &=(255-128-32);
 
-	//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_FLAP,1,"      ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);	
 	menu_footer_z88();
 
 }

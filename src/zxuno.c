@@ -377,10 +377,7 @@ int zxuno_spi_is_write_enabled(void)
 
 void zxuno_footer_print_flash_operating(void)
 {
-	/*if (zxuno_flash_operating_counter) {
-		//color inverso
-		menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_FLASH,1," FLASH ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-	}*/
+
 
 	generic_footertext_print_operating("FLASH");
 }
@@ -390,19 +387,10 @@ void zxuno_footer_flash_operating(void)
 
 	zxuno_footer_print_flash_operating();
 
-	//Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
-	/*if (!zxuno_flash_operating_counter) {
-		zxuno_flash_operating_counter=2;
-		zxuno_footer_print_flash_operating();
 
-	}
-	zxuno_flash_operating_counter=2;*/
 }
 
-void delete_zxuno_flash_text(void)
-{
-	menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_FLASH,1,"       ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}
+
 
 /*void old_mem_set_normal_pages_zxuno(void)
 {

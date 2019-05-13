@@ -1364,7 +1364,7 @@ void remote_send_esc_close_menu(void)
 
 void remote_footer_cpu_step(void)
 {
-	//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_CPUSTEP,1,"STEP",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+
 	menu_footer_activity("STEP");
 	//Dado que se ha quitado multitask y esta todo parado, refrescar pantalla para mostrar el footer
 	scr_refresca_pantalla_solo_driver();
@@ -1373,7 +1373,7 @@ void remote_footer_cpu_step(void)
 
 void remote_footer_cpu_step_clear(void)
 {
-	//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_CPUSTEP,1,"     ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+
 	menu_delete_footer_activity();
 	//no hace falta forzar refresco pantalla dado que se sale de este estado, menu esta cerrado y por tanto se ejecutara el core tal cual
 

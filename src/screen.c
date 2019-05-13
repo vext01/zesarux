@@ -13506,7 +13506,6 @@ void generic_footertext_print_operating(char *s)
 
 void delete_generic_footertext(void)
 {
-  //menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 	menu_delete_footer_activity();
 }
 

@@ -1297,15 +1297,7 @@ f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel
 
 		autoselect_options_put_footer();
 
-		/*
-
-		//De momento borrar lo que haya
-		menu_putstring_footer(0,2,"                                ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-
-		//Y mostrarlo
-		menu_putstring_footer(0,2,mostrar_footer_first_message_mostrado,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-
-		*/
+		
 	}
 
 
@@ -1382,12 +1374,7 @@ void delete_tape_options_set_first_message(void)
 
 			autoselect_options_put_footer();
 
-			/*
-
-			//Mostrarlo
-                        menu_putstring_footer(0,2,mostrar_footer_first_message_mostrado,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-
-			*/
+			
 
                         return;
 	}
@@ -1403,7 +1390,7 @@ void delete_tape_options_set_first_message(void)
 
 		autoselect_options_put_footer();
 
-		//menu_putstring_footer(0,2,mostrar_footer_second_message_mostrado,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+	
 
 	}
 
@@ -1436,7 +1423,7 @@ void delete_tape_options_set_second_message(void)
 
 			//Y mostrarlo
 			autoselect_options_put_footer();
-			//menu_putstring_footer(0,2,mostrar_footer_second_message_mostrado,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+
 
 
 			return;

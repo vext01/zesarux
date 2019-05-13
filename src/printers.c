@@ -77,22 +77,10 @@ int zxprinter_alto_total;
 void draw_print_text(void)
 {
 
-                //printing_counter=2;
 
-
-
-		//color inverso
-		//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_PRINTING,1," PRINT ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
 		generic_footertext_print_operating("PRINT");
 
 }
-
-/*void delete_print_text(void)
-{
-	
-
-	menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_PRINTING,1,"       ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}*/
 
 
 

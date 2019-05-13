@@ -128,7 +128,6 @@ int tape_loading_counter=0;
 
 void draw_tape_text_top_speed(void)
 {
-	//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_TAPE,1,"TSPEED",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
         menu_footer_activity("TSPEED");
 }
 
@@ -142,7 +141,6 @@ void draw_tape_text(void)
 			draw_tape_text_top_speed();
 		}
 		else {
-			//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_TAPE,1," TAPE ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
                         menu_footer_activity("TAPE");
 		}
 
@@ -150,7 +148,6 @@ void draw_tape_text(void)
 
 void delete_tape_text(void)
 {
-        //menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_TAPE,1,"      ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
         menu_delete_footer_activity();
 }
 
