@@ -703,18 +703,19 @@ void textspeech_send_new_line(void)
 
 void textspeech_print_operating(void)
 {
-        if (textspeech_operating_counter) {
+        generic_footertext_print_operating("SPEECH");
+        /*if (textspeech_operating_counter) {
                 //color inverso
                 menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_TEXT_FILTER,1," SPEECH ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-        }
+        }*/
 }
 
 
 
-void textspeech_clear_operating(void)
+/*void textspeech_clear_operating(void)
 {
 	menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_TEXT_FILTER,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}
+}*/
 
 
 int index_buffer_pantalla_speech;

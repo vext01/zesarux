@@ -1861,6 +1861,26 @@ void menu_putstring_footer(int x,int y,char *texto,z80_byte tinta,z80_byte papel
 	redraw_footer();
 }
 
+
+void menu_footer_activity(char *texto)
+{
+
+	char buffer_texto[32];
+	//Agregar espacio delante y detras
+	sprintf (buffer_texto," %s ",texto);
+
+	int inicio_x=32-strlen(buffer_texto);
+
+	menu_putstring_footer(inicio_x,1,buffer_texto,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+
+}
+
+void menu_delete_footer_activity(void)
+{
+	//45678901
+	menu_putstring_footer(24,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+}
+
 //Escribir info tarjetas memoria Z88
 void menu_footer_z88(void)
 {

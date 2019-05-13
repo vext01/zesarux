@@ -93,7 +93,7 @@ extern void zxuno_p2a_write_page_port(z80_int puerto, z80_byte value);
 extern z80_bit zxuno_flash_persistent_writes;
 extern void zxuno_flush_flash_to_disk(void);
 extern void zxuno_set_timing_48k(void);
-extern int zxuno_flash_operating_counter;
+//extern int zxuno_flash_operating_counter;
 
 extern int zxuno_flash_must_flush_to_disk;
 

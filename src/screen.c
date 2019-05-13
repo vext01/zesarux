@@ -13472,8 +13472,8 @@ void generic_footertext_print_operating_aux(char *s)
         	string_aux[indice_string]=0;
 
                 //		      					       01234567
-                //menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1," 123456 ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-                menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,string_aux,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+                //menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,string_aux,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+								menu_footer_activity(string_aux);
         }
 }
 
@@ -13496,7 +13496,8 @@ void generic_footertext_print_operating(char *s)
 
 void delete_generic_footertext(void)
 {
-        menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+  //menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+	menu_delete_footer_activity();
 }
 
 

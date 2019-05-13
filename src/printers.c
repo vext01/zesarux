@@ -72,26 +72,27 @@ int zxprinter_alto_total;
 //contador se decrementa a cada segundo
 //sirve para indicar mediante overlay en pantalla que se esta imprimiendo
 //despues de imprimir, permanece durante x segundos en pantalla
-int printing_counter=0;
+//int printing_counter=0;
 
 void draw_print_text(void)
 {
 
-                printing_counter=2;
+                //printing_counter=2;
 
 
 
 		//color inverso
-		menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_PRINTING,1," PRINT ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+		//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_PRINTING,1," PRINT ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+		generic_footertext_print_operating("PRINT");
 
 }
 
-void delete_print_text(void)
+/*void delete_print_text(void)
 {
 	
 
 	menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_PRINTING,1,"       ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}
+}*/
 
 
 

@@ -327,6 +327,8 @@ extern int menu_generic_message_aux_filter(char *texto,int inicio, int final);
 #define WINDOW_FOOTER_ELEMENT_X_CPU_USE 7
 //#define WINDOW_FOOTER_ELEMENT_X_BATERIA 30
 
+//#define WINDOW_FOOTER_ELEMENT_X_ACTIVITY 24
+
 #define WINDOW_FOOTER_ELEMENT_Y_CPU_USE 1
 #define WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP 1
 #define WINDOW_FOOTER_ELEMENT_Y_FPS 1
@@ -339,10 +341,11 @@ extern int menu_generic_message_aux_filter(char *texto,int inicio, int final);
 Como quedan los textos:
 
 01234567890123456789012345678901
-50 FPS    -PRINT-  29.3C 100% BAT
+50 FPS 100% CPU 29.3C   -SPEECH- 
+
            -TAPE-
           -FLASH-
-          -SPEECH-
+          -PRINT-
 	   MMC
           -ZXPAND-
 */
@@ -366,6 +369,8 @@ Como quedan los textos:
 #define MENU_RETORNO_F2 -3
 #define MENU_RETORNO_F10 -4
 
+extern void menu_footer_activity(char *texto);
+extern void menu_delete_footer_activity(void);
 
 //funcion a la que salta al darle al enter. valor_opcion es un valor que quien crea el menu puede haber establecido,
 //para cada item de menu, un valor diferente
