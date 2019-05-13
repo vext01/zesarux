@@ -2131,6 +2131,8 @@ void redraw_footer(void)
 {
 	if (!menu_footer) return;
 
+	printf ("redraw footer\n");
+
 	int x,y;
 	z80_byte tinta,papel,caracter,parpadeo;
 	int pos_array=0;	
@@ -19762,7 +19764,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_ZXUNO) {
-			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxuno_spi_flash,NULL,"~~ZX-Uno Flash SPI");
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxuno_spi_flash,NULL,"~~ZX-Uno Flash");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'z');
 		}
 							
@@ -31806,6 +31808,9 @@ void menu_inicio_pre_retorno(void)
     //modificado_border.v=1;
 
     timer_reset();
+
+	//Y refrescar footer
+	redraw_footer();
 
 }
 
