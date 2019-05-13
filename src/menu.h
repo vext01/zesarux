@@ -785,6 +785,8 @@ extern void lastfilesuser_scrolldown(int posicion_up,int posicion_down);
 
 extern void menu_debug_daad_init_flagobject(void);
 
+extern void menu_draw_cpu_use_force(void);
+
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

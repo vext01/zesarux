@@ -2023,9 +2023,11 @@ void menu_init_footer(void)
 
 
 	//fps y cpu. Forzar
-	draw_fps=0;
+	/*draw_fps=0;
 	draw_cpu_use=0;
-	draw_middle_footer();
+	draw_middle_footer();*/
+
+	menu_draw_cpu_use_force();
 
 }
 
@@ -2317,13 +2319,8 @@ int menu_get_cpu_use_perc(void)
 int cpu_use_total_acumulado=0;
 int cpu_use_total_acumulado_medidas=0;
 
-void menu_draw_cpu_use(void)
+void menu_draw_cpu_use_force(void)
 {
-        //solo redibujarla de vez en cuando
-        if (draw_cpu_use!=0) {
-                draw_cpu_use--;
-                return;
-        }
 
 		printf ("mostrando cpu use\n");
 
@@ -2357,6 +2354,17 @@ void menu_draw_cpu_use(void)
 
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_USE,buffer_perc,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 
+}
+
+void menu_draw_cpu_use(void)
+{
+        //solo redibujarla de vez en cuando
+        if (draw_cpu_use!=0) {
+                draw_cpu_use--;
+                return;
+        }
+
+	menu_draw_cpu_use_force();
 }
 
 
@@ -2435,13 +2443,8 @@ void menu_draw_cpu_temp(void)
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
 
-void menu_draw_fps(void)
+void menu_draw_fps_force(void)
 {
-        //solo redibujarla de vez en cuando
-        if (draw_fps!=0) {
-                draw_fps--;
-                return;
-        }
 
 			printf ("mostrando fps\n");
 
@@ -2481,6 +2484,16 @@ void menu_draw_fps(void)
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_FPS,buffer_fps,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
 
+void menu_draw_fps(void)
+{
+        //solo redibujarla de vez en cuando
+        if (draw_fps!=0) {
+                draw_fps--;
+                return;
+        }
+
+	menu_draw_fps_force();
+}
 
 int menu_get_bateria_perc(void)
 {
