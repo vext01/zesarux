@@ -1578,6 +1578,27 @@ printf (
 		"--hide-menu-minimize-button Hides minimize button on the title window\n"
 		"--hide-menu-close-button    Hides close button on the title window\n"
 		"--invert-menu-mouse-scroll  Inverts mouse scroll movement\n"
+		);
+
+	printf (
+		"--menu-mix-method s         How to mix menu and the layer below. s should be one of:");
+
+		int i;
+		for (i=0;i<MAX_MENU_MIX_METHODS;i++) {
+			printf ("%s ",screen_menu_mix_methods_strings[i]);
+		}
+
+		printf ("\n");
+
+
+
+printf (
+
+		"--menu-transparency-perc n Transparency percentage to apply to menu\n"
+		"--menu-darken-when-open    Darken layer below menu when menu open\n"
+		"--menu-bw-multitask        Grayscale layer below menu when menu opened and multitask is disabled\n"		
+
+
 
 		"--nowelcomemessage         Disable welcome message\n"
 		"--red                      Force display mode with red colour\n"
@@ -1634,7 +1655,7 @@ printf (
 		printf (
 	  "--def-f-function key action  Define F key to do an action. action can be: ");
 
-		int i;
+
 			for (i=0;i<MAX_F_FUNCTIONS;i++) {
 				printf ("%s ",defined_f_functions_array[i].texto_funcion);
 			}
@@ -5954,6 +5975,51 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--hide-menu-minimize-button")) {
                                 menu_hide_minimize_button.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--menu-mix-method")) {
+				siguiente_parametro_argumento();
+				int i;
+				int encontrado=0;
+				for (i=0;i<MAX_MENU_MIX_METHODS;i++) {
+					if (!strcasecmp(screen_menu_mix_methods_strings[i],argv[puntero_parametro])) {
+						screen_menu_mix_method=i;
+						encontrado=1;
+					}
+				}
+
+				if (!encontrado) {
+						printf ("Invalid menu mix method\n");
+						exit (1);
+										
+				}
+			}
+
+			
+			else if (!strcmp(argv[puntero_parametro],"--menu-transparency-perc")) {
+
+			int valor;
+
+					siguiente_parametro_argumento();
+					valor=atoi(argv[puntero_parametro]);
+
+					if (valor<0 || valor>95) {
+						printf ("Invalid menu transparency value\n");
+						exit (1);
+					}
+
+        screen_menu_mix_transparency=valor;
+
+			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--menu-darken-when-open")) {
+				screen_menu_reduce_bright_machine.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--menu-bw-multitask")) {
+				screen_machine_bw_no_multitask.v=1;
+			}					
+
 
 			else if (!strcmp(argv[puntero_parametro],"--hide-menu-close-button")) {
                                 menu_hide_close_button.v=1;

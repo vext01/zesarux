@@ -3434,6 +3434,18 @@ int util_write_configfile(void)
   if (menu_invert_mouse_scroll.v)             ADD_STRING_CONFIG,"--invert-menu-mouse-scroll");
 
 
+                                              ADD_STRING_CONFIG,"--menu-mix-method \"%s\"",screen_menu_mix_methods_strings[screen_menu_mix_method]);
+
+
+                                                ADD_STRING_CONFIG,"--menu-transparency-perc %d",screen_menu_mix_transparency);
+
+	
+
+  if (screen_menu_reduce_bright_machine.v)   ADD_STRING_CONFIG,"--menu-darken-when-open");
+  if (screen_machine_bw_no_multitask.v)      ADD_STRING_CONFIG,"--menu-bw-multitask");
+
+
+
   if (rainbow_enabled.v)                      ADD_STRING_CONFIG,"--realvideo");
 
   if (autodetect_rainbow.v==0)                ADD_STRING_CONFIG,"--no-detect-realvideo");

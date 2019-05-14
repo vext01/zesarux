@@ -2069,13 +2069,13 @@ void screen_get_rgb_components(unsigned int color_rgb,unsigned int *red,unsigned
 Otro setting=Maquina bajar brillo, se combina con los anteriores
 */
 int screen_menu_mix_method=2; //Por defecto, mezclar
-int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
+int screen_menu_mix_transparency=10; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
 
 //Si reducimos brillo de la maquina al abrir el menu, solo vale para metodos 0  y 1
 z80_bit screen_menu_reduce_bright_machine={0};
 
 //Color en blanco de y negro de maquina con menu abierto cuando multitask esta off
-z80_bit screen_machine_bw_no_multitask={1};
+z80_bit screen_machine_bw_no_multitask={0};
 
 char *screen_menu_mix_methods_strings[]={
 	"Over","Chroma","Mix"
@@ -2165,10 +2165,10 @@ void screen_putpixel_mix_layers(int x,int y)
 
 							//Mezclarlos			
 
-							screen_reduce_color_rgb(screen_menu_mix_transparency,&red_menu,&green_menu,&blue_menu);
+							screen_reduce_color_rgb(100-screen_menu_mix_transparency,&red_menu,&green_menu,&blue_menu);
 
 
-							int machine_transparency=100-screen_menu_mix_transparency;
+							int machine_transparency=screen_menu_mix_transparency;
 							screen_reduce_color_rgb(machine_transparency,&red_machine,&green_machine,&blue_machine);
 
 							red_final=red_menu+red_machine;

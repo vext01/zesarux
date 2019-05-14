@@ -27578,7 +27578,7 @@ void menu_interface_invert_mouse_scroll(MENU_ITEM_PARAMETERS)
 void menu_interface_mix_menu(MENU_ITEM_PARAMETERS)
 {
 	screen_menu_mix_method++;
-	if (screen_menu_mix_method==3) screen_menu_mix_method=0;
+	if (screen_menu_mix_method==MAX_MENU_MIX_METHODS) screen_menu_mix_method=0;
 }
 
 void menu_interface_mix_tranparency(MENU_ITEM_PARAMETERS)
@@ -27587,7 +27587,7 @@ void menu_interface_mix_tranparency(MENU_ITEM_PARAMETERS)
 
 	char string_trans[3];
 
-        sprintf (string_trans,"%d",100-screen_menu_mix_transparency);
+        sprintf (string_trans,"%d",screen_menu_mix_transparency);
 
         menu_ventana_scanf("Transparency? (0-95)",string_trans,3);
 
@@ -27597,7 +27597,7 @@ void menu_interface_mix_tranparency(MENU_ITEM_PARAMETERS)
 	}
 
 	else {
-		screen_menu_mix_transparency=100-valor;
+		screen_menu_mix_transparency=valor;
 	}
 
 
@@ -27700,8 +27700,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 2=Mix de los dos colores, con control de transparecnai
 
 
-//int screen_menu_mix_method=0;
-//int screen_menu_mix_transparency=90; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
+
 */
 
 
@@ -27711,8 +27710,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_window_settings,"How to mix menu and the layer below");
 
 			if (screen_menu_mix_method==2) {
-				//screen_menu_mix_transparency
-				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",100-screen_menu_mix_transparency );
+				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",screen_menu_mix_transparency );
 				menu_add_item_menu_tooltip(array_menu_window_settings,"Transparency percentage to apply to menu");
 				menu_add_item_menu_ayuda(array_menu_window_settings,"Transparency percentage to apply to menu");
 			}
