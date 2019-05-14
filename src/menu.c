@@ -28865,35 +28865,35 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 			//casos maquinas 16k, 48k
 			if (MACHINE_IS_SPECTRUM_16_48) {
 				hotswap_machine_opcion_seleccionada=current_machine_type;
-        	                menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 16k",MENU_OPCION_NORMAL,NULL,NULL);
-                	        menu_add_item_menu(array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
+        	                menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX Spectrum 16k",MENU_OPCION_NORMAL,NULL,NULL);
+                	        menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
                         	menu_add_item_menu(array_menu_machine_selection,"Inves Spectrum +",MENU_OPCION_NORMAL,NULL,NULL);
 	                        menu_add_item_menu(array_menu_machine_selection,"Microdigital TK90X",MENU_OPCION_NORMAL,NULL,NULL);
         	                menu_add_item_menu(array_menu_machine_selection,"Microdigital TK90X (Spanish)",MENU_OPCION_NORMAL,NULL,NULL);
                 	        menu_add_item_menu(array_menu_machine_selection,"Microdigital TK95",MENU_OPCION_NORMAL,NULL,NULL);
-				menu_add_item_menu(array_menu_machine_selection,"Spectrum 128",MENU_OPCION_NORMAL,NULL,NULL);
+				menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum+ 128",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
 			//casos maquinas 128k,+2 (y no +2a)
 			if (MACHINE_IS_SPECTRUM_128_P2) {
 				hotswap_machine_opcion_seleccionada=current_machine_type-6;
-	                        menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 128k",MENU_OPCION_NORMAL,NULL,NULL);
-        	                menu_add_item_menu(array_menu_machine_selection,"Spectrum 128k (Spanish)",MENU_OPCION_NORMAL,NULL,NULL);
-                	        menu_add_item_menu(array_menu_machine_selection,"Spectrum +2",MENU_OPCION_NORMAL,NULL,NULL);
-                        	menu_add_item_menu(array_menu_machine_selection,"Spectrum +2 (French)",MENU_OPCION_NORMAL,NULL,NULL);
-	                        menu_add_item_menu(array_menu_machine_selection,"Spectrum +2 (Spanish)",MENU_OPCION_NORMAL,NULL,NULL);
-													menu_add_item_menu(array_menu_machine_selection,"Spectrum +2A (ROM v4.0)",MENU_OPCION_NORMAL,NULL,NULL);
-				menu_add_item_menu(array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
+	                        menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX Spectrum+ 128k",MENU_OPCION_NORMAL,NULL,NULL);
+        	                menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum+ 128k (Spanish)",MENU_OPCION_NORMAL,NULL,NULL);
+                	        menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum +2",MENU_OPCION_NORMAL,NULL,NULL);
+                        	menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum +2 (French)",MENU_OPCION_NORMAL,NULL,NULL);
+	                        menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum +2 (Spanish)",MENU_OPCION_NORMAL,NULL,NULL);
+													menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum +2A (ROM v4.0)",MENU_OPCION_NORMAL,NULL,NULL);
+				menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
 			//maquinas p2a
 			if (MACHINE_IS_SPECTRUM_P2A_P3) {
 				hotswap_machine_opcion_seleccionada=current_machine_type-11;
-	                        menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum +2A (ROM v4.0)",MENU_OPCION_NORMAL,NULL,NULL);
-        	                menu_add_item_menu(array_menu_machine_selection,"Spectrum +2A (ROM v4.1)",MENU_OPCION_NORMAL,NULL,NULL);
-                	        menu_add_item_menu(array_menu_machine_selection,"Spectrum +2A (Spanish)",MENU_OPCION_NORMAL,NULL,NULL);
+	                        menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX Spectrum +2A (ROM v4.0)",MENU_OPCION_NORMAL,NULL,NULL);
+        	                menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum +2A (ROM v4.1)",MENU_OPCION_NORMAL,NULL,NULL);
+                	        menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum +2A (Spanish)",MENU_OPCION_NORMAL,NULL,NULL);
 													menu_add_item_menu(array_menu_machine_selection,"Spectrum 128k",MENU_OPCION_NORMAL,NULL,NULL);
-				menu_add_item_menu(array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
+				menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
 			//maquinas cpc
@@ -28906,7 +28906,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
                         //maquinas zxuno
                         if (MACHINE_IS_ZXUNO) {
                                 hotswap_machine_opcion_seleccionada=current_machine_type-14;
-                                menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum +2A (ROM v4.0)",MENU_OPCION_NORMAL,NULL,NULL);
+                                menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX Spectrum +2A (ROM v4.0)",MENU_OPCION_NORMAL,NULL,NULL);
 
 	                        menu_add_item_menu_tooltip(array_menu_machine_selection,"The final machine type is "
 							"Spectrum +2A (ROM v4.0) but the data ROM really comes from ZX-Uno");
@@ -28923,8 +28923,8 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 			//maquinas zx80, zx81
 			if (MACHINE_IS_ZX8081) {
 				hotswap_machine_opcion_seleccionada=current_machine_type-120;
-				menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX-80",MENU_OPCION_NORMAL,NULL,NULL);
-	            menu_add_item_menu(array_menu_machine_selection,"ZX-81",MENU_OPCION_NORMAL,NULL,NULL);
+				menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX80",MENU_OPCION_NORMAL,NULL,NULL);
+	            menu_add_item_menu(array_menu_machine_selection,"ZX81",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
                  
@@ -28936,7 +28936,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 
 				menu_add_item_menu_inicial(&array_menu_machine_selection,"Chloe 140SE",MENU_OPCION_NORMAL,NULL,NULL);
 				menu_add_item_menu(array_menu_machine_selection,"Chloe 280SE",MENU_OPCION_NORMAL,NULL,NULL);
-				menu_add_item_menu(array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
+				menu_add_item_menu(array_menu_machine_selection,"ZX Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
 
 
 			}
@@ -28944,7 +28944,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 			//Diferentes maquinas que solo pueden saltar a spectrum 48k
 			if (MACHINE_IS_PRISM || MACHINE_IS_TIMEX_TS2068 || MACHINE_IS_TBBLUE || MACHINE_IS_CHROME || MACHINE_IS_ZXEVO) {
 								hotswap_machine_opcion_seleccionada=0;
-								menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
+								menu_add_item_menu_inicial(&array_menu_machine_selection,"ZX Spectrum 48k",MENU_OPCION_NORMAL,NULL,NULL);
 			}
 
 			
