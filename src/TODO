@@ -20,6 +20,11 @@ Para próxima versión ZEsarUX:
 ok -probar pantalla cpu_panic 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
+-logo OSD ZEsarUX no aparece en zx80/81 y sin realvideo
+
+
+-cambio de maquina zx81 a spec48 peta
+
 -Modo step desde ZRCP aparece bien el footer?
 
 -quitar Mensajes printf de debugging de drivers video y de partes de menu, screen
