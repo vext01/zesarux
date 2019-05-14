@@ -83,6 +83,7 @@ So if you want to demonstrate your appreciation to it, you can donate using Payp
 [ZEsarUX donation](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=E5RSRST8N7KWS&lc=ES&item_name=Donativo%20ZEsarUX&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
 
+All donors will appear in the acknowledgements file
 Thanks!
 
 
@@ -178,7 +179,7 @@ __FEATURES__
 
 * Emulates Betadisk/TR-DOS
 
-* Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC
+* Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC. Support for raw (.mmc) files and hdf files
 
 * Emulates ZX Spectrum IDE Interface: DivIDE, 8-bit simple 
 
@@ -234,7 +235,7 @@ __FEATURES__
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 
-* Powerful debug features: Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
+* Powerful debug features: Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console, DAAD Debugger
 
 * File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc
 
