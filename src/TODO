@@ -40,6 +40,8 @@ la zona de footer izq/der se ve con el color normal sin efecto b&w
 
 -zxvision: arrastrar ventana provoca pulsacion al soltar ventana y si cursor esta en una linea de seleccion
 
+-zxvision ventanas en cpc empiezan por arriba de lo visible
+
 
 -cpc sin footer y zoom 2 peta en Mac
 -cambiar de spectrum a cpc peta (con zoom 2 y footer)
