@@ -1144,8 +1144,6 @@ Mark Hutchings
 
 -Color rojo de stick osd en tema clean, no se ve
 
---volumenes canales sonido: el maximo se ve en color rojo, si hubiera algun skin con tinta roja por defecto, esto no se veria
-
 -En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 
 -entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?

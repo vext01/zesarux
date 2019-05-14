@@ -2476,6 +2476,7 @@ void menu_draw_cpu_use_last(void)
 
 	int color_tinta=WINDOW_FOOTER_INK;
 
+	//Color en rojo si uso cpu sube
 	if (cpu_use>=85) color_tinta=ESTILO_GUI_COLOR_AVISO;
 
 	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_USE,buffer_perc,color_tinta,WINDOW_FOOTER_PAPER);
