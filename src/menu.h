@@ -627,6 +627,8 @@ struct s_estilos_gui {
 	int tinta_opcion_marcada; 
 
 	char boton_cerrar; //caracter de cerrado de ventana
+
+	int color_aviso; //caracter de aviso de volumen alto, cpu alto, etc. normalmente rojo
 };
 
 typedef struct s_estilos_gui estilos_gui;
@@ -675,6 +677,8 @@ extern void set_charset(void);
 #define ESTILO_GUI_SOLO_MAYUSCULAS (definiciones_estilos_gui[estilo_gui_activo].solo_mayusculas)
 
 #define ESTILO_GUI_BOTON_CERRAR (definiciones_estilos_gui[estilo_gui_activo].boton_cerrar)
+
+#define ESTILO_GUI_COLOR_AVISO (definiciones_estilos_gui[estilo_gui_activo].color_aviso)
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 5

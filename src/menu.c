@@ -446,7 +446,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
-		'*'
+		'*',
+		2 //color de aviso
 		},
 	{"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
@@ -456,7 +457,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		6,		//Color waveform
 		0,               //Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
-		'*'
+		'*',
+		2 //color de aviso
 		},
 
         {"ZX80/81",7+8,0,
@@ -467,7 +469,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 7,0,		//Color para opcion marcada
-		'.'
+		'.',
+		2 //color de aviso
                 },
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
@@ -481,7 +484,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 4,              //Color waveform
                 4,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
-		'*'
+		'*',
+		2 //color de aviso
                 },
 
 
@@ -493,7 +497,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 6+8,              //Color waveform
                 0,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
-		'*'
+		'*',
+		2 //color de aviso
                 },
 
         {"Sam",7+8,0,
@@ -504,7 +509,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 1,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
-		'#'
+		'#',
+		2 //color de aviso
                 },
 
 						{"ManSoftware",7+8,0,
@@ -515,7 +521,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							1,		//Color waveform
 							7,		//Color para zona no usada en visualmem
 							2,7+8,		//Color para opcion marcada
-							'#'
+							'#',
+		2 //color de aviso
 							},
 
 
@@ -527,7 +534,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					4,		//Color waveform
 					7,		//Color para zona no usada en visualmem
 					2,7+8,		//Color para opcion marcada
-					'*'
+					'*',
+		2 //color de aviso
 								},
 
         {"Clean",7,0,
@@ -538,7 +546,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 7,0,		//Color para opcion marcada
-		'X'
+		'X',
+		2 //color de aviso
                 },
 
         {"CleanInverse",0,7,
@@ -549,7 +558,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,              //Color waveform
                 0,               //Color para zona no usada en visualmem
                 0,7,		//Color para opcion marcada
-		'X'
+		'X',
+		2 //color de aviso
                 },
 
 
@@ -2464,7 +2474,11 @@ void menu_draw_cpu_use_last(void)
 
 	x=WINDOW_FOOTER_ELEMENT_X_CPU_USE;
 
-	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_USE,buffer_perc,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+	int color_tinta=WINDOW_FOOTER_INK;
+
+	if (cpu_use>=85) color_tinta=ESTILO_GUI_COLOR_AVISO;
+
+	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_USE,buffer_perc,color_tinta,WINDOW_FOOTER_PAPER);
 
 }
 
@@ -9239,7 +9253,7 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 			if (i==11) { 
 				texto[destino++]='$';
 				texto[destino++]='$';
-				texto[destino++]='2';
+				texto[destino++]='0'+ESTILO_GUI_COLOR_AVISO; //'2';
 				indicado_rojo=1;
 			}
 		}

@@ -2118,9 +2118,6 @@ void screen_putpixel_mix_layers(int x,int y)
 
 				int metodo_mix=screen_menu_mix_method & 3;
 
-				//Si el pixel que mostramos es el de maquina
-
-				int pixel_maquina=0;
 
 				switch (metodo_mix) {
 
