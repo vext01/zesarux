@@ -123,8 +123,14 @@ extern int scr_tiene_colores;
 #define WINDOW_FOOTER_LINES 3
 #define WINDOW_FOOTER_COLUMNS 32
 #define WINDOW_FOOTER_SIZE (8*WINDOW_FOOTER_LINES*menu_footer)
-#define WINDOW_FOOTER_PAPER (7+8)
-#define WINDOW_FOOTER_INK 0
+
+
+//#define WINDOW_FOOTER_PAPER (7+8)
+//#define WINDOW_FOOTER_INK 0
+
+
+#define WINDOW_FOOTER_PAPER (ESTILO_GUI_PAPEL_NORMAL)
+#define WINDOW_FOOTER_INK (ESTILO_GUI_TINTA_NORMAL)
 
 extern char *scr_driver_name;
 

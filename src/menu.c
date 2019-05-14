@@ -27427,6 +27427,8 @@ void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
 	estilo_gui_activo++;
 	if (estilo_gui_activo==ESTILOS_GUI) estilo_gui_activo=0;
 	set_charset();
+
+	menu_init_footer();
 }
 
 void menu_interface_multitask(MENU_ITEM_PARAMETERS)
