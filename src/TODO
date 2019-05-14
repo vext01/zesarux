@@ -38,6 +38,8 @@ la zona de footer izq/der se ve con el color normal sin efecto b&w
 
 -Debug daad hacerlo extensivo a paws?
 
+-zxvision: arrastrar ventana provoca pulsacion al soltar ventana y si cursor esta en una linea de seleccion
+
 
 -cpc sin footer y zoom 2 peta en Mac
 -cambiar de spectrum a cpc peta (con zoom 2 y footer)
