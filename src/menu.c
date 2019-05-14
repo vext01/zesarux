@@ -2212,6 +2212,10 @@ void menu_refresca_pantalla(void)
 	modificado_border.v=1;
     all_interlace_scr_refresca_pantalla();
 
+	//necesario si hay efectos de darken o grayscale
+	//menu_clear_footer();
+
+	//y redibujar todo footer
 	redraw_footer();
 
 }
@@ -27703,18 +27707,27 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 		if (si_complete_video_driver() ) {
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
+			menu_add_item_menu_tooltip(array_menu_window_settings,"How to mix menu and the layer below");
+			menu_add_item_menu_ayuda(array_menu_window_settings,"How to mix menu and the layer below");
+
 			if (screen_menu_mix_method==2) {
 				//screen_menu_mix_transparency
 				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",100-screen_menu_mix_transparency );
+				menu_add_item_menu_tooltip(array_menu_window_settings,"Transparency percentage to apply to menu");
+				menu_add_item_menu_ayuda(array_menu_window_settings,"Transparency percentage to apply to menu");
 			}
 
 			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
 				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_reduce_bright_menu,NULL,"[%c] Darken when menu",(screen_menu_reduce_bright_machine.v ? 'X' : ' ' ) );
+				menu_add_item_menu_tooltip(array_menu_window_settings,"Darken layer below menu when menu open");
+				menu_add_item_menu_ayuda(array_menu_window_settings,"Darken layer below menu when menu open");
 			}
 		}
 
 
-				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_bw_no_multitask,NULL,"[%c] B&W machine paused",(screen_machine_bw_no_multitask.v ? 'X' : ' ' ) );
+				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_bw_no_multitask,NULL,"[%c] B&W on menu+no multitask",(screen_machine_bw_no_multitask.v ? 'X' : ' ' ) );
+				menu_add_item_menu_tooltip(array_menu_window_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
+				menu_add_item_menu_ayuda(array_menu_window_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_window_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
