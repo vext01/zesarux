@@ -32123,6 +32123,7 @@ void menu_inicio(void)
 
 	//Y refrescar footer. Hacer esto para que redibuje en pantalla y no en layer de mezcla de menu
 	//menu_init_footer();
+	menu_clear_footer();
 	redraw_footer();
 
 	//Establecemos variable de salida de todos menus a 0
