@@ -83,7 +83,7 @@ int screen_text_brightness=50;
 z80_bit screen_show_splash_texts={1};
 
 //mostrar uso de cpu en footer
-z80_bit screen_show_cpu_usage={0};
+z80_bit screen_show_cpu_usage={1};
 
 //Si pantalla final rainbow se reduce tamanyo a 4/3 (dividir por 4, mult por 3)
 z80_bit screen_reduce_075={0};
@@ -2626,7 +2626,12 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 
 
 		//Hacer zoom de ese pixel si conviene		
-		scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+		//scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+
+
+                                if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(xfinal,yfinal,color);
+
+                                else scr_putpixel_zoom(xfinal,yfinal,color);		
 
 
 	

@@ -110,7 +110,8 @@ void scrvideoname_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80
         f.v=0;
         //128 y 129 corresponden a franja de menu y a letra enye minuscula
         if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
-        scr_putsprite_comun(&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,f);
+
+        scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,menu_gui_zoom);
 
 }
 
@@ -118,35 +119,23 @@ void scrvideoname_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80
 void scrvideoname_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel) {
 
 
-        int yorigen;
 
+        int yorigen;
 
 	yorigen=screen_get_emulated_display_height_no_zoom_bottomborder_en()/8;
 
-/*
-        if (MACHINE_IS_Z88) yorigen=24;
 
-	else if (MACHINE_IS_CPC) {
-                yorigen=(CPC_DISPLAY_HEIGHT/8);
-                if (border_enabled.v) yorigen+=CPC_TOP_BORDER_NO_ZOOM/8;
-        }
 
-	else if (MACHINE_IS_PRISM) {
-                yorigen=(PRISM_DISPLAY_HEIGHT/8);
-                if (border_enabled.v) yorigen+=PRISM_TOP_BORDER_NO_ZOOM/8;
-        }
+        //scr_putchar_menu(x,yorigen+y,caracter,tinta,papel);
+        y +=yorigen;
+        z80_bit inverse;
 
- 
+        inverse.v=0;
 
-        else {
-                //Spectrum o ZX80/81
-                if (border_enabled.v) yorigen=31;
-                else yorigen=24;
-        }
+        //128 y 129 corresponden a franja de menu y a letra enye minuscula
+        if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
 
-*/
-
-        scr_putchar_menu(x,yorigen+y,caracter,tinta,papel);
+        scr_putchar_footer_comun_zoom(caracter,x,y,inverse,tinta,papel);        
 }
 
 
