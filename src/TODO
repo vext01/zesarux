@@ -7,18 +7,9 @@ Para próxima versión ZEsarUX:
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 
--en smartload, se borra zona footer izquierda y derecha en negro
-
 -watches ok aunque no sale centrado. Normal?
 
 -probar numselect
-
--redraw footer con intelace....
-
--scr_putsprite_comun_zoom, usado en zx80/81 sin realvideo y simulacion spectrum, no preserva borders
-
--al borrar layer de machine, el footer de abajo tendria que ser color blanco brillante, 
-para que se mezcle bien con footer
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
 -probar cpu use footer en maquinas que no muestran (como windows)
@@ -31,75 +22,10 @@ ok -probar pantalla cpu_panic
 
 -menus de mas ancho. maximo 256x256?
 
--transparencia menu:
-
-*refresco no siempre parece que vaya bien en menu -> parece que ya va
-*testear bien en menu con y sin multitask
-*ancho buferes, reasignar al asignar ventana
-*funciones de driver, generalizar
-
-
--menus que puedan ir a border y mas alla de pantalla emulada:
-*putpixel sin rainbow siempre agrega margen de border. problema: es comun para menu y pantalla emulada.
-Habria que tener el 0,0 (arriba del todo izquierda) como referencia para putpixel de menu
-*funcion scr_ver_si_refrescar_por_menu_activo, trabajara como 0,0 como referencia esquina arriba izquierda
-Pero putpixel de maquina emulada sin raibow tiene el 0,0 dentro de border. Como hacer que tenga en cuenta el offset?
-
-->habria que sumar scr_return_margenxy_rainbow a la llamada a scr_ver_si_refrescar_por_menu_activo cuando rainbow
-->ver cambios_menu_a_border.txt
-
-
-->si es mucho lio, la solucion seria tener dos buffers de pixel: uno para pantalla, otro para menu
-y luego mezclarlos... problema: drivers como cocoa hace el render el solito, con la memoria de pantalla.
-fbdev pasa lo mismo. Habria que tener un buffer intermedio (cuando menu esta activo) y mezclarlos a cada final de frame
-->esto implicaria alterar funcion de putpixel de driver de video por otro cuando se abre el menu. Demasiado complicado
-->quiza putpixel tendria que ver si hay overlay de menu. 
-Si no esta, hacer putpixel normal
-Si esta, hacer pixel en buffer aparte. Y mezclarlo en algun momento
-->problema 2: buffer de menu y buffer de maquina emulada tienen que ser de tipos iguales: indexado 16 bits
-->quiza mezclarlo a buffer final despues de hacer el putpixel con menu activo
-->o mezclarlo en el mismo putpixel. no agrega incremento de uso de cpu. Metodo preferido
-->dos buffers, para cuando menu esta activo:
-->buffer pixeles menu
-->buffer pixeles maquina emulada
-->al hacer putpixel de driver video, meter primero pixel en buffer de pixeles maquina emulada.
-ver si pixeles menu esta por encima del de maquina emulada o no.
-->truco: hacer pixeles de menu transparentes para cuando se borra. y no usar mas el scr_ver_si_refrescar_por_menu_activo
-->color transparente, hacerlo ficticio por ejemplo 65535 u otro valor
-->esto permitira mezclar elementos de menu con fondo sin tener que ser de tamaño 8x8 necesariamente
-->cuando se hace pixel de texto menu, como se refrescará? vendra en la rutina de refrescar_pantalla. Pero todo menu que este
-fuera de ventana emulada, mas alla del border, no se refrescara....
-Otra función putpixel de driver para píxeles de menú. Que lo meta en su buffer y luego mezcle con píxeles de máquina emulada
-
-Píxeles de menús de waveform etc funcionan igual que textos de menús 
-
-Put pixel de menu ya no hace falta que tenga en cuenta border. Se podrá hacer que por defecto salga más o menos centrado el 0,0 pero no es necesario. De hecho, si hacemos que el total de ancho de menú sea el de la ventana, las ventanas ya saldrán centradas en ancho
-
-Buferes de píxeles deben tener mismo tamaño que el de la ventana. Redimensionar si redimensiona la ventana, lógicamente 
-
-Asignación de memoria de dichos buferes se hace desde los drivers de vídeo. Así los drivers de texto no lo harán.  Y son funciones comunes de asignación 
-
-
-Excepción? Footer como se gestiona?
-Para footer, otra función que escriba con putpixel, pero usando píxeles igual que capa de máquina emulada
-
-Al final se trata de tener dos capas:
--arriba: píxeles menú
--abajo: píxeles máquina emulada
-
-Quizá en vez de buffer de color indexado usar buffer de color rgb? Que ventaja tendría esto? Pues el color final se podría hacer como combinación de los dos, por ejemplo. Inconvenientes?
-Aunque también se pueden hacer mezclas de colores teniendo los buferes indexados 
-Se podría por ejemplo:
--modo normal: menú encima de pantalla spectrum
--modo menú transparente: fusionar los colores de ambos buferes. Se puede jugar con porcentaje de opacidad 
--modo menú semi transparente: color papel blanco con brillo (el del fondo del menú) es totalmente transparente. Resto de colores están encima 
-
-Y podemos volver a hacer que al activar el menu la pantalla spectrum se vea ligeramente oscura (opción configurable)
-
-
-
 
 -cpc sin footer y zoom 2 peta en Mac
+-cambiar de spectrum a cpc peta (con zoom 2 y footer)
+-parece que en cpc la primera linea de footer se ve sobreescrita por pantalla de maquina
 
 -extender ventana emulador
 

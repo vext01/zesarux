@@ -2107,6 +2107,8 @@ void putchar_footer_array(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte 
 		return;
 	}
 
+	if (ESTILO_GUI_SOLO_MAYUSCULAS) caracter=letra_mayuscula(caracter);
+
 	int pos_array=y*WINDOW_FOOTER_COLUMNS+x;
 	footer_screen_array[pos_array].tinta=tinta;
 	footer_screen_array[pos_array].papel=papel;
@@ -2130,7 +2132,7 @@ void cls_footer(void)
 	
 }
 
-void redraw_footer(void)
+void redraw_footer_continue(void)
 {
 	if (!menu_footer) return;
 
@@ -2156,14 +2158,18 @@ void redraw_footer(void)
 		}
 	}
 
-	return;
+}
+
+void redraw_footer(void)
+
+{
 
 
 	if (!menu_footer) return;
 
 	//Sin interlaced
 	if (video_interlaced_mode.v==0) {
-		scr_putchar_footer(x,y,caracter,tinta,papel);
+		redraw_footer_continue();
 		return;
 	}
 
@@ -2180,11 +2186,11 @@ void redraw_footer(void)
 	video_interlaced_scanlines.v=0;
 
 	//Escribe texto pero como hay interlaced, lo hará en una linea de cada 2
-	scr_putchar_footer(x,y,caracter,tinta,papel);
+	redraw_footer_continue();
 
 	//Dado que hay interlaced, simulamos que estamos en siguiente frame de pantalla para que dibuje la linea par/impar siguiente
 	interlaced_numero_frame++;
-	scr_putchar_footer(x,y,caracter,tinta,papel);
+	redraw_footer_continue();
 	interlaced_numero_frame--;
 
 	//restaurar scanlines
