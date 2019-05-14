@@ -2009,7 +2009,7 @@ void scr_redraw_machine_layer(void)
 	int ancho_ventana=screen_get_window_size_width_zoom_border_en();
   int alto_ventana=screen_get_window_size_height_zoom_border_en();	
 
-
+  
 	//Obtener el tamaño menor
 	/*
 	Por que hacemos esto?
