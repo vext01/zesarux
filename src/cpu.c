@@ -1087,29 +1087,29 @@ char *string_machines_list_description=
 //Ordenados por fabricante y año. Misma ordenacion en menu machine selection
 							" MK14     MK14\n"
 
-							" ZX80     ZX-80\n"
-							" ZX81     ZX-81\n"
-              " 16k      Spectrum 16k\n"
-              " 48k      Spectrum 48k\n"
-							" 128k     Spectrum 128k\n"
+							" ZX80     ZX80\n"
+							" ZX81     ZX81\n"
+              " 16k      ZX Spectrum 16k\n"
+              " 48k      ZX Spectrum 48k\n"
+							" 128k     ZX Spectrum+ 128k\n"
 							" QL       QL\n"
 
-							" P2       Spectrum +2\n"
-							" P2F      Spectrum +2 (French)\n"
-							" P2S      Spectrum +2 (Spanish)\n"
-							" P2A40    Spectrum +2A (ROM v4.0)\n"
-							" P2A41    Spectrum +2A (ROM v4.1)\n"
-							" P2AS     Spectrum +2A (Spanish)\n"
+							" P2       ZX Spectrum +2\n"
+							" P2F      ZX Spectrum +2 (French)\n"
+							" P2S      ZX Spectrum +2 (Spanish)\n"
+							" P2A40    ZX Spectrum +2A (ROM v4.0)\n"
+							" P2A41    ZX Spectrum +2A (ROM v4.1)\n"
+							" P2AS     ZX Spectrum +2A (Spanish)\n"
 
-							" P340     Spectrum +3 (ROM v4.0)\n"
-							" P341     Spectrum +3 (ROM v4.1)\n"
-							" P3S      Spectrum +3 (Spanish)\n"							
+							" P340     ZX Spectrum +3 (ROM v4.0)\n"
+							" P341     ZX Spectrum +3 (ROM v4.1)\n"
+							" P3S      ZX Spectrum +3 (Spanish)\n"							
 
 							" TS2068   Timex TS 2068\n"
 
 							" Inves    Inves Spectrum+\n"
-              " 48ks     Spectrum 48k (Spanish)\n"
-							" 128ks    Spectrum 128k (Spanish)\n"
+              " 48ks     ZX Spectrum+ 48k (Spanish)\n"
+							" 128ks    ZX Spectrum+ 128k (Spanish)\n"
 
 					    " TK90X    Microdigital TK90X\n"
 					    " TK90XS   Microdigital TK90X (Spanish)\n"
@@ -2185,40 +2185,40 @@ struct s_machine_names {
 struct s_machine_names machine_names[]={
 
 //char *machine_names[]={
-                                            {"Spectrum 16k",              	0},
-                                            {"Spectrum 48k", 			1},
+                                            {"ZX Spectrum 16k",              	0},
+                                            {"ZX Spectrum 48k", 			1},
                                             {"Inves Spectrum+",			2},
                                             {"Microdigital TK90X",		3},
                                             {"Microdigital TK90X (Spanish)",	4},
                                             {"Microdigital TK95",		5},
-                                            {"Spectrum 128k",			6},
-                                            {"Spectrum 128k (Spanish)",		7},
-                                            {"Spectrum +2",			8},
-                                            {"Spectrum +2 (French)",		9},
-                                            {"Spectrum +2 (Spanish)",		10},
-                                            {"Spectrum +2A (ROM v4.0)",		11},
-                                            {"Spectrum +2A (ROM v4.1)",		12},
-                                            {"Spectrum +2A (Spanish)",		13},
+                                            {"ZX Spectrum+ 128k",			6},
+                                            {"ZX Spectrum+ 128k (Spanish)",		7},
+                                            {"ZX Spectrum +2",			8},
+                                            {"ZX Spectrum +2 (French)",		9},
+                                            {"ZX Spectrum +2 (Spanish)",		10},
+                                            {"ZX Spectrum +2A (ROM v4.0)",		11},
+                                            {"ZX Spectrum +2A (ROM v4.1)",		12},
+                                            {"ZX Spectrum +2A (Spanish)",		13},
 					    {"ZX-Uno",         			14},
 					    {"Chloe 140SE",    			15},
 					    {"Chloe 280SE",    			16},
 			   		    {"Timex TS2068",   			17},
 					    {"Prism 512",       			18},
 					    {"TBBLue",   			19},
-					    {"Spectrum 48k (Spanish)",		20},
+					    {"ZX Spectrum+ 48k (Spanish)",		20},
 					    {"Pentagon",		21},
 							{"Chrome", MACHINE_ID_CHROME},
 							{"ZX-Evolution TS-Conf", MACHINE_ID_TSCONF},
 							{"ZX-Evolution BaseConf", MACHINE_ID_BASECONF},
 
 
-                                            {"Spectrum +3 (ROM v4.0)",		MACHINE_ID_SPECTRUM_P3_40},
-                                            {"Spectrum +3 (ROM v4.1)",		MACHINE_ID_SPECTRUM_P3_41},
-                                            {"Spectrum +3 (Spanish)",		MACHINE_ID_SPECTRUM_P3_SPA},
+                                            {"ZX Spectrum +3 (ROM v4.0)",		MACHINE_ID_SPECTRUM_P3_40},
+                                            {"ZX Spectrum +3 (ROM v4.1)",		MACHINE_ID_SPECTRUM_P3_41},
+                                            {"ZX Spectrum +3 (Spanish)",		MACHINE_ID_SPECTRUM_P3_SPA},
 
 
-                                            {"ZX-80",  				120},
-                                            {"ZX-81",  				121},
+                                            {"ZX80",  				120},
+                                            {"ZX81",  				121},
 					    {"Jupiter Ace",  			122},
 					    {"Z88",  				130},
 				            {"CPC 464",  			MACHINE_ID_CPC_464},
