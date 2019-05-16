@@ -22,6 +22,12 @@ en scr_clear_layer_menu, quitando el for (i=0;i<size;i++) buffer_layer_menu[i]=S
 
 en algun momento de ese bucle, buffer_layer_menu vale 0
 
+parece que scr_reallocate_layers_menu se llama dos veces estando dentro, al haber resize de pantalla desde cocoa
+pese a leer sem_screen_refresh_reallocate_layers, se produce igual
+
+se crea otra variable running_realloc que evita que se llame dos veces->que pasa la segunda vez? no se produce cambio
+quiza tendria que esperarse a que finalizase->pero no va . mejor salir sin nada
+
 Peta de spectrum a cpc, arrancando sin config por ejemplo
 quiza si layers en scr_redraw_machine_layer
  no son iguales, no hacer nada

@@ -1932,19 +1932,35 @@ z80_int *buffer_layer_menu=NULL;
 //No se pueden dar las dos condiciones a la vez, pues si esta por debajo redibujando y reasignamos layers, petara todo
 int sem_screen_refresh_reallocate_layers=0;
 
+
+int running_realloc=0;
+
 void scr_reallocate_layers_menu(int ancho,int alto)
 {
+
+	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
+	if (running_realloc) {
+		printf ("-----another realloc already running. sem_screen_refresh_reallocate_layers: %d  ancho %d alto %d\n",sem_screen_refresh_reallocate_layers,ancho,alto);
+		return;
+	}
+
+	while (running_realloc) {
+		printf ("screen currently reallocating... wait\n");
+		usleep(100);
+	}	
+
+	running_realloc=1;
 
 	//No se puede reasignar layers si esta por debajo refrescando pantalla. Esperar a que finalice
 	while (sem_screen_refresh_reallocate_layers) {
 		printf ("screen currently redrawing... wait\n");
-		usleep(1);
+		usleep(100);
 	}
 
 	sem_screen_refresh_reallocate_layers=1;
 
 
-	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
+
 
 	ancho_layer_menu_machine=ancho;
 	alto_layer_menu_machine=alto;	
@@ -1996,7 +2012,7 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	sem_screen_refresh_reallocate_layers=0;	
 
-
+	running_realloc=0;
 
 }
 
