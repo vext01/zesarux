@@ -2279,6 +2279,8 @@ if (!GetCurrentProcess(&psn))
 //Funcion de poner pixel en pantalla de driver, teniendo como entrada el color en RGB
 void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
+
+
                 int index = 4*(x+y*pixel_screen_width);
 		unsigned int *p;
 		p=(unsigned int *) &pixel_screen_data[index];
@@ -2308,11 +2310,33 @@ void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 
 }
 
-
+int mostrado_trace=0;
 
 
 void scrcocoa_putpixel(int x,int y,unsigned int color)
 {
+
+
+if (buffer_layer_machine==NULL) {
+        printf ("----buffer_layer_machine null\n");
+        exec_show_backtrace();
+        exit(1);
+}
+
+//temporal
+// scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);
+if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
+        if (!mostrado_trace) {
+                printf ("out of range scrcocoa_putpixel x %d y %d limit %d %d\n",x,y,ancho_layer_menu_machine,alto_layer_menu_machine);
+                exec_show_backtrace();
+                mostrado_trace=1;
+                sleep(1);
+        }
+        return;
+}
+
+
+
         if (menu_overlay_activo==0) {
                 //Putpixel con menu cerrado
                 scrcocoa_putpixel_final(x,y,color);
@@ -2466,7 +2490,8 @@ void scrcocoa_refresca_pantalla_solo_driver(void)
 
 }
 
-
+//temp variable 
+int refreshing_cocoa=0;
 
 void scrcocoa_refresca_pantalla(void)
 {
@@ -2486,7 +2511,14 @@ void scrcocoa_refresca_pantalla(void)
 		pendingresize=0;
 	}*/
 
+        if (sem_screen_refresh_reallocate_layers) {
+                printf ("--Screen layers are being reallocated. return\n");
+                //exec_show_backtrace();
+                return;
+        }
 
+sem_screen_refresh_reallocate_layers=1;
+refreshing_cocoa=1;
 
 
     if (MACHINE_IS_ZX8081) {
@@ -2574,7 +2606,8 @@ void scrcocoa_refresca_pantalla(void)
 
 
 
-
+sem_screen_refresh_reallocate_layers=0;
+refreshing_cocoa=0;
 
 }
 

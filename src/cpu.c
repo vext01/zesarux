@@ -2794,18 +2794,8 @@ void set_machine_params(void)
 		//0 para spectrum mejor
 		realtape_volumen=0;
 
-		//temporal. inicializar buffers
-		//z80_int buffer_layer_menu[3000*3000];
-//z80_int buffer_layer_machine[3000*3000];
-//z80_int buffer_layer_menu[3000*3000];
-//int ancho_layer_menu=3000;
-//int alto_layer_menu=3000;		
-			//extern z80_int buffer_layer_machine[];
-			/*extern z80_int buffer_layer_menu[];
-		int hh;
-		for (hh=0;hh<3000*3000;hh++) buffer_layer_menu[hh]=65535; //color transparente*/
-		scr_init_layers_menu();
-		scr_clear_layer_menu();
+
+
 
 		screen_set_parameters_slow_machines();
 
@@ -3770,6 +3760,11 @@ void post_set_machine_no_rom_load(void)
 
 
 		post_set_machine_no_rom_load_reopen_window();
+
+		printf ("antes init layers\n");
+		scr_init_layers_menu();
+		printf ("despues init layers\n");
+		scr_clear_layer_menu();		
 
 
 		last_machine_type=current_machine_type;
@@ -7256,17 +7251,17 @@ struct sched_param sparam;
 
 	//Capturar segmentation fault
 	//desactivado normalmente en versiones snapshot
-	//signal(SIGSEGV, segfault_signal_handler);
+	signal(SIGSEGV, segfault_signal_handler);
 
 	//Capturar floating point exception
 	//desactivado normalmente en versiones snapshot
-	//signal(SIGFPE, floatingpoint_signal_handler);
+	signal(SIGFPE, floatingpoint_signal_handler);
 
 	//Capturar segint (CTRL+C)
-	//signal(SIGINT, segint_signal_handler);
+	signal(SIGINT, segint_signal_handler);
 
 	//Capturar segterm
-	//signal(SIGTERM, segterm_signal_handler);
+	signal(SIGTERM, segterm_signal_handler);
 
 
 

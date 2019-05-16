@@ -734,7 +734,6 @@ void cpu_panic(char *mensaje)
 			//Para xwindows hace falta esto, sino no refresca
 			scr_actualiza_tablas_teclado();
 
-
 			sleep(20);
 			scr_end_pantalla();
 		}

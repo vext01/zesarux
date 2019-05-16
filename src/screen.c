@@ -1925,25 +1925,66 @@ z80_int *buffer_layer_machine=NULL;
 z80_int *buffer_layer_menu=NULL;
 
 
+//Especie de semaforo que indica:
+//Pantalla esta siendo actualizada
+//o
+//Se esta reasignando layers de menu machine
+//No se pueden dar las dos condiciones a la vez, pues si esta por debajo redibujando y reasignamos layers, petara todo
+int sem_screen_refresh_reallocate_layers=0;
+
 void scr_reallocate_layers_menu(int ancho,int alto)
 {
+
+	//No se puede reasignar layers si esta por debajo refrescando pantalla. Esperar a que finalice
+	while (sem_screen_refresh_reallocate_layers) {
+		printf ("screen currently redrawing... wait\n");
+		usleep(1);
+	}
+
+	sem_screen_refresh_reallocate_layers=1;
+
 
 	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
 
 	ancho_layer_menu_machine=ancho;
 	alto_layer_menu_machine=alto;	
+
+	printf ("antes buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
 	
 	//Liberar si conviene
-	if (buffer_layer_machine!=NULL) free (buffer_layer_machine);
-	if (buffer_layer_menu!=NULL) free(buffer_layer_menu);
+	if (buffer_layer_machine!=NULL) {
+		printf ("liberando buffer_layer_machine\n");
+		free (buffer_layer_machine);
+		buffer_layer_machine=NULL;
+	}
+
+	printf ("despues si liberar buffer_layer_machine\n");
+	
+	if (buffer_layer_menu!=NULL) {
+		printf ("Liberando buffer_layer_menu\n");
+		free(buffer_layer_menu);
+		buffer_layer_menu=NULL;
+	}
+
+
+	printf ("despues si liberar buffer_layer_menu\n");
 
 	//Asignar
 	int size_layers=ancho_layer_menu_machine*alto_layer_menu_machine*sizeof(z80_int);
 
+	printf ("Asignando layer tamanyo %d\n",size_layers);
+
 	buffer_layer_machine=malloc(size_layers);
 	buffer_layer_menu=malloc(size_layers);
 
-	if (buffer_layer_machine==NULL || buffer_layer_menu==NULL) cpu_panic("Cannot allocate memory for menu layers");	
+
+	printf ("despues buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
+
+	if (buffer_layer_machine==NULL || buffer_layer_menu==NULL) {
+		printf ("Cannot allocate memory for menu layers\n");
+		cpu_panic("Cannot allocate memory for menu layers");	
+	}
+
 
 	//Inicializar layers. Esto puede dar problemas si se llama aqui sin tener el driver de video inicializado del todo
 	//por esto hay que tener cuidado en que cuando se llama aqui, esta todo correcto
@@ -1952,9 +1993,11 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	scr_clear_layer_menu();
 
-	//Dado que ha cambiado tamaño de dichos buffers, hacemos borrado de putpixel cache
-	//esto ya se hace al final de scr_clear_layer_menu
-	//clear_putpixel_cache();
+
+	sem_screen_refresh_reallocate_layers=0;	
+
+
+
 }
 
 void scr_init_layers_menu(void)
@@ -1982,6 +2025,7 @@ void scr_putpixel_layer_menu(int x,int y,int color)
 												int xdestino=xzoom+zx;
 												int ydestino=yzoom+zy;
                         //scr_putpixel(xzoom+zx,yzoom+zy,color);
+												if (buffer_layer_menu==NULL) printf ("scr_putpixel_layer_menu NULL\n");
 												buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
 
 												//Y hacer mix
@@ -1994,6 +2038,7 @@ void scr_redraw_machine_layer(void)
 {
 
 	printf ("redraw machine layer\n");
+
 
 	if (scr_putpixel==NULL) return;	
 
@@ -2008,6 +2053,12 @@ void scr_redraw_machine_layer(void)
 
 	int ancho_ventana=screen_get_window_size_width_zoom_border_en();
   int alto_ventana=screen_get_window_size_height_zoom_border_en();	
+
+	//Si son tamaños distintos, no hacer nada
+	if (ancho_ventana!=ancho_layer || alto_ventana!=alto_layer) {
+		//printf ("Window size does not match menu layers size\n");
+		return;
+	}
 
   
 	//Obtener el tamaño menor
@@ -2227,16 +2278,43 @@ void scr_clear_layer_menu(void)
 		if (!si_complete_video_driver() ) return;
 
 		printf ("Clearing layer menu\n");
+		//sleep(1);
 
-		int hh;
-		for (hh=0;hh<ancho_layer_menu_machine*alto_layer_menu_machine;hh++) buffer_layer_menu[hh]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente	
+extern int refreshing_cocoa;		
 
+		int i;
+		int size=ancho_layer_menu_machine*alto_layer_menu_machine;
+		printf ("Clearing layer size %d. buffer_layer_menu %p realloc layers %d refresh cocoa %d\n",size,buffer_layer_menu,sem_screen_refresh_reallocate_layers,refreshing_cocoa);
+		//size/=16;
+
+		z80_int *initial_p;
+
+
+
+		initial_p=buffer_layer_menu;
+		for (i=0;i<size;i++) {
+			//if (initial_p!=buffer_layer_menu) {
+			if (buffer_layer_menu==NULL) {
+			//if (sem_screen_refresh_reallocate_layers) {
+				printf ("---i %d %p realloc layers %d refresh cocoa %d\n",i,buffer_layer_menu,sem_screen_refresh_reallocate_layers,refreshing_cocoa);
+				sleep(5);
+			}
+			buffer_layer_menu[i]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente	
+		}
+
+		printf ("After Clearing layer size %d. buffer_layer_menu %p\n",size,buffer_layer_menu);
+
+		printf ("Before clear putpixel cache\n");
 		clear_putpixel_cache();
+		printf ("After clear putpixel cache\n");
 
-		//Y repintar todo buffer maquina
-		scr_redraw_machine_layer();
+		//Y repintar todo buffer maquina. Esto no desde aqui
+		//scr_redraw_machine_layer();
 
 		//menu_clear_footer();
+
+		printf ("End clearing layer menu\n");
+		//sleep(1);
 
 }
 
@@ -9556,28 +9634,8 @@ void cpc_putpixel_zoom(int x,int y,unsigned int color)
 void cpc_putpixel_border(int x,int y,unsigned int color)
 {
 
-	int margenx_izq=CPC_LEFT_BORDER_NO_ZOOM*border_enabled.v;
-        int margeny_arr=CPC_TOP_BORDER_NO_ZOOM*border_enabled.v;
+	scr_putpixel(x,y,color);
 
-	int margen_der=margenx_izq+256;
-	int margen_aba=margeny_arr+192;
-
-	int x2=x/zoom_x;
-	int y2=y/zoom_y;
-
-	int dibujar=0;
-
-        if (x2>=margen_der) dibujar=1;
-        else if (y2>=margen_aba) dibujar=1;
-	else if (x2<margenx_izq) dibujar=1;
-	else if (y2<margeny_arr) dibujar=1;
-        else if (scr_ver_si_refrescar_por_menu_activo((x2-margenx_izq)/8,(y2-margeny_arr)/8)) dibujar=1;
-
-
-        if (dibujar) {
-                scr_putpixel(x,y,color);
-                scr_putpixel(x,y+1,color);
-        }
 }
 
 
@@ -9596,10 +9654,10 @@ void scr_refresca_border_cpc(unsigned int color)
 
 
 	int ancho_border=CPC_LEFT_BORDER_NO_ZOOM+   (640-ancho_pantalla)/2;
-	int alto_border=CPC_TOP_BORDER_NO_ZOOM+ (200-alto_pantalla);
+	int alto_border=CPC_TOP_BORDER_NO_ZOOM+ (200-alto_pantalla)/2;
 
-	//printf ("ancho pantalla: %d alto_pantalla: %d offset_x_pantalla: %d anchoborder: %d altoborder: %d\n",
-	//	ancho_pantalla,alto_pantalla,offset_x_pantalla,ancho_border,alto_border);
+	printf ("ancho pantalla: %d alto_pantalla: %d offset_x_pantalla: %d anchoborder: %d altoborder: %d\n",
+		ancho_pantalla,alto_pantalla,offset_x_pantalla,ancho_border,alto_border);
 
 
 

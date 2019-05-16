@@ -9,6 +9,31 @@ Para próxima versión ZEsarUX:
 
 -watches ok aunque no sale centrado. Normal?
 
+-en cpu_panic volver a activar sleep 20
+
+-screen_currently_refreshing en todos drivers
+
+-Al cambiar de máquina a veces peta
+>probado:
+pendingresize de cocoa. nada
+desactivar scr_redraw_machine_layer. nada
+quitar los free buffer_layer_machine y buffer_layer_menu. nada
+en scr_clear_layer_menu, quitando el for (i=0;i<size;i++) buffer_layer_menu[i]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente	  funciona
+
+en algun momento de ese bucle, buffer_layer_menu vale 0
+
+Peta de spectrum a cpc, arrancando sin config por ejemplo
+quiza si layers en scr_redraw_machine_layer
+ no son iguales, no hacer nada
+Quizá sería tan simple de que:
+Al habilitar layer menu, se asigna buffer pixel
+En otros sitios no hace falta (bueno si, en refimensionado y cambios tamaño ventana)
+Pues si no hay menu_overlay_activo, no se usará el buffer pixel
+
+-Trozo de arriba que en cpc no se ven bien ventanas realmente es la ventana de Mac que ha quedado más pequeña 
+
+-Operaciones de layers, de repintado por ejemplo y la mayoría, no deberían actual si no hay layer de menú, o sea, no está activo menu_overlay_activo
+
 -en zxuno, despues de cerrar menu, siempre muestra indicador "flash"
 
 -probar numselect

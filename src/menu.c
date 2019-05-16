@@ -1719,6 +1719,9 @@ void set_menu_overlay_function(void (*funcion)(void) )
 
 	//Necesario para que al poner la capa de menu, se repinte todo
 	clear_putpixel_cache();	
+
+	//Y por si acaso, aunque ya deberia haber buffer de capas activo, asignarlo
+	scr_init_layers_menu();
 }
 
 

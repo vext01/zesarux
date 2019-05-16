@@ -781,6 +781,8 @@ extern int alto_layer_menu_machine;
 extern void scr_reallocate_layers_menu(int ancho,int alto);
 extern void scr_init_layers_menu(void);
 
+extern int sem_screen_refresh_reallocate_layers;
+
 #define SCREEN_LAYER_TRANSPARENT_MENU 65535
 
 			
