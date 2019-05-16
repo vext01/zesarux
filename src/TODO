@@ -13,6 +13,8 @@ Para próxima versión ZEsarUX:
 
 -screen_currently_refreshing en todos drivers
 
+-arranncar en 48k y zoom 1. cambiar a zoom2 peta,y de 2 a 1 tambien -> ----buffer_layer_machine null
+
 -Al cambiar de máquina a veces peta
 >probado:
 pendingresize de cocoa. nada
