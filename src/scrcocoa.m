@@ -2320,17 +2320,7 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 
 
 
-//temporal
-// scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);
-if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
-        if (!mostrado_trace) {
-                printf ("out of range scrcocoa_putpixel x %d y %d limit %d %d\n",x,y,ancho_layer_menu_machine,alto_layer_menu_machine);
-                exec_show_backtrace();
-                mostrado_trace=1;
-                sleep(1);
-        }
-        return;
-}
+
 
 
 
@@ -2345,6 +2335,20 @@ if (buffer_layer_machine==NULL) {
         exec_show_backtrace();
         exit(1);
 }
+
+//temporal
+// scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);
+if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
+        if (!mostrado_trace) {
+                printf ("out of range scrcocoa_putpixel x %d y %d limit %d %d\n",x,y,ancho_layer_menu_machine,alto_layer_menu_machine);
+                exec_show_backtrace();
+                mostrado_trace=1;
+                sleep(1);
+        }
+        return;
+}
+
+
 
         //if (buffer_layer_machine==NULL) {
         //        printf ("buffer null\n");
