@@ -1947,21 +1947,31 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 		return;
 	}
 
+	//Si el tamanyo anterior es igual que ahora, no tiene sentido tocarlo
+	if (ancho_layer_menu_machine==ancho && alto_layer_menu_machine==alto) {
+		printf ("Returning as the current size is the same as the new\n");
+		return;
+	}
+
+
 	if (running_realloc) {
 		printf ("-----another realloc already running. sem_screen_refresh_reallocate_layers: %d  ancho %d alto %d\n",sem_screen_refresh_reallocate_layers,ancho,alto);
 		return;
 	}
 
+  if (running_realloc) printf ("screen currently reallocating... wait\n");
+
 	while (running_realloc) {
-		printf ("screen currently reallocating... wait\n");
+		//printf ("screen currently reallocating... wait\n");
 		usleep(100);
 	}	
 
 	running_realloc=1;
 
 	//No se puede reasignar layers si esta por debajo refrescando pantalla. Esperar a que finalice
+	if (sem_screen_refresh_reallocate_layers) printf ("screen currently redrawing... wait\n");
 	while (sem_screen_refresh_reallocate_layers) {
-		printf ("screen currently redrawing... wait\n");
+		//printf ("screen currently redrawing... wait\n");
 		usleep(100);
 	}
 
