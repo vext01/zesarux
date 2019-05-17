@@ -784,8 +784,9 @@ extern void scr_init_layers_menu(void);
 extern int sem_screen_refresh_reallocate_layers;
 
 
-extern void screen_end_pantalla_save_overlay(void (**previous_function)(void) );
-extern void screen_restart_pantalla_restore_overlay(void (*previous_function)(void) );
+
+extern void screen_end_pantalla_save_overlay(void (**previous_function)(void),int *menu_antes );
+extern void screen_restart_pantalla_restore_overlay(void (*previous_function)(void),int menu_antes);
 
 #define SCREEN_LAYER_TRANSPARENT_MENU 65535
 

@@ -11070,16 +11070,26 @@ void enable_interlace(void)
 	//Si zoom y no es multiple de 2
 	if ((zoom_y&1)!=0) reinicia_ventana=1;
 
+  void (*previous_function)(void);
+  int menu_antes;
 
         if (reinicia_ventana) {
-		scr_end_pantalla();
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+		//scr_end_pantalla();
 		zoom_y=2;
 		zoom_x=2;
 	}
 
         video_interlaced_mode.v=1;
 
-        if (reinicia_ventana) screen_init_pantalla_and_others();
+        if (reinicia_ventana) {
+					screen_init_pantalla_and_others();
+					screen_restart_pantalla_restore_overlay(previous_function,menu_antes);					
+				}
 
         set_putpixel_zoom();
 
@@ -13389,17 +13399,19 @@ void scr_refresca_pantalla_cpc_text(void (*fun_color) (z80_byte color,int *brill
 }
 
 //Guardamos funcion de overlay y lo desactivamos, y finalizamos pantalla
-void screen_end_pantalla_save_overlay(void (**previous_function)(void) ) {
+void screen_end_pantalla_save_overlay(void (**previous_function)(void),int *menu_antes ) {
 	*previous_function=menu_overlay_function;	
+	*menu_antes=menu_overlay_activo;
+
 	menu_overlay_activo=0;			
 	scr_end_pantalla();
 }
 
 //Restauramos funcion de overlay y lo activamos
-void screen_restart_pantalla_restore_overlay(void (*previous_function)(void))
+void screen_restart_pantalla_restore_overlay(void (*previous_function)(void),int menu_antes)
 {
 	menu_overlay_function=previous_function;
-	menu_overlay_activo=1;
+	menu_overlay_activo=menu_antes;
 }
 
 void screen_set_window_zoom(int z)
@@ -13415,7 +13427,9 @@ void screen_set_window_zoom(int z)
 	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
 	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
   void (*previous_function)(void);
-	screen_end_pantalla_save_overlay(&previous_function);
+	int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
 
 	printf ("funcion leida: %p\n",previous_function);
 
@@ -13432,7 +13446,7 @@ void screen_set_window_zoom(int z)
 
 	printf ("despues init footer\n");
 
-	screen_restart_pantalla_restore_overlay(previous_function);
+	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 
 
 	//menu_overlay_function=previous_function;

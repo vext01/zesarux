@@ -8013,17 +8013,33 @@ void parse_customfile_options(void)
 
 		else if (!strcmp(argv[puntero_parametro],"--disableborder")) {
 			debug_printf(VERBOSE_INFO,"End Screen");
-			scr_end_pantalla();
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+
+			//scr_end_pantalla();
 			disable_border();
 			screen_init_pantalla_and_others();
+                        screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 			debug_printf(VERBOSE_INFO,"Creating Screen");
 		}
 
                 else if (!strcmp(argv[puntero_parametro],"--enableborder")) {
                         debug_printf(VERBOSE_INFO,"End Screen");
-                        scr_end_pantalla();
+
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);                                                
+                        //scr_end_pantalla();
                         enable_border();
 			screen_init_pantalla_and_others();
+                        screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
                         debug_printf(VERBOSE_INFO,"Creating Screen");
                 }
 

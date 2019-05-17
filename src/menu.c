@@ -27014,7 +27014,16 @@ void menu_interface_inverse_video(MENU_ITEM_PARAMETERS)
 void menu_interface_border(MENU_ITEM_PARAMETERS)
 {
         debug_printf(VERBOSE_INFO,"End Screen");
-        scr_end_pantalla();
+
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+
+
+        //scr_end_pantalla();
 
 	if (border_enabled.v) disable_border();
 	else enable_border();
@@ -27025,13 +27034,24 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
         debug_printf(VERBOSE_INFO,"Creating Screen");
 
 	menu_init_footer();
+
+	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
 	
 }
 
 void menu_interface_hidemouse(MENU_ITEM_PARAMETERS)
 {
     debug_printf(VERBOSE_INFO,"End Screen");
-    scr_end_pantalla();
+
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+
+
+
+    //scr_end_pantalla();
 
 	mouse_pointer_shown.v ^=1;
 
@@ -27040,6 +27060,9 @@ void menu_interface_hidemouse(MENU_ITEM_PARAMETERS)
     debug_printf(VERBOSE_INFO,"Creating Screen");
 
 	menu_init_footer();
+
+
+	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
 	
 }
 
@@ -27246,7 +27269,15 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 	}
 
 
-        scr_end_pantalla();
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+        //scr_end_pantalla();
+
+
 
 	screen_reset_scr_driver_params();
 
@@ -27260,6 +27291,9 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 	set_menu_gui_zoom();
 	clear_putpixel_cache();
 
+screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
+
+
                 if ( resultado == 0 ) {
                         funcion_set();
 			menu_generic_message("Apply Driver","OK. Driver applied");
@@ -27272,6 +27306,10 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 			debug_printf(VERBOSE_ERR,"Can not set video driver. Restoring to previous driver %s",scr_driver_name);
 			menu_change_video_driver_get();
 
+
+			screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+
+
 			//Restaurar video driver
 			screen_reset_scr_driver_params();
 		        funcion_init=scr_driver_array[num_previo_menu_scr_driver].funcion_init;
@@ -27282,6 +27320,9 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
 			funcion_init();
 			clear_putpixel_cache();
 			funcion_set();
+
+
+			screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 		}
 
         //scr_init_pantalla();
@@ -27352,7 +27393,8 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
 	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
   void (*previous_function)(void);
-	screen_end_pantalla_save_overlay(&previous_function);
+  int menu_antes;
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
         //scr_end_pantalla();
 
 
@@ -27374,7 +27416,7 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 
 	if (menu_footer) menu_init_footer();
 
-	screen_restart_pantalla_restore_overlay(previous_function);
+	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 
 }
 
@@ -30713,24 +30755,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 	//Average CPU use solo sale si screen_show_cpu_usage.v
 
 
-	//temp prueba
-	/*
-        scr_end_pantalla();
 
-                int (*funcion_init) ();
-                int (*funcion_set) ();
-
-		//1 es video caca
-		//3 es video curses
-                funcion_init=scr_driver_array[3].funcion_init;
-                funcion_set=scr_driver_array[3].funcion_set;
-                if ( (funcion_init()) ==0) {
-                        //printf ("Ok video driver i:%d\n",i);
-                        funcion_set();
-		}
-
-	screen_init_pantalla_and_others();
-	*/
 
 }
 
