@@ -1939,7 +1939,7 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
 	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
-	exec_show_backtrace();
+	//exec_show_backtrace();
 
 	if (!menu_overlay_activo) {
 		//No estrictamente necesario, pero evitamos usos de buffer_layer_menu o machine (especialmente desde thread de redibujo de cocoa) mientras se reasignan layers

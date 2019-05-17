@@ -5747,6 +5747,7 @@ void zxvision_draw_window_contents(zxvision_window *w)
 		return;
 	}
 
+	printf ("sonda inicial\n");
 	//menu_textspeech_send_text(texto);
 
 	//Buffer para speech
@@ -5764,6 +5765,8 @@ void zxvision_draw_window_contents(zxvision_window *w)
 	for (y=0;y<height;y++) {
 		int indice_speech=0;
 		for (x=0;x<width;x++) {
+
+			//printf ("x %d y %d\n",x,y);
 		
 			int xdestination=w->x+x;
 			int ydestination=(w->y)+1+y; //y +1 porque empezamos a escribir debajo del titulo
@@ -5777,6 +5780,8 @@ void zxvision_draw_window_contents(zxvision_window *w)
 			int offset_y_final=y+w->offset_y;
 
 			int lower_margin_starts_at=height-(w->lower_margin);
+
+			//printf ("sonda 1\n");
 				
 				//Texto leyenda parte superior
 				if (y<w->upper_margin) {
@@ -5791,7 +5796,7 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				else {
 					offset_y_final +=w->lower_margin; //Dado que ya hemos pasado la parte superior, saltar la inferior
 				}
-
+			//printf ("sonda 2\n");
 
 			if (offset_y_final>=w->total_height) out_of_bonds=1;
 
@@ -5821,8 +5826,11 @@ void zxvision_draw_window_contents(zxvision_window *w)
 					papel=ESTILO_GUI_PAPEL_SELECCIONADO;
 				} 
 			
+				//printf ("antes de putchar\n");
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
 					caracter_escribir,tinta,papel,caracter->parpadeo);
+
+					//printf ("despues de putchar\n");
 
 				if (indice_speech<MAX_BUFFER_SPEECH) {
 					buffer_linea[indice_speech++]=caracter_escribir;
@@ -5834,14 +5842,17 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
 				' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);
 			}
-
+			//printf ("sonda 3\n");
 
 		}
 
 		buffer_linea[indice_speech]=0;
 		menu_textspeech_send_text(buffer_linea);
+
+		//printf ("sonda 4\n");
 	}
 
+	printf ("sonda final\n");
 
 }
 
@@ -27013,6 +27024,12 @@ void menu_interface_inverse_video(MENU_ITEM_PARAMETERS)
 
 void menu_interface_border(MENU_ITEM_PARAMETERS)
 {
+
+	//Esperar a que no estemos redibujando pantalla
+	//while (sem_screen_refresh_reallocate_layers) {
+	//	printf ("-----Waiting until redraw and realloc functions finish\n");
+	//}
+
         debug_printf(VERBOSE_INFO,"End Screen");
 
 	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
@@ -27028,13 +27045,22 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 	else enable_border();
 
         //scr_init_pantalla();
+
+	printf ("--antes de init pantalla\n");
+
 	screen_init_pantalla_and_others();
 
-        debug_printf(VERBOSE_INFO,"Creating Screen");
+	printf ("--despues de init pantalla\n");
 
+    debug_printf(VERBOSE_INFO,"Creating Screen");
+
+	printf ("--antes de init footer\n");
 	menu_init_footer();
+	printf ("--despues de init footer\n");
 
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
+
+	printf ("--despues de restore overlay\n");
 	
 }
 
@@ -27383,6 +27409,8 @@ int menu_change_video_driver_cond(void)
 
 void menu_interface_footer(MENU_ITEM_PARAMETERS)
 {
+
+
 
         debug_printf(VERBOSE_INFO,"End Screen");
 
