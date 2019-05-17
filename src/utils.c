@@ -8020,7 +8020,7 @@ void parse_customfile_options(void)
 
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
 
-			//scr_end_pantalla();
+			
 			disable_border();
 			screen_init_pantalla_and_others();
                         screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
@@ -8036,7 +8036,7 @@ void parse_customfile_options(void)
   int menu_antes;
 
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);                                                
-                        //scr_end_pantalla();
+                        
                         enable_border();
 			screen_init_pantalla_and_others();
                         screen_restart_pantalla_restore_overlay(previous_function,menu_antes);

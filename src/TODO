@@ -11,6 +11,8 @@ Para próxima versión ZEsarUX:
 
 -en cpu_panic volver a activar sleep 20
 
+-ver si los scr_end_pantalla de cpu.c al cambiar tamanyo ventana afectan a segfault->cambiarlos por screen_end_pantalla_save_overlay ....
+
 -screen_currently_refreshing en todos drivers
 
 -arranncar en 48k y zoom 1. cambiar a zoom2 peta,y de 2 a 1 tambien -> ----buffer_layer_machine null

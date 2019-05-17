@@ -11078,7 +11078,6 @@ void enable_interlace(void)
 
 
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
-		//scr_end_pantalla();
 		zoom_y=2;
 		zoom_x=2;
 	}
@@ -11086,8 +11085,7 @@ void enable_interlace(void)
         video_interlaced_mode.v=1;
 
         if (reinicia_ventana) {
-					screen_init_pantalla_and_others();
-					screen_restart_pantalla_restore_overlay(previous_function,menu_antes);					
+					screen_init_pantalla_and_others();			
 				}
 
         set_putpixel_zoom();
@@ -11095,6 +11093,11 @@ void enable_interlace(void)
 	interlaced_numero_frame=0;
 
 	clear_putpixel_cache();
+
+
+if (reinicia_ventana) {
+					screen_restart_pantalla_restore_overlay(previous_function,menu_antes);					
+				}	
 
 
 }

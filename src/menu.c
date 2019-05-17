@@ -27023,7 +27023,6 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
 
 
-        //scr_end_pantalla();
 
 	if (border_enabled.v) disable_border();
 	else enable_border();
@@ -27050,8 +27049,6 @@ void menu_interface_hidemouse(MENU_ITEM_PARAMETERS)
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
 
 
-
-    //scr_end_pantalla();
 
 	mouse_pointer_shown.v ^=1;
 
@@ -27275,7 +27272,6 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
   int menu_antes;
 
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
-        //scr_end_pantalla();
 
 
 
@@ -27395,7 +27391,6 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
   void (*previous_function)(void);
   int menu_antes;
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
-        //scr_end_pantalla();
 
 
         if (menu_footer==0) {
