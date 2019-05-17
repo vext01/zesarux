@@ -2492,8 +2492,7 @@ void scrcocoa_refresca_pantalla_solo_driver(void)
 
 }
 
-//temp variable 
-int refreshing_cocoa=0;
+
 
 void scrcocoa_refresca_pantalla(void)
 {
@@ -2514,13 +2513,13 @@ void scrcocoa_refresca_pantalla(void)
 	}*/
 
         if (sem_screen_refresh_reallocate_layers) {
-                printf ("--Screen layers are being reallocated. return\n");
+                //printf ("--Screen layers are being reallocated. return\n");
                 //exec_show_backtrace();
                 return;
         }
 
-sem_screen_refresh_reallocate_layers=1;
-refreshing_cocoa=1;
+        sem_screen_refresh_reallocate_layers=1;
+
 
 
     if (MACHINE_IS_ZX8081) {
@@ -2609,7 +2608,7 @@ refreshing_cocoa=1;
 
 
 sem_screen_refresh_reallocate_layers=0;
-refreshing_cocoa=0;
+
 
 }
 

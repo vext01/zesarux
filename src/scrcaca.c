@@ -226,6 +226,15 @@ void scrcaca_refresca_pantalla(void)
 {
 
 
+        if (sem_screen_refresh_reallocate_layers) {
+                //printf ("--Screen layers are being reallocated. return\n");
+                //exec_show_backtrace();
+                return;
+        }
+
+        sem_screen_refresh_reallocate_layers=1;
+
+
         if (MACHINE_IS_ZX8081) {
                 scrcaca_refresca_pantalla_zx81();
         }
@@ -312,6 +321,7 @@ if (caca_last_message_shown_timer) {
 	/* Refresh display */
 	caca_refresh_display(dp);
 
+sem_screen_refresh_reallocate_layers=0;
 
 }
 

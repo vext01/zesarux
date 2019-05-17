@@ -2304,11 +2304,10 @@ void scr_clear_layer_menu(void)
 		printf ("Clearing layer menu\n");
 		//sleep(1);
 
-extern int refreshing_cocoa;		
 
 		int i;
 		int size=ancho_layer_menu_machine*alto_layer_menu_machine;
-		printf ("Clearing layer size %d. buffer_layer_menu %p realloc layers %d refresh cocoa %d\n",size,buffer_layer_menu,sem_screen_refresh_reallocate_layers,refreshing_cocoa);
+		printf ("Clearing layer size %d. buffer_layer_menu %p realloc layers %d\n",size,buffer_layer_menu,sem_screen_refresh_reallocate_layers);
 		//size/=16;
 
 		z80_int *initial_p;
@@ -2320,7 +2319,7 @@ extern int refreshing_cocoa;
 			//if (initial_p!=buffer_layer_menu) {
 			if (buffer_layer_menu==NULL) {
 			//if (sem_screen_refresh_reallocate_layers) {
-				printf ("---i %d %p realloc layers %d refresh cocoa %d\n",i,buffer_layer_menu,sem_screen_refresh_reallocate_layers,refreshing_cocoa);
+				printf ("---i %d %p realloc layers %d\n",i,buffer_layer_menu,sem_screen_refresh_reallocate_layers);
 				sleep(5);
 			}
 			buffer_layer_menu[i]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente	

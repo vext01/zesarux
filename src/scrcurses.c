@@ -1066,6 +1066,15 @@ void scrcurses_refresca_pantalla(void)
 	//int valor_get_pixel;
 
 
+        if (sem_screen_refresh_reallocate_layers) {
+                //printf ("--Screen layers are being reallocated. return\n");
+                //exec_show_backtrace();
+                return;
+        }
+
+        sem_screen_refresh_reallocate_layers=1;
+
+
 	if (MACHINE_IS_ZX8081) {
 
                 if (rainbow_enabled.v==0) {
@@ -1234,6 +1243,9 @@ void scrcurses_refresca_pantalla(void)
 
 
 	refresh();
+
+
+sem_screen_refresh_reallocate_layers=0;
 
 
 }

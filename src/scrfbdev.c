@@ -382,6 +382,14 @@ void scrfbdev_refresca_pantalla(void)
 {
 
 
+        if (sem_screen_refresh_reallocate_layers) {
+                //printf ("--Screen layers are being reallocated. return\n");
+                //exec_show_backtrace();
+                return;
+        }
+
+        sem_screen_refresh_reallocate_layers=1;
+
 
 	if (MACHINE_IS_ZX8081) {
 
@@ -462,6 +470,9 @@ void scrfbdev_refresca_pantalla(void)
 
         //Escribir footer
         draw_middle_footer();
+
+
+	sem_screen_refresh_reallocate_layers=0;
 
 
 }

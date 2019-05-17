@@ -229,6 +229,16 @@ void scraa_refresca_pantalla_solo_driver(void)
 void scraa_refresca_pantalla(void)
 {
 
+
+        if (sem_screen_refresh_reallocate_layers) {
+                //printf ("--Screen layers are being reallocated. return\n");
+                //exec_show_backtrace();
+                return;
+        }
+
+        sem_screen_refresh_reallocate_layers=1;
+
+
         if (MACHINE_IS_ZX8081) {
                 scraa_refresca_pantalla_zx81();
         }
@@ -320,6 +330,9 @@ void scraa_refresca_pantalla(void)
 
 
 	aa_flush (context);
+
+
+sem_screen_refresh_reallocate_layers=0;
 
 
 }

@@ -374,6 +374,17 @@ void scr_simpletext_common_fun_saltolinea (void)
 
 void scrsimpletext_repinta_pantalla(void)
 {
+
+
+        if (sem_screen_refresh_reallocate_layers) {
+                //printf ("--Screen layers are being reallocated. return\n");
+                //exec_show_backtrace();
+                return;
+        }
+
+        sem_screen_refresh_reallocate_layers=1;
+
+
 	
 	//enviar Ansi inicio pantalla
 	screen_text_send_ansi_go_home();
@@ -419,6 +430,7 @@ void scrsimpletext_repinta_pantalla(void)
                 z80_byte modo_video=tsconf_get_video_mode_display();
                 if (modo_video==3) {
                         scr_refresca_pantalla_tsconf_text_textmode(scr_simpletext_common_fun_color,scr_simpletext_common_fun_caracter,scr_simpletext_common_fun_saltolinea,12);
+			sem_screen_refresh_reallocate_layers=0;
                         return;
                 }
 
@@ -440,6 +452,9 @@ void scrsimpletext_repinta_pantalla(void)
 		screen_text_repinta_pantalla_spectrum();
 		
 	}
+
+
+	sem_screen_refresh_reallocate_layers=0;
 	
 	
 }
