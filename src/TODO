@@ -7,6 +7,8 @@ Para próxima versión ZEsarUX:
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 
+-driver xwindows, en mac. Cambiar border off a on, y peta
+
 -watches ok aunque no sale centrado. Normal?
 
 -en cpu_panic volver a activar sleep 20

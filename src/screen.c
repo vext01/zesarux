@@ -13424,6 +13424,12 @@ void screen_restart_pantalla_restore_overlay(void (*previous_function)(void),int
 {
 	menu_overlay_function=previous_function;
 	menu_overlay_activo=menu_antes;
+
+
+	//Si hay menu activo, reallocate layers, ya que probablemente habra cambiado el tamaño (activar border, footer, etc)
+	if (menu_overlay_activo) {
+		scr_init_layers_menu();
+	}
 }
 
 void screen_set_window_zoom(int z)
