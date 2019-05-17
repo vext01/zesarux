@@ -1939,6 +1939,14 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
 	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
+	exec_show_backtrace();
+
+	if (!menu_overlay_activo) {
+		//No estrictamente necesario, pero evitamos usos de buffer_layer_menu o machine (especialmente desde thread de redibujo de cocoa) mientras se reasignan layers
+		printf ("Returning as there are no active menu\n");
+		return;
+	}
+
 	if (running_realloc) {
 		printf ("-----another realloc already running. sem_screen_refresh_reallocate_layers: %d  ancho %d alto %d\n",sem_screen_refresh_reallocate_layers,ancho,alto);
 		return;
@@ -13380,8 +13388,19 @@ void scr_refresca_pantalla_cpc_text(void (*fun_color) (z80_byte color,int *brill
 
 }
 
+//Guardamos funcion de overlay y lo desactivamos, y finalizamos pantalla
+void screen_end_pantalla_save_overlay(void (**previous_function)(void) ) {
+	*previous_function=menu_overlay_function;	
+	menu_overlay_activo=0;			
+	scr_end_pantalla();
+}
 
-
+//Restauramos funcion de overlay y lo activamos
+void screen_restart_pantalla_restore_overlay(void (*previous_function)(void))
+{
+	menu_overlay_function=previous_function;
+	menu_overlay_activo=1;
+}
 
 void screen_set_window_zoom(int z)
 {
@@ -13391,7 +13410,16 @@ void screen_set_window_zoom(int z)
 		return;
 	}
 
-	scr_end_pantalla();
+	printf ("funcion anterior: %p\n",menu_overlay_function);
+
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+	screen_end_pantalla_save_overlay(&previous_function);
+
+	printf ("funcion leida: %p\n",previous_function);
+
+	printf ("despues end pantalla\n");
 
 	zoom_x=zoom_y=z;
 	modificado_border.v=1;
@@ -13401,6 +13429,16 @@ void screen_set_window_zoom(int z)
 
 
 	menu_init_footer();
+
+	printf ("despues init footer\n");
+
+	screen_restart_pantalla_restore_overlay(previous_function);
+
+
+	//menu_overlay_function=previous_function;
+	//menu_overlay_activo=1;
+
+	printf ("---------final cambio zooom\n");
 }
 
 

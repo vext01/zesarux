@@ -2312,16 +2312,13 @@ void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 
 int mostrado_trace=0;
 
+extern int running_realloc;
 
 void scrcocoa_putpixel(int x,int y,unsigned int color)
 {
 
 
-if (buffer_layer_machine==NULL) {
-        printf ("----buffer_layer_machine null\n");
-        exec_show_backtrace();
-        exit(1);
-}
+
 
 //temporal
 // scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);
@@ -2343,6 +2340,11 @@ if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
                 return;
         }          
 
+if (buffer_layer_machine==NULL) {
+        printf ("----buffer_layer_machine null running_realloc %d\n",running_realloc);
+        exec_show_backtrace();
+        exit(1);
+}
 
         //if (buffer_layer_machine==NULL) {
         //        printf ("buffer null\n");

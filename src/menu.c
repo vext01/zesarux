@@ -27349,11 +27349,11 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 
         debug_printf(VERBOSE_INFO,"End Screen");
 
-		//temp
-		//buffer_layer_menu=NULL;
-		//buffer_layer_machine=NULL;
-
-        scr_end_pantalla();
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+	screen_end_pantalla_save_overlay(&previous_function);
+        //scr_end_pantalla();
 
 
         if (menu_footer==0) {
@@ -27374,6 +27374,7 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 
 	if (menu_footer) menu_init_footer();
 
+	screen_restart_pantalla_restore_overlay(previous_function);
 
 }
 
