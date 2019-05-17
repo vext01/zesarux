@@ -695,9 +695,11 @@ void cpu_panic(char *mensaje)
 			reset_splash_text();
 
 
-			cls_menu_overlay();
+			//cls_menu_overlay();
+			//set_menu_overlay_function(normal_overlay_texto_menu);
+			//no tiene sentido tener el menu overlay abierto... o si?
 
-			set_menu_overlay_function(normal_overlay_texto_menu);
+			menu_overlay_activo=0;
 
             cpu_panic_xmax=screen_get_emulated_display_width_zoom_border_en();
             cpu_panic_ymax=screen_get_emulated_display_height_zoom_border_en();
