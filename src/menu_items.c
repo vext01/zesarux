@@ -4074,11 +4074,6 @@ zxvision_window *menu_debug_draw_visualmem_window;
 
 #ifdef EMULATE_VISUALMEM
 
-#define VISUALMEM_MAX_ALTO 24
-#define VISUALMEM_MAX_ANCHO 32
-
-//int visualmem_ancho_variable=VISUALMEM_MAX_ANCHO-2;
-//int visualmem_alto_variable=VISUALMEM_MAX_ALTO-2;
 
 #define visualmem_ancho_variable (menu_debug_draw_visualmem_window->visible_width-1)
 #define visualmem_alto_variable (menu_debug_draw_visualmem_window->visible_height-1)
@@ -4095,8 +4090,8 @@ int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 #define VISUALMEM_ANCHO (visualmem_ancho_variable)
 #define VISUALMEM_ALTO (visualmem_alto_variable)
 
-#define VISUALMEM_DEFAULT_WINDOW_ANCHO (VISUALMEM_MAX_ANCHO-2)
-#define VISUALMEM_DEFAULT_WINDOW_ALTO (VISUALMEM_MAX_ALTO-2)
+#define VISUALMEM_DEFAULT_WINDOW_ANCHO 30
+#define VISUALMEM_DEFAULT_WINDOW_ALTO 22
 
 //0=vemos visualmem write
 //1=vemos visualmem read
@@ -4242,6 +4237,7 @@ void menu_debug_draw_visualmem(void)
 	int max_valores=(final_puntero_membuffer-inicio_puntero_membuffer)/tamanyo_total;
 
 	//printf ("max_valores: %d\n",max_valores);
+	//printf ("tamanyo total: %d\n",tamanyo_total);
 	//le damos uno mas para poder llenar la ventana
 	//printf ("inicio: %06XH final: %06XH\n",inicio_puntero_membuffer,final_puntero_membuffer);
 	max_valores++;
@@ -4403,46 +4399,7 @@ void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
                         else visualmem_bright_multiplier +=10;
 }
 
-/*
-void menu_debug_new_visualmem_key_o(MENU_ITEM_PARAMETERS)
-{
-    /if (visualmem_ancho_variable>23) {
-		visualmem_ancho_variable--;
 
-		if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_DEFAULT_X;
-	}
-}
-
-
-void menu_debug_new_visualmem_key_p(MENU_ITEM_PARAMETERS)
-{
-    if (visualmem_ancho_variable<VISUALMEM_MAX_ANCHO) {
-		visualmem_ancho_variable++;
-
-		//Mover a la izquierda si maximo
-		if (visualmem_ancho_variable>=VISUALMEM_MAX_ANCHO-1) visualmem_x_variable=VISUALMEM_MIN_X;
-	}
-}
-
-void menu_debug_new_visualmem_key_q(MENU_ITEM_PARAMETERS)
-{
-    if (visualmem_alto_variable>7) {
-		visualmem_alto_variable--;
-
-		if (visualmem_alto_variable<VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_DEFAULT_Y;
-	}
-}
-
-void menu_debug_new_visualmem_key_a(MENU_ITEM_PARAMETERS)
-{
-    if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) {
-		visualmem_alto_variable++;
-
-		//Mover a la arriba si maximo
-		if (visualmem_alto_variable>=VISUALMEM_MAX_ALTO-1) visualmem_y_variable=VISUALMEM_MIN_Y;		
-	}
-}
-*/
 void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 {
 
