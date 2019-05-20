@@ -21,6 +21,8 @@ Para próxima versión ZEsarUX:
 pixel_screen_width = screen_get_window_size_width_zoom_border_en()+200*zoom_x;
 en retornar tamanyo menu, retornar +(200)/menu_char_width/menu_gui_zoom; 
 
+-calculo linea derecha en recuadro cuando width no es 8 esta mal calculado
+
 -Algún tema gui en el que el rojo del maximo no sea en rojo. Quizá magenta?
 
 -Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
