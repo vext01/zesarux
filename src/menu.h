@@ -810,6 +810,9 @@ extern void putchar_footer_array(int x,int y,z80_byte caracter,z80_byte tinta,z8
 extern void redraw_footer(void);
 extern void cls_footer(void);
 
+extern int menu_center_x(void);
+extern int menu_center_y(void);
+
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

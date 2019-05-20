@@ -14357,7 +14357,8 @@ void menu_ay_pianokeyboard_insert_inverse(char *origen_orig, int indice)
 	strcpy(origen_orig,cadena_temporal);
 }
 
-#define PIANO_GRAPHIC_BASE_X 9
+//#define PIANO_GRAPHIC_BASE_X 9
+#define PIANO_GRAPHIC_BASE_X (menu_center_x()-7)
 
 int piano_graphic_base_y=0;
 
@@ -30563,10 +30564,13 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 		return;
 	}
 
-	int scanf_x=1;
-	int scanf_y=10;
+	//int scanf_x=1;
+	//int scanf_y=10;
 	int scanf_ancho=30;
-	int scanf_alto=3;
+	int scanf_alto=3;	
+	int scanf_x=menu_center_x()-scanf_ancho/2;
+	int scanf_y=menu_center_y()-scanf_alto/2;
+
 
         menu_espera_no_tecla();
 

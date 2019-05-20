@@ -5976,7 +5976,11 @@ void menu_osd_adventure_keyboard_next(void)
 
 #define ADVENTURE_KB_X 0
 #define ADVENTURE_KB_Y 0
+
+//Le ponemos maximo ancho 32 que es el mismo que gestiona la funcion de dibujar menu
 #define ADVENTURE_KB_ANCHO 32
+
+//Le ponemos maximo alto 24 que es el mismo que gestiona la funcion de dibujar menu
 #define ADVENTURE_KB_ALTO 24
 
 //maximo de alto total admitido para la ventana
@@ -6015,6 +6019,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 							ADVENTURE_KB_ANCHO-1,ADVENTURE_KB_MAX_TOTAL_HEIGHT,"OSD Adventure Keyboard");
 	zxvision_draw_window(&ventana);		
 
+//printf ("ancho: %d\n",ADVENTURE_KB_ANCHO);
 
        
         menu_item *array_menu_osd_adventure_keyboard;
@@ -6129,7 +6134,7 @@ void menu_osd_adventure_keyboard(MENU_ITEM_PARAMETERS)
 		//si tuvieramos el maximo de y, valdria 21. Y el maximo de alto es 24
 		//printf ("ultima y: %d\n",last_y);
 		alto_ventana=last_y+3;
-		y_ventana=12-alto_ventana/2;
+		y_ventana=menu_center_y()-alto_ventana/2;
 		if (y_ventana<0) y_ventana=0;	
 
 

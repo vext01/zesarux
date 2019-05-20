@@ -7,6 +7,8 @@ Para próxima versión ZEsarUX:
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 
+-waveform que se reajuste a tamanyo ventana
+
 -driver xwindows, en mac. Cambiar border off a on, y peta
 
 -quiza por defecto no habilitar transparencia ni oscuro. consume mas cpu...
