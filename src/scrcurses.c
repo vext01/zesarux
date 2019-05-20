@@ -1384,6 +1384,18 @@ void scrcurses_detectedchar_print(z80_byte caracter)
 
 }
 
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
+int scrcurses_get_menu_width(void)
+{
+        return 32;
+}
+
+
+int scrcurses_get_menu_height(void)
+{
+        return 24;
+}
+
 
 
 int scrcurses_init (void) {
@@ -1446,6 +1458,9 @@ scr_debug_registers=scrcurses_debug_registers;
                         scr_messages_debug=scrcurses_messages_debug;
 scr_putchar_menu=scrcurses_putchar_menu;
 scr_putchar_footer=scrcurses_putchar_footer;
+
+        scr_get_menu_width=scrcurses_get_menu_width;
+        scr_get_menu_height=scrcurses_get_menu_height;
 
 scr_putpixel=scrcurses_putpixel;
 scr_putpixel_final=scrcurses_putpixel_final;

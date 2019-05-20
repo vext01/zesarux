@@ -271,6 +271,28 @@ void scrvideoname_detectedchar_print(z80_byte caracter)
 
 }
 
+
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
+int scrvideoname_get_menu_width(void)
+{
+        int max=screen_get_emulated_display_width_no_zoom_border_en()/menu_char_width/menu_gui_zoom;
+        if (max>OVERLAY_SCREEN_MAX_WIDTH) max=OVERLAY_SCREEN_MAX_WIDTH;
+
+                //printf ("max x: %d %d\n",max,screen_get_emulated_display_width_no_zoom_border_en());
+
+        return max;
+}
+
+
+int scrvideoname_get_menu_height(void)
+{
+        int max=screen_get_emulated_display_height_no_zoom_border_en()/8/menu_gui_zoom;
+        if (max>OVERLAY_SCREEN_MAX_HEIGTH) max=OVERLAY_SCREEN_MAX_HEIGTH;
+
+                //printf ("max y: %d %d\n",max,screen_get_emulated_display_height_no_zoom_border_en());
+        return max;
+}
+
 int scrvideoname_init (void) {
 
 	debug_printf (VERBOSE_INFO,"Init VIDEONAME_CAP Video Driver");
@@ -280,6 +302,9 @@ int scrvideoname_init (void) {
         scr_putpixel=scrvideoname_putpixel;
         scr_putpixel_final=scrvideoname_putpixel_final;
         scr_putpixel_final_rgb=scrvideoname_putpixel_final_rgb;
+
+        scr_get_menu_width=scrvideoname_get_menu_width;
+        scr_get_menu_height=scrvideoname_get_menu_height;
 
 
         scr_putchar_zx8081=scrvideoname_putchar_zx8081;

@@ -660,6 +660,19 @@ void scraa_detectedchar_print(z80_byte caracter)
 }
 
 
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
+int scraa_get_menu_width(void)
+{
+        return 32;
+}
+
+
+int scraa_get_menu_height(void)
+{
+        return 24;
+}
+
+
 int scraa_init (void) 
 {
 
@@ -722,7 +735,8 @@ scr_putchar_zx8081=scraa_putchar_zx8081;
 scr_putchar_menu=scraa_putchar_menu;
 scr_putchar_footer=scraa_putchar_footer;
 
-
+        scr_get_menu_width=scraa_get_menu_width;
+        scr_get_menu_height=scraa_get_menu_height;
 
 rparams = aa_getrenderparams();
 aa_resizehandler(context, scraaresize);

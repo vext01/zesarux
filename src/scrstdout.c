@@ -196,6 +196,19 @@ void scrstdout_detectedchar_print(z80_byte caracter)
 
 }
 
+
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
+int scrstdout_get_menu_width(void)
+{
+        return 32;
+}
+
+
+int scrstdout_get_menu_height(void)
+{
+        return 24;
+}
+
 //Null video drivers
 int scrstdout_init (void){ 
 	
@@ -225,6 +238,9 @@ int scrstdout_init (void){
 
 	scr_putpixel_final=scrstdout_putpixel_final;
 	scr_putpixel_final_rgb=scrstdout_putpixel_final_rgb;
+
+        scr_get_menu_width=scrstdout_get_menu_width;
+        scr_get_menu_height=scrstdout_get_menu_height;
 	
 	
 	scr_set_fullscreen=scrstdout_set_fullscreen;

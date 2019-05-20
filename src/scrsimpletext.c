@@ -127,6 +127,18 @@ void scrsimpletext_detectedchar_print(z80_byte caracter)
 
 }
 
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
+int scrsimpletext_get_menu_width(void)
+{
+        return 32;
+}
+
+
+int scrsimpletext_get_menu_height(void)
+{
+        return 24;
+}
+
 
 int scrsimpletext_init (void){ 
 	
@@ -144,6 +156,9 @@ int scrsimpletext_init (void){
 
 	scr_putpixel_final=scrsimpletext_putpixel_final;
 	scr_putpixel_final_rgb=scrsimpletext_putpixel_final_rgb;
+
+        scr_get_menu_width=scrsimpletext_get_menu_width;
+        scr_get_menu_height=scrsimpletext_get_menu_height;
 	
 	
 	scr_set_fullscreen=scrsimpletext_set_fullscreen;

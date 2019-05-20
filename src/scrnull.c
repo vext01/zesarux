@@ -89,6 +89,19 @@ void scrnull_detectedchar_print(z80_byte caracter)
 	caracter++;
 }
 
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
+int scrnull_get_menu_width(void)
+{
+        return 32;
+}
+
+
+int scrnull_get_menu_height(void)
+{
+        return 24;
+}
+
+
 
 //Null video drivers
 int scrnull_init (void){ 
@@ -103,6 +116,10 @@ debug_printf (VERBOSE_INFO,"Init Null Video Driver");
 
 	scr_putpixel_final=scrnull_putpixel_final;
 	scr_putpixel_final_rgb=scrnull_putpixel_final_rgb;
+
+
+        scr_get_menu_width=scrnull_get_menu_width;
+        scr_get_menu_height=scrnull_get_menu_height;
 
 	scr_driver_name="null";
 

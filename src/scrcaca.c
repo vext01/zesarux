@@ -659,6 +659,18 @@ void scrcaca_detectedchar_print(z80_byte caracter)
 
 }
 
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
+int scrcaca_get_menu_width(void)
+{
+        return 32;
+}
+
+
+int scrcaca_get_menu_height(void)
+{
+        return 24;
+}
+
 
 int scrcaca_init (void)
 {
@@ -686,6 +698,9 @@ scr_debug_registers=scrcaca_debug_registers;
 scr_messages_debug=scrcaca_messages_debug;
 scr_putchar_menu=scrcaca_putchar_menu;
 scr_putchar_footer=scrcaca_putchar_footer;
+
+        scr_get_menu_width=scrcaca_get_menu_width;
+        scr_get_menu_height=scrcaca_get_menu_height;
 
 scr_set_fullscreen=scrcaca_set_fullscreen;
 scr_reset_fullscreen=scrcaca_reset_fullscreen;
