@@ -118,8 +118,8 @@ struct s_generic_message_tooltip_return {
 
 typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 
-#define OVERLAY_SCREEN_MAX_WIDTH 32
-#define OVERLAY_SCREEN_MAX_HEIGTH 24
+#define OVERLAY_SCREEN_MAX_WIDTH 256
+#define OVERLAY_SCREEN_MAX_HEIGTH 128
 
 #define ZXVISION_MAX_ANCHO_VENTANA 32
 #define ZXVISION_MAX_ALTO_VENTANA 24

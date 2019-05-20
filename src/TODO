@@ -11,6 +11,7 @@ Para próxima versión ZEsarUX:
 
 -quiza por defecto no habilitar transparencia ni oscuro. consume mas cpu...
 
+-probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
 -watches ok aunque no sale centrado. Normal?
 
@@ -79,7 +80,7 @@ la zona de footer izq/der se ve con el color normal sin efecto b&w
 
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 
--menus de mas ancho. maximo 256x256?
+
 
 -Snapshots automáticos de nombre que depende del archivo cargado. Para tener siempre uno cuando se cambia de juego 
 

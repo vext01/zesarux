@@ -369,9 +369,9 @@ z80_bit force_confirm_yes={0};
 z80_bit mouse_menu_disabled={0};
 
 
-void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_byte color);
+void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color);
 void menu_desactiva_cuadrado(void);
-void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_byte color);
+void menu_establece_cuadrado(int x1,int y1,int x2,int y2,z80_byte color);
 
 
 void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2);
@@ -398,7 +398,7 @@ void menu_file_dsk_browser_show(char *filename);
 //si hay recuadro activo, y cuales son sus coordenadas y color
 
 int cuadrado_activo=0;
-z80_byte cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color;
+int cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color;
 
 //Y si dicho recuadro tiene marca de redimensionado posible para zxvision
 int cuadrado_activo_resize=0;
@@ -569,7 +569,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 //valores de la ventana mostrada
  
-z80_byte ventana_x,ventana_y,ventana_ancho,ventana_alto;
+int ventana_x,ventana_y,ventana_ancho,ventana_alto;
 
 //tipo ventana. normalmente activa. se pone tipo inactiva desde zxvision al pulsar fuera de la ventana
 int ventana_tipo_activa=1;
@@ -1498,7 +1498,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	//Guardamos linea cuadrado ventana
 	int antes_cuadrado_activo=0;
 	int antes_cuadrado_activo_resize=0;
-	z80_byte antes_cuadrado_x1,antes_cuadrado_y1,antes_cuadrado_x2,antes_cuadrado_y2,antes_cuadrado_color;
+	int antes_cuadrado_x1,antes_cuadrado_y1,antes_cuadrado_x2,antes_cuadrado_y2,antes_cuadrado_color;
 	
 	antes_cuadrado_activo=cuadrado_activo;
 	antes_cuadrado_activo_resize=cuadrado_activo_resize;
@@ -2768,7 +2768,7 @@ void normal_overlay_texto_menu(void)
 
 
 //establece cuadrado activo usado en los menus para xwindows y fbdev
-void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_byte color)
+void menu_establece_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
 {
 
 	cuadrado_x1=x1;
@@ -3529,7 +3529,7 @@ margenx_izq=TBBLUE_LEFT_BORDER_NO_ZOOM*border_enabled.v;
 //dibuja cuadrado (4 lineas) usado en los menus para xwindows y fbdev
 //Entrada: x1,y1 punto superior izquierda,x2,y2 punto inferior derecha en resolucion de zx spectrum. Color
 //nota: realmente no es un cuadrado porque el titulo ya hace de franja superior
-void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_byte color)
+void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
 {
 
 	if (!ESTILO_GUI_MUESTRA_RECUADRO) return;
@@ -3966,7 +3966,7 @@ void menu_dibuja_ventana_botones(void)
 //contenido blanco
 //recuadro de lineas
 //Entrada: x,y posicion inicial. ancho, alto. Todo coordenadas en caracteres 0..31 y 0..23
-void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char *titulo)
+void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 {
 
 
@@ -4809,8 +4809,8 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	//int ancho_ventana=max_ancho_texto+2;
 	int ancho_ventana=max_ancho_texto+2;
 
-	int xventana=16-ancho_ventana/2;
-	int yventana=12-alto_ventana/2;
+	int xventana=(scr_get_menu_width()/2)-ancho_ventana/2;
+	int yventana=(scr_get_menu_height()/2)-alto_ventana/2;
 
 	if (tooltip_enabled==0) {
 		menu_espera_no_tecla_con_repeticion();
@@ -29883,8 +29883,8 @@ void menu_simple_ventana(char *titulo,char *texto)
 		cpu_panic("window width too big");
 	}
 
-        int xventana=15-ancho_ventana/2;
-        int yventana=12-alto_ventana/2;
+        int xventana=(scr_get_menu_width()/2)-ancho_ventana/2;
+        int yventana=(scr_get_menu_height()/2)-alto_ventana/2;
 
 
         menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);

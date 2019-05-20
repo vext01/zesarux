@@ -2719,15 +2719,16 @@ void scrcocoa_detectedchar_print(z80_byte caracter)
         fflush(stdout);
 }
 
+//Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
 int scrcocoa_get_menu_width(void)
 {
-        return 32;
+        return 36;
 }
 
 
 int scrcocoa_get_menu_height(void)
 {
-        return 32;
+        return 28;
 }
 
 
