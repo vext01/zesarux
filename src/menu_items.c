@@ -2266,8 +2266,15 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,0,7,32,9,
-							31,7,"Core Statistics");
+	int alto_ventana=9;
+	int ancho_ventana=32;
+
+	int x_ventana=menu_center_x()-ancho_ventana/2; //0;
+	int y_ventana=menu_center_y()-alto_ventana/2; //7;
+
+
+	zxvision_new_window(&ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"Core Statistics");
 
 	zxvision_draw_window(&ventana);
 
