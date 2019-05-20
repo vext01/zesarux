@@ -4,6 +4,22 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
+-Agregar incluir pthreadGC3.dll en ZEsarUX win
+
+-Con —configfile luego graba la config al archivo que toca?
+
+-Mejorar zoom 0.75. Color gris si medio negro?
+
+-Opción command line de desactivar alguna first aid. Si no existe dicha aid, ignorarlo, por si algún día borro por código algunas que ya no existan y se quedan en archivo de config
+
+-First aid que diga que tecla espacio sirve para expandir archivos 
+
+-Probar en Linux driver vídeo con y sin pthread
+
+-Algún tema gui en el que el rojo del maximo no sea en rojo. Quizá magenta?
+
+-Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
+
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 
