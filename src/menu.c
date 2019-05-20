@@ -3986,7 +3986,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 
 	//valores en pixeles
 	int xpixel,ypixel,anchopixel,altopixel;
-	z80_byte i,j;
+	int i,j;
 
 	//guardamos valores globales de la ventana mostrada
 	ventana_x=x;
@@ -3999,6 +3999,11 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	anchopixel=ancho*menu_char_width;
 	altopixel=alto*8;
 
+	int xderecha=xpixel+anchopixel-1;
+	printf ("x derecha: %d\n",xderecha);
+
+	if (menu_char_width!=8) xderecha++; //?????
+
 	//contenido en blanco normalmente en estilo ZEsarUX
 	for (i=0;i<alto-1;i++) {
 		for (j=0;j<ancho;j++) {
@@ -4010,7 +4015,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	//recuadro
 	//menu_establece_cuadrado(xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1,0);
 	//printf ("cuadrado: %d,%d %dX%d\n",xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1);
-	menu_establece_cuadrado(xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1,ESTILO_GUI_PAPEL_TITULO);
+	menu_establece_cuadrado(xpixel,ypixel,xderecha,ypixel+altopixel-1,ESTILO_GUI_PAPEL_TITULO);
 
 
 	
