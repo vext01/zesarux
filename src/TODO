@@ -13,42 +13,9 @@ Para próxima versión ZEsarUX:
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
 
--watches ok aunque no sale centrado. Normal?
-
--en cpu_panic volver a activar sleep 20
-
--ver si los scr_end_pantalla de cpu.c al cambiar tamanyo ventana afectan a segfault->cambiarlos por screen_end_pantalla_save_overlay ....
-
 -screen_currently_refreshing en todos drivers
 
--arranncar en 48k y zoom 1. cambiar a zoom2 peta,y de 2 a 1 tambien -> ----buffer_layer_machine null
-
--Al cambiar de máquina a veces peta
->probado:
-pendingresize de cocoa. nada
-desactivar scr_redraw_machine_layer. nada
-quitar los free buffer_layer_machine y buffer_layer_menu. nada
-en scr_clear_layer_menu, quitando el for (i=0;i<size;i++) buffer_layer_menu[i]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente	  funciona
-
-en algun momento de ese bucle, buffer_layer_menu vale 0
-
-parece que scr_reallocate_layers_menu se llama dos veces estando dentro, al haber resize de pantalla desde cocoa
-pese a leer sem_screen_refresh_reallocate_layers, se produce igual
-
-se crea otra variable running_realloc que evita que se llame dos veces->que pasa la segunda vez? no se produce cambio
-quiza tendria que esperarse a que finalizase->pero no va . mejor salir sin nada
-
-Peta de spectrum a cpc, arrancando sin config por ejemplo
-quiza si layers en scr_redraw_machine_layer
- no son iguales, no hacer nada
-Quizá sería tan simple de que:
-Al habilitar layer menu, se asigna buffer pixel
-En otros sitios no hace falta (bueno si, en refimensionado y cambios tamaño ventana)
-Pues si no hay menu_overlay_activo, no se usará el buffer pixel
-
 -Trozo de arriba que en cpc no se ven bien ventanas realmente es la ventana de Mac que ha quedado más pequeña 
-
--Operaciones de layers, de repintado por ejemplo y la mayoría, no deberían actual si no hay layer de menú, o sea, no está activo menu_overlay_activo
 
 -en zxuno, despues de cerrar menu, siempre muestra indicador "flash"
 
@@ -63,24 +30,12 @@ ok -probar pantalla cpu_panic
 
 -logo OSD ZEsarUX no aparece en zx80/81 y sin realvideo
 
-
--cambio de maquina zx81 a spec48 peta
-
--Modo step desde ZRCP aparece bien el footer?
-
 -quitar Mensajes printf de debugging de drivers video y de partes de menu, screen
 
--Vigilar operaciones sobre buferes layers. Que pasa con drivers de texto? Que sucede si cambia de un driver normal a uno de texto? Pensara que el buffer se usa?
-Quizá dichas operaciones tienen que ver si el buffer no es null, y Cuando se cierra un driver poner dichos buferes a null 
 
 -Extractor dibujos paws?
 
--con multitask off, b&w menu on, y estilo con papel con color (por ejemplo zxspectr), cada vez que se abre un menu,
-la zona de footer izq/der se ve con el color normal sin efecto b&w
-
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
-
-
 
 -Snapshots automáticos de nombre que depende del archivo cargado. Para tener siempre uno cuando se cambia de juego 
 
@@ -88,24 +43,15 @@ la zona de footer izq/der se ve con el color normal sin efecto b&w
 
 -zxvision: arrastrar ventana provoca pulsacion al soltar ventana y si cursor esta en una linea de seleccion
 
--zxvision ventanas en cpc empiezan por arriba de lo visible
-
 -en boot de tbblue, borra footer. sera al cambiar turbo de cpu? en zxuno tambien pasa
-
-
--cpc sin footer y zoom 2 peta en Mac
--cambiar de spectrum a cpc peta (con zoom 2 y footer)
--parece que en cpc la primera linea de footer se ve sobreescrita por pantalla de maquina
 
 -extender ventana emulador
 
-
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
-
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 
- 
+
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 Que hacemos con cocoa no opengl?
 

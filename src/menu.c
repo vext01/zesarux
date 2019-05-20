@@ -11025,7 +11025,7 @@ void menu_watches_conditions_set(MENU_ITEM_PARAMETERS)
 
 void menu_watches_y_position(MENU_ITEM_PARAMETERS)
 {
-	if (debug_watches_y_position==0) debug_watches_y_position=12;
+	if (debug_watches_y_position==0) debug_watches_y_position=menu_center_y();
 	else debug_watches_y_position=0;
 }
 
@@ -27784,6 +27784,10 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (si_complete_video_driver() ) {
+
+			menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			menu_add_item_menu(array_menu_window_settings,"--Special FX--",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
 			menu_add_item_menu_tooltip(array_menu_window_settings,"How to mix menu and the layer below");
 			menu_add_item_menu_ayuda(array_menu_window_settings,"How to mix menu and the layer below");

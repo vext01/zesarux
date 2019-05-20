@@ -2163,7 +2163,7 @@ int screen_menu_mix_transparency=10; //Dice la opacidad de la capa de menu.  Si 
 z80_bit screen_menu_reduce_bright_machine={0};
 
 //Color en blanco de y negro de maquina con menu abierto cuando multitask esta off
-z80_bit screen_machine_bw_no_multitask={1};
+z80_bit screen_machine_bw_no_multitask={0};
 
 char *screen_menu_mix_methods_strings[]={
 	"Over","Chroma","Mix"
@@ -9692,8 +9692,7 @@ void scr_refresca_border_cpc(unsigned int color)
 	int ancho_border=CPC_LEFT_BORDER_NO_ZOOM+   (640-ancho_pantalla)/2;
 	int alto_border=CPC_TOP_BORDER_NO_ZOOM+ (200-alto_pantalla)/2;
 
-	printf ("ancho pantalla: %d alto_pantalla: %d offset_x_pantalla: %d anchoborder: %d altoborder: %d\n",
-		ancho_pantalla,alto_pantalla,offset_x_pantalla,ancho_border,alto_border);
+	//printf ("ancho pantalla: %d alto_pantalla: %d offset_x_pantalla: %d anchoborder: %d altoborder: %d\n",ancho_pantalla,alto_pantalla,offset_x_pantalla,ancho_border,alto_border);
 
 
 
