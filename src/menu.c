@@ -4000,9 +4000,9 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	altopixel=alto*8;
 
 	int xderecha=xpixel+anchopixel-1;
-	printf ("x derecha: %d\n",xderecha);
+	//printf ("x derecha: %d\n",xderecha);
 
-	if (menu_char_width!=8) xderecha++; //?????
+	//if (menu_char_width!=8) xderecha++; //?????
 
 	//contenido en blanco normalmente en estilo ZEsarUX
 	for (i=0;i<alto-1;i++) {

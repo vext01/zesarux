@@ -2452,6 +2452,8 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
   for (line=0;line<8;line++,y++) {
 		byte_leido=*puntero++;
 		if (inverse.v==1) byte_leido = byte_leido ^255;
+
+		int px=0;
 		for (bit=0;bit<8;bit++) {
 			if (byte_leido & 128 ) color=tinta;
 			else color=papel;
@@ -2464,7 +2466,9 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 
 			int xfinal,yfinal;
 
-			xfinal=(((x*menu_char_width)+bit)*zoom_level);
+			//xfinal=(((x*menu_char_width)+bit)*zoom_level);
+
+			xfinal=(((x*menu_char_width)+px)*zoom_level);
 			yfinal=y*zoom_level;
 
 
@@ -2482,21 +2486,33 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 
 		
 			//Ancho de caracter 8, 7 y 6 pixeles
-			if (menu_char_width==8) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+			if (menu_char_width==8) {
+				scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+				px++;
+			}
 
 			//Si 7, saltar primer pixel a la izquierda
 			else if (menu_char_width==7) {
-				if (bit!=0) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+				if (bit!=0) {
+					scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+					px++;
+				}
 			}
 
 			//Si 6, saltar dos pixeles: primero izquierda y primero derecha
 			else if (menu_char_width==6) {
-				if (bit!=0 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+				if (bit!=0 && bit!=7) {
+					scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+					px++;
+				}
 			}
 
 			//Si 5, saltar tres pixeles: primero izquierda y centro y primero derecha
 			else if (menu_char_width==5) {
-				if (bit!=0 && bit!=6 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+				if (bit!=0 && bit!=6 && bit!=7) {
+					scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+					px++;
+				}
 			}
 
 
