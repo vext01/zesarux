@@ -16,9 +16,16 @@ Para próxima versión ZEsarUX:
 
 -Probar en Linux driver vídeo con y sin pthread
 
+-para extender ventanas:
+*en driver video, ventana se debe crear sumando constante de ampliacion (ejemplo 200) multiplicado por zoom:
+pixel_screen_width = screen_get_window_size_width_zoom_border_en()+200*zoom_x;
+en retornar tamanyo menu, retornar +(200)/menu_char_width/menu_gui_zoom;
+
 -Algún tema gui en el que el rojo del maximo no sea en rojo. Quizá magenta?
 
 -Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
+
+-Turbo spool setting en tbblue y otras máquinas 128kb...
 
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
