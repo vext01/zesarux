@@ -32478,6 +32478,11 @@ void set_splash_zesarux_franja_color_repetido(int x,int y,int longitud, int colo
 }
 
 
+int get_zsplash_y_coord(void)
+{
+	return menu_center_y()-4;
+}
+
 
 //Dibuja el logo pero en diferentes pasos:
 //0: solo la z
@@ -32493,7 +32498,7 @@ void set_splash_zesarux_logo_paso(int paso)
 	int alto_z=6;
 
 	int x_inicial=menu_center_x()-ancho_z;  //Centrado
-	int y_inicial=menu_center_y()-4;
+	int y_inicial=get_zsplash_y_coord();
 
 	debug_printf(VERBOSE_DEBUG,"Drawing ZEsarUX splash logo, step %d",paso);
 
@@ -32706,11 +32711,13 @@ void set_splash_text(void)
 	char texto_welcome[40];
 	sprintf(texto_welcome," Welcome to ZEsarUX v." EMULATOR_VERSION " ");
 
+	int yinicial=get_zsplash_y_coord()-6;
+
 	//centramos texto
 	int x=menu_center_x()-strlen(texto_welcome)/2;
 	if (x<0) x=0;
 
-	menu_escribe_texto(x,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_welcome);
+	menu_escribe_texto(x,yinicial++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_welcome);
 
 	set_splash_zesarux_logo();
 
@@ -32727,7 +32734,7 @@ void set_splash_text(void)
         x=menu_center_x()-longitud_texto/2;
         if (x<0) x=0;
 
-        menu_escribe_texto(x,3,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_edition);
+        menu_escribe_texto(x,yinicial++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_edition);
 
 
 
@@ -32737,7 +32744,7 @@ void set_splash_text(void)
 	longitud_texto=strlen(texto_esc_menu);
         x=menu_center_x()-longitud_texto/2;
         if (x<0) x=0;	
-	menu_escribe_texto(x,4,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_esc_menu);
+	menu_escribe_texto(x,yinicial++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_esc_menu);
 
 	set_menu_overlay_function(normal_overlay_texto_menu);
 	menu_splash_text_active.v=1;
