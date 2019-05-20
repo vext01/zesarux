@@ -11140,7 +11140,7 @@ void menu_debug_registers_splash_memory_zone(void)
 
 
 	//menu_escribe_texto(0,0,3,4,"Zone");
-	//screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"hola");
+	//screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"hola");
 }
 
 void menu_debug_registers_change_memory_zone(void)
@@ -30116,7 +30116,7 @@ void reset_splash_zesarux_logo(void)
 
 
 //Esta rutina estaba originalmente en screen.c pero dado que se ha modificado para usar rutinas auxiliares de aqui, mejor que este aqui
-void screen_print_splash_text(z80_byte y,z80_byte tinta,z80_byte papel,char *texto)
+void screen_print_splash_text(int y,z80_byte tinta,z80_byte papel,char *texto)
 {
 
         //Si no hay driver video
@@ -30186,7 +30186,7 @@ void screen_print_splash_text(z80_byte y,z80_byte tinta,z80_byte papel,char *tex
 	int i;
 	for (i=0;i<indice_linea && y<24;i++) {
 		debug_printf (VERBOSE_DEBUG,"line %d y: %d length: %d contents: -%s-",i,y,strlen(buffer_lineas[i]),buffer_lineas[i]);
-		x=16-strlen(buffer_lineas[i])/2;
+		x=menu_center_x()-strlen(buffer_lineas[i])/2;
 		if (x<0) x=0;
 		menu_escribe_texto(x,y,tinta,papel,buffer_lineas[i]);
 		y++;
@@ -30203,6 +30203,13 @@ void screen_print_splash_text(z80_byte y,z80_byte tinta,z80_byte papel,char *tex
 
 }
 
+
+
+//Esta rutina estaba originalmente en screen.c pero dado que se ha modificado para usar rutinas auxiliares de aqui, mejor que este aqui
+void screen_print_splash_text_center(z80_byte tinta,z80_byte papel,char *texto)
+{
+	screen_print_splash_text(menu_center_y(),tinta,papel,texto);
+}
 
 //retorna 1 si y
 //otra cosa, 0

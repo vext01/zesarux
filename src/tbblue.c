@@ -2967,7 +2967,7 @@ z80_byte tbblue_get_register_port(void)
 
 void tbblue_get_string_palette_format(char *texto)
 {
-//if (value&128) screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
+//if (value&128) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
 	/*
 	(R/W) 0x43 (67) => Palette Control
 	bit 0 = Disable the standard Spectrum flash feature to enable the extra colours.
@@ -3016,7 +3016,7 @@ void tbblue_get_string_palette_format(char *texto)
 
 void tbblue_splash_palette_format(void)
 {
-//if (value&128) screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
+//if (value&128) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
 	/*
 	(R/W) 0x43 (67) => Palette Control
 	bit 0 = Disable the standard Spectrum flash feature to enable the extra colours.
@@ -3036,12 +3036,12 @@ void tbblue_splash_palette_format(void)
 
 	sprintf (mensaje,"Setting %s",videomode);
 
-	screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
+	screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
 
 	
 
 	/*
-	if ((tbblue_registers[67]&1)==0) screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling extra colour palette");
+	if ((tbblue_registers[67]&1)==0) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling extra colour palette");
 	else {
 
 		z80_byte palformat=tbblue_registers[66];
@@ -3068,9 +3068,9 @@ void tbblue_splash_palette_format(void)
 
 		char mensaje[200];
 		sprintf (mensaje,"Enabling extra colour palette: %d inks %d papers",tintas,papeles);
-		screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
+		screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
 	}
-	*/	
+	*/
 
 }
 
@@ -3270,8 +3270,8 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 		case 21:
 			//modo lores
 			if ( (last_register_21&128) != (value&128)) {
-				if (value&128) screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
-				else screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling lores video mode");
+				if (value&128) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
+				else screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling lores video mode");
 			}
 		break;
 

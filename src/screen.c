@@ -11020,7 +11020,7 @@ void enable_gigascreen(void)
 {
 	debug_printf (VERBOSE_INFO,"Enable gigascreen");
 	if (gigascreen_enabled.v==0) {
-		screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling Gigascreen mode");
+		screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling Gigascreen mode");
 	}
 
 	gigascreen_enabled.v=1;
@@ -11066,7 +11066,7 @@ void enable_interlace(void)
 
 	debug_printf (VERBOSE_INFO,"Enable interlace");
 	if (video_interlaced_mode.v==0) {
-		screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling Interlace video mode");
+		screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling Interlace video mode");
 	}
 
 	//son excluyentes
@@ -11264,50 +11264,10 @@ void screen_reset_putpixel_maxmin_y(void)
 }
 
 
-/*void old_screen_print_splash_text(z80_byte y,z80_byte tinta,z80_byte papel,char *texto)
-{
-
-	z80_byte x;
-
-	if (menu_abierto==0 && screen_show_splash_texts.v==1) {
-        	cls_menu_overlay();
 
 
-		//trocear maximo en 2 lineas
-		int longitud=strlen(texto);
-		if (longitud>32) {
-			char buffer[33];
-			strncpy(buffer,texto,32);
-			buffer[32]=0;
-			menu_escribe_texto(0,y++,tinta,papel,buffer);
-			texto=&texto[32];
-		}
 
 
-		//centramos en x
-		x=16-(strlen(texto))/2;
-
-		//si se va a negativo
-		if (x>=32) x=0;
-
-	        menu_escribe_texto(x,y,tinta,papel,texto);
-
-
-        	set_menu_overlay_function(normal_overlay_texto_menu);
-	        menu_splash_text_active.v=1;
-        	menu_splash_segundos=5;
-	}
-
-}*/
-
-
-/*
-void screen_text_send_ansi_cls(void)
-{
-        if (!screen_text_accept_ansi) return;
-        printf ("\x1b[2J");
-}
-*/
 
 void screen_text_send_ansi_go_home(void)
 {

@@ -2416,7 +2416,7 @@ void detectar_conocidos(void)
 		char buffer_mensaje[100];
 		sprintf (buffer_mensaje,"Detected custom loader routine at address %d. Reinserting tape as Real Tape",reg_pc);
 		debug_printf (VERBOSE_INFO,buffer_mensaje);
-                screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+                screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 
 
                 //Meter como cinta real. Nos guardamos nombre
@@ -2466,7 +2466,7 @@ check_for_acceleration( void )
                 //y no de la misma manera que lo hago yo (mediante porcentaje)
                 porcentaje_velocidad_emulador=1000;
                 set_emulator_speed();
-                screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Speeding up Z80 Core on loading");
+                screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Speeding up Z80 Core on loading");
         }
   }
 

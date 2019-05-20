@@ -9,10 +9,6 @@ Para próxima versión ZEsarUX:
 
 -waveform que se reajuste a tamanyo ventana
 
--driver xwindows, en mac. Cambiar border off a on, y peta
-
--quiza por defecto no habilitar transparencia ni oscuro. consume mas cpu...
-
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?

@@ -585,7 +585,8 @@ extern char menu_buffer_textspeech_filter_program[];
 
 extern char menu_buffer_textspeech_stop_filter_program[];
 
-extern void screen_print_splash_text(z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
+extern void screen_print_splash_text(int y,z80_byte tinta,z80_byte papel,char *texto);
+extern void screen_print_splash_text_center(z80_byte tinta,z80_byte papel,char *texto);
 
 extern char menu_realtape_name[];
 

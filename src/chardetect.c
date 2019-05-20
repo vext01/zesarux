@@ -178,7 +178,7 @@ void chardetect_print_splash_detected(void)
 	textspeech_print_speech(buffer);
 
 	if (scr_putpixel!=NULL) {
-		screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer);
+		screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer);
 	}
 }
 
@@ -578,7 +578,7 @@ void chardetect_init_automatic_char_detection(void)
 
                         printf ("\nWARNING: Setting internal writing Spectrum operations to a slow function, to use Automatic character detection routine\n");
 			if (scr_putpixel!=NULL) {
-				screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting internal writing Spectrum operations to a slow function");
+				screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting internal writing Spectrum operations to a slow function");
 			}
                 }
         }
@@ -593,7 +593,7 @@ void chardetect_end_automatic_char_detection(void)
 			debug_nested_poke_byte_del(chardetect_automatic_nested_id_poke_byte);
 			//poke_byte=original_char_detect_poke_byte;
 	                printf ("Setting internal writing Spectrum operations to normal mode\n");
-			screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting internal writing Spectrum operations to normal mode");
+			screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting internal writing Spectrum operations to normal mode");
 		//temp}
         }
 	chardetect_char_detection_automatic_finding_range=0;

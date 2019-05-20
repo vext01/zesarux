@@ -1387,7 +1387,7 @@ void z88_open_flap(void)
 	debug_printf (VERBOSE_DEBUG,"Open Z88 flap");
 
 	//este texto no se suele ver dado que casi siempre entra aqui con menu abierto y en esos casos no se muesta mensaje
-	//screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Opening Flap");
+	//screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Opening Flap");
 
 	generic_footertext_print_operating("FLAP");
 
@@ -1414,7 +1414,7 @@ void z88_close_flap(void)
 	debug_printf (VERBOSE_DEBUG,"Close Z88 flap");
 
 	//este texto no se suele ver dado que casi siempre entra aqui con menu abierto y en esos casos no se muesta mensaje
-	//screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Closing Flap");
+	//screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Closing Flap");
 
 
 	z88_pausa_open_close_flap();

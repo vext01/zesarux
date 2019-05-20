@@ -7566,7 +7566,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 			}
                         else sprintf (mensaje,"Setting Unknown Timex Video Mode %d",value);
 
-                	screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
+                	screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
 		}
 
         	if ((value&7)==6) {

@@ -1102,8 +1102,8 @@ void ql_out_port(unsigned int Address, unsigned char Data)
 					0 = 4 colour (mode 4) =512x256
 				  1 = 8 colour (mode 8) =256x256
 				*/
-				if (video_mode==0) screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting mode 4 512x256");
-				else screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting mode 8 256x256");
+				if (video_mode==0) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting mode 4 512x256");
+				else screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting mode 8 256x256");
 			}
 
 		break;
