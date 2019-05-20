@@ -4604,6 +4604,17 @@ void menu_save_text_to_file(char *puntero_memoria,char *titulo_ventana)
 	}
 }
 
+
+int menu_center_x(void)
+{
+	return scr_get_menu_width()/2;
+}
+
+int menu_center_y(void)
+{
+	return scr_get_menu_height()/2;
+}
+
 //Funcion generica para preguntar por un archivo de texto a grabar, con un unico filtro de texto
 //Retorna 0 si se cancela
 int menu_ask_file_to_save(char *titulo_ventana,char *filtro,char *file_save)
@@ -4809,8 +4820,8 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	//int ancho_ventana=max_ancho_texto+2;
 	int ancho_ventana=max_ancho_texto+2;
 
-	int xventana=(scr_get_menu_width()/2)-ancho_ventana/2;
-	int yventana=(scr_get_menu_height()/2)-alto_ventana/2;
+	int xventana=menu_center_x()-ancho_ventana/2;
+	int yventana=menu_center_y()-alto_ventana/2;
 
 	if (tooltip_enabled==0) {
 		menu_espera_no_tecla_con_repeticion();
@@ -8248,8 +8259,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	alto=max_opciones+2;
 
-	x=(scr_get_menu_width()/2)-ancho/2;
-	y=(scr_get_menu_height()/2)-alto/2;
+	x=menu_center_x()-ancho/2;
+	y=menu_center_y()-alto/2;
 
 	int ancho_visible=ancho;
 	int alto_visible=alto;
@@ -19964,11 +19975,10 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 
 
 
-
 #define OSD_KEYBOARD_ANCHO_VENTANA 26
 #define OSD_KEYBOARD_ALTO_VENTANA 12
-#define OSD_KEYBOARD_X_VENTANA (16-OSD_KEYBOARD_ANCHO_VENTANA/2)
-#define OSD_KEYBOARD_Y_VENTANA (12-OSD_KEYBOARD_ALTO_VENTANA/2)
+#define OSD_KEYBOARD_X_VENTANA (menu_center_x()-OSD_KEYBOARD_ANCHO_VENTANA/2)
+#define OSD_KEYBOARD_Y_VENTANA (menu_center_y()-OSD_KEYBOARD_ALTO_VENTANA/2)
 
         struct s_osd_teclas {
         char tecla[5]; //4 de longitud mas 0 final
@@ -29879,12 +29889,12 @@ void menu_simple_ventana(char *titulo,char *texto)
 
 	ancho_ventana +=2;
 
-	if (ancho_ventana>32) {
+	if (ancho_ventana>ZXVISION_MAX_ANCHO_VENTANA) {
 		cpu_panic("window width too big");
 	}
 
-        int xventana=(scr_get_menu_width()/2)-ancho_ventana/2;
-        int yventana=(scr_get_menu_height()/2)-alto_ventana/2;
+        int xventana=menu_center_x()-ancho_ventana/2;
+        int yventana=menu_center_y()-alto_ventana/2;
 
 
         menu_dibuja_ventana(xventana,yventana,ancho_ventana,alto_ventana,titulo);
@@ -32482,8 +32492,8 @@ void set_splash_zesarux_logo_paso(int paso)
 	int ancho_z=6;
 	int alto_z=6;
 
-	int x_inicial=16-ancho_z;  //Centrado
-	int y_inicial=8;
+	int x_inicial=menu_center_x()-ancho_z;  //Centrado
+	int y_inicial=menu_center_y()-4;
 
 	debug_printf(VERBOSE_DEBUG,"Drawing ZEsarUX splash logo, step %d",paso);
 
@@ -32697,7 +32707,7 @@ void set_splash_text(void)
 	sprintf(texto_welcome," Welcome to ZEsarUX v." EMULATOR_VERSION " ");
 
 	//centramos texto
-	int x=16-strlen(texto_welcome)/2;
+	int x=menu_center_x()-strlen(texto_welcome)/2;
 	if (x<0) x=0;
 
 	menu_escribe_texto(x,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_welcome);
@@ -32714,7 +32724,7 @@ void set_splash_text(void)
 		//longitud_texto -=4;
 
         //centramos texto
-        x=16-longitud_texto/2;
+        x=menu_center_x()-longitud_texto/2;
         if (x<0) x=0;
 
         menu_escribe_texto(x,3,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_edition);
@@ -32724,7 +32734,10 @@ void set_splash_text(void)
 
 	char texto_esc_menu[32];
 	sprintf(texto_esc_menu," Press %s for menu ",openmenu_key_message);
-	menu_escribe_texto(3,4,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_esc_menu);
+	longitud_texto=strlen(texto_esc_menu);
+        x=menu_center_x()-longitud_texto/2;
+        if (x<0) x=0;	
+	menu_escribe_texto(x,4,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_esc_menu);
 
 	set_menu_overlay_function(normal_overlay_texto_menu);
 	menu_splash_text_active.v=1;
