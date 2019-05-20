@@ -4122,11 +4122,10 @@ void zxvision_draw_below_windows_nospeech(zxvision_window *w)
 void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
 
-	//Controlar rangos. Cualquier valor que se salga de rango, hacemos ventana del total de pantalla
+	//Controlar rangos. Cualquier valor que se salga de rango, hacemos ventana maximo 32x24
 
-	//TODO: controlar rangos teniendo en cuenta driver video, o sea:
-	//curses, aa, cacalib etc: solo 32x24
-	//drivers de video completos: mayor tamaño 
+	//Rango xy es el total de ventana. Rango ancho y alto es 32x24, aunque luego se pueda hacer mas grande
+
 	if (
 
 	 (x<0               || x>ZXVISION_MAX_X_VENTANA) ||
@@ -5760,7 +5759,6 @@ void zxvision_draw_window_contents(zxvision_window *w)
 		return;
 	}
 
-	printf ("sonda inicial\n");
 	//menu_textspeech_send_text(texto);
 
 	//Buffer para speech
@@ -5865,7 +5863,6 @@ void zxvision_draw_window_contents(zxvision_window *w)
 		//printf ("sonda 4\n");
 	}
 
-	printf ("sonda final\n");
 
 }
 
@@ -32801,10 +32798,14 @@ void reset_splash_text(void)
 	}
 }
 
-#define FILESEL_X 1
-#define FILESEL_Y 1
 #define FILESEL_ANCHO 30
 #define FILESEL_ALTO 23
+
+#define FILESEL_X (menu_center_x()-FILESEL_ANCHO/2)
+#define FILESEL_Y (menu_center_y()-FILESEL_ALTO/2)
+//#define FILESEL_X 1
+//#define FILESEL_Y 1
+
 #define FILESEL_ALTO_DIR (FILESEL_ALTO-10)
 #define FILESEL_POS_FILTER (FILESEL_ALTO-4)
 #define FILESEL_POS_LEYENDA (FILESEL_ALTO-3)
