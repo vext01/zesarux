@@ -13,6 +13,8 @@ Para próxima versión ZEsarUX:
 
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
+-hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
+
 -watches ok aunque no sale centrado. Normal?
 
 -en cpu_panic volver a activar sleep 20

@@ -2156,14 +2156,14 @@ void screen_get_rgb_components(unsigned int color_rgb,unsigned int *red,unsigned
 
 Otro setting=Maquina bajar brillo, se combina con los anteriores
 */
-int screen_menu_mix_method=2; //Por defecto, mezclar
+int screen_menu_mix_method=0; //Por defecto, no mezclar
 int screen_menu_mix_transparency=10; //Dice la opacidad de la capa de menu.  Si 100, transparente total. Si 0, opaco total
 
 //Si reducimos brillo de la maquina al abrir el menu, solo vale para metodos 0  y 1
 z80_bit screen_menu_reduce_bright_machine={0};
 
 //Color en blanco de y negro de maquina con menu abierto cuando multitask esta off
-z80_bit screen_machine_bw_no_multitask={0};
+z80_bit screen_machine_bw_no_multitask={1};
 
 char *screen_menu_mix_methods_strings[]={
 	"Over","Chroma","Mix"
