@@ -118,13 +118,19 @@ struct s_generic_message_tooltip_return {
 
 typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 
-#define OVERLAY_SCREEN_WIDTH 32
-#define OVERLAY_SCREEN_HEIGTH 24
+#define OVERLAY_SCREEN_MAX_WIDTH 32
+#define OVERLAY_SCREEN_MAX_HEIGTH 24
 
 #define ZXVISION_MAX_ANCHO_VENTANA 32
 #define ZXVISION_MAX_ALTO_VENTANA 24
-#define ZXVISION_MAX_X_VENTANA 31
-#define ZXVISION_MAX_Y_VENTANA 23
+
+
+#define ZXVISION_MAX_X_VENTANA (scr_get_menu_width()-1)
+#define ZXVISION_MAX_Y_VENTANA (scr_get_menu_height()-1)
+
+//#define ZXVISION_MAX_X_VENTANA 31
+//#define ZXVISION_MAX_Y_VENTANA 23
+
 
 typedef struct s_overlay_screen overlay_screen;
 
@@ -785,6 +791,9 @@ extern void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice
 extern void menu_copy_clipboard(char *texto);
 
 #define MAX_LAST_FILESUSED 18
+
+//#define ZXVISION_MAX_WINDOW_WIDTH 32
+//#define ZXVISION_MAX_WINDOW_HEIGHT 24
 
 
 extern void last_filesused_clear(void);

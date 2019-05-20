@@ -259,14 +259,14 @@ int menu_define_key_function(int tecla,char *funcion)
 void (*menu_overlay_function)(void);
 
 //buffer de escritura por pantalla
-overlay_screen overlay_screen_array[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
+overlay_screen overlay_screen_array[OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH];
 
 //buffer de escritura de footer
 overlay_screen footer_screen_array[WINDOW_FOOTER_COLUMNS*WINDOW_FOOTER_LINES];
 
 
 //buffer de texto usado 
-int overlay_usado_screen_array[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
+int overlay_usado_screen_array[OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH];
 
 //Indica que hay una segunda capa de texto por encima de menu y por encima del juego incluso
 //util para mostrar indicadores de carga de cinta, por ejemplo
@@ -1491,7 +1491,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	menu_button_osdkeyboard.v=0; //Decir que no tecla osd pulsada, por si acaso
 	menu_button_f_function.v=0;
 
-	overlay_screen copia_overlay[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
+	overlay_screen copia_overlay[OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH];
 
 	//Guardamos contenido de la pantalla
 	menu_save_overlay_text_contents(copia_overlay);
@@ -1754,12 +1754,12 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 	//int xfinal=((x*menu_char_width)+menu_char_width-1)/8;
 
 	//Controlar limite
-	if (x<0 || y<0 || x>=32 || y>=24) {
+	if (x<0 || y<0 || x>=scr_get_menu_width() || y>=scr_get_menu_height() ) {
 		//printf ("Out of range. X: %d Y: %d Character: %c\n",x,y,caracter);
 		return;
 	}
 
-	int pos_array=y*32+x;
+	int pos_array=y*scr_get_menu_width()+x;
 	overlay_screen_array[pos_array].tinta=tinta;
 	overlay_screen_array[pos_array].papel=papel;
 	overlay_screen_array[pos_array].parpadeo=parpadeo;
@@ -1768,7 +1768,7 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 	else overlay_screen_array[pos_array].caracter=caracter;
 
 
-	overlay_usado_screen_array[y*32+xusado]=1;
+	overlay_usado_screen_array[y*scr_get_menu_width()+xusado]=1;
 
 	
 }
@@ -2069,7 +2069,9 @@ void cls_menu_overlay(void)
 {
 
 	int i;
-	for (i=0;i<32*24;i++) {
+
+	//Borrar solo el tamanyo de menu activo
+	for (i=0;i<scr_get_menu_width()*scr_get_menu_height();i++) {
 		overlay_screen_array[i].caracter=0;
 		overlay_usado_screen_array[i]=0;
 	}
@@ -2719,8 +2721,8 @@ void normal_overlay_texto_menu(void)
 
 
 	//printf ("normal_overlay_texto_menu\n");
-	for (y=0;y<24;y++) {
-		for (x=0;x<32;x++,pos_array++) {
+	for (y=0;y<scr_get_menu_height();y++) {
+		for (x=0;x<scr_get_menu_width();x++,pos_array++) {
 			caracter=overlay_screen_array[pos_array].caracter;
 			//si caracter es 0, no mostrar
 
@@ -5512,7 +5514,7 @@ int zxvision_out_bonds(int x,int y,int ancho,int alto)
 {
 	if (x<0 || y<0) return 1;
 
-	if (x+ancho>32 || y+alto>24) return 1;
+	if (x+ancho>scr_get_menu_width() || y+alto>scr_get_menu_height()) return 1;
 
 	return 0;
 }
@@ -8246,13 +8248,13 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	alto=max_opciones+2;
 
-	x=16-ancho/2;
-	y=12-alto/2;
+	x=(scr_get_menu_width()/2)-ancho/2;
+	y=(scr_get_menu_height()/2)-alto/2;
 
 	int ancho_visible=ancho;
 	int alto_visible=alto;
 
-	if (x<0 || y<0 || x+ancho>32 || y+alto>24) {
+	if (x<0 || y<0 || x+ancho>scr_get_menu_width() || y+alto>scr_get_menu_height()) {
 		//char window_error_message[100];
 		//sprintf(window_error_message,"Window out of bounds: x: %d y: %d ancho: %d alto: %d",x,y,ancho,alto);
 		//cpu_panic(window_error_message);
@@ -8260,8 +8262,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Ajustar limites
 		if (x<0) x=0;
 		if (y<0) y=0;
-		if (x+ancho>32) ancho_visible=32-x;
-		if (y+alto>24) alto_visible=24-y;
+		if (x+ancho>scr_get_menu_width()) ancho_visible=scr_get_menu_width()-x;
+		if (y+alto>scr_get_menu_height()) alto_visible=scr_get_menu_height()-y;
 	}
 
 	int redibuja_ventana;

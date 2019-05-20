@@ -109,6 +109,9 @@ void (*scr_putpixel) (int x,int y,unsigned int color);
 void (*scr_putpixel_final_rgb) (int x,int y,unsigned int color_rgb);
 void (*scr_putpixel_final) (int x,int y,unsigned int color);
 
+int (*scr_get_menu_width) (void);
+int (*scr_get_menu_height) (void);
+
 
 void (*scr_z88_cpc_load_keymap) (void);
 

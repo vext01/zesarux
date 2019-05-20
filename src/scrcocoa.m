@@ -2719,6 +2719,17 @@ void scrcocoa_detectedchar_print(z80_byte caracter)
         fflush(stdout);
 }
 
+int scrcocoa_get_menu_width(void)
+{
+        return 32;
+}
+
+
+int scrcocoa_get_menu_height(void)
+{
+        return 32;
+}
+
 
 int scrcocoa_init (void) {
 
@@ -2748,6 +2759,9 @@ int scrcocoa_init (void) {
         scr_putpixel=scrcocoa_putpixel;
         scr_putpixel_final=scrcocoa_putpixel_final;
         scr_putpixel_final_rgb=scrcocoa_putpixel_final_rgb;
+
+        scr_get_menu_width=scrcocoa_get_menu_width;
+        scr_get_menu_height=scrcocoa_get_menu_height;
 
         scr_putchar_zx8081=scrcocoa_putchar_zx8081;
         scr_debug_registers=scrcocoa_debug_registers;
@@ -2797,3 +2811,4 @@ int scrcocoa_init (void) {
 
 	return 0;
 }
+
