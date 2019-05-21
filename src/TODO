@@ -969,7 +969,6 @@ http://velesoft.speccy.cz/sam_zx128.htm
 
 -ay player en modo cpc no borra debajo de pantalla diferentes ventanas
 --machine cpc464 en aa,caca en consola de texto real da segmentation fault
--con cpc464 , si redimensionando la ventana con footer desactivado, falla con segmentation fault. Probado en mac con driver COCOA(OpenGL)
 -dibujado de border cuando pantalla es menor de lo habitual, temporal, no va bien en casos como paperboy. Esto seria mejor para solucionarlo implementar realvideo
 -debug i/o ports
 -teclas cpc y keymap para otros drivers. ahora solo esta para cocoa y xwindows y sdl y fbdev
@@ -1842,7 +1841,7 @@ para lightgun la mayoria de puertos son teclado o kempston, en que ya se control
 
 -realvideo en spectrum para curses, stdout, simpletext -> YA esta. hecho para tsconf. hay funcion generica para convertir rainbow a texto (blanco y negro)
 
--Posibilidad de desactivar puntero raton para el resto de drivers: curses, cocoa
+-Posibilidad de desactivar puntero raton para el resto de drivers: curses, 
 
 -tab en curses en menu filesel no lo lee
 
