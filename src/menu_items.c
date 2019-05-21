@@ -4098,8 +4098,8 @@ zxvision_window *menu_debug_draw_visualmem_window;
 #ifdef EMULATE_VISUALMEM
 
 
-#define visualmem_ancho_variable (menu_debug_draw_visualmem_window->visible_width-1)
-#define visualmem_alto_variable (menu_debug_draw_visualmem_window->visible_height-1)
+//#define visualmem_ancho_variable (menu_debug_draw_visualmem_window->visible_width-1)
+//#define visualmem_alto_variable (menu_debug_draw_visualmem_window->visible_height-1)
 
 #define VISUALMEM_MIN_X 0
 #define VISUALMEM_MIN_Y 0
@@ -4110,8 +4110,8 @@ int visualmem_x_variable=VISUALMEM_DEFAULT_X;
 #define VISUALMEM_DEFAULT_Y (VISUALMEM_MIN_Y+1)
 int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 
-#define VISUALMEM_ANCHO (visualmem_ancho_variable)
-#define VISUALMEM_ALTO (visualmem_alto_variable)
+#define VISUALMEM_ANCHO (menu_debug_draw_visualmem_window->visible_width)
+#define VISUALMEM_ALTO (menu_debug_draw_visualmem_window->visible_height)
 
 #define VISUALMEM_DEFAULT_WINDOW_ANCHO 30
 #define VISUALMEM_DEFAULT_WINDOW_ALTO 22
@@ -4135,7 +4135,7 @@ void menu_debug_draw_visualmem(void)
 
 
         int ancho=(VISUALMEM_ANCHO-2);
-        int alto=(VISUALMEM_ALTO-4);
+        int alto=(VISUALMEM_ALTO-5);
 
 		if (ancho<1 || alto<1) return;
 
