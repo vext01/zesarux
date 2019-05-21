@@ -16,6 +16,8 @@ Para próxima versión ZEsarUX:
 
 -First aid que diga que tecla espacio sirve para expandir archivos 
 
+-que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
+
 -Probar en Linux driver vídeo con y sin pthread
 
 -para extender ventanas:
@@ -66,7 +68,6 @@ ok -probar pantalla cpu_panic
 
 -Debug daad hacerlo extensivo a paws?
 
--zxvision: arrastrar ventana provoca pulsacion al soltar ventana y si cursor esta en una linea de seleccion
 
 -en boot de tbblue, borra footer. sera al cambiar turbo de cpu? en zxuno tambien pasa
 

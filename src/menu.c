@@ -6365,8 +6365,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	}
 
 	//Liberación boton izquierdo
-	if (!mouse_left && mouse_is_clicking) {
-			//printf ("Mouse stopped clicking\n");
+	if (!mouse_left && mouse_is_clicking && !mouse_is_dragging) {
+			//printf ("Mouse stopped clicking mouse_is_dragging %d\n",mouse_is_dragging);
 			mouse_is_clicking=0;
 			//Pulsacion en sitios de ventana
 			//Si en barra titulo
@@ -6599,9 +6599,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	}
 
 	if (mouse_is_dragging) {
-		if (!mouse_left) {
+		//printf ("mouse is dragging\n");
+		if (!mouse_left) { 
 			//printf ("Mouse has stopped to drag\n");
 			mouse_is_dragging=0;
+			mouse_is_clicking=0; //Cuando se deja de arrastrar decir que se deja de pulsar tambien
 			if (window_is_being_moved) {
 
 				//printf ("Handle moved window\n");
@@ -8477,7 +8479,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			//printf ("Despues tecla leida2: %d\n",tecla_leida);
 
-			if (si_menu_mouse_en_ventana() && mouse_left && mouse_en_zona_opciones) {
+			if (si_menu_mouse_en_ventana() && mouse_left && mouse_en_zona_opciones && !mouse_is_dragging) {
 				//printf ("Enviamos enter\n");
 				tecla=13;
 			}					

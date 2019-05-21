@@ -24,6 +24,8 @@ Version 7.3. 15 April 2019 - xxx edition
 -Fixed bug on CPC vertical scrolling
 -Fixed segmentation fault bug when drawing CPC machine
 -Fixed bug redrawing zx80/81 display, with realvideo disabled, and menu char width less than 8
+-Fixed bug drawing menu window boxes when char width less than 8
+-Fixed zxvision left button handling: no longer sends enter when the user is dragging the window
 -Fixed machine names to be completely right: for example, "Spectrum 48k" becomes "ZX Spectrum 48k", etc
 
 
