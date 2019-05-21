@@ -516,11 +516,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 						{"ManSoftware",7+8,0,
 							0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 							5+8,0, 		//Colores para opcion seleccionada
-							7+8,2,7,2, 	//Colores para opcion no disponible
+							7+8,3,7,3, 	//Colores para opcion no disponible
 							0,7+8,        	//Colores para el titulo y linea recuadro ventana
 							1,		//Color waveform
 							7,		//Color para zona no usada en visualmem
-							2,7+8,		//Color para opcion marcada
+							3,7+8,		//Color para opcion marcada
 							'#',
 		3+8 //color de aviso, en este tema, magenta con brillo
 							},
