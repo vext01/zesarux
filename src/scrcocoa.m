@@ -2332,7 +2332,7 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 
 if (buffer_layer_machine==NULL) {
         printf ("----buffer_layer_machine null running_realloc %d\n",running_realloc);
-        exec_show_backtrace();
+        debug_exec_show_backtrace();
         exit(1);
 }
 
@@ -2341,7 +2341,7 @@ if (buffer_layer_machine==NULL) {
 if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
         if (!mostrado_trace) {
                 printf ("out of range scrcocoa_putpixel x %d y %d limit %d %d\n",x,y,ancho_layer_menu_machine,alto_layer_menu_machine);
-                exec_show_backtrace();
+                debug_exec_show_backtrace();
                 mostrado_trace=1;
                 sleep(1);
         }
@@ -2518,7 +2518,7 @@ void scrcocoa_refresca_pantalla(void)
 
         if (sem_screen_refresh_reallocate_layers) {
                 //printf ("--Screen layers are being reallocated. return\n");
-                //exec_show_backtrace();
+                //debug_exec_show_backtrace();
                 return;
         }
 

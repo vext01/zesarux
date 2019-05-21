@@ -266,7 +266,7 @@ void scrsdl_refresca_pantalla(void)
 
         if (sem_screen_refresh_reallocate_layers) {
                 //printf ("--Screen layers are being reallocated. return\n");
-                //exec_show_backtrace();
+                //debug_exec_show_backtrace();
                 return;
         }
 

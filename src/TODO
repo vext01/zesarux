@@ -4,6 +4,8 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
+-Comando ZRCP de cpu transaction log. Un solo comando, el primer parámetro dice el setting a cambiar y el segundo su valor
+
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
 
 -Con —configfile luego graba la config al archivo que toca?
@@ -20,8 +22,6 @@ Para próxima versión ZEsarUX:
 *en driver video, ventana se debe crear sumando constante de ampliacion (ejemplo 200) multiplicado por zoom:
 pixel_screen_width = screen_get_window_size_width_zoom_border_en()+200*zoom_x;
 en retornar tamanyo menu, retornar +(200)/menu_char_width/menu_gui_zoom; 
-
--calculo linea derecha en recuadro cuando width no es 8 esta mal calculado
 
 -Algún tema gui en el que el rojo del maximo no sea en rojo. Quizá magenta?
 

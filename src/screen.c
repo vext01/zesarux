@@ -1942,7 +1942,7 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
 	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
-	//exec_show_backtrace();
+	//debug_exec_show_backtrace();
 
 	if (!menu_overlay_activo) {
 		//No estrictamente necesario, pero evitamos usos de buffer_layer_menu o machine (especialmente desde thread de redibujo de cocoa) mientras se reasignan layers
@@ -2453,7 +2453,7 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 		byte_leido=*puntero++;
 		if (inverse.v==1) byte_leido = byte_leido ^255;
 
-		int px=0;
+		int px=0; //Coordenada x del pixel final
 		for (bit=0;bit<8;bit++) {
 			if (byte_leido & 128 ) color=tinta;
 			else color=papel;

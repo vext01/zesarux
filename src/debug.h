@@ -351,4 +351,6 @@ extern void debug_get_daad_step_breakpoint_string(char *texto);
 
 extern void debug_get_daad_runto_parse_string(char *texto);
 
+extern void debug_exec_show_backtrace(void);
+
 #endif

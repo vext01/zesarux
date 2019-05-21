@@ -4342,15 +4342,16 @@ void segfault_signal_handler(int sig)
 }
 
 
-/* TODO testear senyal sigbus
 void sigbus_signal_handler(int sig)
 {
-        //para evitar warnings al compilar
-        sig++;
+	//Saltara por ejemplo si empezamos a escribir en un puntero que no se ha inicializado
+	//para evitar warnings al compilar
+	sig++;
 
-        cpu_panic("Bus error");
+	cpu_panic("Bus error");
 }
-*/
+
+
 
 
 void floatingpoint_signal_handler(int sig)
@@ -7257,18 +7258,16 @@ struct sched_param sparam;
 	//desactivado normalmente en versiones snapshot
 	signal(SIGFPE, floatingpoint_signal_handler);
 
+  //Capturar sigbus. 
+  //desactivado normalmente en versiones snapshot
+  signal(SIGBUS, sigbus_signal_handler);	
+
 	//Capturar segint (CTRL+C)
 	signal(SIGINT, segint_signal_handler);
 
 	//Capturar segterm
 	signal(SIGTERM, segterm_signal_handler);
 
-
-
-
-  //Capturar sigbus. TODO probar en que casos salta
-  //desactivado normalmente en versiones snapshot
-  //signal(SIGBUS, sigbus_signal_handler);
 
 
 	//Inicio bucle principal

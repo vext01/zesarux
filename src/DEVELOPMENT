@@ -42,6 +42,8 @@ curl -s https://api.github.com/repos/chernandezba/zesarux/releases | egrep '"nam
 
 --------------
 
+Para que el cpu_panic muestre backtrace si hay un error, compilar con -g -rdynamic (en Linux) o -g (en Mac)
+
 
 * source a generar
 

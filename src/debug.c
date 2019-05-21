@@ -557,8 +557,10 @@ void screen_show_panic_screen(int xmax, int ymax)
 }
 
 //Compile with -g -rdynamic to show function names
+//In Mac, with -g
 //These functions on Mac OS X are available starting from Mac OS 10.5
-void exec_show_backtrace(void) {
+void debug_exec_show_backtrace(void) 
+{
 
 #if defined(linux) || defined(__APPLE__) 
   int max_items=50;
@@ -680,6 +682,8 @@ void cpu_panic(char *mensaje)
 	//hacemos pantalla de panic en xwindows y fbdev, y despues de finalizar el driver, volvemos a mostrar error
 	cpu_panic_printf_mensaje(mensaje);
 
+	debug_exec_show_backtrace();
+
     cpu_panic_last_x=cpu_panic_last_y=0;
 
     cpu_panic_current_tinta=6;
@@ -745,9 +749,6 @@ void cpu_panic(char *mensaje)
 		}
 	}
 
-	cpu_panic_printf_mensaje(mensaje);
-
-	exec_show_backtrace();
 
 	exit(1);
 }
