@@ -2141,7 +2141,7 @@ void redraw_footer_continue(void)
 {
 	if (!menu_footer) return;
 
-	printf ("redraw footer\n");
+	//printf ("redraw footer\n");
 
 	int x,y;
 	z80_byte tinta,papel,caracter,parpadeo;

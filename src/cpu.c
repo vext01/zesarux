@@ -3761,9 +3761,9 @@ void post_set_machine_no_rom_load(void)
 
 		post_set_machine_no_rom_load_reopen_window();
 
-		printf ("antes init layers\n");
+		//printf ("antes init layers\n");
 		scr_init_layers_menu();
-		printf ("despues init layers\n");
+		//printf ("despues init layers\n");
 		scr_clear_layer_menu();		
 
 

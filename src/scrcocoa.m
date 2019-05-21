@@ -2751,7 +2751,7 @@ int scrcocoa_init (void) {
 	debug_printf (VERBOSE_INFO,"Init COCOA Video Driver");
 #endif
 
-        printf ("scrcocoa_init\n");
+        //printf ("scrcocoa_init\n");
 
         int soyelmainthread;
 

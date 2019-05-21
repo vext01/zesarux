@@ -2074,7 +2074,7 @@ void scr_putpixel_layer_menu(int x,int y,int color)
 void scr_redraw_machine_layer(void)
 {
 
-	printf ("redraw machine layer\n");
+	debug_printf (VERBOSE_DEBUG,"Redraw machine layer");
 
 
 	if (scr_putpixel==NULL) return;	
@@ -13412,7 +13412,7 @@ void screen_set_window_zoom(int z)
 		return;
 	}
 
-	printf ("funcion anterior: %p\n",menu_overlay_function);
+	//printf ("funcion anterior: %p\n",menu_overlay_function);
 
 	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
 	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
@@ -13421,9 +13421,9 @@ void screen_set_window_zoom(int z)
 
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
 
-	printf ("funcion leida: %p\n",previous_function);
+	//printf ("funcion leida: %p\n",previous_function);
 
-	printf ("despues end pantalla\n");
+	//printf ("despues end pantalla\n");
 
 	zoom_x=zoom_y=z;
 	modificado_border.v=1;
@@ -13434,7 +13434,7 @@ void screen_set_window_zoom(int z)
 
 	menu_init_footer();
 
-	printf ("despues init footer\n");
+	//printf ("despues init footer\n");
 
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 
@@ -14180,10 +14180,11 @@ dejando la ventana en negro como se comenta antes
 int screen_init_pantalla_and_others(void)
 {
 	int retorno=scr_init_pantalla();
-        //Siempre que se redimensiona tamanyo ventana (sin contar zoom) o se reinicia driver video hay que reiniciar cache putpixel
-        init_cache_putpixel();
+  
+	//Siempre que se redimensiona tamanyo ventana (sin contar zoom) o se reinicia driver video hay que reiniciar cache putpixel
+  init_cache_putpixel();
 
-printf ("screen_init_pantalla_and_others\n");
+	//printf ("screen_init_pantalla_and_others\n");
 	//menu_init_footer();
 
 	return retorno;
