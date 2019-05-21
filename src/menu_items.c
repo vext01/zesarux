@@ -1940,7 +1940,6 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 
 	  //Hay que redibujar la ventana desde este bucle
-	//menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,"Waveform");
 	zxvision_new_window(&ventana,SOUND_ZXVISION_WAVE_X,SOUND_ZXVISION_WAVE_Y-2,ancho_visible,alto_visible,
 							ancho_total,alto_total,"ZXVision Test");
 	zxvision_draw_window(&ventana);
@@ -3841,12 +3840,15 @@ void menu_audio_draw_sound_wave(void)
 	}
 
 
+	int ancho;
+	//ancho=(SOUND_WAVE_ANCHO-2);
 
+	//Ancho de zona waveform variable segun el tamanyo de ventana
+	ancho=menu_audio_draw_sound_wave_window->visible_width-2;
 
+	//Por si acaso, no vayamos a provocar alguna division por cero
+	if (ancho<1) ancho=1;
 
-
-
-	int ancho=(SOUND_WAVE_ANCHO-2);
 	int alto=(SOUND_WAVE_ALTO-4);
 	//int xorigen=(SOUND_WAVE_X+1);
 	//int yorigen=(SOUND_WAVE_Y+4);

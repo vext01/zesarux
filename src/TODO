@@ -34,7 +34,6 @@ en retornar tamanyo menu, retornar +(200)/menu_char_width/menu_gui_zoom;
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
 
--waveform que se reajuste a tamanyo ventana
 
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
