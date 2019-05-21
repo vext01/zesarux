@@ -13442,7 +13442,7 @@ void screen_set_window_zoom(int z)
 	//menu_overlay_function=previous_function;
 	//menu_overlay_activo=1;
 
-	printf ("---------final cambio zooom\n");
+	//printf ("---------final cambio zooom\n");
 }
 
 
