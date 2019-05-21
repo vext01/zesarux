@@ -612,7 +612,7 @@ void scrxwindows_resize(int width,int height)
 
 		XMapRaised(dpy,ventana);
 
-	printf ("resize %d %d\n",width,height);
+	//printf ("resize %d %d\n",width,height);
 	scr_reallocate_layers_menu(fullscreen_width,fullscreen_height);	
 
 
@@ -652,7 +652,7 @@ void scrxwindows_resize(int width,int height)
 
 	}
 
-	printf ("resize %d %d\n",width,height);
+	//printf ("resize %d %d\n",width,height);
 	scr_reallocate_layers_menu(width,height);
 
 }
@@ -2139,7 +2139,7 @@ int xdisplay_end (void)
 
 
 
-void disabled_getmouse_coordinates(void)
+/*void disabled_getmouse_coordinates(void)
 {
 
     Bool result;
@@ -2166,4 +2166,4 @@ void disabled_getmouse_coordinates(void)
     kempston_mouse_y=255-mouse_y/zoom_y;
     //printf("Mouse is at (%d,%d)\n", kempston_mouse_x, kempston_mouse_y);
 
-}
+}*/

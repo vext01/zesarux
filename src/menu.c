@@ -2480,7 +2480,7 @@ void menu_draw_cpu_use_last(void)
 	//temp
 	//cpu_use=100;
 
-	printf ("mostrando cpu use\n");
+	//printf ("mostrando cpu use\n");
 
 	char buffer_perc[9];
 	sprintf (buffer_perc,"%3d%% CPU",cpu_use);
@@ -2617,7 +2617,7 @@ void menu_draw_last_fps(void)
 
 	const int ancho_maximo=6;
 
-			printf ("mostrando fps\n");	
+			//printf ("mostrando fps\n");	
 
         char buffer_fps[ancho_maximo+1];
         sprintf (buffer_fps,"%02d FPS",fps);

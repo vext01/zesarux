@@ -1302,7 +1302,7 @@ if (ventana_fullscreen) return ; //No hacer resizes cuando este en pantalla comp
 
         debug_printf (VERBOSE_INFO,"width: %d get_window_width: %d height: %d get_window_height: %d",width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
 
-        printf ("allocate layers menu\n");
+        //printf ("allocate layers menu\n");
         scr_reallocate_layers_menu(width,height);   
 
 	zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();

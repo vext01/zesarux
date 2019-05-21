@@ -1156,9 +1156,9 @@ CGImageRef imageRef;
 {
 	debug_printf (VERBOSE_INFO,"resizeContentToWidth %d X %d",w,h);
 
-        printf ("resizeContentToWidth %d X %d\n",w,h);
+        //printf ("resizeContentToWidth %d X %d\n",w,h);
 
-        printf ("allocate layers menu\n");
+        //printf ("allocate layers menu\n");
         scr_reallocate_layers_menu(w,h);        
 
     // update screenBuffer
@@ -2042,7 +2042,6 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 
 /*- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
-	printf ("adios\n");
 	end_emulator();
 	return NSTerminateCancel;
 }*/
@@ -2318,27 +2317,21 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 {
 
 
-
-
-
-
-
-
         if (menu_overlay_activo==0) {
                 //Putpixel con menu cerrado
                 scrcocoa_putpixel_final(x,y,color);
                 return;
         }          
 
-if (buffer_layer_machine==NULL) {
+/*if (buffer_layer_machine==NULL) {
         printf ("----buffer_layer_machine null running_realloc %d\n",running_realloc);
         debug_exec_show_backtrace();
         exit(1);
-}
+}*/
+
 
 //temporal
-// scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);
-if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
+/*if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
         if (!mostrado_trace) {
                 printf ("out of range scrcocoa_putpixel x %d y %d limit %d %d\n",x,y,ancho_layer_menu_machine,alto_layer_menu_machine);
                 debug_exec_show_backtrace();
@@ -2346,18 +2339,13 @@ if (x>=ancho_layer_menu_machine || y>=alto_layer_menu_machine)  {
                 sleep(1);
         }
         return;
-}
+}*/
 
 
-
-        //if (buffer_layer_machine==NULL) {
-        //        printf ("buffer null\n");
-        //}
 
         //Metemos pixel en layer adecuado
 	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;   
-
-        //if (buffer_layer_machine==NULL) printf ("despues buffer null\n");     
+   
 
         //Putpixel haciendo mix  
         screen_putpixel_mix_layers(x,y);   
