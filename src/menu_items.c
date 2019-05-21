@@ -3849,12 +3849,25 @@ void menu_audio_draw_sound_wave(void)
 	//Por si acaso, no vayamos a provocar alguna division por cero
 	if (ancho<1) ancho=1;
 
-	int alto=(SOUND_WAVE_ALTO-4);
+	int alto;
+
+	int lineas_cabecera=4;
+
+	alto=menu_audio_draw_sound_wave_window->visible_height-lineas_cabecera-2;
+
+	//Por si acaso, no vayamos a provocar alguna division por cero
+	if (alto<1) alto=1;
+
 	//int xorigen=(SOUND_WAVE_X+1);
 	//int yorigen=(SOUND_WAVE_Y+4);
 
 	int xorigen=1;
-	int yorigen=4;
+	int yorigen;
+
+	//yorigen=lineas_cabecera+alto/2;
+
+	//if (yorigen<lineas_cabecera) yorigen=lineas_cabecera;
+	yorigen=lineas_cabecera;
 
 
 	if (si_complete_video_driver() ) {

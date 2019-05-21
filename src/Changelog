@@ -4,31 +4,31 @@ Version 7.3. 15 April 2019 - xxx edition
 --Draw engine: now it allows transparency
 --Menu windows can be placed and resized to the whole program window
 
--Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
--Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
--Added colors to ncurses driver and Chloe machine
--Changes in TSConf: Added "reveal" setting to view which pixels are used by a layer
--Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
--Added DAAD debugger, for Spectrum and CPC
--Added DAAD vocabulary extractor
--Added hdf to ide/mmc raw converter
--Added hdf support to MMC emulation
--Allow text adventure keyboard also on CPC
--Added support for more cyrillic characters on menu
+Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
+Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
+Added colors to ncurses driver and Chloe machine
+Changes in TSConf: Added "reveal" setting to view which pixels are used by a layer
+Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
+Added DAAD debugger, for Spectrum and CPC
+Added DAAD vocabulary extractor
+Added hdf to ide/mmc raw converter
+Added hdf support to MMC emulation
+Allow text adventure keyboard also on CPC
+Added support for more cyrillic characters on menu
 
--Improved footer:
---Footer now completely follows GUI Style
---Reordered cpu use, numbers in red when cpu use > 85%
+Improved footer:
+-Footer now completely follows GUI Style
+-Reordered cpu use, numbers in red when cpu use > 85%
 
 Improved Waveform window: now the wave adjusts automatically to the zxwindow size
 
--Fixed bug having more than 256 text to adventure keyboard words
--Fixed bug on CPC vertical scrolling
--Fixed segmentation fault bug when drawing CPC machine
--Fixed bug redrawing zx80/81 display, with realvideo disabled, and menu char width less than 8
--Fixed bug drawing menu window boxes when char width less than 8
--Fixed zxvision left button handling: no longer sends enter when the user is dragging the window
--Fixed machine names to be completely right: for example, "Spectrum 48k" becomes "ZX Spectrum 48k", etc
+Fixed bug having more than 256 text to adventure keyboard words
+Fixed bug on CPC vertical scrolling
+Fixed segmentation fault bug when drawing CPC machine
+Fixed bug redrawing zx80/81 display, with realvideo disabled, and menu char width less than 8
+Fixed bug drawing menu window boxes when char width less than 8
+Fixed zxvision left button handling: no longer sends enter when the user is dragging the window
+Fixed machine names to be completely right: for example, "Spectrum 48k" becomes "ZX Spectrum 48k", etc
 
 
 Version 7.2. 10 April 2019 - Neula edition
