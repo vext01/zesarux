@@ -59,6 +59,7 @@ ok -probar pantalla cpu_panic
 
 -quitar Mensajes printf de debugging de drivers video y de partes de menu, screen
 
+-al cargar music.tap, pone tspeed y luego tape , en footer , y queda una T restante. Hacer que funcion de footer borre hacia izquierda en blanco un par de caracteres
 
 -Extractor dibujos paws?
 

@@ -4034,7 +4034,8 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
         do {
 
 
-		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
+		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] Wave ~~Shape",
+				(menu_sound_wave_llena ? "Fill" : "Line") );
         menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
 
         //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
