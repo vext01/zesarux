@@ -25,57 +25,51 @@ Para próxima versión ZEsarUX:
 pixel_screen_width = screen_get_window_size_width_zoom_border_en()+200*zoom_x;
 en retornar tamanyo menu, retornar +(200)/menu_char_width/menu_gui_zoom; 
 
--Algún tema gui en el que el rojo del maximo no sea en rojo. Quizá magenta?
-
 -Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
 
 -Turbo spool setting en tbblue y otras máquinas 128kb...
 
 -sprites save lo hace siempre de zona por defecto
 -sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
-
  
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
 
--screen_currently_refreshing en todos drivers
-
--Trozo de arriba que en cpc no se ven bien ventanas realmente es la ventana de Mac que ha quedado más pequeña 
 
 -en zxuno, despues de cerrar menu, siempre muestra indicador "flash"
 
 -probar numselect
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
+-quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
+
 -probar cpu use footer en maquinas que no muestran (como windows)
 
 -probar easter egg
-ok -probar pantalla cpu_panic 
+
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
 -logo OSD ZEsarUX no aparece en zx80/81 y sin realvideo
-
--quitar Mensajes printf de debugging de drivers video y de partes de menu, screen
 
 -al cargar music.tap, pone tspeed y luego tape , en footer , y queda una T restante. Hacer que funcion de footer borre hacia izquierda en blanco un par de caracteres
 
 -Extractor dibujos paws?
 
--quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 
 -Snapshots automáticos de nombre que depende del archivo cargado. Para tener siempre uno cuando se cambia de juego 
 
 -Debug daad hacerlo extensivo a paws?
 
-
--en boot de tbblue, borra footer. sera al cambiar turbo de cpu? en zxuno tambien pasa
+-en boot de tbblue, borra footer. sera al cambiar turbo de cpu? en zxuno tambien pasa. ya no pasa?
 
 -extender ventana emulador
 
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
+
+
 
 
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
