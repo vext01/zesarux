@@ -522,7 +522,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							7,		//Color para zona no usada en visualmem
 							2,7+8,		//Color para opcion marcada
 							'#',
-		2 //color de aviso
+		3+8 //color de aviso, en este tema, magenta con brillo
 							},
 
 
@@ -2831,7 +2831,7 @@ int menu_escribe_texto_si_cambio_tinta(char *texto,int indice)
 
     if (texto[indice++]!='$') return 0;
     if (texto[indice++]!='$') return 0;
-	if (texto[indice]<'0' || texto[indice]>'7') return 0;
+	if (texto[indice]<'0' || texto[indice]>'7'+8) return 0; //Soportar colores con brillo
 	indice++;
 
     //Y siguiente caracter no es final de texto
@@ -9233,7 +9233,7 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 			texto[destino++]='=';
 
 
-			//Codigo control color tinta. Color rojo. TODO: si hubiera algun skin con tinta roja por defecto, esto no se veria
+			//Codigo control color tinta. 
 			if (i==11) { 
 				texto[destino++]='$';
 				texto[destino++]='$';
