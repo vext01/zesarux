@@ -3554,13 +3554,14 @@ void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
 	//solo hacerlo en el caso de drivers completos
 	if (si_complete_video_driver() ) {
 
-		if (rainbow_enabled.v==0) {
+		if (1) {
 
 			//parte inferior
 			for (x=x1;x<=x2;x++) {
 				if (mouse_is_dragging && (x%2)==0) continue; //punteado cuando se mueve o redimensiona
 				scr_putpixel_gui_zoom(x*menu_gui_zoom,y2*menu_gui_zoom,color,menu_gui_zoom);
 			}
+
 
 			//izquierda
 			for (y=y1;y<=y2;y++) {
@@ -3608,7 +3609,7 @@ void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
 
 		}
 
-		else {
+		/*else {
 
 		
  	               //parte inferior
@@ -3661,9 +3662,10 @@ void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
 
 				//Poner solo un pixel
 				scr_putpixel_gui_zoom((centro_marca_zxvison_x)*menu_gui_zoom,(centro_marca_zxvison_y)*menu_gui_zoom,color_marca_zxvision,menu_gui_zoom);					
-			}			
+			}	
 
 		}
+		*/
 	}
 
 
