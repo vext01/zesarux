@@ -3554,6 +3554,7 @@ void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
 	//solo hacerlo en el caso de drivers completos
 	if (si_complete_video_driver() ) {
 
+		//if (rainbow_enabled.v) {
 		if (1) {
 
 			//parte inferior

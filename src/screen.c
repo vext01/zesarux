@@ -1941,28 +1941,28 @@ int running_realloc=0;
 void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
-	printf ("Allocating memory for menu layers %d X %d\n",ancho,alto);
+	debug_printf (VERBOSE_DEBUG,"Allocating memory for menu layers %d X %d",ancho,alto);
 	//debug_exec_show_backtrace();
 
 	if (!menu_overlay_activo) {
 		//No estrictamente necesario, pero evitamos usos de buffer_layer_menu o machine (especialmente desde thread de redibujo de cocoa) mientras se reasignan layers
-		printf ("Returning as there are no active menu\n");
+		debug_printf (VERBOSE_DEBUG,"Returning reallocate layers as there are no active menu");
 		return;
 	}
 
 	//Si el tamanyo anterior es igual que ahora, no tiene sentido tocarlo
 	if (ancho_layer_menu_machine==ancho && alto_layer_menu_machine==alto) {
-		printf ("Returning as the current size is the same as the new\n");
+		debug_printf (VERBOSE_DEBUG,"Returning reallocate layers as the current size is the same as the new");
 		return;
 	}
 
 
 	if (running_realloc) {
-		printf ("-----another realloc already running. sem_screen_refresh_reallocate_layers: %d  ancho %d alto %d\n",sem_screen_refresh_reallocate_layers,ancho,alto);
+		debug_printf (VERBOSE_DEBUG,"Another realloc already running. sem_screen_refresh_reallocate_layers: %d width %d height %d",sem_screen_refresh_reallocate_layers,ancho,alto);
 		return;
 	}
 
-  if (running_realloc) printf ("screen currently reallocating... wait\n");
+  if (running_realloc) debug_printf (VERBOSE_DEBUG,"Reallocate layers, screen currently reallocating... wait");
 
 	while (running_realloc) {
 		//printf ("screen currently reallocating... wait\n");
@@ -1972,7 +1972,7 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 	running_realloc=1;
 
 	//No se puede reasignar layers si esta por debajo refrescando pantalla. Esperar a que finalice
-	if (sem_screen_refresh_reallocate_layers) printf ("screen currently redrawing... wait\n");
+	if (sem_screen_refresh_reallocate_layers) debug_printf (VERBOSE_DEBUG,"Reallocate layers, screen currently redrawing... wait");
 	while (sem_screen_refresh_reallocate_layers) {
 		//printf ("screen currently redrawing... wait\n");
 		usleep(100);
@@ -1986,39 +1986,39 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 	ancho_layer_menu_machine=ancho;
 	alto_layer_menu_machine=alto;	
 
-	printf ("antes buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
+	//printf ("antes buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
 	
 	//Liberar si conviene
 	if (buffer_layer_machine!=NULL) {
-		printf ("liberando buffer_layer_machine\n");
+		//printf ("liberando buffer_layer_machine\n");
 		free (buffer_layer_machine);
 		buffer_layer_machine=NULL;
 	}
 
-	printf ("despues si liberar buffer_layer_machine\n");
+	//printf ("despues si liberar buffer_layer_machine\n");
 	
 	if (buffer_layer_menu!=NULL) {
-		printf ("Liberando buffer_layer_menu\n");
+		//printf ("Liberando buffer_layer_menu\n");
 		free(buffer_layer_menu);
 		buffer_layer_menu=NULL;
 	}
 
 
-	printf ("despues si liberar buffer_layer_menu\n");
+	//printf ("despues si liberar buffer_layer_menu\n");
 
 	//Asignar
 	int size_layers=ancho_layer_menu_machine*alto_layer_menu_machine*sizeof(z80_int);
 
-	printf ("Asignando layer tamanyo %d\n",size_layers);
+	//printf ("Asignando layer tamanyo %d\n",size_layers);
 
 	buffer_layer_machine=malloc(size_layers);
 	buffer_layer_menu=malloc(size_layers);
 
 
-	printf ("despues buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
+	//printf ("despues buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
 
 	if (buffer_layer_machine==NULL || buffer_layer_menu==NULL) {
-		printf ("Cannot allocate memory for menu layers\n");
+		//printf ("Cannot allocate memory for menu layers\n");
 		cpu_panic("Cannot allocate memory for menu layers");	
 	}
 
@@ -2314,13 +2314,13 @@ void scr_clear_layer_menu(void)
 		if (buffer_layer_menu==NULL) return;
 		if (!si_complete_video_driver() ) return;
 
-		printf ("Clearing layer menu\n");
+		debug_printf (VERBOSE_DEBUG,"Clearing layer menu");
 		//sleep(1);
 
 
 		int i;
 		int size=ancho_layer_menu_machine*alto_layer_menu_machine;
-		printf ("Clearing layer size %d. buffer_layer_menu %p realloc layers %d\n",size,buffer_layer_menu,sem_screen_refresh_reallocate_layers);
+		//printf ("Clearing layer size %d. buffer_layer_menu %p realloc layers %d\n",size,buffer_layer_menu,sem_screen_refresh_reallocate_layers);
 		//size/=16;
 
 		z80_int *initial_p;
@@ -2330,27 +2330,21 @@ void scr_clear_layer_menu(void)
 		initial_p=buffer_layer_menu;
 		for (i=0;i<size;i++) {
 			//if (initial_p!=buffer_layer_menu) {
-			if (buffer_layer_menu==NULL) {
+			//if (buffer_layer_menu==NULL) {
 			//if (sem_screen_refresh_reallocate_layers) {
-				printf ("---i %d %p realloc layers %d\n",i,buffer_layer_menu,sem_screen_refresh_reallocate_layers);
-				sleep(5);
-			}
+			//	printf ("---i %d %p realloc layers %d\n",i,buffer_layer_menu,sem_screen_refresh_reallocate_layers);
+			//	sleep(5);
+			//}
 			buffer_layer_menu[i]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente	
 		}
 
-		printf ("After Clearing layer size %d. buffer_layer_menu %p\n",size,buffer_layer_menu);
+		//printf ("After Clearing layer size %d. buffer_layer_menu %p\n",size,buffer_layer_menu);
 
-		printf ("Before clear putpixel cache\n");
+		//printf ("Before clear putpixel cache\n");
 		clear_putpixel_cache();
-		printf ("After clear putpixel cache\n");
+		//printf ("After clear putpixel cache\n");
 
-		//Y repintar todo buffer maquina. Esto no desde aqui
-		//scr_redraw_machine_layer();
-
-		//menu_clear_footer();
-
-		printf ("End clearing layer menu\n");
-		//sleep(1);
+		//printf ("End clearing layer menu\n");
 
 }
 
