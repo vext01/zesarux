@@ -27005,21 +27005,21 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 
         //scr_init_pantalla();
 
-	printf ("--antes de init pantalla\n");
+	//printf ("--antes de init pantalla\n");
 
 	screen_init_pantalla_and_others();
 
-	printf ("--despues de init pantalla\n");
+	//printf ("--despues de init pantalla\n");
 
     debug_printf(VERBOSE_INFO,"Creating Screen");
 
-	printf ("--antes de init footer\n");
+	//printf ("--antes de init footer\n");
 	menu_init_footer();
-	printf ("--despues de init footer\n");
+	//printf ("--despues de init footer\n");
 
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
 
-	printf ("--despues de restore overlay\n");
+	//printf ("--despues de restore overlay\n");
 	
 }
 
