@@ -2295,9 +2295,9 @@ void menu_draw_ext_desktop(void)
 		}		
 
 
-	//Agregamos logo ZEsarUX es esquina inferior derecha
-	int xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO;
-	int yfinal=alto-ZESARUX_ASCII_LOGO_ALTO;
+	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen
+	int xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
+	int yfinal=alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;
 
 	//El ancho y el puntero dan igual, no los vamos a usar
 	screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_logo);

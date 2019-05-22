@@ -747,6 +747,8 @@ extern z80_bit screen_watermark_enabled;
 
 extern void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) );
 
+#define ZESARUX_WATERMARK_LOGO_MARGIN 4
+
 
 extern int scrstdout_simpletext_refresh_factor;
 

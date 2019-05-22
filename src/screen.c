@@ -3402,7 +3402,7 @@ void screen_get_offsets_watermark_position(int position,int ancho, int alto, int
 	int watermark_x=*x;
 	int watermark_y=*y;
 
-	int rango_extremo=4;
+	int rango_extremo=ZESARUX_WATERMARK_LOGO_MARGIN; //4;
 
 		switch (position) {
 			case 0:
