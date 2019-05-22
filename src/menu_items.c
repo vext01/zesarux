@@ -8921,6 +8921,50 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_ext_desk_settings_custom_width(MENU_ITEM_PARAMETERS)
+{
+
+
+	char string_width[5];
+
+	sprintf (string_width,"%d",screen_ext_desktop_width);
+
+
+	menu_ventana_scanf("Width",string_width,5);
+
+	int valor=parse_string_to_number(string_width);
+
+	if (valor<128 || valor>9999) {
+		debug_printf (VERBOSE_ERR,"Invalid value");
+		return;
+	}
+
+	screen_ext_desktop_width=valor;
+
+
+
+
+	debug_printf(VERBOSE_INFO,"End Screen");
+
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+       
+
+	screen_init_pantalla_and_others();
+
+    debug_printf(VERBOSE_INFO,"Creating Screen");
+
+	menu_init_footer();
+
+	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
+
+
+}
+
 void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 {
 	debug_printf(VERBOSE_INFO,"End Screen");
@@ -8938,8 +8982,15 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 	//screen_ext_desktop_width *=2;
 	//if (screen_ext_desktop_width>=2048) screen_ext_desktop_width=128;
 
-	screen_ext_desktop_width +=128;
-	if (screen_ext_desktop_width>=2048) screen_ext_desktop_width=128;
+	//Incrementos de 128 hasta llegar a 1024
+	//Hacerlo multiple de 127 para evitar valores no multiples de custom width
+
+	screen_ext_desktop_width &=(65535-127);
+
+
+	if (screen_ext_desktop_width>=1024 && screen_ext_desktop_width<2048) screen_ext_desktop_width=2048;
+	else if (screen_ext_desktop_width>=2048) screen_ext_desktop_width=128;
+	else screen_ext_desktop_width +=128;
         
 
 	screen_init_pantalla_and_others();
@@ -8981,11 +9032,12 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (screen_ext_desktop_enabled) {
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,NULL,"[%d] Width",screen_ext_desktop_width);
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,NULL,"[%4d] Width",screen_ext_desktop_width);
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,NULL,"Custom Width");
 
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%d] Fill type",menu_ext_desktop_fill);
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%2d] Fill type",menu_ext_desktop_fill);
 			if (menu_ext_desktop_fill==0) {
-				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%d] Color",menu_ext_desktop_fill_solid_color);
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%2d] Fill Color",menu_ext_desktop_fill_solid_color);
 			}
 		}
 		
