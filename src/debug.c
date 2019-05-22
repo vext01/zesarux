@@ -532,8 +532,8 @@ void init_breakpoints_table(void)
 //Dibuja la pantalla de panico
 void screen_show_panic_screen(int xmax, int ymax)
 {
-    //rojo, amarillo, verde, cyan,negro
-    int colores_rainbow[]={2+8,6+8,4+8,5+8,0};
+    
+    //int colores_rainbow[]={2+8,6+8,4+8,5+8,0};
 
 	int x,y;
 
@@ -548,7 +548,7 @@ void screen_show_panic_screen(int xmax, int ymax)
         int color=0;
 		for (y=0;y<ymax;y++) {
 			//scr_putpixel(x,y,(color&15) );
-            scr_putpixel(x,y,colores_rainbow[(color%total_colores)] );
+            scr_putpixel(x,y,screen_colores_rainbow[(color%total_colores)] );
 
 			if ((y%grueso_colores)==grueso_colores-1) color++;
 

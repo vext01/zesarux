@@ -500,6 +500,12 @@ int detect_rainbow_border_total_frames=0;
 void (*scr_putpixel_zoom_z88) (int x,int y,unsigned color);
 
 
+//Colores usados en pantalla panic, en logo de extended desktop etc. Son los colores del rainbow de spectrum
+//rojo, amarillo, verde, cyan,negro
+int screen_colores_rainbow[]={2+8,6+8,4+8,5+8,0};
+
+int screen_colores_rainbow_nobrillo[]={2,6,4,5,0};
+
 //devuelve 1 si hay que dibujar la linea, de acorde al entrelazado
 /*
 int if_store_scanline_interlace(int y)

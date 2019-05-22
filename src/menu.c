@@ -2274,13 +2274,20 @@ void menu_draw_ext_desktop(void)
 		//Rayas diagonales de colores
 		if (menu_ext_desktop_fill==1) {
 
-			int color=0;
+			int grueso_lineas=8;
+			int total_colores=5;
+
+			int contador_color;
 
 			for (y=yinicio;y<yinicio+alto;y++) {
-				color++; //Para dar un aspecto de rayado
+				contador_color=y; //Para dar un aspecto de rayado
+
 				for (x=xinicio;x<xinicio+ancho;x++) {
-					scr_putpixel(x,y,color & 15);
-					color++;
+					int indice_color=(contador_color/grueso_lineas) % total_colores;
+					int color=screen_colores_rainbow_nobrillo[indice_color]; 
+					scr_putpixel(x,y,color);
+
+					contador_color++;
 				}
 			}
 

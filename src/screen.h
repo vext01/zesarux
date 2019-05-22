@@ -749,6 +749,9 @@ extern void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho,
 
 #define ZESARUX_WATERMARK_LOGO_MARGIN 4
 
+extern int screen_colores_rainbow[];
+extern int screen_colores_rainbow_nobrillo[];
+
 
 extern int scrstdout_simpletext_refresh_factor;
 
