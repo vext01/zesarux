@@ -28170,7 +28170,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');		
 
 		if (scr_driver_can_ext_desktop() ) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"E~~xtended desktop settings");
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"Z~~X Desktop settings");
 			menu_add_item_menu_shortcut(array_menu_interface_settings,'x');		
 		}
 

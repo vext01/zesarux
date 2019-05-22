@@ -9046,7 +9046,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_ext_desktop_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_ext_desktop_settings);
 
-                retorno_menu=menu_dibuja_menu(&ext_desktop_settings_opcion_seleccionada,&item_seleccionado,array_menu_ext_desktop_settings,"Extended Desktop Settings");
+                retorno_menu=menu_dibuja_menu(&ext_desktop_settings_opcion_seleccionada,&item_seleccionado,array_menu_ext_desktop_settings,"ZX Desktop Settings");
 
                 
 

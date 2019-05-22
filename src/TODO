@@ -34,7 +34,6 @@ Para próxima versión ZEsarUX:
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
 
-
 -en zxuno, despues de cerrar menu, siempre muestra indicador "flash"
 
 -probar numselect
@@ -54,14 +53,11 @@ Para próxima versión ZEsarUX:
 
 -Extractor dibujos paws?
 
-
 -Snapshots automáticos de nombre que depende del archivo cargado. Para tener siempre uno cuando se cambia de juego 
 
 -Debug daad hacerlo extensivo a paws?
 
 -en boot de tbblue, borra footer. sera al cambiar turbo de cpu? en zxuno tambien pasa. ya no pasa?
-
--extender ventana emulador
 
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
 
