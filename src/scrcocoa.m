@@ -2737,7 +2737,7 @@ int scrcocoa_get_menu_height(void)
 
 int scrcocoa_driver_can_ext_desktop (void)
 {
-        return 0;
+        return 1;
 }
 
 

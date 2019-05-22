@@ -660,6 +660,9 @@ extern void set_charset(void);
 
 extern void menu_draw_ext_desktop(void);
 
+extern int menu_ext_desktop_fill;
+extern int menu_ext_desktop_fill_solid_color;
+
 
 #define ESTILO_GUI_PAPEL_NORMAL (definiciones_estilos_gui[estilo_gui_activo].papel_normal)
 #define ESTILO_GUI_TINTA_NORMAL (definiciones_estilos_gui[estilo_gui_activo].tinta_normal)

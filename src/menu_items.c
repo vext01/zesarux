@@ -156,6 +156,7 @@ int textdrivers_settings_opcion_seleccionada=0;
 int settings_display_opcion_seleccionada=0;
 int cpu_stats_opcion_seleccionada=0;
 int menu_tbblue_hardware_id_opcion_seleccionada=0;
+int ext_desktop_settings_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -8886,5 +8887,123 @@ void menu_tbblue_machine_id(MENU_ITEM_PARAMETERS)
 
 												
                 }
+
+}
+
+
+void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
+{
+	
+	debug_printf(VERBOSE_INFO,"End Screen");
+
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+
+
+
+	screen_ext_desktop_enabled ^=1;
+
+        
+
+	screen_init_pantalla_and_others();
+
+    debug_printf(VERBOSE_INFO,"Creating Screen");
+
+	menu_init_footer();
+
+	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
+
+
+}
+
+
+void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
+{
+	debug_printf(VERBOSE_INFO,"End Screen");
+
+	//Guardar funcion de texto overlay activo, para desactivarlo temporalmente. No queremos que se salte a realloc_layers simultaneamente,
+	//mientras se hace putpixel desde otro sitio -> provocaria escribir pixel en layer que se esta reasignando
+  void (*previous_function)(void);
+  int menu_antes;
+
+	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+
+
+
+	//Cambio ancho
+	screen_ext_desktop_width *=2;
+	if (screen_ext_desktop_width>=2048) screen_ext_desktop_width=128;
+        
+
+	screen_init_pantalla_and_others();
+
+    debug_printf(VERBOSE_INFO,"Creating Screen");
+
+	menu_init_footer();
+
+	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
+}
+
+void menu_ext_desk_settings_filltype(MENU_ITEM_PARAMETERS)
+{
+	menu_ext_desktop_fill++;
+	if (menu_ext_desktop_fill==3) menu_ext_desktop_fill=0;
+}
+
+void menu_ext_desk_settings_fillcolor(MENU_ITEM_PARAMETERS)
+{
+	menu_ext_desktop_fill_solid_color++;
+	if (menu_ext_desktop_fill_solid_color==16) menu_ext_desktop_fill_solid_color=0;
+}
+
+/*
+int menu_ext_desktop_fill=1;
+int menu_ext_desktop_fill_solid_color=1;
+*/
+
+void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_ext_desktop_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+		menu_add_item_menu_inicial_format(&array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_enable,NULL,"[%c] Enabled",(screen_ext_desktop_enabled ? 'X' : ' ' ) );
+
+
+		if (screen_ext_desktop_enabled) {
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,NULL,"[%d] Width",screen_ext_desktop_width);
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%d] Fill type",menu_ext_desktop_fill);
+			if (menu_ext_desktop_fill==0) {
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%d] Color",menu_ext_desktop_fill_solid_color);
+			}
+		}
+		
+
+                menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_ext_desktop_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_ext_desktop_settings);
+
+                retorno_menu=menu_dibuja_menu(&ext_desktop_settings_opcion_seleccionada,&item_seleccionado,array_menu_ext_desktop_settings,"Extended Desktop Settings");
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
