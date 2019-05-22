@@ -2212,6 +2212,14 @@ void menu_set_menu_abierto(int valor)
         menu_abierto=valor;
 }
 
+
+//Tipo de rellenado de extended desktop:
+//0=color solido
+//1=barras diagonales de colores
+//2=punteado blanco/negro
+int menu_ext_desktop_fill=1;
+int menu_ext_desktop_fill_solid_color=1;
+
 void menu_draw_ext_desktop(void)
 {
 
@@ -2233,17 +2241,51 @@ void menu_draw_ext_desktop(void)
 			//else scr_putpixel_zoom(x,y,3);
 
 			//o scr_putpixel, que no tiene zoom
-		
-		int color=0;
 
-		for (y=yinicio;y<yinicio+alto;y++) {
-			color++; //Para dar un aspecto de rayado
-			for (x=xinicio;x<xinicio+ancho;x++) {
-				scr_putpixel(x,y,color & 15);
+		//Color solido
+		if (menu_ext_desktop_fill==0) {
 
-				color++;
+			int color=menu_ext_desktop_fill_solid_color;
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+				for (x=xinicio;x<xinicio+ancho;x++) {
+					scr_putpixel(x,y,color);
+				}
 			}
+
+		}			
+		
+		//Rayas diagonales de colores
+		if (menu_ext_desktop_fill==1) {
+
+			int color=0;
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+				color++; //Para dar un aspecto de rayado
+				for (x=xinicio;x<xinicio+ancho;x++) {
+					scr_putpixel(x,y,color & 15);
+					color++;
+				}
+			}
+
 		}
+
+		//punteado
+		if (menu_ext_desktop_fill==2) {
+
+			int color;
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+				for (x=xinicio;x<xinicio+ancho;x++) {
+
+					int suma=x+y;
+					color=(suma & 1 ? 0 : 15);
+
+					scr_putpixel(x,y,color);
+				}
+			}
+
+		}		
 
 	
 }
