@@ -76,12 +76,15 @@ int scrsdl_crea_ventana(void)
 	}
 
         int ancho=screen_get_window_size_width_zoom_border_en();
+
+        ancho +=screen_get_ext_desktop_width_zoom();
+
         int alto=screen_get_window_size_height_zoom_border_en();
 
 	debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",ancho,alto );
 
-        sdl_screen = SDL_SetVideoMode(screen_get_window_size_width_zoom_border_en(),
-                                      screen_get_window_size_height_zoom_border_en(),
+        sdl_screen = SDL_SetVideoMode(ancho,
+                                      alto,
                                         32, flags);
         if ( sdl_screen == NULL ) {
                 return 1;
@@ -240,7 +243,10 @@ void scrsdl_refresca_border(void)
 
 void scrsdl_refresca_pantalla_solo_driver(void)
 {
-        SDL_UpdateRect(sdl_screen, 0, 0, screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en() );
+        int ancho=screen_get_window_size_width_zoom_border_en();
+        ancho +=screen_get_ext_desktop_width_zoom();
+
+        SDL_UpdateRect(sdl_screen, 0, 0, ancho, screen_get_window_size_height_zoom_border_en() );
 
 
         /* UnLock the screen for direct access to the pixels */
@@ -1263,7 +1269,8 @@ void scrsdl_resize(int width,int height)
         scr_reallocate_layers_menu(width,height);    
 
 
-	zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
+	//zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
+        zoom_x_calculado=width/(screen_get_window_size_width_no_zoom_border_en()+screen_get_ext_desktop_width_no_zoom() );
 	zoom_y_calculado=height/screen_get_window_size_height_no_zoom_border_en();
 
 
@@ -1280,8 +1287,6 @@ void scrsdl_resize(int width,int height)
                 zoom_y=zoom_y_calculado;
                 set_putpixel_zoom();
 
-                //width=screen_get_window_size_width_zoom_border_en();
-                //height=screen_get_window_size_height_zoom_border_en();
 
 
         }
@@ -1463,7 +1468,14 @@ void scrsdl_detectedchar_print(z80_byte caracter)
 //Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
 int scrsdl_get_menu_width(void)
 {
-        int max=screen_get_emulated_display_width_no_zoom_border_en()/menu_char_width/menu_gui_zoom;
+        
+        int max=screen_get_emulated_display_width_no_zoom_border_en();
+
+        max +=screen_get_ext_desktop_width_no_zoom();
+
+        max=max/menu_char_width/menu_gui_zoom;
+
+
         if (max>OVERLAY_SCREEN_MAX_WIDTH) max=OVERLAY_SCREEN_MAX_WIDTH;
 
                 //printf ("max x: %d %d\n",max,screen_get_emulated_display_width_no_zoom_border_en());
@@ -1484,7 +1496,7 @@ int scrsdl_get_menu_height(void)
 
 int scrsdl_driver_can_ext_desktop (void)
 {
-        return 0;
+        return 1;
 }
 
 
