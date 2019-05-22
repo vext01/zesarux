@@ -228,11 +228,14 @@ int scrxwindows_setwindowparms(void)
 	sizeHints->base_width = 0;
 	sizeHints->base_height = 0;
 
-	sizeHints->min_width = screen_get_window_size_width_no_zoom_border_en();
+	//Fijamos el minimo de tamaño de la ventana
+	sizeHints->min_width = screen_get_window_size_width_no_zoom_border_en() + screen_get_ext_desktop_width_no_zoom();
 	sizeHints->min_height = screen_get_window_size_height_no_zoom_border_en();
 
+
+	//Y se fijan los incrementos de la ventana, para que se amplie en fracciones enteras
 	if (ventana_fullscreen==0) {
-	        sizeHints->width_inc    = screen_get_window_size_width_no_zoom_border_en();
+	        sizeHints->width_inc    = screen_get_window_size_width_no_zoom_border_en() + screen_get_ext_desktop_width_no_zoom();
 	        sizeHints->height_inc   = screen_get_window_size_height_no_zoom_border_en();
 	}
 
@@ -1711,6 +1714,7 @@ void scrxwindows_actualiza_tablas_teclado(void)
 //                if (ultimo_resize_width!=event.xconfigure.width || ultimo_resize_height!=event.xconfigure.height) {
                         ultimo_resize_width=event.xconfigure.width;
                         ultimo_resize_height=event.xconfigure.height;
+
 			scrxwindows_resize(event.xconfigure.width,event.xconfigure.height);
 
 			//Redibujar zona inferior Z88 si conviene
