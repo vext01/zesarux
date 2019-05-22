@@ -2213,6 +2213,13 @@ void menu_set_menu_abierto(int valor)
 }
 
 
+//Para meter el logo en zona de extended desktop
+void menu_draw_ext_desktop_logo(z80_int *destino GCC_UNUSED,int x,int y,int ancho GCC_UNUSED,int color)
+{
+	scr_putpixel(x,y,color);
+}
+
+
 //Tipo de rellenado de extended desktop:
 //0=color solido
 //1=barras diagonales de colores
@@ -2287,6 +2294,13 @@ void menu_draw_ext_desktop(void)
 
 		}		
 
+
+	//Agregamos logo ZEsarUX es esquina inferior derecha
+	int xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO;
+	int yfinal=alto-ZESARUX_ASCII_LOGO_ALTO;
+
+	//El ancho y el puntero dan igual, no los vamos a usar
+	screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_logo);
 	
 }
 

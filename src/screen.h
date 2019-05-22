@@ -745,6 +745,9 @@ extern int screen_watermark_position;
 
 extern z80_bit screen_watermark_enabled;
 
+extern void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) );
+
+
 extern int scrstdout_simpletext_refresh_factor;
 
 extern void scr_set_fps_stdout_simpletext(int fps);
