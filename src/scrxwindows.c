@@ -647,7 +647,7 @@ void scrxwindows_resize(int width,int height)
                 height=screen_get_window_size_height_zoom_border_en();
 
 
-		debug_printf (VERBOSE_INFO,"Calling XResizeWindow");
+		debug_printf (VERBOSE_INFO,"Calling XResizeWindow to %d X %d",width,height);
 
 		scrxwindows_alloc_image(width,height);
 
@@ -792,13 +792,17 @@ void scrxwindows_refresca_pantalla_solo_driver(void)
 {
    //Dibujar normal toda la pantalla entera
 
+	 int ancho=screen_get_window_size_width_zoom_border_en();
+
+	 ancho +=screen_get_ext_desktop_width_zoom();
+
         if( shm_used ) {
 
 #ifdef X_USE_SHM
                 //printf ("con shm dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
                 //printf ("image=%x\n",image);
 
-                XShmPutImage(dpy, ventana, gc, image, 0, 0, 0, 0, screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en(), True);
+                XShmPutImage(dpy, ventana, gc, image, 0, 0, 0, 0, ancho, screen_get_window_size_height_zoom_border_en(), True);
 
                 //temp probar para ver si esto detiene el uso de cpu incrementandose
                 //XSync(dpy, False);
@@ -815,7 +819,7 @@ void scrxwindows_refresca_pantalla_solo_driver(void)
 
         else {
                 //printf ("sin shm dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
-                XPutImage(dpy, ventana, gc, image, 0, 0, 0, 0, screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en() );
+                XPutImage(dpy, ventana, gc, image, 0, 0, 0, 0, ancho, screen_get_window_size_height_zoom_border_en() );
 
         }
 
@@ -1899,8 +1903,14 @@ int scrxwindows_init (void) {
 
 	// Create the window
 
+int ancho,alto;
+ancho=screen_get_window_size_width_zoom_border_en();
 
-	ventana = XCreateSimpleWindow(dpy, DefaultRootWindow(dpy), 0, 0, screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en(),0, blackColor, blackColor);
+ancho +=screen_get_ext_desktop_width_zoom();
+
+alto=screen_get_window_size_height_zoom_border_en();
+
+	ventana = XCreateSimpleWindow(dpy, DefaultRootWindow(dpy), 0, 0, ancho, alto,0, blackColor, blackColor);
 
 	//printf ("crear ventana %d %d\n",screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en() );
 
@@ -1938,12 +1948,9 @@ int scrxwindows_init (void) {
 	if ( xdisplay_find_visual() ) exit(1);
 
 
-int ancho,alto;
-ancho=screen_get_window_size_width_zoom_border_en();
 
-ancho +=screen_get_ext_desktop_width_zoom();
 
-alto=screen_get_window_size_height_zoom_border_en();
+
 
 
 
@@ -2028,12 +2035,14 @@ static int try_shm (void)
 
   shm_eventtype = XShmGetEventBase( dpy ) + ShmCompletion;
 
+int ancho=screen_get_window_size_width_zoom_border_en();
 
+ancho +=screen_get_ext_desktop_width_zoom();
 
 image = XShmCreateImage( dpy, xdisplay_visual,
                            xdisplay_depth, ZPixmap,
                            NULL, &shm_info,
-screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en() );
+ancho, screen_get_window_size_height_zoom_border_en() );
 
 
 /*
