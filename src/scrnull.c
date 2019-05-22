@@ -101,6 +101,10 @@ int scrnull_get_menu_height(void)
         return 24;
 }
 
+int scrnull_driver_can_ext_desktop (void)
+{
+        return 0;
+}
 
 
 //Null video drivers
@@ -120,6 +124,7 @@ debug_printf (VERBOSE_INFO,"Init Null Video Driver");
 
         scr_get_menu_width=scrnull_get_menu_width;
         scr_get_menu_height=scrnull_get_menu_height;
+	scr_driver_can_ext_desktop=scrnull_driver_can_ext_desktop;
 
 	scr_driver_name="null";
 

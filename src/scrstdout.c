@@ -209,6 +209,11 @@ int scrstdout_get_menu_height(void)
         return 24;
 }
 
+int scrstdout_driver_can_ext_desktop (void)
+{
+        return 0;
+}
+
 //Null video drivers
 int scrstdout_init (void){ 
 	
@@ -241,6 +246,7 @@ int scrstdout_init (void){
 
         scr_get_menu_width=scrstdout_get_menu_width;
         scr_get_menu_height=scrstdout_get_menu_height;
+	scr_driver_can_ext_desktop=scrstdout_driver_can_ext_desktop;
 	
 	
 	scr_set_fullscreen=scrstdout_set_fullscreen;

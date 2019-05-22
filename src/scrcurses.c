@@ -1397,6 +1397,10 @@ int scrcurses_get_menu_height(void)
 }
 
 
+int scrcurses_driver_can_ext_desktop (void)
+{
+        return 0;
+}
 
 int scrcurses_init (void) {
 
@@ -1461,6 +1465,7 @@ scr_putchar_footer=scrcurses_putchar_footer;
 
         scr_get_menu_width=scrcurses_get_menu_width;
         scr_get_menu_height=scrcurses_get_menu_height;
+scr_driver_can_ext_desktop=scrcurses_driver_can_ext_desktop;
 
 scr_putpixel=scrcurses_putpixel;
 scr_putpixel_final=scrcurses_putpixel_final;

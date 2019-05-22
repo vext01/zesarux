@@ -1863,6 +1863,11 @@ int scrxwindows_get_menu_height(void)
 }
 
 
+int scrxwindows_driver_can_ext_desktop (void)
+{
+        return 0;
+}
+
 
 int scrxwindows_init (void) {
 
@@ -1957,6 +1962,7 @@ scr_reallocate_layers_menu(ancho,alto);
   scr_putpixel_final_rgb=scrxwindows_putpixel_final_rgb;
         scr_get_menu_width=scrxwindows_get_menu_width;
         scr_get_menu_height=scrxwindows_get_menu_height;	
+	scr_driver_can_ext_desktop=scrxwindows_driver_can_ext_desktop;
 
 	scr_putchar_zx8081=scrxwindows_putchar_zx8081;
         scr_debug_registers=scrxwindows_debug_registers;

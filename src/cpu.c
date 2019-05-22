@@ -7119,6 +7119,7 @@ init_randomize_noise_value();
 		//init_cpc_rgb_table();
 	screen_init_colour_table();
 
+  screen_init_ext_desktop();
 	init_screen_addr_table();
 
 	init_cpc_line_display_table();
@@ -7165,8 +7166,6 @@ init_randomize_noise_value();
 
 	//Algun parametro que se resetea con reset_cpu y/o set_machine y se puede haber especificado por linea de comandos
 	if (command_line_zx8081_vsync_sound.v) zx8081_vsync_sound.v=1;
-
-
 
 
   //Inicializamos Video antes que el resto de cosas.

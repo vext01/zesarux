@@ -293,6 +293,11 @@ int scrvideoname_get_menu_height(void)
         return max;
 }
 
+int scrvideoname_driver_can_ext_desktop (void)
+{
+        return 0;
+}
+
 int scrvideoname_init (void) {
 
 	debug_printf (VERBOSE_INFO,"Init VIDEONAME_CAP Video Driver");
@@ -305,6 +310,7 @@ int scrvideoname_init (void) {
 
         scr_get_menu_width=scrvideoname_get_menu_width;
         scr_get_menu_height=scrvideoname_get_menu_height;
+	scr_driver_can_ext_desktop=scrvideoname_driver_can_ext_desktop;
 
 
         scr_putchar_zx8081=scrvideoname_putchar_zx8081;

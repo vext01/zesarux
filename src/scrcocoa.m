@@ -2735,6 +2735,10 @@ int scrcocoa_get_menu_height(void)
 }
 
 
+int scrcocoa_driver_can_ext_desktop (void)
+{
+        return 0;
+}
 
 
 int scrcocoa_init (void) {
@@ -2768,6 +2772,7 @@ int scrcocoa_init (void) {
 
         scr_get_menu_width=scrcocoa_get_menu_width;
         scr_get_menu_height=scrcocoa_get_menu_height;
+        scr_driver_can_ext_desktop=scrcocoa_driver_can_ext_desktop;
 
         scr_putchar_zx8081=scrcocoa_putchar_zx8081;
         scr_debug_registers=scrcocoa_debug_registers;

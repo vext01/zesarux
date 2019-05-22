@@ -2224,7 +2224,7 @@ void menu_draw_ext_desktop(void)
 {
 
 	//Si no escritorio extendido, salir
-	if (!screen_ext_desktop_enabled) return;
+	if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop() ) return;
 
 	
 		int xinicio=screen_get_emulated_display_width_zoom_border_en();

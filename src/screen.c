@@ -112,6 +112,8 @@ void (*scr_putpixel_final) (int x,int y,unsigned int color);
 int (*scr_get_menu_width) (void);
 int (*scr_get_menu_height) (void);
 
+int (*scr_driver_can_ext_desktop) (void);
+
 
 void (*scr_z88_cpc_load_keymap) (void);
 
@@ -1941,7 +1943,7 @@ int running_realloc=0;
 void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
-	ancho +=screen_ext_desktop_enabled*screen_ext_desktop_width*zoom_x;
+	ancho +=screen_ext_desktop_enabled*scr_driver_can_ext_desktop()*screen_ext_desktop_width*zoom_x;
 
 	debug_printf (VERBOSE_DEBUG,"Allocating memory for menu layers %d X %d",ancho,alto);
 	//debug_exec_show_backtrace();
@@ -2366,14 +2368,26 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 	}
 }
 
+//Usado solo antes de iniciar emulador
+int scrgeneric_driver_can_ext_desktop(void)
+{
+	return 0;
+}
+
+
+void screen_init_ext_desktop(void)
+{
+	scr_driver_can_ext_desktop=scrgeneric_driver_can_ext_desktop;
+}
+
 
 //Gestion de extension de desktop a ventana
-int screen_ext_desktop_enabled=0;
+int screen_ext_desktop_enabled=1;
 int screen_ext_desktop_width=256; //se multiplicara por zoom
 
 int screen_get_ext_desktop_width_no_zoom(void)
 {
-	return screen_ext_desktop_enabled*screen_ext_desktop_width;
+	return screen_ext_desktop_enabled*scr_driver_can_ext_desktop()*screen_ext_desktop_width;
 }
 
 int screen_get_ext_desktop_width_zoom(void)
