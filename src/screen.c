@@ -2382,7 +2382,7 @@ void screen_init_ext_desktop(void)
 
 
 //Gestion de extension de desktop a ventana
-int screen_ext_desktop_enabled=1;
+int screen_ext_desktop_enabled=0;
 int screen_ext_desktop_width=256; //se multiplicara por zoom
 
 int screen_get_ext_desktop_width_no_zoom(void)
