@@ -7259,7 +7259,9 @@ struct sched_param sparam;
 
   //Capturar sigbus. 
   //desactivado normalmente en versiones snapshot
+#ifndef MINGW	
   signal(SIGBUS, sigbus_signal_handler);	
+#endif
 
 	//Capturar segint (CTRL+C)
 	signal(SIGINT, segint_signal_handler);
