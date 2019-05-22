@@ -22,8 +22,6 @@ Para próxima versión ZEsarUX:
 
 -sdl2: si se pone width de extended desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
--extended desktop:
--si ventana esta mas alla de zona de maquina emulada, no deja arrastrar ni redimensionar
 
 -Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
 

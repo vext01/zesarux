@@ -8935,7 +8935,10 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 
 
 	//Cambio ancho
-	screen_ext_desktop_width *=2;
+	//screen_ext_desktop_width *=2;
+	//if (screen_ext_desktop_width>=2048) screen_ext_desktop_width=128;
+
+	screen_ext_desktop_width +=128;
 	if (screen_ext_desktop_width>=2048) screen_ext_desktop_width=128;
         
 

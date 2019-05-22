@@ -7061,8 +7061,13 @@ void menu_calculate_mouse_xy(void)
 
 		int mouse_en_emulador=0;
 		//printf ("x: %04d y: %04d\n",mouse_x,mouse_y);
+
+		int ancho=screen_get_window_size_width_zoom_border_en();
+
+		ancho +=screen_get_ext_desktop_width_zoom();
+
 		if (mouse_x>=0 && mouse_y>=0
-			&& mouse_x<=screen_get_window_size_width_zoom_border_en() && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
+			&& mouse_x<=ancho && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
 				//Si mouse esta dentro de la ventana del emulador
 				mouse_en_emulador=1;
 		}
