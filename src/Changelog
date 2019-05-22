@@ -1,6 +1,7 @@
 Version 7.3. 15 April 2019 - xxx edition
 
 -Improved menu interface:
+--Program Window can be extended horizontally and have a right region to place menu zxvision windows
 --Draw engine: now it allows transparency
 --Menu windows can be placed and resized to the whole program window
 
