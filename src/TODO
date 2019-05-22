@@ -20,13 +20,9 @@ Para próxima versión ZEsarUX:
 
 -Probar en Linux driver vídeo con y sin pthread
 
+-sdl2: si se pone width de extended desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
-
--para extender ventanas:
-*en driver video, ventana se debe crear sumando constante de ampliacion (ejemplo 200) multiplicado por zoom:
-pixel_screen_width = screen_get_window_size_width_zoom_border_en()+200*zoom_x;
-en retornar tamanyo menu, retornar +(200)/menu_char_width/menu_gui_zoom; 
-en asignar layer, sumar tambien la constante
+-extended desktop:
 -si ventana esta mas alla de zona de maquina emulada, no deja arrastrar ni redimensionar
 
 -Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
