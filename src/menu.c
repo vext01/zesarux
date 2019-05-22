@@ -2217,7 +2217,7 @@ void menu_set_menu_abierto(int valor)
 //0=color solido
 //1=barras diagonales de colores
 //2=punteado blanco/negro
-int menu_ext_desktop_fill=0;
+int menu_ext_desktop_fill=1;
 int menu_ext_desktop_fill_solid_color=0;
 
 void menu_draw_ext_desktop(void)
@@ -28135,7 +28135,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');		
 
 		if (scr_driver_can_ext_desktop() ) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"E~~~xtended desktop settings");
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"E~~xtended desktop settings");
 			menu_add_item_menu_shortcut(array_menu_interface_settings,'x');		
 		}
 

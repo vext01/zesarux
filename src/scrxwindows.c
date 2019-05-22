@@ -150,7 +150,7 @@ void scrxwindows_messages_debug(char *s)
 }
 
 
-#define SIZE (256 * 192)
+//#define SIZE (256 * 192)
 
 //;                               Bits:  4    3    2    1    0     ;desplazamiento puerto
 //puerto_65278    db              255  ; V    C    X    Z    Sh    ;0
@@ -624,7 +624,8 @@ void scrxwindows_resize(int width,int height)
 
 	debug_printf (VERBOSE_INFO,"width: %d get_window_width: %d height: %d get_window_height: %d",width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
 
-		zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
+		//zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
+		zoom_x_calculado=width/(screen_get_window_size_width_no_zoom_border_en()+screen_get_ext_desktop_width_no_zoom() );
 		zoom_y_calculado=height/screen_get_window_size_height_no_zoom_border_en();
 
 
@@ -641,6 +642,8 @@ void scrxwindows_resize(int width,int height)
 		modificado_border.v=1;
 
                 width=screen_get_window_size_width_zoom_border_en();
+								width+=screen_get_ext_desktop_width_zoom();
+
                 height=screen_get_window_size_height_zoom_border_en();
 
 
@@ -1844,7 +1847,13 @@ void scrxwindows_detectedchar_print(z80_byte caracter)
 //Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
 int scrxwindows_get_menu_width(void)
 {
-        int max=screen_get_emulated_display_width_no_zoom_border_en()/menu_char_width/menu_gui_zoom;
+        int max=screen_get_emulated_display_width_no_zoom_border_en();
+
+        max +=screen_get_ext_desktop_width_no_zoom();
+
+        max=max/menu_char_width/menu_gui_zoom;
+
+
         if (max>OVERLAY_SCREEN_MAX_WIDTH) max=OVERLAY_SCREEN_MAX_WIDTH;
 
                 //printf ("max x: %d %d\n",max,screen_get_emulated_display_width_no_zoom_border_en());
@@ -1865,7 +1874,7 @@ int scrxwindows_get_menu_height(void)
 
 int scrxwindows_driver_can_ext_desktop (void)
 {
-        return 0;
+        return 1;
 }
 
 
@@ -1931,7 +1940,13 @@ int scrxwindows_init (void) {
 
 int ancho,alto;
 ancho=screen_get_window_size_width_zoom_border_en();
+
+ancho +=screen_get_ext_desktop_width_zoom();
+
 alto=screen_get_window_size_height_zoom_border_en();
+
+
+
 
 	scrxwindows_alloc_image(ancho, alto);
 
@@ -2145,31 +2160,4 @@ int xdisplay_end (void)
 
 
 
-/*void disabled_getmouse_coordinates(void)
-{
 
-    Bool result;
-    Window window_returned;
-    int root_x, root_y;
-    int win_x, win_y;
-    unsigned int mask_return;
-
-
-        result = XQueryPointer(dpy, ventana, &window_returned,
-                &window_returned, &root_x, &root_y, &win_x, &win_y,
-                &mask_return);
-    if (result != True) {
-        printf("No mouse found.\n");
-        //return -1;
-    }
-
-    mouse_x=win_x;
-    mouse_y=win_y;
-
-
-
-    kempston_mouse_x=mouse_x/zoom_x;
-    kempston_mouse_y=255-mouse_y/zoom_y;
-    //printf("Mouse is at (%d,%d)\n", kempston_mouse_x, kempston_mouse_y);
-
-}*/

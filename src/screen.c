@@ -1943,9 +1943,9 @@ int running_realloc=0;
 void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
-	ancho +=screen_ext_desktop_enabled*scr_driver_can_ext_desktop()*screen_ext_desktop_width*zoom_x;
+	//ancho +=screen_ext_desktop_enabled*scr_driver_can_ext_desktop()*screen_ext_desktop_width*zoom_x;
 
-	debug_printf (VERBOSE_DEBUG,"Allocating memory for menu layers %d X %d",ancho,alto);
+	debug_printf (VERBOSE_INFO,"Allocating memory for menu layers %d X %d",ancho,alto);
 	//debug_exec_show_backtrace();
 
 	if (!menu_overlay_activo) {
@@ -2046,6 +2046,9 @@ void scr_init_layers_menu(void)
 	int ancho,alto;
 
 	ancho=screen_get_window_size_width_zoom_border_en();
+
+	ancho +=screen_ext_desktop_enabled*scr_driver_can_ext_desktop()*screen_ext_desktop_width*zoom_x;
+
   alto=screen_get_window_size_height_zoom_border_en();
 
 	scr_reallocate_layers_menu(ancho,alto);
