@@ -65,7 +65,7 @@ SDL_Texture *scrsdl_texture;
 
 SDL_Renderer *renderer;
 
-#define SDL_ANCHO_VENTANA screen_get_window_size_width_zoom_border_en()
+//#define screen_get_window_size_width_zoom_border_en() screen_get_window_size_width_zoom_border_en()
 #define SDL_ALTO_VENTANA screen_get_window_size_height_zoom_border_en()
 
 
@@ -84,9 +84,11 @@ int scrsdl_crea_ventana(void)
    }
 
 
-   debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",SDL_ANCHO_VENTANA,SDL_ALTO_VENTANA );
+   debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",screen_get_window_size_width_zoom_border_en(),SDL_ALTO_VENTANA );
 
-   int ancho=SDL_ANCHO_VENTANA;
+   int ancho=screen_get_window_size_width_zoom_border_en();
+   ancho +=screen_get_ext_desktop_width_zoom();
+
    int alto=SDL_ALTO_VENTANA;
 
    if (SDL_CreateWindowAndRenderer(ancho,alto, flags, &window, &renderer)!=0) return 1;
@@ -107,9 +109,9 @@ int scrsdl_crea_ventana(void)
     SDL_SetWindowTitle(window,"ZEsarUX "EMULATOR_VERSION);
 
 
-    scrsdl_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SDL_ANCHO_VENTANA, SDL_ALTO_VENTANA);
-    //Uint32 *pixels = new Uint32[SDL_ANCHO_VENTANA * SDL_ALTO_VENTANA];
-    scrsdl_pixeles=malloc(SDL_ANCHO_VENTANA * SDL_ALTO_VENTANA*4);
+    scrsdl_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, ancho, SDL_ALTO_VENTANA);
+    //Uint32 *pixels = new Uint32[screen_get_window_size_width_zoom_border_en() * SDL_ALTO_VENTANA];
+    scrsdl_pixeles=malloc(ancho * SDL_ALTO_VENTANA*4);
 
 
     if (scrsdl_pixeles==NULL) return 1;
@@ -138,7 +140,9 @@ void scrsdl_destruye_ventana(void)
 
 void scrsdl_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {	
-        Uint8 *p = (Uint8 *)scrsdl_pixeles + (y * SDL_ANCHO_VENTANA + x) * 4;
+        int ancho=screen_get_window_size_width_zoom_border_en();
+        ancho +=screen_get_ext_desktop_width_zoom();
+        Uint8 *p = (Uint8 *)scrsdl_pixeles + (y * ancho + x) * 4;
 
 
         //escribir de golpe los 32 bits.
@@ -275,7 +279,11 @@ void scrsdl_refresca_border(void)
 
 void scrsdl_refresca_pantalla_solo_driver(void)
 {
-  SDL_UpdateTexture(scrsdl_texture, NULL, scrsdl_pixeles, SDL_ANCHO_VENTANA * 4);
+
+        int ancho=screen_get_window_size_width_zoom_border_en();
+        ancho +=screen_get_ext_desktop_width_zoom();
+
+  SDL_UpdateTexture(scrsdl_texture, NULL, scrsdl_pixeles, ancho * 4);
   SDL_RenderClear(renderer);
   SDL_RenderCopy(renderer, scrsdl_texture, NULL, NULL);
   SDL_RenderPresent(renderer);
@@ -1305,7 +1313,8 @@ if (ventana_fullscreen) return ; //No hacer resizes cuando este en pantalla comp
         //printf ("allocate layers menu\n");
         scr_reallocate_layers_menu(width,height);   
 
-	zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
+	//zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
+        zoom_x_calculado=width/(screen_get_window_size_width_no_zoom_border_en()+screen_get_ext_desktop_width_no_zoom() );
 	zoom_y_calculado=height/screen_get_window_size_height_no_zoom_border_en();
 
 
@@ -1511,7 +1520,15 @@ void scrsdl_detectedchar_print(z80_byte caracter)
 //Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
 int scrsdl_get_menu_width(void)
 {
-        int max=screen_get_emulated_display_width_no_zoom_border_en()/menu_char_width/menu_gui_zoom;
+        //int max=screen_get_emulated_display_width_no_zoom_border_en()/menu_char_width/menu_gui_zoom;
+
+        int max=screen_get_emulated_display_width_no_zoom_border_en();
+
+        max +=screen_get_ext_desktop_width_no_zoom();
+
+        max=max/menu_char_width/menu_gui_zoom;
+
+
         if (max>OVERLAY_SCREEN_MAX_WIDTH) max=OVERLAY_SCREEN_MAX_WIDTH;
 
                 //printf ("max x: %d %d\n",max,screen_get_emulated_display_width_no_zoom_border_en());
@@ -1531,7 +1548,7 @@ int scrsdl_get_menu_height(void)
 
 int scrsdl_driver_can_ext_desktop (void)
 {
-        return 0;
+        return 1;
 }
 
 
