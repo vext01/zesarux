@@ -658,6 +658,8 @@ extern estilos_gui definiciones_estilos_gui[];
 
 extern void set_charset(void);
 
+extern void menu_draw_ext_desktop(void);
+
 
 #define ESTILO_GUI_PAPEL_NORMAL (definiciones_estilos_gui[estilo_gui_activo].papel_normal)
 #define ESTILO_GUI_TINTA_NORMAL (definiciones_estilos_gui[estilo_gui_activo].tinta_normal)

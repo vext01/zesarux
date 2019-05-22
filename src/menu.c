@@ -2093,6 +2093,8 @@ void cls_menu_overlay(void)
 	scr_clear_layer_menu();
 
 
+	menu_draw_ext_desktop();
+
 }
 
 
@@ -2210,6 +2212,42 @@ void menu_set_menu_abierto(int valor)
         menu_abierto=valor;
 }
 
+void menu_draw_ext_desktop(void)
+{
+
+	//Si no escritorio extendido, salir
+	if (!screen_ext_desktop_enabled) return;
+
+	
+		int xinicio=screen_get_emulated_display_width_zoom_border_en();
+		int yinicio=0;
+
+		int ancho=screen_get_ext_desktop_width_zoom();
+		int alto=screen_get_emulated_display_height_zoom_border_en();
+
+			int x=xinicio;
+			int y=yinicio;
+
+			//if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x,y,3);
+
+			//else scr_putpixel_zoom(x,y,3);
+
+			//o scr_putpixel, que no tiene zoom
+		
+		int color=0;
+
+		for (y=yinicio;y<yinicio+alto;y++) {
+			color++; //Para dar un aspecto de rayado
+			for (x=xinicio;x<xinicio+ancho;x++) {
+				scr_putpixel(x,y,color & 15);
+
+				color++;
+			}
+		}
+
+	
+}
+
 //refresco de pantalla, avisando cambio de border, 
 void menu_refresca_pantalla(void)
 {
@@ -2222,6 +2260,9 @@ void menu_refresca_pantalla(void)
 
 	//y redibujar todo footer
 	redraw_footer();
+
+
+	menu_draw_ext_desktop();
 
 }
 
