@@ -1941,6 +1941,8 @@ int running_realloc=0;
 void scr_reallocate_layers_menu(int ancho,int alto)
 {
 
+	ancho +=screen_ext_desktop_enabled*screen_ext_desktop_width*zoom_x;
+
 	debug_printf (VERBOSE_DEBUG,"Allocating memory for menu layers %d X %d",ancho,alto);
 	//debug_exec_show_backtrace();
 
@@ -2364,6 +2366,10 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 	}
 }
 
+
+//Gestion de extension de desktop a ventana
+int screen_ext_desktop_enabled=0;
+int screen_ext_desktop_width=256; //se multiplicara por zoom
 
 void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr)
 {

@@ -498,10 +498,10 @@ int pendiente_z88_draw_lower=0;
 
         int zoom_x_calculado,zoom_y_calculado;
 
-        debug_printf (VERBOSE_INFO,"width: %d get_window_width: %d height: %d get_window_height: %d",width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
+        debug_printf (VERBOSE_INFO,"zoom_x %d zoom_y %d width: %d get_window_width: %d height: %d get_window_height: %d",zoom_x,zoom_y,width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
 
 
-        zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
+        zoom_x_calculado=width/(screen_get_window_size_width_no_zoom_border_en()+screen_ext_desktop_enabled*screen_ext_desktop_width);
         zoom_y_calculado=height/screen_get_window_size_height_no_zoom_border_en();
 
 
@@ -520,6 +520,8 @@ int pendiente_z88_draw_lower=0;
         }
 
     pixel_screen_width = screen_get_window_size_width_zoom_border_en();
+    pixel_screen_width += screen_ext_desktop_enabled*screen_ext_desktop_width*zoom_x;
+
     pixel_screen_height = screen_get_window_size_height_zoom_border_en();
 
     NSInteger dataLength = pixel_screen_width * pixel_screen_height * 4;
@@ -2710,7 +2712,11 @@ void scrcocoa_detectedchar_print(z80_byte caracter)
 //Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
 int scrcocoa_get_menu_width(void)
 {
-        int max=screen_get_emulated_display_width_no_zoom_border_en()/menu_char_width/menu_gui_zoom;
+        int max=screen_get_emulated_display_width_no_zoom_border_en();
+
+        max +=screen_ext_desktop_enabled*screen_ext_desktop_width;
+
+        max=max/menu_char_width/menu_gui_zoom;
         if (max>OVERLAY_SCREEN_MAX_WIDTH) max=OVERLAY_SCREEN_MAX_WIDTH;
 
                 //printf ("max x: %d %d\n",max,screen_get_emulated_display_width_no_zoom_border_en());
@@ -2784,7 +2790,7 @@ int scrcocoa_init (void) {
 
 
 
-    pixel_screen_width = screen_get_window_size_width_zoom_border_en();
+    pixel_screen_width = screen_get_window_size_width_zoom_border_en()+screen_ext_desktop_enabled*screen_ext_desktop_width*zoom_x;
     pixel_screen_height = screen_get_window_size_height_zoom_border_en();
 
    
