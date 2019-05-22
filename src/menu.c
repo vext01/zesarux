@@ -2234,20 +2234,29 @@ void menu_draw_ext_desktop(void)
 	if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop() ) return;
 
 	
+		//Los putpixel que hacemos aqui son sin zoom. Se podrian hacer con zoom, pero habria que
+		//usar scr_putpixel_zoom_rainbow y scr_putpixel_zoom dependiendo del caso, y sumar margenes en el caso de rainbow,
+		//pero no vale la pena, con una sola funcion scr_putpixel vale para todos los casos
+		//Con zoom se habria hecho asi:
+		/*
+			int margenx_izq;
+			int margeny_arr;
+			scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+			if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x+margenx_izq,y+margenx_der,color);
+			else scr_putpixel_zoom(x,y,color);
+
+			Y considerando el espacio de coordenadas x e y con zoom
+		*/
+
 		int xinicio=screen_get_emulated_display_width_zoom_border_en();
 		int yinicio=0;
 
 		int ancho=screen_get_ext_desktop_width_zoom();
 		int alto=screen_get_emulated_display_height_zoom_border_en();
 
-			int x=xinicio;
-			int y=yinicio;
+		int x,y;
+		
 
-			//if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x,y,3);
-
-			//else scr_putpixel_zoom(x,y,3);
-
-			//o scr_putpixel, que no tiene zoom
 
 		//Color solido
 		if (menu_ext_desktop_fill==0) {
