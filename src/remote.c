@@ -712,6 +712,16 @@ struct s_items_ayuda items_ayuda[]={
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
+	{"cpu-transaction-log",NULL,"parameter value","Sets cpu transaction log parameters. Parameters and values are the following:\n"
+	"logfile   name: File to store the log\n"
+	"enabled   yes|no: Enable or disable the cpu transaction log. Requires logfile to enable it\n"
+	"datetime  yes|no: Enable datetime logging\n"
+	"tstates   yes|no: Enable tstates logging\n"
+	"address   yes|no: Enable address logging. Enabled by default\n"
+	"opcode    yes|no: Enable opcode logging. Enabled by default\n"
+	"registers yes|no: Enable registers logging\n"
+	},
+
   {"disable-breakpoint","|db","index","Disable specific breakpoint"},
   {"disable-breakpoints",NULL,NULL,"Disable all breakpoints"},
   {"disassemble","|d","[address] [lines]","Disassemble at address. If no address specified, "
@@ -1171,6 +1181,55 @@ void remote_set_breakpointaction(int misocket,char *parametros)
   debug_set_breakpoint_action(indice-1,&parametros[i]);
 }
 
+int remote_eval_yes_no(char *text)
+{
+	if (!strcasecmp(text,"yes")) return 1;
+	else return 0;
+}
+
+void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
+{
+	if (!strcasecmp(parameter,"logfile")) {
+		strcpy(transaction_log_filename,value);
+	}
+
+	else if (!strcasecmp(parameter,"enabled")) {
+		if (remote_eval_yes_no(value)) {
+			set_cpu_core_transaction_log();
+		}
+
+		else {
+			reset_cpu_core_transaction_log();
+		}
+
+	}
+
+	else if (!strcasecmp(parameter,"datetime")) {
+		cpu_transaction_log_store_datetime.v=remote_eval_yes_no(value);
+	}
+
+	else if (!strcasecmp(parameter,"tstates")) {
+		cpu_transaction_log_store_tstates.v=remote_eval_yes_no(value);
+	}	
+
+	else if (!strcasecmp(parameter,"address")) {
+		cpu_transaction_log_store_address.v=remote_eval_yes_no(value);
+	}		
+
+	else if (!strcasecmp(parameter,"opcode")) {
+		cpu_transaction_log_store_opcode.v=remote_eval_yes_no(value);
+	}			
+
+	else if (!strcasecmp(parameter,"registers")) {
+		cpu_transaction_log_store_registers.v=remote_eval_yes_no(value);
+	}	
+
+	else {
+		escribir_socket(misocket,"Error. Unknown parameter");
+	}
+
+
+}
 
 void remote_disassemble(int misocket,unsigned int direccion,int lineas,int mostrar_direccion)
 {
@@ -3407,6 +3466,18 @@ char buffer_retorno[2048];
 
   else if (!strcmp(comando_sin_parametros,"cpu-step-over") || !strcmp(comando_sin_parametros,"cso")) {
     remote_cpu_step_over(misocket);
+  }
+
+	else if (!strcmp(comando_sin_parametros,"cpu-transaction-log") ) {
+    remote_parse_commands_argvc(parametros);
+
+    if (remote_command_argc<2) {
+      escribir_socket(misocket,"ERROR. Needs two parameters");
+      return;
+    }
+
+
+    remote_cpu_transaction_log(misocket,remote_command_argv[0],remote_command_argv[1]);
   }
 
   else if (!strcmp(comando_sin_parametros,"disable-breakpoint") || !strcmp(comando_sin_parametros,"db")) {

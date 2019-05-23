@@ -2393,6 +2393,8 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 	//Si la cpu ha acabado un ciclo y esta esperando final de frame, no hacer nada
 	if (esperando_tiempo_final_t_estados.v==0) {
 
+
+
 		int index=0;
 
                 if (cpu_transaction_log_store_datetime.v) {
@@ -2487,7 +2489,10 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 		//salto de linea
 		transaction_log_line_to_store[index++]=10;
 
-		fwrite(transaction_log_line_to_store,1,index,ptr_transaction_log);
+		//Si esta NULL es que no se ha abierto correctamente, y aqui no deberiamos llegar nunca
+		if (ptr_transaction_log!=NULL) {
+			fwrite(transaction_log_line_to_store,1,index,ptr_transaction_log);
+		}
 	}
 
 
@@ -2503,31 +2508,41 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 void set_cpu_core_transaction_log(void)
 {
         debug_printf(VERBOSE_INFO,"Enabling Transaction Log");
-
-        //cpu_core_loop_no_transaction_log=cpu_core_loop;
-	//cpu_core_loop=cpu_core_loop_transaction_log;
+	if (cpu_transaction_log_enabled.v) {
+		debug_printf(VERBOSE_INFO,"Already enabled");
+		return;
+	}
 
 	transaction_log_nested_id_core=debug_nested_core_add(cpu_core_loop_transaction_log,"Transaction Log Core");
 
 
-	cpu_transaction_log_enabled.v=1;
 
-                              ptr_transaction_log=fopen(transaction_log_filename,"ab");
-                                  if (!ptr_transaction_log)
-                                {
-                                      debug_printf (VERBOSE_ERR,"Unable to open Transaction log");
+  ptr_transaction_log=fopen(transaction_log_filename,"ab");
+  if (!ptr_transaction_log) {
+ 		debug_printf (VERBOSE_ERR,"Unable to open Transaction log");
+		debug_nested_core_del(transaction_log_nested_id_core);
+		return;
+	}
 
-                                  }
+
+	cpu_transaction_log_enabled.v=1;																
 
 }
 
 void reset_cpu_core_transaction_log(void)
 {
-        debug_printf(VERBOSE_INFO,"Setting normal cpu core loop");
-	//cpu_core_loop=cpu_core_loop_no_transaction_log;
+  debug_printf(VERBOSE_INFO,"Disabling Transaction Log");
+	if (cpu_transaction_log_enabled.v==0) {
+		debug_printf(VERBOSE_INFO,"Already disabled");
+		return;
+	}
+
 	debug_nested_core_del(transaction_log_nested_id_core);
 	cpu_transaction_log_enabled.v=0;
-	if (ptr_transaction_log!=NULL) fclose(ptr_transaction_log);
+	if (ptr_transaction_log!=NULL) {
+		fclose(ptr_transaction_log);
+		ptr_transaction_log=NULL;
+	}
 }
 
 
