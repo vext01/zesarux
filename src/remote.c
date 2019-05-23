@@ -1197,6 +1197,14 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 
 	else if (!strcasecmp(parameter,"enabled")) {
 
+		//Si no esta definido logfile, no se permite activar (ni desactivar)
+		//podria dejar permitido desactivar pero es absurdo, si no hay logfile no estara activado
+		if (transaction_log_filename[0]==0) {
+			escribir_socket(misocket,"Error. logfile not set");
+			return;
+		}
+
+
 		//Pausar la emulacion para evitar que ese core transaction log este en ejecucion. Si eso pasa,
 		//puede provocar segfault al desactivarlo, pues intenta llamar a debug_nested_core_call_previous y este mismo core ya ha desaparecido
 			remote_cpu_enter_step(misocket);
