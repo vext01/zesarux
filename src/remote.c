@@ -105,6 +105,8 @@ int enviar_cr=0;
 
 
 int remote_find_label_source_code(char *label_to_find);
+void remote_cpu_enter_step(int misocket);
+void remote_cpu_exit_step(int misocket);
 
 
 //Usados en el prompt de ensamblado
@@ -1194,6 +1196,14 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 	}
 
 	else if (!strcasecmp(parameter,"enabled")) {
+
+		//Pausar la emulacion para evitar que ese core transaction log este en ejecucion. Si eso pasa,
+		//puede provocar segfault al desactivarlo, pues intenta llamar a debug_nested_core_call_previous y este mismo core ya ha desaparecido
+			remote_cpu_enter_step(misocket);
+			if (menu_event_remote_protocol_enterstep.v==0) return;
+
+			
+	
 		if (remote_eval_yes_no(value)) {
 			set_cpu_core_transaction_log();
 		}
@@ -1201,6 +1211,8 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 		else {
 			reset_cpu_core_transaction_log();
 		}
+
+		remote_cpu_exit_step(misocket);
 
 	}
 

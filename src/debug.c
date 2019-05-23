@@ -2386,14 +2386,14 @@ char memory_zone_by_file_name[PATH_MAX];
 z80_byte *memory_zone_by_file_pointer;
 int memory_zone_by_file_size=0;
 
+
 ///void cpu_core_loop_transaction_log(void)
 z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
 
+
 	//Si la cpu ha acabado un ciclo y esta esperando final de frame, no hacer nada
 	if (esperando_tiempo_final_t_estados.v==0) {
-
-
 
 		int index=0;
 
@@ -2493,14 +2493,15 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 		if (ptr_transaction_log!=NULL) {
 			fwrite(transaction_log_line_to_store,1,index,ptr_transaction_log);
 		}
+
+
 	}
 
-
-	//cpu_core_loop_no_transaction_log();
 	//Llamar a core anterior
 	debug_nested_core_call_previous(transaction_log_nested_id_core);
 
 	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+
 	return 0;
 }
 
