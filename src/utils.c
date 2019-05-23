@@ -3145,7 +3145,8 @@ int util_write_configfile(void)
                                                 ADD_STRING_CONFIG,"--watermark-position %d",screen_watermark_position);
 
 
-  if (screen_ext_desktop_enabled)             ADD_STRING_CONFIG,"--enable-zxdesktop");              
+  if (screen_ext_desktop_enabled)             ADD_STRING_CONFIG,"--enable-zxdesktop");   
+                                              ADD_STRING_CONFIG,"--zxdesktop-width %d",screen_ext_desktop_width);        
 
 
   if (autoframeskip.v==0)                     ADD_STRING_CONFIG,"--disable-autoframeskip");

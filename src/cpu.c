@@ -1554,6 +1554,7 @@ printf (
 
 
 		"--enable-zxdesktop         Enable ZX Desktop space\n"
+		"--zxdesktop-width n        ZX Desktop width\n"
 
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
 		"--frameskip n              Set frameskip (0=none, 1=25 FPS, 2=16 FPS, etc)\n"
@@ -4692,6 +4693,17 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--enable-zxdesktop")) {
 				screen_ext_desktop_enabled=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-width")) {
+				siguiente_parametro_argumento();
+				int valor=atoi(argv[puntero_parametro]);
+
+				if (valor<128 || valor>9999) {
+					printf ("Invalid value for ZX Desktop width\n");
+					exit(1);
+				}
+				screen_ext_desktop_width=valor;
+			}		
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {
 				siguiente_parametro_argumento();

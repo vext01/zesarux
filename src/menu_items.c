@@ -9034,6 +9034,9 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 		if (screen_ext_desktop_enabled) {
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,NULL,"[%4d] Width",screen_ext_desktop_width);
+			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the width of the ZX Desktop space");
+			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Final width is this value in pixels X current horizontal zoom");
+
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,NULL,"Custom Width");
 
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%2d] Fill type",menu_ext_desktop_fill);
