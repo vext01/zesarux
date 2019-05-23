@@ -4663,8 +4663,36 @@ void menu_save_text_to_file(char *puntero_memoria,char *titulo_ventana)
 }
 
 
+int menu_origin_x(void)
+{
+
+
+	if (screen_ext_desktop_place_menu && screen_ext_desktop_enabled*scr_driver_can_ext_desktop()) {
+		//Esta zxdesktop. Intentamos mantener ventanas localizadas ahi por defecto, si hay esa opcion activada
+		int ancho_total=scr_get_menu_width();
+
+		//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
+		int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA;
+		return pos_x;
+	}
+
+	return 0;
+}
+
+
 int menu_center_x(void)
 {
+
+
+	if (screen_ext_desktop_place_menu && screen_ext_desktop_enabled*scr_driver_can_ext_desktop()) {
+		//Esta zxdesktop. Intentamos mantener ventanas localizadas ahi por defecto, si hay esa opcion activada
+		int ancho_total=scr_get_menu_width();
+
+		//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
+		int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA/2;
+		return pos_x;
+	}
+
 	return scr_get_menu_width()/2;
 }
 

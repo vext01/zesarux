@@ -3772,7 +3772,7 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 
 
-#define SOUND_WAVE_X 1
+#define SOUND_WAVE_X (menu_origin_x()+1)
 #define SOUND_WAVE_Y 3
 #define SOUND_WAVE_ANCHO 30
 #define SOUND_WAVE_ALTO 15
@@ -9020,6 +9020,11 @@ int menu_ext_desktop_fill=1;
 int menu_ext_desktop_fill_solid_color=1;
 */
 
+void menu_ext_desk_settings_placemenu(MENU_ITEM_PARAMETERS)
+{
+	screen_ext_desktop_place_menu ^=1;	
+}
+
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_ext_desktop_settings;
@@ -9043,6 +9048,9 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			if (menu_ext_desktop_fill==0) {
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%2d] Fill Color",menu_ext_desktop_fill_solid_color);
 			}
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
+
 		}
 		
 

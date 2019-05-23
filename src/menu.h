@@ -817,6 +817,7 @@ extern void redraw_footer(void);
 extern void cls_footer(void);
 
 extern int menu_center_x(void);
+extern int menu_origin_x(void);
 extern int menu_center_y(void);
 
 

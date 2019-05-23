@@ -76,6 +76,7 @@ extern int screen_get_ext_desktop_width_no_zoom(void);
 extern int screen_get_ext_desktop_width_zoom(void);
 
 extern void screen_init_ext_desktop(void);
+extern int screen_ext_desktop_place_menu;
 
 extern void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr);
 

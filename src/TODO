@@ -6,6 +6,8 @@ Para próxima versión ZEsarUX:
 
 -En FAQ explicar qué es ZX Desktop
 
+-Fbdev debe permitir extender escritorio?
+
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
 
 -Con —configfile luego graba la config al archivo que toca?
