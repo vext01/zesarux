@@ -1552,6 +1552,9 @@ printf (
 		"--enable-watermark         Adds a watermark to the display. Needs realvideo\n"
 		"--watermark-position n     Where to put watermark. 0: Top left, 1: Top right. 2: Bottom left. 3: Bottom right\n"
 
+
+		"--enable-zxdesktop         Enable ZX Desktop space\n"
+
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
 		"--frameskip n              Set frameskip (0=none, 1=25 FPS, 2=16 FPS, etc)\n"
 		"--disable-autoframeskip    Disable autoframeskip\n"
@@ -4684,6 +4687,10 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--enable-watermark")) {
 				screen_watermark_enabled.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--enable-zxdesktop")) {
+				screen_ext_desktop_enabled=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {

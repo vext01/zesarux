@@ -4,7 +4,6 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
--Comando ZRCP de cpu transaction log. Un solo comando, el primer parámetro dice el setting a cambiar y el segundo su valor
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
 
