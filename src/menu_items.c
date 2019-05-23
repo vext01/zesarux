@@ -2627,7 +2627,9 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		zxvision_window *ventana;
 		ventana=&zxvision_ay_registers_overlay;
 
-		zxvision_new_window(ventana,1,yventana,30,alto_ventana,
+		int xventana=menu_origin_x()+1;
+
+		zxvision_new_window(ventana,xventana,yventana,30,alto_ventana,
 							30-1,alto_ventana-2,"AY Registers");
 
 		zxvision_draw_window(ventana);		
@@ -4103,11 +4105,12 @@ zxvision_window *menu_debug_draw_visualmem_window;
 //#define visualmem_ancho_variable (menu_debug_draw_visualmem_window->visible_width-1)
 //#define visualmem_alto_variable (menu_debug_draw_visualmem_window->visible_height-1)
 
-#define VISUALMEM_MIN_X 0
+#define VISUALMEM_MIN_X (menu_origin_x())
 #define VISUALMEM_MIN_Y 0
 
 #define VISUALMEM_DEFAULT_X (VISUALMEM_MIN_X+1)
-int visualmem_x_variable=VISUALMEM_DEFAULT_X;
+
+//int visualmem_x_variable=VISUALMEM_DEFAULT_X;
 
 #define VISUALMEM_DEFAULT_Y (VISUALMEM_MIN_Y+1)
 int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
@@ -4141,8 +4144,6 @@ void menu_debug_draw_visualmem(void)
 
 		if (ancho<1 || alto<1) return;
 
-        //int xorigen=(visualmem_x_variable+1);
-        //int yorigen=(visualmem_y_variable+5);
         int xorigen=1;
         int yorigen=3;
 
@@ -4434,7 +4435,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,visualmem_x_variable,visualmem_y_variable,VISUALMEM_DEFAULT_WINDOW_ANCHO,VISUALMEM_DEFAULT_WINDOW_ALTO,
+	zxvision_new_window(&ventana,VISUALMEM_DEFAULT_X,visualmem_y_variable,VISUALMEM_DEFAULT_WINDOW_ANCHO,VISUALMEM_DEFAULT_WINDOW_ALTO,
 							VISUALMEM_DEFAULT_WINDOW_ANCHO-1,VISUALMEM_DEFAULT_WINDOW_ALTO-2,"Visual memory");
 	zxvision_draw_window(&ventana);				
 
@@ -4991,7 +4992,9 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,0,1,32,20,
+	int xventana=menu_origin_x();
+
+	zxvision_new_window(&ventana,xventana,1,32,20,
 							32-1,20-2,"AY Player");
 	zxvision_draw_window(&ventana);			
 

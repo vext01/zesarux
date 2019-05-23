@@ -13075,7 +13075,7 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 
 
 
-#define SPRITES_X 0
+#define SPRITES_X ( menu_origin_x() )
 #define SPRITES_Y 0
 #define SPRITES_ANCHO 32
 #define SPRITES_ALTO 14
