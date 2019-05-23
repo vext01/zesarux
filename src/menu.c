@@ -701,7 +701,6 @@ int z88_flash_intel_size_opcion_seleccionada=0;
 int find_opcion_seleccionada=0;
 int find_bytes_opcion_seleccionada=0;
 int find_lives_opcion_seleccionada=0;
-int cpu_transaction_log_opcion_seleccionada=0;
 int storage_settings_opcion_seleccionada=0;
 int external_tools_config_opcion_seleccionada=0;
 
@@ -25753,119 +25752,6 @@ void menu_debug_input_file_keyboard(MENU_ITEM_PARAMETERS)
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
-
-void menu_cpu_transaction_log_enable(MENU_ITEM_PARAMETERS)
-{
-	if (cpu_transaction_log_enabled.v) {
-		reset_cpu_core_transaction_log();
-	}
-	else {
-
-		if (menu_confirm_yesno_texto("May use lot of disk","Sure?")==1)
-			set_cpu_core_transaction_log();
-	}
-}
-
-void menu_cpu_transaction_log_file(MENU_ITEM_PARAMETERS)
-{
-
-	if (cpu_transaction_log_enabled.v) reset_cpu_core_transaction_log();
-
-        char *filtros[2];
-
-        filtros[0]="log";
-        filtros[1]=0;
-
-
-        if (menu_filesel("Select Log File",filtros,transaction_log_filename)==1) {
-                //Ver si archivo existe y preguntar
-		if (si_existe_archivo(transaction_log_filename)) {
-                        if (menu_confirm_yesno_texto("File exists","Append?")==0) {
-				transaction_log_filename[0]=0;
-				return;
-			}
-                }
-
-        }
-
-	else transaction_log_filename[0]=0;
-
-}
-
-
-void menu_cpu_transaction_log_enable_address(MENU_ITEM_PARAMETERS)
-{
-	cpu_transaction_log_store_address.v ^=1;
-}
-
-void menu_cpu_transaction_log_enable_datetime(MENU_ITEM_PARAMETERS)
-{
-        cpu_transaction_log_store_datetime.v ^=1;
-}
-
-
-void menu_cpu_transaction_log_enable_tstates(MENU_ITEM_PARAMETERS)
-{
-        cpu_transaction_log_store_tstates.v ^=1;
-}
-
-void menu_cpu_transaction_log_enable_opcode(MENU_ITEM_PARAMETERS)
-{
-        cpu_transaction_log_store_opcode.v ^=1;
-}
-
-void menu_cpu_transaction_log_enable_registers(MENU_ITEM_PARAMETERS)
-{
-        cpu_transaction_log_store_registers.v ^=1;
-}
-
-
-
-void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_cpu_transaction_log;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
-
-                char string_transactionlog_shown[18];
-                menu_tape_settings_trunc_name(transaction_log_filename,string_transactionlog_shown,18);
-
-                menu_add_item_menu_inicial_format(&array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_file,NULL,"Log file [%s]",string_transactionlog_shown );
-
-
-                if (transaction_log_filename[0]!=0) {
-                        menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable,NULL,"[%c] Transaction log enabled",(cpu_transaction_log_enabled.v ? 'X' : ' ' ) );
-                }
-
-
-		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_datetime,NULL,"[%c] Store Date & Time",(cpu_transaction_log_store_datetime.v ? 'X' : ' '));
-		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_tstates,NULL,"[%c] Store T-States",(cpu_transaction_log_store_tstates.v ? 'X' : ' '));
-		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_address,NULL,"[%c] Store Address",(cpu_transaction_log_store_address.v ? 'X' : ' '));
-		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_opcode,NULL,"[%c] Store Opcode",(cpu_transaction_log_store_opcode.v ? 'X' : ' '));
-		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_registers,NULL,"[%c] Store Registers",(cpu_transaction_log_store_registers.v ? 'X' : ' '));
-
-
-               menu_add_item_menu(array_menu_cpu_transaction_log,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-                menu_add_ESC_item(array_menu_cpu_transaction_log);
-
-                retorno_menu=menu_dibuja_menu(&cpu_transaction_log_opcion_seleccionada,&item_seleccionado,array_menu_cpu_transaction_log,"CPU Transaction Log" );
-
-                
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-}
 
 
 
