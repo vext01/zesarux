@@ -119,8 +119,6 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 
 -en ventanas con can_use_all_width=1, no se habilita la barra de scroll vertical cuando hace falta
 
--menus zxvision : que cuando se haya arrastrado o redimensionado ventana con raton, al soltar, no pueda interpretar eso como pulsacion de opcion 
-  de menu si el raton esta apuntando a alguna opcion
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
 
@@ -134,6 +132,22 @@ Background windows
 -ultima ventana de arriba deberia salir como activa
 -poder conmutar ventana activa
 -Ventanas que se pueden enviar a background que tengan un botón  especial ? Quizá el &? 
+-menu ventanas finalizan con:
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		ventana->overlay_function=menu_debug_cpu_resumen_stats_overlay;
+		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		menu_generic_message("Background task","OK. Window put in background");
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}
+
+-ventanas en funcion de overlay hacen al principio
+if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+
 
 
 
