@@ -2273,8 +2273,8 @@ void menu_draw_ext_desktop(void)
 		//Rayas diagonales de colores
 		if (menu_ext_desktop_fill==1) {
 
-			int grueso_lineas=8;
-			int total_colores=5;
+			int grueso_lineas=8*zoom_x*menu_gui_zoom; //Para que coincida el color con rainbow de titulo de ventanas
+ 			int total_colores=5;
 
 			int contador_color;
 
