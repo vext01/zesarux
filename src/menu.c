@@ -13578,7 +13578,8 @@ void menu_debug_draw_sprites(void)
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech	
 
 
-	int sx=SPRITES_X+1;
+	//int sx=SPRITES_X+1;
+	int sx=1;
 	//int sy=SPRITES_Y+3;
 	
 	//Si es mas ancho, que ventana visible, mover coordenada x 1 posicion atrás
