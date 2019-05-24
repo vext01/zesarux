@@ -409,6 +409,8 @@ void scrxwindows_set_fullscreen(void)
 
 	//Resolucion de ventana
         widthspectrum=screen_get_window_size_width_no_zoom_border_en()*zoom_futuro_x;
+				widthspectrum +=(screen_get_ext_desktop_width_no_zoom()*zoom_futuro_x);
+
         heightspectrum=screen_get_window_size_height_no_zoom_border_en()*zoom_futuro_y;
 
 
@@ -1907,6 +1909,9 @@ int scrxwindows_init (void) {
 
 	// Create the window
 
+	//Esto asignarlo antes para que el driver vea correctamente el tamaño
+	scr_driver_can_ext_desktop=scrxwindows_driver_can_ext_desktop;
+
 int ancho,alto;
 ancho=screen_get_window_size_width_zoom_border_en();
 
@@ -1917,7 +1922,7 @@ alto=screen_get_window_size_height_zoom_border_en();
 	ventana = XCreateSimpleWindow(dpy, DefaultRootWindow(dpy), 0, 0, ancho, alto,0, blackColor, blackColor);
 
 	//printf ("crear ventana %d %d\n",screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en() );
-
+	debug_printf (VERBOSE_INFO,"Create XWindows Window %d X %d",ancho,alto);
 
 
 
@@ -1988,7 +1993,7 @@ scr_reallocate_layers_menu(ancho,alto);
   scr_putpixel_final_rgb=scrxwindows_putpixel_final_rgb;
         scr_get_menu_width=scrxwindows_get_menu_width;
         scr_get_menu_height=scrxwindows_get_menu_height;	
-	scr_driver_can_ext_desktop=scrxwindows_driver_can_ext_desktop;
+	
 
 	scr_putchar_zx8081=scrxwindows_putchar_zx8081;
         scr_debug_registers=scrxwindows_debug_registers;
@@ -2040,7 +2045,6 @@ static int try_shm (void)
   shm_eventtype = XShmGetEventBase( dpy ) + ShmCompletion;
 
 int ancho=screen_get_window_size_width_zoom_border_en();
-
 ancho +=screen_get_ext_desktop_width_zoom();
 
 image = XShmCreateImage( dpy, xdisplay_visual,

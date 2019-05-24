@@ -36,8 +36,6 @@ Para próxima versión ZEsarUX:
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
 
--en zxuno, despues de cerrar menu, siempre muestra indicador "flash"
-
 -xwindows con zxdesktop activado peta al arrancar
 
 -al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
