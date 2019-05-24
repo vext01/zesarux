@@ -129,6 +129,8 @@ Background windows
 -activarlas con: int menu_allow_background_windows=1;
 -Si ventana en background, no dejar volverla a llamar desde menu normal
 -Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
+Ademas los pixeles siempre van a la ultima ventana arriba
+
 -ultima ventana de arriba deberia salir como activa
 -poder conmutar ventana activa
 -Ventanas que se pueden enviar a background que tengan un botón  especial ? Quizá el &? 
