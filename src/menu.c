@@ -34878,7 +34878,8 @@ char *first_aid_string_zsfextension="ZEsarUX uses two native snapshot file forma
 
 int first_aid_no_spaceexpand=0;
 char *first_aid_string_spaceexpand="Do you know you can navigate inside files, like tap, tzx, trd?\n"
-	"Use the fileselector and press space over that kind of file";
+	"Use the fileselector and press space over that kind of file.\n"
+	"Remember to change fileselector filter to show all contents";
 
 void menu_first_aid_init(void)
 {
@@ -34980,7 +34981,7 @@ void menu_first_aid_restore_all(void)
         }
 }
 
-//Deshabilitar first aid de lectura de config
+//Deshabilitar first aid de lectura de config. Si no existe, volver sin decir nada
 void menu_first_aid_disable(char *texto)
 {
 	int indice;

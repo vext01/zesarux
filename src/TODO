@@ -14,7 +14,7 @@ Para próxima versión ZEsarUX:
 
 -Mejorar zoom 0.75. Color gris si medio negro?
 
--Opción command line de desactivar alguna first aid. Si no existe dicha aid, ignorarlo, por si algún día borro por código algunas que ya no existan y se quedan en archivo de config
+ok-Opción command line de desactivar alguna first aid. Si no existe dicha aid, ignorarlo, por si algún día borro por código algunas que ya no existan y se quedan en archivo de config
 
 -que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
 
