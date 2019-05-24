@@ -13749,10 +13749,12 @@ void old_delete_generic_footertext_print_operating_aux(char *s)
 
 void generic_footertext_print_operating(char *s)
 {
+	//printf ("footer %s\n",s);
 
         //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
         if (!generic_footertext_operating_counter) {  
         	//Borrar si habia alguno otro diferente
+					//printf ("delete footer\n");
         	delete_generic_footertext();
         	  
 		generic_footertext_operating_counter=2;

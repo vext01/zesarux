@@ -24,7 +24,6 @@ Para próxima versión ZEsarUX:
 
 -sdl2: si se pone width de extended desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
-
 -Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
 
 -Turbo spool setting en tbblue y otras máquinas 128kb...
@@ -35,7 +34,6 @@ Para próxima versión ZEsarUX:
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
 
--ZX Desktop en FAQ
 
 -al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
 
@@ -51,8 +49,6 @@ Para próxima versión ZEsarUX:
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
 -logo OSD ZEsarUX no aparece en zx80/81 y sin realvideo
-
--al cargar music.tap, pone tspeed y luego tape , en footer , y queda una T restante. Hacer que funcion de footer borre hacia izquierda en blanco un par de caracteres
 
 -Extractor dibujos paws?
 

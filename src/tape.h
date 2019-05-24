@@ -39,7 +39,7 @@ extern int initial_tap_sequence;
 extern z80_bit noautoload;
 extern z80_bit tape_any_flag_loading;
 
-extern int tape_loading_counter;
+//extern int tape_loading_counter;
 
 extern int (*tape_block_open)(void);
 extern int (*tape_block_read)(void *dir,int longitud);
@@ -78,7 +78,7 @@ extern int tape_pause;
 
 extern int tape_loading_counter;
 extern void draw_tape_text(void);
-extern void delete_tape_text(void);
+//extern void delete_tape_text(void);
 
 extern void gestionar_autoload_spectrum(void);
 extern void gestionar_autoload_cpc(void);

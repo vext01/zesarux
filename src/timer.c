@@ -639,12 +639,12 @@ void timer_check_interrupt(void)
 			
 
 				//temporizador de carga de cinta para escribir texto loading en pantalla
-				if (tape_loading_counter) {
+				/*if (tape_loading_counter) {
 					tape_loading_counter--;
 					if (tape_loading_counter==0) {
 						delete_tape_text();
 					}
-				}
+				}*/
 
 	                           
 

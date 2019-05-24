@@ -128,28 +128,30 @@ int tape_loading_counter=0;
 
 void draw_tape_text_top_speed(void)
 {
-        menu_footer_activity("TSPEED");
+        //menu_footer_activity("TSPEED");
+        generic_footertext_print_operating("TSPEED");
 }
 
 void draw_tape_text(void)
 {
 
-		tape_loading_counter=2;
+		//tape_loading_counter=2;
 
 		//color inverso
 		if (top_speed_timer.v) {
 			draw_tape_text_top_speed();
 		}
 		else {
-                        menu_footer_activity("TAPE");
+                        //menu_footer_activity("TAPE");
+                        generic_footertext_print_operating("TAPE");
 		}
 
 }
 
-void delete_tape_text(void)
+/*void delete_tape_text(void)
 {
         menu_delete_footer_activity();
-}
+}*/
 
 
 void insert_tape_load(void)
