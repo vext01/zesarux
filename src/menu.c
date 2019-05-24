@@ -34876,6 +34876,10 @@ char *first_aid_string_zsfextension="ZEsarUX uses two native snapshot file forma
 	".zx is the old snapshot native file format, which was the default format for ZEsarUX previous versions and also used in my other "
 	"emulator, the ZXSpectr";	
 
+int first_aid_no_spaceexpand=0;
+char *first_aid_string_spaceexpand="Do you know you can navigate inside files, like tap, tzx, trd?\n"
+	"Use the fileselector and press space over that kind of file";
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
@@ -34898,6 +34902,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("conversion",&first_aid_no_conversion,first_aid_string_conversion,1);
 	menu_first_aid_add("fileextensions",&first_aid_no_fileextensions,first_aid_string_fileextensions,1);
 	menu_first_aid_add("zsfextension",&first_aid_no_zsfextension,first_aid_string_zsfextension,1);
+	menu_first_aid_add("spaceexpand",&first_aid_no_spaceexpand,first_aid_string_spaceexpand,1);
 
 }
 

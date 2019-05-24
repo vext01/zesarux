@@ -16,8 +16,6 @@ Para próxima versión ZEsarUX:
 
 -Opción command line de desactivar alguna first aid. Si no existe dicha aid, ignorarlo, por si algún día borro por código algunas que ya no existan y se quedan en archivo de config
 
--First aid que diga que tecla espacio sirve para expandir archivos 
-
 -que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
 
 -Probar en Linux driver vídeo con y sin pthread
