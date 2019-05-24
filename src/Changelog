@@ -30,6 +30,7 @@ Fixed bug redrawing zx80/81 display, with realvideo disabled, and menu char widt
 Fixed bug drawing menu window boxes when char width less than 8
 Fixed zxvision left button handling: no longer sends enter when the user is dragging the window
 Fixed machine names to be completely right: for example, "Spectrum 48k" becomes "ZX Spectrum 48k", etc
+Fixed saving sprites when memory zone is not default zone
 
 
 Version 7.2. 10 April 2019 - Neula edition

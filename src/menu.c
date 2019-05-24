@@ -13569,6 +13569,35 @@ int view_sprites_increment_cursor_vertical=1;
 
 z80_bit view_sprites_zx81_pseudohires={0}; //Si utiliza puntero a tabla de la rom, como los usados en juegos hires de zx81 (ejemplo rocketman)
 
+z80_byte menu_debug_draw_sprites_get_byte(menu_z80_moto_int puntero)
+{
+
+	z80_byte byte_leido;
+
+					puntero=adjust_address_memory_size(puntero);
+				byte_leido=menu_debug_get_mapped_byte(puntero);
+
+				
+
+				//Si hay puntero a valores en rom como algunos juegos pseudo hires de zx81
+				if (view_sprites_zx81_pseudohires.v) {
+					int temp_inverse=0; //si se hace inverse derivado de juegos pseudo hires de zx81
+					if (byte_leido&128) temp_inverse=1;
+
+					z80_int temp_dir=reg_i*256+(8*(byte_leido&63));
+					byte_leido=peek_byte_no_time(temp_dir);
+
+					if (temp_inverse) byte_leido ^=255;
+				}
+	
+
+				if (view_sprites_inverse.v) {
+					byte_leido ^=255;
+				}
+
+	return byte_leido;
+}
+
 void menu_debug_draw_sprites(void)
 {
 
@@ -13626,10 +13655,12 @@ void menu_debug_draw_sprites(void)
 
 			puntero_inicio_linea=puntero;
 			finalx=xorigen;
-			for (x=0;x<view_sprites_ancho_sprite /*&& x<maximo_visible_x*/;) {
-				//byte_leido=peek_byte_z80_moto(puntero);
+			for (x=0;x<view_sprites_ancho_sprite;) {
 				puntero=adjust_address_memory_size(puntero);
-				byte_leido=menu_debug_get_mapped_byte(puntero);
+
+				byte_leido=menu_debug_draw_sprites_get_byte(puntero);
+
+				/*byte_leido=menu_debug_get_mapped_byte(puntero);
 
 				
 
@@ -13643,14 +13674,14 @@ void menu_debug_draw_sprites(void)
 
 					if (temp_inverse) byte_leido ^=255;
 				}
-
-
-								//printf ("x: %d puntero: %d \n",x,puntero);
-				puntero +=view_sprite_incremento;
+	
 
 				if (view_sprites_inverse.v) {
 					byte_leido ^=255;
 				}
+				*/
+
+				puntero +=view_sprite_incremento;
 
 				int incx=0;
 
@@ -13795,7 +13826,8 @@ int menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alto
 				//Copiar de memoria emulador ahi
 				int i;
 				for (i=0;i<longitud;i++) {
-					buf_temp[i]=peek_byte_z80_moto(direccion);
+					//buf_temp[i]=peek_byte_z80_moto(direccion);
+					buf_temp[i]=menu_debug_draw_sprites_get_byte(direccion);
 					direccion +=incremento;
 				}
 
