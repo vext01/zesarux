@@ -3146,7 +3146,10 @@ int util_write_configfile(void)
 
 
   if (screen_ext_desktop_enabled)             ADD_STRING_CONFIG,"--enable-zxdesktop");   
-                                              ADD_STRING_CONFIG,"--zxdesktop-width %d",screen_ext_desktop_width);        
+                                              ADD_STRING_CONFIG,"--zxdesktop-width %d",screen_ext_desktop_width);    
+
+                          
+  if (screen_ext_desktop_place_menu)          ADD_STRING_CONFIG,"--zxdesktop-new-items");                   
 
 
   if (autoframeskip.v==0)                     ADD_STRING_CONFIG,"--disable-autoframeskip");

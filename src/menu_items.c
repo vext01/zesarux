@@ -5148,7 +5148,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
 
-#define DEBUG_HEXDUMP_WINDOW_X 0
+#define DEBUG_HEXDUMP_WINDOW_X (menu_origin_x() )
 #define DEBUG_HEXDUMP_WINDOW_Y 1
 #define DEBUG_HEXDUMP_WINDOW_ANCHO 32
 #define DEBUG_HEXDUMP_WINDOW_ALTO 23
@@ -5532,8 +5532,6 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	
 		
 		if (menu_hexdump_edit_mode) {
-			//int xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x;
-			//int yfinal=DEBUG_HEXDUMP_WINDOW_Y+3+menu_hexdump_edit_position_y;
 			int xfinal=7+menu_hexdump_edit_position_x;
 			int yfinal=2+menu_hexdump_edit_position_y;			
 
@@ -5541,7 +5539,6 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 			//Indicar nibble entero. En caso de edit hexa
 			if (!editando_en_zona_ascii) {
-				//xfinal=DEBUG_HEXDUMP_WINDOW_X+7+menu_hexdump_edit_position_x_nibble;
 				xfinal=7+menu_hexdump_edit_position_x_nibble;
 				menu_debug_hexdump_print_editcursor_nibble(&ventana,xfinal,yfinal,nibble_char);
 			}
@@ -9053,6 +9050,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			}
 
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
+			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
+			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
 
 		}
 		

@@ -1555,6 +1555,9 @@ printf (
 
 		"--enable-zxdesktop         Enable ZX Desktop space\n"
 		"--zxdesktop-width n        ZX Desktop width\n"
+		"--zxdesktop-new-items      Try to place new menu items on the ZX Desktop space\n"
+
+				
 
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
 		"--frameskip n              Set frameskip (0=none, 1=25 FPS, 2=16 FPS, etc)\n"
@@ -4704,6 +4707,13 @@ int parse_cmdline_options(void) {
 				}
 				screen_ext_desktop_width=valor;
 			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-new-items")) {
+				screen_ext_desktop_place_menu=1;
+			}
+
+
+
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {
 				siguiente_parametro_argumento();
