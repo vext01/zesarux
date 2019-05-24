@@ -11026,8 +11026,10 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 	int ancho_ventana=32;
 	int alto_ventana=24;
 
+	int xorigin=menu_origin_x();
+
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
-	zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,ancho_ventana,alto_ventana-2,"Debug CPU");
+	zxvision_new_window(ventana,xorigin,0,ancho_ventana,alto_ventana,ancho_ventana,alto_ventana-2,"Debug CPU");
 	//zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Debug CPU");
 
 	//Cambiar el ancho visible segun la vista actual

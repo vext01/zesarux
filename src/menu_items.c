@@ -1811,7 +1811,9 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 		
 		ventana=&menu_debug_cpu_resumen_stats_ventana;
 
-	zxvision_new_window(ventana,0,1,32,18,
+	int originx=menu_origin_x();
+
+	zxvision_new_window(ventana,originx,1,32,18,
 							31,16,"CPU Compact Statistics");
 	zxvision_draw_window(ventana);
 		
@@ -2741,7 +2743,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
 
-	int xventana=0;
+	int xventana=menu_origin_x();
 	int ancho_ventana=32;
 
 	int yventana;
@@ -2985,7 +2987,7 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 //int tsconf_spritenav_window_y=2;
 //int tsconf_spritenav_window_alto=20;
 
-#define TSCONF_SPRITENAV_WINDOW_X 0
+#define TSCONF_SPRITENAV_WINDOW_X (menu_origin_x() )
 #define TSCONF_SPRITENAV_WINDOW_Y 2
 #define TSCONF_SPRITENAV_WINDOW_ANCHO 32
 #define TSCONF_SPRITENAV_WINDOW_ALTO 20
@@ -3213,7 +3215,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 
 
-#define TSCONF_TILENAV_WINDOW_X 0
+#define TSCONF_TILENAV_WINDOW_X (menu_origin_x() )
 #define TSCONF_TILENAV_WINDOW_Y 0
 #define TSCONF_TILENAV_WINDOW_ANCHO 32
 #define TSCONF_TILENAV_WINDOW_ALTO 24
@@ -5999,7 +6001,7 @@ void menu_osd_adventure_keyboard_next(void)
 }
 
 
-#define ADVENTURE_KB_X 0
+#define ADVENTURE_KB_X (menu_origin_x() )
 #define ADVENTURE_KB_Y 0
 
 //Le ponemos maximo ancho 32 que es el mismo que gestiona la funcion de dibujar menu
@@ -6446,7 +6448,9 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 	//menu_dibuja_ventana(2,6,27,alto,texto_ventana);
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,2,6,27,alto,
+	int posicionx=menu_origin_x()+2;
+
+	zxvision_new_window(&ventana,posicionx,6,27,alto,
 							27-1,alto-2,texto_ventana);
 	zxvision_draw_window(&ventana);			
 
@@ -6802,7 +6806,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();		
 
 
-	int x=7;
+	int x=menu_origin_x()+7;
 	int y=1;
 
 	int ancho=20;
@@ -6812,8 +6816,6 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 		alto=20;
 		y=1;
 	}
-    //menu_dibuja_ventana(x,y,ancho,alto,"Video Layers");
-
 
 
 	zxvision_window ventana;
@@ -6952,7 +6954,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
 
 
-#define TOTAL_PALETTE_WINDOW_X 0
+#define TOTAL_PALETTE_WINDOW_X (menu_origin_x() )
 #define TOTAL_PALETTE_WINDOW_Y 0
 #define TOTAL_PALETTE_WINDOW_ANCHO 32
 #define TOTAL_PALETTE_WINDOW_ALTO 24
@@ -7048,8 +7050,10 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 
 					int longitud_texto=strlen(dumpmemoria);
 
-					int posicion_barra_color_x=TOTAL_PALETTE_WINDOW_X+longitud_texto+2;
-					int posicion_barra_color_y=TOTAL_PALETTE_WINDOW_Y+3+linea_color;
+					//int posicion_barra_color_x=TOTAL_PALETTE_WINDOW_X+longitud_texto+2;
+					//int posicion_barra_color_y=TOTAL_PALETTE_WINDOW_Y+3+linea_color;
+					int posicion_barra_color_x=longitud_texto+2;
+					int posicion_barra_color_y=3+linea_color;					
 
 					//dibujar la barra de color
 					if (si_barras) {
