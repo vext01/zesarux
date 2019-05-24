@@ -2055,7 +2055,7 @@ void menu_init_footer(void)
 	//y en driver xwindows suele generar un evento ConfigureNotify, que vuelve a llamar a init_footer y borraria dicho texto FLASH
 	//y por lo tanto no se veria el texto "FLASH" al arrancar la maquina
 	//en otros drivers de video en teoria no haria falta
-	if (MACHINE_IS_ZXUNO) zxuno_footer_print_flash_operating();
+	//if (MACHINE_IS_ZXUNO) zxuno_footer_print_flash_operating();
 
 
 
