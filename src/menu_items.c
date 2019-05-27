@@ -5436,10 +5436,18 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();		
 
 	zxvision_window ventana;
+	int x,y,ancho,alto;
+	
+	if (!util_find_window_geometry("hexeditor",&x,&y,&ancho,&alto)) {
+		x=DEBUG_HEXDUMP_WINDOW_X;
+		y=DEBUG_HEXDUMP_WINDOW_Y;
+		ancho=DEBUG_HEXDUMP_WINDOW_ANCHO;
+		alto=DEBUG_HEXDUMP_WINDOW_ALTO;
+	}
+
 
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
-	zxvision_new_window(&ventana,DEBUG_HEXDUMP_WINDOW_X,DEBUG_HEXDUMP_WINDOW_Y,DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO,
-							DEBUG_HEXDUMP_WINDOW_ANCHO,DEBUG_HEXDUMP_WINDOW_ALTO-2,"Hexadecimal Editor");
+	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
 
 
 	ventana.can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
@@ -5914,6 +5922,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
         } while (salir==0);
 
 	cls_menu_overlay();
+
+	util_add_window_geometry("hexeditor",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+
 	zxvision_destroy_window(&ventana);
 	
 

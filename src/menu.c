@@ -11082,14 +11082,27 @@ void menu_debug_registers_set_title(zxvision_window *w)
 
 void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 {
-	int ancho_ventana=32;
-	int alto_ventana=24;
+/*
+	
 
-	int xorigin=menu_origin_x();
+	*/
+
+	int ancho_ventana;
+	int alto_ventana;
+
+	int xorigin,yorigin;
+
+
+	if (!util_find_window_geometry("debugcpu",&xorigin,&yorigin,&ancho_ventana,&alto_ventana)) {
+		xorigin=menu_origin_x();
+		yorigin=0;
+		ancho_ventana=32;
+		alto_ventana=24;
+	}
+
 
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
-	zxvision_new_window(ventana,xorigin,0,ancho_ventana,alto_ventana,ancho_ventana,alto_ventana-2,"Debug CPU");
-	//zxvision_new_window(ventana,0,0,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Debug CPU");
+	zxvision_new_window_nocheck_staticsize(ventana,xorigin,yorigin,ancho_ventana,alto_ventana,ancho_ventana,alto_ventana-2,"Debug CPU");
 
 	//Cambiar el ancho visible segun la vista actual
 	menu_debug_registers_zxvision_ventana_set_height(ventana);
@@ -13116,6 +13129,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	}	
 
     cls_menu_overlay();
+
+	util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+
 
 	zxvision_destroy_window(&ventana);
 
