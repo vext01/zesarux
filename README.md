@@ -148,6 +148,8 @@ __FEATURES__
 
 * Supports reducing the screen to 192x144 (0.75 scale)
 
+* Uses its own powerful window environment (ZX Vision) inside the program application window, having the same GUI style on all plattforms
+
 * Can be used with joystick and environments without keyboard, like Raspiboy / Retropie
 
 * Emulates all the oddities of the Inves Spectrum +: 64 KB RAM, RAM initialization with FF00H pattern, OUT ula AND RAM, EAR and MIC XOR, no contended memory, snow in border, colour ula delay, interrupt starts at end of top border (not at the beginning of the border), corrupt memory on every interrupt, no idle bus

@@ -14342,3 +14342,8 @@ int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto)
         return 1;
 
 }
+
+void util_clear_all_windows_geometry(void)
+{
+        total_config_window_geometry=0;        
+}

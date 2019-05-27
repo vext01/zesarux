@@ -27790,6 +27790,14 @@ void menu_interface_bw_no_multitask(MENU_ITEM_PARAMETERS)
 	screen_machine_bw_no_multitask.v ^=1;
 }
 
+void menu_interface_restore_windows_geometry(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno("Restore windows geometry")) {
+		util_clear_all_windows_geometry();
+		menu_generic_message("Restore windows geometry","OK. All windows restored to their default positions and sizes");
+	}
+}
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -27868,6 +27876,10 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_window_settings,'l');
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] I~~nvert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'n');
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
 
 /*
 

@@ -554,6 +554,7 @@ extern int total_config_window_geometry;
 
 extern int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto);
 extern int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto);
+extern void util_clear_all_windows_geometry(void);
 
 
 #define MAX_TECLAS_REDEFINIDAS 10
