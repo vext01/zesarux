@@ -4487,6 +4487,14 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length,int max_length_shown,int x,int y)
 {
 
+	//Al menos 2 de maximo a mostrar. Si no, salir
+	if (max_length_shown<2) {
+		debug_printf (VERBOSE_ERR,"Edit field size too small. Returning null string");
+		string[0]=0;
+		return 2; //Devolvemos escape
+
+	}	
+
 	//Enviar a speech
 	char buf_speech[MAX_BUFFER_SPEECH+1];
 	sprintf (buf_speech,"Edit box: %s",string);
@@ -34962,8 +34970,20 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                 		//para que haga lectura del edit box
 		                menu_speech_tecla_pulsada=0;
 
-				
-				tecla=zxvision_scanf(ventana,filesel_nombre_archivo_seleccionado,PATH_MAX,ventana->visible_width-6-2,7,1);
+				int ancho_mostrado=ventana->visible_width-6-2;
+				if (ancho_mostrado<2) {
+					//La ventana es muy pequeña como para editar
+					menu_reset_counters_tecla_repeticion();
+					filesel_zona_pantalla=1;
+					//no releer todos archivos
+					menu_speech_tecla_pulsada=1;					
+
+				}
+
+				else {
+
+
+				tecla=zxvision_scanf(ventana,filesel_nombre_archivo_seleccionado,PATH_MAX,ancho_mostrado,7,1);
 				//); //6 ocupa el texto "File: "
 
 				if (tecla==15) {
@@ -35061,6 +35081,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                         //return 1;
 
 					}
+				}
+
 				}
 
 				break;
