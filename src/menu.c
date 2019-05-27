@@ -34810,11 +34810,11 @@ int filesel_primera_vez=1;
 void menu_filesel_save_params_window(zxvision_window *ventana)
 {
 				//Guardar anteriores tamaños ventana
-			last_filesel_ventana_x=ventana->x;
+			/*last_filesel_ventana_x=ventana->x;
 			last_filesel_ventana_y=ventana->y;
 
 			last_filesel_ventana_visible_ancho=ventana->visible_width;
-			last_filesel_ventana_visible_alto=ventana->visible_height;
+			last_filesel_ventana_visible_alto=ventana->visible_height;*/
 
 	util_add_window_geometry("filesel",ventana->x,ventana->y,ventana->visible_width,ventana->visible_height);
 }
@@ -34836,7 +34836,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 
-	if (filesel_primera_vez) {
+	//if (filesel_primera_vez) {
 		//La primera de todas metemos ventana centrada. Las siguientes, conservamos posicion
 		if (!util_find_window_geometry("filesel",&last_filesel_ventana_x,&last_filesel_ventana_y,
 			&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto)) {
@@ -34847,8 +34847,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 			last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;	
 		}
 
-		filesel_primera_vez=0;
-	}
+		//filesel_primera_vez=0;
+	//}
 
 	//int primera_ventana=1;
 
@@ -34930,6 +34930,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		
 
 		//Usar ultimas coordenadas y tamaño, sin comprobar rango de maximo ancho y alto 32x24
+		util_find_window_geometry("filesel",&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
+
+
 		zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
 		zxvision_new_window_no_check_range(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
 

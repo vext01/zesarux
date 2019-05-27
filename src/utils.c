@@ -14288,6 +14288,8 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
                         *y=saved_config_window_geometry_array[i].y;
                         *ancho=saved_config_window_geometry_array[i].ancho;
                         *alto=saved_config_window_geometry_array[i].alto;
+                        printf ("Returning window geometry %s from index %d, %d,%d %dX%d \n",
+                        nombre,i,*y,*y,*ancho,*alto);
                         return 1;
                 }
         }
@@ -14297,6 +14299,7 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
         *y=0;
         *ancho=ZXVISION_MAX_ANCHO_VENTANA;
         *alto=ZXVISION_MAX_ALTO_VENTANA;
+         printf ("Returning default window geometry for %s\n",nombre);
         return 0;
 }
 
