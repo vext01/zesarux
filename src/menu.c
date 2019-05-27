@@ -32926,7 +32926,7 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
         p=0;
         sprintf(buffer_filtros,"Filter: ");
 
-        p=p+8;
+        p=p+8;  //8 es lo que ocupa el texto "Filter: "
 
 
         for (i=0;filtros[i];i++) {
@@ -32945,7 +32945,7 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 //Si texto filtros pasa del tope, rellenar con "..."
 		int max_visible=(ventana->visible_width)-2;
 	
-        if (p>max_visible) {
+        if (p>max_visible && max_visible>=3) {
                 p=max_visible;
                 buffer_filtros[p-1]='.';
                 buffer_filtros[p-2]='.';
