@@ -6,7 +6,23 @@ Para próxima versión ZEsarUX:
 
 -En FAQ explicar qué es ZX Desktop
 
+-Redimensionar ventana redibuja el zxdesktop?
+
+-Revisar Full screen en ZX desktop
+
 -Fbdev debe permitir extender escritorio?
+
+-Posibles efectos para fondo ZX Desktop:
+--Efecto de ZX Desktop barras colores animado?
+--Imagen. BMP?
+--Miniatura de pantalla spectrum
+--Imagen. SCR
+--Degradado vertical usando alguna tabla de colores concreta ya existente
+--Botones o iconos pulsables 
+--Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
+--Anaglifo usando segunda pantalla o extensión Desktop 
+
+
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
 
@@ -118,7 +134,7 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 -Cuando se hace resize de ventana y desaparecen barras desplazamientos, habría que mover offset a 0?
 O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir siempre que offset sea mayor que 0, Y que quepa en pantalla
 
-Background windows
+-Background windows
 -activarlas con: int menu_allow_background_windows=1;
 -Si ventana en background, no dejar volverla a llamar desde menu normal
 -Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
@@ -143,7 +159,17 @@ Ademas los pixeles siempre van a la ultima ventana arriba
 if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 
+Ideas para background windows:
+-se deben llamar a todas las funciones de overlay de las ventanas en background desde la función de overlay de menú
+-ventanas en background son solo aquellas que no llevan asociado un menú implícito, casos aparte son el ay player, el view waveform, Visualmem etc (tienen algunas líneas de settings)
+-todo lo que sale de settings no tiene sentido enviar a background-> son menús puros
+-opción para desactivar completamente el background
+-una ventana que se abre:
+**si hay background, entrara y saldrá poniéndose en background, y cerrando todos los menús precedentes. Lo ideal es que luego el foco conmutase aquí, entrando de nuevo a primer plano
+-como se ponen en primer plano ventanas que estaban en background? Quizá cuando se ponen en background deben registrarse indicando la función principal que las inicia. Esto se deberá leer desde el handle de zxvision para cuando se pulsa ahí, cambiar y arrancar ahí 
 
+
+-Fin Background windows
 
 
 -Osd keyboard sin multitarea en ZX81 no va fino

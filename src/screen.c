@@ -8377,6 +8377,7 @@ void scr_fadeout(void)
 		clear_putpixel_cache();
 		modificado_border.v=1;
 		screen_z88_draw_lower_screen();
+		menu_draw_ext_desktop();
 		all_interlace_scr_refresca_pantalla();
 
 		usleep(SLEEPTIME);
