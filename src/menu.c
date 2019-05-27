@@ -4208,11 +4208,8 @@ void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visib
 }
 
 
-void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
+void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
-
-	zxvision_new_window_check_range(&x,&y,&visible_width,&visible_height);
-
 
 	//Alto visible se reduce en 1 - por el titulo de ventana
 	
@@ -4307,6 +4304,16 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 
 }
+
+
+void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
+{
+
+	zxvision_new_window_check_range(&x,&y,&visible_width,&visible_height);
+	zxvision_new_window_no_check_range(w,x,y,visible_width,visible_height,total_width,total_height,title);
+}
+
+
 
 //Borrar contenido ventana con espacios
 void zxvision_clear_window_contents(zxvision_window *w)
@@ -34784,6 +34791,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 	filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
 	filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;
 
+	int primera_ventana=1;
+
 	menu_reset_counters_tecla_repeticion();
 
 	int tecla;
@@ -34865,7 +34874,18 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
 		//zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
 		printf ("ventana %d %d %d X %d\n",filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto);
-		zxvision_new_window(ventana,filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto,filesel_ventana_visible_ancho-1,alto_total,titulo);
+
+		if (primera_ventana) {
+			printf ("primera ventana\n");
+			zxvision_new_window(ventana,filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto,filesel_ventana_visible_ancho-1,alto_total,titulo);
+			primera_ventana=0;
+		}
+
+		else {
+			printf ("no primera ventana\n");
+			//Usar ultimas coordenadas y tamaño
+			zxvision_new_window_no_check_range(ventana,filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto,filesel_ventana_visible_ancho-1,alto_total,titulo);
+		}
 
 
 
