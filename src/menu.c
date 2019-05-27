@@ -4178,7 +4178,7 @@ void zxvision_draw_below_windows_nospeech(zxvision_window *w)
 	//printf ("despues draw below\n");
 }
 
-void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
+void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visible_height)
 {
 
 	//Controlar rangos. Cualquier valor que se salga de rango, hacemos ventana maximo 32x24
@@ -4187,25 +4187,31 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 
 	if (
 
-	 (x<0               || x>ZXVISION_MAX_X_VENTANA) ||
-	 (y<0               || y>ZXVISION_MAX_Y_VENTANA) ||
-	 (visible_width<=0  || visible_width>ZXVISION_MAX_ANCHO_VENTANA) ||
-	 (visible_height<=0 || visible_height>ZXVISION_MAX_ALTO_VENTANA) ||
+	 (*x<0               || *x>ZXVISION_MAX_X_VENTANA) ||
+	 (*y<0               || *y>ZXVISION_MAX_Y_VENTANA) ||
+	 (*visible_width<=0  || *visible_width>ZXVISION_MAX_ANCHO_VENTANA) ||
+	 (*visible_height<=0 || *visible_height>ZXVISION_MAX_ALTO_VENTANA) ||
 
 	//Rangos de final de ventana. ZXVISION_MAX_X_VENTANA normalmente vale 31. ZXVISION_MAX_Y_VENTANA normalmente vale 23. Si esta en ancho 31 y le suma 1, es ok. Si suma 2, es error
-	 (x+visible_width>ZXVISION_MAX_X_VENTANA+1) ||
-	 (y+visible_height>ZXVISION_MAX_Y_VENTANA+1) 
+	 ((*x)+(*visible_width)>ZXVISION_MAX_X_VENTANA+1) ||
+	 ((*y)+(*visible_height)>ZXVISION_MAX_Y_VENTANA+1) 
 
 	)
 		{
-                debug_printf (VERBOSE_DEBUG,"zxvision_new_window: window out of range: %d,%d %dx%d",x,y,visible_width,visible_height);
-                x=0;
-                y=0;
-                visible_width=ZXVISION_MAX_ANCHO_VENTANA;
-                visible_height=ZXVISION_MAX_ALTO_VENTANA;
+                debug_printf (VERBOSE_INFO,"zxvision_new_window: window out of range: %d,%d %dx%d",*x,*y,*visible_width,*visible_height);
+                *x=0;
+                *y=0;
+                *visible_width=ZXVISION_MAX_ANCHO_VENTANA;
+                *visible_height=ZXVISION_MAX_ALTO_VENTANA;
 
 		}
+}
 
+
+void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
+{
+
+	zxvision_new_window_check_range(&x,&y,&visible_width,&visible_height);
 
 
 	//Alto visible se reduce en 1 - por el titulo de ventana
@@ -34843,12 +34849,22 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		if (ventana!=NULL) {
 			//printf ("Destroy previous filesel window\n");
 			cls_menu_overlay();
+
+			//Guardar anteriores tamaños ventana
+			filesel_ventana_x=ventana->x;
+			filesel_ventana_y=ventana->y;
+
+			filesel_ventana_visible_ancho=ventana->visible_width;
+			filesel_ventana_visible_alto=ventana->visible_height;
+
+
 			zxvision_destroy_window(ventana);
 		}
 		ventana=&ventana_filesel;
 
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
 		//zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
+		printf ("ventana %d %d %d X %d\n",filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto);
 		zxvision_new_window(ventana,filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto,filesel_ventana_visible_ancho-1,alto_total,titulo);
 
 
