@@ -32837,6 +32837,7 @@ void reset_splash_text(void)
 
 #define FILESEL_ANCHO 30
 #define FILESEL_INICIAL_ANCHO 30
+#define FILESEL_MAX_ANCHO OVERLAY_SCREEN_MAX_WIDTH
 #define FILESEL_ALTO 23
 
 #define FILESEL_X (menu_center_x()-FILESEL_ANCHO/2)
@@ -32862,7 +32863,7 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
         if (menu_filesel_show_utils.v) return; //Si hay utilidades activas, no mostrar filtros
 
         //texto para mostrar filtros. darle bastante margen aunque no quepa en pantalla
-        char buffer_filtros[200];
+        char buffer_filtros[FILESEL_MAX_ANCHO+1]; //+1 para el 0 final
 
 
         char *f;
@@ -32888,8 +32889,11 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
         }
 
 //Si texto filtros pasa del tope, rellenar con "..."
-        if (p>FILESEL_ANCHO-2) {
-                p=FILESEL_ANCHO-2;
+		int max_visible=(ventana->visible_width)-2;
+        //if (p>FILESEL_ANCHO-2) {
+                //p=FILESEL_ANCHO-2;		
+        if (p>max_visible) {
+                p=max_visible;
                 buffer_filtros[p-1]='.';
                 buffer_filtros[p-2]='.';
                 buffer_filtros[p-3]='.';
@@ -34230,7 +34234,9 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 
 		//Solo hacer esto si es visible en pantalla
 		if (i<mostrados_en_pantalla) {
-		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,i);
+		//zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,i);
+		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,(ventana->visible_width)-2,i);
+		
 
 		//if (filesel_linea_seleccionada==i) {
 		if (ventana->cursor_line==i) {
@@ -34432,7 +34438,9 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 
                             //Si esta en la zona derecha de selector de porcentaje no hacer nada
                             
-                            if (menu_mouse_x==FILESEL_ANCHO-1) return 0;
+                            //if (menu_mouse_x==FILESEL_ANCHO-1) return 0;
+							if (menu_mouse_x==(ventana->visible_width)-1) return 0;
+							
 
                             //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
 
