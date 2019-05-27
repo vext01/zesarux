@@ -4344,6 +4344,13 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 	zxvision_new_window_no_check_range(w,x,y,visible_width,visible_height,total_width,total_height,title);
 }
 
+void zxvision_new_window_nocheck_staticsize(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
+{
+
+	zxvision_new_window_check_range(&x,&y,&visible_width,&visible_height);
+	zxvision_new_window_no_check_range(w,x,y,visible_width,visible_height,total_width,total_height,title);
+}
+
 
 
 //Borrar contenido ventana con espacios
@@ -34939,9 +34946,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		}
 
 
-		zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
-		zxvision_new_window_no_check_range(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
-
+		//zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
+		//zxvision_new_window_no_check_range(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
+		zxvision_new_window_nocheck_staticsize(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
 
 	    ventana->upper_margin=4;
 	    ventana->lower_margin=4;

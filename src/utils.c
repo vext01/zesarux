@@ -14288,7 +14288,7 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
                         *y=saved_config_window_geometry_array[i].y;
                         *ancho=saved_config_window_geometry_array[i].ancho;
                         *alto=saved_config_window_geometry_array[i].alto;
-                        printf ("Returning window geometry %s from index %d, %d,%d %dX%d \n",
+                        debug_printf (VERBOSE_DEBUG,"Returning window geometry %s from index %d, %d,%d %dX%d",
                         nombre,i,*y,*y,*ancho,*alto);
                         return 1;
                 }
@@ -14299,7 +14299,7 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
         *y=0;
         *ancho=ZXVISION_MAX_ANCHO_VENTANA;
         *alto=ZXVISION_MAX_ALTO_VENTANA;
-        printf ("Returning default window geometry for %s\n",nombre);
+        debug_printf (VERBOSE_DEBUG,"Returning default window geometry for %s",nombre);
         return 0;
 }
 
@@ -14328,7 +14328,7 @@ int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto)
                 }
         }
 
-        printf ("Saving window geometry at %d index array, name %s, %d,%d %dX%d\n",
+        debug_printf (VERBOSE_DEBUG,"Storing window geometry at %d index array, name %s, %d,%d %dX%d",
                 destino,nombre,x,y,ancho,alto);
 
         strcpy(saved_config_window_geometry_array[destino].nombre,nombre);

@@ -180,6 +180,7 @@ struct s_zxvision_window {
 typedef struct s_zxvision_window zxvision_window;
 
 extern void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title);
+extern void zxvision_new_window_nocheck_staticsize(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title);
 extern void zxvision_destroy_window(zxvision_window *w);
 extern void zxvision_draw_window(zxvision_window *w);
 extern void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter);

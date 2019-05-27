@@ -4038,8 +4038,17 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,
-							SOUND_WAVE_ANCHO-1,SOUND_WAVE_ALTO+4-2,"Waveform");
+	int x,y,ancho,alto;
+
+	if (!util_find_window_geometry("waveform",&x,&y,&ancho,&alto)) {
+		x=SOUND_WAVE_X;
+		y=SOUND_WAVE_Y-2;
+		ancho=SOUND_WAVE_ANCHO;
+		alto=SOUND_WAVE_ALTO+4;
+	}
+
+	//zxvision_new_window(&ventana,SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,SOUND_WAVE_ANCHO-1,SOUND_WAVE_ALTO+4-2,"Waveform");
+	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
 	zxvision_draw_window(&ventana);		
 
     
@@ -4090,6 +4099,9 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 
     cls_menu_overlay();
+
+	//Grabar geometria ventana
+	util_add_window_geometry("waveform",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
 
 	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
 	zxvision_destroy_window(&ventana);
