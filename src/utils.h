@@ -539,6 +539,23 @@ struct s_subzone_info
 
 typedef struct s_subzone_info subzone_info;
 
+#define MAX_CONFIG_WINDOW_GEOMETRY 100
+
+//Tabla para guardar configuracion de geometria de ventanas
+struct s_saved_config_window_geometry 
+{
+	char nombre[100];
+	int x,y,ancho,alto;
+};
+
+typedef struct s_saved_config_window_geometry saved_config_window_geometry;
+
+extern int total_config_window_geometry;
+
+extern int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto);
+extern int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto);
+
+
 #define MAX_TECLAS_REDEFINIDAS 10
 extern tecla_redefinida lista_teclas_redefinidas[];
 

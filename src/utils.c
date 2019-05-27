@@ -374,6 +374,11 @@ struct x_tabla_teclado mk14_tabla_teclado_numeros[]={
 
 };
 
+
+//Para guardar geometria de ventanas
+int total_config_window_geometry=0;
+saved_config_window_geometry saved_config_window_geometry_array[MAX_CONFIG_WINDOW_GEOMETRY];
+
 /*
 
 Lista fabricantes
@@ -14262,5 +14267,68 @@ void util_daad_get_condact_message(char *buffer)
 
 	menu_generic_message("Message",buffer);
 
+
+}
+
+//Retorna 0 si no encontrado
+int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
+{
+        int i;
+
+        for (i=0;i<total_config_window_geometry;i++) {
+                if (!strcasecmp(nombre,saved_config_window_geometry_array[i].nombre)) {
+                        *x=saved_config_window_geometry_array[i].x;
+                        *y=saved_config_window_geometry_array[i].y;
+                        *ancho=saved_config_window_geometry_array[i].ancho;
+                        *alto=saved_config_window_geometry_array[i].alto;
+                        return 1;
+                }
+        }
+
+        //Si no se encuentra, meter geometria por defecto
+        *x=0;
+        *y=0;
+        *ancho=ZXVISION_MAX_ANCHO_VENTANA;
+        *alto=ZXVISION_MAX_ALTO_VENTANA;
+        return 0;
+}
+
+//Retorna 0 si error. Lo agrega si no existe. Si existe, lo modifica
+int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto)
+{
+
+        int destino=total_config_window_geometry;
+        int sustituir=0;
+
+        int i;
+
+        //Buscar si se encuentra, sustituir
+        for (i=0;i<total_config_window_geometry;i++) {
+                if (!strcasecmp(nombre,saved_config_window_geometry_array[i].nombre)) {
+                        destino=i;
+                        sustituir=1;
+                        break;
+                }
+        }        
+
+        if (!sustituir) {
+                if (total_config_window_geometry==MAX_CONFIG_WINDOW_GEOMETRY) {
+                        debug_printf (VERBOSE_ERR,"Maximum window geometry config reached (%d)",MAX_CONFIG_WINDOW_GEOMETRY);
+                        return 0;
+                }
+        }
+
+        printf ("Saving window geometry at %d index array, name %s, %d,%d %dX%d\n",
+                destino,nombre,x,y,ancho,alto);
+
+        strcpy(saved_config_window_geometry_array[destino].nombre,nombre);
+        saved_config_window_geometry_array[destino].x=x;
+        saved_config_window_geometry_array[destino].y=y;
+        saved_config_window_geometry_array[destino].ancho=ancho;
+        saved_config_window_geometry_array[destino].alto=alto;
+
+        if (!sustituir) total_config_window_geometry++;
+
+        return 1;
 
 }

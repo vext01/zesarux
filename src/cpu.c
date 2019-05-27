@@ -1887,6 +1887,7 @@ printf (
 		"--last-version s           String which identifies last version run. Usually doesnt need to change it, used to show the start popup of the new version changes\n"
 		"--no-show-changelog        Do not show changelog when updating version\n"
 		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
+		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
 		"--codetests                Run develoment code tests\n"
 		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n"
 
@@ -6678,6 +6679,34 @@ int parse_cmdline_options(void) {
 				siguiente_parametro_argumento();
 				strcpy(parameter_disablebetawarning,argv[puntero_parametro]);
 			}	
+
+			else if (!strcmp(argv[puntero_parametro],"--windowgeometry")) {
+				siguiente_parametro_argumento();
+				char *nombre;
+				int x,y,ancho,alto;
+
+				nombre=argv[puntero_parametro];
+
+				siguiente_parametro_argumento();
+				x=parse_string_to_number(argv[puntero_parametro]);
+
+				siguiente_parametro_argumento();
+				y=parse_string_to_number(argv[puntero_parametro]);
+
+				siguiente_parametro_argumento();
+				ancho=parse_string_to_number(argv[puntero_parametro]);
+
+				siguiente_parametro_argumento();
+				alto=parse_string_to_number(argv[puntero_parametro]);
+
+				if (x<0 || y<0 || ancho<0 || alto<0) {
+					printf ("Invalid window geometry\n");
+					exit(1);
+				}
+
+				util_add_window_geometry(nombre,x,y,ancho,alto);
+
+			}			
 
 			else if (!strcmp(argv[puntero_parametro],"--tonegenerator")) {
 				siguiente_parametro_argumento();

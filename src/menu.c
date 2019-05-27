@@ -34839,6 +34839,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		filesel_primera_vez=0;
 		last_filesel_ventana_x=FILESEL_INICIAL_X;
 		last_filesel_ventana_y=FILESEL_INICIAL_Y;
+		last_filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
+		last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;		
 	}
 
 	//int primera_ventana=1;
