@@ -34789,6 +34789,16 @@ int last_filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
 int last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;
 int filesel_primera_vez=1;
 
+void menu_filesel_save_params_window(zxvision_window *ventana)
+{
+				//Guardar anteriores tamaños ventana
+			last_filesel_ventana_x=ventana->x;
+			last_filesel_ventana_y=ventana->y;
+
+			last_filesel_ventana_visible_ancho=ventana->visible_width;
+			last_filesel_ventana_visible_alto=ventana->visible_height;
+}
+
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -34882,11 +34892,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 			cls_menu_overlay();
 
 			//Guardar anteriores tamaños ventana
-			last_filesel_ventana_x=ventana->x;
-			last_filesel_ventana_y=ventana->y;
-
-			last_filesel_ventana_visible_ancho=ventana->visible_width;
-			last_filesel_ventana_visible_alto=ventana->visible_height;
+			menu_filesel_save_params_window(ventana);
 
 
 			zxvision_destroy_window(ventana);
@@ -34896,22 +34902,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
 		
 
-		//Desactivamos esto
-		/*if (primera_ventana) {
-			//printf ("primera ventana\n");
-			//Comprobar rangos. Si por ejemplo teniamos el zxdesktop activo en el ultimo filesel,
-			//y quitamos zxdesktop y volvemos aqui, interesa que compruebe dichas coordenadas
-			zxvision_new_window(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
-			primera_ventana=0;
-		}*/
-
-		//else {
-			//printf ("no primera ventana\n");
-			//Usar ultimas coordenadas y tamaño, sin comprobar rango de maximo ancho y alto 32x24
-			zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
-			zxvision_new_window_no_check_range(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
-		//}
-
+		//Usar ultimas coordenadas y tamaño, sin comprobar rango de maximo ancho y alto 32x24
+		zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
+		zxvision_new_window_no_check_range(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
 
 
 	    ventana->upper_margin=4;
@@ -35320,6 +35313,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									menu_filesel_free_mem();
 
 									//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+									//Guardar anteriores tamaños ventana
+									menu_filesel_save_params_window(ventana);
+
 									cls_menu_overlay();
 									zxvision_destroy_window(ventana);
 									last_filesused_insert(archivo);
