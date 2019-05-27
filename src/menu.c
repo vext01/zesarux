@@ -4201,7 +4201,7 @@ void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visib
 
 	)
 		{
-                debug_printf (VERBOSE_INFO,"zxvision_new_window: window out of range: %d,%d %dx%d",*x,*y,*visible_width,*visible_height);
+                debug_printf (VERBOSE_INFO,"zxvision_new_window: window out of range: %d,%d %dx%d. Returning fixed safe values",*x,*y,*visible_width,*visible_height);
 				//printf ("zxvision_new_window: window out of range: %d,%d %dx%d\n",*x,*y,*visible_width,*visible_height);
                 *x=0;
                 *y=0;
@@ -34838,14 +34838,14 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 	//if (filesel_primera_vez) {
 		//La primera de todas metemos ventana centrada. Las siguientes, conservamos posicion
-		if (!util_find_window_geometry("filesel",&last_filesel_ventana_x,&last_filesel_ventana_y,
+		/*if (!util_find_window_geometry("filesel",&last_filesel_ventana_x,&last_filesel_ventana_y,
 			&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto)) {
 
 			last_filesel_ventana_x=FILESEL_INICIAL_X;
 			last_filesel_ventana_y=FILESEL_INICIAL_Y;
 			last_filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
 			last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;	
-		}
+		}*/
 
 		//filesel_primera_vez=0;
 	//}
@@ -34930,7 +34930,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		
 
 		//Usar ultimas coordenadas y tamaño, sin comprobar rango de maximo ancho y alto 32x24
-		util_find_window_geometry("filesel",&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
+		//Si no hay ultimas, poner las de por defecto
+		if (!util_find_window_geometry("filesel",&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto)) {
+			last_filesel_ventana_x=FILESEL_INICIAL_X;
+			last_filesel_ventana_y=FILESEL_INICIAL_Y;
+			last_filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
+			last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;	
+		}
 
 
 		zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
