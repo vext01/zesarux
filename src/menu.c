@@ -32881,19 +32881,13 @@ void reset_splash_text(void)
 
 #define FILESEL_ANCHO 30
 #define FILESEL_INICIAL_ANCHO 30
-
 #define FILESEL_MAX_ANCHO OVERLAY_SCREEN_MAX_WIDTH
-//#define FILESEL_ALTO 23
+
 #define FILESEL_INICIAL_ALTO 23
 
 #define FILESEL_INICIAL_X (menu_center_x()-FILESEL_INICIAL_ANCHO/2)
 #define FILESEL_INICIAL_Y (menu_center_y()-FILESEL_INICIAL_ALTO/2)
-//#define FILESEL_X 1
-//#define FILESEL_Y 1
 
-//#define (FILESEL_ALTO-10) (FILESEL_ALTO-10)
-//#define (FILESEL_ALTO-4) (FILESEL_ALTO-4)
-//#define (FILESEL_ALTO-3) (FILESEL_ALTO-3)
 #define FILESEL_INICIO_DIR 4
 
 #define ZXVISION_POS_FILTER 6
@@ -32936,8 +32930,7 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 
 //Si texto filtros pasa del tope, rellenar con "..."
 		int max_visible=(ventana->visible_width)-2;
-        //if (p>FILESEL_ANCHO-2) {
-                //p=FILESEL_ANCHO-2;		
+	
         if (p>max_visible) {
                 p=max_visible;
                 buffer_filtros[p-1]='.';
@@ -32955,7 +32948,7 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 	int posicion_filtros=ZXVISION_POS_FILTER;
 
 
-	zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"               ");
+	zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"");
 
 
         //y luego escribimos
@@ -33128,17 +33121,11 @@ void zxvision_menu_filesel_print_file(zxvision_window *ventana,char *s,unsigned 
 
         char buffer[PATH_MAX];
 
-        //int linea_seleccionada;
 
-        //linea_seleccionada=FILESEL_INICIO_DIR+filesel_linea_seleccionada;
 
         menu_filesel_print_file_get(buffer, s, d_type, max_length_shown);
 
-        //si estamos en esa zona, destacar archivo seleccionado
-        //int activo=linea_seleccionada;
 
-        //if (filesel_zona_pantalla!=1) activo=-1;
-        //menu_escribe_linea_opcion(y,activo,1,buffer);
 	zxvision_print_string_defaults_fillspc(ventana,1,y+ZXVISION_FILESEL_INITIAL_MARGIN,buffer);	
 }
 
@@ -33208,9 +33195,9 @@ void zxvision_menu_filesel_localiza_archivo(zxvision_window *ventana,char *nombr
                 if (strcasecmp(nombrebuscar,p->d_name)<=0) {
                         filesel_linea_seleccionada=0;
                         filesel_archivo_seleccionado=i;
-			ventana->cursor_line=i;
-			zxvision_set_offset_y_or_maximum(ventana,i);
-                                        debug_printf (VERBOSE_DEBUG,"Found at position %d",i);
+						ventana->cursor_line=i;
+						zxvision_set_offset_y_or_maximum(ventana,i);
+                        debug_printf (VERBOSE_DEBUG,"Found at position %d",i);
                         return;
                 }
 
@@ -33522,7 +33509,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 	util_get_dir(archivo,directorio);
 	util_get_file_no_directory(archivo,nombre_sin_dir);
 
-	//void menu_ventana_scanf(char *titulo,char *texto,int max_length);
+
 
 	int ejecutar_accion=1;
 
@@ -33616,7 +33603,7 @@ void file_utils_paste_clipboard(void)
 	}
 
 	char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
+    getcwd(directorio_actual,PATH_MAX);
 
 	char nombre_sin_dir[PATH_MAX];
 	char nombre_final[PATH_MAX];
@@ -33751,9 +33738,7 @@ void menu_filesel_exist_ESC(void)
 void menu_filesel_file_no_ext(char *origen, char *destino)
 {
 
-	//char *copiadestino;
 
-	//copiadestino=destino;
 
 	int j;
 
@@ -33888,22 +33873,21 @@ switch (compressed_type) {
  struct stat buf_stat;
 
 
- if (stat(uncompress_program, &buf_stat)!=0) {
-debug_printf(VERBOSE_ERR,"Unable to find uncompress program: %s",uncompress_program);
-return 1;
+ 	if (stat(uncompress_program, &buf_stat)!=0) {
+		debug_printf(VERBOSE_ERR,"Unable to find uncompress program: %s",uncompress_program);
+		return 1;
+
+	}
+
+	debug_printf (VERBOSE_DEBUG,"Running %s",uncompress_command);
+
+	if (system (uncompress_command)==-1) {
+		debug_printf (VERBOSE_DEBUG,"Error running command %s",uncompress_command);
+		return 1;
+ 	}
 
 
- }
-
-debug_printf (VERBOSE_DEBUG,"Running %s",uncompress_command);
-
- if (system (uncompress_command)==-1) {
-debug_printf (VERBOSE_DEBUG,"Error running command %s",uncompress_command);
-return 1;
- }
-
-
-return 0;
+	return 0;
 
 }
 
@@ -33986,8 +33970,9 @@ void menu_filesel_write_file_last_dir(char *directorio_anterior)
 	debug_printf (VERBOSE_DEBUG,"Writing temp file " MENU_LAST_DIR_FILE_NAME " to tell last directory before uncompress (%s)",directorio_anterior);
 
 
-        FILE *ptr_lastdir;
-        ptr_lastdir=fopen(MENU_LAST_DIR_FILE_NAME,"wb");
+    FILE *ptr_lastdir;
+    ptr_lastdir=fopen(MENU_LAST_DIR_FILE_NAME,"wb");
+
 	if (ptr_lastdir!=NULL) {
 	        fwrite(directorio_anterior,1,strlen(directorio_anterior),ptr_lastdir);
         	fclose(ptr_lastdir);
@@ -34045,20 +34030,20 @@ void menu_textspeech_say_current_directory(void)
 
 int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
 {
-        int inicio_y_dir=1+FILESEL_INICIO_DIR;
+    int inicio_y_dir=1+FILESEL_INICIO_DIR;
 
-        if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+zxvision_get_filesel_alto_dir(ventana) && menu_mouse_x<ventana->visible_width-1) {
+    if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+zxvision_get_filesel_alto_dir(ventana) && menu_mouse_x<ventana->visible_width-1) {
 		//printf ("Mouse en zona de archivos\n");
 		return 1;
 	}
-        return 0;
+    
+	return 0;
 }
 
 
 void zxvision_menu_filesel_print_text_contents(zxvision_window *ventana)
 {
 	zxvision_print_string_defaults_fillspc(ventana,1,2,"Directory Contents:");
-	//menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
 }
 
 void file_utils_info_file(char *archivo)
@@ -34146,7 +34131,6 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	filesel_item *p;
 	int i;
 
-	//int mostrados_en_pantalla=(FILESEL_ALTO-10);
 	int mostrados_en_pantalla=(ventana->visible_height)-10;
 	//trucar el maximo en pantalla. dado que somos zxvision, se pueden mostar ya todos en resolucion virtual de ventana
 	mostrados_en_pantalla=999999;
@@ -34163,24 +34147,21 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 
 		//Solo hacer esto si es visible en pantalla
 		if (i<mostrados_en_pantalla) {
-		//zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,i);
+		
 		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,(ventana->total_width)-2,i);
 		
 
 		//if (filesel_linea_seleccionada==i) {
 		if (ventana->cursor_line==i) {
 			char buffer[OVERLAY_SCREEN_MAX_WIDTH+1],buffer2[OVERLAY_SCREEN_MAX_WIDTH+1+32];
-			//primero borrar con espacios
-
-			//menu_escribe_texto_ventana(7,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"                      ");
-
+			
 
 			strcpy(filesel_nombre_archivo_seleccionado,p->d_name);
 
 			//menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,22);
 			menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,ventana->visible_width-6-1); //6 ocupa el texto "File: "
 			sprintf (buffer2,"File: %s",buffer);
-			//menu_escribe_texto_ventana(1,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer2);
+			
 			zxvision_print_string_defaults_fillspc(ventana,1,1,buffer2);
 
 
@@ -34824,12 +34805,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
     }
 
 
-//zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
-	//int filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto;
-	//filesel_ventana_x=FILESEL_INICIAL_X;
-	//filesel_ventana_y=FILESEL_INICIAL_Y;
-	//filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
-	//filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;
+
 	if (filesel_primera_vez) {
 		//La primera de todas metemos ventana centrada. Las siguientes, conservamos posicion
 		filesel_primera_vez=0;
@@ -34837,7 +34813,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		last_filesel_ventana_y=FILESEL_INICIAL_Y;
 	}
 
-	int primera_ventana=1;
+	//int primera_ventana=1;
 
 	menu_reset_counters_tecla_repeticion();
 
@@ -34918,32 +34894,28 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		ventana=&ventana_filesel;
 
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
-		//zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
-		//printf ("ventana %d %d %d X %d\n",last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto);
-
-		/*
-		*/
+		
 
 		//Desactivamos esto
-		if (0 /*primera_ventana*/) {
+		/*if (primera_ventana) {
 			//printf ("primera ventana\n");
 			//Comprobar rangos. Si por ejemplo teniamos el zxdesktop activo en el ultimo filesel,
 			//y quitamos zxdesktop y volvemos aqui, interesa que compruebe dichas coordenadas
 			zxvision_new_window(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
 			primera_ventana=0;
-		}
+		}*/
 
-		else {
+		//else {
 			//printf ("no primera ventana\n");
 			//Usar ultimas coordenadas y tamaño, sin comprobar rango de maximo ancho y alto 32x24
 			zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
 			zxvision_new_window_no_check_range(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
-		}
+		//}
 
 
 
-	        ventana->upper_margin=4;
-	        ventana->lower_margin=4;
+	    ventana->upper_margin=4;
+	    ventana->lower_margin=4;
 		ventana->visible_cursor=1;
 
 		zxvision_draw_window(ventana);
@@ -34987,7 +34959,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                 		//para que haga lectura del edit box
 		                menu_speech_tecla_pulsada=0;
 
-				//tecla=zxvision_scanf(ventana,filesel_nombre_archivo_seleccionado,PATH_MAX,22,7,1);
+				
 				tecla=zxvision_scanf(ventana,filesel_nombre_archivo_seleccionado,PATH_MAX,ventana->visible_width-6-2,7,1);
 				//); //6 ocupa el texto "File: "
 
@@ -35002,7 +34974,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//ESC
                 if (tecla==2) {
                 	menu_filesel_exist_ESC();
-			zxvision_destroy_window(ventana);
+					zxvision_destroy_window(ventana);
                     return 0;
 				}
 
@@ -35100,9 +35072,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//Para no releer todas las entradas
 				menu_speech_tecla_pulsada=1;
 
-		        //menu_refresca_pantalla();
-				//menu_espera_tecla();
-				//tecla=menu_get_pressed_key();
 
 				tecla=zxvision_common_getkey_refresh();
 				//printf ("Despues lee tecla\n");
@@ -35210,7 +35179,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//printf ("salimos con ESC. nombre directorio: %s\n",archivo);
                         menu_filesel_exist_ESC();
 
-			zxvision_destroy_window(ventana);
+						zxvision_destroy_window(ventana);
                         return 0;
 
 					break;
@@ -35226,7 +35195,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                 if (item_seleccionado==NULL) {
                                                         //Esto pasa en las carpetas vacias, como /home en Mac OS
                                                                         menu_filesel_exist_ESC();
-									zxvision_destroy_window(ventana);
+																		zxvision_destroy_window(ventana);
                                                                         return 0;
 
 
@@ -35248,7 +35217,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                                                                 else {
                                                                         menu_filesel_change_to_tmp(tmpdir);
-									releer_directorio=1;
+																		releer_directorio=1;
                                                                 }
 						}
 
@@ -35266,7 +35235,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						if (item_seleccionado==NULL) {
 							//Esto pasa en las carpetas vacias, como /home en Mac OS
                                                                         menu_filesel_exist_ESC();
-									zxvision_destroy_window(ventana);
+																		zxvision_destroy_window(ventana);
                                                                         return 0;
 
 
@@ -35362,7 +35331,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                         //Extension no conocida. No modificar variable archivo
                                                         //printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
 														cls_menu_overlay();
-							zxvision_destroy_window(ventana);
+														zxvision_destroy_window(ventana);
                                                         return 0;
                                     }
 
@@ -35385,19 +35354,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				if (tecla=='D') {
 					releer_directorio=menu_filesel_cambiar_unidad_o_volumen();
-					/*
-					char letra=menu_filesel_cambiar_unidad_windows();
-					//printf ("letra: %d\n",letra);
-					if (letra!=0) {
-						char directorio[3];
-						sprintf (directorio,"%c:",letra);
-
-						//printf ("Changing to unit %s\n",directorio);
-
-						menu_filesel_chdir(directorio);
-						releer_directorio=1;
-						
-					}*/
+					
 				}
 
 				if (tecla=='R') {	

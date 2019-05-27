@@ -4,7 +4,7 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
--File selector que se expanda al ancho de ventana. Mínimo 32. Definir un maximo
+-Comprobar a fondo fileselector despues de cambios a redimensionable
 
 -En FAQ explicar qué es ZX Desktop
 
