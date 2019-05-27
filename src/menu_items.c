@@ -4047,7 +4047,6 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		alto=SOUND_WAVE_ALTO+4;
 	}
 
-	//zxvision_new_window(&ventana,SOUND_WAVE_X,SOUND_WAVE_Y-2,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+4,SOUND_WAVE_ANCHO-1,SOUND_WAVE_ALTO+4-2,"Waveform");
 	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
 	zxvision_draw_window(&ventana);		
 
@@ -4449,8 +4448,18 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,VISUALMEM_DEFAULT_X,visualmem_y_variable,VISUALMEM_DEFAULT_WINDOW_ANCHO,VISUALMEM_DEFAULT_WINDOW_ALTO,
-							VISUALMEM_DEFAULT_WINDOW_ANCHO-1,VISUALMEM_DEFAULT_WINDOW_ALTO-2,"Visual memory");
+	int x,y,ancho,alto;
+
+
+	if (!util_find_window_geometry("visualmem",&x,&y,&ancho,&alto)) {
+		x=VISUALMEM_DEFAULT_X;
+		y=visualmem_y_variable;
+		ancho=VISUALMEM_DEFAULT_WINDOW_ANCHO;
+		alto=VISUALMEM_DEFAULT_WINDOW_ALTO;
+	}
+
+
+	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho-1,alto-2,"Visual memory");
 	zxvision_draw_window(&ventana);				
 
 
@@ -4567,6 +4576,9 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
     cls_menu_overlay();
+
+	util_add_window_geometry("visualmem",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+
 	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
 	zxvision_destroy_window(&ventana);		
 
