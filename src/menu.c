@@ -4178,6 +4178,7 @@ void zxvision_draw_below_windows_nospeech(zxvision_window *w)
 	//printf ("despues draw below\n");
 }
 
+//Controlar rangos excepto tamaño ventana en estatico
 void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visible_height)
 {
 
@@ -4189,8 +4190,10 @@ void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visib
 
 	 (*x<0               || *x>ZXVISION_MAX_X_VENTANA) ||
 	 (*y<0               || *y>ZXVISION_MAX_Y_VENTANA) ||
-	 (*visible_width<=0  || *visible_width>ZXVISION_MAX_ANCHO_VENTANA) ||
-	 (*visible_height<=0 || *visible_height>ZXVISION_MAX_ALTO_VENTANA) ||
+
+	 //Rangos estaticos de ventana
+	 (*visible_width<=0) ||
+	 (*visible_height<=0) ||
 
 	//Rangos de final de ventana. ZXVISION_MAX_X_VENTANA normalmente vale 31. ZXVISION_MAX_Y_VENTANA normalmente vale 23. Si esta en ancho 31 y le suma 1, es ok. Si suma 2, es error
 	 ((*x)+(*visible_width)>ZXVISION_MAX_X_VENTANA+1) ||
@@ -4199,6 +4202,7 @@ void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visib
 	)
 		{
                 debug_printf (VERBOSE_INFO,"zxvision_new_window: window out of range: %d,%d %dx%d",*x,*y,*visible_width,*visible_height);
+				//printf ("zxvision_new_window: window out of range: %d,%d %dx%d\n",*x,*y,*visible_width,*visible_height);
                 *x=0;
                 *y=0;
                 *visible_width=ZXVISION_MAX_ANCHO_VENTANA;
@@ -4207,6 +4211,32 @@ void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visib
 		}
 }
 
+//Comprobar que el alto y ancho no pase de un fijo estatico (32x24 normalmente),
+//para tener ventanas que normalmente no excedan ese 32x24 al crearse
+//Nota: menu_filesel no hace este check
+void zxvision_new_window_check_static_size_range(int *x,int *y,int *visible_width,int *visible_height)
+{
+
+
+	if (
+
+
+	 //Rangos estaticos de ancho ventana
+	 (*visible_width>ZXVISION_MAX_ANCHO_VENTANA) ||
+	 (*visible_height>ZXVISION_MAX_ALTO_VENTANA) 
+
+
+	)
+		{
+                debug_printf (VERBOSE_INFO,"zxvision_new_window: window out of range: %d,%d %dx%d",*x,*y,*visible_width,*visible_height);
+				//printf ("zxvision_new_window: window out of range: %d,%d %dx%d\n",*x,*y,*visible_width,*visible_height);
+                *x=0;
+                *y=0;
+                *visible_width=ZXVISION_MAX_ANCHO_VENTANA;
+                *visible_height=ZXVISION_MAX_ALTO_VENTANA;
+
+		}
+}
 
 void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
@@ -4310,6 +4340,7 @@ void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int vi
 {
 
 	zxvision_new_window_check_range(&x,&y,&visible_width,&visible_height);
+	zxvision_new_window_check_static_size_range(&x,&y,&visible_width,&visible_height);
 	zxvision_new_window_no_check_range(w,x,y,visible_width,visible_height,total_width,total_height,title);
 }
 
@@ -34133,7 +34164,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 		//Solo hacer esto si es visible en pantalla
 		if (i<mostrados_en_pantalla) {
 		//zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,FILESEL_ANCHO-2,i);
-		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,(ventana->visible_width)-2,i);
+		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,(ventana->total_width)-2,i);
 		
 
 		//if (filesel_linea_seleccionada==i) {
@@ -34768,6 +34799,13 @@ int menu_filesel_cambiar_unidad_o_volumen(void)
 	return releer_directorio;
 }
 
+//Ultimas coordenadas de filesel
+int last_filesel_ventana_x=0;
+int last_filesel_ventana_y=0;
+int last_filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
+int last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;
+int filesel_primera_vez=1;
+
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
@@ -34785,11 +34823,17 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 //zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
-	int filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto;
-	filesel_ventana_x=FILESEL_INICIAL_X;
-	filesel_ventana_y=FILESEL_INICIAL_Y;
-	filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
-	filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;
+	//int filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto;
+	//filesel_ventana_x=FILESEL_INICIAL_X;
+	//filesel_ventana_y=FILESEL_INICIAL_Y;
+	//filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
+	//filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;
+	if (filesel_primera_vez) {
+		//La primera de todas metemos ventana centrada. Las siguientes, conservamos posicion
+		filesel_primera_vez=0;
+		last_filesel_ventana_x=FILESEL_INICIAL_X;
+		last_filesel_ventana_y=FILESEL_INICIAL_Y;
+	}
 
 	int primera_ventana=1;
 
@@ -34860,11 +34904,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 			cls_menu_overlay();
 
 			//Guardar anteriores tamaños ventana
-			filesel_ventana_x=ventana->x;
-			filesel_ventana_y=ventana->y;
+			last_filesel_ventana_x=ventana->x;
+			last_filesel_ventana_y=ventana->y;
 
-			filesel_ventana_visible_ancho=ventana->visible_width;
-			filesel_ventana_visible_alto=ventana->visible_height;
+			last_filesel_ventana_visible_ancho=ventana->visible_width;
+			last_filesel_ventana_visible_alto=ventana->visible_height;
 
 
 			zxvision_destroy_window(ventana);
@@ -34873,18 +34917,25 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
 		//zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
-		printf ("ventana %d %d %d X %d\n",filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto);
+		//printf ("ventana %d %d %d X %d\n",last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto);
 
-		if (primera_ventana) {
-			printf ("primera ventana\n");
-			zxvision_new_window(ventana,filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto,filesel_ventana_visible_ancho-1,alto_total,titulo);
+		/*
+		*/
+
+		//Desactivamos esto
+		if (0 /*primera_ventana*/) {
+			//printf ("primera ventana\n");
+			//Comprobar rangos. Si por ejemplo teniamos el zxdesktop activo en el ultimo filesel,
+			//y quitamos zxdesktop y volvemos aqui, interesa que compruebe dichas coordenadas
+			zxvision_new_window(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
 			primera_ventana=0;
 		}
 
 		else {
-			printf ("no primera ventana\n");
-			//Usar ultimas coordenadas y tamaño
-			zxvision_new_window_no_check_range(ventana,filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto,filesel_ventana_visible_ancho-1,alto_total,titulo);
+			//printf ("no primera ventana\n");
+			//Usar ultimas coordenadas y tamaño, sin comprobar rango de maximo ancho y alto 32x24
+			zxvision_new_window_check_range(&last_filesel_ventana_x,&last_filesel_ventana_y,&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto);
+			zxvision_new_window_no_check_range(ventana,last_filesel_ventana_x,last_filesel_ventana_y,last_filesel_ventana_visible_ancho,last_filesel_ventana_visible_alto,last_filesel_ventana_visible_ancho-1,alto_total,titulo);
 		}
 
 
