@@ -32837,17 +32837,19 @@ void reset_splash_text(void)
 
 #define FILESEL_ANCHO 30
 #define FILESEL_INICIAL_ANCHO 30
-#define FILESEL_MAX_ANCHO OVERLAY_SCREEN_MAX_WIDTH
-#define FILESEL_ALTO 23
 
-#define FILESEL_X (menu_center_x()-FILESEL_ANCHO/2)
-#define FILESEL_Y (menu_center_y()-FILESEL_ALTO/2)
+#define FILESEL_MAX_ANCHO OVERLAY_SCREEN_MAX_WIDTH
+//#define FILESEL_ALTO 23
+#define FILESEL_INICIAL_ALTO 23
+
+#define FILESEL_INICIAL_X (menu_center_x()-FILESEL_INICIAL_ANCHO/2)
+#define FILESEL_INICIAL_Y (menu_center_y()-FILESEL_INICIAL_ALTO/2)
 //#define FILESEL_X 1
 //#define FILESEL_Y 1
 
-#define FILESEL_ALTO_DIR (FILESEL_ALTO-10)
-#define FILESEL_POS_FILTER (FILESEL_ALTO-4)
-#define FILESEL_POS_LEYENDA (FILESEL_ALTO-3)
+//#define (FILESEL_ALTO-10) (FILESEL_ALTO-10)
+//#define (FILESEL_ALTO-4) (FILESEL_ALTO-4)
+//#define (FILESEL_ALTO-3) (FILESEL_ALTO-3)
 #define FILESEL_INICIO_DIR 4
 
 #define ZXVISION_POS_FILTER 6
@@ -32904,23 +32906,22 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 
 
         //borramos primero con espacios
-        //menu_escribe_texto_ventana(9,FILESEL_ALTO-3,0,7+8,"               ");
+
 
 	int posicion_filtros=ZXVISION_POS_FILTER;
 
-        //menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"               ");
+
 	zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"               ");
 
 
         //y luego escribimos
-        //menu_escribe_texto_ventana(1,FILESEL_ALTO-3,0,7+8,buffer_filtros);
+
 
         //si esta filesel_zona_pantalla=2, lo ponemos en otro color. TODO
         int inverso=0;
         if (filesel_zona_pantalla==2) inverso=1;
 
-        //menu_escribe_linea_opcion(FILESEL_POS_FILTER,activo,1,buffer_filtros);
-	//zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_filtros);
+
 
 	int tinta=ESTILO_GUI_TINTA_NORMAL;
 	int papel=ESTILO_GUI_PAPEL_NORMAL;
@@ -32934,9 +32935,9 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 	zxvision_print_string(ventana,1,posicion_filtros,tinta,papel,0,buffer_filtros);
 }
 
-void menu_filesel_print_legend(void)
+/*void menu_filesel_print_legend(void)
 {
-	menu_escribe_linea_opcion(FILESEL_POS_LEYENDA,-1,1,"TAB: Changes section");
+	menu_escribe_linea_opcion((FILESEL_ALTO-3),-1,1,"TAB: Changes section");
 	if (menu_filesel_show_utils.v) {
 		//Forzar a mostrar atajos
 		z80_bit antes_menu_writing_inverse_color;
@@ -32945,13 +32946,13 @@ void menu_filesel_print_legend(void)
 
 
 								//    01234  567890  12345  678901  2345678901
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Trunc ~~Del m~~Kdr c~~Onv ~~Inf");
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
+		menu_escribe_linea_opcion((FILESEL_ALTO-4)-1,-1,1,"~~View ~~Trunc ~~Del m~~Kdr c~~Onv ~~Inf");
+		menu_escribe_linea_opcion((FILESEL_ALTO-4),-1,1,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
 
 		//Restaurar comportamiento mostrar atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 	}
-}
+}*/
 
 void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 {
@@ -33665,13 +33666,13 @@ void file_utils_paste_clipboard(void)
 }
 
 
-void menu_filesel_cursor_abajo(void)
+/*void menu_filesel_cursor_abajo(void)
 {
 //ver que no sea ultimo archivo
 	if (si_menu_filesel_no_mas_alla_ultimo_item(filesel_linea_seleccionada)) {
                                         //if (filesel_archivo_seleccionado+filesel_linea_seleccionada<filesel_total_items-1)      {
                                                 //ver si es final de pantalla
-                                                if (filesel_linea_seleccionada==FILESEL_ALTO_DIR-1) {
+                                                if (filesel_linea_seleccionada==(FILESEL_ALTO-10)-1) {
                                                         filesel_archivo_seleccionado++;
                                                 }
                                                 else {
@@ -33679,11 +33680,11 @@ void menu_filesel_cursor_abajo(void)
                                                 }
                                         }
 
-}
+}*/
 
 
 
-void menu_filesel_cursor_arriba(void)
+/*void menu_filesel_cursor_arriba(void)
 {
 //ver que no sea primer archivo
                                         if (filesel_archivo_seleccionado+filesel_linea_seleccionada!=0) {
@@ -33695,7 +33696,7 @@ void menu_filesel_cursor_arriba(void)
                                                         filesel_linea_seleccionada--;
                                                 }
                                         }
-}
+}*/
 
 void zxvision_menu_filesel_cursor_arriba(zxvision_window *ventana)
 {
@@ -34102,13 +34103,13 @@ void menu_textspeech_say_current_directory(void)
 	menu_textspeech_send_text(buffer_texto);
 }
 
-int si_mouse_zona_archivos(void)
+/*int si_mouse_zona_archivos(void)
 {
 	int inicio_y_dir=1+FILESEL_INICIO_DIR;
 
-	if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) return 1;
+	if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+(FILESEL_ALTO-10)) return 1;
 	return 0;
-}
+}*/
 
 
 int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
@@ -34218,7 +34219,8 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	filesel_item *p;
 	int i;
 
-	int mostrados_en_pantalla=FILESEL_ALTO_DIR;
+	//int mostrados_en_pantalla=(FILESEL_ALTO-10);
+	int mostrados_en_pantalla=(ventana->visible_height)-10;
 	//trucar el maximo en pantalla. dado que somos zxvision, se pueden mostar ya todos en resolucion virtual de ventana
 	mostrados_en_pantalla=999999;
 
@@ -34430,7 +34432,7 @@ char menu_filesel_cambiar_unidad_windows(void)
 int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 {
 								int inicio_y_dir=1+FILESEL_INICIO_DIR;
-                            //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+FILESEL_ALTO_DIR) {
+                            //if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+(FILESEL_ALTO-10)) {
                             //printf ("Dentro lista archivos\n");
 
                             //Ver si linea dentro de rango
@@ -34957,7 +34959,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		ventana=&ventana_filesel;
 
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
-		zxvision_new_window(ventana,FILESEL_X,FILESEL_Y,FILESEL_INICIAL_ANCHO,FILESEL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
+		zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
 
 	        ventana->upper_margin=4;
 	        ventana->lower_margin=4;
@@ -34993,7 +34995,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 			//	ventana->cursor_line,filesel_linea_seleccionada,filesel_archivo_seleccionado);
 
 
-			//printf ("FILESEL_ALTO_DIR: %d zxvision_get_filesel_alto_dir: %d\n",FILESEL_ALTO_DIR,zxvision_get_filesel_alto_dir(ventana) );
+			//printf ("(FILESEL_ALTO-10): %d zxvision_get_filesel_alto_dir: %d\n",(FILESEL_ALTO-10),zxvision_get_filesel_alto_dir(ventana) );
 
 			switch (filesel_zona_pantalla) {
 				case 0:
@@ -35161,7 +35163,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                         }
 
-                        else if (menu_mouse_y==FILESEL_POS_FILTER+1) {
+                        else if (menu_mouse_y==(ventana->visible_height-4)+1) {
                             //En la linea de filtros
                             //nada en especial
                             //printf ("En linea de filtros\n");
