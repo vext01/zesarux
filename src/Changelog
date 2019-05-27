@@ -4,6 +4,7 @@ Version 7.3. 15 April 2019 - xxx edition
 --Program Window can be extended horizontally and have a right region to place menu zxvision windows (called ZX Desktop)
 --Draw engine: now it allows transparency
 --Menu windows can be placed and resized to the whole program window
+--Some windows geometry (position, size) are saved in the configuration
 
 Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten

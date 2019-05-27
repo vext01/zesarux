@@ -3537,6 +3537,13 @@ int util_write_configfile(void)
 
   if (parameter_disablebetawarning[0])        ADD_STRING_CONFIG,"--disablebetawarning \"%s\"",parameter_disablebetawarning);
 
+  for (i=0;i<total_config_window_geometry;i++) {
+       ADD_STRING_CONFIG,"--windowgeometry %s %d %d %d %d", saved_config_window_geometry_array[i].nombre,
+       saved_config_window_geometry_array[i].x,saved_config_window_geometry_array[i].y,
+        saved_config_window_geometry_array[i].ancho,saved_config_window_geometry_array[i].alto);
+  }
+
+
 
   for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
     enum defined_f_function_ids accion=defined_f_functions_keys_array[i];

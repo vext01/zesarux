@@ -34815,6 +34815,8 @@ void menu_filesel_save_params_window(zxvision_window *ventana)
 
 			last_filesel_ventana_visible_ancho=ventana->visible_width;
 			last_filesel_ventana_visible_alto=ventana->visible_height;
+
+	util_add_window_geometry("filesel",ventana->x,ventana->y,ventana->visible_width,ventana->visible_height);
 }
 
 
@@ -34836,11 +34838,16 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 	if (filesel_primera_vez) {
 		//La primera de todas metemos ventana centrada. Las siguientes, conservamos posicion
+		if (!util_find_window_geometry("filesel",&last_filesel_ventana_x,&last_filesel_ventana_y,
+			&last_filesel_ventana_visible_ancho,&last_filesel_ventana_visible_alto)) {
+
+			last_filesel_ventana_x=FILESEL_INICIAL_X;
+			last_filesel_ventana_y=FILESEL_INICIAL_Y;
+			last_filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
+			last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;	
+		}
+
 		filesel_primera_vez=0;
-		last_filesel_ventana_x=FILESEL_INICIAL_X;
-		last_filesel_ventana_y=FILESEL_INICIAL_Y;
-		last_filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
-		last_filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;		
 	}
 
 	//int primera_ventana=1;
