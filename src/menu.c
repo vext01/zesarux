@@ -34771,6 +34771,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
     }
 
 
+//zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
+	int filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto;
+	filesel_ventana_x=FILESEL_INICIAL_X;
+	filesel_ventana_y=FILESEL_INICIAL_Y;
+	filesel_ventana_visible_ancho=FILESEL_INICIAL_ANCHO;
+	filesel_ventana_visible_alto=FILESEL_INICIAL_ALTO;
 
 	menu_reset_counters_tecla_repeticion();
 
@@ -34842,7 +34848,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		ventana=&ventana_filesel;
 
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
-		zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
+		//zxvision_new_window(ventana,FILESEL_INICIAL_X,FILESEL_INICIAL_Y,FILESEL_INICIAL_ANCHO,FILESEL_INICIAL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
+		zxvision_new_window(ventana,filesel_ventana_x,filesel_ventana_y,filesel_ventana_visible_ancho,filesel_ventana_visible_alto,filesel_ventana_visible_ancho-1,alto_total,titulo);
+
+
 
 	        ventana->upper_margin=4;
 	        ventana->lower_margin=4;
