@@ -32836,6 +32836,7 @@ void reset_splash_text(void)
 }
 
 #define FILESEL_ANCHO 30
+#define FILESEL_INICIAL_ANCHO 30
 #define FILESEL_ALTO 23
 
 #define FILESEL_X (menu_center_x()-FILESEL_ANCHO/2)
@@ -32851,65 +32852,7 @@ void reset_splash_text(void)
 #define ZXVISION_POS_FILTER 6
 #define ZXVISION_POS_LEYENDA 7
 
-void menu_filesel_print_filters(char *filtros[])
-{
 
-
-	if (menu_filesel_show_utils.v) return; //Si hay utilidades activas, no mostrar filtros
-
-	//texto para mostrar filtros. darle bastante margen aunque no quepa en pantalla
-	char buffer_filtros[200];
-
-
-	char *f;
-
-	int i,p;
-	p=0;
-	sprintf(buffer_filtros,"Filter: ");
-
-	p=p+8;
-
-
-        for (i=0;filtros[i];i++) {
-                //si filtro es "", significa todo (*)
-
-                f=filtros[i];
-                if (f[0]==0) f="*";
-
-                //copiamos
-		//sprintf(&buffer_filtros[p],"*.%s ",f);
-		sprintf(&buffer_filtros[p],"%s ",f);
-		p=p+strlen(f)+1;
-
-        }
-
-
-	//Si texto filtros pasa del tope, rellenar con "..."
-	if (p>FILESEL_ANCHO-2) {
-		p=FILESEL_ANCHO-2;
-		buffer_filtros[p-1]='.';
-		buffer_filtros[p-2]='.';
-		buffer_filtros[p-3]='.';
-	}
-
-
-	buffer_filtros[p]=0;
-
-
-	//borramos primero con espacios
-	//menu_escribe_texto_ventana(9,FILESEL_ALTO-3,0,7+8,"               ");
-	menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"               ");
-
-
-	//y luego escribimos
-	//menu_escribe_texto_ventana(1,FILESEL_ALTO-3,0,7+8,buffer_filtros);
-
-	//si esta filesel_zona_pantalla=2, lo ponemos en otro color
-	int activo=-1;
-	if (filesel_zona_pantalla==2) activo=FILESEL_POS_FILTER;
-
-	menu_escribe_linea_opcion(FILESEL_POS_FILTER,activo,1,buffer_filtros);
-}
 
 
 void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[])
@@ -33008,16 +32951,7 @@ void menu_filesel_print_legend(void)
 
 void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 {
-/*
-#define FILESEL_X 1
-#define FILESEL_Y 1
-#define FILESEL_ANCHO 30
-#define FILESEL_ALTO 23
-#define FILESEL_ALTO_DIR (FILESEL_ALTO-10)
-#define FILESEL_POS_FILTER (FILESEL_ALTO-4)
-#define FILESEL_POS_LEYENDA (FILESEL_ALTO-3)
-#define FILESEL_INICIO_DIR 4
-*/
+
                 //Forzar a mostrar atajos
                 z80_bit antes_menu_writing_inverse_color;
                 antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
@@ -33197,165 +33131,7 @@ void zxvision_menu_filesel_print_file(zxvision_window *ventana,char *s,unsigned 
 }
 
 
-void menu_print_dir(int inicial)
-{
-	//printf ("\nmenu_print_dir\n");
 
-	//escribir en ventana directorio de archivos
-
-	//Para speech
-	char texto_opcion_activa[PATH_MAX+100]; //Dado que hay que meter aqui el nombre del archivo y un poquito mas de texto
-	//Asumimos por si acaso que no hay ninguna activa
-	texto_opcion_activa[0]=0;
-
-
-
-	filesel_item *p;
-	int i;
-
-	int mostrados_en_pantalla=FILESEL_ALTO_DIR;
-
-	p=menu_get_filesel_item(inicial);
-
-	//Para calcular total de archivos de ese directorio, siguiendo el filtro. Util para mostrar indicador de porcentaje '*'
-	//int total_archivos=inicial;
-
-	filesel_total_archivos=inicial;
-
-	for (i=0;p!=NULL;i++,filesel_total_archivos++) {
-		//printf ("file: %s\n",p->d_name);
-
-		//Solo hacer esto si es visible en pantalla
-		if (i<mostrados_en_pantalla) {
-		menu_filesel_print_file(p->d_name,p->d_type,FILESEL_ANCHO-2,FILESEL_Y+3+i);
-
-		if (filesel_linea_seleccionada==i) {
-			char buffer[50],buffer2[50];
-			//primero borrar con espacios
-
-			menu_escribe_texto_ventana(7,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"                      ");
-
-
-			strcpy(filesel_nombre_archivo_seleccionado,p->d_name);
-
-			menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,22);
-			sprintf (buffer2,"File: %s",buffer);
-			menu_escribe_texto_ventana(1,1,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer2);
-
-
-				debug_printf (VERBOSE_DEBUG,"Selected: %s. filesel_zona_pantalla: %d",p->d_name,filesel_zona_pantalla);
-				//Para speech
-				//Si estamos en zona central del selector de archivos, decirlo
-				if (filesel_zona_pantalla==1) {
-
-	                                if (menu_active_item_primera_vez) {
-						//menu_filesel_print_file_get(texto_opcion_activa,p->d_name,p->d_type,FILESEL_ANCHO-2);
-
-        	                                sprintf (texto_opcion_activa,"Active item: %s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
-                	                        menu_active_item_primera_vez=0;
-                        	        }
-
-                                	else {
-	                                        sprintf (texto_opcion_activa,"%s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
-        	                        }
-
-				}
-
-
-		}
-		}
-
-		p=p->next;
-
-    }
-
-	//espacios al final.
-    for (;i<mostrados_en_pantalla;i++) {
-                //printf ("espacios\n");
-                menu_filesel_print_file(" ",DT_REG,FILESEL_ANCHO-2,FILESEL_Y+3+i);
-    }	
-
-	//int texto_no_cabe=0;
-	filesel_no_cabe_todo=0;
-
-	debug_printf (VERBOSE_DEBUG,"Total files read (applying filters): %d",filesel_total_archivos);
-	if (filesel_total_archivos>mostrados_en_pantalla) {
-		filesel_no_cabe_todo=1;
-	}
-
-    if (filesel_no_cabe_todo) {
-                // mostrar * a la derecha para indicar donde estamos en porcentaje
-          
-                int ybase=ventana_y+5;
-                filesel_porcentaje_visible=((inicial+filesel_linea_seleccionada)*100)/(filesel_total_archivos+1); //+1 para no hacer division por cero
-                //int porcentaje=((primera_linea+alto_ventana)*100)/(indice_linea+1); //+1 para no hacer division por cero
-
-                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea,mostrar_cursor,linea_cursor)==0)
-                //if (menu_generic_message_final_abajo(primera_linea,alto_ventana,indice_linea)==0)
-                //        porcentaje=100;
-
-                //debug_printf (VERBOSE_DEBUG,"Percentage reading window: %d",porcentaje);
-
-		//Mostrar linea de barra de progreso vertical
-		if (!menu_hide_vertical_percentaje_bar.v) {
-			int i;
-			for (i=0;i<FILESEL_ALTO_DIR+1;i++) putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4+i,'|',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-		}
-
-        int sumaralto=((FILESEL_ALTO_DIR)*filesel_porcentaje_visible)/100;
-        
-		debug_printf (VERBOSE_DEBUG,"Percentage cursor: %d",filesel_porcentaje_visible);
-		debug_printf (VERBOSE_DEBUG,"Putting percentaje cursor at Y position: %d",ybase+sumaralto);
-		putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ybase+sumaralto,'*',ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
-
-    }
-
-
-
-
-
-	//Imprimir directorio actual
-	//primero borrar con espacios
-
-    menu_escribe_texto_ventana(14,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"               ");
-
-
-	char current_dir[PATH_MAX];
-	char buffer_dir[50];
-	char buffer3[50];
-	getcwd(current_dir,PATH_MAX);
-
-	menu_tape_settings_trunc_name(current_dir,buffer_dir,16);
-	sprintf (buffer3,"Current dir: %s",buffer_dir);
-	menu_escribe_texto_ventana(1,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer3);
-
-
-                if (texto_opcion_activa[0]!=0) {
-
-			debug_printf (VERBOSE_DEBUG,"Send active line to speech: %s",texto_opcion_activa);
-                        //Active item siempre quiero que se escuche
-
-                        //Guardamos estado actual
-                        int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
-                        menu_speech_tecla_pulsada=0;
-
-                        menu_textspeech_send_text(texto_opcion_activa);
-
-                        //Restauro estado
-                        //Pero si se ha pulsado tecla, no restaurar estado
-                        //Esto sino provocaria que , por ejemplo, en la ventana de confirmar yes/no,
-                        //se entra con menu_speech_tecla_pulsada=0, se pulsa tecla mientras se esta leyendo el item activo,
-                        //y luego al salir de aqui, se pierde el valor que se habia metido (1) y se vuelve a poner el 0 del principio
-                        //provocando que cada vez que se mueve el cursor, se relea la ventana entera
-                        if (menu_speech_tecla_pulsada==0) menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
-                }
-
-	//Imprimir flechar arriba y abajo para raton
-	putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4,'^',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-	putchar_menu_overlay(ventana_x+FILESEL_ANCHO-1,ventana_y+4+FILESEL_ALTO_DIR+1,'v',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-
-
-}
 
 void menu_filesel_switch_filters(void)
 {
@@ -34478,7 +34254,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 				if (filesel_zona_pantalla==1) {
 
 	                                if (menu_active_item_primera_vez) {
-						//menu_filesel_print_file_get(texto_opcion_activa,p->d_name,p->d_type,FILESEL_ANCHO-2);
+						
 
         	                                sprintf (texto_opcion_activa,"Active item: %s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
                 	                        menu_active_item_primera_vez=0;
@@ -34498,11 +34274,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 
     }
 
-	//espacios al final.
-    /*for (;i<mostrados_en_pantalla;i++) {
-                //printf ("espacios\n");
-                menu_filesel_print_file(" ",DT_REG,FILESEL_ANCHO-2,FILESEL_Y+3+i);
-    }*/
+
 
 	//int texto_no_cabe=0;
 	filesel_no_cabe_todo=0;
@@ -34659,7 +34431,7 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
                             int linea_final=menu_mouse_y-inicio_y_dir;
 
                             //Si esta en la zona derecha de selector de porcentaje no hacer nada
-                            //if (filesel_no_cabe_todo && menu_mouse_x==FILESEL_ANCHO-1) {
+                            
                             if (menu_mouse_x==FILESEL_ANCHO-1) return 0;
 
                             //filesel_linea_seleccionada=menu_mouse_y-inicio_y_dir;
@@ -35126,10 +34898,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 	//Inicialmente a NULL
 	ventana=NULL;
-/*
-	zxvision_new_window(&ventana,x,y,ancho,alto,
-							ancho-1,alto-2,"Video Layers");
-*/
+
 
 	//guardamos filtros originales
 	filesel_filtros_iniciales=filtros;
@@ -35180,7 +34949,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		ventana=&ventana_filesel;
 
 		int alto_total=filesel_total_items+ZXVISION_FILESEL_INITIAL_MARGIN; //Sumarle las leyendas, etc
-		zxvision_new_window(ventana,FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,FILESEL_ANCHO-1,alto_total,titulo);
+		zxvision_new_window(ventana,FILESEL_X,FILESEL_Y,FILESEL_INICIAL_ANCHO,FILESEL_ALTO,FILESEL_INICIAL_ANCHO-1,alto_total,titulo);
 
 	        ventana->upper_margin=4;
 	        ventana->lower_margin=4;

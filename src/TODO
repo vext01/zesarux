@@ -4,6 +4,8 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
+-File selector que se expanda al ancho de ventana. Mínimo 32. Definir un maximo
+
 -En FAQ explicar qué es ZX Desktop
 
 -Redimensionar ventana redibuja el zxdesktop?
@@ -26,11 +28,9 @@ Para próxima versión ZEsarUX:
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
 
--Con —configfile luego graba la config al archivo que toca?
+ok -Con —configfile luego graba la config al archivo que toca? SI
 
 -Mejorar zoom 0.75. Color gris si medio negro?
-
-ok-Opción command line de desactivar alguna first aid. Si no existe dicha aid, ignorarlo, por si algún día borro por código algunas que ya no existan y se quedan en archivo de config
 
 -que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
 
@@ -48,7 +48,6 @@ ok-Opción command line de desactivar alguna first aid. Si no existe dicha aid, 
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
 
-
 -al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
 
 -probar numselect
@@ -58,7 +57,7 @@ ok-Opción command line de desactivar alguna first aid. Si no existe dicha aid, 
 
 -probar cpu use footer en maquinas que no muestran (como windows)
 
--probar easter egg
+OK -probar easter egg. Si, lo hace en pantalla principal
 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
