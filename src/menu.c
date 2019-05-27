@@ -32935,24 +32935,7 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 	zxvision_print_string(ventana,1,posicion_filtros,tinta,papel,0,buffer_filtros);
 }
 
-/*void menu_filesel_print_legend(void)
-{
-	menu_escribe_linea_opcion((FILESEL_ALTO-3),-1,1,"TAB: Changes section");
-	if (menu_filesel_show_utils.v) {
-		//Forzar a mostrar atajos
-		z80_bit antes_menu_writing_inverse_color;
-		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-		menu_writing_inverse_color.v=1;
 
-
-								//    01234  567890  12345  678901  2345678901
-		menu_escribe_linea_opcion((FILESEL_ALTO-4)-1,-1,1,"~~View ~~Trunc ~~Del m~~Kdr c~~Onv ~~Inf");
-		menu_escribe_linea_opcion((FILESEL_ALTO-4),-1,1,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
-
-		//Restaurar comportamiento mostrar atajos
-		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
-	}
-}*/
 
 void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 {
@@ -33092,26 +33075,6 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 }
 
 //escribe el nombre de archivo o carpeta
-void menu_filesel_print_file(char *s,unsigned char  d_type,unsigned int max_length_shown,int y)
-{
-        //z80_byte papel=7+8;
-        //z80_byte tinta=0;
-
-	char buffer[PATH_MAX];
-
-	int linea_seleccionada;
-
-	linea_seleccionada=FILESEL_INICIO_DIR+filesel_linea_seleccionada;
-
-	menu_filesel_print_file_get(buffer, s, d_type, max_length_shown);
-
-	//si estamos en esa zona, destacar archivo seleccionado
-	int activo=linea_seleccionada;
-
-	if (filesel_zona_pantalla!=1) activo=-1;
-	menu_escribe_linea_opcion(y,activo,1,buffer);
-}
-
 
 //Margen de 8 lineas (4+4) de leyendas
 #define ZXVISION_FILESEL_INITIAL_MARGIN 8
@@ -33161,25 +33124,7 @@ char menu_minus_letra(char letra)
 	return letra;
 }
 
-void menu_filesel_localiza_letra(char letra)
-{
 
-	int i;
-	filesel_item *p;
-        p=primer_filesel_item;
-
-	for (i=0;i<filesel_total_items;i++) {
-		if (menu_minus_letra(p->d_name[0])>=menu_minus_letra(letra)) {
-            		filesel_linea_seleccionada=0;
-                	filesel_archivo_seleccionado=i;
-			return;
-		}
-
-
-                p=p->next;
-        }
-
-}
 
 void zxvision_menu_filesel_localiza_letra(zxvision_window *ventana,char letra)
 {
@@ -33204,28 +33149,7 @@ void zxvision_menu_filesel_localiza_letra(zxvision_window *ventana,char letra)
 
 }
 
-void menu_filesel_localiza_archivo(char *nombrebuscar)
-{
-	debug_printf (VERBOSE_DEBUG,"Searching last file %s",nombrebuscar);
-	int i;
-	filesel_item *p;
-        p=primer_filesel_item;
 
-	for (i=0;i<filesel_total_items;i++) {
-		debug_printf (VERBOSE_DEBUG,"File number: %d Name: %s",i,p->d_name);
-		//if (menu_minus_letra(p->d_name[0])>=menu_minus_letra(letra)) {
-		if (strcasecmp(nombrebuscar,p->d_name)<=0) {
-            		filesel_linea_seleccionada=0;
-                	filesel_archivo_seleccionado=i;
-					debug_printf (VERBOSE_DEBUG,"Found at position %d",i);
-			return;
-		}
-
-
-                p=p->next;
-        }
-
-}
 
 void zxvision_menu_filesel_localiza_archivo(zxvision_window *ventana,char *nombrebuscar)
 {
@@ -33666,37 +33590,6 @@ void file_utils_paste_clipboard(void)
 }
 
 
-/*void menu_filesel_cursor_abajo(void)
-{
-//ver que no sea ultimo archivo
-	if (si_menu_filesel_no_mas_alla_ultimo_item(filesel_linea_seleccionada)) {
-                                        //if (filesel_archivo_seleccionado+filesel_linea_seleccionada<filesel_total_items-1)      {
-                                                //ver si es final de pantalla
-                                                if (filesel_linea_seleccionada==(FILESEL_ALTO-10)-1) {
-                                                        filesel_archivo_seleccionado++;
-                                                }
-                                                else {
-                                                        filesel_linea_seleccionada++;
-                                                }
-                                        }
-
-}*/
-
-
-
-/*void menu_filesel_cursor_arriba(void)
-{
-//ver que no sea primer archivo
-                                        if (filesel_archivo_seleccionado+filesel_linea_seleccionada!=0) {
-                                                //ver si es principio de pantalla
-                                                if (filesel_linea_seleccionada==0) {
-                                                        filesel_archivo_seleccionado--;
-                                                }
-                                                else {
-                                                        filesel_linea_seleccionada--;
-                                                }
-                                        }
-}*/
 
 void zxvision_menu_filesel_cursor_arriba(zxvision_window *ventana)
 {
@@ -34103,13 +33996,7 @@ void menu_textspeech_say_current_directory(void)
 	menu_textspeech_send_text(buffer_texto);
 }
 
-/*int si_mouse_zona_archivos(void)
-{
-	int inicio_y_dir=1+FILESEL_INICIO_DIR;
 
-	if (menu_mouse_y>=inicio_y_dir && menu_mouse_y<inicio_y_dir+(FILESEL_ALTO-10)) return 1;
-	return 0;
-}*/
 
 
 int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
@@ -34123,10 +34010,6 @@ int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
         return 0;
 }
 
-void menu_filesel_print_text_contents(void)
-{
-	menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
-}
 
 void zxvision_menu_filesel_print_text_contents(zxvision_window *ventana)
 {
