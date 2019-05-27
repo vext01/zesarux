@@ -21372,9 +21372,15 @@ void menu_reinsert_tape(void)
 
 //truncar el nombre del archivo a un maximo
 //si origen es NULL, poner en destino cadena vacia
+//Si es 0 o menor que 0, devuelve siempre cadena vacia acabada en 0 (usa 1 byte)
+//Esto se hace en algunos casos para menu_filesel en que se resta sobre el tamaño visible y puede ser <=0
 void menu_tape_settings_trunc_name(char *orig,char *dest,int max)
 {
-
+	//printf ("max: %d\n",max);
+	if (max<=0) {
+		dest[0]=0;
+		return;
+	}
 	//en maximo se incluye caracter 0 del final
 	max--;
 
@@ -33075,7 +33081,7 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 
 
         //si no cabe, poner puntos suspensivos
-        if (strlen(s)>max_length_shown) {
+        if (strlen(s)>max_length_shown && i>=3) {
                 buffer[i-1]='.';
                 buffer[i-2]='.';
                 buffer[i-3]='.';
@@ -33090,7 +33096,7 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 	if (s[0]==' ' && s[1]==0) test_dir=0;
 
 	if (test_dir) {
-	        if (get_file_type(d_type,s) == 2) {
+	        if (get_file_type(d_type,s) == 2 && i>=5) {
         	        buffer[i-1]='>';
                 	buffer[i-2]='r';
 	                buffer[i-3]='i';
@@ -33099,7 +33105,7 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 	        }
 
 			//O si es empaquetado
-			/*else if (menu_util_file_is_compressed(s)) {
+			/*else if (menu_util_file_is_compressed(s) && i>=5) {
 				    buffer[i-1]='>';
                 	buffer[i-2]='p';
 	                buffer[i-3]='x';
@@ -34159,7 +34165,12 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 			strcpy(filesel_nombre_archivo_seleccionado,p->d_name);
 
 			//menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,22);
-			menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,ventana->visible_width-6-1); //6 ocupa el texto "File: "
+			//printf ("antes de trunc\n");
+
+			int tamanyo_mostrar=ventana->visible_width-6-1; //6 ocupa el texto "File: "
+
+				menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,tamanyo_mostrar); 
+
 			sprintf (buffer2,"File: %s",buffer);
 			
 			zxvision_print_string_defaults_fillspc(ventana,1,1,buffer2);
@@ -34215,7 +34226,6 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	char buffer3[OVERLAY_SCREEN_MAX_WIDTH+1+32];
 	getcwd(current_dir,PATH_MAX);
 
-	//menu_tape_settings_trunc_name(current_dir,buffer_dir,16); 
 	menu_tape_settings_trunc_name(current_dir,buffer_dir,ventana->visible_width-14); //14 es lo que ocupa el texto "Current dir: "
 	sprintf (buffer3,"Current dir: %s",buffer_dir);
 	//menu_escribe_texto_ventana(1,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer3);
