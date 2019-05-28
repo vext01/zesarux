@@ -14295,7 +14295,7 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
         }
 
         //Si no se encuentra, meter geometria por defecto
-        *x=0;
+        *x=menu_origin_x();
         *y=0;
         *ancho=ZXVISION_MAX_ANCHO_VENTANA;
         *alto=ZXVISION_MAX_ALTO_VENTANA;
