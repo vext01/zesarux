@@ -10175,7 +10175,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		mensaje_texto_hardware[0]=0;
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
-			sprintf(mensaje_texto_hardware,"~~hardware: %s",(view_sprites_hardware ? "Yes" : "No") );
+			sprintf(mensaje_texto_hardware,"[%c] ~~hardware",(view_sprites_hardware ? 'X' : ' ') );
 		}
 
 		char mensaje_texto_zx81_pseudohires[33];
@@ -10183,11 +10183,15 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		mensaje_texto_zx81_pseudohires[0]=0;
 
 		if (MACHINE_IS_ZX8081) {
-			sprintf(mensaje_texto_zx81_pseudohires,"ps~~eudohires: %s",(view_sprites_zx81_pseudohires.v ? "Yes" : "No") );
+			sprintf(mensaje_texto_zx81_pseudohires,"[%c] ps~~eudohires",(view_sprites_zx81_pseudohires.v ? 'X' : ' ') );
 		}
 		
-		sprintf(buffer_primera_linea,"~~memptr in~~c+%d %s ~~o~~p~~q~~a:Size ~~bpp",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
-		sprintf(buffer_segunda_linea, "~~inverse %s%s%s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~save " : ""),
+		sprintf(buffer_primera_linea,"~~memptr in~~c+%d ~~o~~p~~q~~a:Size ~~bpp %s",
+		view_sprite_incremento,
+		(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~save " : ""));
+
+		sprintf(buffer_segunda_linea, "~~inverse [%c] sc~~r %s%s",
+					(view_sprites_scr_sprite ? 'X' : ' '),
 					mensaje_texto_hardware,mensaje_texto_zx81_pseudohires);
 
 
