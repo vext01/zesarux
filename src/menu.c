@@ -4974,23 +4974,29 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	}
 
 
-	zxvision_window ventana;
+
+	zxvision_window mi_ventana;
+
+	zxvision_window *ventana;
+	ventana=&mi_ventana;
 	//printf ("antes de zxvision_new_window\n");		
-	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+
+
+	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_total_ventana,titulo);	
 
 	//printf ("despues de zxvision_new_window\n");							
 
-	if (!resizable) zxvision_set_not_resizable(&ventana);	
+	if (!resizable) zxvision_set_not_resizable(ventana);	
 
-	if (mostrar_cursor) ventana.visible_cursor=1;	
+	if (mostrar_cursor) ventana->visible_cursor=1;	
 
-	zxvision_draw_window(&ventana);
+	zxvision_draw_window(ventana);
 
 	//printf ("despues de zxvision_draw_window\n");
 
 				//Decir que se ha pulsado tecla asi no se lee todo cuando el cursor esta visible
-				if (ventana.visible_cursor) menu_speech_tecla_pulsada=1;
+				if (ventana->visible_cursor) menu_speech_tecla_pulsada=1;
 	int i;
 	/*for (i=0;i<indice_linea-primera_linea && i<MAX_LINEAS_VENTANA_GENERIC_MESSAGE;i++) {
 		if (mostrar_cursor) {
@@ -5002,10 +5008,10 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	}*/
 
 	for (i=0;i<indice_linea;i++) {
-		zxvision_print_string(&ventana,1,i,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_lineas[i]);
+		zxvision_print_string(ventana,1,i,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_lineas[i]);
 	}
 
-	zxvision_draw_window_contents(&ventana);
+	zxvision_draw_window_contents(ventana);
 
 	if (return_after_print_text) return;
 
@@ -5091,8 +5097,8 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
                         //abajo
                         case 10:
 						//primera_linea=menu_generic_message_cursor_abajo_mostrar_cursor(primera_linea,alto_ventana,indice_linea,mostrar_cursor,&linea_cursor);
-						linea_a_speech=zxvision_generic_message_cursor_down(&ventana);
-						//zxvision_send_scroll_down(&ventana);
+						linea_a_speech=zxvision_generic_message_cursor_down(ventana);
+						//zxvision_send_scroll_down(ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
@@ -5102,8 +5108,8 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
                         //arriba
                         case 11:
 						//primera_linea=menu_generic_message_cursor_arriba_mostrar_cursor(primera_linea,mostrar_cursor,&linea_cursor);
-						//zxvision_send_scroll_up(&ventana);
-						linea_a_speech=zxvision_generic_message_cursor_up(&ventana);
+						//zxvision_send_scroll_up(ventana);
+						linea_a_speech=zxvision_generic_message_cursor_up(ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;
@@ -5114,62 +5120,62 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
                         //izquierda
                         case 8:
-						/*zxvision_send_scroll_left(&ventana);
+						/*zxvision_send_scroll_left(ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;*/
-						zxvision_handle_cursors_pgupdn(&ventana,tecla);
+						zxvision_handle_cursors_pgupdn(ventana,tecla);
 						//ultima_linea_a_speech=1;
                         break;
 
                         //derecha
                         case 9:
-						/*zxvision_send_scroll_right(&ventana);
+						/*zxvision_send_scroll_right(ventana);
 
 						//Decir que se ha pulsado tecla para que no se relea
 						menu_speech_tecla_pulsada=1;*/
-						zxvision_handle_cursors_pgupdn(&ventana,tecla);
+						zxvision_handle_cursors_pgupdn(ventana,tecla);
 						//primera_linea_a_speech=1;
                         break;						
 
 						//PgUp
 						case 24:
-							for (contador_pgdnup=0;contador_pgdnup<ventana.visible_height-2;contador_pgdnup++) {
-								zxvision_generic_message_cursor_up(&ventana);
+							for (contador_pgdnup=0;contador_pgdnup<ventana->visible_height-2;contador_pgdnup++) {
+								zxvision_generic_message_cursor_up(ventana);
 							}
 							//Decir que no se ha pulsado tecla para que se relea
 							menu_speech_tecla_pulsada=0;
 
 							//Y recargar ventana para que la relea
-							zxvision_draw_window_contents(&ventana);
+							zxvision_draw_window_contents(ventana);
 						break;
 
                     	//PgDn
                     	case 25:
-                    		for (contador_pgdnup=0;contador_pgdnup<ventana.visible_height-2;contador_pgdnup++) {
-								zxvision_generic_message_cursor_down(&ventana);
+                    		for (contador_pgdnup=0;contador_pgdnup<ventana->visible_height-2;contador_pgdnup++) {
+								zxvision_generic_message_cursor_down(ventana);
                         	}
 
 							//Decir que no se ha pulsado tecla para que se relea
 							menu_speech_tecla_pulsada=0;
 
 							//Y recargar ventana para que la relea
-							zxvision_draw_window_contents(&ventana);
+							zxvision_draw_window_contents(ventana);
                     	break;
 						
                                         case 'c':
                                         	menu_copy_clipboard(menu_generic_message_tooltip_text_initial);
                                         	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard. Go to file utils and press P to paste to a file");
 
-											zxvision_draw_window(&ventana);
-											zxvision_draw_window_contents(&ventana);
+											zxvision_draw_window(ventana);
+											zxvision_draw_window_contents(ventana);
                                         break;
 
 						
                          case 's':
 						 	menu_save_text_to_file(menu_generic_message_tooltip_text_initial,"Save Text");
-                 											zxvision_draw_window(&ventana);
-											zxvision_draw_window_contents(&ventana);
+                 											zxvision_draw_window(ventana);
+											zxvision_draw_window_contents(ventana);
                         break;
 
 
@@ -5211,13 +5217,13 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 							//Mostramos cursor para poder indicar en que linea se ha encontrado el texto
 							mostrar_cursor=1;
 
-							ventana.visible_cursor=1;
+							ventana->visible_cursor=1;
 
-							ventana.cursor_line=i;
+							ventana->cursor_line=i;
 
 							//Si no esta visible, cambiamos offset
-							zxvision_set_offset_y_visible(&ventana,i);
-							//if (i<ventana.offset_y || i>=ventana.offset_y+ventana.visible_height-2) zxvision_set_offset_y(&ventana,i);
+							zxvision_set_offset_y_visible(ventana,i);
+							//if (i<ventana->offset_y || i>=ventana->offset_y+ventana->visible_height-2) zxvision_set_offset_y(ventana,i);
 
 							/*int contador;
 							for (contador=0;contador<ultima_linea_buscada;contador++) {
@@ -5233,8 +5239,8 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 							menu_warn_message("Text not found");
 						}
 
-						zxvision_draw_window(&ventana);
-						zxvision_draw_window_contents(&ventana);
+						zxvision_draw_window(ventana);
+						zxvision_draw_window_contents(ventana);
 
 
 					break;
@@ -5249,7 +5255,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 					case 'S':
 					case 'K':
 					case 'L':
-						zxvision_handle_cursors_pgupdn(&ventana,tecla);
+						zxvision_handle_cursors_pgupdn(ventana,tecla);
                     break;		
 					
 				}
@@ -5260,10 +5266,10 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	if (retorno!=NULL) {
 		int linea_final;
 
-		//printf ("mostrar cursor %d cursor_line %d ventana.offset_x %d\n",mostrar_cursor,ventana.cursor_line,ventana.offset_x);
+		//printf ("mostrar cursor %d cursor_line %d ventana->offset_x %d\n",mostrar_cursor,ventana->cursor_line,ventana->offset_x);
 
-		if (mostrar_cursor) linea_final=ventana.cursor_line;
-		else linea_final=ventana.offset_x;
+		if (mostrar_cursor) linea_final=ventana->cursor_line;
+		else linea_final=ventana->offset_x;
 
 
 		strcpy(retorno->texto_seleccionado,buffer_lineas[linea_final]);
@@ -5278,7 +5284,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	}
 
     cls_menu_overlay();
-	zxvision_destroy_window(&ventana);
+	zxvision_destroy_window(ventana);
 
 
 
