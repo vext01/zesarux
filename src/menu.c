@@ -2904,7 +2904,7 @@ void menu_desactiva_cuadrado(void)
 	ventana_activa_tipo_zxvision=0;
 }
 
-//Devuelve 1 si hay dos ~~ seguidas en la posicion del indice
+//Devuelve 1 si hay dos ~~ seguidas en la posicion del indice o ~^ 
 //Sino, 0
 int menu_escribe_texto_si_inverso(char *texto, int indice)
 {
@@ -2912,7 +2912,11 @@ int menu_escribe_texto_si_inverso(char *texto, int indice)
 	if (menu_disable_special_chars.v) return 0;
 
 	if (texto[indice++]!='~') return 0;
-	if (texto[indice++]!='~') return 0;
+	if (texto[indice]!='~' && texto[indice]!='^') {
+		return 0;
+	}
+
+	indice++;
 
 	//Y siguiente caracter no es final de texto
 	if (texto[indice]==0) return 0;
@@ -6083,6 +6087,7 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 
 
 	int inverso_letra=0;
+	int minuscula_letra=1;
 	int era_utf=0;
 
 	while (*texto) {
@@ -6106,18 +6111,18 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 			caracter_aux.caracter=*texto;
 		}
 
-		//ver si dos ~~ seguidas y cuidado al comparar que no nos vayamos mas alla del codigo 0 final
+		//ver si dos ~~ o ~^ seguidas y cuidado al comparar que no nos vayamos mas alla del codigo 0 final
 		if (menu_escribe_texto_si_inverso(texto,0)) {
-			//y saltamos esos codigos de negado
-			texto +=2;
+			minuscula_letra=1;
+			//y saltamos esos codigos de negado. Ver si era ~^, con lo que indica que no hay que bajar a minusculas
+			texto++;
+			if (*texto=='^') minuscula_letra=0;
+			texto++;
 			caracter_aux.caracter=*texto;
+
 			if (menu_writing_inverse_color.v) inverso_letra=1;
 			else inverso_letra=0;
 
-
-
-			//if (menu_writing_inverse_color.v) putchar_menu_overlay_parpadeo(x,y,letra,papel,tinta,parpadeo);
-			//else putchar_menu_overlay_parpadeo(x,y,letra,tinta,papel,parpadeo);
 		}
 
 		//else {
@@ -6161,7 +6166,7 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 			caracter_aux.papel=tinta;			
 			//Los hotkeys de menu siempre apareceran en minusculas para ser coherentes
 			//De la misma manera, no se soportan hotkeys en menus que sean minusculas
-			caracter_aux.caracter=letra_minuscula(caracter_aux.caracter);			
+			if (minuscula_letra) caracter_aux.caracter=letra_minuscula(caracter_aux.caracter);			
 		}
 
 		inverso_letra=0;
@@ -8403,13 +8408,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	max_opciones=0;
 	do {
-		/*ancho_calculado=strlen(aux->texto_opcion)+2;
-		//en calculo de ancho, tener en cuenta los "~~" del shortcut que no cuentan
-		unsigned int l;
-		for (l=0;l<strlen(aux->texto_opcion);l++) {
-			if (menu_escribe_texto_si_inverso(aux->texto_opcion,l)) ancho_calculado-=2;
-			if (menu_escribe_texto_si_parpadeo(aux->texto_opcion,l)) ancho_calculado-=2;
-		}*/
+		
 
 
 		ancho_calculado=menu_calcular_ancho_string_item(aux->texto_opcion)+2; //+2 espacios
@@ -28331,11 +28330,11 @@ void menu_filesel_chdir(char *dir)
 	chdir(dir);
 }
 
-char menu_minus_letra(char letra)
+/*char menu_minus_letra(char letra)
 {
 	if (letra>='A' && letra<='Z') letra=letra+('a'-'A');
 	return letra;
-}
+}*/
 
 
 
@@ -28347,7 +28346,7 @@ void zxvision_menu_filesel_localiza_letra(zxvision_window *ventana,char letra)
         p=primer_filesel_item;
 
         for (i=0;i<filesel_total_items;i++) {
-                if (menu_minus_letra(p->d_name[0])>=menu_minus_letra(letra)) {
+                if (letra_minuscula(p->d_name[0])>=letra_minuscula(letra)) {
                         filesel_linea_seleccionada=0;
                         filesel_archivo_seleccionado=i;
 			ventana->cursor_line=i;
