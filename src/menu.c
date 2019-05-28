@@ -28162,8 +28162,8 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
 
                                                                 //    01234  567890  12345  678901  2345678901
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~~View ~~Trunc d~~El m~~Kdr c~~Onv ~~Inf");
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~~Copy ~~Move re~~N ~~Paste ~~Filemem");
+                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~~View ~~Trunc D~~El M~~Kdr C~~Onv ~~Inf");
+                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~~Copy ~~Move Re~~N ~~Paste ~~Filemem");
 
         }
 
