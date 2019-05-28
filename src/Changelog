@@ -5,6 +5,7 @@ Version 7.3. 15 April 2019 - xxx edition
 --Draw engine: now it allows transparency
 --Menu windows can be placed and resized to the whole program window
 --Some windows geometry (position, size) are saved in the configuration
+--Hotkeys now show right capitalization (lowercase or uppercase)
 
 Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten

@@ -6159,6 +6159,9 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 		else {
 			caracter_aux.tinta=papel;
 			caracter_aux.papel=tinta;			
+			//Los hotkeys de menu siempre apareceran en minusculas para ser coherentes
+			//De la misma manera, no se soportan hotkeys en menus que sean minusculas
+			caracter_aux.caracter=letra_minuscula(caracter_aux.caracter);			
 		}
 
 		inverso_letra=0;

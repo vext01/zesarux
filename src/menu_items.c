@@ -4494,16 +4494,16 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 	char texto_linea[33];
 	//sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
-	sprintf (texto_linea,"~~bright: %d",visualmem_bright_multiplier);
+	sprintf (texto_linea,"~~Bright: %d",visualmem_bright_multiplier);
 	//menu_escribe_linea_opcion(0,-1,1,texto_linea);
 	zxvision_print_string_defaults_fillspc(&ventana,1,0,texto_linea);
 
 
 
-	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~looking: Written Mem");
-	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~looking: Read Mem");
-	else if (menu_visualmem_donde == 2) sprintf (texto_linea,"~~looking: Opcode");
-	else sprintf (texto_linea,"~~looking: All");
+	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: Written Mem");
+	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~Looking: Read Mem");
+	else if (menu_visualmem_donde == 2) sprintf (texto_linea,"~~Looking: Opcode");
+	else sprintf (texto_linea,"~~Looking: All");
 
 
 	//sprintf (texto_linea,"~~Looking: %s",(menu_visualmem_donde == 0 ? "Written Mem" : "Opcode") );
@@ -4523,7 +4523,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 
-						menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~bright: %d",visualmem_bright_multiplier);
+						menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
                         //menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
                         //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Change bright value");
@@ -4537,7 +4537,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 		        else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
 				else sprintf (texto_looking,"All");
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~looking: %s",texto_looking);
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
                         //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Which visualmem to look at");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at. If you select all, the final color will be a RGB color result of:\n"
