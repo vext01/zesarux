@@ -10067,7 +10067,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 			while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone();
 
 			//paleta 11 tbblue
-			view_sprites_palette=11;
+			//view_sprites_palette=11;
 
 
 		}
@@ -10104,7 +10104,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
 
 			//paleta 13 tsconf
-			view_sprites_palette=13;
+			//view_sprites_palette=13;
 
 
 

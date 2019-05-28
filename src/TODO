@@ -38,12 +38,8 @@ Para próxima versión ZEsarUX:
 
 -sdl2: si se pone width de extended desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
--Atajos. Mayúsculas y minúsculas como corresponda, si hay que pulsar mayúsculas o minúsculas, en leyendas
-
 -Turbo spool setting en tbblue y otras máquinas 128kb...
 
--sprites en tsconf , al poner hardware, cambia la paleta a tbblue y no la deja cambiar
- 
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
@@ -56,8 +52,6 @@ Para próxima versión ZEsarUX:
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 
 -probar cpu use footer en maquinas que no muestran (como windows)
-
-OK -probar easter egg. Si, lo hace en pantalla principal
 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
