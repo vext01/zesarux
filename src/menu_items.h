@@ -63,5 +63,9 @@ extern void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_view_sprites(MENU_ITEM_PARAMETERS);
 
+extern void menu_debug_registers(MENU_ITEM_PARAMETERS);
+extern void menu_debug_registers_splash_memory_zone(void);
+extern void menu_breakpoint_fired(char *s);
+
 #endif
 
