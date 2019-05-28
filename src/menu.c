@@ -4973,12 +4973,19 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 		cls_menu_overlay();
 	}
 
-
-
-	zxvision_window mi_ventana;
-
 	zxvision_window *ventana;
-	ventana=&mi_ventana;
+
+	if (return_after_print_text) {
+		//Dado que vamos a volver con la ventana activa que se crea aquí, hay que asignar la estructura en memoria global
+		ventana=malloc(sizeof(zxvision_window));
+		//printf ("tamanyo memoria ventana %d\n",sizeof(zxvision_window));
+		if (ventana==NULL) cpu_panic("Can not allocate memory for zxvision window");
+	}
+
+	else {
+		zxvision_window mi_ventana;
+		ventana=&mi_ventana;
+	}
 	//printf ("antes de zxvision_new_window\n");		
 
 
@@ -25793,6 +25800,9 @@ void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char
 
 	cls_menu_overlay();
 	zxvision_destroy_window(ventana);
+
+	//Y liberar esa memoria, dado que la ventana esta asignada en memoria global
+	free(ventana);
 }
 
 

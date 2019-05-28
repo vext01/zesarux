@@ -27,6 +27,7 @@ Improved Waveform window: now the wave adjusts automatically to the zxwindow siz
 Fixed bug having more than 256 text to adventure keyboard words
 Fixed bug on CPC vertical scrolling
 Fixed segmentation fault bug when drawing CPC machine
+Fixed segmentation fault bug when displaying first aid messages
 Fixed bug redrawing zx80/81 display, with realvideo disabled, and menu char width less than 8
 Fixed bug drawing menu window boxes when char width less than 8
 Fixed zxvision left button handling: no longer sends enter when the user is dragging the window
