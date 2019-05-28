@@ -5614,13 +5614,13 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 
-				sprintf (buffer_linea,"%sMemptr C%sopy",string_atajos,string_atajos);
+				sprintf (buffer_linea,"%smemptr C%sopy",string_atajos,string_atajos);
 
 
 				//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-				sprintf (buffer_linea,"%sInvert:%s Edi%st:%s C%shar:%s",
+				sprintf (buffer_linea,"%sinvert:%s Edi%st:%s C%shar:%s",
 					string_atajos,
 					(valor_xor==0 ? "No" : "Yes"), 
 					string_atajos,
@@ -10166,7 +10166,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		char nombre_paleta[33];
 		menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
-		sprintf(buffer_tercera_linea,"pa~~l.: %s. o~~ff:%d",nombre_paleta,view_sprites_offset_palette);
+		sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
 
 
 		char mensaje_texto_hardware[33];
@@ -10183,14 +10183,14 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		mensaje_texto_zx81_pseudohires[0]=0;
 
 		if (MACHINE_IS_ZX8081) {
-			sprintf(mensaje_texto_zx81_pseudohires,"[%c] ps~~eudohires",(view_sprites_zx81_pseudohires.v ? 'X' : ' ') );
+			sprintf(mensaje_texto_zx81_pseudohires,"[%c] Ps~~eudohires",(view_sprites_zx81_pseudohires.v ? 'X' : ' ') );
 		}
 		
-		sprintf(buffer_primera_linea,"~~memptr in~~c+%d ~~o~~p~~q~~a:Size ~~bpp %s",
+		sprintf(buffer_primera_linea,"~~memptr In~~c+%d ~~o~~p~~q~~a:Size ~~bpp %s",
 		view_sprite_incremento,
 		(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~save " : ""));
 
-		sprintf(buffer_segunda_linea, "~~inverse [%c] sc~~r %s%s",
+		sprintf(buffer_segunda_linea, "~~inverse [%c] Sc~~r %s%s",
 					(view_sprites_scr_sprite ? 'X' : ' '),
 					mensaje_texto_hardware,mensaje_texto_zx81_pseudohires);
 
@@ -10206,7 +10206,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		char memory_zone_text[64]; //espacio temporal mas grande por si acaso
 
 		if (menu_debug_show_memory_zones==0) {
-			sprintf (memory_zone_text,"~~z: Mem zone (mapped memory)");
+			sprintf (memory_zone_text,"Mem ~~zone (mapped memory)");
 		}
 
 		else {
@@ -10214,7 +10214,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 			char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
 			//int readwrite;
 			machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
-			sprintf (memory_zone_text,"~~z: Mem zone (%d %s)",menu_debug_memory_zone,buffer_name);
+			sprintf (memory_zone_text,"Mem ~~zone (%d %s)",menu_debug_memory_zone,buffer_name);
 			//printf ("size: %X\n",menu_debug_memory_zone_size);
 			//printf ("Despues zona %d\n",menu_debug_memory_zone);
 		}
