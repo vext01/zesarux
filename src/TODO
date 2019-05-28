@@ -4,7 +4,6 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
--al hacer todas hotkeys minusculas, ahora las de file utils salen minusculas tambien. Solo se deberian bajar en menu, no en otro sitio
 
 -Comprobar a fondo fileselector despues de cambios a redimensionable
 
