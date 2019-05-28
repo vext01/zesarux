@@ -10487,7 +10487,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 
 				int xventana,yventana,ancho_ventana,alto_ventana;
-
+		if (!util_find_window_geometry("wavepiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 				if (!si_mostrar_ay_piano_grafico()) {
 
 					xventana=7;
@@ -10496,19 +10496,21 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 					alto_ventana=11;
 
 				}
-				//#define PIANO_GRAPHIC_BASE_X 7
-				//#define PIANO_GRAPHIC_BASE_Y 7
+
 				else {
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
-
-						piano_graphic_base_y=8;
-
 					xventana=PIANO_GRAPHIC_BASE_X-2;
 					yventana=piano_graphic_base_y;
 					ancho_ventana=AY_PIANO_ANCHO_VENTANA;
 					alto_ventana=8;
 
 				}
+		}
+
+
+		if (si_mostrar_ay_piano_grafico()) {
+			piano_graphic_base_y=8;
+		}		
 
 		char *titulo_ventana="Wave Piano";
 		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
@@ -10593,7 +10595,7 @@ z80_byte tecla=0;
         }
 
         else {
-
+		util_add_window_geometry_compact("wavepiano",ventana);
 		zxvision_destroy_window(ventana);
 
 	}
