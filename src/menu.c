@@ -10207,14 +10207,16 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		int xventana,yventana,ancho_ventana,alto_ventana;
 
-				if (!menu_multitarea) {
-					menu_warn_message("This menu item needs multitask enabled");
-					return;
-				}
+		if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+		}
 
-				int  total_chips=ay_retorna_numero_chips();
-				//Max 3 ay chips
-				if (total_chips>3) total_chips=3;
+		int  total_chips=ay_retorna_numero_chips();
+		//Max 3 ay chips
+		if (total_chips>3) total_chips=3;
+
+		if (!util_find_window_geometry("aypiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
@@ -10223,49 +10225,74 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 					if (total_chips==1) {
 						xventana=9;
 						yventana=7;					
-						alto_ventana=11;
 					}
           			else if (total_chips==2) {
 						xventana=9;
-						yventana=2;
-						alto_ventana=20;						  
-						  
+						yventana=2;						  					  
 					}
 
 					else {
 						xventana=9;
-						yventana=1;
+						yventana=1;					
+					}
+
+				}
+
+				else {
+					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
+					if (total_chips==1) {
+						xventana=PIANO_GRAPHIC_BASE_X;
+						yventana=piano_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;					
+					}
+					else if (total_chips==2) {
+						xventana=PIANO_GRAPHIC_BASE_X;
+						yventana=piano_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;							
+					}
+
+					else {
+						xventana=PIANO_GRAPHIC_BASE_X;
+						yventana=piano_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;						
+					}
+				}
+
+			}
+
+		//El alto ventana siempre lo recalculamos segun el numero de chips
+				if (!si_mostrar_ay_piano_grafico()) {
+
+					if (total_chips==1) {			
+						alto_ventana=11;
+					}
+          			else if (total_chips==2) {
+						alto_ventana=20;						  						  
+					}
+
+					else {
 						alto_ventana=22;						
 					}
 
 				}
-				//#define PIANO_GRAPHIC_BASE_X 7
-				//#define PIANO_GRAPHIC_BASE_Y 7
+
 				else {
 					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 					if (total_chips==1) {
-						piano_graphic_base_y=5;
-						xventana=PIANO_GRAPHIC_BASE_X;
-						yventana=piano_graphic_base_y;
-						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
+						piano_graphic_base_y=5;						
 						alto_ventana=13;						
 					}
 					else if (total_chips==2) {
 						piano_graphic_base_y=1;
-						xventana=PIANO_GRAPHIC_BASE_X;
-						yventana=piano_graphic_base_y;
-						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
 						alto_ventana=22;							
 					}
 
 					else {
-						piano_graphic_base_y=0;
-						xventana=PIANO_GRAPHIC_BASE_X;
-						yventana=piano_graphic_base_y;
-						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
+						piano_graphic_base_y=0;						
 						alto_ventana=24;							
 					}
 				}
+
 
 		char *titulo_ventana="AY Piano";
 		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
@@ -10342,18 +10369,16 @@ valor_contador_segundo_anterior=contador_segundo;
 
         cls_menu_overlay();
 
-        if (tecla==3) {
+	if (tecla==3) {
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_ay_pianokeyboard_overlay;
                 printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 				menu_generic_message("Background task","OK. Window put in background");
-        }
+	}
 
 	else {
-
-	zxvision_destroy_window(ventana);			
-
-
+		util_add_window_geometry_compact("aypiano",ventana);
+		zxvision_destroy_window(ventana);			
 	}
 
 
