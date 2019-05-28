@@ -2505,6 +2505,33 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 	return 0;
 }
 
+void transaction_log_close_file(void)
+{
+	if (ptr_transaction_log!=NULL) {
+		fclose(ptr_transaction_log);
+		ptr_transaction_log=NULL;
+	}	
+}
+
+//Retorna 1 si error
+int transaction_log_open_file(void)
+{
+  ptr_transaction_log=fopen(transaction_log_filename,"ab");
+  if (!ptr_transaction_log) {
+ 		debug_printf (VERBOSE_ERR,"Unable to open Transaction log");
+		debug_nested_core_del(transaction_log_nested_id_core);
+		return 1;
+	}	
+
+	return 0;
+}
+
+void transaction_log_truncate(void)
+{
+	transaction_log_close_file();
+	util_truncate_file(transaction_log_filename);
+	transaction_log_open_file();	
+}
 
 void set_cpu_core_transaction_log(void)
 {
@@ -2517,13 +2544,13 @@ void set_cpu_core_transaction_log(void)
 	transaction_log_nested_id_core=debug_nested_core_add(cpu_core_loop_transaction_log,"Transaction Log Core");
 
 
-
-  ptr_transaction_log=fopen(transaction_log_filename,"ab");
+	if (transaction_log_open_file()) return;
+  /*ptr_transaction_log=fopen(transaction_log_filename,"ab");
   if (!ptr_transaction_log) {
  		debug_printf (VERBOSE_ERR,"Unable to open Transaction log");
 		debug_nested_core_del(transaction_log_nested_id_core);
 		return;
-	}
+	}*/
 
 
 	cpu_transaction_log_enabled.v=1;																
@@ -2540,10 +2567,12 @@ void reset_cpu_core_transaction_log(void)
 
 	debug_nested_core_del(transaction_log_nested_id_core);
 	cpu_transaction_log_enabled.v=0;
-	if (ptr_transaction_log!=NULL) {
+
+	transaction_log_close_file();
+	/*if (ptr_transaction_log!=NULL) {
 		fclose(ptr_transaction_log);
 		ptr_transaction_log=NULL;
-	}
+	}*/
 }
 
 

@@ -9133,6 +9133,14 @@ void menu_cpu_transaction_log_enable(MENU_ITEM_PARAMETERS)
 	}
 }
 
+void menu_cpu_transaction_log_truncate(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno("Truncate log file")) {
+		transaction_log_truncate();
+		menu_generic_message("Truncate log file","OK. Log truncated");
+	}
+}
+
 void menu_cpu_transaction_log_file(MENU_ITEM_PARAMETERS)
 {
 
@@ -9203,6 +9211,7 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 
                 if (transaction_log_filename[0]!=0) {
                         menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable,NULL,"[%c] Transaction log enabled",(cpu_transaction_log_enabled.v ? 'X' : ' ' ) );
+						menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_truncate,NULL,"    Truncate log file");
                 }
 
 

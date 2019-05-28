@@ -716,6 +716,7 @@ struct s_items_ayuda items_ayuda[]={
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
 	{"cpu-transaction-log",NULL,"parameter value","Sets cpu transaction log parameters. Parameters and values are the following:\n"
 	"logfile   name: File to store the log\n"
+	"truncate  yes|no: Truncate the log file. Requires value set to yes\n"
 	"enabled   yes|no: Enable or disable the cpu transaction log. Requires logfile to enable it\n"
 	"datetime  yes|no: Enable datetime logging\n"
 	"tstates   yes|no: Enable tstates logging\n"
@@ -1195,7 +1196,10 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 		strcpy(transaction_log_filename,value);
 	}
 
-	else if (!strcasecmp(parameter,"enabled")) {
+	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
+	else if (!strcasecmp(parameter,"enabled") ||
+					!strcasecmp(parameter,"truncate")
+	) {
 
 		//Si no esta definido logfile, no se permite activar (ni desactivar)
 		//podria dejar permitido desactivar pero es absurdo, si no hay logfile no estara activado
@@ -1207,20 +1211,31 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 
 		//Pausar la emulacion para evitar que ese core transaction log este en ejecucion. Si eso pasa,
 		//puede provocar segfault al desactivarlo, pues intenta llamar a debug_nested_core_call_previous y este mismo core ya ha desaparecido
+		int antes_menu_event_remote_protocol_enterstep=menu_event_remote_protocol_enterstep.v;
 			remote_cpu_enter_step(misocket);
 			if (menu_event_remote_protocol_enterstep.v==0) return;
 
 			
-	
-		if (remote_eval_yes_no(value)) {
-			set_cpu_core_transaction_log();
+		if (!strcasecmp(parameter,"enabled")) {
+			if (remote_eval_yes_no(value)) {
+				set_cpu_core_transaction_log();
+			}
+
+			else {
+				reset_cpu_core_transaction_log();
+			}
 		}
 
-		else {
-			reset_cpu_core_transaction_log();
-		}
+		if (!strcasecmp(parameter,"truncate")) {
+			if (remote_eval_yes_no(value)) {
+				transaction_log_truncate();
+			}
 
-		remote_cpu_exit_step(misocket);
+
+		}		
+
+		//Salir del cpu step si no estaba en ese modo
+		if (!antes_menu_event_remote_protocol_enterstep) remote_cpu_exit_step(misocket);
 
 	}
 
@@ -1464,6 +1479,9 @@ int menu_multitarea_antes_cpu_step=0;
 //Este modo deja la emulacion pausada
 void remote_cpu_enter_step(int misocket)
 {
+	//Si ya estaba este modo, salir sin mas
+	if (menu_event_remote_protocol_enterstep.v) return;
+
   //De momento solo simular pulsacion de tecla de menu, eso hace saltar el step
 
   //TODO: Pendiente de eliminar esta variable. Tiene sentido???

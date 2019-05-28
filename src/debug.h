@@ -146,6 +146,7 @@ extern z80_bit cpu_transaction_log_enabled;
 extern void set_cpu_core_transaction_log(void);
 extern void reset_cpu_core_transaction_log(void);
 extern char transaction_log_filename[];
+extern void transaction_log_truncate(void);
 
 extern z80_bit cpu_transaction_log_store_datetime;
 extern z80_bit cpu_transaction_log_store_address;
