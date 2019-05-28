@@ -10297,6 +10297,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 		char *titulo_ventana="AY Piano";
 		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
+		//Para que siempre se lea el titulo de la ventana
 		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
 
 		zxvision_window *ventana;
