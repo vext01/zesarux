@@ -30,7 +30,65 @@
 
 #include "cpu.h"
 
+
+struct s_overlay_screen {
+	z80_byte tinta,papel,parpadeo;
+	z80_byte caracter;
+};
+
+typedef struct s_overlay_screen overlay_screen;
+
+
+//Nuevas ventanas zxvision
+struct s_zxvision_window {
+	overlay_screen *memory;
+	int visible_width,visible_height;
+	int x,y;
+
+	int upper_margin;
+	int lower_margin;
+
+	//char *text_margin[20]; //Hasta 20 lineas de texto que se usan como texto que no se mueve. La ultima finaliza con 0
+
+	int offset_x,offset_y;
+
+	int total_width,total_height;
+	char window_title[256];
+
+	int can_be_resized;
+	int is_minimized;
+
+	int height_before_minimize;
+	int width_before_minimize;
+	int x_before_minimize;
+	int y_before_minimize;
+
+
+	int can_use_all_width; //Si tenemos usable también la ultima columna derecha
+
+	//Posicion del cursor y si esta visible
+	int visible_cursor;
+	int cursor_line;
+
+	//Ventana anterior. Se van poniendo una encima de otra
+	struct s_zxvision_window *previous_window;
+
+	//Ventana siguiente.
+	struct s_zxvision_window *next_window;
+
+
+	//Puntero a funcion de overlay
+	void (*overlay_function) (void);
+};
+
+typedef struct s_zxvision_window zxvision_window;
+
+
+
+
+
 //Por el tema de usar PATH_MAX en windows
+//Aqui hay un problema, y es que en utils.h se esta usando zxvision_window, y hay que declarar este tipo de ventana antes
 #include "utils.h"
 
 //Valor para ninguna tecla pulsada
@@ -108,10 +166,7 @@ extern void menu_footer_z88(void);
 extern int mouse_is_dragging;
 extern int menu_mouse_left_double_click_counter;
 
-struct s_overlay_screen {
-	z80_byte tinta,papel,parpadeo;
-	z80_byte caracter;
-};
+
 
 struct s_generic_message_tooltip_return {
 	char texto_seleccionado[40];
@@ -136,51 +191,9 @@ typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 //#define ZXVISION_MAX_Y_VENTANA 23
 
 
-typedef struct s_overlay_screen overlay_screen;
-
-//Nuevas ventanas zxvision
-struct s_zxvision_window {
-	overlay_screen *memory;
-	int visible_width,visible_height;
-	int x,y;
-
-	int upper_margin;
-	int lower_margin;
-
-	//char *text_margin[20]; //Hasta 20 lineas de texto que se usan como texto que no se mueve. La ultima finaliza con 0
-
-	int offset_x,offset_y;
-
-	int total_width,total_height;
-	char window_title[256];
-
-	int can_be_resized;
-	int is_minimized;
-
-	int height_before_minimize;
-	int width_before_minimize;
-	int x_before_minimize;
-	int y_before_minimize;
 
 
-	int can_use_all_width; //Si tenemos usable también la ultima columna derecha
 
-	//Posicion del cursor y si esta visible
-	int visible_cursor;
-	int cursor_line;
-
-	//Ventana anterior. Se van poniendo una encima de otra
-	struct s_zxvision_window *previous_window;
-
-	//Ventana siguiente.
-	struct s_zxvision_window *next_window;
-
-
-	//Puntero a funcion de overlay
-	void (*overlay_function) (void);
-};
-
-typedef struct s_zxvision_window zxvision_window;
 
 extern void zxvision_new_window(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title);
 extern void zxvision_new_window_nocheck_staticsize(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title);

@@ -24,6 +24,7 @@
 
 #include "cpu.h"
 #include "compileoptions.h"
+#include "menu.h"
 
 #include <stdio.h>
 #include <dirent.h>
@@ -554,6 +555,9 @@ extern int total_config_window_geometry;
 
 extern int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto);
 extern int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto);
+
+extern void util_add_window_geometry_compact(char *nombre,zxvision_window *ventana);
+
 extern void util_clear_all_windows_geometry(void);
 
 

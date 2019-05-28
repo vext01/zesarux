@@ -2617,29 +2617,39 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		int total_chips=ay_retorna_numero_chips();
 		if (total_chips>3) total_chips=3;
 
-		int yventana;
-		int alto_ventana;
+		int xventana,yventana;
+		int ancho_ventana,alto_ventana;
 
+		if (!util_find_window_geometry("ayregisters",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+
+        	if (total_chips==1) {
+				yventana=5;
+			}
+			else {
+				yventana=0;
+			}
+
+			xventana=menu_origin_x()+1;
+			ancho_ventana=30;
+
+		}
+
+		//El alto siempre lo cambiamos segun el numero de chips
         if (total_chips==1) {
-			yventana=5;
-			alto_ventana=14;
+				alto_ventana=14;
 		}
 		else {
-			yventana=0;
-			alto_ventana=24;
-		}
+				alto_ventana=24;
+		}		
 
 		zxvision_window *ventana;
 		ventana=&zxvision_ay_registers_overlay;
 
-		int xventana=menu_origin_x()+1;
 
-		zxvision_new_window(ventana,xventana,yventana,30,alto_ventana,
-							30-1,alto_ventana-2,"AY Registers");
+
+		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Registers");
 
 		zxvision_draw_window(ventana);		
-
-
 
 
         //Cambiamos funcion overlay de texto de menu
@@ -2677,6 +2687,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	}
 
 	else {
+		util_add_window_geometry_compact("ayregisters",ventana);
 		zxvision_destroy_window(ventana);		
  	}
 }
