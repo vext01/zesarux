@@ -34,8 +34,6 @@ Para próxima versión ZEsarUX:
 
 -que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
 
--Probar en Linux driver vídeo con y sin pthread
-
 -sdl2: si se pone width de extended desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
 -Turbo spool setting en tbblue y otras máquinas 128kb...
@@ -81,7 +79,6 @@ O quiza, en vez de overlay, una segunda unidad de disco
 
 -.nex files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
 
--Quitar soporte cinta Chloe? de storage-tape...
 
 -Incluir derby pro rom?
 

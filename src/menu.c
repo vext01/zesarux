@@ -15053,11 +15053,11 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
                 //char string_spi_flash_file_shown[13]; //,string_mmc_file_shown[13];
 
+		 menu_add_item_menu_inicial(&array_menu_storage_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-		//Primer menu sera Z88 memory slots (si Z88) o microdrive QL o Tape settings en cualquier otro
 
 		if (MACHINE_IS_Z88) {
-			menu_add_item_menu_inicial_format(&array_menu_storage_settings,MENU_OPCION_NORMAL,menu_z88_slots,NULL,"Z88 Memory ~~Slots");
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_z88_slots,NULL,"Z88 Memory ~~Slots");
                         menu_add_item_menu_shortcut(array_menu_storage_settings,'s');
 
                         menu_add_item_menu_tooltip(array_menu_storage_settings,"Z88 Memory Slots");
@@ -15066,7 +15066,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		else if (MACHINE_IS_QL) {
-			menu_add_item_menu_inicial_format(&array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_microdrive_floppy,NULL,"Microdrive&Floppy: %s",
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_microdrive_floppy,NULL,"Microdrive&Floppy: %s",
 				(ql_microdrive_floppy_emulation ? "Yes" : "No") );
 
 				if (ql_microdrive_floppy_emulation) {
@@ -15085,8 +15085,8 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		else {
-	            	menu_add_item_menu_inicial_format(&array_menu_storage_settings,MENU_OPCION_NORMAL,menu_tape_settings,menu_tape_settings_cond,"~~Tape");
+		else if (!MACHINE_IS_CHLOE) {
+	            	menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_tape_settings,menu_tape_settings_cond,"~~Tape");
                 	menu_add_item_menu_shortcut(array_menu_storage_settings,'t');
                 	menu_add_item_menu_tooltip(array_menu_storage_settings,"Select tape and options");
                 	menu_add_item_menu_ayuda(array_menu_storage_settings,"Select tape for input (read) or output (write). \n"

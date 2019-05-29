@@ -71,7 +71,7 @@ z80_bit tape_any_flag_loading;
 //indica que el autoload es con load "". sino es con enter
 //0: autoload con ENTER
 //1: autoload con LOAD(J) ""
-//2: autoload con L O A D "" (para spectrum 128k spanish y chloe)
+//2: autoload con L O A D "" (para spectrum 128k spanish)
 //3: autoload con enter, cursor arriba dos veces y enter (para NextOS)
 int autoload_spectrum_loadpp_mode;
 
@@ -1009,23 +1009,7 @@ int tap_load_detect(void)
                                 return 1;
                 }
 
-		if (MACHINE_IS_CHLOE_280SE)  {
 
-                                //maquina 128k. rom 1 mapeada
-				//Y ver que no haya otra pagina de 8kb mapeada
-
-				//ver segundo segmento de 8192 kb, que este rom mapeada
-				if (timex_port_f4 &2 ) return 0;
-
-                                if ((puerto_32765 & 16) ==16) return 1;
-                }
-
-                if (MACHINE_IS_CHLOE_140SE)  {
-
-                                //maquina 128k. rom 1 mapeada
-                                if ((puerto_32765 & 16) ==16)
-                                return 1;
-                }
 
                 //Para Timex
 		if (MACHINE_IS_TIMEX_TS2068) {
@@ -1191,23 +1175,6 @@ int tap_save_detect(void)
                                 return 1;
                 }
 
-	        if (MACHINE_IS_CHLOE_280SE)  {
-
-                                //maquina 128k. rom 1 mapeada
-                                //Y ver que no haya otra pagina de 8kb mapeada
-
-                                //ver segundo segmento de 8192 kb, que este rom mapeada
-                                if (timex_port_f4 &2 ) return 0;
-
-                                if ((puerto_32765 & 16) ==16) return 1;
-                }
-
-                if (MACHINE_IS_CHLOE_140SE)  {
-
-                                //maquina 128k. rom 1 mapeada
-                                if ((puerto_32765 & 16) ==16)
-                                return 1;
-                }
 
 
 		//Para Timex
@@ -1535,30 +1502,7 @@ void gestionar_autoload_spectrum(void)
 				}
 				break;
 
-			case 15:
-                                //Para Chloe 140SE
-                                //si en rom1
-
-				if ((puerto_32765 & 16) ==16 ) {
-                                        if (reg_pc==0x12a9) gestionar_autoload_spectrum_start_loadpp();
-                                }
-
-                                break;
-
-
-			case 16:
-				//Para Chloe 280SE
-				//Si rom mapeada en segmento bajo
-				if ( (timex_port_f4 &1)==0 ) {
-					//si en rom1
-	                                if ((puerto_32765 & 16) ==16 ) {
-        	                                if (reg_pc==0x12a9) gestionar_autoload_spectrum_start_loadpp();
-                	                }
-
-				}
-
-
-				break;
+			
 
 
 			case 17:
