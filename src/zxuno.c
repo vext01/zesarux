@@ -392,55 +392,6 @@ void zxuno_footer_flash_operating(void)
 
 
 
-/*void old_mem_set_normal_pages_zxuno(void)
-{
-
-	//En modo bootm a 1.
-
-	//Los 16kb de rom del zxuno
-	zxuno_bootm_memory_paged[0]=memoria_spectrum;
-
-	//Paginas 5,2
-	zxuno_bootm_memory_paged[1]=zxuno_sram_mem_table[5];
-	zxuno_bootm_memory_paged[2]=zxuno_sram_mem_table[2];
-
-	//Y pagina 0
-	zxuno_bootm_memory_paged[3]=zxuno_sram_mem_table[0];
-
-
-
-
-	//En modo bootm a 0
-	//La pagina sram 8 (la primera rom del spectrum emulado)
-	zxuno_no_bootm_memory_paged[0]=zxuno_sram_mem_table[8];
-
-	//Paginas 5,2
-	zxuno_no_bootm_memory_paged[1]=zxuno_sram_mem_table[5];
-	zxuno_no_bootm_memory_paged[2]=zxuno_sram_mem_table[2];
-
-	//Y pagina 0
-	zxuno_no_bootm_memory_paged[3]=zxuno_sram_mem_table[0];
-
-
-	//TODO
-	contend_pages_actual[0]=0;
-	contend_pages_actual[1]=contend_pages_128k_p2a[5];
-	contend_pages_actual[2]=contend_pages_128k_p2a[2];
-	contend_pages_actual[3]=contend_pages_128k_p2a[0];
-
-	zxuno_debug_paginas_memoria_mapeadas_bootm[0]=DEBUG_PAGINA_MAP_ES_ROM+0;
-	zxuno_debug_paginas_memoria_mapeadas_bootm[1]=5;
-	zxuno_debug_paginas_memoria_mapeadas_bootm[2]=2;
-	zxuno_debug_paginas_memoria_mapeadas_bootm[3]=0;
-
-	debug_paginas_memoria_mapeadas[0]=DEBUG_PAGINA_MAP_ES_ROM+0;
-	debug_paginas_memoria_mapeadas[1]=5;
-	debug_paginas_memoria_mapeadas[2]=2;
-	debug_paginas_memoria_mapeadas[3]=0;
-
-
-}
-*/
 
 void zxuno_set_emulador_settings(void)
 {
@@ -492,16 +443,7 @@ void hard_reset_cpu_zxuno(void)
 }
 
 
-//Rutina mapeo pagina zxuno con modo bootm=1
-/*
-void old_zxuno_page_ram(z80_byte bank)
-{
-	zxuno_bootm_memory_paged[3]=zxuno_sram_mem_table[bank];
 
-	//contend_pages_actual[3]=contend_pages_128k_p2a[ramentra];
-	zxuno_debug_paginas_memoria_mapeadas_bootm[3]=bank;
-}
-*/
 
 //Escribir 1 byte en la memoria spi
 void zxuno_spi_page_program(int address,z80_byte valor_a_escribir)

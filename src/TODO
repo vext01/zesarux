@@ -4,7 +4,12 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
--mmu de chloe en zxuno
+-mmu de chloe en zxuno:
+--primero cambiar paginacion de zxuno a bloques de 8 kb
+--luego, usar mismas funciones de mapeado de memoria de chloe.c (chloe_set_memory_pages),
+solo habra que hacer una funcion chloe_init_memory_tables propia que mapee los tipos de memoria al esquema de memoria de zxuno
+--para activar, ver devcontrol, enmmu en registros zxuno
+--tener en cuenta poder usar puertos f4 y ff de timex
 
 -Comprobar a fondo fileselector despues de cambios a redimensionable
 
