@@ -4,6 +4,7 @@
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
+-mmu de chloe en zxuno
 
 -Comprobar a fondo fileselector despues de cambios a redimensionable
 
@@ -79,8 +80,6 @@ O quiza, en vez de overlay, una segunda unidad de disco
 
 -.nex files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
 
-
--Incluir derby pro rom?
 
 -Baseconf soporta ulaplus
 
@@ -1610,7 +1609,7 @@ http://www.zxuno.com/forum/viewtopic.php?p=4296#p4296
 
 -nmi-divmmc opción no soportada en zxuno??
 
--mmu de chloe
+
 
 
 ------

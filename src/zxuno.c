@@ -1044,6 +1044,15 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 				//sleep(1);
 			break;
 
+			case 0xfd:
+				/*
+				COREBOOT
+				Registro de control de arranque. Escribiendo un 1 en el bit 0 de este registro (el resto de bits están reservados y deben quedarse a 0) hace que se desencadene el mecanismo interno de la FPGA que permite arrancar otro core. La dirección de comienzo de este segundo core será la última que se escribiera usando el registro COREADDR. 
+				*/
+				if (value & 1) hard_reset_cpu();
+			break;
+
+
 		}
 	}
 
