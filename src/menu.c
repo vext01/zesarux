@@ -26564,7 +26564,7 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
                                             "to run them. If you disable this, the database nor the .config files are read");
 
 
-							if (!MACHINE_IS_Z88) {
+							if (!MACHINE_IS_Z88 && !MACHINE_IS_CHLOE) {
                 						menu_add_item_menu(array_menu_settings_storage,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 								menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_settings_tape,NULL,"~~Tape");
 								menu_add_item_menu_shortcut(array_menu_settings_storage,'t');
