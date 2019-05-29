@@ -190,17 +190,13 @@ Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que 
 -Quizá zxvision generic message ya no debería tener el límite de array de líneas o ancho...
 -quiza zxvision_print_string_defaults_fillspc deba ser la habitual zxvision_print_string_defaults
 
--recordar posicion ventanas: quiza teniendo los punteros a ventana en global,
-inicializados a null, y llamando a funcion diferente al crearlas (para que detecte si no es null, y no crearlas),
-y el destroy que no libere memoria
 
 -al mover o redimensionar ventana, redibujar las de debajo en cascada, empezando por la mas antigua y subiendo
 
 -menus zxvision:
 --porque menus tabulados no rellenan con espacios? ah porque antes siempre se borraba texto con espacios al dibujar menu?
 
--ventanas zxvision que puedan salir parcialmente fuera de pantalla. de momento seria salir por debajo del border,
-pero cuando se puedan mostrar en border incluso, seria tenerlas por debajo del limite de la ventana
+-ventanas zxvision que puedan salir parcialmente fuera de pantalla.  seria tenerlas por debajo del limite de la ventana
 
 -rueda de raton que haga scroll ventana en horizontal y vertical
 
