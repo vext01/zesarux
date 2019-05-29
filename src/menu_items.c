@@ -1243,7 +1243,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 		//hotkeys usadas: vapesboiuctdrf
 
-		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"    Output ~~Volume [%d %%]", audiovolume);
+		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"    Output ~~Volume [%d%%]", audiovolume);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
 
 		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"[%c] A~~utoenable AY Chip",(autoenable_ay_chip.v==1 ? 'X' : ' '));
