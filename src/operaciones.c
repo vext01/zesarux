@@ -6120,7 +6120,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
         }
 
 	//Puerto Timex Paginacion
-        if (puerto_l==0xf4 && (MACHINE_IS_CHLOE || MACHINE_IS_TIMEX_TS2068 || MACHINE_IS_PRISM) ) {
+        if (puerto_l==0xf4 && (MACHINE_IS_CHLOE || MACHINE_IS_TIMEX_TS2068 || MACHINE_IS_PRISM || is_zxuno_chloe_mmu() ) ) {
 		return timex_port_f4;
 
         }
@@ -7583,12 +7583,13 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		if (MACHINE_IS_CHLOE_280SE) chloe_set_memory_pages();
 		if (MACHINE_IS_PRISM) prism_set_memory_pages();
 		if (MACHINE_IS_TIMEX_TS2068) timex_set_memory_pages();
+		if (is_zxuno_chloe_mmu() ) zxuno_set_memory_pages();
 
 	}
 
 
 	//Puerto Timex Paginacion
-	if (puerto_l==0xf4 && (MACHINE_IS_CHLOE || MACHINE_IS_TIMEX_TS2068 || MACHINE_IS_PRISM) ) {
+	if (puerto_l==0xf4 && (MACHINE_IS_CHLOE || MACHINE_IS_TIMEX_TS2068 || MACHINE_IS_PRISM || is_zxuno_chloe_mmu()) ) {
 
 		//Si prism y puerto f4 desactivado
 		if (MACHINE_IS_PRISM) {
@@ -7607,6 +7608,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		if (MACHINE_IS_CHLOE_280SE) chloe_set_memory_pages();
 		if (MACHINE_IS_PRISM) prism_set_memory_pages();
 		if (MACHINE_IS_TIMEX_TS2068) timex_set_memory_pages();
+		if (is_zxuno_chloe_mmu() ) zxuno_set_memory_pages();
 
         }
 

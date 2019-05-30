@@ -19,6 +19,7 @@ Added hdf support to MMC emulation
 Allow text adventure keyboard also on CPC
 Added support for more cyrillic characters on menu
 Added Derby+ and Derby++ roms
+Added Chloe MMU to ZX-Uno
 
 Improved footer:
 -Footer now completely follows GUI Style

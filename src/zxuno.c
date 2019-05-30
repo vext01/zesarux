@@ -1539,11 +1539,23 @@ void zxuno_set_memory_pages_ram_rom(void)
 
 }
 
+int zxuno_is_chloe_mmu(void)
+{
+	return zxuno_ports[0x0e] & 64;
+}
+
+int is_zxuno_chloe_mmu(void)
+{
+	if (MACHINE_IS_ZXUNO && zxuno_is_chloe_mmu() ) return 1;
+	else return 0;
+}
+
 void zxuno_set_memory_pages(void)
 {
 
 	//Si hay habilitado paginacion timex/chloe
-	if (zxuno_ports[0x0e] & 64) {
+	if (zxuno_is_chloe_mmu ()) {
+		//printf ("Usando chloe mmu\n");
 		chloe_set_memory_pages();
 
 		int i;
