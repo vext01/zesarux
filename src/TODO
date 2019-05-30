@@ -17,6 +17,10 @@ Para próxima versión ZEsarUX:
 
 -Fbdev debe permitir extender escritorio?
 
+-Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
+
+-Interrupcion pentagon se dispara en medio de un scanline, según lo hablado con mcleod
+
 -Posibles efectos para fondo ZX Desktop:
 --Efecto de ZX Desktop barras colores animado?
 --Imagen. BMP?
@@ -197,8 +201,6 @@ Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que 
 -zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
 Lo hace realmente con visible_width y visible_height
 
-
--quiza parte de ventana (footer?) para mostrar teclas. Pero entonces donde pongo zona de redimensionado y barra scroll inferior?
 
 
 --- FIN ZX Vision
@@ -807,22 +809,8 @@ Ver registro 2:
 			bit 1 = (R/W) if 1 Hard Reset
 			bit 0 = (R/W) if 1 Soft Reset
 
--tbblue fast render:
-Compilado con O2. 
-boot tbblue pantalla welcome sin real video: 41%. 
-con real video y fast render 55%
-con real video y normal render 57%
-
-
-warhawk 43% en pantalla menu con fast render
-warhawk 45% en pantalla menu sin fast render
-pogie 45% en pantalla inicial con fast render 
-pogie 47% en pantalla inicial sin fast render
-
-
 
 *Contended en mmu tbblue. De momento la contencion la hace por bloques de 16 kb
--dma
 
 -PIXELUP/DN quiza pueda ir mas alla de coordenada 191
 https://www.specnext.com/forum/viewtopic.php?p=8226#p8226
@@ -1423,8 +1411,6 @@ en pruebas: -timer audio en raspberry, quiza pausa deberia ser menor en el caso 
 
 -Lock sdl al refrescar hace printf?
 
--Opción para indicar otro archivo de configuración 
-
 
 -fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback
 
@@ -1981,7 +1967,6 @@ aunque se definen de tipo normal. Tendrian que ser de tipo separador. Pero en es
 si el cursor esta en un separador, que haga bajar el cursor -> esto parece que ya se intento, buscar comentario que dice:
 //Nota: el separador no puede ser final de menu
 
--Quizá sugerencia siempre al iniciar, random? 
 
 -Estilo con tipo letra Chicago del Mac OS Classic 
 
@@ -2030,19 +2015,8 @@ TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, qu
 -Estadísticas de diferentes componentes del core, ya sea cpu u otra cosa, como memoria usada para el rainbow buffer, el buffer de audio  y cosas así
 Info de tamaño ventana. Y tamaño ventana sin zoom
 
--revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter: para cuando se reduce tamaño caracter de 8 a menos
 
--probar como hacer transparencia en menu:
--un layer de color indexado 16 bits para pantalla de spectrum
--otro layer de color indexado 16 bits solo para menu
 
-al dibujar en pantalla, cada driver de video, debe leer los dos layers, sacar valores rgb de los dos colores,
-y hacer la media de los dos colores.
-Color 65535 consideraremos transparente 
-
-Para ello, las rutinas que escriben texto en menu, deben usar otro destino destino: esto es complicado, pues hay rutinas de dibujar sprite en pantalla
-que son comunes para zx8081 (y modo simulado zx81 de spectrum) y menu
-->drivers de texto usaran texto sobre pantalla como hasta ahora
 
 -AY piano pero que vaya mostrando las notas en scroll, y quiza guardando notas en archivo de texto?
 
@@ -2190,7 +2164,6 @@ En ese mismo OSD, si pulsamos una tecla en el OSD, se quedara colgado, pues no v
 a que las variables debug_fire_in y out se resetean antes del core y se comprueban despues, 
 pero la dma va aparte 
 
--Agregar ensamblador
 
 -debugger z80: que sea capaz de mostrar direcciones NNNN correctas (para JR CC DIS) aunque se este debugando con memory zone y direccion alta.
 Por ejemplo:
@@ -2292,7 +2265,6 @@ Si al final es saber por donde se ha estado ejecutando un programa, se puede usa
 
 -remote command info: ultimo uso cpu, últimos fps, velocidad relativa cpu
 
--Capturar senal sigbus. en que casos salta?
 
 -Enabling RAM refresh lo hace mediante cambio de funcion peek. Deberia hacerlo mediante funciones nested
 
