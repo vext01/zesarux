@@ -1466,8 +1466,8 @@ z80_byte *zxuno_return_segment_memory(z80_int dir)
 	int segmento;
 	z80_byte *puntero;
 
-	segmento=dir/16384;
-	puntero=zxuno_memory_paged_new[segmento];
+	segmento=dir/8192;
+	puntero=zxuno_memory_paged_brandnew[segmento];
 	return puntero;
 }
 

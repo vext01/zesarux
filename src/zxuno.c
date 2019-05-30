@@ -96,7 +96,7 @@ z80_byte *zxuno_sram_mem_table_new[ZXUNO_SRAM_PAGES];
 
 
 //Direcciones actuales mapeadas, modo nuevo sin tener que distinguir entre bootm a 0 o 1
-z80_byte *zxuno_memory_paged_new[4];
+z80_byte *zxuno_memory_paged_brandnew[8];
 
 
 int zxuno_flash_must_flush_to_disk=0;
@@ -1446,10 +1446,17 @@ void zxuno_set_memory_pages_ram_rom(void)
 
 		}
 
-		zxuno_memory_paged_new[0]=zxuno_sram_mem_table_new[pagina0];
-		zxuno_memory_paged_new[1]=zxuno_sram_mem_table_new[pagina1];
-		zxuno_memory_paged_new[2]=zxuno_sram_mem_table_new[pagina2];
-		zxuno_memory_paged_new[3]=zxuno_sram_mem_table_new[pagina3];
+		zxuno_memory_paged_brandnew[0*2]=zxuno_sram_mem_table_new[pagina0];
+		zxuno_memory_paged_brandnew[0*2+1]=zxuno_sram_mem_table_new[pagina0]+8192;
+
+		zxuno_memory_paged_brandnew[1*2]=zxuno_sram_mem_table_new[pagina1];
+		zxuno_memory_paged_brandnew[1*2+1]=zxuno_sram_mem_table_new[pagina1]+8192;
+
+		zxuno_memory_paged_brandnew[2*2]=zxuno_sram_mem_table_new[pagina2];
+		zxuno_memory_paged_brandnew[2*2+1]=zxuno_sram_mem_table_new[pagina2]+8192;
+
+		zxuno_memory_paged_brandnew[3*2]=zxuno_sram_mem_table_new[pagina3];
+		zxuno_memory_paged_brandnew[3*2+1]=zxuno_sram_mem_table_new[pagina3]+8192;
 
 		contend_pages_actual[0]=contend_pages_128k_p2a[pagina0];
 		contend_pages_actual[1]=contend_pages_128k_p2a[pagina1];
@@ -1480,11 +1487,17 @@ void zxuno_set_memory_pages(void)
 		pagina3=zxuno_ports[1]&31;
 
 		//Los 16kb de rom del zxuno
-		zxuno_memory_paged_new[0]=memoria_spectrum;
+		zxuno_memory_paged_brandnew[0*2]=memoria_spectrum;
+		zxuno_memory_paged_brandnew[0*2+1]=memoria_spectrum+8192;
 
-		zxuno_memory_paged_new[1]=zxuno_sram_mem_table_new[pagina1];
-		zxuno_memory_paged_new[2]=zxuno_sram_mem_table_new[pagina2];
-		zxuno_memory_paged_new[3]=zxuno_sram_mem_table_new[pagina3];
+		zxuno_memory_paged_brandnew[1*2]=zxuno_sram_mem_table_new[pagina1];
+		zxuno_memory_paged_brandnew[1*2+1]=zxuno_sram_mem_table_new[pagina1]+8192;
+
+		zxuno_memory_paged_brandnew[2*2]=zxuno_sram_mem_table_new[pagina2];
+		zxuno_memory_paged_brandnew[2*2+1]=zxuno_sram_mem_table_new[pagina2]+8192;
+
+		zxuno_memory_paged_brandnew[3*2]=zxuno_sram_mem_table_new[pagina3];
+		zxuno_memory_paged_brandnew[3*2+1]=zxuno_sram_mem_table_new[pagina3]+8192;
 
 		contend_pages_actual[0]=0;
 		contend_pages_actual[1]=contend_pages_128k_p2a[pagina1];
@@ -1518,12 +1531,18 @@ void zxuno_set_memory_pages(void)
 			pagina3=zxuno_get_ram_page();
 
 
-			zxuno_memory_paged_new[0]=zxuno_sram_mem_table_new[pagina0+8];
+			zxuno_memory_paged_brandnew[0*2]=zxuno_sram_mem_table_new[pagina0+8];
+			zxuno_memory_paged_brandnew[0*2+1]=zxuno_sram_mem_table_new[pagina0+8]+8192;
 			//En la tabla zxuno_sram_mem_table hay que saltar las 8 primeras, que son las 8 rams del modo 128k
 
-			zxuno_memory_paged_new[1]=zxuno_sram_mem_table_new[pagina1];
-			zxuno_memory_paged_new[2]=zxuno_sram_mem_table_new[pagina2];
-			zxuno_memory_paged_new[3]=zxuno_sram_mem_table_new[pagina3];
+			zxuno_memory_paged_brandnew[1*2]=zxuno_sram_mem_table_new[pagina1];
+			zxuno_memory_paged_brandnew[1*2+1]=zxuno_sram_mem_table_new[pagina1]+8192;
+
+			zxuno_memory_paged_brandnew[2*2]=zxuno_sram_mem_table_new[pagina2];
+			zxuno_memory_paged_brandnew[2*2+1]=zxuno_sram_mem_table_new[pagina2]+8192;
+
+			zxuno_memory_paged_brandnew[3*2]=zxuno_sram_mem_table_new[pagina3];
+			zxuno_memory_paged_brandnew[3*2+1]=zxuno_sram_mem_table_new[pagina3]+8192;
 
 			contend_pages_actual[0]=0;
 			contend_pages_actual[1]=contend_pages_128k_p2a[pagina1];

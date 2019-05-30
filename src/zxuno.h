@@ -41,7 +41,7 @@ extern void hard_reset_cpu_zxuno(void);
 //extern void mem_set_normal_pages_zxuno(void);
 
 extern z80_byte *zxuno_sram_mem_table_new[];
-extern z80_byte *zxuno_memory_paged_new[];
+extern z80_byte *zxuno_memory_paged_brandnew[];
 extern void zxuno_set_memory_pages(void);
 extern void zxuno_init_memory_tables(void);
 

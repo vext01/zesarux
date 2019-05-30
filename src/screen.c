@@ -1065,11 +1065,12 @@ z80_byte compare_char_step(z80_byte *origen,z80_byte *inverse,int step)
 		else {
 
 			int segmento;
-	                segmento=dir / 16384;
 			z80_int dir_orig=dir;
-        	        dir = dir & 16383;
-			if (MACHINE_IS_ZXUNO_BOOTM_DISABLED) puntero=zxuno_memory_paged_new[segmento];
-			else puntero=memory_paged[segmento];
+
+			segmento=dir / 16384;
+			dir = dir & 16383;
+			puntero=memory_paged[segmento];	
+	                
 
 
 			//Segmentos de 8kb
@@ -1086,6 +1087,13 @@ z80_byte compare_char_step(z80_byte *origen,z80_byte *inverse,int step)
                                 puntero=chloe_memory_paged[segmento];
 				puntero +=dir;
                         }
+
+			else if (MACHINE_IS_ZXUNO_BOOTM_DISABLED) {
+				segmento=dir_orig / 8192;
+				dir = dir_orig & 8191;
+				puntero=zxuno_memory_paged_brandnew[segmento];
+				puntero +=dir;
+			}
 
 
 			//Segmentos de 16 kb

@@ -20285,7 +20285,8 @@ void menu_debug_special_nmi(MENU_ITEM_PARAMETERS)
 
 		//Mapear sram 13
 		//zxuno_memory_paged_new(13);
-		zxuno_memory_paged_new[3]=zxuno_sram_mem_table_new[13];
+		zxuno_memory_paged_brandnew[3*2]=zxuno_sram_mem_table_new[13];
+		zxuno_memory_paged_brandnew[3*2+1]=zxuno_sram_mem_table_new[13]+8192;
 
 		//Valor nmievent
 		zxuno_ports[8]=valor_nmi;
@@ -23996,7 +23997,7 @@ void hotswap_zxuno_to_p2as_set_pages(void)
 
                 //Paginas mapeadas actuales
                 for (i=0;i<4;i++) {
-                        memory_paged[i]=zxuno_memory_paged_new[i];
+                        memory_paged[i]=zxuno_memory_paged_brandnew[i*2];
                 }
 }
 
