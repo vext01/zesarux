@@ -4858,7 +4858,7 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 
 
 //Paginas memoria
-                          if (MACHINE_IS_ZXUNO ) {
+                          if (MACHINE_IS_ZXUNO && !zxuno_is_chloe_mmu() ) {
                                   int pagina;
                                   //4 paginas, texto 6 caracteres max
                                   //char texto_paginas[4][7];
@@ -4894,7 +4894,7 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 
 
   			//Paginas RAM en CHLOE
-  			if (MACHINE_IS_CHLOE) {
+  			if (MACHINE_IS_CHLOE || is_zxuno_chloe_mmu() ) {
   				//char texto_paginas[8][3];
   				//char tipo_memoria[3];
   				int pagina;
