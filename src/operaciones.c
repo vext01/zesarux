@@ -1473,10 +1473,7 @@ z80_byte *zxuno_return_segment_memory(z80_int dir)
 
 void poke_byte_no_time_zxuno(z80_int dir,z80_byte valor)
 {
-	//int segmento;
 	z80_byte *puntero;
-	//segmento=dir / 16384;
-
 
 	puntero=zxuno_return_segment_memory(dir);
 
@@ -1486,7 +1483,7 @@ void poke_byte_no_time_zxuno(z80_int dir,z80_byte valor)
 		//Si no es rom
 		if (dir>16383) {
 			//printf ("Poke bootm %X %X\n",dir,valor);
-			dir = dir & 16383;
+			dir = dir & 8191;
 
 			puntero=puntero+dir;
 			*puntero=valor;
@@ -1502,7 +1499,7 @@ void poke_byte_no_time_zxuno(z80_int dir,z80_byte valor)
 set_visualmembuffer(dir);
 
 #endif
-			dir = dir & 16383;
+			dir = dir & 8191;
 			puntero=puntero+dir;
 			*puntero=valor;
 		}
@@ -1543,7 +1540,7 @@ z80_byte peek_byte_no_time_zxuno(z80_int dir)
 
 				puntero=zxuno_return_segment_memory(dir);
 
-				dir = dir & 16383;
+				dir = dir & 8191;
 				puntero=puntero+dir;
 
 				return *puntero;
