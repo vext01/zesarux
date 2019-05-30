@@ -35,6 +35,7 @@
 #include "ay38912.h"
 #include "ulaplus.h"
 #include "operaciones.h"
+#include "chloe.h"
 
 z80_byte last_port_FC3B=0;
 
@@ -1358,6 +1359,69 @@ void zxuno_flush_flash_to_disk(void)
 //Nuevas funciones de MMU
 
 
+
+
+
+void zxuno_chloe_init_memory_tables(void)
+{
+	debug_printf (VERBOSE_DEBUG,"Initializing Chloe memory pages");
+
+	/*
+//Direcciones donde estan cada pagina de rom. 2 paginas de 16 kb
+//z80_byte *chloe_rom_mem_table[2];
+
+//Direcciones donde estan cada pagina de ram home
+//z80_byte *chloe_home_ram_mem_table[8];
+
+//Direcciones donde estan cada pagina de ram ex
+//z80_byte *chloe_ex_ram_mem_table[8];
+
+//Direcciones donde estan cada pagina de ram dock
+//z80_byte *chloe_dock_ram_mem_table[8];
+
+//Direcciones actuales mapeadas, bloques de 8 kb
+	*/
+
+	//memoria_spectrum
+	//32 kb rom
+	//128kb home
+	//64 kb ex
+	//64 kb dock
+
+	z80_byte *puntero;
+	
+
+	//int puntero=16384; //saltamos los primeros 16kb de rom del bootloader
+
+	puntero=zxuno_sram_mem_table_new[8]; //ROMS
+	chloe_rom_mem_table[0]=puntero;
+	chloe_rom_mem_table[1]=&puntero[16384];
+
+	int i;
+
+	puntero=zxuno_sram_mem_table_new[0]; //RAMS
+	for (i=0;i<8;i++) {
+		chloe_home_ram_mem_table[i]=puntero;
+		puntero +=16384;
+	}
+
+	puntero=zxuno_sram_mem_table_new[24]; //EXT
+	for (i=0;i<8;i++) {
+		chloe_ex_ram_mem_table[i]=puntero;
+		puntero +=8192;
+	}
+
+	puntero=zxuno_sram_mem_table_new[28]; //EXT
+	for (i=0;i<8;i++) {
+		chloe_dock_ram_mem_table[i]=puntero;
+		puntero +=8192;
+	}
+
+
+
+}
+
+
 void zxuno_init_memory_tables(void)
 {
 
@@ -1369,7 +1433,10 @@ void zxuno_init_memory_tables(void)
                         zxuno_sram_mem_table_new[i]=&memoria_spectrum[puntero];
                         puntero +=16384;
                 }
+
+	zxuno_chloe_init_memory_tables();
 }
+
 
 z80_byte zxuno_get_rom_page(void)
 {
@@ -1474,6 +1541,18 @@ void zxuno_set_memory_pages_ram_rom(void)
 
 void zxuno_set_memory_pages(void)
 {
+
+	//Si hay habilitado paginacion timex/chloe
+	if (zxuno_ports[0x0e] & 64) {
+		chloe_set_memory_pages();
+
+		int i;
+		for (i=0;i<8;i++) {
+			zxuno_memory_paged_brandnew[i]=chloe_memory_paged[i];
+		}
+
+		return;
+	}
 
 
 	//Muy facil

@@ -1313,7 +1313,7 @@ sam.o: sam.c sam.h cpu.h screen.h debug.h core_sam.h contend.h joystick.h menu.h
 atomlite.o: atomlite.c atomlite.h cpu.h screen.h debug.h menu.h operaciones.h utils.h ide.h
 	\$(CC) \$(CFLAGS) -c atomlite.c
 
-zxuno.o: zxuno.c zxuno.h cpu.h debug.h contend.h mem128.h utils.h ula.h screen.h menu.h divmmc.h diviface.h ay38912.h ulaplus.h operaciones.h
+zxuno.o: zxuno.c zxuno.h cpu.h debug.h contend.h mem128.h utils.h ula.h screen.h menu.h divmmc.h diviface.h ay38912.h ulaplus.h operaciones.h chloe.h
 	\$(CC) \$(CFLAGS) -c zxuno.c
 
 #ql.o: 68000.c 68000_debug.c op68kadd.c op68karith.c op68ksub.c op68klogop.c op68kmisc.c op68kmove.c op68kshift.c 68000_additional.c ql.c
