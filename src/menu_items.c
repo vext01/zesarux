@@ -2722,8 +2722,8 @@ void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
 		return;
 	}
 
-                zxvision_window *ventana;
-                ventana=zxvision_current_window;
+                //zxvision_window *ventana;
+                //ventana=zxvision_current_window;
 
 	//Metemos funcion de overlay que se encarga de repintar ventanas de debajo con overlay
 	set_menu_overlay_function(menu_draw_background_windows_overlay);
@@ -5450,7 +5450,7 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
 
-	printf ("ancho: %d alto: %d\n",ancho,alto);
+	//printf ("ancho: %d alto: %d\n",ancho,alto);
 
 	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
 
@@ -5464,23 +5464,23 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();		
 
 	zxvision_window ventana;
-	int x,y,ancho,alto;
+	int xventana,yventana,ancho_ventana,alto_ventana;
 	
-	if (!util_find_window_geometry("hexeditor",&x,&y,&ancho,&alto)) {
-		x=DEBUG_HEXDUMP_WINDOW_X;
-		y=DEBUG_HEXDUMP_WINDOW_Y;
-		ancho=DEBUG_HEXDUMP_WINDOW_ANCHO;
-		alto=DEBUG_HEXDUMP_WINDOW_ALTO;
+	if (!util_find_window_geometry("hexeditor",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+		xventana=DEBUG_HEXDUMP_WINDOW_X;
+		yventana=DEBUG_HEXDUMP_WINDOW_Y;
+		ancho_ventana=DEBUG_HEXDUMP_WINDOW_ANCHO;
+		alto_ventana=DEBUG_HEXDUMP_WINDOW_ALTO;
 	}
 
 
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
 	//zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
-	menu_debug_hexdump_crea_ventana(&ventana,x,y,ancho,alto);
+	menu_debug_hexdump_crea_ventana(&ventana,xventana,yventana,ancho_ventana,alto_ventana);
 
 	//Nos guardamos alto y ancho anterior. Si el usuario redimensiona la ventana, la recreamos
-	int alto_anterior=alto;
-	int ancho_anterior=ancho;
+	int alto_anterior=alto_ventana;
+	int ancho_anterior=ancho_ventana;
 
 	
 
@@ -5961,15 +5961,15 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				}
 
 		//Si ha cambiado el alto
-		alto=ventana.visible_height;
-		ancho=ventana.visible_width;
-		if (alto!=alto_anterior || ancho!=ancho_anterior) {
-			printf ("recrear ventana\n");
+		alto_ventana=ventana.visible_height;
+		ancho_ventana=ventana.visible_width;
+		if (alto_ventana!=alto_anterior || ancho_ventana!=ancho_anterior) {
+			//printf ("recrear ventana\n");
 			//Recrear ventana
 			zxvision_destroy_window(&ventana);
-			menu_debug_hexdump_crea_ventana(&ventana,x,y,ancho,alto);
-			alto_anterior=alto;
-			ancho_anterior=ancho;
+			menu_debug_hexdump_crea_ventana(&ventana,xventana,yventana,ancho_ventana,alto_ventana);
+			alto_anterior=alto_ventana;
+			ancho_anterior=ancho_ventana;
 		}
 			
 
