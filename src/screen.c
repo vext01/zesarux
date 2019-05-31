@@ -3350,6 +3350,63 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 	z80_int color_der;
 	z80_int color_arr;
 	z80_int color_aba;
+/*
+
+La reducción funciona de la siguiente manera, se divide la imagen origen en bloques de 4x4 pixeles, y cada una de las de destino será de 3x3
+Se parte de la imagen origen:
+
+abcd
+efgh
+ijkl
+mnop
+
+A la de destino:
+
+ab3
+ef6
+789
+
+De la imagen origen, el primer bloque de 2x2 se traspasa tal cual, así:
+
+ab
+ef
+
+Se traspasa a:
+
+ab
+ef
+
+Luego, las primeras dos filas, se escalan asi:
+Las ultimas dos columnas se mezclan los colores, mediante la funcion de mezclado: si hay antialias, se saca el color medio de los dos pixeles, el de la izquierda y derecha. 
+Si no hay antialas, se escoge el primer pixel.
+Así:
+
+cd   -> 3
+gh   -> 6
+
+
+Luego las ultimas dos filas, se escalan así:
+
+Las primeras 3 columnas se mezclan los colores, de manera similar a la anterior, pero mezclando el pixel de arriba y abajo.
+Así:
+
+i 
+   ->  7
+m   
+
+
+j
+   -> 8
+n
+
+
+k
+   -> 9
+o
+
+De esto se ve que siempre se descarta un pixel como minimo, el p
+
+*/
 
 	for (y=0;y<alto;y++) {
 		
