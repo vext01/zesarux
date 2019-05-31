@@ -2707,11 +2707,17 @@ void menu_draw_cpu_temp(void)
         //primero liberar esas zonas
         int x;
 
+	int color_tinta=WINDOW_FOOTER_INK;
+
+	//Color en rojo si temperatura alta
+	if (grados_entero>=80) color_tinta=ESTILO_GUI_COLOR_AVISO;
+
+
         //luego escribimos el texto
         x=WINDOW_FOOTER_ELEMENT_X_CPU_TEMP;
 
 
-	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_CPU_TEMP,buffer_temp,color_tinta,WINDOW_FOOTER_PAPER);
 }
 
 void menu_draw_last_fps(void)
@@ -2787,8 +2793,9 @@ void draw_middle_footer(void)
 	//temp forzado
 	//menu_draw_cpu_temp();
 
-
-#ifdef EMULATE_RASPBERRY
+//Temperatura mostrarla en raspberry y en general en Linux
+//#ifdef EMULATE_RASPBERRY
+#ifdef __linux__
     menu_draw_cpu_temp();
 #endif
 

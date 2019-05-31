@@ -24,6 +24,7 @@ Added Chloe MMU to ZX-Uno
 Improved footer:
 -Footer now completely follows GUI Style
 -Reordered cpu use, numbers in red when cpu use > 85%
+-Now shows cpu temperature on Linux (and not only on Raspbian as before)
 
 Improved Waveform window: now the wave adjusts automatically to the zxwindow size
 
