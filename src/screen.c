@@ -3404,7 +3404,7 @@ k
    -> 9
 o
 
-De esto se ve que siempre se descarta un pixel como minimo, el p
+De esto se ve que siempre se descarta dos pixeles como minimo, el l y p
 
 */
 
