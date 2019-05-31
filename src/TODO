@@ -34,6 +34,9 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -acabar de definir settings de ZX Desktop y que se guarden/tengan configuración
 
 
+-zxvision:
+--que al redimensionar ventana se pueda hacer que vuelva a la funcion que la llama (como cuando se mueve raton?) para hacer
+funciones de reajuste de disposicion de texto en ventana por ejemplo
 
 -Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
 

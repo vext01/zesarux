@@ -5235,7 +5235,7 @@ menu_z80_moto_int menu_debug_hexdump_direccion=0;
 
 int menu_hexdump_edit_position_x=0; //Posicion del cursor relativa al inicio del volcado hexa
 int menu_hexdump_edit_position_y=0; //Posicion del cursor relativa al inicio del volcado hexa
-const int menu_hexdump_lineas_total=13;
+int menu_hexdump_lineas_total=13;
 
 int menu_hexdump_edit_mode=0;
 const int menu_hexdump_bytes_por_linea=8;
@@ -5445,6 +5445,17 @@ void menu_debug_hexdump_info_subzones(void)
 
 }
 
+void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int ancho,int alto)
+{
+	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
+	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
+
+	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+
+	zxvision_draw_window(ventana);
+
+}
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
@@ -5462,12 +5473,20 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
-	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
+	//zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
+	menu_debug_hexdump_crea_ventana(&ventana,x,y,ancho,alto);
+
+	//Nos guardamos alto y ancho anterior. Si el usuario redimensiona la ventana, la recreamos
+	int alto_anterior=alto;
+	int ancho_anterior=ancho;
+
+	
 
 
-	ventana.can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
 
-	zxvision_draw_window(&ventana);
+	//ventana.can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+
+	//zxvision_draw_window(&ventana);
 
 
     z80_byte tecla;
@@ -5493,6 +5512,12 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
         do {
+
+		//printf ("dibujamos ventana\n");
+			//Alto 23. lineas 13
+		menu_hexdump_lineas_total=ventana.visible_height-10;
+
+			if (menu_hexdump_lineas_total<3) menu_hexdump_lineas_total=3;
 
 			int cursor_en_zona_ascii=0;
 			int editando_en_zona_ascii=0;
@@ -5931,7 +5956,20 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//Si se llega a detecha de hexa o ascii, saltar linea
 
 					
-				}	
+				}
+
+		//Si ha cambiado el alto
+		alto=ventana.visible_height;
+		ancho=ventana.visible_width;
+		if (alto!=alto_anterior || ancho!=ancho_anterior) {
+			printf ("recrear ventana\n");
+			//Recrear ventana
+			zxvision_destroy_window(&ventana);
+			menu_debug_hexdump_crea_ventana(&ventana,x,y,ancho,alto);
+			alto_anterior=alto;
+			ancho_anterior=ancho;
+		}
+			
 
 
         } while (salir==0);
