@@ -30,6 +30,9 @@ Improved Waveform window: now the wave adjusts automatically to the zxwindow siz
 
 Improved scale 0.75 function: now it has antialias
 
+Improved hexadecimal editor:
+-now it resizes view to window height
+
 Fixed bug having more than 256 text to adventure keyboard words
 Fixed bug on CPC vertical scrolling
 Fixed segmentation fault bug when drawing CPC machine

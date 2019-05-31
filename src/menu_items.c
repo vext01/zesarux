@@ -5450,6 +5450,8 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
 
+	printf ("ancho: %d alto: %d\n",ancho,alto);
+
 	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
 
 	zxvision_draw_window(ventana);

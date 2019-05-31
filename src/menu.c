@@ -569,7 +569,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 //valores de la ventana mostrada
  
-int ventana_x,ventana_y,ventana_ancho,ventana_alto;
+int current_win_x,current_win_y,current_win_ancho,current_win_alto;
 
 //tipo ventana. normalmente activa. se pone tipo inactiva desde zxvision al pulsar fuera de la ventana
 int ventana_tipo_activa=1;
@@ -1509,10 +1509,10 @@ void menu_call_onscreen_keyboard_from_menu(void)
 
 	//Guardamos tamanyo ventana
 	z80_byte antes_ventana_x,antes_ventana_y,antes_ventana_ancho,antes_ventana_alto;
-	antes_ventana_x=ventana_x;
-	antes_ventana_y=ventana_y;
-	antes_ventana_ancho=ventana_ancho;
-	antes_ventana_alto=ventana_alto;
+	antes_ventana_x=current_win_x;
+	antes_ventana_y=current_win_y;
+	antes_ventana_ancho=current_win_ancho;
+	antes_ventana_alto=current_win_alto;
 
 	//Comportamiento de 1 caracter de margen a la izquierda en ventana (lo altera hexdump)
 	int antes_menu_escribe_linea_startx=menu_escribe_linea_startx;
@@ -1564,10 +1564,10 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	cuadrado_color=antes_cuadrado_color;
 
 	//Restaurar tamanyo ventana
-	ventana_x=antes_ventana_x;
-	ventana_y=antes_ventana_y;
-	ventana_ancho=antes_ventana_ancho;
-	ventana_alto=antes_ventana_alto;
+	current_win_x=antes_ventana_x;
+	current_win_y=antes_ventana_y;
+	current_win_ancho=antes_ventana_ancho;
+	current_win_alto=antes_ventana_alto;
 
 	menu_refresca_pantalla();	
 
@@ -3190,14 +3190,8 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 void menu_escribe_texto_ventana(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto)
 {
 
-	menu_escribe_texto(ventana_x+x,ventana_y+y+1,tinta,papel,texto);
+	menu_escribe_texto(current_win_x+x,current_win_y+y+1,tinta,papel,texto);
 
-/*
-	unsigned int i;
-
-        //y luego el texto
-        for (i=0;i<strlen(texto);i++) putchar_menu_overlay(ventana_x+x+i,ventana_y+y+1,texto[i],tinta,papel);
-*/
 
 }
 
@@ -3458,7 +3452,7 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int 
 
 
 	//linea entera con espacios
-	for (i=0;i<ventana_ancho;i++) {
+	for (i=0;i<current_win_ancho;i++) {
 		zxvision_print_string(ventana,i,indice,0,papel,0," ");
 	}
 
@@ -3545,7 +3539,7 @@ void menu_escribe_linea_opcion(int indice,int opcion_actual,int opcion_activada,
 
 
 	//linea entera con espacios
-	for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
+	for (i=0;i<current_win_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
 
 	//y texto propiamente
 	int startx=menu_escribe_linea_startx;
@@ -3934,13 +3928,13 @@ void menu_dibuja_ventana_franja_arcoiris(int x, int y, int ancho)
 void menu_dibuja_ventana_franja_arcoiris_trozo_current(int trozos)
 {
 
-	menu_dibuja_ventana_franja_arcoiris_trozo(ventana_x,ventana_y,ventana_ancho,trozos);
+	menu_dibuja_ventana_franja_arcoiris_trozo(current_win_x,current_win_y,current_win_ancho,trozos);
 }
 
 void menu_dibuja_ventana_franja_arcoiris_oscuro_current(int indice)
 {
 
-	menu_dibuja_ventana_franja_arcoiris_oscuro(ventana_x,ventana_y,ventana_ancho,indice);
+	menu_dibuja_ventana_franja_arcoiris_oscuro(current_win_x,current_win_y,current_win_ancho,indice);
 }
 
 //Da ancho titulo de ventana segun el texto titulo, boton cerrado si/no, y franjas de color
@@ -4001,9 +3995,9 @@ z80_byte menu_retorna_caracter_minimizar(zxvision_window *w)
 void menu_dibuja_ventana_botones(void)
 {
 
-	int x=ventana_x;
-	int y=ventana_y;
-	int ancho=ventana_ancho;
+	int x=current_win_x;
+	int y=current_win_y;
+	int ancho=current_win_ancho;
 	//int alto=ventana_alto;
 
 		//Boton de minimizar
@@ -4054,10 +4048,10 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	int i,j;
 
 	//guardamos valores globales de la ventana mostrada
-	ventana_x=x;
-	ventana_y=y;
-	ventana_ancho=ancho;
-	ventana_alto=alto;
+	current_win_x=x;
+	current_win_y=y;
+	current_win_ancho=ancho;
+	current_win_alto=alto;
 
 	xpixel=x*menu_char_width;
 	ypixel=y*8;
@@ -7183,7 +7177,7 @@ void menu_cpu_core_loop(void)
 
 int si_menu_mouse_en_ventana(void)
 {
-	if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<ventana_ancho && menu_mouse_y<ventana_alto ) return 1;
+	if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<current_win_ancho && menu_mouse_y<current_win_alto ) return 1;
 	return 0;
 }
 
@@ -7263,8 +7257,8 @@ void menu_calculate_mouse_xy(void)
 	x /= menu_gui_zoom;
 	y /= menu_gui_zoom;
 
-	x -=ventana_x;
-	y -=ventana_y;
+	x -=current_win_x;
+	y -=current_win_y;
 
 	menu_mouse_x=x;
 	menu_mouse_y=y;
@@ -8647,7 +8641,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 					//printf ("dentro ventana\n");
 					//Descartar linea titulo y ultima linea
 
-					if (menu_mouse_y>0 && menu_mouse_y<ventana_alto-1) {
+					if (menu_mouse_y>0 && menu_mouse_y<current_win_alto-1) {
 						//printf ("dentro espacio efectivo ventana\n");
 						//Ver si hay que subir o bajar cursor
 						int posicion_raton_y=menu_mouse_y-1;
@@ -8701,7 +8695,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			//o mouse en primera linea
 			//o mouse en ultima linea
 			// no enviamos enter si pulsamos boton
-			if (menu_mouse_x==ventana_ancho-1 || menu_mouse_y==0 || menu_mouse_y==ventana_alto-1) mouse_en_zona_opciones=0;
+			if (menu_mouse_x==current_win_ancho-1 || menu_mouse_y==0 || menu_mouse_y==current_win_alto-1) mouse_en_zona_opciones=0;
 
 			//printf ("Despues tecla leida2: %d\n",tecla_leida);
 
