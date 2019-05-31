@@ -3376,7 +3376,7 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 			dest++;
 			}
 
-			//Las ultimas dos lineas, mezclamos arriba y abajo en las dos primeras columnas. La tercera columna, se mezclan
+			//Las ultimas dos lineas, mezclamos arriba y abajo en las tres primeras columnas. La cuarta columna se descarta
 			if ( (y%4)==2) {
 			color_arr=*orig;
 			color_aba=orig[ancho];
@@ -3384,6 +3384,7 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 			*dest=screen_scale_075_mix_two(color_arr,color_aba);
 			dest++;
 			orig++;
+
 			
 			color_arr=*orig;
 			color_aba=orig[ancho];
@@ -3392,14 +3393,26 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 			dest++;
 			orig++;
 
+
 			//Mezclar los ultimos dos
-			color_izq=*orig;
+			/*color_izq=*orig;
 			orig++;
 			color_der=*orig;
 			orig++;
 
 			*dest=screen_scale_075_mix_two(color_izq,color_der);
+			dest++;*/
+
+			color_arr=*orig;
+			color_aba=orig[ancho];
+
+			*dest=screen_scale_075_mix_two(color_arr,color_aba);
 			dest++;
+			orig++;
+
+			orig++;
+			
+
 			}
 
 			
