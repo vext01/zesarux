@@ -5963,9 +5963,17 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 		//Si ha cambiado el alto
 		alto_ventana=ventana.visible_height;
 		ancho_ventana=ventana.visible_width;
+		xventana=ventana.x;
+		yventana=ventana.y;
 		if (alto_ventana!=alto_anterior || ancho_ventana!=ancho_anterior) {
 			//printf ("recrear ventana\n");
 			//Recrear ventana
+			//Cancelamos edicion si estaba ahi
+			editando_en_zona_ascii=0;
+			menu_hexdump_edit_mode=0;
+			menu_hexdump_edit_position_x=0;
+			menu_hexdump_edit_position_y=0;
+
 			zxvision_destroy_window(&ventana);
 			menu_debug_hexdump_crea_ventana(&ventana,xventana,yventana,ancho_ventana,alto_ventana);
 			alto_anterior=alto_ventana;

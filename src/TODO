@@ -37,6 +37,7 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -zxvision:
 --que al redimensionar ventana se pueda hacer que vuelva a la funcion que la llama (como cuando se mueve raton?) para hacer
 funciones de reajuste de disposicion de texto en ventana por ejemplo
+->no hace falta ya que retorna de handle_zxvision al mover el raton. Hexadecimal editor ya lo hace
 
 -Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
 
