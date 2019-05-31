@@ -10,37 +10,41 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -Comprobar a fondo fileselector despues de cambios a redimensionable
 
--En FAQ explicar qué es ZX Desktop
+-ZX Desktop:
 
--Extender info de zxvision y zxdesktop en features (ya hay algo)
+--En FAQ explicar qué es ZX Desktop
 
--Redimensionar ventana redibuja el zxdesktop?
+--Extender info de zxvision y zxdesktop en features (ya hay algo)
 
--Revisar Full screen en ZX desktop
+--Redimensionar ventana redibuja el zxdesktop?
 
--Fbdev debe permitir extender escritorio?
+--Revisar Full screen en ZX desktop
+
+--Posibles efectos para fondo ZX Desktop:
+---Efecto de ZX Desktop barras colores animado?
+---Imagen. BMP?
+---Miniatura de pantalla spectrum
+---Imagen. SCR
+---Degradado vertical usando alguna tabla de colores concreta ya existente
+---Botones o iconos pulsables 
+---Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
+---Anaglifo usando segunda pantalla o extensión Desktop 
+-Fbdev debe permitir ZX Desktop?
+-sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
+-acabar de definir settings de ZX Desktop y que se guarden/tengan configuración
+
+
 
 -Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
 
 -Interrupcion pentagon se dispara en medio de un scanline, según lo hablado con mcleod
 
--Posibles efectos para fondo ZX Desktop:
---Efecto de ZX Desktop barras colores animado?
---Imagen. BMP?
---Miniatura de pantalla spectrum
---Imagen. SCR
---Degradado vertical usando alguna tabla de colores concreta ya existente
---Botones o iconos pulsables 
---Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
---Anaglifo usando segunda pantalla o extensión Desktop 
 
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
 
 
 -que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
-
--sdl2: si se pone width de extended desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
 -Turbo spool setting en tbblue y otras máquinas 128kb...
 
@@ -58,8 +62,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -probar cpu use footer en maquinas que no muestran (como windows)
 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
-
--logo OSD ZEsarUX no aparece en zx80/81 y sin realvideo. si que aparece, aunque con parpadeo
 
 -Extractor dibujos paws?
 
@@ -83,7 +85,10 @@ Que hacemos con cocoa no opengl?
 Asi se puede tener una raiz por ejemplo para divmmc comun, y luego mapear carpetas adicionales para pruebas
 O quiza, en vez de overlay, una segunda unidad de disco
 
--.nex files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
+-.nex files support. Parecidos a .sna pero tienen cabeceras para guardar registros nextreg, etc. Esperar a que tengan finalizado el formato
+
+-.snax files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
+Se usan realmente??
 
 
 -Baseconf soporta ulaplus
