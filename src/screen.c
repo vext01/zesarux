@@ -3348,13 +3348,16 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 
 	z80_int color_izq;
 	z80_int color_der;
+	z80_int color_arr;
+	z80_int color_aba;
 
 	for (y=0;y<alto;y++) {
 		
 
 		for (x=0;x<ancho;x+=4) {
 
-
+			//Las dos primeras lineas, las dos primeras columnas, color tal cual. La tercera columna, se mezclan
+			if ( (y%4)<2) {
 			*dest=*orig;
 			dest++;
 			orig++;
@@ -3371,24 +3374,46 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 
 			*dest=screen_scale_075_mix_two(color_izq,color_der);
 			dest++;
-			
-			/**dest=*orig;
+			}
+
+			//Las ultimas dos lineas, mezclamos arriba y abajo en las dos primeras columnas. La tercera columna, se mezclan
+			if ( (y%4)==2) {
+			color_arr=*orig;
+			color_aba=orig[ancho];
+
+			*dest=screen_scale_075_mix_two(color_arr,color_aba);
 			dest++;
 			orig++;
 			
-			//Saltar el cuarto
-			orig++;*/
+			color_arr=*orig;
+			color_aba=orig[ancho];
+
+			*dest=screen_scale_075_mix_two(color_arr,color_aba);
+			dest++;
+			orig++;
+
+			//Mezclar los ultimos dos
+			color_izq=*orig;
+			orig++;
+			color_der=*orig;
+			orig++;
+
+			*dest=screen_scale_075_mix_two(color_izq,color_der);
+			dest++;
+			}
+
+			
 			
 		}
 		
-		dest+=diferencia_ancho;
 
-
-		if ( (y%4)==3) {
+		if ( (y%4)==2) {
 			//Saltar la cuarta linea
 			orig+=ancho;
 			y++;
 		}
+
+		dest+=diferencia_ancho;
 	}
 
 }

@@ -3138,6 +3138,7 @@ int util_write_configfile(void)
   if (menu_char_width!=8)		      ADD_STRING_CONFIG,"--menucharwidth %d",menu_char_width);
 
   if (screen_reduce_075.v)			ADD_STRING_CONFIG,"--reduce-075");
+  if (screen_reduce_075_antialias.v==0)		ADD_STRING_CONFIG,"--reduce-075-no-antialias");
 
 
 
