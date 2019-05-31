@@ -27,6 +27,8 @@ Improved footer:
 
 Improved Waveform window: now the wave adjusts automatically to the zxwindow size
 
+Improved scale 0.75 function: now it has antialias
+
 Fixed bug having more than 256 text to adventure keyboard words
 Fixed bug on CPC vertical scrolling
 Fixed segmentation fault bug when drawing CPC machine

@@ -88,6 +88,9 @@ z80_bit screen_show_cpu_usage={1};
 //Si pantalla final rainbow se reduce tamanyo a 4/3 (dividir por 4, mult por 3)
 z80_bit screen_reduce_075={0};
 
+//Antialias al reducir
+z80_bit screen_reduce_075_antialias={1};
+
 int screen_reduce_offset_x=0;
 int screen_reduce_offset_y=0;
 
@@ -3315,7 +3318,12 @@ BITS INK PAPER BORDER
 
 }
 
-
+//Mezclar dos colores si estan en rango spectrum 0-15, retornando el gigascreen. Si no, devolver el primero
+z80_int screen_scale_075_mix_two(z80_int color1, z80_int color2)
+{
+	if (color1<16 && color2<16 && screen_reduce_075_antialias.v) return get_gigascreen_color(color1,color2);
+	else return color1;
+}	
 
 void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 {
@@ -3338,10 +3346,15 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 	dest +=screen_reduce_offset_x;
 	dest +=screen_reduce_offset_y*ancho;
 
+	z80_int color_izq;
+	z80_int color_der;
+
 	for (y=0;y<alto;y++) {
 		
 
 		for (x=0;x<ancho;x+=4) {
+
+
 			*dest=*orig;
 			dest++;
 			orig++;
@@ -3349,13 +3362,22 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 			*dest=*orig;
 			dest++;
 			orig++;
+
+			//Mezclar los ultimos dos
+			color_izq=*orig;
+			orig++;
+			color_der=*orig;
+			orig++;
+
+			*dest=screen_scale_075_mix_two(color_izq,color_der);
+			dest++;
 			
-			*dest=*orig;
+			/**dest=*orig;
 			dest++;
 			orig++;
 			
 			//Saltar el cuarto
-			orig++;
+			orig++;*/
 			
 		}
 		

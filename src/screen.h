@@ -240,6 +240,8 @@ extern z80_int *new_scalled_rainbow_buffer;
 
 extern void screen_scale_075_function(int ancho,int alto);
 
+extern z80_bit screen_reduce_075_antialias;
+
 //normalmente a 8
 extern int screen_invisible_borde_superior;
 //normalmente a 56.

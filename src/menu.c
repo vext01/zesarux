@@ -22890,6 +22890,11 @@ void menu_window_settings_reduce_075(MENU_ITEM_PARAMETERS)
 	enable_rainbow();
 }
 
+void menu_window_settings_reduce_075_antialias(MENU_ITEM_PARAMETERS)
+{
+	screen_reduce_075_antialias.v ^=1;
+}
+
 void menu_window_settings_reduce_075_ofx(MENU_ITEM_PARAMETERS)
 {
         char string_offset[3];
@@ -23013,6 +23018,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Reduce machine display output by 0.75. Enables realvideo and forces watermark. This feature has been used on a large bulb display for the RunZX 2018 event");
 
 		if (screen_reduce_075.v) {
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_antialias,NULL,"[%c] Antialias",(screen_reduce_075_antialias.v ? 'X' : ' ') );
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofx,NULL,"[%d] Reduce offset x",screen_reduce_offset_x);
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofy,NULL,"[%d] Reduce offset y",screen_reduce_offset_y);
 		}

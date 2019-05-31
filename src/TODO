@@ -9,11 +9,11 @@ Para próxima versión ZEsarUX:
 
 -En FAQ explicar qué es ZX Desktop
 
+-Extender info de zxvision y zxdesktop en features (ya hay algo)
+
 -Redimensionar ventana redibuja el zxdesktop?
 
 -Revisar Full screen en ZX desktop
-
--Extender info de zxvision y zxdesktop en features (ya hay algo)
 
 -Fbdev debe permitir extender escritorio?
 
@@ -57,7 +57,7 @@ Para próxima versión ZEsarUX:
 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
--logo OSD ZEsarUX no aparece en zx80/81 y sin realvideo
+-logo OSD ZEsarUX no aparece en zx80/81 y sin realvideo. si que aparece, aunque con parpadeo
 
 -Extractor dibujos paws?
 
