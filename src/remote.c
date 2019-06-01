@@ -33,6 +33,7 @@
 #include "ql.h"
 #include "disassemble.h"
 #include "menu.h"
+#include "menu_items.h"
 #include "audio.h"
 #include "timer.h"
 #include "screen.h"
@@ -711,17 +712,19 @@ struct s_items_ayuda items_ayuda[]={
   {"assemble","|a","[address] [instruction]","Assemble at address. If no instruction specified, "
                                         "opens assemble prompt"},	
   {"ayplayer","|ayp","command parameter","Runs a command on the AY Player. command can be:\n"
-	"load:           Loads the .ay file indicated by parameter\n"
-	"prev:           Go to previous track\n"
-	"stop:           Stops playing\n"
-	"next:           Go to next track\n"
-	"get-author:     Prints the author\n"
+	"get-author:        Prints the author\n"
 	"get-elapsed-track: Prints elapsed track time in 1/50 of seconds\n"
-	"get-misc:       Prints misc information\n"
-	"get-track-length: Prints track lenght in 1/50 of seconds\n"
-	"get-track-name: Prints track name\n"
-	"get-track-number: Prints current track number\n"
-	"get-total-tracks: Prints total tracks\n"
+	"get-misc:          Prints misc information\n"
+	"get-total-tracks:  Prints total tracks\n"
+	"get-track-length:  Prints track lenght in 1/50 of seconds\n"
+	"get-track-name:    Prints track name\n"
+	"get-track-number:  Prints current track number\n"
+
+	"load:              Loads the .ay file indicated by parameter\n"
+	"next:              Go to next track\n"
+	"prev:              Go to previous track\n"
+	"stop:              Stops playing\n"
+
 },
 
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
