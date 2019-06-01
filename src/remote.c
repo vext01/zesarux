@@ -710,6 +710,10 @@ struct s_items_ayuda items_ayuda[]={
   {"about",NULL,NULL,"Shows about message"},
   {"assemble","|a","[address] [instruction]","Assemble at address. If no instruction specified, "
                                         "opens assemble prompt"},	
+  {"ayplayer","|ayp","command parameter","Runs a command on the AY Player. command can be:\n"
+	"load: Loads the .ay file indicated by parameter\n"
+	"prev: Go to previous track\n"
+	"next: Go to next track\n"},
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
@@ -2860,6 +2864,31 @@ int remote_is_char_10_or_13(char c)
 	return 0;
 }
 
+void remote_ayplayer(int misocket,char *command,char *command_parm)
+{
+
+	//Comandos que requieren que este en ejecucion el player
+	if (
+		!strcasecmp(command,"prev") ||
+		!strcasecmp(command,"next")
+		) {
+		if (!menu_audio_new_ayplayer_si_mostrar()) {
+			escribir_socket_format(misocket,"ERROR. Player not running\n");
+			return;
+		}
+
+		if (!strcasecmp(command,"prev")) ay_player_previous_track();
+		if (!strcasecmp(command,"next")) ay_player_next_track();
+
+	}
+
+	if (!strcasecmp(command,"load")) {
+		ay_player_load_and_play(command_parm);
+	}
+
+}
+	
+
 void remote_load_source_code(int misocket,char *archivo)
 {
 
@@ -3481,6 +3510,18 @@ char buffer_retorno[2048];
 	else if (comando_sin_parametros[0]=='A' && comando_sin_parametros[1]=='T' && comando_sin_parametros[2]=='D' && comando_sin_parametros[3]=='T') {
 		escribir_socket (misocket,"NO CARRIER");
 	}
+
+  else if (!strcmp(comando_sin_parametros,"ayplayer") || !strcmp(comando_sin_parametros,"ayp")) {
+    remote_parse_commands_argvc(parametros);
+
+    if (remote_command_argc<1) {
+      escribir_socket(misocket,"ERROR. Needs one parameter at least");
+      return;
+    }
+
+
+    remote_ayplayer(misocket,remote_command_argv[0],remote_command_argv[1]);
+  }
 
 
  else if (!strcmp(comando_sin_parametros,"clear-membreakpoints")) {
