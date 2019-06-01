@@ -14248,6 +14248,51 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 }
 
+/*
+
+Partitura
+
+
+
+ --------------------------------
+
+ --------------------------------
+
+ --------------------------------
+ 
+ --------------------------------
+ 
+ --------------------------------
+
+
+
+5 lineas de pentagrana -> 4 separaciones
+
+6 filas por compas -> 48 pixeles de alto -> 12 pixeles de alto cada separacion -> mejor 15 -> 4 DIVISIONES = 60 pixeles cada pentagrama
+
+3 pentagramas->60X3=180 pixeles de alto. Ventana=192. Se queda corto
+
+Dibujo de la nota:
+
+    12345678901
+0 -------XXXXX--------------------------------
+1   ...XX.....XX...            
+2   ..X.........X..
+3   .X...........X.
+4   .X...........X.
+5   X.............X
+6   X.............X
+7   X.............X
+8   X.............X
+9   X.............X
+10   X...........X.
+11   X...........X.
+12    X.........X..
+13     XX     XX...
+14 ------XXXXX-----------------------
+*/
+
+
 
 
 //#define PIANO_PARTITURA_GRAPHIC_BASE_X 9
@@ -14267,7 +14312,7 @@ void menu_ay_partitura_overlay(void)
 
 	//printf ("overlay de menu_ay_partitura_overlay\n");
 
-    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+	normal_overlay_texto_menu();
 
 	//workaround_pentagon_clear_putpixel_cache();
 
