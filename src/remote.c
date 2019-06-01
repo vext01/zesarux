@@ -716,9 +716,14 @@ struct s_items_ayuda items_ayuda[]={
 	"stop:           Stops playing\n"
 	"next:           Go to next track\n"
 	"get-author:     Prints the author\n"
+	"get-elapsed-track: Prints elapsed track time in 1/50 of seconds\n"
 	"get-misc:       Prints misc information\n"
+	"get-track-length: Prints track lenght in 1/50 of seconds\n"
 	"get-track-name: Prints track name\n"
+	"get-track-number: Prints current track number\n"
+	"get-total-tracks: Prints total tracks\n"
 },
+
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
@@ -2879,7 +2884,11 @@ void remote_ayplayer(int misocket,char *command,char *command_parm)
 		!strcasecmp(command,"next") ||
 		!strcasecmp(command,"get-track-name") ||
 		!strcasecmp(command,"get-author") ||
-		!strcasecmp(command,"get-misc")
+		!strcasecmp(command,"get-misc") ||
+		!strcasecmp(command,"get-track-number") ||
+		!strcasecmp(command,"get-total-tracks") ||
+		!strcasecmp(command,"get-elapsed-track") ||
+		!strcasecmp(command,"get-track-length")
 		) {
 		if (!menu_audio_new_ayplayer_si_mostrar()) {
 			escribir_socket_format(misocket,"ERROR. Player not running\n");
@@ -2900,6 +2909,24 @@ void remote_ayplayer(int misocket,char *command,char *command_parm)
 		if (!strcasecmp(command,"get-misc")) {
 			escribir_socket(misocket,ay_player_file_misc);
 		}
+
+		if (!strcasecmp(command,"get-track-number")) {
+			escribir_socket_format(misocket,"%d",ay_player_pista_actual);
+		}
+
+		if (!strcasecmp(command,"get-total-tracks")) {
+			escribir_socket_format(misocket,"%d",ay_player_total_songs());
+		}
+
+
+		if (!strcasecmp(command,"get-elapsed-track")) {
+			escribir_socket_format(misocket,"%d",ay_song_length_counter);
+		}
+
+		if (!strcasecmp(command,"get-track-length")) {
+			escribir_socket_format(misocket,"%d",ay_song_length);
+		}
+
 
 
 	}
