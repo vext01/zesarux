@@ -2542,6 +2542,7 @@ Si es botón está también mapeado a un evento, entonces esa letra no se ve
 
 -Spectra: dos ventanas, una muestra pantalla principal (salida normal de spectrum) y la otra muestra la pantalla que genera la salida del spectra
 quizá modo dual de spectra se puede hacer en misma ventana pero haciéndola el doble de ancho para que se vean las dos pantallas
+->quiza no tiene mucho sentido porque se puede abrir ventana de sprites con visor de pantalla
 
 * Nuevos componentes o hardware *
 

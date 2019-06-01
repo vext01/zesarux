@@ -2307,7 +2307,7 @@ void menu_draw_ext_desktop(void)
 				}
 			}
 
-		}		
+		}	
 
 
 	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen
@@ -10310,13 +10310,15 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
         //z80_byte acumulado;
 
+			menu_ay_pianokeyboard_overlay_window=ventana;
+
 
         //Cambiamos funcion overlay de texto de menu
         //Se establece a la de funcion de piano + texto
         set_menu_overlay_function(menu_ay_pianokeyboard_overlay);
 
 
-		menu_ay_pianokeyboard_overlay_window=ventana;
+
 
 
 				int valor_contador_segundo_anterior;
@@ -10668,6 +10670,12 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
                 	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
 
+
+		if (si_complete_video_driver() ) {
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_chip,"View AY Sheet");
+
+		}
+					
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"View W~~ave Piano");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'a');		

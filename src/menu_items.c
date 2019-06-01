@@ -14247,3 +14247,231 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	zxvision_destroy_window(&ventana);
 
 }
+
+
+
+//#define PIANO_PARTITURA_GRAPHIC_BASE_X 9
+#define PIANO_PARTITURA_GRAPHIC_BASE_X (menu_center_x()-7)
+
+int piano_partitura_graphic_base_y=0;
+
+
+#define AY_PIANO_ANCHO_VENTANA ( menu_char_width==8 || menu_char_width==6 ? 14 : 15 )
+
+
+zxvision_window *menu_ay_partitura_overlay_window;
+
+
+void menu_ay_partitura_overlay(void)
+{
+
+	//printf ("overlay de menu_ay_partitura_overlay\n");
+
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+	//workaround_pentagon_clear_putpixel_cache();
+
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
+
+	//char volumen[16],textovolumen[32],textotono[32];
+
+	int  total_chips=ay_retorna_numero_chips();
+	//Max 3 ay chips
+	if (total_chips>3) total_chips=3;
+
+
+
+	//if (total_chips>2) total_chips=2;
+
+	int chip;
+
+	int linea=1;
+
+	int canal=0;
+
+	for (chip=0;chip<total_chips;chip++) {
+
+
+			int freq_a=ay_retorna_frecuencia(0,chip);
+			int freq_b=ay_retorna_frecuencia(1,chip);
+			int freq_c=ay_retorna_frecuencia(2,chip);
+
+			char nota_a[4];
+			sprintf(nota_a,"%s",get_note_name(freq_a) );
+
+			char nota_b[4];
+			sprintf(nota_b,"%s",get_note_name(freq_b) );
+
+			char nota_c[4];
+			sprintf(nota_c,"%s",get_note_name(freq_c) );
+
+			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+			if (ay_3_8912_registros[chip][7]&1 || ay_3_8912_registros[chip][8]==0) nota_a[0]=0;
+			if (ay_3_8912_registros[chip][7]&2 || ay_3_8912_registros[chip][9]==0) nota_b[0]=0;
+			if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) nota_c[0]=0;
+
+			int incremento_linea=3;
+
+			if (!si_mostrar_ay_piano_grafico()) {
+				//Dibujar ay piano con texto. Comprimir el texto (quitar linea de entre medio) cuando hay 3 chips
+				if (total_chips>2) incremento_linea=2;
+			}
+
+
+			/*menu_ay_partitura_draw_piano(linea,canal,nota_a);
+			linea+=incremento_linea;
+			canal++;
+
+			menu_ay_partitura_draw_piano(linea,canal,nota_b);
+			linea+=incremento_linea;
+			canal++;
+
+			menu_ay_partitura_draw_piano(linea,canal,nota_c);
+			linea+=incremento_linea;
+			canal++;*/
+
+	}
+
+	zxvision_draw_window_contents(menu_ay_partitura_overlay_window); 
+
+}
+
+
+zxvision_window zxvision_window_ay_partitura;
+
+
+void menu_ay_partitura(MENU_ITEM_PARAMETERS)
+{
+        menu_espera_no_tecla();
+
+		int xventana,yventana,ancho_ventana,alto_ventana;
+
+		if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+		}
+
+		int  total_chips=ay_retorna_numero_chips();
+		//Max 3 ay chips
+		if (total_chips>3) total_chips=3;
+
+		if (!util_find_window_geometry("aypartitura",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
+
+				if (!si_mostrar_ay_piano_grafico()) {
+
+					ancho_ventana=14;
+
+					if (total_chips==1) {
+						xventana=9;
+						yventana=7;					
+					}
+          			else if (total_chips==2) {
+						xventana=9;
+						yventana=2;						  					  
+					}
+
+					else {
+						xventana=9;
+						yventana=1;					
+					}
+
+				}
+
+				else {
+					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
+					if (total_chips==1) {
+						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
+						yventana=piano_partitura_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;					
+					}
+					else if (total_chips==2) {
+						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
+						yventana=piano_partitura_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;							
+					}
+
+					else {
+						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
+						yventana=piano_partitura_graphic_base_y;
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;						
+					}
+				}
+
+			}
+
+		//El alto ventana siempre lo recalculamos segun el numero de chips
+				if (!si_mostrar_ay_piano_grafico()) {
+
+					if (total_chips==1) {			
+						alto_ventana=11;
+					}
+          			else if (total_chips==2) {
+						alto_ventana=20;						  						  
+					}
+
+					else {
+						alto_ventana=22;						
+					}
+
+				}
+
+				else {
+					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
+					if (total_chips==1) {
+						piano_partitura_graphic_base_y=5;						
+						alto_ventana=13;						
+					}
+					else if (total_chips==2) {
+						piano_partitura_graphic_base_y=1;
+						alto_ventana=22;							
+					}
+
+					else {
+						piano_partitura_graphic_base_y=0;						
+						alto_ventana=24;							
+					}
+				}
+
+
+		char *titulo_ventana="AY Partitura";
+		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+
+		//Para que siempre se lea el titulo de la ventana
+		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
+
+		zxvision_window *ventana;
+		ventana=&zxvision_window_ay_partitura;
+
+		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,titulo_ventana);
+
+		zxvision_draw_window(ventana);		
+
+		menu_ay_partitura_overlay_window=ventana;		
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de piano + texto
+        set_menu_overlay_function(menu_ay_partitura_overlay);
+
+
+		zxvision_wait_until_esc(&ventana);
+
+				
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+
+	util_add_window_geometry_compact("aypartitura",ventana);
+	zxvision_destroy_window(ventana);			
+	
+
+
+			
+
+}
+
