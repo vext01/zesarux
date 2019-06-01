@@ -711,9 +711,14 @@ struct s_items_ayuda items_ayuda[]={
   {"assemble","|a","[address] [instruction]","Assemble at address. If no instruction specified, "
                                         "opens assemble prompt"},	
   {"ayplayer","|ayp","command parameter","Runs a command on the AY Player. command can be:\n"
-	"load: Loads the .ay file indicated by parameter\n"
-	"prev: Go to previous track\n"
-	"next: Go to next track\n"},
+	"load:           Loads the .ay file indicated by parameter\n"
+	"prev:           Go to previous track\n"
+	"stop:           Stops playing\n"
+	"next:           Go to next track\n"
+	"get-author:     Prints the author\n"
+	"get-misc:       Prints misc information\n"
+	"get-track-name: Prints track name\n"
+},
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
@@ -2870,7 +2875,11 @@ void remote_ayplayer(int misocket,char *command,char *command_parm)
 	//Comandos que requieren que este en ejecucion el player
 	if (
 		!strcasecmp(command,"prev") ||
-		!strcasecmp(command,"next")
+		!strcasecmp(command,"stop") ||
+		!strcasecmp(command,"next") ||
+		!strcasecmp(command,"get-track-name") ||
+		!strcasecmp(command,"get-author") ||
+		!strcasecmp(command,"get-misc")
 		) {
 		if (!menu_audio_new_ayplayer_si_mostrar()) {
 			escribir_socket_format(misocket,"ERROR. Player not running\n");
@@ -2878,7 +2887,20 @@ void remote_ayplayer(int misocket,char *command,char *command_parm)
 		}
 
 		if (!strcasecmp(command,"prev")) ay_player_previous_track();
+		if (!strcasecmp(command,"stop")) ay_player_stop_player();
 		if (!strcasecmp(command,"next")) ay_player_next_track();
+		if (!strcasecmp(command,"get-track-name")) {
+			escribir_socket(misocket,ay_player_file_song_name);
+		}
+
+		if (!strcasecmp(command,"get-author")) {
+			escribir_socket(misocket,ay_player_file_author);
+		}
+
+		if (!strcasecmp(command,"get-misc")) {
+			escribir_socket(misocket,ay_player_file_misc);
+		}
+
 
 	}
 
