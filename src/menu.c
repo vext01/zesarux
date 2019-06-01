@@ -2681,8 +2681,8 @@ void menu_draw_cpu_temp(void)
                 return;
         }
 
-        //cada 10 segundos
-        draw_cpu_temp=50*10;
+        //cada 5 segundos
+        draw_cpu_temp=50*5;
 
         int cpu_temp=menu_get_cpu_temp();
         debug_printf (VERBOSE_DEBUG,"CPU temp: %d",cpu_temp );
