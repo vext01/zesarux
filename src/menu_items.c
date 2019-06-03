@@ -14422,6 +14422,15 @@ void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
 
 	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito);
 
+	//Si hay que poner palito (en do (0), la (12), si(12))
+	if (nota==0 || nota==12 || nota==13) {
+		int ypalito;
+		if (nota==0 || nota==12) ypalito=ynota+PENTAGRAMA_NOTA_OFFSET_PALITO;
+		else ypalito=ynota+PENTAGRAMA_NOTA_ALTO; //si (12)
+
+		menu_ay_partitura_linea(x-2,ypalito,PENTAGRAMA_NOTA_ANCHO+4);	
+	}
+
 	if (si_sostenido) {
 		x=x-PENTAGRAMA_MARGEN_SOSTENIDO;
 		ynota -=2; //un poquito mas para arriba
@@ -14471,14 +14480,17 @@ void menu_ay_partitura_overlay(void)
 
 	int canal=0;
 
-	for (chip=0;chip<total_chips;chip++) {
+			char nota_a[4];
+
+		//temp 1 chip
+	for (chip=0;chip<1;chip++) {
 
 
 			int freq_a=ay_retorna_frecuencia(0,chip);
 			int freq_b=ay_retorna_frecuencia(1,chip);
 			int freq_c=ay_retorna_frecuencia(2,chip);
 
-			char nota_a[4];
+
 			sprintf(nota_a,"%s",get_note_name(freq_a) );
 
 			char nota_b[4];
@@ -14528,8 +14540,10 @@ void menu_ay_partitura_overlay(void)
 	//Do, re ,mi 
 	int nota=0;
 
+	int sostenido=0;	
+
 	for (nota=0;nota<14;nota++) {
-		int sostenido=0;
+
 		int nota_abs=nota % 7;
 		if (nota_abs==0 || nota_abs==1) sostenido=1;
 
@@ -14537,9 +14551,27 @@ void menu_ay_partitura_overlay(void)
 		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,columna,nota,sostenido);
 	}
 
+
+	//Nota leida canal 1
+	//CDEFGAB
+	char *notas="cdefgab";
+
+	int i;
+	int nota_final=-1;
+	for (i=0;i<7;i++) {
+		if (nota_a[0]==letra_minuscula(notas[i])) {
+			nota_final=i;
+			break;
+		}
+	}
+
+	sostenido=0;
+	if (nota_final>=0) {
+		if (nota_a[1]=='#') sostenido=1;
+		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,0,nota_final,sostenido);
+	}
+
 	
-
-
 	//menu_ay_partitura_dibujar_sost(x+20,y);
 
 	//menu_ay_partitura_dibujar_nota(x,y,+1);
