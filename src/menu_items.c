@@ -14548,7 +14548,7 @@ void menu_ay_partitura_overlay(void)
 		if (nota_abs==0 || nota_abs==1) sostenido=1;
 
 		int columna=nota;
-		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,columna,nota,sostenido);
+		//temp disabled menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,columna,nota,sostenido);
 	}
 
 
@@ -14559,7 +14559,7 @@ void menu_ay_partitura_overlay(void)
 	int i;
 	int nota_final=-1;
 	for (i=0;i<7;i++) {
-		if (nota_a[0]==letra_minuscula(notas[i])) {
+		if (letra_minuscula(nota_a[0])==notas[i]) {
 			nota_final=i;
 			break;
 		}
