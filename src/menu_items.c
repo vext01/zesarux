@@ -14558,6 +14558,7 @@ void menu_ay_partitura_overlay(void)
 
 	int i;
 	int nota_final=-1;
+	int octava=0;
 	for (i=0;i<7;i++) {
 		if (letra_minuscula(nota_a[0])==notas[i]) {
 			nota_final=i;
@@ -14567,7 +14568,17 @@ void menu_ay_partitura_overlay(void)
 
 	sostenido=0;
 	if (nota_final>=0) {
-		if (nota_a[1]=='#') sostenido=1;
+		if (nota_a[1]=='#') {
+			sostenido=1;
+			octava=nota_a[2]-'0';
+		}
+		else {
+			octava=nota_a[1]-'0';
+		}
+
+		//Si octava impar, va hacia arriba
+		if (octava & 1) nota_final +=7;
+
 		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,0,nota_final,sostenido);
 	}
 
