@@ -141,4 +141,8 @@ extern z80_byte zxuno_get_radaspalbank_offset(void);
 
 extern void zxuno_set_emulador_settings(void);
 
+extern int is_zxuno_chloe_mmu(void);
+
+extern int zxuno_is_chloe_mmu(void);
+
 #endif

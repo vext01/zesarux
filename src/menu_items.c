@@ -14500,7 +14500,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_partitura_overlay);
 
 
-		zxvision_wait_until_esc(&ventana);
+		zxvision_wait_until_esc(ventana);
 
 				
 
