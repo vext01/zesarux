@@ -14291,6 +14291,12 @@ Dibujo de la nota:
 
 #define PENTAGRAMA_NOTA_ALTO 7
 #define PENTAGRAMA_NOTA_ANCHO 7
+#define PENTAGRAMA_NOTA_LARGO_PALITO 15
+
+//donde empieza el palito
+#define PENTAGRAMA_NOTA_OFFSET_PALITO 3
+
+#define PENTAGRAMA_ESPACIO_LINEAS 8
 
 char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
    //0123456
@@ -14326,6 +14332,64 @@ void menu_ay_partitura_putpixel_nota(z80_int *destino GCC_UNUSED,int x,int y,int
 	zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,color);
 }
 
+
+//incremento_palito: +1 : palito hacia abajo
+//incremento_palito: +1 : palito hacia arriba
+void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito)
+{
+	screen_put_asciibitmap_generic(pentagrama_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+
+	//Y dibujar el "palito"
+	//PENTAGRAMA_NOTA_LARGO_PALITO
+	int yorig=y+PENTAGRAMA_NOTA_OFFSET_PALITO;
+
+	int xorig=x;
+
+	//Si palito hacia arriba
+	if (incremento_palito<0) xorig=x+PENTAGRAMA_NOTA_ANCHO-1;
+
+	int alto=PENTAGRAMA_NOTA_LARGO_PALITO;
+
+	for (;alto>0;alto--,yorig +=incremento_palito) {
+		zxvision_putpixel(menu_ay_partitura_overlay_window,xorig,yorig,0); //Color negro el palito	
+	}
+}
+
+
+void menu_ay_partitura_lineas_pentagrama(int x,int y,int ancho,int separacion_alto)
+{
+	int lineas;
+
+	for (lineas=0;lineas<5;lineas++) {
+		for (x=0;x<ancho;x++) {
+			zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,0);
+		}
+		y +=separacion_alto;
+	}
+}
+
+//nota puede ser:  do, re, mi, fa, sol, la, si, do, re... si (0...13)
+void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
+{
+	//origen y=fa (10)
+
+	int diferencia_nota=10-nota;
+
+	int incremento_alto=diferencia_nota*(PENTAGRAMA_ESPACIO_LINEAS/2);
+
+	//Y el punto inicial y
+	int ynota=y+incremento_alto-PENTAGRAMA_NOTA_OFFSET_PALITO;
+
+	//A partir del do, palito para abajo
+	int incremento_palito=-1;
+
+	if (nota>=7) incremento_palito=+1;
+
+
+	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito);
+
+
+}
 
 void menu_ay_partitura_overlay(void)
 {
@@ -14403,9 +14467,22 @@ void menu_ay_partitura_overlay(void)
 	int x=3;
 	int y=5;
 
+
+	menu_ay_partitura_lineas_pentagrama(x,y,100,PENTAGRAMA_ESPACIO_LINEAS);
+
+	//Do, re ,mi 
+	int nota=0;
+
+	for (nota=0;nota<13;nota++,x+=10) {
+		menu_ay_partitura_nota_pentagrama(x,y,nota,0);
+	}
+
 	//NULL y 0 de ancho_destino pues no los usamos en funcion putpixxel
 
-	screen_put_asciibitmap_generic(pentagrama_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+	//screen_put_asciibitmap_generic(pentagrama_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+	//menu_ay_partitura_dibujar_nota(x,y,+1);
+
+	//menu_ay_partitura_dibujar_nota(x+30,y+20,-1);
 
 	zxvision_draw_window_contents(menu_ay_partitura_overlay_window); 
 
