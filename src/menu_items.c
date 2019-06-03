@@ -14301,6 +14301,10 @@ Dibujo de la nota:
 #define PENTAGRAMA_SOST_ANCHO 8
 #define PENTAGRAMA_SOST_ALTO 11
 
+#define PENTAGRAMA_ANCHO_NOTA_TOTAL (PENTAGRAMA_SOST_ANCHO+PENTAGRAMA_NOTA_ANCHO+4)
+
+#define PENTAGRAMA_MARGEN_SOSTENIDO (PENTAGRAMA_SOST_ANCHO+2)
+
 char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
    //0123456
     "  XXX  ",  
@@ -14379,16 +14383,21 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito)
 	}
 }
 
+void menu_ay_partitura_linea(int x,int y,int ancho)
+{
 
-void menu_ay_partitura_lineas_pentagrama(int xorig,int y,int ancho,int separacion_alto)
+		for (;ancho>0;ancho--,x++) {
+			zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,0);
+		}	
+}
+
+void menu_ay_partitura_lineas_pentagrama(int x,int y,int ancho,int separacion_alto)
 {
 	int lineas;
 
-	int x;
 	for (lineas=0;lineas<5;lineas++) {
-		for (x=0;x<ancho;x++) {
-			zxvision_putpixel(menu_ay_partitura_overlay_window,x+xorig,y,0);
-		}
+		menu_ay_partitura_linea(x,y,ancho);
+
 		y +=separacion_alto;
 	}
 }
@@ -14414,12 +14423,25 @@ void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
 	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito);
 
 	if (si_sostenido) {
-		x=x-PENTAGRAMA_SOST_ANCHO-2;
+		x=x-PENTAGRAMA_MARGEN_SOSTENIDO;
 		ynota -=2; //un poquito mas para arriba
 		menu_ay_partitura_dibujar_sost(x,ynota);
 	}
 
 
+}
+
+//nota puede ser:  do, re, mi, fa, sol, la, si, do, re... si (0...13)
+void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int nota,int si_sostenido)
+{
+	int ancho_columna=PENTAGRAMA_ANCHO_NOTA_TOTAL;
+
+	int posx=(columna*ancho_columna)+xorig;
+
+	//Y darle margen por la izquierda pos si hay sostenido
+	posx +=PENTAGRAMA_MARGEN_SOSTENIDO;
+
+	menu_ay_partitura_nota_pentagrama(posx,yorig,nota,si_sostenido);
 }
 
 void menu_ay_partitura_overlay(void)
@@ -14506,12 +14528,16 @@ void menu_ay_partitura_overlay(void)
 	//Do, re ,mi 
 	int nota=0;
 
-	for (nota=0;nota<14;nota++,x+=(PENTAGRAMA_SOST_ANCHO+PENTAGRAMA_NOTA_ANCHO+4)) {
+	for (nota=0;nota<14;nota++) {
 		int sostenido=0;
 		int nota_abs=nota % 7;
 		if (nota_abs==0 || nota_abs==1) sostenido=1;
-		menu_ay_partitura_nota_pentagrama(x+20,y,nota,sostenido);
+
+		int columna=nota;
+		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,columna,nota,sostenido);
 	}
+
+	
 
 
 	//menu_ay_partitura_dibujar_sost(x+20,y);
