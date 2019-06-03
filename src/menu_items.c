@@ -14268,30 +14268,40 @@ Partitura
 
 5 lineas de pentagrana -> 4 separaciones
 
-6 filas por compas -> 48 pixeles de alto -> 12 pixeles de alto cada separacion -> mejor 15 -> 4 DIVISIONES = 60 pixeles cada pentagrama
+8 pixeles de alto cada separacion -> 32 pixeles cada pentagrama
 
-3 pentagramas->60X3=180 pixeles de alto. Ventana=192. Se queda corto
+Si cogemos dos mas para subir hasta el Do, son 8x6=48 pixeles por pentagama
+
+48 * 3 = 144 los 3 pentagramas
+
 
 Dibujo de la nota:
 
-    12345678901
-0 -------XXXXX--------------------------------
-1   ...XX.....XX...            
-2   ..X.........X..
-3   .X...........X.
-4   .X...........X.
-5   X.............X
-6   X.............X
-7   X.............X
-8   X.............X
-9   X.............X
-10   X...........X.
-11   X...........X.
-12    X.........X..
-13     XX     XX...
-14 ------XXXXX-----------------------
+     012345678901
+0 -----------------------------------
+1    ..XXX..
+2    .X...X.            
+3    X.....X
+4    X.....X
+5    X.....X
+6    .X...X.
+7    ..XXX..
+8 ----------------------------------
 */
 
+#define PENTAGRAMA_NOTA_ALTO 7
+#define PENTAGRAMA_NOTA_ANCHO 7
+
+char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
+   //0123456
+    "  XXX  ",  
+	" XXXXX ",
+	"XXXXXXX",
+	"XXXXXXX",
+	"XXXXXXX",
+	" XXXXX ",
+	"  XXX  "
+};
 
 
 
@@ -14305,6 +14315,16 @@ int piano_partitura_graphic_base_y=0;
 
 
 zxvision_window *menu_ay_partitura_overlay_window;
+
+
+
+//Hacer putpixel en pantalla de color indexado 16 bits. Usado en watermark para no rainbow
+void menu_ay_partitura_putpixel_nota(z80_int *destino GCC_UNUSED,int x,int y,int ancho_destino GCC_UNUSED,int color)
+{
+	//scr_putpixel(x,y,color);
+
+	zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,color);
+}
 
 
 void menu_ay_partitura_overlay(void)
@@ -14377,9 +14397,21 @@ void menu_ay_partitura_overlay(void)
 
 	}
 
+
+	//menu_ay_partitura_putpixel_nota(NULL,3,4,PENTAGRAMA_NOTA_ANCHO,menu_ay_partitura_putpixel_nota);
+
+	int x=3;
+	int y=5;
+
+	//NULL y 0 de ancho_destino pues no los usamos en funcion putpixxel
+
+	screen_put_asciibitmap_generic(pentagrama_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+
 	zxvision_draw_window_contents(menu_ay_partitura_overlay_window); 
 
 }
+
+
 
 
 zxvision_window zxvision_window_ay_partitura;

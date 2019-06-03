@@ -3512,8 +3512,27 @@ void screen_generic_putpixel_no_rainbow_watermark(z80_int *destino GCC_UNUSED,in
 }
 
 
+//Mete un bitmap en formato ascii en un bitmap generico
+void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,int ancho_orig, int alto_orig, int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho_destino,int color) )
+{
+	int fila,columna;
+
+	for (fila=0;fila<alto_orig;fila++) {
+		//int offset_fila=fila*ancho_orig;
+		char *texto;
+		
+		texto=origen[fila];
+		for (columna=0;columna<ancho_orig;columna++) {
+			char caracter=texto[columna];
+
+			if (caracter!=' ') putpixel(destino,x+columna,y+fila,ancho_destino,return_color_zesarux_ascii(caracter));
+		}
+	}
+}
+
+
 //Mete la marca de agua en un bitmap generico
-void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
+/*void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho_destino,int color) )
 {
 	int fila,columna;
 
@@ -3525,8 +3544,12 @@ void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (
 			if (caracter!=' ') putpixel(destino,x+columna,y+fila,ancho,return_color_zesarux_ascii(caracter));
 		}
 	}
-}
+}*/
 
+void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
+{
+		screen_put_asciibitmap_generic(zesarux_ascii_logo,destino,x,y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, ancho_destino,putpixel);
+}
 
 void screen_get_offsets_watermark_position(int position,int ancho, int alto, int *x, int *y)
 {
