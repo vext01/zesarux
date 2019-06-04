@@ -12,6 +12,8 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -boton para maximizar en zxvision
 
+-ay sheet: Última columna nota tocada ya es el último estado. Usar ese y quitar el array de ultimo estado
+
 -ZX Desktop:
 
 --En FAQ explicar qué es ZX Desktop
@@ -125,7 +127,7 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 -AY partitura:
 *que grabe notas en archivo
 *que interprete duraciones notas
-*que muestre los otros chips
+*que muestre los otros chips. ya está preparado el array para varios chips
 *para el beeper tambien
 
 
