@@ -14305,7 +14305,7 @@ Dibujo de la nota:
 
 #define PENTAGRAMA_MARGEN_SOSTENIDO (PENTAGRAMA_SOST_ANCHO+2)
 
-#define PENTAGRAMA_TOTAL_ALTO (PENTAGRAMA_ESPACIO_LINEAS*8)
+#define PENTAGRAMA_TOTAL_ALTO (PENTAGRAMA_ESPACIO_LINEAS*7)
 
 char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
    //0123456
@@ -14338,12 +14338,13 @@ char *pentagrama_sost[PENTAGRAMA_SOST_ALTO]={
 
 
 //#define PIANO_PARTITURA_GRAPHIC_BASE_X 9
-#define PIANO_PARTITURA_GRAPHIC_BASE_X (menu_center_x()-7)
+#define PIANO_PARTITURA_GRAPHIC_BASE_X (menu_origin_x() )
 
 int piano_partitura_graphic_base_y=0;
 
 
-#define AY_PIANO_ANCHO_VENTANA ( menu_char_width==8 || menu_char_width==6 ? 24 : 25 )
+#define AY_PIANO_ANCHO_VENTANA 32
+#define AY_PIANO_ALTO_VENTANA 24
 
 
 zxvision_window *menu_ay_partitura_overlay_window;
@@ -14483,9 +14484,14 @@ void menu_ay_partitura_scroll(int chip)
 	}
 }
 
+int menu_ay_partitura_ancho_col_texto(void)
+{
+	return menu_char_width*menu_gui_zoom;
+}
+
 int menu_ay_partitura_total_columns(void)
 {
-	int ancho_columna=menu_char_width*menu_gui_zoom;
+	int ancho_columna=menu_ay_partitura_ancho_col_texto();
 	int ancho_nota=PENTAGRAMA_ANCHO_NOTA_TOTAL;
 	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
 
@@ -14501,12 +14507,12 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 {
 
 	int x=0;
-	int y=20;
+	int y=PENTAGRAMA_ESPACIO_LINEAS*2;
 
 
-	y +=canal*PENTAGRAMA_TOTAL_ALTO;
+	y +=canal*(PENTAGRAMA_TOTAL_ALTO+1); //+1 para dejar 1 pixelillo de margen
 
-	int ancho_columna=menu_char_width*menu_gui_zoom;
+	int ancho_columna=menu_ay_partitura_ancho_col_texto();
 
 	//Las lineas de pentagrama que dejen espacio a la izquierda y derecha, de ancho=ancho_columna
 	menu_ay_partitura_lineas_pentagrama(x+ancho_columna,y,((menu_ay_partitura_overlay_window->visible_width)-2)*ancho_columna,PENTAGRAMA_ESPACIO_LINEAS);
@@ -14521,7 +14527,7 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 
 	total_columnas=menu_ay_partitura_total_columns();
-	//printf ("total columnas: %d\n",total_columnas);
+	printf ("total columnas: %d\n",total_columnas);
 
 	for (i=0;i<total_columnas;i++) {
 		char *string_nota;
@@ -14601,75 +14607,16 @@ void menu_ay_partitura_overlay(void)
 			if (ay_3_8912_registros[chip][7]&2 || ay_3_8912_registros[chip][9]==0) nota_b[0]=0;
 			if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) nota_c[0]=0;
 
-			int incremento_linea=3;
-
-			if (!si_mostrar_ay_piano_grafico()) {
-				//Dibujar ay piano con texto. Comprimir el texto (quitar linea de entre medio) cuando hay 3 chips
-				if (total_chips>2) incremento_linea=2;
-			}
-
-
-			/*menu_ay_partitura_draw_piano(linea,canal,nota_a);
-			linea+=incremento_linea;
-			canal++;
-
-			menu_ay_partitura_draw_piano(linea,canal,nota_b);
-			linea+=incremento_linea;
-			canal++;
-
-			menu_ay_partitura_draw_piano(linea,canal,nota_c);
-			linea+=incremento_linea;
-			canal++;*/
 
 	}
 
 
-	//menu_ay_partitura_putpixel_nota(NULL,3,4,PENTAGRAMA_NOTA_ANCHO,menu_ay_partitura_putpixel_nota);
-
-	int x=0;
-	int y=20;
-
-	int ancho_columna=menu_char_width*menu_gui_zoom;
-
-	//Las lineas de pentagrama que dejen espacio a la izquierda y derecha, de ancho=ancho_columna
-	//menu_ay_partitura_lineas_pentagrama(x+ancho_columna,y,((menu_ay_partitura_overlay_window->visible_width)-2)*ancho_columna,PENTAGRAMA_ESPACIO_LINEAS);
-
-	//Do, re ,mi 
-	//int nota=0;
-
-
-	/*for (nota=0;nota<14;nota++) {
-
-		int nota_abs=nota % 7;
-		if (nota_abs==0 || nota_abs==1) sostenido=1;
-
-		int columna=nota;
-		//temp disabled menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,columna,nota,sostenido);
-	}*/
-
-	
-
-	//Nota leida canal 0
-
-	/*int i;
-	int nota_final=-1;
-	int octava;
-
-	get_note_values(nota_a,&nota_final,&sostenido,&octava);
-	if (nota_final>=0) {
-
-		//Si octava impar, va hacia arriba
-		if (octava & 1) nota_final +=7;
-
-		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,0,nota_final,sostenido);
-	}*/
-
 	//Si notas anteriores distintas de las actuales, scroll izquierda
-	//menu_ay_partitura_last_state
 
-	printf ("a [%s] [%s]\n",nota_a,menu_ay_partitura_last_state[0][0]);
-	printf ("b [%s] [%s]\n",nota_b,menu_ay_partitura_last_state[0][1]);
-	printf ("c [%s] [%s]\n",nota_c,menu_ay_partitura_last_state[0][2]);
+
+	//printf ("a [%s] [%s]\n",nota_a,menu_ay_partitura_last_state[0][0]);
+	//printf ("b [%s] [%s]\n",nota_b,menu_ay_partitura_last_state[0][1]);
+	//printf ("c [%s] [%s]\n",nota_c,menu_ay_partitura_last_state[0][2]);
 
 	//Si alguno de los 3 canales es diferente del estado anterior
 	if (
@@ -14688,7 +14635,7 @@ void menu_ay_partitura_overlay(void)
 
 		//char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
 
-		printf ("indice_columna: %d contenido %s\n",indice_columna,nota_a);
+		//printf ("indice_columna: %d contenido %s\n",indice_columna,nota_a);
 
 		strcpy(menu_ay_partitura_current_state[0][0][indice_columna],nota_a);
 		strcpy(menu_ay_partitura_current_state[0][1][indice_columna],nota_b);
@@ -14728,7 +14675,7 @@ void menu_ay_partitura_init_state(void)
 
 		//Inicializar estado con string ""
 
-		char letra_temp='c';
+		
 
 		int chip;
 		for (chip=0;chip<MAX_AY_CHIPS;chip++) {
@@ -14741,12 +14688,7 @@ void menu_ay_partitura_init_state(void)
 				for (col=0;col<MENU_AY_PARTITURA_MAX_COLUMNS;col++) {
 					menu_ay_partitura_current_state[chip][canal][col][0]=0;
 
-					menu_ay_partitura_current_state[chip][canal][col][0]=letra_temp;
-					menu_ay_partitura_current_state[chip][canal][col][1]='1';
-					menu_ay_partitura_current_state[chip][canal][col][2]=0;
 
-					letra_temp++;
-					if (letra_temp=='h') letra_temp='c';
 				}
 			}
 		}
@@ -14774,82 +14716,15 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		//Max 3 ay chips
 		if (total_chips>3) total_chips=3;
 
-		if (!util_find_window_geometry("aypartitura",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
-
-				if (!si_mostrar_ay_piano_grafico()) {
-
-					ancho_ventana=14;
-
-					if (total_chips==1) {
-						xventana=9;
-						yventana=7;					
-					}
-          			else if (total_chips==2) {
-						xventana=9;
-						yventana=2;						  					  
-					}
-
-					else {
-						xventana=9;
-						yventana=1;					
-					}
-
-				}
-
-				else {
-					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
-					if (total_chips==1) {
+		if (!util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
+						
 						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
 						yventana=piano_partitura_graphic_base_y;
-						ancho_ventana=AY_PIANO_ANCHO_VENTANA;					
-					}
-					else if (total_chips==2) {
-						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
-						yventana=piano_partitura_graphic_base_y;
-						ancho_ventana=AY_PIANO_ANCHO_VENTANA;							
-					}
+						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
+						alto_ventana=AY_PIANO_ALTO_VENTANA;						
 
-					else {
-						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
-						yventana=piano_partitura_graphic_base_y;
-						ancho_ventana=AY_PIANO_ANCHO_VENTANA;						
-					}
-				}
-
-			}
-
-		//El alto ventana siempre lo recalculamos segun el numero de chips
-				if (!si_mostrar_ay_piano_grafico()) {
-
-					if (total_chips==1) {			
-						alto_ventana=11;
-					}
-          			else if (total_chips==2) {
-						alto_ventana=20;						  						  
-					}
-
-					else {
-						alto_ventana=22;						
-					}
-
-				}
-
-				else {
-					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
-					if (total_chips==1) {
-						piano_partitura_graphic_base_y=5;						
-						alto_ventana=13;						
-					}
-					else if (total_chips==2) {
-						piano_partitura_graphic_base_y=1;
-						alto_ventana=22;							
-					}
-
-					else {
-						piano_partitura_graphic_base_y=0;						
-						alto_ventana=24;							
-					}
-				}
+		}
+				
 
 
 		char *titulo_ventana="AY Sheet";
@@ -14889,7 +14764,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         cls_menu_overlay();
 
 
-	util_add_window_geometry_compact("aypartitura",ventana);
+	util_add_window_geometry_compact("aysheet",ventana);
 	zxvision_destroy_window(ventana);			
 	
 
