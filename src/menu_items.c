@@ -14462,6 +14462,36 @@ void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int n
 //Chip, canal, columna, string de 4
 char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
 
+//Nota anterior de la ultima columna
+char menu_ay_partitura_last_state[MAX_AY_CHIPS][3][4];
+
+
+//Scroll de un chip entero
+void menu_ay_partitura_scroll(int chip)
+{
+
+		//Meter valor actual
+
+	int total_columnas=menu_ay_partitura_total_columns();
+	int i;
+
+	for (i=0;i<total_columnas-1;i++) {
+		int canal;
+		for (canal=0;canal<3;canal++) {
+			strcpy(menu_ay_partitura_current_state[chip][canal][i],menu_ay_partitura_current_state[chip][canal][i+1]);
+		}
+	}
+}
+
+int menu_ay_partitura_total_columns(void)
+{
+	int ancho_columna=menu_char_width*menu_gui_zoom;
+	int ancho_nota=PENTAGRAMA_ANCHO_NOTA_TOTAL;
+	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
+	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
+
+	return total_columnas;	
+}
 
 void menu_ay_partitura_draw_state(int chip,int canal)
 {
@@ -14488,9 +14518,12 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
 
+	total_columnas=menu_ay_partitura_total_columns();
+
 	for (i=0;i<total_columnas;i++) {
-		char *nota;
-		nota=menu_ay_partitura_current_state[chip][canal][i];
+		char *string_nota;
+		string_nota=menu_ay_partitura_current_state[chip][canal][i];
+		printf ("%d [%s]\n",i,string_nota);
 
 		//Nota leida canal 0
 
@@ -14498,7 +14531,7 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 		int octava;
 		int sostenido;
 
-		get_note_values(nota,&nota_final,&sostenido,&octava);
+		get_note_values(string_nota,&nota_final,&sostenido,&octava);
 		if (nota_final>=0) {
 
 			//Si octava impar, va hacia arriba
@@ -14540,6 +14573,8 @@ void menu_ay_partitura_overlay(void)
 	int canal=0;
 
 			char nota_a[4];
+			char nota_b[4];
+			char nota_c[4];
 
 		//temp 1 chip
 	for (chip=0;chip<1;chip++) {
@@ -14552,10 +14587,10 @@ void menu_ay_partitura_overlay(void)
 
 			sprintf(nota_a,"%s",get_note_name(freq_a) );
 
-			char nota_b[4];
+			
 			sprintf(nota_b,"%s",get_note_name(freq_b) );
 
-			char nota_c[4];
+			
 			sprintf(nota_c,"%s",get_note_name(freq_c) );
 
 			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
@@ -14599,7 +14634,6 @@ void menu_ay_partitura_overlay(void)
 	//Do, re ,mi 
 	//int nota=0;
 
-	int sostenido;	
 
 	/*for (nota=0;nota<14;nota++) {
 
@@ -14627,7 +14661,43 @@ void menu_ay_partitura_overlay(void)
 		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,0,nota_final,sostenido);
 	}*/
 
+	//Si notas anteriores distintas de las actuales, scroll izquierda
+	//menu_ay_partitura_last_state
+
+	printf ("a [%s] [%s]\n",nota_a,menu_ay_partitura_last_state[0][0]);
+	printf ("b [%s] [%s]\n",nota_b,menu_ay_partitura_last_state[0][1]);
+	printf ("c [%s] [%s]\n",nota_c,menu_ay_partitura_last_state[0][2]);
+
+	if (
+		!strcasecmp(nota_a,menu_ay_partitura_last_state[0][0]) ||
+		!strcasecmp(nota_b,menu_ay_partitura_last_state[0][1]) ||
+		!strcasecmp(nota_c,menu_ay_partitura_last_state[0][2]) 
+	)
+	{
+		menu_ay_partitura_scroll(0);
+
+		//Meter valor actual
+
+		int total_columnas=menu_ay_partitura_total_columns();
+
+		int indice_columna=total_columnas-1;
+
+		//char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
+
+		strcpy(menu_ay_partitura_current_state[0][0][indice_columna],nota_a);
+		strcpy(menu_ay_partitura_current_state[0][1][indice_columna],nota_b);
+		strcpy(menu_ay_partitura_current_state[0][2][indice_columna],nota_c);
+
+		//Guardar estado anterior
+		strcpy(menu_ay_partitura_last_state[0][0],nota_a);
+		strcpy(menu_ay_partitura_last_state[0][1],nota_b);
+		strcpy(menu_ay_partitura_last_state[0][2],nota_c);
+	}
+
+	//Dibujar estado de los 3 canales
 	menu_ay_partitura_draw_state(0,0);
+	menu_ay_partitura_draw_state(0,1);
+	menu_ay_partitura_draw_state(0,2);
 
 	
 	//menu_ay_partitura_dibujar_sost(x+20,y);
@@ -14652,13 +14722,25 @@ void menu_ay_partitura_init_state(void)
 
 		//Inicializar estado con string ""
 
+		char letra_temp='c';
+
 		int chip;
 		for (chip=0;chip<MAX_AY_CHIPS;chip++) {
 			int canal;
 			for (canal=0;canal<3;canal++) {
 				int col;
+
+				menu_ay_partitura_last_state[chip][canal][0]=0;
+
 				for (col=0;col<MENU_AY_PARTITURA_MAX_COLUMNS;col++) {
 					menu_ay_partitura_current_state[chip][canal][col][0]=0;
+
+					menu_ay_partitura_current_state[chip][canal][col][0]=letra_temp;
+					menu_ay_partitura_current_state[chip][canal][col][1]='1';
+					menu_ay_partitura_current_state[chip][canal][col][2]=0;
+
+					letra_temp++;
+					if (letra_temp=='h') letra_temp='c';
 				}
 			}
 		}
