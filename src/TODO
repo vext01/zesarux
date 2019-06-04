@@ -10,6 +10,8 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -Comprobar a fondo fileselector despues de cambios a redimensionable
 
+-boton para maximizar en zxvision
+
 -ZX Desktop:
 
 --En FAQ explicar qué es ZX Desktop
@@ -124,6 +126,7 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 *que grabe notas en archivo
 *que interprete duraciones notas
 *que muestre los otros chips
+*para el beeper tambien
 
 
 
