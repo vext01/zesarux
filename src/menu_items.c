@@ -14420,7 +14420,7 @@ void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
 	//A partir del do, palito para abajo
 	int incremento_palito=-1;
 
-	if (nota>=7) incremento_palito=+1;
+	if (nota>=6) incremento_palito=+1; //A partir del Si , palito para abajo
 
 
 	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito);
@@ -14457,6 +14457,11 @@ void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int n
 }
 
 #define MENU_AY_PARTITURA_MAX_COLUMNS 30
+
+int menu_ay_partitura_ancho_col_texto(void)
+{
+	return menu_char_width;
+}
 
 int menu_ay_partitura_total_columns(void)
 {
@@ -14500,10 +14505,7 @@ void menu_ay_partitura_scroll(int chip)
 	}
 }
 
-int menu_ay_partitura_ancho_col_texto(void)
-{
-	return menu_char_width;
-}
+
 
 
 
@@ -14581,9 +14583,9 @@ void menu_ay_partitura_overlay(void)
 
 	int chip;
 
-	int linea=1;
+	//int linea=1;
 
-	int canal=0;
+	//int canal=0;
 
 			char nota_a[4];
 			char nota_b[4];
