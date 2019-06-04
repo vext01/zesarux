@@ -14488,6 +14488,10 @@ int menu_ay_partitura_total_columns(void)
 	int ancho_columna=menu_char_width*menu_gui_zoom;
 	int ancho_nota=PENTAGRAMA_ANCHO_NOTA_TOTAL;
 	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
+
+	//-1
+	total_columnas --;
+
 	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
 
 	return total_columnas;	
@@ -14510,20 +14514,19 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 
 	int ancho_nota=PENTAGRAMA_ANCHO_NOTA_TOTAL;
-	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
+	int total_columnas;
 
-	printf ("total columnas: %d\n",total_columnas);
 
 	int i;
 
-	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
 
 	total_columnas=menu_ay_partitura_total_columns();
+	//printf ("total columnas: %d\n",total_columnas);
 
 	for (i=0;i<total_columnas;i++) {
 		char *string_nota;
 		string_nota=menu_ay_partitura_current_state[chip][canal][i];
-		printf ("%d [%s]\n",i,string_nota);
+		//if (canal==0) printf ("%d [%s]\n",i,string_nota);
 
 		//Nota leida canal 0
 
@@ -14668,10 +14671,11 @@ void menu_ay_partitura_overlay(void)
 	printf ("b [%s] [%s]\n",nota_b,menu_ay_partitura_last_state[0][1]);
 	printf ("c [%s] [%s]\n",nota_c,menu_ay_partitura_last_state[0][2]);
 
+	//Si alguno de los 3 canales es diferente del estado anterior
 	if (
-		!strcasecmp(nota_a,menu_ay_partitura_last_state[0][0]) ||
-		!strcasecmp(nota_b,menu_ay_partitura_last_state[0][1]) ||
-		!strcasecmp(nota_c,menu_ay_partitura_last_state[0][2]) 
+		strcasecmp(nota_a,menu_ay_partitura_last_state[0][0]) ||
+		strcasecmp(nota_b,menu_ay_partitura_last_state[0][1]) ||
+		strcasecmp(nota_c,menu_ay_partitura_last_state[0][2]) 
 	)
 	{
 		menu_ay_partitura_scroll(0);
@@ -14683,6 +14687,8 @@ void menu_ay_partitura_overlay(void)
 		int indice_columna=total_columnas-1;
 
 		//char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
+
+		printf ("indice_columna: %d contenido %s\n",indice_columna,nota_a);
 
 		strcpy(menu_ay_partitura_current_state[0][0][indice_columna],nota_a);
 		strcpy(menu_ay_partitura_current_state[0][1][indice_columna],nota_b);
