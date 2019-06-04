@@ -14326,7 +14326,7 @@ char *pentagrama_clave_sol[PENTAGRAMA_CLAVE_SOL_ALTO]={
  012345678901234567890123456789012345
 */
 
-"                XXXXXX        ",
+"                 XXXXX        ",
 "               XXXXXXXX       ",
 "              XXXXXXXXXX      ",
 "             XXXXXXXXXXX      ",
@@ -14344,31 +14344,31 @@ char *pentagrama_clave_sol[PENTAGRAMA_CLAVE_SOL_ALTO]={
 "        XXXXXXXXXX            ",
 "       XXXXXXXXX              ",
 "     XXXXXXXXXXX              ",
-"    XXXXXXXXXX X              ",
-"   XXXXXXXXX   XXX            ",
+"    XXXXXXXXXX XX             ",
+"   XXXXXXXXX   XX             ",
 "  XXXXXXXX     XXXXXXX        ",
-"  XXXXXXX    XXXXXXXXXXXXX    ",
-"  XXXX     XXXXXXXXXXXXXXXXX  ",
-"XXXXX     XXXXXXXXXXXXXXXXXXXX",
-"XXXXXX   XXXXXX  XXX   XXXXXXX",
-"XXXXXX    XXXX   XXXX    XXXXX",
-"  XXXX    XXXX      X      XXX",
-"  XXXX    XXXX      X      XXX",
+"  XXXXXXX    XXXXXXXXXXXX     ",
+" XXXXX     XXXXXXXXXXXXXXXXX  ",
+"XXXXX     XXXXXXXXXXXXXXXXXXX ",
+"XXXXXX   XXXXXX   XX   XXXXXXX",
+"XXXXXX   XXXXX     XX    XXXXX",
+" XXXXX   XXXXX      XX     XXX",
+"  XXXX    XXXX      XX     XXX",
 "  XXXXX   XXXXX     XX     XX ",
-"   XXXXX   XXXX     X    XXXX ",
-"    XXXXXX          X   XXXX  ",
-"     XXXXXXX        XXXXXX    ",
+"   XXXXX   XXXX      XX  XXXX ",
+"    XXXXXX           XX XXXX  ",
+"     XXXXXXX         XXXXX    ",
 "          XXXXXXXXXXXXXXX     ",
 "             XXXXXXXXXXX      ",
 "                      XX      ",
 "                      XX      ",
 "          XXX         XX      ",
-"        XXXXXX        XXX     ",
-"       XXXXXXXX       XXXX    ",
-"       XXXXXXXX       XXX     ",
-"        XXXXXX      XXX       ",
-"          XXXXX     XXX       ",
-"          XXXX XXXXXXX        ",
+"        XXXXXX        XX      ",
+"       XXXXXXXX       XX      ",
+"       XXXXXXXX       XX      ",
+"        XXXXXX       XX       ",
+"          XXX       XX        ",
+"          XXXXXXXXXXX          ",
 "            XXXXXXXX          ",
 };
 
@@ -14462,7 +14462,7 @@ void menu_ay_partitura_lineas_pentagrama(int x,int y,int ancho,int separacion_al
 {
 	int lineas;
 
-	int y_clavesol=y-10;
+	int y_clavesol=y-7;
 
 	for (lineas=0;lineas<5;lineas++) {
 		menu_ay_partitura_linea(x,y,ancho);
