@@ -14412,7 +14412,8 @@ void menu_ay_partitura_putpixel_nota(z80_int *destino GCC_UNUSED,int x,int y,int
 {
 	//scr_putpixel(x,y,color);
 
-	zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,color);
+	//zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,color);
+	zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,ESTILO_GUI_TINTA_NORMAL);
 }
 
 void menu_ay_partitura_dibujar_sost(int x,int y)
@@ -14438,7 +14439,7 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito)
 	int alto=PENTAGRAMA_NOTA_LARGO_PALITO;
 
 	for (;alto>0;alto--,yorig +=incremento_palito) {
-		zxvision_putpixel(menu_ay_partitura_overlay_window,xorig,yorig,0); //Color negro el palito	
+		zxvision_putpixel(menu_ay_partitura_overlay_window,xorig,yorig,ESTILO_GUI_TINTA_NORMAL); 
 	}
 }
 
@@ -14454,7 +14455,7 @@ void menu_ay_partitura_linea(int x,int y,int ancho)
 {
 
 		for (;ancho>0;ancho--,x++) {
-			zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,0);
+			zxvision_putpixel(menu_ay_partitura_overlay_window,x,y,ESTILO_GUI_TINTA_NORMAL);
 		}	
 }
 
