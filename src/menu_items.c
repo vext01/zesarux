@@ -14531,7 +14531,7 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 
 	total_columnas=menu_ay_partitura_total_columns();
-	printf ("total columnas: %d\n",total_columnas);
+	//printf ("total columnas: %d\n",total_columnas);
 
 	for (i=0;i<total_columnas;i++) {
 		char *string_nota;

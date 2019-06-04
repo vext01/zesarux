@@ -7,7 +7,6 @@ Para próxima versión ZEsarUX:
 -alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
 y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
 
--pentagrama: notas Do (0), la (12),si (13) -> palito corto
 
 -Comprobar a fondo fileselector despues de cambios a redimensionable
 
@@ -119,6 +118,13 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 -Revisar archivo install. En caso de Linux y otros binarios ya compilados, enseñarlo más fácilmente. Otro documento quizá que diga cómo compilarlo  
+
+
+-AY partitura:
+*que grabe notas en archivo
+*que interprete duraciones notas
+*que muestre los otros chips
+
 
 
 -------- Fin cosas para la siguiente version
@@ -2028,9 +2034,7 @@ Info de tamaño ventana. Y tamaño ventana sin zoom
 
 
 
--AY piano pero que vaya mostrando las notas en scroll, y quiza guardando notas en archivo de texto?
 
--AY piano notas en pentagrama. maximo canales en pantalla? quiza 1 solo e ir conmutando con una tecla
 
 
 -mejorar deteccion frecuencia sonido en audio wave form
