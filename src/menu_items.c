@@ -14305,6 +14305,8 @@ Dibujo de la nota:
 
 #define PENTAGRAMA_MARGEN_SOSTENIDO (PENTAGRAMA_SOST_ANCHO+2)
 
+#define PENTAGRAMA_TOTAL_ALTO (PENTAGRAMA_ESPACIO_LINEAS*8)
+
 char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
    //0123456
     "  XXX  ",  
@@ -14453,6 +14455,63 @@ void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int n
 	menu_ay_partitura_nota_pentagrama(posx,yorig,nota,si_sostenido);
 }
 
+#define MENU_AY_PARTITURA_MAX_COLUMNS 30
+
+//Lo que contiene cada pentagrama, de cada chip, de cada canal
+
+//Chip, canal, columna, string de 4
+char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
+
+
+void menu_ay_partitura_draw_state(int chip,int canal)
+{
+
+	int x=0;
+	int y=20;
+
+
+	y +=canal*PENTAGRAMA_TOTAL_ALTO;
+
+	int ancho_columna=menu_char_width*menu_gui_zoom;
+
+	//Las lineas de pentagrama que dejen espacio a la izquierda y derecha, de ancho=ancho_columna
+	menu_ay_partitura_lineas_pentagrama(x+ancho_columna,y,((menu_ay_partitura_overlay_window->visible_width)-2)*ancho_columna,PENTAGRAMA_ESPACIO_LINEAS);
+
+
+
+	int ancho_nota=PENTAGRAMA_ANCHO_NOTA_TOTAL;
+	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
+
+	printf ("total columnas: %d\n",total_columnas);
+
+	int i;
+
+	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
+
+	for (i=0;i<total_columnas;i++) {
+		char *nota;
+		nota=menu_ay_partitura_current_state[chip][canal][i];
+
+		//Nota leida canal 0
+
+		int nota_final=-1;
+		int octava;
+		int sostenido;
+
+		get_note_values(nota,&nota_final,&sostenido,&octava);
+		if (nota_final>=0) {
+
+			//Si octava impar, va hacia arriba
+			if (octava & 1) nota_final +=7;
+
+			menu_ay_partitura_nota_pentagrama_pos(x+ancho_nota,y,i,nota_final,sostenido);
+		}
+	}
+
+
+
+}
+
 void menu_ay_partitura_overlay(void)
 {
 
@@ -14535,52 +14594,40 @@ void menu_ay_partitura_overlay(void)
 	int ancho_columna=menu_char_width*menu_gui_zoom;
 
 	//Las lineas de pentagrama que dejen espacio a la izquierda y derecha, de ancho=ancho_columna
-	menu_ay_partitura_lineas_pentagrama(x+ancho_columna,y,((menu_ay_partitura_overlay_window->visible_width)-2)*ancho_columna,PENTAGRAMA_ESPACIO_LINEAS);
+	//menu_ay_partitura_lineas_pentagrama(x+ancho_columna,y,((menu_ay_partitura_overlay_window->visible_width)-2)*ancho_columna,PENTAGRAMA_ESPACIO_LINEAS);
 
 	//Do, re ,mi 
-	int nota=0;
+	//int nota=0;
 
-	int sostenido=0;	
+	int sostenido;	
 
-	for (nota=0;nota<14;nota++) {
+	/*for (nota=0;nota<14;nota++) {
 
 		int nota_abs=nota % 7;
 		if (nota_abs==0 || nota_abs==1) sostenido=1;
 
 		int columna=nota;
 		//temp disabled menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,columna,nota,sostenido);
-	}
+	}*/
 
+	
 
-	//Nota leida canal 1
-	//CDEFGAB
-	char *notas="cdefgab";
+	//Nota leida canal 0
 
-	int i;
+	/*int i;
 	int nota_final=-1;
-	int octava=0;
-	for (i=0;i<7;i++) {
-		if (letra_minuscula(nota_a[0])==notas[i]) {
-			nota_final=i;
-			break;
-		}
-	}
+	int octava;
 
-	sostenido=0;
+	get_note_values(nota_a,&nota_final,&sostenido,&octava);
 	if (nota_final>=0) {
-		if (nota_a[1]=='#') {
-			sostenido=1;
-			octava=nota_a[2]-'0';
-		}
-		else {
-			octava=nota_a[1]-'0';
-		}
 
 		//Si octava impar, va hacia arriba
 		if (octava & 1) nota_final +=7;
 
 		menu_ay_partitura_nota_pentagrama_pos(x+ancho_columna,y,0,nota_final,sostenido);
-	}
+	}*/
+
+	menu_ay_partitura_draw_state(0,0);
 
 	
 	//menu_ay_partitura_dibujar_sost(x+20,y);
@@ -14599,6 +14646,23 @@ void menu_ay_partitura_overlay(void)
 }
 
 
+void menu_ay_partitura_init_state(void)
+{
+			//char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
+
+		//Inicializar estado con string ""
+
+		int chip;
+		for (chip=0;chip<MAX_AY_CHIPS;chip++) {
+			int canal;
+			for (canal=0;canal<3;canal++) {
+				int col;
+				for (col=0;col<MENU_AY_PARTITURA_MAX_COLUMNS;col++) {
+					menu_ay_partitura_current_state[chip][canal][col][0]=0;
+				}
+			}
+		}
+}
 
 
 zxvision_window zxvision_window_ay_partitura;
@@ -14614,6 +14678,9 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 			menu_warn_message("This menu item needs multitask enabled");
 			return;
 		}
+
+		//Inicializar array de estado
+		menu_ay_partitura_init_state();
 
 		int  total_chips=ay_retorna_numero_chips();
 		//Max 3 ay chips
@@ -14697,13 +14764,13 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 				}
 
 
-		char *titulo_ventana="AY Partitura";
+		char *titulo_ventana="AY Sheet";
 		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
 		//Para que siempre se lea el titulo de la ventana
 		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
 
-		printf ("ancho %d\n",ancho_ventana);
+		//printf ("ancho %d\n",ancho_ventana);
 
 		zxvision_window *ventana;
 		ventana=&zxvision_window_ay_partitura;
@@ -14713,7 +14780,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 		zxvision_draw_window(ventana);	
 
-		printf ("ancho creada %d\n",ventana->visible_width);	
+		//printf ("ancho creada %d\n",ventana->visible_width);	
 
 		menu_ay_partitura_overlay_window=ventana;		
 

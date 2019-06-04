@@ -149,6 +149,7 @@ typedef struct s_nota_musical nota_musical;
 #define MAX_NOTAS_MUSICALES (NOTAS_MUSICALES_OCTAVAS*NOTAS_MUSICALES_NOTAS_POR_OCTAVA)
 
 extern char *get_note_name(int frecuencia);
+extern void get_note_values(char *texto,int *nota_final,int *si_sostenido,int *octava);
 extern int set_audiodriver_null(void);
 extern void fallback_audio_null(void);
 extern void audio_empty_buffer(void);

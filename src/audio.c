@@ -1019,6 +1019,35 @@ char *get_note_name(int frecuencia)
 	return tabla_notas_musicales[indice_result].nombre;
 }
 
+//devuelve numero nota (0...6 do,re... si), si es sostenido, y numero de octava, segun string obtenido de funcion get_note_name
+//Devuelve nota -1 si string no coincide con lo esperado
+void get_note_values(char *texto,int *nota_final,int *si_sostenido,int *octava)
+{
+	char *nota_string="cdefgab";
+
+	int i;
+	
+	*nota_final=-1;
+	*octava=0;
+	for (i=0;i<7;i++) {
+		if (letra_minuscula(texto[0])==nota_string[i]) {
+			*nota_final=i;
+			break;
+		}
+	}
+
+	*si_sostenido=0;
+	if (*nota_final>=0) {
+		if (texto[1]=='#') {
+			*si_sostenido=1;
+			*octava=texto[2]-'0';
+		}
+		else {
+			*octava=texto[1]-'0';
+		}
+	}
+}
+
 int set_audiodriver_null(void) {
                         audio_init=audionull_init;
                         audio_send_frame=audionull_send_frame;
