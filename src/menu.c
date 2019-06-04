@@ -10672,7 +10672,8 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (si_complete_video_driver() ) {
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_chip,"View AY Sheet");
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_chip,"View AY ~~Sheet");
+					menu_add_item_menu_shortcut(array_menu_audio_settings,'s');
 
 		}
 					

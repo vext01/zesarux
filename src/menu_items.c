@@ -14339,8 +14339,8 @@ char *pentagrama_sost[PENTAGRAMA_SOST_ALTO]={
 
 //#define PIANO_PARTITURA_GRAPHIC_BASE_X 9
 #define PIANO_PARTITURA_GRAPHIC_BASE_X (menu_origin_x() )
+#define PIANO_PARTITURA_GRAPHIC_BASE_Y 0
 
-int piano_partitura_graphic_base_y=0;
 
 
 #define AY_PIANO_ANCHO_VENTANA 32
@@ -14458,6 +14458,22 @@ void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int n
 
 #define MENU_AY_PARTITURA_MAX_COLUMNS 30
 
+int menu_ay_partitura_total_columns(void)
+{
+	int ancho_columna=menu_ay_partitura_ancho_col_texto();
+	int ancho_nota=PENTAGRAMA_ANCHO_NOTA_TOTAL;
+	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
+
+	total_columnas--; //1 menos
+
+	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
+
+	//control minimos
+	if (total_columnas<2) total_columnas=2;
+
+	return total_columnas;	
+}
+
 //Lo que contiene cada pentagrama, de cada chip, de cada canal
 
 //Chip, canal, columna, string de 4
@@ -14486,22 +14502,10 @@ void menu_ay_partitura_scroll(int chip)
 
 int menu_ay_partitura_ancho_col_texto(void)
 {
-	return menu_char_width*menu_gui_zoom;
+	return menu_char_width;
 }
 
-int menu_ay_partitura_total_columns(void)
-{
-	int ancho_columna=menu_ay_partitura_ancho_col_texto();
-	int ancho_nota=PENTAGRAMA_ANCHO_NOTA_TOTAL;
-	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
 
-	//-1
-	total_columnas --;
-
-	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
-
-	return total_columnas;	
-}
 
 void menu_ay_partitura_draw_state(int chip,int canal)
 {
@@ -14712,14 +14716,11 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		//Inicializar array de estado
 		menu_ay_partitura_init_state();
 
-		int  total_chips=ay_retorna_numero_chips();
-		//Max 3 ay chips
-		if (total_chips>3) total_chips=3;
 
 		if (!util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
 						
 						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
-						yventana=piano_partitura_graphic_base_y;
+						yventana=PIANO_PARTITURA_GRAPHIC_BASE_Y;
 						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
 						alto_ventana=AY_PIANO_ALTO_VENTANA;						
 
@@ -14738,7 +14739,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		zxvision_window *ventana;
 		ventana=&zxvision_window_ay_partitura;
 
-		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
+		zxvision_new_window_nocheck_staticsize(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
 
 		zxvision_draw_window(ventana);	
