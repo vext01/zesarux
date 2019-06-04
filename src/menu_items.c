@@ -14318,6 +14318,60 @@ char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
 	"  XXX  "
 };
 
+#define PENTAGRAMA_CLAVE_SOL_ALTO 44
+#define PENTAGRAMA_CLAVE_SOL_ANCHO 30
+
+char *pentagrama_clave_sol[PENTAGRAMA_CLAVE_SOL_ALTO]={
+/*
+ 012345678901234567890123456789012345
+*/
+
+"                XXXXXX        ",
+"               XXXXXXXX       ",
+"              XXXXXXXXXX      ",
+"             XXXXXXXXXXX      ",
+"            XXXXX     XX      ",
+"            XXXX      XX      ",
+"            XXX       XX      ",
+"            XX        XX      ",
+"            XX      XXXX      ",
+"            XX     XXXXX      ",
+"            XX     XXXXX      ",
+"            XX  XXXXXXX       ",
+"            XXXXXXXXX         ",
+"            XXXXXXXXX         ",
+"          XXXXXXXXXX          ",
+"        XXXXXXXXXX            ",
+"       XXXXXXXXX              ",
+"     XXXXXXXXXXX              ",
+"    XXXXXXXXXX X              ",
+"   XXXXXXXXX   XXX            ",
+"  XXXXXXXX     XXXXXXX        ",
+"  XXXXXXX    XXXXXXXXXXXXX    ",
+"  XXXX     XXXXXXXXXXXXXXXXX  ",
+"XXXXX     XXXXXXXXXXXXXXXXXXXX",
+"XXXXXX   XXXXXX  XXX   XXXXXXX",
+"XXXXXX    XXXX   XXXX    XXXXX",
+"  XXXX    XXXX      X      XXX",
+"  XXXX    XXXX      X      XXX",
+"  XXXXX   XXXXX     XX     XX ",
+"   XXXXX   XXXX     X    XXXX ",
+"    XXXXXX          X   XXXX  ",
+"     XXXXXXX        XXXXXX    ",
+"          XXXXXXXXXXXXXXX     ",
+"             XXXXXXXXXXX      ",
+"                      XX      ",
+"                      XX      ",
+"          XXX         XX      ",
+"        XXXXXX        XXX     ",
+"       XXXXXXXX       XXXX    ",
+"       XXXXXXXX       XXX     ",
+"        XXXXXX      XXX       ",
+"          XXXXX     XXX       ",
+"          XXXX XXXXXXX        ",
+"            XXXXXXXX          ",
+};
+
 
 char *pentagrama_sost[PENTAGRAMA_SOST_ALTO]={
   
@@ -14336,6 +14390,8 @@ char *pentagrama_sost[PENTAGRAMA_SOST_ALTO]={
 
 };
 
+
+//Clave de sol. 56 pixeles alto aprox
 
 //#define PIANO_PARTITURA_GRAPHIC_BASE_X 9
 #define PIANO_PARTITURA_GRAPHIC_BASE_X (menu_origin_x() )
@@ -14386,6 +14442,14 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito)
 	}
 }
 
+void meny_ay_partitura_dibujar_clavesol(int x,int y)
+{
+	screen_put_asciibitmap_generic(pentagrama_clave_sol,NULL,x,y,PENTAGRAMA_CLAVE_SOL_ANCHO,PENTAGRAMA_CLAVE_SOL_ALTO,0,menu_ay_partitura_putpixel_nota);	
+}
+
+
+
+
 void menu_ay_partitura_linea(int x,int y,int ancho)
 {
 
@@ -14398,11 +14462,16 @@ void menu_ay_partitura_lineas_pentagrama(int x,int y,int ancho,int separacion_al
 {
 	int lineas;
 
+	int y_clavesol=y-10;
+
 	for (lineas=0;lineas<5;lineas++) {
 		menu_ay_partitura_linea(x,y,ancho);
 
 		y +=separacion_alto;
 	}
+
+
+	meny_ay_partitura_dibujar_clavesol(x,y_clavesol);
 }
 
 //nota puede ser:  do, re, mi, fa, sol, la, si, do, re... si (0...13)
@@ -14453,6 +14522,9 @@ void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int n
 	//Y darle margen por la izquierda pos si hay sostenido
 	posx +=PENTAGRAMA_MARGEN_SOSTENIDO;
 
+	//darle margen de la clave de sol
+	posx +=PENTAGRAMA_CLAVE_SOL_ANCHO;
+
 	menu_ay_partitura_nota_pentagrama(posx,yorig,nota,si_sostenido);
 }
 
@@ -14470,6 +14542,10 @@ int menu_ay_partitura_total_columns(void)
 	int total_columnas=(((menu_ay_partitura_overlay_window->visible_width)*ancho_columna)-PENTAGRAMA_MARGEN_SOSTENIDO*2)/ancho_nota;
 
 	total_columnas--; //1 menos
+
+	//de la clave de sol
+	total_columnas--;
+
 
 	if (total_columnas>MENU_AY_PARTITURA_MAX_COLUMNS) total_columnas=MENU_AY_PARTITURA_MAX_COLUMNS;
 
@@ -14517,6 +14593,7 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 
 	y +=canal*(PENTAGRAMA_TOTAL_ALTO+1); //+1 para dejar 1 pixelillo de margen
+
 
 	int ancho_columna=menu_ay_partitura_ancho_col_texto();
 
