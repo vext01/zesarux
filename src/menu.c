@@ -6355,8 +6355,6 @@ void zxvision_handle_minimize(zxvision_window *w)
 		zxvision_set_visible_width(w,w->width_before_max_min_imize);
 							
 		int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
-		//Espacio para las barras, si las hay
-		//if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_ventana_final+=MENU_ANCHO_FRANJAS_TITULO;
 
 		//printf ("ancho final: %d\n",ancho_ventana_final);
 		zxvision_set_visible_width(w,ancho_ventana_final);
@@ -6391,6 +6389,18 @@ void zxvision_handle_maximize(zxvision_window *w)
 {
 
 	if (w->can_be_resized) {
+
+		//Para cualquiera de los dos casos, la ponemos como minimizada
+		//Luego en maximizar, restauramos valores originales
+		//Se hace asi para que se pueda partir de un tamaño minimo y poder restaurar a su tamaño original
+		//Si no, las funciones de establecer x,y, ancho, alto, podrian detectar fuera de rango de pantalla y no restaurar
+
+		//Cambiar alto
+		zxvision_set_visible_height(w,2);
+
+		//Cambiar ancho
+		//primero poner ancho inicial y luego reducir a ancho minimo para que quepa el titulo
+		zxvision_set_visible_width(w,w->width_before_max_min_imize);		
 
 
 		//Al maximizar/restaurar, desactivamos minimizado
