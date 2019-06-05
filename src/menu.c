@@ -3995,7 +3995,7 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 z80_byte menu_retorna_caracter_minimizar(zxvision_window *w)
 {
 	z80_byte caracter_mostrar='-';
-	if (w->is_minimized || w->is_maximized) caracter_mostrar='=';
+	if (w->is_minimized) caracter_mostrar='=';
 
 	return caracter_mostrar;
 }
@@ -6361,6 +6361,9 @@ void zxvision_handle_minimize(zxvision_window *w)
 		//printf ("ancho final: %d\n",ancho_ventana_final);
 		zxvision_set_visible_width(w,ancho_ventana_final);
 
+		//Al minimizar/restaurar, desactivamos maximizado
+		w->is_maximized=0;
+
 		if (w->is_minimized) {
 			//Des-minimizar. Dejar posicion y tamaño original
 			//printf ("Unminimize window\n");
@@ -6369,14 +6372,12 @@ void zxvision_handle_minimize(zxvision_window *w)
 			zxvision_set_visible_height(w,w->height_before_max_min_imize);
 			zxvision_set_visible_width(w,w->width_before_max_min_imize);
 			w->is_minimized=0;
-			w->is_maximized=0;
 		}
 		
 		else {
 			//Ya la hemos minimizado antes. solo indicarlo
 			//printf ("Minimize window\n");
 			w->is_minimized=1;
-			w->is_maximized=0;
 		}
 
 		zxvision_draw_window(w);
@@ -6391,6 +6392,10 @@ void zxvision_handle_maximize(zxvision_window *w)
 
 	if (w->can_be_resized) {
 
+
+		//Al maximizar/restaurar, desactivamos minimizado
+		w->is_minimized=0;
+
 		if (w->is_maximized) {
 			//Des-minimizar. Dejar posicion y tamaño original
 			debug_printf (VERBOSE_DEBUG,"Unmaximize window");
@@ -6400,7 +6405,6 @@ void zxvision_handle_maximize(zxvision_window *w)
 			zxvision_set_visible_width(w,w->width_before_max_min_imize);
 
 			w->is_maximized=0;
-			w->is_minimized=0;
 		}
 		
 		else {
@@ -6414,7 +6418,6 @@ void zxvision_handle_maximize(zxvision_window *w)
 			zxvision_set_visible_height(w,max_height);
 			
 			w->is_maximized=1;
-			w->is_minimized=0;
 		}
 
 		zxvision_draw_window(w);
