@@ -23385,17 +23385,17 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'s');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Change GUI Style");
                 menu_add_item_menu_ayuda(array_menu_interface_settings,"You can switch between:\n"
-					"ZEsarUX: default style\n"
-					"ZXSpectr: my first old emulator, that worked on MS-DOS and Windows. Celebrate its 20th anniversay with this style! :)\n"
-					"ZX80/81: ZX80&81 style\n"
-					"Z88: Z88 style\n"
-					"CPC: Amstrad CPC style\n"
-					"Sam: Sam Coupe style\n"
-					"ManSoftware: style using my own font I created when I was a child ;)\n"
-					"QL: Sinclair QL style\n"
-					"RetroMac: MacOS classic style\n"
-					"Clean: Simple style with black & white menus\n"
-					"CleanInverse: Same style as previous but using inverted colours\n"
+					"- ZEsarUX: default style\n"
+					"- ZXSpectr: my first old emulator, that worked on MS-DOS and Windows. Celebrate its 20th anniversay with this style! :)\n"
+					"- ZX80/81: ZX80&81 style\n"
+					"- Z88: Z88 style\n"
+					"- CPC: Amstrad CPC style\n"
+					"- Sam: Sam Coupe style\n"
+					"- ManSoftware: style using my own font I created when I was a child ;)\n"
+					"- QL: Sinclair QL style\n"
+					"- RetroMac: MacOS classic style\n"
+					"- Clean: Simple style with black & white menus\n"
+					"- CleanInverse: Same style as previous but using inverted colours\n"
 					
 					);
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

@@ -14402,13 +14402,22 @@ char *pentagrama_sost[PENTAGRAMA_SOST_ALTO]={
 #define AY_PIANO_ANCHO_VENTANA 32
 #define AY_PIANO_ALTO_VENTANA 24
 
+#define MENU_AY_PARTITURA_MAX_COLUMNS 30
 
 zxvision_window *menu_ay_partitura_overlay_window;
 
 
+//Lo que contiene cada pentagrama, de cada chip, de cada canal
+
+//Chip, canal, columna, string de 4
+char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
+
+//Nota anterior de la ultima columna
+//char menu_ay_partitura_last_state[MAX_AY_CHIPS][3][4];
+
 
 //Hacer putpixel en pantalla de color indexado 16 bits. Usado en watermark para no rainbow
-void menu_ay_partitura_putpixel_nota(z80_int *destino GCC_UNUSED,int x,int y,int ancho_destino GCC_UNUSED,int color)
+void menu_ay_partitura_putpixel_nota(z80_int *destino GCC_UNUSED,int x,int y,int ancho_destino GCC_UNUSED,int color GCC_UNUSED)
 {
 	//scr_putpixel(x,y,color);
 
@@ -14529,7 +14538,7 @@ void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int n
 	menu_ay_partitura_nota_pentagrama(posx,yorig,nota,si_sostenido);
 }
 
-#define MENU_AY_PARTITURA_MAX_COLUMNS 30
+
 
 int menu_ay_partitura_ancho_col_texto(void)
 {
@@ -14556,13 +14565,7 @@ int menu_ay_partitura_total_columns(void)
 	return total_columnas;	
 }
 
-//Lo que contiene cada pentagrama, de cada chip, de cada canal
 
-//Chip, canal, columna, string de 4
-char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
-
-//Nota anterior de la ultima columna
-char menu_ay_partitura_last_state[MAX_AY_CHIPS][3][4];
 
 
 //Scroll de un chip entero
@@ -14641,29 +14644,15 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 void menu_ay_partitura_overlay(void)
 {
 
-	//printf ("overlay de menu_ay_partitura_overlay\n");
 
 	normal_overlay_texto_menu();
 
-	//workaround_pentagon_clear_putpixel_cache();
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
 
-	//char volumen[16],textovolumen[32],textotono[32];
-
-	int  total_chips=ay_retorna_numero_chips();
-	//Max 3 ay chips
-	if (total_chips>3) total_chips=3;
-
-
-
-	//if (total_chips>2) total_chips=2;
 
 	int chip;
 
-	//int linea=1;
-
-	//int canal=0;
 
 			char nota_a[4];
 			char nota_b[4];
@@ -14702,33 +14691,25 @@ void menu_ay_partitura_overlay(void)
 	//printf ("b [%s] [%s]\n",nota_b,menu_ay_partitura_last_state[0][1]);
 	//printf ("c [%s] [%s]\n",nota_c,menu_ay_partitura_last_state[0][2]);
 
+	int columna_estado_anterior;
+	columna_estado_anterior=menu_ay_partitura_total_columns()-1;
+
+
 	//Si alguno de los 3 canales es diferente del estado anterior
 	if (
-		strcasecmp(nota_a,menu_ay_partitura_last_state[0][0]) ||
-		strcasecmp(nota_b,menu_ay_partitura_last_state[0][1]) ||
-		strcasecmp(nota_c,menu_ay_partitura_last_state[0][2]) 
+		strcasecmp(nota_a,menu_ay_partitura_current_state[0][0][columna_estado_anterior]) ||
+		strcasecmp(nota_b,menu_ay_partitura_current_state[0][1][columna_estado_anterior]) ||
+		strcasecmp(nota_c,menu_ay_partitura_current_state[0][2][columna_estado_anterior]) 
 	)
 	{
 		menu_ay_partitura_scroll(0);
 
 		//Meter valor actual
+		strcpy(menu_ay_partitura_current_state[0][0][columna_estado_anterior],nota_a);
+		strcpy(menu_ay_partitura_current_state[0][1][columna_estado_anterior],nota_b);
+		strcpy(menu_ay_partitura_current_state[0][2][columna_estado_anterior],nota_c);
 
-		int total_columnas=menu_ay_partitura_total_columns();
 
-		int indice_columna=total_columnas-1;
-
-		//char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
-
-		//printf ("indice_columna: %d contenido %s\n",indice_columna,nota_a);
-
-		strcpy(menu_ay_partitura_current_state[0][0][indice_columna],nota_a);
-		strcpy(menu_ay_partitura_current_state[0][1][indice_columna],nota_b);
-		strcpy(menu_ay_partitura_current_state[0][2][indice_columna],nota_c);
-
-		//Guardar estado anterior
-		strcpy(menu_ay_partitura_last_state[0][0],nota_a);
-		strcpy(menu_ay_partitura_last_state[0][1],nota_b);
-		strcpy(menu_ay_partitura_last_state[0][2],nota_c);
 	}
 
 	//Dibujar estado de los 3 canales
@@ -14737,16 +14718,7 @@ void menu_ay_partitura_overlay(void)
 	menu_ay_partitura_draw_state(0,2);
 
 	
-	//menu_ay_partitura_dibujar_sost(x+20,y);
 
-	//menu_ay_partitura_dibujar_nota(x,y,+1);
-
-	//NULL y 0 de ancho_destino pues no los usamos en funcion putpixxel
-
-	//screen_put_asciibitmap_generic(pentagrama_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
-	//menu_ay_partitura_dibujar_nota(x,y,+1);
-
-	//menu_ay_partitura_dibujar_nota(x+30,y+20,-1);
 
 	zxvision_draw_window_contents(menu_ay_partitura_overlay_window); 
 
@@ -14755,7 +14727,7 @@ void menu_ay_partitura_overlay(void)
 
 void menu_ay_partitura_init_state(void)
 {
-			//char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
+			
 
 		//Inicializar estado con string ""
 
@@ -14766,8 +14738,6 @@ void menu_ay_partitura_init_state(void)
 			int canal;
 			for (canal=0;canal<3;canal++) {
 				int col;
-
-				menu_ay_partitura_last_state[chip][canal][0]=0;
 
 				for (col=0;col<MENU_AY_PARTITURA_MAX_COLUMNS;col++) {
 					menu_ay_partitura_current_state[chip][canal][col][0]=0;
