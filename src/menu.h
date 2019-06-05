@@ -59,10 +59,10 @@ struct s_zxvision_window {
 	int is_minimized;
 	int is_maximized;
 
-	int height_before_minimize;
-	int width_before_minimize;
-	int x_before_minimize;
-	int y_before_minimize;
+	int height_before_max_min_imize;
+	int width_before_max_min_imize;
+	int x_before_max_min_imize;
+	int y_before_max_min_imize;
 
 
 	int can_use_all_width; //Si tenemos usable también la ultima columna derecha
