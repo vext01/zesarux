@@ -538,6 +538,19 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2 //color de aviso
 								},
 
+	{"RetroMac",7,0,
+		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		5+8,0, 		//Colores para opcion seleccionada
+		7+8,2,7,2, 	//Colores para opcion no disponible
+		7,0,        	//Colores para el titulo y linea recuadro ventana
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		2,7+8,		//Color para opcion marcada
+		'.',
+		2 //color de aviso
+		},
+
+
         {"Clean",7,0,
                 0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 0,7,          //Colores para opcion seleccionada
@@ -29309,6 +29322,7 @@ void set_charset(void)
 	else if (estilo_gui_activo==ESTILO_GUI_SAM) char_set=char_set_sam;
 	else if (estilo_gui_activo==ESTILO_GUI_MANSOFTWARE) char_set=char_set_mansoftware;
 	else if (estilo_gui_activo==ESTILO_GUI_QL) char_set=char_set_ql;
+	else if (estilo_gui_activo==ESTILO_GUI_RETROMAC) char_set=char_set_retromac;
 	else char_set=char_set_spectrum;
 }
 

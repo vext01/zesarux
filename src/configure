@@ -1474,7 +1474,7 @@ textspeech.o: textspeech.c textspeech.h cpu.h operaciones.h debug.h screen.h cha
 
 
 clean:
-	rm -f *.o zesarux zesarux.exe smpatap sp_z80 tapabin leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite spedtotxt install.sh 
+	rm -f *.o zesarux zesarux.exe smpatap sp_z80 tapabin bin_sprite_to_c leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite spedtotxt install.sh 
 	rm -fR bintargztemp/ sourcetargztemp/ ZEsarUX_win-\$(EMULATOR_VERSION)/
 	rm -fR macos/zesarux.app
 	rm -fR macos/zesarux.dmg
@@ -1581,7 +1581,7 @@ install: all
 	./install.sh
 
 #utilities: \$(UTILITIES)
-utilities: smpatap sp_z80 tapabin leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite spedtotxt
+utilities: smpatap sp_z80 tapabin leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite spedtotxt bin_sprite_to_c 
 
 
 spedtotxt: spedtotxt.c
@@ -1607,6 +1607,9 @@ bmp_to_prism_4_planar: bmp_to_prism_4_planar.c
 
 bmp_to_sprite: bmp_to_sprite.c
 	\$(CC) \$(CFLAGS) bmp_to_sprite.c -o bmp_to_sprite
+
+bin_sprite_to_c: bin_sprite_to_c.c
+	\$(CC) \$(CFLAGS) bin_sprite_to_c.c -o bin_sprite_to_c
 
 _EOF
 
