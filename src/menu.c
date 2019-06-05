@@ -6400,7 +6400,13 @@ void zxvision_handle_maximize(zxvision_window *w)
 
 		//Cambiar ancho
 		//primero poner ancho inicial y luego reducir a ancho minimo para que quepa el titulo
-		zxvision_set_visible_width(w,w->width_before_max_min_imize);		
+		zxvision_set_visible_width(w,w->width_before_max_min_imize);	
+
+		int ancho_ventana_final=menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title);
+
+		//printf ("ancho final: %d\n",ancho_ventana_final);
+		zxvision_set_visible_width(w,ancho_ventana_final);
+
 
 
 		//Al maximizar/restaurar, desactivamos minimizado
