@@ -9,7 +9,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -Comprobar a fondo fileselector despues de cambios a redimensionable
 
--boton para maximizar en zxvision
 
 -ZX Desktop:
 
@@ -127,6 +126,8 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 *que muestre los otros chips. ya está preparado el array para varios chips
 *para el beeper tambien
 
+-temperatura cpu en mac
+https://github.com/lavoiesl/osx-cpu-temp
 
 
 -------- Fin cosas para la siguiente version

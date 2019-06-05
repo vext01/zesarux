@@ -4313,6 +4313,7 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
 	w->can_be_resized=1;
 
 	w->is_minimized=0;
+	w->is_maximized=0;
 	w->height_before_minimize=visible_height;	
 	w->width_before_minimize=visible_width;	
 
@@ -5845,7 +5846,10 @@ void zxvision_set_y_position(zxvision_window *w,int y)
 
 void zxvision_set_visible_width(zxvision_window *w,int visible_width)
 {
-	if (zxvision_out_bonds(w->x,w->y,visible_width,w->visible_height)) return;
+	if (zxvision_out_bonds(w->x,w->y,visible_width,w->visible_height)) {
+		printf ("Window out of bounds trying to set width\n");
+		return;
+	}
 
 	if (visible_width<1) return;
 
@@ -6379,6 +6383,41 @@ void zxvision_handle_minimize(zxvision_window *w)
 
 }
 
+
+void zxvision_handle_maximize(zxvision_window *w)
+{
+
+	if (w->can_be_resized) {
+
+		if (w->is_maximized) {
+			//Des-minimizar. Dejar posicion y tamaño original
+			debug_printf (VERBOSE_DEBUG,"Unmaximize window");
+			zxvision_set_x_position(w,w->x_before_minimize);
+			zxvision_set_y_position(w,w->y_before_minimize);
+			zxvision_set_visible_height(w,w->height_before_minimize);
+			zxvision_set_visible_width(w,w->width_before_minimize);
+			w->is_maximized=0;
+		}
+		
+		else {
+			debug_printf (VERBOSE_DEBUG,"Maximize window");
+			zxvision_set_x_position(w,0);
+			zxvision_set_y_position(w,0);
+			int max_width=scr_get_menu_width();
+			int max_height=scr_get_menu_height();
+			printf ("visible width %d\n",max_width);
+			zxvision_set_visible_width(w,max_width);
+			zxvision_set_visible_height(w,max_height);
+			
+			w->is_maximized=1;
+		}
+
+		zxvision_draw_window(w);
+		zxvision_draw_window_contents(w);
+	}
+
+}
+
 void zxvision_send_scroll_right_and_draw(zxvision_window *w)
 {
 						//printf ("Pulsado en scroll derecha\n");
@@ -6599,9 +6638,9 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//printf ("Clicked on title\n");
 				//Y si ha sido doble click
 				if (mouse_is_double_clicking) {
-					//printf ("Doble clicked on title\n");
+					debug_printf (VERBOSE_DEBUG,"Double clicked on title");
 
-					zxvision_handle_minimize(w);
+					zxvision_handle_maximize(w);
 					
 					
 				}
@@ -26240,7 +26279,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On ZX-Vision windows:\n"
 			"- Use mouse to move windows dragging from the title bar\n"
 			"- Drag mouse from the bottom-right part of the window to resize it\n"
-			"- Doble click on the title bar to minimize/restore\n"
+			"- Doble click on the title bar to mazimize/restore\n"
 			"- Click out of the window to put the focus on the emulated machine and send there keyboard presses\n"
 			"- Can also be moved with the keyboard: Shift+QAOP\n"
 			"- Can also be resized with the keyboard: Shift+WSKL\n"

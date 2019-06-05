@@ -57,6 +57,7 @@ struct s_zxvision_window {
 
 	int can_be_resized;
 	int is_minimized;
+	int is_maximized;
 
 	int height_before_minimize;
 	int width_before_minimize;
