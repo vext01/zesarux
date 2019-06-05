@@ -443,6 +443,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		5+8,0, 		//Colores para opcion seleccionada
 		7+8,2,7,2, 	//Colores para opcion no disponible
 		0,7+8,        	//Colores para el titulo y linea recuadro ventana
+		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
@@ -454,6 +455,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		1+8,6,		//Colores para opcion seleccionada
 		1,6,1,6,	//Colores para opcion no disponible, iguales que para opcion disponible
 		6,1,		//Colores para el titulo y linea recuadro ventana
+		1,6,		//Colores para el titulo y linea recuadro ventana inactiva
 		6,		//Color waveform
 		0,               //Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
@@ -466,6 +468,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,7+8,          //Colores para opcion seleccionada
                 7+8,0,0,7+8,      //Colores para opcion no disponible
                 0,7+8,          //Colores para el titulo y linea recuadro ventana
+				7+8,0,          //Colores para el titulo y linea recuadro ventana inactiva
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 7,0,		//Color para opcion marcada
@@ -481,6 +484,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 4,0,          //Colores para opcion seleccionada
                 7,2,4,2,      //Colores para opcion no disponible
                 0,7,          //Colores para el titulo y linea recuadro ventana
+				7,0,          //Colores para el titulo y linea recuadro ventana inactiva
                 4,              //Color waveform
                 4,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
@@ -494,6 +498,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 6+8,1,            //Colores para opcion seleccionada
                 1,2,6+8,2,        //Colores para opcion no disponible
                 6+8,1,            //Colores para el titulo y linea recuadro ventana
+				1,6+8,            //Colores para el titulo y linea recuadro ventana inactiva
                 6+8,              //Color waveform
                 0,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
@@ -506,6 +511,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 5+8,0,          //Colores para opcion seleccionada
                 7+8,2,7,2,      //Colores para opcion no disponible
                 0,7+8,          //Colores para el titulo y linea recuadro ventana
+				7+8,0,          //Colores para el titulo y linea recuadro ventana inactiva
                 1,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
@@ -518,6 +524,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							5+8,0, 		//Colores para opcion seleccionada
 							7+8,3,7,3, 	//Colores para opcion no disponible
 							0,7+8,        	//Colores para el titulo y linea recuadro ventana
+							7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
 							1,		//Color waveform
 							7,		//Color para zona no usada en visualmem
 							3,7+8,		//Color para opcion marcada
@@ -531,6 +538,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					4+8,0, 		//Colores para opcion seleccionada
 					7+8,2,7,2, 	//Colores para opcion no disponible
 					2,7+8,        	//Colores para el titulo y linea recuadro ventana
+					7+8,2,        	//Colores para el titulo y linea recuadro ventana inactiva
 					4,		//Color waveform
 					7,		//Color para zona no usada en visualmem
 					2,7+8,		//Color para opcion marcada
@@ -540,12 +548,13 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 	{"RetroMac",7,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-		5+8,0, 		//Colores para opcion seleccionada
-		7+8,2,7,2, 	//Colores para opcion no disponible
-		7,0,        	//Colores para el titulo y linea recuadro ventana
-		1,		//Color waveform
+		1+8,7+8, 		//Colores para opcion seleccionada
+		7,2,1+8,2, 	//Colores para opcion no disponible
+		7+8,0,        	//Colores para el titulo y linea recuadro ventana
+		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+		0,		//Color waveform
 		7,		//Color para zona no usada en visualmem
-		2,7+8,		//Color para opcion marcada
+		2,7,		//Color para opcion marcada
 		'.',
 		2 //color de aviso
 		},
@@ -556,6 +565,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,7,          //Colores para opcion seleccionada
 		7,2,0,2, 	//Colores para opcion no disponible
                 0,7,          //Colores para el titulo y linea recuadro ventana
+				7,0,          //Colores para el titulo y linea recuadro ventana inactiva
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 7,0,		//Color para opcion marcada
@@ -568,6 +578,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,0,          //Colores para opcion seleccionada
 		0,2,7,2, 	//Colores para opcion no disponible
                 7,0,          //Colores para el titulo y linea recuadro ventana
+				0,7,          //Colores para el titulo y linea recuadro ventana inactiva
                 7,              //Color waveform
                 0,               //Color para zona no usada en visualmem
                 0,7,		//Color para opcion marcada
@@ -3968,23 +3979,7 @@ int menu_da_ancho_titulo(char *titulo)
 		return ancho_total;
 }
 
-int old_menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
-{
-	        //y luego el texto. titulo mostrar solo lo que cabe de ancho
-		int ancho_disponible_titulo=ancho;
-		//Y si muestra las franjas, quitar ancho de titulo
-		if (ESTILO_GUI_MUESTRA_RAINBOW) ancho_disponible_titulo-=MENU_ANCHO_FRANJAS_TITULO;
 
-		int ancho_boton_cerrar=2;
-
-		if (menu_hide_close_button.v) ancho_boton_cerrar=0;
-
-		//el ancho del texto mostrado del titulo tiene que ser el que quepa, sumando dos caracter para boton de cerrado y espacio derecha para boton minimizar
-		int ancho_mostrar_titulo=strlen(titulo)+ancho_boton_cerrar+1;
-		if (ancho_disponible_titulo<ancho_mostrar_titulo) ancho_mostrar_titulo=ancho_disponible_titulo;
-
-	return ancho_mostrar_titulo;
-}
 
 int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 {
@@ -4087,17 +4082,29 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	//recuadro
 	//menu_establece_cuadrado(xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1,0);
 	//printf ("cuadrado: %d,%d %dX%d\n",xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1);
+	
 	menu_establece_cuadrado(xpixel,ypixel,xderecha,ypixel+altopixel-1,ESTILO_GUI_PAPEL_TITULO);
 
 
-	
+	int color_tinta_titulo;
+	int color_papel_titulo;
+
+
+	if (ventana_tipo_activa) {
+		color_tinta_titulo=ESTILO_GUI_TINTA_TITULO;
+		color_papel_titulo=ESTILO_GUI_PAPEL_TITULO;
+	}
+
+	else {
+		color_tinta_titulo=ESTILO_GUI_TINTA_TITULO_INACTIVA;
+		color_papel_titulo=ESTILO_GUI_PAPEL_TITULO_INACTIVA;		
+	}
 
 
         //titulo
         //primero franja toda negra normalmente en estilo ZEsarUX
         for (i=0;i<ancho;i++) {
-			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-			else putchar_menu_overlay(x+i,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+			putchar_menu_overlay(x+i,y,' ',color_tinta_titulo,color_papel_titulo);
 		}
 
 
@@ -4120,8 +4127,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
         for (i=0;i<ancho_mostrar_titulo && titulo_mostrar[i];i++) {
 			char caracter_mostrar=titulo_mostrar[i];
 			
-			if (ventana_tipo_activa) putchar_menu_overlay(x+i,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-			else putchar_menu_overlay(x+i,y,caracter_mostrar,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+			putchar_menu_overlay(x+i,y,caracter_mostrar,color_tinta_titulo,color_papel_titulo);
 		}
 
 
@@ -4130,22 +4136,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	if (ESTILO_GUI_MUESTRA_RAINBOW && ventana_tipo_activa) {
 		//en el caso de drivers completos, hacerlo real
 		menu_dibuja_ventana_franja_arcoiris(x,y,ancho);
-		/*
-		if (si_complete_video_driver() ) {
-	                putchar_menu_overlay(x+ancho-6,y,128,2+8,ESTILO_GUI_PAPEL_TITULO);
-        	        putchar_menu_overlay(x+ancho-5,y,128,6+8,2+8);
-                	putchar_menu_overlay(x+ancho-4,y,128,4+8,6+8);
-	                putchar_menu_overlay(x+ancho-3,y,128,5+8,4+8);
-        	        putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,5+8);
-	        }
-
-		//en caso de curses o caca, hacerlo con lineas de colores
-	        if (!strcmp(scr_driver_name,"curses") || !strcmp(scr_driver_name,"caca") ) {
-        	        putchar_menu_overlay(x+ancho-6,y,'/',2+8,ESTILO_GUI_PAPEL_TITULO);
-                	putchar_menu_overlay(x+ancho-5,y,'/',6+8,ESTILO_GUI_PAPEL_TITULO);
-	                putchar_menu_overlay(x+ancho-4,y,'/',4+8,ESTILO_GUI_PAPEL_TITULO);
-        	        putchar_menu_overlay(x+ancho-3,y,'/',5+8,ESTILO_GUI_PAPEL_TITULO);
-	        }*/
+	
 	}
 
 		menu_dibuja_ventana_botones();
@@ -23402,6 +23393,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					"Sam: Sam Coupe style\n"
 					"ManSoftware: style using my own font I created when I was a child ;)\n"
 					"QL: Sinclair QL style\n"
+					"RetroMac: MacOS classic style\n"
 					"Clean: Simple style with black & white menus\n"
 					"CleanInverse: Same style as previous but using inverted colours\n"
 					

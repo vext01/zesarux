@@ -650,6 +650,7 @@ struct s_estilos_gui {
         int tinta_seleccionado_no_disponible;
 
         int papel_titulo, tinta_titulo;
+		int papel_titulo_inactiva, tinta_titulo_inactiva; //Colores de titulo con ventana inactiva
 
         int color_waveform;  //Color para forma de onda en view waveform
         int color_unused_visualmem; //Color para zona no usada en visualmem
@@ -705,6 +706,9 @@ extern int menu_ext_desktop_fill_solid_color;
 
 #define ESTILO_GUI_PAPEL_TITULO (definiciones_estilos_gui[estilo_gui_activo].papel_titulo)
 #define ESTILO_GUI_TINTA_TITULO (definiciones_estilos_gui[estilo_gui_activo].tinta_titulo)
+
+#define ESTILO_GUI_PAPEL_TITULO_INACTIVA (definiciones_estilos_gui[estilo_gui_activo].papel_titulo_inactiva)
+#define ESTILO_GUI_TINTA_TITULO_INACTIVA (definiciones_estilos_gui[estilo_gui_activo].tinta_titulo_inactiva)
 
 #define ESTILO_GUI_COLOR_WAVEFORM (definiciones_estilos_gui[estilo_gui_activo].color_waveform)
 #define ESTILO_GUI_COLOR_UNUSED_VISUALMEM (definiciones_estilos_gui[estilo_gui_activo].color_unused_visualmem)
