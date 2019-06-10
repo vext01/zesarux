@@ -226,13 +226,144 @@ void debugger_disassemble_crear_rep_spaces(char *origen)
 
 //Tabla de desensamblado de condacts de daad
 
-struct s_daad_contacts {
+struct s_daad_paws_contacts {
   int parametros;
   char nombre[10];
 };
 
+struct s_daad_paws_contacts paws_contacts_array[]={
+{1,"AT     "}, //0
+{1,"NOTAT  "},
+{1,"ATGT   "},
+{1,"ATLT   "},
+{1,"PRESENT"},
+{1,"ABSENT "}, //5
+{1,"WORN   "},
+{1,"NOTWORN"},
+{1,"CARRIED"},
+{1,"NOTCARR"},
+{1,"CHANCE "}, //10
+{1,"ZERO   "},
+{1,"NOTZERO"},
+{2,"EQ     "},
+{2,"GT     "},
+{2,"LT     "}, //15
+{1,"ADJECT1"},
+{1,"ADVERB "},
+{0,"INVEN  "},
+{0,"DESC   "},
+{0,"QUIT   "}, //20
+{0,"END    "},
+{0,"DONE   "},
+{0,"OK     "},
+{0,"ANYKEY "},
+{0,"SAVE   "}, //25
+{0,"LOAD   "},
+{0,"TURNS  "},
+{0,"SCORE  "},
+{0,"CLS    "},
+{0,"DROPALL"}, //30
+{0,"AUTOG  "},
+{0,"AUTOD  "},
+{0,"AUTOW  "},
+{0,"AUTOR  "},
+{1,"PAUSE  "}, //35
+{0,"TIMEOUT"},
+{1,"GOTO   "},
+{1,"MESSAGE"},
+{1,"REMOVE "},
+{1,"GET    "}, //40
+{1,"DROP   "},
+{1,"WEAR   "},
+{1,"DESTROY"},
+{1,"CREATE "},
+{2,"SWAP   "}, //45
+{2,"PLACE  "},
+{1,"SET    "},
+{1,"CLEAR  "},
+{2,"PLUS   "},
+{2,"MINUS  "}, //50
+{2,"LET    "},
+{0,"NEWLINE"},
+{1,"PRINT  "},
+{1,"SYSMESS"},
+{2,"ISAT   "}, //55
+{2,"COPYOF "},
+{2,"COPYOO "},
+{2,"COPYFO "},
+{2,"COPYFF "},
+{0,"LISTOBJ"}, //60
+{1,"EXTERN "},
+{0,"RAMSAVE"},
+{1,"RAMLOAD"},
+{2,"BEEP   "},
+{1,"PAPER  "}, //65
+{1,"INK    "},
+{1,"BORDER "},
+{1,"PREP   "},
+{1,"NOUN2  "},
+{1,"ADJECT2"}, //70
+{2,"ADD    "},
+{2,"SUB    "},
+{0,"PARSE  "},
+{1,"LISTAT "},
+{1,"PROCESS"}, //75
+{2,"SAME   "},
+{1,"MES    "},
+{1,"CHARSET"},
+{2,"NOTEQ  "},
+{2,"NOTSAME"}, //80
+{2,"MODE   "},
+{1,"LINE   "},
+{2,"TIME   "},
+{1,"PICTURE"},
+{1,"DOALL  "}, //85
+{1,"PROMPT "},
+{1,"GRAPHIC"},
+{2,"ISNOTAT"},
+{2,"WEIGH  "},
+{2,"PUTIN  "}, //90
+{2,"TAKEOUT"},
+{0,"NEWTEXT"},
+{2,"ABILITY"},
+{1,"WEIGHT "},
+{1,"RANDOM "}, //95
+{1,"INPUT  "},
+{0,"SAVEAT "},
+{0,"BACKAT "},
+{2,"PRINTAT"},
+{0,"WHATO  "}, //100
+{1,"RESET  "},
+{1,"PUTO   "},
+{0,"NOTDONE"},
+{1,"AUTOP  "},
+{1,"AUTOT  "}, //105
+{1,"MOVE   "},
+{0,"PROTECT"},  //107
+{0,"UNKNOWN"},  //108
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  //110
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  //115
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  //120
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  //125
+{0,"UNKNOWN"},  
+{0,"UNKNOWN"},  //127
 
-struct s_daad_contacts daad_contacts_array[]={
+};
+
+struct s_daad_paws_contacts daad_contacts_array[]={
   {1,"AT     "}, //   0 $00
   {1,"NOTAT  "}, //   1 $01
   {1,"ATGT   "}, //   2 $$02
@@ -506,6 +637,94 @@ primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te su
 
     return;
   }
+
+
+  //Caso para contacts de daad
+  if (menu_debug_memory_zone==MEMORY_ZONE_NUM_PAWS_CONDACTS) {
+
+		z80_byte op=disassemble_peek_byte(address);
+		z80_byte arg1=disassemble_peek_byte(address+1);
+    z80_byte arg2=disassemble_peek_byte(address+2);
+
+    //Palabra del vocabulario
+    char buffer_vocabulary[10];
+    //por defecto
+    buffer_vocabulary[0]=0;
+
+    /*
+    Por otro lado, el valor del opcode le tienes que hacer AND 0x7F, porque solo los 7 bits bajos son el opcode, el bit alto indica si el 
+primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te supone poner el parametro 1 entre corechetes o no.
+  */
+
+    int indireccion=0;
+
+    if (op>127) {
+      op -=128;
+      indireccion=1;
+    }
+
+    int num_parametros=paws_contacts_array[op].parametros;
+    char *nombre_condact=paws_contacts_array[op].nombre;
+
+  z80_byte arg_vocabulary=arg1;
+  if (indireccion) arg_vocabulary=util_daad_get_flag_value(arg_vocabulary);
+
+//Si parametros son vocabularios
+	//{1,"NOUN2  "}, //  69 $45
+	if (op==69) {
+		util_daad_locate_word(arg_vocabulary,2,buffer_vocabulary);
+	} 		
+
+  //{1,"ADJECT1"}, //  16 $10
+  //{1,"ADJECT2"}, //  70 $46
+  	if (op==16 || op==70) {
+		util_daad_locate_word(arg_vocabulary,3,buffer_vocabulary);
+	} 	
+
+
+  	//{1,"ADVERB "}, //  17 $11
+    if (op==17) {
+		util_daad_locate_word(arg_vocabulary,1,buffer_vocabulary);
+	} 
+
+    //{1,"PREP   "}, //  68 $44	
+	if (op==68) {
+		util_daad_locate_word(arg_vocabulary,4,buffer_vocabulary);
+	} 	
+
+  int vocabulario_encontrado=0;
+
+  if (buffer_vocabulary[0]!=0 && buffer_vocabulary[0]!='?') vocabulario_encontrado=1;
+
+  char buffer_parametro1[32];
+  if (indireccion) sprintf (buffer_parametro1,"@%d",arg1);
+  else {
+    //Skip utiliza parametro en complemento a 2
+    if (op==116) sprintf (buffer_parametro1,"%d",(char) arg1);  
+    else sprintf (buffer_parametro1,"%d",arg1);  
+  }
+
+
+
+    if (num_parametros==0) {
+      sprintf (buffer,"%s",nombre_condact);
+    }
+
+    else if (num_parametros==1) {
+      if (vocabulario_encontrado) sprintf (buffer,"%s %s (%s)",nombre_condact,buffer_vocabulary,buffer_parametro1);
+      else sprintf (buffer,"%s %s",nombre_condact,buffer_parametro1);
+    }    
+
+    else {
+      sprintf (buffer,"%s %s %3d",nombre_condact,buffer_parametro1,arg2);
+    }   
+
+    *length=1+num_parametros; 
+
+    return;
+  }
+
+
 
 	disassemble_main( address, buffer, buflen, length, USE_HL );
 

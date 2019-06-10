@@ -11562,7 +11562,7 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 
 				//Si no esta en zona de parser
-				if (!util_daad_is_in_parser()) {
+				if (!util_daad_is_in_parser() && !util_paws_is_in_parser() ) {
 					strcpy(buffer_linea,"Not in condacts");
 					//zxvision_print_string_defaults_fillspc(w,1,linea++,"Not in condacts");
 				}
@@ -11621,7 +11621,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 					for (j=0;j<64;j++) buffer_linea[j]=32;
 
 						//Si esta en zona de parser
-						if (util_daad_is_in_parser()) {
+						if (util_daad_is_in_parser() || util_paws_is_in_parser() ) {
 
 							//$terminatorOpcodes = array(22, 23,103, 116,117,108);  //DONE/OK/NOTDONE/SKIP/RESTART/REDO
 
@@ -11648,7 +11648,8 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 							if (!terminador) {
 								//Cambiamos temporalmente a zona de memoria de condacts de daad, para que desensamble como si fueran condacts
 								int antes_menu_debug_memory_zone=menu_debug_memory_zone;
-								menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
+								if (util_daad_detect()) menu_debug_memory_zone=MEMORY_ZONE_NUM_DAAD_CONDACTS;	
+								else menu_debug_memory_zone=MEMORY_ZONE_NUM_PAWS_CONDACTS;
 								debugger_disassemble(dumpassembler,32,&longitud_op,direccion_desensamblar);
 								menu_debug_memory_zone=antes_menu_debug_memory_zone;
 
@@ -12340,7 +12341,7 @@ void menu_debug_registers_set_view(zxvision_window *ventana,int vista)
 	if (vista<1 || vista>8) vista=1;
 
 	//Si no es daad, no permite seleccionar vista 8
-	if (vista==8 && !util_daad_detect()) return;
+	if (vista==8 && !util_daad_detect() && !util_paws_detect()) return;
 
 	menu_debug_registers_current_view=vista;
 
@@ -12506,7 +12507,18 @@ int debug_show_fired_breakpoints_type=0;
 
 	if (mostrar) {
 		//Si no era un breakpoint de daad de step-to-step o runtoparse
-		if ( (debug_stepping_daad.v || debug_stepping_daad_runto_parse.v) && reg_pc==util_daad_get_pc_parser() ) {
+
+		int esta_en_parser=0;
+		if (util_daad_detect() ) {
+			if (reg_pc==util_daad_get_pc_parser()) esta_en_parser=1;
+		}
+
+		if (util_paws_detect()){
+			if (reg_pc==util_paws_get_pc_parser()) esta_en_parser=1;
+		}
+
+
+		if ( (debug_stepping_daad.v || debug_stepping_daad_runto_parse.v) && esta_en_parser ) {
 
 		}
 		else menu_generic_message_format("Breakpoint","Breakpoint fired: %s",catch_breakpoint_message);
@@ -12782,7 +12794,7 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 
 				char maxima_vista='7';
 
-				if (util_daad_detect()) maxima_vista='8';
+				if (util_daad_detect() || util_paws_detect() ) maxima_vista='8';
 
                                 //sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
 								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~%c:View",
@@ -12820,7 +12832,7 @@ void menu_debug_get_legend(int linea,char *s)
 							// chReg Brkp. Toggle Runto Watch		
 
 				char step_condact_buffer[32];
-				if (!util_daad_is_in_parser()) {
+				if (!util_daad_is_in_parser() && !util_paws_is_in_parser()) {
 					strcpy(step_condact_buffer,"~~E~~n:runTo Condact");
 				}
 				else {
@@ -13394,7 +13406,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	//menu_debug_registers_current_view
 	//Si estabamos antes en vista 8, pero ya no hay un programa daad en memoria, resetear a vista 1
-	if (menu_debug_registers_current_view==8 && !util_daad_detect()) {
+	if (menu_debug_registers_current_view==8 && !util_daad_detect() && !util_paws_detect() ) {
 		menu_debug_registers_current_view=1;
 	}
 

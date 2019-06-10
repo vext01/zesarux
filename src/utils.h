@@ -795,6 +795,7 @@ extern z80_int util_daad_get_pc_parser(void);
 #define MEMORY_ZONE_NUM_TIMEX_DOCK 19
 
 #define MEMORY_ZONE_NUM_DAAD_CONDACTS 20
+#define MEMORY_ZONE_NUM_PAWS_CONDACTS 21
 
 #define DAAD_PARSER_BREAKPOINT_PC_SPECTRUM 0x617c
 

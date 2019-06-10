@@ -5587,7 +5587,10 @@ void debug_get_daad_breakpoint_string(char *texto)
 //Retorna cadena de breakpoint de step to step para pararse en el parser de condacts, y siempre que condact no sea FFH
 void debug_get_daad_step_breakpoint_string(char *texto)
 {
-	z80_int breakpoint_dir=util_daad_get_pc_parser();
+	z80_int breakpoint_dir;
+
+	if (util_daad_detect() ) breakpoint_dir=util_daad_get_pc_parser();
+	if (util_paws_detect() ) breakpoint_dir=util_paws_get_pc_parser();	
 
 	sprintf (texto,"PC=%XH AND (BC)/FFH",breakpoint_dir);
 }
@@ -5596,7 +5599,10 @@ void debug_get_daad_step_breakpoint_string(char *texto)
 //Retorna cadena de breakpoint cuando va a leer condact PARSE
 void debug_get_daad_runto_parse_string(char *texto)
 {
-	z80_int breakpoint_dir=util_daad_get_pc_parser();
+	z80_int breakpoint_dir;
+
+	if (util_daad_detect() ) breakpoint_dir=util_daad_get_pc_parser();
+	if (util_paws_detect() ) breakpoint_dir=util_paws_get_pc_parser();
 
 	sprintf (texto,"PC=%XH AND (BC)=73",breakpoint_dir);
 }

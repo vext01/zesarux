@@ -10035,6 +10035,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
                 }                
 
         break;
+
+        case MEMORY_ZONE_NUM_PAWS_CONDACTS:
+                if (MACHINE_IS_SPECTRUM) {
+                        if (util_paws_detect()) size=65536;
+                }
+
+
+        break;        
 	
 
   }
@@ -10311,6 +10319,23 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 
         break;
 	    
+
+        case MEMORY_ZONE_NUM_PAWS_CONDACTS:
+                if (MACHINE_IS_SPECTRUM) {
+                        if (util_paws_detect()) {
+                                //La direccion está en la zona de memoria ram (zona 0)
+                                //No tiene sentido evaluar entre 0-16383. En ese caso sera igual que 16384-32767
+                                if (address<16384) address +=16384;
+                                z80_byte *start=machine_get_memory_zone_pointer(0,address-16384); 
+                                //Nota: la direccion dentro de la zona de memoria sera la misma que la direccion real en memoria mapeada
+                                //restamos 16384 pues la zona 0 de ram empieza a contar desde ahi
+                                p=start;
+                        }
+                }
+
+          
+
+        break;
 
 
   }
@@ -10619,6 +10644,15 @@ void machine_get_memory_zone_name(int zone, char *name)
                 if (MACHINE_IS_CPC) {
                         strcpy(name,"Daad Condacts");
                 }                
+
+        break;    
+
+
+        case MEMORY_ZONE_NUM_PAWS_CONDACTS:
+                //if (MACHINE_IS_SPECTRUM) {
+                        strcpy(name,"Paws Condacts");
+                //}
+      
 
         break;    
 
@@ -13234,6 +13268,17 @@ END;
 
 }
 
+int util_paws_detect(void)
+{
+
+  if (!MACHINE_IS_SPECTRUM) return 0;
+
+  z80_int mainattr;
+  int quillversion=util_unpaws_detect_version(&mainattr);
+  if (quillversion<0) return 0;
+  else return 1;
+}
+
 z80_int readtokenised(z80_int puntero)
 {
    z80_byte low, high;
@@ -14018,6 +14063,18 @@ z80_int util_daad_get_pc_parser(void)
 {
         if (MACHINE_IS_CPC) return DAAD_PARSER_BREAKPOINT_PC_CPC;
         else return DAAD_PARSER_BREAKPOINT_PC_SPECTRUM;
+}
+
+z80_int util_paws_get_pc_parser(void)
+{
+        return 0x76a6;
+}
+
+int util_paws_is_in_parser(void)
+{
+        if (reg_pc==util_paws_get_pc_parser() ) return 1;
+        
+        else return 0;
 }
 
 int util_daad_is_in_parser(void)
