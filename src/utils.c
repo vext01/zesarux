@@ -12900,6 +12900,49 @@ void util_clear_final_spaces(char *orig,char *destination)
 }
 
 
+z80_byte daad_peek(z80_int dir)
+{
+
+        if (MACHINE_IS_CPC) {
+                z80_byte *start=cpc_ram_mem_table[0];
+                z80_byte *p=&start[dir];
+                return *p;
+        }
+
+
+        //Spectrum
+        else {
+                return peek_byte_no_time(dir);
+        }
+}
+
+
+z80_int daad_peek_word(z80_int dir)
+{
+
+        z80_byte low,high;
+        low=daad_peek(dir);
+        dir++;
+        high=daad_peek(dir);
+
+        return value_8_to_16(high,low);
+}
+
+void daad_poke(z80_int dir,z80_byte value)
+{
+
+        if (MACHINE_IS_CPC) {
+                z80_byte *start=cpc_ram_mem_table[0];
+                z80_byte *p=&start[dir];
+                *p=value;
+        }
+
+        //Spectrum
+        else {
+                poke_byte_no_time(dir,value);
+        }
+}
+
 //Usado en unpaws, ungac etc para agregar letra de hotkey automaticamente
 #define TOTAL_UNPAWSGAC_HOTKEYS 26
 int util_unpawsgac_hotkeys[TOTAL_UNPAWSGAC_HOTKEYS]; //De la A a la Z
@@ -12947,9 +12990,100 @@ char *quillversions_strings[]={
         "Quill.C"
 };
 
-int util_unpaws_detect_version(z80_int *p_mainattr)
+
+void util_unpaws_get_maintop_mainattr(z80_int *final_maintop,z80_int *final_mainattr,int *final_quillversion)
 {
         int quillversion=0;
+
+        z80_int MainTop=daad_peek_word(65533);
+        z80_int MainAttr=MainTop+311;
+
+        if   (MainTop<=(65535-321) 
+   && (MainTop>=(16384-311))
+   && (daad_peek(MainAttr) == 16)
+   && (daad_peek(MainAttr+2) == 17)
+   && (daad_peek(MainAttr+4) == 18)
+   && (daad_peek(MainAttr+6) == 19)
+   && (daad_peek(MainAttr+8) == 20)
+   && (daad_peek(MainAttr+10) == 21) 
+        ) {
+                //debug_printf (VERBOSE_DEBUG,"PAW signature found");
+        }
+
+  else {
+       MainTop=26931;
+      MainAttr=MainTop+977;
+      if  (  (daad_peek(MainAttr) == 16)
+        && (daad_peek(MainAttr+2) == 17)
+        && (daad_peek(MainAttr+4) == 18)
+        && (daad_peek(MainAttr+6) == 19)
+        && (daad_peek(MainAttr+8) == 20)
+        && (daad_peek(MainAttr+10) == 21)
+      ) {
+          //debug_printf (VERBOSE_DEBUG,"Quill.A signature found");
+          quillversion=1;
+      }
+
+      else {
+              MainTop=27356;
+           MainAttr=MainTop+169;
+           if (    (daad_peek(MainAttr) == 16)
+             && (daad_peek(MainAttr+2) == 17)
+             && (daad_peek(MainAttr+4) == 18)
+             && (daad_peek(MainAttr+6) == 19)
+             && (daad_peek(MainAttr+8) == 20)
+             && (daad_peek(MainAttr+10) == 21)
+           ) {
+               //debug_printf (VERBOSE_DEBUG,"Quill.C signature found");
+               quillversion=3;
+           }
+
+           else {
+                   quillversion=-1;
+           }
+     
+      }
+  }
+
+  *final_maintop=MainTop;
+  *final_mainattr=MainAttr;
+  *final_quillversion=quillversion;
+
+}
+
+z80_int util_unpaws_get_maintop(void)
+{
+        z80_int final_maintop;
+        z80_int final_mainattr;
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&final_maintop,&final_mainattr,&quillversion);
+
+        return final_maintop;
+}
+
+z80_int util_unpaws_get_mainattr(void)
+{
+        z80_int final_maintop;
+        z80_int final_mainattr;
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&final_maintop,&final_mainattr,&quillversion);
+
+        return final_mainattr;
+}
+
+
+int util_unpaws_detect_version(z80_int *p_mainattr)
+{
+
+        int quillversion;
+        z80_int MainTop;
+        z80_int MainAttr;        
+
+        util_unpaws_get_maintop_mainattr(&MainTop,&MainAttr,&quillversion);
+
+        /*int quillversion=0;
 
         z80_int MainTop=peek_word_no_time(65533);
         z80_int MainAttr=MainTop+311;
@@ -13000,6 +13134,7 @@ int util_unpaws_detect_version(z80_int *p_mainattr)
      
       }
   }
+  */
 
   if (quillversion>=0) debug_printf (VERBOSE_DEBUG,"%s signature found",quillversions_strings[quillversion]);
 
@@ -13661,36 +13796,7 @@ int get_cpu_frequency(void)
 }
 
 
-z80_byte daad_peek(z80_int dir)
-{
 
-        if (MACHINE_IS_CPC) {
-                z80_byte *start=cpc_ram_mem_table[0];
-                z80_byte *p=&start[dir];
-                return *p;
-        }
-
-
-        //Spectrum
-        else {
-                return peek_byte_no_time(dir);
-        }
-}
-
-void daad_poke(z80_int dir,z80_byte value)
-{
-
-        if (MACHINE_IS_CPC) {
-                z80_byte *start=cpc_ram_mem_table[0];
-                z80_byte *p=&start[dir];
-                *p=value;
-        }
-
-        //Spectrum
-        else {
-                poke_byte_no_time(dir,value);
-        }
-}
 
 z80_int util_daad_get_start_pointers(void)
 {
