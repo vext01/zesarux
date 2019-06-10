@@ -5659,11 +5659,13 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-				sprintf (buffer_linea,"%sinvert:%s Edi%st:%s C%shar:%s",
+				sprintf (buffer_linea,"[%c] %sinvert [%c] Edi%st C%shar:%s",
+					(valor_xor==0 ? ' ' : 'X'), 
 					string_atajos,
-					(valor_xor==0 ? "No" : "Yes"), 
+					
+					(menu_hexdump_edit_mode==0 ? ' ' : 'X' ),
 					string_atajos,
-					(menu_hexdump_edit_mode==0 ? "No" : "Yes" ),
+					
 					string_atajos,
 					buffer_char_type
 					);
