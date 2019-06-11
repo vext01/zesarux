@@ -12207,9 +12207,29 @@ void menu_watches_daad(void)
 
 
 		string_line[0]=0;
-		menu_ventana_scanf("Index to watch?",string_line,4);
+		char ventana_titulo[33];
+
+		int limite_max=256;
+
+		//quill tiene 33 flags y 210 objetos
+		//Tabla Para quill de 33 flags y 210 objetos
+		if (util_undaad_unpaws_is_quill() ) {
+			if (tipo==0) {
+				//flags
+				limite_max=33;
+			}
+			else {
+				//objetos
+				limite_max=210;
+			}
+		}		
+
+		sprintf (ventana_titulo,"Index to watch? (max %d)",limite_max-1);
+		menu_ventana_scanf(ventana_titulo,string_line,4);
 		int indice=parse_string_to_number(string_line);
-		if (indice<0 || indice>255) return;
+	
+
+		if (indice<0 || indice>=limite_max) return;
 
 
 		debug_daad_flag_object[linea].tipo=tipo;
