@@ -13049,7 +13049,7 @@ void util_unpaws_get_maintop_mainattr(z80_int *final_maintop,z80_int *final_main
   *final_mainattr=MainAttr;
   *final_quillversion=quillversion;
 
-  printf ("quill version: %d\n",quillversion);
+  //printf ("quill version: %d\n",quillversion);
 
 }
 
@@ -14050,7 +14050,11 @@ z80_int util_daad_get_start_flags(void)
 
         else {
                 //Paws
-                return 0x6d3f;
+                z80_int dir=0x85c0;
+
+                //Creo que todas las de english cambia esto:
+                if (reg_ix==0x85b0) dir=0x85b0;
+                return dir;
         }
 
         
@@ -14384,7 +14388,7 @@ z80_int util_paws_get_pc_parser(void)
 
         z80_int dir=0x76a6; //por defecto
 
-        if (quillversion==0) {
+        
                 /*
                 LD A,(BC)
                 CP FF
@@ -14399,7 +14403,16 @@ z80_int util_paws_get_pc_parser(void)
                 ) {
                         dir=dir2;
                 }
-        }
+
+                z80_int dir3=0x76aa;
+                if (
+                        daad_peek(dir3)==0x0a &&
+                        daad_peek(dir3+1)==0xfe &&
+                        daad_peek(dir3+2)==0xff 
+                ) {
+                        dir=dir3;
+                }                
+    
 
         return dir;
 }
