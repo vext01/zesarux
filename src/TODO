@@ -25,6 +25,8 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *función evaluar desde tokens
 *espacio en bytes de cada token fijo
 
+-ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
+la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
 -ZX Desktop:
 
@@ -48,6 +50,20 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -Fbdev debe permitir ZX Desktop?
 -sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 -acabar de definir settings de ZX Desktop y que se guarden/tengan configuración
+
+
+-replica entre dos ZEsarUX
+
+*1 master y 1 slave
+*ambos envian actualizaciones de pulsaciones/liberaciones de teclas, mismos valores que util_set_reset_key
+*solo el master envia snapshots
+*1 nested core que gestione el envio y/o recepcion de actualizaciones de teclas, que a su vez llame a un thread por debajo que haga la conexión UDP
+*Como evitar problemas de acceso simultaneo a misma variable de thread? Por ejemplo longitud en la cola de envio/recepcion? 
+Semáforos? Todos sistemas operativos lo permitiran? Windows inclusive?
+*O quizá hacerlo por ZRCP?
+*comando que envie pulsaciones teclas, como util_set_reset_key
+*comando para enviar snapshot, pasando bytes del snapshot por comando. Quizá en base64? O en hexa?
+
 
 
 -zxvision:
