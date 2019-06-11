@@ -12,7 +12,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -unpaws , unquill para cpc
 
 -unpaws con quill:
-*direccion flags y objetos no va->parece que flags si (obtiene verbo actual pero no nombre actual)
 *compression tokens?
 
 -unpaws: 
