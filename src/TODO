@@ -12,11 +12,11 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -unpaws , unquill para cpc
 
 -unpaws con quill:
-*direccion flags y objetos no va->parece que flags si (obtiene palabras y verbos actuales)
+*direccion flags y objetos no va->parece que flags si (obtiene verbo actual pero no nombre actual)
 *compression tokens?
 
 -unpaws: 
-*no parece que funcione siempre el runtoparse
+*no parece que funcione siempre el runtoparse->no existe "parse" ni en paws ni quill, solo se usa en psi
 *compression tokens no siempre estan hasta el 255
 
 -debug cpu: dado que guarda tamaño ventana al salir, si salimos desde ventana mas pequeña (por ejemplo vista 7 u 8),
