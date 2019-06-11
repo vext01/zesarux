@@ -14164,22 +14164,45 @@ z80_int util_daad_get_start_user_messages(void)
         return dir;
 }
 
+//Comun para daad y paws
 z80_int util_daad_get_start_sys_messages(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+18;
+        z80_int puntero;
 
-        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+18;
+        dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));        
+        }
+        else {
+                //Paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffSys;
+        }
 
         return dir;
 }
 
+
+//Comun para daad y paws
 z80_int util_daad_get_start_compressed_messages(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+8;
+        z80_int puntero;
 
-        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+8;
+        dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));        
+        }
+        else {
+                //paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffAbreviations;
+        }
 
         return dir;
 }
@@ -14227,12 +14250,23 @@ z80_int util_daad_get_num_user_messages(void)
         return dir;
 }
 
+//Comun para daad y paws
 z80_int util_daad_get_num_sys_messages(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+6;
+        z80_int puntero;
 
-        z80_int dir=daad_peek(puntero);
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+6;
+        dir=daad_peek(puntero);        
+        }
+        else {
+                //paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_NumSys;
+        }
 
         return dir;
 }
@@ -14346,6 +14380,7 @@ void util_daad_get_sys_message(z80_byte index,char *texto)
 {
 
         z80_int table_dir=util_daad_get_start_sys_messages();
+        
         util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_sys_messages());
 }
 
