@@ -13080,6 +13080,7 @@ z80_int util_unpaws_OffMsg;
 z80_int util_unpaws_OffSys;
 z80_byte util_unpaws_NumSys;
 z80_byte util_unpaws_NumLoc;
+z80_int util_unpaws_OffLoc;
 z80_int util_unpaws_OffObj;
 z80_byte util_unpaws_NumObj;
 z80_byte util_unpaws_NumPro;
@@ -13107,6 +13108,9 @@ void util_unpaws_init_parameters(void)
 
 
 
+
+
+
 //(* Global data *)
  if (quillversion==0) {
    util_unpaws_NumMsg=daad_peek(maintop+326);
@@ -13114,6 +13118,7 @@ void util_unpaws_init_parameters(void)
    util_unpaws_OffSys=daad_peek_word(65505);
    util_unpaws_NumSys=daad_peek(maintop+327);
    util_unpaws_NumLoc=daad_peek(maintop+325);
+   util_unpaws_OffLoc=daad_peek_word(65501);
    util_unpaws_OffObj = daad_peek_word(65499);
    util_unpaws_NumObj = daad_peek(maintop+324);
    util_unpaws_NumPro = daad_peek(maintop+328) ;
@@ -13134,12 +13139,14 @@ void util_unpaws_init_parameters(void)
     util_unpaws_OffSys=maintop+168;
     util_unpaws_NumSys=32;
     util_unpaws_OffMsg=daad_peek_word(mainattr+25);
+    util_unpaws_OffLoc=daad_peek_word(mainattr+23);
     }
    else
    {
     util_unpaws_OffSys=daad_peek_word(util_unpaws_tOffs+15);
     util_unpaws_NumSys=daad_peek(util_unpaws_tOffs+4);
     util_unpaws_OffMsg=daad_peek_word(mainattr+26);
+    util_unpaws_OffLoc=daad_peek_word(mainattr+24);
    }
 
    util_unpaws_NumLoc=daad_peek(util_unpaws_tOffs+2);
@@ -14132,34 +14139,69 @@ caracteres con acentos etc códigos por debajo del 32
 */
 
 
+//Comun para daad y paws
 z80_int util_daad_get_start_objects_names(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+12;
+        z80_int puntero;
 
-        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+12;
+        dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));        
+        }
+        else {
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffObj;
+                printf ("Obj messages: %XH\n",dir);
+        }
 
         return dir;
 }
 
+//Comun para daad y paws
 z80_int util_daad_get_start_locat_messages(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+14;
+        z80_int puntero;
 
-        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+14;
+        dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        }
+        else {
+                //Paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffLoc;
+        }
+
 
         return dir;
 }
 
 
-
+//Comun para daad y paws
 z80_int util_daad_get_start_user_messages(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+16;
+        z80_int puntero;
 
-        z80_int dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        z80_int dir;
+
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+16;
+        dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        }
+        else {
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffMsg;
+                printf ("user messages: %XH\n",dir);
+        }
+
 
         return dir;
 }
@@ -14180,6 +14222,7 @@ z80_int util_daad_get_start_sys_messages(void)
                 //Paws
                 util_unpaws_init_parameters();
                 dir=util_unpaws_OffSys;
+                printf ("sys messages: %XH\n",dir);
         }
 
         return dir;
@@ -14207,22 +14250,44 @@ z80_int util_daad_get_start_compressed_messages(void)
         return dir;
 }
 
+//Comun para daad y paws
 z80_int util_daad_get_num_objects_description(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+3;
+        z80_int puntero;
 
-        z80_int dir=daad_peek(puntero);
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+3;
+        dir=daad_peek(puntero);        
+        }
+        else {
+                //paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_NumObj;
+        }
 
         return dir;
 }
 
+//Comun para daad y paws
 z80_int util_daad_get_num_locat_messages(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+4;
+        z80_int puntero;
 
-        z80_int dir=daad_peek(puntero);
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        puntero=util_daad_get_start_pointers()+4;
+        dir=daad_peek(puntero);        
+        }
+        else {
+                //Paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_NumLoc;
+        }
 
         return dir;
 }
@@ -14306,6 +14371,13 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
                 return;
         }
 
+        int es_daad=util_daad_detect();
+
+        z80_byte caracter_fin;
+
+        if (es_daad) caracter_fin=10;
+        else caracter_fin=31;
+
         z80_int offset_pointer=table_dir+index*2;
 
         z80_int dir=value_8_to_16(daad_peek(offset_pointer+1),daad_peek(offset_pointer));
@@ -14315,9 +14387,9 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
 
         z80_byte caracter=0;
 
-        while (destino<255 && caracter!=10) {
+        while (destino<255 && caracter!=caracter_fin) {
                 caracter=daad_peek(dir++) ^255;
-                if (caracter!=10) {
+                if (caracter!=caracter_fin) {
 
                         caracter=chardetect_convert_daad_accents(caracter);
 
@@ -14358,20 +14430,13 @@ void util_daad_get_object_description(z80_byte index,char *texto)
 }
 
 
-//Comun para daad y paws
 void util_daad_get_user_message(z80_byte index,char *texto)
 {
 
         z80_int table_dir;
 
-        if (util_daad_detect() ) {
-                table_dir=util_daad_get_start_user_messages();
-        }
-        else {
-                //paws
-                util_unpaws_init_parameters();
-                table_dir=util_unpaws_OffMsg;
-        }
+        table_dir=util_daad_get_start_user_messages();
+
         util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_user_messages() );
 }
 
