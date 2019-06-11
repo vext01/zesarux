@@ -14245,6 +14245,7 @@ z80_int util_daad_get_start_compressed_messages(void)
                 //paws
                 util_unpaws_init_parameters();
                 dir=util_unpaws_OffAbreviations;
+                printf ("compressed: %XH\n",dir);
         }
 
         return dir;
@@ -14374,9 +14375,16 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
         int es_daad=util_daad_detect();
 
         z80_byte caracter_fin;
+        z80_byte limite_caracter_comprimido;
 
-        if (es_daad) caracter_fin=10;
-        else caracter_fin=31;
+        if (es_daad) {
+                caracter_fin=10;
+                limite_caracter_comprimido=127;
+        }
+        else {
+                caracter_fin=31;
+                limite_caracter_comprimido=164;
+        }
 
         z80_int offset_pointer=table_dir+index*2;
 
@@ -14394,11 +14402,12 @@ void util_daad_get_message_table_lookup(z80_byte index,z80_int table_dir,char *t
                         caracter=chardetect_convert_daad_accents(caracter);
 
                         if (caracter<32 || caracter>127) {
-                                if (caracter>127) {
+                                if (caracter>limite_caracter_comprimido) {
                                         //Meter token
                                         char buffer_temp[256];
                                         //printf ("token %d\n",caracter & 127);
-                                        util_daad_get_compressed_message(caracter & 127,buffer_temp);
+                                        if (es_daad) util_daad_get_compressed_message(caracter & 127,buffer_temp);
+                                        else util_daad_get_compressed_message(caracter-164,buffer_temp);
                                         unsigned int i;
                                         for (i=0;i<strlen(buffer_temp) && destino<255;i++) {
                                                 texto[destino++]=buffer_temp[i];
@@ -14496,9 +14505,10 @@ void util_daad_get_token_message(z80_byte index,z80_int table_dir,char *texto)
 
 void util_daad_get_compressed_message(z80_byte index,char *texto)
 {
-//fseek ($file, $pos_tokens + 1);  // It seems actual token table starts one byte after the one the header points to
+
+//fseek ($file, $pos_tokens + 1);  // It seems actual token table starts one byte after the one the header points to (daad)
         z80_int table_dir=util_daad_get_start_compressed_messages();
-        table_dir++;
+        if (util_daad_detect()) table_dir++;
         util_daad_get_token_message(index,table_dir,texto);
 }
 
