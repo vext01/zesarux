@@ -672,24 +672,24 @@ primer parámetro tiene indirección, cosa que en lo que a ti afecta, solo te su
 //Si parametros son vocabularios
 	//{1,"NOUN2  "}, //  69 $45
 	if (op==69) {
-		util_daad_locate_word(arg_vocabulary,2,buffer_vocabulary);
+		util_paws_locate_word(arg_vocabulary,2,buffer_vocabulary);
 	} 		
 
   //{1,"ADJECT1"}, //  16 $10
   //{1,"ADJECT2"}, //  70 $46
   	if (op==16 || op==70) {
-		util_daad_locate_word(arg_vocabulary,3,buffer_vocabulary);
+		util_paws_locate_word(arg_vocabulary,3,buffer_vocabulary);
 	} 	
 
 
   	//{1,"ADVERB "}, //  17 $11
     if (op==17) {
-		util_daad_locate_word(arg_vocabulary,1,buffer_vocabulary);
+		util_paws_locate_word(arg_vocabulary,1,buffer_vocabulary);
 	} 
 
     //{1,"PREP   "}, //  68 $44	
 	if (op==68) {
-		util_daad_locate_word(arg_vocabulary,4,buffer_vocabulary);
+		util_paws_locate_word(arg_vocabulary,4,buffer_vocabulary);
 	} 	
 
   int vocabulario_encontrado=0;

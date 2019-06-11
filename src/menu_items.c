@@ -11579,8 +11579,8 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 					strcpy(buffer_verbo,"_");
 					strcpy(buffer_nombre,"_");
 
-					if (verbo!=255) util_daad_locate_word(verbo,0,buffer_verbo);
-					if (nombre!=255) util_daad_locate_word(nombre,2,buffer_nombre);
+					if (verbo!=255) util_daad_paws_locate_word(verbo,0,buffer_verbo);
+					if (nombre!=255) util_daad_paws_locate_word(nombre,2,buffer_nombre);
 
 					sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
 
@@ -13266,8 +13266,9 @@ void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 
 	int resultado=0;
 
-	if (valor_opcion==5) {
-			util_daad_dump_vocabulary(1,texto,MAX_TEXTO_GENERIC_MESSAGE);
+	if (valor_opcion==5) { 
+			if (util_daad_detect() ) util_daad_dump_vocabulary(1,texto,MAX_TEXTO_GENERIC_MESSAGE);
+			else util_paws_dump_vocabulary_tostring(1,texto,MAX_TEXTO_GENERIC_MESSAGE);
 	}
 
 	else {

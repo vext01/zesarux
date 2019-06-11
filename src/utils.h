@@ -755,6 +755,9 @@ extern int util_daad_dump_vocabulary(int tipo,char *texto,int max_string);
 extern z80_byte util_daad_get_flag_value(z80_byte index);
 
 extern void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino);
+extern void util_daad_paws_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino);
+extern int util_paws_dump_vocabulary_tostring(int tipo,char *texto,int max_string);
+extern void util_paws_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino);
 
 extern z80_byte util_daad_get_object_value(z80_byte index);
 

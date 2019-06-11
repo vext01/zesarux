@@ -13947,19 +13947,26 @@ int util_daad_detect(void)
 }
 
 
-//Comun para daad y paws
 z80_int util_daad_get_start_vocabulary(void)
 {
         z80_int dir;
 
-        if (util_daad_detect()) {
+
         dir=value_8_to_16(daad_peek(util_daad_get_start_pointers()+0x17),daad_peek(util_daad_get_start_pointers()+0x16));
-        }
-        else {
-                //paws
-                util_unpaws_init_parameters();
-                dir=util_unpaws_OffVoc;
-        }
+       
+
+
+        return dir;
+}
+
+z80_int util_paws_get_start_vocabulary(void)
+{
+        z80_int dir;
+
+        
+        util_unpaws_init_parameters();
+        dir=util_unpaws_OffVoc;
+        
 
         return dir;
 }
@@ -14055,6 +14062,124 @@ int util_daad_dump_vocabulary(int tipo,char *texto,int max_string)
 
        return palabras;
 }
+
+
+//Volcar vocabulario para el extractor de palabras (teclado text adventure) o como un string con saltos de linea
+//tipo=0: para text adventure. 1:para string 
+int util_paws_dump_vocabulary_tostring(int tipo,char *texto,int max_string)
+{
+
+        debug_printf (VERBOSE_DEBUG,"Dumping Daad vocabulary");
+
+        util_clear_text_adventure_kdb();
+
+        z80_int puntero=util_paws_get_start_vocabulary();
+
+        //Leer entradas de 7 bytes
+        /*
+        5 para 5 letras de la palabra (puede incluir espacios de padding al final si es más corta), con xor 255
+        1 byte para el número de palabra 
+        1 byte para el tipo de palabra 
+
+        Quill es de 5 bytes, 4 para caracteres de palabra y 1 numero
+        */
+
+       //Rellenamos con espacio para que se vea centrado
+       char *word_types[]={"verb       ", "adverb     ", "noun       ", "adjective  ", "preposition","conjugation", "pronoun    "};
+       //char *word_types[]={"verb", "adverb", "noun", "adjective", "preposition","conjugation", "pronoun"};
+
+
+
+        z80_int maintop;
+        z80_int mainattr;
+
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);
+
+        int longitud_total_palabra;
+        int longitud_palabra;
+
+        if (quillversion==0) {
+                longitud_total_palabra=7;
+                longitud_palabra=5;
+        }
+
+        else {
+                longitud_total_palabra=5;
+                longitud_palabra=4;
+        }
+
+
+       int palabras=0;
+
+       char buffer_palabra[6];
+
+       if (tipo) texto[0]=0;
+
+       int salir=0;
+
+       do {
+               //Copiar palabra a buffer
+               int i;
+               z80_byte caracter;
+               z80_byte tipo_palabra;
+               z80_byte num_palabra;
+
+                if (daad_peek(puntero)==0) salir=1;
+
+                else {
+
+               for (i=0;i<longitud_palabra;i++) {
+                       caracter=daad_peek(puntero+i) ^255;
+                       //Si hay espacio, fin
+                       if (caracter==32) break;
+
+                       caracter=chardetect_convert_daad_accents(caracter);
+
+                       //Pasar a mayusculas por si acaso
+                       caracter=letra_mayuscula(caracter);
+
+                       if (caracter<32 || caracter>127) {
+                               //printf ("%d\n",caracter);
+                               //21=á
+                               caracter='?';
+                       }
+                       buffer_palabra[i]=caracter;
+               }
+               buffer_palabra[i]=0;
+
+               num_palabra=daad_peek(puntero+longitud_palabra);
+
+               if (quillversion==0) tipo_palabra=daad_peek(puntero+6);
+               else tipo_palabra=0;
+
+               //if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
+               //else  {
+                       debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
+
+                       if (tipo==0) {
+                           util_unpawsgac_add_word_kb(buffer_palabra);
+                       }
+                       else {
+		        char buffer_linea[32];
+		        sprintf(buffer_linea,"%03d %s %s\n",num_palabra,(tipo_palabra<=6 ? word_types[tipo_palabra] : "unknown"),
+                        buffer_palabra);
+
+		        //Y concatenar a final
+		        salir=util_concat_string(texto,buffer_linea,max_string);
+                       }
+                       palabras++;
+               //}
+
+               puntero+=longitud_total_palabra;
+                }
+
+       } while (!salir);
+
+       return palabras;
+}
+
 
 //Dice si aventura es spanish. Si no, english
 int util_daad_is_spanish(void)
@@ -14192,8 +14317,113 @@ void util_daad_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_
 
        } while (!salir);
      
+} 
+
+void util_paws_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino)
+{
+        z80_int puntero=util_paws_get_start_vocabulary();
+
+        //Leer entradas de 7 bytes
+        /*
+        5 para 5 letras de la palabra (puede incluir espacios de padding al final si es más corta), con xor 255
+        1 byte para el número de palabra 
+        1 byte para el tipo de palabra. Si 255, cualquiera. Si no, de 0 hasta: ("verb", "adverb", "noun", "adjective", "preposition","conjugation", "pronoun");
+
+        En quill, entradas de 5 bytes
+        4 letras para palabra
+        1 byte para numero de palabra
+        */
+
+        z80_int maintop;
+        z80_int mainattr;
+
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);
+
+        int longitud_total_palabra;
+        int longitud_palabra;
+
+        if (quillversion==0) {
+                longitud_total_palabra=7;
+                longitud_palabra=5;
+        }
+        
+        else {
+                longitud_total_palabra=5;
+                longitud_palabra=4;
+        }
+
+       int palabras=0;
+
+       char buffer_palabra[6];
+
+       int salir=0;
+
+        //Por defecto asumimos no encontrado
+        strcpy(texto_destino,"?");
+
+       do {
+               //Copiar palabra a buffer
+               int i;
+               z80_byte caracter;
+
+                if (daad_peek(puntero)==0) salir=1;
+                else {
+
+               for (i=0;i<longitud_palabra;i++) {
+                       caracter=daad_peek(puntero+i) ^255;
+                       //Si hay espacio, fin
+                       //if (caracter==32) break;
+
+
+                       caracter=chardetect_convert_daad_accents(caracter);
+
+                       //Pasar a mayusculas por si acaso
+                       caracter=letra_mayuscula(caracter);
+
+
+
+                       if (caracter<32 || caracter>127) caracter='?';
+                       buffer_palabra[i]=caracter;
+               }
+               buffer_palabra[i]=0;
+
+               //if (buffer_palabra[0]<32 || buffer_palabra[0]>127) {
+                       //No encontrado
+                //       return;
+               //}
+               //else  {
+                       z80_byte numero_palabra=daad_peek(puntero+longitud_palabra);
+                       z80_byte tipo_palabra;
+
+                       if (quillversion==0) tipo_palabra=daad_peek(puntero+6);
+                       else tipo_palabra=0;
+                       //debug_printf (VERBOSE_DEBUG,"Adding word: %s",buffer_palabra);
+                       //util_unpawsgac_add_word_kb(buffer_palabra);
+                       //palabras++;
+                       if (numero_palabra==numero_palabra_buscar && (tipo_palabra==tipo_palabra_buscar || tipo_palabra==255)) {
+                               strcpy(texto_destino,buffer_palabra);
+                               return;
+                       }
+               //}
+
+               puntero+=longitud_total_palabra;
+               palabras++;
+
+               //Agregar un limite por si acaso
+               if (palabras==65535) salir=1;
+                }
+
+       } while (!salir);
+     
 }
 
+void util_daad_paws_locate_word(z80_byte numero_palabra_buscar,z80_byte tipo_palabra_buscar,char *texto_destino)
+{
+        if (util_daad_detect() ) util_daad_locate_word(numero_palabra_buscar,tipo_palabra_buscar,texto_destino);
+        else util_paws_locate_word(numero_palabra_buscar,tipo_palabra_buscar,texto_destino);
+}
 
 //Listado de objetos daad
 /*
@@ -14722,25 +14952,25 @@ void util_daad_get_condact_message(char *buffer)
 
 	//{1,"NOUN2  "}, //  69 $45
 	if (opcode_daad==69) {
-		util_daad_locate_word(param_message,2,buffer);
+		util_daad_paws_locate_word(param_message,2,buffer);
 	} 		
 
   //{1,"ADJECT1"}, //  16 $10
   //{1,"ADJECT2"}, //  70 $46
   	if (opcode_daad==16 || opcode_daad==70) {
-		util_daad_locate_word(param_message,3,buffer);
+		util_daad_paws_locate_word(param_message,3,buffer);
 	} 	
 
 
 
   	//{1,"ADVERB "}, //  17 $11
     if (opcode_daad==17) {
-		util_daad_locate_word(param_message,1,buffer);
+		util_daad_paws_locate_word(param_message,1,buffer);
 	} 
 
     //{1,"PREP   "}, //  68 $44	
 	if (opcode_daad==68) {
-		util_daad_locate_word(param_message,4,buffer);
+		util_daad_paws_locate_word(param_message,4,buffer);
 	} 	
 
 
