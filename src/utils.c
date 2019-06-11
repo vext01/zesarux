@@ -14377,6 +14377,25 @@ z80_int util_daad_get_pc_parser(void)
         else return DAAD_PARSER_BREAKPOINT_PC_SPECTRUM;
 }
 
+int util_paws_is_opcodes_parser(z80_int dir)
+{
+                        /*
+                LD A,(BC)
+                CP FF
+
+                0a fe ff
+                 */
+                
+                 if (
+                        daad_peek(dir)==0x0a &&
+                        daad_peek(dir+1)==0xfe &&
+                        daad_peek(dir+2)==0xff 
+                ) {    
+                        return 1;
+                }
+                else return 0;   
+}
+
 z80_int util_paws_get_pc_parser(void)
 {
 
@@ -14389,29 +14408,18 @@ z80_int util_paws_get_pc_parser(void)
         z80_int dir=0x76a6; //por defecto
 
         
-                /*
-                LD A,(BC)
-                CP FF
 
-                0a fe ff
-                 */
                 z80_int dir2=0x7671;
-                if (
-                        daad_peek(dir2)==0x0a &&
-                        daad_peek(dir2+1)==0xfe &&
-                        daad_peek(dir2+2)==0xff 
-                ) {
-                        dir=dir2;
-                }
+                if (util_paws_is_opcodes_parser(dir2)) dir=dir2;
+
 
                 z80_int dir3=0x76aa;
-                if (
-                        daad_peek(dir3)==0x0a &&
-                        daad_peek(dir3+1)==0xfe &&
-                        daad_peek(dir3+2)==0xff 
-                ) {
-                        dir=dir3;
-                }                
+                if (util_paws_is_opcodes_parser(dir3)) dir=dir3;
+
+                z80_int dir4=0x63fc;
+                if (util_paws_is_opcodes_parser(dir4)) dir=dir4;
+
+                              
     
 
         return dir;
