@@ -13073,6 +13073,116 @@ z80_int util_unpaws_get_mainattr(void)
         return final_mainattr;
 }
 
+//Variables que se inicializan desde util_unpaws_init_parameters
+
+z80_byte util_unpaws_NumMsg;
+z80_int util_unpaws_OffMsg;
+z80_int util_unpaws_OffSys;
+z80_byte util_unpaws_NumSys;
+z80_byte util_unpaws_NumLoc;
+z80_int util_unpaws_OffObj;
+z80_byte util_unpaws_NumObj;
+z80_byte util_unpaws_NumPro;
+z80_int util_unpaws_OffPro;
+z80_int util_unpaws_OffAbreviations;
+z80_byte util_unpaws_NumFonts;
+z80_int util_unpaws_OffFont;
+z80_int util_unpaws_OffGraph;
+z80_int util_unpaws_OffGraphAttr;
+z80_byte util_unpaws_compressed;
+z80_int util_unpaws_tOffs;
+z80_byte util_unpaws_Patched;
+z80_int util_unpaws_OffResp;
+z80_byte util_unpaws_GraphCount;
+
+void util_unpaws_init_parameters(void)
+{
+
+        z80_int maintop;
+        z80_int mainattr;
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);
+
+
+
+
+//(* Global data *)
+ if (quillversion==0) {
+   util_unpaws_NumMsg=daad_peek(maintop+326);
+   util_unpaws_OffMsg=daad_peek_word(65503);
+   util_unpaws_OffSys=daad_peek_word(65505);
+   util_unpaws_NumSys=daad_peek(maintop+327);
+   util_unpaws_NumLoc=daad_peek(maintop+325);
+   util_unpaws_OffObj = daad_peek_word(65499);
+   util_unpaws_NumObj = daad_peek(maintop+324);
+   util_unpaws_NumPro = daad_peek(maintop+328) ;
+   util_unpaws_OffPro = daad_peek_word(65497) ;
+   util_unpaws_OffAbreviations = daad_peek_word(maintop+332) ;
+   util_unpaws_NumFonts = daad_peek(maintop+329);
+   util_unpaws_OffFont = daad_peek_word(maintop+330);
+   util_unpaws_OffGraph = daad_peek_word(65521);
+   util_unpaws_OffGraphAttr=daad_peek_word(65523);
+   util_unpaws_compressed=daad_peek(util_unpaws_OffAbreviations); //=0;
+}
+ else
+ {
+   util_unpaws_tOffs=mainattr+13;
+   util_unpaws_NumMsg=daad_peek(util_unpaws_tOffs+3);
+   if (quillversion==1) 
+   {
+    util_unpaws_OffSys=maintop+168;
+    util_unpaws_NumSys=32;
+    util_unpaws_OffMsg=daad_peek_word(mainattr+25);
+    }
+   else
+   {
+    util_unpaws_OffSys=daad_peek_word(util_unpaws_tOffs+15);
+    util_unpaws_NumSys=daad_peek(util_unpaws_tOffs+4);
+    util_unpaws_OffMsg=daad_peek_word(mainattr+26);
+   }
+
+   util_unpaws_NumLoc=daad_peek(util_unpaws_tOffs+2);
+   if (quillversion==1) util_unpaws_OffObj = daad_peek_word(util_unpaws_tOffs+8);
+   else util_unpaws_OffObj = daad_peek_word(util_unpaws_tOffs+9);
+
+   util_unpaws_NumObj = daad_peek(util_unpaws_tOffs+1);
+
+   if (quillversion==1) util_unpaws_OffPro = daad_peek_word(util_unpaws_tOffs+6);
+   else util_unpaws_OffPro = daad_peek_word(util_unpaws_tOffs+7);
+
+   if (quillversion==1) util_unpaws_OffResp = daad_peek_word(util_unpaws_tOffs+4);
+   else util_unpaws_OffResp = daad_peek_word(util_unpaws_tOffs+5);
+
+   if (quillversion==1) util_unpaws_OffAbreviations = util_unpaws_tOffs+24;
+   else util_unpaws_OffAbreviations = util_unpaws_tOffs+29;
+
+   util_unpaws_compressed=(quillversion==3) && (daad_peek(util_unpaws_OffAbreviations)<128) && (daad_peek(util_unpaws_OffAbreviations+1)==128);
+
+   util_unpaws_Patched= (daad_peek_word(24791)==daad_peek_word(23606)) || (daad_peek_word(24802)==daad_peek_word(23606));
+   
+   if(!util_unpaws_Patched) {
+                         if ((daad_peek_word(23606)<16384)) util_unpaws_NumFonts=0;
+                         else util_unpaws_NumFonts=1;
+   }
+
+   else if ( (daad_peek_word(24791)<16384) && (daad_peek_word(24802)<16384) )  util_unpaws_NumFonts=0;
+   else if ( (daad_peek_word(24791)<16384) || (daad_peek_word(24802)<16384) ) util_unpaws_NumFonts=1;
+   else util_unpaws_NumFonts=2;
+
+
+   if  ((daad_peek_word(64182)<=64182) && (daad_peek_word(64188) == 64181))
+   {
+      util_unpaws_OffGraph = daad_peek_word(64184);
+      util_unpaws_OffGraphAttr=daad_peek_word(64186);
+      util_unpaws_GraphCount=daad_peek(64190);
+   }
+   else 
+    util_unpaws_OffGraph=0;
+} 
+
+
+}
 
 int util_unpaws_detect_version(z80_int *p_mainattr)
 {
@@ -13083,58 +13193,7 @@ int util_unpaws_detect_version(z80_int *p_mainattr)
 
         util_unpaws_get_maintop_mainattr(&MainTop,&MainAttr,&quillversion);
 
-        /*int quillversion=0;
-
-        z80_int MainTop=peek_word_no_time(65533);
-        z80_int MainAttr=MainTop+311;
-
-        if   (MainTop<=(65535-321) 
-   && (MainTop>=(16384-311))
-   && (peek_byte_no_time(MainAttr) == 16)
-   && (peek_byte_no_time(MainAttr+2) == 17)
-   && (peek_byte_no_time(MainAttr+4) == 18)
-   && (peek_byte_no_time(MainAttr+6) == 19)
-   && (peek_byte_no_time(MainAttr+8) == 20)
-   && (peek_byte_no_time(MainAttr+10) == 21) 
-        ) {
-                //debug_printf (VERBOSE_DEBUG,"PAW signature found");
-        }
-
-  else {
-       MainTop=26931;
-      MainAttr=MainTop+977;
-      if  (  (peek_byte_no_time(MainAttr) == 16)
-        && (peek_byte_no_time(MainAttr+2) == 17)
-        && (peek_byte_no_time(MainAttr+4) == 18)
-        && (peek_byte_no_time(MainAttr+6) == 19)
-        && (peek_byte_no_time(MainAttr+8) == 20)
-        && (peek_byte_no_time(MainAttr+10) == 21)
-      ) {
-          //debug_printf (VERBOSE_DEBUG,"Quill.A signature found");
-          quillversion=1;
-      }
-
-      else {
-              MainTop=27356;
-           MainAttr=MainTop+169;
-           if (    (peek_byte_no_time(MainAttr) == 16)
-             && (peek_byte_no_time(MainAttr+2) == 17)
-             && (peek_byte_no_time(MainAttr+4) == 18)
-             && (peek_byte_no_time(MainAttr+6) == 19)
-             && (peek_byte_no_time(MainAttr+8) == 20)
-             && (peek_byte_no_time(MainAttr+10) == 21)
-           ) {
-               //debug_printf (VERBOSE_DEBUG,"Quill.C signature found");
-               quillversion=3;
-           }
-
-           else {
-                   quillversion=-1;
-           }
-     
-      }
-  }
-  */
+    
 
   if (quillversion>=0) debug_printf (VERBOSE_DEBUG,"%s signature found",quillversions_strings[quillversion]);
 
@@ -14145,12 +14204,25 @@ z80_int util_daad_get_num_locat_messages(void)
         return dir;
 }
 
+//Comun para daad y paws
 z80_int util_daad_get_num_user_messages(void)
 {
 
-        z80_int puntero=util_daad_get_start_pointers()+5;
+        z80_int puntero;
 
-        z80_int dir=daad_peek(puntero);
+        z80_int dir;
+
+        if (util_daad_detect()) {
+                puntero=util_daad_get_start_pointers()+5;
+                dir=daad_peek(puntero);
+        }
+
+        else {
+                //paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_NumMsg;
+        }
+
 
         return dir;
 }
@@ -14252,10 +14324,20 @@ void util_daad_get_object_description(z80_byte index,char *texto)
 }
 
 
+//Comun para daad y paws
 void util_daad_get_user_message(z80_byte index,char *texto)
 {
 
-        z80_int table_dir=util_daad_get_start_user_messages();
+        z80_int table_dir;
+
+        if (util_daad_detect() ) {
+                table_dir=util_daad_get_start_user_messages();
+        }
+        else {
+                //paws
+                util_unpaws_init_parameters();
+                table_dir=util_unpaws_OffMsg;
+        }
         util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_user_messages() );
 }
 
