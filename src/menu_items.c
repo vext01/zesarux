@@ -12111,7 +12111,12 @@ void menu_debug_registers_set_title(zxvision_window *w)
 
 	//En vista daad, meter otro titulo
 	if (menu_debug_registers_current_view==8) {
-		strcpy(w->window_title,"Daad Debug");
+		if (util_daad_detect()) {
+			strcpy(w->window_title,"Daad Debug");
+		}
+		else {
+			strcpy(w->window_title,"Paws Debug");
+		}
 		return;
 	}
 

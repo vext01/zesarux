@@ -14037,11 +14037,20 @@ int util_daad_is_spanish(void)
 z80_int util_daad_get_start_flags(void)
 {
 
-        if (MACHINE_IS_CPC) return 0x23c9;
+        if (util_daad_detect()) {
 
-        else  {
-                if (util_daad_is_spanish()) return 0x7f1c;
-                else return 0x7e55;
+                if (MACHINE_IS_CPC) return 0x23c9;
+
+                else  {
+                        if (util_daad_is_spanish()) return 0x7f1c;
+                        else return 0x7e55;
+                }
+
+        }
+
+        else {
+                //Paws
+                return 0x6d3f;
         }
 
         
