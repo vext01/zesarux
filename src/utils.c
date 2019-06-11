@@ -13075,6 +13075,34 @@ z80_int util_unpaws_get_mainattr(void)
         return final_mainattr;
 }
 
+int util_unpaws_get_version(void)
+{
+        z80_int final_maintop;
+        z80_int final_mainattr;
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&final_maintop,&final_mainattr,&quillversion);
+
+        return quillversion;
+}
+
+
+char *util_unpaws_const_parser_paws="Paws";
+char *util_unpaws_const_parser_quill="Quill";
+char *util_unpaws_const_parser_daad="Daad";
+
+char *util_unpaws_get_parser_name(void)
+{
+        if (util_unpaws_get_version==0) return util_unpaws_const_parser_paws;
+        else return util_unpaws_const_parser_quill;
+}
+
+char *util_undaad_unpaws_get_parser_name(void)
+{
+        if (util_daad_detect()) return util_unpaws_const_parser_daad;
+	else return util_unpaws_get_parser_name();
+}
+
 //Variables que se inicializan desde util_unpaws_init_parameters
 
 z80_byte util_unpaws_NumMsg;

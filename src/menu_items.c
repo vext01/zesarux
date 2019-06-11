@@ -12111,12 +12111,7 @@ void menu_debug_registers_set_title(zxvision_window *w)
 
 	//En vista daad, meter otro titulo
 	if (menu_debug_registers_current_view==8) {
-		if (util_daad_detect()) {
-			strcpy(w->window_title,"Daad Debug");
-		}
-		else {
-			strcpy(w->window_title,"Paws Debug");
-		}
+		sprintf(w->window_title,"%s Debug",util_undaad_unpaws_get_parser_name() );
 		return;
 	}
 
@@ -13212,47 +13207,51 @@ void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 {
 
 	int total_messages;
-	char *window_title;
+	char window_title[64];
 	void (*funcion_mensajes) (z80_byte index,char *texto);
+
+	char titulo_parser[20];
+
+	strcpy(titulo_parser,util_undaad_unpaws_get_parser_name() );
 	//char *entry_message;
 
 	switch (valor_opcion) {
 		case 1:
 			total_messages=util_daad_get_num_user_messages();
 			funcion_mensajes=util_daad_get_user_message;
-			window_title="Daad User Messages";
+			sprintf(window_title,"%s User Messages",titulo_parser);
 			//entry_message="Message";
 		break;
 
 		case 2:
 			total_messages=util_daad_get_num_sys_messages();
 			funcion_mensajes=util_daad_get_sys_message;
-			window_title="Daad System Messages";
+			sprintf(window_title,"%s System Messages",titulo_parser);
 			//entry_message="Sys Message";
 		break;		
 
 		case 3:
 			total_messages=util_daad_get_num_locat_messages();
 			funcion_mensajes=util_daad_get_locat_message;
-			window_title="Daad Locations Messages";
+			sprintf(window_title,"%s Locations Messages",titulo_parser);
 			//entry_message="Location Message";
 		break;		
 
 		case 4:
 			total_messages=128;
 			funcion_mensajes=util_daad_get_compressed_message;
-			window_title="Daad Compression Tokens";
+			sprintf(window_title,"%s Compression Tokens",titulo_parser);
 			//entry_message="Compressed Message";
 		break;		
 
 		case 5:
-			window_title="Vocabulary";
+			strcpy(window_title,"Vocabulary");
 		break;		
 
 		default:
 			total_messages=util_daad_get_num_objects_description();
 			funcion_mensajes=util_daad_get_object_description;
-			window_title="Daad Objects";
+			sprintf(window_title,"%s Objects",titulo_parser);
 			//entry_message="Object";
 		break;
 	}

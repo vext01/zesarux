@@ -789,6 +789,9 @@ extern z80_byte daad_peek(z80_int dir);
 extern void daad_poke(z80_int dir,z80_byte value);
 extern z80_int util_daad_get_pc_parser(void);
 
+extern char *util_unpaws_get_parser_name(void);
+extern char *util_undaad_unpaws_get_parser_name(void);
+
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 #define MEMORY_ZONE_NUM_TIMEX_EX 18
