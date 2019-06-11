@@ -13093,7 +13093,7 @@ char *util_unpaws_const_parser_daad="Daad";
 
 char *util_unpaws_get_parser_name(void)
 {
-        if (util_unpaws_get_version==0) return util_unpaws_const_parser_paws;
+        if (util_unpaws_get_version()==0) return util_unpaws_const_parser_paws;
         else return util_unpaws_const_parser_quill;
 }
 
@@ -13508,7 +13508,7 @@ END;
 
 }
 
-int util_paws_detect(void)
+int util_paws_detect(void) 
 {
 
   if (!MACHINE_IS_SPECTRUM) return 0;

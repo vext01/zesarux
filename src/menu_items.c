@@ -12839,7 +12839,8 @@ void menu_debug_get_legend(int linea,char *s)
 					strcpy(step_condact_buffer,"~~E~~n:Step Condact");
 				}
 
-				sprintf(s,"%s [%c] Daadbr~~kpnt",step_condact_buffer,(debug_allow_daad_breakpoint.v ? 'X' : ' '));
+				if (util_daad_detect()) sprintf(s,"%s [%c] Daadbr~~kpnt",step_condact_buffer,(debug_allow_daad_breakpoint.v ? 'X' : ' '));
+				else sprintf(s,"%s",step_condact_buffer);
 				return;
 			}
 
@@ -12875,7 +12876,9 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 			if (menu_debug_registers_current_view==8) {
-				sprintf(s,"runto~~Parse ~~Watch Wr~~ite M~~essages");
+				//de momento solo el run to parse en daad
+				if (util_daad_detect()) sprintf(s,"runto~~Parse ~~Watch Wr~~ite M~~essages");
+				else sprintf(s,"~~Watch Wr~~ite M~~essages");
 				return;
 			}
 
