@@ -13049,6 +13049,8 @@ void util_unpaws_get_maintop_mainattr(z80_int *final_maintop,z80_int *final_main
   *final_mainattr=MainAttr;
   *final_quillversion=quillversion;
 
+  printf ("quill version: %d\n",quillversion);
+
 }
 
 z80_int util_unpaws_get_maintop(void)
@@ -13095,6 +13097,8 @@ z80_int util_unpaws_tOffs;
 z80_byte util_unpaws_Patched;
 z80_int util_unpaws_OffResp;
 z80_byte util_unpaws_GraphCount;
+z80_int util_unpaws_OffVoc;
+z80_int util_unpaws_vocptr;
 
 void util_unpaws_init_parameters(void)
 {
@@ -13129,6 +13133,10 @@ void util_unpaws_init_parameters(void)
    util_unpaws_OffGraph = daad_peek_word(65521);
    util_unpaws_OffGraphAttr=daad_peek_word(65523);
    util_unpaws_compressed=daad_peek(util_unpaws_OffAbreviations); //=0;
+
+     util_unpaws_vocptr = daad_peek_word(65509);
+     util_unpaws_OffVoc = daad_peek_word(65509);
+
 }
  else
  {
@@ -13140,6 +13148,7 @@ void util_unpaws_init_parameters(void)
     util_unpaws_NumSys=32;
     util_unpaws_OffMsg=daad_peek_word(mainattr+25);
     util_unpaws_OffLoc=daad_peek_word(mainattr+23);
+    util_unpaws_vocptr = daad_peek_word(mainattr+29);
     }
    else
    {
@@ -13147,7 +13156,9 @@ void util_unpaws_init_parameters(void)
     util_unpaws_NumSys=daad_peek(util_unpaws_tOffs+4);
     util_unpaws_OffMsg=daad_peek_word(mainattr+26);
     util_unpaws_OffLoc=daad_peek_word(mainattr+24);
+    util_unpaws_vocptr = daad_peek_word(mainattr+32);
    }
+   util_unpaws_OffVoc = util_unpaws_vocptr;
 
    util_unpaws_NumLoc=daad_peek(util_unpaws_tOffs+2);
    if (quillversion==1) util_unpaws_OffObj = daad_peek_word(util_unpaws_tOffs+8);
@@ -13908,9 +13919,19 @@ int util_daad_detect(void)
 }
 
 
+//Comun para daad y paws
 z80_int util_daad_get_start_vocabulary(void)
 {
-        z80_int dir=value_8_to_16(daad_peek(util_daad_get_start_pointers()+0x17),daad_peek(util_daad_get_start_pointers()+0x16));
+        z80_int dir;
+
+        if (util_daad_detect()) {
+        dir=value_8_to_16(daad_peek(util_daad_get_start_pointers()+0x17),daad_peek(util_daad_get_start_pointers()+0x16));
+        }
+        else {
+                //paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffVoc;
+        }
 
         return dir;
 }
