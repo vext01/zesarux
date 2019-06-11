@@ -10896,7 +10896,7 @@ struct s_debug_daad_flag_object {
 
 struct s_debug_daad_flag_object debug_daad_flag_object[MENU_DEBUG_NUMBER_FLAGS_OBJECTS];
 
-//inicializar la lista de flags/objetos a una por defecto
+//inicializar la lista de flags/objetos a una por defecto, valida para daad y paws
 
 void menu_debug_daad_init_flagobject(void)
 {
@@ -10913,9 +10913,29 @@ void menu_debug_daad_init_flagobject(void)
 	int i;
 	for (i=0;i<MENU_DEBUG_NUMBER_FLAGS_OBJECTS;i++) 	debug_daad_flag_object[i].tipo=0;
 
-	debug_daad_flag_object[3].tipo=0;
 			
 }
+
+//comprobamos si algun valor de la tabla se sale del rango admitido. Esto pasa en quill por ejemplo
+void menu_debug_daad_check_init_flagobject(void)
+{
+
+	//todos tipo flag
+	int i;
+	for (i=0;i<MENU_DEBUG_NUMBER_FLAGS_OBJECTS;i++) {
+		int tipo=debug_daad_flag_object[i].tipo;
+		int indice=debug_daad_flag_object[i].indice;
+
+		int limite_max;
+		if (tipo==0) limite_max=util_daad_get_limit_flags();
+		else limite_max=util_daad_get_limit_objects();
+
+		if (indice>limite_max) debug_daad_flag_object[i].indice=0; //Poner un indice admitido
+
+	}	
+			
+}
+
 
 //Retornar el texto si es flag o objeto y valores:
 //FXXX XXX o OXXX XXX
@@ -12209,27 +12229,30 @@ void menu_watches_daad(void)
 		string_line[0]=0;
 		char ventana_titulo[33];
 
-		int limite_max=256;
+		char tipo_watch[10];
 
-		//quill tiene 33 flags y 210 objetos
-		//Tabla Para quill de 33 flags y 210 objetos
-		if (util_undaad_unpaws_is_quill() ) {
-			if (tipo==0) {
-				//flags
-				limite_max=33;
-			}
-			else {
-				//objetos
-				limite_max=210;
-			}
-		}		
+		int limite_max;
 
-		sprintf (ventana_titulo,"Index to watch? (max %d)",limite_max-1);
+		if (tipo==0) {
+			limite_max=util_daad_get_limit_flags();
+			strcpy(tipo_watch,"Flag");
+		}
+		else {
+			limite_max=util_daad_get_limit_objects();
+			strcpy(tipo_watch,"Object");
+		}
+
+		
+
+		sprintf (ventana_titulo,"%s? (max %d)",tipo_watch,limite_max);
 		menu_ventana_scanf(ventana_titulo,string_line,4);
 		int indice=parse_string_to_number(string_line);
 	
 
-		if (indice<0 || indice>=limite_max) return;
+		if (indice<0 || indice>limite_max) {
+			menu_error_message("Out of range");
+			return;
+		}
 
 
 		debug_daad_flag_object[linea].tipo=tipo;

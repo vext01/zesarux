@@ -14925,6 +14925,30 @@ int util_daad_condact_uses_message(void)
 	else return 0;
 }
 
+int util_daad_get_limit_flags(void)
+{
+        int limite_max=255;        
+        		//quill tiene 33 flags y 210 objetos
+		//Tabla Para quill de 33 flags y 210 objetos (33 oficiales, realmente 37)
+		if (util_undaad_unpaws_is_quill() ) {
+				limite_max=36;			
+		}	
+
+        return limite_max;
+}
+
+int util_daad_get_limit_objects(void)
+{
+        int limite_max=255;        
+        		//quill tiene 33 flags y 210 objetos
+		//Tabla Para quill de 33 flags y 210 objetos
+		if (util_undaad_unpaws_is_quill() ) {
+			//objetos
+			limite_max=209;
+		}	
+
+        return limite_max;
+}
 
 //Retorna mensaje relacionado con condacto
 void util_daad_get_condact_message(char *buffer)
