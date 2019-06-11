@@ -14366,7 +14366,33 @@ z80_int util_daad_get_pc_parser(void)
 
 z80_int util_paws_get_pc_parser(void)
 {
-        return 0x76a6;
+
+        z80_int maintop;
+        z80_int mainattr;
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);
+
+        z80_int dir=0x76a6; //por defecto
+
+        if (quillversion==0) {
+                /*
+                LD A,(BC)
+                CP FF
+
+                0a fe ff
+                 */
+                z80_int dir2=0x7671;
+                if (
+                        daad_peek(dir2)==0x0a &&
+                        daad_peek(dir2+1)==0xfe &&
+                        daad_peek(dir2+2)==0xff 
+                ) {
+                        dir=dir2;
+                }
+        }
+
+        return dir;
 }
 
 int util_paws_is_in_parser(void)
