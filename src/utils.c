@@ -14115,14 +14115,20 @@ int util_paws_dump_vocabulary_tostring(int tipo,char *texto,int max_string)
         int longitud_total_palabra;
         int longitud_palabra;
 
+        int isquill;
+
         if (quillversion==0) {
+                //paws
                 longitud_total_palabra=7;
                 longitud_palabra=5;
+                isquill=0;
         }
 
         else {
+                //quill
                 longitud_total_palabra=5;
                 longitud_palabra=4;
+                isquill=1;
         }
 
 
@@ -14166,7 +14172,7 @@ int util_paws_dump_vocabulary_tostring(int tipo,char *texto,int max_string)
 
                num_palabra=daad_peek(puntero+longitud_palabra);
 
-               if (quillversion==0) tipo_palabra=daad_peek(puntero+6);
+               if (!isquill) tipo_palabra=daad_peek(puntero+6);
                else tipo_palabra=0;
 
                //if (buffer_palabra[0]<32 || buffer_palabra[0]>127) salir=1;
@@ -14178,8 +14184,8 @@ int util_paws_dump_vocabulary_tostring(int tipo,char *texto,int max_string)
                        }
                        else {
 		        char buffer_linea[32];
-		        sprintf(buffer_linea,"%03d %s %s\n",num_palabra,(tipo_palabra<=6 ? word_types[tipo_palabra] : "unknown"),
-                        buffer_palabra);
+                        if (!isquill) sprintf(buffer_linea,"%03d %s %s\n",num_palabra,(tipo_palabra<=6 ? word_types[tipo_palabra] : "unknown"), buffer_palabra);
+                        else sprintf(buffer_linea,"%03d %s\n",num_palabra, buffer_palabra);
 
 		        //Y concatenar a final
 		        salir=util_concat_string(texto,buffer_linea,max_string);

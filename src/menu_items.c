@@ -10982,6 +10982,9 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 		int linea_origen=linea;
 		if (linea_origen<0 || linea_origen>MENU_DEBUG_NUMBER_FLAGS_OBJECTS) return;
 
+		//comprobar que no haya watches fuera de rango, como en quill
+		menu_debug_daad_check_init_flagobject();
+
 		menu_debug_daad_string_flagobject(linea_origen,textoregistros);
 
 		//sprintf (textoregistros,"F%2d %d",flag_leer,util_daad_get_flag_value(flag_leer));
@@ -11595,12 +11598,20 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 					z80_byte verbo=util_daad_get_flag_value(33);
 					z80_byte nombre=util_daad_get_flag_value(34);
 
+					//printf ("nombre: %d\n",nombre);
+
 					//Por defecto
 					strcpy(buffer_verbo,"_");
 					strcpy(buffer_nombre,"_");
 
+					//en quill no hay tipos de palabras. los establecemos a 0
+
 					if (verbo!=255) util_daad_paws_locate_word(verbo,0,buffer_verbo);
-					if (nombre!=255) util_daad_paws_locate_word(nombre,2,buffer_nombre);
+					if (nombre!=255) {
+						z80_byte tipo_palabra=2; 
+						if (util_undaad_unpaws_is_quill() ) tipo_palabra=0;
+						util_daad_paws_locate_word(nombre,tipo_palabra,buffer_nombre);
+					}
 
 					sprintf (buffer_linea,"%s %s",buffer_verbo,buffer_nombre);
 

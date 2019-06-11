@@ -12,8 +12,7 @@ Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in spac
 Added colors to ncurses driver and Chloe machine
 Changes in TSConf: Added "reveal" setting to view which pixels are used by a layer
 Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
-Added DAAD, PAWS and GAC debugger, for Spectrum and CPC
-Added DAAD vocabulary extractor
+Added DAAD, PAWS and Quill debugger, for Spectrum and CPC (CPC only supports Daad)
 Added hdf to ide/mmc raw converter
 Added hdf support to MMC emulation
 Allow text adventure keyboard also on CPC
@@ -23,6 +22,7 @@ Added Chloe MMU to ZX-Uno
 Added AY Sheet
 Added RetroMac Gui Style
 
+Improved adventure text extractor: now supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved footer:
 -Footer now completely follows GUI Style
 -Reordered cpu use, numbers in red when cpu use > 85%
