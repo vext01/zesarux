@@ -14054,6 +14054,10 @@ z80_int util_daad_get_start_flags(void)
 
                 //Creo que todas las de english cambia esto:
                 if (reg_ix==0x85b0) dir=0x85b0;
+
+                //con quill
+                if (reg_ix==0x5b00) dir=0x5b00;
+
                 return dir;
         }
 
@@ -14188,7 +14192,7 @@ z80_int util_daad_get_start_objects_names(void)
         else {
                 util_unpaws_init_parameters();
                 dir=util_unpaws_OffObj;
-                printf ("Obj messages: %XH\n",dir);
+                //printf ("Obj messages: %XH\n",dir);
         }
 
         return dir;
@@ -14233,7 +14237,7 @@ z80_int util_daad_get_start_user_messages(void)
         else {
                 util_unpaws_init_parameters();
                 dir=util_unpaws_OffMsg;
-                printf ("user messages: %XH\n",dir);
+                //printf ("user messages: %XH\n",dir);
         }
 
 
@@ -14256,7 +14260,7 @@ z80_int util_daad_get_start_sys_messages(void)
                 //Paws
                 util_unpaws_init_parameters();
                 dir=util_unpaws_OffSys;
-                printf ("sys messages: %XH\n",dir);
+                //printf ("sys messages: %XH\n",dir);
         }
 
         return dir;
@@ -14279,7 +14283,7 @@ z80_int util_daad_get_start_compressed_messages(void)
                 //paws
                 util_unpaws_init_parameters();
                 dir=util_unpaws_OffAbreviations;
-                printf ("compressed: %XH\n",dir);
+                //printf ("compressed: %XH\n",dir);
         }
 
         return dir;
@@ -14385,7 +14389,7 @@ int util_paws_is_opcodes_parser(z80_int dir)
 
                 0a fe ff
                  */
-                
+
                  if (
                         daad_peek(dir)==0x0a &&
                         daad_peek(dir+1)==0xfe &&
@@ -14416,10 +14420,17 @@ z80_int util_paws_get_pc_parser(void)
                 z80_int dir3=0x76aa;
                 if (util_paws_is_opcodes_parser(dir3)) dir=dir3;
 
+                //quill
                 z80_int dir4=0x63fc;
                 if (util_paws_is_opcodes_parser(dir4)) dir=dir4;
 
-                              
+                //quill (bugsy)
+                z80_int dir5=0x6448;
+                if (util_paws_is_opcodes_parser(dir5)) dir=dir5;          
+
+                //quill (evil realm)
+                z80_int dir6=0x644d;
+                if (util_paws_is_opcodes_parser(dir6)) dir=dir6;                                         
     
 
         return dir;

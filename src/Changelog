@@ -12,7 +12,7 @@ Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in spac
 Added colors to ncurses driver and Chloe machine
 Changes in TSConf: Added "reveal" setting to view which pixels are used by a layer
 Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
-Added DAAD and PAWS debugger, for Spectrum and CPC
+Added DAAD, PAWS and GAC debugger, for Spectrum and CPC
 Added DAAD vocabulary extractor
 Added hdf to ide/mmc raw converter
 Added hdf support to MMC emulation
