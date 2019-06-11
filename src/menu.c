@@ -5847,7 +5847,7 @@ void zxvision_set_y_position(zxvision_window *w,int y)
 void zxvision_set_visible_width(zxvision_window *w,int visible_width)
 {
 	if (zxvision_out_bonds(w->x,w->y,visible_width,w->visible_height)) {
-		printf ("Window out of bounds trying to set width\n");
+		//printf ("Window out of bounds trying to set width\n");
 		return;
 	}
 

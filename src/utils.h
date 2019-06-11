@@ -751,6 +751,11 @@ extern int util_paws_detect(void);
 extern z80_int util_daad_get_start_vocabulary(void);
 extern int util_daad_dump_vocabulary(int tipo,char *texto,int max_string);
 
+extern int util_daad_get_limit_objects(void);
+extern int util_daad_get_limit_flags(void);
+
+extern int util_undaad_unpaws_is_quill(void);
+
 
 extern z80_byte util_daad_get_flag_value(z80_byte index);
 
