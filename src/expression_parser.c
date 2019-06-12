@@ -675,7 +675,11 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
             break;
 
             case TPT_OPERADOR_CONDICIONAL:  //=, <,>, <>,
-
+            printf ("operaodr condicional\n"); 
+                if (indice==TPI_OC_MAYOR) {
+                    printf ("operaodr mayor\n");    
+                    if (valor_izquierda>valor_derecha) resultado=1;
+                }
             break;
 
             case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
@@ -741,6 +745,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int valor_izquierda;
             int valor_derecha;
 
+            printf ("dividiendo condicionales\n");
             valor_izquierda=exp_par_evaluate_token(tokens,i,nivel+1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
 
