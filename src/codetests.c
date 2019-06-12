@@ -679,6 +679,12 @@ void codetests_expression_parser_print_tokens(token_parser *tokens)
 		);
 		i++;
 	}
+
+	printf ("text from tokens: \n");
+	char buffer_destino[1024];
+
+	exp_par_tokens_to_exp(tokens,buffer_destino);
+	printf ("[%s]\n",buffer_destino);	
 }
 
 void codetests_expression_parser(void)
@@ -690,16 +696,22 @@ void codetests_expression_parser(void)
 	int result;
 
 	char *text_token1="34";
-	printf ("Text to token: %s\n",text_token1);
+	printf ("\nText to token: %s\n",text_token1);
 	result=exp_par_exp_to_tokens(text_token1,tokens);
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);
 
 	char *text_token2="MRA>3";
-	printf ("Text to token: %s\n",text_token2);
+	printf ("\nText to token: %s\n",text_token2);
 	result=exp_par_exp_to_tokens(text_token2,tokens);
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);	
+
+	char *text_token3="BC>300";
+	printf ("\nText to token: %s\n",text_token3);
+	result=exp_par_exp_to_tokens(text_token3,tokens);
+	printf ("result: %d\n",result);
+	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
 
 }
 

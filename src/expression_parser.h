@@ -83,6 +83,7 @@ struct s_token_parser {
 typedef struct s_token_parser token_parser;
 
 
+
 //Usados en la conversion de texto a tokens
 #define MAX_PARSER_TEXTOS_INDICE_LENGTH 32
 struct s_token_parser_textos_indices {
@@ -95,5 +96,6 @@ typedef struct s_token_parser_textos_indices token_parser_textos_indices;
 
 
 extern int exp_par_exp_to_tokens(char *expression,token_parser *tokens);
+extern void exp_par_tokens_to_exp(token_parser *tokens,char *expression);
 
 #endif

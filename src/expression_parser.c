@@ -325,6 +325,45 @@ int exp_par_is_var_reg(char *texto,int *final)
 
 }
 
+
+//Parsear texto como variable o registro
+//Devuelve 0 si no existe
+int exp_par_parse_var_reg(char *texto,enum token_parser_tipo *tipo,enum token_parser_indice *indice_final)
+{
+   
+    int indice;
+
+    indice=exp_par_is_token_parser_textos_indices(texto,tpti_variables);
+    if (indice>=0) {
+        *tipo=TPT_VARIABLE;
+        *indice_final=indice;
+        return 1;
+    }
+
+    indice=exp_par_is_token_parser_textos_indices(texto,tpti_registros);
+    if (indice>=0) {
+        *tipo=TPT_REGISTRO;
+        *indice_final=indice;
+        return 1;
+    }
+
+    return 0;
+
+}
+
+//Copia la cadena origen en destino, con longitud indicada. Agrega 0 al final
+void exp_par_copy_string(char *origen,char *destino, int longitud)
+{
+    int i;
+
+    for (i=0;i<longitud;i++) {
+        destino[i]=origen[i];
+    }
+
+    destino[i]=0;
+}
+
+
 //Convierte expression de entrada en tokens. Devuelve <0 si error
 int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 {
@@ -390,8 +429,24 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 printf ("final index: %d\n",final);
 
                 //Parsear expresion. TODO
-                tokens[indice_token].tipo=TPT_VARIABLE; //temporal
-            
+                //tokens[indice_token].tipo=TPT_VARIABLE; //temporal
+
+                //Metemos en buffer temporal
+                char buffer_temp[MAX_PARSER_TEXTOS_INDICE_LENGTH];
+                exp_par_copy_string(expression,buffer_temp,final);
+
+                enum token_parser_tipo tipo;
+                enum token_parser_indice indice;
+
+                if (!exp_par_parse_var_reg(buffer_temp,&tipo,&indice)) {
+                    printf ("return error exp_par_parse_var_reg\n");
+                    return -1;
+                }
+
+                tokens[indice_token].tipo=tipo;
+                tokens[indice_token].indice=indice;
+
+           
             }
 
             //Siguiente expresion
@@ -433,4 +488,69 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
     return 0;
 
+}
+
+//Convierte tokens en string
+void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
+{
+	int i=0;
+    int dest_string=0;
+
+	while (tokens[i].tipo!=TPT_FIN) {
+        int esnumero=0;
+        int espacio=0;
+        enum token_parser_tipo tipo=tokens[i].tipo;
+
+        token_parser_textos_indices *indice_a_tabla;
+
+        switch (tipo) {
+            case TPT_NUMERO:
+                esnumero=1;
+            break;
+
+	        case TPT_VARIABLE: //mra,mrw, etc
+                indice_a_tabla=tpti_variables;
+            break;
+
+	        case TPT_REGISTRO: //a, bc, de, etc
+                indice_a_tabla=tpti_registros;
+            break;
+
+
+	        case TPT_OPERADOR_LOGICO:  //and, or, xor
+                indice_a_tabla=tpti_operador_logico;
+                espacio=1;
+            break;
+
+            case TPT_OPERADOR_CONDICIONAL:  //=, <,>, <>,
+                indice_a_tabla=tpti_operador_condicional;
+            break;
+
+            case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
+                indice_a_tabla=tpti_operador_calculo;
+            break;
+
+            case TPT_FIN:
+                //esto se gestiona desde el while y por tanto no se llega nunca aqui. Lo pongo para que no se queje el compilador
+            break;
+
+        }
+
+        if (esnumero) {
+            //TODO: signo, formato hexa,binario etc
+           sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+        }
+
+        else {
+            int indice=tokens[i].indice;
+            if (!espacio) sprintf(&expression[dest_string],"%s",indice_a_tabla[indice].texto);
+            else sprintf(&expression[dest_string]," %s ",indice_a_tabla[indice].texto);
+        }
+
+        int longitud=strlen(&expression[dest_string]);
+        dest_string +=longitud;    
+
+            
+		i++;
+	}
 }
