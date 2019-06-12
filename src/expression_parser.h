@@ -63,6 +63,23 @@ enum token_parser_indice {
         TPI_R_DE,
         TPI_R_HL,
 
+	TPI_R_A_SHADOW,
+	TPI_R_B_SHADOW,
+	TPI_R_C_SHADOW,
+	TPI_R_D_SHADOW,
+	TPI_R_E_SHADOW,
+	TPI_R_F_SHADOW,
+	TPI_R_H_SHADOW,
+	TPI_R_L_SHADOW,
+
+        TPI_R_AF_SHADOW,
+        TPI_R_BC_SHADOW,
+        TPI_R_DE_SHADOW,
+        TPI_R_HL_SHADOW,
+
+
+
+
 	//de tipo operador logico
 	TPI_OL_AND,
 	TPI_OL_OR,

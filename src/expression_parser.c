@@ -141,6 +141,22 @@ token_parser_textos_indices tpti_registros[]={
         {TPI_R_DE,"DE"},
         {TPI_R_HL,"HL"},    
 
+	{TPI_R_A_SHADOW,"A'"},
+	{TPI_R_B_SHADOW,"B'"},
+	{TPI_R_C_SHADOW,"C'"},
+	{TPI_R_D_SHADOW,"D'"},
+	{TPI_R_E_SHADOW,"E'"},
+	{TPI_R_F_SHADOW,"F'"},
+	{TPI_R_H_SHADOW,"H'"},
+	{TPI_R_L_SHADOW,"L'"},
+
+
+        {TPI_R_AF_SHADOW,"AF'"},
+        {TPI_R_BC_SHADOW,"BC'"},
+        {TPI_R_DE_SHADOW,"DE'"},
+        {TPI_R_HL_SHADOW,"HL'"},   
+
+
     {TPI_FIN,""}
 };
 
@@ -279,10 +295,17 @@ int exp_par_is_operador(char *texto,int *final)
 
     char buffer_texto[3];
 
-    //TODO: considerar condicional <>
+    
     primer_caracter=*texto;
     buffer_texto[0]=primer_caracter;
     buffer_texto[1]=0;
+
+    //considerar condicional <>
+    if (texto[0]=='<' && texto[1]=='>') {
+        buffer_texto[0]='<';
+        buffer_texto[1]='>';
+        buffer_texto[2]=0;        
+    }
 
     //tpti_operador_condicional
     if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_operador_condicional)>=0) {
@@ -318,7 +341,9 @@ int exp_par_is_var_reg(char *texto,int *final)
     char buffer_texto[MAX_PARSER_TEXTOS_INDICE_LENGTH];
 
     int i=0;
-    while (*texto && exp_par_is_letter(*texto) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
+    while (*texto && (exp_par_is_letter(*texto) || *texto=='\'') && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
+        //consideramos que pueden acabar los registros con '
+
         buffer_texto[i]=*texto;
         i++;
         texto++;
@@ -580,9 +605,9 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
 
 
-
-
-
+/*
+Funciones de paso de tokens a string
+*/
 
 //Convierte tokens en string
 void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
@@ -702,6 +727,26 @@ int exp_par_calculate_numvarreg(token_parser *token)
         case TPI_R_BC: return reg_bc; break;
         case TPI_R_DE: return reg_de; break;
         case TPI_R_HL: return reg_hl; break;
+
+
+
+	case TPI_R_A_SHADOW: return reg_a_shadow; break;
+	case TPI_R_B_SHADOW: return reg_b_shadow; break;
+	case TPI_R_C_SHADOW: return reg_c_shadow; break;
+	case TPI_R_D_SHADOW: return reg_d_shadow; break;
+	case TPI_R_E_SHADOW: return reg_e_shadow; break;
+	case TPI_R_F_SHADOW: return Z80_FLAGS_SHADOW; break;
+	case TPI_R_H_SHADOW: return reg_h_shadow; break;
+	case TPI_R_L_SHADOW: return reg_l_shadow; break;
+
+        case TPI_R_AF_SHADOW: return REG_AF_SHADOW; break;
+        case TPI_R_BC_SHADOW: return REG_BC_SHADOW; break;
+        case TPI_R_DE_SHADOW: return REG_DE_SHADOW; break;
+        case TPI_R_HL_SHADOW: return REG_HL_SHADOW; break;
+
+
+
+
 
                     default:
                         //Para que no se queje el compilador por demas valores enum no tratados
@@ -865,18 +910,6 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
  
 
     for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
-        if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
-            //Evaluar parte izquierda y derecha y aplicar operador
-            int valor_izquierda;
-            int valor_derecha;
-
-            int errorcode1,errorcode2;
-
-            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
-
-            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
-        }
 
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL ) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -891,6 +924,21 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
+
+        if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
+            //Evaluar parte izquierda y derecha y aplicar operador
+            int valor_izquierda;
+            int valor_derecha;
+
+            int errorcode1,errorcode2;
+
+            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+
+            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+        }
+
+
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO) {
             //Evaluar parte izquierda y derecha y aplicar operador
