@@ -610,3 +610,150 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
 		i++;
 	}
 }
+
+//calcula valor de token, si es numero, variable o registro
+int exp_par_calculate_numvarreg(token_parser *token)
+{
+
+    enum token_parser_tipo tipo=token->tipo;
+    enum token_parser_indice indice=token->indice;
+
+        int resultado=0; //asumimos cero
+
+        switch (tipo) {
+            case TPT_NUMERO:
+                resultado=token->valor;
+            break;
+
+	        case TPT_VARIABLE: //mra,mrw, etc
+            break;
+
+	        case TPT_REGISTRO: //a, bc, de, etc
+            break;
+            
+
+
+	        case TPT_OPERADOR_LOGICO:  //and, or, xor
+            case TPT_OPERADOR_CONDICIONAL:  //=, <,>, <>,
+            case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
+            case TPT_FIN:
+                //esto no se llega nunca aqui. Lo pongo para que no se queje el compilador
+            break;
+
+
+
+    }
+
+    return resultado;
+}
+
+//calcula valor resultante de aplicar operador, puede ser 
+int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_parser_tipo tipo,enum token_parser_indice indice)
+{
+
+    int resultado=0; //asumimos cero
+    
+    /*
+    	TPT_OPERADOR_LOGICO, //and, or, xor
+	TPT_OPERADOR_CONDICIONAL, //=, <,>, <>,
+	TPT_OPERADOR_CALCULO //+,-,*,/. & (and), | (or), ^ (xor)
+     */
+
+    switch (tipo) {
+            case TPT_NUMERO:
+	        case TPT_VARIABLE: //mra,mrw, etc
+	        case TPT_REGISTRO: //a, bc, de, etc
+            case TPT_FIN:
+                //esto no se llega nunca aqui. Lo pongo para que no se queje el compilador
+            break;
+
+
+	        case TPT_OPERADOR_LOGICO:  //and, or, xor
+
+            break;
+
+            case TPT_OPERADOR_CONDICIONAL:  //=, <,>, <>,
+
+            break;
+
+            case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
+
+            break;
+
+
+
+    }
+
+    return resultado;
+}
+
+
+//Calcula la expresion identificada por tokens. Funcion recursiva
+//final identifica al siguiente token despues del final. Poner valor alto para que no tenga final y detecte token de fin
+int exp_par_evaluate_token(token_parser *tokens,int final)
+{
+/*
+Evaluar expresión:
+
+Buscar si hay operador logico and, or, xor. Si lo hay, separar sub condiciones
+
+Evaluar condiciones: buscar si hay comparadores =, <,>, <>. Si lo hay, evaluar cada uno de los valores
+Cada condición genera 0 o 1
+
+Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de cálculo: +,-,*,/. & (and), | (or), ^ (xor)
+ */
+    if (final==0) {
+        //expresion vacia. no deberia suceder. retornar 0
+        return 0;
+    }
+
+    //Ver si hay operadores logicos
+    //int i;
+
+    int i=0;
+
+    //for (i=0;i<final && tokens[i].tipo!=TPT_FIN ;i++) {
+        if (tokens[i].tipo==TPT_OPERADOR_LOGICO) {
+            //Evaluar parte izquierda y derecha y aplicar operador
+            int valor_izquierda;
+            int valor_derecha;
+
+            valor_izquierda=exp_par_evaluate_token(tokens,i);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM);
+
+            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+        }
+
+        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL) {
+            //Evaluar parte izquierda y derecha y aplicar operador
+            int valor_izquierda;
+            int valor_derecha;
+
+            valor_izquierda=exp_par_evaluate_token(tokens,i);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM);
+
+            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+        }
+
+        if (tokens[i].tipo==TPT_OPERADOR_CALCULO) {
+            //Evaluar parte izquierda y derecha y aplicar operador
+            int valor_izquierda;
+            int valor_derecha;
+
+            valor_izquierda=exp_par_evaluate_token(tokens,i);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM);
+
+            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+        }     
+
+        if (tokens[i].tipo==TPT_NUMERO || tokens[i].tipo==TPT_VARIABLE || tokens[i].tipo==TPT_REGISTRO) {
+            return exp_par_calculate_numvarreg(&tokens[i]);
+        }
+
+        //otra cosa indica fin
+        return 1;
+
+
+    //}
+
+}

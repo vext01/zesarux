@@ -685,6 +685,10 @@ void codetests_expression_parser_print_tokens(token_parser *tokens)
 
 	exp_par_tokens_to_exp(tokens,buffer_destino);
 	printf ("[%s]\n",buffer_destino);	
+
+	printf ("Resultado expresion tokens\n");
+	int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM);
+	printf ("%d\n",resultado);
 }
 
 void codetests_expression_parser(void)
