@@ -179,6 +179,15 @@ int exp_par_is_hexadigit(char c)
     else return 0;
 }
 
+
+
+//Dice si caracter es letra
+int exp_par_is_letter(char c)
+{
+    if (letra_minuscula(c)>='a' && letra_minuscula(c)<='z') return 1;
+    else return 0;
+}
+
 //Dice si una expresion es numérica, y dice donde acaba (caracter siguiente)
 //Retorna 1 si lo es. 0 si no. -1 si hay error parseando
 int exp_par_is_number(char *texto,int *final)
@@ -202,6 +211,9 @@ int exp_par_is_number(char *texto,int *final)
         else return -1; //no hay comillas de cierre
     }
 
+    //Tendra que empezar con numero o hexa, si no, error
+    if (!exp_par_is_hexadigit(texto[0])) return -1;
+
     //Parseamos hasta encontrar sufijo, si lo hay
     int i;
     for (i=0;texto[i];i++) {
@@ -215,6 +227,101 @@ int exp_par_is_number(char *texto,int *final)
 
     *final=i;
     return 1;
+
+}
+
+//Dice si el texto es uno de los contenidos en array de token_parser_textos_indices
+//Retorna el indice si esta, -1 si no
+int exp_par_is_token_parser_textos_indices(char *texto,token_parser_textos_indices *textos_indices)
+{
+
+    int i=0;
+
+    while (textos_indices->indice!=TPI_FIN) {
+        if (!strcasecmp(texto,textos_indices->texto)) return i;
+        i++;
+        textos_indices++;
+    }
+
+    return -1;
+}
+
+
+//Dice si una expresion es operador, y dice donde acaba (caracter siguiente)
+//Retorna 1 si lo es. 0 si no. -1 si hay error parseando
+int exp_par_is_operador(char *texto,int *final)
+{
+    //Considerar letras y tpti_operador_condicional y tpti_operador_calculo
+    char primer_caracter;
+
+    char buffer_texto[3];
+
+    //TODO: considerar condicional <>
+    primer_caracter=*texto;
+    buffer_texto[0]=primer_caracter;
+    buffer_texto[1]=0;
+
+    //tpti_operador_condicional
+    if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_operador_condicional)>=0) {
+        *final=strlen(buffer_texto);
+        return 1;
+    }
+
+    //tpti_operador_calculo
+    if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_operador_calculo)>=0) {
+        *final=strlen(buffer_texto);
+        return 1;
+    }
+
+    //letras hasta que no sean letras
+    int i=0;
+    while (!exp_par_is_letter(texto[i])) {
+        i++;
+    }
+
+    *final=i;
+    return 1;
+
+}
+
+
+//Dice si una expresion es variable/registro, y dice donde acaba (caracter siguiente)
+//Retorna 1 si lo es. 0 si no. -1 si hay error parseando
+int exp_par_is_var_reg(char *texto,int *final)
+{
+   
+
+    //Buscar hasta final letras
+    char buffer_texto[MAX_PARSER_TEXTOS_INDICE_LENGTH];
+
+    int i=0;
+    while (*texto && exp_par_is_letter(*texto) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
+        buffer_texto[i]=*texto;
+
+        i++;
+        texto++;
+    }
+
+    if (i==MAX_PARSER_TEXTOS_INDICE_LENGTH) {
+        //Final de buffer. error
+        return -1;
+    }
+
+    buffer_texto[i]=0;
+
+    //tpti_operador_condicional
+    if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_variables)>=0) {
+        *final=strlen(buffer_texto);
+        return 1;
+    }
+
+    //tpti_operador_calculo
+    if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_registros)>=0) {
+        *final=strlen(buffer_texto);
+        return 1;
+    }
+
+    return 0;
 
 }
 
@@ -246,18 +353,46 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //Obtener numero
             int final;
             int resultado;
+            printf ("parsing number from %s\n",expression);
             resultado=exp_par_is_number(expression,&final);
-            if (resultado==-1) return -1; //error
+            
+            /* if (resultado==-1) {
+                printf ("return number with error\n");
+                return -1; //error
+            }*/
 
-            //Parseamos numero
-            int valor=parse_string_to_number(expression);
+            if (resultado>=0) {
+                printf ("final index: %d\n",final);
+                //Es un numero
+                printf ("end number: %c\n",expression[final]);
 
-            //Meter valor en token
-            tokens[indice_token].tipo=TPT_NUMERO;
-            //TODO: formato, signo
+                //Parseamos numero
+                int valor=parse_string_to_number(expression);
 
-            //Meter valor
-            tokens[indice_token].valor=valor;
+                //Meter valor en token
+                tokens[indice_token].tipo=TPT_NUMERO;
+                //TODO: formato, signo
+
+                //Meter valor
+                tokens[indice_token].valor=valor;
+
+            }
+
+            else {
+                //Consideramos variable/registro
+                printf ("parsing variable/register from %s\n",expression);
+                resultado=exp_par_is_var_reg(expression,&final);
+                if (resultado==-1) {
+                     printf ("return var_reg with error\n");
+                    return -1; //error
+                }
+
+                printf ("final index: %d\n",final);
+
+                //Parsear expresion. TODO
+                tokens[indice_token].tipo=TPT_VARIABLE; //temporal
+            
+            }
 
             //Siguiente expresion
             indice_token++;
@@ -269,6 +404,25 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //Si no final, 
             if ( (*expression)!=0) {
                 //Calcular operador
+                printf ("parsing operador from %s\n",expression);
+                resultado=exp_par_is_operador(expression,&final);
+                if (resultado==-1) {
+                    printf ("return operador with error\n");
+                    return -1; //error
+                }
+
+                printf ("final index: %d\n",final);
+
+                //printf ("end number: %c\n",expression[final]);
+
+                //Parsear expresion. TODO
+                tokens[indice_token].tipo=TPT_OPERADOR_LOGICO; //temporal            
+            
+                //Siguiente expresion
+                indice_token++;
+                expression=&expression[final];
+
+
             }
 
         }

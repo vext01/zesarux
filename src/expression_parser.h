@@ -84,9 +84,10 @@ typedef struct s_token_parser token_parser;
 
 
 //Usados en la conversion de texto a tokens
+#define MAX_PARSER_TEXTOS_INDICE_LENGTH 32
 struct s_token_parser_textos_indices {
 	enum token_parser_indice indice;
-	char texto[32];
+	char texto[MAX_PARSER_TEXTOS_INDICE_LENGTH];
 };
 
 typedef struct s_token_parser_textos_indices token_parser_textos_indices;

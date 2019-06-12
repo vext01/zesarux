@@ -693,13 +693,13 @@ void codetests_expression_parser(void)
 	printf ("Text to token: %s\n",text_token1);
 	result=exp_par_exp_to_tokens(text_token1,tokens);
 	printf ("result: %d\n",result);
-	codetests_expression_parser_print_tokens(tokens);
+	if (result>=0) codetests_expression_parser_print_tokens(tokens);
 
 	char *text_token2="MRA>3";
 	printf ("Text to token: %s\n",text_token2);
 	result=exp_par_exp_to_tokens(text_token2,tokens);
 	printf ("result: %d\n",result);
-	codetests_expression_parser_print_tokens(tokens);	
+	if (result>=0) codetests_expression_parser_print_tokens(tokens);	
 
 }
 
