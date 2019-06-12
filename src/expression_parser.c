@@ -1137,6 +1137,19 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
 
+        if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
+            //Evaluar parte izquierda y derecha y aplicar operador
+            int valor_izquierda;
+            int valor_derecha;
+
+            int errorcode1,errorcode2;
+
+            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+
+            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+        }
+
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL ) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
@@ -1151,19 +1164,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
 
-        if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
-            //Evaluar parte izquierda y derecha y aplicar operador
-            int valor_izquierda;
-            int valor_derecha;
-
-            int errorcode1,errorcode2;
-
-            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
-
-            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
-        }
-
+    
 
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO) {
