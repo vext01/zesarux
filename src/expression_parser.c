@@ -140,6 +140,11 @@ token_parser_textos_indices tpti_variables[]={
 	{TPI_V_INFIRED,"INFIRED"},
 	{TPI_V_INTFIRED,"INTFIRED"},
 
+    {TPI_V_SEG0,"SEG0"},
+    {TPI_V_SEG1,"SEG0"},
+    {TPI_V_SEG2,"SEG0"},
+    {TPI_V_SEG3,"SEG0"},
+
     {TPI_FIN,""}
 };
 
@@ -379,12 +384,12 @@ int exp_par_char_is_reg_aux(char c)
     else return 0;
 }
 
-//Considerar caracteres auxiliares para variables: 12,  como iff1 y iff2, pero no al principio
+//Considerar caracteres auxiliares para variables: 12,  como iff1 y iff2, seg0 etc, pero no al principio
 int exp_par_char_is_reg_aux_more(char c,int i)
 {
     if (i==0) return 0;
 
-    if (c=='1' || c=='2') return 1;
+    if (c=='0' || c=='1' || c=='2' || c=='3') return 1;
     else return 0;
 }
 
@@ -794,6 +799,25 @@ int exp_par_calculate_numvarreg(token_parser *token)
 	case TPI_V_INTFIRED: return debug_fired_interrupt; break;	
 
 
+    //bancos memoria Z88
+    case TPI_V_SEG0:
+        if (MACHINE_IS_Z88) return blink_mapped_memory_banks[0];
+    break;
+
+    case TPI_V_SEG1:
+        if (MACHINE_IS_Z88) return blink_mapped_memory_banks[1];
+    break;
+
+    case TPI_V_SEG2:
+        if (MACHINE_IS_Z88) return blink_mapped_memory_banks[2];
+    break;
+
+    case TPI_V_SEG3:
+        if (MACHINE_IS_Z88) return blink_mapped_memory_banks[3];
+    break;            
+
+	
+
                     default:
                         //Para que no se queje el compilador por demas valores enum no tratados
                     break;
@@ -832,13 +856,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
                 if (!strcasecmp(registro,"ram")) return prism_retorna_ram_entra()*2;
 	}
 
-	//bancos memoria Z88
-	if (MACHINE_IS_Z88) {
-		if (!strcasecmp(registro,"seg0")) return blink_mapped_memory_banks[0];
-		if (!strcasecmp(registro,"seg1")) return blink_mapped_memory_banks[1];
-		if (!strcasecmp(registro,"seg2")) return blink_mapped_memory_banks[2];
-		if (!strcasecmp(registro,"seg3")) return blink_mapped_memory_banks[3];
-	}
+
 
 	
 

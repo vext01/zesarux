@@ -64,6 +64,12 @@ enum token_parser_indice {
 	TPI_V_OUTFIRED,
 	TPI_V_INFIRED,
 	TPI_V_INTFIRED,
+
+	TPI_V_SEG0,
+	TPI_V_SEG1,
+	TPI_V_SEG2,
+	TPI_V_SEG3,
+
 	//de tipo registro
 
 	TPI_R_PC,
