@@ -21,6 +21,23 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -expression parser:
 *cuando hay varias sumas , restas, etc el orden es de derecha a izquierda y tiene un efecto extraño
+error como:
+Parsed string: 1+3=4 AND 2+3=99 -> result 1
+resultado variable: 1
+resultado variable: 3
+resultado variable: 4
+resultado variable: 2
+resultado variable: 3
+resultado variable: 99
+
+O 2+3=99
+result: 2
+resultado variable: 2
+resultado variable: 3
+resultado variable: 99
+
+
+
 *condicion opcode
 *valores negativos, positivos
 *base numerica hexad, binaria, ascii
