@@ -19,11 +19,7 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *compression tokens no siempre estan hasta el 255
 
 
--Parser breakpoints
-*función compilar ascii a tokens
-*función inversa
-*función evaluar desde tokens
-*espacio en bytes de cada token fijo
+
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista

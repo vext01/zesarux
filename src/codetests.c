@@ -41,6 +41,7 @@
 
 #include "disassemble.h"
 #include "assemble.h"
+#include "expression_parser.h"
 
 
 void codetests_repetitions(void)
@@ -662,6 +663,37 @@ void codetests_assembler(void)
 
 }
 
+void codetests_expression_parser_print_tokens(token_parser *tokens)
+{
+	int i=0;
+
+	while (tokens[i].tipo!=TPT_FIN) {
+		printf ("%d: tipo: %d indice: %d formato: %d signo: %d valor: %d\n",
+			i,
+			tokens[i].tipo,
+			tokens[i].indice,
+			tokens[i].formato,
+			tokens[i].signo,
+			tokens[i].valor
+		);
+		i++;
+	}
+}
+
+void codetests_expression_parser(void)
+{
+	//void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
+
+	//Mis tokens de salida
+	token_parser tokens[200];
+
+	char *text_token1="MRA>3";
+	printf ("Text to token: %s\n",text_token1);
+	exp_par_exp_to_tokens(text_token1,tokens);
+	codetests_expression_parser_print_tokens(tokens);
+
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -671,21 +703,24 @@ void codetests_main(int main_argc,char *main_argv[])
 		exit(0);
 	}
 
+	printf ("\nRunning expression parser tests\n");
+	codetests_expression_parser();
+
 	//printf ("\nRunning assembler tests\n");
-	codetests_assembler();
+	//codetests_assembler();
 
 
 	//printf ("\nRunning tbblue layers strings\n");
-	codetests_tbblue_layers();
+	//codetests_tbblue_layers();
 
 	//printf ("\nRunning repetitions code\n");
-	codetests_repetitions();
+	//codetests_repetitions();
 
 	//printf ("\nRunning compress repetitions code\n");
-	coretests_compress_repetitions();
+	//coretests_compress_repetitions();
 
 	//printf ("\nRunning get raster tbblue horizontal\n");
-	codetests_tbblue_get_horizontal_raster();
+	//codetests_tbblue_get_horizontal_raster();
 
 	exit(0);
 }
