@@ -655,6 +655,9 @@ int exp_par_calculate_numvarreg(token_parser *token)
             break;
 
 	        case TPT_REGISTRO: //a, bc, de, etc
+                if (indice==TPI_R_A) return reg_a;
+                if (indice==TPI_R_BC) return reg_bc;
+                if (indice==TPI_R_DE) return reg_de;
             break;
             
 
@@ -699,18 +702,18 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 	        case TPT_OPERADOR_LOGICO:  //and, or, xor
 
                 if (indice==TPI_OL_AND) {   
-                    if (valor_izquierda && valor_derecha) resultado=1;
+                    if (valor_izquierda && valor_derecha) return 1;
                 }
 
                 if (indice==TPI_OL_OR) {   
-                    if (valor_izquierda || valor_derecha) resultado=1;
+                    if (valor_izquierda || valor_derecha) return 1;
                 }                
 
                 if (indice==TPI_OL_XOR) {
-                    if (valor_izquierda && valor_derecha) resultado=0;  
-                    else if (!valor_izquierda && valor_derecha) resultado=1;  
-                    else if (valor_izquierda && !valor_derecha) resultado=1;  
-                    else resultado=0; //ambos a 0
+                    if (valor_izquierda && valor_derecha) return 0;  
+                    else if (!valor_izquierda && valor_derecha) return 1;  
+                    else if (valor_izquierda && !valor_derecha) return 1;  
+                    else return 0; //ambos a 0
                 }                   
 
             break;
@@ -719,18 +722,18 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
             //printf ("operaodr condicional\n"); 
                 if (indice==TPI_OC_MAYOR) {
                     //printf ("operaodr mayor\n");    
-                    if (valor_izquierda>valor_derecha) resultado=1;
+                    if (valor_izquierda>valor_derecha) return 1;
                 }
                 if (indice==TPI_OC_MENOR) {   
-                    if (valor_izquierda<valor_derecha) resultado=1;
+                    if (valor_izquierda<valor_derecha) return 1;
                 }
 
                 if (indice==TPI_OC_IGUAL) {   
-                    if (valor_izquierda==valor_derecha) resultado=1;
+                    if (valor_izquierda==valor_derecha) return 1;
                 }           
 
                 if (indice==TPI_OC_DIFERENTE) {  
-                    if (valor_izquierda!=valor_derecha) resultado=1;
+                    if (valor_izquierda!=valor_derecha) return 1;
                 }                          
 
             break;
@@ -738,33 +741,33 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
             case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
 
                 if (indice==TPI_OC_SUMA) {
-                    printf ("sumando %d y %d\n",valor_izquierda,valor_derecha);
-                    resultado=valor_izquierda + valor_derecha;
+                    //printf ("sumando %d y %d\n",valor_izquierda,valor_derecha);
+                    return valor_izquierda + valor_derecha;
                 }         
 
                 if (indice==TPI_OC_RESTA) {
-                    resultado=valor_izquierda - valor_derecha;
+                    return valor_izquierda - valor_derecha;
                 }          
 
                 if (indice==TPI_OC_MULTIPLICACION) {
-                    printf ("multiplicando %d y %d\n",valor_izquierda,valor_derecha);
-                    resultado=valor_izquierda * valor_derecha;
+                    //printf ("multiplicando %d y %d\n",valor_izquierda,valor_derecha);
+                    return valor_izquierda * valor_derecha;
                 }         
 
                 if (indice==TPI_OC_DIVISION) {
-                    resultado=valor_izquierda / valor_derecha;
+                    return valor_izquierda / valor_derecha;
                 }        
 
                 if (indice==TPI_OC_AND) {
-                    resultado=valor_izquierda & valor_derecha;
+                    return valor_izquierda & valor_derecha;
                 }     
 
                 if (indice==TPI_OC_OR) {
-                    resultado=valor_izquierda | valor_derecha;
+                    return valor_izquierda | valor_derecha;
                 }          
 
                 if (indice==TPI_OC_XOR) {
-                    resultado=valor_izquierda ^ valor_derecha;
+                    return valor_izquierda ^ valor_derecha;
                 }                                                                          
 
             break;
@@ -791,7 +794,7 @@ Cada condición genera 0 o 1
 
 Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de cálculo: +,-,*,/. & (and), | (or), ^ (xor)
  */
-    printf ("evaluando tokens hasta longitud %d\n",final);
+    //printf ("evaluando tokens hasta longitud %d\n",final);
 
     *error_code=0; //asumimos ok
 
