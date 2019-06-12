@@ -234,11 +234,16 @@ int exp_par_is_number(char *texto,int *final)
 //Retorna el indice si esta, -1 si no
 int exp_par_is_token_parser_textos_indices(char *texto,token_parser_textos_indices *textos_indices)
 {
+    printf ("llamando a exp_par_is_token_parser_textos_indices con texto [%s]\n",texto);
 
     int i=0;
 
     while (textos_indices->indice!=TPI_FIN) {
-        if (!strcasecmp(texto,textos_indices->texto)) return i;
+        printf ("i %d\n",i);
+        if (!strcasecmp(texto,textos_indices->texto)) {
+            printf ("es texto %s indice %d\n",textos_indices->texto,textos_indices->indice);
+            return textos_indices->indice;
+        }
         i++;
         textos_indices++;
     }
@@ -308,6 +313,7 @@ int exp_par_is_var_reg(char *texto,int *final)
 
     buffer_texto[i]=0;
 
+    printf ("probando tpti_variables\n");
     if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_variables)>=0) {
         printf ("es variable\n");
         *final=strlen(buffer_texto);
@@ -432,6 +438,7 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //Consideramos variable/registro
             printf ("parsing variable/register from %s\n",expression);
             resultado=exp_par_is_var_reg(expression,&final);
+            printf ("resultado exp_par_is_var_reg %d\n",resultado);
             if (resultado>0) {
                 printf ("final index: %d\n",final);
 
@@ -546,6 +553,14 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
 }
 
+
+
+
+
+
+
+
+
 //Convierte tokens en string
 void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
 {
@@ -598,9 +613,18 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
         }
 
         else {
-            int indice=tokens[i].indice;
-            if (!espacio) sprintf(&expression[dest_string],"%s",indice_a_tabla[indice].texto);
-            else sprintf(&expression[dest_string]," %s ",indice_a_tabla[indice].texto);
+            int indice=tokens[i].indice; //indice a buscar
+
+            //buscar texto que corresponda con ese indice
+            int j;
+            for (j=0;indice_a_tabla[j].indice!=TPT_FIN;j++) {
+                if (indice_a_tabla[j].indice==indice) break;
+            }
+
+            if (!espacio) sprintf(&expression[dest_string],"%s",indice_a_tabla[j].texto,j);
+            else sprintf(&expression[dest_string]," %s ",indice_a_tabla[j].texto);
+
+            //printf ("***MRA=%d \n",TPI_V_MRA);
         }
 
         int longitud=strlen(&expression[dest_string]);
@@ -627,7 +651,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
 
 	        case TPT_VARIABLE: //mra,mrw, etc
                 //temporal
-                resultado=5;
+                resultado=66;
             break;
 
 	        case TPT_REGISTRO: //a, bc, de, etc
@@ -660,6 +684,8 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 	TPT_OPERADOR_CONDICIONAL, //=, <,>, <>,
 	TPT_OPERADOR_CALCULO //+,-,*,/. & (and), | (or), ^ (xor)
      */
+
+    printf ("exp_par_calculate_operador tipo %d indice %d\n",tipo,indice);
 
     switch (tipo) {
             case TPT_NUMERO:

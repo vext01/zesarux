@@ -711,7 +711,7 @@ void codetests_expression_parser(void)
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);	
 
-	char *text_token3="BC>300";
+	/* char *text_token3="BC>300";
 	printf ("\nText to token: %s\n",text_token3);
 	result=exp_par_exp_to_tokens(text_token3,tokens);
 	printf ("result: %d\n",result);
@@ -728,7 +728,7 @@ void codetests_expression_parser(void)
 	printf ("\nText to token: %s\n",text_token5);
 	result=exp_par_exp_to_tokens(text_token5,tokens);
 	printf ("result: %d\n",result);
-	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
+	if (result>=0) codetests_expression_parser_print_tokens(tokens);	*/	
 
 }
 
