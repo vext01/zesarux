@@ -480,8 +480,13 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 //Es un numero
                 //printf ("end number: %c\n",expression[final]);
 
+
+                //Metemos en buffer temporal
+                char buffer_temp[MAX_PARSER_TEXTOS_INDICE_LENGTH];
+                exp_par_copy_string(expression,buffer_temp,final);                
+
                 //Parseamos numero
-                int valor=parse_string_to_number(expression);
+                int valor=parse_string_to_number(buffer_temp);
 
                 //Meter valor en token
                 tokens[indice_token].tipo=TPT_NUMERO;
