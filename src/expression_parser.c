@@ -690,7 +690,7 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 
 //Calcula la expresion identificada por tokens. Funcion recursiva
 //final identifica al siguiente token despues del final. Poner valor alto para que no tenga final y detecte token de fin
-int exp_par_evaluate_token(token_parser *tokens,int final)
+int exp_par_evaluate_token(token_parser *tokens,int final,int nivel)
 {
 /*
 Evaluar expresión:
@@ -702,6 +702,8 @@ Cada condición genera 0 o 1
 
 Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de cálculo: +,-,*,/. & (and), | (or), ^ (xor)
  */
+    printf ("evaluando tokens hasta longitud %d\n",final);
+
     if (final==0) {
         //expresion vacia. no deberia suceder. retornar 0
         return 0;
@@ -712,48 +714,59 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     int i=0;
 
-    //for (i=0;i<final && tokens[i].tipo!=TPT_FIN ;i++) {
-        if (tokens[i].tipo==TPT_OPERADOR_LOGICO) {
+    /*
+    niveles recursividad:
+    0=operadores logicos
+    1=operadores condicionales
+    2=operadores calculo
+    3=numeros,variables, registros
+     */
+
+    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+        if (tokens[i].tipo==TPT_OPERADOR_LOGICO && nivel==0) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
             int valor_derecha;
 
-            valor_izquierda=exp_par_evaluate_token(tokens,i);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM);
+            valor_izquierda=exp_par_evaluate_token(tokens,i,nivel+1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
 
-        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL) {
+        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL && nivel==1) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
             int valor_derecha;
 
-            valor_izquierda=exp_par_evaluate_token(tokens,i);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM);
+            valor_izquierda=exp_par_evaluate_token(tokens,i,nivel+1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
 
-        if (tokens[i].tipo==TPT_OPERADOR_CALCULO) {
+        if (tokens[i].tipo==TPT_OPERADOR_CALCULO && nivel==2) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
             int valor_derecha;
 
-            valor_izquierda=exp_par_evaluate_token(tokens,i);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM);
+            valor_izquierda=exp_par_evaluate_token(tokens,i,nivel+1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }     
 
-        if (tokens[i].tipo==TPT_NUMERO || tokens[i].tipo==TPT_VARIABLE || tokens[i].tipo==TPT_REGISTRO) {
+        if ( (tokens[i].tipo==TPT_NUMERO || tokens[i].tipo==TPT_VARIABLE || tokens[i].tipo==TPT_REGISTRO)
+             //&& nivel==3
+             )
+        {
             return exp_par_calculate_numvarreg(&tokens[i]);
         }
 
-        //otra cosa indica fin
-        return 1;
+        //otra cosa indica fin o error
+        //return 1;
 
 
-    //}
+    }
 
 }
