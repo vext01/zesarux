@@ -119,9 +119,27 @@ token_parser_textos_indices tpti_variables[]={
 
 //Usado en la conversion de texto a tokens, registros:
 token_parser_textos_indices tpti_registros[]={
-    {TPI_R_A,"A"},
-    {TPI_R_BC,"BC"},
-    {TPI_R_DE,"DE"},
+
+	{TPI_R_PC,"PC"},
+    {TPI_R_SP,"SP"},
+    {TPI_R_IX,"IX"},
+    {TPI_R_IY,"IY"},	
+
+	{TPI_R_A,"A"},
+	{TPI_R_B,"B"},
+	{TPI_R_C,"C"},
+	{TPI_R_D,"D"},
+	{TPI_R_E,"E"},
+	{TPI_R_F,"F"},
+	{TPI_R_H,"H"},
+	{TPI_R_L,"L"},
+	{TPI_R_I,"I"},
+	{TPI_R_R,"R"},
+
+        {TPI_R_AF,"AF"},
+        {TPI_R_BC,"BC"},
+        {TPI_R_DE,"DE"},
+        {TPI_R_HL,"HL"},    
 
     {TPI_FIN,""}
 };
@@ -660,9 +678,39 @@ int exp_par_calculate_numvarreg(token_parser *token)
             break;
 
 	        case TPT_REGISTRO: //a, bc, de, etc
-                if (indice==TPI_R_A) return reg_a;
+                /*/if (indice==TPI_R_A) return reg_a;
                 if (indice==TPI_R_BC) return reg_bc;
-                if (indice==TPI_R_DE) return reg_de;
+                if (indice==TPI_R_DE) return reg_de;*/
+                switch (indice) {
+    case TPI_R_PC: return reg_pc; break;
+    case TPI_R_SP: return reg_sp; break;
+    case TPI_R_IX: return reg_ix; break;
+    case TPI_R_IY: return reg_iy; break;	
+
+	case TPI_R_A: return reg_a; break;
+	case TPI_R_B: return reg_b; break;
+	case TPI_R_C: return reg_c; break;
+	case TPI_R_D: return reg_d; break;
+	case TPI_R_E: return reg_e; break;
+	case TPI_R_F: return Z80_FLAGS; break;
+	case TPI_R_H: return reg_h; break;
+	case TPI_R_L: return reg_l; break;
+	case TPI_R_I: return reg_i; break;
+	case TPI_R_R: return (reg_r&127)|(reg_r_bit7&128); break;
+
+        case TPI_R_AF: return REG_AF; break;
+        case TPI_R_BC: return reg_bc; break;
+        case TPI_R_DE: return reg_de; break;
+        case TPI_R_HL: return reg_hl; break;
+
+                    default:
+                        //Para que no se queje el compilador por demas valores enum no tratados
+                    break;
+                }
+
+
+
+
             break;
             
 

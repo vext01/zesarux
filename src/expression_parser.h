@@ -41,9 +41,28 @@ enum token_parser_indice {
 	TPI_V_MRA,
 	TPI_V_MRW,
 	//de tipo registro
+
+	TPI_R_PC,
+    TPI_R_SP,
+    TPI_R_IX,
+    TPI_R_IY,	
+
 	TPI_R_A,
-	TPI_R_BC,
-	TPI_R_DE,
+	TPI_R_B,
+	TPI_R_C,
+	TPI_R_D,
+	TPI_R_E,
+	TPI_R_F,
+	TPI_R_H,
+	TPI_R_L,
+	TPI_R_I,
+	TPI_R_R,
+
+        TPI_R_AF,
+        TPI_R_BC,
+        TPI_R_DE,
+        TPI_R_HL,
+
 	//de tipo operador logico
 	TPI_OL_AND,
 	TPI_OL_OR,
