@@ -30,11 +30,14 @@ resultado variable: 2
 resultado variable: 3
 resultado variable: 99
 
-O 2+3=99
-result: 2
-resultado variable: 2
-resultado variable: 3
-resultado variable: 99
+O 2*3+1 
+result: 9 (con distintas prioridades para +- */)
+
+result: 8 (con mismas prioridades para +- */)
+
+
+7*3=21 -> falso   -> parece que evalua el ultimo 21 dos veces...
+21=7*3 -> verdadero
 
 Bucle de evaluar tokens tienen que ser 3 bucles, uno para cada tipo de operador 
 

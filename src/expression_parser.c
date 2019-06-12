@@ -1134,6 +1134,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     int i=0;
 
  
+    
+
 
     for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
 
@@ -1151,6 +1153,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         }
     }
 
+
+
     for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
 
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL ) {
@@ -1164,16 +1168,42 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
 
+            printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
+
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
     }
 
 
-    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
    
 
+        if (tokens[i].tipo==TPT_OPERADOR_CALCULO 
+        ) {
+            //Evaluar parte izquierda y derecha y aplicar operador
+            int valor_izquierda;
+            int valor_derecha;
 
-        if (tokens[i].tipo==TPT_OPERADOR_CALCULO) {
+            int errorcode1,errorcode2;
+
+            //printf ("calculando desde ")
+            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+
+            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+        }   
+
+    }    
+    
+
+
+    /*for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+   
+        //Para sumas y restas, mas prioridad que dividir o multiplicar
+
+        if (tokens[i].tipo==TPT_OPERADOR_CALCULO && 
+                (tokens[i].indice==TPI_OC_SUMA || tokens[i].indice==TPI_OC_RESTA)
+        ) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
             int valor_derecha;
@@ -1188,6 +1218,29 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         }   
 
     }
+
+
+    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+   
+        //Pero no sumas y restas
+
+        if (tokens[i].tipo==TPT_OPERADOR_CALCULO &&
+        (tokens[i].indice!=TPI_OC_SUMA && tokens[i].indice!=TPI_OC_RESTA)
+        ) {
+            //Evaluar parte izquierda y derecha y aplicar operador
+            int valor_izquierda;
+            int valor_derecha;
+
+            int errorcode1,errorcode2;
+
+            //printf ("calculando desde ")
+            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+
+            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+        }   
+
+    }*/
 
     i=0;
 
