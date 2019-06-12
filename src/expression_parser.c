@@ -626,6 +626,8 @@ int exp_par_calculate_numvarreg(token_parser *token)
             break;
 
 	        case TPT_VARIABLE: //mra,mrw, etc
+                //temporal
+                resultado=5;
             break;
 
 	        case TPT_REGISTRO: //a, bc, de, etc
@@ -723,7 +725,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
      */
 
     for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
-        if (tokens[i].tipo==TPT_OPERADOR_LOGICO && nivel==0) {
+        if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
             int valor_derecha;
@@ -734,7 +736,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
 
-        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL && nivel==1) {
+        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL ) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
             int valor_derecha;
@@ -745,7 +747,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
 
-        if (tokens[i].tipo==TPT_OPERADOR_CALCULO && nivel==2) {
+        if (tokens[i].tipo==TPT_OPERADOR_CALCULO) {
             //Evaluar parte izquierda y derecha y aplicar operador
             int valor_izquierda;
             int valor_derecha;
@@ -754,19 +756,27 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
-        }     
+        }   
+
+    }
+
+    i=0;
 
         if ( (tokens[i].tipo==TPT_NUMERO || tokens[i].tipo==TPT_VARIABLE || tokens[i].tipo==TPT_REGISTRO)
              //&& nivel==3
              )
         {
-            return exp_par_calculate_numvarreg(&tokens[i]);
+            printf ("es variable\n");
+            //tiene que ser numero
+            int resultado=exp_par_calculate_numvarreg(&tokens[i]);
+            printf("resultado variable: %d\n",resultado);
+            return resultado;
         }
 
         //otra cosa indica fin o error
         //return 1;
 
 
-    }
+    //}
 
 }
