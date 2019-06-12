@@ -25,6 +25,7 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *valores negativos, positivos
 *base numerica hexad, binaria, ascii
 *resto de variables....
+* (NN)
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista

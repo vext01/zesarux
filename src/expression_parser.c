@@ -49,6 +49,7 @@
 #include "debug.h"
 #include "operaciones.h"
 #include "screen.h"
+#include "mem128.h"
 
 /*
 
@@ -141,9 +142,14 @@ token_parser_textos_indices tpti_variables[]={
 	{TPI_V_INTFIRED,"INTFIRED"},
 
     {TPI_V_SEG0,"SEG0"},
-    {TPI_V_SEG1,"SEG0"},
-    {TPI_V_SEG2,"SEG0"},
-    {TPI_V_SEG3,"SEG0"},
+    {TPI_V_SEG1,"SEG1"},
+    {TPI_V_SEG2,"SEG2"},
+    {TPI_V_SEG3,"SEG3"},
+
+
+    {TPI_V_RAM,"RAM"},
+    {TPI_V_ROM,"ROM"},
+    	
 
     {TPI_FIN,""}
 };
@@ -816,7 +822,26 @@ int exp_par_calculate_numvarreg(token_parser *token)
         if (MACHINE_IS_Z88) return blink_mapped_memory_banks[3];
     break;            
 
+
+    case TPI_V_ROM:
+	    //ram mapeada en 49152-65535 de Spectrum
+	    if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) return (debug_paginas_memoria_mapeadas[0] & 127);
+
+    break;
 	
+    case TPI_V_RAM:
+	//ram mapeada en 49152-65535 de Spectrum
+	    if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
+		    return debug_paginas_memoria_mapeadas[3];
+		    //TODO. condiciones especiales para mapeo de paginas del +2A tipo ram en rom
+	    }
+
+	//ram mapeada en 49152-65535 de Prism
+        if (MACHINE_IS_PRISM) {
+                return prism_retorna_ram_entra()*2;
+	    }
+
+    break;    
 
                     default:
                         //Para que no se queje el compilador por demas valores enum no tratados
@@ -840,25 +865,6 @@ int exp_par_calculate_numvarreg(token_parser *token)
 			}
 		}
 	}
-
-	//ram mapeada en 49152-65535 de Spectrum
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
-		if (!strcasecmp(registro,"ram")) return debug_paginas_memoria_mapeadas[3];
-
-		//rom mapeada en Spectrum
-		if (!strcasecmp(registro,"rom")) return (debug_paginas_memoria_mapeadas[0] & 127);
-
-		//TODO. condiciones especiales para mapeo de paginas del +2A tipo ram en rom
-	}
-
-	//ram mapeada en 49152-65535 de Prism
-        if (MACHINE_IS_PRISM) {
-                if (!strcasecmp(registro,"ram")) return prism_retorna_ram_entra()*2;
-	}
-
-
-
-	
 
 	
 
@@ -895,7 +901,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
 
                 }
                 //temporal
-                resultado=66;
+                //resultado=66;
             break;
 
 	        case TPT_REGISTRO: //a, bc, de, etc

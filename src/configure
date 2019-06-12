@@ -1418,7 +1418,7 @@ codetests.o: codetests.c codetests.h cpu.h debug.h utils.h operaciones.h ula.h m
 assemble.o: assemble.c assemble.h cpu.h debug.h utils.h
 	\$(CC) \$(CFLAGS) -c assemble.c
 
-expression_parser.o: expression_parser.c expression_parser.h cpu.h debug.h utils.h operaciones.h screen.h
+expression_parser.o: expression_parser.c expression_parser.h cpu.h debug.h utils.h operaciones.h screen.h mem128.h
 	\$(CC) \$(CFLAGS) -c expression_parser.c
 
 kartusho.o: kartusho.c kartusho.h cpu.h debug.h utils.h operaciones.h ula.h
