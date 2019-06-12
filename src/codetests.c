@@ -713,6 +713,19 @@ void codetests_expression_parser(void)
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
 
+	char *text_token4="BC>300 AND A<3 XOR A=4 OR MRA=55";
+	printf ("\nText to token: %s\n",text_token4);
+	result=exp_par_exp_to_tokens(text_token4,tokens);
+	printf ("result: %d\n",result);
+	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
+
+
+	char *text_token5="BC+2>300-1 AND A*2<3 XOR A*4=4 OR MRA*2=55";
+	printf ("\nText to token: %s\n",text_token5);
+	result=exp_par_exp_to_tokens(text_token5,tokens);
+	printf ("result: %d\n",result);
+	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
+
 }
 
 void codetests_main(int main_argc,char *main_argv[])

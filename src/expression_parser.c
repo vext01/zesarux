@@ -275,7 +275,7 @@ int exp_par_is_operador(char *texto,int *final)
 
     //letras hasta que no sean letras
     int i=0;
-    while (!exp_par_is_letter(texto[i])) {
+    while (exp_par_is_letter(texto[i])) {
         i++;
     }
 
@@ -297,7 +297,6 @@ int exp_par_is_var_reg(char *texto,int *final)
     int i=0;
     while (*texto && exp_par_is_letter(*texto) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
         buffer_texto[i]=*texto;
-
         i++;
         texto++;
     }
@@ -309,14 +308,14 @@ int exp_par_is_var_reg(char *texto,int *final)
 
     buffer_texto[i]=0;
 
-    //tpti_operador_condicional
     if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_variables)>=0) {
+        printf ("es variable\n");
         *final=strlen(buffer_texto);
         return 1;
     }
 
-    //tpti_operador_calculo
     if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_registros)>=0) {
+        printf ("es registro\n");
         *final=strlen(buffer_texto);
         return 1;
     }
@@ -350,6 +349,41 @@ int exp_par_parse_var_reg(char *texto,enum token_parser_tipo *tipo,enum token_pa
     return 0;
 
 }
+
+
+//Parsear texto como operador
+//Devuelve 0 si no existe
+int exp_par_parse_operador(char *texto,enum token_parser_tipo *tipo,enum token_parser_indice *indice_final)
+{
+    int indice;
+
+ 
+    indice=exp_par_is_token_parser_textos_indices(texto,tpti_operador_condicional);
+    if (indice>=0) {
+        *tipo=TPT_OPERADOR_CONDICIONAL;
+        *indice_final=indice;
+        return 1;
+    }
+
+    indice=exp_par_is_token_parser_textos_indices(texto,tpti_operador_calculo);
+    if (indice>=0) {
+        *tipo=TPT_OPERADOR_CALCULO;
+        *indice_final=indice;
+        return 1;
+    }
+
+
+    indice=exp_par_is_token_parser_textos_indices(texto,tpti_operador_logico);
+    if (indice>=0) {
+        *tipo=TPT_OPERADOR_LOGICO;
+        *indice_final=indice;
+        return 1;
+    }
+
+    return 0;
+
+}
+
 
 //Copia la cadena origen en destino, con longitud indicada. Agrega 0 al final
 void exp_par_copy_string(char *origen,char *destino, int longitud)
@@ -392,40 +426,13 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //Obtener numero
             int final;
             int resultado;
-            printf ("parsing number from %s\n",expression);
-            resultado=exp_par_is_number(expression,&final);
-            
-            /* if (resultado==-1) {
-                printf ("return number with error\n");
-                return -1; //error
-            }*/
 
-            if (resultado>=0) {
-                printf ("final index: %d\n",final);
-                //Es un numero
-                printf ("end number: %c\n",expression[final]);
+            //Suponer primero que son variables/registros
 
-                //Parseamos numero
-                int valor=parse_string_to_number(expression);
-
-                //Meter valor en token
-                tokens[indice_token].tipo=TPT_NUMERO;
-                //TODO: formato, signo
-
-                //Meter valor
-                tokens[indice_token].valor=valor;
-
-            }
-
-            else {
-                //Consideramos variable/registro
-                printf ("parsing variable/register from %s\n",expression);
-                resultado=exp_par_is_var_reg(expression,&final);
-                if (resultado==-1) {
-                     printf ("return var_reg with error\n");
-                    return -1; //error
-                }
-
+            //Consideramos variable/registro
+            printf ("parsing variable/register from %s\n",expression);
+            resultado=exp_par_is_var_reg(expression,&final);
+            if (resultado>0) {
                 printf ("final index: %d\n",final);
 
                 //Parsear expresion. TODO
@@ -449,6 +456,37 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
            
             }
 
+            else {
+
+                //Consideramos numero
+
+                printf ("parsing number from %s\n",expression);
+                resultado=exp_par_is_number(expression,&final);
+            
+                if (resultado<=0) {
+                    printf ("return number with error\n");
+                    return -1; //error
+                }
+
+            
+                printf ("final index: %d\n",final);
+                //Es un numero
+                printf ("end number: %c\n",expression[final]);
+
+                //Parseamos numero
+                int valor=parse_string_to_number(expression);
+
+                //Meter valor en token
+                tokens[indice_token].tipo=TPT_NUMERO;
+                //TODO: formato, signo
+
+                //Meter valor
+                tokens[indice_token].valor=valor;
+
+            }
+
+            
+
             //Siguiente expresion
             indice_token++;
             expression=&expression[final];
@@ -471,7 +509,25 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 //printf ("end number: %c\n",expression[final]);
 
                 //Parsear expresion. TODO
-                tokens[indice_token].tipo=TPT_OPERADOR_LOGICO; //temporal            
+                //tokens[indice_token].tipo=TPT_OPERADOR_LOGICO; //temporal    
+
+
+
+                //Metemos en buffer temporal
+                char buffer_temp[MAX_PARSER_TEXTOS_INDICE_LENGTH];
+                exp_par_copy_string(expression,buffer_temp,final);
+
+                enum token_parser_tipo tipo;
+                enum token_parser_indice indice;
+
+                if (!exp_par_parse_operador(buffer_temp,&tipo,&indice)) {
+                    printf ("return error exp_par_parse_operador [%s]\n",buffer_temp);
+                    return -1;
+                }
+
+                tokens[indice_token].tipo=tipo;
+                tokens[indice_token].indice=indice;                
+       
             
                 //Siguiente expresion
                 indice_token++;
