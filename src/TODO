@@ -36,7 +36,9 @@ resultado variable: 2
 resultado variable: 3
 resultado variable: 99
 
+Bucle de evaluar tokens tienen que ser 3 bucles, uno para cada tipo de operador 
 
++ y - deben tener más prioridad que * y /
 
 *condicion opcode
 *valores negativos, positivos

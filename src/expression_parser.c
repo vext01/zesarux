@@ -1149,6 +1149,9 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
+    }
+
+    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
 
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL ) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -1163,8 +1166,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
+    }
 
-    
+
+    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+   
 
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO) {
