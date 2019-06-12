@@ -1160,8 +1160,7 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 
         if (!strcasecmp(registro,"fs")) return ( Z80_FLAGS & FLAG_S ? 1 : 0);
         if (!strcasecmp(registro,"fz")) return ( Z80_FLAGS & FLAG_Z ? 1 : 0);
-        if (!strcasecmp(registro,"fp") || !strcasecmp(registro,"fv"))
-            return ( Z80_FLAGS & FLAG_PV ? 1 : 0);
+        if (!strcasecmp(registro,"fp") || !strcasecmp(registro,"fv"))    return ( Z80_FLAGS & FLAG_PV ? 1 : 0);
         if (!strcasecmp(registro,"fh")) return ( Z80_FLAGS & FLAG_H ? 1 : 0);
         if (!strcasecmp(registro,"fn")) return ( Z80_FLAGS & FLAG_N ? 1 : 0);
         if (!strcasecmp(registro,"fc")) return ( Z80_FLAGS & FLAG_C ? 1 : 0);

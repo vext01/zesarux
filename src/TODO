@@ -19,7 +19,12 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *compression tokens no siempre estan hasta el 255
 
 
-
+-expression parser:
+*cuando hay varias sumas , restas, etc el orden es de derecha a izquierda y tiene un efecto extraño
+*condicion opcode
+*valores negativos, positivos
+*base numerica hexad, binaria, ascii
+*resto de variables....
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista

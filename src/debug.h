@@ -354,5 +354,18 @@ extern void debug_get_daad_runto_parse_string(char *texto);
 
 extern void debug_exec_show_backtrace(void);
 
+extern unsigned int debug_mmu_mrv;
+extern unsigned int debug_mmu_mwv;
+extern unsigned int debug_mmu_prv;
+extern unsigned int debug_mmu_pwv;
+
+extern unsigned int debug_mmu_pra;
+extern unsigned int debug_mmu_pwa;
+
+extern unsigned int debug_mmu_mra;
+extern unsigned int debug_mmu_mwa;
+
+extern unsigned int anterior_debug_mmu_mra;
+extern unsigned int anterior_debug_mmu_mwa;
 
 #endif

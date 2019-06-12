@@ -47,6 +47,8 @@
 #include "expression_parser.h"
 #include "utils.h"
 #include "debug.h"
+#include "operaciones.h"
+#include "screen.h"
 
 /*
 
@@ -111,8 +113,32 @@ Al final esto dará un valor 0 o diferente de 0. A efectos de disparar breakpoin
 
 //Usado en la conversion de texto a tokens, variables:
 token_parser_textos_indices tpti_variables[]={
-	{TPI_V_MRA,"MRA"},
-	{TPI_V_MRW,"MRW"},
+    {TPI_V_MRA,"MRA"},
+	{TPI_V_MRV,"MRV"},
+
+	{TPI_V_MWV,"MWV"},
+	{TPI_V_MWA,"MWA"},
+
+	//Puertos
+	{TPI_V_PRV,"PRV"},
+	{TPI_V_PRA,"PRA"},
+
+	{TPI_V_PWV,"PWV"},
+	{TPI_V_PWA,"PWA"},
+
+	{TPI_V_TSTATES,"TSTATES"},
+	{TPI_V_TSTATESL,"TSTATESL"},
+	{TPI_V_TSTATESP,"TSTATESP"},
+
+	{TPI_V_SCANLINE,"SCANLINE"},
+
+
+	{TPI_V_IFF1,"IFF1"},
+	{TPI_V_IFF2,"IFF2"},
+
+	{TPI_V_OUTFIRED,"OUTFIRED"},
+	{TPI_V_INFIRED,"INFIRED"},
+	{TPI_V_INTFIRED,"INTFIRED"},
 
     {TPI_FIN,""}
 };
@@ -155,6 +181,22 @@ token_parser_textos_indices tpti_registros[]={
         {TPI_R_BC_SHADOW,"BC'"},
         {TPI_R_DE_SHADOW,"DE'"},
         {TPI_R_HL_SHADOW,"HL'"},   
+
+        {TPI_R_FS,"FS"},
+        {TPI_R_FZ,"FZ"},
+        {TPI_R_FP,"FP"},
+        {TPI_R_FV,"FV"},    
+        {TPI_R_FH,"FH"},
+        {TPI_R_FN,"FN"},
+        {TPI_R_FC,"FC"},  
+
+	    {TPI_R_P_BC,"(BC)"},
+        {TPI_R_P_DE,"(DE)"},
+        {TPI_R_P_HL,"(HL)"},
+        {TPI_R_P_SP,"(SP)"},
+        {TPI_R_P_PC,"(PC)"},
+        {TPI_R_P_IX,"(IX)"},
+        {TPI_R_P_IY,"(IY)"},             
 
 
     {TPI_FIN,""}
@@ -330,6 +372,21 @@ int exp_par_is_operador(char *texto,int *final)
 
 }
 
+//Considerar caracteres auxiliares para registros: ' , (), pero no ciua
+int exp_par_char_is_reg_aux(char c)
+{
+    if (c=='\'' || c=='(' || c==')') return 1;
+    else return 0;
+}
+
+//Considerar caracteres auxiliares para variables: 12,  como iff1 y iff2, pero no al principio
+int exp_par_char_is_reg_aux_more(char c,int i)
+{
+    if (i==0) return 0;
+
+    if (c=='1' || c=='2') return 1;
+    else return 0;
+}
 
 //Dice si una expresion es variable/registro, y dice donde acaba (caracter siguiente)
 //Retorna 1 si lo es. 0 si no. -1 si hay error parseando
@@ -341,8 +398,8 @@ int exp_par_is_var_reg(char *texto,int *final)
     char buffer_texto[MAX_PARSER_TEXTOS_INDICE_LENGTH];
 
     int i=0;
-    while (*texto && (exp_par_is_letter(*texto) || *texto=='\'') && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
-        //consideramos que pueden acabar los registros con '
+    while (*texto && (exp_par_is_letter(*texto) || exp_par_char_is_reg_aux(*texto) || exp_par_char_is_reg_aux_more(*texto,i) ) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
+        //consideramos que pueden acabar los registros con ' ()
 
         buffer_texto[i]=*texto;
         i++;
@@ -698,6 +755,127 @@ int exp_par_calculate_numvarreg(token_parser *token)
             break;
 
 	        case TPT_VARIABLE: //mra,mrw, etc
+                switch (indice) {
+                    
+
+//Variables de la MMU
+	//Memoria
+    case TPI_V_MRA: return debug_mmu_mra; break;
+	case TPI_V_MRV: return debug_mmu_mrv; break;
+
+	case TPI_V_MWV: return debug_mmu_mwv; break;
+	case TPI_V_MWA: return debug_mmu_mwa; break;
+
+	//Puertos
+	case TPI_V_PRV: return debug_mmu_prv; break;
+	case TPI_V_PRA: return debug_mmu_pra; break;
+
+	case TPI_V_PWV: return debug_mmu_pwv; break;
+	case TPI_V_PWA: return debug_mmu_pwa; break;
+
+	//T-estados
+	case TPI_V_TSTATES: return t_estados; break;
+	case TPI_V_TSTATESL: return t_estados % screen_testados_linea; break;
+	case TPI_V_TSTATESP: return debug_t_estados_parcial; break;
+
+	case TPI_V_SCANLINE: return t_scanline_draw; break;
+
+
+
+	//interrupciones
+	case TPI_V_IFF1: return iff1.v; break;
+	case TPI_V_IFF2: return iff2.v; break;
+
+	//se acaba de lanzar un out
+	case TPI_V_OUTFIRED: return debug_fired_out; break;
+	//se acaba de lanzar un in
+	case TPI_V_INFIRED: return debug_fired_in; break;
+	//se acaba de generar una interrupcion
+	case TPI_V_INTFIRED: return debug_fired_interrupt; break;	
+
+
+                    default:
+                        //Para que no se queje el compilador por demas valores enum no tratados
+                    break;
+
+/*
+//si (NN)
+	if (registro[0]=='(') {
+		int s=strlen(registro);
+		if (s>2) {
+			if (registro[s-1]==')') {
+				char buf_direccion[MAX_BREAKPOINT_CONDITION_LENGTH];
+				//copiar saltando parentesis inicial
+				sprintf (buf_direccion,"%s",&registro[1]);
+				//quitar parentesis final
+				//(16384) -> s=7 -> buf_direccion=16384). () -> s=2 ->buf_direccion=) .
+				buf_direccion[s-2]=0;
+				//printf ("buf_direccion: %s\n",buf_direccion);
+				z80_int direccion=parse_string_to_number(buf_direccion);
+				return peek_byte_no_time(direccion);
+			}
+		}
+	}
+
+	//ram mapeada en 49152-65535 de Spectrum
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
+		if (!strcasecmp(registro,"ram")) return debug_paginas_memoria_mapeadas[3];
+
+		//rom mapeada en Spectrum
+		if (!strcasecmp(registro,"rom")) return (debug_paginas_memoria_mapeadas[0] & 127);
+
+		//TODO. condiciones especiales para mapeo de paginas del +2A tipo ram en rom
+	}
+
+	//ram mapeada en 49152-65535 de Prism
+        if (MACHINE_IS_PRISM) {
+                if (!strcasecmp(registro,"ram")) return prism_retorna_ram_entra()*2;
+	}
+
+	//bancos memoria Z88
+	if (MACHINE_IS_Z88) {
+		if (!strcasecmp(registro,"seg0")) return blink_mapped_memory_banks[0];
+		if (!strcasecmp(registro,"seg1")) return blink_mapped_memory_banks[1];
+		if (!strcasecmp(registro,"seg2")) return blink_mapped_memory_banks[2];
+		if (!strcasecmp(registro,"seg3")) return blink_mapped_memory_banks[3];
+	}
+
+	
+
+	
+
+	//enterrom, exitrom
+
+//Avisa cuando se ha entrado o salido de rom. Solo salta una vez el breakpoint
+//0: no esta en rom
+//1: esta en rom y aun no ha saltado breakpoint
+//2: esta en rom y ya ha saltado breakpoint
+//int debug_enterrom=0;
+
+//0: no ha salido de rom
+//1: ha salido de rom y aun no ha saltado breakpoint
+//2: ha salido de rom y ya ha saltado breakpoint
+//int debug_exitrom=0;
+
+
+	if (!strcasecmp(registro,"enterrom")) {
+		if (debug_enterrom==1) {
+			debug_enterrom++;
+			return 1;
+		}
+		return 0;
+	}
+
+	if (!strcasecmp(registro,"exitrom")) {
+		if (debug_exitrom==1) {
+			debug_exitrom++;
+			return 1;
+		}
+		return 0;
+	}
+ */
+
+                }
                 //temporal
                 resultado=66;
             break;
@@ -744,8 +922,26 @@ int exp_par_calculate_numvarreg(token_parser *token)
         case TPI_R_DE_SHADOW: return REG_DE_SHADOW; break;
         case TPI_R_HL_SHADOW: return REG_HL_SHADOW; break;
 
+        case TPI_R_FS: return ( Z80_FLAGS & FLAG_S ? 1 : 0); break;
+        case TPI_R_FZ: return ( Z80_FLAGS & FLAG_Z ? 1 : 0); break;
+
+        case TPI_R_FP: 
+        case TPI_R_FV: 
+            return ( Z80_FLAGS & FLAG_PV ? 1 : 0);
+        break;
+
+        case TPI_R_FH: return ( Z80_FLAGS & FLAG_H ? 1 : 0); break;
+        case TPI_R_FN: return ( Z80_FLAGS & FLAG_N ? 1 : 0); break;
+        case TPI_R_FC: return ( Z80_FLAGS & FLAG_C ? 1 : 0); break;
 
 
+	    case TPI_R_P_BC: return peek_byte_no_time(reg_bc); break;
+        case TPI_R_P_DE: return peek_byte_no_time(reg_de); break;
+        case TPI_R_P_HL: return peek_byte_no_time(reg_hl); break;
+        case TPI_R_P_SP: return peek_byte_no_time(reg_sp); break;
+        case TPI_R_P_PC: return peek_byte_no_time(reg_pc); break;
+        case TPI_R_P_IX: return peek_byte_no_time(reg_ix); break;
+        case TPI_R_P_IY: return peek_byte_no_time(reg_iy); break;        
 
 
                     default:
@@ -853,7 +1049,13 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
                 }         
 
                 if (indice==TPI_OC_DIVISION) {
-                    return valor_izquierda / valor_derecha;
+
+                    //controlar division por cero
+                    if (valor_derecha==0) {
+                        //retornamos valor 16 bits maximo
+                        return 0xffff;
+                    }
+                    else return valor_izquierda / valor_derecha;
                 }        
 
                 if (indice==TPI_OC_AND) {

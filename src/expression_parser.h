@@ -38,8 +38,32 @@ enum token_parser_tipo {
 enum token_parser_indice {
 	TPI_FIN, //para indicar final de array
 	//de tipo variable
-	TPI_V_MRA,
-	TPI_V_MRW,
+  	TPI_V_MRA,
+	TPI_V_MRV,
+
+	TPI_V_MWV,
+	TPI_V_MWA,
+
+	//Puertos
+	TPI_V_PRV,
+	TPI_V_PRA,
+
+	TPI_V_PWV,
+	TPI_V_PWA,
+
+	TPI_V_TSTATES,
+	TPI_V_TSTATESL,
+	TPI_V_TSTATESP,
+
+	TPI_V_SCANLINE,
+
+
+	TPI_V_IFF1,
+	TPI_V_IFF2,
+
+	TPI_V_OUTFIRED,
+	TPI_V_INFIRED,
+	TPI_V_INTFIRED,
 	//de tipo registro
 
 	TPI_R_PC,
@@ -77,8 +101,21 @@ enum token_parser_indice {
         TPI_R_DE_SHADOW,
         TPI_R_HL_SHADOW,
 
+        TPI_R_FS,
+        TPI_R_FZ,
+        TPI_R_FP,
+        TPI_R_FV,    
+        TPI_R_FH,
+        TPI_R_FN,
+        TPI_R_FC,
 
-
+	    TPI_R_P_BC,
+        TPI_R_P_DE,
+        TPI_R_P_HL,
+        TPI_R_P_SP,
+        TPI_R_P_PC,
+        TPI_R_P_IX,
+        TPI_R_P_IY,
 
 	//de tipo operador logico
 	TPI_OL_AND,
