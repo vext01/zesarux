@@ -687,7 +687,8 @@ void codetests_expression_parser_print_tokens(token_parser *tokens)
 	printf ("[%s]\n",buffer_destino);	
 
 	printf ("Resultado expresion tokens\n");
-	int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,0);
+	int error_code;
+	int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
 	printf ("%d\n",resultado);
 }
 
@@ -696,37 +697,47 @@ void codetests_expression_parser(void)
 	//void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
 	//Mis tokens de salida
-	token_parser tokens[200];
+	token_parser tokens[MAX_PARSER_TOKENS_NUM];
 	int result;
 
-	char *text_token1="34";
-	printf ("\nText to token: %s\n",text_token1);
-	result=exp_par_exp_to_tokens(text_token1,tokens);
+	char *text_token;
+
+	text_token="34";
+	printf ("\nText to token: %s\n",text_token);
+	result=exp_par_exp_to_tokens(text_token,tokens);
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);
 
-	char *text_token2="MRA>3";
-	printf ("\nText to token: %s\n",text_token2);
-	result=exp_par_exp_to_tokens(text_token2,tokens);
+	text_token="MRA>3";
+	printf ("\nText to token: %s\n",text_token);
+	result=exp_par_exp_to_tokens(text_token,tokens);
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);	
 
-	/* char *text_token3="BC>300";
-	printf ("\nText to token: %s\n",text_token3);
-	result=exp_par_exp_to_tokens(text_token3,tokens);
+	text_token="1+2*3+4*5";
+	printf ("\nText to token: %s\n",text_token);
+	result=exp_par_exp_to_tokens(text_token,tokens);
+	printf ("result: %d\n",result);
+	if (result>=0) codetests_expression_parser_print_tokens(tokens);	
+
+	
+
+	/* char *text_token="BC>300";
+	printf ("\nText to token: %s\n",text_token);
+	result=exp_par_exp_to_tokens(text_token,tokens);
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
 
-	char *text_token4="BC>300 AND A<3 XOR A=4 OR MRA=55";
-	printf ("\nText to token: %s\n",text_token4);
-	result=exp_par_exp_to_tokens(text_token4,tokens);
+	char *text_token="BC>300 AND A<3 XOR A=4 OR MRA=55";
+	printf ("\nText to token: %s\n",text_token);
+	result=exp_par_exp_to_tokens(text_token,tokens);
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
 
 
-	char *text_token5="BC+2>300-1 AND A*2<3 XOR A*4=4 OR MRA*2=55";
-	printf ("\nText to token: %s\n",text_token5);
-	result=exp_par_exp_to_tokens(text_token5,tokens);
+	char *text_token="BC+2>300-1 AND A*2<3 XOR A*4=4 OR MRA*2=55";
+	printf ("\nText to token: %s\n",text_token);
+	result=exp_par_exp_to_tokens(text_token,tokens);
 	printf ("result: %d\n",result);
 	if (result>=0) codetests_expression_parser_print_tokens(tokens);	*/	
 

@@ -97,6 +97,7 @@
 #include "settings.h"
 #include "datagear.h"
 #include "assemble.h"
+#include "expression_parser.h"
 
  
 #if defined(__APPLE__)
@@ -10571,7 +10572,48 @@ void menu_breakpoints_condition_evaluate(MENU_ITEM_PARAMETERS)
         menu_generic_message_format("Result","%s -> %s",string_texto,(result ? "True" : "False " ));
 }
 
+void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
+{
 
+        char string_texto[MAX_BREAKPOINT_CONDITION_LENGTH];
+	string_texto[0]=0;
+
+        menu_ventana_scanf("Expression",string_texto,MAX_BREAKPOINT_CONDITION_LENGTH);
+
+
+        //menu_generic_message_format("Result","%s -> %s",string_texto,(result ? "True" : "False " ));
+
+
+
+	//void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
+
+	//Mis tokens de salida
+	token_parser tokens[MAX_PARSER_TOKENS_NUM];
+	int result;
+
+	//printf ("\nText to token: %s\n",string_texto);
+	result=exp_par_exp_to_tokens(string_texto,tokens);
+	//printf ("result: %d\n",result);
+	if (result>=0) {
+			//Pasamos primero a string de nuevo
+			char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
+			exp_par_tokens_to_exp(tokens,string_detoken);
+			
+			int error_code;  
+			
+			
+			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
+			menu_generic_message_format("Result","Parsed string: %s\nResult: %d",
+				string_detoken,resultado);
+
+			printf ("%d\n",resultado);
+	}
+	else {
+		menu_error_message("Error parsing");
+	}
+
+
+}
 
 
 
@@ -10635,6 +10677,10 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_breakpoints,'e');
 		menu_add_item_menu_tooltip(array_menu_breakpoints,"Test if a condition is true");
 		menu_add_item_menu_ayuda(array_menu_breakpoints,"It tests a condition using the same method as breakpoint conditions below");
+
+		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate_new,NULL,"NewEvaluate Expression");
+		menu_add_item_menu_tooltip(array_menu_breakpoints,"Evaluate expression using new parser");
+		menu_add_item_menu_ayuda(array_menu_breakpoints,"Evaluate expression using new parser");		
 
 		//Maximo 10 breakpoints mostrados en pantalla. Para mas, usar ZRCP
         for (i=0;i<MAX_BREAKPOINTS_CONDITIONS && i<10;i++) {

@@ -234,14 +234,14 @@ int exp_par_is_number(char *texto,int *final)
 //Retorna el indice si esta, -1 si no
 int exp_par_is_token_parser_textos_indices(char *texto,token_parser_textos_indices *textos_indices)
 {
-    printf ("llamando a exp_par_is_token_parser_textos_indices con texto [%s]\n",texto);
+    //printf ("llamando a exp_par_is_token_parser_textos_indices con texto [%s]\n",texto);
 
     int i=0;
 
     while (textos_indices->indice!=TPI_FIN) {
-        printf ("i %d\n",i);
+        //printf ("i %d\n",i);
         if (!strcasecmp(texto,textos_indices->texto)) {
-            printf ("es texto %s indice %d\n",textos_indices->texto,textos_indices->indice);
+            //printf ("es texto %s indice %d\n",textos_indices->texto,textos_indices->indice);
             return textos_indices->indice;
         }
         i++;
@@ -313,15 +313,15 @@ int exp_par_is_var_reg(char *texto,int *final)
 
     buffer_texto[i]=0;
 
-    printf ("probando tpti_variables\n");
+    //printf ("probando tpti_variables\n");
     if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_variables)>=0) {
-        printf ("es variable\n");
+        //printf ("es variable\n");
         *final=strlen(buffer_texto);
         return 1;
     }
 
     if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_registros)>=0) {
-        printf ("es registro\n");
+        //printf ("es registro\n");
         *final=strlen(buffer_texto);
         return 1;
     }
@@ -436,11 +436,11 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //Suponer primero que son variables/registros
 
             //Consideramos variable/registro
-            printf ("parsing variable/register from %s\n",expression);
+            //printf ("parsing variable/register from %s\n",expression);
             resultado=exp_par_is_var_reg(expression,&final);
-            printf ("resultado exp_par_is_var_reg %d\n",resultado);
+            //printf ("resultado exp_par_is_var_reg %d\n",resultado);
             if (resultado>0) {
-                printf ("final index: %d\n",final);
+                //printf ("final index: %d\n",final);
 
                 //Parsear expresion. TODO
                 //tokens[indice_token].tipo=TPT_VARIABLE; //temporal
@@ -467,18 +467,18 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
                 //Consideramos numero
 
-                printf ("parsing number from %s\n",expression);
+                //printf ("parsing number from %s\n",expression);
                 resultado=exp_par_is_number(expression,&final);
             
                 if (resultado<=0) {
-                    printf ("return number with error\n");
+                    //printf ("return number with error\n");
                     return -1; //error
                 }
 
             
-                printf ("final index: %d\n",final);
+                //printf ("final index: %d\n",final);
                 //Es un numero
-                printf ("end number: %c\n",expression[final]);
+                //printf ("end number: %c\n",expression[final]);
 
                 //Parseamos numero
                 int valor=parse_string_to_number(expression);
@@ -504,14 +504,14 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //Si no final, 
             if ( (*expression)!=0) {
                 //Calcular operador
-                printf ("parsing operador from %s\n",expression);
+                //printf ("parsing operador from %s\n",expression);
                 resultado=exp_par_is_operador(expression,&final);
                 if (resultado==-1) {
                     printf ("return operador with error\n");
                     return -1; //error
                 }
 
-                printf ("final index: %d\n",final);
+                //printf ("final index: %d\n",final);
 
                 //printf ("end number: %c\n",expression[final]);
 
@@ -528,7 +528,7 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 enum token_parser_indice indice;
 
                 if (!exp_par_parse_operador(buffer_temp,&tipo,&indice)) {
-                    printf ("return error exp_par_parse_operador [%s]\n",buffer_temp);
+                    //printf ("return error exp_par_parse_operador [%s]\n",buffer_temp);
                     return -1;
                 }
 
@@ -621,7 +621,7 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
                 if (indice_a_tabla[j].indice==indice) break;
             }
 
-            if (!espacio) sprintf(&expression[dest_string],"%s",indice_a_tabla[j].texto,j);
+            if (!espacio) sprintf(&expression[dest_string],"%s",indice_a_tabla[j].texto);
             else sprintf(&expression[dest_string]," %s ",indice_a_tabla[j].texto);
 
             //printf ("***MRA=%d \n",TPI_V_MRA);
@@ -685,7 +685,7 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 	TPT_OPERADOR_CALCULO //+,-,*,/. & (and), | (or), ^ (xor)
      */
 
-    printf ("exp_par_calculate_operador tipo %d indice %d\n",tipo,indice);
+    //printf ("exp_par_calculate_operador tipo %d indice %d\n",tipo,indice);
 
     switch (tipo) {
             case TPT_NUMERO:
@@ -698,17 +698,74 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 
 	        case TPT_OPERADOR_LOGICO:  //and, or, xor
 
+                if (indice==TPI_OL_AND) {   
+                    if (valor_izquierda && valor_derecha) resultado=1;
+                }
+
+                if (indice==TPI_OL_OR) {   
+                    if (valor_izquierda || valor_derecha) resultado=1;
+                }                
+
+                if (indice==TPI_OL_XOR) {
+                    if (valor_izquierda && valor_derecha) resultado=0;  
+                    else if (!valor_izquierda && valor_derecha) resultado=1;  
+                    else if (valor_izquierda && !valor_derecha) resultado=1;  
+                    else resultado=0; //ambos a 0
+                }                   
+
             break;
 
             case TPT_OPERADOR_CONDICIONAL:  //=, <,>, <>,
-            printf ("operaodr condicional\n"); 
+            //printf ("operaodr condicional\n"); 
                 if (indice==TPI_OC_MAYOR) {
-                    printf ("operaodr mayor\n");    
+                    //printf ("operaodr mayor\n");    
                     if (valor_izquierda>valor_derecha) resultado=1;
                 }
+                if (indice==TPI_OC_MENOR) {   
+                    if (valor_izquierda<valor_derecha) resultado=1;
+                }
+
+                if (indice==TPI_OC_IGUAL) {   
+                    if (valor_izquierda==valor_derecha) resultado=1;
+                }           
+
+                if (indice==TPI_OC_DIFERENTE) {  
+                    if (valor_izquierda!=valor_derecha) resultado=1;
+                }                          
+
             break;
 
             case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
+
+                if (indice==TPI_OC_SUMA) {
+                    printf ("sumando %d y %d\n",valor_izquierda,valor_derecha);
+                    resultado=valor_izquierda + valor_derecha;
+                }         
+
+                if (indice==TPI_OC_RESTA) {
+                    resultado=valor_izquierda - valor_derecha;
+                }          
+
+                if (indice==TPI_OC_MULTIPLICACION) {
+                    printf ("multiplicando %d y %d\n",valor_izquierda,valor_derecha);
+                    resultado=valor_izquierda * valor_derecha;
+                }         
+
+                if (indice==TPI_OC_DIVISION) {
+                    resultado=valor_izquierda / valor_derecha;
+                }        
+
+                if (indice==TPI_OC_AND) {
+                    resultado=valor_izquierda & valor_derecha;
+                }     
+
+                if (indice==TPI_OC_OR) {
+                    resultado=valor_izquierda | valor_derecha;
+                }          
+
+                if (indice==TPI_OC_XOR) {
+                    resultado=valor_izquierda ^ valor_derecha;
+                }                                                                          
 
             break;
 
@@ -722,7 +779,7 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 
 //Calcula la expresion identificada por tokens. Funcion recursiva
 //final identifica al siguiente token despues del final. Poner valor alto para que no tenga final y detecte token de fin
-int exp_par_evaluate_token(token_parser *tokens,int final,int nivel)
+int exp_par_evaluate_token(token_parser *tokens,int final,int *error_code)
 {
 /*
 Evaluar expresión:
@@ -736,8 +793,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
  */
     printf ("evaluando tokens hasta longitud %d\n",final);
 
+    *error_code=0; //asumimos ok
+
     if (final==0) {
         //expresion vacia. no deberia suceder. retornar 0
+        *error_code=1;
         return 0;
     }
 
@@ -746,13 +806,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     int i=0;
 
-    /*
-    niveles recursividad:
-    0=operadores logicos
-    1=operadores condicionales
-    2=operadores calculo
-    3=numeros,variables, registros
-     */
+ 
 
     for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
         if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
@@ -760,8 +814,10 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int valor_izquierda;
             int valor_derecha;
 
-            valor_izquierda=exp_par_evaluate_token(tokens,i,nivel+1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
+            int errorcode1,errorcode2;
+
+            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
@@ -771,9 +827,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int valor_izquierda;
             int valor_derecha;
 
-            printf ("dividiendo condicionales\n");
-            valor_izquierda=exp_par_evaluate_token(tokens,i,nivel+1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
+            int errorcode1,errorcode2;
+
+            //printf ("dividiendo condicionales\n");
+            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
@@ -783,8 +841,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int valor_izquierda;
             int valor_derecha;
 
-            valor_izquierda=exp_par_evaluate_token(tokens,i,nivel+1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,nivel+1);
+            int errorcode1,errorcode2;
+
+            //printf ("calculando desde ")
+            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
@@ -793,21 +854,19 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     i=0;
 
-        if ( (tokens[i].tipo==TPT_NUMERO || tokens[i].tipo==TPT_VARIABLE || tokens[i].tipo==TPT_REGISTRO)
-             //&& nivel==3
+    if ( (tokens[i].tipo==TPT_NUMERO || tokens[i].tipo==TPT_VARIABLE || tokens[i].tipo==TPT_REGISTRO)
              )
-        {
-            printf ("es variable\n");
+    {
+            //printf ("es variable\n");
             //tiene que ser numero
             int resultado=exp_par_calculate_numvarreg(&tokens[i]);
             printf("resultado variable: %d\n",resultado);
             return resultado;
-        }
-
-        //otra cosa indica fin o error
-        //return 1;
+    }
 
 
-    //}
+    //Aqui no deberia llegar nunca
+    *error_code=1;
+    return 0;
 
 }

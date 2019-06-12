@@ -97,6 +97,6 @@ typedef struct s_token_parser_textos_indices token_parser_textos_indices;
 
 extern int exp_par_exp_to_tokens(char *expression,token_parser *tokens);
 extern void exp_par_tokens_to_exp(token_parser *tokens,char *expression);
-int exp_par_evaluate_token(token_parser *tokens,int final,int nivel);
+int exp_par_evaluate_token(token_parser *tokens,int final,int *error_code);
 
 #endif
