@@ -111,57 +111,57 @@ Al final esto dará un valor 0 o diferente de 0. A efectos de disparar breakpoin
 
 //Usado en la conversion de texto a tokens, variables:
 token_parser_textos_indices tpti_variables[]={
-	TPI_V_MRA,"MRA",
-	TPI_V_MRW,"MRW",
+	{TPI_V_MRA,"MRA"},
+	{TPI_V_MRW,"MRW"},
 
-    TPI_FIN,""
+    {TPI_FIN,""}
 };
 
 //Usado en la conversion de texto a tokens, registros:
 token_parser_textos_indices tpti_registros[]={
-    TPI_R_A,"A",
-    TPI_R_BC,"BC",
-    TPI_R_DE,"DE",
+    {TPI_R_A,"A"},
+    {TPI_R_BC,"BC"},
+    {TPI_R_DE,"DE"},
 
-    TPI_FIN,""
+    {TPI_FIN,""}
 };
 
 //Usado en la conversion de texto a tokens, operador logico:
 token_parser_textos_indices tpti_operador_logico[]={
 
 	//de tipo operador logico
-	TPI_OL_AND,"AND",
-	TPI_OL_OR,"OR",
-	TPI_OL_XOR,"XOR",
+	{TPI_OL_AND,"AND"},
+	{TPI_OL_OR,"OR"},
+	{TPI_OL_XOR,"XOR"},
 
-    TPI_FIN,""
+    {TPI_FIN,""}
 };
 
 
 //Usado en la conversion de texto a tokens, operador condicional:
 token_parser_textos_indices tpti_operador_condicional[]={
 
-	TPI_OC_IGUAL,"=",
-	TPI_OC_MENOR,"<",
-	TPI_OC_MAYOR,">",
-	TPI_OC_DIFERENTE,"<>",
+	{TPI_OC_IGUAL,"="},
+	{TPI_OC_MENOR,"<"},
+	{TPI_OC_MAYOR,">"},
+	{TPI_OC_DIFERENTE,"<>"},
 
-    TPI_FIN,""
+    {TPI_FIN,""}
 };
 
 
 //Usado en la conversion de texto a tokens, operador calculo:
 token_parser_textos_indices tpti_operador_calculo[]={
 
-	TPI_OC_SUMA,"+",
-	TPI_OC_RESTA,"-",
-	TPI_OC_MULTIPLICACION,"*",
-	TPI_OC_DIVISION,"/",
-	TPI_OC_AND,"&",	
-	TPI_OC_OR,"|",
-	TPI_OC_XOR,"^",
+	{TPI_OC_SUMA,"+"},
+	{TPI_OC_RESTA,"-"},
+	{TPI_OC_MULTIPLICACION,"*"},
+	{TPI_OC_DIVISION,"/"},
+	{TPI_OC_AND,"&"},	
+	{TPI_OC_OR,"|"},
+	{TPI_OC_XOR,"^"},
 
-    TPI_FIN,""
+    {TPI_FIN,""}
 };    
 
 //Dice si caracter es digito 0...9
@@ -218,8 +218,8 @@ int exp_par_is_number(char *texto,int *final)
 
 }
 
-//Convierte expression de entrada en tokens
-void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
+//Convierte expression de entrada en tokens. Devuelve <0 si error
+int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 {
     /*
     Expresion de entrada:
@@ -240,10 +240,43 @@ void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
     int indice_token=0;
 
     while (*expression) {
+        //Si hay espacio, saltar
+        if ( (*expression)==' ') expression++;
+        else {
+            //Obtener numero
+            int final;
+            int resultado;
+            resultado=exp_par_is_number(expression,&final);
+            if (resultado==-1) return -1; //error
 
+            //Parseamos numero
+            int valor=parse_string_to_number(expression);
+
+            //Meter valor en token
+            tokens[indice_token].tipo=TPT_NUMERO;
+            //TODO: formato, signo
+
+            //Meter valor
+            tokens[indice_token].valor=valor;
+
+            //Siguiente expresion
+            indice_token++;
+            expression=&expression[final];
+
+            //saltar espacios
+            while ( (*expression)==' ') expression++;
+
+            //Si no final, 
+            if ( (*expression)!=0) {
+                //Calcular operador
+            }
+
+        }
     };
 
     //Poner final de token
     tokens[indice_token].tipo=TPT_FIN;
+
+    return 0;
 
 }

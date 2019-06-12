@@ -667,6 +667,7 @@ void codetests_expression_parser_print_tokens(token_parser *tokens)
 {
 	int i=0;
 
+	printf ("Printing tokens\n");
 	while (tokens[i].tipo!=TPT_FIN) {
 		printf ("%d: tipo: %d indice: %d formato: %d signo: %d valor: %d\n",
 			i,
@@ -686,11 +687,19 @@ void codetests_expression_parser(void)
 
 	//Mis tokens de salida
 	token_parser tokens[200];
+	int result;
 
-	char *text_token1="MRA>3";
+	char *text_token1="34";
 	printf ("Text to token: %s\n",text_token1);
-	exp_par_exp_to_tokens(text_token1,tokens);
+	result=exp_par_exp_to_tokens(text_token1,tokens);
+	printf ("result: %d\n",result);
 	codetests_expression_parser_print_tokens(tokens);
+
+	char *text_token2="MRA>3";
+	printf ("Text to token: %s\n",text_token2);
+	result=exp_par_exp_to_tokens(text_token2,tokens);
+	printf ("result: %d\n",result);
+	codetests_expression_parser_print_tokens(tokens);	
 
 }
 
