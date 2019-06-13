@@ -678,12 +678,12 @@ Funciones de paso de tokens a string
 */
 
 //Convierte tokens en string
-void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
+void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
 {
 	int i=0;
     int dest_string=0;
 
-	while (tokens[i].tipo!=TPT_FIN) {
+	while (tokens[i].tipo!=TPT_FIN && maximo) {
         int esnumero=0;
         int espacio=0;
         enum token_parser_tipo tipo=tokens[i].tipo;
@@ -748,6 +748,7 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression)
 
             
 		i++;
+        maximo--;
 	}
 }
 
@@ -1134,10 +1135,14 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     int i=0;
 
     //debug mostrar tokens
-    printf ("exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
+    printf ("--exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
     exp_par_debug_dump_tokens(tokens,longitud_tokens);
-    printf ("end dump\n");
-    
+    printf ("--end dump\n");
+
+    char buffer_destino[1024];
+    exp_par_tokens_to_exp(tokens,buffer_destino,longitud_tokens);
+    printf ("--exp_par_evaluate_token. expression to parse: [%s]\n",buffer_destino);
+    //fin debug mostrar tokens
 
 
     for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {

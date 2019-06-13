@@ -178,7 +178,7 @@ typedef struct s_token_parser_textos_indices token_parser_textos_indices;
 #define MAX_PARSER_TOKENS_NUM 1000
 
 extern int exp_par_exp_to_tokens(char *expression,token_parser *tokens);
-extern void exp_par_tokens_to_exp(token_parser *tokens,char *expression);
+extern void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo);
 int exp_par_evaluate_token(token_parser *tokens,int final,int *error_code);
 
 extern void exp_par_debug_dump_tokens(token_parser *tokens,int longitud);

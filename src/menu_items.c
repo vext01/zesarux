@@ -10597,7 +10597,7 @@ void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
 	if (result>=0) {
 			//Pasamos primero a string de nuevo
 			char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
-			exp_par_tokens_to_exp(tokens,string_detoken);
+			exp_par_tokens_to_exp(tokens,string_detoken,MAX_PARSER_TOKENS_NUM);
 			
 			int error_code;  
 			
