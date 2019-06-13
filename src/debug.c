@@ -2601,9 +2601,16 @@ int transaction_log_open_file(void)
 
 void transaction_log_truncate(void)
 {
-	transaction_log_close_file();
-	util_truncate_file(transaction_log_filename);
-	transaction_log_open_file();	
+
+ 	if (ptr_transaction_log) {
+        transaction_log_close_file();
+        util_truncate_file(transaction_log_filename);
+        transaction_log_open_file();    
+    }
+    else {
+        util_truncate_file(transaction_log_filename);
+    }
+
 }
 
 void set_cpu_core_transaction_log(void)
