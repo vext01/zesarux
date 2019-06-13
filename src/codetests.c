@@ -665,20 +665,7 @@ void codetests_assembler(void)
 
 void codetests_expression_parser_print_tokens(token_parser *tokens)
 {
-	int i=0;
-
-	printf ("Printing tokens\n");
-	while (tokens[i].tipo!=TPT_FIN) {
-		printf ("%d: tipo: %d indice: %d formato: %d signo: %d valor: %d\n",
-			i,
-			tokens[i].tipo,
-			tokens[i].indice,
-			tokens[i].formato,
-			tokens[i].signo,
-			tokens[i].valor
-		);
-		i++;
-	}
+	exp_par_debug_dump_tokens(tokens,MAX_PARSER_TOKENS_NUM);
 
 	printf ("text from tokens: \n");
 	char buffer_destino[1024];

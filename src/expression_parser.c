@@ -1106,7 +1106,7 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 
 //Calcula la expresion identificada por tokens. Funcion recursiva
 //final identifica al siguiente token despues del final. Poner valor alto para que no tenga final y detecte token de fin
-int exp_par_evaluate_token(token_parser *tokens,int final,int *error_code)
+int exp_par_evaluate_token(token_parser *tokens,int longitud_tokens,int *error_code)
 {
 /*
 Evaluar expresión:
@@ -1122,7 +1122,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     *error_code=0; //asumimos ok
 
-    if (final==0) {
+    if (longitud_tokens==0) {
         //expresion vacia. no deberia suceder. retornar 0
         *error_code=1;
         return 0;
@@ -1133,11 +1133,14 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     int i=0;
 
- 
+    //debug mostrar tokens
+    printf ("exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
+    exp_par_debug_dump_tokens(tokens,longitud_tokens);
+    printf ("end dump\n");
     
 
 
-    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -1146,8 +1149,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             int errorcode1,errorcode2;
 
-            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+            int longitud_izquierda=i;
+            int longitud_derecha=longitud_tokens-longitud_izquierda-1;
+
+            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
@@ -1155,7 +1161,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
 
 
-    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL ) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -1164,9 +1170,12 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             int errorcode1,errorcode2;
 
+            int longitud_izquierda=i;
+            int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
+
             //printf ("dividiendo condicionales\n");
-            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
 
@@ -1175,7 +1184,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     }
 
 
-for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO 
@@ -1186,9 +1195,12 @@ for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
 
             int errorcode1,errorcode2;
 
+            int longitud_izquierda=i;
+            int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
+
             //printf ("calculando desde ")
-            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
@@ -1197,7 +1209,7 @@ for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
     
 
 
-    /*for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+    /*for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Para sumas y restas, mas prioridad que dividir o multiplicar
 
@@ -1210,9 +1222,12 @@ for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
 
             int errorcode1,errorcode2;
 
+            int longitud_izquierda=i;
+            int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
+
             //printf ("calculando desde ")
-            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
@@ -1220,7 +1235,7 @@ for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
     }
 
 
-    for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Pero no sumas y restas
 
@@ -1233,9 +1248,12 @@ for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
 
             int errorcode1,errorcode2;
 
+            int longitud_izquierda=i;
+            int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
+
             //printf ("calculando desde ")
-            valor_izquierda=exp_par_evaluate_token(tokens,i,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],MAX_PARSER_TOKENS_NUM,&errorcode2);
+            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
@@ -1258,5 +1276,27 @@ for (i=0;i<final && tokens[i].tipo!=TPT_FIN;i++) {
     //Aqui no deberia llegar nunca
     *error_code=1;
     return 0;
+
+}
+
+//funcion para hacer dump de los tokens por pantalla. Se utiliza para debugar, y no en el proceso normal del programa
+void exp_par_debug_dump_tokens(token_parser *tokens,int longitud)
+{
+
+	int i=0;
+
+	printf ("Printing tokens\n");
+	while (tokens[i].tipo!=TPT_FIN && longitud) {
+		printf ("%d: tipo: %d indice: %d formato: %d signo: %d valor: %d\n",
+			i,
+			tokens[i].tipo,
+			tokens[i].indice,
+			tokens[i].formato,
+			tokens[i].signo,
+			tokens[i].valor
+		);
+		i++;
+        longitud--;
+	}
 
 }

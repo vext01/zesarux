@@ -181,4 +181,6 @@ extern int exp_par_exp_to_tokens(char *expression,token_parser *tokens);
 extern void exp_par_tokens_to_exp(token_parser *tokens,char *expression);
 int exp_par_evaluate_token(token_parser *tokens,int final,int *error_code);
 
+extern void exp_par_debug_dump_tokens(token_parser *tokens,int longitud);
+
 #endif
