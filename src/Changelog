@@ -22,6 +22,8 @@ Added Chloe MMU to ZX-Uno
 Added AY Sheet
 Added RetroMac Gui Style
 
+Improved breakpoint parser: now it's a lot more faster. Up to 7 times faster, so it uses 7 times less cpu than the old version
+
 Improved adventure text extractor: now supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved footer:
 -Footer now completely follows GUI Style

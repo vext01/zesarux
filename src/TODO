@@ -25,9 +25,10 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *base numerica hexad, binaria, ascii
 *resto de variables....
 * (NN)
+* parentesis para cambiar prioridades. complicado!!
 
 -comparacion breakpoint parser. uso cpu:
-sin breakpoints: 10% cpu
+no breakpoints: 10% cpu
 
 --set-breakpoint 1 "A=3 AND IX=32768"
 --set-breakpoint 2 "BC>32768 AND A=4 AND IX=20000"
@@ -45,6 +46,11 @@ new: 21% cpu old: 52% cpu
 --set-breakpoint 3 "IY>32768 OR IX=10000 OR I>200"
 --set-breakpoint 4 "IY>32768 OR IX=10000 OR I>200 OR SP>65535"
 new: 24% cpu old: 73% cpu
+
+Incremento cpu nuevo algoritmo: 3%
+Incremento cpu viejo algoritmo: 15-20%
+Mejora: (15/3)=5 -> 5 veces mas rápido
+ (20/3)=7 -> 7 veces mas rápido
 
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
