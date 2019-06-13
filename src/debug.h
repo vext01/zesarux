@@ -23,6 +23,7 @@
 #define DEBUG_H
 
 #include "cpu.h"
+#include "expression_parser.h"
 
 //#define DEBUG_STRING_FLAGS         ( Z80_FLAGS & FLAG_S ? 'S' : '-'), ( Z80_FLAGS & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS & FLAG_5 ? '5' : '-'), ( Z80_FLAGS & FLAG_PV ? 'P' : '-'), ( Z80_FLAGS & FLAG_3 ? '3' : '-'), ( Z80_FLAGS & FLAG_H ? 'H' : '-'), ( Z80_FLAGS & FLAG_N ? 'N' : '-'), ( Z80_FLAGS & FLAG_C ? 'C' : '-')
 
@@ -63,6 +64,7 @@ extern void init_breakpoints_table(void);
 
 #define MAX_BREAKPOINTS_CONDITIONS 100
 extern char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
+extern token_parser debug_breakpoints_conditions_array_tokens[MAX_BREAKPOINTS_CONDITIONS][MAX_PARSER_TOKENS_NUM];
 
 #define MAX_MEM_BREAKPOINT_TYPES 4
 extern char *mem_breakpoint_types_strings[];

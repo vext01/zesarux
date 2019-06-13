@@ -3415,8 +3415,30 @@ int util_write_configfile(void)
 
 
   for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+
+#ifdef NEW_BREAKPOINTS_PARSER
+
+			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
+
+				//nuevo parser de breakpoints
+				char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+				exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+                                ADD_STRING_CONFIG,"--set-breakpoint %d \"%s\"",i+1,buffer_temp);
+			}
+
+
+
+
+#else
+
+
 		if (debug_breakpoints_conditions_array[i][0]!=0)
                                               ADD_STRING_CONFIG,"--set-breakpoint %d \"%s\"",i+1,debug_breakpoints_conditions_array[i]);
+
+#endif
+
+
+
 	}
 
   for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {

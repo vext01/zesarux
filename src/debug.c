@@ -83,6 +83,7 @@
 #include "remote.h"
 #include "charset.h"
 #include "settings.h"
+#include "expression_parser.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -99,6 +100,9 @@ z80_bit debug_breakpoints_enabled={0};
 
 //breakpoints de condiciones
 char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
+
+//breakpoints de condiciones. nuevo formato para nuevo parser de tokens
+token_parser debug_breakpoints_conditions_array_tokens[MAX_BREAKPOINTS_CONDITIONS][MAX_PARSER_TOKENS_NUM];
 
 //acciones a ejecutar cuando salta un breakpoint
 char debug_breakpoints_actions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
@@ -509,6 +513,11 @@ void init_breakpoints_table(void)
 
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 		debug_breakpoints_conditions_array[i][0]=0;
+
+		#ifdef NEW_BREAKPOINTS_PARSER
+		debug_breakpoints_conditions_array_tokens[i][0].tipo=TPT_FIN;
+		#endif
+
 	    	debug_breakpoints_actions_array[i][0]=0;
 		debug_breakpoints_conditions_saltado[i]=0;
 		debug_breakpoints_conditions_enabled[i]=0;
@@ -2097,6 +2106,68 @@ int anterior_debug_mmu_mwa=-1;
 
 }
 
+#ifdef NEW_BREAKPOINTS_PARSER
+
+//Comprobar condiciones. Usando nuevo breakpoint parser.  Solo lo hacemos en core_loop
+void cpu_core_loop_debug_check_breakpoints(void)
+{
+	//Condicion de debug
+	if (debug_breakpoints_enabled.v) {
+
+		//Comprobar los mem-breakpoints
+		cpu_core_loop_debug_check_mem_breakpoints();
+
+		int i;
+
+		//Breakpoint de condicion
+		for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+			//Si ese breakpoint esta activo
+			if (debug_breakpoints_conditions_enabled[i]) {
+				if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
+
+					int se_cumple_breakpoint;
+					//printf ("Checking breakpoint %d\n",i);
+					//Si esta optimizado
+
+					if (optimized_breakpoint_array[i].optimized) {
+						//printf ("Parsing optimized breakpoint\n");
+						se_cumple_breakpoint=debug_breakpoint_condition_optimized(i);
+					}
+					else {
+						//se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
+						int error_code;
+						se_cumple_breakpoint=exp_par_evaluate_token(debug_breakpoints_conditions_array_tokens[i],MAX_PARSER_TOKENS_NUM,&error_code);
+					}
+
+					if ( se_cumple_breakpoint ) {
+						//Si condicion pasa de false a true o bien el comportamiento por defecto es saltar siempre
+						if (debug_breakpoints_cond_behaviour.v==0 || debug_breakpoints_conditions_saltado[i]==0) {
+							debug_breakpoints_conditions_saltado[i]=1;
+
+							char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+							exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+
+	        	        	char buffer_mensaje[MAX_BREAKPOINT_CONDITION_LENGTH+64];
+        	    	    	sprintf(buffer_mensaje,"%s",buffer_temp);
+
+	                    	//Ejecutar accion, por defecto es abrir menu
+							catch_breakpoint_index=i;
+        	        		cpu_core_loop_debug_breakpoint(buffer_mensaje);
+						}
+            		}
+					else {
+						//No se cumple condicion. Indicarlo que esa condicion esta false
+						debug_breakpoints_conditions_saltado[i]=0;
+					}
+    	    	}
+			}
+    	}
+
+    }
+
+}
+
+#else
 
 //Comprobar condiciones. Solo lo hacemos en core_loop
 void cpu_core_loop_debug_check_breakpoints(void)
@@ -2150,6 +2221,9 @@ void cpu_core_loop_debug_check_breakpoints(void)
     }
 
 }
+
+
+#endif
 
 int debug_watches_mostrado_frame=0;
 char debug_watches_texto_destino[1024];
@@ -3698,8 +3772,15 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
       return;
     }
 
-
+	#ifdef NEW_BREAKPOINTS_PARSER
+	int result=exp_par_exp_to_tokens(condicion,debug_breakpoints_conditions_array_tokens[breakpoint_index]);
+	if (result<0) {
+		debug_printf (VERBOSE_ERR,"Error adding breakpoint %s\n",condicion);
+		debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo=TPT_FIN; //Inicializarlo vacio
+	}
+	#else
     strcpy(debug_breakpoints_conditions_array[breakpoint_index],condicion);
+	#endif
 
   	debug_breakpoints_conditions_saltado[breakpoint_index]=0;
   	debug_breakpoints_conditions_enabled[breakpoint_index]=1;
@@ -5398,7 +5479,14 @@ int debug_return_brk_pc_condition(int indice)
 		if (debug_breakpoints_conditions_enabled[i]) {
 			if (debug_breakpoints_actions_array[i][0]!=0) return 0;
 
+			#ifdef NEW_BREAKPOINTS_PARSER
+			char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+			cond=buffer_temp;
+			#else
 			cond=debug_breakpoints_conditions_array[i];
+			#endif
+
 			return debug_text_is_pc_condition(cond);
 		}
 	
@@ -5421,7 +5509,15 @@ int debug_return_brk_pc_dir_condition(menu_z80_moto_int direccion)
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 			if (debug_return_brk_pc_condition(i)) {
 
+
+			//TODO: esto se podria mejorar analizando los tokens
+			#ifdef NEW_BREAKPOINTS_PARSER
+			char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+			cond=buffer_temp;
+			#else
 				cond=debug_breakpoints_conditions_array[i];
+			#endif
 
 				menu_z80_moto_int valor=parse_string_to_number(&cond[3]);
 				if (valor==direccion) return i;
@@ -5436,7 +5532,11 @@ int debug_find_free_breakpoint(void)
 {
 	int i;
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
-		if (debug_breakpoints_conditions_array[i][0]==0) return i;
+			#ifdef NEW_BREAKPOINTS_PARSER
+			if (debug_breakpoints_conditions_array_tokens[i][0].tipo==TPT_FIN) return i;
+			#else		
+			if (debug_breakpoints_conditions_array[i][0]==0) return i;
+			#endif
 	}
 
 	return -1;
@@ -5451,7 +5551,13 @@ int debug_find_breakpoint(char *to_find)
 	int i;
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 		if (debug_breakpoints_conditions_enabled[i]) {
+			#ifdef NEW_BREAKPOINTS_PARSER
+			char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+			if  (!strcasecmp(buffer_temp,to_find)) return 1;
+			#else			
 			if (!strcasecmp(debug_breakpoints_conditions_array[i],to_find)) return i;
+			#endif
 		}
 	}
 
@@ -5464,7 +5570,13 @@ int debug_find_breakpoint_activeornot(char *to_find)
 
 	int i;
 	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+			#ifdef NEW_BREAKPOINTS_PARSER
+			char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+			if (!strcasecmp(buffer_temp,to_find)) return 1;
+			#else		
 			if (!strcasecmp(debug_breakpoints_conditions_array[i],to_find)) return i;
+			#endif
 	}
 
 	return -1;
