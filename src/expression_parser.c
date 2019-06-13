@@ -948,7 +948,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
                 //Fin registros mk14
 
                 //Registros motorola
-                if (CPU_IS_SCMP) {
+                if (CPU_IS_MOTOROLA) {
                     switch (indice) {
                     case TPI_R_PC: return get_pc_register(); break;
 
