@@ -50,6 +50,8 @@
 #include "operaciones.h"
 #include "screen.h"
 #include "mem128.h"
+#include "scmp.h"
+#include "m68k.h"
 
 /*
 
@@ -207,7 +209,29 @@ token_parser_textos_indices tpti_registros[]={
         {TPI_R_P_SP,"(SP)"},
         {TPI_R_P_PC,"(PC)"},
         {TPI_R_P_IX,"(IX)"},
-        {TPI_R_P_IY,"(IY)"},             
+        {TPI_R_P_IY,"(IY)"},     
+
+
+	//De motorola
+        {TPI_R_D0,"D0"},     
+        {TPI_R_D1,"D1"}, 
+        {TPI_R_D2,"D2"}, 
+        {TPI_R_D3,"D3"}, 
+        {TPI_R_D4,"D4"}, 
+        {TPI_R_D5,"D5"}, 
+        {TPI_R_D6,"D6"}, 
+        {TPI_R_D7,"D7"}, 
+
+        {TPI_R_A0,"A0"},     
+        {TPI_R_A1,"A1"}, 
+        {TPI_R_A2,"A2"}, 
+        {TPI_R_A3,"A3"}, 
+        {TPI_R_A4,"A4"}, 
+        {TPI_R_A5,"A5"}, 
+        {TPI_R_A6,"A6"}, 
+        {TPI_R_A7,"A7"},         
+
+             
 
 
     {TPI_FIN,""}
@@ -390,12 +414,12 @@ int exp_par_char_is_reg_aux(char c)
     else return 0;
 }
 
-//Considerar caracteres auxiliares para variables: 12,  como iff1 y iff2, seg0 etc, pero no al principio
+//Considerar caracteres auxiliares para variables: 12,  como iff1 y iff2, seg0 etc, d0, d1 etc, pero no al principio
 int exp_par_char_is_reg_aux_more(char c,int i)
 {
     if (i==0) return 0;
 
-    if (c=='0' || c=='1' || c=='2' || c=='3') return 1;
+    if (exp_par_is_digit(c)) return 1;
     else return 0;
 }
 
@@ -848,6 +872,11 @@ int exp_par_calculate_numvarreg(token_parser *token)
                         //Para que no se queje el compilador por demas valores enum no tratados
                     break;
 
+
+                }
+  
+            break;
+
 /*
 //si (NN)
 	if (registro[0]=='(') {
@@ -900,12 +929,56 @@ int exp_par_calculate_numvarreg(token_parser *token)
 	}
  */
 
-                }
-                //temporal
-                //resultado=66;
-            break;
+
 
 	        case TPT_REGISTRO: //a, bc, de, etc
+
+
+                //Registros mk14
+                if (CPU_IS_SCMP) {
+                    switch (indice) {
+                    case TPI_R_PC: return scmp_m_PC.w.l; break;
+
+                    default:
+                        //Para que no se queje el compilador por demas valores enum no tratados
+                    break;
+
+                    }
+                }
+                //Fin registros mk14
+
+                //Registros motorola
+                if (CPU_IS_SCMP) {
+                    switch (indice) {
+                    case TPI_R_PC: return get_pc_register(); break;
+
+                    case TPI_R_D0: return m68k_get_reg(NULL, M68K_REG_D0); break;
+                    case TPI_R_D1: return m68k_get_reg(NULL, M68K_REG_D1); break;
+                    case TPI_R_D2: return m68k_get_reg(NULL, M68K_REG_D2); break;
+                    case TPI_R_D3: return m68k_get_reg(NULL, M68K_REG_D3); break;
+                    case TPI_R_D4: return m68k_get_reg(NULL, M68K_REG_D4); break;
+                    case TPI_R_D5: return m68k_get_reg(NULL, M68K_REG_D5); break;
+                    case TPI_R_D6: return m68k_get_reg(NULL, M68K_REG_D6); break;
+                    case TPI_R_D7: return m68k_get_reg(NULL, M68K_REG_D7); break;
+
+                    case TPI_R_A0: return m68k_get_reg(NULL, M68K_REG_A0); break;
+                    case TPI_R_A1: return m68k_get_reg(NULL, M68K_REG_A1); break;
+                    case TPI_R_A2: return m68k_get_reg(NULL, M68K_REG_A2); break;
+                    case TPI_R_A3: return m68k_get_reg(NULL, M68K_REG_A3); break;
+                    case TPI_R_A4: return m68k_get_reg(NULL, M68K_REG_A4); break;
+                    case TPI_R_A5: return m68k_get_reg(NULL, M68K_REG_A5); break;
+                    case TPI_R_A6: return m68k_get_reg(NULL, M68K_REG_A6); break;
+                    case TPI_R_A7: return m68k_get_reg(NULL, M68K_REG_A7); break;                    
+
+                    default:
+                        //Para que no se queje el compilador por demas valores enum no tratados
+                    break;
+
+                    }
+                }
+               //Fin registros motorola                
+
+
                 /*/if (indice==TPI_R_A) return reg_a;
                 if (indice==TPI_R_BC) return reg_bc;
                 if (indice==TPI_R_DE) return reg_de;*/

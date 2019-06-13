@@ -126,6 +126,25 @@ enum token_parser_indice {
         TPI_R_P_IX,
         TPI_R_P_IY,
 
+	//De motorola
+	TPI_R_D0,
+	TPI_R_D1,
+	TPI_R_D2,
+	TPI_R_D3,
+	TPI_R_D4,
+	TPI_R_D5,
+	TPI_R_D6,
+	TPI_R_D7,
+
+	TPI_R_A0,
+	TPI_R_A1,
+	TPI_R_A2,
+	TPI_R_A3,
+	TPI_R_A4,
+	TPI_R_A5,
+	TPI_R_A6,
+	TPI_R_A7,	
+
 	//de tipo operador logico
 	TPI_OL_AND,
 	TPI_OL_OR,

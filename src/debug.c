@@ -5710,7 +5710,11 @@ void debug_get_daad_step_breakpoint_string(char *texto)
 	if (util_daad_detect() ) breakpoint_dir=util_daad_get_pc_parser();
 	if (util_paws_detect() ) breakpoint_dir=util_paws_get_pc_parser();	
 
+#ifdef NEW_BREAKPOINTS_PARSER
+	sprintf (texto,"PC=%XH AND (BC)<>FFH",breakpoint_dir);
+#else
 	sprintf (texto,"PC=%XH AND (BC)/FFH",breakpoint_dir);
+#endif
 }
 
 
