@@ -5561,7 +5561,7 @@ int debug_find_breakpoint(char *to_find)
 			#ifdef NEW_BREAKPOINTS_PARSER
 			char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
 			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
-			if  (!strcasecmp(buffer_temp,to_find)) return 1;
+			if  (!strcasecmp(buffer_temp,to_find)) return i;
 			#else			
 			if (!strcasecmp(debug_breakpoints_conditions_array[i],to_find)) return i;
 			#endif
@@ -5580,7 +5580,10 @@ int debug_find_breakpoint_activeornot(char *to_find)
 			#ifdef NEW_BREAKPOINTS_PARSER
 			char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
 			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
-			if (!strcasecmp(buffer_temp,to_find)) return 1;
+
+			//printf ("%d temp: [%s] comp: [%s]\n",i,buffer_temp,to_find);
+
+			if (!strcasecmp(buffer_temp,to_find)) return i;
 			#else		
 			if (!strcasecmp(debug_breakpoints_conditions_array[i],to_find)) return i;
 			#endif
@@ -5698,7 +5701,12 @@ void debug_get_daad_breakpoint_string(char *texto)
 #define DAAD_PARSER_CONDACT_BREAKPOINT 0xbc
 	*/
 
+#ifdef NEW_BREAKPOINTS_PARSER
+	//de momento en decimal (dado que aun no mostamos hexadecimal en parser) para que al comparar salga igual
+	sprintf (texto,"PC=%d AND A=%d",util_daad_get_pc_parser()+1,DAAD_PARSER_CONDACT_BREAKPOINT);
+#else
 	sprintf (texto,"PC=%04XH AND A=%02XH",util_daad_get_pc_parser()+1,DAAD_PARSER_CONDACT_BREAKPOINT);
+#endif
 }
 
 
@@ -5711,7 +5719,8 @@ void debug_get_daad_step_breakpoint_string(char *texto)
 	if (util_paws_detect() ) breakpoint_dir=util_paws_get_pc_parser();	
 
 #ifdef NEW_BREAKPOINTS_PARSER
-	sprintf (texto,"PC=%XH AND (BC)<>FFH",breakpoint_dir);
+	//de momento en decimal (dado que aun no mostamos hexadecimal en parser) para que al comparar salga igual
+	sprintf (texto,"PC=%d AND (BC)<>255",breakpoint_dir);
 #else
 	sprintf (texto,"PC=%XH AND (BC)/FFH",breakpoint_dir);
 #endif
@@ -5726,5 +5735,11 @@ void debug_get_daad_runto_parse_string(char *texto)
 	if (util_daad_detect() ) breakpoint_dir=util_daad_get_pc_parser();
 	if (util_paws_detect() ) breakpoint_dir=util_paws_get_pc_parser();
 
+
+#ifdef NEW_BREAKPOINTS_PARSER
+	//de momento en decimal (dado que aun no mostamos hexadecimal en parser) para que al comparar salga igual
+	sprintf (texto,"PC=%d AND (BC)=73",breakpoint_dir);
+#else
 	sprintf (texto,"PC=%XH AND (BC)=73",breakpoint_dir);
+#endif
 }

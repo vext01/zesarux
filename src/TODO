@@ -1,6 +1,8 @@
   
 --- Para esta version 7.3:
 
+-sin footer y sin zxdesktop, peta, a veces (quiza cuando ha dejado configuracion sin footer de que ha salido mal)
+
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 
@@ -23,7 +25,7 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *condicion opcode
 *valores negativos, positivos
 *base numerica hexad, binaria, ascii
-*resto de variables....
+*registro SP motorola y otros mk14. revisar
 * (NN)
 * parentesis para cambiar prioridades. complicado!!
 
