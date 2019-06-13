@@ -10606,7 +10606,7 @@ void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
 			menu_generic_message_format("Result","Parsed string: %s\nResult: %d",
 				string_detoken,resultado);
 
-			printf ("%d\n",resultado);
+			//printf ("%d\n",resultado);
 	}
 	else {
 		menu_error_message("Error parsing");

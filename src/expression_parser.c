@@ -1135,13 +1135,14 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     int i=0;
 
     //debug mostrar tokens
-    printf ("--exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
+    /* printf ("--exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
     exp_par_debug_dump_tokens(tokens,longitud_tokens);
     printf ("--end dump\n");
 
     char buffer_destino[1024];
     exp_par_tokens_to_exp(tokens,buffer_destino,longitud_tokens);
     printf ("--exp_par_evaluate_token. expression to parse: [%s]\n",buffer_destino);
+    */
     //fin debug mostrar tokens
 
 
@@ -1182,14 +1183,14 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
-            printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
+            //printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
     }
 
 
-    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    /* for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO 
@@ -1210,11 +1211,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
 
-    }    
+    }  */  
     
 
 
-    /*for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Para sumas y restas, mas prioridad que dividir o multiplicar
 
@@ -1263,7 +1264,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
 
-    }*/
+    }
 
     i=0;
 
@@ -1273,7 +1274,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             //printf ("es variable\n");
             //tiene que ser numero
             int resultado=exp_par_calculate_numvarreg(&tokens[i]);
-            printf("resultado variable: %d\n",resultado);
+            //printf("resultado variable: %d\n",resultado);
             return resultado;
     }
 
