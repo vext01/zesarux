@@ -1302,7 +1302,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     int pos_inicial=0;
 
     //Empieza con parentesis?
-    if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_ABRIR) {
+    if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) {
         //buscar hasta cierre
         int final_par=exp_par_final_parentesis(tokens,longitud_tokens);
         printf ("cierre parentesis en indice %d\n",final_par);
@@ -1345,8 +1345,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_ABRIR) nivel_parentesis++;
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_CERRAR) nivel_parentesis--;
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) nivel_parentesis++;
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_CERRAR) nivel_parentesis--;
 
         if (tokens[i].tipo==TPT_OPERADOR_LOGICO && !nivel_parentesis ) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -1369,11 +1369,22 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
 
     nivel_parentesis=0;
+    printf ("inicio check condicionales\n");
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_ABRIR) nivel_parentesis++;
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_CERRAR) nivel_parentesis--;
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) {
+            printf ("abrir parentesis en %d\n",i);
+            nivel_parentesis++;
+        }
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_CERRAR) {
+            printf ("cerrar parentesis en %d\n",i);
+            nivel_parentesis--;
+        }
+
+        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL) {
+            printf ("token es condicional y parentesis=%d\n",nivel_parentesis);
+        }
 
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL && !nivel_parentesis) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -1391,20 +1402,23 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
-            //printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
+            printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
+            int resul=exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
 
-            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
+            printf ("resultado condicional %d\n",resul);
+            return resul;
         }
     }
 
+    printf ("fin check condicionales\n");
     
 
     nivel_parentesis=0;
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Al separar por operador, ver que no estemos dentro de parentesis
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_ABRIR) nivel_parentesis++;
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_CERRAR) nivel_parentesis--;
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) nivel_parentesis++;
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_CERRAR) nivel_parentesis--;
 
         //Para sumas y restas, mas prioridad que dividir o multiplicar
 
@@ -1436,8 +1450,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_ABRIR) nivel_parentesis++;
-        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_CERRAR) nivel_parentesis--;        
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) nivel_parentesis++;
+        if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_CERRAR) nivel_parentesis--;        
    
         //Pero no sumas y restas
 
@@ -1469,6 +1483,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     if (calculado_izquierda) {
         //devolver numero entre parentesis
+        printf ("devolver calculado izquierda %d\n",valor_izquierda);
         return valor_izquierda;
     }
 
@@ -1478,7 +1493,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             //printf ("es variable\n");
             //tiene que ser numero
             int resultado=exp_par_calculate_numvarreg(&tokens[0]);
-            //printf("resultado variable: %d\n",resultado);
+            printf("resultado variable: %d\n",resultado);
             return resultado;
     }
 
