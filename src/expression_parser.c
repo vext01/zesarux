@@ -1301,8 +1301,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     int valor_izquierda;
     int pos_inicial=0;
 
-    //Empieza con parentesis?
-    if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) {
+    //Empieza con parentesis?. temp desactivado
+    /*if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) {
         //buscar hasta cierre
         int final_par=exp_par_final_parentesis(tokens,longitud_tokens);
         printf ("cierre parentesis en indice %d\n",final_par);
@@ -1339,7 +1339,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             tokens=&tokens[i];
             printf ("vuelta de evaluar parentesis. valor_izquierda=%d longitud restante: %d indice actual: %d\n",valor_izquierda,longitud_tokens,i);
         }
-    }
+    }*/
 
     nivel_parentesis=0;
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
@@ -1480,6 +1480,47 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         }   
 
     }
+
+    i=0;
+    if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) {
+        //buscar hasta cierre
+        int final_par=exp_par_final_parentesis(tokens,longitud_tokens);
+        printf ("cierre parentesis en indice %d\n",final_par);
+        if (final_par<0) {
+            *error_code=1;
+            return 0;
+        }
+        else {
+            //calculamos valor entre llaves
+            i++;
+            calculado_izquierda=1;
+
+            //debug parentesis
+            char buffer_destino[1024];
+            exp_par_tokens_to_exp(&tokens[i],buffer_destino,final_par-1);
+            printf ("evaluar parentesis: [%s]\n",buffer_destino);
+            //fin debug parentesis
+
+
+            int otro_err_code;
+            valor_izquierda=exp_par_evaluate_token(&tokens[i],final_par-1,&otro_err_code);
+            
+            if ( otro_err_code <0) {
+                *error_code=otro_err_code;
+                return 0; //ha habido error
+            }
+
+            //Alternativa 1: avanzamos indice puntero, cambiando pos_inicial
+            //pos_inicial=final_par+1; //seguimos evaluacion desde despues parentesis
+
+            //Alternativa 2: avanzamos puntero tokens, descartando el resto
+            i=final_par+1;
+            longitud_tokens -=i;
+            tokens=&tokens[i];
+            printf ("vuelta de evaluar parentesis. valor_izquierda=%d longitud restante: %d indice actual: %d\n",valor_izquierda,longitud_tokens,i);
+        }
+    }
+
 
     if (calculado_izquierda) {
         //devolver numero entre parentesis
