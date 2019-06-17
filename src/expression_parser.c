@@ -643,7 +643,6 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             indice_token++;    
 
             //Apuntamos al parentesis de abrir
-            indice_token++;
             expression=&expression[final];                 
 
         }
@@ -1609,10 +1608,10 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     }
 
     if (tokens[0].tipo==TPT_FUNCION) {
-
+        printf ("es funcion\n");
     //buscar hasta cierre
-        int final_par=exp_par_final_parentesis(tokens,longitud_tokens);
-        printf ("cierre parentesis de funcion en indice %d\n",final_par);
+        int final_par=exp_par_final_parentesis(&tokens[1],longitud_tokens-1);
+        printf ("cierre funcion en indice %d\n",final_par);
         if (final_par<0) {
             *error_code=1;
             return 0;
@@ -1625,7 +1624,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             //debug parentesis
             char buffer_destino[1024];
             exp_par_tokens_to_exp(&tokens[i],buffer_destino,final_par-1);
-            printf ("evaluar parentesis: [%s]\n",buffer_destino);
+            printf ("evaluar funcion: [%s]\n",buffer_destino);
             //fin debug parentesis
 
 
