@@ -27,6 +27,7 @@
 
 enum token_parser_tipo {
 	TPT_FIN, //fin de expresion
+	TPT_PARENTESIS, //parentesis
 	TPT_NUMERO,
 	TPT_VARIABLE, //mra, mrw, etc
 	TPT_REGISTRO, //a, bc, de, etc
@@ -37,6 +38,12 @@ enum token_parser_tipo {
 
 enum token_parser_indice {
 	TPI_FIN, //para indicar final de array
+
+
+	//tipo parentesis
+	TPI_P_ABRIR,
+	TPI_P_CERRAR,
+
 	//de tipo variable
   	TPI_V_MRA,
 	TPI_V_MRV,

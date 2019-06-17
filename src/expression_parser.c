@@ -114,6 +114,15 @@ Al final esto dará un valor 0 o diferente de 0. A efectos de disparar breakpoin
  */
 
 
+//Usado en la gestión de paréntesis:
+token_parser_textos_indices tpti_parentesis[]={
+
+	{TPI_P_ABRIR,"{"},
+	{TPI_P_CERRAR,"}"},
+
+    {TPI_FIN,""}
+};
+
 //Usado en la conversion de texto a tokens, variables:
 token_parser_textos_indices tpti_variables[]={
     {TPI_V_MRA,"MRA"},
@@ -563,6 +572,18 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
     while (*expression) {
         //Si hay espacio, saltar
         if ( (*expression)==' ') expression++;
+        else if ( (*expression)=='{') { //si hay parentesis abrir o cerrar,saltar
+                tokens[indice_token].tipo=TPT_PARENTESIS;
+                tokens[indice_token].indice=TPI_P_ABRIR;      
+                expression++;
+                indice_token++;          
+        }
+        else if ( (*expression)=='}') { //si hay parentesis abrir o cerrar,saltar
+                tokens[indice_token].tipo=TPT_PARENTESIS;
+                tokens[indice_token].indice=TPI_P_CERRAR;      
+                expression++;
+                indice_token++;          
+        }        
         else {
             //Obtener numero
             int final;
@@ -717,6 +738,10 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
         switch (tipo) {
             case TPT_NUMERO:
                 esnumero=1;
+            break;
+
+            case TPT_PARENTESIS:
+                indice_a_tabla=tpti_parentesis;
             break;
 
 	        case TPT_VARIABLE: //mra,mrw, etc
@@ -1057,6 +1082,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
 	        case TPT_OPERADOR_LOGICO:  //and, or, xor
             case TPT_OPERADOR_CONDICIONAL:  //=, <,>, <>,
             case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
+            case TPT_PARENTESIS:
             case TPT_FIN:
                 //esto no se llega nunca aqui. Lo pongo para que no se queje el compilador
             break;
@@ -1084,6 +1110,7 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 
     switch (tipo) {
             case TPT_NUMERO:
+            case TPT_PARENTESIS:
 	        case TPT_VARIABLE: //mra,mrw, etc
 	        case TPT_REGISTRO: //a, bc, de, etc
             case TPT_FIN:
