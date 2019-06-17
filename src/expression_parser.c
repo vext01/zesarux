@@ -1341,6 +1341,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         }
     }
 
+    nivel_parentesis=0;
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
@@ -1358,6 +1359,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;
             printf ("operador logico\n");
 
+            //TODO gestionar errorcode1, errorcode2
             if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
@@ -1366,7 +1368,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     }
 
 
-
+    nivel_parentesis=0;
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
@@ -1384,6 +1386,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
 
             printf ("operador condicionales\n");
+
+            //TODO gestionar errorcode1, errorcode2
             if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
@@ -1393,32 +1397,9 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         }
     }
 
-
-    /* for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
-   
-
-        if (tokens[i].tipo==TPT_OPERADOR_CALCULO && !nivel_parentesis
-        ) {
-            //Evaluar parte izquierda y derecha y aplicar operador
-           
-            int valor_derecha;
-
-            int errorcode1,errorcode2;
-
-            int longitud_izquierda=i;
-            int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
-
-            //printf ("calculando desde ")
-            if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
-            valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
-
-            return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
-        }   
-
-    }  */  
     
 
-
+    nivel_parentesis=0;
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Al separar por operador, ver que no estemos dentro de parentesis
@@ -1441,6 +1422,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
 
             printf ("operador suma/resta\n");
+
+            //TODO gestionar errorcode1, errorcode2
             if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
@@ -1449,7 +1432,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     }
 
-
+    nivel_parentesis=0;
     for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
@@ -1472,6 +1455,8 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
 
             printf ("operador multi/divi etc\n");
+
+            //TODO gestionar errorcode1, errorcode2
             if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
 
             //printf ("evaluar parte derecha multiplicacion");
