@@ -23,6 +23,28 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -expression parser:
 *despues de parentesis cerrado puede haber espacio ) AND
+*codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
+->da -16. acaba haciendo 2*3 - 4*5 - 6/3
+en cambio: (2*3 - 4*5) + 6/3 da bien
+
+es porque acaba desglosando:
+2*3 -     4*5 + 6/3
+6   -     20 +2
+6   -     22   -> -16
+
+el 20+2 deberia tener en consideracion quiza el signo de delante:
+6 -      20 - 2 
+6 - 18 -> -12 
+
+O esto lo apunto como un bug que el usuario le ponga parentesis y listo
+
+tambien:
+10-1-1 -> no da 8
+hace:
+
+10   -    1-1
+10   -    0  -> 10
+
 *peek,peekw para ql , mk14
 *condicion opcode
 *valores negativos, positivos

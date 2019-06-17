@@ -667,11 +667,11 @@ int codetests_expression_parser_print_tokens(token_parser *tokens)
 {
 	exp_par_debug_dump_tokens(tokens,MAX_PARSER_TOKENS_NUM);
 
-	printf ("text from tokens: \n");
+	printf ("**text from tokens: \n");
 	char buffer_destino[1024];
 
 	exp_par_tokens_to_exp(tokens,buffer_destino,MAX_PARSER_TOKENS_NUM);
-	printf ("[%s]\n",buffer_destino);	
+	printf ("[%s]\n\n",buffer_destino);	
 
 	printf ("Resultado expresion tokens\n");
 	int error_code;
@@ -732,10 +732,29 @@ void codetests_expression_parser(void)
 	codetests_expression_parser_expect("2*3",6);
 	codetests_expression_parser_expect("2*3+1",7);
 	codetests_expression_parser_expect("1+2*3",7);
+
+
+	codetests_expression_parser_expect("10/2",5);
+	codetests_expression_parser_expect("4+10/2",9);
+
+	codetests_expression_parser_expect("10-1-1",8);
+
+	codetests_expression_parser_expect("(6-20)+2",-12);
+	codetests_expression_parser_expect("6-20+2",-12);
+	
+
 	codetests_expression_parser_expect("3*(6+7)",39);
 	codetests_expression_parser_expect("3*(6+7)+4",43);
 	codetests_expression_parser_expect("3*(6+7)+4=43",1);
 	codetests_expression_parser_expect("3*(6+7)+4=99",0);
+
+	codetests_expression_parser_expect("(((((5)))))",5);
+    codetests_expression_parser_expect("(( ((2)) + 4))*((5))",30);
+
+    codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
+    //codetests_expression_parser_expect("2*3*4/8 -   5/2*4 +  6 + 0/3   ",-1);
+
+	
 
 
 	codetests_expression_parser_expect("A",45);
