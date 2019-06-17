@@ -33,7 +33,8 @@ enum token_parser_tipo {
 	TPT_REGISTRO, //a, bc, de, etc
 	TPT_OPERADOR_LOGICO, //and, or, xor
 	TPT_OPERADOR_CONDICIONAL, //=, <,>, <>,
-	TPT_OPERADOR_CALCULO //+,-,*,/. & (and), | (or), ^ (xor)
+	TPT_OPERADOR_CALCULO, //+,-,*,/. & (and), | (or), ^ (xor)
+	TPT_FUNCION //peek(, peekw (, not() etc
 };
 
 enum token_parser_indice {
@@ -168,7 +169,12 @@ enum token_parser_indice {
 	TPI_OC_DIVISION,
 	TPI_OC_AND,	
 	TPI_OC_OR,
-	TPI_OC_XOR
+	TPI_OC_XOR,
+
+	TPI_F_PEEK,
+	TPI_F_PEEKW,
+	TPI_F_NOT
+
 };
 
 enum token_parser_formato {

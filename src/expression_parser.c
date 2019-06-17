@@ -123,6 +123,16 @@ token_parser_textos_indices tpti_parentesis[]={
     {TPI_FIN,""}
 };
 
+//funciones. Siempre acabarlas en (
+token_parser_textos_indices tpti_funciones[]={
+
+	{TPI_F_PEEK,"PEEK("},
+	{TPI_F_PEEKW,"PEEKW("},
+	{TPI_F_NOT,"NOT("},
+
+    {TPI_FIN,""}
+};
+
 //Usado en la conversion de texto a tokens, variables:
 token_parser_textos_indices tpti_variables[]={
     {TPI_V_MRA,"MRA"},
@@ -371,6 +381,41 @@ int exp_par_is_token_parser_textos_indices(char *texto,token_parser_textos_indic
     return -1;
 }
 
+//Dice si una expresion es funcion, y dice donde acaba (caracter apuntando a cierre parentesis) y indice funcion
+//Retorna 1 si lo es. 0 si no. -1 si hay error parseando
+int exp_par_is_funcion(char *texto,int *final,enum token_parser_indice *indice_final)
+{
+    //Buscar hasta final letras
+    char buffer_texto[MAX_PARSER_TEXTOS_INDICE_LENGTH];
+
+    int i=0;
+    while (*texto && (exp_par_is_letter(*texto) || (*texto)=='(' ) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
+        buffer_texto[i]=*texto;
+        i++;
+        texto++;
+    }
+
+    if (i==MAX_PARSER_TEXTOS_INDICE_LENGTH) {
+        //Final de buffer. error
+        return -1;
+    }
+
+    buffer_texto[i]=0;
+
+    //printf ("probando tpti_variables\n");
+    int indice=exp_par_is_token_parser_textos_indices(buffer_texto,tpti_funciones);
+    if (indice>=0) {
+        //printf ("es funcion\n");
+        *final=strlen(buffer_texto)-1; //quitarle el parentesis 
+        *indice_final=indice;
+        return 1;
+    }
+
+ 
+    return 0;
+
+}
+
 
 //Dice si una expresion es operador, y dice donde acaba (caracter siguiente)
 //Retorna 1 si lo es. 0 si no. -1 si hay error parseando
@@ -569,26 +614,43 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
     int indice_token=0;
 
+    enum token_parser_indice indice_funcion;
+    int final;
+
     while (*expression) {
         //Si hay espacio, saltar
         if ( (*expression)==' ') expression++;
-        else if ( (*expression)=='{') { //si hay parentesis abrir o cerrar,saltar
+        else if ( (*expression)=='{' || (*expression)=='(') { //si hay parentesis abrir o cerrar,saltar
                 printf ("abrir parentesis\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_ABRIR;      
                 expression++;
                 indice_token++;          
         }
-        else if ( (*expression)=='}') { //si hay parentesis abrir o cerrar,saltar
+        else if ( (*expression)=='}' || (*expression)==')') { //si hay parentesis abrir o cerrar,saltar
                 printf ("cerrar parentesis\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_CERRAR;      
                 expression++;
                 indice_token++;          
-        }        
+        }      
+
+        else if (exp_par_is_funcion(expression,&final,&indice_funcion)) {
+            //meter funcion
+            tokens[indice_token].tipo=TPT_FUNCION;
+            tokens[indice_token].indice=indice_funcion;      
+
+            indice_token++;    
+
+            //Apuntamos al parentesis de abrir
+            indice_token++;
+            expression=&expression[final];                 
+
+        }
+
         else {
             //Obtener numero
-            int final;
+            
             int resultado;
 
             //Suponer primero que son variables/registros
@@ -664,14 +726,14 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //saltar espacios
             while ( (*expression)==' ') expression++;
 
-            while ( (*expression)=='{') { //si hay parentesis abrir o cerrar,saltar
+            while ( (*expression)=='{' || (*expression)=='(') { //si hay parentesis abrir o cerrar,saltar
                 printf ("abrir parentesis en bucle\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_ABRIR;      
                 expression++;
                 indice_token++;          
             }
-            while ( (*expression)=='}') { //si hay parentesis abrir o cerrar,saltar
+            while ( (*expression)=='}' || (*expression)==')' ) { //si hay parentesis abrir o cerrar,saltar
                 printf ("cerrar parentesis en bucle\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_CERRAR;      
@@ -748,6 +810,7 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
 	while (tokens[i].tipo!=TPT_FIN && maximo) {
         int esnumero=0;
         int espacio=0;
+        int esfuncion=0;
         enum token_parser_tipo tipo=tokens[i].tipo;
 
         token_parser_textos_indices *indice_a_tabla;
@@ -783,6 +846,11 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
                 indice_a_tabla=tpti_operador_calculo;
             break;
 
+            case TPT_FUNCION: 
+                indice_a_tabla=tpti_funciones;
+                esfuncion=1;
+            break;            
+
             case TPT_FIN:
                 //esto se gestiona desde el while y por tanto no se llega nunca aqui. Lo pongo para que no se queje el compilador
             break;
@@ -803,8 +871,19 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
                 if (indice_a_tabla[j].indice==indice) break;
             }
 
-            if (!espacio) sprintf(&expression[dest_string],"%s",indice_a_tabla[j].texto);
-            else sprintf(&expression[dest_string]," %s ",indice_a_tabla[j].texto);
+            //Meter en buffer el texto
+            char buf_tok_str[MAX_PARSER_TEXTOS_INDICE_LENGTH];
+            
+            strcpy(buf_tok_str,indice_a_tabla[j].texto);
+
+            //Si es funcion, eliminar ultimo caracter que sera "("
+            if (esfuncion) {
+                int l=strlen(buf_tok_str);
+                if (l) buf_tok_str[l-1]=0;
+            }            
+
+            if (!espacio) sprintf(&expression[dest_string],"%s",buf_tok_str);
+            else sprintf(&expression[dest_string]," %s ",buf_tok_str);
 
             //printf ("***MRA=%d \n",TPI_V_MRA);
         }
@@ -1093,6 +1172,8 @@ int exp_par_calculate_numvarreg(token_parser *token)
 
 
             break;
+
+         
             
 
 
@@ -1100,6 +1181,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
             case TPT_OPERADOR_CONDICIONAL:  //=, <,>, <>,
             case TPT_OPERADOR_CALCULO: //+,-,*,/. & (and), | (or), ^ (xor)
             case TPT_PARENTESIS:
+            case TPT_FUNCION:
             case TPT_FIN:
                 //esto no se llega nunca aqui. Lo pongo para que no se queje el compilador
             break;
@@ -1130,6 +1212,7 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
             case TPT_PARENTESIS:
 	        case TPT_VARIABLE: //mra,mrw, etc
 	        case TPT_REGISTRO: //a, bc, de, etc
+            case TPT_FUNCION:
             case TPT_FIN:
                 //esto no se llega nunca aqui. Lo pongo para que no se queje el compilador
             break;
@@ -1220,6 +1303,50 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
 
     return resultado;
 }
+
+
+//calcula valor resultante de aplicar funcion
+int exp_par_calculate_funcion(int valor,enum token_parser_tipo tipo,enum token_parser_indice indice)
+{
+
+    int resultado=0; //asumimos cero
+    
+
+    switch (tipo) {
+            case TPT_NUMERO:
+            case TPT_PARENTESIS:
+	        case TPT_VARIABLE: //mra,mrw, etc
+	        case TPT_REGISTRO: //a, bc, de, etc
+            case TPT_OPERADOR_LOGICO:
+            case TPT_OPERADOR_CONDICIONAL:
+            case TPT_OPERADOR_CALCULO:
+            case TPT_FIN:
+                //esto no se llega nunca aqui. Lo pongo para que no se queje el compilador
+            break;
+
+
+            case TPT_FUNCION:
+                switch (indice) {
+                    case TPI_F_PEEK:
+        				return peek_byte_no_time(valor);
+                    break;
+                    	//TPI_F_PEEK,
+	//TPI_F_PEEKW,
+	//TPI_F_NOT
+                    default:
+                        //Para que no se queje el compilador por demas valores enum no tratados
+                    break;    
+                    
+                }
+            break;
+
+
+
+    }
+
+    return resultado;
+}
+
 
 //Devuelve el indice donde hay final de paréntesis. Se le empieza token con {
 //Se va abriendo y cerrando hasta igualar nivel paréntesis
@@ -1479,6 +1606,40 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
 
+    }
+
+    if (tokens[0].tipo==TPT_FUNCION) {
+
+    //buscar hasta cierre
+        int final_par=exp_par_final_parentesis(tokens,longitud_tokens);
+        printf ("cierre parentesis de funcion en indice %d\n",final_par);
+        if (final_par<0) {
+            *error_code=1;
+            return 0;
+        }
+        else {
+            //calculamos valor entre llaves
+            i++;
+            calculado_izquierda=1;
+
+            //debug parentesis
+            char buffer_destino[1024];
+            exp_par_tokens_to_exp(&tokens[i],buffer_destino,final_par-1);
+            printf ("evaluar parentesis: [%s]\n",buffer_destino);
+            //fin debug parentesis
+
+
+            int otro_err_code;
+            valor_izquierda=exp_par_evaluate_token(&tokens[i],final_par-1,&otro_err_code);
+            
+            if ( otro_err_code <0) {
+                *error_code=otro_err_code;
+                return 0; //ha habido error
+            }
+
+            int valor_resultante=exp_par_calculate_funcion(valor_izquierda,TPT_FUNCION,tokens[0].indice);
+            return valor_resultante;
+        }
     }
 
     i=0;
