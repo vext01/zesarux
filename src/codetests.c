@@ -663,7 +663,7 @@ void codetests_assembler(void)
 
 }
 
-void codetests_expression_parser_print_tokens(token_parser *tokens)
+int codetests_expression_parser_print_tokens(token_parser *tokens)
 {
 	exp_par_debug_dump_tokens(tokens,MAX_PARSER_TOKENS_NUM);
 
@@ -677,11 +677,84 @@ void codetests_expression_parser_print_tokens(token_parser *tokens)
 	int error_code;
 	int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
 	printf ("%d\n",resultado);
+	return resultado;
+}
+
+void codetests_expression_parser_expect(char *string,int expected_value)
+{
+
+	printf ("\n*****Text [%s] expect to be [%d]\n",string,expected_value);
+
+	//Mis tokens de salida
+	token_parser tokens[MAX_PARSER_TOKENS_NUM];
+	int result;
+	int resultado_evaluar;
+
+	printf ("\nText to token: %s\n",string);
+	result=exp_par_exp_to_tokens(string,tokens);
+	printf ("result token: %d\n",result);
+	if (result>=0) resultado_evaluar=codetests_expression_parser_print_tokens(tokens);		
+	else {
+		printf ("ERROR!\n");
+		exit(1);
+	}
+
+	if (resultado_evaluar!=expected_value) {
+		printf ("*****ERROR text [%s] is NOT [%d]\n",string,expected_value);	
+		exit(1);
+	}
+	else {
+		printf ("*****OK text [%s] is [%d]\n",string,expected_value);	
+	}
+
 }
 
 void codetests_expression_parser(void)
 {
 	//void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
+	//algunas inicializaciones de registros
+	current_machine_type=MACHINE_ID_SPECTRUM_48;
+	reg_a=45;
+	reg_bc=40000;
+	reg_de=30000;
+
+	codetests_expression_parser_expect("0",0);
+	codetests_expression_parser_expect("1",1);
+	codetests_expression_parser_expect("1+1",2);
+	codetests_expression_parser_expect("2*3",6);
+	codetests_expression_parser_expect("2*3+1",7);
+	codetests_expression_parser_expect("1+2*3",7);
+	codetests_expression_parser_expect("3*(6+7)",39);
+	codetests_expression_parser_expect("3*(6+7)+4",43);
+	codetests_expression_parser_expect("3*(6+7)+4=43",1);
+	codetests_expression_parser_expect("3*(6+7)+4=99",0);
+
+
+	codetests_expression_parser_expect("A",45);
+	codetests_expression_parser_expect("AH",10);
+
+	codetests_expression_parser_expect("NOT(1)",0);
+	codetests_expression_parser_expect("NOT(0)",1);
+
+	codetests_expression_parser_expect("BC+DE",70000);
+
+	codetests_expression_parser_expect("(BC+DE)",70000);
+
+	codetests_expression_parser_expect("(BC+DE)&FFFFH",4464);
+
+
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)",3*4464);
+
+
+	codetests_expression_parser_expect("NOT(3*((BC+DE)&FFFFH))",0);
+
+	codetests_expression_parser_expect("NOT(NOT(1))",1);
+
+	codetests_expression_parser_expect("NOT(NOT((3*((BC+DE)&FFFFH)))",1);
+
+	printf ("\nOK ALL expression parser TESTS OK\n");
+	
+	return;
 
 	//Mis tokens de salida
 	token_parser tokens[MAX_PARSER_TOKENS_NUM];

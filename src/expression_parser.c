@@ -464,7 +464,8 @@ int exp_par_is_operador(char *texto,int *final)
 //Considerar caracteres auxiliares para registros: ' , (), pero no ciua
 int exp_par_char_is_reg_aux(char c)
 {
-    if (c=='\'' || c=='(' || c==')') return 1;
+    //if (c=='\'' || c=='(' || c==')') return 1;
+    if (c=='\'') return 1;  //no considerar () como parte de un registro
     else return 0;
 }
 
@@ -1332,6 +1333,11 @@ int exp_par_calculate_funcion(int valor,enum token_parser_tipo tipo,enum token_p
                     	//TPI_F_PEEK,
 	//TPI_F_PEEKW,
 	//TPI_F_NOT
+
+                    case TPI_F_NOT:
+        				return !valor;
+                    break;        
+
                     default:
                         //Para que no se queje el compilador por demas valores enum no tratados
                     break;    
