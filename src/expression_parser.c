@@ -1299,6 +1299,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     int calculado_izquierda=0;
     int valor_izquierda;
+    int pos_inicial=0;
 
     //Empieza con parentesis?
     if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_ABRIR) {
@@ -1312,14 +1313,22 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             //calculamos valor entre llaves
             i++;
             calculado_izquierda=1;
+
+            //debug parentesis
+            char buffer_destino[1024];
+            exp_par_tokens_to_exp(&tokens[i],buffer_destino,final_par-1);
+            printf ("evaluar parentesis: [%s]\n",buffer_destino);
+            //fin debug parentesis
+
+
             valor_izquierda=exp_par_evaluate_token(&tokens[i],final_par-1,error_code);
             if ( (*error_code)<0) return 0; //ha habido error
-            i=final_par+1; //seguimos evaluacion desde despues parentesis
+            pos_inicial=final_par+1; //seguimos evaluacion desde despues parentesis
             longitud_tokens -=i;
         }
     }
 
-    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         if (tokens[i].tipo==TPT_OPERADOR_LOGICO && !nivel_parentesis ) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -1340,7 +1349,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
 
 
-    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL && !nivel_parentesis) {
             //Evaluar parte izquierda y derecha y aplicar operador
@@ -1363,7 +1372,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     }
 
 
-    /* for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    /* for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO && !nivel_parentesis
@@ -1388,7 +1397,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     
 
 
-    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Para sumas y restas, mas prioridad que dividir o multiplicar
 
@@ -1415,7 +1424,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     }
 
 
-    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Pero no sumas y restas
 
@@ -1446,14 +1455,12 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         return valor_izquierda;
     }
 
-    i=0;
-
     if ( (tokens[i].tipo==TPT_NUMERO || tokens[i].tipo==TPT_VARIABLE || tokens[i].tipo==TPT_REGISTRO)
              )
     {
             //printf ("es variable\n");
             //tiene que ser numero
-            int resultado=exp_par_calculate_numvarreg(&tokens[i]);
+            int resultado=exp_par_calculate_numvarreg(&tokens[0]);
             //printf("resultado variable: %d\n",resultado);
             return resultado;
     }
