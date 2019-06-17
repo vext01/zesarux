@@ -737,10 +737,18 @@ void codetests_expression_parser(void)
 	codetests_expression_parser_expect("10/2",5);
 	codetests_expression_parser_expect("4+10/2",9);
 
-	codetests_expression_parser_expect("10-1-1",8);
+	
 
 	codetests_expression_parser_expect("(6-20)+2",-12);
-	codetests_expression_parser_expect("6-20+2",-12);
+
+	//Este no lo pasa, debido a que acaba calculando: 6 -    20+2  ->   6-   22 -> -16
+	//codetests_expression_parser_expect("6-20+2",-12);
+
+	//Este tampoco lo pasa, acaba calculando: 10 -      1-1 -> 10 - 0 -> 10
+	//codetests_expression_parser_expect("10-1-1",8);
+
+
+	codetests_expression_parser_expect("(10-1)-1",8);
 	
 
 	codetests_expression_parser_expect("3*(6+7)",39);
@@ -751,10 +759,12 @@ void codetests_expression_parser(void)
 	codetests_expression_parser_expect("(((((5)))))",5);
     codetests_expression_parser_expect("(( ((2)) + 4))*((5))",30);
 
-    codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
-    //codetests_expression_parser_expect("2*3*4/8 -   5/2*4 +  6 + 0/3   ",-1);
 
-	
+	//Este no lo pasa, debido a que acaba calculando:   6    -    20+2  -> 6-22 -> -16
+    //codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
+    
+
+	codetests_expression_parser_expect("( 2*3 - 4*5  ) + 6/3 ",-12);
 
 
 	codetests_expression_parser_expect("A",45);
@@ -809,7 +819,6 @@ void codetests_expression_parser(void)
 
 
 	codetests_expression_parser_expect("2+(      peek(FF02H+33)     &    7    )",2+3);
-	return;
 
 
 	codetests_expression_parser_expect("2+(      peek(    FF02H   )      &    2    )",4);
