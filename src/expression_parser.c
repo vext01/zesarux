@@ -1287,14 +1287,14 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
 
     //debug mostrar tokens
-    /* printf ("--exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
+     printf ("--exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
     exp_par_debug_dump_tokens(tokens,longitud_tokens);
     printf ("--end dump\n");
 
     char buffer_destino[1024];
     exp_par_tokens_to_exp(tokens,buffer_destino,longitud_tokens);
     printf ("--exp_par_evaluate_token. expression to parse: [%s]\n",buffer_destino);
-    */
+    
     //fin debug mostrar tokens
 
     int calculado_izquierda=0;
@@ -1314,7 +1314,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             calculado_izquierda=1;
             valor_izquierda=exp_par_evaluate_token(&tokens[i],final_par-1,error_code);
             if ( (*error_code)<0) return 0; //ha habido error
-            i=final_par+1;
+            i=final_par+1; //seguimos evaluacion desde despues parentesis
             longitud_tokens -=i;
         }
     }
@@ -1331,7 +1331,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_izquierda=i;
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;
 
-            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
@@ -1353,7 +1353,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
 
             //printf ("dividiendo condicionales\n");
-            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             //printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
@@ -1378,7 +1378,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
 
             //printf ("calculando desde ")
-            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
@@ -1406,7 +1406,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
 
             //printf ("calculando desde ")
-            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
@@ -1433,12 +1433,17 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;            
 
             //printf ("calculando desde ")
-            valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
+            if (!calculado_izquierda) valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
 
+    }
+
+    if (calculado_izquierda) {
+        //devolver numero entre parentesis
+        return valor_izquierda;
     }
 
     i=0;
