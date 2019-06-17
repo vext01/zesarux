@@ -117,8 +117,8 @@ Al final esto dará un valor 0 o diferente de 0. A efectos de disparar breakpoin
 //Usado en la gestión de paréntesis:
 token_parser_textos_indices tpti_parentesis[]={
 
-	{TPI_P_ABRIR,"{"},
-	{TPI_P_CERRAR,"}"},
+	{TPI_P_ABRIR,"("},
+	{TPI_P_CERRAR,")"},
 
     {TPI_FIN,""}
 };
@@ -1618,18 +1618,17 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         }
         else {
             //calculamos valor entre llaves
-            i++;
-            calculado_izquierda=1;
+            int longitud_dentro_llaves=final_par-1; //el pa
 
             //debug parentesis
             char buffer_destino[1024];
-            exp_par_tokens_to_exp(&tokens[i],buffer_destino,final_par-1);
-            printf ("evaluar funcion: [%s]\n",buffer_destino);
+            exp_par_tokens_to_exp(&tokens[2],buffer_destino,final_par-1);
+            printf ("evaluar funcion para valor: [%s]\n",buffer_destino);
             //fin debug parentesis
 
 
             int otro_err_code;
-            valor_izquierda=exp_par_evaluate_token(&tokens[i],final_par-1,&otro_err_code);
+            valor_izquierda=exp_par_evaluate_token(&tokens[2],final_par-1,&otro_err_code);
             
             if ( otro_err_code <0) {
                 *error_code=otro_err_code;
