@@ -388,24 +388,35 @@ int exp_par_is_funcion(char *texto,int *final,enum token_parser_indice *indice_f
     //Buscar hasta final letras
     char buffer_texto[MAX_PARSER_TEXTOS_INDICE_LENGTH];
 
+    int unparentesis=0;
+
     int i=0;
-    while (*texto && (exp_par_is_letter(*texto) || (*texto)=='(' ) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
+    while (*texto && (exp_par_is_letter(*texto) /* || ( (*texto)=='(' && unparentesis==0)*/ ) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
         buffer_texto[i]=*texto;
+
+        //if ( (*texto)=='(') unparentesis=1; //solo leer hasta el primer parentesis
+
         i++;
         texto++;
     }
+
+    //Si no acaba con parentesis
+    if ((*texto)!='(') return 0;
 
     if (i==MAX_PARSER_TEXTOS_INDICE_LENGTH) {
         //Final de buffer. error
         return -1;
     }
 
+    //Meter parentesis
+    buffer_texto[i++]='(';
+
     buffer_texto[i]=0;
 
-    //printf ("probando tpti_variables\n");
+    printf ("probando tpti_funciones con [%s]\n",buffer_texto);
     int indice=exp_par_is_token_parser_textos_indices(buffer_texto,tpti_funciones);
     if (indice>=0) {
-        //printf ("es funcion\n");
+        printf ("[%s] es funcion\n",buffer_texto);
         *final=strlen(buffer_texto)-1; //quitarle el parentesis 
         *indice_final=indice;
         return 1;
@@ -691,7 +702,7 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 resultado=exp_par_is_number(expression,&final);
             
                 if (resultado<=0) {
-                    printf ("return number with error\n");
+                    printf ("return number with error (evaluated [%s]\n",expression);
                     return -1; //error
                 }
 
@@ -739,7 +750,10 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 tokens[indice_token].indice=TPI_P_CERRAR;      
                 expression++;
                 indice_token++;          
-            }                  
+            }    
+
+            //saltar espacios
+            while ( (*expression)==' ') expression++;                          
 
             //Si no final, 
             if ( (*expression)!=0) {

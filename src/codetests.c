@@ -683,7 +683,7 @@ int codetests_expression_parser_print_tokens(token_parser *tokens)
 void codetests_expression_parser_expect(char *string,int expected_value)
 {
 
-	printf ("\n*****Text [%s] expect to be [%d]\n",string,expected_value);
+	printf ("\n\n\n*****Text [%s] expect to be [%d]\n",string,expected_value);
 
 	//Mis tokens de salida
 	token_parser tokens[MAX_PARSER_TOKENS_NUM];
@@ -700,13 +700,20 @@ void codetests_expression_parser_expect(char *string,int expected_value)
 	}
 
 	if (resultado_evaluar!=expected_value) {
-		printf ("*****ERROR text [%s] is NOT [%d]\n",string,expected_value);	
+		printf ("*****ERROR text [%s] is NOT [%d]. IS [%d]\n",string,expected_value,resultado_evaluar);	
 		exit(1);
 	}
 	else {
 		printf ("*****OK text [%s] is [%d]\n",string,expected_value);	
 	}
 
+}
+
+z80_byte codetests_expression_parser_peek_byte_no_time(z80_int dir)
+{
+	//para testeo
+	//devolver nibble bajo de direccion
+	return dir & 0xFF;
 }
 
 void codetests_expression_parser(void)
@@ -717,6 +724,7 @@ void codetests_expression_parser(void)
 	reg_a=45;
 	reg_bc=40000;
 	reg_de=30000;
+	peek_byte_no_time=codetests_expression_parser_peek_byte_no_time;
 
 	codetests_expression_parser_expect("0",0);
 	codetests_expression_parser_expect("1",1);
@@ -744,13 +752,54 @@ void codetests_expression_parser(void)
 
 
 	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)",3*4464);
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(2+1)*((BC+DE)&FFFFH)",1);
 
+
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(2+1)*((BC+DE)&FFFFH) AND (1=1)",1);
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(2+1)*((BC+DE)&FFFFH) AND (bc=de+10000)",1);
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(2+1)*((BC+DE)&FFFFH) AND (bc=de+10001)",0);
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(2+1)*((BC+DE)&FFFFH) AND (bc=de+10000) AND (bc-de=10000)",1);
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(2+1)*((BC+DE)&FFFFH) AND (bc=de+10000) AND (bc-de=10001)",0);
+
+
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(2+1)*((BC+DE)&FFFFH) AND bc=de+10000 AND bc-de=10000",1);
+	codetests_expression_parser_expect("3  * ( (  BC +  DE ) &  FFFFH  )=( 2 + 1  )  *  (  (  BC  +  DE  )  &  FFFFH) AND    bc   =   de +  10000 AND bc - de =  10000",1);
+
+
+	codetests_expression_parser_expect("3  * ( (  BC +  DE ) &  FFFFH  )",3*4464);
+	
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(999999+1)*((BC+DE)&FFFFH) OR (bc=de+10000)",1);
+	codetests_expression_parser_expect("3*((BC+DE)&FFFFH)=(999999+1)*((BC+DE)&FFFFH) OR (bc=de+9999)",0);
+
+	codetests_expression_parser_expect("NOT(1)",0);
+	codetests_expression_parser_expect("NOT(NOT(1))",1);
 
 	codetests_expression_parser_expect("NOT(3*((BC+DE)&FFFFH))",0);
 
-	codetests_expression_parser_expect("NOT(NOT(1))",1);
 
-	codetests_expression_parser_expect("NOT(NOT((3*((BC+DE)&FFFFH)))",1);
+
+	codetests_expression_parser_expect("NOT(NOT(3*((BC+DE)&FFFFH)))",1);
+
+
+	codetests_expression_parser_expect("peek(FF01H)",1);
+	codetests_expression_parser_expect("3*peek(FF02H)",6);
+	codetests_expression_parser_expect("3*peek(FF02H)+NOT(0)",7);
+
+
+	codetests_expression_parser_expect("2+(      peek(FF02H)     &    2    )",4);
+
+
+	codetests_expression_parser_expect("2+(      peek(FF02H+33)     &    7    )",2+3);
+	return;
+
+
+	codetests_expression_parser_expect("2+(      peek(    FF02H   )      &    2    )",4);
+
+
+	codetests_expression_parser_expect("A*BC",1800000);
+	codetests_expression_parser_expect("A*BC+3",1800000+3);
+	codetests_expression_parser_expect("99*(A*BC+3)",99*(1800000+3));
+	codetests_expression_parser_expect("(99*(A*BC+3)) & FFFFH",7913);
 
 	printf ("\nOK ALL expression parser TESTS OK\n");
 	

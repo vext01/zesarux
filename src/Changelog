@@ -1,11 +1,11 @@
 Version 7.3. 30 May 2019 - xxx edition
 
--Improved menu interface:
---Program Window can be extended horizontally and have a right region to place menu zxvision windows (called ZX Desktop)
---Draw engine: now it allows transparency
---Menu windows can be placed and resized to the whole program window
---Some windows geometry (position, size) are saved in the configuration
---Hotkeys now show right capitalization (lowercase or uppercase)
+Improved menu interface:
+-Program Window can be extended horizontally and have a right region to place menu zxvision windows (called ZX Desktop)
+-Draw engine: now it allows transparency
+-Menu windows can be placed and resized to the whole program window
+-Some windows geometry (position, size) are saved in the configuration
+-Hotkeys now show right capitalization (lowercase or uppercase)
 
 Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
@@ -22,7 +22,9 @@ Added Chloe MMU to ZX-Uno
 Added AY Sheet
 Added RetroMac Gui Style
 
-Improved breakpoint parser: now it's a lot more faster. Up to 7 times faster, so it uses 7 times less cpu than the old version
+Improved breakpoint parser: 
+-full expression parser: parenthesis, functions, sums, multiplications, etc. Can be used as a full calculator!
+-now it's a lot more faster. Up to 7 times faster, so it uses 7 times less cpu than the old version
 
 Improved adventure text extractor: now supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved footer:

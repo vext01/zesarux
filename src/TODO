@@ -22,7 +22,7 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 
 -expression parser:
-*NOT(NOT( no va
+*despues de parentesis cerrado puede haber espacio ) AND
 *peek,peekw para ql , mk14
 *condicion opcode
 *valores negativos, positivos
