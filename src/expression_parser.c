@@ -573,12 +573,14 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
         //Si hay espacio, saltar
         if ( (*expression)==' ') expression++;
         else if ( (*expression)=='{') { //si hay parentesis abrir o cerrar,saltar
+                printf ("abrir parentesis\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_ABRIR;      
                 expression++;
                 indice_token++;          
         }
         else if ( (*expression)=='}') { //si hay parentesis abrir o cerrar,saltar
+                printf ("cerrar parentesis\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_CERRAR;      
                 expression++;
@@ -627,7 +629,7 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 resultado=exp_par_is_number(expression,&final);
             
                 if (resultado<=0) {
-                    //printf ("return number with error\n");
+                    printf ("return number with error\n");
                     return -1; //error
                 }
 
@@ -662,10 +664,25 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //saltar espacios
             while ( (*expression)==' ') expression++;
 
+            while ( (*expression)=='{') { //si hay parentesis abrir o cerrar,saltar
+                printf ("abrir parentesis en bucle\n");
+                tokens[indice_token].tipo=TPT_PARENTESIS;
+                tokens[indice_token].indice=TPI_P_ABRIR;      
+                expression++;
+                indice_token++;          
+            }
+            while ( (*expression)=='}') { //si hay parentesis abrir o cerrar,saltar
+                printf ("cerrar parentesis en bucle\n");
+                tokens[indice_token].tipo=TPT_PARENTESIS;
+                tokens[indice_token].indice=TPI_P_CERRAR;      
+                expression++;
+                indice_token++;          
+            }                  
+
             //Si no final, 
             if ( (*expression)!=0) {
                 //Calcular operador
-                //printf ("parsing operador from %s\n",expression);
+                printf ("parsing operador from %s\n",expression);
                 resultado=exp_par_is_operador(expression,&final);
                 if (resultado==-1) {
                     printf ("return operador with error\n");
@@ -1204,6 +1221,38 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
     return resultado;
 }
 
+//Devuelve el indice donde hay final de paréntesis. Se le empieza token con {
+//Se va abriendo y cerrando hasta igualar nivel paréntesis
+//Devuelve -1 si no se detecta final
+int exp_par_final_parentesis(token_parser *tokens,int longitud_tokens)
+{
+    int i=0;
+    int nivel_parentesis=0;
+
+    //Avanzamos el índice. suponemos que habia {
+    i++;
+    nivel_parentesis=1;
+
+    for (;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+        if (tokens[i].tipo==TPT_PARENTESIS) {
+            if (tokens[i].indice==TPI_P_ABRIR) {
+              nivel_parentesis++;  
+            }
+            else if (tokens[i].indice==TPI_P_CERRAR) {
+                nivel_parentesis--;
+                //final?
+                if (nivel_parentesis==0) {
+                    return i;
+                }
+            }
+        }
+    }
+
+    //final y no hay cierre conveniente
+    return -1;
+
+}
+
 
 //Calcula la expresion identificada por tokens. Funcion recursiva
 //final identifica al siguiente token despues del final. Poner valor alto para que no tenga final y detecte token de fin
@@ -1234,6 +1283,9 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     int i=0;
 
+    int nivel_parentesis=0;
+
+
     //debug mostrar tokens
     /* printf ("--exp_par_evaluate_token. longitud %d. dump:\n",longitud_tokens);
     exp_par_debug_dump_tokens(tokens,longitud_tokens);
@@ -1245,12 +1297,33 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     */
     //fin debug mostrar tokens
 
+    int calculado_izquierda=0;
+    int valor_izquierda;
+
+    //Empieza con parentesis?
+    if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].tipo==TPI_P_ABRIR) {
+        //buscar hasta cierre
+        int final_par=exp_par_final_parentesis(tokens,longitud_tokens);
+        if (final_par<0) {
+            *error_code=1;
+            return 0;
+        }
+        else {
+            //calculamos valor entre llaves
+            i++;
+            calculado_izquierda=1;
+            valor_izquierda=exp_par_evaluate_token(&tokens[i],final_par-1,error_code);
+            if ( (*error_code)<0) return 0; //ha habido error
+            i=final_par+1;
+            longitud_tokens -=i;
+        }
+    }
 
     for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
-        if (tokens[i].tipo==TPT_OPERADOR_LOGICO ) {
+        if (tokens[i].tipo==TPT_OPERADOR_LOGICO && !nivel_parentesis ) {
             //Evaluar parte izquierda y derecha y aplicar operador
-            int valor_izquierda;
+            
             int valor_derecha;
 
             int errorcode1,errorcode2;
@@ -1269,9 +1342,9 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
-        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL ) {
+        if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL && !nivel_parentesis) {
             //Evaluar parte izquierda y derecha y aplicar operador
-            int valor_izquierda;
+            
             int valor_derecha;
 
             int errorcode1,errorcode2;
@@ -1293,10 +1366,10 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     /* for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
 
-        if (tokens[i].tipo==TPT_OPERADOR_CALCULO 
+        if (tokens[i].tipo==TPT_OPERADOR_CALCULO && !nivel_parentesis
         ) {
             //Evaluar parte izquierda y derecha y aplicar operador
-            int valor_izquierda;
+           
             int valor_derecha;
 
             int errorcode1,errorcode2;
@@ -1320,10 +1393,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         //Para sumas y restas, mas prioridad que dividir o multiplicar
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO && 
+                !nivel_parentesis &&
                 (tokens[i].indice==TPI_OC_SUMA || tokens[i].indice==TPI_OC_RESTA)
         ) {
             //Evaluar parte izquierda y derecha y aplicar operador
-            int valor_izquierda;
+            
             int valor_derecha;
 
             int errorcode1,errorcode2;
@@ -1346,10 +1420,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         //Pero no sumas y restas
 
         if (tokens[i].tipo==TPT_OPERADOR_CALCULO &&
+        !nivel_parentesis &&
         (tokens[i].indice!=TPI_OC_SUMA && tokens[i].indice!=TPI_OC_RESTA)
         ) {
             //Evaluar parte izquierda y derecha y aplicar operador
-            int valor_izquierda;
+            
             int valor_derecha;
 
             int errorcode1,errorcode2;
