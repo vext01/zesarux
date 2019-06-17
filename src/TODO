@@ -27,8 +27,7 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *valores negativos, positivos
 *base numerica hexad, binaria, ascii
 *registro SP motorola y otros mk14. revisar
-* (NN)
-* parentesis para cambiar prioridades. complicado!!
+
 
 -comparacion breakpoint parser. uso cpu:
 no breakpoints: 10% cpu
