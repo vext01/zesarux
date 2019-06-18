@@ -919,8 +919,7 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
                else sprintf(&expression[dest_string],"%d",tokens[i].valor); 
                break;     
 
-               case TPF_BINARIO:
-                
+               case TPF_BINARIO:  
                 util_ascii_to_binary(tokens[i].valor,buffer_temporal_binario,33);
                 strcpy(&expression[dest_string],buffer_temporal_binario);
                break;      

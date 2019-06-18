@@ -11132,9 +11132,16 @@ void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_max, int
 //No imprimir ceros al inicio
 void util_ascii_to_binary(int valor_origen,char *destino,int longitud_max)
 {
+
+        //Si es cero tal cual
+        if (valor_origen==0 && longitud_max>=2) {
+                strcpy(destino,"0%");
+                return;
+        }
+
         //Usamos sin signo por si acaso
         unsigned int valor=valor_origen;
-        const unsigned int mascara=(unsigned int)4294967296;
+        const unsigned int mascara=(unsigned int)2147483648;
 
         longitud_max--; //hemos de considerar prefijo final
 
@@ -11142,7 +11149,9 @@ void util_ascii_to_binary(int valor_origen,char *destino,int longitud_max)
         int primer_uno=0;
 
         for (nbit=0;nbit<32 && longitud_max>0;nbit++) {
+                //printf ("nbit %d valor %u\n",nbit,valor);
                 if (valor & mascara) {
+                        //printf ("primer uno en nbit %d valor %d\n",nbit,valor);
                         *destino='1';
                         primer_uno=1;
                 }
@@ -11155,7 +11164,11 @@ void util_ascii_to_binary(int valor_origen,char *destino,int longitud_max)
                         destino++;
                         longitud_max--;
                 }
+
+                valor=valor<<1;
         }
+
+
 
         *destino='%';
         destino++;
