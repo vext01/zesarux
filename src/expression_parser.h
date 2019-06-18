@@ -126,13 +126,6 @@ enum token_parser_indice {
         TPI_R_FN,
         TPI_R_FC,
 
-	    TPI_R_P_BC,
-        TPI_R_P_DE,
-        TPI_R_P_HL,
-        TPI_R_P_SP,
-        TPI_R_P_PC,
-        TPI_R_P_IX,
-        TPI_R_P_IY,
 
 	//De motorola
 	TPI_R_D0,

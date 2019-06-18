@@ -222,13 +222,7 @@ token_parser_textos_indices tpti_registros[]={
         {TPI_R_FN,"FN"},
         {TPI_R_FC,"FC"},  
 
-	    {TPI_R_P_BC,"(BC)"},
-        {TPI_R_P_DE,"(DE)"},
-        {TPI_R_P_HL,"(HL)"},
-        {TPI_R_P_SP,"(SP)"},
-        {TPI_R_P_PC,"(PC)"},
-        {TPI_R_P_IX,"(IX)"},
-        {TPI_R_P_IY,"(IY)"},     
+
 
 
 	//De motorola
@@ -1168,13 +1162,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
         case TPI_R_FC: return ( Z80_FLAGS & FLAG_C ? 1 : 0); break;
 
 
-	    case TPI_R_P_BC: return peek_byte_no_time(reg_bc); break;
-        case TPI_R_P_DE: return peek_byte_no_time(reg_de); break;
-        case TPI_R_P_HL: return peek_byte_no_time(reg_hl); break;
-        case TPI_R_P_SP: return peek_byte_no_time(reg_sp); break;
-        case TPI_R_P_PC: return peek_byte_no_time(reg_pc); break;
-        case TPI_R_P_IX: return peek_byte_no_time(reg_ix); break;
-        case TPI_R_P_IY: return peek_byte_no_time(reg_iy); break;        
+ 
 
 
                     default:
