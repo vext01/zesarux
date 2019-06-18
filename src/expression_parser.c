@@ -388,7 +388,7 @@ int exp_par_is_funcion(char *texto,int *final,enum token_parser_indice *indice_f
     //Buscar hasta final letras
     char buffer_texto[MAX_PARSER_TEXTOS_INDICE_LENGTH];
 
-    int unparentesis=0;
+    //int unparentesis=0;
 
     int i=0;
     while (*texto && (exp_par_is_letter(*texto) /* || ( (*texto)=='(' && unparentesis==0)*/ ) && i<MAX_PARSER_TEXTOS_INDICE_LENGTH)  {
@@ -1447,7 +1447,9 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     //int calculado_izquierda=0;
     int valor_izquierda;
+    int valor_derecha;
     int pos_inicial=0;
+
 
     //Empieza con parentesis?. temp desactivado
     /*if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) {
@@ -1499,7 +1501,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         if (tokens[i].tipo==TPT_OPERADOR_LOGICO && !nivel_parentesis ) {
             //Evaluar parte izquierda y derecha y aplicar operador
             
-            int valor_derecha;
+            
 
             int errorcode1,errorcode2;
 
@@ -1537,7 +1539,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         if (tokens[i].tipo==TPT_OPERADOR_CONDICIONAL && !nivel_parentesis) {
             //Evaluar parte izquierda y derecha y aplicar operador
             
-            int valor_derecha;
+
 
             int errorcode1,errorcode2;
 
@@ -1576,7 +1578,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         ) {
             //Evaluar parte izquierda y derecha y aplicar operador
             
-            int valor_derecha;
+
 
             int errorcode1,errorcode2;
 
@@ -1609,7 +1611,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         ) {
             //Evaluar parte izquierda y derecha y aplicar operador
             
-            int valor_derecha;
+
 
             int errorcode1,errorcode2;
 
@@ -1640,7 +1642,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
         }
         else {
             //calculamos valor entre llaves
-            int longitud_dentro_llaves=final_par-1; //el pa
+            //int longitud_dentro_llaves=final_par-1; //el pa
 
             //debug parentesis
             char buffer_destino[1024];
@@ -1686,23 +1688,14 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
 
             int otro_err_code;
-            valor_izquierda=exp_par_evaluate_token(&tokens[i],final_par-1,&otro_err_code);
+            int valor_parentesis=exp_par_evaluate_token(&tokens[i],final_par-1,&otro_err_code);
             
             if ( otro_err_code <0) {
                 *error_code=otro_err_code;
                 return 0; //ha habido error
             }
-
-            //Alternativa 1: avanzamos indice puntero, cambiando pos_inicial
-            //pos_inicial=final_par+1; //seguimos evaluacion desde despues parentesis
-
-            //Alternativa 2: avanzamos puntero tokens, descartando el resto
-            i=final_par+1;
-            longitud_tokens -=i;
-            tokens=&tokens[i];
-            //printf ("vuelta de evaluar parentesis. valor_izquierda=%d longitud restante: %d indice actual: %d\n",valor_izquierda,longitud_tokens,i);
-
-            return valor_izquierda;
+        
+            return valor_parentesis;
         }
     }
 
