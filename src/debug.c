@@ -4904,7 +4904,7 @@ void debug_get_daad_step_breakpoint_string(char *texto)
 }
 
 
-//Retorna cadena de breakpoint cuando va a leer condact PARSE
+//Retorna cadena de breakpoint cuando va a leer condact PARSE en daad
 void debug_get_daad_runto_parse_string(char *texto)
 {
 	z80_int breakpoint_dir;

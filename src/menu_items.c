@@ -13053,7 +13053,8 @@ void menu_debug_get_legend(int linea,char *s)
 
 
 			if (menu_debug_registers_current_view==8) {
-				//de momento solo el run to parse en daad
+				//de momento solo el run to parse en daad. en quill o paws no tiene sentido, dado que no usan el condacto "PARSE"
+				//solo se usa en psi en paws
 				if (util_daad_detect()) sprintf(s,"runto~~Parse ~~Watch Wr~~ite M~~essages");
 				else sprintf(s,"~~Watch Wr~~ite M~~essages");
 				return;

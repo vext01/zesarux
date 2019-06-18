@@ -9,20 +9,17 @@ Para próxima versión ZEsarUX:
 -alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
 y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
 
--Comprobar a fondo fileselector despues de cambios a redimensionable
-
 -unpaws , unquill para cpc
 
 -unpaws con quill:
 *compression tokens?
 
 -unpaws: 
-*no parece que funcione siempre el runtoparse->no existe "parse" ni en paws ni quill, solo se usa en psi
 *compression tokens no siempre estan hasta el 255
 
 
--expression parser:
-*despues de parentesis cerrado puede haber espacio ) AND
+**Inicio Expression Parser
+
 *codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
 ->da -16. acaba haciendo 2*3 - 4*5 - 6/3
 en cambio: (2*3 - 4*5) + 6/3 da bien
@@ -84,6 +81,8 @@ Incremento cpu viejo algoritmo: 15-20%
 Mejora: (15/3)=5 -> 5 veces mas rápido
  (20/3)=7 -> 7 veces mas rápido
 
+
+**Fin Expression Parser
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
