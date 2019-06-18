@@ -213,4 +213,8 @@ int exp_par_evaluate_token(token_parser *tokens,int final,int *error_code);
 
 extern void exp_par_debug_dump_tokens(token_parser *tokens,int longitud);
 
+extern void exp_par_evaluate_expression(char *entrada,char *salida);
+
+extern int exp_par_is_number(char *texto,int *final);
+
 #endif

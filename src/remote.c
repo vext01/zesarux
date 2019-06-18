@@ -752,8 +752,8 @@ struct s_items_ayuda items_ayuda[]={
   {"enable-breakpoints",NULL,NULL,"Enable breakpoints"},
   {"enter-cpu-step",NULL,NULL,"Enter cpu step to step mode"},
 	{"esxdoshandler-get-open-files","|esxgof",NULL,"Gets a list of open files and directories on the esxdos handler"},
-  {"evaluate","|e","expression","Evaluate expression, can be more than one register separated by spaces. It's the same as using watches on the debug menu"},
-  {"evaluate-condition","|ec","condition","Evaluate condition. It's the same as using evaluate condition on the breakpoints debug menu"},
+  {"evaluate","|e","expression","Evaluate expression. It's the same parser as using breakpoints on the debug menu"},
+  //{"evaluate-condition","|ec","condition","Evaluate condition. It's the same as using evaluate condition on the breakpoints debug menu"},
   {"exit-cpu-step","|ecs",NULL,"Exit cpu step to step mode"},
   {"exit-emulator",NULL,NULL,"Ends emulator"},
 {"find-label",NULL,"label","Finds label on source code"},
@@ -1866,11 +1866,12 @@ void remote_cpu_run(int misocket,int verbose,int limite,int datosvuelve,int upda
 
 void remote_evaluate(int misocket,char *texto)
 {
-  char buffer_retorno[1024];
+  
+  char salida[MAX_BREAKPOINT_CONDITION_LENGTH];
 
 
-  debug_watches_loop(texto,buffer_retorno);
-  escribir_socket(misocket,buffer_retorno);
+  exp_par_evaluate_expression(texto,salida);
+  escribir_socket(misocket,salida);
 }
 
 
@@ -3725,7 +3726,7 @@ char buffer_retorno[2048];
   }
 
 
-   else if (!strcmp(comando_sin_parametros,"evaluate-condition") || !strcmp(comando_sin_parametros,"ec")) {
+   /*else if (!strcmp(comando_sin_parametros,"evaluate-condition") || !strcmp(comando_sin_parametros,"ec")) {
     if (parametros[0]==0) {
       escribir_socket(misocket,"Error. No expression");
     }
@@ -3733,7 +3734,7 @@ char buffer_retorno[2048];
       int result=debug_breakpoint_condition_loop(parametros,1);
       escribir_socket_format(misocket,"Result: %s -> %s",parametros,(result ? "True" : "False " ));
     }
-  }
+  }*/
 
 
 

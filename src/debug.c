@@ -1067,6 +1067,7 @@ void cpu_core_loop_debug_breakpoint(char *message)
 //devuelve valor registro
 //devuelve 0xFFFFFFFF si no reconoce
 //activa cond_opcode si condicion es de opcode
+/*
 unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_cond_opcode)
 {
 
@@ -1146,14 +1147,7 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
         if (!strcasecmp(registro,"hl")) return reg_hl;
 
 
-/*
-#define REG_AF (value_8_to_16(reg_a,Z80_FLAGS))
 
-#define REG_AF_SHADOW (value_8_to_16(reg_a_shadow,Z80_FLAGS_SHADOW))
-#define REG_HL_SHADOW (value_8_to_16(reg_h_shadow,reg_l_shadow))
-#define REG_BC_SHADOW (value_8_to_16(reg_b_shadow,reg_c_shadow))
-#define REG_DE_SHADOW (value_8_to_16(reg_d_shadow,reg_e_shadow))
-*/
       if (!strcasecmp(registro,"af'")) return REG_AF_SHADOW;
       if (!strcasecmp(registro,"bc'")) return REG_BC_SHADOW;
       if (!strcasecmp(registro,"de'")) return REG_DE_SHADOW;
@@ -1282,18 +1276,18 @@ unsigned int cpu_core_loop_debug_registro_solo_registro(char *registro,int *si_c
 
 
 	//enterrom, exitrom
-/*
+
 //Avisa cuando se ha entrado o salido de rom. Solo salta una vez el breakpoint
 //0: no esta en rom
 //1: esta en rom y aun no ha saltado breakpoint
 //2: esta en rom y ya ha saltado breakpoint
-int debug_enterrom=0;
+
 
 //0: no ha salido de rom
 //1: ha salido de rom y aun no ha saltado breakpoint
 //2: ha salido de rom y ya ha saltado breakpoint
-int debug_exitrom=0;
-*/
+
+
 
 	if (!strcasecmp(registro,"enterrom")) {
 		if (debug_enterrom==1) {
@@ -1316,6 +1310,9 @@ int debug_exitrom=0;
     return 0xFFFFFFFF;
 }
 
+*/
+
+
 
 //devuelve valor registro, con operador opcional: registro[operador][valor]
 //Donde operador puede ser:
@@ -1325,6 +1322,8 @@ int debug_exitrom=0;
 //valor es un valor decimal, hexa, etc
 //devuelve 0xFFFFFFFF si no reconoce
 //activa cond_opcode si condicion es de opcode
+
+/*
 unsigned int cpu_core_loop_debug_registro(char *registro,int *si_cond_opcode)
 {
 	//Ver si hay operador
@@ -1385,6 +1384,7 @@ unsigned int cpu_core_loop_debug_registro(char *registro,int *si_cond_opcode)
 
 	}
 }
+*/
 
 //con la cadena de entrada de condicion, retorna el registro a mirar (o sea, lo que hay antes del =, < o > o /
 //retorna registro en string registro. codigo de retorno es puntero a =, < , >, /. si no hay operador, retorna NULL
@@ -1467,7 +1467,7 @@ int debug_breakpoint_cond_opcode(unsigned int valor)
 
 
 
-
+/*
 unsigned int debug_parse_value_register_etc(char *texto,int *si_cond_opcode)
 {
 
@@ -1489,11 +1489,12 @@ unsigned int debug_parse_value_register_etc(char *texto,int *si_cond_opcode)
 
 	return valor;
 
-}
+}*/
 
 
 //Determina si una condicion es valida o no, hasta final de condicion o que se encuentre un operador: and, or, xor
 
+/*
 int debug_breakpoint_condition(char *texto_total,int debug)
 {
 
@@ -1549,30 +1550,7 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 	int si_cond_right_opcode;
 
 
-	/* Metodo antiguo de obtener parte izquierda y derecha 
-
-	//Obtener valor de despues del operador <, > o = o /
-	//Aqui obtenemos parte derecha de la comparacion. El valor antiguamente
-	valor=parse_string_to_number(texto);
-
-        if (debug) {
-                debug_printf (VERBOSE_DEBUG,"Parsed condition: %s %c %d",registro,operador,valor);
-        }
-
-
-
-
-	//Aqui obtenemos parte izquierda de la comparacion. El registro antiguamente
-	unsigned int v_reg=cpu_core_loop_debug_registro(registro,&si_cond_opcode);
-
-	if (v_reg==0xFFFFFFFF) {
-		if (debug) debug_printf (VERBOSE_DEBUG,"Invalid register %s",registro);
-		return 0;
-	}
-
-	unsigned int valor_registro=v_reg;
-
-	*/
+	
 
 	if (debug) {
 		debug_printf (VERBOSE_DEBUG,"Dividing two members of condition. Left=%s Right=%s",registro,texto);
@@ -1645,7 +1623,7 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 
 }
 
-
+*/
 
 
 
@@ -1653,6 +1631,7 @@ int debug_breakpoint_condition(char *texto_total,int debug)
 //devuelve 0xFFFFFFFF si no reconoce
 //activa cond_opcode si condicion es de opcode
 //Retorna puntero a siguiente variable
+/*
 char *debug_watches_get_value_variable_condition(char *texto,unsigned int *valor_final,char *registro)
 {
         //registro a mirar . no deberia ser mas alla de 10 caracteres, pero por si acaso
@@ -1685,7 +1664,7 @@ char *debug_watches_get_value_variable_condition(char *texto,unsigned int *valor
 
 	return &texto[i];
 }
-
+*/
 
 
 
@@ -1701,7 +1680,9 @@ void debug_watches_loop(char *texto,char *texto_destino)
 
 	while (*texto!=0) {
 
-		texto=debug_watches_get_value_variable_condition(texto,&valor_final,registro);
+		//texto=debug_watches_get_value_variable_condition(texto,&valor_final,registro);
+		texto="TODO";
+		valor_final=000;
 
 		if (valor_final==0xFFFFFFFF) sprintf (texto_destino,"%s=UNK ",registro);
 		else sprintf (texto_destino,"%s=%04X ",registro,valor_final);
@@ -1779,6 +1760,7 @@ char *si_get_cond_operator(char *cadena, char *buscar)
 //final del operador->apunta a despues del espacio final del operador
 //operador leido, incluyendo espacios principio y final : " and " o " or "
 //si no encontrado, retorna NULL
+/*
 char *debug_breakpoint_condition_loop_find_op(char *cadena_entrada,char **final_operador, char *operador_leido)
 {
 
@@ -1847,6 +1829,7 @@ char *debug_breakpoint_condition_loop_find_op(char *cadena_entrada,char **final_
 	return NULL;
 
 }
+*/
 
 //ejecuta operacion logica and , or, etc con operador
 int debug_breakpoint_condition_run_operator(int operador,int valor_anterior, int valor_siguiente)
@@ -1886,6 +1869,7 @@ int debug_breakpoint_condition_run_operator(int operador,int valor_anterior, int
 //Nota: aqui se habla de condicion entendiendo una expresion asi: [registro][operador][valor]], por ejemplo: A>3
 //y un operador es alguno de los siguientes: or, and, xor, etc
 
+/*
 int debug_breakpoint_condition_loop(char *texto,int debug)
 {
 	//formato entrada: condicion and/or/xor condicion and/or/xor condicion ....
@@ -1945,6 +1929,8 @@ int debug_breakpoint_condition_loop(char *texto,int debug)
 	if (debug) debug_printf (VERBOSE_DEBUG,"Final condition: %d",valor_final);
 	return valor_final;
 }
+
+*/
 
 /*
 Sobre el parser optimizado y otras optimizaciones. Usos de cpu antes y ahora:
@@ -3758,12 +3744,15 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 	if (condicion[i]==' ') return;
 
 	//Ver si eso que hay a la derecha del igual es una variable
-	int si_cond_opcode=0;
-	unsigned int valor;
+	//int si_cond_opcode=0;
+	unsigned int valor; 
 
-    valor=cpu_core_loop_debug_registro(valor_comparar,&si_cond_opcode);
+    //old parser valor=cpu_core_loop_debug_registro(valor_comparar,&si_cond_opcode);
+	int final_numero;
+	printf ("Comprobar si [%s] es numero\n",valor_comparar);
+	if (exp_par_is_number(valor_comparar,&final_numero)<=0) {
 
-    if (valor!=0xFFFFFFFF) {
+    //if (valor!=0xFFFFFFFF) {
 			//Resulta que es una variable, no un numero . no optimizar
 			debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Value is a variable. Not optimized");
 			return;

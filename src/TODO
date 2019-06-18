@@ -50,6 +50,7 @@ hace:
 *valores negativos, positivos
 *base numerica hexad, binaria, ascii
 *registro SP motorola y otros mk14. revisar
+*enterrom, exitrom, etc
 
 
 -comparacion breakpoint parser. uso cpu:

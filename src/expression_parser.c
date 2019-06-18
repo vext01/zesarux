@@ -301,10 +301,19 @@ int exp_par_is_digit(char c)
 }
 
 //Dice si caracter es digito hexadecimal 0...9...F
-int exp_par_is_hexadigit(char c)
+//modifica esletra si es letra a....f
+int exp_par_is_hexadigit(char c,int *esletra)
 {
-    if (exp_par_is_digit(c)) return 1;
-    if (letra_minuscula(c)>='a' && letra_minuscula(c)<='f') return 1;
+
+    if (exp_par_is_digit(c)) {
+        return 1;
+    }
+
+    if (letra_minuscula(c)>='a' && letra_minuscula(c)<='f') {
+        *esletra=1;
+        return 1;
+    }
+
     else return 0;
 }
 
@@ -341,7 +350,11 @@ int exp_par_is_number(char *texto,int *final)
     }
 
     //Tendra que empezar con numero o hexa, si no, error
-    if (!exp_par_is_hexadigit(texto[0])) return -1;
+    int esletra=0;
+    if (!exp_par_is_hexadigit(texto[0],&esletra)) {
+        //printf ("numero no empieza con hexadigito\n");
+        return -1;
+    }
 
     //Parseamos hasta encontrar sufijo, si lo hay
     int i;
@@ -350,8 +363,16 @@ int exp_par_is_number(char *texto,int *final)
             *final=i+1;
             return 1;
         }
-        if (!exp_par_is_hexadigit(texto[i])) break;
+        if (!exp_par_is_hexadigit(texto[i],&esletra)) break;
 
+    }
+
+    //final pero sin letra de sufijo
+
+    //esletra?
+    if (esletra) {
+        printf ("Habia letra hexa pero sin sufijo hexa. no es numero\n");
+        return 0;
     }
 
     *final=i;
@@ -1774,4 +1795,35 @@ void exp_par_debug_dump_tokens(token_parser *tokens,int longitud)
         longitud--;
 	}
 
+}
+
+//Evalua expresion de entrada y la muestra en salida
+void exp_par_evaluate_expression(char *entrada,char *salida)
+{
+
+	//void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
+
+	//Mis tokens de salida
+	token_parser tokens[MAX_PARSER_TOKENS_NUM];
+	int result;
+
+	//printf ("\nText to token: %s\n",string_texto);
+	result=exp_par_exp_to_tokens(entrada,tokens);
+	//printf ("result: %d\n",result);
+	if (result>=0) {
+			//Pasamos primero a string de nuevo
+			char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
+			exp_par_tokens_to_exp(tokens,string_detoken,MAX_PARSER_TOKENS_NUM);
+			
+			int error_code;  
+			
+			
+			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
+			sprintf(salida,"%d",resultado);
+
+			//printf ("%d\n",resultado);
+	}
+	else {
+		strcpy(salida,"Error parsing");
+	}
 }

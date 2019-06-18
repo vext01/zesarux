@@ -10561,6 +10561,7 @@ void menu_breakpoints_conditions_set(MENU_ITEM_PARAMETERS)
 
 }
 
+/*
 void menu_breakpoints_condition_evaluate(MENU_ITEM_PARAMETERS)
 {
 
@@ -10573,6 +10574,7 @@ void menu_breakpoints_condition_evaluate(MENU_ITEM_PARAMETERS)
 
         menu_generic_message_format("Result","%s -> %s",string_texto,(result ? "True" : "False " ));
 }
+*/
 
 void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
 {
@@ -10669,14 +10671,15 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
                 int i;
 
 
-		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate,NULL,"~~Evaluate Condition");
+		/*menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate,NULL,"~~Evaluate Condition");
 		menu_add_item_menu_shortcut(array_menu_breakpoints,'e');
 		menu_add_item_menu_tooltip(array_menu_breakpoints,"Test if a condition is true");
-		menu_add_item_menu_ayuda(array_menu_breakpoints,"It tests a condition using the same method as breakpoint conditions below");
+		menu_add_item_menu_ayuda(array_menu_breakpoints,"It tests a condition using the same method as breakpoint conditions below");*/
 
-		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate_new,NULL,"NewEvaluate Expression");
-		menu_add_item_menu_tooltip(array_menu_breakpoints,"Evaluate expression using new parser");
-		menu_add_item_menu_ayuda(array_menu_breakpoints,"Evaluate expression using new parser");		
+		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate_new,NULL,"~~Evaluate Expression");
+		menu_add_item_menu_shortcut(array_menu_breakpoints,'e');
+		menu_add_item_menu_tooltip(array_menu_breakpoints,"Evaluate expression using parser");
+		menu_add_item_menu_ayuda(array_menu_breakpoints,"Evaluate expression using parser. It's the same parser as breakpoint conditions below");		
 
 		//Maximo 10 breakpoints mostrados en pantalla. Para mas, usar ZRCP
         for (i=0;i<MAX_BREAKPOINTS_CONDITIONS && i<10;i++) {

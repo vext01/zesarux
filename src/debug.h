@@ -165,7 +165,7 @@ extern char *spectrum_rom_tokens[];
 extern char *zx81_rom_tokens[];
 extern char *zx80_rom_tokens[];
 
-extern int debug_breakpoint_condition_loop(char *texto,int debug);
+//extern int debug_breakpoint_condition_loop(char *texto,int debug);
 
 extern char debug_watches_text_to_watch[];
 
