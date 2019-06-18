@@ -51,6 +51,7 @@ hace:
 *registro SP motorola y otros mk14. revisar
 *watches
 *si imprime valor de 32 bits con bit ultimo alzado, sale negativo. Habria que imprimir siempre como positivo?
+*permitir [] como parentesis en parser?
 
 
 -comparacion breakpoint parser. uso cpu:

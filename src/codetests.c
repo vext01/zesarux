@@ -743,7 +743,7 @@ void codetests_expression_parser(void)
 
 	codetests_expression_parser_expect("1111111111111111111111111111111%",2147483647);
 
-	codetests_expression_parser_expect("11111111111111111111111111111111%",(unsigned int)4294967295);
+	codetests_expression_parser_expect("11111111111111111111111111111111%",(unsigned int)4294967295); 
 
 
 

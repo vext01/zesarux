@@ -10555,7 +10555,7 @@ void menu_breakpoints_conditions_set(MENU_ITEM_PARAMETERS)
 
 	sprintf (string_texto,"%s",debug_breakpoints_actions_array[breakpoint_index]);
 
-  menu_ventana_scanf("Action",string_texto,MAX_BREAKPOINT_CONDITION_LENGTH);
+  menu_ventana_scanf("Action? (enter=normal)",string_texto,MAX_BREAKPOINT_CONDITION_LENGTH);
 
   debug_set_breakpoint_action(breakpoint_index,string_texto);
 
@@ -10679,46 +10679,65 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate_new,NULL,"~~Evaluate Expression");
 		menu_add_item_menu_shortcut(array_menu_breakpoints,'e');
 		menu_add_item_menu_tooltip(array_menu_breakpoints,"Evaluate expression using parser");
-		menu_add_item_menu_ayuda(array_menu_breakpoints,"Evaluate expression using parser. It's the same parser as breakpoint conditions below");		
+		menu_add_item_menu_ayuda(array_menu_breakpoints,"Evaluate expression using parser. It's the same parser as breakpoint conditions below");
+
+#define MAX_BRK_SHOWN_MENU 10		
+
+		//Para mostrar los tooltip de cada linea, como contenido del breakpoint
+		char buffer_temp_breakpoint_array[MAX_BRK_SHOWN_MENU][MAX_BREAKPOINT_CONDITION_LENGTH];		
 
 		//Maximo 10 breakpoints mostrados en pantalla. Para mas, usar ZRCP
-        for (i=0;i<MAX_BREAKPOINTS_CONDITIONS && i<10;i++) {
-			char string_condition_shown[17];
+        for (i=0;i<MAX_BREAKPOINTS_CONDITIONS && i<MAX_BRK_SHOWN_MENU;i++) {
+			char string_condition_shown[23];
 			char string_action_shown[7];
 
 			char string_condition_action[33];
 
-			
+			char buffer_temp_breakpoint[MAX_BREAKPOINT_CONDITION_LENGTH];
 
 			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
-
 			
-
-				
 				//nuevo parser de breakpoints
-				char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
-				exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
-				menu_tape_settings_trunc_name(buffer_temp,string_condition_shown,17);
+				
+				exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp_breakpoint,MAX_PARSER_TOKENS_NUM);
+
+				//metemos en array para mostrar tooltip
+				strcpy(buffer_temp_breakpoint_array[i],buffer_temp_breakpoint);
+
+				menu_tape_settings_trunc_name(buffer_temp_breakpoint,string_condition_shown,23);
 				
 
 
 				menu_tape_settings_trunc_name(debug_breakpoints_actions_array[i],string_action_shown,7);
 				if (debug_breakpoints_actions_array[i][0]) sprintf (string_condition_action,"%s->%s",string_condition_shown,string_action_shown);
-				else sprintf (string_condition_action,"%s->menu",string_condition_shown);
+
+				//Si accion es menu, no escribir, para que quepa bien en pantalla
+				//else sprintf (string_condition_action,"%s->menu",string_condition_shown);
+				else sprintf (string_condition_action,"%s",string_condition_shown);
 			}
 			else {
 				sprintf(string_condition_action,"None");
+				//metemos en array para mostrar tooltip
+				buffer_temp_breakpoint_array[i][0]=0;			
 			}
+
+			char string_condition_action_shown[23];
+			menu_tape_settings_trunc_name(string_condition_action,string_condition_action_shown,23);
+
 																																																										//0123456789012345678901234567890
 			if (debug_breakpoints_conditions_enabled[i]==0 || debug_breakpoints_enabled.v==0) {														//Di 12345678901234: 12345678
-				menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_conditions_set,menu_breakpoints_cond,"Di %d: %s",i+1,string_condition_action);
+				menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_conditions_set,menu_breakpoints_cond,"Di %d: %s",i+1,string_condition_action_shown);
 			}
-                        else {
-				menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_conditions_set,menu_breakpoints_cond,"En %d: %s",i+1,string_condition_action);
+            
+			else {
+				menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_conditions_set,menu_breakpoints_cond,"En %d: %s",i+1,string_condition_action_shown);
 			}
 
-
-			menu_add_item_menu_tooltip(array_menu_breakpoints,"Set a condition breakpoint. Press Space to disable or enable. Only 10 shown here. "
+			//tooltip dice el breakpoint, si lo hay. si no, breakpoint normal
+			if (buffer_temp_breakpoint_array[i][0]) {
+				menu_add_item_menu_tooltip(array_menu_breakpoints,buffer_temp_breakpoint_array[i]);
+			}
+			else menu_add_item_menu_tooltip(array_menu_breakpoints,"Set a condition breakpoint. Press Space to disable or enable. Only 10 shown here. "
 						"If you want to use more, connect to ZRCP");
 
 			menu_add_item_menu_espacio(array_menu_breakpoints,menu_breakpoints_condition_enable_disable);
