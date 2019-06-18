@@ -707,6 +707,7 @@ void codetests_expression_parser_expect(char *string,int expected_value)
 		printf ("*****OK text [%s] is [%d]\n",string,expected_value);	
 	}
 
+
 }
 
 z80_byte codetests_expression_parser_peek_byte_no_time(z80_int dir)
@@ -728,6 +729,26 @@ void codetests_expression_parser(void)
 
 	codetests_expression_parser_expect("0",0);
 	codetests_expression_parser_expect("1",1);
+
+	codetests_expression_parser_expect("0%",0);
+	codetests_expression_parser_expect("1%",1);
+
+	codetests_expression_parser_expect("0H",0);
+	codetests_expression_parser_expect("1H",1);		
+
+	codetests_expression_parser_expect("101%",5);
+	codetests_expression_parser_expect("AAB0H",0xaab0);
+	codetests_expression_parser_expect("\"A\"",'A');
+	codetests_expression_parser_expect("'b'",'b');
+
+	codetests_expression_parser_expect("1111111111111111111111111111111%",2147483647);
+
+	codetests_expression_parser_expect("11111111111111111111111111111111%",(unsigned int)4294967295);
+
+
+
+	codetests_expression_parser_expect("110%+AAH+'c'+33",6+0xaa+'c'+33);
+
 	codetests_expression_parser_expect("1+1",2);
 	codetests_expression_parser_expect("2*3",6);
 	codetests_expression_parser_expect("2*3+1",7);
@@ -831,53 +852,6 @@ void codetests_expression_parser(void)
 
 	printf ("\nOK ALL expression parser TESTS OK\n");
 	
-	return;
-
-	//Mis tokens de salida
-	token_parser tokens[MAX_PARSER_TOKENS_NUM];
-	int result;
-
-	char *text_token;
-
-	text_token="34";
-	printf ("\nText to token: %s\n",text_token);
-	result=exp_par_exp_to_tokens(text_token,tokens);
-	printf ("result: %d\n",result);
-	if (result>=0) codetests_expression_parser_print_tokens(tokens);
-
-	text_token="MRA>3";
-	printf ("\nText to token: %s\n",text_token);
-	result=exp_par_exp_to_tokens(text_token,tokens);
-	printf ("result: %d\n",result);
-	if (result>=0) codetests_expression_parser_print_tokens(tokens);	
-
-	text_token="1+2*3+4*5";
-	printf ("\nText to token: %s\n",text_token);
-	result=exp_par_exp_to_tokens(text_token,tokens);
-	printf ("result: %d\n",result);
-	if (result>=0) codetests_expression_parser_print_tokens(tokens);	
-
-	
-
-	/* char *text_token="BC>300";
-	printf ("\nText to token: %s\n",text_token);
-	result=exp_par_exp_to_tokens(text_token,tokens);
-	printf ("result: %d\n",result);
-	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
-
-	char *text_token="BC>300 AND A<3 XOR A=4 OR MRA=55";
-	printf ("\nText to token: %s\n",text_token);
-	result=exp_par_exp_to_tokens(text_token,tokens);
-	printf ("result: %d\n",result);
-	if (result>=0) codetests_expression_parser_print_tokens(tokens);		
-
-
-	char *text_token="BC+2>300-1 AND A*2<3 XOR A*4=4 OR MRA*2=55";
-	printf ("\nText to token: %s\n",text_token);
-	result=exp_par_exp_to_tokens(text_token,tokens);
-	printf ("result: %d\n",result);
-	if (result>=0) codetests_expression_parser_print_tokens(tokens);	*/	
-
 }
 
 void codetests_main(int main_argc,char *main_argv[])
