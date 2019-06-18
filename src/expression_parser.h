@@ -163,6 +163,10 @@ enum token_parser_indice {
 	TPI_OC_MENOR,
 	TPI_OC_MAYOR,
 	TPI_OC_DIFERENTE,
+
+	TPI_OC_MENOR_IGUAL,
+	TPI_OC_MAYOR_IGUAL,
+
 	//de tipo operador calculo
 	TPI_OC_SUMA,
 	TPI_OC_RESTA,

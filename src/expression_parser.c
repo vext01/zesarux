@@ -279,6 +279,9 @@ token_parser_textos_indices tpti_operador_condicional[]={
 	{TPI_OC_MAYOR,">"},
 	{TPI_OC_DIFERENTE,"<>"},
 
+	{TPI_OC_MENOR_IGUAL,"<="},
+	{TPI_OC_MAYOR_IGUAL,">="},    
+
     {TPI_FIN,""}
 };
 
@@ -405,6 +408,20 @@ int exp_par_is_token_parser_textos_indices(char *texto,token_parser_textos_indic
     return -1;
 }
 
+//Retorna 1 si el caracter es de abrir parentesis : ({[
+int exp_par_is_parentesis_abrir(char caracter)
+{
+    if ( caracter=='{' || caracter=='(' || caracter=='[') return 1;
+    else return 0;
+}
+
+//Retorna 1 si el caracter es de cerrar parentesis : )}]
+int exp_par_is_parentesis_cerrar(char caracter)
+{
+    if ( caracter=='}' || caracter==')' || caracter==']') return 1;
+    else return 0;
+}
+
 //Dice si una expresion es funcion, y dice donde acaba (caracter apuntando a cierre parentesis) y indice funcion
 //Retorna 1 si lo es. 0 si no. -1 si hay error parseando
 int exp_par_is_funcion(char *texto,int *final,enum token_parser_indice *indice_final)
@@ -424,8 +441,9 @@ int exp_par_is_funcion(char *texto,int *final,enum token_parser_indice *indice_f
         texto++;
     }
 
-    //Si no acaba con parentesis
-    if ((*texto)!='(') return 0;
+    //Si no acaba la palabra con parentesis abrir
+    //if ((*texto)!='(') return 0;
+    if (!exp_par_is_parentesis_abrir(*texto)) return 0;
 
     if (i==MAX_PARSER_TEXTOS_INDICE_LENGTH) {
         //Final de buffer. error
@@ -456,6 +474,9 @@ int exp_par_is_funcion(char *texto,int *final,enum token_parser_indice *indice_f
 //Retorna 1 si lo es. 0 si no. -1 si hay error parseando
 int exp_par_is_operador(char *texto,int *final)
 {
+    //cadena vacia
+    if (texto[0]==0) return 0;
+
     //Considerar letras y tpti_operador_condicional y tpti_operador_calculo
     char primer_caracter;
 
@@ -472,6 +493,16 @@ int exp_par_is_operador(char *texto,int *final)
         buffer_texto[1]='>';
         buffer_texto[2]=0;        
     }
+
+    //considerar condicionales <= >=
+    if (
+        (texto[0]=='<' || texto[0]=='>') &&
+        texto[1]=='='
+    ) {
+        buffer_texto[0]=texto[0];
+        buffer_texto[1]='=';
+        buffer_texto[2]=0;        
+    }    
 
     //tpti_operador_condicional
     if (exp_par_is_token_parser_textos_indices(buffer_texto,tpti_operador_condicional)>=0) {
@@ -629,6 +660,8 @@ void exp_par_copy_string(char *origen,char *destino, int longitud)
 }
 
 
+
+
 //Convierte expression de entrada en tokens. Devuelve <0 si error
 int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 {
@@ -656,14 +689,14 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
     while (*expression) {
         //Si hay espacio, saltar
         if ( (*expression)==' ') expression++;
-        else if ( (*expression)=='{' || (*expression)=='(') { //si hay parentesis abrir o cerrar,saltar
+        else if ( exp_par_is_parentesis_abrir(*expression) ) { //si hay parentesis abrir o cerrar,saltar
                 //printf ("abrir parentesis\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_ABRIR;      
                 expression++;
                 indice_token++;          
         }
-        else if ( (*expression)=='}' || (*expression)==')') { //si hay parentesis abrir o cerrar,saltar
+        else if ( exp_par_is_parentesis_cerrar(*expression) ) { //si hay parentesis abrir o cerrar,saltar
                 //printf ("cerrar parentesis\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_CERRAR;      
@@ -763,14 +796,14 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             //saltar espacios
             while ( (*expression)==' ') expression++;
 
-            while ( (*expression)=='{' || (*expression)=='(') { //si hay parentesis abrir o cerrar,saltar
+            while ( exp_par_is_parentesis_abrir(*expression) ) { //si hay parentesis abrir o cerrar,saltar
                 //printf ("abrir parentesis en bucle\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_ABRIR;      
                 expression++;
                 indice_token++;          
             }
-            while ( (*expression)=='}' || (*expression)==')' ) { //si hay parentesis abrir o cerrar,saltar
+            while ( exp_par_is_parentesis_cerrar(*expression) ) { //si hay parentesis abrir o cerrar,saltar
                 //printf ("cerrar parentesis en bucle\n");
                 tokens[indice_token].tipo=TPT_PARENTESIS;
                 tokens[indice_token].indice=TPI_P_CERRAR;      
@@ -1384,6 +1417,13 @@ int exp_par_calculate_operador(int valor_izquierda,int valor_derecha,enum token_
                 if (indice==TPI_OC_MENOR) {   
                     if (valor_izquierda<valor_derecha) return 1;
                 }
+
+                if (indice==TPI_OC_MAYOR_IGUAL) {
+                    if (valor_izquierda>=valor_derecha) return 1;
+                }
+                if (indice==TPI_OC_MENOR_IGUAL) {   
+                    if (valor_izquierda<=valor_derecha) return 1;
+                }                
 
                 if (indice==TPI_OC_IGUAL) {   
                     if (valor_izquierda==valor_derecha) return 1;

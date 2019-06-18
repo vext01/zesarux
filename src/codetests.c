@@ -759,6 +759,16 @@ void codetests_expression_parser(void)
 	codetests_expression_parser_expect("4+10/2",9);
 
 	
+	codetests_expression_parser_expect("1=1",1);
+	codetests_expression_parser_expect("1<2",1);
+	codetests_expression_parser_expect("20>1",1);
+
+	codetests_expression_parser_expect("1<=2",1);
+	codetests_expression_parser_expect("20>=1",1);	
+
+	codetests_expression_parser_expect("20>=20",1);
+	codetests_expression_parser_expect("20<=20",1);
+
 
 	codetests_expression_parser_expect("(6-20)+2",-12);
 
@@ -776,6 +786,10 @@ void codetests_expression_parser(void)
 	codetests_expression_parser_expect("3*(6+7)+4",43);
 	codetests_expression_parser_expect("3*(6+7)+4=43",1);
 	codetests_expression_parser_expect("3*(6+7)+4=99",0);
+
+	codetests_expression_parser_expect("3*[6+7]+4=99",0);
+	codetests_expression_parser_expect("3*{6+7}+4=99",0);
+
 
 	codetests_expression_parser_expect("(((((5)))))",5);
     codetests_expression_parser_expect("(( ((2)) + 4))*((5))",30);
