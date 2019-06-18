@@ -1448,7 +1448,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     //int calculado_izquierda=0;
     int valor_izquierda;
     int valor_derecha;
-    int pos_inicial=0;
+    //int pos_inicial=0;
 
 
     //Empieza con parentesis?. temp desactivado
@@ -1492,7 +1492,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     }*/
 
     nivel_parentesis=0;
-    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
         if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) nivel_parentesis++;
@@ -1520,7 +1520,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     nivel_parentesis=0;
     //printf ("inicio check condicionales\n");
-    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
         if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) {
@@ -1564,7 +1564,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     
 
     nivel_parentesis=0;
-    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
    
         //Al separar por operador, ver que no estemos dentro de parentesis
         if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) nivel_parentesis++;
@@ -1597,7 +1597,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
     }
 
     nivel_parentesis=0;
-    for (i=pos_inicial;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
+    for (i=0;i<longitud_tokens && tokens[i].tipo!=TPT_FIN;i++) {
 
         //Al separar por operador, ver que no estemos dentro de parentesis
         if (tokens[i].tipo==TPT_PARENTESIS && tokens[i].indice==TPI_P_ABRIR) nivel_parentesis++;
