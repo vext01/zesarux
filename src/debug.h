@@ -63,7 +63,7 @@ extern void init_breakpoints_table(void);
 #define MAX_BREAKPOINT_CONDITION_LENGTH 256
 
 #define MAX_BREAKPOINTS_CONDITIONS 100
-extern char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
+//extern char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
 extern token_parser debug_breakpoints_conditions_array_tokens[MAX_BREAKPOINTS_CONDITIONS][MAX_PARSER_TOKENS_NUM];
 
 extern void debug_breakpoints_conditions_toggle(int indice);

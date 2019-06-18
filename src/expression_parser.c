@@ -167,6 +167,11 @@ token_parser_textos_indices tpti_variables[]={
     {TPI_V_SEG2,"SEG2"},
     {TPI_V_SEG3,"SEG3"},
 
+    {TPI_V_OPCODE1,"OPCODE1"},
+    {TPI_V_OPCODE2,"OPCODE2"},
+    {TPI_V_OPCODE3,"OPCODE3"},
+    {TPI_V_OPCODE4,"OPCODE4"},
+
 
     {TPI_V_RAM,"RAM"},
     {TPI_V_ROM,"ROM"},
@@ -905,6 +910,31 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
 	}
 }
 
+
+//Retorna valor de opcode segun si tipo opcode1,2,3 o 4
+int exp_par_opcode(int longitud)
+{
+
+	int resultado=0;
+    int i;
+
+	//printf ("longitud en bytes de la condicion opcode: %d\n",longitud);
+	unsigned int copia_reg_pc=get_pc_register();
+
+	for (i=0;i<longitud;i++) {
+		z80_byte valor_leido=peek_byte_z80_moto(copia_reg_pc);
+		resultado=resultado<<8;
+		resultado |=valor_leido;
+
+		copia_reg_pc++;
+	}
+
+
+
+	return resultado;
+
+}
+
 //calcula valor de token, si es numero, variable o registro
 int exp_par_calculate_numvarreg(token_parser *token)
 {
@@ -957,6 +987,22 @@ int exp_par_calculate_numvarreg(token_parser *token)
 	case TPI_V_INFIRED: return debug_fired_in; break;
 	//se acaba de generar una interrupcion
 	case TPI_V_INTFIRED: return debug_fired_interrupt; break;	
+
+    case TPI_V_OPCODE1:
+        return exp_par_opcode(1);
+    break;
+
+    case TPI_V_OPCODE2:
+        return exp_par_opcode(2);
+    break;
+
+    case TPI_V_OPCODE3:
+        return exp_par_opcode(3);
+    break;
+
+    case TPI_V_OPCODE4:
+        return exp_par_opcode(4);
+    break;
 
 
     //bancos memoria Z88
@@ -1330,11 +1376,13 @@ int exp_par_calculate_funcion(int valor,enum token_parser_tipo tipo,enum token_p
             case TPT_FUNCION:
                 switch (indice) {
                     case TPI_F_PEEK:
-        				return peek_byte_no_time(valor);
+        				return peek_byte_z80_moto(valor);
                     break;
-                    	//TPI_F_PEEK,
-	//TPI_F_PEEKW,
-	//TPI_F_NOT
+
+                    case TPI_F_PEEKW:
+        				return peek_byte_z80_moto(valor)+256*peek_byte_z80_moto(valor+1);
+                    break;
+
 
                     case TPI_F_NOT:
         				return !valor;

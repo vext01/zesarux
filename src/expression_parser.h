@@ -81,6 +81,11 @@ enum token_parser_indice {
 	TPI_V_RAM,
 	TPI_V_ROM,
 
+	TPI_V_OPCODE1,
+	TPI_V_OPCODE2,
+	TPI_V_OPCODE3,
+	TPI_V_OPCODE4,
+
 	//de tipo registro
 
 	TPI_R_PC,

@@ -45,8 +45,8 @@ hace:
 10   -    1-1
 10   -    0  -> 10
 
-*peek,peekw para ql , mk14
-*condicion opcode1, opcode2, opcode3, opcode4
+
+
 *valores negativos, positivos
 *base numerica hexad, binaria, ascii
 *registro SP motorola y otros mk14. revisar

@@ -3416,7 +3416,7 @@ int util_write_configfile(void)
 
   for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
 
-#ifdef NEW_BREAKPOINTS_PARSER
+
 
 			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
 
@@ -3429,13 +3429,7 @@ int util_write_configfile(void)
 
 
 
-#else
 
-
-		if (debug_breakpoints_conditions_array[i][0]!=0)
-                                              ADD_STRING_CONFIG,"--set-breakpoint %d \"%s\"",i+1,debug_breakpoints_conditions_array[i]);
-
-#endif
 
 
 

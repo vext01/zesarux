@@ -10543,17 +10543,14 @@ void menu_breakpoints_conditions_set(MENU_ITEM_PARAMETERS)
 
   char string_texto[MAX_BREAKPOINT_CONDITION_LENGTH];
 
-			#ifdef NEW_BREAKPOINTS_PARSER
 			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[breakpoint_index],string_texto,MAX_PARSER_TOKENS_NUM);
-			#else  
-
-  sprintf (string_texto,"%s",debug_breakpoints_conditions_array[breakpoint_index]);
-			#endif
+			
+			
 
   menu_ventana_scanf("Condition",string_texto,MAX_BREAKPOINT_CONDITION_LENGTH);
 
   debug_set_breakpoint(breakpoint_index,string_texto);
-
+//TODO: comprobar error
 
 
 	sprintf (string_texto,"%s",debug_breakpoints_actions_array[breakpoint_index]);
@@ -10688,24 +10685,18 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
 			char string_condition_action[33];
 
-			#ifdef NEW_BREAKPOINTS_PARSER
+			
 
 			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
 
-			#else
+			
 
-			if (debug_breakpoints_conditions_array[i][0]) {
-
-			#endif
-
-				#ifdef NEW_BREAKPOINTS_PARSER
+				
 				//nuevo parser de breakpoints
 				char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
 				exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
 				menu_tape_settings_trunc_name(buffer_temp,string_condition_shown,17);
-				#else				
-				menu_tape_settings_trunc_name(debug_breakpoints_conditions_array[i],string_condition_shown,17);
-				#endif
+				
 
 
 				menu_tape_settings_trunc_name(debug_breakpoints_actions_array[i],string_action_shown,7);

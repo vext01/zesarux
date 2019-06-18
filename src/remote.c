@@ -962,7 +962,7 @@ void remote_get_breakpoints(int misocket,int inicio,int items)
     }
 
 
-#ifdef NEW_BREAKPOINTS_PARSER
+
 
 			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
 
@@ -975,14 +975,7 @@ void remote_get_breakpoints(int misocket,int inicio,int items)
 
 
 
-#else
 
-    if (debug_breakpoints_conditions_array[i][0]) {
-      escribir_socket_format(misocket,debug_breakpoints_conditions_array[i]);
-    }
-
-
-#endif
 
 
 
