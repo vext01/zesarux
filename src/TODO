@@ -51,6 +51,7 @@ hace:
 *base numerica hexad, binaria, ascii
 *registro SP motorola y otros mk14. revisar
 *enterrom, exitrom, etc
+*watches
 
 
 -comparacion breakpoint parser. uso cpu:

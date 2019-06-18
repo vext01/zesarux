@@ -1670,6 +1670,11 @@ char *debug_watches_get_value_variable_condition(char *texto,unsigned int *valor
 
 void debug_watches_loop(char *texto,char *texto_destino)
 {
+
+	//TODO
+	strcpy(texto_destino,"TODO");
+	return;
+
 	//formato entrada: variable[espacio]variable[espacio]variable  ....
 
         //registro a mirar . no deberia ser mas alla de 10 caracteres, pero por si acaso
@@ -1681,8 +1686,6 @@ void debug_watches_loop(char *texto,char *texto_destino)
 	while (*texto!=0) {
 
 		//texto=debug_watches_get_value_variable_condition(texto,&valor_final,registro);
-		texto="TODO";
-		valor_final=000;
 
 		if (valor_final==0xFFFFFFFF) sprintf (texto_destino,"%s=UNK ",registro);
 		else sprintf (texto_destino,"%s=%04X ",registro,valor_final);
