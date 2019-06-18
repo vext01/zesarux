@@ -10693,12 +10693,12 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
 			char string_condition_action[33];
 
-			char buffer_temp_breakpoint[MAX_BREAKPOINT_CONDITION_LENGTH];
+			
 
 			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
 			
 				//nuevo parser de breakpoints
-				
+				char buffer_temp_breakpoint[MAX_BREAKPOINT_CONDITION_LENGTH];
 				exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp_breakpoint,MAX_PARSER_TOKENS_NUM);
 
 				//metemos en array para mostrar tooltip
