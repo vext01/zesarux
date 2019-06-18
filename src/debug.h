@@ -66,6 +66,8 @@ extern void init_breakpoints_table(void);
 extern char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
 extern token_parser debug_breakpoints_conditions_array_tokens[MAX_BREAKPOINTS_CONDITIONS][MAX_PARSER_TOKENS_NUM];
 
+extern void debug_breakpoints_conditions_toggle(int indice);
+
 #define MAX_MEM_BREAKPOINT_TYPES 4
 extern char *mem_breakpoint_types_strings[];
 

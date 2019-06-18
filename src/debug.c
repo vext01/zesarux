@@ -104,6 +104,11 @@ char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOI
 //breakpoints de condiciones. nuevo formato para nuevo parser de tokens
 token_parser debug_breakpoints_conditions_array_tokens[MAX_BREAKPOINTS_CONDITIONS][MAX_PARSER_TOKENS_NUM];
 
+
+//Ultimo breakpoint activo+1 (o sea, despues del ultimo activo) para optimizar la comprobacion de breakpoints,
+//asi solo se comprueba hasta este en vez de comprobarlos todos
+int last_active_breakpoint=0;
+
 //acciones a ejecutar cuando salta un breakpoint
 char debug_breakpoints_actions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
 
@@ -529,7 +534,7 @@ void init_breakpoints_table(void)
 
 
 	clear_mem_breakpoints();
-
+	last_active_breakpoint=0;
 
 
 }
@@ -2106,6 +2111,54 @@ int anterior_debug_mmu_mwa=-1;
 
 }
 
+//Establece variable al ultimo activo+1
+void debug_set_last_active_breakpoint(void)
+{
+	int i;
+	for (i=MAX_BREAKPOINTS_CONDITIONS-1;i>=0;i--) {
+		if (debug_breakpoints_conditions_enabled[i]) {
+			//Esta activado, pero tiene contenido?
+
+
+			#ifdef NEW_BREAKPOINTS_PARSER
+			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
+				last_active_breakpoint=i+1;
+				printf ("Ultimo breakpoint activo: %d\n",last_active_breakpoint);
+				return;				
+			}
+			#else			
+			if (debug_breakpoints_conditions_array[i][0]!=0) {
+				last_active_breakpoint=i+1;
+				printf ("Ultimo breakpoint activo: %d\n",last_active_breakpoint);
+				return;				
+			}
+			#endif
+
+
+		}
+		
+	}
+
+	last_active_breakpoint=0; //no hay breakpoints activos
+	printf ("Ultimo breakpoint activo: %d\n",last_active_breakpoint);
+}
+
+
+//conmutar enabled/disabled
+void debug_breakpoints_conditions_toggle(int indice)
+{
+	//printf ("Ejecutada funcion para espacio, condicion: %d\n",valor_opcion);
+
+	debug_breakpoints_conditions_enabled[indice] ^=1;
+
+	//si queda activo, decir que no ha saltado aun ese breakpoint
+	if (debug_breakpoints_conditions_enabled[indice]) {
+		debug_breakpoints_conditions_saltado[indice]=0;
+	}
+
+	debug_set_last_active_breakpoint();
+}
+
 #ifdef NEW_BREAKPOINTS_PARSER
 
 //Comprobar condiciones. Usando nuevo breakpoint parser.  Solo lo hacemos en core_loop
@@ -2120,7 +2173,8 @@ void cpu_core_loop_debug_check_breakpoints(void)
 		int i;
 
 		//Breakpoint de condicion
-		for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+		//for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+		for (i=0;i<last_active_breakpoint;i++) {
 			//Si ese breakpoint esta activo
 			if (debug_breakpoints_conditions_enabled[i]) {
 				if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
@@ -2181,7 +2235,8 @@ void cpu_core_loop_debug_check_breakpoints(void)
 		int i;
 
 		//Breakpoint de condicion
-		for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+		//for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+		for (i=0;i<last_active_breakpoint;i++) {			
 			//Si ese breakpoint esta activo
 			if (debug_breakpoints_conditions_enabled[i]) {
 				if (debug_breakpoints_conditions_array[i][0]!=0) {
@@ -3770,6 +3825,8 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 
 }
 
+
+
 //Indice entre 0 y MAX_BREAKPOINTS_CONDITIONS-1
 void debug_set_breakpoint(int breakpoint_index,char *condicion)
 {
@@ -3794,6 +3851,9 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
 
 	//Llamamos al optimizador
 	debug_set_breakpoint_optimized(breakpoint_index,condicion);
+
+	//Miramos cual es el ultimo breakpoint activo
+	debug_set_last_active_breakpoint();
 
 }
 
@@ -5591,6 +5651,8 @@ int debug_find_breakpoint_activeornot(char *to_find)
 
 	return -1;
 }
+
+
 
 //Agrega un breakpoint, con action en la siguiente posicion libre. -1 si no hay
 //Retorna indice posicion si hay libre
