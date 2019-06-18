@@ -2159,6 +2159,20 @@ void debug_breakpoints_conditions_toggle(int indice)
 	debug_set_last_active_breakpoint();
 }
 
+
+void debug_breakpoints_conditions_enable(int indice)
+{
+  debug_breakpoints_conditions_enabled[indice]=1;
+  debug_set_last_active_breakpoint();
+}
+
+void debug_breakpoints_conditions_disable(int indice)
+{
+  debug_breakpoints_conditions_enabled[indice]=0;
+  debug_set_last_active_breakpoint();
+}
+
+
 #ifdef NEW_BREAKPOINTS_PARSER
 
 //Comprobar condiciones. Usando nuevo breakpoint parser.  Solo lo hacemos en core_loop
@@ -5677,7 +5691,8 @@ void debug_clear_breakpoint(int indice)
 	//Elimina una linea de breakpoint. Pone condicion vacia y enabled a 0
 	debug_set_breakpoint(indice,"");
 	debug_set_breakpoint_action(indice,"");
-	debug_breakpoints_conditions_enabled[indice]=0;
+	//debug_breakpoints_conditions_enabled[indice]=0;
+	debug_breakpoints_conditions_disable(indice);
 }
 
 void debug_get_stack_moto(menu_z80_moto_int p,int items, char *texto)

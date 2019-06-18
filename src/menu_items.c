@@ -10644,15 +10644,7 @@ void menu_breakpoints_enable_disable(MENU_ITEM_PARAMETERS)
 void menu_breakpoints_condition_enable_disable(MENU_ITEM_PARAMETERS)
 {
 	debug_breakpoints_conditions_toggle(valor_opcion);
-	//printf ("Ejecutada funcion para espacio, condicion: %d\n",valor_opcion);
 
-	/*debug_breakpoints_conditions_enabled[valor_opcion] ^=1;
-
-	//si queda activo, decir que no ha saltado aun ese breakpoint
-	if (debug_breakpoints_conditions_enabled[valor_opcion]) {
-		debug_breakpoints_conditions_saltado[valor_opcion]=0;
-	}
-	*/
 }
 
 
@@ -12735,8 +12727,7 @@ void menu_debug_toggle_breakpoint(void)
 	if (posicion>=0) {
 		debug_printf (VERBOSE_DEBUG,"Clearing breakpoint at index %d",posicion);
 		debug_clear_breakpoint(posicion);
-		//debug_set_breakpoint(posicion,"");
-		//debug_breakpoints_conditions_enabled[posicion]=0;
+
 	}
 
 	//Si no, ponerlo

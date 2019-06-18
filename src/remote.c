@@ -1112,7 +1112,8 @@ void remote_disable_breakpoint(int misocket,char *parametros)
   }
 
 
-  debug_breakpoints_conditions_enabled[indice-1]=0;
+  //debug_breakpoints_conditions_enabled[indice-1]=0;
+  debug_breakpoints_conditions_disable(indice-1);
 }
 
 
@@ -1133,7 +1134,8 @@ void remote_enable_breakpoint(int misocket,char *parametros)
   }
 
 
-  debug_breakpoints_conditions_enabled[indice-1]=1;
+  //debug_breakpoints_conditions_enabled[indice-1]=1;
+  debug_breakpoints_conditions_enable(indice-1);
 }
 
 void remote_set_breakpoint(int misocket,char *parametros)

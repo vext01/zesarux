@@ -68,6 +68,9 @@ extern token_parser debug_breakpoints_conditions_array_tokens[MAX_BREAKPOINTS_CO
 
 extern void debug_breakpoints_conditions_toggle(int indice);
 
+extern void debug_breakpoints_conditions_enable(int indice);
+extern void debug_breakpoints_conditions_disable(int indice);
+
 #define MAX_MEM_BREAKPOINT_TYPES 4
 extern char *mem_breakpoint_types_strings[];
 
