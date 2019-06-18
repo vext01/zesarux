@@ -25,6 +25,7 @@
 #include "cpu.h"
 #include "compileoptions.h"
 #include "menu.h"
+#include "expression_parser.h"
 
 #include <stdio.h>
 #include <dirent.h>
@@ -379,7 +380,10 @@ extern void util_set_reset_key_cpc_keymap(enum util_teclas_cpc_keymap tecla,int 
 extern void util_set_reset_key_chloe_keymap(enum util_teclas_chloe_keymap tecla,int pressrelease);
 extern void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int pressrelease);
 
+
+
 extern unsigned int parse_string_to_number(char *texto);
+extern unsigned int parse_string_to_number_get_type(char *texto,enum token_parser_formato *tipo_valor);
 
 //#define TMPDIR_BASE "/tmp/zesarux"
 
@@ -672,6 +676,8 @@ extern void util_binary_to_hex(z80_byte *origen, char *destino, int longitud_max
 extern void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_max, int longitud);
 
 extern void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,char *texto);
+
+extern void util_ascii_to_binary(int valor_origen,char *destino,int longitud_max);
 
 //extern void util_file_save(char *filename,z80_byte *puntero, long int tamanyo);
 

@@ -7004,16 +7004,31 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 //Si acaba en 
 //Si empieza por ' o "" es un caracter (1 solo caracter, no un string)
 //Valor de retorno unsigned de 32 bits
-unsigned int parse_string_to_number(char *texto)
+//Da tipo valor segun:
+/*
+enum token_parser_formato {
+	TPF_DECIMAL,
+	TPF_HEXADECIMAL,
+	TPF_BINARIO,
+	TPF_ASCII
+}; */
+
+unsigned int parse_string_to_number_get_type(char *texto,enum token_parser_formato *tipo_valor)
 {
 	int value;
+
+        //Asumimos decimal
+        *tipo_valor=TPF_DECIMAL;
 
 	int l=strlen(texto);
 	if (l==0) return 0;
 
 
 	//Si empieza por ' o ""
-	if (texto[0]=='\'' || texto[0]=='"') return texto[1];
+	if (texto[0]=='\'' || texto[0]=='"') {
+                *tipo_valor=TPF_ASCII;
+                return texto[1];
+        }
 
 	//sufijo. Buscar ultimo caracter antes de final de cadena o espacio. Asi podemos parsear cosas como "20H 32 34", y se interpretara solo el 20H
         int posicion_sufijo=0;
@@ -7031,6 +7046,8 @@ unsigned int parse_string_to_number(char *texto)
 		value=strtol(texto, NULL, 16);
 		//volvemos a dejar sufijo tal cual
 		texto[posicion_sufijo]=sufijo;
+
+                *tipo_valor=TPF_HEXADECIMAL;
 		return value;
 	}
 
@@ -7041,12 +7058,25 @@ unsigned int parse_string_to_number(char *texto)
 		value=strtol(texto, NULL, 2);
 		//volvemos a dejar sufijo tal cual
 		texto[posicion_sufijo]=sufijo;
+
+                *tipo_valor=TPF_BINARIO;
 		return value;
 	}
 
 	//decimal
         return atoi(texto);
 
+}
+
+
+//Retorna numero parseado. Si acaba en H, se supone que es hexadecimal
+//Si acaba en 
+//Si empieza por ' o "" es un caracter (1 solo caracter, no un string)
+//Valor de retorno unsigned de 32 bits
+unsigned int parse_string_to_number(char *texto)
+{
+        enum token_parser_formato tipo_valor;
+        return parse_string_to_number_get_type(texto,&tipo_valor);
 }
 
 /*int ascii_to_hexa(char c)
@@ -11097,6 +11127,42 @@ void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_max, int
         *destino=0;
 }
 
+//Imprime numero binario de 32 bits acabado con prefijo "%"
+//longitud_max maximo de la longitud de la cadena incluyendo "%"
+//No imprimir ceros al inicio
+void util_ascii_to_binary(int valor_origen,char *destino,int longitud_max)
+{
+        //Usamos sin signo por si acaso
+        unsigned int valor=valor_origen;
+        const unsigned int mascara=(unsigned int)4294967296;
+
+        longitud_max--; //hemos de considerar prefijo final
+
+        int nbit;
+        int primer_uno=0;
+
+        for (nbit=0;nbit<32 && longitud_max>0;nbit++) {
+                if (valor & mascara) {
+                        *destino='1';
+                        primer_uno=1;
+                }
+                
+                else {
+                        if (primer_uno) *destino='0';
+                }
+
+                if (primer_uno) {
+                        destino++;
+                        longitud_max--;
+                }
+        }
+
+        *destino='%';
+        destino++;
+
+        *destino=0;
+
+}
 
 
 

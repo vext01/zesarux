@@ -741,11 +741,13 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 exp_par_copy_string(expression,buffer_temp,final);                
 
                 //Parseamos numero
-                int valor=parse_string_to_number(buffer_temp);
+                enum token_parser_formato formato;
+                int valor=parse_string_to_number_get_type(buffer_temp,&formato);
 
                 //Meter valor en token
                 tokens[indice_token].tipo=TPT_NUMERO;
-                //TODO: formato, signo
+                tokens[indice_token].formato=formato;
+                //TODO: signo
 
                 //Meter valor
                 tokens[indice_token].valor=valor;
@@ -844,6 +846,7 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
 {
 	int i=0;
     int dest_string=0;
+    char buffer_temporal_binario[34]; //32 bits, prefijo y 0 del final
 
 	while (tokens[i].tipo!=TPT_FIN && maximo) {
         int esnumero=0;
@@ -896,8 +899,44 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
         }
 
         if (esnumero) {
-            //TODO: signo, formato hexa,binario etc
-           sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+            //TODO: signo
+           enum token_parser_formato formato;
+           formato=tokens[i].formato;
+
+           switch (formato) {
+
+               case TPF_HEXADECIMAL:
+                sprintf(&expression[dest_string],"%XH",tokens[i].valor); 
+               break;   
+
+               case TPF_DECIMAL:
+               sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+               break;
+
+               case TPF_ASCII:
+               //controlar rango, por si acaso
+               if (tokens[i].valor>=32 && tokens[i].valor<=126) sprintf(&expression[dest_string],"\"%c\"",tokens[i].valor); 
+               else sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+               break;     
+
+               case TPF_BINARIO:
+                
+                util_ascii_to_binary(tokens[i].valor,buffer_temporal_binario,33);
+                strcpy(&expression[dest_string],buffer_temporal_binario);
+               break;      
+
+               default:
+               //cualquier otra cosa, decimal (aunque aqui no deberia llegar nunca)
+               sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+               break;
+
+               	//TPF_DECIMAL,
+	            //TPF_HEXADECIMAL,
+	            //TPF_BINARIO,
+	            //TPF_ASCII
+               
+           }
+           
         }
 
         else {
