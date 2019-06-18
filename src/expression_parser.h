@@ -73,6 +73,9 @@ enum token_parser_indice {
 	TPI_V_INFIRED,
 	TPI_V_INTFIRED,
 
+	TPI_V_ENTERROM,
+	TPI_V_EXITROM,
+
 	TPI_V_SEG0,
 	TPI_V_SEG1,
 	TPI_V_SEG2,

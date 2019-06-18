@@ -162,6 +162,10 @@ token_parser_textos_indices tpti_variables[]={
 	{TPI_V_INFIRED,"INFIRED"},
 	{TPI_V_INTFIRED,"INTFIRED"},
 
+	{TPI_V_ENTERROM,"ENTERROM"},
+	{TPI_V_EXITROM,"EXITROM"},
+
+
     {TPI_V_SEG0,"SEG0"},
     {TPI_V_SEG1,"SEG1"},
     {TPI_V_SEG2,"SEG2"},
@@ -1008,6 +1012,33 @@ int exp_par_calculate_numvarreg(token_parser *token)
 	case TPI_V_INFIRED: return debug_fired_in; break;
 	//se acaba de generar una interrupcion
 	case TPI_V_INTFIRED: return debug_fired_interrupt; break;	
+
+
+    case TPI_V_ENTERROM:
+
+	
+		if (debug_enterrom==1) {
+			debug_enterrom++;
+			return 1;
+		}
+		return 0;
+	
+
+    break;
+
+    case TPI_V_EXITROM:
+
+	
+		if (debug_exitrom==1) {
+			debug_exitrom++;
+			return 1;
+		}
+		return 0;
+	
+
+    break;
+    
+
 
     case TPI_V_OPCODE1:
         return exp_par_opcode(1);

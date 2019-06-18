@@ -167,6 +167,7 @@ extern char *zx80_rom_tokens[];
 
 //extern int debug_breakpoint_condition_loop(char *texto,int debug);
 
+
 extern char debug_watches_text_to_watch[];
 
 extern void debug_watches_loop(char *texto,char *texto_destino);
@@ -326,6 +327,10 @@ extern int debug_text_is_pc_condition(char *cond);
 extern int debug_fired_out;
 extern int debug_fired_in;
 extern int debug_fired_interrupt;
+
+
+extern int debug_enterrom;
+extern int debug_exitrom;
 
 
 #define OPTIMIZED_BRK_TYPE_NINGUNA 0
