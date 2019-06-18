@@ -371,7 +371,7 @@ int exp_par_is_number(char *texto,int *final)
 
     //esletra?
     if (esletra) {
-        printf ("Habia letra hexa pero sin sufijo hexa. no es numero\n");
+        //printf ("Habia letra hexa pero sin sufijo hexa. no es numero\n");
         return 0;
     }
 

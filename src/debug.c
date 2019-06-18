@@ -3752,7 +3752,7 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 
     //old parser valor=cpu_core_loop_debug_registro(valor_comparar,&si_cond_opcode);
 	int final_numero;
-	printf ("Comprobar si [%s] es numero\n",valor_comparar);
+	//printf ("Comprobar si [%s] es numero\n",valor_comparar);
 	if (exp_par_is_number(valor_comparar,&final_numero)<=0) {
 
     //if (valor!=0xFFFFFFFF) {
