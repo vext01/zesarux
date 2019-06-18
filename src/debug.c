@@ -1711,6 +1711,7 @@ char *breakpoint_cond_operadores[BREAKPOINT_MAX_OPERADORES]={
 };
 
 //retorna que valor de operador tiene en base a su texto. -1 si ninguno
+/*
 int cpu_core_loop_debug_breakpoint_return_operator(char *string_op)
 {
 
@@ -1726,8 +1727,10 @@ int cpu_core_loop_debug_breakpoint_return_operator(char *string_op)
 	return -1;
 
 }
+*/
 
 //buscar dentro de toda la expresion si el primer operador coincide con buscar. no tener en cuenta mayusculas/minusculas
+/*
 char *si_get_cond_operator(char *cadena, char *buscar)
 {
 
@@ -1756,6 +1759,7 @@ char *si_get_cond_operator(char *cadena, char *buscar)
 	return NULL;
 
 }
+*/
 
 //busca si hay un operador " and " o " or " en la cadena de entrada
 //retorno:
@@ -1835,6 +1839,7 @@ char *debug_breakpoint_condition_loop_find_op(char *cadena_entrada,char **final_
 */
 
 //ejecuta operacion logica and , or, etc con operador
+/*
 int debug_breakpoint_condition_run_operator(int operador,int valor_anterior, int valor_siguiente)
 {
 
@@ -1865,6 +1870,7 @@ int debug_breakpoint_condition_run_operator(int operador,int valor_anterior, int
 	return valor_final;
 
 }
+*/
 
 //Determina si una condicion es valida o no, incluyendo operadores and y or de separacion
 //llama repetidamente a debug_breakpoint_condition para cada condicion separada por and o or
@@ -2115,7 +2121,7 @@ void debug_set_last_active_breakpoint(void)
 			
 			if (debug_breakpoints_conditions_array_tokens[i][0].tipo!=TPT_FIN) {
 				last_active_breakpoint=i+1;
-				printf ("Ultimo breakpoint activo: %d\n",last_active_breakpoint);
+				debug_printf (VERBOSE_DEBUG,"Last active breakpoint +1: %d",last_active_breakpoint);
 				return;				
 			}
 					
@@ -2127,7 +2133,7 @@ void debug_set_last_active_breakpoint(void)
 	}
 
 	last_active_breakpoint=0; //no hay breakpoints activos
-	printf ("Ultimo breakpoint activo: %d\n",last_active_breakpoint);
+	debug_printf (VERBOSE_DEBUG,"Last active breakpoint +1: %d",last_active_breakpoint);
 }
 
 
