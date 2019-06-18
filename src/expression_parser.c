@@ -189,6 +189,7 @@ token_parser_textos_indices tpti_registros[]={
 
 	{TPI_R_PC,"PC"},
     {TPI_R_SP,"SP"},
+    {TPI_R_USP,"USP"},
     {TPI_R_IX,"IX"},
     {TPI_R_IY,"IY"},	
 
@@ -251,7 +252,15 @@ token_parser_textos_indices tpti_registros[]={
         {TPI_R_A4,"A4"}, 
         {TPI_R_A5,"A5"}, 
         {TPI_R_A6,"A6"}, 
-        {TPI_R_A7,"A7"},         
+        {TPI_R_A7,"A7"},     
+
+    //De SCMP
+	{TPI_R_AC,"AC"},
+    {TPI_R_ER,"ER"},
+    {TPI_R_SR,"SR"},
+    {TPI_R_P1,"P1"},
+    {TPI_R_P2,"P2"},
+    {TPI_R_P3,"P3"},  
 
              
 
@@ -1237,6 +1246,20 @@ int exp_par_calculate_numvarreg(token_parser *token)
                     switch (indice) {
                     case TPI_R_PC: return scmp_m_PC.w.l; break;
 
+                    case TPI_R_AC: return scmp_m_AC; break;
+
+                    case TPI_R_ER: return scmp_m_ER; break;
+
+                    case TPI_R_SR: return scmp_m_SR; break;
+
+                    case TPI_R_P1: return scmp_m_P1.w.l; break;
+
+                    case TPI_R_P2: return scmp_m_P2.w.l; break;
+
+                    case TPI_R_P3: return scmp_m_P3.w.l; break;
+
+
+
                     default:
                         //Para que no se queje el compilador por demas valores enum no tratados
                     break;
@@ -1249,6 +1272,8 @@ int exp_par_calculate_numvarreg(token_parser *token)
                 if (CPU_IS_MOTOROLA) {
                     switch (indice) {
                     case TPI_R_PC: return get_pc_register(); break;
+                    case TPI_R_SP: return m68k_get_reg(NULL, M68K_REG_SP); break;
+                    case TPI_R_USP: return m68k_get_reg(NULL, M68K_REG_USP); break;
 
                     case TPI_R_D0: return m68k_get_reg(NULL, M68K_REG_D0); break;
                     case TPI_R_D1: return m68k_get_reg(NULL, M68K_REG_D1); break;
@@ -1266,7 +1291,9 @@ int exp_par_calculate_numvarreg(token_parser *token)
                     case TPI_R_A4: return m68k_get_reg(NULL, M68K_REG_A4); break;
                     case TPI_R_A5: return m68k_get_reg(NULL, M68K_REG_A5); break;
                     case TPI_R_A6: return m68k_get_reg(NULL, M68K_REG_A6); break;
-                    case TPI_R_A7: return m68k_get_reg(NULL, M68K_REG_A7); break;                    
+                    case TPI_R_A7: return m68k_get_reg(NULL, M68K_REG_A7); break;       
+
+
 
                     default:
                         //Para que no se queje el compilador por demas valores enum no tratados

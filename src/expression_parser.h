@@ -93,6 +93,7 @@ enum token_parser_indice {
 
 	TPI_R_PC,
     TPI_R_SP,
+	TPI_R_USP, //de motorola
     TPI_R_IX,
     TPI_R_IY,	
 
@@ -153,6 +154,14 @@ enum token_parser_indice {
 	TPI_R_A5,
 	TPI_R_A6,
 	TPI_R_A7,	
+
+	//De SCMP
+	TPI_R_AC,
+    TPI_R_ER,
+    TPI_R_SR,
+    TPI_R_P1,
+    TPI_R_P2,
+    TPI_R_P3,
 
 	//de tipo operador logico
 	TPI_OL_AND,

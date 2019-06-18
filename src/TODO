@@ -47,16 +47,16 @@ hace:
 
 
 *valores negativos, positivos
-*registro SP motorola y otros mk14. revisar
 *watches
 *si imprime valor de 32 bits con bit ultimo alzado, sale negativo. Habria que imprimir siempre como positivo?
+*case de registros y valores, meter switch en vez de if....
 
 *decir en ayuda:
 []{}() equivalentes
 permite sumas. resta, multiplicacion, etc
 Si hay 3 operadores con restas, parentesis:
 a-b+c -> mejor: (a-b)+c
-
+<>, >=,<=
 
 
 -comparacion breakpoint parser. uso cpu:
