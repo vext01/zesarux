@@ -765,6 +765,19 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 //Consideramos numero
 
                 //printf ("parsing number from %s\n",expression);
+                int signo_valor=+1;
+
+                //Ver si empieza por - o +
+                if ( (*expression)=='-') {
+                    signo_valor=-1;
+                    expression++;
+                }
+
+                if ( (*expression)=='+') {
+                    signo_valor=+1; //aunque ya viene asi por defecto antes, pero para que quede mas claro
+                    expression++;
+                }                
+
                 resultado=exp_par_is_number(expression,&final);
             
                 if (resultado<=0) {
@@ -789,7 +802,7 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
                 //Meter valor en token
                 tokens[indice_token].tipo=TPT_NUMERO;
                 tokens[indice_token].formato=formato;
-                //TODO: signo
+                tokens[indice_token].signo=signo_valor;
 
                 //Meter valor
                 tokens[indice_token].valor=valor;
@@ -941,34 +954,39 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
         }
 
         if (esnumero) {
-            //TODO: signo
+
+           int valor_final=tokens[i].valor;
+
+            //aplicar signo
+            valor_final *=tokens[i].signo;        
+            
            enum token_parser_formato formato;
            formato=tokens[i].formato;
 
            switch (formato) {
 
                case TPF_HEXADECIMAL:
-                sprintf(&expression[dest_string],"%XH",tokens[i].valor); 
+                sprintf(&expression[dest_string],"%XH",valor_final); 
                break;   
 
                case TPF_DECIMAL:
-               sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+               sprintf(&expression[dest_string],"%d",valor_final); 
                break;
 
                case TPF_ASCII:
                //controlar rango, por si acaso
-               if (tokens[i].valor>=32 && tokens[i].valor<=126) sprintf(&expression[dest_string],"\"%c\"",tokens[i].valor); 
-               else sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+               if (valor_final>=32 && valor_final<=126) sprintf(&expression[dest_string],"\'%c\'",valor_final); 
+               else sprintf(&expression[dest_string],"%d",valor_final); 
                break;     
 
                case TPF_BINARIO:  
-                util_ascii_to_binary(tokens[i].valor,buffer_temporal_binario,33);
+                util_ascii_to_binary(valor_final,buffer_temporal_binario,33);
                 strcpy(&expression[dest_string],buffer_temporal_binario);
                break;      
 
                default:
                //cualquier otra cosa, decimal (aunque aqui no deberia llegar nunca)
-               sprintf(&expression[dest_string],"%d",tokens[i].valor); 
+               sprintf(&expression[dest_string],"%d",valor_final); 
                break;
 
                	//TPF_DECIMAL,
@@ -1051,7 +1069,7 @@ int exp_par_calculate_numvarreg(token_parser *token)
 
         switch (tipo) {
             case TPT_NUMERO:
-                resultado=token->valor;
+                resultado=(token->valor) * (token->signo);
             break;
 
 	        case TPT_VARIABLE: //mra,mrw, etc

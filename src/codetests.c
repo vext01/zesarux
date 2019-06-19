@@ -727,9 +727,11 @@ void codetests_expression_parser(void)
 	reg_de=30000;
 	peek_byte_no_time=codetests_expression_parser_peek_byte_no_time;
 
+	//Basicos
 	codetests_expression_parser_expect("0",0);
 	codetests_expression_parser_expect("1",1);
 
+	//Diferentes bases
 	codetests_expression_parser_expect("0%",0);
 	codetests_expression_parser_expect("1%",1);
 
@@ -745,10 +747,35 @@ void codetests_expression_parser(void)
 
 	codetests_expression_parser_expect("11111111111111111111111111111111%",(unsigned int)4294967295); 
 
-
-
 	codetests_expression_parser_expect("110%+AAH+'c'+33",6+0xaa+'c'+33);
 
+	//Unos cuantos de numeros negativos con signo
+	codetests_expression_parser_expect("-2",-2);
+	codetests_expression_parser_expect("-2+5",3);
+	codetests_expression_parser_expect("-2-6",-8);
+	codetests_expression_parser_expect("10+(-3)",7);
+	codetests_expression_parser_expect("10-(-3)",13);
+
+	//esta sintacticamente no deberia ser posible, pero lo es
+	codetests_expression_parser_expect("10--3",13);
+
+	codetests_expression_parser_expect("10-3",7);
+
+	//Unos cuantos de numeros positivos con signo
+	codetests_expression_parser_expect("+2",+2);
+	codetests_expression_parser_expect("+2+5",7);
+	codetests_expression_parser_expect("+2-6",-4);
+	codetests_expression_parser_expect("10+(+3)",13);
+	codetests_expression_parser_expect("10-(+3)",7);
+
+	//esta sintacticamente no deberia ser posible, pero lo es
+	codetests_expression_parser_expect("10++3",13);
+	
+	codetests_expression_parser_expect("10+3",13);	
+
+
+	
+	//Sumas, restas, multiplicaciones y divisiones
 	codetests_expression_parser_expect("1+1",2);
 	codetests_expression_parser_expect("2*3",6);
 	codetests_expression_parser_expect("2*3+1",7);
@@ -758,7 +785,7 @@ void codetests_expression_parser(void)
 	codetests_expression_parser_expect("10/2",5);
 	codetests_expression_parser_expect("4+10/2",9);
 
-	
+	//Comparadores
 	codetests_expression_parser_expect("1=1",1);
 	codetests_expression_parser_expect("1<2",1);
 	codetests_expression_parser_expect("20>1",1);
@@ -781,7 +808,7 @@ void codetests_expression_parser(void)
 
 	codetests_expression_parser_expect("(10-1)-1",8);
 	
-
+	//Operaciones mas complejas
 	codetests_expression_parser_expect("3*(6+7)",39);
 	codetests_expression_parser_expect("3*(6+7)+4",43);
 	codetests_expression_parser_expect("3*(6+7)+4=43",1);

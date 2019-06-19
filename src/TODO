@@ -44,7 +44,6 @@ hace:
 10   -    0  -> 10
 
 
-*valores negativos, positivos
 *watches
 *si imprime valor de 32 bits con bit ultimo alzado, sale negativo. Habria que imprimir siempre como positivo?
 *case de registros y valores, meter switch en vez de if....
@@ -56,6 +55,7 @@ Si hay 3 operadores con restas, parentesis:
 a-b+c -> mejor: (a-b)+c
 <>, >=,<=
 
+*permite doble resta como a--b -> que eso al final es : a- (-b) -> a+b
 
 -comparacion breakpoint parser. uso cpu:
 no breakpoints: 10% cpu
