@@ -1068,35 +1068,7 @@ void cpu_core_loop_debug_breakpoint(char *message)
 
 
 
-void debug_watches_loop(char *texto,char *texto_destino)
-{
 
-	//TODO
-	strcpy(texto_destino,"TODO");
-	return;
-
-	//formato entrada: variable[espacio]variable[espacio]variable  ....
-
-        //registro a mirar . no deberia ser mas alla de 10 caracteres, pero por si acaso
-        char registro[MAX_BREAKPOINT_CONDITION_LENGTH];
-
-	unsigned int valor_final;
-	int len;
-
-	while (*texto!=0) {
-
-		//texto=debug_watches_get_value_variable_condition(texto,&valor_final,registro);
-
-		if (valor_final==0xFFFFFFFF) sprintf (texto_destino,"%s=UNK ",registro);
-		else sprintf (texto_destino,"%s=%04X ",registro,valor_final);
-
-		len=strlen(texto_destino);
-		texto_destino +=len;
-
-		//printf ("valor_final: %u\n",valor_final);
-
-	}
-}
 
 
 
@@ -1409,14 +1381,14 @@ void cpu_core_loop_debug_check_breakpoints(void)
 
 
 
-int debug_watches_mostrado_frame=0;
-char debug_watches_texto_destino[1024];
+//int debug_watches_mostrado_frame=0;
+//char debug_watches_texto_destino[1024];
 
 //Misma limitacion de longitud que un breakpoint.
 //Si cadena vacia, no hay breakpoint
-char debug_watches_text_to_watch[MAX_BREAKPOINT_CONDITION_LENGTH]="";
+//char debug_watches_text_to_watch[MAX_BREAKPOINT_CONDITION_LENGTH]="";
 
-z80_byte debug_watches_y_position=0;
+//z80_byte debug_watches_y_position=0;
 
 //void cpu_core_loop_debug(void)
 
@@ -1472,15 +1444,7 @@ int debug_exitrom=0;
 
 	cpu_core_loop_debug_check_breakpoints();
 
-	//mostrar watches
-	//frames_total dice el numero de frame del driver de video
-	if (frames_total!=debug_watches_mostrado_frame) {
-		debug_watches_mostrado_frame=frames_total;
-		if (debug_watches_text_to_watch[0]!=0) {
-			debug_watches_loop(debug_watches_text_to_watch,debug_watches_texto_destino);
-			screen_print_splash_text(debug_watches_y_position,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,debug_watches_texto_destino);
-		}
-	}
+
 
 
 
@@ -3805,9 +3769,12 @@ int i;
       if (parametros[0]==0) debug_printf (VERBOSE_DEBUG,"Command needs one parameter");
       else {
         debug_printf (VERBOSE_DEBUG,"Running printe command : %s",parametros);
-        char resultado_expresion[256];
-        debug_watches_loop(parametros,resultado_expresion);
-        printf ("%s\n",resultado_expresion);
+        //char resultado_expresion[256];
+        //debug_watches_loop(parametros,resultado_expresion);
+  		char salida[MAX_BREAKPOINT_CONDITION_LENGTH];
+		exp_par_evaluate_expression(parametros,salida);
+
+        printf ("%s\n",salida);
       }
     }
 

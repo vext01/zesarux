@@ -12383,111 +12383,18 @@ void menu_watches_daad(void)
 
 
 
-
-
-void menu_watches_view(MENU_ITEM_PARAMETERS)
-{
-
-	debug_watches_loop(debug_watches_text_to_watch,debug_watches_texto_destino);
-	menu_generic_message("Watch result",debug_watches_texto_destino);
-	
-}
-
-
-void menu_watches_conditions_set(MENU_ITEM_PARAMETERS)
-{
-
-        char string_texto[MAX_BREAKPOINT_CONDITION_LENGTH];
-
-        sprintf (string_texto,"%s",debug_watches_text_to_watch);
-
-        menu_ventana_scanf("Watch",string_texto,MAX_BREAKPOINT_CONDITION_LENGTH);
-
-        sprintf (debug_watches_text_to_watch,"%s",string_texto);
-
-
-		//esto tiene que activar los breakpoints, sino no se evalúa
-      if (debug_breakpoints_enabled.v==0) menu_breakpoints_enable_disable(0);
-
-	//Si no esta screen_show_splash_texts.v avisar de que no se vera
-	if (screen_show_splash_texts.v==0) menu_warn_message("Splash texts are disabled. You won't see Watches until you enable them");
-
-
-}
-
-void menu_watches_y_position(MENU_ITEM_PARAMETERS)
-{
-	if (debug_watches_y_position==0) debug_watches_y_position=menu_center_y();
-	else debug_watches_y_position=0;
-}
-
-//void menu_watches(MENU_ITEM_PARAMETERS)
 void menu_watches(void)
 {
 
-	//Si es modo debug daad
-	if (menu_debug_registers_current_view==8) {
+       //Si es modo debug daad
+       if (menu_debug_registers_current_view==8) {
         menu_watches_daad();
-		return;
-	}
+               return;
+       }
 
+		//Watches normales
 
-        menu_espera_no_tecla();
-
-        menu_item *array_menu_watches;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
-
-
-
-
-                char string_condition_shown[15];
-                        if (debug_watches_text_to_watch[0]) {
-                                menu_tape_settings_trunc_name(debug_watches_text_to_watch,string_condition_shown,15);
-                        }
-                        else {
-                                sprintf(string_condition_shown,"None");
-                        }
-
-                        menu_add_item_menu_inicial_format(&array_menu_watches,MENU_OPCION_NORMAL,menu_watches_conditions_set,NULL,"Watch: %s",string_condition_shown);
-	                menu_add_item_menu_tooltip(array_menu_watches,"Add an expression to watch in real time");
-			menu_add_item_menu_ayuda(array_menu_watches,"You can write registers and variable names, separated by only 1 space, to see "
-						"their values in real time. They are shown 50 times per second on the display (with menu closed). "
-						"Registers and variable names are the same used on Breakpoint conditions, for example: \n"
-						"A BC IX PWA\n\n"
-						"Note: Setting a watch enables breakpoints, it needed them to be enabled\n");
-
-			//mostrar aqui ultimo valor watch
-			menu_add_item_menu_format(array_menu_watches,MENU_OPCION_NORMAL,menu_watches_view,NULL,"View watch result");
-			menu_add_item_menu_tooltip(array_menu_watches,"View watch result");
-			menu_add_item_menu_ayuda(array_menu_watches,"View watch result");
-
-
-			menu_add_item_menu_format(array_menu_watches,MENU_OPCION_NORMAL,menu_watches_y_position,NULL,"Watch y coord: %d",debug_watches_y_position);
-			menu_add_item_menu_tooltip(array_menu_watches,"Changes y coordinate of watch message");
-			menu_add_item_menu_ayuda(array_menu_watches,"Changes y coordinate of watch message");
-
-
-
- menu_add_item_menu(array_menu_watches,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                menu_add_ESC_item(array_menu_watches);
-                retorno_menu=menu_dibuja_menu(&watches_opcion_seleccionada,&item_seleccionado,array_menu_watches,"Watches" );
-
-                
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
-
 
 
 

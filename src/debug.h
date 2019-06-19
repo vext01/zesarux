@@ -168,13 +168,12 @@ extern char *zx80_rom_tokens[];
 //extern int debug_breakpoint_condition_loop(char *texto,int debug);
 
 
-extern char debug_watches_text_to_watch[];
+//extern char debug_watches_text_to_watch[];
 
-extern void debug_watches_loop(char *texto,char *texto_destino);
 
-extern char debug_watches_texto_destino[];
+//extern char debug_watches_texto_destino[];
 
-extern z80_byte debug_watches_y_position;
+//extern z80_byte debug_watches_y_position;
 
 extern void debug_get_t_stados_parcial_post(void);
 extern void debug_get_t_stados_parcial_pre(void);
