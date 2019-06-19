@@ -739,8 +739,7 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
             if (resultado>0) {
                 //printf ("final index: %d\n",final);
 
-                //Parsear expresion. TODO
-                //tokens[indice_token].tipo=TPT_VARIABLE; //temporal
+                //Parsear expresion
 
                 //Metemos en buffer temporal
                 char buffer_temp[MAX_PARSER_TEXTOS_INDICE_LENGTH];
@@ -850,10 +849,7 @@ int exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
                 //printf ("end number: %c\n",expression[final]);
 
-                //Parsear expresion. TODO
-                //tokens[indice_token].tipo=TPT_OPERADOR_LOGICO; //temporal    
-
-
+                //Parsear expresion
 
                 //Metemos en buffer temporal
                 char buffer_temp[MAX_PARSER_TEXTOS_INDICE_LENGTH];
