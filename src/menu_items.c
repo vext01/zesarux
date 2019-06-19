@@ -12427,7 +12427,7 @@ void menu_watches_overlay_mostrar_texto(void)
 
 
 
-	                sprintf (buf_linea,"Result: %d",resultado); 
+	                sprintf (buf_linea,"  Result: %d",resultado); 
 					zxvision_print_string_defaults_fillspc(menu_watches_overlay_window,1,linea,buf_linea);
 
 					linea+=2;
@@ -12536,7 +12536,7 @@ void menu_watches(void)
 		char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
 
 		menu_add_item_menu_inicial(&array_menu_watches_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
-		char texto_expresion_shown[30];
+		char texto_expresion_shown[27];
 
 
 		for (i=0;i<DEBUG_MAX_WATCHES;i++) {
@@ -12547,10 +12547,10 @@ void menu_watches(void)
 			}
 			else exp_par_tokens_to_exp(debug_watches_array[i],string_detoken,MAX_PARSER_TOKENS_NUM);
 
-			//Limitar a 30 caracteres
-			menu_tape_settings_trunc_name(string_detoken,texto_expresion_shown,30);
+			//Limitar a 27 caracteres
+			menu_tape_settings_trunc_name(string_detoken,texto_expresion_shown,27);
 
- 			menu_add_item_menu_format(array_menu_watches_settings,MENU_OPCION_NORMAL,menu_watches_edit,NULL,"%d: %s",i+1,texto_expresion_shown);
+ 			menu_add_item_menu_format(array_menu_watches_settings,MENU_OPCION_NORMAL,menu_watches_edit,NULL,"%2d: %s",i+1,texto_expresion_shown);
 
 			//En que linea va
 			menu_add_item_menu_tabulado(array_menu_watches_settings,1,lin);		
