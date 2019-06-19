@@ -536,6 +536,8 @@ extern void cls_menu_overlay(void);
 extern int menu_multitarea;
 extern int menu_abierto;
 
+extern void menu_muestra_pending_error_message(void);
+
 extern void menu_set_menu_abierto(int valor);
 
 extern z80_bit menu_hide_vertical_percentaje_bar;

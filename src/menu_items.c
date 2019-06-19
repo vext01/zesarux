@@ -269,12 +269,20 @@ void menu_mem_breakpoints_list(MENU_ITEM_PARAMETERS)
 
 void menu_mem_breakpoints_clear(MENU_ITEM_PARAMETERS)
 {
-	if (menu_confirm_yesno("Clear breakpoints")) {
+	if (menu_confirm_yesno("Clear Mem breakpoints")) {
 		clear_mem_breakpoints();
-		menu_generic_message("Clear breakpoints","OK. All breakpoints cleared");
+		menu_generic_message("Clear Mem breakpoints","OK. All memory breakpoints cleared");
 	}
 }
 
+
+void menu_clear_all_breakpoints(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno("Clear breakpoints")) {
+		init_breakpoints_table();
+		menu_generic_message("Clear breakpoints","OK. All breakpoints cleared");
+	}
+}
 
 void menu_mem_breakpoints(MENU_ITEM_PARAMETERS)
 {
@@ -10768,6 +10776,7 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_breakpoints,'m');
 
 
+		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_clear_all_breakpoints,NULL,"Clear all breakpoints");
 
 
                 menu_add_item_menu(array_menu_breakpoints,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -12457,7 +12466,9 @@ void menu_watches_edit(MENU_ITEM_PARAMETERS)
   menu_ventana_scanf("Watch",string_texto,MAX_BREAKPOINT_CONDITION_LENGTH);
 
   debug_set_watch(watch_index,string_texto);
-//TODO: comprobar error
+
+  menu_muestra_pending_error_message(); //Si se genera un error derivado del set watch, mostrarlo
+
 }
 
 

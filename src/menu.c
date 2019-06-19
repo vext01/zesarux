@@ -4591,6 +4591,20 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 		}
 
+		//tecla abajo. borrar todo
+		if (tecla==10) {
+			//Enviar a speech decir borrar todo
+			menu_speech_tecla_pulsada=0;
+            strcpy (buf_speech,"delete all");
+            menu_textspeech_send_text(buf_speech);
+
+            string[0]=0;
+			offset_string=0;
+	
+		}
+
+				
+
 
 	} while (tecla!=13 && tecla!=15 && tecla!=2);
 

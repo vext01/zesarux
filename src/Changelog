@@ -6,6 +6,7 @@ Improved menu interface:
 -Menu windows can be placed and resized to the whole program window
 -Some windows geometry (position, size) are saved in the configuration
 -Hotkeys now show right capitalization (lowercase or uppercase)
+-Edit box now has a key to delete all input (cursor down)
 
 Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
@@ -29,6 +30,7 @@ Improved breakpoint parser:
 Improved watches:
 -using new expression parser
 -up to 10 watches on screen
+-watches are saved on configuration file
 
 Improved adventure text extractor: now supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved footer:
