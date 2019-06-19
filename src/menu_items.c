@@ -12390,7 +12390,7 @@ void menu_watches_overlay_mostrar_texto(void)
 {
  int linea;
 
-    linea=0;
+    linea=1; //Empezar justo en cada linea Result
 
     
         //mostrarlos siempre a cada refresco
@@ -12406,7 +12406,7 @@ void menu_watches_overlay_mostrar_texto(void)
 					//Imprimir texto watch
  					//Pasamos primero a string de nuevo
                         
-                        exp_par_tokens_to_exp(debug_watches_array[i],string_detoken,MAX_PARSER_TOKENS_NUM);
+                        //exp_par_tokens_to_exp(debug_watches_array[i],string_detoken,MAX_PARSER_TOKENS_NUM);
 
                         int error_code;
 
@@ -12425,13 +12425,15 @@ void menu_watches_overlay_mostrar_texto(void)
 
 				
 
-                menu_tape_settings_trunc_name(string_detoken,texto_expresion_shown,30);
+                //menu_tape_settings_trunc_name(string_detoken,texto_expresion_shown,30);
 
 			
-	                sprintf (buf_linea,"%d: %s",i,texto_expresion_shown); 
-					zxvision_print_string_defaults_fillspc(menu_watches_overlay_window,1,linea++,buf_linea);
+	                //sprintf (buf_linea,"%d: %s",i,texto_expresion_shown); 
+					//zxvision_print_string_defaults_fillspc(menu_watches_overlay_window,1,linea++,buf_linea);
 	                sprintf (buf_linea,"Result: %d",resultado); 
-					zxvision_print_string_defaults_fillspc(menu_watches_overlay_window,1,linea++,buf_linea);
+					zxvision_print_string_defaults_fillspc(menu_watches_overlay_window,1,linea,buf_linea);
+
+					linea+=2;
 
 								
 				}
@@ -12497,7 +12499,7 @@ void menu_watches(void)
 	int x=menu_origin_x()+7;
 	int y=1;
 
-	int ancho=20;
+	int ancho=32;
 	int alto=22;
 
 
@@ -12523,23 +12525,35 @@ void menu_watches(void)
 		//que he definido en el overlay para que aparezca
 		menu_watches_overlay_mostrar_texto();
 
-        int lin=1;
+        int lin=0;
 
 		
 		
 		int i;
 
+		char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
+
 		menu_add_item_menu_inicial(&array_menu_watches_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+		char texto_expresion_shown[30];
 
 
 		for (i=0;i<DEBUG_MAX_WATCHES;i++) {
- 			menu_add_item_menu_format(array_menu_watches_settings,MENU_OPCION_NORMAL,menu_watches_edit,NULL,"%d",i);
+			
+			if (debug_watches_array[i][0].tipo==TPT_FIN) {
+				strcpy(string_detoken,"None");
+			}
+			else exp_par_tokens_to_exp(debug_watches_array[i],string_detoken,MAX_PARSER_TOKENS_NUM);
+
+
+			menu_tape_settings_trunc_name(string_detoken,texto_expresion_shown,30);
+
+ 			menu_add_item_menu_format(array_menu_watches_settings,MENU_OPCION_NORMAL,menu_watches_edit,NULL,"%d: %s",i+1,texto_expresion_shown);
 			menu_add_item_menu_tabulado(array_menu_watches_settings,1,lin);		
 			menu_add_item_menu_valor_opcion(array_menu_watches_settings,i);
-			lin+=2;			
-		}
+		
 
- 			
+			lin+=2;			
+		}	
 		
 				
 
@@ -12553,7 +12567,22 @@ void menu_watches(void)
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
+
+
+
+									//restauramos modo normal de texto de menu para llamar al editor de watch
+                                                                //con el sprite encima
+                                    set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+                                      
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+								set_menu_overlay_function(menu_watches_overlay);
+								zxvision_clear_window_contents(&ventana); //limpiar restos
+								zxvision_draw_window(&ventana);
+
+
 				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
                                 
                         }

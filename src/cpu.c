@@ -1338,6 +1338,10 @@ printf(
 		"--set-breakpointaction n s Set breakpoint action with string s at position n. n must be between 1 and %d. string s must be written in \"\" if has spaces. Used normally with --enable-breakpoints\n",MAX_BREAKPOINTS_CONDITIONS
 );
 
+printf(
+		"--set-watch n s            Set watch with string s at position n. n must be between 1 and %d. string s must be written in \"\" if has spaces\n",DEBUG_MAX_WATCHES
+);
+
 printf (
 	  "--set-mem-breakpoint a n   Set memory breakpoint at address a for type n\n"
 	  "--hardware-debug-ports     These ports are used to interact with ZEsarUX, for example showing a ASCII character on console, read ZEsarUX version, etc. "
@@ -6487,6 +6491,23 @@ int parse_cmdline_options(void) {
 			 debug_set_breakpoint(valor,argv[puntero_parametro]);
 
 		 }
+
+		 else if (!strcmp(argv[puntero_parametro],"--set-watch")) {
+			 siguiente_parametro_argumento();
+			 int valor=atoi(argv[puntero_parametro]);
+			 valor--;
+
+			 siguiente_parametro_argumento();
+
+
+			 if (valor<0 || valor>DEBUG_MAX_WATCHES-1) {
+				 printf("Index %d out of range setting watch \"%s\"\n",valor+1,argv[puntero_parametro]);
+				 exit(1);
+			 }
+
+			 debug_set_watch(valor,argv[puntero_parametro]);
+
+		 }		 
 
 		 else if (!strcmp(argv[puntero_parametro],"--set-mem-breakpoint")) {
 			 siguiente_parametro_argumento();

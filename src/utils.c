@@ -3427,18 +3427,27 @@ int util_write_configfile(void)
 			}
 
 
-
-
-
-
-
-
 	}
 
   for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
     if (debug_breakpoints_actions_array[i][0]!=0)
                                               ADD_STRING_CONFIG,"--set-breakpointaction %d \"%s\"",i+1,debug_breakpoints_actions_array[i]);
   }
+
+
+
+  for (i=0;i<DEBUG_MAX_WATCHES;i++) {
+
+			if (debug_watches_array[i][0].tipo!=TPT_FIN) {
+
+				char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+				exp_par_tokens_to_exp(debug_watches_array[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+                                ADD_STRING_CONFIG,"--set-watch %d \"%s\"",i+1,buffer_temp);
+			}
+
+	}
+
+  
 
   for (i=0;i<65536;i++) {
 		if (mem_breakpoint_array[i]!=0)
