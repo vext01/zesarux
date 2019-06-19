@@ -10559,7 +10559,12 @@ void menu_breakpoints_conditions_set(MENU_ITEM_PARAMETERS)
   menu_ventana_scanf("Condition",string_texto,MAX_BREAKPOINT_CONDITION_LENGTH);
 
   debug_set_breakpoint(breakpoint_index,string_texto);
-//TODO: comprobar error
+
+	//comprobar error
+	if (if_pending_error_message) {
+		menu_muestra_pending_error_message(); //Si se genera un error derivado del set breakpoint, mostrarlo y salir
+		return;
+	}
 
 
 	sprintf (string_texto,"%s",debug_breakpoints_actions_array[breakpoint_index]);
@@ -14637,7 +14642,7 @@ Dibujo de la nota:
 
 #define PENTAGRAMA_TOTAL_ALTO (PENTAGRAMA_ESPACIO_LINEAS*7)
 
-char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
+char *pentagrama_nota_negra[PENTAGRAMA_NOTA_ALTO]={
    //0123456
     "  XXX  ",  
 	" XXXXX ",
@@ -14645,6 +14650,17 @@ char *pentagrama_nota[PENTAGRAMA_NOTA_ALTO]={
 	"XXXXXXX",
 	"XXXXXXX",
 	" XXXXX ",
+	"  XXX  "
+};
+
+char *pentagrama_nota_blanca[PENTAGRAMA_NOTA_ALTO]={
+   //0123456
+    "  XXX  ",  
+	" X   X ",
+	"X     X",
+	"X     X",
+	"X     X",
+	" X   X ",
 	"  XXX  "
 };
 
@@ -14762,11 +14778,42 @@ void menu_ay_partitura_dibujar_sost(int x,int y)
 
 //incremento_palito: +1 : palito hacia abajo
 //incremento_palito: +1 : palito hacia arriba
-void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito)
+//duracion en 1/50 de segundos. 50=negra
+void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duracion)
 {
-	screen_put_asciibitmap_generic(pentagrama_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+	/*
+	Duraciones notas:
 
-	//Y dibujar el "palito"
+
+	3.125=0.0625 segundos=semifusa
+	6.25=0.125 segundos=fusa
+	12.5=0.25 segundos=semicorchea
+	25=0.5 segundos=corchea
+	50=1 segundo=negra
+	75=1.5 segundos=negra con punto
+	100=2 segundos=blanca
+	150=3 segundos=blanca con punto
+	200=4 segundos=redonda
+	300=6 segundos=redonda con punto
+
+	 */
+
+	//TODO: funcion que retorne tipo nota segun duracion, hacerlo con enum
+	//enum aysheet_tipo_nota_duracion AYSHEET_NOTA_NEGRA, AYSHEET_NOTA_NEGRA_PUNTO, AYSHEET_NOTA_BLANCA, etc
+
+	//TODO: otra funcion que retorne el char * de donde esta la nota (blanca,redonda=pentagrama_nota_blanca. resto=pentagrama_nota_negra)
+
+	//TODO: dibujar o no palitos, redonda no tiene palito
+
+	//TODO: dibujar "cortes" en palitos, para duraciones de corchea o menores
+
+	//TODO: dibujar puntos para notas que sean _PUNTO
+
+	screen_put_asciibitmap_generic(pentagrama_nota_negra,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+	//screen_put_asciibitmap_generic(pentagrama_nota_blanca,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+
+	//Y dibujar el "palito", excepto para redonda
+
 	//PENTAGRAMA_NOTA_LARGO_PALITO
 	int yorig=y+PENTAGRAMA_NOTA_OFFSET_PALITO;
 
@@ -14832,7 +14879,7 @@ void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
 	if (nota>=6) incremento_palito=+1; //A partir del Si , palito para abajo
 
 
-	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito);
+	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito,50);
 
 	//Si hay que poner palito (en do (0), la (12), si(12))
 	if (nota==0 || nota==12 || nota==13) {
