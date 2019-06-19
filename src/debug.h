@@ -169,6 +169,8 @@ extern char *zx80_rom_tokens[];
 
 #define DEBUG_MAX_WATCHES 10
 extern token_parser debug_watches_array[DEBUG_MAX_WATCHES][MAX_PARSER_TOKENS_NUM];
+extern void debug_set_watch(int watch_index,char *condicion);
+extern void init_watches_table(void);
 
 //extern char debug_watches_text_to_watch[];
 

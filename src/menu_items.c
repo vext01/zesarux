@@ -12393,21 +12393,15 @@ void menu_watches_overlay_mostrar_texto(void)
     linea=1; //Empezar justo en cada linea Result
 
     
-        //mostrarlos siempre a cada refresco
+  
+				char buf_linea[32];
 
-                char texto_expresion_shown[30];
-				char buf_linea[64];
-
-				char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
+				//char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
 
 				int i;
 
 				for (i=0;i<DEBUG_MAX_WATCHES;i++) {
-					//Imprimir texto watch
- 					//Pasamos primero a string de nuevo
-                        
-                        //exp_par_tokens_to_exp(debug_watches_array[i],string_detoken,MAX_PARSER_TOKENS_NUM);
-
+					
                         int error_code;
 
                         int resultado=exp_par_evaluate_token(debug_watches_array[i],MAX_PARSER_TOKENS_NUM,&error_code);
@@ -12423,13 +12417,7 @@ void menu_watches_overlay_mostrar_texto(void)
 						*/
 
 
-				
 
-                //menu_tape_settings_trunc_name(string_detoken,texto_expresion_shown,30);
-
-			
-	                //sprintf (buf_linea,"%d: %s",i,texto_expresion_shown); 
-					//zxvision_print_string_defaults_fillspc(menu_watches_overlay_window,1,linea++,buf_linea);
 	                sprintf (buf_linea,"Result: %d",resultado); 
 					zxvision_print_string_defaults_fillspc(menu_watches_overlay_window,1,linea,buf_linea);
 
@@ -12437,9 +12425,6 @@ void menu_watches_overlay_mostrar_texto(void)
 
 								
 				}
-       
-
-
 
 }
 
@@ -12488,24 +12473,30 @@ void menu_watches(void)
                return;
        }
 
-		//Watches normales
-
-
+	
+	
+	//Watches normales
 
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
+    int xventana,yventana;
+    int ancho_ventana,alto_ventana;	
 
-	int x=menu_origin_x()+7;
-	int y=1;
+	if (!util_find_window_geometry("watches",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 
-	int ancho=32;
-	int alto=22;
+	 xventana=menu_origin_x();
+	 yventana=1;
+
+	 ancho_ventana=32;
+	 alto_ventana=22;
+	}
+
 
 
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,x,y,ancho,alto,ancho-1,alto-2,"Watches");
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Watches");
 	zxvision_draw_window(&ventana);		
 
 
@@ -12539,16 +12530,21 @@ void menu_watches(void)
 
 		for (i=0;i<DEBUG_MAX_WATCHES;i++) {
 			
+			//Convertir token de watch a texto 
 			if (debug_watches_array[i][0].tipo==TPT_FIN) {
 				strcpy(string_detoken,"None");
 			}
 			else exp_par_tokens_to_exp(debug_watches_array[i],string_detoken,MAX_PARSER_TOKENS_NUM);
 
-
+			//Limitar a 30 caracteres
 			menu_tape_settings_trunc_name(string_detoken,texto_expresion_shown,30);
 
  			menu_add_item_menu_format(array_menu_watches_settings,MENU_OPCION_NORMAL,menu_watches_edit,NULL,"%d: %s",i+1,texto_expresion_shown);
+
+			//En que linea va
 			menu_add_item_menu_tabulado(array_menu_watches_settings,1,lin);		
+
+			//Indicamos el indice
 			menu_add_item_menu_valor_opcion(array_menu_watches_settings,i);
 		
 
@@ -12579,7 +12575,7 @@ void menu_watches(void)
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
 
 								set_menu_overlay_function(menu_watches_overlay);
-								zxvision_clear_window_contents(&ventana); //limpiar restos
+								zxvision_clear_window_contents(&ventana); //limpiar de texto anterior en linea de watch
 								zxvision_draw_window(&ventana);
 
 
@@ -12595,14 +12591,13 @@ void menu_watches(void)
 
 	   cls_menu_overlay();
 
+	util_add_window_geometry_compact("watches",&ventana);	   
+
 	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
 	zxvision_destroy_window(&ventana);			   
 
 
 }
-
-
-
 
 
 

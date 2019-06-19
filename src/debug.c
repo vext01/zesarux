@@ -2953,8 +2953,8 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
 	
 	int result=exp_par_exp_to_tokens(condicion,debug_breakpoints_conditions_array_tokens[breakpoint_index]);
 	if (result<0) {
-		debug_printf (VERBOSE_ERR,"Error adding breakpoint [%s]",condicion);
 		debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo=TPT_FIN; //Inicializarlo vacio
+		debug_printf (VERBOSE_ERR,"Error adding breakpoint [%s]",condicion);
 	}
 
 
@@ -2981,8 +2981,8 @@ void debug_set_watch(int watch_index,char *condicion)
 	
 	int result=exp_par_exp_to_tokens(condicion,debug_watches_array[watch_index]);
 	if (result<0) {
-		debug_printf (VERBOSE_ERR,"Error adding watch [%s]",condicion);
 		debug_watches_array[watch_index][0].tipo=TPT_FIN; //Inicializarlo vacio
+		debug_printf (VERBOSE_ERR,"Error adding watch [%s]",condicion);
 	}
 
 
