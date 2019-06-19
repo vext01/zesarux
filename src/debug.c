@@ -2926,7 +2926,10 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 	valor_comparar[index_destino]=0;
 
 	//Si ha acabado con un espacio, no optimizar
-	if (condicion[i]==' ') return;
+	if (condicion[i]==' ') {
+		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Space after number. Not optimized");
+		return;
+    }		
 
 	//Ver si eso que hay a la derecha del igual es una variable
 	//int si_cond_opcode=0;
@@ -2935,13 +2938,21 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
     //old parser valor=cpu_core_loop_debug_registro(valor_comparar,&si_cond_opcode);
 	int final_numero;
 	//printf ("Comprobar si [%s] es numero\n",valor_comparar);
-	if (exp_par_is_number(valor_comparar,&final_numero)<=0) {
+	int result_is_number;
+	result_is_number=exp_par_is_number(valor_comparar,&final_numero);
+	debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Testing expression [%s] to see if it's a single number",valor_comparar);
 
-    //if (valor!=0xFFFFFFFF) {
+	if (result_is_number<=0) {
 			//Resulta que es una variable, no un numero . no optimizar
 			debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: Value is a variable. Not optimized");
 			return;
     }
+
+	//Ver si el final del numero ya es el final de texto
+	if (valor_comparar[final_numero]!=0) {
+		debug_printf(VERBOSE_DEBUG,"set_breakpoint_optimized: More characters left after the number. Not optimized");
+		return;
+	}
 
 	//Pues tenemos que suponer que es un valor. Parsearlo y meterlo en array de optimizacion
 	valor=parse_string_to_number(valor_comparar);

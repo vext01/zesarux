@@ -20,9 +20,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 **Inicio Expression Parser
 
-*si expresion:
-PC=1234H+1 -> lo detecta como un optimizado! error
-seguramente lo mismo pasara para los otros optimizables: mra, mwa
 
 *codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
 ->da -16. acaba haciendo 2*3 - 4*5 - 6/3
