@@ -56,6 +56,7 @@ permite sumas. resta, multiplicacion, etc
 Si hay 3 operadores con restas, parentesis:
 a-b+c -> mejor: (a-b)+c
 <>, >=,<=
+pwa,pwv,mra,mwv etc requieren que breakpoints esten activos
 
 *permite doble resta como a--b -> que eso al final es : a- (-b) -> a+b
 
