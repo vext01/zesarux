@@ -1027,6 +1027,11 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
 		i++;
         maximo--;
 	}
+
+    //Esto solo tiene sentido si cadena de entrada era TPT_FIN tal cual,
+    //por que si no, cualquiera de los sprintf de antes habran metido el 0 final
+    expression[dest_string]=0;
+
 }
 
 
@@ -1609,6 +1614,7 @@ int exp_par_final_parentesis(token_parser *tokens,int longitud_tokens)
 
 //Calcula la expresion identificada por tokens. Funcion recursiva
 //final identifica al siguiente token despues del final. Poner valor alto para que no tenga final y detecte token de fin
+//error_code puede ser 0 o 1
 int exp_par_evaluate_token(token_parser *tokens,int longitud_tokens,int *error_code)
 {
 /*
@@ -1627,6 +1633,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
     if (longitud_tokens==0) {
         //expresion vacia. no deberia suceder. retornar 0
+        //printf ("expresion vacia\n");
         *error_code=1;
         return 0;
     }
@@ -1716,9 +1723,10 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             int longitud_derecha=longitud_tokens-longitud_izquierda-1;
             //printf ("operador logico\n");
 
-            //TODO gestionar errorcode1, errorcode2
             valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
+
+            *error_code=errorcode1 | errorcode2; //cualquiera de los dos puede ser 0 o 1, hacer OR de los dos
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }
@@ -1755,9 +1763,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             //printf ("operador condicionales\n");
 
-            //TODO gestionar errorcode1, errorcode2
             valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
+
+            *error_code=errorcode1 | errorcode2; //cualquiera de los dos puede ser 0 o 1, hacer OR de los dos
+
 
             //printf ("condicional [%d] y [%d]\n",valor_izquierda,valor_derecha);
             int resul=exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
@@ -1794,9 +1804,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             //printf ("operador suma/resta\n");
 
-            //TODO gestionar errorcode1, errorcode2
             valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
+
+            *error_code=errorcode1 | errorcode2; //cualquiera de los dos puede ser 0 o 1, hacer OR de los dos
+
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
@@ -1827,11 +1839,11 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
             //printf ("operador multi/divi etc\n");
 
-            //TODO gestionar errorcode1, errorcode2
             valor_izquierda=exp_par_evaluate_token(tokens,longitud_izquierda,&errorcode1);
-
-            //printf ("evaluar parte derecha multiplicacion");
             valor_derecha=exp_par_evaluate_token(&tokens[i+1],longitud_derecha,&errorcode2);
+
+            *error_code=errorcode1 | errorcode2; //cualquiera de los dos puede ser 0 o 1, hacer OR de los dos
+
 
             return exp_par_calculate_operador(valor_izquierda,valor_derecha,tokens[i].tipo,tokens[i].indice);
         }   
@@ -1858,11 +1870,13 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             //fin debug parentesis
 
 
-            int otro_err_code;
-            valor_izquierda=exp_par_evaluate_token(&tokens[2],final_par-1,&otro_err_code);
+            int errorcode2;
+            valor_izquierda=exp_par_evaluate_token(&tokens[2],final_par-1,&errorcode2);
+
+            *error_code=errorcode2;
+
             
-            if ( otro_err_code <0) {
-                *error_code=otro_err_code;
+            if ( *error_code ) {
                 return 0; //ha habido error
             }
 
@@ -1894,11 +1908,13 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
             //fin debug parentesis
 
 
-            int otro_err_code;
-            int valor_parentesis=exp_par_evaluate_token(&tokens[i],final_par-1,&otro_err_code);
+            int errorcode2;
+            int valor_parentesis=exp_par_evaluate_token(&tokens[i],final_par-1,&errorcode2);
+
+            *error_code=errorcode2;
+
             
-            if ( otro_err_code <0) {
-                *error_code=otro_err_code;
+            if ( *error_code ) {
                 return 0; //ha habido error
             }
         
@@ -1920,6 +1936,7 @@ Evaluar valores: por orden, evaluar valores, variables  y posibles operadores de
 
 
     //Aqui no deberia llegar nunca
+    //printf ("fin evaluar token sin coincidir ninguno. posible token de fin\n");
     *error_code=1;
     return 0;
 

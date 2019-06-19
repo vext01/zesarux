@@ -10607,8 +10607,15 @@ void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
 			
 			
 			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
-			menu_generic_message_format("Result","Parsed string: %s\nResult: %d",
+			if (error_code) {
+				//printf ("%d\n",tokens[0].tipo);
+				menu_generic_message_format("Error","Error evaluating parsed string: %s\nResult: %d",
 				string_detoken,resultado);
+			}
+			else {
+				menu_generic_message_format("Result","Parsed string: %s\nResult: %d",
+				string_detoken,resultado);
+			}
 
 			//printf ("%d\n",resultado);
 	}
