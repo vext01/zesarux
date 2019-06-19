@@ -7040,6 +7040,7 @@ tooltip_enabled.v=1;
 
 	//esto va aqui, asi podemos parsear el establecer set-breakpoint desde linea de comandos
 	init_breakpoints_table();
+	init_watches_table();
 
 
 	last_filesused_clear();

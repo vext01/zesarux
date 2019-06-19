@@ -167,6 +167,7 @@ extern char *zx80_rom_tokens[];
 
 //extern int debug_breakpoint_condition_loop(char *texto,int debug);
 
+#define DEBUG_MAX_WATCHES 10
 
 //extern char debug_watches_text_to_watch[];
 

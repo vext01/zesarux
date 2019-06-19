@@ -95,14 +95,11 @@ z80_bit menu_breakpoint_exception={0};
 
 z80_bit debug_breakpoints_enabled={0};
 
-//breakpoints de direcciones PC. Si vale -1, no hay breakpoint
-//int debug_breakpoints_array[MAX_BREAKPOINTS];
-
-//breakpoints de condiciones. viejo formato
-//char debug_breakpoints_conditions_array[MAX_BREAKPOINTS_CONDITIONS][MAX_BREAKPOINT_CONDITION_LENGTH];
-
 //breakpoints de condiciones. nuevo formato para nuevo parser de tokens
 token_parser debug_breakpoints_conditions_array_tokens[MAX_BREAKPOINTS_CONDITIONS][MAX_PARSER_TOKENS_NUM];
+
+//watches. nuevo formato con parser de tokens
+token_parser debug_watches_array[DEBUG_MAX_WATCHES][MAX_PARSER_TOKENS_NUM];
 
 
 //Ultimo breakpoint activo+1 (o sea, despues del ultimo activo) para optimizar la comprobacion de breakpoints,
@@ -540,6 +537,16 @@ void init_breakpoints_table(void)
 }
 
 
+void init_watches_table(void)
+{
+	int i;
+
+	for (i=0;i<DEBUG_MAX_WATCHES;i++) {
+		debug_watches_array[i][0].tipo=TPT_FIN;
+	}
+
+
+}
 
 
 
@@ -2946,7 +2953,7 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
 	
 	int result=exp_par_exp_to_tokens(condicion,debug_breakpoints_conditions_array_tokens[breakpoint_index]);
 	if (result<0) {
-		debug_printf (VERBOSE_ERR,"Error adding breakpoint %s\n",condicion);
+		debug_printf (VERBOSE_ERR,"Error adding breakpoint [%s]",condicion);
 		debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo=TPT_FIN; //Inicializarlo vacio
 	}
 
@@ -2959,6 +2966,25 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
 
 	//Miramos cual es el ultimo breakpoint activo
 	debug_set_last_active_breakpoint();
+
+}
+
+
+void debug_set_watch(int watch_index,char *condicion)
+{
+
+    if (watch_index<0 || watch_index>DEBUG_MAX_WATCHES-1) {
+      debug_printf(VERBOSE_ERR,"Index out of range setting watch");
+      return;
+    }
+
+	
+	int result=exp_par_exp_to_tokens(condicion,debug_watches_array[watch_index]);
+	if (result<0) {
+		debug_printf (VERBOSE_ERR,"Error adding watch [%s]",condicion);
+		debug_watches_array[watch_index][0].tipo=TPT_FIN; //Inicializarlo vacio
+	}
+
 
 }
 
