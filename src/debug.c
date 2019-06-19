@@ -1374,6 +1374,7 @@ void cpu_core_loop_debug_check_breakpoints(void)
 						//se_cumple_breakpoint=debug_breakpoint_condition_loop(&debug_breakpoints_conditions_array[i][0],0);
 						int error_code;
 						se_cumple_breakpoint=exp_par_evaluate_token(debug_breakpoints_conditions_array_tokens[i],MAX_PARSER_TOKENS_NUM,&error_code);
+						//Nota: aqui no comprobamos error_code, gestionamos el valor de retorno tal cual vuelve, haya habido o no error
 					}
 
 					if ( se_cumple_breakpoint ) {
