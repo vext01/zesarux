@@ -15277,10 +15277,21 @@ void menu_ay_partitura_overlay(void)
 
 		//Meter valor actual
 		strcpy(menu_ay_partitura_current_state[0][0][columna_estado_anterior],nota_a);
+		menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]=1;
+
 		strcpy(menu_ay_partitura_current_state[0][1][columna_estado_anterior],nota_b);
+		menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]=1;
+
 		strcpy(menu_ay_partitura_current_state[0][2][columna_estado_anterior],nota_c);
+		menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]=1;
 
 
+	}
+	//Si no, incrementar duraciones notas
+	else {
+		menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]++;
+		menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]++;
+		menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]++;
 	}
 
 	//Dibujar estado de los 3 canales
