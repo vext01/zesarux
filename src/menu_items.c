@@ -14776,56 +14776,155 @@ void menu_ay_partitura_dibujar_sost(int x,int y)
 	screen_put_asciibitmap_generic(pentagrama_sost,NULL,x,y,PENTAGRAMA_SOST_ANCHO,PENTAGRAMA_SOST_ALTO,0,menu_ay_partitura_putpixel_nota);
 }
 
-//incremento_palito: +1 : palito hacia abajo
-//incremento_palito: +1 : palito hacia arriba
-//duracion en 1/50 de segundos. 50=negra
-void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duracion)
+//duraciones notas
+enum aysheet_tipo_nota_duracion {
+	AYSHEET_NOTA_SEMIFUSA,
+	AYSHEET_NOTA_SEMIFUSA_PUNTO,
+
+	AYSHEET_NOTA_FUSA,
+	AYSHEET_NOTA_FUSA_PUNTO,	
+
+	AYSHEET_NOTA_SEMICORCHEA,
+	AYSHEET_NOTA_SEMICORCHEA_PUNTO,	
+
+	AYSHEET_NOTA_CORCHEA,
+	AYSHEET_NOTA_CORCHEA_PUNTO,	
+
+	AYSHEET_NOTA_NEGRA,
+	AYSHEET_NOTA_NEGRA_PUNTO,	
+
+	AYSHEET_NOTA_BLANCA,
+	AYSHEET_NOTA_BLANCA_PUNTO,	
+
+	AYSHEET_NOTA_REDONDA,
+	AYSHEET_NOTA_REDONDA_PUNTO
+
+};
+
+//retorne el char * de donde esta la nota (blanca,redonda=pentagrama_nota_blanca. resto=pentagrama_nota_negra)
+char **aysheet_tipo_nota_bitmap(enum aysheet_tipo_nota_duracion nota)
 {
-	/*
+	switch (nota) {
+		case AYSHEET_NOTA_BLANCA:
+		case AYSHEET_NOTA_BLANCA_PUNTO:
+		case AYSHEET_NOTA_REDONDA:
+		case AYSHEET_NOTA_REDONDA_PUNTO:
+			return pentagrama_nota_blanca;
+		break;
+
+		default:
+			return pentagrama_nota_negra;
+		break;
+	}
+}
+
+
+//dice si nota tiene "palito", o sea, todos menos la redonda
+int aysheet_tipo_nota_tienepalo(enum aysheet_tipo_nota_duracion nota)
+{
+	switch (nota) {
+		case AYSHEET_NOTA_REDONDA:
+		case AYSHEET_NOTA_REDONDA_PUNTO:
+			return 0;
+		break;
+
+		default:
+			return 1;
+		break;
+	}
+}
+
+//Devuelve tipo de nota segun su duracion en 1/50 de segundo
+enum aysheet_tipo_nota_duracion menu_aysheet_get_length(int duracion)
+{
+/*
 	Duraciones notas:
 
 
 	3.125=0.0625 segundos=semifusa
+	4.6875=0.09375 segundos=semifusa con punto
+	
 	6.25=0.125 segundos=fusa
+	9.375=0.1875 segundos=fusa con punto
+
 	12.5=0.25 segundos=semicorchea
+	18.75=0.375 segundos=semicorchea con punto
+	
 	25=0.5 segundos=corchea
+	37.5=0.75 segundos=corchea con punto
+
 	50=1 segundo=negra
 	75=1.5 segundos=negra con punto
+
 	100=2 segundos=blanca
 	150=3 segundos=blanca con punto
+
 	200=4 segundos=redonda
 	300=6 segundos=redonda con punto
 
 	 */
 
-	//TODO: funcion que retorne tipo nota segun duracion, hacerlo con enum
-	//enum aysheet_tipo_nota_duracion AYSHEET_NOTA_NEGRA, AYSHEET_NOTA_NEGRA_PUNTO, AYSHEET_NOTA_BLANCA, etc
+	//Vemos duraciones segun si es menor o igual. Hacemos redondeos de duraciones: 4.6 es 5
+	if (duracion<=3) return AYSHEET_NOTA_SEMIFUSA;
+	if (duracion<=5) return AYSHEET_NOTA_SEMIFUSA_PUNTO;
+	if (duracion<=6) return AYSHEET_NOTA_FUSA;
+	if (duracion<=9) return AYSHEET_NOTA_FUSA_PUNTO;
 
-	//TODO: otra funcion que retorne el char * de donde esta la nota (blanca,redonda=pentagrama_nota_blanca. resto=pentagrama_nota_negra)
+	if (duracion<=12) return AYSHEET_NOTA_SEMICORCHEA;
+	if (duracion<=19) return AYSHEET_NOTA_SEMICORCHEA_PUNTO;
+	if (duracion<=25) return AYSHEET_NOTA_CORCHEA;
+	if (duracion<=37) return AYSHEET_NOTA_CORCHEA_PUNTO;
+	
+	if (duracion<=50) return AYSHEET_NOTA_NEGRA;
+	if (duracion<=75) return AYSHEET_NOTA_NEGRA_PUNTO;
+	if (duracion<=100) return AYSHEET_NOTA_BLANCA;
+	if (duracion<=150) return AYSHEET_NOTA_BLANCA_PUNTO;
 
-	//TODO: dibujar o no palitos, redonda no tiene palito
+	if (duracion<=200) return AYSHEET_NOTA_REDONDA;
+
+	//Cualquier otra cosa
+	return AYSHEET_NOTA_REDONDA_PUNTO;
+
+}
+
+//incremento_palito: +1 : palito hacia abajo
+//incremento_palito: +1 : palito hacia arriba
+//duracion en 1/50 de segundos. 50=negra
+void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duracion)
+{
+	
+	enum aysheet_tipo_nota_duracion tipo_nota_duracion=menu_aysheet_get_length(duracion);
+
+	char **bitmap_nota=aysheet_tipo_nota_bitmap(tipo_nota_duracion);
+
+	bitmap_nota=aysheet_tipo_nota_bitmap(tipo_nota_duracion);
+
 
 	//TODO: dibujar "cortes" en palitos, para duraciones de corchea o menores
 
 	//TODO: dibujar puntos para notas que sean _PUNTO
 
-	screen_put_asciibitmap_generic(pentagrama_nota_negra,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
+
+
+	screen_put_asciibitmap_generic(bitmap_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
 	//screen_put_asciibitmap_generic(pentagrama_nota_blanca,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
 
-	//Y dibujar el "palito", excepto para redonda
+
 
 	//PENTAGRAMA_NOTA_LARGO_PALITO
-	int yorig=y+PENTAGRAMA_NOTA_OFFSET_PALITO;
+	if (aysheet_tipo_nota_tienepalo(tipo_nota_duracion)) {
+		int yorig=y+PENTAGRAMA_NOTA_OFFSET_PALITO;
 
-	int xorig=x;
+		int xorig=x;
 
-	//Si palito hacia arriba
-	if (incremento_palito<0) xorig=x+PENTAGRAMA_NOTA_ANCHO-1;
+		//Si palito hacia arriba
+		if (incremento_palito<0) xorig=x+PENTAGRAMA_NOTA_ANCHO-1;
 
-	int alto=PENTAGRAMA_NOTA_LARGO_PALITO;
+		int alto=PENTAGRAMA_NOTA_LARGO_PALITO;
 
-	for (;alto>0;alto--,yorig +=incremento_palito) {
-		zxvision_putpixel(menu_ay_partitura_overlay_window,xorig,yorig,ESTILO_GUI_TINTA_NORMAL); 
+		for (;alto>0;alto--,yorig +=incremento_palito) {
+			zxvision_putpixel(menu_ay_partitura_overlay_window,xorig,yorig,ESTILO_GUI_TINTA_NORMAL); 
+		}
 	}
 }
 
