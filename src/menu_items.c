@@ -14778,6 +14778,9 @@ char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLU
 //Chip, canal, columna, duracion de cada nota
 int menu_ay_partitura_current_state_duraciones[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS];
 
+//Ultima columna de cada canal usada
+int menu_ay_partitura_ultima_columna[3];
+
 //Nota anterior de la ultima columna
 //char menu_ay_partitura_last_state[MAX_AY_CHIPS][3][4];
 
@@ -15151,6 +15154,22 @@ void menu_ay_partitura_scroll(int chip)
 			menu_ay_partitura_current_state_duraciones[chip][canal][i]=menu_ay_partitura_current_state_duraciones[chip][canal][i+1];
 		}
 	}
+
+	//La ultima columna ponerla a vacia
+		int canal;
+		for (canal=0;canal<3;canal++) {
+			menu_ay_partitura_current_state[chip][canal][i][0]=0;
+			menu_ay_partitura_current_state_duraciones[chip][canal][i]=0;
+		}	
+
+	//Desplazar indices de ultima columna a la izquierda
+		
+	for (i=0;i<3;i++) {
+		int c=menu_ay_partitura_ultima_columna[i];
+		if (c>=0) {
+			menu_ay_partitura_ultima_columna[i]=c-1;
+		}
+	}		
 }
 
 
@@ -15263,35 +15282,93 @@ void menu_ay_partitura_overlay(void)
 	//printf ("c [%s] [%s]\n",nota_c,menu_ay_partitura_last_state[0][2]);
 
 	int columna_estado_anterior;
-	columna_estado_anterior=menu_ay_partitura_total_columns()-1;
+	//columna_estado_anterior=menu_ay_partitura_total_columns()-1;
+
+	int hayscroll=0;
+	int modificado_canal1=0;
+	int modificado_canal2=0;
+	int modificado_canal3=0;
+
+	//Si alguno de los 3 canales es diferente del estado anterior
+	columna_estado_anterior=menu_ay_partitura_ultima_columna[0];
+	if (strcasecmp(nota_a,menu_ay_partitura_current_state[0][0][columna_estado_anterior])) {
+		hayscroll=1;
+		modificado_canal1=1;
+	}
+	else {
+		//se mantiene igual. aumentar duracion
+		menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]++;
+	}
+
+
+	columna_estado_anterior=menu_ay_partitura_ultima_columna[1];
+	if (strcasecmp(nota_b,menu_ay_partitura_current_state[0][1][columna_estado_anterior])) {
+		hayscroll=1;
+		modificado_canal2=1;
+	}
+	else {
+		//se mantiene igual. aumentar duracion
+		menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]++;
+	}	
+
+
+	columna_estado_anterior=menu_ay_partitura_ultima_columna[2];
+	if (strcasecmp(nota_c,menu_ay_partitura_current_state[0][2][columna_estado_anterior])) {
+		hayscroll=1;
+		modificado_canal3=1;
+	}
+	else {
+		//se mantiene igual. aumentar duracion
+		menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]++;
+	}	
 
 
 	//Si alguno de los 3 canales es diferente del estado anterior
-	if (
+	/*/if (
 		strcasecmp(nota_a,menu_ay_partitura_current_state[0][0][columna_estado_anterior]) ||
 		strcasecmp(nota_b,menu_ay_partitura_current_state[0][1][columna_estado_anterior]) ||
 		strcasecmp(nota_c,menu_ay_partitura_current_state[0][2][columna_estado_anterior]) 
-	)
-	{
+	) hayscroll=1;*/
+
+	if (hayscroll) {
 		menu_ay_partitura_scroll(0);
 
-		//Meter valor actual
-		strcpy(menu_ay_partitura_current_state[0][0][columna_estado_anterior],nota_a);
-		menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]=1;
+		//Meter valor actual los que se han modificado
+		if (modificado_canal1) {
+			//Y decir que ultima columna es la de mas a la derecha
+			columna_estado_anterior=menu_ay_partitura_total_columns()-1;
+			menu_ay_partitura_ultima_columna[0]=columna_estado_anterior;
 
-		strcpy(menu_ay_partitura_current_state[0][1][columna_estado_anterior],nota_b);
-		menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]=1;
+			strcpy(menu_ay_partitura_current_state[0][0][columna_estado_anterior],nota_a);
+			menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]=1;
+		}
 
-		strcpy(menu_ay_partitura_current_state[0][2][columna_estado_anterior],nota_c);
-		menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]=1;
+		if (modificado_canal2) {
+			//Y decir que ultima columna es la de mas a la derecha
+			columna_estado_anterior=menu_ay_partitura_total_columns()-1;
+			menu_ay_partitura_ultima_columna[1]=columna_estado_anterior;
+
+			strcpy(menu_ay_partitura_current_state[0][1][columna_estado_anterior],nota_b);
+			menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]=1;
+		}
+
+		if (modificado_canal3) {
+			//Y decir que ultima columna es la de mas a la derecha
+			columna_estado_anterior=menu_ay_partitura_total_columns()-1;
+			menu_ay_partitura_ultima_columna[2]=columna_estado_anterior;
+
+			strcpy(menu_ay_partitura_current_state[0][2][columna_estado_anterior],nota_c);
+			menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]=1;
+		}				
+		
 
 
 	}
 	//Si no, incrementar duraciones notas
 	else {
-		menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]++;
-		menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]++;
-		menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]++;
+		//menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]++;
+		//menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]++;
+		//menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]++;
 	}
 
 	//Dibujar estado de los 3 canales
@@ -15328,8 +15405,18 @@ void menu_ay_partitura_init_state(void)
 				}
 			}
 		}
+
+
 }
 
+void menu_ay_partitura_init_state_last_column(void)
+{
+			
+		//printf ("ultima col %d\n",menu_ay_partitura_total_columns());
+		menu_ay_partitura_ultima_columna[0]=menu_ay_partitura_total_columns()-1;
+		menu_ay_partitura_ultima_columna[1]=menu_ay_partitura_total_columns()-1;
+		menu_ay_partitura_ultima_columna[2]=menu_ay_partitura_total_columns()-1;
+}
 
 zxvision_window zxvision_window_ay_partitura;
 
@@ -15376,9 +15463,14 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 		zxvision_draw_window(ventana);	
 
+
+		
+
 		//printf ("ancho creada %d\n",ventana->visible_width);	
 
-		menu_ay_partitura_overlay_window=ventana;		
+		menu_ay_partitura_overlay_window=ventana;	
+
+		menu_ay_partitura_init_state_last_column();	
 
 
         //Cambiamos funcion overlay de texto de menu
