@@ -14626,7 +14626,7 @@ Dibujo de la nota:
 
 #define PENTAGRAMA_NOTA_ALTO 7
 #define PENTAGRAMA_NOTA_ANCHO 7
-#define PENTAGRAMA_NOTA_LARGO_PALITO 15
+#define PENTAGRAMA_NOTA_LARGO_PALITO 17
 
 //donde empieza el palito
 #define PENTAGRAMA_NOTA_OFFSET_PALITO 3
@@ -14851,6 +14851,37 @@ int aysheet_tipo_nota_tienepalo(enum aysheet_tipo_nota_duracion nota)
 	}
 }
 
+//dice el numero de diagonales que tiene la nota (corchea, semicorchea, fusa, semifusa)
+int aysheet_tipo_nota_diagonales(enum aysheet_tipo_nota_duracion nota)
+{
+	switch (nota) {
+		case AYSHEET_NOTA_CORCHEA:
+		case AYSHEET_NOTA_CORCHEA_PUNTO:
+			return 1;
+		break;
+
+		case AYSHEET_NOTA_SEMICORCHEA:
+		case AYSHEET_NOTA_SEMICORCHEA_PUNTO:
+			return 2;
+		break;
+
+		case AYSHEET_NOTA_FUSA:
+		case AYSHEET_NOTA_FUSA_PUNTO:
+			return 3;
+		break;
+
+		case AYSHEET_NOTA_SEMIFUSA:
+		case AYSHEET_NOTA_SEMIFUSA_PUNTO:
+			return 4;
+		break;				
+
+
+		default:
+			return 0;
+		break;
+	}
+}
+
 //dice si nota tiene puntillo
 int aysheet_tipo_nota_tienepuntillo(enum aysheet_tipo_nota_duracion nota)
 {
@@ -14929,9 +14960,7 @@ enum aysheet_tipo_nota_duracion menu_aysheet_get_length(int duracion)
 //duracion en 1/50 de segundos. 50=negra
 void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duracion)
 {
-	
-	//temp
-	duracion=150;
+
 
 	enum aysheet_tipo_nota_duracion tipo_nota_duracion=menu_aysheet_get_length(duracion);
 
@@ -14940,16 +14969,10 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duraci
 	bitmap_nota=aysheet_tipo_nota_bitmap(tipo_nota_duracion);
 
 
-	//TODO: dibujar "cortes" en palitos, para duraciones de corchea o menores
-
-	//TODO: dibujar puntos para notas que sean _PUNTO
-
 
 
 	screen_put_asciibitmap_generic(bitmap_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
-	//screen_put_asciibitmap_generic(pentagrama_nota_blanca,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota);
-
-
+	
 
 	//PENTAGRAMA_NOTA_LARGO_PALITO
 	if (aysheet_tipo_nota_tienepalo(tipo_nota_duracion)) {
@@ -14965,13 +14988,31 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duraci
 		for (;alto>0;alto--,yorig +=incremento_palito) {
 			zxvision_putpixel(menu_ay_partitura_overlay_window,xorig,yorig,ESTILO_GUI_TINTA_NORMAL); 
 		}
+
+
+		//Diagonales de la nota. corchea, semi, etc
+		int diagonales=aysheet_tipo_nota_diagonales(tipo_nota_duracion);
+		int i;
+		int largo_diagonal=5;
+
+		
+		for (i=0;i<diagonales;i++) {
+			int l;
+			yorig=y+PENTAGRAMA_NOTA_OFFSET_PALITO+((PENTAGRAMA_NOTA_LARGO_PALITO-i*3)*incremento_palito);
+			for (l=0;l<largo_diagonal;l++) {
+				zxvision_putpixel(menu_ay_partitura_overlay_window,xorig+l,yorig-(l*incremento_palito),ESTILO_GUI_TINTA_NORMAL); 
+			}
+		}		
 	}
 
 	//Si hay que dibujar puntillo
 	if (aysheet_tipo_nota_tienepuntillo(tipo_nota_duracion)) {
-		screen_put_asciibitmap_generic(pentagrama_puntillo,NULL,x+PENTAGRAMA_NOTA_ANCHO+1,y+PENTAGRAMA_NOTA_ALTO/2,
+		screen_put_asciibitmap_generic(pentagrama_puntillo,NULL,x+PENTAGRAMA_NOTA_ANCHO+1,y+PENTAGRAMA_NOTA_ALTO/2+1,
 				PENTAGRAMA_PUNTILLO_ANCHO,PENTAGRAMA_PUNTILLO_ALTO,0,menu_ay_partitura_putpixel_nota);
 	}
+
+
+
 
 }
 
