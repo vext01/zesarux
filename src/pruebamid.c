@@ -1,14 +1,58 @@
 #include <stdio.h>
 #include <string.h>
 
-unsigned char midi_file[2048];
+
 
 //http://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
 
+int mete_nota(unsigned char *mem,int duracion,int canal_midi,int keynote,int velocity)
+{
+
+    int indice=0;
+
+    unsigned int deltatime=duracion & 0x7f; //de momento duracion variable de 1 byte
+
+        //unsigned int deltatime=0x7f; //prueba
+
+    //Evento note on. al momento
+    mem[indice++]=0;
+    //midi_file[indice++]=(deltatime>>8)&0xFF;
+    
+
+    //int canal_midi=0;
+    unsigned char noteonevent=(128+16) | (canal_midi & 0xf);
+
+    //unsigned char keynote=60; //C octava 4
+    //unsigned char velocity=100;
+
+    mem[indice++]=noteonevent;
+    mem[indice++]=keynote & 127;
+    mem[indice++]=velocity & 127;
+
+
+
+    //Evento note off
+    mem[indice++]=deltatime & 0xFF;
+    //midi_file[indice++]=(deltatime>>8)&0xFF;
+
+    unsigned char noteoffevent=(128) | (canal_midi & 0xf);
+
+    mem[indice++]=noteoffevent;
+    mem[indice++]=keynote & 127;
+    mem[indice++]=velocity & 127;
+
+    return indice;
+}
+
 int main(void)
 {
+
+    unsigned char midi_file[2048];
+
     //cabecera
     memcpy(midi_file,"MThd",4);
+
+    int pistas=1;
 
     //Valor 6
     midi_file[4]=0;
@@ -20,9 +64,9 @@ int main(void)
     midi_file[8]=0;
     midi_file[9]=1;
 
-    //Pistas
-    midi_file[10]=0;
-    midi_file[11]=1;   
+    //Pistas. This is a 16-bit binary number, MSB first.
+    midi_file[10]=(pistas>>8) & 0xFF;
+    midi_file[11]=pistas & 0xFF;   
 
  
     //Division. TODO
@@ -33,7 +77,7 @@ int main(void)
     memcpy(&midi_file[14],"MTrk",4);
     int indice=18;
 
-    int notas=1;
+    int notas=7;
 
     int longitud_evento=((1+3)*2)*notas;//note on+off
 
@@ -45,73 +89,49 @@ int main(void)
     midi_file[indice++]=(longitud_evento  ) & 0xFF;    
 
     
-
+    //TODO: averiguar parametro deltatime segun duracion
+    //TODO: convertir nota formato ZEsarUX a keynote
+    //TODO: poder escribir mas pistas... hasta 3
 
 
     //Nota 1
     
-
     unsigned int deltatime=0x7f; //prueba
-
-    //Evento note on
-    midi_file[indice++]=deltatime & 0xFF;
-    //midi_file[indice++]=(deltatime>>8)&0xFF;
-    
-
     int canal_midi=0;
-    unsigned char noteonevent=(128+16) | canal_midi;
 
     unsigned char keynote=60; //C octava 4
-    unsigned char velocity=100;
-
-    midi_file[indice++]=noteonevent;
-    midi_file[indice++]=keynote & 127;
-    midi_file[indice++]=velocity & 127;
+    unsigned char velocity=0x40; //Devices which are not velocity sensitive should send vv=40....
 
 
-
-    //Evento note off
-    midi_file[indice++]=deltatime & 0xFF;
-    //midi_file[indice++]=(deltatime>>8)&0xFF;
-
-    unsigned char noteoffevent=(128) | canal_midi;
-
-    midi_file[indice++]=noteoffevent;
-    midi_file[indice++]=keynote & 127;
-    midi_file[indice++]=velocity & 127;
+    indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);
 
 
-    //Nota 2
-    
-
-    deltatime=0x7f; //prueba
-
-    //Evento note on
-    midi_file[indice++]=deltatime & 0xFF;
-    //midi_file[indice++]=(deltatime>>8)&0xFF;
-    
-
-    canal_midi=0;
-    noteonevent=(128+16) | canal_midi;
-
+   //Nota 2
+ 
     keynote=62; //D octava 4
-    velocity=100;
-
-    midi_file[indice++]=noteonevent;
-    midi_file[indice++]=keynote & 127;
-    midi_file[indice++]=velocity & 127;
+    indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);    
 
 
+    //Nota 3
+    keynote=64; //E octava 4
+    indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);   
 
-    //Evento note off
-    midi_file[indice++]=deltatime & 0xFF;
-    //midi_file[indice++]=(deltatime>>8)&0xFF;
+    //Nota 4
+    keynote=65; //E octava 4
+    indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);      
 
-    noteoffevent=(128) | canal_midi;
 
-    midi_file[indice++]=noteoffevent;
-    midi_file[indice++]=keynote & 127;
-    midi_file[indice++]=velocity & 127;
+    //Nota 5
+    keynote=67; //G octava 4
+    indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);       
+
+    //Nota 6
+    keynote=69; //A octava 4
+    indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);       
+
+    //Nota 7
+    keynote=71; //B octava 4
+    indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);           
 
 
          FILE *ptr_configfile;
