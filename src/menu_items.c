@@ -14636,7 +14636,7 @@ Dibujo de la nota:
 #define PENTAGRAMA_SOST_ANCHO 8
 #define PENTAGRAMA_SOST_ALTO 11
 
-#define PENTAGRAMA_ANCHO_NOTA_TOTAL (PENTAGRAMA_SOST_ANCHO+PENTAGRAMA_NOTA_ANCHO+4)
+#define PENTAGRAMA_ANCHO_NOTA_TOTAL (PENTAGRAMA_SOST_ANCHO+PENTAGRAMA_NOTA_ANCHO+6)
 
 #define PENTAGRAMA_MARGEN_SOSTENIDO (PENTAGRAMA_SOST_ANCHO+2)
 
@@ -14663,6 +14663,23 @@ char *pentagrama_nota_blanca[PENTAGRAMA_NOTA_ALTO]={
 	" X   X ",
 	"  XXX  "
 };
+
+#define PENTAGRAMA_PUNTILLO_ALTO 2
+#define PENTAGRAMA_PUNTILLO_ANCHO 2
+
+/* char *pentagrama_puntillo[PENTAGRAMA_PUNTILLO_ALTO]={
+   //0123456
+    " X ",  
+	"XXX",
+	" X "
+};*/
+
+char *pentagrama_puntillo[PENTAGRAMA_PUNTILLO_ALTO]={
+   //0123456
+    "XX",  
+	"XX",
+};
+
 
 #define PENTAGRAMA_CLAVE_SOL_ALTO 44
 #define PENTAGRAMA_CLAVE_SOL_ANCHO 30
@@ -14834,6 +14851,26 @@ int aysheet_tipo_nota_tienepalo(enum aysheet_tipo_nota_duracion nota)
 	}
 }
 
+//dice si nota tiene puntillo
+int aysheet_tipo_nota_tienepuntillo(enum aysheet_tipo_nota_duracion nota)
+{
+	switch (nota) {
+		case AYSHEET_NOTA_SEMIFUSA_PUNTO:
+		case AYSHEET_NOTA_FUSA_PUNTO:
+		case AYSHEET_NOTA_SEMICORCHEA_PUNTO:
+		case AYSHEET_NOTA_CORCHEA_PUNTO:
+		case AYSHEET_NOTA_NEGRA_PUNTO:
+		case AYSHEET_NOTA_BLANCA_PUNTO:	
+		case AYSHEET_NOTA_REDONDA_PUNTO:
+			return 1;
+		break;
+
+		default:
+			return 0;
+		break;
+	}
+}
+
 //Devuelve tipo de nota segun su duracion en 1/50 de segundo
 enum aysheet_tipo_nota_duracion menu_aysheet_get_length(int duracion)
 {
@@ -14893,6 +14930,9 @@ enum aysheet_tipo_nota_duracion menu_aysheet_get_length(int duracion)
 void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duracion)
 {
 	
+	//temp
+	duracion=150;
+
 	enum aysheet_tipo_nota_duracion tipo_nota_duracion=menu_aysheet_get_length(duracion);
 
 	char **bitmap_nota=aysheet_tipo_nota_bitmap(tipo_nota_duracion);
@@ -14926,6 +14966,13 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duraci
 			zxvision_putpixel(menu_ay_partitura_overlay_window,xorig,yorig,ESTILO_GUI_TINTA_NORMAL); 
 		}
 	}
+
+	//Si hay que dibujar puntillo
+	if (aysheet_tipo_nota_tienepuntillo(tipo_nota_duracion)) {
+		screen_put_asciibitmap_generic(pentagrama_puntillo,NULL,x+PENTAGRAMA_NOTA_ANCHO+1,y+PENTAGRAMA_NOTA_ALTO/2,
+				PENTAGRAMA_PUNTILLO_ANCHO,PENTAGRAMA_PUNTILLO_ALTO,0,menu_ay_partitura_putpixel_nota);
+	}
+
 }
 
 void meny_ay_partitura_dibujar_clavesol(int x,int y)
@@ -14980,7 +15027,7 @@ void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
 
 	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito,50);
 
-	//Si hay que poner palito (en do (0), la (12), si(12))
+	//Si hay que poner palito de linea pentagrama (en do (0), la (12), si(12))
 	if (nota==0 || nota==12 || nota==13) {
 		int ypalito;
 		if (nota==0 || nota==12) ypalito=ynota+PENTAGRAMA_NOTA_OFFSET_PALITO;
