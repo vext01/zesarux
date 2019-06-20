@@ -667,6 +667,14 @@ struct s_estilos_gui {
 	char boton_cerrar; //caracter de cerrado de ventana
 
 	int color_aviso; //caracter de aviso de volumen alto, cpu alto, etc. normalmente rojo
+
+	//franjas de color normales con brillo
+	int *franjas_brillo;
+
+	//franjas de color oscuras
+	int *franjas_oscuras;
+
+
 };
 
 typedef struct s_estilos_gui estilos_gui;
@@ -726,6 +734,12 @@ extern int menu_ext_desktop_fill_solid_color;
 #define ESTILO_GUI_BOTON_CERRAR (definiciones_estilos_gui[estilo_gui_activo].boton_cerrar)
 
 #define ESTILO_GUI_COLOR_AVISO (definiciones_estilos_gui[estilo_gui_activo].color_aviso)
+
+#define ESTILO_GUI_FRANJAS_NORMALES (definiciones_estilos_gui[estilo_gui_activo].franjas_brillo)
+
+#define ESTILO_GUI_FRANJAS_OSCURAS (definiciones_estilos_gui[estilo_gui_activo].franjas_oscuras)
+
+
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 5

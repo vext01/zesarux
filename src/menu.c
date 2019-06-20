@@ -435,6 +435,15 @@ int menu_escribe_linea_startx=1;
 //Si se desactiva parseo caracteres especiales como ~~ o ^^ etc
 z80_bit menu_disable_special_chars={0};
 
+//Colores franja speccy
+int colores_franja_speccy_brillo[]={2+8,6+8,4+8,5+8};
+int colores_franja_speccy_oscuro[]={2,6,4,5};
+
+//Colores franja cpc
+int colores_franja_cpc_brillo[]={2+8,4+8,1+8,0};
+int colores_franja_cpc_oscuro[]={2,4,1,0};
+
+
 int estilo_gui_activo=0;
 
 estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
@@ -448,7 +457,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 	{"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
@@ -460,7 +470,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		0,               //Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
         {"ZX80/81",7+8,0,
@@ -473,7 +484,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,               //Color para zona no usada en visualmem
                 7,0,		//Color para opcion marcada
 		'.',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
@@ -489,7 +501,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 4,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
 		'*',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
 
@@ -503,7 +516,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
 		'*',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
                 },
 
         {"Sam",7+8,0,
@@ -516,7 +530,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
 		'#',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
 						{"ManSoftware",7+8,0,
@@ -529,7 +544,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							7,		//Color para zona no usada en visualmem
 							3,7+8,		//Color para opcion marcada
 							'#',
-		3+8 //color de aviso, en este tema, magenta con brillo
+		3+8, //color de aviso, en este tema, magenta con brillo
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 							},
 
 
@@ -543,7 +559,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					7,		//Color para zona no usada en visualmem
 					2,7+8,		//Color para opcion marcada
 					'*',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 								},
 
 	{"RetroMac",7,0,
@@ -556,7 +573,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7,		//Color para zona no usada en visualmem
 		2,7,		//Color para opcion marcada
 		'.',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
 
@@ -570,7 +588,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,               //Color para zona no usada en visualmem
                 7,0,		//Color para opcion marcada
 		'X',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
         {"CleanInverse",0,7,
@@ -583,7 +602,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,               //Color para zona no usada en visualmem
                 0,7,		//Color para opcion marcada
 		'X',
-		2 //color de aviso
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
 
@@ -3830,7 +3850,9 @@ void menu_dibuja_ventana_franja_arcoiris_oscuro(int x, int y, int ancho,int indi
 
 	if (!ventana_tipo_activa) return;
 
-	int cr[]={2,6,4,5};
+	//int cr[]={2,6,4,5};
+	int *cr;
+	cr=ESTILO_GUI_FRANJAS_OSCURAS;
 
 	//int indice=4-franjas;
 
@@ -3868,7 +3890,9 @@ void menu_dibuja_ventana_franja_arcoiris_trozo(int x, int y, int ancho,int franj
 
 	if (!ventana_tipo_activa) return;
 
-	int cr[]={2+8,6+8,4+8,5+8};
+	//int cr[]={2+8,6+8,4+8,5+8};
+	int *cr;
+	cr=ESTILO_GUI_FRANJAS_NORMALES;
 
 	if (ESTILO_GUI_MUESTRA_RAINBOW) {
 		//en el caso de drivers completos, hacerlo real
