@@ -439,9 +439,9 @@ z80_bit menu_disable_special_chars={0};
 int colores_franja_speccy_brillo[]={2+8,6+8,4+8,5+8};
 int colores_franja_speccy_oscuro[]={2,6,4,5};
 
-//Colores franja cpc
-int colores_franja_cpc_brillo[]={2+8,4+8,1+8,0};
-int colores_franja_cpc_oscuro[]={2,4,1,0};
+//Colores franja cpc. Ultima amarillo, porque son 3 barras y queremos que se confunda con el fondo
+int colores_franja_cpc_brillo[]={2+8,4+8,1+8,6+8};
+int colores_franja_cpc_oscuro[]={2,4,1,6+8};
 
 
 int estilo_gui_activo=0;
@@ -3851,13 +3851,26 @@ void menu_dibuja_ventana_franja_arcoiris_oscuro(int x, int y, int ancho,int indi
 	if (!ventana_tipo_activa) return;
 
 	//int cr[]={2,6,4,5};
-	int *cr;
-	cr=ESTILO_GUI_FRANJAS_OSCURAS;
+
+	int cr[4]; 
+	//Copiar del estilo actual aqui, pues internamente lo modificamos
+	int i;
+	int *temp_ptr;
+	temp_ptr=ESTILO_GUI_FRANJAS_OSCURAS;
+	for (i=0;i<4;i++) {
+		cr[i]=temp_ptr[i];
+	}
+	//int *cr;
+	//cr=ESTILO_GUI_FRANJAS_OSCURAS;
 
 	//int indice=4-franjas;
 
 	if (indice>=0 && indice<=3) {
-		cr[indice]+=8;
+		//cr[indice]+=8;
+		//Coger color de las normales brillantes
+		int *temp_ptr_brillo;
+		temp_ptr_brillo=ESTILO_GUI_FRANJAS_NORMALES;
+		cr[indice]=temp_ptr_brillo[indice];
 	}
 
 
