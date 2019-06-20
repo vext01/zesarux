@@ -21,7 +21,7 @@ Allow text adventure keyboard also on CPC
 Added support for more cyrillic characters on menu
 Added Derby+ and Derby++ roms
 Added Chloe MMU to ZX-Uno
-Added AY Sheet
+Added AY Sheet: showing a sheet with the notes being played
 Added RetroMac Gui Style
 
 Improved breakpoint parser: 
