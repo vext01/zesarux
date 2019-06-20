@@ -14775,6 +14775,9 @@ zxvision_window *menu_ay_partitura_overlay_window;
 //Chip, canal, columna, string de 4
 char menu_ay_partitura_current_state[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS][4];
 
+//Chip, canal, columna, duracion de cada nota
+int menu_ay_partitura_current_state_duraciones[MAX_AY_CHIPS][3][MENU_AY_PARTITURA_MAX_COLUMNS];
+
 //Nota anterior de la ultima columna
 //char menu_ay_partitura_last_state[MAX_AY_CHIPS][3][4];
 
@@ -15049,7 +15052,7 @@ void menu_ay_partitura_lineas_pentagrama(int x,int y,int ancho,int separacion_al
 }
 
 //nota puede ser:  do, re, mi, fa, sol, la, si, do, re... si (0...13)
-void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
+void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido,int duracion)
 {
 	//origen y=fa (10)
 
@@ -15066,7 +15069,7 @@ void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
 	if (nota>=6) incremento_palito=+1; //A partir del Si , palito para abajo
 
 
-	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito,50);
+	menu_ay_partitura_dibujar_nota(x,ynota,incremento_palito,duracion);
 
 	//Si hay que poner palito de linea pentagrama (en do (0), la (12), si(12))
 	if (nota==0 || nota==12 || nota==13) {
@@ -15087,7 +15090,7 @@ void menu_ay_partitura_nota_pentagrama(int x,int y,int nota,int si_sostenido)
 }
 
 //nota puede ser:  do, re, mi, fa, sol, la, si, do, re... si (0...13)
-void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int nota,int si_sostenido)
+void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int nota,int si_sostenido,int duracion)
 {
 	int ancho_columna=PENTAGRAMA_ANCHO_NOTA_TOTAL;
 
@@ -15099,7 +15102,7 @@ void menu_ay_partitura_nota_pentagrama_pos(int xorig,int yorig,int columna,int n
 	//darle margen de la clave de sol
 	posx +=PENTAGRAMA_CLAVE_SOL_ANCHO;
 
-	menu_ay_partitura_nota_pentagrama(posx,yorig,nota,si_sostenido);
+	menu_ay_partitura_nota_pentagrama(posx,yorig,nota,si_sostenido,duracion);
 }
 
 
@@ -15145,6 +15148,7 @@ void menu_ay_partitura_scroll(int chip)
 		int canal;
 		for (canal=0;canal<3;canal++) {
 			strcpy(menu_ay_partitura_current_state[chip][canal][i],menu_ay_partitura_current_state[chip][canal][i+1]);
+			menu_ay_partitura_current_state_duraciones[chip][canal][i]=menu_ay_partitura_current_state_duraciones[chip][canal][i+1];
 		}
 	}
 }
@@ -15158,6 +15162,7 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 	int x=0;
 	int y=PENTAGRAMA_ESPACIO_LINEAS*2;
+	int duracion;
 
 
 	y +=canal*(PENTAGRAMA_TOTAL_ALTO+1); //+1 para dejar 1 pixelillo de margen
@@ -15197,7 +15202,9 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 			//Si octava impar, va hacia arriba
 			if (octava & 1) nota_final +=7;
 
-			menu_ay_partitura_nota_pentagrama_pos(x+ancho_nota,y,i,nota_final,sostenido);
+			duracion=menu_ay_partitura_current_state_duraciones[chip][canal][i];
+
+			menu_ay_partitura_nota_pentagrama_pos(x+ancho_nota,y,i,nota_final,sostenido,duracion);
 		}
 	}
 
@@ -15293,7 +15300,7 @@ void menu_ay_partitura_init_state(void)
 {
 			
 
-		//Inicializar estado con string ""
+		//Inicializar estado con string "" y duraciones 0
 
 		
 
@@ -15305,7 +15312,7 @@ void menu_ay_partitura_init_state(void)
 
 				for (col=0;col<MENU_AY_PARTITURA_MAX_COLUMNS;col++) {
 					menu_ay_partitura_current_state[chip][canal][col][0]=0;
-
+					menu_ay_partitura_current_state_duraciones[chip][canal][col]=0;
 
 				}
 			}
