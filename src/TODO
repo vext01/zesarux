@@ -225,6 +225,7 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 *que grabe notas en archivo
 *que muestre los otros chips. ya está preparado el array para varios chips
 *para el beeper tambien
+*ideal para probar duraciones: golden axe
 
 -temperatura cpu en mac
 https://github.com/lavoiesl/osx-cpu-temp
