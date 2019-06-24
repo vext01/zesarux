@@ -2322,10 +2322,157 @@ int mid_nota_sonando_duracion[3]={
 	0,0,0
 };
 
+//Puntero a inicio pista de cada canal
+int mid_inicio_pista[3];
+
+//Indice actual en cada buffer destino
+int mid_indices_actuales[3];
+
+
+//Silencios acumulados en cada canal
+int mid_silencios_acumulados[3]={
+	0,0,0
+};
+
+z80_byte mid_memoria_export[3][16384];
+
+int inicializado_mid=0;
+
+
+void mid_export_put_note(int canal,char *nota,int duracion,int division)
+{
+	//Si era silencio
+	if (nota[0]==0) {
+		//Acumular silencio para siguiente nota y volver
+		mid_silencios_acumulados[canal]=duracion;
+		return;
+	}
+
+
+
+
+	//Meter nota
+
+	//Leer indice actual
+	int indice=mid_indices_actuales[canal];
+
+
+	//Obtener nota
+	int nota_numero=get_mid_number_note(nota);
+
+	if (nota_numero<0) {
+		//Nota invalida. no se deberia llegar aqui nunca
+		printf ("Invalid note %s\n",nota);
+		return;
+	}
+
+	indice +=mid_mete_nota(&mid_memoria_export[canal][indice],mid_silencios_acumulados[canal],division,canal,nota_numero,0x40);
+
+
+	//Ya no hay silencio acumulado
+	mid_silencios_acumulados[canal]=0;	
+
+
+	//Guardar indice 
+	mid_indices_actuales[canal]=indice;	
+	
+}
+
+//Cierra pistas y graba a disco
+void mid_flush_file(void)
+{
+	//Cerrar pistas
+	int canal;
+
+	for (canal=0;canal<3;canal++) {
+		int indice=mid_indices_actuales[canal];			
+//Final de pista
+	indice +=mid_mete_evento_final_pista(&mid_memoria_export[canal][indice]);
+
+	int inicio_pista=mid_inicio_pista[canal];
+
+	//Indicar longitud de pista
+	int longitud_pista=indice-inicio_pista;
+
+	mid_mete_longitud_pista(&mid_memoria_export[canal][inicio_pista],longitud_pista);	
+
+	//Guardar indice 
+	mid_indices_actuales[canal]=indice;			
+
+	}
+
+
+	//Generar cabecera
+	z80_byte cabecera_midi[256];
+
+	//Escribir las 3 pistas
+	int pistas=3;
+
+	//Cabecera archivo
+	int division=50;
+	int longitud_cabecera=mid_mete_cabecera(cabecera_midi,pistas,division);
+
+	//Abrir archivo. Grabar cabecera y grabar las 3 pistas
+
+
+	//Grabar a disco
+FILE *ptr_midfile;
+
+     ptr_midfile=fopen("salida.mid","wb");
+     if (!ptr_midfile) {
+                        printf("can not write midi file\n");
+                        return;
+      }
+
+    fwrite(cabecera_midi, 1, longitud_cabecera, ptr_midfile);
+
+	for (canal=0;canal<3;canal++) {
+		int longitud_pista=mid_indices_actuales[canal];
+		printf ("escribiendo canal %d longitud %d\n",canal,longitud_pista);
+		fwrite(mid_memoria_export[canal], 1, longitud_pista, ptr_midfile);
+	}
+
+
+      fclose(ptr_midfile);		
+
+}
 
 //Evento de frame
 void mid_frame_event(void)
 {
+
+	int division=50;
+
+		//temporal. inicializar memoria mid
+		if (!inicializado_mid) {
+			inicializado_mid=1;
+			int canal;
+			for (canal=0;canal<3;canal++) {
+
+
+				//Metemos cabecera bloque
+				int indice=0;
+
+
+				int pistas=3;
+
+				//Cabecera archivo
+				//indice +=mid_mete_cabecera(&mid_memoria_export[canal][indice],pistas,division);
+
+
+
+				//Inicio pista 
+				mid_inicio_pista[canal]=indice; //TODO: esto es 0 siempre
+
+				indice +=mid_mete_inicio_pista(&mid_memoria_export[canal][indice],division);
+				mid_indices_actuales[canal]=indice;
+
+
+
+			}
+		}
+
+
 		int chip;
 
 
@@ -2360,11 +2507,19 @@ void mid_frame_event(void)
 				//Comparar si igual o anterior
 				if (!strcasecmp(nota,mid_nota_sonando[canal])) {
 					mid_nota_sonando_duracion[canal]++;
-					printf ("nota igual [%s] duracion [%d]",
-					nota,mid_nota_sonando_duracion[canal]);
+					//printf ("nota igual [%s] duracion [%d]\n",
+					//nota,mid_nota_sonando_duracion[canal]);
 				}
 				else {
-					printf ("nota diferente. nueva [%s]\n",nota);
+					printf ("nota diferente canal %d. anterior [%s] duracion %d\n",canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal]);
+
+
+					printf ("nota diferente canal %d. nueva [%s]\n",canal,nota);
+
+					//Metemos nota
+					mid_export_put_note(canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal],division);
+
+
 					mid_nota_sonando_duracion[canal]=0;
 					strcpy(mid_nota_sonando[canal],nota);
 				}
