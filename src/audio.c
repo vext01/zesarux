@@ -2344,13 +2344,9 @@ int mid_silencios_acumulados[MAX_AY_CHIPS*3];
 
 int mid_parm_division=50;
 
-//z80_byte mid_memoria_export[3][MAX_MID_EXPORT_BUFFER];
 
 z80_byte *mid_memoria_export[MAX_AY_CHIPS*3];//3 canales
 
-//int inicializado_mid=0;
-
-//int temp_desactivado_mid=1;
 
 z80_bit mid_is_recording={0};
 
@@ -2600,24 +2596,27 @@ void mid_frame_event(void)
 					if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) nota[0]=0;
 				}
 
+				int canal_final=3*chip+canal;
+
 				//Comparar si igual o anterior
-				if (!strcasecmp(nota,mid_nota_sonando[canal])) {
-					mid_nota_sonando_duracion[canal]++;
+				if (!strcasecmp(nota,mid_nota_sonando[canal_final])) {
+					mid_nota_sonando_duracion[canal_final]++;
 					//printf ("nota igual [%s] duracion [%d]\n",
 					//nota,mid_nota_sonando_duracion[canal]);
 				}
 				else {
-					printf ("nota diferente canal %d. anterior [%s] duracion %d\n",canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal]);
+					
+					printf ("nota diferente canal %d. anterior [%s] duracion %d\n",canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final]);
 
 
-					printf ("nota diferente canal %d. nueva [%s]\n",canal,nota);
+					printf ("nota diferente canal %d. nueva [%s]\n",canal_final,nota);
 
 					//Metemos nota
-					mid_export_put_note(3*chip+canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal],mid_parm_division);
+					mid_export_put_note(canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final],mid_parm_division);
 
 
-					mid_nota_sonando_duracion[canal]=1;
-					strcpy(mid_nota_sonando[canal],nota);
+					mid_nota_sonando_duracion[canal_final]=1;
+					strcpy(mid_nota_sonando[canal_final],nota);
 				}
 			}
 			
