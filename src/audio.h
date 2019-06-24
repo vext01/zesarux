@@ -160,6 +160,10 @@ extern int mid_mete_inicio_pista(z80_byte *mem,int division);
 extern int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_midi,int keynote,int velocity);
 extern void mid_frame_event(void);
 
+extern z80_bit mid_is_recording;
+extern z80_bit mid_is_paused;
+extern char mid_export_file[];
+
 extern char audio_valor_enviar_sonido;
 
 extern char audio_valor_enviar_sonido_izquierdo;

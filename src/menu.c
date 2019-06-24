@@ -10822,6 +10822,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 
 					
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_record_mid,menu_cond_ay_chip,"AY Chip to MID");
 
 
                 //menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

@@ -2354,9 +2354,26 @@ int mid_parm_division=50;
 
 z80_byte *mid_memoria_export[MAX_AY_CHIPS*3];//3 canales
 
-int inicializado_mid=0;
+//int inicializado_mid=0;
 
-int temp_desactivado_mid=1;
+//int temp_desactivado_mid=1;
+
+z80_bit mid_is_recording={0};
+
+z80_bit mid_is_paused={0};
+
+char mid_export_file[PATH_MAX];
+
+void mid_init_export(void)
+{
+	//Poner todos bufferes a null para decir que no estan asignados
+	int i;
+
+	for (i=0;i<MAX_AY_CHIPS*3;i++) {
+		mid_memoria_export[i]=NULL;
+	}
+}
+
 
 
 void mid_initialize_export(void)
@@ -2377,9 +2394,14 @@ void mid_initialize_export(void)
 				//Cabecera archivo
 				//indice +=mid_mete_cabecera(&mid_memoria_export[canal][indice],pistas,division);
 
-				mid_memoria_export[canal]=malloc(MAX_MID_EXPORT_BUFFER);
+				//Si esta NULL, asignar
+				if (mid_memoria_export[canal]==NULL) {
 
-				if (mid_memoria_export[canal]==NULL) cpu_panic("Can not allocate mid export buffer");
+					mid_memoria_export[canal]=malloc(MAX_MID_EXPORT_BUFFER);
+
+					if (mid_memoria_export[canal]==NULL) cpu_panic("Can not allocate mid export buffer");
+
+				}
 
 
 				//Inicio pista 
@@ -2389,6 +2411,13 @@ void mid_initialize_export(void)
 				mid_indices_actuales[canal]=indice;
 			}
 
+}
+
+int mid_has_been_initialized(void)
+{
+	//Solo con que el primer buffer apunte a algun sitio
+	if (mid_memoria_export[0]!=NULL) return 1;
+	else return 0;
 }
 
 
@@ -2437,7 +2466,7 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 void mid_flush_file(void)
 {
 
-	if (temp_desactivado_mid) return ;
+	//if (temp_desactivado_mid) return ;
 
 	//Cerrar pistas
 	int canal;
@@ -2476,7 +2505,7 @@ void mid_flush_file(void)
 	//Grabar a disco
 FILE *ptr_midfile;
 
-     ptr_midfile=fopen("salida.mid","wb");
+     ptr_midfile=fopen(mid_export_file,"wb");
      if (!ptr_midfile) {
                         printf("can not write midi file\n");
                         return;
@@ -2499,15 +2528,16 @@ FILE *ptr_midfile;
 void mid_frame_event(void)
 {
 
-	if (temp_desactivado_mid) return;	
+	if (mid_is_recording.v==1 && mid_is_paused.v==0) {
+
 
 		//temporal. inicializar memoria mid
-		if (!inicializado_mid) {
+		/* if (!inicializado_mid) {
 			inicializado_mid=1;
 			mid_initialize_export();
 			
 
-		}
+		}*/
 
 
 		int chip;
@@ -2563,6 +2593,8 @@ void mid_frame_event(void)
 			}
 			
 		}
+
+	}
 
 
 	

@@ -163,6 +163,7 @@ int daad_tipo_mensaje_opcion_seleccionada=0;
 int watches_opcion_seleccionada=0;
 int breakpoints_opcion_seleccionada=0;
 int menu_watches_opcion_seleccionada=0;
+int record_mid_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -15424,9 +15425,7 @@ zxvision_window zxvision_window_ay_partitura;
 void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 {
 
-	//temp
-	printf ("!!!!!!QUITAR mid_flush_file!!!!!!\n");
-	mid_flush_file();
+
 
         menu_espera_no_tecla();
 
@@ -15503,3 +15502,104 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 }
 
+
+
+
+	//temp
+	//printf ("!!!!!!QUITAR mid_flush_file!!!!!!\n");
+	//mid_flush_file();
+
+
+void menu_record_mid_start(MENU_ITEM_PARAMETERS)
+{
+	mid_initialize_export();
+}
+
+
+
+void menu_record_mid_stop(MENU_ITEM_PARAMETERS)
+{
+	mid_is_recording.v=0;
+}
+
+
+void menu_record_mid_save(MENU_ITEM_PARAMETERS)
+{
+        char file_save[PATH_MAX];
+
+        char *filtros[2];
+
+        filtros[0]="mid";
+    filtros[1]=0;
+
+    int ret;
+
+        ret=menu_filesel("Mid file",filtros,file_save);
+
+        if (ret==1) {
+
+                //Ver si archivo existe y preguntar
+                if (si_existe_archivo(file_save)) {
+
+                        if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+
+       			}
+
+			strcpy(mid_export_file,file_save);
+			mid_flush_file();
+
+	        menu_generic_message("Save MID","OK File saved");
+
+ 
+        }
+}
+
+void menu_record_mid(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_record_mid;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+        do {
+
+                    menu_add_item_menu_inicial(&array_menu_record_mid,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+					if (mid_is_recording.v==0) {
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_start,menu_cond_ay_chip,"Start Recording");	
+					}
+
+					else {
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_chip,"Stop Recording");	
+					}
+
+					if (mid_has_been_initialized()) {
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_chip,"Save to Disk");
+					}
+
+					
+		
+					
+
+
+
+                menu_add_item_menu(array_menu_record_mid,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                //menu_add_item_menu(array_menu_record_mid,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_record_mid);
+
+                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"Record MID" );
+
+                
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+	                //llamamos por valor de funcion
+        	        if (item_seleccionado.menu_funcion!=NULL) {
+                	        //printf ("actuamos por funcion\n");
+	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+        	        }
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+}
