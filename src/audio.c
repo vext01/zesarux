@@ -2613,7 +2613,7 @@ void mid_frame_event(void)
 					printf ("nota diferente canal %d. nueva [%s]\n",canal,nota);
 
 					//Metemos nota
-					mid_export_put_note(canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal],mid_parm_division);
+					mid_export_put_note(3*chip+canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal],mid_parm_division);
 
 
 					mid_nota_sonando_duracion[canal]=1;
