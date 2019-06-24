@@ -15512,7 +15512,13 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 void menu_record_mid_start(MENU_ITEM_PARAMETERS)
 {
+	
+	if (mid_has_been_initialized()) {
+		if (!menu_confirm_yesno_texto("Will empty buffer","Sure?")) return;
+	}
+
 	mid_initialize_export();
+	mid_is_recording.v=1;
 }
 
 
@@ -15522,6 +15528,11 @@ void menu_record_mid_stop(MENU_ITEM_PARAMETERS)
 	mid_is_recording.v=0;
 }
 
+
+void menu_record_mid_pause_unpause(MENU_ITEM_PARAMETERS)
+{
+	mid_is_paused.v ^=0;
+}
 
 void menu_record_mid_save(MENU_ITEM_PARAMETERS)
 {
@@ -15571,6 +15582,14 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 					else {
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_chip,"Stop Recording");	
 					}
+
+					if (mid_is_paused.v==0) {
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Pause Recording");
+					}
+
+					else {
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Resume Recording");
+					}					
 
 					if (mid_has_been_initialized()) {
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_chip,"Save to Disk");
