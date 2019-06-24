@@ -2356,6 +2356,8 @@ z80_byte *mid_memoria_export[MAX_AY_CHIPS*3];//3 canales
 
 int inicializado_mid=0;
 
+int temp_desactivado_mid=1;
+
 
 void mid_initialize_export(void)
 {
@@ -2434,6 +2436,9 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 //Cierra pistas y graba a disco
 void mid_flush_file(void)
 {
+
+	if (temp_desactivado_mid) return ;
+
 	//Cerrar pistas
 	int canal;
 
@@ -2494,7 +2499,7 @@ FILE *ptr_midfile;
 void mid_frame_event(void)
 {
 
-	
+	if (temp_desactivado_mid) return;	
 
 		//temporal. inicializar memoria mid
 		if (!inicializado_mid) {
