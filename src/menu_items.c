@@ -15531,7 +15531,7 @@ void menu_record_mid_stop(MENU_ITEM_PARAMETERS)
 
 void menu_record_mid_pause_unpause(MENU_ITEM_PARAMETERS)
 {
-	mid_is_paused.v ^=0;
+	mid_is_paused.v ^=1;
 }
 
 void menu_record_mid_save(MENU_ITEM_PARAMETERS)
@@ -15583,13 +15583,16 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_chip,"Stop Recording");	
 					}
 
-					if (mid_is_paused.v==0) {
-						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Pause Recording");
-					}
+					if (mid_is_recording.v) {
 
-					else {
-						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Resume Recording");
-					}					
+						if (mid_is_paused.v==0) {
+							menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Pause Recording");
+						}
+
+						else {
+							menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Resume Recording");
+						}					
+					}
 
 					if (mid_has_been_initialized()) {
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_chip,"Save to Disk");

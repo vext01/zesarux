@@ -2346,7 +2346,8 @@ int mid_silencios_acumulados[3]={
 };
 
 //Para cuantas notas da esto aprox?
-#define MAX_MID_EXPORT_BUFFER 1000000
+//#define MAX_MID_EXPORT_BUFFER 1000000
+#define MAX_MID_EXPORT_BUFFER 1024
 
 int mid_parm_division=50;
 
@@ -2437,6 +2438,13 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 
 	//Leer indice actual
 	int indice=mid_indices_actuales[canal];
+
+	//Comprobar si se acerca al final del buffer, en ese caso error y dejar de grabar
+	if (indice>=MAX_MID_EXPORT_BUFFER-128) {
+		mid_is_recording.v=0;
+		debug_printf (VERBOSE_ERR,"Error exporting to MID. Memory buffer full. Stopping recording");
+		return;
+	}
 
 
 	//Obtener nota
