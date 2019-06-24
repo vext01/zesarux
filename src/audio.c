@@ -2324,26 +2324,21 @@ int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_mid
 
 
 //Notas anteriores sonando, 3 canales
-char mid_nota_sonando[3][4]={
-	"","",""
-};
+char mid_nota_sonando[MAX_AY_CHIPS*3][4];
 
 
-int mid_nota_sonando_duracion[3]={
-	0,0,0
-};
+int mid_nota_sonando_duracion[MAX_AY_CHIPS*3];
+
 
 //Puntero a inicio pista de cada canal
-int mid_inicio_pista[3];
+int mid_inicio_pista[MAX_AY_CHIPS*3];
 
 //Indice actual en cada buffer destino
-int mid_indices_actuales[3];
+int mid_indices_actuales[MAX_AY_CHIPS*3];
 
 
 //Silencios acumulados en cada canal
-int mid_silencios_acumulados[3]={
-	0,0,0
-};
+int mid_silencios_acumulados[MAX_AY_CHIPS*3];
 
 
 
@@ -2362,6 +2357,8 @@ z80_bit mid_is_recording={0};
 z80_bit mid_is_paused={0};
 
 char mid_export_file[PATH_MAX];
+
+int mid_chips_al_start=1;
 
 void mid_init_export(void)
 {
@@ -2383,7 +2380,7 @@ int mid_max_buffer(void)
 
 	int total_canales;
 
-	total_canales=3; //temp
+	total_canales=3*mid_chips_al_start; 
 
 	for (i=0;i<total_canales;i++) {
 		if (mid_indices_actuales[i]>maximo) maximo=mid_indices_actuales[i];
@@ -2397,7 +2394,9 @@ int mid_max_buffer(void)
 void mid_initialize_export(void)
 {
 
-	int total_pistas=3;
+	mid_chips_al_start=ay_retorna_numero_chips();
+
+	int total_pistas=3*mid_chips_al_start;
 
 			int canal;
 			for (canal=0;canal<total_pistas;canal++) {
@@ -2427,6 +2426,12 @@ void mid_initialize_export(void)
 
 				indice +=mid_mete_inicio_pista(&mid_memoria_export[canal][indice],mid_parm_division);
 				mid_indices_actuales[canal]=indice;
+
+				mid_silencios_acumulados[canal]=0;
+
+				mid_nota_sonando[canal][0]=0;
+
+				mid_nota_sonando_duracion[canal]=0;
 			}
 
 }
@@ -2496,7 +2501,7 @@ void mid_flush_file(void)
 	//Cerrar pistas
 	int canal;
 
-	for (canal=0;canal<3;canal++) {
+	for (canal=0;canal<3*mid_chips_al_start;canal++) {
 		int indice=mid_indices_actuales[canal];			
 //Final de pista
 	indice +=mid_mete_evento_final_pista(&mid_memoria_export[canal][indice]);
@@ -2518,7 +2523,7 @@ void mid_flush_file(void)
 	z80_byte cabecera_midi[256];
 
 	//Escribir las 3 pistas
-	int pistas=3;
+	int pistas=3*mid_chips_al_start;
 
 	//Cabecera archivo
 	int division=50;
@@ -2538,7 +2543,7 @@ FILE *ptr_midfile;
 
     fwrite(cabecera_midi, 1, longitud_cabecera, ptr_midfile);
 
-	for (canal=0;canal<3;canal++) {
+	for (canal=0;canal<pistas;canal++) {
 		int longitud_pista=mid_indices_actuales[canal];
 		printf ("escribiendo canal %d longitud %d\n",canal,longitud_pista);
 		fwrite(mid_memoria_export[canal], 1, longitud_pista, ptr_midfile);
@@ -2571,8 +2576,7 @@ void mid_frame_event(void)
 			char nota[4];
 
 
-		//temp 1 chip
-		for (chip=0;chip<1;chip++) {
+		for (chip=0;chip<mid_chips_al_start;chip++) {
 			int canal;
 			for (canal=0;canal<3;canal++) {
 

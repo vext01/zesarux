@@ -15593,6 +15593,7 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						printf ("%d %d\n",max_buffer,max_buffer_perc);
 
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,NULL,NULL,"Buffer used: %d%%",max_buffer_perc);
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,NULL,NULL,"Voices: %d",3*mid_chips_al_start);
 
 						if (mid_is_paused.v==0) {
 							menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Pause Recording");

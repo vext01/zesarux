@@ -166,6 +166,7 @@ extern void mid_frame_event(void);
 extern z80_bit mid_is_recording;
 extern z80_bit mid_is_paused;
 extern char mid_export_file[];
+extern int mid_chips_al_start;
 
 extern char audio_valor_enviar_sonido;
 
