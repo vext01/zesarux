@@ -907,6 +907,29 @@ void codetests_main(int main_argc,char *main_argv[])
 	printf ("\nRunning expression parser tests\n");
 	codetests_expression_parser();
 
+	//Prueba mid
+	z80_byte midi_buffer[2048];
+
+	//Metemos cabecera bloque
+	int indice=0;
+
+	int division=50;
+	int pistas=1;
+
+	//Cabecera archivo
+	indice +=mid_mete_cabecera(&midi_buffer[indice],pistas,division);
+
+	//Inicio pista
+	int inicio_pista=indice;
+
+	indice +=mid_mete_inicio_pista(&midi_buffer[indice],division);
+
+
+	/*printf ("Note: %d\n",get_mid_number_note("C0"));
+	printf ("Note: %d\n",get_mid_number_note("G9"));
+	printf ("Note: %d\n",get_mid_number_note("KK"));
+	printf ("Note: %d\n",get_mid_number_note(""));*/
+
 	//printf ("\nRunning assembler tests\n");
 	//codetests_assembler();
 

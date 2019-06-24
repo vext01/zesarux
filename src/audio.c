@@ -986,6 +986,24 @@ nota_musical tabla_notas_musicales[MAX_NOTAS_MUSICALES]={
 {"B9",15804}
 };
 
+//convertir nombre nota en formato string a formato mid
+//Si no coincide, retornar -1
+int get_mid_number_note(char *str)
+{
+	//nota_musical tabla_notas_musicales[MAX_NOTAS_MUSICALES]={
+	const int offset_inicial=12;  //C0=12
+
+	//cadena vacia, -1
+	if (str[0]==0) return -1;
+
+	int i;
+	for (i=0;i<MAX_NOTAS_MUSICALES;i++) {
+		if (!strcasecmp(str,tabla_notas_musicales[i].nombre)) return i+offset_inicial;
+	}
+
+	return -1;
+}
+
 //devuelve nombre nota, segun su frecuencia se aproxime lo maximo
 char *get_note_name(int frecuencia)
 {
@@ -2096,4 +2114,194 @@ void audiodac_send_sample_value(z80_byte value)
 {
 	audiodac_last_value_data=value;
 	silence_detection_counter=0;
+}
+
+
+//Funciones midi
+
+//Convierte valor entero en variable length. Se devuelve en el orden tal cual tiene que ir en destino
+//Devuelve longitud en bytes
+int util_int_variable_length(unsigned int valor,z80_byte *destino)
+{
+
+    //Controlar rango maximo
+    if (valor>0x0FFFFFFF) valor=0x0FFFFFFF;
+
+    //Inicializarlo a cero
+    //destino[0]=destino[1]=destino[2]=destino[3]=0;
+    int longitud=1;
+
+    //Lo metemos temporalmente ahi
+    unsigned int final=0;
+
+    final=valor & 0x7F;
+
+    do {
+        valor=valor>>7;
+        if (valor) {
+            final=final<<8;
+            final |=(valor & 0x7f);
+            final |=128;
+            longitud++;
+        }
+    } while (valor);
+
+    //Y lo metemos en buffer destino
+    int i;
+    for (i=0;i<longitud;i++) { //maximo 4 bytes, por si acaso
+        z80_byte valor_leer=final & 0xFF;
+        final=final>>8;
+
+        destino[i]=valor_leer;
+    }
+
+    return longitud;
+
+
+}
+
+
+
+
+//Meter cabecera archivo mid. Retorna longitud en bytes
+int mid_mete_cabecera(z80_byte *midi_file,int pistas,int division)
+{
+
+    //cabecera
+    memcpy(midi_file,"MThd",4);
+
+    
+
+    //Valor 6
+    midi_file[4]=0;
+    midi_file[5]=0;
+    midi_file[6]=0;
+    midi_file[7]=6;
+
+    //Formato
+    midi_file[8]=0;
+    midi_file[9]=1;
+
+    //Pistas. This is a 16-bit binary number, MSB first.
+    midi_file[10]=(pistas>>8) & 0xFF;
+    midi_file[11]=pistas & 0xFF;   
+
+ 
+    //Division. Ticks per quarter note (negra?)
+    //int division=50; //96; //lo que dura la negra. hacemos 50 para 1/50s
+
+    midi_file[12]=0x00;
+    midi_file[13]=division;   
+
+	return 14;
+}
+
+//Pone inicio pista. Retorna longitud bloque
+//Posteriormente habra que poner longitud del bloque en (mem+4)
+int mid_mete_inicio_pista(z80_byte *mem,int division)
+{
+
+      //Pista
+    memcpy(mem,"MTrk",4);
+    int indice=4;
+
+    //int notas=7;
+
+    //longitud eventos. meter cuando se finalice pista
+    indice +=4;
+
+
+    //Time signature
+    //4 bytes; 4/4 time; 24 MIDI clocks/click, 8 32nd notes/ 24 MIDI clocks (24 MIDI clocks = 1 crotchet = 1 beat)
+    //El 0 del principio es el deltatime
+    unsigned char midi_clocks=0x18; //24=96/4
+
+    midi_clocks=division/4;
+
+    unsigned char midi_time_signature[]={0x00,0xFF,0x58,0x04,0x04,0x02,midi_clocks,0x08};
+    memcpy(&mem[indice],midi_time_signature,8);
+    indice +=8;
+
+    //Tempo
+    //3 bytes: 500,000 usec/ quarter note = 120 beats/minute
+    //El 0 del principio es el deltatime
+    unsigned char midi_tempo[]={0x00,0xFF,0x51,0x03,0x07,0xA1,0x20};
+    memcpy(&mem[indice],midi_tempo,7);
+    indice +=7;
+
+	return indice;
+
+}
+
+//Devuelve longitud en bytes
+int mid_mete_evento_final_pista(unsigned char *mem)
+{
+
+    int indice=0;
+
+    //Evento al momento
+    mem[indice++]=0;    
+
+
+    mem[indice++]=0xFF;
+    mem[indice++]=0x2F;
+    mem[indice++]=0x00;
+
+    return indice;
+
+}
+
+//Mete los 4 bytes que indican longitud de pista
+//mem apunta a inicio de cabecera pista "MTrk"
+//longitud es todo el bloque de pista, desde MTrk hasta despues del evento de final de pista
+void mid_mete_longitud_pista(z80_byte *mem,int longitud)
+{
+	    //Meter longitud eventos
+    int longitud_eventos=longitud-4; //evitar los 4 bytes que indican precisamente longitud
+
+	int puntero_longitud_pista=4;
+
+    //longitud eventos. meter al final
+    mem[puntero_longitud_pista++]=(longitud_eventos>>24) & 0xFF;
+    mem[puntero_longitud_pista++]=(longitud_eventos>>16) & 0xFF;
+    mem[puntero_longitud_pista++]=(longitud_eventos>>8) & 0xFF;
+    mem[puntero_longitud_pista++]=(longitud_eventos  ) & 0xFF;    
+}
+
+
+//Mete nota mid. Devuelve longitud en bytes
+int mid_mete_nota(z80_byte *mem,int duracion,int canal_midi,int keynote,int velocity)
+{
+
+    int indice=0;
+
+    unsigned int deltatime=duracion;
+
+
+    //Evento note on. al momento
+    mem[indice++]=0;
+   
+
+    //int canal_midi=0;
+    unsigned char noteonevent=(128+16) | (canal_midi & 0xf);
+
+
+    mem[indice++]=noteonevent;
+    mem[indice++]=keynote & 127;
+    mem[indice++]=velocity & 127;
+
+
+
+    //Evento note off
+    int longitud_delta=util_int_variable_length(deltatime,&mem[indice]);
+    indice +=longitud_delta;
+
+
+    unsigned char noteoffevent=(128) | (canal_midi & 0xf);
+
+    mem[indice++]=noteoffevent;
+    mem[indice++]=keynote & 127;
+    mem[indice++]=velocity & 127;
+
+    return indice;
 }
