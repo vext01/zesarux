@@ -2345,7 +2345,9 @@ int mid_silencios_acumulados[3]={
 	0,0,0
 };
 
-z80_byte mid_memoria_export[3][16384];
+#define MAX_MID_EXPORT_BUFFER 32768
+
+z80_byte mid_memoria_export[3][MAX_MID_EXPORT_BUFFER];
 
 int inicializado_mid=0;
 
@@ -2533,7 +2535,7 @@ void mid_frame_event(void)
 					mid_export_put_note(canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal],division);
 
 
-					mid_nota_sonando_duracion[canal]=0;
+					mid_nota_sonando_duracion[canal]=1;
 					strcpy(mid_nota_sonando[canal],nota);
 				}
 			}
