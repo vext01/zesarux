@@ -623,6 +623,8 @@ void envio_audio(void)
 
         }
 
+	mid_frame_event();
+
 }
 
 
@@ -2306,4 +2308,70 @@ int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_mid
     mem[indice++]=velocity & 127;
 
     return indice;
+}
+
+
+
+//Notas anteriores sonando, 3 canales
+char mid_nota_sonando[3][4]={
+	"","",""
+};
+
+
+int mid_nota_sonando_duracion[3]={
+	0,0,0
+};
+
+
+//Evento de frame
+void mid_frame_event(void)
+{
+		int chip;
+
+
+			char nota[4];
+
+
+		//temp 1 chip
+		for (chip=0;chip<1;chip++) {
+			int canal;
+			for (canal=0;canal<3;canal++) {
+
+
+				int freq=ay_retorna_frecuencia(canal,chip);
+
+
+				sprintf(nota,"%s",get_note_name(freq) );
+
+			
+				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+				if (canal==0) {
+					if (ay_3_8912_registros[chip][7]&1 || ay_3_8912_registros[chip][8]==0) nota[0]=0;
+				}
+
+				if (canal==1) {
+					if (ay_3_8912_registros[chip][7]&2 || ay_3_8912_registros[chip][9]==0) nota[0]=0;
+				}
+
+				if (canal==2) {
+					if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) nota[0]=0;
+				}
+
+				//Comparar si igual o anterior
+				if (!strcasecmp(nota,mid_nota_sonando[canal])) {
+					mid_nota_sonando_duracion[canal]++;
+					printf ("nota igual [%s] duracion [%d]",
+					nota,mid_nota_sonando_duracion[canal]);
+				}
+				else {
+					printf ("nota diferente. nueva [%s]\n",nota);
+					mid_nota_sonando_duracion[canal]=0;
+					strcpy(mid_nota_sonando[canal],nota);
+				}
+			}
+			
+		}
+
+
+	
 }
