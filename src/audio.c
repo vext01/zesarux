@@ -2345,11 +2345,49 @@ int mid_silencios_acumulados[3]={
 	0,0,0
 };
 
-#define MAX_MID_EXPORT_BUFFER 32768
+//Para cuantas notas da esto aprox?
+#define MAX_MID_EXPORT_BUFFER 1000000
 
-z80_byte mid_memoria_export[3][MAX_MID_EXPORT_BUFFER];
+int mid_parm_division=50;
+
+//z80_byte mid_memoria_export[3][MAX_MID_EXPORT_BUFFER];
+
+z80_byte *mid_memoria_export[MAX_AY_CHIPS*3];//3 canales
 
 int inicializado_mid=0;
+
+
+void mid_initialize_export(void)
+{
+
+	int total_pistas=3;
+
+			int canal;
+			for (canal=0;canal<total_pistas;canal++) {
+
+
+				//Metemos cabecera bloque
+				int indice=0;
+
+
+				int pistas=3;
+
+				//Cabecera archivo
+				//indice +=mid_mete_cabecera(&mid_memoria_export[canal][indice],pistas,division);
+
+				mid_memoria_export[canal]=malloc(MAX_MID_EXPORT_BUFFER);
+
+				if (mid_memoria_export[canal]==NULL) cpu_panic("Can not allocate mid export buffer");
+
+
+				//Inicio pista 
+				mid_inicio_pista[canal]=indice; //TODO: esto es 0 siempre
+
+				indice +=mid_mete_inicio_pista(&mid_memoria_export[canal][indice],mid_parm_division);
+				mid_indices_actuales[canal]=indice;
+			}
+
+}
 
 
 void mid_export_put_note(int canal,char *nota,int duracion,int division)
@@ -2456,35 +2494,14 @@ FILE *ptr_midfile;
 void mid_frame_event(void)
 {
 
-	int division=50;
+	
 
 		//temporal. inicializar memoria mid
 		if (!inicializado_mid) {
 			inicializado_mid=1;
-			int canal;
-			for (canal=0;canal<3;canal++) {
+			mid_initialize_export();
+			
 
-
-				//Metemos cabecera bloque
-				int indice=0;
-
-
-				int pistas=3;
-
-				//Cabecera archivo
-				//indice +=mid_mete_cabecera(&mid_memoria_export[canal][indice],pistas,division);
-
-
-
-				//Inicio pista 
-				mid_inicio_pista[canal]=indice; //TODO: esto es 0 siempre
-
-				indice +=mid_mete_inicio_pista(&mid_memoria_export[canal][indice],division);
-				mid_indices_actuales[canal]=indice;
-
-
-
-			}
 		}
 
 
@@ -2532,7 +2549,7 @@ void mid_frame_event(void)
 					printf ("nota diferente canal %d. nueva [%s]\n",canal,nota);
 
 					//Metemos nota
-					mid_export_put_note(canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal],division);
+					mid_export_put_note(canal,mid_nota_sonando[canal],mid_nota_sonando_duracion[canal],mid_parm_division);
 
 
 					mid_nota_sonando_duracion[canal]=1;
