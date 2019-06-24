@@ -2220,6 +2220,9 @@ int mid_mete_inicio_pista(z80_byte *mem,int division)
 
     midi_clocks=division/4;
 
+	//un poco mas lento
+	//midi_clocks /=4;
+
     unsigned char midi_time_signature[]={0x00,0xFF,0x58,0x04,0x04,0x02,midi_clocks,0x08};
     memcpy(&mem[indice],midi_time_signature,8);
     indice +=8;
@@ -2227,7 +2230,15 @@ int mid_mete_inicio_pista(z80_byte *mem,int division)
     //Tempo
     //3 bytes: 500,000 usec/ quarter note = 120 beats/minute
     //El 0 del principio es el deltatime
+	int tempo=500000;
+	tempo*=2;
+
+
+
     unsigned char midi_tempo[]={0x00,0xFF,0x51,0x03,0x07,0xA1,0x20};
+	midi_tempo[4]=(tempo>>16)&0xFF;
+	midi_tempo[5]=(tempo>>8)&0xFF;
+	midi_tempo[6]=(tempo)&0xFF;
     memcpy(&mem[indice],midi_tempo,7);
     indice +=7;
 
