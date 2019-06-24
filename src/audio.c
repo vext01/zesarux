@@ -2345,9 +2345,7 @@ int mid_silencios_acumulados[3]={
 	0,0,0
 };
 
-//Para cuantas notas da esto aprox?
-//#define MAX_MID_EXPORT_BUFFER 1000000
-#define MAX_MID_EXPORT_BUFFER 1024
+
 
 int mid_parm_division=50;
 
@@ -2375,6 +2373,25 @@ void mid_init_export(void)
 	}
 }
 
+//Dice de todos los bufferes de canales cuanto esta ocupado el que mas
+int mid_max_buffer(void)
+{
+
+	//Poner todos bufferes a null para decir que no estan asignados
+	int maximo=0;
+	int i;
+
+	int total_canales;
+
+	total_canales=3; //temp
+
+	for (i=0;i<total_canales;i++) {
+		if (mid_indices_actuales[i]>maximo) maximo=mid_indices_actuales[i];
+	}
+
+	return maximo;
+
+}
 
 
 void mid_initialize_export(void)
@@ -2390,7 +2407,7 @@ void mid_initialize_export(void)
 				int indice=0;
 
 
-				int pistas=3;
+				//int pistas=3;
 
 				//Cabecera archivo
 				//indice +=mid_mete_cabecera(&mid_memoria_export[canal][indice],pistas,division);

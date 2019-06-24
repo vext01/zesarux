@@ -15585,6 +15585,15 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 
 					if (mid_is_recording.v) {
 
+						int max_buffer=mid_max_buffer();
+						
+
+						int max_buffer_perc=(max_buffer*100)/MAX_MID_EXPORT_BUFFER;
+
+						printf ("%d %d\n",max_buffer,max_buffer_perc);
+
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,NULL,NULL,"Buffer used: %d%%",max_buffer_perc);
+
 						if (mid_is_paused.v==0) {
 							menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Pause Recording");
 						}

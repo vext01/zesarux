@@ -160,6 +160,9 @@ extern int mid_mete_inicio_pista(z80_byte *mem,int division);
 extern int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_midi,int keynote,int velocity);
 extern void mid_frame_event(void);
 
+//Para cuantas notas da esto aprox?
+#define MAX_MID_EXPORT_BUFFER 1000000
+
 extern z80_bit mid_is_recording;
 extern z80_bit mid_is_paused;
 extern char mid_export_file[];
