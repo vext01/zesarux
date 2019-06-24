@@ -55,6 +55,26 @@ void dump_variable_length(unsigned char *buffer,int longitud)
 //http://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
 
 
+
+
+//Devuelve longitud en bytes
+int mete_evento_final_pista(unsigned char *mem)
+{
+
+    int indice=0;
+
+    //Evento al momento
+    mem[indice++]=0;    
+
+
+    mem[indice++]=0xFF;
+    mem[indice++]=0x2F;
+    mem[indice++]=0x00;
+
+    return indice;
+
+}
+    
 //Devuelve longitud en bytes
 int mete_nota(unsigned char *mem,int duracion,int canal_midi,int keynote,int velocity)
 {
@@ -90,6 +110,112 @@ int mete_nota(unsigned char *mem,int duracion,int canal_midi,int keynote,int vel
     mem[indice++]=velocity & 127;
 
     return indice;
+}
+
+
+//Retorna longitud pista
+int mete_pista(unsigned char *mem,int canal_midi,int division)
+{
+      //Pista
+    memcpy(mem,"MTrk",4);
+    int indice=4;
+
+    int notas=7;
+
+
+    int puntero_longitud_pista=indice;
+
+    //longitud eventos. meter al final
+    indice +=4;
+
+
+    //Time signature
+    //4 bytes; 4/4 time; 24 MIDI clocks/click, 8 32nd notes/ 24 MIDI clocks (24 MIDI clocks = 1 crotchet = 1 beat)
+    //El 0 del principio es el deltatime
+    unsigned char midi_clocks=0x18; //24=96/4
+
+    midi_clocks=division/4;
+
+    unsigned char midi_time_signature[]={0x00,0xFF,0x58,0x04,0x04,0x02,midi_clocks,0x08};
+    memcpy(&mem[indice],midi_time_signature,8);
+    indice +=8;
+
+    //Tempo
+    //3 bytes: 500,000 usec/ quarter note = 120 beats/minute
+    //El 0 del principio es el deltatime
+    unsigned char midi_tempo[]={0x00,0xFF,0x51,0x03,0x07,0xA1,0x20};
+    memcpy(&mem[indice],midi_tempo,7);
+    indice +=7;
+
+ 
+    //TODO: convertir nota formato ZEsarUX a keynote
+
+
+
+    //Nota 1
+    
+    unsigned int deltatime=division; //negra
+
+    //deltatime /=4; //blanca
+    //deltatime /=2; //negra
+
+
+
+    unsigned char keynote=60; //C octava 4
+    unsigned char velocity=0x40; //Devices which are not velocity sensitive should send vv=40....
+
+
+    indice +=mete_nota(&mem[indice],deltatime,canal_midi,keynote,velocity);
+
+
+   //Nota 2
+ 
+    keynote=62; //D octava 4
+    indice +=mete_nota(&mem[indice],deltatime,canal_midi,keynote,velocity);    
+
+
+    //Nota 3
+    keynote=64; //E octava 4
+    indice +=mete_nota(&mem[indice],deltatime,canal_midi,keynote,velocity);   
+
+    //Nota 4
+    keynote=65; //E octava 4
+    indice +=mete_nota(&mem[indice],deltatime,canal_midi,keynote,velocity);      
+
+
+    deltatime /=2; //corchea
+    //deltatime /=2; //semicorchea
+    //deltatime /=2; //fusa
+    //deltatime /=2; //semifusa
+
+    //Nota 5
+    keynote=67; //G octava 4
+    indice +=mete_nota(&mem[indice],deltatime,canal_midi,keynote,velocity);       
+
+    //Nota 6
+    keynote=69; //A octava 4
+    indice +=mete_nota(&mem[indice],deltatime,canal_midi,keynote,velocity);       
+
+    //Nota 7
+    keynote=71; //B octava 4
+    indice +=mete_nota(&mem[indice],deltatime,canal_midi,keynote,velocity);         
+
+
+    //Final de pista
+    indice +=mete_evento_final_pista(&mem[indice]);
+
+
+    //Meter longitud eventos
+    int longitud_eventos=indice-puntero_longitud_pista-4; //evitar los 4 bytes que indican precisamente longitud
+
+    //longitud eventos. meter al final
+    mem[puntero_longitud_pista++]=(longitud_eventos>>24) & 0xFF;
+    mem[puntero_longitud_pista++]=(longitud_eventos>>16) & 0xFF;
+    mem[puntero_longitud_pista++]=(longitud_eventos>>8) & 0xFF;
+    mem[puntero_longitud_pista++]=(longitud_eventos  ) & 0xFF;    
+
+    return indice;
+
 }
 
 int main(void)
@@ -166,13 +292,14 @@ int main(void)
     midi_file[11]=pistas & 0xFF;   
 
  
-    //Division. Ticks per quarter note (redonda?)
-    //Haremos 400 (=50*4*2->redonda)
-
-    int division=100;
+    //Division. Ticks per quarter note (negra?)
+    int division=50; //96; //lo que dura la negra. hacemos 50 para 1/50s
 
     midi_file[12]=0x00;
-    midi_file[13]=12;   
+    midi_file[13]=division;   
+
+
+    mete_pista(&midi_file[14],0,division);
 
     //Pista
     memcpy(&midi_file[14],"MTrk",4);
@@ -185,29 +312,39 @@ int main(void)
     int puntero_longitud_pista=indice;
 
     //longitud eventos. meter al final
-    /*midi_file[indice++]=(longitud_evento>>24) & 0xFF;
-    midi_file[indice++]=(longitud_evento>>16) & 0xFF;
-    midi_file[indice++]=(longitud_evento>>8) & 0xFF;
-    midi_file[indice++]=(longitud_evento  ) & 0xFF;    */
-
     indice +=4;
 
-    
-    //TODO: averiguar parametro deltatime segun duracion
+
+    //Time signature
+    //4 bytes; 4/4 time; 24 MIDI clocks/click, 8 32nd notes/ 24 MIDI clocks (24 MIDI clocks = 1 crotchet = 1 beat)
+    //El 0 del principio es el deltatime
+    unsigned char midi_clocks=0x18; //24=96/4
+
+    midi_clocks=division/4;
+
+    unsigned char midi_time_signature[]={0x00,0xFF,0x58,0x04,0x04,0x02,midi_clocks,0x08};
+    memcpy(&midi_file[indice],midi_time_signature,8);
+    indice +=8;
+
+    //Tempo
+    //3 bytes: 500,000 usec/ quarter note = 120 beats/minute
+    //El 0 del principio es el deltatime
+    unsigned char midi_tempo[]={0x00,0xFF,0x51,0x03,0x07,0xA1,0x20};
+    memcpy(&midi_file[indice],midi_tempo,7);
+    indice +=7;
+
+ 
     //TODO: convertir nota formato ZEsarUX a keynote
     //TODO: poder escribir mas pistas... hasta 3
 
 
     //Nota 1
     
-    unsigned int deltatime=(division/2); ///2=redonda
+    unsigned int deltatime=division; //negra
 
+    //deltatime /=4; //blanca
+    //deltatime /=2; //negra
 
-    deltatime=(division/2)/2; //blanca
-
-    deltatime=(division/2)/4; //negra
-
-    deltatime=(division/2)/8; //corchea
 
     int canal_midi=0;
 
@@ -233,6 +370,11 @@ int main(void)
     indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);      
 
 
+    deltatime /=2; //corchea
+    //deltatime /=2; //semicorchea
+    //deltatime /=2; //fusa
+    //deltatime /=2; //semifusa
+
     //Nota 5
     keynote=67; //G octava 4
     indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);       
@@ -244,6 +386,10 @@ int main(void)
     //Nota 7
     keynote=71; //B octava 4
     indice +=mete_nota(&midi_file[indice],deltatime,canal_midi,keynote,velocity);         
+
+
+    //Final de pista
+    indice +=mete_evento_final_pista(&midi_file[indice]);
 
 
     //Meter longitud eventos
