@@ -157,7 +157,7 @@ extern void audio_empty_buffer(void);
 
 extern int mid_mete_cabecera(z80_byte *midi_file,int pistas,int division);
 extern int mid_mete_inicio_pista(z80_byte *mem,int division);
-extern int mid_mete_nota(z80_byte *mem,int duracion,int canal_midi,int keynote,int velocity);
+extern int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_midi,int keynote,int velocity);
 
 extern char audio_valor_enviar_sonido;
 

@@ -2270,7 +2270,7 @@ void mid_mete_longitud_pista(z80_byte *mem,int longitud)
 
 
 //Mete nota mid. Devuelve longitud en bytes
-int mid_mete_nota(z80_byte *mem,int duracion,int canal_midi,int keynote,int velocity)
+int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_midi,int keynote,int velocity)
 {
 
     int indice=0;
@@ -2278,8 +2278,10 @@ int mid_mete_nota(z80_byte *mem,int duracion,int canal_midi,int keynote,int velo
     unsigned int deltatime=duracion;
 
 
-    //Evento note on. al momento
-    mem[indice++]=0;
+
+    //Evento note on. meter silencio anterior
+    //mem[indice++]=0;
+    indice +=util_int_variable_length(silencio_anterior,&mem[indice]);
    
 
     //int canal_midi=0;

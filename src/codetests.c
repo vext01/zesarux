@@ -895,6 +895,88 @@ void codetests_expression_parser(void)
 	
 }
 
+
+void codetests_mid_test(void)
+{
+
+	//Prueba mid
+	z80_byte midi_buffer[2048];
+
+	//Metemos cabecera bloque
+	int indice=0;
+
+	int division=50;
+	int pistas=2;
+
+	//Cabecera archivo
+	indice +=mid_mete_cabecera(&midi_buffer[indice],pistas,division);
+
+
+	int inicio_pista;
+	int canal;
+	int longitud_pista;
+
+
+
+	//Inicio pista 0
+	inicio_pista=indice;
+
+	indice +=mid_mete_inicio_pista(&midi_buffer[indice],division);
+
+	canal=0;
+
+	//Nota
+	indice +=mid_mete_nota(&midi_buffer[indice],0,division,canal,60,0x40);
+	indice +=mid_mete_nota(&midi_buffer[indice],0,division,canal,61,0x40);
+	indice +=mid_mete_nota(&midi_buffer[indice],0,division,canal,62,0x40);
+
+	//Final de pista
+	indice +=mid_mete_evento_final_pista(&midi_buffer[indice]);
+
+	//Indicar longitud de pista
+	longitud_pista=indice-inicio_pista;
+
+	mid_mete_longitud_pista(&midi_buffer[inicio_pista],longitud_pista);
+
+
+
+	//Inicio pista 1
+	inicio_pista=indice;
+
+	indice +=mid_mete_inicio_pista(&midi_buffer[indice],division);
+
+	canal=1;
+
+	//Nota
+	indice +=mid_mete_nota(&midi_buffer[indice],0,division,canal,63,0x40);
+	indice +=mid_mete_nota(&midi_buffer[indice],0,division,canal,64,0x40);
+	indice +=mid_mete_nota(&midi_buffer[indice],50,division,canal,65,0x40);
+
+	//Final de pista
+	indice +=mid_mete_evento_final_pista(&midi_buffer[indice]);
+
+	//Indicar longitud de pista
+	longitud_pista=indice-inicio_pista;
+
+	mid_mete_longitud_pista(&midi_buffer[inicio_pista],longitud_pista);
+
+
+
+	//Grabar a disco
+FILE *ptr_midfile;
+
+     ptr_midfile=fopen("salida.mid","wb");
+     if (!ptr_midfile) {
+                        printf("can not write midi file\n");
+                        return;
+      }
+
+    fwrite(midi_buffer, 1, indice, ptr_midfile);
+
+
+      fclose(ptr_midfile);	
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -904,25 +986,15 @@ void codetests_main(int main_argc,char *main_argv[])
 		exit(0);
 	}
 
-	printf ("\nRunning expression parser tests\n");
-	codetests_expression_parser();
+	//printf ("\nRunning expression parser tests\n");
+	//codetests_expression_parser();
 
-	//Prueba mid
-	z80_byte midi_buffer[2048];
 
-	//Metemos cabecera bloque
-	int indice=0;
+	printf ("\nRunning mid tests\n");
+	codetests_mid_test();	
 
-	int division=50;
-	int pistas=1;
 
-	//Cabecera archivo
-	indice +=mid_mete_cabecera(&midi_buffer[indice],pistas,division);
 
-	//Inicio pista
-	int inicio_pista=indice;
-
-	indice +=mid_mete_inicio_pista(&midi_buffer[indice],division);
 
 
 	/*printf ("Note: %d\n",get_mid_number_note("C0"));
