@@ -2270,7 +2270,7 @@ int mid_mete_evento_final_pista(unsigned char *mem)
 void mid_mete_longitud_pista(z80_byte *mem,int longitud)
 {
 	    //Meter longitud eventos
-    int longitud_eventos=longitud-4; //evitar los 4 bytes que indican precisamente longitud
+    int longitud_eventos=longitud-4-4; //evitar los 4 bytes que indican precisamente longitud y los 4 de "Mtrk"
 
 	int puntero_longitud_pista=4;
 
