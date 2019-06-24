@@ -15423,6 +15423,11 @@ zxvision_window zxvision_window_ay_partitura;
 
 void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 {
+
+	//temp
+	printf ("!!!!!!QUITAR mid_flush_file!!!!!!\n");
+	mid_flush_file();
+
         menu_espera_no_tecla();
 
 		int xventana,yventana,ancho_ventana,alto_ventana;

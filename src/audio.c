@@ -2366,7 +2366,9 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 		return;
 	}
 
-	indice +=mid_mete_nota(&mid_memoria_export[canal][indice],mid_silencios_acumulados[canal],division,canal,nota_numero,0x40);
+	printf ("meter nota %d en canal %d silencio acumulado %d duracion %d\n",nota_numero,canal,mid_silencios_acumulados[canal],duracion);
+
+	indice +=mid_mete_nota(&mid_memoria_export[canal][indice],mid_silencios_acumulados[canal],duracion,canal,nota_numero,0x40);
 
 
 	//Ya no hay silencio acumulado
