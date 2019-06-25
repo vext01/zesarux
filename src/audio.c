@@ -2623,7 +2623,16 @@ void mid_frame_event(void)
 
 
 				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
-				if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==mascara_mezclador || ay_3_8912_registros[chip][reg_vol]==0) nota[0]=0;
+				int suena_nota=0;
+
+				if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==0) suena_nota=1; //Los bits a mirar tienen que ser cero
+
+
+				//Pero si no hay volumen, no hay nota
+				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
+
+
+				//if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==mascara_mezclador || ay_3_8912_registros[chip][reg_vol]==0) nota[0]=0;
 				
 
 				int canal_final=3*chip+canal;
