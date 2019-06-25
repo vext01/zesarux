@@ -2356,6 +2356,12 @@ char mid_export_file[PATH_MAX];
 
 int mid_chips_al_start=1;
 
+//Para saber si se ha grabado algo, para menu
+//int mid_record_at_least_one=0;
+
+//Para estadistica
+int mid_notes_recorded=0;
+
 void mid_init_export(void)
 {
 	//Poner todos bufferes a null para decir que no estan asignados
@@ -2429,6 +2435,11 @@ void mid_initialize_export(void)
 				mid_nota_sonando[canal][0]=0;
 
 				mid_nota_sonando_duracion[canal]=1;
+
+				//Decir que no ha sonado aun ninguna noda
+				//mid_record_at_least_one=0;
+
+				mid_notes_recorded=0;
 			}
 
 }
@@ -2451,9 +2462,18 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 	}
 
 
+	//Si no habia sonado nada aun, no meter silencio acumulado, resetearlos todos a cero
+	if (!mid_notes_recorded) {
+			int total_pistas=3*mid_chips_al_start;
+
+			int canal;
+			for (canal=0;canal<total_pistas;canal++) {	
+				mid_silencios_acumulados[canal]=0;
+			}	
+	}
 
 
-	//Meter nota
+	mid_notes_recorded++;
 
 	//Leer indice actual
 	int indice=mid_indices_actuales[canal];

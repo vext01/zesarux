@@ -15525,6 +15525,9 @@ void menu_record_mid_start(MENU_ITEM_PARAMETERS)
 
 void menu_record_mid_stop(MENU_ITEM_PARAMETERS)
 {
+	if (mid_has_been_initialized()) {
+		if (!menu_confirm_yesno_texto("Stop recording","Sure?")) return;
+	}	
 	mid_is_recording.v=0;
 }
 
@@ -15617,11 +15620,11 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						}					
 					}
 
-					if (mid_has_been_initialized()) {
-						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_chip,"Save to Disk");
+					if (mid_has_been_initialized() && mid_notes_recorded) {
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_chip,"Save .MID file");
 					}
 
-					if (mid_is_recording.v) {
+					if (mid_notes_recorded) {
 
 						int max_buffer=mid_max_buffer();
 						
@@ -15635,7 +15638,8 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"Info:");
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"Buffer used: %d%%",max_buffer_perc);
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"Voices: %d",3*mid_chips_al_start);
-						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"");
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"Notes recorded: %d",mid_notes_recorded);
+						
 
 					}					
 		
