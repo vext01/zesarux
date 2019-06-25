@@ -5,9 +5,7 @@
 
 -random pete al arranque
 
--stop recording que pida confirmacion
-
--agregar en features ay sheet, ay piano, ay to mid, etc
+-meter comentario en archivo midi de grabado con ZEsarUX
 
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
@@ -16,6 +14,8 @@ Para próxima versión ZEsarUX:
 y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
 
 -comprobar mra. parece que no siempre se dispara
+
+-Editor scanf que permita mover cursor. 
 
 -unpaws , unquill para cpc
 
@@ -27,6 +27,12 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 
 **Inicio Expression Parser
+
+Otras funciones:
+
+Abs()
+Byte(). Equivale a () & FFH
+Word(). Equivale a () & FFFFH
 
 
 *codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);

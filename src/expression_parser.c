@@ -32,15 +32,7 @@
 
 
 
-#if defined(__APPLE__)
-        #include <sys/syslimits.h>
-#endif
 
-
-#ifdef MINGW
-//Para usar GetLogicalDrives
-#include <winbase.h>
-#endif
 
 
 #include "cpu.h"
@@ -52,6 +44,7 @@
 #include "mem128.h"
 #include "scmp.h"
 #include "m68k.h"
+#include "prism.h"
 
 /*
 

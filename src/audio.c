@@ -2534,6 +2534,8 @@ void mid_flush_file(void)
 
 	if (mid_flush_finished_tracks.v==0) {
 
+		//printf ("Cerrando pistas\n");
+
 		mid_flush_finished_tracks.v=1;
 
 		for (canal=0;canal<3*mid_chips_al_start;canal++) {
@@ -2564,7 +2566,7 @@ void mid_flush_file(void)
 	int pistas=3*mid_chips_al_start;
 
 	//Cabecera archivo
-	int division=50;
+	int division=mid_parm_division;
 	int longitud_cabecera=mid_mete_cabecera(cabecera_midi,pistas,division);
 
 	//Abrir archivo. Grabar cabecera y grabar las 3 pistas

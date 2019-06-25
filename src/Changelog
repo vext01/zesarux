@@ -23,7 +23,7 @@ Added Derby+ and Derby++ roms
 Added Chloe MMU to ZX-Uno
 Added AY Sheet: showing a sheet with the notes being played
 Added RetroMac Gui Style
-Added feature to export music to MID file
+Added feature to export AY chip music to midi (.mid) file
 
 Improved breakpoint parser: 
 -full expression parser: parenthesis, functions, sums, multiplications, etc. Can be used as a full calculator!

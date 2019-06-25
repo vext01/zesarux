@@ -15167,7 +15167,7 @@ void menu_ay_partitura_scroll(int chip)
 		
 	for (i=0;i<3;i++) {
 		int c=menu_ay_partitura_ultima_columna[i];
-		if (c>=0) {
+		if (c>0) {
 			menu_ay_partitura_ultima_columna[i]=c-1;
 		}
 	}		
@@ -15505,9 +15505,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 
 
-	//temp
-	//printf ("!!!!!!QUITAR mid_flush_file!!!!!!\n");
-	//mid_flush_file();
+
 
 
 void menu_record_mid_start(MENU_ITEM_PARAMETERS)
@@ -15670,7 +15668,7 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_record_mid,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_record_mid);
 
-                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"AY Chip to MID" );
+                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"AY to MID" );
 
                 
 
