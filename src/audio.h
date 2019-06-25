@@ -174,6 +174,7 @@ extern int mid_has_been_initialized(void);
 extern void mid_flush_file(void);
 extern void mid_initialize_export(void);
 extern void mid_reset_export_buffers(void);
+extern int mid_max_buffer(void);
 
 extern char audio_valor_enviar_sonido;
 

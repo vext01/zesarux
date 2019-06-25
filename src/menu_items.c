@@ -15612,11 +15612,9 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_chip,"Stop Recording");	
 					}
 
-					menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_noisetone,NULL,"[%c] Allow tone+noise",
-						(mid_record_noisetone.v ? 'X' : ' ') );
+				
 
-					menu_add_item_menu_tooltip(array_menu_record_mid,"Record also channels enabled as tone+noise");
-					menu_add_item_menu_ayuda(array_menu_record_mid,"Record also channels enabled as tone+noise");
+
 
 
 					if (mid_is_recording.v) {
@@ -15630,9 +15628,18 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						}					
 					}
 
-					if (mid_has_been_initialized() && mid_notes_recorded) {
+					//No dejamos grabar hasta que no se haga stop
+					//porque el flush del final mete cabeceras de final de pistas y ya no se puede reaprovechar
+					if (mid_has_been_initialized() && mid_notes_recorded && mid_is_recording.v==0) {
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_chip,"Save .MID file");
 					}
+
+
+					menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"");
+					menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_noisetone,NULL,"[%c] Allow tone+noise",
+						(mid_record_noisetone.v ? 'X' : ' ') );
+					menu_add_item_menu_tooltip(array_menu_record_mid,"Record also channels enabled as tone+noise");
+					menu_add_item_menu_ayuda(array_menu_record_mid,"Record also channels enabled as tone+noise");
 
 					if (mid_notes_recorded) {
 

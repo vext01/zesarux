@@ -2362,6 +2362,9 @@ int mid_chips_al_start=1;
 //Para estadistica
 int mid_notes_recorded=0;
 
+//Dice que ya se han finalizado las pistas, metiendo cabecera de final y longitud de pistas
+z80_bit mid_flush_finished_tracks={0};
+
 
 //Permite grabar canales que sean tono+ruido
 z80_bit mid_record_noisetone={0};
@@ -2401,6 +2404,8 @@ void mid_initialize_export(void)
 {
 
 	mid_chips_al_start=ay_retorna_numero_chips();
+	mid_flush_finished_tracks.v=0;
+	mid_notes_recorded=0;	
 
 	int total_pistas=3*mid_chips_al_start;
 
@@ -2443,8 +2448,9 @@ void mid_initialize_export(void)
 				//Decir que no ha sonado aun ninguna noda
 				//mid_record_at_least_one=0;
 
-				mid_notes_recorded=0;
+				
 			}
+
 
 }
 
@@ -2526,20 +2532,27 @@ void mid_flush_file(void)
 	//Cerrar pistas
 	int canal;
 
-	for (canal=0;canal<3*mid_chips_al_start;canal++) {
-		int indice=mid_indices_actuales[canal];			
-//Final de pista
-	indice +=mid_mete_evento_final_pista(&mid_memoria_export[canal][indice]);
+	if (mid_flush_finished_tracks.v==0) {
 
-	int inicio_pista=mid_inicio_pista[canal];
+		mid_flush_finished_tracks.v=1;
 
-	//Indicar longitud de pista
-	int longitud_pista=indice-inicio_pista;
+		for (canal=0;canal<3*mid_chips_al_start;canal++) {
+			int indice=mid_indices_actuales[canal];			
+			//Final de pista
+			indice +=mid_mete_evento_final_pista(&mid_memoria_export[canal][indice]);
 
-	mid_mete_longitud_pista(&mid_memoria_export[canal][inicio_pista],longitud_pista);	
+			int inicio_pista=mid_inicio_pista[canal];
 
-	//Guardar indice 
-	mid_indices_actuales[canal]=indice;			
+			//Indicar longitud de pista
+			int longitud_pista=indice-inicio_pista;
+
+			mid_mete_longitud_pista(&mid_memoria_export[canal][inicio_pista],longitud_pista);	
+
+			//Guardar indice 
+			mid_indices_actuales[canal]=indice;			
+
+		}
+
 
 	}
 
@@ -2547,7 +2560,7 @@ void mid_flush_file(void)
 	//Generar cabecera
 	z80_byte cabecera_midi[256];
 
-	//Escribir las 3 pistas
+	//Escribir todas las pistas
 	int pistas=3*mid_chips_al_start;
 
 	//Cabecera archivo
@@ -2566,8 +2579,13 @@ FILE *ptr_midfile;
                         return;
       }
 
+	//la cabecera
     fwrite(cabecera_midi, 1, longitud_cabecera, ptr_midfile);
 
+
+
+
+	//cada pista
 	for (canal=0;canal<pistas;canal++) {
 		int longitud_pista=mid_indices_actuales[canal];
 		debug_printf (VERBOSE_DEBUG,"Writing Channel %d length %d",canal,longitud_pista);
