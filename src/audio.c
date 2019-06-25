@@ -2650,6 +2650,8 @@ void mid_frame_event(void)
 				//Pero si no hay volumen, no hay nota
 				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
 
+				if (!suena_nota) nota[0]=0;
+
 
 				//if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==mascara_mezclador || ay_3_8912_registros[chip][reg_vol]==0) nota[0]=0;
 				
