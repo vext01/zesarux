@@ -2362,7 +2362,11 @@ int mid_chips_al_start=1;
 //Para estadistica
 int mid_notes_recorded=0;
 
-void mid_init_export(void)
+
+//Permite grabar canales que sean tono+ruido
+z80_bit mid_record_noisetone={0};
+
+void mid_reset_export_buffers(void)
 {
 	//Poner todos bufferes a null para decir que no estan asignados
 	int i;
@@ -2452,7 +2456,7 @@ int mid_has_been_initialized(void)
 }
 
 
-void mid_export_put_note(int canal,char *nota,int duracion,int division)
+void mid_export_put_note(int canal,char *nota,int duracion)
 {
 	//Si era silencio
 	if (nota[0]==0) {
@@ -2471,7 +2475,7 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 			int canal;
 			for (canal=0;canal<total_pistas;canal++) {	
 				//Acumulados tienen que ser todos iguales
-				printf ("acumulado %d\n",mid_silencios_acumulados[canal]);
+				//printf ("acumulado %d\n",mid_silencios_acumulados[canal]);
 				mid_silencios_acumulados[canal]=0;
 			}	
 	}*/
@@ -2582,13 +2586,7 @@ void mid_frame_event(void)
 	if (mid_is_recording.v==1 && mid_is_paused.v==0) {
 
 
-		//temporal. inicializar memoria mid
-		/* if (!inicializado_mid) {
-			inicializado_mid=1;
-			mid_initialize_export();
-			
 
-		}*/
 
 
 		int chip;
@@ -2608,18 +2606,25 @@ void mid_frame_event(void)
 				sprintf(nota,"%s",get_note_name(freq) );
 
 			
+				
+				//int reg_tono;
+				int reg_vol;
+
+				reg_vol=8+canal;
+
+				int mascara_mezclador=1; //1+8;
+
+				if (mid_record_noisetone.v) mascara_mezclador |=8;
+
+
+				if (canal>0) {
+					mascara_mezclador=mascara_mezclador<<canal;
+				}
+
+
 				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
-				if (canal==0) {
-					if (ay_3_8912_registros[chip][7]&1 || ay_3_8912_registros[chip][8]==0) nota[0]=0;
-				}
-
-				if (canal==1) {
-					if (ay_3_8912_registros[chip][7]&2 || ay_3_8912_registros[chip][9]==0) nota[0]=0;
-				}
-
-				if (canal==2) {
-					if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) nota[0]=0;
-				}
+				if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==mascara_mezclador || ay_3_8912_registros[chip][reg_vol]==0) nota[0]=0;
+				
 
 				int canal_final=3*chip+canal;
 
@@ -2637,7 +2642,7 @@ void mid_frame_event(void)
 					//printf ("nota diferente canal %d. nueva [%s]\n",canal_final,nota);
 
 					//Metemos nota
-					mid_export_put_note(canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final],mid_parm_division);
+					mid_export_put_note(canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final]);
 
 
 					mid_nota_sonando_duracion[canal_final]=1;

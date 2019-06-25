@@ -7291,7 +7291,7 @@ init_randomize_noise_value();
 
 
 	init_chip_ay();
-	mid_init_export();
+	mid_reset_export_buffers();
 
 	if (realjoystick_present.v==1) {
 			if (realjoystick_init()) {

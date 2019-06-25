@@ -169,6 +169,11 @@ extern char mid_export_file[];
 extern int mid_chips_al_start;
 //extern int mid_record_at_least_one;
 extern int mid_notes_recorded;
+extern z80_bit mid_record_noisetone;
+extern int mid_has_been_initialized(void);
+extern void mid_flush_file(void);
+extern void mid_initialize_export(void);
+extern void mid_reset_export_buffers(void);
 
 extern char audio_valor_enviar_sonido;
 

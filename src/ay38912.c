@@ -62,11 +62,11 @@ D3 Ruido en el canal A
 D2 Tono en el canal C
 D1 Tono en el canal B
 DO Tono en el canal A
-Seccion 30. Informaci~n de referencia
+Seccion 30. Informacion de referencia
 309
-Este registro controla la mezcla de ruido y tono para cada canal y la direc i~n
-puerta de E/S de o~ho bits. Un cero en un bit de mezcla indica que la funci~n
-a~tivada.
+Este registro controla la mezcla de ruido y tono para cada canal y la direccion
+puerta de E/S de ocho bits. Un cero en un bit de mezcla indica que la funcion
+activada.
 
 R8 � Control de amplitud del ca~al A
 R9 � Control de amplitud del canal B

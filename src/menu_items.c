@@ -15589,6 +15589,11 @@ void menu_record_mid_save(MENU_ITEM_PARAMETERS)
         }
 }
 
+void menu_record_mid_noisetone(MENU_ITEM_PARAMETERS)
+{
+	mid_record_noisetone.v ^=1;	
+}
+
 void menu_record_mid(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_record_mid;
@@ -15607,7 +15612,12 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_chip,"Stop Recording");	
 					}
 
-					
+					menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_noisetone,NULL,"[%c] Allow tone+noise",
+						(mid_record_noisetone.v ? 'X' : ' ') );
+
+					menu_add_item_menu_tooltip(array_menu_record_mid,"Record also channels enabled as tone+noise");
+					menu_add_item_menu_ayuda(array_menu_record_mid,"Record also channels enabled as tone+noise");
+
 
 					if (mid_is_recording.v) {
 
