@@ -15583,17 +15583,9 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_chip,"Stop Recording");	
 					}
 
+					
+
 					if (mid_is_recording.v) {
-
-						int max_buffer=mid_max_buffer();
-						
-
-						int max_buffer_perc=(max_buffer*100)/MAX_MID_EXPORT_BUFFER;
-
-						printf ("%d %d\n",max_buffer,max_buffer_perc);
-
-						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,NULL,NULL,"Buffer used: %d%%",max_buffer_perc);
-						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,NULL,NULL,"Voices: %d",3*mid_chips_al_start);
 
 						if (mid_is_paused.v==0) {
 							menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_chip,"Pause Recording");
@@ -15608,7 +15600,23 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_chip,"Save to Disk");
 					}
 
-					
+					if (mid_is_recording.v) {
+
+						int max_buffer=mid_max_buffer();
+						
+
+						int max_buffer_perc=(max_buffer*100)/MAX_MID_EXPORT_BUFFER;
+
+						printf ("%d %d\n",max_buffer,max_buffer_perc);
+
+
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"");
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"Info:");
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"Buffer used: %d%%",max_buffer_perc);
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"Voices: %d",3*mid_chips_al_start);
+						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"");
+
+					}					
 		
 					
 
@@ -15620,7 +15628,7 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_record_mid,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_record_mid);
 
-                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"Record MID" );
+                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"AY Chip to MID" );
 
                 
 

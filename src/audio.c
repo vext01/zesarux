@@ -2425,9 +2425,10 @@ void mid_initialize_export(void)
 
 				mid_silencios_acumulados[canal]=0;
 
+				//Al principio decimos que hay un silencio sonando. De 1/50 s
 				mid_nota_sonando[canal][0]=0;
 
-				mid_nota_sonando_duracion[canal]=0;
+				mid_nota_sonando_duracion[canal]=1;
 			}
 
 }
