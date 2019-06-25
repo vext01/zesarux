@@ -15631,7 +15631,7 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 
 						int max_buffer_perc=(max_buffer*100)/MAX_MID_EXPORT_BUFFER;
 
-						printf ("%d %d\n",max_buffer,max_buffer_perc);
+						//printf ("%d %d\n",max_buffer,max_buffer_perc);
 
 
 						menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_SEPARADOR,NULL,NULL,"");

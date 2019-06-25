@@ -2464,7 +2464,8 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 
 	//Si no habia sonado nada aun, no meter silencio acumulado, resetearlos todos a cero
 	//Para no grabar silencios del principio
-	if (!mid_notes_recorded) {
+	//Esto NO va bien
+	/*if (!mid_notes_recorded) {
 			int total_pistas=3*mid_chips_al_start;
 
 			int canal;
@@ -2473,7 +2474,7 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 				printf ("acumulado %d\n",mid_silencios_acumulados[canal]);
 				mid_silencios_acumulados[canal]=0;
 			}	
-	}
+	}*/
 
 
 	mid_notes_recorded++;
