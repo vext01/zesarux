@@ -2503,7 +2503,7 @@ void mid_export_put_note(int canal,char *nota,int duracion)
 		return;
 	}
 
-	debug_printf (VERBOSE_DEBUG,"Adding note nota %d in channel %d silence before %d length %d",nota_numero,canal,mid_silencios_acumulados[canal],duracion);
+	debug_printf (VERBOSE_DEBUG,"Adding note %d in channel %d silence before %d length %d",nota_numero,canal,mid_silencios_acumulados[canal],duracion);
 
 	indice +=mid_mete_nota(&mid_memoria_export[canal][indice],mid_silencios_acumulados[canal],duracion,canal,nota_numero,0x40);
 
@@ -2643,12 +2643,18 @@ void mid_frame_event(void)
 
 				//Se permite tono y ruido?
 				if (mid_record_noisetone.v) {
-					if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador_tonoruido) suena_nota=1;
+					if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
+						suena_nota=1;
+						//printf ("tonoruido\n");
+					}
 				}
 
 
 				//Pero si no hay volumen, no hay nota
 				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
+
+				//if (!suena_nota) printf ("no suena\n");
+				//else printf ("suena\n");
 
 				if (!suena_nota) nota[0]=0;
 
