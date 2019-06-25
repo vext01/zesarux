@@ -2463,11 +2463,14 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 
 
 	//Si no habia sonado nada aun, no meter silencio acumulado, resetearlos todos a cero
+	//Para no grabar silencios del principio
 	if (!mid_notes_recorded) {
 			int total_pistas=3*mid_chips_al_start;
 
 			int canal;
 			for (canal=0;canal<total_pistas;canal++) {	
+				//Acumulados tienen que ser todos iguales
+				printf ("acumulado %d\n",mid_silencios_acumulados[canal]);
 				mid_silencios_acumulados[canal]=0;
 			}	
 	}
@@ -2491,11 +2494,11 @@ void mid_export_put_note(int canal,char *nota,int duracion,int division)
 
 	if (nota_numero<0) {
 		//Nota invalida. no se deberia llegar aqui nunca
-		printf ("Invalid note %s\n",nota);
+		debug_printf (VERBOSE_DEBUG,"Invalid note %s",nota);
 		return;
 	}
 
-	printf ("meter nota %d en canal %d silencio acumulado %d duracion %d\n",nota_numero,canal,mid_silencios_acumulados[canal],duracion);
+	debug_printf (VERBOSE_DEBUG,"Adding note nota %d in channel %d silence before %d length %d",nota_numero,canal,mid_silencios_acumulados[canal],duracion);
 
 	indice +=mid_mete_nota(&mid_memoria_export[canal][indice],mid_silencios_acumulados[canal],duracion,canal,nota_numero,0x40);
 
@@ -2554,7 +2557,7 @@ FILE *ptr_midfile;
 
      ptr_midfile=fopen(mid_export_file,"wb");
      if (!ptr_midfile) {
-                        printf("can not write midi file\n");
+                        debug_printf(VERBOSE_ERR,"Can not write midi file");
                         return;
       }
 
@@ -2562,7 +2565,7 @@ FILE *ptr_midfile;
 
 	for (canal=0;canal<pistas;canal++) {
 		int longitud_pista=mid_indices_actuales[canal];
-		printf ("escribiendo canal %d longitud %d\n",canal,longitud_pista);
+		debug_printf (VERBOSE_DEBUG,"Writing Channel %d length %d",canal,longitud_pista);
 		fwrite(mid_memoria_export[canal], 1, longitud_pista, ptr_midfile);
 	}
 
@@ -2627,10 +2630,10 @@ void mid_frame_event(void)
 				}
 				else {
 					
-					printf ("nota diferente canal %d. anterior [%s] duracion %d\n",canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final]);
+					//printf ("nota diferente canal %d. anterior [%s] duracion %d\n",canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final]);
 
 
-					printf ("nota diferente canal %d. nueva [%s]\n",canal_final,nota);
+					//printf ("nota diferente canal %d. nueva [%s]\n",canal_final,nota);
 
 					//Metemos nota
 					mid_export_put_note(canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final],mid_parm_division);
