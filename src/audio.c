@@ -2612,20 +2612,39 @@ void mid_frame_event(void)
 
 				reg_vol=8+canal;
 
-				int mascara_mezclador=1; //1+8;
+				int mascara_mezclador=1|8; 
+				int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)
 
-				if (mid_record_noisetone.v) mascara_mezclador |=8;
+				int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
+
+				//if (mid_record_noisetone.v) mascara_mezclador |=8;
+
+
+				/*
+				1xx1 -> no tono ni ruido
+				0xx1 -> ruido
+
+				0xx0 -> ruido+tono
+				1xx0 -> tono
+				*/
 
 
 				if (canal>0) {
 					mascara_mezclador=mascara_mezclador<<canal;
+					valor_esperado_mezclador=valor_esperado_mezclador<<canal;
 				}
 
 
 				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
 				int suena_nota=0;
 
-				if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==0) suena_nota=1; //Los bits a mirar tienen que ser cero
+
+				if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
+
+				//Se permite tono y ruido?
+				if (mid_record_noisetone.v) {
+					if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador_tonoruido) suena_nota=1;
+				}
 
 
 				//Pero si no hay volumen, no hay nota
