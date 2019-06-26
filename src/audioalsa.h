@@ -32,6 +32,11 @@ extern int fifo_alsa_buffer_size;
 extern int alsa_periodsize;
 extern void audioalsa_get_buffer_info (int *buffer_size,int *current_buffer_position);
 
+extern int alsa_midi_client;
+extern int alsa_midi_port;
+
+extern int alsa_midi_initialized;
+
 
 
 #endif

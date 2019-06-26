@@ -99,6 +99,11 @@
 #include "assemble.h"
 #include "expression_parser.h"
 
+
+#ifdef COMPILE_ALSA
+#include "audioalsa.h"
+#endif
+
  
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>
@@ -164,6 +169,7 @@ int watches_opcion_seleccionada=0;
 int breakpoints_opcion_seleccionada=0;
 int menu_watches_opcion_seleccionada=0;
 int record_mid_opcion_seleccionada=0;
+int direct_midi_output_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -15683,3 +15689,59 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 
 	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
+
+
+//Midi output a dispositivo real. Solo con Alsa
+#ifdef COMPILE_ALSA
+
+void menu_direct_midi_output_initialize(MENU_ITEM_PARAMETERS)
+{
+alsa_mid_main();
+}
+
+
+void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_direct_midi_output;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+        do {
+
+		menu_add_item_menu_inicial_format(&array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"List midi devices");
+
+
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Midi port: %d",alsa_midi_port);
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Midi client: %d",alsa_midi_client);
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Initialize midi");
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
+			(alsa_midi_initialized ? "Yes" : "No" ) );
+
+
+
+
+
+
+                menu_add_item_menu(array_menu_direct_midi_output,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                //menu_add_item_menu(array_menu_direct_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_direct_midi_output);
+
+                retorno_menu=menu_dibuja_menu(&direct_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_midi_output,"AY to MID" );
+
+
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+	                //llamamos por valor de funcion
+        	        if (item_seleccionado.menu_funcion!=NULL) {
+                	        //printf ("actuamos por funcion\n");
+	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+        	        }
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+}
+
+#endif

@@ -7294,11 +7294,6 @@ init_randomize_noise_value();
 	mid_reset_export_buffers();
 
 
-	//temp
-#ifdef COMPILE_ALSA
-	//de momento midi output solo esta para alsa
-	alsa_mid_main(24,0);
-#endif
 
 	if (realjoystick_present.v==1) {
 			if (realjoystick_init()) {

@@ -699,12 +699,12 @@ void audioalsa_send_frame(char *buffer)
 
 	//return new_audioalsa_send_frame(buffer);
 }
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <errno.h>
-#include <alsa/asoundlib.h>
+
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <unistd.h>
+//#include <pthread.h>
+//#include <errno.h>
 
 
 //Para ver dispositivos midi:
@@ -918,7 +918,7 @@ int alsa_note_off
 
 
 //Inicialitzar el sistema ALSA
-void alsa_mid_initialize_audio(void)
+int alsa_mid_initialize_audio(void)
 {
 	//Creem el client
 #ifdef DEBUG_ZESARUX_ALSA_MID_C
@@ -926,7 +926,7 @@ void alsa_mid_initialize_audio(void)
 #endif
 	if (alsa_mid_audio_open_client()==NULL) {
 		printf ("Error Creant Client Alsa!\n");
-		exit (1);
+		return 1;
 	}
 
 	//Creem el port
@@ -939,7 +939,7 @@ void alsa_mid_initialize_audio(void)
 #endif
 	if (zesarux_mid_alsa_audio_info.port<0) {
 		printf ("Error creant port!\n");
-		exit (1);
+		return 1;
 	}
 
 	//Creem la cua
@@ -949,7 +949,7 @@ void alsa_mid_initialize_audio(void)
 	zesarux_mid_alsa_audio_info.cua=alsa_mid_audio_new_queue(zesarux_mid_alsa_audio_info.handle);
 	if (zesarux_mid_alsa_audio_info.cua<0) {
 		printf ("Error creant la cua!\n");
-		exit (1);
+		return 1;
 	}
 
 	//Escollim el tempo
@@ -965,7 +965,7 @@ void alsa_mid_initialize_audio(void)
 #ifdef DEBUG_ZESARUX_ALSA_MID_C
 		printf ("Error subscrivint al port de midi client=%d port=%d\n",
 				zesarux_mid_alsa_audio_info.midi_client,zesarux_mid_alsa_audio_info.midi_port);
-		exit (1);
+		return 1;
 #endif
 	}
 	//subscriure_port_midi_equivalent(midi_client,midi_port);
@@ -976,6 +976,8 @@ void alsa_mid_initialize_audio(void)
 		printf ("Error iniciant la cua\n");
 		exit (1);
 	}*/
+
+	return 0;
 }
 
 
@@ -1037,19 +1039,29 @@ int alsa_mid_note_off(unsigned char channel, unsigned char note)
 }
 
 
-int alsa_mid_main(int client,int port)
+int alsa_midi_client=24;
+int alsa_midi_port=0;
+
+int alsa_midi_initialized=0;
+
+
+//Devuelve 1 si error
+int alsa_mid_main(void)
 {
 
         //Inicialitzar sistema ALSA
         //zesarux_mid_alsa_audio_info.midi_client=atoi(argv[1]);
         //zesarux_mid_alsa_audio_info.midi_port=atoi(argv[2]);
-        zesarux_mid_alsa_audio_info.midi_client=client;
-        zesarux_mid_alsa_audio_info.midi_port=port;
+        zesarux_mid_alsa_audio_info.midi_client=alsa_midi_client;
+        zesarux_mid_alsa_audio_info.midi_port=alsa_midi_port;
 
-        alsa_mid_initialize_audio();
+        if (alsa_mid_initialize_audio() ) return 1;
 	alsa_mid_initialize_volume();
 
-return;
+
+	alsa_midi_initialized=1;
+
+	return 0;
 
         //Final. Aqui no s'arriba mai
         getchar();
@@ -1091,7 +1103,7 @@ char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
 void alsa_midi_output_frame_event(void)
 {
 
-
+	if (alsa_midi_initialized==0) return;
 
 
 		int chip;
