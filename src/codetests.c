@@ -42,6 +42,7 @@
 #include "disassemble.h"
 #include "assemble.h"
 #include "expression_parser.h"
+#include "audio.h"
 
 
 void codetests_repetitions(void)

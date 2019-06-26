@@ -123,6 +123,11 @@ token_parser_textos_indices tpti_funciones[]={
 	{TPI_F_PEEKW,"PEEKW("},
 	{TPI_F_NOT,"NOT("},
 
+	{TPI_F_ABS,"ABS("},
+	{TPI_F_BYTE,"BYTE("},
+	{TPI_F_WORD,"WORD("},
+
+
     {TPI_FIN,""}
 };
 
@@ -1555,7 +1560,20 @@ int exp_par_calculate_funcion(int valor,enum token_parser_tipo tipo,enum token_p
 
                     case TPI_F_NOT:
         				return !valor;
-                    break;        
+                    break;       
+
+                    case TPI_F_ABS:
+        				if (valor<0) return -valor;
+                        else return valor;
+                    break;         
+
+                    case TPI_F_BYTE:
+        				return valor & 0xFF;
+                    break;          
+
+                    case TPI_F_WORD:
+        				return valor & 0xFFFF;
+                    break;                                                
 
                     default:
                         //Para que no se queje el compilador por demas valores enum no tratados
