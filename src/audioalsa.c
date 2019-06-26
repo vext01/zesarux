@@ -1009,9 +1009,11 @@ void alsa_mid_set_volume_master(int percent)
 
 	elem = snd_mixer_find_selem(mixer, id);
 
-	//da error al ejecutar snd_mixer_selem_get_playback_volume_range(elem,&pmin,&pmax);
+	//Parece que da error al ejecutar esto
+	snd_mixer_selem_get_playback_volume_range(elem,&pmin,&pmax);
 
-	//da error al ejecutar snd_mixer_selem_set_playback_volume_all(elem, alsa_mid_percent_to_alsa(percent,pmin,pmax));
+	//Parece que da error al ejecutar esto
+	snd_mixer_selem_set_playback_volume_all(elem, alsa_mid_percent_to_alsa(percent,pmin,pmax));
 
 	snd_mixer_close(mixer);
 
@@ -1022,7 +1024,7 @@ void alsa_mid_set_volume_master(int percent)
 void alsa_mid_initialize_volume(void)
 {
 
-        alsa_mid_set_volume_master(100);
+        alsa_mid_set_volume_master(alsa_midi_volume);
 }
 
 
@@ -1041,6 +1043,7 @@ int alsa_mid_note_off(unsigned char channel, unsigned char note)
 
 int alsa_midi_client=0;
 int alsa_midi_port=0;
+int alsa_midi_volume=100;
 
 int alsa_midi_initialized=0;
 

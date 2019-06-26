@@ -15697,7 +15697,15 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 
 void menu_direct_midi_output_initialize(MENU_ITEM_PARAMETERS)
 {
-alsa_mid_main();
+
+	if (alsa_midi_initialized==0) {
+		alsa_mid_main();
+	}
+	else {
+		//TODO desactivar dispositivo y noteoff, etc
+		alsa_midi_initialized=0;
+	}
+
 }
 
 void menu_direct_midi_output_list_devices(MENU_ITEM_PARAMETERS)
@@ -15757,6 +15765,29 @@ void menu_direct_midi_output_port(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_direct_midi_output_volume(MENU_ITEM_PARAMETERS)
+{
+        char string_valor[4];
+        int valor;
+
+
+        sprintf (string_valor,"%d",alsa_midi_volume);
+
+
+        menu_ventana_scanf("Volume",string_valor,4);
+
+        valor=parse_string_to_number(string_valor);
+        if (valor<0 || valor>100) {
+                menu_error_message("Invalid Volume");
+        }
+
+
+        alsa_midi_volume=valor;
+
+	alsa_mid_initialize_volume();
+
+}
+
 
 
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
@@ -15772,7 +15803,16 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_client,NULL,"Midi client: %d",alsa_midi_client);
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_port,NULL,"Midi port: %d",alsa_midi_port);
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Initialize midi");
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
+
+
+		if (alsa_midi_initialized==0) {
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Initialize midi");
+		}
+		else {
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Disable midi");
+		}
+
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
 			(alsa_midi_initialized ? "Yes" : "No" ) );
 
