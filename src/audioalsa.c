@@ -879,7 +879,7 @@ int alsa_note_on
 (unsigned char channel, unsigned char note,unsigned char velocity)
 {
 
-	printf ("noteon event channel %d note %d velocity %d\n",channel,note,velocity);
+	debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
 
 	snd_seq_event_t ev;
 
@@ -900,7 +900,7 @@ int alsa_note_off
 (unsigned char channel, unsigned char note,unsigned char velocity)
 {
 
-	printf ("noteoff event channel %d note %d velocity %d\n",channel,note,velocity);
+	debug_printf (VERBOSE_PARANOID,"noteoff event channel %d note %d velocity %d",channel,note,velocity);
 	snd_seq_event_t ev;
 
 	snd_seq_ev_clear(&ev);
@@ -1010,10 +1010,10 @@ void alsa_mid_set_volume_master(int percent)
 	elem = snd_mixer_find_selem(mixer, id);
 
 	//Parece que da error al ejecutar esto
-	snd_mixer_selem_get_playback_volume_range(elem,&pmin,&pmax);
+	//snd_mixer_selem_get_playback_volume_range(elem,&pmin,&pmax);
 
 	//Parece que da error al ejecutar esto
-	snd_mixer_selem_set_playback_volume_all(elem, alsa_mid_percent_to_alsa(percent,pmin,pmax));
+	//snd_mixer_selem_set_playback_volume_all(elem, alsa_mid_percent_to_alsa(percent,pmin,pmax));
 
 	snd_mixer_close(mixer);
 
@@ -1047,6 +1047,8 @@ int alsa_midi_volume=100;
 
 int alsa_midi_initialized=0;
 
+//Notas anteriores sonando, 3 canales
+char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
 
 //Devuelve 1 si error
 int alsa_mid_main(void)
@@ -1064,42 +1066,32 @@ int alsa_mid_main(void)
 
 	alsa_midi_initialized=1;
 
+
+
+    int total_pistas=3*mid_chips_al_start;
+
+                        int canal;
+                        for (canal=0;canal<total_pistas;canal++) {
+
+                                //Al principio decimos que hay un silencio sonando
+                                midi_output_nota_sonando[canal][0]=0;
+
+
+	}
+
+
+
+
+
 	return 0;
 
-        //Final. Aqui no s'arriba mai
-        getchar();
-
-	int nota;
-	for (nota=0;nota<100;nota++) {
-
-	if (alsa_mid_note_on(0,nota)<0) {
-                        printf ("midi_alsa.c::activar_aviso: Error fent noteon\n");
-	}
-
-	//temp
-	alsa_mid_note_on(1,nota+50);
-                
-	snd_seq_drain_output(zesarux_mid_alsa_audio_info.handle);
-
-        getchar();
-	if (alsa_mid_note_off(0,nota)<0) {
-                        printf ("midi_alsa.c::activar_aviso: Error fent noteoff\n");
-	}
-
-	//temp
-	alsa_mid_note_off(1,nota+50);
-
-	//snd_seq_drain_output(zesarux_mid_alsa_audio_info.handle);
-
-
-	}
 
 
 }
 
 
-//Notas anteriores sonando, 3 canales
-char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
+
+
 
 
 

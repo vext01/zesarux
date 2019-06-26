@@ -15699,7 +15699,9 @@ void menu_direct_midi_output_initialize(MENU_ITEM_PARAMETERS)
 {
 
 	if (alsa_midi_initialized==0) {
-		alsa_mid_main();
+		if (alsa_mid_main()) {
+			menu_error_message("Error initializing midi device");
+		}
 	}
 	else {
 		//TODO desactivar dispositivo y noteoff, etc
@@ -15803,7 +15805,9 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_client,NULL,"Midi client: %d",alsa_midi_client);
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_port,NULL,"Midi port: %d",alsa_midi_port);
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
+
+		//Parece que no funciona la gestion de volumen
+		//menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
 
 
 		if (alsa_midi_initialized==0) {
