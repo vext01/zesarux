@@ -625,6 +625,8 @@ void envio_audio(void)
 
 	mid_frame_event();
 
+	midi_output_frame_event();
+
 }
 
 
@@ -2712,4 +2714,15 @@ void mid_frame_event(void)
 
 
 	
+}
+
+
+void midi_output_frame_event(void)
+{
+#ifdef COMPILE_ALSA
+	//de momento midi output solo esta para alsa
+	alsa_midi_output_frame_event();
+#else
+	return;
+#endif
 }

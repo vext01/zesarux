@@ -37,6 +37,7 @@
 #include "compileoptions.h"
 #include "debug.h"
 #include "settings.h"
+#include "ay38912.h"
 
 
 
@@ -1037,7 +1038,8 @@ int alsa_mid_note_off(unsigned char channel, unsigned char note)
 
 
 int alsa_mid_main
-(int argc,char *argv[])
+//(int argc,char *argv[])
+(int client,int port)
 {
 
         if (argc<3) {
@@ -1046,10 +1048,15 @@ int alsa_mid_main
         }
 
         //Inicialitzar sistema ALSA
-        zesarux_mid_alsa_audio_info.midi_client=atoi(argv[1]);
-        zesarux_mid_alsa_audio_info.midi_port=atoi(argv[2]);
+        //zesarux_mid_alsa_audio_info.midi_client=atoi(argv[1]);
+        //zesarux_mid_alsa_audio_info.midi_port=atoi(argv[2]);
+        zesarux_mid_alsa_audio_info.midi_client=client;
+        zesarux_mid_alsa_audio_info.midi_port=port;
+
         alsa_mid_initialize_audio();
 	alsa_mid_initialize_volume();
+
+return;
 
         //Final. Aqui no s'arriba mai
         getchar();
@@ -1079,6 +1086,138 @@ int alsa_mid_main
 
 	}
 
-        return 0;
+
+}
+
+
+//Notas anteriores sonando, 3 canales
+char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
+
+
+
+void alsa_midi_output_frame_event(void)
+{
+
+
+
+
+		int chip;
+
+
+			char nota[4];
+
+
+		for (chip=0;chip<mid_chips_al_start;chip++) {
+			int canal;
+			for (canal=0;canal<3;canal++) {
+
+
+				int freq=ay_retorna_frecuencia(canal,chip);
+
+
+				sprintf(nota,"%s",get_note_name(freq) );
+
+
+
+				//int reg_tono;
+				int reg_vol;
+
+				reg_vol=8+canal;
+
+				int mascara_mezclador=1|8;
+				int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)
+
+				int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
+
+				//if (mid_record_noisetone.v) mascara_mezclador |=8;
+
+
+				/*
+				1xx1 -> no tono ni ruido
+				0xx1 -> ruido
+
+				0xx0 -> ruido+tono
+				1xx0 -> tono
+				*/
+
+
+				if (canal>0) {
+					mascara_mezclador=mascara_mezclador<<canal;
+					valor_esperado_mezclador=valor_esperado_mezclador<<canal;
+				}
+
+
+				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+				int suena_nota=0;
+
+
+				if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
+
+				//Se permite tono y ruido?
+				if (mid_record_noisetone.v) {
+					if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
+						suena_nota=1;
+						//printf ("tonoruido\n");
+					}
+				}
+
+
+				//Pero si no hay volumen, no hay nota
+				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
+
+				//if (!suena_nota) printf ("no suena\n");
+				//else printf ("suena\n");
+
+				if (!suena_nota) nota[0]=0;
+
+
+				int canal_final=3*chip+canal;
+
+				//Comparar si igual o anterior
+				if (!strcasecmp(nota,midi_output_nota_sonando[canal_final])) {
+					//midi_output_nota_sonando_duracion[canal_final]++;
+					//printf ("nota igual [%s] duracion [%d]\n",
+					//nota,midi_output_nota_sonando_duracion[canal]);
+				}
+				else {
+
+					//printf ("nota diferente canal %d. anterior [%s] duracion %d\n",canal_final,midi_output_nota_sonando[canal_final],midi_output_nota_sonando_duracion[canal_final]);
+
+
+					//printf ("nota diferente canal %d. nueva [%s]\n",canal_final,nota);
+
+					//Metemos nota
+					//Note off de la anterior y note on de la actual
+
+					//note off si no era un silencio
+					if (midi_output_nota_sonando[canal_final][0]!=0) {
+					      int nota_numero=get_mid_number_note(midi_output_nota_sonando[canal_final]);
+
+					        if (nota_numero<0) {
+					                //Nota invalida. no se deberia llegar aqui nunca
+					                debug_printf (VERBOSE_DEBUG,"Invalid note %s",nota);
+        					}	
+						alsa_mid_note_off(canal_final,nota_numero);
+					}
+
+					//note on si no es un silencio
+					if (nota[0]!=0) {
+                                              int nota_numero=get_mid_number_note(nota);
+
+                                                if (nota_numero<0) {
+                                                        //Nota invalida. no se deberia llegar aqui nunca
+                                                        debug_printf (VERBOSE_DEBUG,"Invalid note %s",nota);
+                                                }
+                                                alsa_mid_note_off(canal_final,nota_numero);
+                                        }
+	
+					//mid_export_put_note(canal_final,midi_output_nota_sonando[canal_final],midi_output_nota_sonando_duracion[canal_final]);
+
+
+					strcpy(midi_output_nota_sonando[canal_final],nota);
+				}
+			}
+
+		}
 
 }

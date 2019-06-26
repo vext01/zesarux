@@ -1765,7 +1765,7 @@ fi
 if [ "$OPTIONOBJALSA" != "" ]; then
 
 cat >> Makefile << _EOF
-audioalsa.o: audioalsa.c audioalsa.h cpu.h audio.h compileoptions.h debug.h settings.h
+audioalsa.o: audioalsa.c audioalsa.h cpu.h audio.h compileoptions.h debug.h settings.h ay38912.h
 	\$(CC) \$(CFLAGS) -c audioalsa.c
 
 _EOF
