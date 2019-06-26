@@ -15715,6 +15715,48 @@ void menu_direct_midi_output_list_devices(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_direct_midi_output_client(MENU_ITEM_PARAMETERS)
+{
+        char string_valor[4];
+        int valor;
+
+
+        sprintf (string_valor,"%d",alsa_midi_client);
+
+
+        menu_ventana_scanf("Client value",string_valor,4);
+
+        valor=parse_string_to_number(string_valor);
+	if (valor<0 || valor>255) {
+		menu_error_message("Invalid client value");
+	}
+
+
+	alsa_midi_client=valor;
+
+}
+
+void menu_direct_midi_output_port(MENU_ITEM_PARAMETERS)
+{
+        char string_valor[4];
+        int valor;
+
+
+        sprintf (string_valor,"%d",alsa_midi_port);
+
+
+        menu_ventana_scanf("Port value",string_valor,4);
+
+        valor=parse_string_to_number(string_valor);
+        if (valor<0 || valor>255) {
+                menu_error_message("Invalid client value");
+        }
+
+
+        alsa_midi_port=valor;
+
+}
+
 
 
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
@@ -15728,8 +15770,8 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_list_devices,NULL,"List midi devices");
 
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Midi client: %d",alsa_midi_client);
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Midi port: %d",alsa_midi_port);
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_client,NULL,"Midi client: %d",alsa_midi_client);
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_port,NULL,"Midi port: %d",alsa_midi_port);
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Initialize midi");
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
 			(alsa_midi_initialized ? "Yes" : "No" ) );

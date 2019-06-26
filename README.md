@@ -202,6 +202,8 @@ __FEATURES__
 
 * Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
 
+* Real time playback from AY Chip sound to external MIDI device
+
 * Supports Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
 
 * Supports Speaker and Soundbox sound on Jupiter Ace

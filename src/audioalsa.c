@@ -1039,7 +1039,7 @@ int alsa_mid_note_off(unsigned char channel, unsigned char note)
 }
 
 
-int alsa_midi_client=24;
+int alsa_midi_client=0;
 int alsa_midi_port=0;
 
 int alsa_midi_initialized=0;
