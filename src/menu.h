@@ -133,6 +133,7 @@ extern int menu_generic_message_final_abajo(int primera_linea,int alto_ventana,i
 extern void menu_espera_tecla_timeout_window_splash(void);
 extern void menu_cpu_core_loop(void);
 extern z80_byte menu_get_pressed_key(void);
+extern void menu_about_read_file(char *title,char *aboutfile);
 
 extern int menu_cond_zx8081(void);
 extern int menu_cond_zx8081_realvideo(void);

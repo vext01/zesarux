@@ -15694,10 +15694,27 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 //Midi output a dispositivo real. Solo con Alsa
 #ifdef COMPILE_ALSA
 
+
 void menu_direct_midi_output_initialize(MENU_ITEM_PARAMETERS)
 {
 alsa_mid_main();
 }
+
+void menu_direct_midi_output_list_devices(MENU_ITEM_PARAMETERS)
+{
+
+	char *device_list="/proc/asound/seq/clients";
+
+	if (!si_existe_archivo(device_list)) {
+		menu_error_message("Can not find device list");
+	}
+
+	//Abrir archivo y mostrarlo en ventana
+	//Usamos esta funcion generica de mostrar archivos de ayuda
+	menu_about_read_file("Sequencer devices",device_list);
+
+}
+
 
 
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
@@ -15708,11 +15725,11 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
         do {
 
-		menu_add_item_menu_inicial_format(&array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"List midi devices");
+		menu_add_item_menu_inicial_format(&array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_list_devices,NULL,"List midi devices");
 
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Midi port: %d",alsa_midi_port);
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Midi client: %d",alsa_midi_client);
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Midi port: %d",alsa_midi_port);
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Initialize midi");
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
 			(alsa_midi_initialized ? "Yes" : "No" ) );
