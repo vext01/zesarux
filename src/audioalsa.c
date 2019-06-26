@@ -1040,11 +1040,6 @@ int alsa_mid_note_off(unsigned char channel, unsigned char note)
 int alsa_mid_main(int client,int port)
 {
 
-        if (argc<3) {
-                printf ("Command line: %s [midi_client] [midi_port]\n\n",argv[0]);
-                exit (1);
-        }
-
         //Inicialitzar sistema ALSA
         //zesarux_mid_alsa_audio_info.midi_client=atoi(argv[1]);
         //zesarux_mid_alsa_audio_info.midi_port=atoi(argv[2]);
@@ -1206,7 +1201,7 @@ void alsa_midi_output_frame_event(void)
                                                         //Nota invalida. no se deberia llegar aqui nunca
                                                         debug_printf (VERBOSE_DEBUG,"Invalid note %s",nota);
                                                 }
-                                                alsa_mid_note_off(canal_final,nota_numero);
+                                                alsa_mid_note_on(canal_final,nota_numero);
                                         }
 	
 					//mid_export_put_note(canal_final,midi_output_nota_sonando[canal_final],midi_output_nota_sonando_duracion[canal_final]);
@@ -1217,5 +1212,8 @@ void alsa_midi_output_frame_event(void)
 			}
 
 		}
+
+	snd_seq_drain_output(zesarux_mid_alsa_audio_info.handle);
+		
 
 }
