@@ -1037,9 +1037,7 @@ int alsa_mid_note_off(unsigned char channel, unsigned char note)
 }
 
 
-int alsa_mid_main
-//(int argc,char *argv[])
-(int client,int port)
+int alsa_mid_main(int client,int port)
 {
 
         if (argc<3) {
