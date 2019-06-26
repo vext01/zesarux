@@ -997,7 +997,7 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
 
             //buscar texto que corresponda con ese indice
             int j;
-            for (j=0;indice_a_tabla[j].indice!=TPT_FIN;j++) {
+            for (j=0;indice_a_tabla[j].indice!=TPI_FIN;j++) {
                 if (indice_a_tabla[j].indice==indice) break;
             }
 
