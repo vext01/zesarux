@@ -280,6 +280,8 @@ extern void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_soni
 
 extern void audiodac_send_sample_value(z80_byte value);
 
+extern void midi_output_frame_event(void);
+
 #define FREQ_TOP_SPEED_CHANGE 12800
 
 
