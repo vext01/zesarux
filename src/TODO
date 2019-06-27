@@ -7,6 +7,8 @@
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
+-mezclador AY para activar/desactivar canales, ruidos, etc
+
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod
 

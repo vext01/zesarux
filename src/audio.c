@@ -2661,11 +2661,11 @@ void mid_frame_event(void)
 				int suena_nota=0;
 
 
-				if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
+				if ( (ay_retorna_mixer_register(chip) &mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
 
 				//Se permite tono y ruido?
 				if (mid_record_noisetone.v) {
-					if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
+					if ( (ay_retorna_mixer_register(chip) &mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
 						suena_nota=1;
 						//printf ("tonoruido\n");
 					}
@@ -2681,7 +2681,7 @@ void mid_frame_event(void)
 				if (!suena_nota) nota[0]=0;
 
 
-				//if ( (ay_3_8912_registros[chip][7]&mascara_mezclador)==mascara_mezclador || ay_3_8912_registros[chip][reg_vol]==0) nota[0]=0;
+				
 				
 
 				int canal_final=3*chip+canal;

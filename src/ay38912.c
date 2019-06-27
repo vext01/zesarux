@@ -421,8 +421,8 @@ COMMENT !
 
 //	printf ("ultimo_valor_tono: %d\n",ultimo_valor_tono);
 
-	tone.v=!(ay_3_8912_registros[chip][7] & mascara & 7);
-	noise.v=!(ay_3_8912_registros[chip][7] & mascara & (8+16+32));
+	tone.v=!(ay_retorna_mixer_register(chip) & mascara & 7);
+	noise.v=!(ay_retorna_mixer_register(chip) & mascara & (8+16+32));
 
 	if (tone.v==1 && noise.v==0)  {
 		valor=ultimo_valor_tono;
@@ -1237,4 +1237,11 @@ int ay_retorna_frecuencia(int registro,int chip)
         freq_tono=FRECUENCIA_AY/freq_temp;
 
 	return freq_tono;
+}
+
+//Retorna el registro del mezclador, pero aplicando filtro de canal activado/no, ruido si/no, tono si/no
+//Usado en mid export, direct midi
+z80_byte ay_retorna_mixer_register(int chip)
+{
+	return ay_3_8912_registros[chip][7];
 }
