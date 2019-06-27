@@ -792,7 +792,7 @@ void alsa_mid_audio_set_tempo
 //(BPM/60)*PPQ=ticks/temps
 
 	unsigned int tempo;
-	int p;
+	//int p;
 	unsigned int bpm;
 
 
