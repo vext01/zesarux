@@ -15853,7 +15853,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 
 //Muestra cadena filtro
-int menu_ay_filters_retorna_filtro(int chip,int canal,char *destino)
+void menu_ay_filters_retorna_filtro(int chip,int canal,char *destino)
 {
 	z80_byte valor_filtro=ay_filtros[chip];
 	z80_byte mascara=1|8; //bits xxxx1xx1
