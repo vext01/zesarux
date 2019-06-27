@@ -170,6 +170,7 @@ int breakpoints_opcion_seleccionada=0;
 int menu_watches_opcion_seleccionada=0;
 int record_mid_opcion_seleccionada=0;
 int direct_midi_output_opcion_seleccionada=0;
+int ay_filters_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -15848,3 +15849,93 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 }
 
 #endif
+//Final midi output alsa
+
+
+//Muestra cadena filtro
+int menu_ay_filters_retorna_filtro(int chip,int canal,char *destino)
+{
+	z80_byte valor_filtro=ay_filtros[chip];
+	z80_byte mascara=1|8; //bits xxxx1xx1
+
+	if (canal>0) mascara=mascara<<canal;
+
+	//aplicar mascara
+	valor_filtro &=mascara;
+
+	//Normalizar
+	if (canal>0) valor_filtro=valor_filtro>>canal;
+
+	//Posibles valores: 0,1,8,9
+	switch (valor_filtro) {
+		case 0:
+			strcpy(destino,"No filter");
+		break;
+
+		case 1:
+			strcpy(destino,"No tone");
+		break;
+
+		case 8:
+			strcpy(destino,"No noise");
+		break;		
+
+		//case 9:
+		default:
+			strcpy(destino,"Nothing");
+		break;			
+
+	}
+
+	return;
+}
+
+
+void menu_ay_filters(MENU_ITEM_PARAMETERS)
+{
+menu_item *array_menu_ay_filters;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+	char buffer_filtro[33];
+	
+
+        do {
+
+			menu_add_item_menu_inicial(&array_menu_ay_filters,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+			int chip;
+
+			for (chip=0;chip<ay_retorna_numero_chips();chip++) {
+				int canal;
+				for (canal=0;canal<3;canal++) {
+					menu_ay_filters_retorna_filtro(chip,canal,buffer_filtro);
+					menu_add_item_menu_format(array_menu_ay_filters,MENU_OPCION_NORMAL,NULL,NULL,"C%d CH%d %s",chip,canal,buffer_filtro);
+
+				}
+			}
+
+		
+
+
+                menu_add_item_menu(array_menu_ay_filters,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                //menu_add_item_menu(array_menu_ay_filters,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_ay_filters);
+
+                retorno_menu=menu_dibuja_menu(&ay_filters_opcion_seleccionada,&item_seleccionado,array_menu_ay_filters,"AY filters" );
+
+
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+	                //llamamos por valor de funcion
+        	        if (item_seleccionado.menu_funcion!=NULL) {
+                	        //printf ("actuamos por funcion\n");
+	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+        	        }
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);	
+}

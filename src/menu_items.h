@@ -72,6 +72,7 @@ extern void menu_ay_partitura(MENU_ITEM_PARAMETERS);
 extern void menu_record_mid(MENU_ITEM_PARAMETERS);
 
 extern void menu_direct_midi_output(MENU_ITEM_PARAMETERS);
+extern void menu_ay_filters(MENU_ITEM_PARAMETERS);
 
 #endif
 

@@ -100,4 +100,7 @@ extern int ay3_custom_stereo_C;
 
 extern z80_byte ay_retorna_mixer_register(int chip);
 
+extern z80_byte ay_filtros[];
+extern void ay_init_filters(void);
+
 #endif

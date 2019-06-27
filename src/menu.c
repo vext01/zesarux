@@ -10817,6 +10817,10 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 
 
+					
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_filters,NULL,"AY filters");
+
+
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"W~~ave Piano");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'a');		
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the output speakers");

@@ -1036,7 +1036,9 @@ int alsa_mid_main(void)
 
 
 
-    int total_pistas=3*mid_chips_al_start;
+    int total_pistas=3*MAX_AY_CHIPS;
+
+	//mid_chips_al_start=ay_retorna_numero_chips();
 
 	int canal;
 	for (canal=0;canal<total_pistas;canal++) {
@@ -1069,7 +1071,7 @@ void alsa_midi_output_frame_event(void)
 			char nota[4];
 
 
-		for (chip=0;chip<mid_chips_al_start;chip++) {
+		for (chip=0;chip<ay_retorna_numero_chips();chip++) {
 			int canal;
 			for (canal=0;canal<3;canal++) {
 

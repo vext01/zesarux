@@ -7291,6 +7291,8 @@ init_randomize_noise_value();
 
 
 	init_chip_ay();
+	ay_init_filters();
+	
 	mid_reset_export_buffers();
 
 
