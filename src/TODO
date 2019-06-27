@@ -7,7 +7,7 @@
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
--mezclador AY para activar/desactivar canales, ruidos, etc
+-filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
 
 Para próxima versión ZEsarUX:
 -cpuid ("zxid") según especificación de mcleod

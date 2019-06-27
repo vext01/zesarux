@@ -15852,6 +15852,53 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 //Final midi output alsa
 
 
+//cambia filtro
+void menu_ay_filters_cambia_filtro(MENU_ITEM_PARAMETERS)
+{
+
+	int chip=valor_opcion/3;
+	int canal=valor_opcion % 3;
+
+	//printf ("chip %d canal %d\n",chip,canal);
+
+	z80_byte valor_filtro=ay_filtros[chip];
+	z80_byte mascara=1|8; //bits xxxx1xx1
+
+	z80_byte mascara_ceros=1|8;
+
+	if (canal>0) {
+		mascara=mascara<<canal;
+		mascara_ceros=mascara_ceros<<canal;
+	}
+
+	//aplicar mascara
+	valor_filtro &=mascara;
+
+	//Normalizar
+	if (canal>0) valor_filtro=valor_filtro>>canal;
+
+
+	//Valores posibles 0,1,8,9
+	if (valor_filtro==0) valor_filtro=1;
+	else if (valor_filtro==1) valor_filtro=8;
+	else if (valor_filtro==8) valor_filtro=9;
+	else valor_filtro=0;
+
+	//Volver a meter donde estaba
+	if (canal>0) {
+		valor_filtro=valor_filtro<<canal;
+	}
+
+	mascara_ceros=255-mascara_ceros;
+
+	//Poner a ceros los que habia
+	ay_filtros[chip] &=mascara_ceros;
+
+	//Poner filtro actual
+	ay_filtros[chip] |=valor_filtro;
+	
+}
+
 //Muestra cadena filtro
 void menu_ay_filters_retorna_filtro(int chip,int canal,char *destino)
 {
@@ -15910,7 +15957,9 @@ menu_item *array_menu_ay_filters;
 				int canal;
 				for (canal=0;canal<3;canal++) {
 					menu_ay_filters_retorna_filtro(chip,canal,buffer_filtro);
-					menu_add_item_menu_format(array_menu_ay_filters,MENU_OPCION_NORMAL,NULL,NULL,"C%d CH%d %s",chip,canal,buffer_filtro);
+					menu_add_item_menu_format(array_menu_ay_filters,MENU_OPCION_NORMAL,menu_ay_filters_cambia_filtro,NULL,"C%d CH%d %s",chip,canal,buffer_filtro);
+
+					menu_add_item_menu_valor_opcion(array_menu_ay_filters,chip*3+canal);
 
 				}
 			}
