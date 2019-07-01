@@ -6480,7 +6480,7 @@ void zxvision_handle_maximize(zxvision_window *w)
 			zxvision_set_y_position(w,0);
 			int max_width=scr_get_menu_width();
 			int max_height=scr_get_menu_height();
-			printf ("visible width %d\n",max_width);
+			//printf ("visible width %d\n",max_width);
 			zxvision_set_visible_width(w,max_width);
 			zxvision_set_visible_height(w,max_height);
 			
@@ -10815,7 +10815,12 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 #ifdef COMPILE_ALSA
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_direct_midi_output,NULL,"AY to MIDI ~~Output");
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
+					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device. On Linux, needs alsa driver\n"
+						"You can simulate a external midi device by running timidity with the command line:\n"
+						"timidity -iA -Os -B2,8 -EFreverb=0\n"
+						"Running timidity that way, probably would require that you use another audio driver in ZEsarUX different than alsa, "
+						"unless you have alsa software mixing enabled");
+					);
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
 #endif
 
