@@ -43,6 +43,10 @@
 	#include <sndfile.h>
 #endif
 
+#ifdef COMPILE_ALSA
+#include "audioalsa.h"
+#endif
+
 
 //Si se usa audio sdl2. para workaround con el detector de silencio, que genera zumbido con sdl2
 //Esta a 0 inicialmente. Si se usa sdl2, se pondra a 1, y ya no se pondra a 0 hasta no salir del emulador

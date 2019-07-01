@@ -38,6 +38,8 @@ extern int alsa_midi_volume;
 
 extern int alsa_midi_initialized;
 
+extern void alsa_midi_output_frame_event(void);
+
 
 
 #endif

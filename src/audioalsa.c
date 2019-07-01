@@ -707,6 +707,9 @@ void audioalsa_send_frame(char *buffer)
 //Para ver dispositivos midi:
 //cat /proc/asound/seq/clients
 
+//Para iniciar timidity en modo secuenciador midi externo:
+//timidity -iA -Os -B2,8 -EFreverb=0
+
 #define ZESARUX_MID_PPQ 96
 
 
