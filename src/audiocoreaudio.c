@@ -268,6 +268,9 @@ stereoptr=&pepe;
 	audio_driver_name="coreaudio";
 
 
+
+//temp
+audio_midi_output_init();
   return 0;
 }
 

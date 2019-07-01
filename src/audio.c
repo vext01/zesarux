@@ -2723,12 +2723,8 @@ void mid_frame_event(void)
 
 void midi_output_frame_event(void)
 {
-#ifdef COMPILE_ALSA
-	//de momento midi output solo esta para alsa
+
 	audio_midi_output_frame_event();
-#else
-	return;
-#endif
 }
 
 
@@ -2793,7 +2789,7 @@ int audio_midi_output_init(void)
 	}
 #endif
 
-
+	printf ("Inicializado midi\n");
 	audio_midi_output_initialized=1;
 
 
@@ -2891,8 +2887,8 @@ void audio_midi_output_frame_event(void)
 				//Pero si no hay volumen, no hay nota
 				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
 
-				//if (!suena_nota) printf ("no suena\n");
-				//else printf ("suena\n");
+				if (!suena_nota) printf ("no suena\n");
+				else printf ("suena\n");
 
 				if (!suena_nota) nota[0]=0;
 

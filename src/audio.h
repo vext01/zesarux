@@ -162,6 +162,7 @@ extern int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int ca
 extern void mid_mete_longitud_pista(z80_byte *mem,int longitud);
 extern void mid_frame_event(void);
 extern int audio_midi_output_initialized;
+extern void audio_midi_output_frame_event(void);
 
 //Para cuantas notas da esto aprox?
 #define MAX_MID_EXPORT_BUFFER 1000000
