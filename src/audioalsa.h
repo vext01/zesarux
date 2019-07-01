@@ -35,6 +35,8 @@ extern void audioalsa_get_buffer_info (int *buffer_size,int *current_buffer_posi
 extern int alsa_midi_client;
 extern int alsa_midi_port;
 extern int alsa_midi_volume;
+extern void alsa_midi_output_flush_output(void);
+
 
 //extern int alsa_midi_initialized;
 

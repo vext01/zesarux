@@ -2765,13 +2765,11 @@ int audio_midi_output_init(void)
 {
 
 #ifdef COMPILE_ALSA
-        //Inicializar sistema ALSA midi
-        zesarux_mid_alsa_audio_info.midi_client=alsa_midi_client;
-        zesarux_mid_alsa_audio_info.midi_port=alsa_midi_port;
+     
 
-    if (alsa_mid_initialize_audio() ) return 1;
-
-	alsa_mid_initialize_volume();
+	if (alsa_mid_initialize_all()) {
+		return 1;
+	}
 
 #endif
 

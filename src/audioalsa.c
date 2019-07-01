@@ -1020,9 +1020,8 @@ int alsa_midi_volume=100;
 
 
 
-
+int alsa_mid_initialize_all(void)
 //Devuelve 1 si error
-/*int old_delete_alsa_mid_main(void)
 {
 
         //Inicializar sistema ALSA midi
@@ -1034,30 +1033,13 @@ int alsa_midi_volume=100;
 	alsa_mid_initialize_volume();
 
 
-	alsa_midi_initialized=1;
-
-
-
-    int total_pistas=3*MAX_AY_CHIPS;
-
-	//mid_chips_al_start=ay_retorna_numero_chips();
-
-	int canal;
-	for (canal=0;canal<total_pistas;canal++) {
-
-                                //Al principio decimos que hay un silencio sonando
-                                midi_output_nota_sonando[canal][0]=0;
-
-
-	}
-
 
 	return 0;
 
 
 
 }
-*/
+
 
 void alsa_midi_output_flush_output(void)
 {
