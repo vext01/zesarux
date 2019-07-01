@@ -10807,7 +10807,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 
 					
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_record_mid,menu_cond_ay_chip,"AY to ~~MID");
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_record_mid,menu_cond_ay_chip,"AY to .~~mid");
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Saves music from the AY Chip to a .mid file");
 					menu_add_item_menu_ayuda(array_menu_audio_settings,"Saves music from the AY Chip to a .mid file");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'m');
