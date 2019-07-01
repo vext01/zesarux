@@ -945,7 +945,7 @@ _EOF
                 OPTIONOBJCOREAUDIO=""
         else
                 echo "found"
-                LDFLAGS="$LDFLAGS -framework CoreAudio -framework AudioUnit -framework CoreServices"
+                LDFLAGS="$LDFLAGS -framework CoreAudio -framework AudioUnit -framework CoreServices -framework CoreMIDI"
         fi
         rm -f $TEMPFILE $TEMPFILE.o
 

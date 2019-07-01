@@ -2738,6 +2738,11 @@ int audio_midi_output_note_on(unsigned char channel, unsigned char note)
 	#ifdef COMPILE_ALSA
 	return alsa_note_on(channel,note,ALSA_MID_VELOCITY);
 	#endif
+
+
+	#ifdef COMPILE_COREAUDIO
+	return coreaudio_note_on(channel,note,127);
+	#endif
 }
 
 int audio_midi_output_note_off(unsigned char channel, unsigned char note)
@@ -2745,6 +2750,11 @@ int audio_midi_output_note_off(unsigned char channel, unsigned char note)
 	#ifdef COMPILE_ALSA
 	return alsa_note_off(channel,note,ALSA_MID_VELOCITY);
 	#endif
+
+
+	#ifdef COMPILE_COREAUDIO
+	return coreaudio_note_on(channel,note,127);
+	#endif	
 }
 
 
@@ -2754,6 +2764,10 @@ void audio_midi_output_flush_output(void)
 	#ifdef COMPILE_ALSA
 	alsa_midi_output_flush_output();
 	#endif
+
+	#ifdef COMPILE_COREAUDIO
+	coreaudio_midi_output_flush_output();
+	#endif	
 }
 
 
@@ -2771,6 +2785,12 @@ int audio_midi_output_init(void)
 		return 1;
 	}
 
+#endif
+
+#ifdef COMPILE_COREAUDIO
+	if (coreaudio_mid_initialize_all()) {
+		return 1;
+	}
 #endif
 
 
