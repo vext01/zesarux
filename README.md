@@ -202,7 +202,7 @@ __FEATURES__
 
 * Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
 
-* Real time playback from AY Chip sound to external MIDI device
+* Real time playback from AY Chip sound to external MIDI device (Linux and Mac OS X)
 
 * Supports Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
 
