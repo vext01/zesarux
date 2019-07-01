@@ -9227,17 +9227,10 @@ void menu_cpu_transaction_log_rotate_number(MENU_ITEM_PARAMETERS)
 
         int numero=parse_string_to_number(string_number);
 
-		if (numero<1) {
-			debug_printf (VERBOSE_ERR,"Invalid rotation number");
-            return;
+		if (transaction_log_set_rotate_number(numero)) {
+			debug_printf (VERBOSE_ERR,"Invalid rotation number");			
 		}
 
-
-
-		cpu_transaction_log_rotated_files=numero;
-
-//extern int cpu_transaction_log_rotated_files;
-//extern int cpu_transaction_log_rotate_size;
 
 }
 
@@ -9255,15 +9248,10 @@ void menu_cpu_transaction_log_rotate_size(MENU_ITEM_PARAMETERS)
 
         int numero=parse_string_to_number(string_number);
 
-		if (numero<1) {
+		if (transaction_log_set_rotate_size(numero)) {
 			debug_printf (VERBOSE_ERR,"Invalid rotation size");
-            return;
 		}
 
-		cpu_transaction_log_rotate_size=numero;
-
-//extern int cpu_transaction_log_rotated_files;
-//extern int cpu_transaction_log_rotate_size;
 
 }
 
@@ -9283,7 +9271,7 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
                 if (transaction_log_filename[0]!=0) {
                         menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable,NULL,"[%c] Transaction log enabled",(cpu_transaction_log_enabled.v ? 'X' : ' ' ) );
 						
-						menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_rotate,NULL,"[%c] Rotate transaction log",(cpu_transaction_log_rotate_enabled.v ? 'X' : ' ' ) );
+						menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_rotate,NULL,"[%c] Autorotate files",(cpu_transaction_log_rotate_enabled.v ? 'X' : ' ' ) );
 						menu_add_item_menu_tooltip(array_menu_cpu_transaction_log,"Enable automatic rotation of transaction log files");
 						menu_add_item_menu_ayuda(array_menu_cpu_transaction_log,"Enable automatic rotation of transaction log files");
 						if (cpu_transaction_log_rotate_enabled.v) {

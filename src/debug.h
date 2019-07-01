@@ -167,6 +167,9 @@ extern z80_bit cpu_transaction_log_rotate_enabled;
 extern int cpu_transaction_log_rotated_files;
 extern int cpu_transaction_log_rotate_size;
 
+extern int transaction_log_set_rotate_number(int numero);
+extern int transaction_log_set_rotate_size(int numero);
+
 extern char *spectrum_rom_tokens[];
 extern char *zx81_rom_tokens[];
 extern char *zx80_rom_tokens[];

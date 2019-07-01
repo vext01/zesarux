@@ -1713,6 +1713,31 @@ extern int cpu_transaction_log_rotate_size;
 }
 
 
+int transaction_log_set_rotate_number(int numero)
+{
+	if (numero<1 || numero>999) {
+		//debug_printf (VERBOSE_ERR,"Invalid rotation number");
+        return 1;
+	}
+
+
+	cpu_transaction_log_rotated_files=numero;
+	return 0;
+}
+
+
+int transaction_log_set_rotate_size(int numero)
+{
+	if (numero<1 || numero>9999) {
+		//debug_printf (VERBOSE_ERR,"Invalid rotation size");
+        return 1;
+	}
+
+
+	cpu_transaction_log_rotate_size=numero;
+	return 0;
+}
+
 ///void cpu_core_loop_transaction_log(void)
 z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
