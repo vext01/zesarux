@@ -1695,10 +1695,11 @@ void transaction_log_rotate(void)
 	//printf ("posicion: (tamanyo) %ld\n",tamanyo);
 
 	//Si hay que rotar
-	//Calcular tamanyo en MB
+	
 
 	long tamanyo_a_rotar=cpu_transaction_log_rotate_size;
 
+	//Pasar tamanyo a bytes
 	tamanyo_a_rotar *=1024;
 	tamanyo_a_rotar *=1024;
 
