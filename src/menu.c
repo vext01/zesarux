@@ -10815,8 +10815,8 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 #ifdef COMPILE_ALSA
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_direct_midi_output,NULL,"AY to MIDI ~~Output");
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device. On Linux, needs alsa driver\n"
-						"You can simulate a external midi device by running timidity with the command line:\n"
+					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device. On Linux, needs alsa driver.\n"
+						"You can simulate an external midi device by running timidity with the command line:\n"
 						"timidity -iA -Os -B2,8 -EFreverb=0\n"
 						"Running timidity that way, probably would require that you use another audio driver in ZEsarUX different than alsa, "
 						"unless you have alsa software mixing enabled"
