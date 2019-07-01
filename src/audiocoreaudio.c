@@ -613,6 +613,8 @@ Byte coreaudio_midi_buffer[4096];             // storage space for MIDI Packets 
 int coreaudio_note_on(unsigned char channel, unsigned char note,unsigned char velocity)
 {
 
+  debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
+
    // Prepare a MIDI Note-On message to send
    MIDITimeStamp timestamp = 0;   // 0 will mean play now.
    
@@ -632,6 +634,9 @@ int coreaudio_note_on(unsigned char channel, unsigned char note,unsigned char ve
 
 int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char velocity)
 {
+
+  debug_printf (VERBOSE_PARANOID,"noteoff event channel %d note %d velocity %d",channel,note,velocity);
+
    // Prepare a MIDI Note-On message to send
    MIDITimeStamp timestamp = 0;   // 0 will mean play now.
    
