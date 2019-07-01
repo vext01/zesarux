@@ -1636,7 +1636,7 @@ void transaction_log_rotate_files(int archivos)
 
 	sprintf(buffer_last_file,"%s.%d",transaction_log_filename,archivos);
 
-	printf ("Erasing file %s\n",buffer_last_file);
+	debug_printf (VERBOSE_DEBUG,"Erasing oldest transaction log file %s",buffer_last_file);
 
 	util_delete(buffer_last_file);
 
@@ -1664,7 +1664,7 @@ void transaction_log_rotate_files(int archivos)
 
 		sprintf(buffer_file_dest,"%s.%d",transaction_log_filename,i+1);
 
-		printf ("Rename file %s -> %s\n",buffer_file_orig,buffer_file_dest);
+		debug_printf (VERBOSE_DEBUG,"Renaming transaction log file %s -> %s",buffer_file_orig,buffer_file_dest);
 		rename(buffer_file_orig,buffer_file_dest);
 	}
 
@@ -1678,23 +1678,19 @@ void transaction_log_rotate_files(int archivos)
 
 void transaction_log_rotate(void)
 {
-	/*
-	extern z80_bit cpu_transaction_log_rotate_enabled;
-extern int cpu_transaction_log_rotated_files;
-extern int cpu_transaction_log_rotate_size;
-	 */
+
 
 	if (cpu_transaction_log_rotate_enabled.v==0) return;
 
 	//Obtener tamanyo archivo a ver si hay que rotar o no
 	//nota: dado que el flush en mac por ejemplo se hace muy de vez en cuando, ver el tamanyo del archivo
 	//tal cual con la estructura en memoria, no mirando el archivo en disco
+
+	//ftell es muy lento
 	//long tamanyo=ftell(ptr_transaction_log);
 
 
 	long tamanyo=transaction_log_tamanyo_escrito;
-
-	//ftell es muy lento
 
 	//printf ("posicion: (tamanyo) %ld\n",tamanyo);
 
@@ -1707,7 +1703,7 @@ extern int cpu_transaction_log_rotate_size;
 	tamanyo_a_rotar *=1024;
 
 	if (tamanyo>=tamanyo_a_rotar) {
-		printf ("Rotating transaction log. File size %ld exceeds maximum %ld\n",tamanyo,tamanyo_a_rotar);
+		debug_printf (VERBOSE_DEBUG,"Rotating transaction log. File size %ld exceeds maximum %ld",tamanyo,tamanyo_a_rotar);
 		transaction_log_rotate_files(cpu_transaction_log_rotated_files);
 	}
 }
@@ -1716,7 +1712,6 @@ extern int cpu_transaction_log_rotate_size;
 int transaction_log_set_rotate_number(int numero)
 {
 	if (numero<1 || numero>999) {
-		//debug_printf (VERBOSE_ERR,"Invalid rotation number");
         return 1;
 	}
 
@@ -1729,7 +1724,6 @@ int transaction_log_set_rotate_number(int numero)
 int transaction_log_set_rotate_size(int numero)
 {
 	if (numero<1 || numero>9999) {
-		//debug_printf (VERBOSE_ERR,"Invalid rotation size");
         return 1;
 	}
 
@@ -1881,7 +1875,7 @@ int transaction_log_open_file(void)
 	 transaction_log_tamanyo_escrito=get_file_size(transaction_log_filename);
   }
 
-  printf ("Tamanyo archivo log: %ld\n",transaction_log_tamanyo_escrito);
+  debug_printf (VERBOSE_DEBUG,"Transaction log file size: %ld",transaction_log_tamanyo_escrito);
 
   ptr_transaction_log=fopen(transaction_log_filename,"ab");
   if (!ptr_transaction_log) {

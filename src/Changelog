@@ -45,6 +45,8 @@ Improved footer:
 
 Improved Waveform window: now the wave adjusts automatically to the zxwindow size
 
+Improved cpu transaction log: now logfiles can be rotated automatically
+
 Improved scale 0.75 function: now it has antialias
 
 Improved hexadecimal editor:
