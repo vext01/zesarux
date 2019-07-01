@@ -1000,9 +1000,9 @@ void alsa_mid_initialize_volume(void)
 }
 
 
-#define ALSA_MID_VELOCITY 127
 
-int alsa_mid_note_on(unsigned char channel, unsigned char note)
+
+/*int alsa_mid_note_on(unsigned char channel, unsigned char note)
 {
 	return alsa_note_on(channel,note,ALSA_MID_VELOCITY);
 }
@@ -1011,19 +1011,18 @@ int alsa_mid_note_off(unsigned char channel, unsigned char note)
 {
 	return alsa_note_off(channel,note,ALSA_MID_VELOCITY);
 }
+*/
 
 
 int alsa_midi_client=0;
 int alsa_midi_port=0;
 int alsa_midi_volume=100;
 
-int alsa_midi_initialized=0;
 
-//Notas anteriores sonando, 3 canales
-char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
+
 
 //Devuelve 1 si error
-int alsa_mid_main(void)
+int old_delete_alsa_mid_main(void)
 {
 
         //Inicializar sistema ALSA midi
@@ -1059,10 +1058,14 @@ int alsa_mid_main(void)
 
 }
 
+void alsa_midi_output_flush_output(void)
+{
+	snd_seq_drain_output(zesarux_mid_alsa_audio_info.handle);
+}
 
 
-
-void alsa_midi_output_frame_event(void)
+/*
+void old_delete_alsa_midi_output_frame_event(void)
 {
 
 	if (alsa_midi_initialized==0) return;
@@ -1099,13 +1102,13 @@ void alsa_midi_output_frame_event(void)
 				//if (mid_record_noisetone.v) mascara_mezclador |=8;
 
 
-				/*
-				1xx1 -> no tono ni ruido
-				0xx1 -> ruido
+				
+				//1xx1 -> no tono ni ruido
+				//0xx1 -> ruido
 
-				0xx0 -> ruido+tono
-				1xx0 -> tono
-				*/
+				//0xx0 -> ruido+tono
+				//1xx0 -> tono
+				
 
 
 				if (canal>0) {
@@ -1193,3 +1196,5 @@ void alsa_midi_output_frame_event(void)
 		
 
 }
+
+*/

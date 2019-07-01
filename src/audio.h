@@ -161,6 +161,7 @@ extern int mid_mete_evento_final_pista(unsigned char *mem);
 extern int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_midi,int keynote,int velocity);
 extern void mid_mete_longitud_pista(z80_byte *mem,int longitud);
 extern void mid_frame_event(void);
+extern int audio_midi_output_initialized;
 
 //Para cuantas notas da esto aprox?
 #define MAX_MID_EXPORT_BUFFER 1000000

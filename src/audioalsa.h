@@ -36,9 +36,11 @@ extern int alsa_midi_client;
 extern int alsa_midi_port;
 extern int alsa_midi_volume;
 
-extern int alsa_midi_initialized;
+//extern int alsa_midi_initialized;
 
-extern void alsa_midi_output_frame_event(void);
+//extern void alsa_midi_output_frame_event(void);
+
+#define ALSA_MID_VELOCITY 127
 
 
 
