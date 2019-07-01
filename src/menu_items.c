@@ -15807,7 +15807,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 		}
 
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
-			(alsa_midi_initialized ? "Yes" : "No" ) );
+			(audio_midi_output_initialized ? "Yes" : "No" ) );
 
 
 
