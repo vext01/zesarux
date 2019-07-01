@@ -36,7 +36,9 @@ extern int alsa_midi_client;
 extern int alsa_midi_port;
 extern int alsa_midi_volume;
 extern void alsa_midi_output_flush_output(void);
-
+extern int alsa_note_on(unsigned char channel, unsigned char note,unsigned char velocity);
+extern int alsa_note_off(unsigned char channel, unsigned char note,unsigned char velocity);
+extern int alsa_mid_initialize_all(void);
 
 //extern int alsa_midi_initialized;
 
