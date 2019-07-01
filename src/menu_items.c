@@ -9209,6 +9209,63 @@ void menu_cpu_transaction_log_enable_registers(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_cpu_transaction_log_enable_rotate(MENU_ITEM_PARAMETERS)
+{
+	cpu_transaction_log_rotate_enabled.v ^=1;	
+}
+
+void menu_cpu_transaction_log_rotate_number(MENU_ITEM_PARAMETERS)
+{
+
+        int brkp_type,dir;
+
+        char string_number[4];
+
+        sprintf (string_number,"%d",cpu_transaction_log_rotated_files);
+
+        menu_ventana_scanf("Number of files",string_number,4);
+
+        int numero=parse_string_to_number(string_number);
+
+		if (numero<1) {
+			debug_printf (VERBOSE_ERR,"Invalid rotation number");
+            return;
+		}
+
+
+
+		cpu_transaction_log_rotated_files=numero;
+
+//extern int cpu_transaction_log_rotated_files;
+//extern int cpu_transaction_log_rotate_size;
+
+}
+
+
+void menu_cpu_transaction_log_rotate_size(MENU_ITEM_PARAMETERS)
+{
+
+        int brkp_type,dir;
+
+        char string_number[5];
+
+        sprintf (string_number,"%d",cpu_transaction_log_rotate_size);
+
+        menu_ventana_scanf("Size in MB",string_number,5);
+
+        int numero=parse_string_to_number(string_number);
+
+		if (numero<1) {
+			debug_printf (VERBOSE_ERR,"Invalid rotation size");
+            return;
+		}
+
+		cpu_transaction_log_rotate_size=numero;
+
+//extern int cpu_transaction_log_rotated_files;
+//extern int cpu_transaction_log_rotate_size;
+
+}
 
 void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 {
@@ -9225,6 +9282,15 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 
                 if (transaction_log_filename[0]!=0) {
                         menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable,NULL,"[%c] Transaction log enabled",(cpu_transaction_log_enabled.v ? 'X' : ' ' ) );
+						
+						menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_rotate,NULL,"[%c] Rotate transaction log",(cpu_transaction_log_rotate_enabled.v ? 'X' : ' ' ) );
+						menu_add_item_menu_tooltip(array_menu_cpu_transaction_log,"Enable automatic rotation of transaction log files");
+						menu_add_item_menu_ayuda(array_menu_cpu_transaction_log,"Enable automatic rotation of transaction log files");
+						if (cpu_transaction_log_rotate_enabled.v) {
+							menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_rotate_number,NULL,"[%d] Rotate files",cpu_transaction_log_rotated_files);
+							menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_rotate_size,NULL,"[%d] Rotate size (MB)",cpu_transaction_log_rotate_size);
+						}
+
 						menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_truncate,NULL,"    Truncate log file");
                 }
 

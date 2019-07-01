@@ -154,12 +154,18 @@ extern void set_cpu_core_transaction_log(void);
 extern void reset_cpu_core_transaction_log(void);
 extern char transaction_log_filename[];
 extern void transaction_log_truncate(void);
+extern void transaction_log_close_file(void);
+extern int transaction_log_open_file(void);
 
 extern z80_bit cpu_transaction_log_store_datetime;
 extern z80_bit cpu_transaction_log_store_address;
 extern z80_bit cpu_transaction_log_store_tstates;
 extern z80_bit cpu_transaction_log_store_opcode;
 extern z80_bit cpu_transaction_log_store_registers;
+
+extern z80_bit cpu_transaction_log_rotate_enabled;
+extern int cpu_transaction_log_rotated_files;
+extern int cpu_transaction_log_rotate_size;
 
 extern char *spectrum_rom_tokens[];
 extern char *zx81_rom_tokens[];

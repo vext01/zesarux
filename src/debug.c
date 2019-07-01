@@ -1595,6 +1595,10 @@ FILE *ptr_transaction_log=NULL;
 
 char transaction_log_filename[PATH_MAX];
 
+
+//Tamanyo del archivo de transaction log. Para leer desde aqui en vez de usar ftell para saber que tamanyo tiene, que es mas rapido
+long transaction_log_tamanyo_escrito=0;
+
 char transaction_log_line_to_store[2048];
 
 
@@ -1605,6 +1609,13 @@ z80_bit cpu_transaction_log_store_tstates={0};
 z80_bit cpu_transaction_log_store_opcode={1};
 z80_bit cpu_transaction_log_store_registers={0};
 
+//Si se habilita rotacion del transaction log
+z80_bit cpu_transaction_log_rotate_enabled={0};
+//Numero de archivos rotados
+int cpu_transaction_log_rotated_files=10;
+//Tamanyo maximo antes de rotar archivo, en MB
+int cpu_transaction_log_rotate_size=100;
+
 
 int transaction_log_nested_id_core;
 
@@ -1613,6 +1624,93 @@ int transaction_log_nested_id_core;
 char memory_zone_by_file_name[PATH_MAX];
 z80_byte *memory_zone_by_file_pointer;
 int memory_zone_by_file_size=0;
+
+
+void transaction_log_rotate_files(int archivos)
+{
+	//Primero cerrar archivo
+	transaction_log_close_file();
+
+	//Borrar el ultimo
+	char buffer_last_file[PATH_MAX];
+
+	sprintf(buffer_last_file,"%s.%d",transaction_log_filename,archivos);
+
+	printf ("Erasing file %s\n",buffer_last_file);
+
+	util_delete(buffer_last_file);
+
+	//Y renombrar, el penultimo al ultimo, el antepenultimo al penultimo, etc
+	//con 10 archivos:
+	//ren file.9 file.10
+	//ren file.8 file.9
+	//ren file.7 file.8
+	//...
+	//ren file.1 file.2 
+	//ren file file.1 esto a mano
+	int i;
+
+	for (i=archivos-1;i>=0;i--) {
+		char buffer_file_orig[PATH_MAX];
+		char buffer_file_dest[PATH_MAX];
+
+		//Caso especial ultimo (seria el .0)
+		if (i==0) {
+			strcpy(buffer_file_orig,transaction_log_filename);
+		}
+		else {
+			sprintf(buffer_file_orig,"%s.%d",transaction_log_filename,i);
+		}
+
+		sprintf(buffer_file_dest,"%s.%d",transaction_log_filename,i+1);
+
+		printf ("Rename file %s -> %s\n",buffer_file_orig,buffer_file_dest);
+		rename(buffer_file_orig,buffer_file_dest);
+	}
+
+
+	//Y finalmente truncar
+	transaction_log_truncate();
+
+	//Y tenemos que abrirlo a mano
+	transaction_log_open_file();
+}
+
+void transaction_log_rotate(void)
+{
+	/*
+	extern z80_bit cpu_transaction_log_rotate_enabled;
+extern int cpu_transaction_log_rotated_files;
+extern int cpu_transaction_log_rotate_size;
+	 */
+
+	if (cpu_transaction_log_rotate_enabled.v==0) return;
+
+	//Obtener tamanyo archivo a ver si hay que rotar o no
+	//nota: dado que el flush en mac por ejemplo se hace muy de vez en cuando, ver el tamanyo del archivo
+	//tal cual con la estructura en memoria, no mirando el archivo en disco
+	//long tamanyo=ftell(ptr_transaction_log);
+
+
+	long tamanyo=transaction_log_tamanyo_escrito;
+
+	//ftell es muy lento
+
+	//printf ("posicion: (tamanyo) %ld\n",tamanyo);
+
+	//Si hay que rotar
+	//Calcular tamanyo en MB
+
+	long tamanyo_a_rotar=cpu_transaction_log_rotate_size;
+
+	tamanyo_a_rotar *=1024;
+	tamanyo_a_rotar *=1024;
+
+	if (tamanyo>=tamanyo_a_rotar) {
+		printf ("Rotating transaction log. File size %ld exceeds maximum %ld\n",tamanyo,tamanyo_a_rotar);
+		transaction_log_rotate_files(cpu_transaction_log_rotated_files);
+	}
+}
 
 
 ///void cpu_core_loop_transaction_log(void)
@@ -1720,8 +1818,13 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 		//Si esta NULL es que no se ha abierto correctamente, y aqui no deberiamos llegar nunca
 		if (ptr_transaction_log!=NULL) {
 			fwrite(transaction_log_line_to_store,1,index,ptr_transaction_log);
+
+			transaction_log_tamanyo_escrito +=index;
 		}
 
+
+		//Rotar log si conviene
+		transaction_log_rotate();
 
 	}
 
@@ -1744,12 +1847,25 @@ void transaction_log_close_file(void)
 //Retorna 1 si error
 int transaction_log_open_file(void)
 {
+
+  transaction_log_tamanyo_escrito=0; 
+
+  //Si el archivo existia, inicializar tamanyo, no poner a 0
+
+  if (si_existe_archivo(transaction_log_filename)) {
+	 transaction_log_tamanyo_escrito=get_file_size(transaction_log_filename);
+  }
+
+  printf ("Tamanyo archivo log: %ld\n",transaction_log_tamanyo_escrito);
+
   ptr_transaction_log=fopen(transaction_log_filename,"ab");
   if (!ptr_transaction_log) {
  		debug_printf (VERBOSE_ERR,"Unable to open Transaction log");
 		debug_nested_core_del(transaction_log_nested_id_core);
 		return 1;
 	}	
+
+
 
 	return 0;
 }
