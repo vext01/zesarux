@@ -2725,7 +2725,7 @@ void midi_output_frame_event(void)
 {
 #ifdef COMPILE_ALSA
 	//de momento midi output solo esta para alsa
-	alsa_midi_output_frame_event();
+	audio_midi_output_frame_event();
 #else
 	return;
 #endif
