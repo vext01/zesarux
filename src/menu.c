@@ -10783,6 +10783,10 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_inicial(&array_menu_audio_settings,"AY ~~Registers",MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_chip);
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'r');
 
+
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
+					menu_add_item_menu_shortcut(array_menu_audio_settings,'x');
+
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_chip,"AY P~~iano");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
@@ -10818,7 +10822,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 
 					
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_filters,NULL,"AY filters");
+					
 
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"W~~ave Piano");

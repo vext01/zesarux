@@ -170,7 +170,7 @@ int breakpoints_opcion_seleccionada=0;
 int menu_watches_opcion_seleccionada=0;
 int record_mid_opcion_seleccionada=0;
 int direct_midi_output_opcion_seleccionada=0;
-int ay_filters_opcion_seleccionada=0;
+int ay_mixer_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -1040,15 +1040,7 @@ void menu_audio_ay_chip_autoenable(MENU_ITEM_PARAMETERS)
 	autoenable_ay_chip.v^=1;
 }
 
-void menu_audio_envelopes(MENU_ITEM_PARAMETERS)
-{
-	ay_envelopes_enabled.v^=1;
-}
 
-void menu_audio_speech(MENU_ITEM_PARAMETERS)
-{
-        ay_speech_enabled.v^=1;
-}
 
 void menu_audio_sound_zx8081(MENU_ITEM_PARAMETERS)
 {
@@ -1221,29 +1213,7 @@ void menu_audio_ay_stereo_custom(MENU_ITEM_PARAMETERS)
 	}	
 }
 
-void menu_audio_ay_stereo_custom_A(MENU_ITEM_PARAMETERS)
-{
-	ay3_custom_stereo_A++;
-	if (ay3_custom_stereo_A==3) ay3_custom_stereo_A=0;
-}
 
-void menu_audio_ay_stereo_custom_B(MENU_ITEM_PARAMETERS)
-{
-	ay3_custom_stereo_B++;
-	if (ay3_custom_stereo_B==3) ay3_custom_stereo_B=0;
-}
-
-void menu_audio_ay_stereo_custom_C(MENU_ITEM_PARAMETERS)
-{
-	ay3_custom_stereo_C++;
-	if (ay3_custom_stereo_C==3) ay3_custom_stereo_C=0;
-}
-
-char *menu_stereo_positions[]={
-	"Left",
-	"    Center",
-	"          Right"
-};
 
 
 void menu_silence_detector(MENU_ITEM_PARAMETERS)
@@ -1296,46 +1266,10 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		}
 
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_envelopes,menu_cond_ay_chip,"[%c] AY ~~Envelopes", (ay_envelopes_enabled.v==1 ? 'X' : ' '));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'e');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable volume envelopes for the AY Chip");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"Enable or disable volume envelopes for the AY Chip");
-
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_speech,menu_cond_ay_chip,"[%c] AY ~~Speech", (ay_speech_enabled.v==1 ? 'X' : ' '));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'s');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable or disable AY Speech effects");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"These effects are used, for example, in Chase H.Q.");
 
 
-		if (MACHINE_IS_SPECTRUM) {
 
-
-			char ay3_stereo_string[16];
-			if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
-			else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
-			else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
-			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
-			else strcpy(ay3_stereo_string,"Mono");
-
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY S~~tereo: %s",
-				ay3_stereo_string);
-			menu_add_item_menu_shortcut(array_menu_settings_audio,'t');
-
-			if (ay3_stereo_mode==4) {	
-
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
-					"    Ch. A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
-
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
-					"    Ch. B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
-
-				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
-					"    Ch. C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
-
-
-			}
-
-		}
+		
 
 
 
@@ -15853,7 +15787,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 
 //cambia filtro
-void menu_ay_filters_cambia_filtro(MENU_ITEM_PARAMETERS)
+void menu_ay_mixer_cambia_filtro(MENU_ITEM_PARAMETERS)
 {
 
 	int chip=valor_opcion/3;
@@ -15900,7 +15834,7 @@ void menu_ay_filters_cambia_filtro(MENU_ITEM_PARAMETERS)
 }
 
 //Muestra cadena filtro
-void menu_ay_filters_retorna_filtro(int chip,int canal,char *destino)
+void menu_ay_mixer_retorna_filtro(int chip,int canal,char *destino)
 {
 	z80_byte valor_filtro=ay_filtros[chip];
 	z80_byte mascara=1|8; //bits xxxx1xx1
@@ -15929,7 +15863,7 @@ void menu_ay_filters_retorna_filtro(int chip,int canal,char *destino)
 
 		//case 9:
 		default:
-			strcpy(destino,"Nothing");
+			strcpy(destino,"Silence");
 		break;			
 
 	}
@@ -15938,9 +15872,43 @@ void menu_ay_filters_retorna_filtro(int chip,int canal,char *destino)
 }
 
 
-void menu_ay_filters(MENU_ITEM_PARAMETERS)
+void menu_audio_envelopes(MENU_ITEM_PARAMETERS)
 {
-menu_item *array_menu_ay_filters;
+	ay_envelopes_enabled.v^=1;
+}
+
+void menu_audio_speech(MENU_ITEM_PARAMETERS)
+{
+        ay_speech_enabled.v^=1;
+}
+
+void menu_audio_ay_stereo_custom_A(MENU_ITEM_PARAMETERS)
+{
+	ay3_custom_stereo_A++;
+	if (ay3_custom_stereo_A==3) ay3_custom_stereo_A=0;
+}
+
+void menu_audio_ay_stereo_custom_B(MENU_ITEM_PARAMETERS)
+{
+	ay3_custom_stereo_B++;
+	if (ay3_custom_stereo_B==3) ay3_custom_stereo_B=0;
+}
+
+void menu_audio_ay_stereo_custom_C(MENU_ITEM_PARAMETERS)
+{
+	ay3_custom_stereo_C++;
+	if (ay3_custom_stereo_C==3) ay3_custom_stereo_C=0;
+}
+
+char *menu_stereo_positions[]={
+	"Left",
+	"    Center",
+	"          Right"
+};
+
+void menu_ay_mixer(MENU_ITEM_PARAMETERS)
+{
+menu_item *array_menu_ay_mixer;
 	menu_item item_seleccionado;
 	int retorno_menu;
 
@@ -15949,17 +15917,61 @@ menu_item *array_menu_ay_filters;
 
         do {
 
-			menu_add_item_menu_inicial(&array_menu_ay_filters,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+		menu_add_item_menu_inicial_format(&array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_envelopes,menu_cond_ay_chip,"[%c] AY ~~Envelopes", (ay_envelopes_enabled.v==1 ? 'X' : ' '));
+		menu_add_item_menu_shortcut(array_menu_ay_mixer,'e');
+		menu_add_item_menu_tooltip(array_menu_ay_mixer,"Enable or disable volume envelopes for the AY Chip");
+		menu_add_item_menu_ayuda(array_menu_ay_mixer,"Enable or disable volume envelopes for the AY Chip");
+
+		menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_speech,menu_cond_ay_chip,"[%c] AY ~~Speech", (ay_speech_enabled.v==1 ? 'X' : ' '));
+		menu_add_item_menu_shortcut(array_menu_ay_mixer,'s');
+		menu_add_item_menu_tooltip(array_menu_ay_mixer,"Enable or disable AY Speech effects");
+		menu_add_item_menu_ayuda(array_menu_ay_mixer,"These effects are used, for example, in Chase H.Q.");
+
+
+		if (MACHINE_IS_SPECTRUM) {
+
+
+			char ay3_stereo_string[16];
+			if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
+			else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
+			else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
+			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
+			else strcpy(ay3_stereo_string,"Mono");
+
+			menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY S~~tereo: %s",
+				ay3_stereo_string);
+			menu_add_item_menu_shortcut(array_menu_ay_mixer,'t');
+
+			if (ay3_stereo_mode==4) {	
+
+				menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
+					"    Ch. A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
+
+				menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
+					"    Ch. B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
+
+				menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
+					"    Ch. C: %s",menu_stereo_positions[ay3_custom_stereo_C]);								
+
+
+			}
+
+		}		
+
+
 
 			int chip;
 
 			for (chip=0;chip<ay_retorna_numero_chips();chip++) {
 				int canal;
-				for (canal=0;canal<3;canal++) {
-					menu_ay_filters_retorna_filtro(chip,canal,buffer_filtro);
-					menu_add_item_menu_format(array_menu_ay_filters,MENU_OPCION_NORMAL,menu_ay_filters_cambia_filtro,NULL,"C%d CH%d %s",chip,canal,buffer_filtro);
+				menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_SEPARADOR,NULL,NULL,"---Chip %d---",chip+1);
 
-					menu_add_item_menu_valor_opcion(array_menu_ay_filters,chip*3+canal);
+				for (canal=0;canal<3;canal++) {
+					menu_ay_mixer_retorna_filtro(chip,canal,buffer_filtro);
+					menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_ay_mixer_cambia_filtro,NULL,"Channel %c: %s",'A'+canal,buffer_filtro);
+
+					menu_add_item_menu_valor_opcion(array_menu_ay_mixer,chip*3+canal);
 
 				}
 			}
@@ -15967,13 +15979,13 @@ menu_item *array_menu_ay_filters;
 		
 
 
-                menu_add_item_menu(array_menu_ay_filters,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                menu_add_item_menu(array_menu_ay_mixer,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-                //menu_add_item_menu(array_menu_ay_filters,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_ay_filters);
+                //menu_add_item_menu(array_menu_ay_mixer,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_ay_mixer);
 
-                retorno_menu=menu_dibuja_menu(&ay_filters_opcion_seleccionada,&item_seleccionado,array_menu_ay_filters,"AY filters" );
+                retorno_menu=menu_dibuja_menu(&ay_mixer_opcion_seleccionada,&item_seleccionado,array_menu_ay_mixer,"AY filters" );
 
 
 
