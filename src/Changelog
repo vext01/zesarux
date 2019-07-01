@@ -9,7 +9,7 @@ Improved menu interface:
 -Edit box now has a key to delete all input (cursor down)
 -GUI color bars depend on current style
 
-Added Real time playback from AY Chip sound to external MIDI device
+Added Real time playback from AY Chip sound to external MIDI device, on Linux and Mac OS X
 
 Changed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten

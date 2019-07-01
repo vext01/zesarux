@@ -25,6 +25,8 @@
 #include <AudioUnit/AudioUnit.h>
 #include <CoreAudio/AudioHardware.h>
 
+#include <CoreMIDI/CoreMIDI.h>    
+
 
 
 #include "audio.h"
@@ -269,8 +271,7 @@ stereoptr=&pepe;
 
 
 
-//temp
-audio_midi_output_init();
+
   return 0;
 }
 
@@ -509,7 +510,7 @@ return noErr;
 // website, as well as using links at the bottom of the file.
 //
 
-#include <CoreMIDI/CoreMIDI.h>    /* interface to MIDI in Macintosh OS X */
+
 #include <unistd.h>               /* for sleep() function                */
 #define MESSAGESIZE 3             /* byte count for MIDI note messages   */
 
@@ -606,7 +607,7 @@ int coreaudio_mid_initialize_all(void)
 }
 
 
-Byte coreaudio_midi_buffer[16384];             // storage space for MIDI Packets (max 65536)
+Byte coreaudio_midi_buffer[4096];             // storage space for MIDI Packets (max 65536)
 
 //Hacer note on de una nota inmediatamente
 int coreaudio_note_on(unsigned char channel, unsigned char note,unsigned char velocity)
@@ -617,7 +618,7 @@ int coreaudio_note_on(unsigned char channel, unsigned char note,unsigned char ve
    
    MIDIPacketList *packetlist = (MIDIPacketList*)coreaudio_midi_buffer;
    MIDIPacket *currentpacket = MIDIPacketListInit(packetlist);
-   Byte noteon[MESSAGESIZE] = {0x90, note, 127}; //127 es volumen
+   Byte noteon[MESSAGESIZE] = {0x90, note, 90}; //90 es volumen?
    currentpacket = MIDIPacketListAdd(packetlist, sizeof(coreaudio_midi_buffer),
          currentpacket, timestamp, MESSAGESIZE, noteon);
 

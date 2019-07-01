@@ -169,7 +169,10 @@ int watches_opcion_seleccionada=0;
 int breakpoints_opcion_seleccionada=0;
 int menu_watches_opcion_seleccionada=0;
 int record_mid_opcion_seleccionada=0;
+
 int direct_midi_output_opcion_seleccionada=0;
+int direct_coreaudio_midi_output_opcion_seleccionada=0;
+
 int ay_mixer_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
@@ -15781,7 +15784,7 @@ void menu_direct_midi_output_volume(MENU_ITEM_PARAMETERS)
 
 
 
-void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
+void menu_direct_alsa_midi_output(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_direct_midi_output;
 	menu_item item_seleccionado;
@@ -15839,6 +15842,73 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 #endif
 //Final midi output alsa
 
+
+#ifdef COMPILE_COREAUDIO
+
+void menu_direct_coreaudio_midi_output_initialize(MENU_ITEM_PARAMETERS)
+{
+	
+
+
+	if (audio_midi_output_initialized==0) {
+		if (audio_midi_output_init() ) {
+			menu_error_message("Error initializing midi device");
+		}
+	}
+	else {
+		//TODO desactivar dispositivo y noteoff, etc
+		audio_midi_output_initialized=0;
+	}	
+}
+
+void menu_direct_coreaudio_midi_output(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_direct_coreaudio_midi_output;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+        do {
+
+	
+		if (audio_midi_output_initialized==0) {
+			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_direct_coreaudio_midi_output_initialize,NULL,"Initialize midi");
+		}
+		else {
+			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_direct_coreaudio_midi_output_initialize,NULL,"Disable midi");
+		}
+
+		menu_add_item_menu_format(array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
+			(audio_midi_output_initialized ? "Yes" : "No" ) );
+
+
+
+
+
+
+                menu_add_item_menu(array_menu_direct_coreaudio_midi_output,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                //menu_add_item_menu(array_menu_direct_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_direct_coreaudio_midi_output);
+
+                retorno_menu=menu_dibuja_menu(&direct_coreaudio_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_coreaudio_midi_output,"AY to MID" );
+
+
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+	                //llamamos por valor de funcion
+        	        if (item_seleccionado.menu_funcion!=NULL) {
+                	        //printf ("actuamos por funcion\n");
+	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+        	        }
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+}
+
+#endif
+//fin compilacion de coreaudio
 
 //cambia filtro
 void menu_ay_mixer_cambia_filtro(MENU_ITEM_PARAMETERS)
