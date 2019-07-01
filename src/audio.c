@@ -2749,7 +2749,7 @@ int audio_midi_output_note_off(unsigned char channel, unsigned char note)
 
 
 	#ifdef COMPILE_COREAUDIO
-	return coreaudio_note_on(channel,note,127);
+	return coreaudio_note_off(channel,note,127);
 	#endif	
 }
 

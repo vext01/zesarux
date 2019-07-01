@@ -637,7 +637,8 @@ int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char v
    
    MIDIPacketList *packetlist = (MIDIPacketList*)coreaudio_midi_buffer;
    MIDIPacket *currentpacket = MIDIPacketListInit(packetlist);
-   Byte noteoff[MESSAGESIZE] = {0x90, note, 0}; 
+   //Byte noteoff[MESSAGESIZE] = {0x90, note, 0}; 
+   Byte noteoff[MESSAGESIZE] = {0x80, note, 90}; 
    currentpacket = MIDIPacketListAdd(packetlist, sizeof(coreaudio_midi_buffer),
          currentpacket, timestamp, MESSAGESIZE, noteoff);
 
