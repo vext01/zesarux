@@ -15687,14 +15687,14 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 void menu_direct_midi_output_initialize(MENU_ITEM_PARAMETERS)
 {
 
-	if (alsa_midi_initialized==0) {
-		if (alsa_mid_main()) {
+	if (audio_midi_output_initialized==0) {
+		if (audio_midi_output_init()) {
 			menu_error_message("Error initializing midi device");
 		}
 	}
 	else {
 		//TODO desactivar dispositivo y noteoff, etc
-		alsa_midi_initialized=0;
+		audio_midi_output_initialized=0;
 	}
 
 }
@@ -15799,7 +15799,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 		//menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
 
 
-		if (alsa_midi_initialized==0) {
+		if (audio_midi_output_initialized==0) {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Initialize midi");
 		}
 		else {
