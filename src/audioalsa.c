@@ -1022,7 +1022,7 @@ int alsa_midi_volume=100;
 
 
 //Devuelve 1 si error
-int old_delete_alsa_mid_main(void)
+/*int old_delete_alsa_mid_main(void)
 {
 
         //Inicializar sistema ALSA midi
@@ -1057,6 +1057,7 @@ int old_delete_alsa_mid_main(void)
 
 
 }
+*/
 
 void alsa_midi_output_flush_output(void)
 {
