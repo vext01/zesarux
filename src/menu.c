@@ -10865,7 +10865,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 						"You can simulate an external midi device by using timidity. If you have it installed, it may probably be running in memory as "
 						"an alsa sequencer client. If not, run it with the command line:\n"
 						"timidity -iA -Os -B2,8 -EFreverb=0\n"
-						"Running timidity that way, probably would require that you use another audio driver in ZEsarUX different than alsa, "
+						"Running timidity that way, would probably require that you use another audio driver in ZEsarUX different than alsa, "
 						"unless you have alsa software mixing enabled"
 					);
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
