@@ -5,6 +5,13 @@
 
 -random pete al arranque
 
+
+
+-Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
+
+-Interrupcion pentagon se dispara en medio de un scanline, según lo hablado con mcleod
+
+
 -meter comentario en archivo midi de grabado con ZEsarUX
 
 -filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
@@ -28,78 +35,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 *compression tokens no siempre estan hasta el 255
 
 
-**Inicio Expression Parser
-
-
-
-
-*codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
-->da -16. acaba haciendo 2*3 - 4*5 - 6/3
-en cambio: (2*3 - 4*5) + 6/3 da bien
-
-es porque acaba desglosando:
-2*3 -     4*5 + 6/3
-6   -     20 +2
-6   -     22   -> -16
-
-el 20+2 deberia tener en consideracion quiza el signo de delante:
-6 -      20 - 2 
-6 - 18 -> -12 
-
-O esto lo apunto como un bug que el usuario le ponga parentesis y listo
-
-tambien:
-10-1-1 -> no da 8
-hace:
-
-10   -    1-1
-10   -    0  -> 10
-
-
-*si imprime valor de 32 bits con bit ultimo alzado, sale negativo. Habria que imprimir siempre como positivo?
-*case de registros y valores, meter switch en vez de if....
-
-*decir en ayuda:
-[]{}() equivalentes
-permite sumas. resta, multiplicacion, etc
-Si hay 3 operadores con restas, parentesis:
-a-b+c -> mejor: (a-b)+c
-<>, >=,<=
-pwa,pwv,mra,mwv etc requieren que breakpoints esten activos
-
-*permite doble resta como a--b -> que eso al final es : a- (-b) -> a+b
-
--comparacion breakpoint parser. uso cpu:
-no breakpoints: 10% cpu
-
---set-breakpoint 1 "A=3 AND IX=32768"
---set-breakpoint 2 "BC>32768 AND A=4 AND IX=20000"
-new:  18% cpu. old: 37% cpu
-
-
---set-breakpoint 1 "A=3 AND IX=32768"
---set-breakpoint 2 "BC>32768 AND A=4 AND IX=20000"
---set-breakpoint 3 "IY>32768 OR IX=10000 OR I>200"
-new: 21% cpu old: 52% cpu
-
-
---set-breakpoint 1 "A=3 AND IX=32768"
---set-breakpoint 2 "BC>32768 AND A=4 AND IX=20000"
---set-breakpoint 3 "IY>32768 OR IX=10000 OR I>200"
---set-breakpoint 4 "IY>32768 OR IX=10000 OR I>200 OR SP>65535"
-new: 24% cpu old: 73% cpu
-
-Incremento cpu nuevo algoritmo: 3%
-Incremento cpu viejo algoritmo: 15-20%
-Mejora: (15/3)=5 -> 5 veces mas rápido
- (20/3)=7 -> 7 veces mas rápido
-
-
-**Fin Expression Parser
-
-
-
-
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
@@ -113,19 +48,10 @@ la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que s
 
 --Revisar Full screen en ZX desktop
 
---Posibles efectos para fondo ZX Desktop:
----Efecto de ZX Desktop barras colores animado?
----Imagen. BMP?
----Miniatura de pantalla spectrum
----Imagen. SCR
----Degradado vertical usando alguna tabla de colores concreta ya existente
----Botones o iconos pulsables 
----Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
----Anaglifo usando segunda pantalla o extensión Desktop 
+
 -Fbdev debe permitir ZX Desktop?
 -sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 -acabar de definir settings de ZX Desktop y que se guarden/tengan configuración
-
 
 
 -zxvision:
@@ -133,29 +59,6 @@ la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que s
 funciones de reajuste de disposicion de texto en ventana por ejemplo
 ->no hace falta ya que retorna de handle_zxvision al mover el raton. Hexadecimal editor ya lo hace
 -que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
-
-
-
--replica entre dos ZEsarUX
-
-*1 master y 1 slave
-*ambos envian actualizaciones de pulsaciones/liberaciones de teclas, mismos valores que util_set_reset_key
-*solo el master envia snapshots
-*1 nested core que gestione el envio y/o recepcion de actualizaciones de teclas, que a su vez llame a un thread por debajo que haga la conexión UDP
-*Como evitar problemas de acceso simultaneo a misma variable de thread? Por ejemplo longitud en la cola de envio/recepcion? 
-Semáforos? Todos sistemas operativos lo permitiran? Windows inclusive?
-*O quizá hacerlo por ZRCP?
-*comando que envie pulsaciones teclas, como util_set_reset_key
-*comando para enviar snapshot, pasando bytes del snapshot por comando. Quizá en base64? O en hexa?
-
-
-
-
-
--Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
-
--Interrupcion pentagon se dispara en medio de un scanline, según lo hablado con mcleod
-
 
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
@@ -189,7 +92,6 @@ Semáforos? Todos sistemas operativos lo permitiran? Windows inclusive?
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
-
 
 
 
@@ -296,6 +198,17 @@ Ideas para background windows:
 -Fin Background windows
 
 
+--Posibles efectos para fondo ZX Desktop:
+---Efecto de ZX Desktop barras colores animado?
+---Imagen. BMP?
+---Miniatura de pantalla spectrum
+---Imagen. SCR
+---Degradado vertical usando alguna tabla de colores concreta ya existente
+---Botones o iconos pulsables 
+---Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
+---Anaglifo usando segunda pantalla o extensión Desktop 
+
+
 -Osd keyboard sin multitarea en ZX81 no va fino
 
 -Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
@@ -338,6 +251,68 @@ Lo hace realmente con visible_width y visible_height
 --- FIN ZX Vision
 
 
+
+--- expression parser
+
+
+*codetests_expression_parser_expect(" 2*3 - 4*5 + 6/3 ",-12);
+->da -16. acaba haciendo 2*3 - 4*5 - 6/3
+en cambio: (2*3 - 4*5) + 6/3 da bien
+
+es porque acaba desglosando:
+2*3 -     4*5 + 6/3
+6   -     20 +2
+6   -     22   -> -16
+
+el 20+2 deberia tener en consideracion quiza el signo de delante:
+6 -      20 - 2 
+6 - 18 -> -12 
+
+O esto lo apunto como un bug que el usuario le ponga parentesis y listo
+
+tambien:
+10-1-1 -> no da 8
+hace:
+
+10   -    1-1
+10   -    0  -> 10
+
+
+*si imprime valor de 32 bits con bit ultimo alzado, sale negativo. Habria que imprimir siempre como positivo?
+*case de registros y valores, meter switch en vez de if....
+
+*pwa,pwv,mra,mwv etc requieren que breakpoints esten activos
+
+*permite doble resta como a--b -> que eso al final es : a- (-b) -> a+b
+
+-comparacion breakpoint parser. uso cpu:
+no breakpoints: 10% cpu
+
+--set-breakpoint 1 "A=3 AND IX=32768"
+--set-breakpoint 2 "BC>32768 AND A=4 AND IX=20000"
+new:  18% cpu. old: 37% cpu
+
+
+--set-breakpoint 1 "A=3 AND IX=32768"
+--set-breakpoint 2 "BC>32768 AND A=4 AND IX=20000"
+--set-breakpoint 3 "IY>32768 OR IX=10000 OR I>200"
+new: 21% cpu old: 52% cpu
+
+
+--set-breakpoint 1 "A=3 AND IX=32768"
+--set-breakpoint 2 "BC>32768 AND A=4 AND IX=20000"
+--set-breakpoint 3 "IY>32768 OR IX=10000 OR I>200"
+--set-breakpoint 4 "IY>32768 OR IX=10000 OR I>200 OR SP>65535"
+new: 24% cpu old: 73% cpu
+
+Incremento cpu nuevo algoritmo: 3%
+Incremento cpu viejo algoritmo: 15-20%
+Mejora: (15/3)=5 -> 5 veces mas rápido
+ (20/3)=7 -> 7 veces mas rápido
+
+
+
+----------
 
 
 --- audio - fallos ---
@@ -2331,6 +2306,20 @@ y ademas, la funcion de debug_dump_nested_functions ya controla esos casos y no 
 
 
 *** Core CPU ***
+
+
+
+-replica entre dos ZEsarUX
+
+*1 master y 1 slave
+*ambos envian actualizaciones de pulsaciones/liberaciones de teclas, mismos valores que util_set_reset_key
+*solo el master envia snapshots
+*1 nested core que gestione el envio y/o recepcion de actualizaciones de teclas, que a su vez llame a un thread por debajo que haga la conexión UDP
+*Como evitar problemas de acceso simultaneo a misma variable de thread? Por ejemplo longitud en la cola de envio/recepcion? 
+Semáforos? Todos sistemas operativos lo permitiran? Windows inclusive?
+*O quizá hacerlo por ZRCP?
+*comando que envie pulsaciones teclas, como util_set_reset_key
+*comando para enviar snapshot, pasando bytes del snapshot por comando. Quizá en base64? O en hexa?
 
 
 -128ke parecido a +2B

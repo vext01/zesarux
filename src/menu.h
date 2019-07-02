@@ -876,13 +876,20 @@ extern int menu_center_y(void);
 
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
-"A condition breakpoint has the following format: \n" \
-"[EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR]  [EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR] ... where: \n" \
-"[EXPRESSION] can be a COMPLEXVARIABLE or a VALUE  \n" \
-"[COMPLEXVARIABLE] is formed by [VARIABLE][VOP] \n" \
-"[VARIABLE] can be a CPU register or some pseudo variables: A,B,C,D,E,F,H,L,AF,BC,DE,HL,A',B',C',D',E',F',H',L',AF',BC',DE',HL',I,R,SP,PC,IX,IY\n" \
+"A condition breakpoint evaluates an expression and the breakpoint will be fired if the expression is not 0.\n" \
+"An expression (or just 'e' to shorten it) has the following syntax:" \
+"[VALUE][LOGICOPERATOR]  [VALUE][LOGICOPERATOR] ... where: \n" \
+"[VALUE] can be a combination of VARIABLE, a FUNCTION, a NUMERICVALUE or OPERATOR \n" \
+"You can use parenthesis to prioritize some values over others, you can use any of these three: [{( to open parenthesis, and: )}] to close parenthesis\n" \
+"\n" \
+"[VARIABLE] can be a CPU register or some pseudo variables: A,B,C,D,E,F,H,L,AF,BC,DE,HL,A',B',C',D',E',F',H',L',AF',BC',DE',HL',I,R,SP,PC,IX,IY," \
+"D0,D1,D2,D3,D4,D5,D6,D7,A0,A1,A2,A3,A4,A5,A6,A7,AC,ER,SR,P1,P2,P3\n" \
 "FS,FZ,FP,FV,FH,FN,FC: Flags\n" \
-"(BC),(DE),(HL),(SP),(PC),(IX),(IY), (NN), IFF1, IFF2, OPCODE,\n" \
+"IFF1, IFF2: Interrupt bits,\n" \
+"OPCODE1: returns the byte at address PC, so the byte of the opcode being read,\n" \
+"OPCODE2: returns the word at address PC, MSB order,\n" \
+"OPCODE3: returns the three byte at adress PC, MSB order,\n" \
+"OPCODE4: returns the four bytes at adress PC, MSB order,\n" \
 "RAM: RAM mapped on 49152-65535 on Spectrum 128 or Prism,\n" \
 "ROM: ROM mapped on 0-16383 on Spectrum 128,\n" \
 "SEG0, SEG1, SEG2, SEG3: memory banks mapped on each 4 memory segments on Z88\n" \
@@ -894,7 +901,6 @@ extern int menu_center_y(void);
 "PWV: value written on write port operation\n" \
 "PRA: address used on read port operation\n" \
 "PWA: address used on write port operation\n" \
-"\n" \
 "OUTFIRED: returns 1 if last Z80 opcode was an OUT operation\n" \
 "INFIRED: returns 1 if last Z80 opcode was an IN operation\n" \
 "INTFIRED: returns 1 when an interrupt has been generated\n" \
@@ -902,28 +908,35 @@ extern int menu_center_y(void);
 "EXITROM: returns 1 the first time PC register is out ROM space (16384-65535)\n" \
 "Note: The last two only return 1 the first time the breakpoint is fired, or a watch is shown, " \
 "it will return 1 again only exiting required space address and entering again\n" \
-"\n" \
 "TSTATES: t-states total in a frame\n" \
 "TSTATESL: t-states in a scanline\n" \
 "TSTATESP: t-states partial\n" \
 "SCANLINE: scanline counter\n" \
 "\n" \
-"[VOP] is optional is made of a Variable Operator and Variable Value, joined together with no space. Variable Operator can be:\n" \
-"& : bitwise AND\n" \
-"| : bitwise OR\n" \
-"^ : bitwise XOR\n" \
-"Variable Value is any value you want to apply with the operator\n" \
-"Examples of [VOP]: \n" \
-"|3 : Makes a bitwise OR with 3 to the Variable value\n" \
-"&FH : Makes a bitwise AND with FH to the Variable value\n" \
+"[FUNCTION] can be:\n" \
+"PEEK(e): returns the byte at address e, where e is any expression\n" \
+"PEEKW(e): returns the word at address e\n" \
+"NOT(e): negates expression e: if it's 0, returns 1. Otherwhise, return 0. \n" \
+"ABS(e): returns absolute value of expression e\n" \
+"BYTE(e): same as (e)&FFH\n" \
+"WORD(e): same as (e)&FFFFH\n" \
 "\n" \
-"[CONDITION] must be one of: <,>,=,/  (/ means not equal)\n" \
-"[VALUE] must be a numeric value\n" \
-"[OPERATOR] must be one of the following: and, or, xor\n" \
+"[NUMERICVALUE] must be a numeric value, it can have a suffix indicating the numeric base, otherwise it's decimal:\n" \
+"suffix H: hexadecimal\n" \
+"suffix %: binary\n" \
+"between quotes '' or \"\": ascii\n" \
+"\n" \
+"[OPERATOR] must be one of the following: =, <, > , <>, <=, >=, +, -, *, / , \n" \
+"& : bitwise and\n" \
+"| : bitwise or\n" \
+"^ : bitwise xor\n" \
+"\n" \
+"[LOGICOPERATOR] must be one of the following: and, or, xor\n" \
 "\n" \
 "Examples of conditions:\n" \
+"A: it will match when A register is not zero\n" \
 "SP<32768 : it will match when SP register is below 32768\n" \
-"PWA&FFH=FEH : it will match when last port write address, doing an AND bitwise (&) with FFH, is equal to FEH\n" \
+"PWA & FFH=FEH : it will match when last port write address, doing an AND bitwise (&) with FFH, is equal to FEH\n" \
 "A|1=255 : it will match when register A, doing OR bitwise (|), it equal to 255\n" \
 "(32768)&0FH=3 : it will match when memory address 32768 has the low 4 bits set to value 3\n" \
 "OUTFIRED=1 AND PWA&00FFH=FEH AND PWV&7=1 : it will match when changing border color to blue\n" \
@@ -932,22 +945,20 @@ extern int menu_center_y(void);
 "1=1 : it will match when 1=1, so always ;) \n" \
 "FS=1: it will match when flag S is set\n" \
 "A=10 and BC<33 : it will match when A register is 10 and BC is below 33\n" \
-"OPCODE=ED4AH : it will match when running opcode ADC HL,BC\n" \
-"OPCODE=21H : it will match when running opcode LD HL,NN\n" \
-"OPCODE=210040H : it will match when running opcode LD HL,4000H\n" \
+"A+1=10 : it will match when A+1 equals to 10\n" \
+"BC=(DE+HL)*2: it will match when BC register is (DE+HL)*2\n" \
+"OPCODE2=ED4AH : it will match when running opcode ADC HL,BC\n" \
+"OPCODE1=21H : it will match when running opcode LD HL,NN\n" \
+"OPCODE3=210040H : it will match when running opcode LD HL,4000H\n" \
 "SEG2=40H : when memory bank 40H is mapped to memory segment 2 (49152-65535 range) on Z88\n" \
 "MWA<16384 : it will match when attempting to write in ROM\n" \
 "ENTERROM=1 : it will match when entering ROM space address\n" \
 "TSTATESP>69888 : it will match when partial counter has executed a 48k full video frame (you should reset it before)\n" \
 "\nNote 1: Any condition in the whole list can trigger a breakpoint" \
-"\n\nNote 2: When writing values, is faster for the breakpoint parser if the number starts with a digit and uses less cpu, " \
-"so, having this breakpoint: \n" \
-"DE=3FFFH \n" \
-"is faster than\n" \
-"DE=FFFFH \n" \
-"So I recommend you to add a 0 at the beginning of the number, if it does not start with a digit. So using the same example, this expression will be faster: \n" \
-"DE=0FFFFH \n" \
-"The technical explanation for that is, if the parser sees a starting digit, it doesn't have to try to find a match on every register/variable\n" \
+"\nNote 2: It you are using the substract operator (-) and using 3 or more values, you should use parenthesis. So an expression like:\n" \
+"A-B-C will be calculated wrong. You should write it as:\n" \
+"(A-B)-C . The reason for that is that the expression parser uses a fast approach to calculate expressions recursively, from left to right, and it " \
+"does not prioritize some operators, like the substract\n" \
 "\nNote 3: Breakpoint types PC=XXXX, MWA=XXXX and MRA=XXXX are a lot faster than the rest, because they use a breakpoint optimizer"
 
 
@@ -956,7 +967,7 @@ extern int menu_center_y(void);
 "menu or break or empty string: Breaks current execution of program\n" \
 "call address: Calls memory address\n" \
 "printc c: Print character c to console\n" \
-"printe expression: Print expression following the same syntax as watches and evaluate condition\n" \
+"printe expression: Print expression following the same syntax as breakpoints and evaluate condition\n" \
 "prints string: Prints string to console\n" \
 "quicksave: Saves a quick snapshot\n" \
 "set-register string: Sets register indicated on string. Example: set-register PC=32768\n" \
