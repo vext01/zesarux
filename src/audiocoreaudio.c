@@ -494,16 +494,10 @@ return noErr;
 
 
 
+// Midi code derived from work of Craig Stuart Sapp:
 //
 // Programmer:	Craig Stuart Sapp
 // Date:	Mon Jun  8 14:54:42 PDT 2009
-// Filename:	testout.c
-// Syntax:	C; Apple OSX CoreMIDI
-// $Smake:	gcc -o %b %f -framework CoreMIDI -framework CoreServices
-//              note: CoreServices needed for GetMacOSSStatusErrorString().
-//
-// Description:	This program plays a single MIDI note (middle C) on all
-//              MIDI output ports which the program can find.
 //
 // Derived from "Audio and MIDI on Mac OS X" Preliminary Documentation,
 // May 2001 Apple Computer, Inc. found in PDF form on the developer.apple.com
@@ -511,12 +505,12 @@ return noErr;
 //
 
 
-#include <unistd.h>               /* for sleep() function                */
-#define MESSAGESIZE 3             /* byte count for MIDI note messages   */
+//#define MESSAGESIZE 3             /* byte count for MIDI note messages   */
 
 void playPacketListOnAllDevices   (MIDIPortRef     midiout,
                                    const MIDIPacketList* pktlist);
 
+/*
 /////////////////////////////////////////////////////////////////////////
 
 int main_test_midi(void) {
@@ -541,20 +535,15 @@ int main_test_midi(void) {
    Byte buffer[1024];             // storage space for MIDI Packets (max 65536)
    MIDIPacketList *packetlist = (MIDIPacketList*)buffer;
    MIDIPacket *currentpacket = MIDIPacketListInit(packetlist);
-   Byte noteon[MESSAGESIZE] = {0x90, 60, 127}; //127 es volumen
-   Byte noteon2[MESSAGESIZE] = {0x90, 70, 127}; //127 es volumen
+   Byte noteon[MESSAGESIZE] = {0x90, 60, 127}; 
+
    currentpacket = MIDIPacketListAdd(packetlist, sizeof(buffer),
          currentpacket, timestamp, MESSAGESIZE, noteon);
 
-   currentpacket = MIDIPacketListAdd(packetlist, sizeof(buffer),
-         currentpacket, timestamp, MESSAGESIZE, noteon2);
 
    // send the MIDI data and wait for one second:
    playPacketListOnAllDevices(midiout, packetlist);
    sleep(1);
-
-
-
 
 
    // Prepare a MIDI Note-Off message to send
@@ -582,32 +571,60 @@ int main_test_midi(void) {
 
    return 0;
 }
+*/
 
-   MIDIClientRef midiclient  = NULL;
-   MIDIPortRef   midiout     = NULL;
+
+MIDIPacketList *coreaudio_midi_packetlist = NULL;
+MIDIPacket *coreaudio_midi_currentpacket = NULL;
+
+//Mas que suficiente para almacenar 3 notas*3 canales
+#define COREAUDIO_MIDI_BUFFER_SIZE 16384
+z80_byte coreaudio_midi_buffer[COREAUDIO_MIDI_BUFFER_SIZE];       
+
+void coreaudio_mid_add_note(z80_byte *note,int messagesize)
+{
+
+   MIDITimeStamp timestamp = 0;   // 0 will mean play now.
+
+    coreaudio_midi_currentpacket = MIDIPacketListAdd(coreaudio_midi_packetlist, COREAUDIO_MIDI_BUFFER_SIZE,
+         coreaudio_midi_currentpacket, timestamp, messagesize, note);
+}
+
+void coreaudio_mid_initialize_queue(void)
+{
+   coreaudio_midi_packetlist = (MIDIPacketList*)coreaudio_midi_buffer;
+   coreaudio_midi_currentpacket = MIDIPacketListInit(coreaudio_midi_packetlist);
+}
+
+
+   MIDIClientRef coreaudio_midi_midiclient  = NULL;
+   MIDIPortRef   coreaudio_midi_midiout     = NULL;
 
 int coreaudio_mid_initialize_all(void)
 {
    // Prepare MIDI Interface Client/Port for writing MIDI data:
 
    OSStatus status;
-   if (status = MIDIClientCreate(CFSTR("TeStInG"), NULL, NULL, &midiclient)) {
+   if (status = MIDIClientCreate(CFSTR("TeStInG"), NULL, NULL, &coreaudio_midi_midiclient)) {
        printf("Error trying to create MIDI Client structure: %d\n", status);
        printf("%s\n", GetMacOSStatusErrorString(status));
        return 1;
    }
-   if (status = MIDIOutputPortCreate(midiclient, CFSTR("OuTpUt"), &midiout)) {
+   if (status = MIDIOutputPortCreate(coreaudio_midi_midiclient, CFSTR("OuTpUt"), &coreaudio_midi_midiout)) {
        printf("Error trying to create MIDI output port: %d\n", status);
        printf("%s\n", GetMacOSStatusErrorString(status));
        return 1;
    }
+  
+
+  coreaudio_mid_initialize_queue();
 
 
   return 0;
 }
 
 
-Byte coreaudio_midi_buffer[4096];             // storage space for MIDI Packets (max 65536)
+
 
 //Hacer note on de una nota inmediatamente
 int coreaudio_note_on(unsigned char channel, unsigned char note,unsigned char velocity)
@@ -615,19 +632,9 @@ int coreaudio_note_on(unsigned char channel, unsigned char note,unsigned char ve
 
   debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
 
-   // Prepare a MIDI Note-On message to send
-   MIDITimeStamp timestamp = 0;   // 0 will mean play now.
-   
-   MIDIPacketList *packetlist = (MIDIPacketList*)coreaudio_midi_buffer;
-   MIDIPacket *currentpacket = MIDIPacketListInit(packetlist);
-   Byte noteon[MESSAGESIZE] = {0x90, note, 90}; //90 es volumen?
-   currentpacket = MIDIPacketListAdd(packetlist, sizeof(coreaudio_midi_buffer),
-         currentpacket, timestamp, MESSAGESIZE, noteon);
+  z80_byte noteon[] = {0x90, note, velocity}; 
 
-
-   // send the MIDI data and wait for one second:
-   playPacketListOnAllDevices(midiout, packetlist);
-
+  coreaudio_mid_add_note(noteon,3);
 
   return 0;
 }
@@ -637,19 +644,9 @@ int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char v
 
   debug_printf (VERBOSE_PARANOID,"noteoff event channel %d note %d velocity %d",channel,note,velocity);
 
-   // Prepare a MIDI Note-On message to send
-   MIDITimeStamp timestamp = 0;   // 0 will mean play now.
-   
-   MIDIPacketList *packetlist = (MIDIPacketList*)coreaudio_midi_buffer;
-   MIDIPacket *currentpacket = MIDIPacketListInit(packetlist);
-   //Byte noteoff[MESSAGESIZE] = {0x90, note, 0}; 
-   Byte noteoff[MESSAGESIZE] = {0x80, note, 90}; 
-   currentpacket = MIDIPacketListAdd(packetlist, sizeof(coreaudio_midi_buffer),
-         currentpacket, timestamp, MESSAGESIZE, noteoff);
+  z80_byte noteoff[] = {0x80, note, velocity}; 
 
-
-   // send the MIDI data and wait for one second:
-   playPacketListOnAllDevices(midiout, packetlist);
+  coreaudio_mid_add_note(noteoff,3);
 
 
   return 0;  
@@ -658,6 +655,11 @@ int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char v
 
 void coreaudio_midi_output_flush_output(void)
 {
+
+   // send the MIDI data 
+   playPacketListOnAllDevices(coreaudio_midi_midiout, coreaudio_midi_packetlist);
+
+  coreaudio_mid_initialize_queue();
 
 }
 /////////////////////////////////////////////////////////////////////////
