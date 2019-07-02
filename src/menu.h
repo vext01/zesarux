@@ -967,7 +967,7 @@ extern int menu_center_y(void);
 "menu or break or empty string: Breaks current execution of program\n" \
 "call address: Calls memory address\n" \
 "printc c: Print character c to console\n" \
-"printe expression: Print expression following the same syntax as breakpoints and evaluate condition\n" \
+"printe expression: Print expression following the same syntax as breakpoints and evaluate expression\n" \
 "prints string: Prints string to console\n" \
 "quicksave: Saves a quick snapshot\n" \
 "set-register string: Sets register indicated on string. Example: set-register PC=32768\n" \
