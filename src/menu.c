@@ -4065,6 +4065,8 @@ void menu_dibuja_ventana_botones(void)
 		//putchar_menu_overlay(x+ancho-1,y,'-',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 }
 
+int no_dibuja_ventana_muestra_pending_error_message=0;
+
 //dibuja ventana de menu, con:
 //titulo
 //contenido blanco
@@ -4074,7 +4076,8 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 {
 
 
-	menu_muestra_pending_error_message();
+	//Para draw below windows, no mostrar error pendiante cuando esta dibujando ventanas de debajo
+	if (!no_dibuja_ventana_muestra_pending_error_message) menu_muestra_pending_error_message();
 
 	//En el caso de stdout, solo escribimos el texto
         if (!strcmp(scr_driver_name,"stdout")) {
@@ -4419,7 +4422,7 @@ void zxvision_destroy_window(zxvision_window *w)
 
 	//printf ("Setting current window to %p\n",zxvision_current_window);
 
-	printf ("Next window was %p\n",w->next_window);
+	//printf ("Next window was %p\n",w->next_window);
 
 	
 	ventana_tipo_activa=1;
@@ -4429,7 +4432,7 @@ void zxvision_destroy_window(zxvision_window *w)
 		//Dibujar las de detras
 		//printf ("Dibujando ventanas por detras\n");
 
-		printf ("proxima ventana antes de dibujar: %p\n",w->next_window);
+		//printf ("proxima ventana antes de dibujar: %p\n",w->next_window);
 		zxvision_draw_below_windows_nospeech(w);
 
 		
@@ -4448,7 +4451,6 @@ void zxvision_destroy_window(zxvision_window *w)
 	//TODO: solo podemos hacer destroy de la ultima ventana creada,
 	//habria que tener metodo para poder destruir ventana de en medio
 	//TODO2: si hacemos esto justo despues de zxvision_current_window=w->previous_window; acaba provocando segfault al redibujar. por que?
-	//TODO3: esto va relacionado con error "Pointer was null redrawing below windows" de draw_below_windows
 	if (zxvision_current_window!=NULL) zxvision_current_window->next_window=NULL;
 
 	//para poder hacer destroy de ventana de en medio seria tan simple como hacer que zxvision_current_window->next_window= fuera el next que habia al principio
@@ -5793,16 +5795,24 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	//esto puede suceder haciendo esto:
 	//entrar a debug cpu-breakpoints. activarlo y dejar que salte el tooltip
 	//ir a ZRCP. Meter breakpoint que de error, ejemplo: "sb 1 pc=kkkk("
-	//ir a menu. enter y enter. Se provoca esta situacion. Por que? Probablemente porque se ha llamado a destroy window de una ventana que no era
-	//la ultima?. Ver comentarios en zxvision_destroy_window
+	//ir a menu. enter y enter. Se provoca esta situacion. Por que? Probablemente porque se ha llamado a destroy window y
+	//se ha generado una ventana de error cuando habia un tooltip abierto
+	//Ver comentarios en zxvision_destroy_window
 
-	if (pointer_window==NULL) {
-		printf ("Pointer was null before loop redrawing below windows\n");
-	}	
+	//if (pointer_window==NULL) {
+	//	printf ("Pointer was null before loop redrawing below windows\n");
+	//}	
 
-	printf ("\nStart loop redrawing below windows\n");
+	//printf ("\nStart loop redrawing below windows\n");
+
+	//no mostrar mensajes de error pendientes
+	//si eso se hiciera, aparece en medio de la lista de ventanas una que apunta a null y de ahi la condicion pointer_window!=NULL
+	//asi entonces dicha condicion pointer_window!=NULL ya no seria necesaria pero la dejamos por si acaso...
+	int antes_no_dibuja_ventana_muestra_pending_error_message=no_dibuja_ventana_muestra_pending_error_message;
+	no_dibuja_ventana_muestra_pending_error_message=1;
+
 	while (pointer_window!=w && pointer_window!=NULL) {
-		printf ("window from bottom to top %p\n",pointer_window);
+		//printf ("window from bottom to top %p\n",pointer_window);
 		//printf ("window from bottom to top %p. name: %s\n",pointer_window,pointer_window->window_title);
 		
 		zxvision_draw_window(pointer_window);
@@ -5811,11 +5821,14 @@ void zxvision_draw_below_windows(zxvision_window *w)
 		pointer_window=pointer_window->next_window;
 	}
 
-	printf ("Stop loop redrawing below windows\n\n");	
 
-	if (pointer_window==NULL) {
-		printf ("Pointer was null redrawing below windows\n");
-	}
+	no_dibuja_ventana_muestra_pending_error_message=antes_no_dibuja_ventana_muestra_pending_error_message;
+
+	//printf ("Stop loop redrawing below windows\n\n");	
+
+	//if (pointer_window==NULL) {
+	//	printf ("Pointer was null redrawing below windows\n");
+	//}
 
 	ventana_es_background=0;
 	ventana_tipo_activa=antes_ventana_tipo_activa;
