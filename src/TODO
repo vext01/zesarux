@@ -1,23 +1,19 @@
   
---- Para esta version 7.3:
+--- Para esta version 8.0:
 
 -sin footer y sin zxdesktop, peta, a veces (quiza cuando ha dejado configuracion sin footer de que ha salido mal)
 
--random pete al arranque
-
-
+-random pete al arranque en mac
 
 -Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
 
 -Interrupcion pentagon se dispara en medio de un scanline, según lo hablado con mcleod
 
+-cpuid ("zxid") según especificación de mcleod
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
 -filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
-
-Para próxima versión ZEsarUX:
--cpuid ("zxid") según especificación de mcleod
 
 -alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
 y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
@@ -26,7 +22,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -Editor scanf que permita mover cursor. 
 
--unpaws , unquill para cpc
 
 -unpaws con quill:
 *compression tokens?
@@ -34,18 +29,14 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -unpaws: 
 *compression tokens no siempre estan hasta el 255
 
-
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
 -ZX Desktop:
 
 --En FAQ explicar qué es ZX Desktop
-
 --Extender info de zxvision y zxdesktop en features (ya hay algo)
-
 --Redimensionar ventana redibuja el zxdesktop?
-
 --Revisar Full screen en ZX desktop
 
 
@@ -62,7 +53,6 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win
-
 
 -Turbo spool setting en tbblue y otras máquinas 128kb...
 
@@ -81,18 +71,11 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
--Extractor dibujos paws?
-
--Snapshots automáticos de nombre que depende del archivo cargado. Para tener siempre uno cuando se cambia de juego 
-
--Debug daad hacerlo extensivo a paws?
-
 -en boot de tbblue, borra footer. sera al cambiar turbo de cpu? en zxuno tambien pasa. ya no pasa?
 
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
-
 
 
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
@@ -102,18 +85,13 @@ Que hacemos con cocoa no opengl?
 Asi se puede tener una raiz por ejemplo para divmmc comun, y luego mapear carpetas adicionales para pruebas
 O quiza, en vez de overlay, una segunda unidad de disco
 
--.nex files support. Parecidos a .sna pero tienen cabeceras para guardar registros nextreg, etc. Esperar a que tengan finalizado el formato
-
--.snax files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
-Se usan realmente??
-
-
--Baseconf soporta ulaplus
-
 -Poner sondas de tiempo para saber que funciones tardan más en ejecutarse para poderlas optimizar 
 Que sea un tiempo que se acumule. Para hacer cálculos con más tiempo de muestreo
 Parecido a core statistics pero con más sondas 
 Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano en compileoptions.h
+
+
+
 
 
 
@@ -134,7 +112,6 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 
 
 -AY partitura:
-*que grabe notas en archivo
 *que muestre los otros chips. ya está preparado el array para varios chips
 *para el beeper tambien
 *ideal para probar duraciones: golden axe
@@ -862,6 +839,11 @@ Before this update, 512 tile mode was automatically entered when the ula was dis
 
 
 
+-.nex files support. Parecidos a .sna pero tienen cabeceras para guardar registros nextreg, etc. Esperar a que tengan finalizado el formato
+
+-.snax files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
+Se usan realmente??
+
 
 TBBLUE: 
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
@@ -932,6 +914,8 @@ hay dos tarjetas según:
 Which card is activated, sets bit 4 port # 7FFD.?? -> pendiente
 
 -No llega a arrancar la rom
+
+-Baseconf soporta ulaplus
 
 
 -------------
@@ -2065,6 +2049,8 @@ ver de momento workaround audio_using_sdl2
 
 *** Menu  ***
 
+-Snapshots automáticos de nombre que depende del archivo cargado. Para tener siempre uno cuando se cambia de juego 
+
 -Opcional cargar snapshot y no cerrar menú. Mismo para Smartload pero solo con snapshots?
 
 -Algunos items de menu, por ejemplo dentro del buscador de vidas, son lineas no seleccionables,
@@ -2599,6 +2585,9 @@ como descubrir rutinas de pintado de sprites
 * de momento hay algo preliminar: ver spritefinder
 
 -Extractor palabras paws gac etc que clasifique por verbos, nombres etc
+-Extractor dibujos paws?
+
+-unpaws , unquill para cpc
 -Text keyboard editable desde menu?
 
 -Joystick en Mac,Win
