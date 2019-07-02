@@ -4065,6 +4065,7 @@ void menu_dibuja_ventana_botones(void)
 		//putchar_menu_overlay(x+ancho-1,y,'-',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 }
 
+//si no mostramos mensajes de error pendientes
 int no_dibuja_ventana_muestra_pending_error_message=0;
 
 //dibuja ventana de menu, con:
@@ -4076,7 +4077,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 {
 
 
-	//Para draw below windows, no mostrar error pendiante cuando esta dibujando ventanas de debajo
+	//Para draw below windows, no mostrar error pendiente cuando esta dibujando ventanas de debajo
 	if (!no_dibuja_ventana_muestra_pending_error_message) menu_muestra_pending_error_message();
 
 	//En el caso de stdout, solo escribimos el texto
