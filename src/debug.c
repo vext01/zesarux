@@ -3078,12 +3078,13 @@ void debug_set_breakpoint_optimized(int breakpoint_index,char *condicion)
 
 
 //Indice entre 0 y MAX_BREAKPOINTS_CONDITIONS-1
-void debug_set_breakpoint(int breakpoint_index,char *condicion)
+//Retorna 0 si ok
+int debug_set_breakpoint(int breakpoint_index,char *condicion)
 {
 
     if (breakpoint_index<0 || breakpoint_index>MAX_BREAKPOINTS_CONDITIONS-1) {
       debug_printf(VERBOSE_ERR,"Index out of range setting breakpoint");
-      return;
+      return 1;
     }
 
 	
@@ -3091,6 +3092,7 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
 	if (result<0) {
 		debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo=TPT_FIN; //Inicializarlo vacio
 		debug_printf (VERBOSE_ERR,"Error adding breakpoint [%s]",condicion);
+		return 1;
 	}
 
 
@@ -3102,6 +3104,8 @@ void debug_set_breakpoint(int breakpoint_index,char *condicion)
 
 	//Miramos cual es el ultimo breakpoint activo
 	debug_set_last_active_breakpoint();
+
+	return 0;
 
 }
 

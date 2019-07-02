@@ -265,7 +265,7 @@ extern void debug_dump_nested_functions(char *result);
 
 extern int debug_change_register(char *texto);
 
-extern void debug_set_breakpoint(int breakpoint_index,char *condicion);
+extern int debug_set_breakpoint(int breakpoint_index,char *condicion);
 
 extern void debug_set_breakpoint_action(int breakpoint_index,char *accion);
 

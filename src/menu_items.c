@@ -10687,10 +10687,7 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
                 int i;
 
 
-		/*menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate,NULL,"~~Evaluate Condition");
-		menu_add_item_menu_shortcut(array_menu_breakpoints,'e');
-		menu_add_item_menu_tooltip(array_menu_breakpoints,"Test if a condition is true");
-		menu_add_item_menu_ayuda(array_menu_breakpoints,"It tests a condition using the same method as breakpoint conditions below");*/
+
 
 		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_breakpoints_condition_evaluate_new,NULL,"~~Evaluate Expression");
 		menu_add_item_menu_shortcut(array_menu_breakpoints,'e');
@@ -10722,7 +10719,7 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
 				menu_tape_settings_trunc_name(buffer_temp_breakpoint,string_condition_shown,23);
 				
-
+				//printf ("brkp %d [%s]\n",i,string_condition_shown);
 
 				menu_tape_settings_trunc_name(debug_breakpoints_actions_array[i],string_action_shown,7);
 				if (debug_breakpoints_actions_array[i][0]) sprintf (string_condition_action,"%s->%s",string_condition_shown,string_action_shown);

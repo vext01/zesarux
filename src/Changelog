@@ -30,6 +30,7 @@ Added Derby+ and Derby++ roms
 Added hdf to ide/mmc raw converter
 Added hdf support to MMC emulation
 
+
 Improved breakpoint parser: 
 -full expression parser: parenthesis, functions, sums, multiplications, etc. Can be used as a full calculator!
 -now it's a lot more faster. Up to 7 times faster, so it uses 7 times less cpu than the old version
@@ -39,16 +40,13 @@ Improved watches:
 -up to 10 watches on screen
 -watches are saved on configuration file
 
-Improved adventure text extractor: now supports Daad games too. So it supports Daad, Paws, Quill and Gac
-
-
+Improved adventure text extractor: now it supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved TSConf layers menu: Added "reveal" setting to view which pixels are used by a layer
 Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
 Improved Waveform window: now the wave adjusts automatically to the zxwindow size
 Improved hexadecimal editor: now it resizes view to zxwindow height
 Improved cpu transaction log: now logfiles can be rotated automatically
 Improved scale 0.75 function: now it has antialias
-
 
 
 Fixed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
@@ -62,6 +60,7 @@ Fixed zxvision left button handling: no longer sends enter when the user is drag
 Fixed machine names to be completely right: for example, "Spectrum 48k" becomes "ZX Spectrum 48k", etc
 Fixed saving sprites when memory zone is not default zone
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
+
 
 
 Version 7.2. 10 April 2019 - Neula edition
