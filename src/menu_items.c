@@ -9220,8 +9220,6 @@ void menu_cpu_transaction_log_enable_rotate(MENU_ITEM_PARAMETERS)
 void menu_cpu_transaction_log_rotate_number(MENU_ITEM_PARAMETERS)
 {
 
-        int brkp_type,dir;
-
         char string_number[4];
 
         sprintf (string_number,"%d",cpu_transaction_log_rotated_files);
@@ -9241,7 +9239,6 @@ void menu_cpu_transaction_log_rotate_number(MENU_ITEM_PARAMETERS)
 void menu_cpu_transaction_log_rotate_size(MENU_ITEM_PARAMETERS)
 {
 
-        int brkp_type,dir;
 
         char string_number[5];
 
@@ -15666,7 +15663,7 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_record_mid,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_record_mid);
 
-                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"AY to MID" );
+                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"AY to .mid" );
 
                 
 

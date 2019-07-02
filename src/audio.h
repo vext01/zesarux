@@ -283,6 +283,7 @@ extern void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_soni
 extern void audiodac_send_sample_value(z80_byte value);
 
 extern void midi_output_frame_event(void);
+extern int audio_midi_output_init(void);
 
 extern z80_bit midi_output_record_noisetone;
 
