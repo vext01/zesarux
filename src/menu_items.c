@@ -15820,6 +15820,11 @@ void menu_direct_alsa_midi_output(MENU_ITEM_PARAMETERS)
 
 
 
+					menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_SEPARADOR,NULL,NULL,"");
+					menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_midi_output_noisetone,NULL,"[%c] Allow tone+noise",
+						(midi_output_record_noisetone.v ? 'X' : ' ') );
+					menu_add_item_menu_tooltip(array_menu_direct_alsa_midi_output,"Send also channels enabled as tone+noise");
+					menu_add_item_menu_ayuda(array_menu_direct_alsa_midi_output,"Send also channels enabled as tone+noise");
 
 
 
