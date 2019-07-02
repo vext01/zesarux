@@ -574,20 +574,34 @@ int main_test_midi(void) {
 */
 
 
-MIDIPacketList *coreaudio_midi_packetlist = NULL;
-MIDIPacket *coreaudio_midi_currentpacket = NULL;
+MIDIClientRef coreaudio_midi_midiclient;
+MIDIPortRef   coreaudio_midi_midiout;
+
+MIDIPacketList *coreaudio_midi_packetlist=NULL;
+MIDIPacket *coreaudio_midi_currentpacket=NULL;
 
 //Mas que suficiente para almacenar 3 notas*3 canales
+//de todas maneras, si no cabe al agregar, hace flush y reintenta
 #define COREAUDIO_MIDI_BUFFER_SIZE 16384
 z80_byte coreaudio_midi_buffer[COREAUDIO_MIDI_BUFFER_SIZE];       
 
 void coreaudio_mid_add_note(z80_byte *note,int messagesize)
 {
 
+  //Ver si hay espacio suficiente. Si no, flush
+
    MIDITimeStamp timestamp = 0;   // 0 will mean play now.
 
     coreaudio_midi_currentpacket = MIDIPacketListAdd(coreaudio_midi_packetlist, COREAUDIO_MIDI_BUFFER_SIZE,
          coreaudio_midi_currentpacket, timestamp, messagesize, note);
+
+    if (coreaudio_midi_currentpacket==NULL) {
+      debug_printf (VERBOSE_DEBUG,"Coreaudio midi queue was full. Flush and retry");
+      //Hacemos flush y reintentamos
+      coreaudio_midi_output_flush_output();
+      coreaudio_midi_currentpacket = MIDIPacketListAdd(coreaudio_midi_packetlist, COREAUDIO_MIDI_BUFFER_SIZE,
+         coreaudio_midi_currentpacket, timestamp, messagesize, note);
+    }
 }
 
 void coreaudio_mid_initialize_queue(void)
@@ -596,23 +610,36 @@ void coreaudio_mid_initialize_queue(void)
    coreaudio_midi_currentpacket = MIDIPacketListInit(coreaudio_midi_packetlist);
 }
 
+void coreaudio_midi_output_flush_output(void)
+{
 
-   MIDIClientRef coreaudio_midi_midiclient  = NULL;
-   MIDIPortRef   coreaudio_midi_midiout     = NULL;
+   // send the MIDI data 
+   //Por si acaso comprobamos que no sea NULL
+  if (coreaudio_midi_packetlist!=NULL) playPacketListOnAllDevices(coreaudio_midi_midiout, coreaudio_midi_packetlist);
+
+  coreaudio_mid_initialize_queue();
+
+}
+
+
+
+
 
 int coreaudio_mid_initialize_all(void)
 {
    // Prepare MIDI Interface Client/Port for writing MIDI data:
 
    OSStatus status;
-   if (status = MIDIClientCreate(CFSTR("TeStInG"), NULL, NULL, &coreaudio_midi_midiclient)) {
-       printf("Error trying to create MIDI Client structure: %d\n", status);
-       printf("%s\n", GetMacOSStatusErrorString(status));
+   status = MIDIClientCreate(CFSTR("ZEsarUX"), NULL, NULL, &coreaudio_midi_midiclient);
+   if (status) {
+       debug_printf(VERBOSE_ERR,"Error trying to create MIDI Client structure: %d", status);
+       //printf("%s\n", GetMacOSStatusErrorString(status)); 
        return 1;
    }
-   if (status = MIDIOutputPortCreate(coreaudio_midi_midiclient, CFSTR("OuTpUt"), &coreaudio_midi_midiout)) {
-       printf("Error trying to create MIDI output port: %d\n", status);
-       printf("%s\n", GetMacOSStatusErrorString(status));
+   status = MIDIOutputPortCreate(coreaudio_midi_midiclient, CFSTR("ZEsarUX output"), &coreaudio_midi_midiout);
+   if (status) {
+       debug_printf(VERBOSE_ERR,"Error trying to create MIDI output port: %d", status);
+       //printf("%s\n", GetMacOSStatusErrorString(status));
        return 1;
    }
   
@@ -653,15 +680,7 @@ int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char v
 }
 
 
-void coreaudio_midi_output_flush_output(void)
-{
 
-   // send the MIDI data 
-   playPacketListOnAllDevices(coreaudio_midi_midiout, coreaudio_midi_packetlist);
-
-  coreaudio_mid_initialize_queue();
-
-}
 /////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////
@@ -680,10 +699,11 @@ void playPacketListOnAllDevices(MIDIPortRef midiout,
    MIDIEndpointRef dest;
    for(iDest=0; iDest<nDests; iDest++) {
       dest = MIDIGetDestination(iDest);
-      if (status = MIDISend(midiout, dest, pktlist)) {
-          printf("Problem sendint MIDI data on port %d\n", iDest);
-          printf("%s\n", GetMacOSStatusErrorString(status));
-          exit(status);
+      status = MIDISend(midiout, dest, pktlist);
+      if (status) {
+          debug_printf(VERBOSE_DEBUG,"coreaudio_midi: Problem sending MIDI data");
+          //printf("%s\n", GetMacOSStatusErrorString(status));
+          //exit(status);
       }
    }
 }
