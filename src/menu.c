@@ -5122,8 +5122,10 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 		}*/
 
 		if (volver_timeout) {
+			printf ("antes de tooltip\n");
 			zxvision_espera_tecla_timeout_window_splash(volver_timeout);
 			if (volver_timeout==2) menu_espera_no_tecla();
+			printf ("despues de tooltip\n");
 		}
 		else {
 			//printf ("Antes espera tecla\n");
@@ -5133,10 +5135,10 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 		}
 
-
+printf ("antes de leer tecla\n");
 				tecla=zxvision_read_keyboard();
 
-             
+printf ("despues de leer tecla\n");             
 
 				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
 				//if (tecla==13 && mouse_left && zxvision_keys_event_not_send_to_machine && !mouse_is_dragging) {
