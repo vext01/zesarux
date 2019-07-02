@@ -4419,15 +4419,20 @@ void zxvision_destroy_window(zxvision_window *w)
 
 	//printf ("Setting current window to %p\n",zxvision_current_window);
 
-	free(w->memory);
+	printf ("Next window was %p\n",w->next_window);
+
+	
 	ventana_tipo_activa=1;
 	zxvision_keys_event_not_send_to_machine=1;
 
 	if (zxvision_current_window!=NULL) {
 		//Dibujar las de detras
 		//printf ("Dibujando ventanas por detras\n");
+
+		printf ("proxima ventana antes de dibujar: %p\n",w->next_window);
 		zxvision_draw_below_windows_nospeech(w);
 
+		
 		zxvision_set_draw_window_parameters(zxvision_current_window);
 
 		//Dibujar ventana que habia debajo
@@ -4436,11 +4441,17 @@ void zxvision_destroy_window(zxvision_window *w)
 		//printf ("Dibujando ventana de debajo que ahora es de frente\n");
 	}
 
+	//Liberar memoria cuando ya no se use para nada
+	free(w->memory);
+
 	//Decir que esta ventana no tiene siguiente. 
 	//TODO: solo podemos hacer destroy de la ultima ventana creada,
 	//habria que tener metodo para poder destruir ventana de en medio
 	//TODO2: si hacemos esto justo despues de zxvision_current_window=w->previous_window; acaba provocando segfault al redibujar. por que?
+	//TODO3: esto va relacionado con error "Pointer was null redrawing below windows" de draw_below_windows
 	if (zxvision_current_window!=NULL) zxvision_current_window->next_window=NULL;
+
+	//para poder hacer destroy de ventana de en medio seria tan simple como hacer que zxvision_current_window->next_window= fuera el next que habia al principio
 
 }
 
@@ -5122,10 +5133,10 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 		}*/
 
 		if (volver_timeout) {
-			printf ("antes de tooltip\n");
+			//printf ("antes de tooltip\n");
 			zxvision_espera_tecla_timeout_window_splash(volver_timeout);
 			if (volver_timeout==2) menu_espera_no_tecla();
-			printf ("despues de tooltip\n");
+			//printf ("despues de tooltip\n");
 		}
 		else {
 			//printf ("Antes espera tecla\n");
@@ -5135,10 +5146,10 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 
 		}
 
-printf ("antes de leer tecla\n");
+//printf ("antes de leer tecla\n");
 				tecla=zxvision_read_keyboard();
 
-printf ("despues de leer tecla\n");             
+//printf ("despues de leer tecla\n");             
 
 				//Si se pulsa boton mouse, al final aparece como enter y no es lo que quiero
 				//if (tecla==13 && mouse_left && zxvision_keys_event_not_send_to_machine && !mouse_is_dragging) {
@@ -5778,13 +5789,32 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	ventana_es_background=1;
 
 	//Y ahora de ahi hacia arriba
-	while (pointer_window!=w) {
-		//printf ("window from bottom to top %p\n",pointer_window);
+	//Si puntero es NULL, es porque se ha borrado alguna ventana de debajo. Salir
+	//esto puede suceder haciendo esto:
+	//entrar a debug cpu-breakpoints. activarlo y dejar que salte el tooltip
+	//ir a ZRCP. Meter breakpoint que de error, ejemplo: "sb 1 pc=kkkk("
+	//ir a menu. enter y enter. Se provoca esta situacion. Por que? Probablemente porque se ha llamado a destroy window de una ventana que no era
+	//la ultima?. Ver comentarios en zxvision_destroy_window
 
+	if (pointer_window==NULL) {
+		printf ("Pointer was null before loop redrawing below windows\n");
+	}	
+
+	printf ("\nStart loop redrawing below windows\n");
+	while (pointer_window!=w && pointer_window!=NULL) {
+		printf ("window from bottom to top %p\n",pointer_window);
+		//printf ("window from bottom to top %p. name: %s\n",pointer_window,pointer_window->window_title);
+		
 		zxvision_draw_window(pointer_window);
 	        zxvision_draw_window_contents(pointer_window);
 
 		pointer_window=pointer_window->next_window;
+	}
+
+	printf ("Stop loop redrawing below windows\n\n");	
+
+	if (pointer_window==NULL) {
+		printf ("Pointer was null redrawing below windows\n");
 	}
 
 	ventana_es_background=0;
