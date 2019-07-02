@@ -4801,8 +4801,7 @@ int mostrar_player;
 
 	mostrar_player=menu_audio_new_ayplayer_si_mostrar();
 
-
-         
+       
 
 
 		if (mostrar_player) {
@@ -16107,7 +16106,7 @@ menu_item *array_menu_ay_mixer;
                 //menu_add_item_menu(array_menu_ay_mixer,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_ay_mixer);
 
-                retorno_menu=menu_dibuja_menu(&ay_mixer_opcion_seleccionada,&item_seleccionado,array_menu_ay_mixer,"AY filters" );
+                retorno_menu=menu_dibuja_menu(&ay_mixer_opcion_seleccionada,&item_seleccionado,array_menu_ay_mixer,"AY mixer" );
 
 
 
