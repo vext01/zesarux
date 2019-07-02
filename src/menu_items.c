@@ -170,7 +170,7 @@ int breakpoints_opcion_seleccionada=0;
 int menu_watches_opcion_seleccionada=0;
 int record_mid_opcion_seleccionada=0;
 
-int direct_midi_output_opcion_seleccionada=0;
+int direct_alsa_midi_output_opcion_seleccionada=0;
 int direct_coreaudio_midi_output_opcion_seleccionada=0;
 
 int ay_mixer_opcion_seleccionada=0;
@@ -15683,26 +15683,36 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 }
 
 
-//Midi output a dispositivo real. Solo con Alsa
-#ifdef COMPILE_ALSA
 
-
-void menu_direct_midi_output_initialize(MENU_ITEM_PARAMETERS)
+//Funcion comun de midi output de alsa y coreaudio
+void menu_midi_output_noisetone(MENU_ITEM_PARAMETERS)
 {
+	midi_output_record_noisetone.v ^=1;
+}
+
+//Funcion comun de midi output de alsa y coreaudio
+void menu_midi_output_initialize(MENU_ITEM_PARAMETERS)
+{
+	
+
 
 	if (audio_midi_output_initialized==0) {
-		if (audio_midi_output_init()) {
+		if (audio_midi_output_init() ) {
 			menu_error_message("Error initializing midi device");
 		}
 	}
 	else {
 		//TODO desactivar dispositivo y noteoff, etc
 		audio_midi_output_initialized=0;
-	}
-
+	}	
 }
 
-void menu_direct_midi_output_list_devices(MENU_ITEM_PARAMETERS)
+
+//Midi output a dispositivo real. Con alsa
+#ifdef COMPILE_ALSA
+
+
+void menu_direct_alsa_midi_output_list_devices(MENU_ITEM_PARAMETERS) 
 {
 
 	char *device_list="/proc/asound/seq/clients";
@@ -15717,7 +15727,7 @@ void menu_direct_midi_output_list_devices(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_direct_midi_output_client(MENU_ITEM_PARAMETERS)
+void menu_direct_alsa_midi_output_client(MENU_ITEM_PARAMETERS)
 {
         char string_valor[4];
         int valor;
@@ -15738,7 +15748,7 @@ void menu_direct_midi_output_client(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_direct_midi_output_port(MENU_ITEM_PARAMETERS)
+void menu_direct_alsa_midi_output_port(MENU_ITEM_PARAMETERS)
 {
         char string_valor[4];
         int valor;
@@ -15759,7 +15769,7 @@ void menu_direct_midi_output_port(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_direct_midi_output_volume(MENU_ITEM_PARAMETERS)
+void menu_direct_alsa_midi_output_volume(MENU_ITEM_PARAMETERS)
 {
         char string_valor[4];
         int valor;
@@ -15786,30 +15796,30 @@ void menu_direct_midi_output_volume(MENU_ITEM_PARAMETERS)
 
 void menu_direct_alsa_midi_output(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_direct_midi_output;
+        menu_item *array_menu_direct_alsa_midi_output;
 	menu_item item_seleccionado;
 	int retorno_menu;
 
         do {
 
-		menu_add_item_menu_inicial_format(&array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_list_devices,NULL,"List midi devices");
+		menu_add_item_menu_inicial_format(&array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_list_devices,NULL,"List midi devices");
 
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_client,NULL,"Midi client: %d",alsa_midi_client);
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_port,NULL,"Midi port: %d",alsa_midi_port);
+		menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_client,NULL,"Midi client: %d",alsa_midi_client);
+		menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_port,NULL,"Midi port: %d",alsa_midi_port);
 
 		//Parece que no funciona la gestion de volumen
-		//menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
+		//menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
 
 
 		if (audio_midi_output_initialized==0) {
-			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Initialize midi");
+			menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Initialize midi");
 		}
 		else {
-			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_initialize,NULL,"Disable midi");
+			menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
 		}
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
+		menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
 			(audio_midi_output_initialized ? "Yes" : "No" ) );
 
 
@@ -15817,13 +15827,13 @@ void menu_direct_alsa_midi_output(MENU_ITEM_PARAMETERS)
 
 
 
-                menu_add_item_menu(array_menu_direct_midi_output,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                menu_add_item_menu(array_menu_direct_alsa_midi_output,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-                //menu_add_item_menu(array_menu_direct_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_direct_midi_output);
+                //menu_add_item_menu(array_menu_direct_alsa_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_direct_alsa_midi_output);
 
-                retorno_menu=menu_dibuja_menu(&direct_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_midi_output,"AY to MID" );
+                retorno_menu=menu_dibuja_menu(&direct_alsa_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_alsa_midi_output,"AY to MIDI output" );
 
 
 
@@ -15843,23 +15853,10 @@ void menu_direct_alsa_midi_output(MENU_ITEM_PARAMETERS)
 //Final midi output alsa
 
 
+
+//Inicio compilacion de coreaudio
 #ifdef COMPILE_COREAUDIO
 
-void menu_direct_coreaudio_midi_output_initialize(MENU_ITEM_PARAMETERS)
-{
-	
-
-
-	if (audio_midi_output_initialized==0) {
-		if (audio_midi_output_init() ) {
-			menu_error_message("Error initializing midi device");
-		}
-	}
-	else {
-		//TODO desactivar dispositivo y noteoff, etc
-		audio_midi_output_initialized=0;
-	}	
-}
 
 void menu_direct_coreaudio_midi_output(MENU_ITEM_PARAMETERS)
 {
@@ -15871,10 +15868,10 @@ void menu_direct_coreaudio_midi_output(MENU_ITEM_PARAMETERS)
 
 	
 		if (audio_midi_output_initialized==0) {
-			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_direct_coreaudio_midi_output_initialize,NULL,"Initialize midi");
+			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Initialize midi");
 		}
 		else {
-			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_direct_coreaudio_midi_output_initialize,NULL,"Disable midi");
+			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
 		}
 
 		menu_add_item_menu_format(array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
@@ -15882,16 +15879,20 @@ void menu_direct_coreaudio_midi_output(MENU_ITEM_PARAMETERS)
 
 
 
-
+					menu_add_item_menu_format(array_menu_direct_coreaudio_midi_output,MENU_OPCION_SEPARADOR,NULL,NULL,"");
+					menu_add_item_menu_format(array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_midi_output_noisetone,NULL,"[%c] Allow tone+noise",
+						(midi_output_record_noisetone.v ? 'X' : ' ') );
+					menu_add_item_menu_tooltip(array_menu_direct_coreaudio_midi_output,"Send also channels enabled as tone+noise");
+					menu_add_item_menu_ayuda(array_menu_direct_coreaudio_midi_output,"Send also channels enabled as tone+noise");
 
 
                 menu_add_item_menu(array_menu_direct_coreaudio_midi_output,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-                //menu_add_item_menu(array_menu_direct_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                //menu_add_item_menu(array_menu_direct_coreaudio_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_direct_coreaudio_midi_output);
 
-                retorno_menu=menu_dibuja_menu(&direct_coreaudio_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_coreaudio_midi_output,"AY to MID" );
+                retorno_menu=menu_dibuja_menu(&direct_coreaudio_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_coreaudio_midi_output,"AY to MIDI output" );
 
 
 
@@ -15978,16 +15979,16 @@ void menu_ay_mixer_retorna_filtro(int chip,int canal,char *destino)
 		break;
 
 		case 1:
-			strcpy(destino,"No tone");
+			strcpy(destino,"No tone  ");
 		break;
 
 		case 8:
-			strcpy(destino,"No noise");
+			strcpy(destino,"No noise ");
 		break;		
 
 		//case 9:
 		default:
-			strcpy(destino,"Silence");
+			strcpy(destino,"Silence  ");
 		break;			
 
 	}
@@ -16093,7 +16094,7 @@ menu_item *array_menu_ay_mixer;
 
 				for (canal=0;canal<3;canal++) {
 					menu_ay_mixer_retorna_filtro(chip,canal,buffer_filtro);
-					menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_ay_mixer_cambia_filtro,NULL,"Channel %c: %s",'A'+canal,buffer_filtro);
+					menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_ay_mixer_cambia_filtro,NULL,"[%s] Channel %c",buffer_filtro,'A'+canal);
 
 					menu_add_item_menu_valor_opcion(array_menu_ay_mixer,chip*3+canal);
 

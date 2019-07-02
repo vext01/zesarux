@@ -284,6 +284,8 @@ extern void audiodac_send_sample_value(z80_byte value);
 
 extern void midi_output_frame_event(void);
 
+extern z80_bit midi_output_record_noisetone;
+
 #define FREQ_TOP_SPEED_CHANGE 12800
 
 

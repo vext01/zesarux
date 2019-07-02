@@ -2372,8 +2372,12 @@ int mid_notes_recorded=0;
 z80_bit mid_flush_finished_tracks={0};
 
 
-//Permite grabar canales que sean tono+ruido
+//Permite grabar canales que sean tono+ruido, en exportar a .mid
 z80_bit mid_record_noisetone={0};
+
+
+//Permite enviar canales que sean tono+ruido, en midi output
+z80_bit midi_output_record_noisetone={0};
 
 void mid_reset_export_buffers(void)
 {
@@ -2643,8 +2647,6 @@ void mid_frame_event(void)
 
 				int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
 
-				//if (mid_record_noisetone.v) mascara_mezclador |=8;
-
 
 				/*
 				1xx1 -> no tono ni ruido
@@ -2851,8 +2853,7 @@ void audio_midi_output_frame_event(void)
 
 				int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
 
-				//if (mid_record_noisetone.v) mascara_mezclador |=8;
-
+	
 
 				/*
 				1xx1 -> no tono ni ruido
@@ -2876,7 +2877,7 @@ void audio_midi_output_frame_event(void)
 				if ( (ay_retorna_mixer_register(chip)&mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
 
 				//Se permite tono y ruido?
-				if (mid_record_noisetone.v) {
+				if (midi_output_record_noisetone.v) {
 					if ( (ay_retorna_mixer_register(chip)&mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
 						suena_nota=1;
 						//printf ("tonoruido\n");
