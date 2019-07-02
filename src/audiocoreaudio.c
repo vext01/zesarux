@@ -505,73 +505,8 @@ return noErr;
 //
 
 
-//#define MESSAGESIZE 3             /* byte count for MIDI note messages   */
 
-void playPacketListOnAllDevices   (MIDIPortRef     midiout,
-                                   const MIDIPacketList* pktlist);
-
-/*
-/////////////////////////////////////////////////////////////////////////
-
-int main_test_midi(void) {
-
-   // Prepare MIDI Interface Client/Port for writing MIDI data:
-   MIDIClientRef midiclient  = NULL;
-   MIDIPortRef   midiout     = NULL;
-   OSStatus status;
-   if (status = MIDIClientCreate(CFSTR("TeStInG"), NULL, NULL, &midiclient)) {
-       printf("Error trying to create MIDI Client structure: %d\n", status);
-       printf("%s\n", GetMacOSStatusErrorString(status));
-       exit(status);
-   }
-   if (status = MIDIOutputPortCreate(midiclient, CFSTR("OuTpUt"), &midiout)) {
-       printf("Error trying to create MIDI output port: %d\n", status);
-       printf("%s\n", GetMacOSStatusErrorString(status));
-       exit(status);
-   }
-
-   // Prepare a MIDI Note-On message to send
-   MIDITimeStamp timestamp = 0;   // 0 will mean play now.
-   Byte buffer[1024];             // storage space for MIDI Packets (max 65536)
-   MIDIPacketList *packetlist = (MIDIPacketList*)buffer;
-   MIDIPacket *currentpacket = MIDIPacketListInit(packetlist);
-   Byte noteon[MESSAGESIZE] = {0x90, 60, 127}; 
-
-   currentpacket = MIDIPacketListAdd(packetlist, sizeof(buffer),
-         currentpacket, timestamp, MESSAGESIZE, noteon);
-
-
-   // send the MIDI data and wait for one second:
-   playPacketListOnAllDevices(midiout, packetlist);
-   sleep(1);
-
-
-   // Prepare a MIDI Note-Off message to send
-   currentpacket = MIDIPacketListInit(packetlist);
-   Byte noteoff[MESSAGESIZE] = {0x90, 60, 0};
-   currentpacket = MIDIPacketListAdd(packetlist, sizeof(buffer),
-         currentpacket, timestamp, MESSAGESIZE, noteoff);
-
-   // send the MIDI data and exit immediately
-   playPacketListOnAllDevices(midiout, packetlist);
-
-   if (status = MIDIPortDispose(midiout)) {
-      printf("Error trying to close MIDI output port: %d\n", status);
-      printf("%s\n", GetMacOSStatusErrorString(status));
-      exit(status);
-   }
-   midiout = NULL;
-
-   if (status = MIDIClientDispose(midiclient)) {
-      printf("Error trying to close MIDI client: %d\n", status);
-      printf("%s\n", GetMacOSStatusErrorString(status));
-      exit(status);
-   }
-   midiclient = NULL;
-
-   return 0;
-}
-*/
+void playPacketListOnAllDevices   (MIDIPortRef     midiout,  const MIDIPacketList* pktlist);
 
 
 MIDIClientRef coreaudio_midi_midiclient;
@@ -620,8 +555,6 @@ void coreaudio_midi_output_flush_output(void)
   coreaudio_mid_initialize_queue();
 
 }
-
-
 
 
 
@@ -690,8 +623,8 @@ int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char v
 //    (Send the MIDI message(s) to all MIDI out ports).
 //
 
-void playPacketListOnAllDevices(MIDIPortRef midiout,
-      const MIDIPacketList* pktlist) {
+void playPacketListOnAllDevices(MIDIPortRef midiout,const MIDIPacketList* pktlist) 
+{
    // send MIDI message to all MIDI output devices connected to computer:
    ItemCount nDests = MIDIGetNumberOfDestinations();
    ItemCount iDest;
