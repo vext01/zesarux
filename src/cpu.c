@@ -477,6 +477,10 @@ z80_bit zxmmc_emulation={0};
 //z80_byte valor_poke_rom=255;
 
 
+//Decir si hay que volver a hacer fetch en el core, esto pasa con instrucciones FD FD FD ... por ejemplo
+int core_refetch=0;
+
+
 //Inves. Ultimo valor hecho poke a RAM baja (0...16383) desde menu
 z80_byte last_inves_low_ram_poke_menu=255;
 

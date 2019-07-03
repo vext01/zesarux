@@ -43,12 +43,12 @@ Examples
 
 //#define EMULATOR_VERSION "8.0"
 
-#define EMULATOR_VERSION "8.0-SN"
-//#define EMULATOR_VERSION "8.0-RC"
+//#define EMULATOR_VERSION "8.0-SN"
+#define EMULATOR_VERSION "8.0-RC"
 #define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "1 July 2019"
-#define EMULATOR_SHORT_DATE "01/07/2019"
+#define EMULATOR_DATE "3 July 2019"
+#define EMULATOR_SHORT_DATE "03/07/2019"
 #define EMULATOR_GAME_EDITION "World Destruction"
 #define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
 
@@ -154,6 +154,7 @@ extern z80_bit interrupcion_pendiente;
 extern z80_bit z80_ejecutando_halt;
 extern z80_byte im_mode;
 extern z80_bit cpu_step_mode;
+extern int core_refetch;
 
 #ifndef GCC_UNUSED
 

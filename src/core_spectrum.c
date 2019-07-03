@@ -60,6 +60,10 @@
 z80_byte byte_leido_core_spectrum;
 
 
+int duracion_ultimo_opcode=0;
+
+
+
 //int tempcontafifty=0;
 
 int si_siguiente_sonido(void)
@@ -336,6 +340,11 @@ void cpu_core_loop_spectrum(void)
 					}				
 
 
+				int t_estados_antes_opcode=t_estados;
+			
+
+				core_refetch=0;
+
 				//Modo normal
 				if (diviface_enabled.v==0) {
 
@@ -354,6 +363,8 @@ void cpu_core_loop_spectrum(void)
 					byte_leido_core_spectrum=fetch_opcode();
 					diviface_post_opcode_fetch();
 				}
+
+
 
 
 #ifdef EMULATE_CPU_STATS
@@ -377,7 +388,14 @@ void cpu_core_loop_spectrum(void)
 
 
 
+						
 	                	codsinpr[byte_leido_core_spectrum]  () ;
+				
+
+						if (!core_refetch) duracion_ultimo_opcode=t_estados-t_estados_antes_opcode;
+						else duracion_ultimo_opcode +=t_estados-t_estados_antes_opcode;
+						
+						//printf ("refetch: %d duracion opcode: %d\n",core_refetch,duracion_ultimo_opcode);
 
 				//printf ("t_estados:%d\n",t_estados);
 
@@ -611,7 +629,17 @@ void cpu_core_loop_spectrum(void)
 
 					//TSConf lo gestiona mediante interrupciones de frame
 					if (MACHINE_IS_TSCONF) interrupcion_maskable_generada.v=0;
+
+
+					//Si la anterior instruccion ha tardado 32 ciclos o mas
+					if (duracion_ultimo_opcode>=32) {
+						//printf ("Perdiendo interrupcion pues ultima instruccion dura 32 ciclos o mas\n");
+						interrupcion_maskable_generada.v=0;
+					}
 				 	
+
+					//Ya hemos leido duracion. Resetearla a 0 si no hay que hacer refetch
+					if (!core_refetch) duracion_ultimo_opcode=0;
 
 
 				}

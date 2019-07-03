@@ -1953,7 +1953,9 @@ void instruccion_ddfd_220 ()
 
 void instruccion_ddfd_221 ()
 {
-        invalid_opcode_ddfd("221/253 221");
+        //invalid_opcode_ddfd("221/253 221");
+        core_refetch=1;
+        //reg_pc++;
 }
 
 void instruccion_ddfd_222 ()
@@ -2148,7 +2150,9 @@ void instruccion_ddfd_252 ()
 
 void instruccion_ddfd_253 ()
 {
-        invalid_opcode_ddfd("221/253 253");
+        //invalid_opcode_ddfd("221/253 253");
+        core_refetch=1;
+        //reg_pc++;
 }
 
 void instruccion_ddfd_254 ()
