@@ -1997,7 +1997,12 @@ void exp_par_evaluate_expression(char *entrada,char *salida)
 			
 			
 			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
-			sprintf(salida,"%d",resultado);
+            if (error_code) {
+                strcpy(salida,"Error evaluating");
+            }
+            else {
+			    sprintf(salida,"%d",resultado);
+            }
 
 			//printf ("%d\n",resultado);
 	}
