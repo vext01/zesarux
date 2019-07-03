@@ -50,6 +50,7 @@ Improved Cpu Transaction Log: now logfiles can be rotated automatically
 
 
 Fixed Pentagon interrupt handling: now effects on border and hi-res work almost perfect!
+Fixed interrupt bug behaviour where last opcode lasts >=32 t-states and interrupt in the middle
 Fixed "Jeff Braine" manufacturer to "New Horizons". Changed Prism machine name to "Prism 512"
 Fixed bug having more than 256 text to adventure keyboard words
 Fixed bug on CPC vertical scrolling

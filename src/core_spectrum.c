@@ -260,7 +260,7 @@ tiempo de proceso en 10 segundos: user	0m1.239s
 
 void core_spectrum_fin_frame_pantalla(void)
 {
-//Siguiente frame de pantalla
+	//Siguiente frame de pantalla
 				core_cpu_timer_frame_difftime=timer_stats_diference_time(&core_cpu_timer_frame_antes,&core_cpu_timer_frame_despues);
 
 				//printf ("tiempo transcurrido: %ld microsec\n",tiempo_timer_difftime);
@@ -353,9 +353,6 @@ void core_spectrum_fin_frame_pantalla(void)
 						interrupcion_maskable_generada.v=0;
 					}
 				 	
-
-
-
 
 					//en el Spectrum la INT comienza en el scanline 248, 0T
 					//Pero en Pentagon la interrupción debe dispararse en el scanline 239 (contando desde 0), y 320 pixel clocks (o 160 T estados) tras comenzar dicho scanline
@@ -520,7 +517,7 @@ void core_spectrum_fin_scanline(void)
 
 void core_spectrum_handle_interrupts(void)
 {
-debug_fired_interrupt=1;
+		debug_fired_interrupt=1;
 
 			//printf ("Generada interrupcion Z80\n");
 
@@ -674,7 +671,7 @@ debug_fired_interrupt=1;
 
 void core_spectrum_handle_interrupts_pentagon(void)
 {
-if (!disparada_int_pentagon) {
+		if (!disparada_int_pentagon) {
 			
 				int linea=t_estados/screen_testados_linea;
 				if (linea==319) {
@@ -707,7 +704,7 @@ if (!disparada_int_pentagon) {
 
 void core_spectrum_ciclo_fetch(void)
 {
-core_spectrum_store_rainbow_current_atributes();
+	core_spectrum_store_rainbow_current_atributes();
 
 
 
@@ -777,12 +774,11 @@ core_spectrum_store_rainbow_current_atributes();
 	            codsinpr[byte_leido_core_spectrum]  () ;
 				
 
+				//Ultima duracion, si es que ultimo opcode no genera fetch de nuevo del opcode
 				if (!core_refetch) duracion_ultimo_opcode=t_estados-t_estados_antes_opcode;
 				else duracion_ultimo_opcode +=t_estados-t_estados_antes_opcode;
 						
-						//printf ("refetch: %d duracion opcode: %d\n",core_refetch,duracion_ultimo_opcode);
-
-				//printf ("t_estados:%d\n",t_estados);
+					
 
 				/*if (rzx_reproduciendo && rzx_in_fetch_counter_til_next_int) {
 					if (rzx_in_fetch_counter_til_next_int_counter>=rzx_in_fetch_counter_til_next_int) {
@@ -894,8 +890,7 @@ void cpu_core_loop_spectrum(void)
 		
 
 
-
-		//Ya hemos leido duracion. Resetearla a 0 si no hay que hacer refetch
+		//Ya hemos leido duracion ultimo opcode. Resetearla a 0 si no hay que hacer refetch
 		if (!core_refetch) duracion_ultimo_opcode=0;		
 
 

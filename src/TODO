@@ -5,11 +5,9 @@
 
 -random pete al arranque en mac
 
--Al disparar interrupcion puede que no salte si hay una instruccion con prefijo repetido, según lo hablado con mcleod
-
--Interrupcion pentagon se dispara en medio de un scanline, según lo hablado con mcleod
-
 -cpuid ("zxid") según especificación de mcleod
+
+-tile navigator, sprite navigator tbblue, tsconf que conserven geometria
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
