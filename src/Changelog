@@ -61,6 +61,7 @@ Fixed machine names to be completely right: for example, "Spectrum 48k" becomes 
 Fixed saving sprites when memory zone is not default zone
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
 Fixed bug crash when a message error was generated from ZRCP and menu had a tooltip open
+Fixed interrupt behaviour where last opcode lasts >=32 t-states and interrupt in the middle
 
 
 

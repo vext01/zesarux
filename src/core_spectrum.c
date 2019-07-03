@@ -341,8 +341,6 @@ void cpu_core_loop_spectrum(void)
 
 
 				int t_estados_antes_opcode=t_estados;
-			
-
 				core_refetch=0;
 
 				//Modo normal
@@ -633,7 +631,7 @@ void cpu_core_loop_spectrum(void)
 
 					//Si la anterior instruccion ha tardado 32 ciclos o mas
 					if (duracion_ultimo_opcode>=32) {
-						//printf ("Perdiendo interrupcion pues ultima instruccion dura 32 ciclos o mas\n");
+						debug_printf (VERBOSE_PARANOID,"Losing last interrupt because last opcode lasts 32 t-states or more");
 						interrupcion_maskable_generada.v=0;
 					}
 				 	
