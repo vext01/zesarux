@@ -155,6 +155,7 @@ extern z80_bit z80_ejecutando_halt;
 extern z80_byte im_mode;
 extern z80_bit cpu_step_mode;
 extern int core_refetch;
+extern int cpu_duracion_pulso_interrupcion;
 
 #ifndef GCC_UNUSED
 

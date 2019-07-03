@@ -480,6 +480,9 @@ z80_bit zxmmc_emulation={0};
 //Decir si hay que volver a hacer fetch en el core, esto pasa con instrucciones FD FD FD ... por ejemplo
 int core_refetch=0;
 
+//en spectrum, 32. en pentagon, 36
+int cpu_duracion_pulso_interrupcion=32;
+
 
 //Inves. Ultimo valor hecho poke a RAM baja (0...16383) desde menu
 z80_byte last_inves_low_ram_poke_menu=255;
@@ -2723,6 +2726,9 @@ void set_machine_params(void)
 		//sleep (3);
 		//cpu_turbo_speed=1;
 
+		//en spectrum, 32. en pentagon, 36
+		cpu_duracion_pulso_interrupcion=32;
+
 
 		//cpu_core_loop=cpu_core_loop_spectrum;
 		if (MACHINE_IS_SPECTRUM) {
@@ -3326,13 +3332,19 @@ You don't need timings for H/V sync =)
                 break;
 
 
-                case 21:
+                case MACHINE_ID_PENTAGON:
+
+				//Pentagon
                 poke_byte=poke_byte_spectrum_128k;
                 peek_byte=peek_byte_spectrum_128k;
                 peek_byte_no_time=peek_byte_no_time_spectrum_128k;
                 poke_byte_no_time=poke_byte_no_time_spectrum_128k;
                 lee_puerto=lee_puerto_spectrum;
                 ay_chip_present.v=1;
+
+
+				//en spectrum, 32. en pentagon, 36
+				cpu_duracion_pulso_interrupcion=36;				
                 break;
 
 

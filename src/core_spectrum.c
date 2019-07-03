@@ -63,6 +63,9 @@ z80_byte byte_leido_core_spectrum;
 int duracion_ultimo_opcode=0;
 
 
+int disparada_int_pentagon=0;
+
+int pentagon_inicio_interrupt=160;
 
 //int tempcontafifty=0;
 
@@ -432,6 +435,34 @@ void cpu_core_loop_spectrum(void)
 		//esto implica que al final del frame de pantalla habremos enviado 312 bytes de sonido
 
 
+		//En pentagon, disparar interrupcion antes del final de frame
+		if (MACHINE_IS_PENTAGON) {
+			if (!disparada_int_pentagon) {
+			
+				int linea=t_estados/screen_testados_linea;
+				if (linea==319) {
+					//TODO: en el Spectrum la INT comienza en el scanline 248, 0T
+					//Pero en Pentagon la interrupción debe dispararse en el scanline 239 (contando desde 0), y 320 pixel clocks (o 160 T estados) tras comenzar dicho scanline
+					//A los 160 estados
+					int t_est_linea=t_estados % screen_testados_linea;
+					if (t_est_linea>=pentagon_inicio_interrupt) {
+						//printf ("Int Pentagon\n");
+						//printf ("scanline %d t_estados %d\n",t_estados/screen_testados_linea,t_estados);			
+
+						disparada_int_pentagon=1;
+						if (iff1.v==1) {
+							//printf ("Generated pentagon interrupt\n");
+							//printf ("scanline %d t_estados %d\n",t_estados/screen_testados_linea,t_estados);
+							interrupcion_maskable_generada.v=1;					
+						}
+					}
+
+				}
+			}
+			
+		}
+
+
 		//A final de cada scanline
 		if ( (t_estados/screen_testados_linea)>t_scanline  ) {
 			//printf ("%d\n",t_estados);
@@ -536,6 +567,9 @@ void cpu_core_loop_spectrum(void)
 
 			t_scanline_next_line();
 
+
+
+
 			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
 			//esperar para ver si se ha generado una interrupcion 1/50
 
@@ -630,7 +664,7 @@ void cpu_core_loop_spectrum(void)
 
 
 					//Si la anterior instruccion ha tardado 32 ciclos o mas
-					if (duracion_ultimo_opcode>=32) {
+					if (duracion_ultimo_opcode>=cpu_duracion_pulso_interrupcion) {
 						debug_printf (VERBOSE_PARANOID,"Losing last interrupt because last opcode lasts 32 t-states or more");
 						interrupcion_maskable_generada.v=0;
 					}
@@ -640,7 +674,21 @@ void cpu_core_loop_spectrum(void)
 					if (!core_refetch) duracion_ultimo_opcode=0;
 
 
+					//TODO: en el Spectrum la INT comienza en el scanline 248, 0T
+					//Pero en Pentagon la interrupción debe dispararse en el scanline 239 (contando desde 0), y 320 pixel clocks (o 160 T estados) tras comenzar dicho scanline
+					//La generamos en pentagon desde otro sitio del bucle
+					if (MACHINE_IS_PENTAGON) interrupcion_maskable_generada.v=0;
+
+					//printf ("Interrupcion en scanline %d\n",t_estados/screen_testados_linea);
+					//if ( (t_estados/screen_testados_linea)>t_scanline  ) {
+
+
+
+
 				}
+
+				//Final de frame. Permitir de nuevo interrupciones pentagon
+				disparada_int_pentagon=0;				
 
 
 				cpu_loop_refresca_pantalla();
