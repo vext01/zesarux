@@ -441,7 +441,7 @@ void cpu_core_loop_spectrum(void)
 			
 				int linea=t_estados/screen_testados_linea;
 				if (linea==319) {
-					//TODO: en el Spectrum la INT comienza en el scanline 248, 0T
+					//en el Spectrum la INT comienza en el scanline 248, 0T
 					//Pero en Pentagon la interrupción debe dispararse en el scanline 239 (contando desde 0), y 320 pixel clocks (o 160 T estados) tras comenzar dicho scanline
 					//A los 160 estados
 					int t_est_linea=t_estados % screen_testados_linea;
@@ -453,7 +453,14 @@ void cpu_core_loop_spectrum(void)
 						if (iff1.v==1) {
 							//printf ("Generated pentagon interrupt\n");
 							//printf ("scanline %d t_estados %d\n",t_estados/screen_testados_linea,t_estados);
-							interrupcion_maskable_generada.v=1;					
+							interrupcion_maskable_generada.v=1;		
+
+
+							//Si la anterior instruccion ha tardado 32 ciclos o mas
+							if (duracion_ultimo_opcode>=cpu_duracion_pulso_interrupcion) {
+								debug_printf (VERBOSE_PARANOID,"Losing last interrupt because last opcode lasts 32 t-states or more");
+								interrupcion_maskable_generada.v=0;
+							}			
 						}
 					}
 
@@ -545,8 +552,6 @@ void cpu_core_loop_spectrum(void)
 
 			}
 
-
-
 			//final de linea
 
 			//copiamos contenido linea y border a buffer rainbow
@@ -568,8 +573,6 @@ void cpu_core_loop_spectrum(void)
 			t_scanline_next_line();
 
 
-
-
 			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
 			//esperar para ver si se ha generado una interrupcion 1/50
 
@@ -585,30 +588,29 @@ void cpu_core_loop_spectrum(void)
 
 
 
-	if (MACHINE_IS_TBBLUE) {
-		tbblue_copper_handle_vsync();
-								
-						}
+				if (MACHINE_IS_TBBLUE) {
+					tbblue_copper_handle_vsync();			
+				}
 
 
 				//tsconf_last_frame_y=-1;
 
 				if (rainbow_enabled.v==1) t_scanline_next_fullborder();
 
-		                t_scanline=0;
+		        t_scanline=0;
 
 		                //printf ("final scan lines. total: %d\n",screen_scanlines);
-		                if (MACHINE_IS_INVES) {
+		        if (MACHINE_IS_INVES) {
 		                        //Inves
 		                        t_scanline_draw=screen_indice_inicio_pant;
 		                        //printf ("reset inves a inicio pant : %d\n",t_scanline_draw);
-		                }
+		        }
 
-		                else {
+		        else {
                 		        //printf ("reset no inves\n");
 					set_t_scanline_draw_zero();
 
-		                }
+		        }
 
 
                                 //Parche para maquinas que no generan 312 lineas, porque si enviamos menos sonido se escuchara un click al final
@@ -617,18 +619,18 @@ void cpu_core_loop_spectrum(void)
                                 //este completo; esto es necesario para Z88
 
 
-                                int linea_estados=t_estados/screen_testados_linea;
+                int linea_estados=t_estados/screen_testados_linea;
 
-                                while (linea_estados<312) {
+                while (linea_estados<312) {
 					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
 					//audio_send_mono_sample(audio_valor_enviar_sonido_izquierdo);
                                         linea_estados++;
-                                }
+                }
 
 
 
 
-                                t_estados -=screen_testados_total;
+                t_estados -=screen_testados_total;
 
 				//Para paperboy, thelosttapesofalbion0 y otros que hacen letras en el border, para que no se desplacen en diagonal
 				//t_estados=0;
@@ -670,19 +672,13 @@ void cpu_core_loop_spectrum(void)
 					}
 				 	
 
-					//Ya hemos leido duracion. Resetearla a 0 si no hay que hacer refetch
-					if (!core_refetch) duracion_ultimo_opcode=0;
 
 
-					//TODO: en el Spectrum la INT comienza en el scanline 248, 0T
+
+					//en el Spectrum la INT comienza en el scanline 248, 0T
 					//Pero en Pentagon la interrupción debe dispararse en el scanline 239 (contando desde 0), y 320 pixel clocks (o 160 T estados) tras comenzar dicho scanline
 					//La generamos en pentagon desde otro sitio del bucle
 					if (MACHINE_IS_PENTAGON) interrupcion_maskable_generada.v=0;
-
-					//printf ("Interrupcion en scanline %d\n",t_estados/screen_testados_linea);
-					//if ( (t_estados/screen_testados_linea)>t_scanline  ) {
-
-
 
 
 				}
@@ -722,9 +718,15 @@ void cpu_core_loop_spectrum(void)
 				}
 
 
-			}
+			} 
+			//Fin bloque final de pantalla
 
 		}
+		//Fin bucle final scanline
+
+
+		//Ya hemos leido duracion. Resetearla a 0 si no hay que hacer refetch
+		if (!core_refetch) duracion_ultimo_opcode=0;		
 
 		if (esperando_tiempo_final_t_estados.v) {
 			timer_pause_waiting_end_frame();
@@ -733,7 +735,7 @@ void cpu_core_loop_spectrum(void)
 
 
 		//Interrupcion de 1/50s. mapa teclas activas y joystick
-                if (interrupcion_fifty_generada.v) {
+        if (interrupcion_fifty_generada.v) {
 			interrupcion_fifty_generada.v=0;
 
                         //y de momento actualizamos tablas de teclado segun tecla leida
@@ -761,7 +763,7 @@ void cpu_core_loop_spectrum(void)
 			timer_stats_current_time(&core_cpu_timer_frame_antes);
 
 
-                }
+        }
 
 
 		//Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en spectrum o al cambio de bit6 de R en zx80/81
@@ -917,7 +919,7 @@ void cpu_core_loop_spectrum(void)
 
 			}
 
-                }
+        }
 		debug_get_t_stados_parcial_post();
 
 }
