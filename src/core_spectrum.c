@@ -157,6 +157,8 @@ void interrupcion_si_despues_lda_ir(void)
 
 
 
+
+
 void core_spectrum_store_rainbow_current_atributes(void)
 {
 
@@ -255,330 +257,10 @@ tiempo de proceso en 10 segundos: user	0m1.239s
 				}
 }
 
-//bucle principal de ejecucion de la cpu de spectrum
-void cpu_core_loop_spectrum(void)
+
+void core_spectrum_fin_frame_pantalla(void)
 {
-
-		debug_get_t_stados_parcial_pre();
-
-		timer_check_interrupt();
-
-
-
-//#ifdef COMPILE_STDOUT
-//		if (screen_stdout_driver) scr_stdout_printchar();
-//#endif
-//
-//#ifdef COMPILE_SIMPLETEXT
-//                if (screen_simpletext_driver) scr_simpletext_printchar();
-//#endif
-		if (chardetect_detect_char_enabled.v) chardetect_detect_char();
-		if (chardetect_printchar_enabled.v) chardetect_printchar();
-
-		if (plus3dos_traps.v) traps_plus3dos();
-
-
-		//Gestionar autoload
-		gestionar_autoload_spectrum();
-
-
-		if (tap_load_detect()) {
-        	                //si estamos en pausa, no hacer nada
-                	        if (!tape_pause) {
-					audio_playing.v=0;
-
-					draw_tape_text();
-
-					tap_load();
-					all_interlace_scr_refresca_pantalla();
-
-					//printf ("refresco pantalla\n");
-					//audio_playing.v=1;
-					timer_reset();
-				}
-
-				else {
-					core_spectrum_store_rainbow_current_atributes();
-					//generamos nada. como si fuera un NOP
-
-					contend_read( reg_pc, 4 );
-
-
-				}
-		}
-
-		else  if (tap_save_detect()) {
-	               	        audio_playing.v=0;
-
-				draw_tape_text();
-
-                        	tap_save();
-	                        //audio_playing.v=1;
-				timer_reset();
-               	}
-
-
-		else {
-			if (esperando_tiempo_final_t_estados.v==0) {
-
-				core_spectrum_store_rainbow_current_atributes();
-
-
-
-#ifdef DEBUG_SECOND_TRAP_STDOUT
-
-        //Para poder debugar rutina que imprima texto. Util para aventuras conversacionales
-        //hay que definir este DEBUG_SECOND_TRAP_STDOUT manualmente en compileoptions.h despues de ejecutar el configure
-
-	scr_stdout_debug_print_char_routine();
-
-#endif
-
-				if (MACHINE_IS_TSCONF) tsconf_handle_frame_interrupts();
-
-					if (nmi_pending_pre_opcode) {
-						//Dado que esto se activa despues de lanzar nmi y antes de leer opcode, aqui saltara cuando PC=66H
-						debug_printf (VERBOSE_DEBUG,"Handling nmi mapping pre opcode fetch at %04XH",reg_pc);
-						nmi_handle_pending_prepost_fetch();
-					}				
-
-
-				int t_estados_antes_opcode=t_estados;
-				core_refetch=0;
-
-				//Modo normal
-				if (diviface_enabled.v==0) {
-
-        	                        contend_read( reg_pc, 4 );
-					byte_leido_core_spectrum=fetch_opcode();
-
-
-
-				}
-
-
-				//Modo con diviface activado
-				else {
-					diviface_pre_opcode_fetch();
-					contend_read( reg_pc, 4 );
-					byte_leido_core_spectrum=fetch_opcode();
-					diviface_post_opcode_fetch();
-				}
-
-
-
-
-#ifdef EMULATE_CPU_STATS
-				util_stats_increment_counter(stats_codsinpr,byte_leido_core_spectrum);
-#endif
-
-                reg_pc++;
-
-					//Nota: agregar estos dos if de nmi_pending_pre_opcode y nmi_pending_post_opcode 
-					//supone un 0.2 % de uso mas en mi iMac: pasa de usar 5.4% cpu a 5.6% cpu en --vo null y --ao null
-					//Es muy poco...
-					if (nmi_pending_post_opcode) {
-						//Dado que esto se activa despues de lanzar nmi y leer opcode, aqui saltara cuando PC=67H
-						debug_printf (VERBOSE_DEBUG,"Handling nmi mapping post opcode fetch at %04XH",reg_pc);
-						nmi_handle_pending_prepost_fetch(); 
-					}				
-
-				reg_r++;
-
-				rzx_in_fetch_counter_til_next_int_counter++;
-
-
-
-						
-	                	codsinpr[byte_leido_core_spectrum]  () ;
-				
-
-						if (!core_refetch) duracion_ultimo_opcode=t_estados-t_estados_antes_opcode;
-						else duracion_ultimo_opcode +=t_estados-t_estados_antes_opcode;
-						
-						//printf ("refetch: %d duracion opcode: %d\n",core_refetch,duracion_ultimo_opcode);
-
-				//printf ("t_estados:%d\n",t_estados);
-
-				/*if (rzx_reproduciendo && rzx_in_fetch_counter_til_next_int) {
-					if (rzx_in_fetch_counter_til_next_int_counter>=rzx_in_fetch_counter_til_next_int) {
-						//Forzar final de frame
-						//t_estados=screen_testados_total;
-						printf ("Forzar final de frame\n");
-						rzx_next_frame_recording();
-					}
-				}*/
-
-
-				//Soporte interrupciones raster zxuno
-				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) zxuno_tbblue_handle_raster_interrupts();
-
-				//Soporte DMA ZXUNO
-				if (MACHINE_IS_ZXUNO && zxuno_dma_disabled.v==0) zxuno_handle_dma();
-
-				//Soporte Datagear/TBBlue DMA
-				if (datagear_dma_emulation.v && datagear_dma_is_disabled.v==0) datagear_handle_dma(); 
-
-				//Soporte TBBlue copper
-				if (MACHINE_IS_TBBLUE) {
-					//Si esta activo copper
-					tbblue_copper_handle_next_opcode();
-				}
-
-
-                        }
-                }
-
-
-
-		//ejecutar esto al final de cada una de las scanlines (312)
-		//esto implica que al final del frame de pantalla habremos enviado 312 bytes de sonido
-
-
-		//En pentagon, disparar interrupcion antes del final de frame
-		if (MACHINE_IS_PENTAGON) {
-			if (!disparada_int_pentagon) {
-			
-				int linea=t_estados/screen_testados_linea;
-				if (linea==319) {
-					//en el Spectrum la INT comienza en el scanline 248, 0T
-					//Pero en Pentagon la interrupción debe dispararse en el scanline 239 (contando desde 0), y 320 pixel clocks (o 160 T estados) tras comenzar dicho scanline
-					//A los 160 estados
-					int t_est_linea=t_estados % screen_testados_linea;
-					if (t_est_linea>=pentagon_inicio_interrupt) {
-						//printf ("Int Pentagon\n");
-						//printf ("scanline %d t_estados %d\n",t_estados/screen_testados_linea,t_estados);			
-
-						disparada_int_pentagon=1;
-						if (iff1.v==1) {
-							//printf ("Generated pentagon interrupt\n");
-							//printf ("scanline %d t_estados %d\n",t_estados/screen_testados_linea,t_estados);
-							interrupcion_maskable_generada.v=1;		
-
-
-							//Si la anterior instruccion ha tardado 32 ciclos o mas
-							if (duracion_ultimo_opcode>=cpu_duracion_pulso_interrupcion) {
-								debug_printf (VERBOSE_PARANOID,"Losing last interrupt because last opcode lasts 32 t-states or more");
-								interrupcion_maskable_generada.v=0;
-							}			
-						}
-					}
-
-				}
-			}
-			
-		}
-
-
-		//A final de cada scanline
-		if ( (t_estados/screen_testados_linea)>t_scanline  ) {
-			//printf ("%d\n",t_estados);
-			//if (t_estados>69000) printf ("t_scanline casi final: %d\n",t_scanline);
-
-			if (si_siguiente_sonido() ) {
-
-				//audio_valor_enviar_sonido=0;
-
-				audio_valor_enviar_sonido_izquierdo=audio_valor_enviar_sonido_derecho=0;
-
-				audio_valor_enviar_sonido_izquierdo +=da_output_ay_izquierdo();
-				audio_valor_enviar_sonido_derecho +=da_output_ay_derecho();
-
-
-				if (beeper_enabled.v) {
-					if (beeper_real_enabled==0) {
-						audio_valor_enviar_sonido_izquierdo += value_beeper;
-						audio_valor_enviar_sonido_derecho += value_beeper;
-					}
-
-					else {
-						char suma_beeper=get_value_beeper_sum_array();
-						audio_valor_enviar_sonido_izquierdo += suma_beeper;
-						audio_valor_enviar_sonido_derecho += suma_beeper;
-						beeper_new_line();
-					}
-
-					
-				}
-
-				if (audiodac_enabled.v) {
-					audiodac_mix();
-				}
-
-
-				if (realtape_inserted.v && realtape_playing.v) {
-					realtape_get_byte();
-					if (realtape_loading_sound.v) {
-                        audio_valor_enviar_sonido_izquierdo /=2;
-	                    audio_valor_enviar_sonido_izquierdo += realtape_last_value/2;
-
-						audio_valor_enviar_sonido_derecho /=2;
-	                    audio_valor_enviar_sonido_derecho += realtape_last_value/2;
-
-						//Sonido alterado cuando top speed
-						if (timer_condicion_top_speed() ) {
-							audio_valor_enviar_sonido_izquierdo=audio_change_top_speed_sound(audio_valor_enviar_sonido_izquierdo);
-							audio_valor_enviar_sonido_derecho=audio_change_top_speed_sound(audio_valor_enviar_sonido_derecho);
-						}
-					}
-				}
-
-				//Ajustar volumen
-				if (audiovolume!=100) {
-					audio_valor_enviar_sonido_izquierdo=audio_adjust_volume(audio_valor_enviar_sonido_izquierdo);
-					audio_valor_enviar_sonido_derecho=audio_adjust_volume(audio_valor_enviar_sonido_derecho);
-				}
-
-				//if (audio_valor_enviar_sonido>127 || audio_valor_enviar_sonido<-128) printf ("Error audio value: %d\n",audio_valor_enviar_sonido);
-
-				if (audio_tone_generator) {
-					audio_send_mono_sample(audio_tone_generator_get() );
-				}
-
-				else {
-					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
-				}
-
-
-
-				ay_chip_siguiente_ciclo();
-
-				if (MACHINE_IS_TSCONF) {
-					tsconf_handle_line_interrupts();
-
-					//y reseteo de esto, que es para interrupciones frame
-					tsconf_handle_frame_interrupts_prev_horiz=9999; 
-				}
-
-			}
-
-			//final de linea
-
-			//copiamos contenido linea y border a buffer rainbow
-			if (rainbow_enabled.v==1) {
-				if (!screen_if_refresh()) {
-					//if ((t_estados/screen_testados_linea)>319) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
-				}
-
-				else {
-					//if ((t_estados/screen_testados_linea)>319) printf ("storing rainbow buffer\n");
-					screen_store_scanline_rainbow_solo_border();
-					screen_store_scanline_rainbow_solo_display();
-				}
-
-				//t_scanline_next_border();
-
-			}
-
-			t_scanline_next_line();
-
-
-			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
-			//esperar para ver si se ha generado una interrupcion 1/50
-
-            if (t_estados>=screen_testados_total) {
-
-				//Siguiente frame de pantalla
+//Siguiente frame de pantalla
 				core_cpu_timer_frame_difftime=timer_stats_diference_time(&core_cpu_timer_frame_antes,&core_cpu_timer_frame_despues);
 
 				//printf ("tiempo transcurrido: %ld microsec\n",tiempo_timer_difftime);
@@ -718,58 +400,127 @@ void cpu_core_loop_spectrum(void)
 				}
 
 
+}
+
+void core_spectrum_fin_scanline(void)
+{
+//printf ("%d\n",t_estados);
+			//if (t_estados>69000) printf ("t_scanline casi final: %d\n",t_scanline);
+
+			if (si_siguiente_sonido() ) {
+
+				//audio_valor_enviar_sonido=0;
+
+				audio_valor_enviar_sonido_izquierdo=audio_valor_enviar_sonido_derecho=0;
+
+				audio_valor_enviar_sonido_izquierdo +=da_output_ay_izquierdo();
+				audio_valor_enviar_sonido_derecho +=da_output_ay_derecho();
+
+
+				if (beeper_enabled.v) {
+					if (beeper_real_enabled==0) {
+						audio_valor_enviar_sonido_izquierdo += value_beeper;
+						audio_valor_enviar_sonido_derecho += value_beeper;
+					}
+
+					else {
+						char suma_beeper=get_value_beeper_sum_array();
+						audio_valor_enviar_sonido_izquierdo += suma_beeper;
+						audio_valor_enviar_sonido_derecho += suma_beeper;
+						beeper_new_line();
+					}
+
+					
+				}
+
+				if (audiodac_enabled.v) {
+					audiodac_mix();
+				}
+
+
+				if (realtape_inserted.v && realtape_playing.v) {
+					realtape_get_byte();
+					if (realtape_loading_sound.v) {
+                        audio_valor_enviar_sonido_izquierdo /=2;
+	                    audio_valor_enviar_sonido_izquierdo += realtape_last_value/2;
+
+						audio_valor_enviar_sonido_derecho /=2;
+	                    audio_valor_enviar_sonido_derecho += realtape_last_value/2;
+
+						//Sonido alterado cuando top speed
+						if (timer_condicion_top_speed() ) {
+							audio_valor_enviar_sonido_izquierdo=audio_change_top_speed_sound(audio_valor_enviar_sonido_izquierdo);
+							audio_valor_enviar_sonido_derecho=audio_change_top_speed_sound(audio_valor_enviar_sonido_derecho);
+						}
+					}
+				}
+
+				//Ajustar volumen
+				if (audiovolume!=100) {
+					audio_valor_enviar_sonido_izquierdo=audio_adjust_volume(audio_valor_enviar_sonido_izquierdo);
+					audio_valor_enviar_sonido_derecho=audio_adjust_volume(audio_valor_enviar_sonido_derecho);
+				}
+
+				//if (audio_valor_enviar_sonido>127 || audio_valor_enviar_sonido<-128) printf ("Error audio value: %d\n",audio_valor_enviar_sonido);
+
+				if (audio_tone_generator) {
+					audio_send_mono_sample(audio_tone_generator_get() );
+				}
+
+				else {
+					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
+				}
+
+
+
+				ay_chip_siguiente_ciclo();
+
+				if (MACHINE_IS_TSCONF) {
+					tsconf_handle_line_interrupts();
+
+					//y reseteo de esto, que es para interrupciones frame
+					tsconf_handle_frame_interrupts_prev_horiz=9999; 
+				}
+
+			}
+
+			//final de linea
+
+			//copiamos contenido linea y border a buffer rainbow
+			if (rainbow_enabled.v==1) {
+				if (!screen_if_refresh()) {
+					//if ((t_estados/screen_testados_linea)>319) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
+				}
+
+				else {
+					//if ((t_estados/screen_testados_linea)>319) printf ("storing rainbow buffer\n");
+					screen_store_scanline_rainbow_solo_border();
+					screen_store_scanline_rainbow_solo_display();
+				}
+
+				//t_scanline_next_border();
+
+			}
+
+			t_scanline_next_line();
+
+
+			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
+			//esperar para ver si se ha generado una interrupcion 1/50
+
+            if (t_estados>=screen_testados_total) {
+
+				core_spectrum_fin_frame_pantalla();
 			} 
 			//Fin bloque final de pantalla
 
-		}
-		//Fin bucle final scanline
 
 
-		//Ya hemos leido duracion. Resetearla a 0 si no hay que hacer refetch
-		if (!core_refetch) duracion_ultimo_opcode=0;		
+}
 
-		if (esperando_tiempo_final_t_estados.v) {
-			timer_pause_waiting_end_frame();
-		}
-
-
-
-		//Interrupcion de 1/50s. mapa teclas activas y joystick
-        if (interrupcion_fifty_generada.v) {
-			interrupcion_fifty_generada.v=0;
-
-                        //y de momento actualizamos tablas de teclado segun tecla leida
-			//printf ("Actualizamos tablas teclado %d ", temp_veces_actualiza_teclas++);
-                       scr_actualiza_tablas_teclado();
-
-
-                       //lectura de joystick
-                       realjoystick_main();
-
-			//printf ("temp conta fifty: %d\n",tempcontafifty++);
-		}
-
-
-		//Interrupcion de procesador y marca final de frame
-		if (interrupcion_timer_generada.v) {
-			//printf ("Generada interrupcion timer\n");
-                        interrupcion_timer_generada.v=0;
-                        esperando_tiempo_final_t_estados.v=0;
-			interlaced_numero_frame++;
-			//printf ("%d\n",interlaced_numero_frame);
-
-
-			//Para calcular lo que se tarda en ejecutar todo un frame
-			timer_stats_current_time(&core_cpu_timer_frame_antes);
-
-
-        }
-
-
-		//Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en spectrum o al cambio de bit6 de R en zx80/81
-		if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
-
-			debug_fired_interrupt=1;
+void core_spectrum_handle_interrupts(void)
+{
+debug_fired_interrupt=1;
 
 			//printf ("Generada interrupcion Z80\n");
 
@@ -918,8 +669,282 @@ void cpu_core_loop_spectrum(void)
 
 
 			}
+}
+
+
+void core_spectrum_handle_interrupts_pentagon(void)
+{
+if (!disparada_int_pentagon) {
+			
+				int linea=t_estados/screen_testados_linea;
+				if (linea==319) {
+					//en el Spectrum la INT comienza en el scanline 248, 0T
+					//Pero en Pentagon la interrupción debe dispararse en el scanline 239 (contando desde 0), y 320 pixel clocks (o 160 T estados) tras comenzar dicho scanline
+					//A los 160 estados
+					int t_est_linea=t_estados % screen_testados_linea;
+					if (t_est_linea>=pentagon_inicio_interrupt) {
+						//printf ("Int Pentagon\n");
+						//printf ("scanline %d t_estados %d\n",t_estados/screen_testados_linea,t_estados);			
+
+						disparada_int_pentagon=1;
+						if (iff1.v==1) {
+							//printf ("Generated pentagon interrupt\n");
+							//printf ("scanline %d t_estados %d\n",t_estados/screen_testados_linea,t_estados);
+							interrupcion_maskable_generada.v=1;		
+
+
+							//Si la anterior instruccion ha tardado 32 ciclos o mas
+							if (duracion_ultimo_opcode>=cpu_duracion_pulso_interrupcion) {
+								debug_printf (VERBOSE_PARANOID,"Losing last interrupt because last opcode lasts 32 t-states or more");
+								interrupcion_maskable_generada.v=0;
+							}			
+						}
+					}
+
+				}
+			}
+}
+
+void core_spectrum_ciclo_fetch(void)
+{
+core_spectrum_store_rainbow_current_atributes();
+
+
+
+#ifdef DEBUG_SECOND_TRAP_STDOUT
+
+        //Para poder debugar rutina que imprima texto. Util para aventuras conversacionales
+        //hay que definir este DEBUG_SECOND_TRAP_STDOUT manualmente en compileoptions.h despues de ejecutar el configure
+
+	scr_stdout_debug_print_char_routine();
+
+#endif
+
+				if (MACHINE_IS_TSCONF) tsconf_handle_frame_interrupts();
+
+				if (nmi_pending_pre_opcode) {
+						//Dado que esto se activa despues de lanzar nmi y antes de leer opcode, aqui saltara cuando PC=66H
+						debug_printf (VERBOSE_DEBUG,"Handling nmi mapping pre opcode fetch at %04XH",reg_pc);
+						nmi_handle_pending_prepost_fetch();
+				}				
+
+
+				int t_estados_antes_opcode=t_estados;
+				core_refetch=0;
+
+				//Modo normal
+				if (diviface_enabled.v==0) {
+
+        	                        contend_read( reg_pc, 4 );
+					byte_leido_core_spectrum=fetch_opcode();
+
+
+
+				}
+
+
+				//Modo con diviface activado
+				else {
+					diviface_pre_opcode_fetch();
+					contend_read( reg_pc, 4 );
+					byte_leido_core_spectrum=fetch_opcode();
+					diviface_post_opcode_fetch();
+				}
+
+
+
+
+#ifdef EMULATE_CPU_STATS
+				util_stats_increment_counter(stats_codsinpr,byte_leido_core_spectrum);
+#endif
+
+                reg_pc++;
+
+				//Nota: agregar estos dos if de nmi_pending_pre_opcode y nmi_pending_post_opcode 
+				//supone un 0.2 % de uso mas en mi iMac: pasa de usar 5.4% cpu a 5.6% cpu en --vo null y --ao null
+				//Es muy poco...
+				if (nmi_pending_post_opcode) {
+					//Dado que esto se activa despues de lanzar nmi y leer opcode, aqui saltara cuando PC=67H
+					debug_printf (VERBOSE_DEBUG,"Handling nmi mapping post opcode fetch at %04XH",reg_pc);
+					nmi_handle_pending_prepost_fetch(); 
+				}				
+
+				reg_r++;
+
+				rzx_in_fetch_counter_til_next_int_counter++;
+
+						
+	            codsinpr[byte_leido_core_spectrum]  () ;
+				
+
+				if (!core_refetch) duracion_ultimo_opcode=t_estados-t_estados_antes_opcode;
+				else duracion_ultimo_opcode +=t_estados-t_estados_antes_opcode;
+						
+						//printf ("refetch: %d duracion opcode: %d\n",core_refetch,duracion_ultimo_opcode);
+
+				//printf ("t_estados:%d\n",t_estados);
+
+				/*if (rzx_reproduciendo && rzx_in_fetch_counter_til_next_int) {
+					if (rzx_in_fetch_counter_til_next_int_counter>=rzx_in_fetch_counter_til_next_int) {
+						//Forzar final de frame
+						//t_estados=screen_testados_total;
+						printf ("Forzar final de frame\n");
+						rzx_next_frame_recording();
+					}
+				}*/
+
+
+				//Soporte interrupciones raster zxuno
+				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) zxuno_tbblue_handle_raster_interrupts();
+
+				//Soporte DMA ZXUNO
+				if (MACHINE_IS_ZXUNO && zxuno_dma_disabled.v==0) zxuno_handle_dma();
+
+				//Soporte Datagear/TBBlue DMA
+				if (datagear_dma_emulation.v && datagear_dma_is_disabled.v==0) datagear_handle_dma(); 
+
+				//Soporte TBBlue copper
+				if (MACHINE_IS_TBBLUE) {
+					//Si esta activo copper
+					tbblue_copper_handle_next_opcode();
+				}
+
+}
+
+//bucle principal de ejecucion de la cpu de spectrum
+void cpu_core_loop_spectrum(void)
+{
+
+		debug_get_t_stados_parcial_pre();
+
+		timer_check_interrupt();
+
+
+
+//#ifdef COMPILE_STDOUT
+//		if (screen_stdout_driver) scr_stdout_printchar();
+//#endif
+//
+//#ifdef COMPILE_SIMPLETEXT
+//                if (screen_simpletext_driver) scr_simpletext_printchar();
+//#endif
+
+
+		if (chardetect_detect_char_enabled.v) chardetect_detect_char();
+		if (chardetect_printchar_enabled.v) chardetect_printchar();
+		if (plus3dos_traps.v) traps_plus3dos();
+
+
+		//Gestionar autoload
+		gestionar_autoload_spectrum();
+
+
+		if (tap_load_detect()) {
+			//si estamos en pausa, no hacer nada
+			if (!tape_pause) {
+				audio_playing.v=0;
+
+				draw_tape_text();
+
+				tap_load();
+				all_interlace_scr_refresca_pantalla();
+
+				//audio_playing.v=1;
+				timer_reset();
+			}
+
+			else {
+				core_spectrum_store_rainbow_current_atributes();
+				//generamos nada. como si fuera un NOP
+				contend_read( reg_pc, 4 );
+
+			}
+		}
+
+		else if (tap_save_detect()) {
+			audio_playing.v=0;
+
+			draw_tape_text();
+
+			tap_save();
+			//audio_playing.v=1;
+			timer_reset();
+		}
+
+
+		else {
+			if (esperando_tiempo_final_t_estados.v==0) {
+				core_spectrum_ciclo_fetch();
+            }
 
         }
+
+
+
+		//En pentagon, disparar interrupcion antes del final de frame
+		if (MACHINE_IS_PENTAGON) {
+			core_spectrum_handle_interrupts_pentagon();
+		}
+
+
+		//A final de cada scanline 
+		if ( (t_estados/screen_testados_linea)>t_scanline  ) {
+			core_spectrum_fin_scanline();			
+		}
+		
+
+
+
+		//Ya hemos leido duracion. Resetearla a 0 si no hay que hacer refetch
+		if (!core_refetch) duracion_ultimo_opcode=0;		
+
+
+
+		if (esperando_tiempo_final_t_estados.v) {
+			timer_pause_waiting_end_frame();
+		}
+
+
+
+		//Interrupcion de 1/50s. mapa teclas activas y joystick
+        if (interrupcion_fifty_generada.v) {
+			interrupcion_fifty_generada.v=0;
+
+            //y de momento actualizamos tablas de teclado segun tecla leida
+			//printf ("Actualizamos tablas teclado %d ", temp_veces_actualiza_teclas++);
+			scr_actualiza_tablas_teclado();
+
+
+			//lectura de joystick
+			realjoystick_main();
+
+			//printf ("temp conta fifty: %d\n",tempcontafifty++);
+		}
+
+
+		//Interrupcion de procesador y marca final de frame
+		if (interrupcion_timer_generada.v) {
+			//printf ("Generada interrupcion timer\n");
+			interrupcion_timer_generada.v=0;
+			esperando_tiempo_final_t_estados.v=0;
+			interlaced_numero_frame++;
+			//printf ("%d\n",interlaced_numero_frame);
+
+			//Para calcular lo que se tarda en ejecutar todo un frame
+			timer_stats_current_time(&core_cpu_timer_frame_antes);
+
+
+        }
+
+
+		//Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en spectrum o al cambio de bit6 de R en zx80/81
+		if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
+			core_spectrum_handle_interrupts();
+        }
+		//Fin gestion interrupciones
+
+
+
 		debug_get_t_stados_parcial_post();
 
 }
