@@ -1976,10 +1976,15 @@ void exp_par_debug_dump_tokens(token_parser *tokens,int longitud)
 }
 
 //Evalua expresion de entrada y la muestra en salida
-void exp_par_evaluate_expression(char *entrada,char *salida)
+//Retorna:
+//0 si ok
+//1 si error parseando
+//2 si error evaluando
+//En salida retorna valor numerico o mensaje de error
+//en string_detoken retorna la cadena resultado de pasar el token parseado a string
+int exp_par_evaluate_expression(char *entrada,char *salida,char *string_detoken)
 {
 
-	//void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
 
 	//Mis tokens de salida
 	token_parser tokens[MAX_PARSER_TOKENS_NUM];
@@ -1990,7 +1995,7 @@ void exp_par_evaluate_expression(char *entrada,char *salida)
 	//printf ("result: %d\n",result);
 	if (result>=0) {
 			//Pasamos primero a string de nuevo
-			char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
+			//char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
 			exp_par_tokens_to_exp(tokens,string_detoken,MAX_PARSER_TOKENS_NUM);
 			
 			int error_code;  
@@ -1999,14 +2004,19 @@ void exp_par_evaluate_expression(char *entrada,char *salida)
 			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
             if (error_code) {
                 strcpy(salida,"Error evaluating");
+                return 2;
             }
             else {
 			    sprintf(salida,"%d",resultado);
             }
 
-			//printf ("%d\n",resultado);
+
 	}
 	else {
 		strcpy(salida,"Error parsing");
+        string_detoken[0]=0; //Ya que no lo ha parseado, cadena detoken vacia
+        return 1;
 	}
+
+    return 0;
 }

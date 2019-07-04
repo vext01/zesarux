@@ -10597,10 +10597,25 @@ void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
         //menu_generic_message_format("Result","%s -> %s",string_texto,(result ? "True" : "False " ));
 
 
+	//int exp_par_evaluate_expression(char *entrada,char *salida)
+	char buffer_salida[256]; //mas que suficiente
+	char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
 
-	//void exp_par_exp_to_tokens(char *expression,token_parser *tokens)
+	int result=exp_par_evaluate_expression(string_texto,buffer_salida,string_detoken);
+	if (result==0) {
+		menu_generic_message_format("Result","Parsed string: %s\nResult: %s",string_detoken,buffer_salida);		
+	}
+
+	else if (result==1) {
+		menu_error_message(buffer_salida);
+	}
+
+	else {
+		menu_generic_message_format("Error","%s parsed string: %s",buffer_salida,string_detoken);
+	}
 
 	//Mis tokens de salida
+	/*
 	token_parser tokens[MAX_PARSER_TOKENS_NUM];
 	int result;
 
@@ -10617,22 +10632,18 @@ void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
 			
 			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
 			if (error_code) {
-				//printf ("%d\n",tokens[0].tipo);
-				menu_generic_message_format("Error","Error evaluating parsed string: %s\nResult: %d",
-				string_detoken,resultado);
+				menu_generic_message_format("Error","Error evaluating parsed string: %s",string_detoken);
 			}
 			else {
-				menu_generic_message_format("Result","Parsed string: %s\nResult: %d",
-				string_detoken,resultado);
+				menu_generic_message_format("Result","Parsed string: %s\nResult: %d",string_detoken,resultado);
 			}
 
-			//printf ("%d\n",resultado);
+
 	}
 	else {
 		menu_error_message("Error parsing");
 	}
-
-
+	*/
 }
 
 

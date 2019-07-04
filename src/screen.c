@@ -1973,7 +1973,7 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	//Si el tamanyo anterior es igual que ahora, no tiene sentido tocarlo
 	if (ancho_layer_menu_machine==ancho && alto_layer_menu_machine==alto) {
-		debug_printf (VERBOSE_DEBUG,"Returning reallocate layers as the current size is the same as the new");
+		debug_printf (VERBOSE_DEBUG,"Returning reallocate layers as the current size is the same as the new (%dX%d)",ancho,alto);
 		return;
 	}
 

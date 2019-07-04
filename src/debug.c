@@ -3098,12 +3098,16 @@ int debug_set_breakpoint(int breakpoint_index,char *condicion)
 	//Ver si se puede evaluar la expresion resultante. Aqui basicamente generara error
 	//cuando haya un parentesis sin cerrar
 	int error_evaluate;
-	exp_par_evaluate_token(debug_breakpoints_conditions_array_tokens[breakpoint_index],MAX_PARSER_TOKENS_NUM,&error_evaluate);
-	if (error_evaluate) {
-		debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo=TPT_FIN; //Inicializarlo vacio
-		debug_printf (VERBOSE_ERR,"Error adding breakpoint, can not be evaluated [%s]",condicion);
-		return 1;
-	}	
+
+	//Si no es token vacio
+	if (debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo!=TPT_FIN) {
+		exp_par_evaluate_token(debug_breakpoints_conditions_array_tokens[breakpoint_index],MAX_PARSER_TOKENS_NUM,&error_evaluate);
+		if (error_evaluate) {
+			debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo=TPT_FIN; //Inicializarlo vacio
+			debug_printf (VERBOSE_ERR,"Error adding breakpoint, can not be evaluated [%s]",condicion);
+			return 1;
+		}	
+	}
 
 
   	debug_breakpoints_conditions_saltado[breakpoint_index]=0;
@@ -3948,7 +3952,9 @@ int i;
         //char resultado_expresion[256];
         //debug_watches_loop(parametros,resultado_expresion);
   		char salida[MAX_BREAKPOINT_CONDITION_LENGTH];
-		exp_par_evaluate_expression(parametros,salida);
+		char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
+
+		exp_par_evaluate_expression(parametros,salida,string_detoken);
 
         printf ("%s\n",salida);
       }
