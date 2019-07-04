@@ -4689,18 +4689,20 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 		if (tecla==12) {
 			if (strlen(string)>0) {
 
+				int pos_eliminar=pos_cursor_x+offset_string-1;
+
 				//no borrar si cursor a la izquierda del todo
-				if (!(offset_string==0 && pos_cursor_x==0)) {
+				if (pos_eliminar>=0) {
+
+					printf ("borrar\n");
+					
                                 int i;
                                 i=strlen(string)-1;
 
-								int pos_eliminar=pos_cursor_x+offset_string-1;
-
 								
-
                                 //Enviar a speech letra borrada
 
-				menu_speech_tecla_pulsada=0;
+								menu_speech_tecla_pulsada=0;
                                 sprintf (buf_speech,"%c",string[pos_eliminar]);
                                 menu_textspeech_send_text(buf_speech);
 
@@ -4708,12 +4710,16 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
                                 //string[i]=0;
 								util_str_del_char(string,pos_eliminar);
 
-					if (offset_string>0 && pos_cursor_x==0) {
+					//Cursor no a la izquierda del todo
+					if (pos_cursor_x>0) pos_cursor_x--;
+					
+					//Cursor a la izquierda del todo
+					else /*if (offset_string>0 && pos_cursor_x==0)*/ {
 						offset_string--;
 						//printf ("offset string: %d\n",offset_string);
 					}
 
-					if (pos_cursor_x>0) pos_cursor_x--;
+					
 				}
 			}
 
