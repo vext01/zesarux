@@ -4538,32 +4538,32 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 			printf ("Escribir cursor en medio en %d %d\n",x,y);
 			zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
 			//zxvision_print_string_defaults(ventana,x,y,"_");
-			x++;
-			rel_x++;
-			//max_length_shown--;
+
 		}
 
-		cadena_buf[0]=*string;
-		cadena_buf[1]=0;
-		//menu_escribe_texto(x,y,tinta,papel,cadena_buf);
-		zxvision_print_string_defaults(ventana,x,y,cadena_buf);
+		else {
+			cadena_buf[0]=*string;
+			cadena_buf[1]=0;
+		
+			zxvision_print_string_defaults(ventana,x,y,cadena_buf);
+			string++;
+		}
 		x++;
 		rel_x++;
-		string++;
+
+		
 	}
 
 		if (rel_x==pos_cursor_x) {
 			printf ("Escribir cursor al final en %d %d\n",x,y);
 			zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
+			x++;
 		}	
 
         //menu_escribe_texto(x,y,tinta,papel,"_");
 		//putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
 		
 	//zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
-
-
-    x++;
 
 
     for (;max_length_shown!=0;max_length_shown--) {
@@ -4577,6 +4577,17 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 
 }
 
+void menu_scanf_cursor_izquierda(int *offset_string,int *pos_cursor_x)
+{
+                        
+				//Desplazar siempre offset que se pueda
+				if ((*offset_string)>0) {
+					(*offset_string)--;
+					//printf ("offset string: %d\n",offset_string);
+				}
+
+				else if ((*pos_cursor_x)>0) (*pos_cursor_x)--;
+}
 
 //devuelve cadena de texto desde teclado
 //max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
@@ -4666,8 +4677,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				int pos_agregar=pos_cursor_x+offset_string;
 				printf ("agregar letra en %d\n",pos_agregar);
 				util_str_add_char(string,pos_agregar,tecla);
-
-
+				i++;
 
 				//Enviar a speech letra pulsada
 				menu_speech_tecla_pulsada=0;
@@ -4675,12 +4685,16 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
         			menu_textspeech_send_text(buf_speech);
 
 
-				
-
-
-				if (pos_cursor_x<max_length_shown) pos_cursor_x++;
+				if (pos_cursor_x<max_length_shown-1) {
+					pos_cursor_x++;
+					printf ("mover cursor\n");
+				}
 				//Si no mueve cursor, puede que haya que desplazar offset del inicio
-				else if (i>=max_length_shown) offset_string++;
+				
+				else if (i>=max_length_shown) {
+					printf ("Scroll\n");
+					offset_string++;
+				}
 
 			}
 		}
@@ -4710,15 +4724,8 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
                                 //string[i]=0;
 								util_str_del_char(string,pos_eliminar);
 
-					//Cursor no a la izquierda del todo
-					if (pos_cursor_x>0) pos_cursor_x--;
-					
-					//Cursor a la izquierda del todo
-					else /*if (offset_string>0 && pos_cursor_x==0)*/ {
-						offset_string--;
-						//printf ("offset string: %d\n",offset_string);
-					}
-
+								menu_scanf_cursor_izquierda(&offset_string,&pos_cursor_x);
+	
 					
 				}
 			}
@@ -4727,15 +4734,9 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 		//tecla izquierda
 		if (tecla==8) {
-                        
-				if (offset_string>0) {
-					offset_string--;
-					//printf ("offset string: %d\n",offset_string);
-				}
 
+				menu_scanf_cursor_izquierda(&offset_string,&pos_cursor_x);
 
-
-				if (pos_cursor_x>0) pos_cursor_x--;
 
 				printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
 			
@@ -4751,14 +4752,20 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 
 				if (pos_final<i) {  
-				
-					//if (i>=max_length_shown) offset_string++;
-					//if (pos_cursor_x<max_length_shown && pos_cursor_x<i) pos_cursor_x++;
 
 
-					if (pos_cursor_x<max_length_shown) pos_cursor_x++;
+					if (pos_cursor_x<max_length_shown-1) {
+						pos_cursor_x++;
+						printf ("mover cursor\n");
+					}
 					//Si no mueve cursor, puede que haya que desplazar offset del inicio
-					else if (i>=max_length_shown) offset_string++; 
+				
+					else if (i>=max_length_shown) {
+						printf ("Scroll\n");
+						offset_string++;
+					}
+
+				
 
 					printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
 				}
