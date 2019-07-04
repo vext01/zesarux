@@ -29,7 +29,10 @@ la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que s
 --En FAQ explicar qué es ZX Desktop
 --Extender info de zxvision y zxdesktop en features (ya hay algo)
 --Redimensionar ventana redibuja el zxdesktop?
+
 --Revisar Full screen en ZX desktop
+ok mac os
+pendiente sdl, xwindow, fbdev
 
 
 -Fbdev debe permitir ZX Desktop?
@@ -73,17 +76,11 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 Que hacemos con cocoa no opengl?
 
--"overlay" esxdos handler: sobreponer una segunda carpeta sobre la principal
-Asi se puede tener una raiz por ejemplo para divmmc comun, y luego mapear carpetas adicionales para pruebas
-O quiza, en vez de overlay, una segunda unidad de disco
 
 -Poner sondas de tiempo para saber que funciones tardan más en ejecutarse para poderlas optimizar 
 Que sea un tiempo que se acumule. Para hacer cálculos con más tiempo de muestreo
 Parecido a core statistics pero con más sondas 
 Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano en compileoptions.h
-
-
-
 
 
 
@@ -1112,6 +1109,10 @@ http://www.spinpoint.org/2016/05/06/m4-board-retrofun-8-bit-amstrad-cpc-wifi/#co
 
 --- ESXDOS handler ---
 
+
+-"overlay" esxdos handler: sobreponer una segunda carpeta sobre la principal
+Asi se puede tener una raiz por ejemplo para divmmc comun, y luego mapear carpetas adicionales para pruebas
+O quiza, en vez de overlay, una segunda unidad de disco
 
 -Esxdos. Decidir hl o ix según si está paginada la memoria divmmc?
 
