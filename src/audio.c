@@ -2918,26 +2918,26 @@ void audio_midi_output_frame_event(void)
 
 					//note off si no era un silencio
 					if (midi_output_nota_sonando[canal_final][0]!=0) {
-					      int nota_numero=get_mid_number_note(midi_output_nota_sonando[canal_final]);
+					    int nota_numero=get_mid_number_note(midi_output_nota_sonando[canal_final]);
 
-					        if (nota_numero<0) {
-					                //Nota invalida. no se deberia llegar aqui nunca
-					                debug_printf (VERBOSE_DEBUG,"Invalid note %s",midi_output_nota_sonando[canal_final]);
-        					}	
-						audio_midi_output_note_off(canal_final,nota_numero);
+					    if (nota_numero<0) {
+					        //Nota invalida. no se deberia llegar aqui nunca
+					        debug_printf (VERBOSE_DEBUG,"Invalid note %s",midi_output_nota_sonando[canal_final]);
+        				}	
+						else audio_midi_output_note_off(canal_final,nota_numero);
 					}
 
 
 					//note on si no es un silencio
 					if (nota[0]!=0) {
-                                              int nota_numero=get_mid_number_note(nota);
+                    	int nota_numero=get_mid_number_note(nota);
 
-                                                if (nota_numero<0) {
-                                                        //Nota invalida. no se deberia llegar aqui nunca
-                                                        debug_printf (VERBOSE_DEBUG,"Invalid note %s",nota);
-                                                }
-                                                audio_midi_output_note_on(canal_final,nota_numero);
-                                        }
+                        if (nota_numero<0) {
+                            //Nota invalida. no se deberia llegar aqui nunca
+                            debug_printf (VERBOSE_DEBUG,"Invalid note %s",nota);
+                        }
+                        else audio_midi_output_note_on(canal_final,nota_numero);
+                    }
 	
 					
 
@@ -2951,7 +2951,7 @@ void audio_midi_output_frame_event(void)
 
 	//Y enviar todos los eventos
 	audio_midi_output_flush_output();
-	
 		
 
 }
+
