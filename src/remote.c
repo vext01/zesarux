@@ -1899,9 +1899,6 @@ void remote_evaluate(int misocket,char *texto)
 	char buffer_salida[256]; //mas que suficiente
 	char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
 
-  //exp_par_evaluate_expression(texto,buffer_salida,string_detoken); 
-  //escribir_socket(misocket,salida);
-
 
 	int result=exp_par_evaluate_expression(texto,buffer_salida,string_detoken);
 	if (result==0) {
