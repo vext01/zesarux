@@ -15216,3 +15216,61 @@ void util_clear_all_windows_geometry(void)
 {
         total_config_window_geometry=0;        
 }
+
+//Agregar una letra en el string en la posicion indicada
+void util_str_add_char(char *texto,int posicion,char letra)
+{
+
+
+        if (posicion<0) return; //error
+
+        //Primero hacer hueco, desplazar todo a la derecha
+        int longitud=strlen(texto);
+
+
+
+        //Si se intenta meter mas alla de la posicion del 0 final
+        if (posicion>longitud) {
+                printf ("intentando escribir mas alla del 0 final\n");
+                posicion=longitud;
+        }        
+
+        int i;
+
+
+        //Meter un 0 despues del 0 ultimo
+        texto[longitud+1]=0;
+
+        for (i=longitud;i>posicion;i--) {
+                texto[i]=texto[i-1];
+        }
+
+        texto[posicion]=letra;
+}
+
+//Quitar una letra en el string en la posicion indicada
+void util_str_del_char(char *texto,int posicion)
+{
+
+         if (posicion<0) return; //error
+
+        //desplazar todo a la izquierda
+        int longitud=strlen(texto);
+
+        if (longitud==0) return; //cadena vacia
+
+
+        //Si se intenta borrar mas alla de la longitud
+        if (posicion>=longitud) {
+                printf ("intentando borrar mas alla del final\n");
+                posicion=longitud-1;
+        }        
+
+        int i;
+
+
+        for (i=posicion;i<longitud;i++) {
+                texto[i]=texto[i+1];
+        }
+
+}

@@ -7,6 +7,7 @@ Improved menu interface:
 -Some windows geometry (position, size) are saved in the configuration
 -Hotkeys now show right capitalization (lowercase or uppercase)
 -Edit box now has a key to delete all input (cursor down)
+-Edit box can now move cursor left and right and write text in the middle
 -GUI color bars depend on current style
 -Added support for more cyrillic characters on menu
 -Added RetroMac Gui Style

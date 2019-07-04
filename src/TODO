@@ -12,7 +12,9 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -comprobar mra. parece que no siempre se dispara
 
--Editor scanf que permita mover cursor. 
+-Editor scanf que permita mover cursor: 
+*en curso. que borre restos a la derecha de cadena
+*que muestre cursor si a la derecha del todo
 
 
 -unpaws con quill:

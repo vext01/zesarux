@@ -4510,7 +4510,7 @@ void zxvision_wait_until_esc(zxvision_window *w)
 
 
 //escribe la cadena de texto
-void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offset_string,int max_length_shown,int x,int y)
+void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offset_string,int max_length_shown,int x,int y,int pos_cursor_x)
 {
 	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
 	//z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
@@ -4519,40 +4519,58 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 	string=&string[offset_string];
 
 	//contar que hay que escribir el cursor
-	max_length_shown--;
+	//max_length_shown--;
+
+	int rel_x=0;
 
 	//y si offset>0, primer caracter sera '<'
 	if (offset_string) {
-		//menu_escribe_texto(x,y,tinta,papel,"<");
 		zxvision_print_string_defaults(ventana,x,y,"<");
 		max_length_shown--;
 		x++;
+		rel_x++;
 		string++;
 	}
 
 	for (;max_length_shown && (*string)!=0;max_length_shown--) {
+
+		if (rel_x==pos_cursor_x) {
+			printf ("Escribir cursor en medio en %d %d\n",x,y);
+			zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
+			//zxvision_print_string_defaults(ventana,x,y,"_");
+			x++;
+			rel_x++;
+			//max_length_shown--;
+		}
+
 		cadena_buf[0]=*string;
 		cadena_buf[1]=0;
 		//menu_escribe_texto(x,y,tinta,papel,cadena_buf);
 		zxvision_print_string_defaults(ventana,x,y,cadena_buf);
 		x++;
+		rel_x++;
 		string++;
 	}
+
+		if (rel_x==pos_cursor_x) {
+			printf ("Escribir cursor al final en %d %d\n",x,y);
+			zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
+		}	
 
         //menu_escribe_texto(x,y,tinta,papel,"_");
 		//putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
 		
-		zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
+	//zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
 
 
+    x++;
+
+
+    for (;max_length_shown!=0;max_length_shown--) {
+        //menu_escribe_texto(x,y,tinta,papel," ");
+		zxvision_print_string_defaults(ventana,x,y," ");
         x++;
-
-
-        for (;max_length_shown!=0;max_length_shown--) {
-                //menu_escribe_texto(x,y,tinta,papel," ");
-				zxvision_print_string_defaults(ventana,x,y," ");
-                x++;
-        }
+    }
 
 	zxvision_draw_window_contents(ventana);
 
@@ -4565,6 +4583,24 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 //ejemplo, si el array es de 50, se le debe pasar max_length a 50
 int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length,int max_length_shown,int x,int y)
 {
+
+	/*char aa[20]="hola";
+	util_str_del_char(aa,0);
+	printf ("[%s]\n",aa);
+
+	char bb[20]="hola";
+	util_str_del_char(bb,2);
+	printf ("[%s]\n",bb);
+
+
+	char cc[20]="hola";
+	util_str_del_char(cc,4);
+	printf ("[%s]\n",cc);
+
+	char dd[20]="hola";
+	util_str_del_char(dd,5);
+	printf ("[%s]\n",dd);*/
+
 
 	//Al menos 2 de maximo a mostrar. Si no, salir
 	if (max_length_shown<2) {
@@ -4590,6 +4626,11 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 	if (j>max_length_shown-1) offset_string=j-max_length_shown+1;
 	else offset_string=0;
 
+	int pos_cursor_x; //Donde esta el cursor
+
+	pos_cursor_x=j;
+	if (pos_cursor_x>max_length_shown-1) pos_cursor_x=max_length_shown;
+
 
 	//max_length ancho maximo del texto, sin contar caracter 0
 	//por tanto si el array es de 50, se le debe pasar max_length a 50
@@ -4599,8 +4640,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 	//cursor siempre al final del texto
 
 	do { 
-		//zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y);
-		zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y);
+		zxvision_scanf_print_string(ventana,string,offset_string,max_length_shown,x,y,pos_cursor_x);
 
 		if (menu_multitarea==0) menu_refresca_pantalla();
 
@@ -4612,13 +4652,22 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 
 
-		//si tecla normal, agregar:
+		//si tecla normal, agregar en la posicion del cursor:
 		if (tecla>31 && tecla<128) {
 			if (strlen(string)<max_length) {
+
+				
+
 				int i;
 				i=strlen(string);
-				string[i++]=tecla;
-				string[i]=0;
+				//string[i++]=tecla;
+				//string[i]=0;
+
+				int pos_agregar=pos_cursor_x+offset_string;
+				printf ("agregar letra en %d\n",pos_agregar);
+				util_str_add_char(string,pos_agregar,tecla);
+
+
 
 				//Enviar a speech letra pulsada
 				menu_speech_tecla_pulsada=0;
@@ -4626,32 +4675,89 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
         			menu_textspeech_send_text(buf_speech);
 
 
-				if (i>=max_length_shown) offset_string++;
+				
+
+
+				if (pos_cursor_x<max_length_shown) pos_cursor_x++;
+				//Si no mueve cursor, puede que haya que desplazar offset del inicio
+				else if (i>=max_length_shown) offset_string++;
 
 			}
 		}
 
-		//tecla borrar o tecla izquierda
-		if (tecla==12 || tecla==8) {
+		//tecla borrar
+		if (tecla==12) {
 			if (strlen(string)>0) {
+
+				//no borrar si cursor a la izquierda del todo
+				if (!(offset_string==0 && pos_cursor_x==0)) {
                                 int i;
                                 i=strlen(string)-1;
+
+								int pos_eliminar=pos_cursor_x+offset_string-1;
+
+								
 
                                 //Enviar a speech letra borrada
 
 				menu_speech_tecla_pulsada=0;
-                                sprintf (buf_speech,"%c",string[i]);
+                                sprintf (buf_speech,"%c",string[pos_eliminar]);
                                 menu_textspeech_send_text(buf_speech);
 
 
-                                string[i]=0;
-				if (offset_string>0) {
-					offset_string--;
-					//printf ("offset string: %d\n",offset_string);
+                                //string[i]=0;
+								util_str_del_char(string,pos_eliminar);
+
+					if (offset_string>0 && pos_cursor_x==0) {
+						offset_string--;
+						//printf ("offset string: %d\n",offset_string);
+					}
+
+					if (pos_cursor_x>0) pos_cursor_x--;
 				}
 			}
 
 		}
+
+		//tecla izquierda
+		if (tecla==8) {
+                        
+				if (offset_string>0) {
+					offset_string--;
+					//printf ("offset string: %d\n",offset_string);
+				}
+
+
+
+				if (pos_cursor_x>0) pos_cursor_x--;
+
+				printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
+			
+
+		}		
+
+		//tecla derecha
+		if (tecla==9) {
+                 				int i;
+				i=strlen(string);     
+
+				int pos_final=offset_string+pos_cursor_x;
+
+
+				if (pos_final<i) {  
+				
+					//if (i>=max_length_shown) offset_string++;
+					//if (pos_cursor_x<max_length_shown && pos_cursor_x<i) pos_cursor_x++;
+
+
+					if (pos_cursor_x<max_length_shown) pos_cursor_x++;
+					//Si no mueve cursor, puede que haya que desplazar offset del inicio
+					else if (i>=max_length_shown) offset_string++; 
+
+					printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
+				}
+
+		}			
 
 		//tecla abajo. borrar todo
 		if (tecla==10) {
@@ -4662,6 +4768,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
             string[0]=0;
 			offset_string=0;
+			pos_cursor_x=0;
 	
 		}
 
