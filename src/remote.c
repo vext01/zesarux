@@ -52,6 +52,7 @@
 #include "settings.h"
 #include "esxdos_handler.h"
 #include "assemble.h"
+#include "expression_parser.h"
 
 
 
@@ -1892,11 +1893,29 @@ void remote_cpu_run(int misocket,int verbose,int limite,int datosvuelve,int upda
 void remote_evaluate(int misocket,char *texto)
 {
   
-  char salida[MAX_BREAKPOINT_CONDITION_LENGTH];
+  //char salida[MAX_BREAKPOINT_CONDITION_LENGTH];
 
 
-  exp_par_evaluate_expression(texto,salida);
-  escribir_socket(misocket,salida);
+	char buffer_salida[256]; //mas que suficiente
+	char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
+
+  //exp_par_evaluate_expression(texto,buffer_salida,string_detoken); 
+  //escribir_socket(misocket,salida);
+
+
+	int result=exp_par_evaluate_expression(texto,buffer_salida,string_detoken);
+	if (result==0) {
+		escribir_socket(misocket,buffer_salida);		
+	}
+
+	else if (result==1) {
+		escribir_socket(misocket,buffer_salida);
+	}
+
+	else {
+		escribir_socket_format(misocket,"%s parsed string: %s",buffer_salida,string_detoken);
+	}
+
 }
 
 

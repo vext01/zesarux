@@ -10614,36 +10614,7 @@ void menu_breakpoints_condition_evaluate_new(MENU_ITEM_PARAMETERS)
 		menu_generic_message_format("Error","%s parsed string: %s",buffer_salida,string_detoken);
 	}
 
-	//Mis tokens de salida
-	/*
-	token_parser tokens[MAX_PARSER_TOKENS_NUM];
-	int result;
-
-	//printf ("\nText to token: %s\n",string_texto);
-	result=exp_par_exp_to_tokens(string_texto,tokens);
-	//printf ("result: %d\n",result);
-	if (result>=0) {
-			//Pasamos primero a string de nuevo
-			char string_detoken[MAX_BREAKPOINT_CONDITION_LENGTH];
-			exp_par_tokens_to_exp(tokens,string_detoken,MAX_PARSER_TOKENS_NUM);
-			
-			int error_code;  
-			
-			
-			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
-			if (error_code) {
-				menu_generic_message_format("Error","Error evaluating parsed string: %s",string_detoken);
-			}
-			else {
-				menu_generic_message_format("Result","Parsed string: %s\nResult: %d",string_detoken,resultado);
-			}
-
-
-	}
-	else {
-		menu_error_message("Error parsing");
-	}
-	*/
+	
 }
 
 
