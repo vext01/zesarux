@@ -4537,8 +4537,6 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 		if (rel_x==pos_cursor_x) {
 			printf ("Escribir cursor en medio en %d %d\n",x,y);
 			zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
-			//zxvision_print_string_defaults(ventana,x,y,"_");
-
 		}
 
 		else {
@@ -4560,14 +4558,10 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 			x++;
 		}	
 
-        //menu_escribe_texto(x,y,tinta,papel,"_");
-		//putchar_menu_overlay_parpadeo(x,y,'_',tinta,papel,1);
-		
-	//zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
 
 
+	//Espacios al final
     for (;max_length_shown!=0;max_length_shown--) {
-        //menu_escribe_texto(x,y,tinta,papel," ");
 		zxvision_print_string_defaults(ventana,x,y," ");
         x++;
     }
@@ -4587,6 +4581,24 @@ void menu_scanf_cursor_izquierda(int *offset_string,int *pos_cursor_x)
 				}
 
 				else if ((*pos_cursor_x)>0) (*pos_cursor_x)--;
+}
+
+void menu_scanf_cursor_derecha(char *texto,int *pos_cursor_x,int *offset_string,int max_length_shown)
+{
+
+				int i;
+				i=strlen(texto);
+
+						if ((*pos_cursor_x)<max_length_shown-1) {
+						(*pos_cursor_x)++;
+						printf ("mover cursor\n");
+					}
+					//Si no mueve cursor, puede que haya que desplazar offset del inicio
+				
+					else if (i>=max_length_shown) {
+						printf ("Scroll\n");
+						(*offset_string)++;
+					}
 }
 
 //devuelve cadena de texto desde teclado
@@ -4667,12 +4679,10 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 		if (tecla>31 && tecla<128) {
 			if (strlen(string)<max_length) {
 
-				
-
+			
 				int i;
 				i=strlen(string);
-				//string[i++]=tecla;
-				//string[i]=0;
+
 
 				int pos_agregar=pos_cursor_x+offset_string;
 				printf ("agregar letra en %d\n",pos_agregar);
@@ -4685,7 +4695,9 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
         			menu_textspeech_send_text(buf_speech);
 
 
-				if (pos_cursor_x<max_length_shown-1) {
+				menu_scanf_cursor_derecha(string,&pos_cursor_x,&offset_string,max_length_shown);
+
+				/*if (pos_cursor_x<max_length_shown-1) {
 					pos_cursor_x++;
 					printf ("mover cursor\n");
 				}
@@ -4694,10 +4706,40 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				else if (i>=max_length_shown) {
 					printf ("Scroll\n");
 					offset_string++;
-				}
+				}*/
 
 			}
 		}
+
+		//tecla derecha
+		if (tecla==9) {
+                int i;
+				i=strlen(string);     
+
+				int pos_final=offset_string+pos_cursor_x;
+
+
+				if (pos_final<i) {  
+
+					menu_scanf_cursor_derecha(string,&pos_cursor_x,&offset_string,max_length_shown);
+
+					/*if (pos_cursor_x<max_length_shown-1) {
+						pos_cursor_x++;
+						printf ("mover cursor\n");
+					}
+					//Si no mueve cursor, puede que haya que desplazar offset del inicio
+				
+					else if (i>=max_length_shown) {
+						printf ("Scroll\n");
+						offset_string++;
+					}*/
+
+				
+
+					printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
+				}
+
+		}			
 
 		//tecla borrar
 		if (tecla==12) {
@@ -4721,7 +4763,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
                                 menu_textspeech_send_text(buf_speech);
 
 
-                                //string[i]=0;
+                                
 								util_str_del_char(string,pos_eliminar);
 
 								menu_scanf_cursor_izquierda(&offset_string,&pos_cursor_x);
@@ -4743,34 +4785,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 		}		
 
-		//tecla derecha
-		if (tecla==9) {
-                 				int i;
-				i=strlen(string);     
-
-				int pos_final=offset_string+pos_cursor_x;
-
-
-				if (pos_final<i) {  
-
-
-					if (pos_cursor_x<max_length_shown-1) {
-						pos_cursor_x++;
-						printf ("mover cursor\n");
-					}
-					//Si no mueve cursor, puede que haya que desplazar offset del inicio
-				
-					else if (i>=max_length_shown) {
-						printf ("Scroll\n");
-						offset_string++;
-					}
-
-				
-
-					printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
-				}
-
-		}			
+			
 
 		//tecla abajo. borrar todo
 		if (tecla==10) {
