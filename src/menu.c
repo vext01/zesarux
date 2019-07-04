@@ -2698,7 +2698,7 @@ int menu_get_cpu_temp(void)
 	char *posible_archivo_cputemp1="/sys/class/thermal/thermal_zone0/temp";
 
 	//sensor especifico para mi pc linux
-	char *posible_archivo_cputemp2="/sys/devices/platform/smsc47b397.1152/hwmon/hwmon/temp1_input";
+	char *posible_archivo_cputemp2="/sys/devices/platform/smsc47b397.1152/hwmon/hwmon0/temp1_input";
 
 	char *archivo_cputemp;
 
