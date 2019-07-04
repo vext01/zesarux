@@ -1158,14 +1158,33 @@ CGImageRef imageRef;
 {
 	debug_printf (VERBOSE_INFO,"resizeContentToWidth %d X %d",w,h);
 
-        //printf ("resizeContentToWidth %d X %d\n",w,h);
+        int timeout=100;
 
-        //printf ("allocate layers menu\n");
-        scr_reallocate_layers_menu(w,h);        
+        if (sem_screen_refresh_reallocate_layers) {
+                debug_printf (VERBOSE_DEBUG,"About to run resizeContentToWidth in the middle of a screen refresh. Wait until finish refreshing");
+        }
+
+        while (sem_screen_refresh_reallocate_layers && timeout) {
+                //printf ("Se va a hacer resizeContentToWidth en medio de refresco. Esperar\n");
+
+                //esto parece que solo sucede al inicio del programa? y solo en Cocoa?
+                //este tipo de cosas parece que solo sucede en cocoa pues el driver de video va con un thread aparte a su bola
+                //cuando genera error aqui entra por un resize de un evento "automatico" de cocoa
+                //esto es independiente de ZX Desktop, ya este habilitado o no, puede suceder esto
+                //si no controlase esto, acaba generando segmentation fault (pero parece que el segmentation fault solo cuando esta habilitado ZX Desktop)
+
+                usleep(10000); //0.01 segundo
+
+                timeout--;
+        }
+
+        //Si ha saltado el timeout despues de 100 intentos (100*0.01=1 segundo) y sigue reallocating, que pase lo que pase, pero que salga de ahi
+
+        scr_reallocate_layers_menu(w,h);      
 
     // update screenBuffer
-    if (dataProviderRef)
-        CGDataProviderRelease(dataProviderRef);
+    if (dataProviderRef) CGDataProviderRelease(dataProviderRef);
+
 
     //sync host window color space with guests
 	screen.bitsPerPixel = 32;
