@@ -2691,30 +2691,41 @@ void menu_draw_cpu_use(void)
 //Retorna -1 si hay algun error
 int menu_get_cpu_temp(void)
 {
-//return 9999999;
+
 	char procstat_buffer[10];
-	char *archivo_cputemp="/sys/class/thermal/thermal_zone0/temp";
 
-	//temp pruebas
-	//return 56324
+	//sensor generico
+	char *posible_archivo_cputemp1="/sys/class/thermal/thermal_zone0/temp";
 
-        if (si_existe_archivo(archivo_cputemp) ) {
+	//sensor especifico para mi pc linux
+	char *posible_archivo_cputemp2="/sys/devices/platform/smsc47b397.1152/hwmon/hwmon/temp1_input";
 
-		int leidos=lee_archivo(archivo_cputemp,procstat_buffer,9);
+	char *archivo_cputemp;
 
-		if (leidos<1) {
-                                debug_printf (VERBOSE_DEBUG,"Error reading cpu status on %s",archivo_cputemp);
-                                return -1;
-                }
-
-                //establecemos final de cadena
-                procstat_buffer[leidos]=0;
-
-
-		return atoi(procstat_buffer);
+	if (si_existe_archivo(posible_archivo_cputemp1) ) {
+		archivo_cputemp=posible_archivo_cputemp1;
 	}
 
-	return -1;
+	else if (si_existe_archivo(posible_archivo_cputemp2) ) {
+		archivo_cputemp=posible_archivo_cputemp2;
+	}
+
+	else return -1;
+
+
+	int leidos=lee_archivo(archivo_cputemp,procstat_buffer,9);
+
+	if (leidos<1) {
+        debug_printf (VERBOSE_DEBUG,"Error reading cpu status on %s",archivo_cputemp);
+        return -1;
+    }
+
+    //establecemos final de cadena
+    procstat_buffer[leidos]=0;
+
+
+	return atoi(procstat_buffer);
+	
 }
 
 void menu_draw_cpu_temp(void)

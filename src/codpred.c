@@ -36,6 +36,7 @@ void invalid_opcode_ed(char *s)
 	        //printf ("Invalid opcode %s. Final PC: %04XH\n",s,reg_pc);
         }
 
+        //Y acaba ejecutando un NOP tal cual
 
 }
 

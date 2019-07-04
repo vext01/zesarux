@@ -37,7 +37,7 @@ void invalid_opcode_ddfd(char *s)
 {
 	if (debug_shows_invalid_opcode.v) debug_printf(VERBOSE_INFO,"Invalid opcode %s. Final PC: %04XH. Executing opcode without preffix",s,reg_pc);
 
-	//En este caso, retroceder 1 instruccion y volver a parsear
+	//En este caso, retroceder 1 instruccion y volver a parsear. Es como ejecutar la instruccion pero sin prefijo DD/FD
 	reg_pc--;
 	reg_r--;
 
@@ -1953,9 +1953,8 @@ void instruccion_ddfd_220 ()
 
 void instruccion_ddfd_221 ()
 {
-        //invalid_opcode_ddfd("221/253 221");
+        //Doble prefijo DD/FD + DD/FD. Decir al core que hay que volver a hacer fetch y sumar longitud instruccion
         core_refetch=1;
-        //reg_pc++;
 }
 
 void instruccion_ddfd_222 ()
@@ -2150,9 +2149,8 @@ void instruccion_ddfd_252 ()
 
 void instruccion_ddfd_253 ()
 {
-        //invalid_opcode_ddfd("221/253 253");
+        //Doble prefijo DD/FD + DD/FD. Decir al core que hay que volver a hacer fetch y sumar longitud instruccion
         core_refetch=1;
-        //reg_pc++;
 }
 
 void instruccion_ddfd_254 ()
