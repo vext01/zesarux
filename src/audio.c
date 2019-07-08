@@ -2793,6 +2793,29 @@ void audio_midi_output_flush_output(void)
 //Notas anteriores sonando, 3 canales
 char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
 
+
+void audio_midi_output_finish(void)
+{
+#ifdef COMPILE_ALSA
+     
+	alsa_mid_finish_all();
+
+#endif
+
+#ifdef COMPILE_COREAUDIO
+
+	coreaudio_mid_finish_all();
+
+#endif
+
+
+#ifdef MINGW
+
+	windows_mid_finish_all();
+
+#endif	
+}
+
 //Devuelve 1 si error
 int audio_midi_output_init(void)
 {
@@ -2984,6 +3007,21 @@ void audio_midi_output_frame_event(void)
 //Inicio rutinas Midi Windows
 #ifdef MINGW
 
+
+// Midi code derived from work of Craig Stuart Sapp:
+//
+// Programmer:    Craig Stuart Sapp <craig@ccrma.stanford.edu>
+// Creation Date: Sat Jan  1 20:29:45 PST 2005
+// Last Modified: Sat Jan  1 20:37:28 PST 2005
+// Filename:      ...midiio/doc/windowsmidi/keymidi/keymidi.c
+// URL:           http://midiio.sapp.org/doc/windowsmidi/keymidi/keymidi.c
+// Syntax:        C; Visual C/C++ 5/6
+//
+// Description:   The example program shows how to open MIDI output,
+//                send a MIDI message, and close MIDI output.
+//                When you press a key on the computer keyboard, a MIDI
+//     
+
 HMIDIOUT windows_midi_device;
 int windows_midi_midiport=0;
 
@@ -3033,7 +3071,14 @@ int windows_mid_initialize_all(void)
   return 0;
 }
 
+void windows_mid_finish_all(void)
+{
+   // turn any MIDI notes currently playing:
+   midiOutReset(device);
 
+   // Remove any data in MIDI device and close the MIDI Output port
+   midiOutClose(device);	
+}
 
 
 //Hacer note on de una nota inmediatamente

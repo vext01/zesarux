@@ -506,6 +506,7 @@ return noErr;
 
 
 
+
 void playPacketListOnAllDevices   (MIDIPortRef     midiout,  const MIDIPacketList* pktlist);
 
 
@@ -583,6 +584,25 @@ int coreaudio_mid_initialize_all(void)
   return 0;
 }
 
+
+void coreaudio_mid_finish_all(void)
+{
+  OSStatus status;
+
+    status = MIDIPortDispose(coreaudio_midi_midiout);
+    if (status) {
+      debug_printf(VERBOSE_ERR,"Error trying to close MIDI output port");
+      return;
+   }
+   //coreaudio_midi_midiout = NULL;
+  status = MIDIClientDispose(coreaudio_midi_midiclient);
+   if (status) {
+      debug_printf(VERBOSE_ERR,"Error trying to close MIDI client: %d");
+   }
+   //coreaudio_midi_midiclient = NULL;
+
+   return;
+}
 
 
 

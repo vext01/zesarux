@@ -284,6 +284,7 @@ extern void audiodac_send_sample_value(z80_byte value);
 
 extern void midi_output_frame_event(void);
 extern int audio_midi_output_init(void);
+extern void audio_midi_output_finish(void);
 
 extern z80_bit midi_output_record_noisetone;
 
@@ -296,6 +297,7 @@ extern z80_bit midi_output_record_noisetone;
 extern int windows_midi_midiport;
 extern void windows_midi_output_flush_output(void);
 extern int windows_mid_initialize_all(void);
+extern void windows_mid_finish_all(void);
 extern int windows_note_on(unsigned char channel, unsigned char note,unsigned char velocity);
 extern int windows_note_off(unsigned char channel, unsigned char note,unsigned char velocity);
 

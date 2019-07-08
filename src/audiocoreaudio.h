@@ -40,5 +40,6 @@ extern int coreaudio_note_on(unsigned char channel, unsigned char note,unsigned 
 extern int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char velocity);
 extern void coreaudio_midi_output_flush_output(void);
 extern int coreaudio_mid_initialize_all(void);
+extern void coreaudio_mid_finish_all(void);
 
 #endif

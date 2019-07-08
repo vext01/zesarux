@@ -845,7 +845,22 @@ int alsa_mid_subscribe_midi_port(int midi_client, int midi_port)
 
 }
 
+//Se desuscribe al puerto midi indicado. Retorna <0 en caso de error
+int alsa_mid_unsubscribe_midi_port(int midi_client, int midi_port)
+{
 
+	int err;
+
+
+	err=snd_seq_unsubscribe_port(zesarux_mid_alsa_audio_info.handle, zesarux_mid_alsa_audio_info.subs);
+	if (err<0) {
+		debug_printf (VERBOSE_ERR,"Error unsubscribing midi alsa port");
+		return err;
+	}
+
+	return 0;
+
+}
 
 
 //Hacer note on de una nota inmediatamente
@@ -1029,6 +1044,11 @@ int alsa_mid_initialize_all(void)
 
 
 
+}
+
+void alsa_mid_finish_all(void)
+{
+	alsa_mid_unsubscribe_midi_port();
 }
 
 

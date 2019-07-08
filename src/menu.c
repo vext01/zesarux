@@ -11004,37 +11004,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_ayuda(array_menu_audio_settings,"Saves music from the AY Chip to a .mid file");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'m');
 
-#ifdef COMPILE_ALSA
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output,NULL,"AY to MIDI ~~Output");
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device. On Linux, needs alsa driver compiled.\n"
-						"You can simulate an external midi device by using timidity. If you have it installed, it may probably be running in memory as "
-						"an alsa sequencer client. If not, run it with the command line:\n"
-						"timidity -iA -Os -B2,8 -EFreverb=0\n"
-						"Running timidity that way, would probably require that you use another audio driver in ZEsarUX different than alsa, "
-						"unless you have alsa software mixing enabled"
-					);
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
-#endif
-
-
-
-
-
-		
-#ifdef COMPILE_COREAUDIO
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_direct_coreaudio_midi_output,NULL,"AY to MIDI ~~Output");
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
-#endif			
-					
-#ifdef MINGW
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_direct_windows_midi_output,NULL,"AY to MIDI ~~Output");
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
-#endif			
+	
 
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"W~~ave Piano");
