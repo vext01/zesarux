@@ -1625,6 +1625,13 @@ char memory_zone_by_file_name[PATH_MAX];
 z80_byte *memory_zone_by_file_pointer;
 int memory_zone_by_file_size=0;
 
+//Si ultima instruccion era HALT. Para ignorar hasta lo que no sea HALT. Contar al menos 1
+int cpu_trans_log_last_was_halt=0;
+
+z80_bit cpu_trans_log_ignore_repeated_halt={0};
+
+
+
 
 void transaction_log_rotate_files(int archivos)
 {
@@ -1817,6 +1824,9 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 		}
 
 
+
+
+
 	        if (cpu_transaction_log_store_opcode.v) {
 			debugger_disassemble(&transaction_log_line_to_store[index],32,&transaction_log_longitud_opcode,registro_pc);
 			int len=strlen(&transaction_log_line_to_store[index]);
@@ -1824,6 +1834,25 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 			transaction_log_line_to_store[index++]=' ';
         	}
 
+
+		//Si es halt lo ultimo
+		if (cpu_trans_log_ignore_repeated_halt.v) {
+			if (CPU_IS_Z80) {
+				z80_byte opcode=peek_byte_no_time(registro_pc);
+				if (opcode==118) {
+					if (cpu_trans_log_last_was_halt<2) cpu_trans_log_last_was_halt++;
+					printf ("halts %d\n",cpu_trans_log_last_was_halt);
+
+				}
+				else {
+					cpu_trans_log_last_was_halt=0;
+				}
+
+			}	
+			else {
+				cpu_trans_log_last_was_halt=0;
+			}	
+		}
 
 		if (cpu_transaction_log_store_registers.v) {
 			print_registers(&transaction_log_line_to_store[index]);
@@ -1837,10 +1866,20 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 
 		//Si esta NULL es que no se ha abierto correctamente, y aqui no deberiamos llegar nunca
 		if (ptr_transaction_log!=NULL) {
-			fwrite(transaction_log_line_to_store,1,index,ptr_transaction_log);
 
-			transaction_log_tamanyo_escrito +=index;
+			//Si era halt los dos ultimos y hay que ignorarlo
+			if (cpu_trans_log_last_was_halt>1 && cpu_trans_log_ignore_repeated_halt.v) {
+
+			}
+			else {
+
+				fwrite(transaction_log_line_to_store,1,index,ptr_transaction_log);
+
+				transaction_log_tamanyo_escrito +=index;
+			}
 		}
+
+
 
 
 		//Rotar log si conviene
