@@ -846,7 +846,7 @@ int alsa_mid_subscribe_midi_port(int midi_client, int midi_port)
 }
 
 //Se desuscribe al puerto midi indicado. Retorna <0 en caso de error
-int alsa_mid_unsubscribe_midi_port(int midi_client, int midi_port)
+int alsa_mid_unsubscribe_midi_port(void)
 {
 
 	int err;
