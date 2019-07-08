@@ -3074,10 +3074,10 @@ int windows_mid_initialize_all(void)
 void windows_mid_finish_all(void)
 {
    // turn any MIDI notes currently playing:
-   midiOutReset(device);
+   midiOutReset(windows_midi_device);
 
    // Remove any data in MIDI device and close the MIDI Output port
-   midiOutClose(device);	
+   midiOutClose(windows_midi_device);	
 }
 
 
