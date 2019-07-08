@@ -26478,7 +26478,6 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"- Use cursors and PgDn/Up\n"
 			"- Use f and n to find text\n"
 			"- Use c to copy to ZEsarUX clipboard\n"
-			"- Use s to save contents to a text file\n"
 			"\n"
 			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or \"\")\n\n"
 			"Symbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "
