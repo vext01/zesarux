@@ -90,7 +90,7 @@ Thanks!
 
 __FEATURES__
 
-* Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Mac OS X, Windows native, Windows + Cygwin
+* Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Linux RetroPie, Mac OS X, Windows native, Windows + Cygwin
 
 * Emulates:
 * Science of Cambridge MK14
@@ -112,7 +112,7 @@ __FEATURES__
 * Jupiter Ace
 * Amstrad CPC 464, CPC 4128
 
-* Is the only emulator for machines: ZX-Uno, Chloe 140/280, Prism, TBBlue and Chrome
+* Is the only emulator for machines: Chloe 140/280, Prism and Chrome
 
 * Almost perfect emulation of timing of all Spectrum machines
 
@@ -123,8 +123,6 @@ __FEATURES__
 * Supports Motorola CPU 68008 (Sinclair QL)
 
 * Supports SC/MP CPU - INS8060 (MK14)
-
-* Supports Pentagon timing
 
 * Supports perfect ZX Spectrum 16k/48k colour palette
 
@@ -202,7 +200,7 @@ __FEATURES__
 
 * Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
 
-* Real time playback from AY Chip sound to external MIDI device (Linux and Mac OS X)
+* Real time playback from AY Chip sound to external MIDI device 
 
 * Supports Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
 
@@ -234,7 +232,7 @@ __FEATURES__
 
 * Supports reading Pokes from .POK files
 
-* AY Chip Tools: AY Player, AY Sheet, AY Piano, AY Registers, export AY music to midi (.mid) files, AY Filters
+* AY Chip Tools: AY Player, AY Sheet, AY Piano, AY Registers, export AY music to midi (.mid) files, AY Mixer
 
 * Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
 
@@ -244,7 +242,7 @@ __FEATURES__
 
 * File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc
 
-* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can be also read by a text-to-speech program.
+* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
 
 * Simulates upper RAM memory refresh on Spectrum 48Kb, losing its contents when changing R register very quickly
 

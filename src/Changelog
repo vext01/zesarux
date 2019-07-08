@@ -21,7 +21,7 @@ Added menu to export AY chip music to midi (.mid) file
 Added AY Sheet: showing a sheet with the notes being played
 Added AY mixer menu
 
-Added DAAD, PAWS and Quill debugger, for Spectrum and CPC (CPC only supports Daad)
+Added DAAD, PAWS and Quill debugger, for Spectrum and CPC (CPC only supports Daad debugger)
 Added text adventure keyboard also on CPC
 
 Added colors to ncurses driver and Chloe machine
@@ -64,7 +64,6 @@ Fixed machine names to be completely right: for example, "Spectrum 48k" becomes 
 Fixed saving sprites when memory zone is not default zone
 Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
 Fixed bug crash when a message error was generated from ZRCP and menu had a tooltip open
-Fixed interrupt behaviour where last opcode lasts >=32 t-states and interrupt in the middle
 
 
 

@@ -94,7 +94,7 @@ The following is a list of complete features, all of which are optional.
 # Audio Drivers
 
 - OSS (dsp) (on Linux/Raspberry): needs soundcard includes. Usually included on Linux systems.
-- alsa (on Linux/Raspberry): needs alsalibs.
+- alsa (on Linux/Raspberry): needs alsalibs. Also needed if you want midi output
 - pulse (on Linux/Raspberry): needs pulselibs.
 - SDL 1.2 (on Linux/Raspberry): needs sdllib. SDL2 is experimental.
 - coreaudio (on Mac OS X): Compiling supported using XCode.
