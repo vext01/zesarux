@@ -16,7 +16,7 @@ Improved menu interface:
 --Reordered cpu use, numbers in red when cpu use > 85%
 --Now shows cpu temperature on Linux (and not only on Raspbian as before)
 
-Added Real time playback from AY Chip sound to external MIDI device, on Linux and Mac OS X
+Added Real time playback from AY Chip sound to external MIDI device
 Added menu to export AY chip music to midi (.mid) file
 Added AY Sheet: showing a sheet with the notes being played
 Added AY mixer menu

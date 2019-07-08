@@ -1725,7 +1725,7 @@ scrsdl.o: scrsdl.c cpu.h scrsdl.h debug.h screen.h mem128.h compileoptions.h zx8
 	\$(CC) \$(CFLAGS) -c scrsdl.c
 
 audiosdl.o: audiosdl.c audiosdl.h cpu.h audio.h compileoptions.h debug.h common_sdl.h
-	\$(CC) \$(CFLAGS) -c audiosdl.c settings.h
+	\$(CC) \$(CFLAGS) -c audiosdl.c 
 
 common_sdl.o: common_sdl.c common_sdl.h cpu.h compileoptions.h debug.h
 	\$(CC) \$(CFLAGS) -c common_sdl.c
