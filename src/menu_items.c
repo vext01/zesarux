@@ -1416,7 +1416,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 						"Running timidity that way, would probably require that you use another audio driver in ZEsarUX different than alsa, "
 						"unless you have alsa software mixing enabled"
 					);
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
+					menu_add_item_menu_shortcut(array_menu_settings_audio,'o');
 #endif
 
 
