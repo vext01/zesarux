@@ -15928,7 +15928,7 @@ void menu_direct_windows_midi_output(MENU_ITEM_PARAMETERS)
         do {
 
 
-            menu_add_item_menu_inicial_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_windows_midi_output_port,NULL,"Midi port: %d",windows_midi_midiport);
+            menu_add_item_menu_inicial_format(&array_menu_direct_windows_midi_output,MENU_OPCION_NORMAL,menu_direct_windows_midi_output_port,NULL,"Midi port: %d",windows_midi_midiport);
 
 	
 		if (audio_midi_output_initialized==0) {

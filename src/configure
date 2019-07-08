@@ -1059,7 +1059,7 @@ _EOF
 				LDFLAGS="$LDFLAGS -framework $LIBSDL -F/Library/Frameworks"
 			elif [ "$SISTEMA" == "Msys" ]; then
                                 CFLAGS="$CFLAGS -I/c/mingw/$LIBSDL/include"
-                                LDFLAGS="$LDFLAGS -L/c/mingw/$LIBSDL/lib -l$LIBSDL"
+                                LDFLAGS="$LDFLAGS -L/c/mingw/$LIBSDL/lib -l$LIBSDL -lwinmm"
 			else
 		                LDFLAGS="$LDFLAGS -l$LIBSDL"
 			fi

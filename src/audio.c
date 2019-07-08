@@ -2814,7 +2814,7 @@ int audio_midi_output_init(void)
 
 
 #ifdef MINGW
-	if (windows_mid_mid_initialize_all()) {
+	if (windows_mid_initialize_all()) {
 		return 1;
 	}
 #endif
@@ -2985,7 +2985,7 @@ void audio_midi_output_frame_event(void)
 #ifdef MINGW
 
 HMIDIOUT windows_midi_device;
-int windows_midi_midiport;
+int windows_midi_midiport=0;
 
 typedef union 
 { 

@@ -11029,6 +11029,12 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
 #endif			
 					
+#ifdef MINGW
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_direct_windows_midi_output,NULL,"AY to MIDI ~~Output");
+					menu_add_item_menu_tooltip(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
+					menu_add_item_menu_ayuda(array_menu_audio_settings,"Direct AY music output to a real MIDI device");
+					menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
+#endif			
 
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"W~~ave Piano");
