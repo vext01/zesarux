@@ -51,6 +51,11 @@
 #include "audiocoreaudio.h"
 #endif 
 
+//Para rutinas midi windows que hay aqui
+#ifdef MINGW
+#include <windows.h>   
+#include <mmsystem.h>  
+#endif
 
 //Si se usa audio sdl2. para workaround con el detector de silencio, que genera zumbido con sdl2
 //Esta a 0 inicialmente. Si se usa sdl2, se pondra a 1, y ya no se pondra a 0 hasta no salir del emulador
@@ -2745,6 +2750,10 @@ int audio_midi_output_note_on(unsigned char channel, unsigned char note)
 	#ifdef COMPILE_COREAUDIO
 	return coreaudio_note_on(channel,note,127);
 	#endif
+
+	#ifdef MINGW
+	return windows_note_on(channel,note,127);
+	#endif		
 }
 
 int audio_midi_output_note_off(unsigned char channel, unsigned char note)
@@ -2757,6 +2766,10 @@ int audio_midi_output_note_off(unsigned char channel, unsigned char note)
 	#ifdef COMPILE_COREAUDIO
 	return coreaudio_note_off(channel,note,127);
 	#endif	
+
+	#ifdef MINGW
+	return windows_note_off(channel,note,127);
+	#endif		
 }
 
 
@@ -2770,6 +2783,10 @@ void audio_midi_output_flush_output(void)
 	#ifdef COMPILE_COREAUDIO
 	coreaudio_midi_output_flush_output();
 	#endif	
+
+	#ifdef MINGW
+	windows_midi_output_flush_output();
+	#endif
 }
 
 
@@ -2794,6 +2811,14 @@ int audio_midi_output_init(void)
 		return 1;
 	}
 #endif
+
+
+#ifdef MINGW
+	if (windows_mid_mid_initialize_all()) {
+		return 1;
+	}
+#endif
+
 
 	//printf ("Inicializado midi\n");
 	audio_midi_output_initialized=1;
@@ -2955,3 +2980,100 @@ void audio_midi_output_frame_event(void)
 
 }
 
+
+//Inicio rutinas Midi Windows
+#ifdef MINGW
+
+HMIDIOUT windows_midi_device;
+int windows_midi_midiport;
+
+typedef union 
+{ 
+    DWORD word; 
+	BYTE data[4]; 
+
+    //unsigned int word; 
+	//unsigned char data[4]; 
+
+} windows_midi_message;
+
+void windows_mid_add_note(windows_midi_message mensaje)
+{
+
+	//printf ("%d\n",mensaje.word);
+   int flag = midiOutShortMsg(windows_midi_device, mensaje.word);
+            //if (flag != MMSYSERR_NOERROR) {
+            //printf("Warning: MIDI Output is not open.\n");
+        // }
+
+}
+
+
+
+void windows_midi_output_flush_output(void)
+{
+
+   //nada
+
+}
+
+
+
+int windows_mid_initialize_all(void)
+{
+// Open the MIDI output port
+   int flag = midiOutOpen(&windows_midi_device, windows_midi_midiport, 0, 0, CALLBACK_NULL);
+   if (flag != MMSYSERR_NOERROR) {
+      debug_printf(VERBOSE_ERR,"Error opening MIDI Output");
+      return 1;
+   }
+
+
+
+  return 0;
+}
+
+
+
+
+//Hacer note on de una nota inmediatamente
+int windows_note_on(unsigned char channel, unsigned char note,unsigned char velocity)
+{
+
+  debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
+
+  windows_midi_message mensaje;
+
+  mensaje.data[0]=0x90;
+  mensaje.data[1]=note;
+  mensaje.data[2]=velocity;
+  mensaje.data[3]=0;
+
+
+  windows_mid_add_note(mensaje);
+
+  return 0;
+}
+
+int windows_note_off(unsigned char channel, unsigned char note,unsigned char velocity)
+{
+
+  debug_printf (VERBOSE_PARANOID,"noteoff event channel %d note %d velocity %d",channel,note,velocity);
+
+  windows_midi_message mensaje;
+
+  mensaje.data[0]=0x80;
+  mensaje.data[1]=note;
+  mensaje.data[2]=velocity;
+  mensaje.data[3]=0;
+
+
+  windows_mid_add_note(mensaje);
+
+
+  return 0;  
+}
+
+
+#endif
+//Fin rutinas Midi Windows

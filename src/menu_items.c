@@ -172,6 +172,7 @@ int record_mid_opcion_seleccionada=0;
 
 int direct_alsa_midi_output_opcion_seleccionada=0;
 int direct_coreaudio_midi_output_opcion_seleccionada=0;
+int direct_windows_midi_output_opcion_seleccionada=0;
 
 int ay_mixer_opcion_seleccionada=0;
 
@@ -15890,6 +15891,92 @@ void menu_direct_coreaudio_midi_output(MENU_ITEM_PARAMETERS)
 
 #endif
 //fin compilacion de coreaudio
+
+
+
+//Inicio compilacion de mingw midi windows
+#ifdef MINGW
+
+
+void menu_direct_windows_midi_output_port(MENU_ITEM_PARAMETERS)
+{
+        char string_valor[4];
+        int valor;
+
+
+        sprintf (string_valor,"%d",windows_midi_midiport);
+
+
+        menu_ventana_scanf("Port value",string_valor,4);
+
+        valor=parse_string_to_number(string_valor);
+        if (valor<0 || valor>255) {
+                menu_error_message("Invalid client value");
+        }
+
+
+        windows_midi_midiport=valor;
+
+}
+
+void menu_direct_windows_midi_output(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_direct_windows_midi_output;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+        do {
+
+
+            menu_add_item_menu_inicial_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_windows_midi_output_port,NULL,"Midi port: %d",windows_midi_midiport);
+
+	
+		if (audio_midi_output_initialized==0) {
+			menu_add_item_menu_format(array_menu_direct_windows_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Initialize midi");
+		}
+		else {
+			menu_add_item_menu_format(array_menu_direct_windows_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
+		}
+
+		menu_add_item_menu_format(array_menu_direct_windows_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
+			(audio_midi_output_initialized ? "Yes" : "No" ) );
+
+
+
+					menu_add_item_menu_format(array_menu_direct_windows_midi_output,MENU_OPCION_SEPARADOR,NULL,NULL,"");
+					menu_add_item_menu_format(array_menu_direct_windows_midi_output,MENU_OPCION_NORMAL,menu_midi_output_noisetone,NULL,"[%c] Allow tone+noise",
+						(midi_output_record_noisetone.v ? 'X' : ' ') );
+					menu_add_item_menu_tooltip(array_menu_direct_windows_midi_output,"Send also channels enabled as tone+noise");
+					menu_add_item_menu_ayuda(array_menu_direct_windows_midi_output,"Send also channels enabled as tone+noise");
+
+
+                menu_add_item_menu(array_menu_direct_windows_midi_output,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                //menu_add_item_menu(array_menu_direct_windows_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_direct_windows_midi_output);
+
+                retorno_menu=menu_dibuja_menu(&direct_windows_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_windows_midi_output,"AY to MIDI output" );
+
+
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+	                //llamamos por valor de funcion
+        	        if (item_seleccionado.menu_funcion!=NULL) {
+                	        //printf ("actuamos por funcion\n");
+	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+        	        }
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+}
+
+#endif
+//fin compilacion de windows
+
+
+
 
 //cambia filtro
 void menu_ay_mixer_cambia_filtro(MENU_ITEM_PARAMETERS)

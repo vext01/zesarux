@@ -290,4 +290,16 @@ extern z80_bit midi_output_record_noisetone;
 #define FREQ_TOP_SPEED_CHANGE 12800
 
 
+
+#ifdef MINGW
+
+extern int windows_midi_midiport;
+extern void windows_midi_output_flush_output(void);
+extern int windows_mid_initialize_all(void);
+extern int windows_note_on(unsigned char channel, unsigned char note,unsigned char velocity);
+extern int windows_note_off(unsigned char channel, unsigned char note,unsigned char velocity);
+
+
+#endif
+
 #endif
