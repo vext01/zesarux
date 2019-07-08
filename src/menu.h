@@ -31,6 +31,15 @@
 #include "cpu.h"
 
 
+//Por el tema de usar PATH_MAX en windows
+#ifdef MINGW
+#include <stdlib.h>
+#define PATH_MAX MAX_PATH
+#define NAME_MAX MAX_PATH
+#endif
+
+
+
 struct s_overlay_screen {
 	z80_byte tinta,papel,parpadeo;
 	z80_byte caracter;
@@ -88,7 +97,7 @@ typedef struct s_zxvision_window zxvision_window;
 
 
 
-//Por el tema de usar PATH_MAX en windows
+
 //Aqui hay un problema, y es que en utils.h se esta usando zxvision_window, y hay que declarar este tipo de ventana antes
 #include "utils.h"
 

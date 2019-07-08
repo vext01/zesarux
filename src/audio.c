@@ -3004,7 +3004,7 @@ void audio_midi_output_frame_event(void)
 }
 
 
-//Inicio rutinas Midi Windows
+//Inicio rutinas Midi Windows. Esto quiza deberia estar en un archivo aparte, tipo "windows.c"
 #ifdef MINGW
 
 
