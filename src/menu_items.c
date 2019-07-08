@@ -1233,7 +1233,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
         do {
 
-		//hotkeys usadas: vapesboiuctdrf
+		//hotkeys usadas: vuacpdrbfoilh
 
 		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"    Output ~~Volume [%d%%]", audiovolume);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
@@ -1407,7 +1407,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 #ifdef COMPILE_ALSA
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output,NULL,"AY to MIDI ~~Output");
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output,NULL,"AY to ~~MIDI Output");
 					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device");
 					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct AY music output to a real MIDI device. On Linux, needs alsa driver compiled.\n"
 						"You can simulate an external midi device by using timidity. If you have it installed, it may probably be running in memory as "
@@ -1416,24 +1416,24 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 						"Running timidity that way, would probably require that you use another audio driver in ZEsarUX different than alsa, "
 						"unless you have alsa software mixing enabled"
 					);
-					menu_add_item_menu_shortcut(array_menu_settings_audio,'o');
+					menu_add_item_menu_shortcut(array_menu_settings_audio,'m');
 #endif
 
 
 		
 #ifdef COMPILE_COREAUDIO
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_coreaudio_midi_output,NULL,"AY to MIDI ~~Output");
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_coreaudio_midi_output,NULL,"AY to ~~MIDI Output");
 					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device");
 					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_shortcut(array_menu_settings_audio,'o');
+					menu_add_item_menu_shortcut(array_menu_settings_audio,'m');
 #endif			
 
 
 #ifdef MINGW
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_windows_midi_output,NULL,"AY to MIDI ~~Output");
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_windows_midi_output,NULL,"AY to ~~MIDI Output");
 					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device");
 					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct AY music output to a real MIDI device");
-					menu_add_item_menu_shortcut(array_menu_settings_audio,'o');
+					menu_add_item_menu_shortcut(array_menu_settings_audio,'m');
 #endif		
 
 
@@ -15716,6 +15716,11 @@ void menu_midi_output_initialize(MENU_ITEM_PARAMETERS)
 	}	
 }
 
+int menu_midi_output_initialized_cond(void)
+{
+	return !audio_midi_output_initialized;
+}
+
 
 //Midi output a dispositivo real. Con alsa
 #ifdef COMPILE_ALSA
@@ -15814,8 +15819,8 @@ void menu_direct_alsa_midi_output(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_list_devices,NULL,"List midi devices");
 
 
-		menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_client,NULL,"Midi client: %d",alsa_midi_client);
-		menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_port,NULL,"Midi port: %d",alsa_midi_port);
+		menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_client,menu_midi_output_initialized_cond,"Midi client: %d",alsa_midi_client);
+		menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_port,menu_midi_output_initialized_cond,"Midi port: %d",alsa_midi_port);
 
 		//Parece que no funciona la gestion de volumen
 		//menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
@@ -15880,12 +15885,14 @@ void menu_direct_coreaudio_midi_output(MENU_ITEM_PARAMETERS)
 
         do {
 
+
+		menu_add_item_menu_inicial(&array_menu_direct_coreaudio_midi_output,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 	
 		if (audio_midi_output_initialized==0) {
-			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Initialize midi");
+			menu_add_item_menu_format(array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Initialize midi");
 		}
 		else {
-			menu_add_item_menu_inicial_format(&array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
+			menu_add_item_menu_format(array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
 		}
 
 		menu_add_item_menu_format(array_menu_direct_coreaudio_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
@@ -15961,7 +15968,9 @@ void menu_direct_windows_midi_output(MENU_ITEM_PARAMETERS)
         do {
 
 
-            menu_add_item_menu_inicial_format(&array_menu_direct_windows_midi_output,MENU_OPCION_NORMAL,menu_direct_windows_midi_output_port,NULL,"Midi port: %d",windows_midi_midiport);
+			menu_add_item_menu_inicial(&array_menu_direct_windows_midi_output,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+            menu_add_item_menu_format(array_menu_direct_windows_midi_output,MENU_OPCION_NORMAL,menu_direct_windows_midi_output_port,menu_midi_output_initialized_cond,"Midi port: %d",windows_midi_midiport);
 
 	
 		if (audio_midi_output_initialized==0) {
