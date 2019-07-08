@@ -4512,14 +4512,11 @@ void zxvision_wait_until_esc(zxvision_window *w)
 //escribe la cadena de texto
 void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offset_string,int max_length_shown,int x,int y,int pos_cursor_x)
 {
-	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
-	//z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
+
 	char cadena_buf[2];
 
 	string=&string[offset_string];
 
-	//contar que hay que escribir el cursor
-	//max_length_shown--;
 
 	int rel_x=0;
 
@@ -4532,10 +4529,10 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 		string++;
 	}
 
-	for (;max_length_shown/* && (*string)!=0*/;max_length_shown--) {
+	for (;max_length_shown;max_length_shown--) {
 
 		if (rel_x==pos_cursor_x) {
-			printf ("Escribir cursor en medio o final en %d %d\n",x,y);
+			//printf ("Escribir cursor en medio o final en %d %d\n",x,y);
 			zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
 		}
 
@@ -4558,21 +4555,6 @@ void zxvision_scanf_print_string(zxvision_window *ventana,char *string,int offse
 
 		
 	}
-
-	/*if (rel_x==pos_cursor_x) {
-		printf ("Escribir cursor al final en %d %d\n",x,y);
-		zxvision_print_string(ventana,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"_");
-		x++;
-	}	
-
-
-
-	//Espacios al final
-    for (;max_length_shown!=0;max_length_shown--) {
-		zxvision_print_string_defaults(ventana,x,y," ");
-        x++;
-    }
-	*/
 
 	zxvision_draw_window_contents(ventana);
 
@@ -4620,23 +4602,6 @@ void menu_scanf_cursor_derecha(char *texto,int *pos_cursor_x,int *offset_string,
 //ejemplo, si el array es de 50, se le debe pasar max_length a 50
 int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length,int max_length_shown,int x,int y)
 {
-
-	/*char aa[20]="hola";
-	util_str_del_char(aa,0);
-	printf ("[%s]\n",aa);
-
-	char bb[20]="hola";
-	util_str_del_char(bb,2);
-	printf ("[%s]\n",bb);
-
-
-	char cc[20]="hola";
-	util_str_del_char(cc,4);
-	printf ("[%s]\n",cc);
-
-	char dd[20]="hola";
-	util_str_del_char(dd,5);
-	printf ("[%s]\n",dd);*/
 
 
 	//Al menos 2 de maximo a mostrar. Si no, salir
@@ -4692,11 +4657,9 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 		//si tecla normal, agregar en la posicion del cursor:
 		if (tecla>31 && tecla<128) {
 			if (strlen(string)<max_length) {
-
 			
 				int i;
 				i=strlen(string);
-
 
 				int pos_agregar=pos_cursor_x+offset_string;
 				printf ("agregar letra en %d\n",pos_agregar);
@@ -4874,42 +4837,7 @@ int zxvision_generic_message_cursor_up(zxvision_window *ventana)
 
 }		
 
-//Funcion generica para guardar un archivo de texto a disco
-//Supondra que es de texto y por tanto pone filtro de "*.txt"
-//Ademas el tamaño del archivo a guardar se determina por el caracter 0 final
-void menu_save_text_to_file(char *puntero_memoria,char *titulo_ventana)
-{
-	char file_save[PATH_MAX];
 
-	char *filtros[2];
-
-	filtros[0]="txt";
-    filtros[1]=0;
-
-    int ret;
-
-	ret=menu_filesel(titulo_ventana,filtros,file_save);
-
-	if (ret==1) {
-
-		//Ver si archivo existe y preguntar
-		if (si_existe_archivo(file_save)) {
-
-			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
-
-        }
-
-		int file_size=strlen(puntero_memoria);
-
-		util_save_file((z80_byte *)puntero_memoria,file_size,file_save);
-
-		menu_generic_message_splash(titulo_ventana,"OK File saved");
-
-		menu_espera_no_tecla();
-
-
-	}
-}
 
 
 int menu_origin_x(void)
@@ -5371,11 +5299,14 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
                                         break;
 
 						
+						/*
+						Desactivado para evitar confusiones. Mejor hay que hacer antes copy y paste en file utls
                          case 's':
 						 	menu_save_text_to_file(menu_generic_message_tooltip_text_initial,"Save Text");
                  											zxvision_draw_window(ventana);
 											zxvision_draw_window_contents(ventana);
                         break;
+						*/
 
 
 						
@@ -25534,6 +25465,44 @@ void menu_paste_clipboard_to_file(char *destination_file)
 }
 
 
+//Funcion generica para guardar un archivo de texto a disco
+//Supondra que es de texto y por tanto pone filtro de "*.txt"
+//Ademas el tamaño del archivo a guardar se determina por el caracter 0 final
+//de momento funcion no usada
+/*void menu_save_text_to_file(char *puntero_memoria,char *titulo_ventana)
+{
+	char file_save[PATH_MAX];
+
+	char *filtros[2];
+
+	filtros[0]="txt";
+    filtros[1]=0;
+
+    int ret;
+
+	ret=menu_filesel(titulo_ventana,filtros,file_save);
+
+	if (ret==1) {
+
+		//Ver si archivo existe y preguntar
+		if (si_existe_archivo(file_save)) {
+
+			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+
+        }
+
+		int file_size=strlen(puntero_memoria);
+
+		util_save_file((z80_byte *)puntero_memoria,file_size,file_save);
+
+		menu_generic_message_splash(titulo_ventana,"OK File saved");
+
+		menu_espera_no_tecla();
+
+
+	}
+}*/
+
 
 //Cortar linea en dos, pero teniendo en cuenta que solo puede cortar por los espacios
 void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2)
@@ -29096,6 +29065,15 @@ void file_utils_paste_clipboard(void)
 	nombre_sin_dir[0]=0;
 	menu_ventana_scanf("Filename?",nombre_sin_dir,PATH_MAX);
 	sprintf(nombre_final,"%s/%s",directorio_actual,nombre_sin_dir);
+
+
+	//Ver si archivo existe y preguntar
+	if (si_existe_archivo(nombre_final)) {
+
+		if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+
+    }
+
 
 	menu_paste_clipboard_to_file(nombre_final);
 

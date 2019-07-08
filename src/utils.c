@@ -15231,7 +15231,7 @@ void util_str_add_char(char *texto,int posicion,char letra)
 
         //Si se intenta meter mas alla de la posicion del 0 final
         if (posicion>longitud) {
-                printf ("intentando escribir mas alla del 0 final\n");
+                //printf ("intentando escribir mas alla del 0 final\n");
                 posicion=longitud;
         }        
 
@@ -15262,7 +15262,7 @@ void util_str_del_char(char *texto,int posicion)
 
         //Si se intenta borrar mas alla de la longitud
         if (posicion>=longitud) {
-                printf ("intentando borrar mas alla del final\n");
+                //printf ("intentando borrar mas alla del final\n");
                 posicion=longitud-1;
         }        
 
