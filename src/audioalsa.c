@@ -852,6 +852,13 @@ int alsa_mid_unsubscribe_midi_port(void)
 	int err;
 
 
+	snd_seq_port_subscribe_alloca(&zesarux_mid_alsa_audio_info.subs);
+	snd_seq_port_subscribe_set_sender(zesarux_mid_alsa_audio_info.subs, &zesarux_mid_alsa_audio_info.sender);
+	snd_seq_port_subscribe_set_dest(zesarux_mid_alsa_audio_info.subs, &zesarux_mid_alsa_audio_info.dest);
+
+	snd_seq_port_subscribe_set_time_update(zesarux_mid_alsa_audio_info.subs, 1);
+	snd_seq_port_subscribe_set_time_real(zesarux_mid_alsa_audio_info.subs, 1);
+
 	err=snd_seq_unsubscribe_port(zesarux_mid_alsa_audio_info.handle, zesarux_mid_alsa_audio_info.subs);
 	if (err<0) {
 		debug_printf (VERBOSE_ERR,"Error unsubscribing midi alsa port");
