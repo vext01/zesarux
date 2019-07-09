@@ -738,7 +738,7 @@ struct s_items_ayuda items_ayuda[]={
 
 	"autorotate  yes|no: Enables automatic rotation of the log file\n"
 	"rotatefiles number: Number of files to keep in rotation (1-999)\n"
-	"rotatesize  number: Size in MB to rotate log file (1-9999)\n"
+	"rotatesize  number: Size in MB to rotate log file (0-9999). 0 means no rotate\n"
 
 	"truncate    yes|no: Truncate the log file. Requires value set to yes\n"
 

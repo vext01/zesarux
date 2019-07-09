@@ -1613,7 +1613,7 @@ z80_bit cpu_transaction_log_store_registers={0};
 z80_bit cpu_transaction_log_rotate_enabled={0};
 //Numero de archivos rotados
 int cpu_transaction_log_rotated_files=10;
-//Tamanyo maximo antes de rotar archivo, en MB
+//Tamanyo maximo antes de rotar archivo, en MB. Si es 0, no rotar
 int cpu_transaction_log_rotate_size=100;
 
 
@@ -1689,6 +1689,8 @@ void transaction_log_rotate(void)
 
 	if (cpu_transaction_log_rotate_enabled.v==0) return;
 
+	if (cpu_transaction_log_rotate_size==0) return; //no rotar si vale 0
+
 	//Obtener tamanyo archivo a ver si hay que rotar o no
 	//nota: dado que el flush en mac por ejemplo se hace muy de vez en cuando, ver el tamanyo del archivo
 	//tal cual con la estructura en memoria, no mirando el archivo en disco
@@ -1731,7 +1733,7 @@ int transaction_log_set_rotate_number(int numero)
 
 int transaction_log_set_rotate_size(int numero)
 {
-	if (numero<1 || numero>9999) {
+	if (numero<0 || numero>9999) {
         return 1;
 	}
 

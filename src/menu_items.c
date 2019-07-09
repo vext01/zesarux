@@ -9277,7 +9277,7 @@ void menu_cpu_transaction_log_rotate_size(MENU_ITEM_PARAMETERS)
 
         sprintf (string_number,"%d",cpu_transaction_log_rotate_size);
 
-        menu_ventana_scanf("Size in MB",string_number,5);
+        menu_ventana_scanf("Size in MB (0=no rot)",string_number,5);
 
         int numero=parse_string_to_number(string_number);
 
