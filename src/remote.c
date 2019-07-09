@@ -741,6 +741,8 @@ struct s_items_ayuda items_ayuda[]={
 	"rotatesize  number: Size in MB to rotate log file (1-9999)\n"
 
 	"truncate    yes|no: Truncate the log file. Requires value set to yes\n"
+
+	"ignrephalt  yes|no: Ignore repeated opcode HALT. Disabled by default\n"
 	
 	"datetime    yes|no: Enable datetime logging\n"
 	"tstates     yes|no: Enable tstates logging\n"
@@ -1298,6 +1300,11 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 			return;
 		}		
 	}		
+
+
+	else if (!strcasecmp(parameter,"ignrephalt")) {
+		cpu_trans_log_ignore_repeated_halt.v=remote_eval_yes_no(value);
+	}
 
 	else if (!strcasecmp(parameter,"datetime")) {
 		cpu_transaction_log_store_datetime.v=remote_eval_yes_no(value);

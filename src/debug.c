@@ -1841,7 +1841,7 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 				z80_byte opcode=peek_byte_no_time(registro_pc);
 				if (opcode==118) {
 					if (cpu_trans_log_last_was_halt<2) cpu_trans_log_last_was_halt++;
-					printf ("halts %d\n",cpu_trans_log_last_was_halt);
+					//printf ("halts %d\n",cpu_trans_log_last_was_halt);
 
 				}
 				else {
@@ -1868,8 +1868,8 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 		if (ptr_transaction_log!=NULL) {
 
 			//Si era halt los dos ultimos y hay que ignorarlo
-			if (cpu_trans_log_last_was_halt>1 && cpu_trans_log_ignore_repeated_halt.v) {
-
+			if (cpu_trans_log_ignore_repeated_halt.v && cpu_trans_log_last_was_halt>1) {
+				//no hacer log
 			}
 			else {
 

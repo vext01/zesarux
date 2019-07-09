@@ -9288,6 +9288,11 @@ void menu_cpu_transaction_log_rotate_size(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_cpu_transaction_log_ignore_rep_halt(MENU_ITEM_PARAMETERS)
+{
+	cpu_trans_log_ignore_repeated_halt.v ^=1;
+}
+
 void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_cpu_transaction_log;
@@ -9315,12 +9320,15 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 						menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_truncate,NULL,"    Truncate log file");
                 }
 
+		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_ignore_rep_halt,NULL,"[%c] Ignore repeated halt",(cpu_trans_log_ignore_repeated_halt.v ? 'X' : ' '));
+
 
 		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_datetime,NULL,"[%c] Store Date & Time",(cpu_transaction_log_store_datetime.v ? 'X' : ' '));
 		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_tstates,NULL,"[%c] Store T-States",(cpu_transaction_log_store_tstates.v ? 'X' : ' '));
 		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_address,NULL,"[%c] Store Address",(cpu_transaction_log_store_address.v ? 'X' : ' '));
 		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_opcode,NULL,"[%c] Store Opcode",(cpu_transaction_log_store_opcode.v ? 'X' : ' '));
 		menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_enable_registers,NULL,"[%c] Store Registers",(cpu_transaction_log_store_registers.v ? 'X' : ' '));
+		
 
 
                menu_add_item_menu(array_menu_cpu_transaction_log,"",MENU_OPCION_SEPARADOR,NULL,NULL);
