@@ -4567,7 +4567,7 @@ void menu_scanf_cursor_izquierda(int *offset_string,int *pos_cursor_x)
 				//Desplazar siempre offset que se pueda
 				if ((*offset_string)>0) {
 					(*offset_string)--;
-					printf ("offset string: %d\n",*offset_string);
+					//printf ("offset string: %d\n",*offset_string);
 				}
 
 				else if ((*pos_cursor_x)>0) (*pos_cursor_x)--;
@@ -4586,12 +4586,12 @@ void menu_scanf_cursor_derecha(char *texto,int *pos_cursor_x,int *offset_string,
 
 				if ((*pos_cursor_x)<max_length_shown-1) {
 						(*pos_cursor_x)++;
-						printf ("mover cursor\n");
+						//printf ("mover cursor\n");
 				}
 					//Si no mueve cursor, puede que haya que desplazar offset del inicio
 				
 				else if (i>=max_length_shown) {
-					printf ("Scroll\n");
+					//printf ("Scroll\n");
 					(*offset_string)++;
 				}
 			}
@@ -4662,9 +4662,9 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				i=strlen(string);
 
 				int pos_agregar=pos_cursor_x+offset_string;
-				printf ("agregar letra en %d\n",pos_agregar);
+				//printf ("agregar letra en %d\n",pos_agregar);
 				util_str_add_char(string,pos_agregar,tecla);
-				//i++;
+
 
 				//Enviar a speech letra pulsada
 				menu_speech_tecla_pulsada=0;
@@ -4674,7 +4674,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				//Y mover cursor a la derecha
 				menu_scanf_cursor_derecha(string,&pos_cursor_x,&offset_string,max_length_shown);
 
-				printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
+				//printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
 
 			}
 		}
@@ -4682,7 +4682,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 		//tecla derecha
 		if (tecla==9) {
 				menu_scanf_cursor_derecha(string,&pos_cursor_x,&offset_string,max_length_shown);
-				printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
+				//printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
 		}			
 
 		//tecla borrar
@@ -4695,11 +4695,8 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				//no borrar si cursor a la izquierda del todo
 				if (pos_eliminar>=0) {
 
-					printf ("borrar\n");
+					//printf ("borrar\n");
 					
-                    //int i;
-                    //i=strlen(string)-1;
-
 								
                     //Enviar a speech letra borrada
 
@@ -4721,7 +4718,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 		//tecla izquierda
 		if (tecla==8) {
 				menu_scanf_cursor_izquierda(&offset_string,&pos_cursor_x);
-				printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
+				//printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
 		}				
 
 		//tecla abajo. borrar todo
