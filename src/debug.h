@@ -166,6 +166,7 @@ extern z80_bit cpu_transaction_log_store_registers;
 extern z80_bit cpu_transaction_log_rotate_enabled;
 extern int cpu_transaction_log_rotated_files;
 extern int cpu_transaction_log_rotate_size;
+extern int cpu_transaction_log_rotate_lines;
 
 extern z80_bit cpu_trans_log_ignore_repeated_halt;
 

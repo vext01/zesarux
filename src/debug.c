@@ -1599,6 +1599,9 @@ char transaction_log_filename[PATH_MAX];
 //Tamanyo del archivo de transaction log. Para leer desde aqui en vez de usar ftell para saber que tamanyo tiene, que es mas rapido
 long transaction_log_tamanyo_escrito=0;
 
+//Lineas del archivo de transaction log
+long transaction_log_tamanyo_lineas=0;
+
 char transaction_log_line_to_store[2048];
 
 
@@ -1615,6 +1618,9 @@ z80_bit cpu_transaction_log_rotate_enabled={0};
 int cpu_transaction_log_rotated_files=10;
 //Tamanyo maximo antes de rotar archivo, en MB. Si es 0, no rotar
 int cpu_transaction_log_rotate_size=100;
+
+//Lineas maximas antes de rotar archivo. Si es 0, no rotar
+int cpu_transaction_log_rotate_lines=1000000;
 
 
 int transaction_log_nested_id_core;
@@ -1683,7 +1689,7 @@ void transaction_log_rotate_files(int archivos)
 	transaction_log_open_file();
 }
 
-void transaction_log_rotate(void)
+void transaction_log_rotate_by_size(void)
 {
 
 
@@ -1718,6 +1724,31 @@ void transaction_log_rotate(void)
 	}
 }
 
+void transaction_log_rotate_by_lines(void)
+{
+
+
+	if (cpu_transaction_log_rotate_enabled.v==0) return;
+
+	if (cpu_transaction_log_rotate_lines==0) return; //no rotar si vale 0
+
+
+	long tamanyo=transaction_log_tamanyo_lineas;
+
+	//printf ("posicion: (tamanyo) %ld\n",tamanyo);
+
+	//Si hay que rotar
+	
+
+	long tamanyo_a_rotar=cpu_transaction_log_rotate_lines;
+
+	if (tamanyo>=tamanyo_a_rotar) {
+		debug_printf (VERBOSE_DEBUG,"Rotating transaction log. File lines %ld exceeds maximum %ld",tamanyo,tamanyo_a_rotar);
+		transaction_log_rotate_files(cpu_transaction_log_rotated_files);
+	}
+}
+
+
 
 int transaction_log_set_rotate_number(int numero)
 {
@@ -1739,6 +1770,17 @@ int transaction_log_set_rotate_size(int numero)
 
 
 	cpu_transaction_log_rotate_size=numero;
+	return 0;
+}
+
+int transaction_log_set_rotate_lines(int numero)
+{
+	if (numero<0 || numero>2147483647) { //maximo 2^31-1
+        return 1;
+	}
+
+
+	cpu_transaction_log_rotate_lines=numero;
 	return 0;
 }
 
@@ -1878,14 +1920,19 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 				fwrite(transaction_log_line_to_store,1,index,ptr_transaction_log);
 
 				transaction_log_tamanyo_escrito +=index;
+
+				transaction_log_tamanyo_lineas++;
 			}
 		}
 
 
 
 
-		//Rotar log si conviene
-		transaction_log_rotate();
+		//Rotar log si conviene por tamanyo
+		transaction_log_rotate_by_size();
+
+		//Rotar log si conviene por lineas
+		transaction_log_rotate_by_lines();		
 
 	}
 
@@ -1910,11 +1957,13 @@ int transaction_log_open_file(void)
 {
 
   transaction_log_tamanyo_escrito=0; 
+  transaction_log_tamanyo_lineas=0;
 
   //Si el archivo existia, inicializar tamanyo, no poner a 0
 
   if (si_existe_archivo(transaction_log_filename)) {
 	 transaction_log_tamanyo_escrito=get_file_size(transaction_log_filename);
+	 //TODO: aqui habria que contar el numero de lineas en el archivo existente
   }
 
   debug_printf (VERBOSE_DEBUG,"Transaction log file size: %ld",transaction_log_tamanyo_escrito);
