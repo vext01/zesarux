@@ -3,6 +3,9 @@
 
 -cpuid ("zxid") según especificación de mcleod
 
+-Parámetro config de tipo background ZX desktop. Más tipos?
+y parámetro de color del tipo de fondo sólido
+
 -meter comentario en archivo midi de grabado con ZEsarUX
 
 -filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
@@ -38,14 +41,7 @@ pendiente sdl, xwindow, fbdev
 -acabar de definir settings de ZX Desktop y que se guarden/tengan configuración
 
 
--zxvision:
---que al redimensionar ventana se pueda hacer que vuelva a la funcion que la llama (como cuando se mueve raton?) para hacer
-funciones de reajuste de disposicion de texto en ventana por ejemplo
-->no hace falta ya que retorna de handle_zxvision al mover el raton. Hexadecimal editor ya lo hace
--que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
-
-
--Agregar incluir pthreadGC3.dll en ZEsarUX win
+-Agregar incluir pthreadGC3.dll en ZEsarUX win ?
 
 -Turbo spool setting en tbblue y otras máquinas 128kb...
 
@@ -74,11 +70,6 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 Que hacemos con cocoa no opengl?
 
-
--Poner sondas de tiempo para saber que funciones tardan más en ejecutarse para poderlas optimizar 
-Que sea un tiempo que se acumule. Para hacer cálculos con más tiempo de muestreo
-Parecido a core statistics pero con más sondas 
-Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano en compileoptions.h
 
 
 
@@ -117,6 +108,13 @@ https://github.com/lavoiesl/osx-cpu-temp
 --- ZX Vision
 
 -en ventanas con can_use_all_width=1, no se habilita la barra de scroll vertical cuando hace falta
+
+
+-zxvision:
+--que al redimensionar ventana se pueda hacer que vuelva a la funcion que la llama (como cuando se mueve raton?) para hacer
+funciones de reajuste de disposicion de texto en ventana por ejemplo
+->no hace falta ya que retorna de handle_zxvision al mover el raton. Hexadecimal editor ya lo hace
+-que en menu de opciones si raton pulsa en ventana pero en zona que no hay opciones, no envie enter
 
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
@@ -2297,6 +2295,11 @@ Semáforos? Todos sistemas operativos lo permitiran? Windows inclusive?
 *O quizá hacerlo por ZRCP?
 *comando que envie pulsaciones teclas, como util_set_reset_key
 *comando para enviar snapshot, pasando bytes del snapshot por comando. Quizá en base64? O en hexa?
+
+-Poner sondas de tiempo para saber que funciones tardan más en ejecutarse para poderlas optimizar 
+Que sea un tiempo que se acumule. Para hacer cálculos con más tiempo de muestreo
+Parecido a core statistics pero con más sondas 
+Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano en compileoptions.h
 
 
 -128ke parecido a +2B
