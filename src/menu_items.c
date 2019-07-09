@@ -9288,6 +9288,25 @@ void menu_cpu_transaction_log_rotate_size(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_cpu_transaction_log_rotate_lines(MENU_ITEM_PARAMETERS)
+{
+
+
+        char string_number[11];
+
+        sprintf (string_number,"%d",cpu_transaction_log_rotate_lines);
+
+        menu_ventana_scanf("Lines (0=no rotate)",string_number,11);
+
+        int numero=parse_string_to_number(string_number);
+
+		if (transaction_log_set_rotate_lines(numero)) {
+			debug_printf (VERBOSE_ERR,"Invalid rotation lines");
+		}
+
+
+}
+
 void menu_cpu_transaction_log_ignore_rep_halt(MENU_ITEM_PARAMETERS)
 {
 	cpu_trans_log_ignore_repeated_halt.v ^=1;
@@ -9315,6 +9334,7 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 						if (cpu_transaction_log_rotate_enabled.v) {
 							menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_rotate_number,NULL,"[%d] Rotate files",cpu_transaction_log_rotated_files);
 							menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_rotate_size,NULL,"[%d] Rotate size (MB)",cpu_transaction_log_rotate_size);
+							menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_rotate_lines,NULL,"[%d] Rotate lines",cpu_transaction_log_rotate_lines);
 						}
 
 						menu_add_item_menu_format(array_menu_cpu_transaction_log,MENU_OPCION_NORMAL,menu_cpu_transaction_log_truncate,NULL,"    Truncate log file");

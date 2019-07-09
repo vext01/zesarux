@@ -172,6 +172,7 @@ extern z80_bit cpu_trans_log_ignore_repeated_halt;
 
 extern int transaction_log_set_rotate_number(int numero);
 extern int transaction_log_set_rotate_size(int numero);
+extern int transaction_log_set_rotate_lines(int numero);
 
 extern char *spectrum_rom_tokens[];
 extern char *zx81_rom_tokens[];

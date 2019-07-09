@@ -739,6 +739,7 @@ struct s_items_ayuda items_ayuda[]={
 	"autorotate  yes|no: Enables automatic rotation of the log file\n"
 	"rotatefiles number: Number of files to keep in rotation (1-999)\n"
 	"rotatesize  number: Size in MB to rotate log file (0-9999). 0 means no rotate\n"
+	"rotatelines number: Size in lines to rotate log file (0-2147483647). 0 means no rotate\n"
 
 	"truncate    yes|no: Truncate the log file. Requires value set to yes\n"
 
@@ -1301,6 +1302,12 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 		}		
 	}		
 
+	else if (!strcasecmp(parameter,"rotatelines")) {
+		if (transaction_log_set_rotate_lines(parse_string_to_number(value))) {
+			escribir_socket(misocket,"Error. Invalid value");
+			return;
+		}		
+	}		
 
 	else if (!strcasecmp(parameter,"ignrephalt")) {
 		cpu_trans_log_ignore_repeated_halt.v=remote_eval_yes_no(value);
