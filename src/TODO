@@ -12,9 +12,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -comprobar mra. parece que no siempre se dispara
 
--Editor scanf que permita mover cursor: 
-*generalizar movimiento cursor izq/borrar, y derecha/insertar. creo que ya esta
-
 
 -unpaws con quill:
 *compression tokens?
