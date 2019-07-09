@@ -4664,14 +4664,14 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				int pos_agregar=pos_cursor_x+offset_string;
 				printf ("agregar letra en %d\n",pos_agregar);
 				util_str_add_char(string,pos_agregar,tecla);
-				i++;
+				//i++;
 
 				//Enviar a speech letra pulsada
 				menu_speech_tecla_pulsada=0;
 			    sprintf (buf_speech,"%c",tecla);
         		menu_textspeech_send_text(buf_speech);
 
-
+				//Y mover cursor a la derecha
 				menu_scanf_cursor_derecha(string,&pos_cursor_x,&offset_string,max_length_shown);
 
 				printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
@@ -4687,6 +4687,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 		//tecla borrar
 		if (tecla==12) {
+			//Si longitud texto no es 0
 			if (strlen(string)>0) {
 
 				int pos_eliminar=pos_cursor_x+offset_string-1;
@@ -4696,8 +4697,8 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 
 					printf ("borrar\n");
 					
-                    int i;
-                    i=strlen(string)-1;
+                    //int i;
+                    //i=strlen(string)-1;
 
 								
                     //Enviar a speech letra borrada
@@ -4706,8 +4707,10 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
                     sprintf (buf_speech,"%c",string[pos_eliminar]);
                     menu_textspeech_send_text(buf_speech);
                            
+					//Eliminar ese caracter
 					util_str_del_char(string,pos_eliminar);
 
+					//Y mover cursor a la izquierda
 					menu_scanf_cursor_izquierda(&offset_string,&pos_cursor_x);	
 					
 				}
