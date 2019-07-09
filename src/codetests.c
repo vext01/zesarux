@@ -995,7 +995,8 @@ void codetests_main(int main_argc,char *main_argv[])
 	codetests_mid_test();	
 
 
-
+	//int lineas=get_file_lines("pruebatrans.log.1x");
+	//printf ("lineas: %d\n",lineas);
 
 
 	/*printf ("Note: %d\n",get_mid_number_note("C0"));

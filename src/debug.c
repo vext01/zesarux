@@ -1963,10 +1963,12 @@ int transaction_log_open_file(void)
 
   if (si_existe_archivo(transaction_log_filename)) {
 	 transaction_log_tamanyo_escrito=get_file_size(transaction_log_filename);
-	 //TODO: aqui habria que contar el numero de lineas en el archivo existente
+	 
+	 transaction_log_tamanyo_lineas=get_file_lines(transaction_log_filename);
+
   }
 
-  debug_printf (VERBOSE_DEBUG,"Transaction log file size: %ld",transaction_log_tamanyo_escrito);
+  debug_printf (VERBOSE_DEBUG,"Transaction log file size: %ld lines: %ld",transaction_log_tamanyo_escrito,transaction_log_tamanyo_lineas);
 
   ptr_transaction_log=fopen(transaction_log_filename,"ab");
   if (!ptr_transaction_log) {

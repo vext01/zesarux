@@ -4768,6 +4768,37 @@ long int get_file_size(char *nombre)
                 }
 }
 
+
+//Retorna numero lineas archivo.
+int get_file_lines(char *filename)
+{
+
+	int leidos;
+        int total_lineas=0;
+
+                FILE *ptr_archivo;
+                ptr_archivo=fopen(filename,"rb");
+                if (!ptr_archivo) {
+                        debug_printf (VERBOSE_DEBUG,"Can not open %s",filename);
+                        return 0;
+                }
+
+        z80_byte buffer;
+
+        do {
+                leidos=fread(&buffer,1,1,ptr_archivo);
+                if (leidos) {
+                        if (buffer=='\n') total_lineas++;
+                }
+        } while (leidos>0);
+                
+        fclose(ptr_archivo);
+
+	return total_lineas;
+
+}
+
+
 //0 desconocido o inexistente
 //1 normal
 //2 directorio
@@ -15274,3 +15305,6 @@ void util_str_del_char(char *texto,int posicion)
         }
 
 }
+
+
+

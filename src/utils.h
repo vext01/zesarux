@@ -811,6 +811,7 @@ extern int util_paws_is_in_parser(void);
 
 extern void util_str_add_char(char *texto,int posicion,char letra);
 extern void util_str_del_char(char *texto,int posicion);
+extern int get_file_lines(char *filename);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
