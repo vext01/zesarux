@@ -7541,50 +7541,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 	//Puerto Timex Video. 8 bit bajo a ff
 	if (timex_video_emulation.v && puerto_l==0xFF) {
-
-		if ( (timex_port_ff&7)!=(value&7)) {
-	                char mensaje[200];
-
-			if ((value&7)==0) sprintf (mensaje,"Setting Timex Video Mode 0 (standard screen 0)");
-			else if ((value&7)==1) sprintf (mensaje,"Setting Timex Video Mode 1 (standard screen 1)");
-			else if ((value&7)==2) sprintf (mensaje,"Setting Timex Video Mode 2 (hires colour 8x1)");
-			else if ((value&7)==6) {
-				if ( (zoom_x&1)==0 && timex_mode_512192_real.v) {
-					sprintf (mensaje,"Setting Timex Video Mode 6 (512x192 monochrome)");
-				}
-
-				else if (MACHINE_IS_PRISM || MACHINE_IS_TBBLUE) {
-					sprintf (mensaje,"Setting Timex Video Mode 6 (512x192 monochrome)");
-                                }
-
-				else {
-					sprintf (mensaje,"Timex Video Mode 6 (512x192 monochrome) needs Timex Real 512x192 setting enabled and horizontal zoom even. Reducing to 256x192");
-				}
-			}
-                        else sprintf (mensaje,"Setting Unknown Timex Video Mode %d",value);
-
-                	screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
-		}
-
-        	if ((value&7)==6) {
-                        //Indicar que se ha puesto modo timex en alguna parte del frame
-	                //timex_ugly_hack_last_hires=t_estados/screen_testados_linea;
-        	        //printf ("estableciendo modo timex en y: %d\n",timex_ugly_hack_last_hires);
-        	}
-
-
-		z80_byte last_timex_port_ff=timex_port_ff;
-		timex_port_ff=value;
-		//Color del border en modo timex hi-res sale de aqui
-		//Aunque con esto avisamos que el color del border en modo 512x192 se puede haber modificado
-		modificado_border.v=1;
-		if (last_timex_port_ff!=timex_port_ff) clear_putpixel_cache(); //porque se puede cambiar de modo, borrar la putpixel cache
-
-		if (MACHINE_IS_CHLOE_280SE) chloe_set_memory_pages();
-		if (MACHINE_IS_PRISM) prism_set_memory_pages();
-		if (MACHINE_IS_TIMEX_TS2068) timex_set_memory_pages();
-		if (is_zxuno_chloe_mmu() ) zxuno_set_memory_pages();
-
+		set_timex_port_ff(value);
 	}
 
 

@@ -5120,9 +5120,27 @@ void load_nex_snapshot(char *archivo)
 	//8	1	RAM required: 0 = 768k, 1 = 1792k
 	//En ZEsarUX, si activo los 2048 kb, es 1792 KB para el sistema. 
 	//En ZEsarUX, si activo los 1024 kb, es 768 KB para el sistema. 
+	//tbblue_extra_512kb_blocks 1 o 3
+	if (nex_header[8]) {
+		printf ("Uses 1792 kb\n");
+		tbblue_extra_512kb_blocks=3;
+	}
+	else {
+		printf ("Uses 768k kb\n");
+		tbblue_extra_512kb_blocks=1;
+	}
+	
+	//Ofset 8: Number of 16k Banks to Load: 0-112 (see also the byte array at offset 18, which must yield this count)
+	//Que sentido tiene si ya hay un array en el offset 18?? Pasamos de esto
 
+	//border
+    out_254=nex_header[11] & 7;
+    modificado_border.v=1;	
+
+	//SP
 	reg_sp=value_8_to_16(nex_header[13],nex_header[12]);
 
+	//PC
 	z80_int possible_pc=value_8_to_16(nex_header[15],nex_header[14]);
 
 	if (possible_pc!=0) {
@@ -5130,6 +5148,9 @@ void load_nex_snapshot(char *archivo)
 		printf ("reg_pc: %d\n",reg_pc);
 	}
 
+	//modo timex
+	set_timex_port_ff(nex_header[138]);
+	printf ("modo timex: %02XH\n",timex_port_ff);
 
 	//TODO otros valores de la cabecera
 
