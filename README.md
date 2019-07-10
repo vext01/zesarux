@@ -166,7 +166,7 @@ __FEATURES__
 
 * Simulates real tape loading on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81
 
-* Handles snapshot format: ZSF, ZX, Z80, SP, SPG, SNA (loading only), P, O, Z81 (loading only), ACE
+* Handles snapshot format: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
 
 * Handles RZX playback 
 

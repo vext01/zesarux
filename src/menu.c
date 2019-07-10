@@ -17256,8 +17256,8 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
                 set_menu_overlay_function(normal_overlay_texto_menu);
 
                 //Y salimos de todos los menus
-				printf ("Temporal NO salir todos menus\n");
-                //salir_todos_menus=1;
+				//printf ("Temporal NO salir todos menus\n");
+                salir_todos_menus=1;
         }
 
 	//printf ("tapefile: %p %s\n",tapefile,tapefile);

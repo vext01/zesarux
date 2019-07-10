@@ -5071,8 +5071,20 @@ void load_nex_snapshot(char *archivo)
         }
 
 
-	//TODO: cambio a maquina tbblue , modo fast mode, si no esta ya ahi
-	//Solo es maquina Spectrum 48k
+	//cambio a maquina tbblue, siempre 
+	//if (!MACHINE_IS_TBBLUE) {
+        current_machine_type=MACHINE_ID_TBBLUE;
+
+		//temporalmente ponemos tbblue fast boot mode y luego restauramos valor anterior
+		z80_bit antes_tbblue_fast_boot_mode;
+		antes_tbblue_fast_boot_mode.v=tbblue_fast_boot_mode.v;
+		tbblue_fast_boot_mode.v=1;
+
+        set_machine(NULL);
+        reset_cpu();
+
+		tbblue_fast_boot_mode.v=antes_tbblue_fast_boot_mode.v;
+	//}
 
 
 	//desactivamos interrupciones. No esta en el formato pero supongo que es asi
