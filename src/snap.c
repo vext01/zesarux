@@ -5093,9 +5093,33 @@ void load_nex_snapshot(char *archivo)
 
 	//TODO check version. Permitir 1.0, 1.1 y 1.2 y avisar si mayor de 1.2
 
-	
+	char snap_version[5];
+	//4	4	string with NEX file version, currently "V1.0", "V1.1" or "V1.2"
+	snap_version[0]=nex_header[4];
+	snap_version[1]=nex_header[5];
+	snap_version[2]=nex_header[6];
+	snap_version[3]=nex_header[7];
+	snap_version[4]=0;
 
-	
+	//no imprimirlo por si no es una string normal
+	printf ("Snapshot version: %s\n",snap_version);
+
+	if (
+		! 
+		(
+		!strcmp(snap_version,"V1.0") ||
+		!strcmp(snap_version,"V1.1") ||
+		!strcmp(snap_version,"V1.2") 
+		)
+	) {
+
+		debug_printf (VERBOSE_ERR,"Unsupported snapshot version. Loading it anyway");
+	}
+
+
+	//8	1	RAM required: 0 = 768k, 1 = 1792k
+	//En ZEsarUX, si activo los 2048 kb, es 1792 KB para el sistema. 
+	//En ZEsarUX, si activo los 1024 kb, es 768 KB para el sistema. 
 
 	reg_sp=value_8_to_16(nex_header[13],nex_header[12]);
 
