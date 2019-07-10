@@ -5022,6 +5022,18 @@ void autosave_snapshot_at_fixed_interval(void)
   }
 }
 
+//Devuelve el offset al bloque de memoria, teniendo en cuenta que los primeros 6 estan desordenados:
+//5,2,0,1,3,4,6,7,8,9,10,...,111
+/*int load_nex_snapshot_get_ram_offset(int block)
+{
+	switch (block) {
+		default:
+			return block*16384;
+		break;
+	}
+}*/
+
+
 
 
 //Cargar snapshot nex
@@ -5062,6 +5074,11 @@ void load_nex_snapshot(char *archivo)
 	//TODO: cambio a maquina tbblue , modo fast mode, si no esta ya ahi
 	//Solo es maquina Spectrum 48k
 
+
+	//desactivamos interrupciones. No esta en el formato pero supongo que es asi
+	iff1.v=iff2.v=0;
+
+
 	//TODO check version
 
 	//TODO banks to load
@@ -5074,13 +5091,22 @@ void load_nex_snapshot(char *archivo)
 
 	if (possible_pc!=0) {
 		reg_pc=possible_pc;
+		printf ("reg_pc: %d\n",reg_pc);
 	}
 
 
 	//TODO otros valores de la cabecera
 
+	int cargar_paleta=0;
+	// Only Layer2 and Lo-Res screens expect the palette block (unless +128 flag set
+	if (load_screen_blocks & 1 || load_screen_blocks & 4) {
+		cargar_paleta=1;
+	}
+
+	if (load_screen_blocks & 128) cargar_paleta=0;
+
 	//Cargar paleta optional palette (for Layer2 or LoRes screen)
-	if (load_screen_blocks & 128) {
+	if (cargar_paleta) {
 		printf ("Loading paleta\n");
 		leidos=fread(tbblue_palette_layer2_second,1,512,ptr_nexfile);
 	}
@@ -5140,6 +5166,43 @@ void load_nex_snapshot(char *archivo)
 	}		
 
 	//16kiB raw memory bank data in predefined order: 5,2,0,1,3,4,6,7,8,9,10,...,111 (particular bank may be omitted completely)
+	//Vamos a cargar los posibles 112 bloques en ram
+	//Aunque no vayan a existir esos bloques, los cargamos todos y luego ya vemos
+#define NEX_RAM_BLOCKS 112
+
+	//z80_byte *ram_blocks;
+
+	//ram_blocks=malloc(NEX_RAM_BLOCKS*16384);
+	//if (ram_blocks==NULL) cpu_panic ("Error allocating memory for .nex file load");
+
+	//Gestionar los primeros 6 bloques desordenados
+
+	int array_bloques[6]={5,2,0,1,3,4};
+
+	int i;
+	for (i=0;i<6;i++) {
+		//int offset_bloque;
+		int bloque_cargar=array_bloques[i];
+		z80_byte esta_presente=nex_header[18+bloque_cargar];
+		if (esta_presente) {
+			printf ("Loading ram block %d\n",bloque_cargar);
+			z80_byte *destino=tbblue_ram_memory_pages[bloque_cargar*2];
+			leidos=fread(destino,1,16384,ptr_nexfile);	
+		}
+	}
+
+	//Leer el resto de bloques
+	for (i=6;i<112;i++) {
+		//int offset_bloque;
+		int bloque_cargar=i;
+		z80_byte esta_presente=nex_header[18+bloque_cargar];
+		if (esta_presente) {
+			printf ("Loading ram block %d\n",bloque_cargar);
+			z80_byte *destino=tbblue_ram_memory_pages[bloque_cargar*2];
+			leidos=fread(destino,1,16384,ptr_nexfile);	
+		}
+	}	
+
 
 	fclose(ptr_nexfile);	
 }
