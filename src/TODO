@@ -3,6 +3,17 @@
 
 -cpuid ("zxid") según especificación de mcleod
 
+-.nex format. file handler:
+“File handle address: 0 = NEX file is closed by the loader, 1..0x3FFF values (1 recommended) = NEX loader keeps NEX file open and does pass the file handle in BC register, 0x4000..0xFFFF values (for 0xC000..0xFFFF see also "Entry bank") = NEX loader keeps NEX file open and the file handle is written into memory at the desired address.”
+
+If the word at offset is 0, I just simply close the file and I don’t do anything else. Set bc=255
+
+If the value is between 1...0x3fff value, I keep the file open and the file handler number is copied to register BC
+
+If the value is between 0x4000 and ffff, I write the file handler number at the address that poitnts this offset 140. Set bc to 255 
+
+Y esto hacerlo después de marear toda la ram y cargar los bloques de memoria, lógicamente 
+
 -Parámetro config de tipo background ZX desktop. Más tipos?
 y parámetro de color del tipo de fondo sólido
 
