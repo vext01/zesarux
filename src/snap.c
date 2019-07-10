@@ -5079,13 +5079,11 @@ void load_nex_snapshot(char *archivo)
 	iff1.v=iff2.v=0;
 
 
-	//TODO check version
+	//TODO check version. Permitir 1.0, 1.1 y 1.2 y avisar si mayor de 1.2
 
 	
 
-	//TODO banks to load
-
-	z80_byte load_screen_blocks=nex_header[10];
+	
 
 	reg_sp=value_8_to_16(nex_header[13],nex_header[12]);
 
@@ -5103,7 +5101,12 @@ void load_nex_snapshot(char *archivo)
 	z80_int file_handler=value_8_to_16(nex_header[141],nex_header[140]);
 	printf ("File handler: %d\n",file_handler);
 
+	
+
 	int cargar_paleta=0;
+	z80_byte load_screen_blocks=nex_header[10];
+
+
 	// Only Layer2 and Lo-Res screens expect the palette block (unless +128 flag set
 	if ( (load_screen_blocks & 1) || (load_screen_blocks & 4) ) {
 		cargar_paleta=1;
