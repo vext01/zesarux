@@ -5352,3 +5352,20 @@ void screen_tbblue_refresca_no_rainbow(void)
                         screen_tbblue_refresca_pantalla_comun();
                 }
 }
+
+
+void tbblue_out_port_32765(z80_byte value)
+{
+				//printf ("TBBLUE changing port 32765 value=0x%02XH\n",value);
+                                puerto_32765=value;
+
+				//para indicar a la MMU la  pagina en los segmentos 6 y 7
+				tbblue_registers[80+6]=(value&7)*2;
+				tbblue_registers[80+7]=(value&7)*2+1;
+
+				//En rom entra la pagina habitual de modo 128k, evitando lo que diga la mmu
+				tbblue_registers[80]=255;
+				tbblue_registers[81]=255;
+
+                tbblue_set_memory_pages();
+}

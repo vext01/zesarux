@@ -5154,6 +5154,11 @@ void load_nex_snapshot(char *archivo)
 
 	//TODO otros valores de la cabecera
 
+
+	
+	printf ("Mapping ram %d at C000H\n",nex_header[139]);
+	tbblue_out_port_32765(nex_header[139]);
+
 	//file handler address
 	z80_int file_handler=value_8_to_16(nex_header[141],nex_header[140]);
 	printf ("File handler: %d\n",file_handler);

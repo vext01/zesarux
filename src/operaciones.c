@@ -7358,21 +7358,11 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
                         //Puerto tipicamente 32765
                         // the hardware will respond only to those port addresses with
-												//bit 1 reset, bit 14 set and bit 15 reset (as opposed to just bits 1 and 15 reset on the 128K/+2).
-                        if ( (puerto & 49154) == 16384 ) {
-				//printf ("TBBLUE changing port 32765 value=0x%02XH\n",value);
-                                puerto_32765=value;
-
-				//para indicar a la MMU la  pagina en los segmentos 6 y 7
-				tbblue_registers[80+6]=(value&7)*2;
-				tbblue_registers[80+7]=(value&7)*2+1;
-
-				//En rom entra la pagina habitual de modo 128k, evitando lo que diga la mmu
-				tbblue_registers[80]=255;
-				tbblue_registers[81]=255;
-
-                                tbblue_set_memory_pages();
-                        }
+						//bit 1 reset, bit 14 set and bit 15 reset (as opposed to just bits 1 and 15 reset on the 128K/+2).
+        if ( (puerto & 49154) == 16384 ) {
+				tbblue_out_port_32765(value);
+				
+        }
 
 
                         //Puerto tipicamente 8189
