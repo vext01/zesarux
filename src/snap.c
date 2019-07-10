@@ -65,6 +65,7 @@
 #include "snap_zsf.h"
 #include "snap_spg.h"
 #include "settings.h"
+#include "tbblue.h"
 
 
 #include "autoselectoptions.h"
@@ -5026,5 +5027,119 @@ void autosave_snapshot_at_fixed_interval(void)
 //Cargar snapshot nex
 void load_nex_snapshot(char *archivo)
 {
-	
+
+#define NEX_HEADER_SIZE 256
+	//buffer para la cabecera
+	z80_byte nex_header[NEX_HEADER_SIZE];
+
+
+        FILE *ptr_nexfile;
+        z80_byte *buffer_lectura;
+
+        int leidos;
+
+        //Load File
+        ptr_nexfile=fopen(archivo,"rb");
+        if (ptr_nexfile==NULL) {
+                debug_printf(VERBOSE_ERR,"Error opening %s",archivo);
+                return;
+        }
+
+        leidos=fread(nex_header,1,NEX_HEADER_SIZE,ptr_nexfile);
+        if (leidos!=NEX_HEADER_SIZE) {
+                        debug_printf(VERBOSE_ERR,"Error reading %d bytes of header",NEX_HEADER_SIZE);
+                        return;
+        }
+        
+
+        //Ver si signatura correcta
+        if (nex_header[0]!='N' || nex_header[1]!='e' || nex_header[2]!='x' || nex_header[3]!='t') {
+                        debug_printf(VERBOSE_ERR,"Unknown NEX signature: 0x%x 0x%x 0x%x 0x%x",nex_header[0],nex_header[1],nex_header[2],nex_header[3]);
+                        return;
+        }
+
+
+	//TODO: cambio a maquina tbblue , modo fast mode, si no esta ya ahi
+	//Solo es maquina Spectrum 48k
+
+	//TODO check version
+
+	//TODO banks to load
+
+	z80_byte load_screen_blocks=nex_header[10];
+
+	reg_sp=value_8_to_16(nex_header[13],nex_header[12]);
+
+	z80_int possible_pc=value_8_to_16(nex_header[15],nex_header[14]);
+
+	if (possible_pc!=0) {
+		reg_pc=possible_pc;
+	}
+
+
+	//TODO otros valores de la cabecera
+
+	//Cargar paleta optional palette (for Layer2 or LoRes screen)
+	if (load_screen_blocks & 128) {
+		printf ("Loading paleta\n");
+		leidos=fread(tbblue_palette_layer2_second,1,512,ptr_nexfile);
+	}
+
+	//Cargar Layer2 loading screen
+	if (load_screen_blocks & 1) {
+		printf ("Loading Layer2 loading screen\n");
+		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
+		leidos=fread(&memoria_spectrum[tbblue_layer2_offset],1,49152,ptr_nexfile);
+	}	
+
+	//classic ULA loading screen
+	if (load_screen_blocks & 2) {
+		printf ("Loading classic ULA loading screen\n");
+		z80_byte *pant;
+		pant=get_base_mem_pantalla();
+		leidos=fread(pant,1,6912,ptr_nexfile);
+	}		
+
+	//LoRes loading screen
+	if (load_screen_blocks & 4) {
+		printf ("Loading LoRes loading screen\n");
+		z80_byte *pant;
+		pant=get_lores_pointer(0);
+		leidos=fread(pant,1,12288,ptr_nexfile);
+	}		
+
+
+	//Timex HiRes (512x192) loading screen
+	if (load_screen_blocks & 8) {
+		printf ("Loading Timex HiRes loading screen\n");
+		z80_byte *pant;
+		pant=tbblue_ram_memory_pages[5*2];
+
+		//primer bloque
+		leidos=fread(pant,1,6144,ptr_nexfile);
+
+		pant +=0x2000;
+
+		//segundo bloque
+		leidos=fread(pant,1,6144,ptr_nexfile);		
+	}			
+
+	//Timex HiCol (8x1) loading screen
+	if (load_screen_blocks & 16) {
+		printf ("Timex HiCol (8x1) loading screen\n");
+		z80_byte *pant;
+		pant=tbblue_ram_memory_pages[5*2];
+
+		//primer bloque
+		leidos=fread(pant,1,6144,ptr_nexfile);
+
+		pant +=0x2000;
+
+		//segundo bloque
+		leidos=fread(pant,1,6144,ptr_nexfile);	
+	}		
+
+	//16kiB raw memory bank data in predefined order: 5,2,0,1,3,4,6,7,8,9,10,...,111 (particular bank may be omitted completely)
+
+	fclose(ptr_nexfile);	
 }

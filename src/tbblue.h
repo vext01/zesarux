@@ -269,4 +269,6 @@ struct s_tbblue_machine_id_definition {
 
 extern struct s_tbblue_machine_id_definition tbblue_machine_id_list[];
 
+extern z80_byte *get_lores_pointer(int y);
+
 #endif

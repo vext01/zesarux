@@ -15,6 +15,7 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -comprobar mra. parece que no siempre se dispara
 
+-uso de settings.c y settings.h. revisar que tiene que ir ahi
 
 -unpaws con quill:
 *compression tokens?
