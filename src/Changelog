@@ -41,6 +41,9 @@ Improved watches:
 -up to 10 watches on screen
 -watches are saved on configuration file
 
+Improved tbblue emulation:
+-can load .nex snapshot files from the command line or the ZEsarUX menus, without having to boot NextOS
+
 Improved Adventure Text Extractor: now it supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
 Improved Waveform window: now the wave adjusts automatically to the zxwindow size

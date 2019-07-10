@@ -5040,7 +5040,7 @@ void autosave_snapshot_at_fixed_interval(void)
 void load_nex_snapshot(char *archivo)
 {
 
-#define NEX_HEADER_SIZE 256
+#define NEX_HEADER_SIZE 512
 	//buffer para la cabecera
 	z80_byte nex_header[NEX_HEADER_SIZE];
 
@@ -5081,6 +5081,8 @@ void load_nex_snapshot(char *archivo)
 
 	//TODO check version
 
+	
+
 	//TODO banks to load
 
 	z80_byte load_screen_blocks=nex_header[10];
@@ -5097,9 +5099,13 @@ void load_nex_snapshot(char *archivo)
 
 	//TODO otros valores de la cabecera
 
+	//file handler address
+	z80_int file_handler=value_8_to_16(nex_header[141],nex_header[140]);
+	printf ("File handler: %d\n",file_handler);
+
 	int cargar_paleta=0;
 	// Only Layer2 and Lo-Res screens expect the palette block (unless +128 flag set
-	if (load_screen_blocks & 1 || load_screen_blocks & 4) {
+	if ( (load_screen_blocks & 1) || (load_screen_blocks & 4) ) {
 		cargar_paleta=1;
 	}
 
@@ -5107,7 +5113,7 @@ void load_nex_snapshot(char *archivo)
 
 	//Cargar paleta optional palette (for Layer2 or LoRes screen)
 	if (cargar_paleta) {
-		printf ("Loading paleta\n");
+		printf ("Loading palette\n");
 		leidos=fread(tbblue_palette_layer2_second,1,512,ptr_nexfile);
 	}
 
