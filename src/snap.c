@@ -5046,7 +5046,7 @@ void load_nex_snapshot(char *archivo)
 
 
         FILE *ptr_nexfile;
-        z80_byte *buffer_lectura;
+
 
         int leidos;
 
@@ -5091,7 +5091,7 @@ void load_nex_snapshot(char *archivo)
 	iff1.v=iff2.v=0;
 
 
-	//TODO check version. Permitir 1.0, 1.1 y 1.2 y avisar si mayor de 1.2
+	//check version. Permitir 1.0, 1.1 y 1.2 y avisar si mayor de 1.2
 
 	char snap_version[5];
 	//4	4	string with NEX file version, currently "V1.0", "V1.1" or "V1.2"
@@ -5152,10 +5152,7 @@ void load_nex_snapshot(char *archivo)
 	set_timex_port_ff(nex_header[138]);
 	printf ("modo timex: %02XH\n",timex_port_ff);
 
-	//TODO otros valores de la cabecera
 
-
-	
 	printf ("Mapping ram %d at C000H\n",nex_header[139]);
 	tbblue_out_port_32765(nex_header[139]);
 
@@ -5187,6 +5184,9 @@ void load_nex_snapshot(char *archivo)
 		printf ("Loading Layer2 loading screen\n");
 		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
 		leidos=fread(&memoria_spectrum[tbblue_layer2_offset],1,49152,ptr_nexfile);
+		//Asumimos que esta activo modo layer2 entonces
+		//tbblue_out_port_layer2_value(1);
+		//tbblue_registers[0x15]=4; //Layer priority L S U
 	}	
 
 	//classic ULA loading screen
@@ -5203,6 +5203,9 @@ void load_nex_snapshot(char *archivo)
 		z80_byte *pant;
 		pant=get_lores_pointer(0);
 		leidos=fread(pant,1,12288,ptr_nexfile);
+
+		//Asumimos modo lores
+		//tbblue_registers[0x15]=128;
 	}		
 
 
@@ -5236,15 +5239,15 @@ void load_nex_snapshot(char *archivo)
 		leidos=fread(pant,1,6144,ptr_nexfile);	
 	}		
 
+	//TODO: que modo activo de video esta? aparte del timex, no se puede saber si esta lores, o layer2, o ula normal
+	//pruebo a activar el modo de la pantalla que carga pero no parece que ningun snapshot tenga una pantalla valida
+
+
 	//16kiB raw memory bank data in predefined order: 5,2,0,1,3,4,6,7,8,9,10,...,111 (particular bank may be omitted completely)
 	//Vamos a cargar los posibles 112 bloques en ram
 	//Aunque no vayan a existir esos bloques, los cargamos todos y luego ya vemos
 #define NEX_RAM_BLOCKS 112
 
-	//z80_byte *ram_blocks;
-
-	//ram_blocks=malloc(NEX_RAM_BLOCKS*16384);
-	//if (ram_blocks==NULL) cpu_panic ("Error allocating memory for .nex file load");
 
 	//Gestionar los primeros 6 bloques desordenados
 
@@ -5276,4 +5279,5 @@ void load_nex_snapshot(char *archivo)
 
 
 	fclose(ptr_nexfile);	
+
 }
