@@ -4921,6 +4921,13 @@ void snapshot_load_name(char *nombre)
                         load_zsf_snapshot(nombre);
                 }
 
+
+                else if (!util_compare_file_extension(nombre,"nex") ) {
+			set_snap_file_options(nombre);
+                        load_nex_snapshot(nombre);
+                }
+
+
                 else if (!util_compare_file_extension(nombre,"spg") ) {
       set_snap_file_options(nombre);
                         load_spg_snapshot(nombre);
@@ -5012,4 +5019,12 @@ void autosave_snapshot_at_fixed_interval(void)
     snapshot_quick_save(NULL);
 
   }
+}
+
+
+
+//Cargar snapshot nex
+void load_nex_snapshot(char *archivo)
+{
+	
 }

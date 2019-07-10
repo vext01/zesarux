@@ -17157,7 +17157,7 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
 
 	menu_first_aid("smartload");
 
-        char *filtros[28];
+        char *filtros[29];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -17200,7 +17200,9 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
 
 	filtros[26]="trd";
 
-	filtros[27]=0;
+	filtros[27]="nex";
+
+	filtros[28]=0;
 
 
         //guardamos directorio actual
@@ -19935,7 +19937,7 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 void menu_snapshot_load(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[14];
+        char *filtros[15];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -19948,10 +19950,11 @@ void menu_snapshot_load(MENU_ITEM_PARAMETERS)
         filtros[7]="81";
         filtros[8]="z81";
         filtros[9]="ace";
-				filtros[10]="rzx";
-				filtros[11]="zsf";
-				filtros[12]="spg";
-        filtros[13]=0;
+		filtros[10]="rzx";
+		filtros[11]="zsf";
+		filtros[12]="spg";
+		filtros[13]="nex";
+        filtros[14]=0;
 
 
 

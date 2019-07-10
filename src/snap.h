@@ -57,6 +57,8 @@ extern void autosave_snapshot_at_fixed_interval(void);
 
 extern void load_z80_snapshot(char *archivo);
 
+extern void load_nex_snapshot(char *archivo);
+
 extern void snapshot_quick_save(char *nombre);
 
 extern z80_bit sna_setting_no_change_machine;
