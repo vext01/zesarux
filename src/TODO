@@ -3,6 +3,7 @@
 
 -cpuid ("zxid") según especificación de mcleod
 
+-ZRCP command para trucar logs historicos
 
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
 acortar archivo... pero habra que acortar tambien ruta subdirectorios....
@@ -43,10 +44,12 @@ pendiente sdl, xwindow, fbdev
 -sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 -acabar de definir settings de ZX Desktop y que se guarden/tengan configuración
 
-
 -Agregar incluir pthreadGC3.dll en ZEsarUX win ?
 
--Turbo spool setting en tbblue y otras máquinas 128kb...
+-Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar la velocidad de la cpu en nextos
+
+-ejemplos para spool, como:
+./txt_to_basic_lines.sh FAQ 3 si si no > pruebaspool2.txt
 
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
@@ -72,8 +75,6 @@ pendiente sdl, xwindow, fbdev
 
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 Que hacemos con cocoa no opengl?
-
-
 
 
 --------Para próxima versión:

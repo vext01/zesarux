@@ -15486,7 +15486,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 				
 
 
-		char *titulo_ventana="AY Sheet";
+		char *titulo_ventana="AY Sheet (60 BPM)";
 		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
 		//Para que siempre se lea el titulo de la ventana
