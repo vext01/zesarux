@@ -17,6 +17,10 @@ Y esto hacerlo después de marear toda la ram y cargar los bloques de memoria, l
 -Parámetro config de tipo background ZX desktop. Más tipos?
 y parámetro de color del tipo de fondo sólido
 
+-soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
+acortar archivo... pero habra que acortar tambien ruta subdirectorios....
+complicado. quiza ver mejor como gestiona los nombres largos desde nextos
+
 -meter comentario en archivo midi de grabado con ZEsarUX
 
 -filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech

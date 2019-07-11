@@ -485,6 +485,19 @@ void esxdos_handler_call_f_stat(void)
 }
 
 
+void esxdos_handler_call_f_open_post(int handle,char *nombre_archivo,char *fullpath)
+{
+
+		//Indicar handle ocupado
+		esxdos_fopen_files[handle].open_file.v=1;
+
+		esxdos_fopen_files[handle].is_a_directory.v=0;
+
+		//Y poner nombres para debug
+		strcpy(esxdos_fopen_files[handle].debug_name,nombre_archivo);
+		strcpy(esxdos_fopen_files[handle].debug_fullpath,fullpath);
+}
+
 
 void esxdos_handler_call_f_open(void)
 {
@@ -657,13 +670,13 @@ Esto se usa en NextDaw, es open+truncate
 			//como workaround, hacemos que el que realmente no tenga cabecera (no empieza por "plus3dos"), no se le lea cabecera
 			//Si no, la pantalla de ayuda se veria desplazada estos 128 bytes
 			/*
-        Bytes 0...7     - +3DOS signature - 'PLUS3DOS'
-        Byte 8          - 1Ah (26) Soft-EOF (end of file)
-        Byte 9          - Issue number
-        Byte 10         - Version number
-        Bytes 11...14   - Length of the file in bytes, 32 bit number,
+        	Bytes 0...7     - +3DOS signature - 'PLUS3DOS'
+        	Byte 8          - 1Ah (26) Soft-EOF (end of file)
+        	Byte 9          - Issue number
+        	Byte 10         - Version number
+        	Bytes 11...14   - Length of the file in bytes, 32 bit number,
                             least significant byte in lowest address
-        Bytes 15...22   - +3 BASIC header data			
+        	Bytes 15...22   - +3 BASIC header data			
 			*/
 
 			//Leer los primeros 8 bytes
@@ -715,14 +728,10 @@ Esto se usa en NextDaw, es open+truncate
 						debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Unable to get status of file %s",fullpath);
 		}
 
-		//Indicar handle ocupado
-		esxdos_fopen_files[free_handle].open_file.v=1;
+		
+		esxdos_handler_call_f_open_post(free_handle,nombre_archivo,fullpath);
 
-		esxdos_fopen_files[free_handle].is_a_directory.v=0;
 
-		//Y poner nombres para debug
-		strcpy(esxdos_fopen_files[free_handle].debug_name,nombre_archivo);
-		strcpy(esxdos_fopen_files[free_handle].debug_fullpath,fullpath);
 	}
 
 

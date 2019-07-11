@@ -66,6 +66,7 @@
 #include "snap_spg.h"
 #include "settings.h"
 #include "tbblue.h"
+#include "esxdos_handler.h"
 
 
 #include "autoselectoptions.h"
@@ -5033,6 +5034,81 @@ void autosave_snapshot_at_fixed_interval(void)
 	}
 }*/
 
+//funcion derivada y reducida de esxdos_handler_call_f_open
+//Retorna file handle. Si <0, error
+int load_nex_snapshot_open_esxdos(char *nombre_archivo)
+{
+	/*
+	;                                                                       // Open file. A=drive. HL=Pointer to null-
+;                                                                       // terminated string containg path and/or
+;                                                                       // filename. B=file access mode. DE=Pointer
+;                                                                       // to BASIC header data/buffer to be filled
+;                                                                       // with 8 byte PLUS3DOS BASIC header. If you
+;                                                                       // open a headerless file, the BASIC type is
+;                                                                       // $ff. Only used when specified in B.
+;                                                                       // On return without error, A=file handle.
+*/
+
+	//Abrir para lectura
+	char *fopen_mode="rb";
+
+	//z80_byte modo_abrir=reg_b;
+
+
+	//Ver si no se han abierto el maximo de archivos y obtener handle libre
+	int free_handle=esxdos_find_free_fopen();
+	if (free_handle==-1) {
+		//esxdos_handler_error_carry(ESXDOS_ERROR_ENFILE);
+		//esxdos_handler_old_return_call();
+		return -1;
+	}
+
+	
+	char fullpath[PATH_MAX];
+	
+
+	esxdos_fopen_files[free_handle].tiene_plus3dos_header.v=0;
+
+
+	esxdos_handler_pre_fileopen(nombre_archivo,fullpath);
+
+	printf ("ESXDOS handler: fullpath file: %s\n",fullpath);
+
+
+
+	//Abrir el archivo.
+	esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix=fopen(fullpath,fopen_mode);
+
+
+	if (esxdos_fopen_files[free_handle].esxdos_last_open_file_handler_unix==NULL) {
+		//esxdos_handler_error_carry(ESXDOS_ERROR_ENOENT);
+		printf ("ESXDOS handler: Error from esxdos_handler_call_f_open file: %s\n",fullpath);
+		//esxdos_handler_old_return_call();
+		return -1;
+	}
+	else {
+		
+
+
+		//reg_a=free_handle;
+		//esxdos_handler_no_error_uncarry();
+		printf ("ESXDOS handler: Successfully esxdos_handler_call_f_open file: %s\n",fullpath);
+
+
+		if (stat(fullpath, &esxdos_fopen_files[free_handle].last_file_buf_stat)!=0) {
+						printf ("ESXDOS handler: Unable to get status of file %s\n",fullpath);
+		}
+
+		
+		esxdos_handler_call_f_open_post(free_handle,nombre_archivo,fullpath);
+
+
+	}
+
+	return free_handle;
+
+
+}
 
 
 
@@ -5277,7 +5353,56 @@ void load_nex_snapshot(char *archivo)
 		}
 	}	
 
+	//Gestionar file handler
+	/*
+	-.nex format. file handler:
+“File handle address: 0 = NEX file is closed by the loader, 1..0x3FFF values (1 recommended) = NEX loader keeps NEX file open and does 
+pass the file handle in BC register, 0x4000..0xFFFF values (for 0xC000..0xFFFF see also "Entry bank") = NEX loader 
+keeps NEX file open and the file handle is written into memory at the desired address.”
 
-	fclose(ptr_nexfile);	
+If the word at offset is 0, I just simply close the file and I don’t do anything else. Set bc=255
+
+If the value is between 1...0x3fff value, I keep the file open and the file handler number is copied to register BC
+
+If the value is between 0x4000 and ffff, I write the file handler number at the address that poitnts this offset 140. Set bc to 255 
+
+Y esto hacerlo después de marear toda la ram y cargar los bloques de memoria, lógicamente 
+
+-Parámetro config de tipo background ZX desktop. Más tipos?
+y parámetro de color del tipo de fondo sólido
+	 */
+	if (file_handler) {
+		//Si no esta esxdos handler habilitado, avisar y no hacer nada mas
+		//por defecto hacemos que registro bc=255, error
+		printf ("Uses NextOS file handler\n");
+		BC=255;
+
+		if (esxdos_handler_enabled.v) {
+			//Obtener offset actual sobre archivo snapshot abierto
+			long initial_offset=ftell(ptr_nexfile);
+			printf ("Current offset of .nex file after loading it: %ld\n",initial_offset);
+
+			//Abrir este mismo archivo desde esxdos handler. Luego hacer seek hasta el offset que tenemos
+
+			//Cerrarlo antes, por problemas de bloqueo en sistema operativo al tenerlo dos veces (en windows?)
+			fclose(ptr_nexfile);
+
+
+			int file_handle=load_nex_snapshot_open_esxdos(archivo);
+			printf ("file handle of esxdos open file: %d\n",file_handle);
+
+			if (file_handle>=0) {
+
+			}
+
+		}
+		else {
+			debug_printf (VERBOSE_ERR,"Snapshot uses NextOS file handler. You should enable esxdos handler before loading it");
+			fclose(ptr_nexfile);
+		}
+	}
+	else {
+		fclose(ptr_nexfile);
+	}
 
 }
