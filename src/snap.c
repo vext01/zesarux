@@ -5070,7 +5070,12 @@ int load_nex_snapshot_open_esxdos(char *nombre_archivo)
 	esxdos_fopen_files[free_handle].tiene_plus3dos_header.v=0;
 
 
-	esxdos_handler_pre_fileopen(nombre_archivo,fullpath);
+	//esxdos_handler_pre_fileopen(nombre_archivo,fullpath);
+	char directorio_actual[PATH_MAX];
+	getcwd(directorio_actual,PATH_MAX);
+
+	//TODO: si archivo a cargar .nex esta fuera del esxdos root dir, deberia dar error
+	sprintf (fullpath,"%s/%s",directorio_actual,nombre_archivo);
 
 	printf ("ESXDOS handler: fullpath file: %s\n",fullpath);
 
@@ -5233,8 +5238,8 @@ void load_nex_snapshot(char *archivo)
 	tbblue_out_port_32765(nex_header[139]);
 
 	//file handler address
-	z80_int file_handler=value_8_to_16(nex_header[141],nex_header[140]);
-	printf ("File handler: %d\n",file_handler);
+	z80_int nex_file_handler=value_8_to_16(nex_header[141],nex_header[140]);
+	printf ("File handler: %d\n",nex_file_handler);
 
 	
 
@@ -5371,11 +5376,13 @@ Y esto hacerlo después de marear toda la ram y cargar los bloques de memoria, l
 -Parámetro config de tipo background ZX desktop. Más tipos?
 y parámetro de color del tipo de fondo sólido
 	 */
-	if (file_handler) {
+	BC=255;
+
+	if (nex_file_handler>0) {
 		//Si no esta esxdos handler habilitado, avisar y no hacer nada mas
 		//por defecto hacemos que registro bc=255, error
 		printf ("Uses NextOS file handler\n");
-		BC=255;
+		
 
 		if (esxdos_handler_enabled.v) {
 			//Obtener offset actual sobre archivo snapshot abierto
@@ -5388,10 +5395,32 @@ y parámetro de color del tipo de fondo sólido
 			fclose(ptr_nexfile);
 
 
-			int file_handle=load_nex_snapshot_open_esxdos(archivo);
-			printf ("file handle of esxdos open file: %d\n",file_handle);
+			int esx_file_handler=load_nex_snapshot_open_esxdos(archivo);
+			printf ("file handle of esxdos open file: %d\n",esx_file_handler);
 
-			if (file_handle>=0) {
+			if (esx_file_handler>=0) {
+				//Hacer fseek
+				if (fseek (esxdos_fopen_files[esx_file_handler].esxdos_last_open_file_handler_unix, initial_offset, SEEK_CUR)!=0) {
+					printf ("ESXDOS handler: Error running fseek system call\n");
+				}
+
+				//Retornar BCDE
+				long cur_offset=ftell(esxdos_fopen_files[esx_file_handler].esxdos_last_open_file_handler_unix);
+
+				printf ("ESXDOS handler: offset is now at %ld\n",cur_offset);
+
+
+				//If the value is between 1...0x3fff value, I keep the file open and the file handler number is copied to register BC
+
+				//If the value is between 0x4000 and ffff, I write the file handler number at the address that poitnts this offset 140. Set bc to 255 
+				if (nex_file_handler<=0x3fff) {
+					BC=esx_file_handler;
+					printf ("Setting BC register to value %d\n",BC);
+				}
+				else {
+					//copiar handler en memoria
+					poke_byte_no_time(nex_file_handler,esx_file_handler);
+				}
 
 			}
 
