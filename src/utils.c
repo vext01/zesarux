@@ -3152,7 +3152,14 @@ int util_write_configfile(void)
 
 
   if (screen_ext_desktop_enabled)             ADD_STRING_CONFIG,"--enable-zxdesktop");   
-                                              ADD_STRING_CONFIG,"--zxdesktop-width %d",screen_ext_desktop_width);    
+                                              ADD_STRING_CONFIG,"--zxdesktop-width %d",screen_ext_desktop_width);  
+
+
+
+                                              ADD_STRING_CONFIG,"--zxdesktop-fill-type %d",menu_ext_desktop_fill);
+                                              ADD_STRING_CONFIG,"--zxdesktop-fill-solid-color %d",menu_ext_desktop_fill_solid_color);
+				
+
 
                           
   if (screen_ext_desktop_place_menu)          ADD_STRING_CONFIG,"--zxdesktop-new-items");                   

@@ -3,8 +3,6 @@
 
 -cpuid ("zxid") según especificación de mcleod
 
--Parámetro config de tipo background ZX desktop. Más tipos?
-y parámetro de color del tipo de fondo sólido
 
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
 acortar archivo... pero habra que acortar tambien ruta subdirectorios....

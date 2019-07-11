@@ -1566,9 +1566,11 @@ printf (
 		"--watermark-position n     Where to put watermark. 0: Top left, 1: Top right. 2: Bottom left. 3: Bottom right\n"
 
 
-		"--enable-zxdesktop         Enable ZX Desktop space\n"
-		"--zxdesktop-width n        ZX Desktop width\n"
-		"--zxdesktop-new-items      Try to place new menu items on the ZX Desktop space\n"
+		"--enable-zxdesktop              Enable ZX Desktop space\n"
+		"--zxdesktop-width n             ZX Desktop width\n"
+		"--zxdesktop-fill-type n         ZX Desktop fill type (0,1 or 2)\n"
+		"--zxdesktop-fill-solid-color n  ZX Desktop fill solid color on fill type 0 (0-15)\n"
+		"--zxdesktop-new-items           Try to place new menu items on the ZX Desktop space\n"
 
 				
 
@@ -4726,7 +4728,7 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-width")) {
 				siguiente_parametro_argumento();
-				int valor=atoi(argv[puntero_parametro]);
+				int valor=parse_string_to_number(argv[puntero_parametro]);
 
 				if (valor<128 || valor>9999) {
 					printf ("Invalid value for ZX Desktop width\n");
@@ -4734,6 +4736,30 @@ int parse_cmdline_options(void) {
 				}
 				screen_ext_desktop_width=valor;
 			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-fill-type")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+
+				if (valor<0 || valor>2) {
+					printf ("Invalid value for ZX Desktop fill type\n");
+					exit(1);
+				}
+				menu_ext_desktop_fill=valor;
+			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-fill-solid-color")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+
+				if (valor<0 || valor>15) {
+					printf ("Invalid value for ZX Desktop fill solid color on fill type 0\n");
+					exit(1);
+				}
+				menu_ext_desktop_fill_solid_color=valor;
+			}				
+
+
 
 			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-new-items")) {
 				screen_ext_desktop_place_menu=1;
