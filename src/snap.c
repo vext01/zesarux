@@ -5075,7 +5075,9 @@ int load_nex_snapshot_open_esxdos(char *nombre_archivo)
 	getcwd(directorio_actual,PATH_MAX);
 
 	//TODO: si archivo a cargar .nex esta fuera del esxdos root dir, deberia dar error
-	sprintf (fullpath,"%s/%s",directorio_actual,nombre_archivo);
+	//Si empieza por /, es ruta absoluta
+	if (nombre_archivo[0]=='/' || nombre_archivo[0]=='\\') strcpy (fullpath,nombre_archivo);
+	else sprintf (fullpath,"%s/%s",directorio_actual,nombre_archivo);
 
 	printf ("ESXDOS handler: fullpath file: %s\n",fullpath);
 

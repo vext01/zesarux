@@ -1388,6 +1388,7 @@ printf (
 		"--autosnappath path        Folder to save/load automatic snapshots\n"
 		"--tempdir path             Folder to save temporary files. Folder must exist and have read and write permissions\n"
 		"--sna-no-change-machine    Do not change machine when loading sna snapshots. Just load it on memory\n"
+		"--no-close-after-smartload Do not close menu after SmartLoad\n"
 		
 
 		"\n"
@@ -5397,6 +5398,10 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--sna-no-change-machine")) {
 				sna_setting_no_change_machine.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--no-close-after-smartload")) {
+				no_close_menu_after_smartload.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--loadbinary")) {

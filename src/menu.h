@@ -880,6 +880,8 @@ extern int menu_center_x(void);
 extern int menu_origin_x(void);
 extern int menu_center_y(void);
 
+extern z80_bit no_close_menu_after_smartload;
+
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

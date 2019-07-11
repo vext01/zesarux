@@ -369,6 +369,9 @@ z80_bit force_confirm_yes={0};
 z80_bit mouse_menu_disabled={0};
 
 
+z80_bit no_close_menu_after_smartload={0};
+
+
 void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color);
 void menu_desactiva_cuadrado(void);
 void menu_establece_cuadrado(int x1,int y1,int x2,int y2,z80_byte color);
@@ -17255,9 +17258,8 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
                 //restauramos modo normal de texto de menu
                 set_menu_overlay_function(normal_overlay_texto_menu);
 
-                //Y salimos de todos los menus
-				//printf ("Temporal NO salir todos menus\n");
-                salir_todos_menus=1;
+                //Y salimos de todos los menus si conviene
+                if (no_close_menu_after_smartload.v==0) salir_todos_menus=1;
         }
 
 	//printf ("tapefile: %p %s\n",tapefile,tapefile);
@@ -26879,11 +26881,17 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
 
 
+void menu_snapshot_close_menu_after_smartload(MENU_ITEM_PARAMETERS)
+{
+	no_close_menu_after_smartload.v ^=1;
+}
+
+
+
 void menu_snapshot_sna_set_machine(MENU_ITEM_PARAMETERS)
 {
 	sna_setting_no_change_machine.v ^=1;
 }
-
 
 void menu_snapshot_settings_compressed_zsf(MENU_ITEM_PARAMETERS)
 {
@@ -26990,6 +26998,10 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 					"This setting only applies to .sna snapshots, but not to .z80, .zx, or any other snapshot type."
 				);
 
+                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_close_menu_after_smartload,NULL,"[%c] Close menu on smartload",(no_close_menu_after_smartload.v ? ' ' : 'X'));
+                menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Closes the menu after Smartload");
+				menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Closes the menu after Smartload");
+               
 
                 menu_add_item_menu(array_menu_settings_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 

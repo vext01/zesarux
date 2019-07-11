@@ -30,6 +30,10 @@
 #include "menu.h"
 #include "tape.h"
 
+#include "chloe.h"
+#include "prism.h"
+#include "zxuno.h" 
+
 
 
 z80_byte timex_port_f4;

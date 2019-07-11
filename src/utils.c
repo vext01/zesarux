@@ -3299,6 +3299,8 @@ int util_write_configfile(void)
 
   if (sna_setting_no_change_machine.v)      ADD_STRING_CONFIG,"--sna-no-change-machine");
 
+  if (no_close_menu_after_smartload.v)      ADD_STRING_CONFIG,"--no-close-after-smartload");
+  		
 
   if (texto_artistico.v==0)                   ADD_STRING_CONFIG,"--disablearttext");
                                               ADD_STRING_CONFIG,"--arttextthresold %d",umbral_arttext);
