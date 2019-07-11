@@ -5376,14 +5376,22 @@ Y esto hacerlo después de marear toda la ram y cargar los bloques de memoria, l
 -Parámetro config de tipo background ZX desktop. Más tipos?
 y parámetro de color del tipo de fondo sólido
 	 */
+	
+	//por defecto hacemos que registro bc=255, error
 	BC=255;
 
 	if (nex_file_handler>0) {
-		//Si no esta esxdos handler habilitado, avisar y no hacer nada mas
-		//por defecto hacemos que registro bc=255, error
-		printf ("Uses NextOS file handler\n");
 		
 
+		printf ("Uses NextOS file handler\n");
+		
+		//De momento asumimos error y escribimos 255 en la memoria tambien (en caso que nex_file_handler esta entre 0x4000 y ffff)
+		//Asi le daremos un file handler erroneo si pasase cualquier cosa
+		if (nex_file_handler>=0x4000 && nex_file_handler<0xffff) {
+			poke_byte_no_time(nex_file_handler,255);
+		}
+
+		//Si no esta esxdos handler habilitado, avisar y no hacer nada mas
 		if (esxdos_handler_enabled.v) {
 			//Obtener offset actual sobre archivo snapshot abierto
 			long initial_offset=ftell(ptr_nexfile);
@@ -5419,6 +5427,7 @@ y parámetro de color del tipo de fondo sólido
 				}
 				else {
 					//copiar handler en memoria
+					printf ("Writing file handler to memory, address %04XH\n",nex_file_handler);
 					poke_byte_no_time(nex_file_handler,esx_file_handler);
 				}
 
