@@ -1,6 +1,15 @@
 ;Compile with Z88DK with the command:
 ;z80asm -b tstfile5.asm
 ;
+;Simple test to load data from the .nex file handle (12 characters at the end of the snapshot),
+;and print that string on the screen
+;file handled is saved at address 50000, as told in the header (offsets 140 and 141)
+;After compiling it, I modify the snapshot tstfile5_load_data.nex writing this binary code starting at offset 3200h
+;I used my own ZEsarUX menu tools (load filemen, load binary, hex editor) to modify the tstfile5_load_data.nex
+
+;this tstfile5_load_data.nex is a derived snapshot from https://github.com/ped7g/ZXSpectrumNextMisc/tree/master/nexload2/tmHiRes.nex
+;I modified it to reuse the esxdos/NextOS file handle and added the 12 characters at the end  (and of course, included this binary code)
+
 		org 32768
 	
 
@@ -9,7 +18,12 @@
 		ld bc,12
 		ld ix,40000
 		rst 8
-		defb 9dh
+		;fread
+		defb 9dh  
+
+;I use my own functions to cls and print character
+;as I haven't booted regular Basic ROM and I can't use rst 16
+;But I do have the character map
 
 		call cls
 
