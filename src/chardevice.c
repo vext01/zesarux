@@ -61,6 +61,12 @@ int chardevice_open(char *path,enum chardevice_openmode mode)
 
     int handler=open(path,openflag);
 
+    if (handler>=0) {
+        //Agregar no bloqueo
+        int flags = fcntl(handler, F_GETFL, 0);
+        fcntl(handler, F_SETFL, flags | O_NONBLOCK);
+    }
+
     return handler;
 }
 

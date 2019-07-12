@@ -5,6 +5,8 @@
 
 -ZRCP command para trucar logs historicos
 
+-file browser no muestra dispositivos. importante para uart
+
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
 acortar archivo... pero habra que acortar tambien ruta subdirectorios....
 complicado. quiza ver mejor como gestiona los nombres largos desde nextos
