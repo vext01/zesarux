@@ -106,7 +106,15 @@ int chardevice_dataread_avail(int handler)
 
     FD_ZERO(&readset);
     FD_SET(handler, &readset);
-    int resultado=select(handler + 1, &readset, NULL, NULL, NULL);
+
+
+    struct timeval timeout;
+    //timeout de 64 microsegundos, lo que dura un scanline aprox de spectrum
+    timeout.tv_sec  = 0;
+    timeout.tv_usec = 64;
+
+
+    int resultado=select(handler + 1, &readset, NULL, NULL, &timeout);
 
 
     if (resultado<=0) return 0;
