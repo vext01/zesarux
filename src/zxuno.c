@@ -1763,6 +1763,18 @@ z80_byte zxuno_uart_readdata(void)
 {
 	//No dispositivo abierto
 	if (!zxuno_uart_available()) return 0;
+
+	//Devolver 0 por defecto si error leyendo
+	z80_byte byte_leido=0;
+
+	int status=chardevice_read(zxuno_uart_handler,&byte_leido);
+
+	if (status<1) {
+		//Error leyendo
+		//de momento no decir nada
+	}
+
+	return byte_leido;
 }
 
 
@@ -1770,6 +1782,14 @@ void zxuno_uart_writedata(z80_byte value)
 {
 	//No dispositivo abierto
 	if (!zxuno_uart_available()) return;
+
+	int status=chardevice_write(zxuno_uart_handler,value);
+
+	if (status<1) {
+		//Error escribiendo
+		//de momento no decir nada
+	}	
+
 }
 
 z80_byte zxuno_uart_readstatus(void)
