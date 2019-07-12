@@ -170,14 +170,16 @@ z80_bit zxuno_dma_disabled={0};
 
 
 
-//Nombre de la ruta al dispositivo uart
-char zxuno_uart_name[PATH_MAX]="";
+//Nombre de la ruta al dispositivo uart bridge
+//char zxuno_uartbridge_name[PATH_MAX]="";
+//temp
+char zxuno_uartbridge_name[PATH_MAX]="/tmp/uart";
 
-//Si esta habilitado uart
-z80_bit zxuno_uart_enabled={0};
+//Si esta habilitado uart bridge
+z80_bit zxuno_uartbridge_enabled={0};
 
-//file handler del dispositivo uart. -1 si no esta abierto
-int zxuno_uart_handler=-1;
+//file handler del dispositivo uart bridge. -1 si no esta abierto
+int zxuno_uartbridge_handler=-1;
 
 void zxuno_test_if_prob(void)
 {
@@ -746,12 +748,12 @@ Bit 7: set to 1 when DMAPROB address has been reached. It automatically reset to
 
 		else if (last_port_FC3B==ZXUNO_UART_DATA_REG) {
 			//UART_DATA_REG
-			return zxuno_uart_readdata();
+			return zxuno_uartbridge_readdata();
 		}
 
 		else if (last_port_FC3B==ZXUNO_UART_STAT_REG) {
 			//UART_STAT_REG
-			return zxuno_uart_readstatus();
+			return zxuno_uartbridge_readstatus();
 		}
 
 
@@ -1016,7 +1018,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 
 			//UART_DATA_REG
 			case ZXUNO_UART_DATA_REG:
-				zxuno_uart_writedata(value);
+				zxuno_uartbridge_writedata(value);
 			break;
 
 			//UART_STAT_REG
@@ -1716,58 +1718,64 @@ hasta 64 colores en pantalla (cambiando de bloque de paleta cada vez que llega l
 }
 
 //Nombre de la ruta al dispositivo uart
-//char zxuno_uart_name[PATH_MAX]="";
+//char zxuno_uartbridge_name[PATH_MAX]="";
 
 //Si esta habilitado uart
-//z80_bit zxuno_uart_enabled={0};
+//z80_bit zxuno_uartbridge_enabled={0};
 
 //file handler del dispositivo uart. -1 si no esta abierto
-//int zxuno_uart_handler=-1;
+//int zxuno_uartbridge_handler=-1;
 
-int zxuno_uart_available(void)
+int zxuno_uartbridge_available(void)
 {
 	//No dispositivo abierto
-	if (zxuno_uart_enabled.v==0 || zxuno_uart_handler<0) return 0;
+	if (zxuno_uartbridge_enabled.v==0 || zxuno_uartbridge_handler<0) return 0;
 	else return 1;
 }
 
-void zxuno_uart_enable(void)
+void zxuno_uartbridge_enable(void)
 {
 
-	if (zxuno_uart_enabled.v) return;
+	if (zxuno_uartbridge_enabled.v) return;
 
-	zxuno_uart_handler=chardevice_open(zxuno_uart_name,CHDEV_RDWR);
+	zxuno_uartbridge_handler=chardevice_open(zxuno_uartbridge_name,CHDEV_RDWR);
 
-	if (zxuno_uart_handler>=0) {
-		zxuno_uart_enabled.v=1;
+	if (zxuno_uartbridge_handler>=0) {
+		zxuno_uartbridge_enabled.v=1;
 	}
 	else {
-		debug_printf (VERBOSE_ERR,"Error opening uart bridge %s",zxuno_uart_name);
-		zxuno_uart_enabled.v=0;
+		debug_printf (VERBOSE_ERR,"Error opening uart bridge %s",zxuno_uartbridge_name);
+		zxuno_uartbridge_enabled.v=0;
 	}
 }
 
-void zxuno_uart_close(void)
+void zxuno_uartbridge_close(void)
 {
-	if (zxuno_uart_enabled.v==0) return;	
+	if (zxuno_uartbridge_enabled.v==0) return;	
 
-	if (chardevice_close(zxuno_uart_handler)<0) {
+	if (chardevice_close(zxuno_uartbridge_handler)<0) {
 		debug_printf (VERBOSE_ERR,"Error closing uart bridge");		
 	}
 
-	zxuno_uart_enabled.v=0;
+	zxuno_uartbridge_enabled.v=0;
 }
 
 
-z80_byte zxuno_uart_readdata(void)
+z80_byte zxuno_uartbridge_readdata(void)
 {
+
+//!!!!!!!!!TEMPORAL!!!!!!!!!!!!!!!!! solo para abrirlo automaticamente la primera vez
+	if (zxuno_uartbridge_enabled.v==0) zxuno_uartbridge_enable();
+//!!!!!!!!!TEMPORAL!!!!!!!!!!!!!!!!!	
+
+
 	//No dispositivo abierto
-	if (!zxuno_uart_available()) return 0;
+	if (!zxuno_uartbridge_available()) return 0;
 
 	//Devolver 0 por defecto si error leyendo
 	z80_byte byte_leido=0;
 
-	int status=chardevice_read(zxuno_uart_handler,&byte_leido);
+	int status=chardevice_read(zxuno_uartbridge_handler,&byte_leido);
 
 	if (status<1) {
 		//Error leyendo
@@ -1778,12 +1786,16 @@ z80_byte zxuno_uart_readdata(void)
 }
 
 
-void zxuno_uart_writedata(z80_byte value)
+void zxuno_uartbridge_writedata(z80_byte value)
 {
-	//No dispositivo abierto
-	if (!zxuno_uart_available()) return;
 
-	int status=chardevice_write(zxuno_uart_handler,value);
+
+
+
+	//No dispositivo abierto
+	if (!zxuno_uartbridge_available()) return;
+
+	int status=chardevice_write(zxuno_uartbridge_handler,value);
 
 	if (status<1) {
 		//Error escribiendo
@@ -1792,12 +1804,12 @@ void zxuno_uart_writedata(z80_byte value)
 
 }
 
-z80_byte zxuno_uart_readstatus(void)
+z80_byte zxuno_uartbridge_readstatus(void)
 {
 	//No dispositivo abierto
-	if (!zxuno_uart_available()) return 0;
+	if (!zxuno_uartbridge_available()) return 0;
 
-	int status=chardevice_status(zxuno_uart_handler);
+	int status=chardevice_status(zxuno_uartbridge_handler);
 
 	z80_byte status_retorno=0;
 
