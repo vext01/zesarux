@@ -36,6 +36,7 @@
 #include "ulaplus.h"
 #include "operaciones.h"
 #include "chloe.h"
+#include "chardevice.h"
 
 z80_byte last_port_FC3B=0;
 
@@ -166,6 +167,17 @@ z80_int zxuno_dma_current_len;
 
 
 z80_bit zxuno_dma_disabled={0};
+
+
+
+//Nombre de la ruta al dispositivo uart
+char zxuno_uart_name[PATH_MAX]="";
+
+//Si esta habilitado uart
+z80_bit zxuno_uart_enabled={0};
+
+//file handler del dispositivo uart. -1 si no esta abierto
+int zxuno_uart_handler=-1;
 
 void zxuno_test_if_prob(void)
 {
@@ -731,6 +743,18 @@ Bit 7: set to 1 when DMAPROB address has been reached. It automatically reset to
 			return valor_retorno;
 		}
 
+
+		else if (last_port_FC3B==ZXUNO_UART_DATA_REG) {
+			//UART_DATA_REG
+			return zxuno_uart_readdata();
+		}
+
+		else if (last_port_FC3B==ZXUNO_UART_STAT_REG) {
+			//UART_STAT_REG
+			return zxuno_uart_readstatus();
+		}
+
+
 		return zxuno_ports[last_port_FC3B];
 	}
 
@@ -954,6 +978,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 				zxuno_radasoffset_high_byte.v ^=1;
 
 			break;
+			
 
 			//Registros DMA de 16 bits
 			case 0xa1:
@@ -986,6 +1011,18 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 				//printf ("Starting DMA src=%04XH dst=%02XH len=%04XH\n",zxuno_dma_current_src,zxuno_dma_current_dst,zxuno_dma_current_len);
 				//sleep(1);
 			break;
+
+
+
+			//UART_DATA_REG
+			case ZXUNO_UART_DATA_REG:
+				zxuno_uart_writedata(value);
+			break;
+
+			//UART_STAT_REG
+			//case ZXUNO_UART_STAT_REG:
+				//registro no es de escritura
+			//break;			
 
 			case 0xfd:
 				/*
@@ -1676,4 +1713,75 @@ hasta 64 colores en pantalla (cambiando de bloque de paleta cada vez que llega l
 */
 	return (zxuno_ports[0x43]&3)*16;
 
+}
+
+//Nombre de la ruta al dispositivo uart
+//char zxuno_uart_name[PATH_MAX]="";
+
+//Si esta habilitado uart
+//z80_bit zxuno_uart_enabled={0};
+
+//file handler del dispositivo uart. -1 si no esta abierto
+//int zxuno_uart_handler=-1;
+
+int zxuno_uart_available(void)
+{
+	//No dispositivo abierto
+	if (zxuno_uart_enabled.v==0 || zxuno_uart_handler<0) return 0;
+	else return 1;
+}
+
+void zxuno_uart_enable(void)
+{
+
+	if (zxuno_uart_enabled.v) return;
+
+	zxuno_uart_handler=chardevice_open(zxuno_uart_name,CHDEV_RDWR);
+
+	if (zxuno_uart_handler>=0) {
+		zxuno_uart_enabled.v=1;
+	}
+	else {
+		debug_printf (VERBOSE_ERR,"Error opening uart bridge %s",zxuno_uart_name);
+		zxuno_uart_enabled.v=0;
+	}
+}
+
+void zxuno_uart_close(void)
+{
+	if (zxuno_uart_enabled.v==0) return;	
+
+	if (chardevice_close(zxuno_uart_handler)<0) {
+		debug_printf (VERBOSE_ERR,"Error closing uart bridge");		
+	}
+
+	zxuno_uart_enabled.v=0;
+}
+
+
+z80_byte zxuno_uart_readdata(void)
+{
+	//No dispositivo abierto
+	if (!zxuno_uart_available()) return 0;
+}
+
+
+void zxuno_uart_writedata(z80_byte value)
+{
+	//No dispositivo abierto
+	if (!zxuno_uart_available()) return;
+}
+
+z80_byte zxuno_uart_readstatus(void)
+{
+	//No dispositivo abierto
+	if (!zxuno_uart_available()) return 0;
+
+	int status=chardevice_status(zxuno_uart_handler);
+
+	z80_byte status_retorno=0;
+
+	if (status & CHDEV_ST_RD_AVAIL_DATA) status_retorno |= ZXUNO_UART_BYTE_RECEIVED_BIT;
+
+	return status_retorno;
 }

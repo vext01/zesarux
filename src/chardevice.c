@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <fcntl.h>
 
 
@@ -57,4 +58,44 @@ int chardevice_open(char *path,enum chardevice_openmode mode)
     int handler=open(path,openflag);
 
     return handler;
+}
+
+//Lee 1 byte
+//Devuelve numero bytes leidos. <0 si error. 0=no bytes leidos, tambien error
+int chardevice_read(int handler,z80_byte *buffer)
+{
+    int leidos = read(handler, buffer, 1);
+
+    return leidos;
+}
+
+//Escribe 1 byte
+//Devuelve numero bytes escritos. <0 si error. 0=no bytes leidos, tambien error
+int chardevice_write(int handler,z80_byte valor_escribir)
+{
+    int escritos=write(handler,&valor_escribir,1);
+
+    return escritos;
+}
+
+//0 si ok. -1 si error
+int chardevice_close(int handler)
+{
+    int retorno=close(handler);
+
+    return retorno;
+}
+
+//Retorna el estado del dispositivo
+int chardevice_status(int handler)
+{
+    //TODO
+    //de momento decir datos disponibles
+
+    int status=0;
+
+    status |= CHDEV_ST_RD_AVAIL_DATA;
+
+    return status;
+
 }

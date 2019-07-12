@@ -22,10 +22,21 @@
 #ifndef CHARDEVICE_H
 #define CHARDEVICE_H
 
+#include "cpu.h"
+
 enum chardevice_openmode {
 	CHDEV_RDONLY,
 	CHDEV_WRONLY,
 	CHDEV_RDWR
 };
+
+#define	CHDEV_ST_RD_AVAIL_DATA 1
+
+
+extern int chardevice_open(char *path,enum chardevice_openmode mode);
+extern int chardevice_read(int handler,z80_byte *buffer);
+extern int chardevice_write(int handler,z80_byte valor_escribir);
+extern int chardevice_close(int handler);
+extern int chardevice_status(int handler);
 
 #endif
