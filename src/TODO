@@ -12,7 +12,7 @@
 *poder lanzar ioctl de cambio velocidad. compatible otros sistemas?
 *probar en windows. Validado en mac (con archivo) y en linux (con archivo, pipe y psaux)
 *extender tambien para tbblue
-*/sys/select.h no existe en windows. Ver alternativa
+*/sys/select.h no existe en windows. Ver alternativa -> Dado que los devices no tienen sentido en windows, desactivar esto
 
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
 acortar archivo... pero habra que acortar tambien ruta subdirectorios....
