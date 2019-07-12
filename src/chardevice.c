@@ -23,7 +23,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+#ifndef MINGW
+//select no existe en windows
 #include <sys/select.h>
+#endif
 
 
 #include "chardevice.h"
@@ -102,6 +106,11 @@ int chardevice_close(int handler)
 int chardevice_dataread_avail(int handler)
 {
 
+#ifdef MINGW
+    //Select no esta disponible en windows
+    //Decimos que hay siempre datos disponibles
+    return 1;
+#else
     fd_set readset;
 
     FD_ZERO(&readset);
@@ -122,7 +131,7 @@ int chardevice_dataread_avail(int handler)
 
     if (resultado<=0) return 0;
     else return 1;
- 
+ #endif
 
 }
 
