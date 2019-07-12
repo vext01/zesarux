@@ -110,6 +110,7 @@ int chardevice_dataread_avail(int handler)
 
     struct timeval timeout;
     //timeout de 64 microsegundos, lo que dura un scanline aprox de spectrum
+    //Por que 64 microsegundos y no otro valor? Porque creo que es un valor considerable para esperar si hay datos o no
     timeout.tv_sec  = 0;
     timeout.tv_usec = 64;
 
