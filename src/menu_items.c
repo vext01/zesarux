@@ -175,6 +175,7 @@ int direct_coreaudio_midi_output_opcion_seleccionada=0;
 int direct_windows_midi_output_opcion_seleccionada=0;
 
 int ay_mixer_opcion_seleccionada=0;
+int zxuno_uartbridge_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -16261,4 +16262,103 @@ menu_item *array_menu_ay_mixer;
 		}
 
 	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);	
+}
+
+
+
+
+void menu_zxuno_uartbridge_file(MENU_ITEM_PARAMETERS)
+{
+	zxuno_uartbridge_disable();
+
+        char *filtros[2];
+
+        filtros[0]="";
+        filtros[1]=0;
+
+
+        if (menu_filesel("Select Device File",filtros,zxuno_uartbridge_name)==1) {
+                if (!si_existe_archivo(zxuno_uartbridge_name)) {
+                        menu_error_message("File does not exist");
+                        zxuno_uartbridge_name[0]=0;
+                        return;
+                }
+
+
+        }
+        //Sale con ESC
+        else {
+                //Quitar nombre
+                zxuno_uartbridge_name[0]=0;
+
+
+        }
+
+}
+
+
+void menu_zxuno_uartbridge_enable(MENU_ITEM_PARAMETERS)
+{
+	if (zxuno_uartbridge_enabled.v) zxuno_uartbridge_disable();
+	else zxuno_uartbridge_enable();
+}
+
+
+int menu_zxuno_uartbridge_cond(void)
+{
+	if (zxuno_uartbridge_name[0]==0) return 0;
+
+	else return 1;
+
+}
+
+void menu_zxuno_uartbridge(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_zxuno_uartbridge;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                char string_zxuno_uartbridge_file_shown[13];
+
+			
+                        menu_tape_settings_trunc_name(zxuno_uartbridge_name,string_zxuno_uartbridge_file_shown,13);
+                        menu_add_item_menu_inicial_format(&array_menu_zxuno_uartbridge,MENU_OPCION_NORMAL,menu_zxuno_uartbridge_file,NULL,"~~File [%s]",string_zxuno_uartbridge_file_shown);
+                        menu_add_item_menu_shortcut(array_menu_zxuno_uartbridge,'f');
+                        menu_add_item_menu_tooltip(array_menu_zxuno_uartbridge,"Path to the serial device");
+                        menu_add_item_menu_ayuda(array_menu_zxuno_uartbridge,"Path to the serial device");
+
+
+						//Lo separamos en dos pues cuando no esta habilitado, tiene que comprobar que el path no sea nulo
+						if (zxuno_uartbridge_enabled.v) {
+							menu_add_item_menu_format(array_menu_zxuno_uartbridge,MENU_OPCION_NORMAL,menu_zxuno_uartbridge_enable,NULL,"[X] ~~Enabled");
+						}
+						else {
+							menu_add_item_menu_format(array_menu_zxuno_uartbridge,MENU_OPCION_NORMAL,menu_zxuno_uartbridge_enable,menu_zxuno_uartbridge_cond,"[ ] ~~Enabled");
+						}	
+						menu_add_item_menu_shortcut(array_menu_zxuno_uartbridge,'e');
+
+
+
+                        menu_add_item_menu(array_menu_zxuno_uartbridge,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_ESC_item(array_menu_zxuno_uartbridge);
+
+                retorno_menu=menu_dibuja_menu(&zxuno_uartbridge_opcion_seleccionada,&item_seleccionado,array_menu_zxuno_uartbridge,"UART Bridge" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
 }

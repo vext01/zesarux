@@ -149,12 +149,16 @@ extern int zxuno_is_chloe_mmu(void);
 #define ZXUNO_UART_DATA_REG 0xc6
 #define ZXUNO_UART_STAT_REG 0xc7
 
-
+extern void zxuno_uartbridge_enable(void);
+extern void zxuno_uartbridge_disable(void);
 extern z80_byte zxuno_uartbridge_readdata(void);
 extern void zxuno_uartbridge_writedata(z80_byte value);
 extern z80_byte zxuno_uartbridge_readstatus(void);
 
 #define ZXUNO_UART_BYTE_RECEIVED_BIT 0x80
 #define ZXUNO_UART_BYTE_TRANSMITTING_BIT 0x40
+
+extern char zxuno_uartbridge_name[];
+extern z80_bit zxuno_uartbridge_enabled;
 
 #endif

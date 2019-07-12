@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/select.h>
 
 
 #include "chardevice.h"
@@ -53,6 +54,9 @@ int chardevice_open(char *path,enum chardevice_openmode mode)
             return -1;
         break;
     }
+
+    //Agregar no bloqueo
+    openflag |=O_NONBLOCK;
 
 
     int handler=open(path,openflag);
@@ -86,15 +90,30 @@ int chardevice_close(int handler)
     return retorno;
 }
 
+//Dice si hay datos disponibles para leer en el file handler
+int chardevice_dataread_avail(int handler)
+{
+
+    fd_set readset;
+
+    FD_ZERO(&readset);
+    FD_SET(handler, &readset);
+    int resultado=select(handler + 1, &readset, NULL, NULL, NULL);
+
+
+    if (resultado<=0) return 0;
+    else return 1;
+
+
+}
+
 //Retorna el estado del dispositivo
 int chardevice_status(int handler)
 {
-    //TODO
-    //de momento decir datos disponibles
 
     int status=0;
 
-    status |= CHDEV_ST_RD_AVAIL_DATA;
+    if (chardevice_dataread_avail(handler)) status |= CHDEV_ST_RD_AVAIL_DATA;
 
     return status;
 

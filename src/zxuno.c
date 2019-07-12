@@ -173,7 +173,7 @@ z80_bit zxuno_dma_disabled={0};
 //Nombre de la ruta al dispositivo uart bridge
 //char zxuno_uartbridge_name[PATH_MAX]="";
 //temp
-char zxuno_uartbridge_name[PATH_MAX]="/tmp/uart";
+char zxuno_uartbridge_name[PATH_MAX]="/dev/ttyS0";
 
 //Si esta habilitado uart bridge
 z80_bit zxuno_uartbridge_enabled={0};
@@ -1736,6 +1736,8 @@ int zxuno_uartbridge_available(void)
 void zxuno_uartbridge_enable(void)
 {
 
+	printf ("opening uart bridge\n");
+
 	if (zxuno_uartbridge_enabled.v) return;
 
 	zxuno_uartbridge_handler=chardevice_open(zxuno_uartbridge_name,CHDEV_RDWR);
@@ -1749,7 +1751,7 @@ void zxuno_uartbridge_enable(void)
 	}
 }
 
-void zxuno_uartbridge_close(void)
+void zxuno_uartbridge_disable(void)
 {
 	if (zxuno_uartbridge_enabled.v==0) return;	
 
@@ -1764,13 +1766,11 @@ void zxuno_uartbridge_close(void)
 z80_byte zxuno_uartbridge_readdata(void)
 {
 
-//!!!!!!!!!TEMPORAL!!!!!!!!!!!!!!!!! solo para abrirlo automaticamente la primera vez
-	if (zxuno_uartbridge_enabled.v==0) zxuno_uartbridge_enable();
-//!!!!!!!!!TEMPORAL!!!!!!!!!!!!!!!!!	
-
 
 	//No dispositivo abierto
 	if (!zxuno_uartbridge_available()) return 0;
+
+	printf ("Reading uart data\n");
 
 	//Devolver 0 por defecto si error leyendo
 	z80_byte byte_leido=0;
@@ -1778,6 +1778,7 @@ z80_byte zxuno_uartbridge_readdata(void)
 	int status=chardevice_read(zxuno_uartbridge_handler,&byte_leido);
 
 	if (status<1) {
+		printf ("Error reading uart data: %d\n",status);
 		//Error leyendo
 		//de momento no decir nada
 	}
@@ -1789,11 +1790,10 @@ z80_byte zxuno_uartbridge_readdata(void)
 void zxuno_uartbridge_writedata(z80_byte value)
 {
 
-
-
-
 	//No dispositivo abierto
 	if (!zxuno_uartbridge_available()) return;
+
+	printf ("Writing uart data\n");
 
 	int status=chardevice_write(zxuno_uartbridge_handler,value);
 
