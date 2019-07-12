@@ -56,13 +56,15 @@ int chardevice_open(char *path,enum chardevice_openmode mode)
     }
 
     //Agregar no bloqueo
-    openflag |=O_NONBLOCK;
+    //openflag |=O_NONBLOCK;
 
 
     int handler=open(path,openflag);
 
+
     if (handler>=0) {
-        //Agregar no bloqueo. TODO: redundante con el flag al hacer open. Parece que solo con el open no funciona
+        //Agregar no bloqueo. manera estandard
+        //Haciendolo con el open tambien seria valido, pero mejor asi
         int flags = fcntl(handler, F_GETFL, 0);
         fcntl(handler, F_SETFL, flags | O_NONBLOCK);
     }
@@ -109,7 +111,7 @@ int chardevice_dataread_avail(int handler)
 
     if (resultado<=0) return 0;
     else return 1;
-
+ 
 
 }
 
