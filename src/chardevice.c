@@ -114,6 +114,8 @@ int chardevice_dataread_avail(int handler)
     timeout.tv_sec  = 0;
     timeout.tv_usec = 64;
 
+    //Si pusieramos timeout a null, se haria bloqueo hasta que hubieran datos.
+
 
     int resultado=select(handler + 1, &readset, NULL, NULL, &timeout);
 

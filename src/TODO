@@ -7,7 +7,11 @@
 
 -file browser no muestra dispositivos. importante para uart
 
--uart: read funciona bien sin bloqueo. Pero select hace bloqueo. Probar con /dev/psaux dando permisos a todos 777
+-uart bridge zxuno:
+*Probar con /dev/psaux dando permisos a todos 777
+*poder lanzar ioctl de cambio velocidad. compatible otros sistemas?
+*probar en windows. Validado en mac (con archivo) y en linux (con archivo, pipe y psaux)
+*extender tambien para tbblue
 
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
 acortar archivo... pero habra que acortar tambien ruta subdirectorios....
