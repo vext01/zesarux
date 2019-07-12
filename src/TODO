@@ -13,7 +13,7 @@
 *probar en windows. Validado en mac (con archivo) y en linux (con archivo, pipe y psaux)
 *extender tambien para tbblue
 */sys/select.h no existe en windows. Ver alternativa -> Dado que los devices no tienen sentido en windows, desactivar esto:
-**ni include de select.h ni funcion select. el resto se deja, para simular en windows con archivos puede servir
+**ni include de select.h ni funcion select->decir que siempre hay datos disponibles. el resto se deja, para simular en windows con archivos puede servir
 
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
 acortar archivo... pero habra que acortar tambien ruta subdirectorios....
