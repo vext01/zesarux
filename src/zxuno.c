@@ -1775,7 +1775,9 @@ z80_byte zxuno_uartbridge_readdata(void)
 	//Devolver 0 por defecto si error leyendo
 	z80_byte byte_leido=0;
 
+	printf ("Before chardevice_read\n");
 	int status=chardevice_read(zxuno_uartbridge_handler,&byte_leido);
+	printf ("After chardevice_read\n");
 
 	if (status<1) {
 		printf ("Error reading uart data: %d\n",status);
@@ -1809,7 +1811,9 @@ z80_byte zxuno_uartbridge_readstatus(void)
 	//No dispositivo abierto
 	if (!zxuno_uartbridge_available()) return 0;
 
+	printf ("Before chardevice_status\n");
 	int status=chardevice_status(zxuno_uartbridge_handler);
+	printf ("After chardevice_status\n");
 
 	z80_byte status_retorno=0;
 
