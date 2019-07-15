@@ -23,6 +23,7 @@
 #define UARTBRIDGE_H
 
 #include "cpu.h"
+#include "chardevice.h"
 
 extern int uartbridge_handler;
 extern z80_bit uartbridge_enabled;
@@ -33,5 +34,7 @@ extern void uartbridge_disable(void);
 extern z80_byte uartbridge_readdata(void);
 extern void uartbridge_writedata(z80_byte value);
 extern int uartbridge_available(void);
+
+extern enum chardevice_speed uartbridge_speed;
 
 #endif

@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "utils.h"
 #include "chardevice.h"
+#include "screen.h"
 
 
 //Nombre de la ruta al dispositivo uart bridge
@@ -43,6 +44,8 @@ z80_bit uartbridge_enabled={0};
 
 //file handler del dispositivo uart bridge. -1 si no esta abierto
 int uartbridge_handler=-1;
+
+enum chardevice_speed uartbridge_speed=CHDEV_SPEED_DEFAULT;
 
 int uartbridge_available(void)
 {
@@ -62,6 +65,7 @@ void uartbridge_enable(void)
 
 	if (uartbridge_handler>=0) {
 		uartbridge_enabled.v=1;
+        if (uartbridge_speed!=CHDEV_SPEED_DEFAULT) chardevice_setspeed(uartbridge_handler,uartbridge_speed);
 	}
 	else {
 		debug_printf (VERBOSE_ERR,"Error opening uart bridge %s",uartbridge_name);

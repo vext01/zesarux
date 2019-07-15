@@ -39,4 +39,17 @@ extern int chardevice_write(int handler,z80_byte valor_escribir);
 extern int chardevice_close(int handler);
 extern int chardevice_status(int handler);
 
+
+enum chardevice_speed {
+    CHDEV_SPEED_DEFAULT,
+    CHDEV_SPEED_9600,
+    CHDEV_SPEED_19200,
+    CHDEV_SPEED_38400,
+    CHDEV_SPEED_57600,
+    CHDEV_SPEED_115200
+};
+
+extern void chardevice_setspeed(int handler,enum chardevice_speed velocidad);
+extern int chardevice_getspeed_enum_int(enum chardevice_speed velocidad);
+
 #endif

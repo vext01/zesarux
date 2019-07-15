@@ -27,6 +27,7 @@
 #ifndef MINGW
 //select no existe en windows
 #include <sys/select.h>
+#include <termios.h>
 #endif
 
 
@@ -146,5 +147,87 @@ int chardevice_status(int handler)
     if (chardevice_dataread_avail(handler)) status |= CHDEV_ST_RD_AVAIL_DATA;
 
     return status;
+
+}
+
+int chardevice_getspeed_enum_int(enum chardevice_speed velocidad)
+{
+    switch (velocidad) {
+        case CHDEV_SPEED_9600:
+            return 9600;
+        break;
+
+        case CHDEV_SPEED_19200:
+            return 19200;
+        break;
+
+        case CHDEV_SPEED_38400:
+            return 38400;
+        break;
+
+        case CHDEV_SPEED_57600:
+            return 57600;
+        break;
+
+        case CHDEV_SPEED_115200:
+            return 115200;
+        break;
+
+        default:
+            return 0;
+        break;
+    }
+}
+
+#ifndef MINGW
+speed_t chardevice_getspeed_enum_speed_t(enum chardevice_speed velocidad)
+{
+    switch (velocidad) {
+        case CHDEV_SPEED_9600:
+            return B9600;
+        break;
+
+        case CHDEV_SPEED_19200:
+            return B19200;
+        break;
+
+        case CHDEV_SPEED_38400:
+            return B38400;
+        break;
+
+        case CHDEV_SPEED_57600:
+            return B57600;
+        break;
+
+        case CHDEV_SPEED_115200:
+            return B115200;
+        break;
+
+        default:
+            return B9600;
+        break;
+    }
+}
+#endif
+
+void chardevice_setspeed(int handler,enum chardevice_speed velocidad)
+{
+
+#ifdef MINGW
+    //nada
+#else
+
+printf ("Setting speed port to %d\n",chardevice_getspeed_enum_int(velocidad));
+
+speed_t vdestino=chardevice_getspeed_enum_speed_t(velocidad);
+
+
+struct termios options;
+
+tcgetattr(handler, &options);
+cfsetispeed(&options, vdestino);
+cfsetospeed(&options, vdestino);
+tcsetattr(handler, TCSANOW, &options);
+#endif
 
 }
