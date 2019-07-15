@@ -37,6 +37,7 @@
 #include "operaciones.h"
 #include "chloe.h"
 #include "chardevice.h"
+#include "uartbridge.h"
 
 z80_byte last_port_FC3B=0;
 
@@ -170,16 +171,7 @@ z80_bit zxuno_dma_disabled={0};
 
 
 
-//Nombre de la ruta al dispositivo uart bridge
-//char zxuno_uartbridge_name[PATH_MAX]="";
-//temp
-char zxuno_uartbridge_name[PATH_MAX]="/dev/ttyS0";
 
-//Si esta habilitado uart bridge
-z80_bit zxuno_uartbridge_enabled={0};
-
-//file handler del dispositivo uart bridge. -1 si no esta abierto
-int zxuno_uartbridge_handler=-1;
 
 void zxuno_test_if_prob(void)
 {
@@ -1717,102 +1709,30 @@ hasta 64 colores en pantalla (cambiando de bloque de paleta cada vez que llega l
 
 }
 
-//Nombre de la ruta al dispositivo uart
-//char zxuno_uartbridge_name[PATH_MAX]="";
-
-//Si esta habilitado uart
-//z80_bit zxuno_uartbridge_enabled={0};
-
-//file handler del dispositivo uart. -1 si no esta abierto
-//int zxuno_uartbridge_handler=-1;
-
-int zxuno_uartbridge_available(void)
-{
-	//No dispositivo abierto
-	if (zxuno_uartbridge_enabled.v==0 || zxuno_uartbridge_handler<0) return 0;
-	else return 1;
-}
-
-void zxuno_uartbridge_enable(void)
-{
-
-	printf ("opening uart bridge\n");
-
-	if (zxuno_uartbridge_enabled.v) return;
-
-	zxuno_uartbridge_handler=chardevice_open(zxuno_uartbridge_name,CHDEV_RDWR);
-
-	if (zxuno_uartbridge_handler>=0) {
-		zxuno_uartbridge_enabled.v=1;
-	}
-	else {
-		debug_printf (VERBOSE_ERR,"Error opening uart bridge %s",zxuno_uartbridge_name);
-		zxuno_uartbridge_enabled.v=0;
-	}
-}
-
-void zxuno_uartbridge_disable(void)
-{
-	if (zxuno_uartbridge_enabled.v==0) return;	
-
-	if (chardevice_close(zxuno_uartbridge_handler)<0) {
-		debug_printf (VERBOSE_ERR,"Error closing uart bridge");		
-	}
-
-	zxuno_uartbridge_enabled.v=0;
-}
 
 
 z80_byte zxuno_uartbridge_readdata(void)
 {
 
-
-	//No dispositivo abierto
-	if (!zxuno_uartbridge_available()) return 0;
-
-	printf ("Reading uart data\n");
-
-	//Devolver 0 por defecto si error leyendo
-	z80_byte byte_leido=0;
-
-	printf ("Before chardevice_read\n");
-	int status=chardevice_read(zxuno_uartbridge_handler,&byte_leido);
-	printf ("After chardevice_read\n");
-
-	if (status<1) {
-		printf ("Error reading uart data: %d\n",status);
-		//Error leyendo
-		//de momento no decir nada
-	}
-
-	return byte_leido;
+	return uartbridge_readdata();
 }
 
 
 void zxuno_uartbridge_writedata(z80_byte value)
 {
 
-	//No dispositivo abierto
-	if (!zxuno_uartbridge_available()) return;
+	uartbridge_writedata(value);
 
-	printf ("Writing uart data\n");
-
-	int status=chardevice_write(zxuno_uartbridge_handler,value);
-
-	if (status<1) {
-		//Error escribiendo
-		//de momento no decir nada
-	}	
 
 }
 
 z80_byte zxuno_uartbridge_readstatus(void)
 {
 	//No dispositivo abierto
-	if (!zxuno_uartbridge_available()) return 0;
+	if (!uartbridge_available()) return 0;
 
 	printf ("Before chardevice_status\n");
-	int status=chardevice_status(zxuno_uartbridge_handler);
+	int status=chardevice_status(uartbridge_handler);
 	printf ("After chardevice_status\n");
 
 	z80_byte status_retorno=0;

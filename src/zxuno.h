@@ -158,7 +158,6 @@ extern z80_byte zxuno_uartbridge_readstatus(void);
 #define ZXUNO_UART_BYTE_RECEIVED_BIT 0x80
 #define ZXUNO_UART_BYTE_TRANSMITTING_BIT 0x40
 
-extern char zxuno_uartbridge_name[];
-extern z80_bit zxuno_uartbridge_enabled;
+
 
 #endif
