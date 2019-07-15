@@ -10507,7 +10507,13 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					break;
 
 					case 'z':
+							//restauramos modo normal de texto de menu, sino, el selector de zona se vera
+								//con el sprite encima
+						set_menu_overlay_function(normal_overlay_texto_menu);
+
 						menu_debug_change_memory_zone();
+
+						set_menu_overlay_function(menu_debug_draw_sprites);
 
 						break;
 
@@ -10531,7 +10537,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 									menu_error_message("Unknown file format");
 								}
 
-								cls_menu_overlay();
+								//cls_menu_overlay();
 
 								//menu_debug_view_sprites_ventana();
 								set_menu_overlay_function(menu_debug_draw_sprites);
