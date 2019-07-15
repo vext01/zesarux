@@ -6007,6 +6007,9 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 		if (puerto==TBBLUE_UART_RX_PORT) return tbblue_uartbridge_readdata();
 
+		//puerto estado es el de escritura pero en lectura
+		if (puerto==TBBLUE_UART_TX_PORT) return tbblue_uartbridge_readstatus();
+
 		//TODO puerto segundo joystick. De momento retornar 0
 		if (puerto==TBBLUE_SECOND_KEMPSTON_PORT) return 0;
 
@@ -6172,6 +6175,13 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		if (puerto==0xdff7) return zxevo_last_port_dff7;
 		if (puerto==0xbff7) return zxevo_nvram[zxevo_last_port_dff7];
 		if (puerto_l==0xaf) return tsconf_get_af_port(puerto_h);
+
+		//Puertos ZIFI
+		if (puerto==TSCONF_ZIFI_ERROR_REG) return tsconf_zifi_read_error_reg();
+		if (puerto==TSCONF_ZIFI_DATA_REG) return tsconf_zifi_read_data_reg();
+		if (puerto==TSCONF_ZIFI_INPUT_FIFO_STATUS) return tsconf_zifi_read_input_fifo_status(); 
+		if (puerto==TSCONF_ZIFI_OUTPUT_FIFO_STATUS) return tsconf_zifi_read_output_fifo_status(); 
+
 
 		//Otros puertos
 		//printf ("Leyendo puerto %04XH\n",puerto);
@@ -7329,6 +7339,9 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 						mmc_write(value);
 					}
 
+					//Puertos ZIFI
+					if (puerto==TSCONF_ZIFI_COMMAND_REG) tsconf_zifi_write_command_reg(value);
+					if (puerto==TSCONF_ZIFI_DATA_REG) tsconf_zifi_write_data_reg(value);
 
 
 

@@ -34,7 +34,10 @@
 #include "zxevo.h"
 
 //temporal para printf debug que mira contador_segundo
-#include "timer.h"
+//#include "timer.h"
+
+#include "chardevice.h"
+#include "uartbridge.h"
 
 
 void tsconf_generate_im1_im2(z80_byte vector);
@@ -3215,3 +3218,57 @@ void tsconf_set_emulador_settings(void)
   
   
 }
+
+
+z80_byte tsconf_zifi_read_data_reg(void)
+{
+
+	return uartbridge_readdata();
+}
+
+
+void tsconf_zifi_write_data_reg(z80_byte value)
+{
+
+	uartbridge_writedata(value);
+
+
+}
+
+z80_byte tsconf_zifi_read_error_reg(void)
+{
+	//TODO: Ni idea que retornar
+	return 0;
+}
+
+void tsconf_zifi_write_command_reg(void)
+{
+	//TODO: Ni idea que hacer con esto, aparentemente altera la fifo de conexion con la wifi
+}
+
+
+z80_byte tsconf_zifi_read_input_fifo_status(void)
+{
+	//No dispositivo abierto
+	if (!uartbridge_available()) return 0;
+
+	printf ("Before chardevice_status\n");
+	int status=chardevice_status(uartbridge_handler);
+	printf ("After chardevice_status\n");
+
+	z80_byte status_retorno=0;
+
+	if (status & CHDEV_ST_RD_AVAIL_DATA) status_retorno |= 1;
+	//0 - input FIFO is empty,
+
+	return status_retorno;
+}
+
+
+z80_byte tsconf_zifi_read_output_fifo_status(void)
+{
+	//0 - output FIFO is full
+	return 1;
+}
+
+

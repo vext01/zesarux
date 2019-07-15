@@ -21,6 +21,7 @@ Added menu to export AY chip music to midi (.mid) file
 Added AY Sheet: showing a sheet with the notes being played
 Added AY mixer menu
 Added ZXUno UART Bridge emulation
+Added TSConf UART Bridge emulation
 
 Added DAAD, PAWS and Quill debugger, for Spectrum and CPC (CPC only supports Daad debugger)
 Added text adventure keyboard also on CPC

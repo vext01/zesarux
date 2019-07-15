@@ -41,6 +41,8 @@
 #include "datagear.h"
 #include "ay38912.h"
 #include "multiface.h"
+#include "uartbridge.h"
+#include "chardevice.h"
 
 #define TBBLUE_MAX_SRAM_8KB_BLOCKS 224
 
@@ -5384,4 +5386,20 @@ void tbblue_uartbridge_writedata(z80_byte value)
 	uartbridge_writedata(value);
 
 
+}
+
+z80_byte tbblue_uartbridge_readstatus(void)
+{
+	//No dispositivo abierto
+	if (!uartbridge_available()) return 0;
+
+	printf ("Before chardevice_status\n");
+	int status=chardevice_status(uartbridge_handler);
+	printf ("After chardevice_status\n");
+
+	z80_byte status_retorno=0;
+
+	if (status & CHDEV_ST_RD_AVAIL_DATA) status_retorno |= TBBLUE_UART_STATUS_DATA_READY;
+
+	return status_retorno;
 }

@@ -76,8 +76,17 @@ extern void tbblue_set_timing_48k(void);
 #define TBBLUE_SPRITE_PATTERN_PORT 0x5b
 #define TBBLUE_SPRITE_SPRITE_PORT 0x57
 
-#define TBBLUE_UART_RX_PORT 0x133b
-#define TBBLUE_UART_TX_PORT 0x143b
+
+#define TBBLUE_UART_TX_PORT 0x133b
+//Tambien byte de estado en lectura
+
+#define TBBLUE_UART_RX_PORT 0x143b
+
+#define TBBLUE_UART_STATUS_DATA_READY 1
+#define TBBLUE_UART_STATUS_BUSY 2
+#define TBBLUE_UART_STATUS_FIFO_FULL 4
+
+
 
 #define TBBLUE_SECOND_KEMPSTON_PORT 0x37
 
@@ -276,5 +285,7 @@ extern void tbblue_out_port_32765(z80_byte value);
 
 extern z80_byte tbblue_uartbridge_readdata(void);
 extern void tbblue_uartbridge_writedata(z80_byte value);
+
+extern z80_byte tbblue_uartbridge_readstatus(void);
 
 #endif

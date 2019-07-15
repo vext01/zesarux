@@ -177,4 +177,10 @@ extern z80_bit tsconf_reveal_layer_sprites_two;
 extern z80_bit tsconf_reveal_layer_tiles_zero;
 extern z80_bit tsconf_reveal_layer_tiles_one;
 
+#define TSCONF_ZIFI_COMMAND_REG		    0xC7EF
+#define TSCONF_ZIFI_ERROR_REG			0xC7EF
+#define TSCONF_ZIFI_DATA_REG			0xBFEF
+#define TSCONF_ZIFI_INPUT_FIFO_STATUS	0xC0EF
+#define TSCONF_ZIFI_OUTPUT_FIFO_STATUS	0xC1EF
+
 #endif
