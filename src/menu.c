@@ -1085,6 +1085,21 @@ void menu_debug_change_memory_zone_non_interactive(void)
 	
 }
 
+void menu_debug_set_memory_zone(int zone)
+{
+	//Cambiar a zona memoria indicada
+	int salir=0;
+
+	int zona_inicial=menu_debug_memory_zone;
+
+	while (menu_debug_memory_zone!=zone && salir<2) {
+		menu_debug_change_memory_zone_non_interactive();
+
+		//Si ha pasado dos veces por la zona mapped, es que no existe dicha zona
+		if (menu_debug_memory_zone<0) salir++;
+	}
+}
+
 int menu_get_current_memory_zone_name_number(char *s)
 {
 	if (menu_debug_show_memory_zones==0) {
@@ -20796,9 +20811,9 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 		menu_debug_set_memory_zone_attr();
 
 
-		menu_debug_change_memory_zone();
+		menu_debug_change_memory_zone_splash();
 
-  		menu_debug_registers_splash_memory_zone();
+  		
 
         	char string_direccion[10];
 
@@ -20894,9 +20909,9 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
                 menu_debug_set_memory_zone_attr();
 
 
-				menu_debug_change_memory_zone();
+				menu_debug_change_memory_zone_splash();
 
-  		menu_debug_registers_splash_memory_zone();
+
 
                 char string_direccion[10];
 

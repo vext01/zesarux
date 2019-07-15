@@ -32,7 +32,7 @@
 
   tiene que cambiarse y meterlo en bucle o similar
 
--revisar uso tambien de menu_debug_registers_change_memory_zone
+-revisar uso tambien de menu_debug_change_memory_zone_splash
 
 -grabar binario si ponemos 0, debe grabar total de zona memoria
 

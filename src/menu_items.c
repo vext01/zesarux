@@ -10183,7 +10183,9 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 
 			//Cambiar a zona memoria 14. TBBlue sprites
-			while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone_non_interactive();
+			//while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone_non_interactive();
+
+			menu_debug_set_memory_zone(14);
 
 			//paleta 11 tbblue
 			//view_sprites_palette=11;
@@ -10220,7 +10222,9 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 
 			//Cambiar a zona memoria 15. TSConf sprites
-			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone_non_interactive();
+			//while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone_non_interactive();
+
+			menu_debug_set_memory_zone(15);
 
 			//paleta 13 tsconf
 			//view_sprites_palette=13;
@@ -12721,7 +12725,7 @@ void menu_debug_registers_splash_memory_zone(void)
 	//screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"hola");
 }
 
-void menu_debug_registers_change_memory_zone(void)
+void menu_debug_change_memory_zone_splash(void)
 {
 	menu_debug_change_memory_zone();
 
@@ -13904,7 +13908,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				}
 
 				if (tecla=='z') {
-					menu_debug_registers_change_memory_zone();
+					menu_debug_change_memory_zone_splash();
 				}
 
 
@@ -14194,7 +14198,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
-                    menu_debug_registers_change_memory_zone();
+                    menu_debug_change_memory_zone_splash();
 
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
