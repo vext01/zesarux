@@ -984,21 +984,105 @@ void menu_debug_set_memory_zone_mapped(void)
 		menu_debug_show_memory_zones=0;	
 }
 
-void menu_debug_change_memory_zone(void)
+
+//Retorna -1 si mapped memory. 0 o en adelante si otros. -2 si ESC
+int menu_change_memory_zone_list(void)
 {
 
-if (menu_debug_show_memory_zones==0) menu_debug_show_memory_zones=1;
+        menu_item *array_menu_memory_zones;
+        menu_item item_seleccionado;
+        int retorno_menu;
+		int menu_change_memory_zone_list_opcion_seleccionada=0;
+        //do {
 
-//Si se ha habilitado en el if anterior, entrara aqui
-if (menu_debug_show_memory_zones) {
-	menu_debug_memory_zone++;
-	menu_debug_memory_zone=machine_get_next_available_memory_zone(menu_debug_memory_zone);
-	if (menu_debug_memory_zone<0)  {
-		menu_debug_set_memory_zone_mapped();
-		//menu_debug_memory_zone=-1;
-		//menu_debug_show_memory_zones=0;
-	}
+                char buffer_texto[40];
+
+				
+
+				menu_add_item_menu_inicial_format(&array_menu_memory_zones,MENU_OPCION_NORMAL,NULL,NULL,"Mapped memory");
+				menu_add_item_menu_valor_opcion(array_menu_memory_zones,-1);
+
+                int zone=-1;
+				int i=1;
+                do {
+
+					zone++;
+					zone=machine_get_next_available_memory_zone(zone);
+					if (zone>=0) {
+						machine_get_memory_zone_name(zone,buffer_texto);
+						menu_add_item_menu_format(array_menu_memory_zones,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
+						menu_add_item_menu_valor_opcion(array_menu_memory_zones,zone);
+
+						if (menu_debug_memory_zone==zone) menu_change_memory_zone_list_opcion_seleccionada=i;
+
+					}
+					i++;
+				} while (zone>=0);
+
+
+                menu_add_item_menu(array_menu_memory_zones,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_hardware_set_f_func_action,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_memory_zones);
+
+                retorno_menu=menu_dibuja_menu(&menu_change_memory_zone_list_opcion_seleccionada,&item_seleccionado,array_menu_memory_zones,"Zones" );
+
+                
+
+
+				if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+						//Cambiamos la zona
+						int valor_opcion=item_seleccionado.valor_opcion;
+						return valor_opcion;
+                    
+                }
+
+	return -2;
+
 }
+
+void menu_debug_change_memory_zone(void)
+{
+	int valor_opcion=menu_change_memory_zone_list();
+	if (valor_opcion==-2) return; //Pulsado ESC
+
+	if (valor_opcion<0) {
+		menu_debug_set_memory_zone_mapped();
+	}
+	else {
+		menu_debug_show_memory_zones=1;
+		menu_debug_memory_zone=valor_opcion;
+	}	
+
+	/*if (menu_debug_show_memory_zones==0) menu_debug_show_memory_zones=1;
+
+	//Si se ha habilitado en el if anterior, entrara aqui
+	if (menu_debug_show_memory_zones) {
+		menu_debug_memory_zone++;
+		menu_debug_memory_zone=machine_get_next_available_memory_zone(menu_debug_memory_zone);
+		if (menu_debug_memory_zone<0)  {
+			menu_debug_set_memory_zone_mapped();
+
+		}
+	}
+	*/
+}
+
+void menu_debug_change_memory_zone_non_interactive(void)
+{
+
+
+	if (menu_debug_show_memory_zones==0) menu_debug_show_memory_zones=1;
+
+	//Si se ha habilitado en el if anterior, entrara aqui
+	if (menu_debug_show_memory_zones) {
+		menu_debug_memory_zone++;
+		menu_debug_memory_zone=machine_get_next_available_memory_zone(menu_debug_memory_zone);
+		if (menu_debug_memory_zone<0)  {
+			menu_debug_set_memory_zone_mapped();
+
+		}
+	}
+	
 }
 
 int menu_get_current_memory_zone_name_number(char *s)
@@ -20711,6 +20795,9 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 
 		menu_debug_set_memory_zone_attr();
 
+
+		menu_debug_change_memory_zone();
+
   		menu_debug_registers_splash_memory_zone();
 
         	char string_direccion[10];
@@ -20805,6 +20892,9 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
                 cls_menu_overlay();
 
                 menu_debug_set_memory_zone_attr();
+
+
+				menu_debug_change_memory_zone();
 
   		menu_debug_registers_splash_memory_zone();
 

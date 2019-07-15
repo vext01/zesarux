@@ -10183,7 +10183,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 
 			//Cambiar a zona memoria 14. TBBlue sprites
-			while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone();
+			while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone_non_interactive();
 
 			//paleta 11 tbblue
 			//view_sprites_palette=11;
@@ -10220,7 +10220,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 
 			//Cambiar a zona memoria 15. TSConf sprites
-			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
+			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone_non_interactive();
 
 			//paleta 13 tsconf
 			//view_sprites_palette=13;

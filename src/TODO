@@ -18,6 +18,24 @@
 
 -uart tsconf, tbblue y zxuno: quitar printf de debug de ahi y de chardevice y uartbridge
 
+-probar zonas memoria
+
+-revisar esto:
+			//Cambiar a zona memoria 14. TBBlue sprites
+			while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone();
+
+      y otros
+			//Cambiar a zona memoria 15. TSConf sprites
+			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
+
+      que usen        menu_debug_change_memory_zone. Recuperar version anterior algo asi como no interactiva y que este en bucle
+
+  tiene que cambiarse y meterlo en bucle o similar
+
+-revisar uso tambien de menu_debug_registers_change_memory_zone
+
+-grabar binario si ponemos 0, debe grabar total de zona memoria
+
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
 acortar archivo... pero habra que acortar tambien ruta subdirectorios....
 complicado. quiza ver mejor como gestiona los nombres largos desde nextos
