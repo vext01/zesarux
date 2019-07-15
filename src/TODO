@@ -20,19 +20,9 @@
 
 -probar zonas memoria
 
--revisar esto:
-			//Cambiar a zona memoria 14. TBBlue sprites
-			while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone();
+-Cambio zona en view sprites esta overlay por encima
 
-      y otros
-			//Cambiar a zona memoria 15. TSConf sprites
-			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
-
-      que usen        menu_debug_change_memory_zone. Recuperar version anterior algo asi como no interactiva y que este en bucle
-
-  tiene que cambiarse y meterlo en bucle o similar
-
--revisar uso tambien de menu_debug_change_memory_zone_splash
+-Probar sprites hardware ver 
 
 -grabar binario si ponemos 0, debe grabar total de zona memoria
 

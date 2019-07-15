@@ -1090,7 +1090,7 @@ void menu_debug_set_memory_zone(int zone)
 	//Cambiar a zona memoria indicada
 	int salir=0;
 
-	int zona_inicial=menu_debug_memory_zone;
+	//int zona_inicial=menu_debug_memory_zone;
 
 	while (menu_debug_memory_zone!=zone && salir<2) {
 		menu_debug_change_memory_zone_non_interactive();

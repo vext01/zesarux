@@ -10226,6 +10226,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 			menu_debug_set_memory_zone(15);
 
+
 			//paleta 13 tsconf
 			//view_sprites_palette=13;
 

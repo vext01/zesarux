@@ -77,5 +77,7 @@ extern void menu_direct_coreaudio_midi_output(MENU_ITEM_PARAMETERS);
 extern void menu_direct_windows_midi_output(MENU_ITEM_PARAMETERS);
 extern void menu_uartbridge(MENU_ITEM_PARAMETERS);
 
+extern void menu_debug_change_memory_zone_splash(void);
+
 #endif
 

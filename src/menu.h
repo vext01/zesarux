@@ -793,6 +793,8 @@ extern int menu_debug_hexdump_change_pointer(int p);
 
 extern void menu_debug_change_memory_zone(void);
 
+extern void menu_debug_set_memory_zone(int zone);
+
 extern void menu_chdir_sharedfiles(void);
 
 extern void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int longitud);
