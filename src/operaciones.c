@@ -6002,7 +6002,10 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//sea 0 antes de empezar
 		// http://devnext.referata.com/wiki/UART_TX
 		// https://www.specnext.com/the-next-on-the-network/
-		if (puerto==TBBLUE_UART_RX_PORT) return 0;
+		//if (puerto==TBBLUE_UART_RX_PORT) return 0;
+
+
+		if (puerto==TBBLUE_UART_RX_PORT) return tbblue_uartbridge_readdata();
 
 		//TODO puerto segundo joystick. De momento retornar 0
 		if (puerto==TBBLUE_SECOND_KEMPSTON_PORT) return 0;
@@ -7391,6 +7394,8 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
                 if (puerto==DS1307_PORT_CLOCK) ds1307_write_port_clock(value);
                 if (puerto==DS1307_PORT_DATA) ds1307_write_port_data(value);
+
+		if (puerto==TBBLUE_UART_TX_PORT) tbblue_uartbridge_writedata(value);				
 
 
 	}

@@ -5369,3 +5369,19 @@ void tbblue_out_port_32765(z80_byte value)
 
                 tbblue_set_memory_pages();
 }
+
+
+z80_byte tbblue_uartbridge_readdata(void)
+{
+
+	return uartbridge_readdata();
+}
+
+
+void tbblue_uartbridge_writedata(z80_byte value)
+{
+
+	uartbridge_writedata(value);
+
+
+}
