@@ -225,7 +225,7 @@ speed_t vdestino=chardevice_getspeed_enum_speed_t(velocidad);
 struct termios options;
 
     if (tcgetattr(handler, &options)!=0) {
-        debug_printf(VERBOSE_ERR,"Error getting port properties");
+        debug_printf(VERBOSE_ERR,"Error getting port properties when setting speed");
         return;
     }
     
