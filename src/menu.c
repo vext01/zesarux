@@ -16587,9 +16587,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_uartbridge,NULL,"UART bridge emulation");
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Bridge from zxuno uart ports to a local serial uart device");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Bridge from zxuno uart ports to a local serial uart device\n"
-					"It does NOT emulate a full uart device, just links from the zxuno ports to a physical local device"
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Bridge from emulated machine uart ports to a local serial uart device");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Bridge from emulated machine uart ports to a local serial uart device\n"
+					"It does NOT emulate a full uart device, just links from the emulated machine ports to a physical local device"
 				);
 		}		
 

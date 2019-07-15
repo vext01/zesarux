@@ -224,10 +224,25 @@ speed_t vdestino=chardevice_getspeed_enum_speed_t(velocidad);
 
 struct termios options;
 
-tcgetattr(handler, &options);
-cfsetispeed(&options, vdestino);
-cfsetospeed(&options, vdestino);
-tcsetattr(handler, TCSANOW, &options);
+    if (tcgetattr(handler, &options)!=0) {
+        debug_printf(VERBOSE_ERR,"Error getting port properties");
+        return;
+    }
+    
+    if (cfsetispeed(&options, vdestino)!=0) {
+        debug_printf(VERBOSE_ERR,"Error setting input port speed");
+        return;
+    }
+    
+    if (cfsetospeed(&options, vdestino)!=0) {
+        debug_printf(VERBOSE_ERR,"Error setting output port speed");
+        return;
+    }
+
+    if (tcsetattr(handler, TCSANOW, &options)!=0) {
+        debug_printf(VERBOSE_ERR,"Error setting port speed");
+        return;
+    }
 #endif
 
 }

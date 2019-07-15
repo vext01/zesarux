@@ -6182,7 +6182,7 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		if (puerto==TSCONF_ZIFI_INPUT_FIFO_STATUS) return tsconf_zifi_read_input_fifo_status(); 
 		if (puerto==TSCONF_ZIFI_OUTPUT_FIFO_STATUS) return tsconf_zifi_read_output_fifo_status(); 
 
-		//Puerto desconocido pero que usa la demo zifi
+		//Puerto desconocido pero que usa la demo zifi. Tambien lo usa en escritura pero no se como va
 		if (puerto==0x57) return tsconf_read_port_57();
 
 
