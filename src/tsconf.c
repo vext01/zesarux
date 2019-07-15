@@ -3222,7 +3222,7 @@ void tsconf_set_emulador_settings(void)
 
 z80_byte tsconf_zifi_read_data_reg(void)
 {
-
+	printf ("tsconf_zifi_read_data_reg\n");
 	return uartbridge_readdata();
 }
 
@@ -3230,6 +3230,7 @@ z80_byte tsconf_zifi_read_data_reg(void)
 void tsconf_zifi_write_data_reg(z80_byte value)
 {
 
+	printf ("tsconf_zifi_write_data_reg\n");
 	uartbridge_writedata(value);
 
 
@@ -3238,17 +3239,22 @@ void tsconf_zifi_write_data_reg(z80_byte value)
 z80_byte tsconf_zifi_read_error_reg(void)
 {
 	//TODO: Ni idea que retornar
+	printf ("tsconf_zifi_read_error_reg\n");
 	return 0;
 }
 
-void tsconf_zifi_write_command_reg(void)
+void tsconf_zifi_write_command_reg(z80_byte value)
 {
 	//TODO: Ni idea que hacer con esto, aparentemente altera la fifo de conexion con la wifi
+	printf ("tsconf_zifi_write_command_reg\n");
 }
 
 
 z80_byte tsconf_zifi_read_input_fifo_status(void)
 {
+
+	printf ("tsconf_zifi_read_input_fifo_status\n");
+
 	//No dispositivo abierto
 	if (!uartbridge_available()) return 0;
 
@@ -3267,8 +3273,19 @@ z80_byte tsconf_zifi_read_input_fifo_status(void)
 
 z80_byte tsconf_zifi_read_output_fifo_status(void)
 {
+	printf ("tsconf_zifi_read_output_fifo_status\n");
+
 	//0 - output FIFO is full
 	return 1;
 }
 
+z80_byte temp_valor_puerto_57;
+
+z80_byte tsconf_read_port_57(void)
+{
+	//TODO: ni idea. demo zifi espera que sea FFH
+	//printf ("PC=%04XH\n",reg_pc);
+	temp_valor_puerto_57++;
+	return temp_valor_puerto_57;	
+}
 

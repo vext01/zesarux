@@ -6182,6 +6182,9 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		if (puerto==TSCONF_ZIFI_INPUT_FIFO_STATUS) return tsconf_zifi_read_input_fifo_status(); 
 		if (puerto==TSCONF_ZIFI_OUTPUT_FIFO_STATUS) return tsconf_zifi_read_output_fifo_status(); 
 
+		//Puerto desconocido pero que usa la demo zifi
+		if (puerto==0x57) return tsconf_read_port_57();
+
 
 		//Otros puertos
 		//printf ("Leyendo puerto %04XH\n",puerto);
@@ -7346,7 +7349,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 
 					//Otros puertos en escritura, hacer debug
-					if ( (puerto & 32770) != 0 && puerto_l!=0xFE ) {
+					if ( (puerto & 32770) != 0 && puerto_l!=0xFE && puerto_l!=0xAF) {
 						//printf ("Writing TSConf port %04XH value %02XH\n",puerto,value);
 					}
 				}
