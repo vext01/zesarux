@@ -16354,6 +16354,9 @@ void menu_uartbridge(MENU_ITEM_PARAMETERS)
 						}	
 						menu_add_item_menu_shortcut(array_menu_uartbridge,'e');
 
+
+#ifndef MINGW
+
 						if (uartbridge_speed==CHDEV_SPEED_DEFAULT) {
 							menu_add_item_menu_format(array_menu_uartbridge,MENU_OPCION_NORMAL,menu_uartbridge_speed,menu_uartbridge_speed_cond,"[Default] Speed");
 						}
@@ -16361,6 +16364,9 @@ void menu_uartbridge(MENU_ITEM_PARAMETERS)
 							menu_add_item_menu_format(array_menu_uartbridge,MENU_OPCION_NORMAL,menu_uartbridge_speed,menu_uartbridge_speed_cond,"[%d] Speed",
 							chardevice_getspeed_enum_int(uartbridge_speed));
 						}
+
+#endif
+					
 
                         menu_add_item_menu(array_menu_uartbridge,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
