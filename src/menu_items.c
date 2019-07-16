@@ -1424,7 +1424,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 					);
 
 #else
-					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct AY music output to a real MIDI device");
+					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct AY music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
 #endif
 
 					menu_add_item_menu_shortcut(array_menu_settings_audio,'m');
