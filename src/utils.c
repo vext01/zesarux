@@ -3535,7 +3535,8 @@ int util_write_configfile(void)
   if (audio_midi_output_initialized)          ADD_STRING_CONFIG,"--enable-midi");
                                               ADD_STRING_CONFIG,"--midi-client %d",audio_midi_client);
                                               ADD_STRING_CONFIG,"--midi-port %d",audio_midi_port);
-						
+
+  if (midi_output_record_noisetone.v)         ADD_STRING_CONFIG,"--midi-allow-tone-noise");			
 
 
 
