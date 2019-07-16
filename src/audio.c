@@ -2861,6 +2861,9 @@ int audio_midi_output_init(void)
 	//Aqui no se puede entrar desde menu, pero si desde command line, y podria intentar activarse cuando no hay dichos drivers disponibles
 	if (!audio_midi_available()) return 0;
 
+
+	debug_printf (VERBOSE_DEBUG,"Initializing midi output");
+
 #ifdef COMPILE_ALSA
      
 
