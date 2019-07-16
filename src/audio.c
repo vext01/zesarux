@@ -2822,9 +2822,34 @@ void audio_midi_output_finish(void)
 #endif	
 }
 
+//Dice si esta disponible midi, cuando es en windows, o con coreaudio compilado, o con alsa compilado
+int audio_midi_available(void)
+{
+#ifdef COMPILE_ALSA
+		return 1;
+#endif
+
+#ifdef COMPILE_COREAUDIO
+		return 1;
+#endif
+
+
+#ifdef MINGW
+		return 1;
+#endif	
+
+	//Cualquier otro caso, no disponible
+	return 0;
+
+}
+
+
 //Devuelve 1 si error
 int audio_midi_output_init(void)
 {
+
+	//Aqui no se puede entrar desde menu, pero si desde command line, y podria intentar activarse cuando no hay dichos drivers disponibles
+	if (!audio_midi_available()) return 0;
 
 #ifdef COMPILE_ALSA
      

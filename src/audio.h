@@ -292,6 +292,7 @@ extern z80_bit midi_output_record_noisetone;
 
 extern int audio_midi_client;
 extern int audio_midi_port;
+extern int audio_midi_available(void);
 
 
 #ifdef MINGW

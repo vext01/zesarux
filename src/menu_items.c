@@ -1409,7 +1409,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_midi_output,NULL,"AY to ~~MIDI Output");
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_midi_output,audio_midi_available,"AY to ~~MIDI Output");
 					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device");
 
 
