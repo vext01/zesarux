@@ -1,9 +1,12 @@
   
 --- Para esta version 8.0:
 
+
+-ZRCP command para truncar logs historicos
+
 -cpuid ("zxid") según especificación de mcleod
 
--ZRCP command para trucar logs historicos
+-Formato pzx
 
 -file browser no muestra dispositivos. importante para uart
 
@@ -27,6 +30,12 @@
 -tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
 
 -Copiar datos entre zonas memoria 
+
+-Alguna especie de “top” de partes del emulador 
+
+-Efecto de encefalograma... para..?
+
+-Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
 
 -menu debug cpu: lineas desensamblado que aumente si ventana mas grande
 
@@ -58,6 +67,8 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -unpaws: 
 *compression tokens no siempre estan hasta el 255
+
+-mapa localidades daad/paws/quill
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
