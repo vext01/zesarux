@@ -3531,6 +3531,14 @@ int util_write_configfile(void)
   if (ay_player_limit_any_track!=0)           ADD_STRING_CONFIG,"--ayplayer-any-length %d",ay_player_limit_any_track/50);
   if (ay_player_cpc_mode.v)                   ADD_STRING_CONFIG,"--ayplayer-cpc");
 
+
+  if (audio_midi_output_initialized)          ADD_STRING_CONFIG,"--enable-midi");
+                                              ADD_STRING_CONFIG,"--midi-client %d",audio_midi_client);
+                                              ADD_STRING_CONFIG,"--midi-port %d",audio_midi_port);
+						
+
+
+
   //Este setting lo permitimos siempre, aunque no se haya compilado driver sdl, pues es una variable global, aunque no se verá en la ayuda,
   if (sdl_raw_keyboard_read.v)                ADD_STRING_CONFIG,"--sdlrawkeyboard");
   

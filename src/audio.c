@@ -2802,6 +2802,16 @@ int audio_midi_port=0;
 
 void audio_midi_output_finish(void)
 {
+
+	//Aqui no se puede entrar desde menu, pero si al finalizar ZEsarUX, y podria intentar activarse cuando no hay dichos drivers disponibles
+	if (!audio_midi_available()) return;
+
+
+	//No hay nada que finalizar?
+	if (!audio_midi_output_initialized) return;
+
+	debug_printf (VERBOSE_DEBUG,"Closing midi output");
+
 #ifdef COMPILE_ALSA
      
 	alsa_mid_finish_all();

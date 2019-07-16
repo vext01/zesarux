@@ -7750,6 +7750,8 @@ void end_emulator(void)
 	trd_flush_contents_to_disk();
 	superupgrade_flush_flash_to_disk();
 
+	audio_midi_output_finish();
+
 
 	audio_thread_finish();
 	audio_playing.v=0;
