@@ -2793,6 +2793,12 @@ void audio_midi_output_flush_output(void)
 //Notas anteriores sonando, 3 canales
 char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
 
+//Puerto y cliente, para diferentes drivers
+int audio_midi_client=0;
+int audio_midi_port=0;
+//Client solo es usado por alsa
+//Port lo utilizan alsa y windows 
+
 
 void audio_midi_output_finish(void)
 {
@@ -3023,7 +3029,7 @@ void audio_midi_output_frame_event(void)
 //     
 
 HMIDIOUT windows_midi_device;
-int windows_midi_midiport=0;
+//int windows_midi_midiport=0;
 
 typedef union 
 { 
@@ -3060,7 +3066,7 @@ void windows_midi_output_flush_output(void)
 int windows_mid_initialize_all(void)
 {
 // Open the MIDI output port
-   int flag = midiOutOpen(&windows_midi_device, windows_midi_midiport, 0, 0, CALLBACK_NULL);
+   int flag = midiOutOpen(&windows_midi_device, audio_midi_port, 0, 0, CALLBACK_NULL);
    if (flag != MMSYSERR_NOERROR) {
       debug_printf(VERBOSE_ERR,"Error opening MIDI Output");
       return 1;

@@ -1027,8 +1027,8 @@ void alsa_mid_initialize_volume(void)
 
 
 
-int alsa_midi_client=0;
-int alsa_midi_port=0;
+//int alsa_midi_client=0;
+//int alsa_midi_port=0;
 int alsa_midi_volume=100;
 
 
@@ -1038,8 +1038,8 @@ int alsa_mid_initialize_all(void)
 {
 
         //Inicializar sistema ALSA midi
-        zesarux_mid_alsa_audio_info.midi_client=alsa_midi_client;
-        zesarux_mid_alsa_audio_info.midi_port=alsa_midi_port;
+        zesarux_mid_alsa_audio_info.midi_client=audio_midi_client;
+        zesarux_mid_alsa_audio_info.midi_port=audio_midi_port;
 
     if (alsa_mid_initialize_audio() ) return 1;
 

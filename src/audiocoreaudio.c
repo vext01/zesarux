@@ -563,6 +563,7 @@ int coreaudio_mid_initialize_all(void)
 {
    // Prepare MIDI Interface Client/Port for writing MIDI data:
 
+
    OSStatus status;
    status = MIDIClientCreate(CFSTR("ZEsarUX"), NULL, NULL, &coreaudio_midi_midiclient);
    if (status) {
