@@ -12722,11 +12722,11 @@ void menu_debug_registers_splash_memory_zone(void)
 	menu_generic_message_splash("Memory Zone",textofinal);
 
 
-
-	//menu_escribe_texto(0,0,3,4,"Zone");
-	//screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"hola");
 }
 
+
+//Actualmente nadie usa esta funcion. Para que queremos cambiar la zona (en un menu visible) y luego hacer splash?
+//antes tenia sentido pues el cambio de zona de memoria no era con menu, simplemente saltaba a la siguiente
 void menu_debug_change_memory_zone_splash(void)
 {
 	menu_debug_change_memory_zone();
@@ -13910,7 +13910,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				}
 
 				if (tecla=='z') {
-					menu_debug_change_memory_zone_splash();
+					menu_debug_change_memory_zone();
 				}
 
 
@@ -14200,7 +14200,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
-                    menu_debug_change_memory_zone_splash();
+                    menu_debug_change_memory_zone();
 
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;

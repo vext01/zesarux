@@ -24,6 +24,8 @@
 
 -Puerto 57 tsconf es mmc??
 
+-tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
+
 -grabar binario si ponemos 0, debe grabar total de zona memoria
 
 -soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?

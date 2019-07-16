@@ -20811,7 +20811,7 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 		menu_debug_set_memory_zone_attr();
 
 
-		menu_debug_change_memory_zone_splash();
+		menu_debug_change_memory_zone();
 
   		
 
@@ -20909,7 +20909,7 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
                 menu_debug_set_memory_zone_attr();
 
 
-				menu_debug_change_memory_zone_splash();
+				menu_debug_change_memory_zone();
 
 
 
