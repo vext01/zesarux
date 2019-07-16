@@ -1907,6 +1907,7 @@ printf (
 		"--no-show-changelog        Do not show changelog when updating version\n"
 		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
 		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
+		"--clear-all-windowgeometry Clear all windows geometry thay may be loaded from the configuration file\n"
 		"--codetests                Run develoment code tests\n"
 		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n"
 
@@ -6815,7 +6816,12 @@ int parse_cmdline_options(void) {
 
 				util_add_window_geometry(nombre,x,y,ancho,alto);
 
-			}			
+			}	
+
+
+			else if (!strcmp(argv[puntero_parametro],"--clear-all-windowgeometry")) {
+				util_clear_all_windows_geometry();
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--tonegenerator")) {
 				siguiente_parametro_argumento();
