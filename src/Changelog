@@ -11,6 +11,7 @@ Improved menu interface:
 -GUI color bars depend on current style
 -Added support for more cyrillic characters on menu
 -Added RetroMac Gui Style
+-Improved memory zone selector
 -Improved footer:
 --Footer now completely follows GUI Style
 --Reordered cpu use, numbers in red when cpu use > 85%

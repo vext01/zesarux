@@ -20696,9 +20696,9 @@ void menu_run_mantransfer(MENU_ITEM_PARAMETERS)
 
 
 
-menu_z80_moto_int load_binary_last_address=16384;
+menu_z80_moto_int load_binary_last_address=0;
 menu_z80_moto_int load_binary_last_length=0;
-menu_z80_moto_int save_binary_last_address=16384;
+menu_z80_moto_int save_binary_last_address=0;
 menu_z80_moto_int save_binary_last_length=1;
 
 
@@ -20935,17 +20935,22 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 
                 sprintf (string_longitud,"%d",save_binary_last_length);
 
-                menu_ventana_scanf("Length: ",string_longitud,8);
+                menu_ventana_scanf("Length: 0 - all",string_longitud,8);
 
                 int valor_leido_longitud=parse_string_to_number(string_longitud);
 
-                                        //maximo 64kb
-		if (MACHINE_IS_SPECTRUM) {
-                                        //if (valor_leido_longitud==0 || valor_leido_longitud>65536) valor_leido_longitud=65536;
-                        if (valor_leido_longitud==0) valor_leido_longitud=4194304; //4 MB max
-		}
+		save_binary_last_length=valor_leido_longitud;						
 
-		save_binary_last_length=valor_leido_longitud;
+
+			menu_debug_set_memory_zone_attr();
+
+			
+
+		if (valor_leido_longitud==0) valor_leido_longitud=menu_debug_memory_zone_size;			
+
+ 
+
+		
 
 
 		char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
