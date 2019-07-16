@@ -1962,7 +1962,7 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	//ancho +=screen_ext_desktop_enabled*scr_driver_can_ext_desktop()*screen_ext_desktop_width*zoom_x;
 
-	debug_printf (VERBOSE_INFO,"Allocating memory for menu layers %d X %d",ancho,alto);
+	debug_printf (VERBOSE_DEBUG,"Allocating memory for menu layers %d X %d",ancho,alto);
 	//debug_exec_show_backtrace();
 
 	if (!menu_overlay_activo) {
@@ -1973,7 +1973,7 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 
 	//Si el tamanyo anterior es igual que ahora, no tiene sentido tocarlo
 	if (ancho_layer_menu_machine==ancho && alto_layer_menu_machine==alto) {
-		debug_printf (VERBOSE_DEBUG,"Returning reallocate layers as the current size is the same as the new (%dX%d)",ancho,alto);
+		debug_printf (VERBOSE_DEBUG,"Returning reallocate layers as the current size is the same as the new (%d X %d)",ancho,alto);
 		return;
 	}
 
