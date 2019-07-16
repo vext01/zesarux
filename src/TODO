@@ -1,12 +1,8 @@
-  
+ 
 --- Para esta version 8.0:
 
 
 -ZRCP command para truncar logs historicos
-
--cpuid ("zxid") según especificación de mcleod
-
--Formato pzx
 
 -file browser no muestra dispositivos. importante para uart
 
@@ -25,21 +21,7 @@
 
 -Probar watches sin multitarea 
 
--Puerto 57 tsconf es mmc??
-
--tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
-
--Copiar datos entre zonas memoria 
-
--Alguna especie de “top” de partes del emulador 
-
--Efecto de encefalograma... para..?
-
 -Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
-
--menu debug cpu: lineas desensamblado que aumente si ventana mas grande
-
--leer audio casette
 
 -.nex file arrancar en 14 MHz
 https://specnext.dev/wiki/NEX_file_format
@@ -47,31 +29,10 @@ https://specnext.dev/wiki/NEX_file_format
 -aumentar sprites por linea next
 -actualizar sd card next
 
--soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
-acortar archivo... pero habra que acortar tambien ruta subdirectorios....
-complicado. quiza ver mejor como gestiona los nombres largos desde nextos
+-comprobar mra. parece que no siempre se dispara. probar tambien pra. Quiza falla en los que se esta cambiando el cpu turbo continuamente?
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
--filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
-
--alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
-y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
-
--comprobar mra. parece que no siempre se dispara
-
--uso de settings.c y settings.h. revisar que tiene que ir ahi
-
--unpaws con quill:
-*compression tokens?
-
--unpaws: 
-*compression tokens no siempre estan hasta el 255
-
--mapa localidades daad/paws/quill
-
--ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
-la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
 -ZX Desktop:
 
@@ -90,16 +51,9 @@ pendiente sdl, xwindow, fbdev
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win ?
 
--Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar la velocidad de la cpu en nextos
-
--ejemplos para spool, como:
-./txt_to_basic_lines.sh FAQ 3 si si no > pruebaspool2.txt
-
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
-
--al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
 
 -probar numselect
 
@@ -121,8 +75,60 @@ pendiente sdl, xwindow, fbdev
 Que hacemos con cocoa no opengl?
 
 
+
+
 --------Para próxima versión:
 
+-ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
+la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
+
+-Puerto 57 tsconf es mmc??
+
+-alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
+y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
+
+-filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
+
+-uso de settings.c y settings.h. revisar que tiene que ir ahi
+
+-soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
+acortar archivo... pero habra que acortar tambien ruta subdirectorios....
+complicado. quiza ver mejor como gestiona los nombres largos desde nextos
+
+-Copiar datos entre zonas memoria 
+
+-unpaws con quill:
+*compression tokens?
+
+-unpaws: 
+*compression tokens no siempre estan hasta el 255
+
+-mapa localidades daad/paws/quill
+
+-Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar la velocidad de la cpu en nextos
+
+
+-ejemplos para spool, como:
+./txt_to_basic_lines.sh FAQ 3 si si no > pruebaspool2.txt
+
+-al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
+
+-menu debug cpu: lineas desensamblado que aumente si ventana mas grande
+
+-leer audio casette
+
+-En mostrar registros IR
+Decir cuál es el vector de interrupción 
+
+-Alguna especie de “top” de partes del emulador 
+
+-Efecto de encefalograma... para..?
+
+-tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
+
+--Formato pzx
+
+-cpuid ("zxid") según especificación de mcleod
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
 cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
