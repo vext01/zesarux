@@ -1420,6 +1420,9 @@ printf (
 		"--ayplayer-inf-length n    Limit to n seconds to ay tracks with infinite lenght\n"
 		"--ayplayer-any-length n    Limit to n seconds to all ay tracks\n"
 		"--ayplayer-cpc             Set AY Player to CPC mode (default: Spectrum)\n"
+		"--enable-midi              Enable midi output\n"
+		"--midi-client n            Set midi client value to n. Needed only on Linux with Alsa audio driver\n"
+		"--midi-port n              Set midi port valur to n. Needed on Windows and Linux with Alsa audio driver\n"
 
 
 		"\n"
@@ -4629,6 +4632,8 @@ z80_bit command_line_dsk={0};
 
 z80_bit command_line_set_breakpoints={0};
 
+z80_bit command_line_enable_midi={0};
+
 int command_line_vsync_minimum_lenght=0;
 
 char *command_line_load_binary_file=NULL;
@@ -6297,6 +6302,32 @@ int parse_cmdline_options(void) {
 				ay_player_cpc_mode.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--enable-midi")) {
+				command_line_enable_midi.v=1;
+			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--midi-client")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<0 || valor>255) {
+					printf ("Invalid client value. Must be between 0 and 255\n");
+					exit(1);
+				}
+				audio_midi_client=valor;
+			}			
+
+			else if (!strcmp(argv[puntero_parametro],"--midi-port")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<0 || valor>255) {
+					printf ("Invalid port value. Must be between 0 and 255\n");
+					exit(1);
+				}
+				audio_midi_port=valor;
+			}					
+
+
 			else if (!strcmp(argv[puntero_parametro],"--noreset-audiobuffer-full")) {
 				audio_noreset_audiobuffer_full.v=1;
 			}
@@ -7523,6 +7554,10 @@ struct sched_param sparam;
 		        breakpoints_enable();
 		}
 
+	}
+
+	if (command_line_enable_midi.v) {
+		if (audio_midi_output_init() ) debug_printf (VERBOSE_ERR,"Error initializing midi device");
 	}
 
 
