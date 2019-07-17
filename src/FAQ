@@ -485,6 +485,16 @@ Q: Trying the breakout demo, it gives me the error: Nonsense in basic at line 10
 A: That is an old version which uses previous NextOS basic. Change line 10 to:
 10 LOAD "breakout.SPR" BANK 10 
 
+
+Q: Can I use CSpect SD card images from site http://www.zxspectrumnext.online/cspect/ ?
+A: Of course. As they say in the web page "for use with CSpect and real ZX Spectrum Next board", ZEsarUX behaves almost a real ZX Spectrum next board,
+so you can use the SD card images. Just some things to take into account:
+-You should rename the img file to extension .mmc. If you don't do it, it won't appear in the File Browser (unless you change the filter to show all files), but can be used even with .img extension
+-Those img file size are not multiple of 16 kb. It will tell you an error but the file can be used
+-Writing changes to a mmc file bigger than 2 gb may generate error on Mac OS. In these cases I recommend you to disable the "Persistent writes" setting
+-It seems the CSpect 2 GB image file is a bit smaller than 2gb, so it can be used even on Mac and write changes to it.
+-Using mmc files bigger than 1 gb may be slow. So be patient when opening the image or writing changes.
+
 ----------------------------------------------------------------------------
 
 

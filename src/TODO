@@ -7,8 +7,6 @@
 -Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
 
 -aumentar sprites por linea next
--actualizar sd card next
-
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
@@ -1364,7 +1362,10 @@ Fifosdlbuffersize 4 y sdlsamplesize 2048
 
 -Probar otros firmwares de divmmc, si es que los hay: fatware?
 
--Mmap para acceso a mmc/ide 
+-Mmap para acceso a mmc/ide. Pero solo cuando se activa "persistent writes".
+mmap tiene flags para decir que es solo lectura pero supongo que fallaria con segfault si escribimos en una zona de solo lectura
+Sin persistent writes deberia hacerlo como siempre: escribiendo en memoria, sin mmap
+Con mmap, se deja de hacer flush, ya que lo hará automáticamente (??) el sistema operativo, al activar mmap 
 
 -TODO. Bit MAPRAM can be set to '1' only (when it's '1', only power-on can return it to '0').
 
@@ -1372,6 +1373,7 @@ Fifosdlbuffersize 4 y sdlsamplesize 2048
 retorna:
 ptr_mmcfile: 2017595472
 escritos: -2147483648
+
 
 -Revisar protección de escritura en páginas divmmc
 
