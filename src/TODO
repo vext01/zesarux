@@ -1,32 +1,21 @@
  
 --- Para esta version 8.0:
 
-
--file browser no muestra dispositivos. importante para uart
-
 -listado de caracteristicas exclusivas que solo estan en ZEsarUX y en ningun otro emulador de Spectrum
 
--Probar watches sin multitarea 
 
 -Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
-
--.nex file arrancar en 14 MHz
-https://specnext.dev/wiki/NEX_file_format
 
 -aumentar sprites por linea next
 -actualizar sd card next
 
--comprobar mra. parece que no siempre se dispara. probar tambien pra. Quiza falla en los que se esta cambiando el cpu turbo continuamente?
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
 
 -ZX Desktop:
 
---En FAQ explicar qué es ZX Desktop
---Extender info de zxvision y zxdesktop en features (ya hay algo)
 --Redimensionar ventana redibuja el zxdesktop?
-
 --Revisar Full screen en ZX desktop
 ok mac os
 pendiente sdl, xwindow, fbdev
@@ -65,6 +54,12 @@ Que hacemos con cocoa no opengl?
 
 
 --------Para próxima versión:
+
+
+-file browser no muestra dispositivos. importante para uart
+Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
+o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
+arriba)
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
@@ -285,6 +280,9 @@ hace:
 *case de registros y valores, meter switch en vez de if....
 
 *pwa,pwv,mra,mwv etc requieren que breakpoints esten activos
+
+*parece que a veces mra o pra por ejemplo no siempre se dispara. probar tambien pra. Quiza falla en los que se esta cambiando el cpu turbo continuamente?
+Pero probado en next y funciona
 
 *permite doble resta como a--b -> que eso al final es : a- (-b) -> a+b
 
@@ -864,11 +862,9 @@ Before this update, 512 tile mode was automatically entered when the ula was dis
 "ULA over tilemap" was only bit 8 of the tile number if the ULA was disabled.  We're getting rid of that requirement by making it bit 8 when the 512 tile mode is enabled.  So no need to have the ULA disabled to get there anymore.
 
 
+-.nex file format info:
+https://specnext.dev/wiki/NEX_file_format
 
--.nex files support. Parecidos a .sna pero tienen cabeceras para guardar registros nextreg, etc. Esperar a que tengan finalizado el formato
-
--.snax files supoort. son como .sna en teoria, y luego el esxdos le deja un archivo abierto que apunta ahi-> necesitara esxdos handler
-Se usan realmente??
 
 
 TBBLUE: 
@@ -893,15 +889,6 @@ https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9
 
 
 -mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
-
--.nex files:
-NextOS (but not esxDOS) doesn’t check the length when it loads, so you can append anything you like onto the end of the 128K version. The responsibility is yours to seek, load, stream from it etc, as you like.
-
-For SNA files, you have to embed the file name into your loading code, and reopen the file, which means a user can’t easily rename the file.
-
-SNX files are identical to SNA, except NextOS leaves the file open for you to do stuff with. This is always handle no. 0.
-
-There are a couple of other large file formats in the works too. These will have dot commands that load the contents for you. It’s easy to integrate this into the browser by adding entries to browser.cfg.
 
 
 	
@@ -990,6 +977,8 @@ la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
 -Opción para poder cargar snapshot pero sin cambiar la rom actual... útil por si grabamos un snapshot por ejemplo en máquina 128kb pero la rom era la del opense
 ->esto ya esta para .sna, hacer para zsf
 -Opcion para forzar siempre snap grabar zsf de 48k
+
+-Incluir campo con fecha grabacion snapshot
 
 
 -quiza en set_machine, cuando hace:

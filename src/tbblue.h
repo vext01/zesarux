@@ -24,9 +24,13 @@
 
 #include "cpu.h"
 
-#define TBBLUE_CORE_VERSION_MAJOR     1 
-#define TBBLUE_CORE_VERSION_MINOR     10
-#define TBBLUE_CORE_VERSION_SUBMINOR  47
+//#define TBBLUE_CORE_VERSION_MAJOR     1 
+//#define TBBLUE_CORE_VERSION_MINOR     10
+//#define TBBLUE_CORE_VERSION_SUBMINOR  47
+
+#define TBBLUE_CORE_VERSION_MAJOR     2
+#define TBBLUE_CORE_VERSION_MINOR     0
+#define TBBLUE_CORE_VERSION_SUBMINOR  28
 
 extern z80_byte *tbblue_ram_memory_pages[];
 

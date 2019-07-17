@@ -8878,6 +8878,27 @@ int get_file_type_from_stat(struct stat *f)
 
 int get_file_type(int d_type, char *nombre)
 {
+/*
+       lowing macro constants for the value returned in d_type:
+
+       DT_BLK      This is a block device.
+
+       DT_CHR      This is a character device.
+
+       DT_DIR      This is a directory.
+
+       DT_FIFO     This is a named pipe (FIFO).
+
+       DT_LNK      This is a symbolic link.
+
+       DT_REG      This is a regular file.
+
+       DT_SOCK     This is a UNIX domain socket.
+
+       DT_UNKNOWN  The file type is unknown.
+
+*/
+
 
 	debug_printf (VERBOSE_DEBUG,"Name: %s type: %d constants: DT_DIR: %d DT_REG: %d DT_LNK: %d",
 			nombre,d_type,DT_DIR,DT_REG,DT_LNK);

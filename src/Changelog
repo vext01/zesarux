@@ -46,6 +46,7 @@ Improved watches:
 -watches are saved on configuration file
 
 Improved tbblue emulation:
+-Updated to the last Next Version files
 -can load .nex snapshot files from the command line or the ZEsarUX menus, without having to boot NextOS
 -added UART Bridge emulation
 
