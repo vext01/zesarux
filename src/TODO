@@ -5,7 +5,6 @@
 
 -Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
 
--aumentar sprites por linea next
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
@@ -887,6 +886,15 @@ https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9
 
 -mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
 
+-mas patterns de sprites:
+N6, despite the name, is the least significant bit.
+
+This 7-bit pattern number can identify 128 patterns in the 16k pattern memory, each of which are 128 bytes in size. The full 7-bits are therefore used for 4-bit sprites.
+
+For 8-bit sprites, N6=0 always. The remaining 6 bits can identify 64 patterns, each of which is 256 bytes in size.
+De momento estoy haciendo 64 patterns-> por tanto, 256 bytes por pattern
+
+-en visor de sprites, dice Sprites y zona memory tambien. Quiza deberia decir mejor patterns?
 
 	
 
