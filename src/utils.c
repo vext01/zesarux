@@ -5483,7 +5483,7 @@ void util_set_reset_key_chloe(void)
 //Decir si el raton funciona sobre el menu
 int si_menu_mouse_activado(void)
 {
-  if (kempston_mouse_emulation.v) return 0;
+  //if (kempston_mouse_emulation.v) return 0;
   if (gunstick_emulation) return 0;
   if (mouse_menu_disabled.v) return 0;
 
@@ -5536,8 +5536,10 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 
         //printf ("Leido press release mouse\n");
         if (si_menu_mouse_activado() ) {
-          //Si no esta menu abierto, hace accion de abrir menu
-          if (menu_abierto==0) menu_fire_event_open_menu();
+          //Si no esta menu abierto, hace accion de abrir menu, siempre que no este kempston
+          if (menu_abierto==0) {
+                  if (kempston_mouse_emulation.v==0) menu_fire_event_open_menu();
+          }
           else {
             //Si esta menu abierto, es como enviar enter, pero cuando no esta la ventana en background
             if (zxvision_keys_event_not_send_to_machine) {
@@ -5577,8 +5579,10 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
         //Si esta menu abierto, hace como ESC
 
         if (si_menu_mouse_activado() ) {
-          //Si no esta menu abierto, hace accion de abrir menu
-          if (menu_abierto==0) menu_fire_event_open_menu();
+          //Si no esta menu abierto, hace accion de abrir menu, siempre que no este kempston
+          if (menu_abierto==0) {
+                  if (kempston_mouse_emulation.v==0) menu_fire_event_open_menu();
+          }
           else {
             //Si esta menu abierto, es como enviar ESC
             if (zxvision_keys_event_not_send_to_machine) {
