@@ -894,6 +894,8 @@ This 7-bit pattern number can identify 128 patterns in the 16k pattern memory, e
 For 8-bit sprites, N6=0 always. The remaining 6 bits can identify 64 patterns, each of which is 256 bytes in size.
 De momento estoy haciendo 64 patterns-> por tanto, 256 bytes por pattern
 
+-otros tipos de patterns (4 bit etc) y atributos extendidos sprites (quinto byte)
+
 -en visor de sprites, dice Sprites y zona memory tambien. Quiza deberia decir mejor patterns?
 
 	
