@@ -908,7 +908,7 @@ void tbsprite_pattern_put_value_index(z80_byte sprite,z80_byte index_in_sprite,z
 	tbsprite_new_patterns[tbsprite_pattern_get_offset_index(sprite,index_in_sprite)]=value;
 }
 
-//64 sprites
+
 /*
 [0] 1st: X position (bits 7-0).
 [1] 2nd: Y position (0-255).

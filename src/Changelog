@@ -49,6 +49,8 @@ Improved tbblue emulation:
 -updated to the last Next Version files
 -can load .nex snapshot files from the command line or the ZEsarUX menus, without having to boot NextOS
 -added UART Bridge emulation
+-increased maximum sprites per line to 100
+-increased total sprites to 128
 
 Improved Adventure Text Extractor: now it supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color

@@ -94,12 +94,7 @@ extern void tbblue_set_timing_48k(void);
 
 #define TBBLUE_SECOND_KEMPSTON_PORT 0x37
 
-#define MAX_SPRITES_PER_LINE 12
 
-#define TBBLUE_SPRITE_BORDER 32
-#define TBBLUE_TILES_BORDER 32
-
-#define MAX_X_SPRITE_LINE (TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER)
 
 
 #define TBBLUE_COPPER_MEMORY 2048
@@ -120,10 +115,20 @@ extern z80_byte tbblue_get_value_port_register(z80_byte registro);
 
 extern void tbsprite_do_overlay(void);
 
+
+#define MAX_SPRITES_PER_LINE 100
+
+#define TBBLUE_SPRITE_BORDER 32
+#define TBBLUE_TILES_BORDER 32
+
+#define MAX_X_SPRITE_LINE (TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER)
+
+
+
 #define TBBLUE_MAX_PATTERNS 64
 #define TBBLUE_SPRITE_SIZE 256
 
-#define TBBLUE_MAX_SPRITES 64
+#define TBBLUE_MAX_SPRITES 128
 //#define TBBLUE_TRANSPARENT_COLOR_INDEX 0xE3
 //#define TBBLUE_TRANSPARENT_COLOR 0x1C6
 
