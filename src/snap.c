@@ -5123,6 +5123,9 @@ int load_nex_snapshot_open_esxdos(char *nombre_archivo)
 void load_nex_snapshot(char *archivo)
 {
 
+	debug_printf(VERBOSE_DEBUG,"Loading .nex snapshot %s",archivo);
+
+
 #define NEX_HEADER_SIZE 512
 	//buffer para la cabecera
 	z80_byte nex_header[NEX_HEADER_SIZE];
@@ -5156,6 +5159,7 @@ void load_nex_snapshot(char *archivo)
 
 	//cambio a maquina tbblue, siempre 
 	//if (!MACHINE_IS_TBBLUE) {
+		
         current_machine_type=MACHINE_ID_TBBLUE;
 
 		//temporalmente ponemos tbblue fast boot mode y luego restauramos valor anterior
@@ -5168,6 +5172,23 @@ void load_nex_snapshot(char *archivo)
 
 		tbblue_fast_boot_mode.v=antes_tbblue_fast_boot_mode.v;
 	//}
+
+
+	//Al cargar .nex lo pone en turbo x 4
+	debug_printf(VERBOSE_DEBUG,"Setting turbo x 4 because it's the usual speed when loading .nex files from NextOS");
+
+	z80_byte reg7=tbblue_registers[7];
+	
+	reg7 &=(255-3); //Quitar los dos bits bajos
+
+	reg7 |=2;
+	//(R/W)	07 => Turbo mode
+	//bit 1-0 = Turbo (00 = 3.5MHz, 01 = 7MHz, 10 = 14MHz)
+
+	tbblue_registers[7]=reg7;
+	tbblue_set_emulator_setting_turbo();
+
+
 
 
 	//desactivamos interrupciones. No esta en el formato pero supongo que es asi
