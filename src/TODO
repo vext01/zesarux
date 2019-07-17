@@ -5,7 +5,6 @@
 
 -Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
 
-
 -meter comentario en archivo midi de grabado con ZEsarUX
 
 
@@ -15,11 +14,9 @@
 --Revisar Full screen en ZX desktop
 ok mac os
 pendiente sdl, xwindow, fbdev
+--Fbdev debe permitir ZX Desktop?
+--sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
-
--Fbdev debe permitir ZX Desktop?
--sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
--acabar de definir settings de ZX Desktop y que se guarden/tengan configuración
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win ?
 
@@ -28,9 +25,6 @@ pendiente sdl, xwindow, fbdev
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
 
 -probar numselect
-
--para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
--quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 
 -probar cpu use footer en maquinas que no muestran (como windows)
 
@@ -42,15 +36,16 @@ pendiente sdl, xwindow, fbdev
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
 
-
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
 Que hacemos con cocoa no opengl?
 
 
 
-
 --------Para próxima versión:
+-->no todo. Clasificar en otras secciones menos prioritarias!!
 
+-para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
+-quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
 
 -file browser no muestra dispositivos. importante para uart
 Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
