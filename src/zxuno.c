@@ -1731,9 +1731,9 @@ z80_byte zxuno_uartbridge_readstatus(void)
 	//No dispositivo abierto
 	if (!uartbridge_available()) return 0;
 
-	printf ("Before chardevice_status\n");
+	
 	int status=chardevice_status(uartbridge_handler);
-	printf ("After chardevice_status\n");
+	
 
 	z80_byte status_retorno=0;
 

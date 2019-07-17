@@ -2,8 +2,6 @@
 --- Para esta version 8.0:
 
 
--ZRCP command para truncar logs historicos
-
 -file browser no muestra dispositivos. importante para uart
 
 -uart bridge zxuno:
@@ -15,7 +13,6 @@
 **ni include de select.h ni funcion select->decir que siempre hay datos disponibles. el resto se deja, para simular en windows con archivos puede servir
 *parece que fcntl tampoco existe en windows 
 
--uart tsconf, tbblue y zxuno: quitar printf de debug de ahi y de chardevice y uartbridge
 
 -listado de caracteristicas exclusivas que solo estan en ZEsarUX y en ningun otro emulador de Spectrum
 

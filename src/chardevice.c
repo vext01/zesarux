@@ -217,7 +217,7 @@ void chardevice_setspeed(int handler,enum chardevice_speed velocidad)
     //nada
 #else
 
-printf ("Setting speed port to %d\n",chardevice_getspeed_enum_int(velocidad));
+debug_printf (VERBOSE_DEBUG,"Setting speed port to %d",chardevice_getspeed_enum_int(velocidad));
 
 speed_t vdestino=chardevice_getspeed_enum_speed_t(velocidad);
 

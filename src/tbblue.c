@@ -5382,7 +5382,7 @@ z80_byte tbblue_uartbridge_readdata(void)
 
 void tbblue_uartbridge_writedata(z80_byte value)
 {
-
+ 
 	uartbridge_writedata(value);
 
 
@@ -5393,9 +5393,9 @@ z80_byte tbblue_uartbridge_readstatus(void)
 	//No dispositivo abierto
 	if (!uartbridge_available()) return 0;
 
-	printf ("Before chardevice_status\n");
+	
 	int status=chardevice_status(uartbridge_handler);
-	printf ("After chardevice_status\n");
+	
 
 	z80_byte status_retorno=0;
 

@@ -3222,7 +3222,7 @@ void tsconf_set_emulador_settings(void)
 
 z80_byte tsconf_zifi_read_data_reg(void)
 {
-	printf ("tsconf_zifi_read_data_reg\n");
+	
 	return uartbridge_readdata();
 }
 
@@ -3230,7 +3230,7 @@ z80_byte tsconf_zifi_read_data_reg(void)
 void tsconf_zifi_write_data_reg(z80_byte value)
 {
 
-	printf ("tsconf_zifi_write_data_reg\n");
+	
 	uartbridge_writedata(value);
 
 
@@ -3239,28 +3239,29 @@ void tsconf_zifi_write_data_reg(z80_byte value)
 z80_byte tsconf_zifi_read_error_reg(void)
 {
 	//TODO: Ni idea que retornar
-	printf ("tsconf_zifi_read_error_reg\n");
+	
 	return 0;
 }
 
 void tsconf_zifi_write_command_reg(z80_byte value)
 {
 	//TODO: Ni idea que hacer con esto, aparentemente altera la fifo de conexion con la wifi
-	printf ("tsconf_zifi_write_command_reg\n");
+	value=1; //Para que no se queje el compilador
+	value++; 
 }
 
 
 z80_byte tsconf_zifi_read_input_fifo_status(void)
 {
 
-	printf ("tsconf_zifi_read_input_fifo_status\n");
+	
 
 	//No dispositivo abierto
 	if (!uartbridge_available()) return 0;
 
-	printf ("Before chardevice_status\n");
+	
 	int status=chardevice_status(uartbridge_handler);
-	printf ("After chardevice_status\n");
+	
 
 	z80_byte status_retorno=0;
 
@@ -3273,7 +3274,7 @@ z80_byte tsconf_zifi_read_input_fifo_status(void)
 
 z80_byte tsconf_zifi_read_output_fifo_status(void)
 {
-	printf ("tsconf_zifi_read_output_fifo_status\n");
+	//printf ("tsconf_zifi_read_output_fifo_status\n");
 
 	//0 - output FIFO is full
 	return 1;

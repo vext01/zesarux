@@ -57,7 +57,7 @@ int uartbridge_available(void)
 void uartbridge_enable(void)
 {
 
-	printf ("opening uart bridge\n");
+	debug_printf(VERBOSE_DEBUG,"Opening uart bridge");
 
 	if (uartbridge_enabled.v) return;
 
@@ -77,6 +77,8 @@ void uartbridge_disable(void)
 {
 	if (uartbridge_enabled.v==0) return;	
 
+	debug_printf(VERBOSE_DEBUG,"Closing uart bridge");
+
 	if (chardevice_close(uartbridge_handler)<0) {
 		debug_printf (VERBOSE_ERR,"Error closing uart bridge");		
 	}
@@ -94,17 +96,17 @@ z80_byte uartbridge_readdata(void)
 
     generic_footertext_print_operating("UART");
 
-	printf ("Reading uart data\n");
+	//printf ("Reading uart data\n");
 
 	//Devolver 0 por defecto si error leyendo
 	z80_byte byte_leido=0;
 
-	printf ("Before chardevice_read\n");
+	//printf ("Before chardevice_read\n");
 	int status=chardevice_read(uartbridge_handler,&byte_leido);
-	printf ("After chardevice_read\n");
+	//printf ("After chardevice_read\n");
 
 	if (status<1) {
-		printf ("Error reading uart data: %d\n",status);
+		//printf ("Error reading uart data: %d\n",status);
 		//Error leyendo
 		//de momento no decir nada
 	}
@@ -121,7 +123,7 @@ void uartbridge_writedata(z80_byte value)
 
     generic_footertext_print_operating("UART");
 
-	printf ("Writing uart data\n");
+	//printf ("Writing uart data\n");
 
 	int status=chardevice_write(uartbridge_handler,value);
 
