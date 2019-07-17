@@ -5205,7 +5205,7 @@ void load_nex_snapshot(char *archivo)
 	snap_version[3]=nex_header[7];
 	snap_version[4]=0;
 
-	//no imprimirlo por si no es una string normal
+	//no imprimirlo por si no es una string normal 
 	//printf ("Snapshot version: %s\n",snap_version);
 
 	if (

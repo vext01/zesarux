@@ -5894,8 +5894,8 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 	*/
 
-	//kempston mouse
-	if ( kempston_mouse_emulation.v  &&  (puerto_l&32) == 0  &&  ( (puerto_h&7)==3 || (puerto_h&7)==7 || (puerto_h&2)==2 ) ) {
+	//kempston mouse. Solo con menu cerrado
+	if ( !menu_abierto && kempston_mouse_emulation.v  &&  (puerto_l&32) == 0  &&  ( (puerto_h&7)==3 || (puerto_h&7)==7 || (puerto_h&2)==2 ) ) {
 		//printf ("kempston mouse. port 0x%x%x\n",puerto_h,puerto_l);
 
 //IN 64479 - return X axis (0-255)

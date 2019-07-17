@@ -4,16 +4,6 @@
 
 -file browser no muestra dispositivos. importante para uart
 
--uart bridge zxuno:
-*Probar con /dev/psaux dando permisos a todos 777
-*poder lanzar ioctl de cambio velocidad. compatible otros sistemas. ok no win
-*probar en windows. Validado en mac (con archivo) y en linux (con archivo, pipe y psaux)
-*extender tambien para tbblue
-*/sys/select.h no existe en windows. Ver alternativa -> Dado que los devices no tienen sentido en windows, desactivar esto:
-**ni include de select.h ni funcion select->decir que siempre hay datos disponibles. el resto se deja, para simular en windows con archivos puede servir
-*parece que fcntl tampoco existe en windows 
-
-
 -listado de caracteristicas exclusivas que solo estan en ZEsarUX y en ningun otro emulador de Spectrum
 
 -Probar watches sin multitarea 
