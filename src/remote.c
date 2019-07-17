@@ -733,23 +733,24 @@ struct s_items_ayuda items_ayuda[]={
   {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
 	{"cpu-transaction-log",NULL,"parameter value","Sets cpu transaction log parameters. Parameters and values are the following:\n"
-	"logfile     name:   File to store the log\n"
-	"enabled     yes|no: Enable or disable the cpu transaction log. Requires logfile to enable it\n"
+	"logfile         name:   File to store the log\n"
+	"enabled         yes|no: Enable or disable the cpu transaction log. Requires logfile to enable it\n"
 
-	"autorotate  yes|no: Enables automatic rotation of the log file\n"
-	"rotatefiles number: Number of files to keep in rotation (1-999)\n"
-	"rotatesize  number: Size in MB to rotate log file (0-9999). 0 means no rotate\n"
-	"rotatelines number: Size in lines to rotate log file (0-2147483647). 0 means no rotate\n"
+	"autorotate      yes|no: Enables automatic rotation of the log file\n"
+	"rotatefiles     number: Number of files to keep in rotation (1-999)\n"
+	"rotatesize      number: Size in MB to rotate log file (0-9999). 0 means no rotate\n"
+	"rotatelines     number: Size in lines to rotate log file (0-2147483647). 0 means no rotate\n"
 
-	"truncate    yes|no: Truncate the log file. Requires value set to yes\n"
+	"truncate        yes|no: Truncate the log file. Requires value set to yes\n"
+	"truncaterotated yes|no: Truncate the rotated log files. Requires value set to yes\n"
 
-	"ignrephalt  yes|no: Ignore repeated opcode HALT. Disabled by default\n"
+	"ignrephalt      yes|no: Ignore repeated opcode HALT. Disabled by default\n"
 	
-	"datetime    yes|no: Enable datetime logging\n"
-	"tstates     yes|no: Enable tstates logging\n"
-	"address     yes|no: Enable address logging. Enabled by default\n"
-	"opcode      yes|no: Enable opcode logging. Enabled by default\n"
-	"registers   yes|no: Enable registers logging\n"
+	"datetime        yes|no: Enable datetime logging\n"
+	"tstates         yes|no: Enable tstates logging\n"
+	"address         yes|no: Enable address logging. Enabled by default\n"
+	"opcode          yes|no: Enable opcode logging. Enabled by default\n"
+	"registers       yes|no: Enable registers logging\n"
 	},
 
   {"disable-breakpoint","|db","index","Disable specific breakpoint"},
@@ -1243,7 +1244,8 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 
 	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
 	else if (!strcasecmp(parameter,"enabled") ||
-					!strcasecmp(parameter,"truncate")
+					!strcasecmp(parameter,"truncate") ||
+					!strcasecmp(parameter,"truncaterotated")
 	) {
 
 		//Si no esta definido logfile, no se permite activar (ni desactivar)
@@ -1275,9 +1277,13 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 			if (remote_eval_yes_no(value)) {
 				transaction_log_truncate();
 			}
-
-
 		}		
+
+		if (!strcasecmp(parameter,"truncaterotated")) {
+			if (remote_eval_yes_no(value)) {
+				transaction_log_truncate_rotated();
+			}
+		}			
 
 		//Salir del cpu step si no estaba en ese modo
 		if (!antes_menu_event_remote_protocol_enterstep) remote_cpu_exit_step(misocket);

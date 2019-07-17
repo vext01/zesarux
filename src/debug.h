@@ -382,6 +382,8 @@ extern void debug_get_daad_runto_parse_string(char *texto);
 
 extern void debug_exec_show_backtrace(void);
 
+extern void transaction_log_truncate_rotated(void);
+
 extern unsigned int debug_mmu_mrv;
 extern unsigned int debug_mmu_mwv;
 extern unsigned int debug_mmu_prv;

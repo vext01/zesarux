@@ -1996,6 +1996,28 @@ void transaction_log_truncate(void)
 
 }
 
+//Truncar los logs rotados
+void transaction_log_truncate_rotated(void)
+{
+
+ 	
+
+	int archivos=cpu_transaction_log_rotated_files;
+	int i;
+
+	for (i=1;i<=archivos;i++) {
+		
+		char buffer_file_dest[PATH_MAX];
+
+		sprintf(buffer_file_dest,"%s.%d",transaction_log_filename,i);
+
+		debug_printf (VERBOSE_DEBUG,"Truncating rotated transaction log file %s",buffer_file_dest);
+		util_truncate_file(buffer_file_dest);
+	}
+
+
+}
+
 void set_cpu_core_transaction_log(void)
 {
         debug_printf(VERBOSE_INFO,"Enabling Transaction Log");
