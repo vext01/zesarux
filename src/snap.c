@@ -5185,7 +5185,7 @@ void load_nex_snapshot(char *archivo)
 	snap_version[4]=0;
 
 	//no imprimirlo por si no es una string normal
-	printf ("Snapshot version: %s\n",snap_version);
+	//printf ("Snapshot version: %s\n",snap_version);
 
 	if (
 		! 
@@ -5205,11 +5205,11 @@ void load_nex_snapshot(char *archivo)
 	//En ZEsarUX, si activo los 1024 kb, es 768 KB para el sistema. 
 	//tbblue_extra_512kb_blocks 1 o 3
 	if (nex_header[8]) {
-		printf ("Uses 1792 kb\n");
+		debug_printf(VERBOSE_DEBUG,"Uses 1792 kb");
 		tbblue_extra_512kb_blocks=3;
 	}
 	else {
-		printf ("Uses 768k kb\n");
+		debug_printf(VERBOSE_DEBUG,"Uses 768k kb");
 		tbblue_extra_512kb_blocks=1;
 	}
 	
@@ -5228,20 +5228,20 @@ void load_nex_snapshot(char *archivo)
 
 	if (possible_pc!=0) {
 		reg_pc=possible_pc;
-		printf ("reg_pc: %d\n",reg_pc);
+		debug_printf(VERBOSE_DEBUG,"Register PC: %04XH",reg_pc);
 	}
 
 	//modo timex
 	set_timex_port_ff(nex_header[138]);
-	printf ("modo timex: %02XH\n",timex_port_ff);
+	debug_printf(VERBOSE_DEBUG,"Timex mode: %02XH",timex_port_ff);
 
 
-	printf ("Mapping ram %d at C000H\n",nex_header[139]);
+	debug_printf(VERBOSE_DEBUG,"Mapping ram %d at C000H",nex_header[139]);
 	tbblue_out_port_32765(nex_header[139]);
 
 	//file handler address
 	z80_int nex_file_handler=value_8_to_16(nex_header[141],nex_header[140]);
-	printf ("File handler: %d\n",nex_file_handler);
+	debug_printf(VERBOSE_DEBUG,"File handler: %d",nex_file_handler);
 
 	
 
@@ -5258,13 +5258,13 @@ void load_nex_snapshot(char *archivo)
 
 	//Cargar paleta optional palette (for Layer2 or LoRes screen)
 	if (cargar_paleta) {
-		printf ("Loading palette\n");
+		debug_printf(VERBOSE_DEBUG,"Loading palette");
 		leidos=fread(tbblue_palette_layer2_second,1,512,ptr_nexfile);
 	}
 
 	//Cargar Layer2 loading screen
 	if (load_screen_blocks & 1) {
-		printf ("Loading Layer2 loading screen\n");
+		debug_printf(VERBOSE_DEBUG,"Loading Layer2 loading screen");
 		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
 		leidos=fread(&memoria_spectrum[tbblue_layer2_offset],1,49152,ptr_nexfile);
 		//Asumimos que esta activo modo layer2 entonces
@@ -5274,7 +5274,7 @@ void load_nex_snapshot(char *archivo)
 
 	//classic ULA loading screen
 	if (load_screen_blocks & 2) {
-		printf ("Loading classic ULA loading screen\n");
+		debug_printf(VERBOSE_DEBUG,"Loading classic ULA loading screen");
 		z80_byte *pant;
 		pant=get_base_mem_pantalla();
 		leidos=fread(pant,1,6912,ptr_nexfile);
@@ -5282,7 +5282,7 @@ void load_nex_snapshot(char *archivo)
 
 	//LoRes loading screen
 	if (load_screen_blocks & 4) {
-		printf ("Loading LoRes loading screen\n");
+		debug_printf(VERBOSE_DEBUG,"Loading LoRes loading screen");
 		z80_byte *pant;
 		pant=get_lores_pointer(0);
 		leidos=fread(pant,1,12288,ptr_nexfile);
@@ -5294,7 +5294,7 @@ void load_nex_snapshot(char *archivo)
 
 	//Timex HiRes (512x192) loading screen
 	if (load_screen_blocks & 8) {
-		printf ("Loading Timex HiRes loading screen\n");
+		debug_printf(VERBOSE_DEBUG,"Loading Timex HiRes loading screen");
 		z80_byte *pant;
 		pant=tbblue_ram_memory_pages[5*2];
 
@@ -5309,7 +5309,7 @@ void load_nex_snapshot(char *archivo)
 
 	//Timex HiCol (8x1) loading screen
 	if (load_screen_blocks & 16) {
-		printf ("Timex HiCol (8x1) loading screen\n");
+		debug_printf(VERBOSE_DEBUG,"Timex HiCol (8x1) loading screen");
 		z80_byte *pant;
 		pant=tbblue_ram_memory_pages[5*2];
 
@@ -5342,7 +5342,7 @@ void load_nex_snapshot(char *archivo)
 		int bloque_cargar=array_bloques[i];
 		z80_byte esta_presente=nex_header[18+bloque_cargar];
 		if (esta_presente) {
-			printf ("Loading ram block %d\n",bloque_cargar);
+			debug_printf(VERBOSE_DEBUG,"Loading ram block %d",bloque_cargar);
 			z80_byte *destino=tbblue_ram_memory_pages[bloque_cargar*2];
 			leidos=fread(destino,1,16384,ptr_nexfile);	
 		}
@@ -5354,7 +5354,7 @@ void load_nex_snapshot(char *archivo)
 		int bloque_cargar=i;
 		z80_byte esta_presente=nex_header[18+bloque_cargar];
 		if (esta_presente) {
-			printf ("Loading ram block %d\n",bloque_cargar);
+			debug_printf(VERBOSE_DEBUG,"Loading ram block %d",bloque_cargar);
 			z80_byte *destino=tbblue_ram_memory_pages[bloque_cargar*2];
 			leidos=fread(destino,1,16384,ptr_nexfile);	
 		}
@@ -5385,7 +5385,7 @@ y parámetro de color del tipo de fondo sólido
 	if (nex_file_handler>0) {
 		
 
-		printf ("Uses NextOS file handler\n");
+		debug_printf(VERBOSE_DEBUG,"Uses NextOS file handler");
 		
 		//De momento asumimos error y escribimos 255 en la memoria tambien (en caso que nex_file_handler esta entre 0x4000 y ffff)
 		//Asi le daremos un file handler erroneo si pasase cualquier cosa
@@ -5397,7 +5397,7 @@ y parámetro de color del tipo de fondo sólido
 		if (esxdos_handler_enabled.v) {
 			//Obtener offset actual sobre archivo snapshot abierto
 			long initial_offset=ftell(ptr_nexfile);
-			printf ("Current offset of .nex file after loading it: %ld\n",initial_offset);
+			debug_printf(VERBOSE_DEBUG,"Current offset of .nex file after loading it: %ld",initial_offset);
 
 			//Abrir este mismo archivo desde esxdos handler. Luego hacer seek hasta el offset que tenemos
 
@@ -5406,18 +5406,18 @@ y parámetro de color del tipo de fondo sólido
 
 
 			int esx_file_handler=load_nex_snapshot_open_esxdos(archivo);
-			printf ("file handle of esxdos open file: %d\n",esx_file_handler);
+			debug_printf(VERBOSE_DEBUG,"file handle of esxdos open file: %d",esx_file_handler);
 
 			if (esx_file_handler>=0) {
 				//Hacer fseek
 				if (fseek (esxdos_fopen_files[esx_file_handler].esxdos_last_open_file_handler_unix, initial_offset, SEEK_CUR)!=0) {
-					printf ("ESXDOS handler: Error running fseek system call\n");
+					debug_printf (VERBOSE_ERR,"ESXDOS handler: Error running fseek system call");
 				}
 
 				//Retornar BCDE
 				long cur_offset=ftell(esxdos_fopen_files[esx_file_handler].esxdos_last_open_file_handler_unix);
 
-				printf ("ESXDOS handler: offset is now at %ld\n",cur_offset);
+				debug_printf(VERBOSE_DEBUG,"ESXDOS handler: offset is now at %ld",cur_offset);
 
 
 				//If the value is between 1...0x3fff value, I keep the file open and the file handler number is copied to register BC
@@ -5425,11 +5425,11 @@ y parámetro de color del tipo de fondo sólido
 				//If the value is between 0x4000 and ffff, I write the file handler number at the address that poitnts this offset 140. Set bc to 255 
 				if (nex_file_handler<=0x3fff) {
 					BC=esx_file_handler;
-					printf ("Setting BC register to value %d\n",BC);
+					debug_printf(VERBOSE_DEBUG,"Setting BC register to value %04XH",BC);
 				}
 				else {
 					//copiar handler en memoria
-					printf ("Writing file handler to memory, address %04XH\n",nex_file_handler);
+					debug_printf(VERBOSE_DEBUG,"Writing file handler to memory, address %04XH",nex_file_handler);
 					poke_byte_no_time(nex_file_handler,esx_file_handler);
 				}
 
