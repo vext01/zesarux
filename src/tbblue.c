@@ -3776,11 +3776,10 @@ z80_int tbblue_get_border_color(z80_int color)
 	}
     else if (flash_disabled) {   // ULANext mode ON
 
-        //to-be-confirmed core2.00.27 change - commented at this moment
-        //if (tbblue_registers[0x42] == 255) {    // full-ink mode takes border colour from "fallback"
+        if (tbblue_registers[0x42] == 255) {    // full-ink mode takes border colour from "fallback"
         //    // in this case this is final result, just return it (no further processing needed)
-        //    return RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[0x4A]);
-        //}
+            return RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[0x4A]);
+        }
 
         // other ULANext modes take border color from palette starting at 128..135
         color += 128;
@@ -4394,8 +4393,15 @@ void tbblue_fast_render_ula_layer(z80_int *puntero_final_rainbow,int estamos_bor
 	int final_borde_izquierdo,int inicio_borde_derecho,int ancho_rainbow)
 {
 
+
 	int i;
 		z80_int color;
+
+
+	//(R/W) 0x4A (74) => Transparency colour fallback
+	//	bits 7-0 = Set the 8 bit colour.
+	//	(0 = black on reset on reset)
+	z80_int fallbackcolour = RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[74]);
 
 	for (i=0;i<ancho_rainbow;i++) {
 
@@ -4418,19 +4424,10 @@ void tbblue_fast_render_ula_layer(z80_int *puntero_final_rainbow,int estamos_bor
 					else {
 						//Borde izquierdo o derecho o pantalla. Ver si estamos en pantalla
 						if (i>=final_borde_izquierdo && i<inicio_borde_derecho) {
-							//Poner color indicado por registro:
-							
-							//(R/W) 0x4A (74) => Transparency colour fallback
- 							//	bits 7-0 = Set the 8 bit colour.
- 							//	(0 = black on reset on reset)
-							
-
-							//Suponemos que es un color tal cual, no un indice a paleta, multiplicado por 2
-							z80_int fallbackcolour=tbblue_registers[74];
-							fallbackcolour *=2;
-							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
+							//Poner color indicado por "Transparency colour fallback" registro
+							*puntero_final_rainbow=fallbackcolour;
 							//doble de alto
-							puntero_final_rainbow[ancho_rainbow]=RGB9_INDEX_FIRST_COLOR+fallbackcolour;								
+							puntero_final_rainbow[ancho_rainbow]=fallbackcolour;								
 						}
 						else {
 							//Es borde. dejar ese color
@@ -4454,6 +4451,12 @@ void tbblue_fast_render_ula_layer(z80_int *puntero_final_rainbow,int estamos_bor
 //Nos situamos en la linea justo donde empiezan los tiles
 void tbblue_render_layers_rainbow(int capalayer2,int capasprites)
 {
+
+
+	//(R/W) 0x4A (74) => Transparency colour fallback
+		//	bits 7-0 = Set the 8 bit colour.
+		//	(0 = black on reset on reset)
+	z80_int fallbackcolour = RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[74]);
 
 	int y;
 	int diferencia_border_tiles=screen_indice_inicio_pant-TBBLUE_TILES_BORDER;
@@ -4550,19 +4553,10 @@ void tbblue_render_layers_rainbow(int capalayer2,int capasprites)
 					else {
 						//Borde izquierdo o derecho o pantalla. Ver si estamos en pantalla
 						if (i>=final_borde_izquierdo && i<inicio_borde_derecho) {
-							//Poner color indicado por registro:
-							
-							//(R/W) 0x4A (74) => Transparency colour fallback
- 							//	bits 7-0 = Set the 8 bit colour.
- 							//	(0 = black on reset on reset)
-							
-
-							//Suponemos que es un color tal cual, no un indice a paleta, multiplicado por 2
-							z80_int fallbackcolour=tbblue_registers[74];
-							fallbackcolour *=2;
-							*puntero_final_rainbow=RGB9_INDEX_FIRST_COLOR+fallbackcolour;
+							//Poner color indicado por "Transparency colour fallback" registro:
+							*puntero_final_rainbow=fallbackcolour;
 							//doble de alto
-							puntero_final_rainbow[ancho_rainbow]=RGB9_INDEX_FIRST_COLOR+fallbackcolour;					
+							puntero_final_rainbow[ancho_rainbow]=fallbackcolour;
 						}
 						else {
 							//Es borde. dejar ese color
