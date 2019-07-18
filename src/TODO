@@ -13,39 +13,30 @@
 --Redimensionar ventana redibuja el zxdesktop?
 --Revisar Full screen en ZX desktop
 ok mac os
-pendiente sdl, xwindow, fbdev
-ok sdl en raspiboy
---Fbdev debe permitir ZX Desktop?
---sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
+ok sdl en raspiboy, linux
+ok sdl2 linux
+pendiente xwindow
 
-
--Agregar incluir pthreadGC3.dll en ZEsarUX win ?
+-Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
 
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
--hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24?
-
+-hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24? Creo que no
 
 -probar cpu use footer en maquinas que no muestran (como windows)
 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
--en boot de tbblue, borra footer. sera al cambiar turbo de cpu? en zxuno tambien pasa. ya no pasa?
-
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
-
--parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
-
--quiza version mac debe tener dos versiones: una compilada con O2, otra sin
-Que hacemos con cocoa no opengl?
-
 
 
 --------Para próxima versión:
 
--hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
 
 -->no todo. Clasificar en otras secciones menos prioritarias!!
+
+-hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
+
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
@@ -58,8 +49,6 @@ arriba)
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
--Puerto 57 tsconf es mmc??
-
 -alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
 y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
 
@@ -67,9 +56,6 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 
 -uso de settings.c y settings.h. revisar que tiene que ir ahi
 
--soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
-acortar archivo... pero habra que acortar tambien ruta subdirectorios....
-complicado. quiza ver mejor como gestiona los nombres largos desde nextos
 
 -Copiar datos entre zonas memoria 
 
@@ -83,7 +69,6 @@ complicado. quiza ver mejor como gestiona los nombres largos desde nextos
 
 -Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar la velocidad de la cpu en nextos
 
-
 -ejemplos para spool, como:
 ./txt_to_basic_lines.sh FAQ 3 si si no > pruebaspool2.txt
 
@@ -96,23 +81,12 @@ complicado. quiza ver mejor como gestiona los nombres largos desde nextos
 -En mostrar registros IR
 Decir cuál es el vector de interrupción 
 
--Alguna especie de “top” de partes del emulador 
-
--Efecto de encefalograma... para..?
-
--tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
-
 --Formato pzx
 
 -cpuid ("zxid") según especificación de mcleod
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
 cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
-
--zona en fileselector que muestre miniatura de: pantalla scr, snapshot, archivo de texto etc
-Quiza como ventana emergente al esperar unos segundos o bien a la derecha del selector, teniendo el filesel mas grande
-
--parece que ZSF no guarda estado ulaplus o timex. probar con view8x1.tap
 
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
@@ -126,6 +100,12 @@ Quiza como ventana emergente al esperar unos segundos o bien a la derecha del se
 
 -temperatura cpu en mac
 https://github.com/lavoiesl/osx-cpu-temp
+
+
+-parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
+
+-quiza version mac debe tener dos versiones: una compilada con O2, otra sin
+Que hacemos con cocoa no opengl?
 
 
 -------- Fin cosas para la siguiente version
@@ -199,7 +179,8 @@ Ideas para background windows:
 ---Botones o iconos pulsables 
 ---Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
 ---Anaglifo usando segunda pantalla o extensión Desktop 
-
+--Fbdev debe permitir ZX Desktop?
+--sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
 -Osd keyboard sin multitarea en ZX81 no va fino
 
@@ -669,6 +650,10 @@ Y montones de flags y parámetros de dma que de momento no gestiono
 
 --- TSConf ---
 
+-Puerto 57 tsconf es mmc?? usado en zifi demo
+
+-tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
+
 -Tsconf render modo spectrum compatible debería leer de buffer atributos y pixeles ; para que demos como overscan se vean bien
 
 -tsconf y tr-dos no deberia hacer nested_core, solo detectar cuando se esta en core trdos
@@ -974,6 +959,8 @@ night hunter. aunque luego no carga la cara b
 
 --- ZSF ---
 
+-parece que ZSF no guarda estado ulaplus o timex. probar con view8x1.tap
+
 -Incluir campo para numero de versión?
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
 porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
@@ -1141,6 +1128,10 @@ http://www.spinpoint.org/2016/05/06/m4-board-retrofun-8-bit-amstrad-cpc-wifi/#co
 
 --- ESXDOS handler ---
 
+
+-soporte LFN para esxdos handler. quiza acortar archivos al listar con "dir" y similares. que hacer si hacen fopen de archivo largo?
+acortar archivo... pero habra que acortar tambien ruta subdirectorios....
+complicado. quiza ver mejor como gestiona los nombres largos desde nextos
 
 -"overlay" esxdos handler: sobreponer una segunda carpeta sobre la principal
 Asi se puede tener una raiz por ejemplo para divmmc comun, y luego mapear carpetas adicionales para pruebas
@@ -1875,6 +1866,10 @@ eliminar warnings de funciones sin definir como extern
 -s TOTAL_MEMORY=167772160 -o zesarux.html  --embed-file roms
 
 
+-Alguna especie de "top" de partes del emulador 
+
+-Efecto de encefalograma... para..?
+
 
 * -Agregar todas desensamblado roms en txt
   http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
@@ -2167,6 +2162,9 @@ opcion tambien para bajar bit 7 final
 -visualmem que siga memory zone
 
 -lectura de nombre de archivo en fileselector para stdout no admite espacios
+
+-zona en fileselector que muestre miniatura de: pantalla scr, snapshot, archivo de texto etc
+Quiza como ventana emergente al esperar unos segundos o bien a la derecha del selector, teniendo el filesel mas grande
 
 -sin multitask, no va repeticion de teclas. esto es porque no se ejecuta timer_check_interrupt
 quiza estas funciones de contadores deberian venir con el thread del timer? aunque luego en version
