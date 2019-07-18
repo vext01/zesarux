@@ -827,6 +827,7 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
 --- TBBlue ---
 
+-Activar el kempston mouse entra en conflicto con el editor de basic. Al mover raton hace cosas raras.
 
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
