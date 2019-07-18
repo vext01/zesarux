@@ -3,7 +3,6 @@
 
 -listado de caracteristicas exclusivas que solo estan en ZEsarUX y en ningun otro emulador de Spectrum
 
--Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
 
 -meter comentario en archivo midi de grabado con ZEsarUX
 
@@ -21,13 +20,12 @@ pendiente xwindow
 
 -probar llamadas a menu_simple_ventana despues de extender coordenadas menu
 
--hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24? Creo que no
-
 -probar cpu use footer en maquinas que no muestran (como windows)
 
 -Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
+
 
 
 --------Para próxima versión:
@@ -118,6 +116,12 @@ Que hacemos con cocoa no opengl?
 --- ZX Vision
 
 -en ventanas con can_use_all_width=1, no se habilita la barra de scroll vertical cuando hace falta
+
+
+-hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24? Creo que no
+
+
+-Máximo ancho de ventanas de menú es siempre 32? O va según ancho  ventana programa?
 
 
 -zxvision:
