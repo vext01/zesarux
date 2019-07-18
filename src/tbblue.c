@@ -2491,12 +2491,12 @@ which allows you access to all SRAM.
 	z80_byte multisetting=tbblue_registers[6]&8;
 
 	if (multisetting) {
-		printf ("Enabling multiface\n");
+		//printf ("Enabling multiface\n");
 		//sleep (1);
 		//temp multiface_enable();
 	}
 	else {
-		printf ("Disabling multiface\n");
+		//printf ("Disabling multiface\n");
 		//sleep (1);
 		//temp multiface_disable();
 	}
@@ -3469,10 +3469,7 @@ z80_byte tbblue_get_value_port_register(z80_byte registro)
 	(R) 0x01 (01) => Version (Nibble most significant = Major, Nibble less significant = Minor)
 	*/
 
-	//temp
-	/*if (registro==40 || registro==41 || registro==42 || registro==43) {
-		printf ("reading tbblue register %042XH from pc=%04XH\n",registro,reg_pc);
-	}*/
+	
 
 	switch(registro)
 	{
