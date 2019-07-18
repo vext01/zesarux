@@ -2257,6 +2257,14 @@ int mid_mete_inicio_pista(z80_byte *mem,int division)
     memcpy(&mem[indice],midi_tempo,7);
     indice +=7;
 
+	//Y texto de ZEsarUX en cada pista
+	//FF 03 : Sequence/Track Name
+	char *midi_zesarux_message="\x00\xff\x03\x1b" "Created on ZEsarUX emulator"; //27=0x1B
+	int longitud_bloque=27+4;
+
+    memcpy(&mem[indice],midi_zesarux_message,longitud_bloque);
+    indice +=longitud_bloque;	
+
 	return indice;
 
 }
