@@ -51,6 +51,8 @@ Improved tbblue emulation:
 -added UART Bridge emulation
 -increased maximum sprites per line to 100
 -increased total sprites to 128
+-fixed full ink mode border colour
+-fallback (transparency) colour is now a 9-bit value
 
 Improved Adventure Text Extractor: now it supports Daad games too. So it supports Daad, Paws, Quill and Gac
 Improved Visualmem: now you can see all 3 different access (write, read, opcode) at once, generating a RGB color
