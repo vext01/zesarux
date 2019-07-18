@@ -5217,6 +5217,7 @@ void debug_memory_zone_debug_reset(void)
 void debug_memory_zone_debug_write_value(z80_byte valor)
 {
 	if (memory_zone_debug_ptr==NULL) {
+		debug_printf (VERBOSE_DEBUG,"Allocating memory for debug memory zone");
 		memory_zone_debug_ptr=malloc(MEMORY_ZONE_DEBUG_MAX_SIZE);
 		if (memory_zone_debug_ptr==NULL) {
 			cpu_panic ("Can not allocate memory for debug memory zone");
@@ -5228,4 +5229,7 @@ void debug_memory_zone_debug_write_value(z80_byte valor)
 		memory_zone_debug_ptr[memory_zone_current_size]=valor;
 		memory_zone_current_size++;
 	}
+	//else {
+	//	printf ("Memory zone full\n");
+	//}
 }

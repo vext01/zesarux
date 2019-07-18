@@ -1088,6 +1088,10 @@ util_stats_init();
 		esxdos_handler_reset();
 	}
 
+
+	//Inicializar zona memoria de debug
+	debug_memory_zone_debug_reset();
+
 }
 
 char *string_machines_list_description=

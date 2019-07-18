@@ -982,7 +982,7 @@ extern z80_bit no_close_menu_after_smartload;
 "printc c: Print character c to console\n" \
 "printe expression: Print expression following the same syntax as breakpoints and evaluate expression\n" \
 "prints string: Prints string to console\n" \
-"putv expression: Puts expression result value in the Debug Memory Zone. Result is always treated as a 8-bit value\n" \
+"putv expression: Adds expression result value in the Debug Memory Zone. Result is always treated as a 8-bit value. Zone is cleared when running Reset\n" \
 "quicksave: Saves a quick snapshot\n" \
 "set-register string: Sets register indicated on string. Example: set-register PC=32768\n" \
 "write address value: Write memory address with indicated value\n" \
