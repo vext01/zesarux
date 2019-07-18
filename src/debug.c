@@ -4097,6 +4097,16 @@ int i;
       }
     }
 
+    else if (!strcmp(comando_sin_parametros,"putv")) {
+      if (parametros[0]==0) debug_printf (VERBOSE_DEBUG,"Command needs one parameter");
+      else {
+        debug_printf (VERBOSE_DEBUG,"Running putv command : %s",parametros);
+		z80_byte resultado;
+		resultado=exp_par_evaluate_expression_to_number(parametros);
+        debug_memory_zone_debug_write_value(resultado);
+      }
+    }	
+
     else {
       debug_printf (VERBOSE_DEBUG,"Unknown command %s",comando_sin_parametros);
     }
@@ -5191,4 +5201,31 @@ void debug_get_daad_runto_parse_string(char *texto)
 	//de momento en decimal (dado que aun no mostamos hexadecimal en parser) para que al comparar salga igual
 	sprintf (texto,"PC=%d AND PEEK(BC)=73",breakpoint_dir);
 
+}
+
+
+
+z80_byte *memory_zone_debug_ptr=NULL;
+
+int memory_zone_current_size=0;
+
+void debug_memory_zone_debug_reset(void)
+{
+	memory_zone_current_size=0;
+}
+
+void debug_memory_zone_debug_write_value(z80_byte valor)
+{
+	if (memory_zone_debug_ptr==NULL) {
+		memory_zone_debug_ptr=malloc(MEMORY_ZONE_DEBUG_MAX_SIZE);
+		if (memory_zone_debug_ptr==NULL) {
+			cpu_panic ("Can not allocate memory for debug memory zone");
+		}
+	}
+
+	//Si aun hay espacio disponible
+	if (memory_zone_current_size<MEMORY_ZONE_DEBUG_MAX_SIZE) {
+		memory_zone_debug_ptr[memory_zone_current_size]=valor;
+		memory_zone_current_size++;
+	}
 }

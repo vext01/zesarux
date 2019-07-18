@@ -2015,3 +2015,44 @@ int exp_par_evaluate_expression(char *entrada,char *salida,char *string_detoken)
 
     return 0;
 }
+
+
+
+
+//Evalua expresion de entrada y la retorna como valor
+//Puede retornar valor 0 si expresion con error
+//Usado por ejemplo en breakpoint condition "putv" en que no hace falta que evaluemos si expresion con error o no
+int exp_par_evaluate_expression_to_number(char *entrada)
+{
+
+
+	//Mis tokens de salida
+	token_parser tokens[MAX_PARSER_TOKENS_NUM];
+	int result;
+
+	//printf ("\nText to token: %s\n",string_texto);
+	result=exp_par_exp_to_tokens(entrada,tokens);
+	//printf ("result: %d\n",result);
+	if (result>=0) {
+			
+			int error_code;  
+		
+			int resultado=exp_par_evaluate_token(tokens,MAX_PARSER_TOKENS_NUM,&error_code);
+            if (error_code) {
+                //Error evaluating
+                return 0;
+            }
+            else {
+                //OK
+                return resultado;
+            }
+
+
+	}
+	else {
+        //Error parsing
+        return 0;
+
+	}
+
+}

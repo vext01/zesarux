@@ -398,4 +398,17 @@ extern unsigned int debug_mmu_mwa;
 extern unsigned int anterior_debug_mmu_mra;
 extern unsigned int anterior_debug_mmu_mwa;
 
+//4 MB maximo
+#define MEMORY_ZONE_DEBUG_MAX_SIZE 4194304
+
+extern z80_byte *memory_zone_debug_ptr;
+
+extern int memory_zone_current_size;
+
+extern void debug_memory_zone_debug_reset(void);
+
+extern void debug_memory_zone_debug_write_value(z80_byte valor);
+
+
+
 #endif

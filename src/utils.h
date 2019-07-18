@@ -820,6 +820,7 @@ extern int get_file_lines(char *filename);
 
 #define MEMORY_ZONE_NUM_DAAD_CONDACTS 20
 #define MEMORY_ZONE_NUM_PAWS_CONDACTS 21
+#define MEMORY_ZONE_DEBUG 22
 
 #define DAAD_PARSER_BREAKPOINT_PC_SPECTRUM 0x617c
 

@@ -14,6 +14,7 @@
 --Revisar Full screen en ZX desktop
 ok mac os
 pendiente sdl, xwindow, fbdev
+ok sdl en raspiboy
 --Fbdev debe permitir ZX Desktop?
 --sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
@@ -42,6 +43,9 @@ Que hacemos con cocoa no opengl?
 
 
 --------Para próxima versión:
+
+-hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
+
 -->no todo. Clasificar en otras secciones menos prioritarias!!
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c

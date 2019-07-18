@@ -59,6 +59,7 @@ Improved Hexadecimal editor: now it resizes view to zxwindow height
 Improved TSConf layers menu: Added "reveal" setting to view which pixels are used by a layer
 Improved Scale 0.75 function: now it has antialias
 Improved Cpu Transaction Log: now logfiles can be rotated automatically
+Improved debugging: added a breakpoint action "putv" to write values on a Debug Memory Zone
 
 
 Fixed Pentagon interrupt handling: now effects on border and hi-res work almost perfect!

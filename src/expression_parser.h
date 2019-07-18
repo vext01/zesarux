@@ -237,4 +237,6 @@ extern int exp_par_evaluate_expression(char *entrada,char *salida,char *string_d
 
 extern int exp_par_is_number(char *texto,int *final);
 
+extern int exp_par_evaluate_expression_to_number(char *entrada);
+
 #endif

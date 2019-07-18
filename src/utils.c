@@ -10173,7 +10173,13 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
                 }
 
 
-        break;        
+        break;     
+
+        case MEMORY_ZONE_DEBUG:
+                if (memory_zone_current_size) {
+                        size=memory_zone_current_size;
+                }
+        break;           
 	
 
   }
@@ -10467,6 +10473,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
           
 
         break;
+
+        case MEMORY_ZONE_DEBUG:
+                if (memory_zone_current_size) {
+                        p=&memory_zone_debug_ptr[address];
+                }
+        break;        
 
 
   }
@@ -10786,6 +10798,13 @@ void machine_get_memory_zone_name(int zone, char *name)
       
 
         break;    
+
+
+        case MEMORY_ZONE_DEBUG:
+                if (memory_zone_current_size) {
+                        strcpy(name,"Debug");
+                }
+        break;
 
 
   }
