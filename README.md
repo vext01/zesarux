@@ -228,6 +228,8 @@ __FEATURES__
 
 * Kempston mouse emulation
 
+* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on Linux only (Windows, Mac can simulate it)
+
 * Supports Input spool text file to simulate keyboard press
 
 * Supports reading Pokes from .POK files

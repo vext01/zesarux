@@ -35,6 +35,8 @@ Added Derby+ and Derby++ roms
 Added hdf to ide/mmc raw converter
 Added hdf support to MMC emulation
 
+Added ZRCP commands: ayplayer, cpu-transaction-log
+
 
 Improved breakpoint parser: 
 -full expression parser: parenthesis, functions, sums, multiplications, etc. Can be used as a full calculator!
