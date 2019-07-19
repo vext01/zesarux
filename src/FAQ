@@ -355,7 +355,9 @@ But these cards are recognized for reading when have data like a new oz release 
 
 
 Q: I'm very interested in the Cambridge Z88, but I don't know how to use it. Where can I find the documentation?
-A: Look at https://cambridgez88.jira.com/wiki/display/UG45/
+A: You can find it at https://cambridgez88.jira.com/wiki/display/UG45/
+or in the ZEsarUX extras package:
+extras/docs/z88/Z88UGV4.pdf
 
 ----------------------------------------------------------------------------
 

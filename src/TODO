@@ -4,27 +4,20 @@
 
 -ZX Desktop:
 
---Redimensionar ventana redibuja el zxdesktop?
+
 --Revisar Full screen en ZX desktop
 ok mac os
 ok sdl en raspiboy, linux
 ok sdl2 linux
 pendiente xwindow
 
--Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
-
--probar llamadas a menu_simple_ventana despues de extender coordenadas menu
-
--probar cpu use footer en maquinas que no muestran (como windows)
-
--Pruebas uso cpu antes y después de cambios píxeles. Con menú cerrado
 
 -Agregar manual Z88 a extras. Quizá también documentación de apis?
 
 
-
 --------Para próxima versión:
 
+-Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
 
 -->no todo. Clasificar en otras secciones menos prioritarias!!
 
@@ -104,13 +97,33 @@ Que hacemos con cocoa no opengl?
 -------- Fin cosas para la siguiente version
 
 
+--- ZX Desktop
 
+--Redimensionar ventana redibuja el zxdesktop?
+
+
+--Posibles efectos para fondo ZX Desktop:
+---Efecto de ZX Desktop barras colores animado?
+---Imagen. BMP?
+---Miniatura de pantalla spectrum
+---Imagen. SCR
+---Degradado vertical usando alguna tabla de colores concreta ya existente
+---Botones o iconos pulsables 
+---Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
+---Anaglifo usando segunda pantalla o extensión Desktop 
+--Fbdev debe permitir ZX Desktop?
+--sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
+
+--- FIN ZX Desktop
 
 
 
 --- ZX Vision
 
 -en ventanas con can_use_all_width=1, no se habilita la barra de scroll vertical cuando hace falta
+
+-menu_simple_ventana solo se usa al redefinir eventos joystick. No usa zxvision tal cual porque necesita evento de lectura de joystick,
+solo dibuja la ventana al "viejo estilo" (pre-zx vision) y vuelve. Si no se puede migrar a zxvision, dejar tal cual
 
 
 -hay algun limite de array o memoria etc en ventanas zxvision alto y alto 32x24? Creo que no
@@ -169,17 +182,6 @@ Ideas para background windows:
 -Fin Background windows
 
 
---Posibles efectos para fondo ZX Desktop:
----Efecto de ZX Desktop barras colores animado?
----Imagen. BMP?
----Miniatura de pantalla spectrum
----Imagen. SCR
----Degradado vertical usando alguna tabla de colores concreta ya existente
----Botones o iconos pulsables 
----Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
----Anaglifo usando segunda pantalla o extensión Desktop 
---Fbdev debe permitir ZX Desktop?
---sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
 -Osd keyboard sin multitarea en ZX81 no va fino
 
