@@ -6,6 +6,9 @@
 
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
+-en debug_set_breakpoint: desactivado temporalmente: meter breakpoints por config file, tipo:
+	opcode2=xxxx hace que se evalue el valor de opcode2, quien hace un peek, y al no haber inicializado aun la maquina,
+	hace que pete con segmentation fault 
 
 -AY partitura:
 *que muestre los otros chips. ya está preparado el array para varios chips
