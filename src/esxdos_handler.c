@@ -817,7 +817,7 @@ void esxdos_handler_call_f_seek(void)
 /*
 F_SEEK: Seek BCDE bytes. A=handle
 
-L=mode (0 from start of file, 1 fwd from current pos, 2 bak from current pos).
+IXL / L=mode (0 from start of file, 1 fwd from current pos, 2 bak from current pos).
 
 On return BCDE=current file pointer. FIXME-Should return bytes actually seeked
 */
@@ -828,7 +828,9 @@ On return BCDE=current file pointer. FIXME-Should return bytes actually seeked
 
 	int whence;
 
-	switch (reg_l) {
+	//Usar reg_l o IX_L
+
+	switch (*registro_parametros_hl_ix) {
 		case 0:
 			whence=SEEK_SET;
 		break;
@@ -843,7 +845,7 @@ On return BCDE=current file pointer. FIXME-Should return bytes actually seeked
 		break;
 
 		default:
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_seek. Unsupported mode %d",reg_l);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Error from esxdos_handler_call_f_seek. Unsupported mode %d",*registro_parametros_hl_ix);
 			esxdos_handler_error_carry(ESXDOS_ERROR_EIO);
 			esxdos_handler_old_return_call();
 			return;
@@ -1941,7 +1943,7 @@ void esxdos_handler_begin_handling_commands(void)
 		break;
 
 		case ESXDOS_RST8_F_SEEK:
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_SEEK. Move %04X%04XH bytes mode %d from file handle %d",reg_bc,reg_de,reg_l,reg_a);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_SEEK. Move %04X%04XH bytes mode %d from file handle %d",reg_bc,reg_de,*registro_parametros_hl_ix,reg_a);
 			esxdos_handler_call_f_seek();
 			esxdos_handler_new_return_call();
 		break;
