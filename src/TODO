@@ -4,7 +4,11 @@
 
 -Menú frameskip que diga cuantos fps son 
 
--Selector de chip en ay sheet
+
+-AY partitura:
+*que muestre los otros chips. ya está preparado el array para varios chips
+*para el beeper tambien
+*ideal para probar duraciones: golden axe
 
 -Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drives null y simpletext? Con printf verbose error?
 
@@ -65,12 +69,11 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -Copiar datos entre zonas memoria 
 
 -unpaws con quill:
-*compression tokens?
+*compression tokens existen?
 
 -unpaws: 
 *compression tokens no siempre estan hasta el 255
 
--mapa localidades daad/paws/quill
 
 -Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar la velocidad de la cpu en nextos
 
@@ -97,11 +100,6 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 -en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
 -Revisar archivo install. En caso de Linux y otros binarios ya compilados, enseñarlo más fácilmente. Otro documento quizá que diga cómo compilarlo  
 
-
--AY partitura:
-*que muestre los otros chips. ya está preparado el array para varios chips
-*para el beeper tambien
-*ideal para probar duraciones: golden axe
 
 -temperatura cpu en mac
 https://github.com/lavoiesl/osx-cpu-temp
@@ -2640,6 +2638,9 @@ como descubrir rutinas de pintado de sprites
 -Extractor dibujos paws?
 
 -unpaws , unquill para cpc
+
+-mapa localidades daad/paws/quill
+
 -Text keyboard editable desde menu?
 
 -Joystick en Mac,Win
