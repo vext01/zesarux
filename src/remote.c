@@ -3511,7 +3511,7 @@ char buffer_retorno[2048];
 	i=0;
 	while (comando[i]) {
 		char c=comando[i];
-		if (c!=10 && c!=13 && c!=10) comando_ignorar=0;
+		if (c!=10 && c!=13) comando_ignorar=0;
 		i++;
 	}
 

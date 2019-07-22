@@ -41,15 +41,15 @@ Examples
 
 */
 
-#define EMULATOR_VERSION "8.0"
+//#define EMULATOR_VERSION "8.1"
 
-//#define EMULATOR_VERSION "8.0-SN"
-//#define EMULATOR_VERSION "8.0-RC"
-//#define SNAPSHOT_VERSION
+#define EMULATOR_VERSION "8.1-SN"
+//#define EMULATOR_VERSION "8.-RC"
+#define SNAPSHOT_VERSION
 
 #define EMULATOR_DATE "19 July 2019"
 #define EMULATOR_SHORT_DATE "19/07/2019"
-#define EMULATOR_GAME_EDITION "World Destruction"
+#define EMULATOR_GAME_EDITION "xxx"
 #define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
 
 //8 bits

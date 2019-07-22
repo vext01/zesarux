@@ -2,6 +2,40 @@
 
 --------Para próxima versión:
 
+-Menú frameskip que diga cuantos fps son 
+
+-Selector de chip en ay sheet
+
+-Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drives null y simpletext? Con printf verbose error?
+
+-Incluir sonic y otros en juegos TSConf. Pedir permiso a autores 
+
+-utils.c: In function ‘util_extract_hdf’:
+utils.c:11099:18: warning: this decimal constant is unsigned only in ISO C90
+                  2147483648L, //8. 2 GB
+                  ^
+utils.c: In function ‘util_ascii_to_binary’:
+utils.c:11248:9: warning: this decimal constant is unsigned only in ISO C90
+         const unsigned int mascara=(unsigned int)2147483648;
+
+
+Puede dar problemas?
+
+-- get_file_lines could be more efficient. Data is read byte by byte: leidos=fread(&buffer,1,1,ptr_archivo);
+For 700MB this takes about 20 secs. This is just a note. For me it is normally not an issue as I will truncate the file before usage.
+But if this is not done it can lead to a significant delay on startup.
+
+Yes. Loading it at once (with a previous malloc) will be better.
+
+
+
+-average cpu use en menu help parece que sale 0% si no esta habilitado footer
+
+-Thread aparte para descargas web. Útil para spectranet, browser juegos, comprobación updates, emulación uart 
+
+-Si el config file no carga por error en parse siempre desactiva setting de auto grabar config?
+
+
 -Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
 
 -->no todo. Clasificar en otras secciones menos prioritarias!!

@@ -440,9 +440,11 @@ Q: I can't run TBBlue machine. I get the following error: "Erro ao inicializar c
 A: TBBlue machine needs a SD/MMC image to boot. You must select file image "media/disk_images/tbblue.mmc" on Storage->MMC->MMC File.
 Then enable MMC emulation and DivMMC ports (but not DivMMC paging), and do a hard reset
 Or you can select it from the command line with:
-./zesarux --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports --machine tbblue
+./zesarux --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports --machine tbblue --realvideo
 
-Note: tbblue.mmc is included on the base package (and not on extras) because it is needed to boot that machine
+Note 1: tbblue.mmc is included on the base package (and not on extras) because it is needed to boot that machine
+Note 2: --realvideo setting is only needed on the initial video screen adjust. After it writes the configuration to the mmc file, it won't appear again,
+and the Real Video setting is not usually needed on boot anymore
 
 Q: I have enabled divmmc on Tbblue bios, but seems it's not working (no esxdos or nextos)
 A: Sometimes, enabling divmmc on tbblue bios requires closing and reopening ZEsarUX. The technical answer for this issue,
