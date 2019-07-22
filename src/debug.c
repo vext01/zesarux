@@ -3211,7 +3211,7 @@ int debug_set_breakpoint(int breakpoint_index,char *condicion)
 
 	//Ver si se puede evaluar la expresion resultante. Aqui basicamente generara error
 	//cuando haya un parentesis sin cerrar
-	int error_evaluate;
+	int error_evaluate; 
 
 	//Si no es token vacio
 	/*
