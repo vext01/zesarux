@@ -23679,8 +23679,16 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
                 menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
 
+		int fps;
+		int divisor=frameskip+1;
+		if (divisor==0) {
+			fps=50; //Esto no deberia suceder nunca. Pero lo hacemos por una posible division por 0 (si frameskip fuera -1)
+		}
+		else {
+			fps=50/divisor;
+		}
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"[%d] F~~rameskip",frameskip);
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"[%d] F~~rameskip (%d FPS)",frameskip,fps);
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'r');
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
 			menu_add_item_menu_ayuda(array_menu_interface_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
