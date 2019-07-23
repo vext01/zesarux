@@ -2,6 +2,10 @@
 
 --------Para próxima versión:
 
+-página man de ZEsarUX
+
+-explorador archivos imagenes mmc etc con chanfatfs?
+
 -Menú frameskip que diga cuantos fps son 
 
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
@@ -44,6 +48,8 @@ Yes. Loading it at once (with a previous malloc) will be better.
 -average cpu use en menu help parece que sale 0% si no esta habilitado footer
 
 -Thread aparte para descargas web. Útil para spectranet, browser juegos, comprobación updates, emulación uart 
+Función simple que abra la conexión y devuelva datos http. Thread por debajo que indique cuando estén los datos listos
+1 sola petición cada vez?
 
 -Si el config file no carga por error en parse siempre desactiva setting de auto grabar config?
 
