@@ -3402,7 +3402,7 @@ z80_int tbblue_palette_sprite_second[256];
 
 int remote_assemble(int misocket,char *texto,unsigned int direccion)
 {
-	z80_byte destino_ensamblado[256];
+	z80_byte destino_ensamblado[MAX_DESTINO_ENSAMBLADO];
 
 
 				int longitud_destino=assemble_opcode(direccion,texto,destino_ensamblado);

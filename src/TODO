@@ -16,11 +16,7 @@ Y Windows sdl?
 
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
--en debug_set_breakpoint: desactivado temporalmente: meter breakpoints por config file, tipo:
-	opcode2=xxxx hace que se evalue el valor de opcode2, quien hace un peek, y al no haber inicializado aun la maquina,
-	hace que pete con segmentation fault 
-->se puede solucionar simplemente al principio de todo asignar las peek_byte, peek_byte_no_time, poke_byte, poke_byte_no time
-a funciones que no hagan nada para que no pete esto
+
 
 
 -AY partitura:

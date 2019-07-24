@@ -7706,7 +7706,7 @@ void menu_debug_assemble(MENU_ITEM_PARAMETERS)
 		else {
 
 
-				z80_byte destino_ensamblado[256];
+				z80_byte destino_ensamblado[MAX_DESTINO_ENSAMBLADO];
 
 
 				int longitud_destino=assemble_opcode(direccion_ensamblado,string_opcode,destino_ensamblado);

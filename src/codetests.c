@@ -438,7 +438,7 @@ void codetests_assembler(void)
 	printf ("Assembling\n");
 
 	//int assemble_opcode(char *texto,z80_byte *destino)
-	z80_byte destino_ensamblado[256];
+	z80_byte destino_ensamblado[MAX_DESTINO_ENSAMBLADO];
 
 
 /*	codetests_assemble_opcode("NOP",destino_ensamblado);
@@ -991,8 +991,8 @@ void codetests_main(int main_argc,char *main_argv[])
 	//codetests_expression_parser();
 
 
-	printf ("\nRunning mid tests\n");
-	codetests_mid_test();	
+	//printf ("\nRunning mid tests\n");
+	//codetests_mid_test();	
 
 
 	//int lineas=get_file_lines("pruebatrans.log.1x");
@@ -1004,8 +1004,8 @@ void codetests_main(int main_argc,char *main_argv[])
 	printf ("Note: %d\n",get_mid_number_note("KK"));
 	printf ("Note: %d\n",get_mid_number_note(""));*/
 
-	//printf ("\nRunning assembler tests\n");
-	//codetests_assembler();
+	printf ("\nRunning assembler tests\n");
+	codetests_assembler();
 
 
 	//printf ("\nRunning tbblue layers strings\n");

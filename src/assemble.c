@@ -630,6 +630,30 @@ int assemble_opcode_defm(char *texto,z80_byte *destino)
 }
 
 
+int assemble_opcode_defs(char *texto,z80_byte *destino)
+{
+	//Asumimos que el primer parámetro empieza just despues de "defs " 
+	//posicion 5
+	int indice=5;
+
+
+	int longitud_total=parse_string_to_number(&texto[indice]);
+
+	if (longitud_total<=0 || longitud_total>MAX_DESTINO_ENSAMBLADO) return 0; //Error
+
+	int i;
+
+	for (i=0;i<longitud_total;i++) {
+		
+		*destino=0; //meter ceros en destino
+		destino++;
+
+	}
+
+	//printf ("longitud: %d\n",longitud_total);
+	return longitud_total;
+}
+
 int assemble_opcode_defb_defw(int si_defw,char *texto,z80_byte *destino)
 {
 	//Asumimos que el primer parámetro empieza just despues de "defb " 
@@ -701,7 +725,7 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 	//Si coincide con algun tipo de parametro conocido, y si no, se trata como numero
 
 
-	//Casos especiales defb, defw, defm
+	//Casos especiales defb, defw, defm, defs
 	if (parametros_entrada) {
 		if (!strcasecmp("defb",buf_opcode)) {
 			return assemble_opcode_defb_defw(0,texto,destino);
@@ -710,10 +734,14 @@ int assemble_opcode(int direccion_destino,char *texto,z80_byte *destino)
 		if (!strcasecmp("defw",buf_opcode)) {
 			return assemble_opcode_defb_defw(1,texto,destino);
 		}
-
+ 
 		if (!strcasecmp("defm",buf_opcode)) {
 			return assemble_opcode_defm(texto,destino);
 		}		
+
+		if (!strcasecmp("defs",buf_opcode)) {
+			return assemble_opcode_defs(texto,destino);
+		}				
 
 	}
 
