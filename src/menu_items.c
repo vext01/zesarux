@@ -14686,6 +14686,10 @@ Dibujo de la nota:
 
 #define PENTAGRAMA_TOTAL_ALTO (PENTAGRAMA_ESPACIO_LINEAS*7)
 
+//#define PENTAGRAMA_MARGEN_SUPERIOR 8
+//Si hay mas de un chip, meter margen superior
+#define PENTAGRAMA_MARGEN_SUPERIOR (total_ay_chips>1 ? 8 : 0)
+
 char *pentagrama_nota_negra[PENTAGRAMA_NOTA_ALTO]={
    //0123456
     "  XXX  ",  
@@ -14800,14 +14804,13 @@ char *pentagrama_sost[PENTAGRAMA_SOST_ALTO]={
 
 //Clave de sol. 56 pixeles alto aprox
 
-//#define PIANO_PARTITURA_GRAPHIC_BASE_X 9
 #define PIANO_PARTITURA_GRAPHIC_BASE_X (menu_origin_x() )
 #define PIANO_PARTITURA_GRAPHIC_BASE_Y 0
 
 
 
-#define AY_PIANO_ANCHO_VENTANA 32
-#define AY_PIANO_ALTO_VENTANA 24
+#define PIANO_PARTITURA_ANCHO_VENTANA 32
+#define PIANO_PARTITURA_ALTO_VENTANA 24
 
 #define MENU_AY_PARTITURA_MAX_COLUMNS 30
 
@@ -15231,6 +15234,9 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 	y +=canal*(PENTAGRAMA_TOTAL_ALTO+1); //+1 para dejar 1 pixelillo de margen
 
 
+	y +=PENTAGRAMA_MARGEN_SUPERIOR;
+
+
 	int ancho_columna=menu_ay_partitura_ancho_col_texto();
 
 	//Las lineas de pentagrama que dejen espacio a la izquierda y derecha, de ancho=ancho_columna
@@ -15275,6 +15281,8 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 }
 
+int menu_ay_partitura_chip=0;
+
 void menu_ay_partitura_overlay(void)
 {
 
@@ -15285,20 +15293,19 @@ void menu_ay_partitura_overlay(void)
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
 
 
-	int chip;
+	//int chip=menu_ay_partitura_chip;
 
 
 			char nota_a[4];
 			char nota_b[4];
 			char nota_c[4];
 
-		//temp 1 chip
-	for (chip=0;chip<1;chip++) {
 
 
-			int freq_a=ay_retorna_frecuencia(0,chip);
-			int freq_b=ay_retorna_frecuencia(1,chip);
-			int freq_c=ay_retorna_frecuencia(2,chip);
+
+			int freq_a=ay_retorna_frecuencia(0,menu_ay_partitura_chip);
+			int freq_b=ay_retorna_frecuencia(1,menu_ay_partitura_chip);
+			int freq_c=ay_retorna_frecuencia(2,menu_ay_partitura_chip);
 
 
 			sprintf(nota_a,"%s",get_note_name(freq_a) );
@@ -15310,12 +15317,12 @@ void menu_ay_partitura_overlay(void)
 			sprintf(nota_c,"%s",get_note_name(freq_c) );
 
 			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
-			if (ay_3_8912_registros[chip][7]&1 || ay_3_8912_registros[chip][8]==0) nota_a[0]=0;
-			if (ay_3_8912_registros[chip][7]&2 || ay_3_8912_registros[chip][9]==0) nota_b[0]=0;
-			if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) nota_c[0]=0;
+			if (ay_3_8912_registros[menu_ay_partitura_chip][7]&1 || ay_3_8912_registros[menu_ay_partitura_chip][8]==0) nota_a[0]=0;
+			if (ay_3_8912_registros[menu_ay_partitura_chip][7]&2 || ay_3_8912_registros[menu_ay_partitura_chip][9]==0) nota_b[0]=0;
+			if (ay_3_8912_registros[menu_ay_partitura_chip][7]&4 || ay_3_8912_registros[menu_ay_partitura_chip][10]==0) nota_c[0]=0;
 
 
-	}
+	
 
 
 	//Si notas anteriores distintas de las actuales, scroll izquierda
@@ -15335,47 +15342,42 @@ void menu_ay_partitura_overlay(void)
 
 	//Si alguno de los 3 canales es diferente del estado anterior
 	columna_estado_anterior=menu_ay_partitura_ultima_columna[0];
-	if (strcasecmp(nota_a,menu_ay_partitura_current_state[0][0][columna_estado_anterior])) {
+	if (strcasecmp(nota_a,menu_ay_partitura_current_state[menu_ay_partitura_chip][0][columna_estado_anterior])) {
 		hayscroll=1;
 		modificado_canal1=1;
 	}
 	else {
 		//se mantiene igual. aumentar duracion
-		menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]++;
+		menu_ay_partitura_current_state_duraciones[menu_ay_partitura_chip][0][columna_estado_anterior]++;
 	}
 
 
 	columna_estado_anterior=menu_ay_partitura_ultima_columna[1];
-	if (strcasecmp(nota_b,menu_ay_partitura_current_state[0][1][columna_estado_anterior])) {
+	if (strcasecmp(nota_b,menu_ay_partitura_current_state[menu_ay_partitura_chip][1][columna_estado_anterior])) {
 		hayscroll=1;
 		modificado_canal2=1;
 	}
 	else {
 		//se mantiene igual. aumentar duracion
-		menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]++;
+		menu_ay_partitura_current_state_duraciones[menu_ay_partitura_chip][1][columna_estado_anterior]++;
 	}	
 
 
 	columna_estado_anterior=menu_ay_partitura_ultima_columna[2];
-	if (strcasecmp(nota_c,menu_ay_partitura_current_state[0][2][columna_estado_anterior])) {
+	if (strcasecmp(nota_c,menu_ay_partitura_current_state[menu_ay_partitura_chip][2][columna_estado_anterior])) {
 		hayscroll=1;
 		modificado_canal3=1;
 	}
 	else {
 		//se mantiene igual. aumentar duracion
-		menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]++;
+		menu_ay_partitura_current_state_duraciones[menu_ay_partitura_chip][2][columna_estado_anterior]++;
 	}	
 
 
-	//Si alguno de los 3 canales es diferente del estado anterior
-	/*/if (
-		strcasecmp(nota_a,menu_ay_partitura_current_state[0][0][columna_estado_anterior]) ||
-		strcasecmp(nota_b,menu_ay_partitura_current_state[0][1][columna_estado_anterior]) ||
-		strcasecmp(nota_c,menu_ay_partitura_current_state[0][2][columna_estado_anterior]) 
-	) hayscroll=1;*/
+
 
 	if (hayscroll) {
-		menu_ay_partitura_scroll(0);
+		menu_ay_partitura_scroll(menu_ay_partitura_chip);
 
 		//Meter valor actual los que se han modificado
 		if (modificado_canal1) {
@@ -15383,8 +15385,8 @@ void menu_ay_partitura_overlay(void)
 			columna_estado_anterior=menu_ay_partitura_total_columns()-1;
 			menu_ay_partitura_ultima_columna[0]=columna_estado_anterior;
 
-			strcpy(menu_ay_partitura_current_state[0][0][columna_estado_anterior],nota_a);
-			menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]=1;
+			strcpy(menu_ay_partitura_current_state[menu_ay_partitura_chip][0][columna_estado_anterior],nota_a);
+			menu_ay_partitura_current_state_duraciones[menu_ay_partitura_chip][0][columna_estado_anterior]=1;
 		}
 
 		if (modificado_canal2) {
@@ -15392,8 +15394,8 @@ void menu_ay_partitura_overlay(void)
 			columna_estado_anterior=menu_ay_partitura_total_columns()-1;
 			menu_ay_partitura_ultima_columna[1]=columna_estado_anterior;
 
-			strcpy(menu_ay_partitura_current_state[0][1][columna_estado_anterior],nota_b);
-			menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]=1;
+			strcpy(menu_ay_partitura_current_state[menu_ay_partitura_chip][1][columna_estado_anterior],nota_b);
+			menu_ay_partitura_current_state_duraciones[menu_ay_partitura_chip][1][columna_estado_anterior]=1;
 		}
 
 		if (modificado_canal3) {
@@ -15401,24 +15403,18 @@ void menu_ay_partitura_overlay(void)
 			columna_estado_anterior=menu_ay_partitura_total_columns()-1;
 			menu_ay_partitura_ultima_columna[2]=columna_estado_anterior;
 
-			strcpy(menu_ay_partitura_current_state[0][2][columna_estado_anterior],nota_c);
-			menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]=1;
+			strcpy(menu_ay_partitura_current_state[menu_ay_partitura_chip][2][columna_estado_anterior],nota_c);
+			menu_ay_partitura_current_state_duraciones[menu_ay_partitura_chip][2][columna_estado_anterior]=1;
 		}				
 		
 
 
 	}
-	//Si no, incrementar duraciones notas
-	else {
-		//menu_ay_partitura_current_state_duraciones[0][0][columna_estado_anterior]++;
-		//menu_ay_partitura_current_state_duraciones[0][1][columna_estado_anterior]++;
-		//menu_ay_partitura_current_state_duraciones[0][2][columna_estado_anterior]++;
-	}
 
 	//Dibujar estado de los 3 canales
-	menu_ay_partitura_draw_state(0,0);
-	menu_ay_partitura_draw_state(0,1);
-	menu_ay_partitura_draw_state(0,2);
+	menu_ay_partitura_draw_state(menu_ay_partitura_chip,0);
+	menu_ay_partitura_draw_state(menu_ay_partitura_chip,1);
+	menu_ay_partitura_draw_state(menu_ay_partitura_chip,2);
 
 	
 
@@ -15462,6 +15458,12 @@ void menu_ay_partitura_init_state_last_column(void)
 		menu_ay_partitura_ultima_columna[2]=menu_ay_partitura_total_columns()-1;
 }
 
+void menu_aysheet_change_chip(MENU_ITEM_PARAMETERS)
+{
+	menu_ay_partitura_chip++;
+	if (menu_ay_partitura_chip==total_ay_chips) menu_ay_partitura_chip=0;
+}
+
 zxvision_window zxvision_window_ay_partitura;
 
 
@@ -15487,8 +15489,8 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 						
 						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
 						yventana=PIANO_PARTITURA_GRAPHIC_BASE_Y;
-						ancho_ventana=AY_PIANO_ANCHO_VENTANA;
-						alto_ventana=AY_PIANO_ALTO_VENTANA;						
+						ancho_ventana=PIANO_PARTITURA_ANCHO_VENTANA;
+						alto_ventana=PIANO_PARTITURA_ALTO_VENTANA;						
 
 		}
 				
@@ -15512,6 +15514,9 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 
 		
+		//Comprobacion inicial de que el chip seleccionado no es mayor que los disponibles
+		if (menu_ay_partitura_chip>=total_ay_chips) menu_ay_partitura_chip=0;
+
 
 		//printf ("ancho creada %d\n",ventana->visible_width);	
 
@@ -15525,7 +15530,54 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_partitura_overlay);
 
 
-		zxvision_wait_until_esc(ventana);
+
+
+		
+		
+		//Si solo hay 1 chip, no mostrar selector de chip
+		if (total_ay_chips==1) zxvision_wait_until_esc(ventana);
+
+		else {
+        
+        	//Los array de menu_item no tienen porque cambiar el nombre en cada sitio que se usen
+        	menu_item *array_menu_nonamed;
+        	menu_item item_seleccionado;
+
+        	int nonamed_opcion_seleccionada=0; //Solo 1 item de menu, no tiene sentido guardar posicion
+        
+        	int retorno_menu;
+        	do {
+
+			
+            	menu_add_item_menu_inicial_format(&array_menu_nonamed,MENU_OPCION_NORMAL,menu_aysheet_change_chip,NULL,"[%d] ~~Chip",menu_ay_partitura_chip);
+	        	menu_add_item_menu_shortcut(array_menu_nonamed,'c');
+
+        		//Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+        		//menu_add_item_menu_tooltip(array_menu_nonamed,"Change wave Shape");
+        		menu_add_item_menu_ayuda(array_menu_nonamed,"Change selected chip");
+            	menu_add_item_menu_tabulado(array_menu_nonamed,1,0);
+			
+
+
+            	//Nombre de ventana solo aparece en el caso de stdout
+        		retorno_menu=menu_dibuja_menu(&nonamed_opcion_seleccionada,&item_seleccionado,array_menu_nonamed,"AY Sheet (60 BPM)" );
+
+
+            	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+            	cls_menu_overlay();
+        		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                	//llamamos por valor de funcion
+            		if (item_seleccionado.menu_funcion!=NULL) {
+                		//printf ("actuamos por funcion\n");
+                		item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+	            	}
+    	    	}
+
+    		} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);		
+		}
+
+
 
 				
 

@@ -14,11 +14,10 @@ Y Windows sdl?
 
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
-
+-a veces al cambiar numero chips en settings-audio-ay chips se cuelga
 
 
 -AY partitura:
-*que muestre los otros chips. ya está preparado el array para varios chips
 *para el beeper tambien
 *ideal para probar duraciones: golden axe
 
