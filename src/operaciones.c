@@ -451,6 +451,43 @@ void neg(void)
 	sub_a_reg(tempneg);
 }
 
+
+
+
+//Rutinas de cpu core vacias para que, al parsear breakpoints del config file, donde aun no hay inicializada maquina,
+//funciones como opcode1=XX , peek(x), etc no peten porque utilizan funciones peek. Inicializar también las de puerto por si acaso
+
+z80_byte peek_byte_vacio(z80_int dir GCC_UNUSED)
+{
+	return 0;
+}
+
+void poke_byte_vacio(z80_int dir GCC_UNUSED,z80_byte valor GCC_UNUSED)
+{
+
+}
+
+
+z80_byte lee_puerto_vacio(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l GCC_UNUSED)
+{
+	return 0;
+}
+
+
+void out_port_vacio(z80_int puerto GCC_UNUSED,z80_byte value GCC_UNUSED)
+{
+
+}
+
+z80_byte fetch_opcode_vacio(void)
+{
+	return 0;
+}
+
+
+
+
+
 void poke_byte_no_time_spectrum_48k(z80_int dir,z80_byte valor)
 {
         if (dir>16383) {

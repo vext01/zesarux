@@ -3214,10 +3214,6 @@ int debug_set_breakpoint(int breakpoint_index,char *condicion)
 	int error_evaluate; 
 
 	//Si no es token vacio
-	/*
-	Desactivado temporalmente: meter breakpoints por config file, tipo:
-	opcode2=xxxx hace que se evalue el valor de opcode2, quien hace un peek, y al no haber inicializado aun la maquina,
-	hace que pete con segmentation fault 
 	if (debug_breakpoints_conditions_array_tokens[breakpoint_index][0].tipo!=TPT_FIN) {
 		exp_par_evaluate_token(debug_breakpoints_conditions_array_tokens[breakpoint_index],MAX_PARSER_TOKENS_NUM,&error_evaluate);
 		if (error_evaluate) {
@@ -3226,7 +3222,7 @@ int debug_set_breakpoint(int breakpoint_index,char *condicion)
 			return 1;
 		}	
 	}
-	*/
+	
 
 
   	debug_breakpoints_conditions_saltado[breakpoint_index]=0;

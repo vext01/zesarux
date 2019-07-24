@@ -1,3 +1,8 @@
+Version 8.1. 24 July 2019 - xxx edition
+
+-Fixed f_seek call on esxdos handler
+-Fixed segfault error when using breakpoints like peek/opcode in config file
+
 Version 8.0. 19 July 2019 - World Destruction edition
 
 Improved menu interface:

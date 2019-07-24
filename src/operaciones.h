@@ -199,6 +199,16 @@ extern void init_cpu_tables(void);
 //extern void set_flags_rld_rrd(z80_byte rh,z80_byte rl);
 extern void set_flags_in_reg(z80_byte value);
 
+
+
+extern z80_byte peek_byte_vacio(z80_int dir GCC_UNUSED);
+extern void poke_byte_vacio(z80_int dir GCC_UNUSED,z80_byte valor GCC_UNUSED);
+extern z80_byte lee_puerto_vacio(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l GCC_UNUSED);
+extern void out_port_vacio(z80_int puerto GCC_UNUSED,z80_byte value GCC_UNUSED);
+extern z80_byte fetch_opcode_vacio(void);
+
+
+
 extern void (*poke_byte)(z80_int dir,z80_byte valor);
 extern void (*poke_byte_no_time)(z80_int dir,z80_byte valor);
 extern z80_byte (*peek_byte)(z80_int dir);

@@ -7147,6 +7147,18 @@ tooltip_enabled.v=1;
 
 	menu_first_aid_startup=1;
 
+	//Inicializar rutinas de cpu core para que, al parsear breakpoints del config file, donde aun no hay inicializada maquina,
+	//funciones como opcode1=XX , peek(x), etc no peten porque utilizan funciones peek. Inicializar también las de puerto por si acaso
+	poke_byte=poke_byte_vacio;
+	poke_byte_no_time=poke_byte_vacio;
+	peek_byte=peek_byte_vacio;
+	peek_byte_no_time=peek_byte_vacio;	
+	lee_puerto=lee_puerto_vacio;
+	out_port=out_port_vacio;	
+	fetch_opcode=fetch_opcode_vacio;
+
+
+
 	clear_lista_teclas_redefinidas();
 
 	debug_nested_cores_pokepeek_init();
