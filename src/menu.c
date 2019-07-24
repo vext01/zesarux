@@ -14950,6 +14950,8 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 
 }
 
+//Funcion para seleccionar un directorio con filesel
+//Solo cambia string_root_dir si se sale de filesel con ESC
 //Devuelve mismo valor que retorna menu_filesel
 int menu_storage_string_root_dir(char *string_root_dir)
 {
