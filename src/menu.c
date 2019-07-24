@@ -20181,7 +20181,7 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 		snapshot_save(snapshot_save_file);
 
 		//Si ha ido bien la grabacion
-		if (!if_pending_error_message) menu_generic_message("Save Snapshot","OK. Snapshot saved");
+		if (!if_pending_error_message) menu_generic_message_splash("Save Snapshot","OK. Snapshot saved");
 
                 //Y salimos de todos los menus
                 salir_todos_menus=1;
@@ -20440,7 +20440,7 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 
 
 		util_save_game_config(game_config_file);
-		menu_generic_message("Save autoconfig","OK. File saved");
+		menu_generic_message_splash("Save autoconfig","OK. File saved");
 
 
     }
@@ -27233,7 +27233,7 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 void menu_settings_config_file_save_config(MENU_ITEM_PARAMETERS)
 {
 	if (util_write_configfile()) {
-		menu_generic_message("Save configuration","OK. Configuration saved");
+		menu_generic_message_splash("Save configuration","OK. Configuration saved");
 	};
 }
 
@@ -27243,7 +27243,7 @@ void menu_settings_config_file_save_on_exit(MENU_ITEM_PARAMETERS)
 		if (menu_confirm_yesno_texto("Write configuration","To disable setting saveconf")==0) return;
 		save_configuration_file_on_exit.v=0;
 		util_write_configfile();
-		menu_generic_message("Save configuration","OK. Configuration saved");
+		menu_generic_message_splash("Save configuration","OK. Configuration saved");
 	}
 	else save_configuration_file_on_exit.v=1;
 }

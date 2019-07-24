@@ -16,6 +16,7 @@ Y Windows sdl?
 
 -a veces al cambiar numero chips en settings-audio-ay chips se cuelga
 
+-poder usar kempston mouse desde menu si ventana de menu no tiene el foco (al igual que sucede con el teclado)
 
 -AY partitura:
 *para el beeper tambien

@@ -15549,7 +15549,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         	do {
 
 			
-            	menu_add_item_menu_inicial_format(&array_menu_nonamed,MENU_OPCION_NORMAL,menu_aysheet_change_chip,NULL,"[%d] ~~Chip",menu_ay_partitura_chip);
+            	menu_add_item_menu_inicial_format(&array_menu_nonamed,MENU_OPCION_NORMAL,menu_aysheet_change_chip,NULL,"[%d] Selected ~~Chip",menu_ay_partitura_chip+1);
 	        	menu_add_item_menu_shortcut(array_menu_nonamed,'c');
 
         		//Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
@@ -15676,7 +15676,7 @@ void menu_record_mid_save(MENU_ITEM_PARAMETERS)
 			strcpy(mid_export_file,file_save);
 			mid_flush_file();
 
-	        menu_generic_message("Save MID","OK File saved");
+	        menu_generic_message_splash("Save MID","OK File saved");
 
  
         }
