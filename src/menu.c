@@ -27073,6 +27073,9 @@ void menu_snapshot_autoload_start(MENU_ITEM_PARAMETERS)
 void menu_snapshot_autosnap_path(MENU_ITEM_PARAMETERS)
 {
 
+	menu_storage_string_root_dir(autosave_snapshot_path_buffer);
+
+/*
         char *filtros[2];
 
         filtros[0]="nofiles";
@@ -27107,7 +27110,7 @@ void menu_snapshot_autosnap_path(MENU_ITEM_PARAMETERS)
 
         //volvemos a directorio inicial
         menu_filesel_chdir(directorio_actual);
-
+*/
 
 }
 
