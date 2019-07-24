@@ -5,13 +5,10 @@
 
 -página man de ZEsarUX. que no diga opciones, que haga referencia a --help y --experthelp
 
--filtro en menu_filesel que no muestre archivos, solo directorios. Para menus que piden ruta directorio
-
 -Joystick en Mac
 Y Windows sdl?
 
 -explorador archivos imagenes mmc etc con chanfatfs?
-
 
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
