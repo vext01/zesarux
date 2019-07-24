@@ -13710,46 +13710,6 @@ void menu_storage_zxpand_root_dir(MENU_ITEM_PARAMETERS)
         zxpand_cwd[0]=0;
 	}		
 
-/*
-        char *filtros[2];
-
-        filtros[0]="nofiles";
-        filtros[1]=0;
-
-
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
-
-        int ret;
-
-
-	char nada[PATH_MAX];
-
-        //Obtenemos ultimo directorio visitado
-	menu_filesel_chdir(zxpand_root_dir);
-
-
-        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
-
-
-	//Si sale con ESC
-	if (ret==0) {
-		//Directorio root zxpand
-		sprintf (zxpand_root_dir,"%s",menu_filesel_last_directory_seen);
-		debug_printf (VERBOSE_DEBUG,"Selected directory: %s",zxpand_root_dir);
-
-        	//directorio zxpand vacio
-	        zxpand_cwd[0]=0;
-
-	}
-
-
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
-		*/
-
-
 }
 
 
@@ -15081,46 +15041,6 @@ void menu_esxdos_traps_root_dir(MENU_ITEM_PARAMETERS)
         //directorio esxdos vacio
 	    esxdos_handler_cwd[0]=0;
 	}		
-
-/*
-        char *filtros[2];
-
-        //filtros[0]="";
-		filtros[0]="nofiles";
-        filtros[1]=0;
-
-
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
-
-        int ret;
-
-
-	char nada[PATH_MAX];
-
-        //Obtenemos ultimo directorio visitado
-	menu_filesel_chdir(esxdos_handler_root_dir);
-
-
-        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
-
-
-	//Si sale con ESC
-	if (ret==0) {
-		//Directorio root esxdos
-		sprintf (esxdos_handler_root_dir,"%s",menu_filesel_last_directory_seen);
-		debug_printf (VERBOSE_DEBUG,"Selected directory: %s",esxdos_handler_root_dir);
-
-        	//directorio esxdos vacio
-	        esxdos_handler_cwd[0]=0;
-
-	}
-
-
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
-*/
 
 }
 
@@ -20271,48 +20191,7 @@ void menu_snapshot_autosave_at_interval_prefix(MENU_ITEM_PARAMETERS)
 
 void menu_snapshot_autosave_at_interval_directory(MENU_ITEM_PARAMETERS)
 {
-
-	
 	menu_storage_string_root_dir(snapshot_autosave_interval_quicksave_directory);
-
-	/*
-
-        char *filtros[2];
-
-        filtros[0]="nofiles";
-        filtros[1]=0;
-
-
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
-
-        int ret;
-
-
-	char nada[PATH_MAX];
-
-        //Obtenemos ultimo directorio visitado
-	menu_filesel_chdir(snapshot_autosave_interval_quicksave_directory);
-
-
-        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
-
-
-	//Si sale con ESC
-	if (ret==0) {
-		//Directorio root
-		sprintf (snapshot_autosave_interval_quicksave_directory,"%s",menu_filesel_last_directory_seen);
-		debug_printf (VERBOSE_DEBUG,"Selected directory: %s",snapshot_autosave_interval_quicksave_directory);
-
-
-	}
-
-
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
-
-	*/
 }
 
 
@@ -27072,46 +26951,7 @@ void menu_snapshot_autoload_start(MENU_ITEM_PARAMETERS)
 
 void menu_snapshot_autosnap_path(MENU_ITEM_PARAMETERS)
 {
-
 	menu_storage_string_root_dir(autosave_snapshot_path_buffer);
-
-/*
-        char *filtros[2];
-
-        filtros[0]="nofiles";
-        filtros[1]=0;
-
-
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
-
-        int ret;
-
-
-        char nada[PATH_MAX];
-
-        //Obtenemos ultimo directorio visitado
-        menu_filesel_chdir(autosave_snapshot_path_buffer);
-
-
-        ret=menu_filesel("Enter dir & press ESC",filtros,nada);
-
-
-        //Si sale con ESC
-        if (ret==0) {
-                //Directorio root
-                sprintf (autosave_snapshot_path_buffer,"%s",menu_filesel_last_directory_seen);
-                debug_printf (VERBOSE_DEBUG,"Selected directory: %s",autosave_snapshot_path_buffer);
-
-
-        }
-
-
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
-*/
-
 }
 
 
