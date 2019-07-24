@@ -914,7 +914,7 @@ void menu_change_audio_driver_apply(MENU_ITEM_PARAMETERS)
         funcion_set=audio_driver_array[num_menu_audio_driver].funcion_set;
                 if ( (funcion_init()) ==0) {
                         funcion_set();
-			menu_generic_message("Apply Driver","OK. Driver applied");
+			menu_generic_message_splash("Apply Driver","OK. Driver applied");
 			salir_todos_menus=1;
                 }
 
@@ -1599,7 +1599,7 @@ void menu_cpu_full_stats_clear(MENU_ITEM_PARAMETERS)
 {
 	util_stats_init();
 
-	menu_generic_message("Clear CPU statistics","OK. Statistics cleared");
+	menu_generic_message_splash("Clear CPU statistics","OK. Statistics cleared");
 }
 
 

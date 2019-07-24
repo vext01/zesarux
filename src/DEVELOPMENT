@@ -46,6 +46,29 @@ Para que el cpu_panic muestre backtrace si hay un error, compilar con -g -rdynam
 
 --------------
 
+Diferencias en el uso del menu de:
+menu_generic_message
+y
+menu_generic_message_splash
+
+en el caso de mostrar un OK de alguna operación realizada
+
+
+* menu_generic_message_splash: suele mostrar un OK de alguna operación realizada, en que no es muy importante que el usuario 
+lea detenidamente el mensaje. Ejemplo:
+
+menu_generic_message_splash("Clear CPU statistics","OK. Statistics cleared");
+menu_generic_message_splash("Reload MMC","OK. MMC file reloaded");
+
+
+* menu_generic_message: en el caso de mensajes con OK, interesa que el usuario pueda leer detenidamente el mensaje. Ejemplo:
+
+menu_generic_message("Change DIVMMC ROM","OK. Remember to enable DIVMMC paging to load the firmware");
+menu_generic_message("Rename file","OK. File renamed");
+
+
+--------------
+
 
 * source a generar
 

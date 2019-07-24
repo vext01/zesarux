@@ -14443,7 +14443,7 @@ void menu_timexcart(MENU_ITEM_PARAMETERS)
 void menu_storage_mmc_reload(MENU_ITEM_PARAMETERS)
 {
 	if (mmc_read_file_to_memory()==0) {
-		menu_generic_message("Reload MMC","OK. MMC file reloaded");
+		menu_generic_message_splash("Reload MMC","OK. MMC file reloaded");
 	}
 }
 
@@ -14787,7 +14787,7 @@ void menu_atomlite_enable(MENU_ITEM_PARAMETERS)
 void menu_storage_ide_reload(MENU_ITEM_PARAMETERS)
 {
 	if (ide_read_file_to_memory()==0) {
-		menu_generic_message("Reload IDE","OK. IDE file reloaded");
+		menu_generic_message_splash("Reload IDE","OK. IDE file reloaded");
 	}
 }
 
@@ -22951,7 +22951,7 @@ screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 
                 if ( resultado == 0 ) {
                         funcion_set();
-			menu_generic_message("Apply Driver","OK. Driver applied");
+			menu_generic_message_splash("Apply Driver","OK. Driver applied");
 	                //Y salimos de todos los menus
 	                salir_todos_menus=1;
 
@@ -29995,7 +29995,7 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 void menu_filesel_recent_files_clear(MENU_ITEM_PARAMETERS)
 {
 	last_filesused_clear();
-	menu_generic_message("Clear List","OK. List cleared");
+	menu_generic_message_splash("Clear List","OK. List cleared");
 }
 
 char *menu_filesel_recent_files(void)
