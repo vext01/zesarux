@@ -13701,9 +13701,19 @@ void menu_storage_zxpand_enable(MENU_ITEM_PARAMETERS)
 void menu_storage_zxpand_root_dir(MENU_ITEM_PARAMETERS)
 {
 
+	int ret;
+	ret=menu_storage_string_root_dir(zxpand_root_dir);
+
+	//Si sale con ESC
+	if (ret==0) {
+       	//directorio zxpand vacio
+        zxpand_cwd[0]=0;
+	}		
+
+/*
         char *filtros[2];
 
-        filtros[0]="";
+        filtros[0]="nofiles";
         filtros[1]=0;
 
 
@@ -13737,6 +13747,7 @@ void menu_storage_zxpand_root_dir(MENU_ITEM_PARAMETERS)
 
         //volvemos a directorio inicial
         menu_filesel_chdir(directorio_actual);
+		*/
 
 
 }
@@ -14979,12 +14990,13 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_storage_string_root_dir(char *string_root_dir)
+//Devuelve mismo valor que retorna menu_filesel
+int menu_storage_string_root_dir(char *string_root_dir)
 {
 
         char *filtros[2];
 
-        filtros[0]="";
+        filtros[0]="nofiles";
         filtros[1]=0;
 
 
@@ -15012,8 +15024,10 @@ void menu_storage_string_root_dir(char *string_root_dir)
 
 	}
 
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+    //volvemos a directorio inicial
+    menu_filesel_chdir(directorio_actual);
+
+	return ret;
 
 
 }
@@ -15058,9 +15072,21 @@ void menu_storage_esxdos_traps_emulation(MENU_ITEM_PARAMETERS)
 void menu_esxdos_traps_root_dir(MENU_ITEM_PARAMETERS)
 {
 
+
+	int ret;
+	ret=menu_storage_string_root_dir(esxdos_handler_root_dir);
+
+	//Si sale con ESC
+	if (ret==0) {
+        //directorio esxdos vacio
+	    esxdos_handler_cwd[0]=0;
+	}		
+
+/*
         char *filtros[2];
 
-        filtros[0]="";
+        //filtros[0]="";
+		filtros[0]="nofiles";
         filtros[1]=0;
 
 
@@ -15094,7 +15120,7 @@ void menu_esxdos_traps_root_dir(MENU_ITEM_PARAMETERS)
 
         //volvemos a directorio inicial
         menu_filesel_chdir(directorio_actual);
-
+*/
 
 }
 
@@ -17045,6 +17071,8 @@ int menu_file_filter(const char *name,char *filtros[])
 
 	char *f;
 
+	//Si filtro[0]=="nofiles" no muestra ningun archivo
+	if (!strcasecmp(filtros[0],"nofiles")) return 0;
 
 	//Bucle por cada filtro
 	for (i=0;filtros[i];i++) {
@@ -20244,9 +20272,14 @@ void menu_snapshot_autosave_at_interval_prefix(MENU_ITEM_PARAMETERS)
 void menu_snapshot_autosave_at_interval_directory(MENU_ITEM_PARAMETERS)
 {
 
+	
+	menu_storage_string_root_dir(snapshot_autosave_interval_quicksave_directory);
+
+	/*
+
         char *filtros[2];
 
-        filtros[0]="";
+        filtros[0]="nofiles";
         filtros[1]=0;
 
 
@@ -20279,7 +20312,7 @@ void menu_snapshot_autosave_at_interval_directory(MENU_ITEM_PARAMETERS)
         //volvemos a directorio inicial
         menu_filesel_chdir(directorio_actual);
 
-
+	*/
 }
 
 
@@ -27042,7 +27075,7 @@ void menu_snapshot_autosnap_path(MENU_ITEM_PARAMETERS)
 
         char *filtros[2];
 
-        filtros[0]="";
+        filtros[0]="nofiles";
         filtros[1]=0;
 
 
@@ -29120,7 +29153,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 		//Move or copy
 		char *filtros[2];
 
-       	 	filtros[0]="";
+       	 	filtros[0]="nofiles";
         	filtros[1]=0;
 
 

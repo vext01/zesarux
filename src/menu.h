@@ -474,6 +474,8 @@ extern void menu_ventana_scanf(char *titulo,char *texto,int max_length);
 extern int menu_filesel(char *titulo,char *filtros[],char *archivo);
 extern int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo);
 
+extern int menu_storage_string_root_dir(char *string_root_dir);
+
 extern void menu_add_item_menu_inicial(menu_item **m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo);
 extern void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...);
 extern void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo);

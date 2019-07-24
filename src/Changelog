@@ -2,6 +2,7 @@ Version 8.1. 24 July 2019 - xxx edition
 
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
+Improved file selector: when asking for a directory, only shows directories, not files
 
 Fixed f_seek call on esxdos handler
 Fixed segfault error when using breakpoints like peek/opcode in config file
