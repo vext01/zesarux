@@ -54,6 +54,7 @@
 #include "assemble.h"
 #include "expression_parser.h"
 #include "joystick.h"
+#include "snap_zsf.h"
 
 
 
@@ -796,6 +797,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"get-os",NULL,NULL,"Shows emulator operating system"},
   {"get-paging-state",NULL,NULL,"Shows paging state on Spectrum 128k machines: if using screen 5/7 and if paging enabled"},
   {"get-registers","|gr",NULL,"Get CPU registers"},
+	{"get-snapshot",NULL,NULL,"Gets a zsf snapshot on console. Contents are shown as hexadecimal characters"}, 
 	{"get-stack-backtrace",NULL,"[items]","Get last 16-bit values from the stack. If no items parameter, it shows 5 by default"},
 	{"get-tstates",NULL,NULL,"Get the t-states counter"},
 	{"get-tstates-partial",NULL,NULL,"Get the t-states partial counter. Shows text OVERFLOW if value overflows"},
@@ -4147,6 +4149,26 @@ char buffer_retorno[2048];
     print_registers(buffer_retorno);
     escribir_socket (misocket,buffer_retorno);
   }
+
+	else if (!strcmp(comando_sin_parametros,"get-snapshot")) {
+		z80_byte *buffer_temp;
+		buffer_temp=malloc(1024*1024*16); //16 MB es mas que suficiente
+		if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
+
+		z80_byte *puntero=buffer_temp; 
+		int longitud;
+
+  		save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
+
+		printf ("longitud: %d\n",longitud);
+
+		int i;
+		for (i=0;i<longitud;i++) {
+			escribir_socket_format(misocket,"%02X",buffer_temp[i]);
+		}
+
+	 	free(buffer_temp);
+	}
 
 	else if (!strcmp(comando_sin_parametros,"get-stack-backtrace")) {
 

@@ -335,7 +335,9 @@ char *zsf_get_block_id_name(int block_id)
   else return zsf_block_id_names[block_id];
 }
 
-int zsf_write_block(FILE *ptr_zsf_file, z80_byte *source,z80_int block_id, unsigned int lenght)
+//Si ptr_zsf_file no es NULL, lo guarda en archivo
+//Si es NULL, lo guarda en destination_memory
+int zsf_write_block(FILE *ptr_zsf_file, z80_byte *destination_memory, int *longitud_total, z80_byte *source,z80_int block_id, unsigned int lenght)
 {
   z80_byte block_header[6];
   block_header[0]=value_16_to_8l(block_id);
@@ -346,11 +348,37 @@ int zsf_write_block(FILE *ptr_zsf_file, z80_byte *source,z80_int block_id, unsig
   block_header[4]=(lenght>>16)  & 0xFF;
   block_header[5]=(lenght>>24)  & 0xFF;
 
+  z80_byte *puntero_memoria;
+  puntero_memoria=destination_memory;
+
   //Write header
-  fwrite(block_header, 1, 6, ptr_zsf_file);
+  if (ptr_zsf_file!=NULL) {
+    fwrite(block_header, 1, 6, ptr_zsf_file);
+  }
+  else {
+    memcpy(puntero_memoria,block_header,6);
+    puntero_memoria +=6;
+  }
+
+  *longitud_total +=6;
+
+
 
   //Write data block
-  if (lenght) fwrite(source, 1, lenght, ptr_zsf_file);
+  if (lenght) {
+    if (ptr_zsf_file!=NULL) {
+      fwrite(source, 1, lenght, ptr_zsf_file);
+    }
+    else {
+      memcpy(puntero_memoria,source,lenght);
+      puntero_memoria +=lenght;      
+    }
+  }
+
+  *longitud_total +=lenght;
+
+  //Modificar puntero
+  //if (ptr_zsf_file==NULL) *destination_memory=puntero_memoria;
 
   return 0;
 
@@ -1125,7 +1153,7 @@ void load_zsf_snapshot(char *filename)
 
 }
 
-void save_zsf_snapshot_cpuregs(FILE *ptr)
+void save_zsf_snapshot_cpuregs(FILE *ptr,z80_byte *destination_memory,int *longitud_total)
 {
 
   z80_byte header[27];
@@ -1172,7 +1200,7 @@ void save_zsf_snapshot_cpuregs(FILE *ptr)
   z80_byte bits_estado=(iff1.v) | (im_mode==2 ? 2 : 0);
   header[26]=bits_estado;
 
-  zsf_write_block(ptr, header,ZSF_Z80_REGS_ID, 27);
+  zsf_write_block(ptr, destination_memory, longitud_total, header,ZSF_Z80_REGS_ID, 27);
 
 }
 
@@ -1197,39 +1225,58 @@ int save_zsf_copyblock_compress_uncompres(z80_byte *origen,z80_byte *destino,int
   }
 }
 
-void save_zsf_snapshot(char *filename)
+
+
+//Guarda snapshot en disco on en memoria destino:
+//Si guardar en archivo, filename contiene nombre y destination_memory es NULL
+//Si guardan en memoria, filename es NULL y destionation_memory contiene puntero destino memoria
+void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int *longitud_total)
 {
 
   FILE *ptr_zsf_file;
 
+  *longitud_total=0;
+
   //ZSF File
-  ptr_zsf_file=fopen(filename,"wb");
-  if (!ptr_zsf_file) {
-          debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
-          return;
+  if (filename!=NULL) {
+    ptr_zsf_file=fopen(filename,"wb");
+    if (!ptr_zsf_file) {
+            debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
+            return;
+    }
+  }
+  else {
+    ptr_zsf_file=NULL;
   }
 
-
-  //Save header
-  fwrite(zsf_magic_header, 1, strlen(zsf_magic_header), ptr_zsf_file);
+  if (filename!=NULL) {
+    //Save header
+    fwrite(zsf_magic_header, 1, strlen(zsf_magic_header), ptr_zsf_file);
+  }
+  else {
+    memcpy(destination_memory,zsf_magic_header,strlen(zsf_magic_header) );
+    destination_memory +=strlen(zsf_magic_header);
+    (*longitud_total) +=strlen(zsf_magic_header);
+  }
   
 
 
   //First save machine ID
   z80_byte save_machine_id=current_machine_type;
-  zsf_write_block(ptr_zsf_file, &save_machine_id,ZSF_MACHINEID, 1);
+  zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, &save_machine_id,ZSF_MACHINEID, 1); 
 
 
 
   //Save cpu registers. Z80 or Moto or MK14
   if (CPU_IS_MOTOROLA) {
-
+    //TODO
   }
   else if (CPU_IS_SCMP) {
+    //TODO
   }
 
   else {
-    save_zsf_snapshot_cpuregs(ptr_zsf_file);
+    save_zsf_snapshot_cpuregs(ptr_zsf_file,destination_memory,longitud_total);
   }
 
 
@@ -1240,7 +1287,7 @@ void save_zsf_snapshot(char *filename)
 
     ulablock[0]=out_254 & 7;
 
-    zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, ulablock,ZSF_ULA, 1);
 
   }
 
@@ -1265,7 +1312,7 @@ Byte fields:
         int i;
         for (i=0;i<64;i++) ulaplusblock[3+i]=ulaplus_palette_table[i];
 
-     zsf_write_block(ptr_zsf_file, ulaplusblock,ZSF_ULAPLUS, 67);
+     zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, ulaplusblock,ZSF_ULAPLUS, 67);
   }
 
   //Algunos flags zx80/81
@@ -1283,7 +1330,7 @@ Byte fields:
     zx8081confblock[1]=flags1;
     zx8081confblock[2]=flags2;
 
-    zsf_write_block(ptr_zsf_file, zx8081confblock,ZSF_ZX8081_CONF, 3);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, zx8081confblock,ZSF_ZX8081_CONF, 3);
 
 
   }
@@ -1342,7 +1389,7 @@ Byte fields:
     if (si_comprimido) compressed_ramblock[0]|=1;
 
     //Store block to file
-    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
 
     free(compressed_ramblock);
 
@@ -1381,7 +1428,7 @@ Byte Fields:
 	memconf[1]=puerto_8189;
 	memconf[2]=mem128_multiplicador;
 
-  	zsf_write_block(ptr_zsf_file, memconf,ZSF_SPEC128_MEMCONF, 3);
+  	zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, memconf,ZSF_SPEC128_MEMCONF, 3);
 
 }
 
@@ -1395,7 +1442,7 @@ if (MACHINE_IS_ZXEVO) {
   int i;
   for (i=0;i<256;i++) nvramblock[i+2]=zxevo_nvram[i];
 
-  zsf_write_block(ptr_zsf_file, nvramblock,ZSF_ZXEVO_NVRAM, 258);
+  zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, nvramblock,ZSF_ZXEVO_NVRAM, 258);
 
 
 }
@@ -1451,7 +1498,7 @@ Byte Fields:
 	  debug_printf(VERBOSE_DEBUG,"Saving ZSF_SPEC128_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
 
 	  //Store block to file
-	  zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_SPEC128_RAMBLOCK, longitud_bloque+6);
+	  zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, compressed_ramblock,ZSF_SPEC128_RAMBLOCK, longitud_bloque+6);
 
   }
 
@@ -1497,7 +1544,7 @@ Byte fields:
 
     for (i=0;i<8;i++) zxunoconfblock[266+i]=zxuno_spi_bus[i];
 
-    zsf_write_block(ptr_zsf_file, zxunoconfblock,ZSF_ZXUNO_CONF, 274);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, zxunoconfblock,ZSF_ZXUNO_CONF, 274);
 
 
 
@@ -1545,7 +1592,7 @@ Byte Fields:
     debug_printf(VERBOSE_DEBUG,"Saving ZSF_ZXUNO_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
 
     //Store block to file
-    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_ZXUNO_RAMBLOCK, longitud_bloque+6);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, compressed_ramblock,ZSF_ZXUNO_RAMBLOCK, longitud_bloque+6);
 
   }
 
@@ -1583,7 +1630,7 @@ Byte fields:
                       cpcconfblock[57]=cpc_crtc_last_selected_register;
 
 
-  zsf_write_block(ptr_zsf_file, cpcconfblock,ZSF_CPC_CONF, 58);
+  zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, cpcconfblock,ZSF_CPC_CONF, 58);
 
 
 
@@ -1631,7 +1678,7 @@ Byte Fields:
     debug_printf(VERBOSE_DEBUG,"Saving ZSF_CPC_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
 
     //Store block to file
-    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_CPC_RAMBLOCK, longitud_bloque+6);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, compressed_ramblock,ZSF_CPC_RAMBLOCK, longitud_bloque+6);
 
   }
 
@@ -1658,7 +1705,7 @@ Byte fields:
     for (i=0;i<256;i++) tsconfconfblock[i]=tsconf_af_ports[i];
     for (i=0;i<1024;i++) tsconfconfblock[i+256]=tsconf_fmaps[i];
 
-    zsf_write_block(ptr_zsf_file, tsconfconfblock,ZSF_TSCONF_CONF, 256+1024);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, tsconfconfblock,ZSF_TSCONF_CONF, 256+1024);
 
 
 
@@ -1704,7 +1751,7 @@ Byte Fields:
     debug_printf(VERBOSE_DEBUG,"Saving ZSF_TSCONF_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
 
     //Store block to file
-    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_TSCONF_RAMBLOCK, longitud_bloque+6);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, compressed_ramblock,ZSF_TSCONF_RAMBLOCK, longitud_bloque+6);
 
   }
 
@@ -1736,7 +1783,7 @@ Byte fields:
       int j;
       for (j=0;j<16;j++) aycontents[3+j]=ay_3_8912_registros[i][j];
 
-      zsf_write_block(ptr_zsf_file, aycontents,ZSF_AYCHIP, 19);
+      zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, aycontents,ZSF_AYCHIP, 19);
     }
   }
 
@@ -1766,7 +1813,7 @@ Byte fields:
   divifaceblock[1]=diviface_control_register;
   divifaceblock[2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
 
-  zsf_write_block(ptr_zsf_file, divifaceblock,ZSF_DIVIFACE_CONF, 3);
+  zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, divifaceblock,ZSF_DIVIFACE_CONF, 3);
 
   //memoria divmmc solo en el caso que no sea ni zxuno, ni tbblue ni prism 
   if (!MACHINE_IS_ZXUNO && !MACHINE_IS_TBBLUE && !MACHINE_IS_PRISM) {
@@ -1809,7 +1856,7 @@ Byte Fields:
     debug_printf(VERBOSE_DEBUG,"Saving ZSF_DIVIFACE_MEM ram page: %d length: %d",ram_page,longitud_bloque);
 
     //Store block to file
-    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_DIVIFACE_MEM, longitud_bloque+3);
+    zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, compressed_ramblock,ZSF_DIVIFACE_MEM, longitud_bloque+3);
 
   }
 
@@ -1823,9 +1870,20 @@ Byte Fields:
 
 
   //test meter un NOOP
-  zsf_write_block(ptr_zsf_file, NULL,0, 0);
+  zsf_write_block(ptr_zsf_file,destination_memory,longitud_total, NULL,0, 0);
+
+  if (filename!=NULL) {
+    fclose(ptr_zsf_file);
+  }
+
+}
 
 
-  fclose(ptr_zsf_file);
 
+void save_zsf_snapshot(char *filename)
+{
+  z80_byte *puntero;
+  puntero=NULL;
+  int longitud;
+  save_zsf_snapshot_file_mem(filename,NULL,&longitud);
 }
