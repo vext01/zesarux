@@ -7020,7 +7020,7 @@ Port: 10-- ---- ---- --0-
         	        if ( (puerto & 49154) == 16384 ) {
                 	        zxuno_p2a_write_page_port(puerto,value);
 
-	                        //return;
+	                        
         	        }
 
 	                //Puerto tipicamente 8189
@@ -7028,7 +7028,7 @@ Port: 10-- ---- ---- --0-
         	        // the hardware will respond to all port addresses with bit 1 reset, bit 12 set and bits 13, 14 and 15 reset).
 	                if ( (puerto & 61442 )== 4096) {
         	                zxuno_p2a_write_page_port(puerto,value);
-	                        //return;
+	                        
         	        }
 
 
@@ -7047,7 +7047,7 @@ Port: 10-- ---- ---- --0-
                                 //zxuno_p2a_write_page_port(puerto,value);
 				//printf ("Paginacion 32765 con bootm activo\n");
 
-                                //return;
+                               
                         }
 
                         //Puerto tipicamente 8189

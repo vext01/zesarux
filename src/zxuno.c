@@ -1033,7 +1033,17 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 
 }
 
+z80_byte zxuno_get_devcontrol_di7ffd(void)
+{
+	//Paginacion desactivada por puertos de zxuno DEVCONTROL. DI7FFD
+	return zxuno_ports[0x0E]&4;
+}
 
+z80_byte zxuno_get_devcontrol_di1ffd(void)
+{
+	//Paginacion desactivada por puertos de zxuno DEVCONTROL. DI1FFD
+	return zxuno_ports[0x0E]&8;
+}
 
 //Rutinas de puertos paginacion zxuno pero cuando bootm=0, o sea, como plus2a
 void zxuno_p2a_write_page_port(z80_int puerto, z80_byte value)
@@ -1057,13 +1067,8 @@ void zxuno_p2a_write_page_port(z80_int puerto, z80_byte value)
 		//64 kb rom, 128 ram
 
 		//Paginacion desactivada por puertos de zxuno DEVCONTROL. DI7FFD
-		if (zxuno_ports[0x0E]&4) return;
-
-		//asignar ram
-		//zxuno_mem_page_ram_p2a();
-
-		//asignar rom
-		//zxuno_mem_page_rom_p2a();
+		//if (zxuno_ports[0x0E]&4) return;
+		if (zxuno_get_devcontrol_di7ffd()) return;
 
 		zxuno_set_memory_pages();
 
@@ -1078,11 +1083,12 @@ void zxuno_p2a_write_page_port(z80_int puerto, z80_byte value)
 		if (puerto_32765 & 32) return;
 
 		//Paginacion desactivada por puertos de zxuno DEVCONTROL. DI7FFD
-		if (zxuno_ports[0x0E]&4) return;
+		//if (zxuno_ports[0x0E]&4) return;
+		if (zxuno_get_devcontrol_di7ffd()) return;
 
 		//Paginacion desactivada por puertos de zxuno DEVCONTROL. DI1FFD
-		if (zxuno_ports[0x0E]&8) return;
-
+		//if (zxuno_ports[0x0E]&8) return;
+		if (zxuno_get_devcontrol_di1ffd()) return;
 
 		puerto_8189=value;
 

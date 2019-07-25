@@ -5,6 +5,10 @@
 
 -página man de ZEsarUX. que no diga opciones, que haga referencia a --help y --experthelp
 
+-zxuno: Quiza cuando devcontrol desactiva puertos de paginación, no deberían salir en i/o ports. Se pueden desactivar cualquiera de los dos
+
+-Probar malloc en 32 bit de 2 gb
+
 -Joystick en Mac
 Parece que en Mac es complicado
 Ver
