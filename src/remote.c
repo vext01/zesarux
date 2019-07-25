@@ -4188,8 +4188,6 @@ char buffer_retorno[2048];
 	//Este comando no se usa en la funcion de juegos online, aunque lo hago como complemento a set-ui-io-ports, por si resulta util para algo
 	else if (!strcmp(comando_sin_parametros,"get-ui-io-ports") ) {
 		
-
-		
 //;                    Bits:  4    3    2    1    0     ;desplazamiento puerto
 //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
 //puerto_65022   db    255  ; G    F    D    S    A     ;1
@@ -4206,9 +4204,6 @@ char buffer_retorno[2048];
 			puerto_especial_joystick);
 
 	}
-
-
-
 
 
 	else if (!strcmp(comando_sin_parametros,"get-version")) {
