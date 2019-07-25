@@ -975,17 +975,40 @@ Byte fields:
   //ulaplus_set_extended_mode(zxuno_ports[0x40]);
 }
 
-void load_zsf_snapshot(char *filename)
+
+int load_zsf_eof(FILE *ptr_zsf_file,int longitud_memoria)
+{
+
+  if (ptr_zsf_file!=NULL) {
+    return feof(ptr_zsf_file);
+  }
+  else {
+    if (longitud_memoria>0) return 0;
+    else return 1; 
+  }
+
+}
+
+//Load snapshot de disco o desde memoria
+//Si leer de archivo, filename contiene nombre y no se usa origin_memory ni longitud_memoria
+//Si leer en memoria, filename es NULL y origin_memory contiene puntero origen memoria y longitud_memoria contiene longitud bloque memoria
+void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longitud_memoria)
 {
 
   FILE *ptr_zsf_file;
 
-  ptr_zsf_file=fopen(filename,"rb");
-  if (!ptr_zsf_file) {
-          debug_printf (VERBOSE_ERR,"Error reading snapshot file %s",filename);
-          return;
+  if (filename!=NULL) {
+    ptr_zsf_file=fopen(filename,"rb");
+    if (!ptr_zsf_file) {
+            debug_printf (VERBOSE_ERR,"Error reading snapshot file %s",filename);
+            return;
+    }
   }
 
+  else {
+    ptr_zsf_file=NULL;
+  }
+ 
 
   //Verificar que la cabecera inicial coincide
   //zsf_magic_header
@@ -995,13 +1018,22 @@ void load_zsf_snapshot(char *filename)
   int longitud_magic=strlen(zsf_magic_header);
 
 
-  int leidos=fread(buffer_magic_header,1,longitud_magic,ptr_zsf_file);
+  if (filename!=NULL) {
+    int leidos=fread(buffer_magic_header,1,longitud_magic,ptr_zsf_file);
 
-  if (leidos!=longitud_magic) {
-    debug_printf(VERBOSE_ERR,"Invalid ZSF file, small magic header");
-    fclose(ptr_zsf_file);
-    return;
+    if (leidos!=longitud_magic) {
+      debug_printf(VERBOSE_ERR,"Invalid ZSF file, small magic header");
+      fclose(ptr_zsf_file);
+      return;
+    }
   }
+
+  else {
+    memcpy(buffer_magic_header,origin_memory,longitud_magic);
+    origin_memory +=longitud_magic;
+    longitud_memoria -=longitud_magic;
+  }
+
 
   //Comparar texto
   buffer_magic_header[longitud_magic]=0;
@@ -1016,9 +1048,24 @@ void load_zsf_snapshot(char *filename)
   z80_byte block_header[6];
 
   //Read blocks
-  while (!feof(ptr_zsf_file)) {
+  //while (!feof(ptr_zsf_file)) {
+  while (!load_zsf_eof(ptr_zsf_file,longitud_memoria)) {
     //Read header block
-    unsigned int leidos=fread(block_header,1,6,ptr_zsf_file);
+    unsigned int leidos;
+
+    if (filename!=NULL) {
+      leidos=fread(block_header,1,6,ptr_zsf_file);
+    }
+    else {
+      if (longitud_memoria>0) {
+        memcpy(block_header,origin_memory,6);
+        origin_memory +=6;      
+        leidos=6;
+        longitud_memoria -=6;
+      }
+      else leidos=0;
+    }
+
     if (leidos==0) break; //End while
 
     if (leidos!=6) {
@@ -1047,8 +1094,25 @@ void load_zsf_snapshot(char *filename)
         return;
       }
 
-      //Read block data
-      leidos=fread(block_data,1,block_lenght,ptr_zsf_file);
+      
+
+
+      if (filename!=NULL) {
+        //Read block data
+        leidos=fread(block_data,1,block_lenght,ptr_zsf_file);
+      }
+      else {
+        if (longitud_memoria>0) {
+          memcpy(block_data,origin_memory,block_lenght);
+          origin_memory +=block_lenght;      
+          leidos=block_lenght;
+          longitud_memoria -=block_lenght;
+        }
+        else leidos=0;
+      }
+
+
+
       if (leidos!=block_lenght) {
         debug_printf(VERBOSE_ERR,"Error reading snapshot file. Read: %u Expected: %u",leidos,block_lenght);
         return;
@@ -1149,10 +1213,17 @@ void load_zsf_snapshot(char *filename)
 
   }
 
-  fclose(ptr_zsf_file);
+  if (filename!=NULL) fclose(ptr_zsf_file);
 
 
 }
+
+
+void load_zsf_snapshot(char *filename)
+{
+  load_zsf_snapshot_file_mem(filename,NULL,0);
+}
+
 
 void save_zsf_snapshot_cpuregs(FILE *ptr,z80_byte **destination_memory,int *longitud_total)
 {
@@ -1225,6 +1296,9 @@ int save_zsf_copyblock_compress_uncompres(z80_byte *origen,z80_byte *destino,int
     return longitud_comprimido;
   }
 }
+
+
+
 
 
 

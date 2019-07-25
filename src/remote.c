@@ -828,6 +828,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"load-source-code","|lsc","file","Load source file to be used on disassemble opcode functions"},
 	{"ls",NULL,NULL,"Minimal command list"},
 	{"noop",NULL,NULL,"This command does nothing"},
+	{"put-snapshot",NULL,NULL,"Puts a zsf snapshot from console. Contents must be hexadecimal characters without spaces"}, 
   {"quit","|exit|logout",NULL,"Closes connection"},
 	{"read-memory",NULL,"[address] [length]","Dumps memory at address. "
 																				"It not specify address, dumps all memory for current memory zone: 64 KB for mapped memory on Z80, 16 kb for Spectrum 48KB ROM, etc. "
@@ -3529,9 +3530,17 @@ char *parametros;
 void interpreta_comando(char *comando,int misocket)
 {
 
-char buffer_retorno[2048];
+	char buffer_retorno[2048];
 
-	debug_printf (VERBOSE_DEBUG,"Remote command: lenght: %d [%s]",strlen(comando),comando);
+	int longitud_comando=strlen(comando);
+
+	if (longitud_comando<DEBUG_MAX_MESSAGE_LENGTH) {
+		debug_printf (VERBOSE_DEBUG,"Remote command: lenght: %d [%s]",longitud_comando,comando);
+	}
+
+	else {
+		debug_printf (VERBOSE_DEBUG,"Remote command: lenght: %d",longitud_comando);
+	}
 
 	//Si enter y setting de repetir comando anterior solo pulsando enter
 	if (  (comando[0]==0  || comando[0]=='\n' || comando[0]=='\r')
@@ -3603,7 +3612,13 @@ char buffer_retorno[2048];
 	parametros[pindex]=0;
 
 	debug_printf (VERBOSE_DEBUG,"Remote command without parameters: lenght: %d [%s]",strlen(comando_sin_parametros),comando_sin_parametros);
-	debug_printf (VERBOSE_DEBUG,"Remote command parameters: lenght: %d [%s]",strlen(parametros),parametros);
+
+	if (strlen(parametros)<DEBUG_MAX_MESSAGE_LENGTH) {
+		debug_printf (VERBOSE_DEBUG,"Remote command parameters: lenght: %d [%s]",strlen(parametros),parametros);
+	}
+	else {
+		debug_printf (VERBOSE_DEBUG,"Remote command parameters: lenght: %d",strlen(parametros));
+	}
 
 
 	//Si en modo assembling. Juntamos comando y parametros
@@ -4152,7 +4167,7 @@ char buffer_retorno[2048];
 
 	else if (!strcmp(comando_sin_parametros,"get-snapshot")) {
 		z80_byte *buffer_temp;
-		buffer_temp=malloc(1024*1024*16); //16 MB es mas que suficiente
+		buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
 		if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
 
 		z80_byte *puntero=buffer_temp; 
@@ -4422,6 +4437,48 @@ char buffer_retorno[2048];
 	else if (!strcmp(comando_sin_parametros,"noop")) {
 		//No hacer absolutamente nada
 	}
+
+//Este comando se usa (o se usara) en la funcion de juegos online
+	else if (!strcmp(comando_sin_parametros,"put-snapshot") ) {
+		z80_byte valor;
+		if (parametros[0]==0) {
+			escribir_socket(misocket,"ERROR. No parameters set");
+		}
+
+		else {
+
+			char *s=parametros;
+			int parametros_recibidos=0;
+
+			z80_byte *buffer_destino;
+			buffer_destino=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
+			if (buffer_destino==NULL) cpu_panic("Can not allocate memory for put-snapshot");
+
+		
+			while (*s) {
+				char buffer_valor[4];
+				buffer_valor[0]=s[0];
+				buffer_valor[1]=s[1];
+				buffer_valor[2]='H';
+				buffer_valor[3]=0;
+				//printf ("%s\n",buffer_valor);
+				valor=parse_string_to_number(buffer_valor);
+				//printf ("valor: %d\n",valor);
+				
+				buffer_destino[parametros_recibidos++]=valor;
+				//menu_debug_write_mapped_byte(direccion++,valor);
+
+				s++;
+				if (*s) s++;
+			}
+
+			//Enviarlo como snapshot
+			load_zsf_snapshot_file_mem(NULL,buffer_destino,parametros_recibidos);
+
+
+		}
+
+	}	
 
 	else if (!strcmp(comando_sin_parametros,"read-memory")) {
 		unsigned int inicio=0;
@@ -5573,10 +5630,13 @@ void *thread_remote_protocol_function(void *nada)
 								//temp
 								//if (indice_destino> DEBUG_MAX_MESSAGE_LENGTH-100)verbose_level=0;
 
-								//Esto probablemente petara el emulador si el verbose level esta al menos 3 y el comando recibido excede 1024... esto es
-								//porque el buffer de texto en la funcion debug_printf es precisamente de 1024
-								//Entonces por ejemplo el comando write-mapped-memory si se le envia una secuencia de mas de 1024 caracteres, petara en este caso
-								debug_printf (VERBOSE_DEBUG,"Remote command. Read text: [%s]",buffer_lectura_socket);
+								//Para que no pete el emulador si el verbose level esta al menos 3 y el comando recibido excede el maximo que puede mostrar debug_printf
+								printf ("antes mostrar mensaje\n");
+								if (strlen(buffer_lectura_socket)<DEBUG_MAX_MESSAGE_LENGTH) {
+									printf ("Mostrar mensaje. longitud: %d\n",strlen(buffer_lectura_socket));
+									debug_printf (VERBOSE_DEBUG,"Remote command. Read text: [%s]",buffer_lectura_socket);
+								}
+								printf ("despues mostrar mensaje\n");
 
 								interpreta_comando(buffer_lectura_socket,sock_conectat);
 							//}
