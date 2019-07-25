@@ -4160,7 +4160,7 @@ char buffer_retorno[2048];
 
   		save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
 
-		printf ("longitud: %d\n",longitud);
+		//printf ("longitud: %d\n",longitud);
 
 		int i;
 		for (i=0;i<longitud;i++) {

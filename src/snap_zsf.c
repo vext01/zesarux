@@ -336,7 +336,8 @@ char *zsf_get_block_id_name(int block_id)
 }
 
 //Si ptr_zsf_file no es NULL, lo guarda en archivo
-//Si es NULL, lo guarda en destination_memory
+//Si ptr_zsf_file es NULL, lo guarda en destination_memory
+//El **destination_memory es el puntero al puntero donde esta la memoria destino, se modificara al salir con el siguiente byte del final
 int zsf_write_block(FILE *ptr_zsf_file, z80_byte **destination_memory, int *longitud_total, z80_byte *source,z80_int block_id, unsigned int lenght)
 {
   z80_byte block_header[6];
@@ -1228,8 +1229,8 @@ int save_zsf_copyblock_compress_uncompres(z80_byte *origen,z80_byte *destino,int
 
 
 //Guarda snapshot en disco on en memoria destino:
-//Si guardar en archivo, filename contiene nombre y destination_memory es NULL
-//Si guardan en memoria, filename es NULL y destionation_memory contiene puntero destino memoria
+//Si guardar en archivo, filename contiene nombre y no se usa destination_memory
+//Si guardar en memoria, filename es NULL y destination_memory contiene puntero destino memoria
 void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int *longitud_total)
 {
 
@@ -1249,14 +1250,16 @@ void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int 
     ptr_zsf_file=NULL;
   }
 
+  int longitud_zsf_magic_header=strlen(zsf_magic_header);
+
   if (filename!=NULL) {
     //Save header
-    fwrite(zsf_magic_header, 1, strlen(zsf_magic_header), ptr_zsf_file);
+    fwrite(zsf_magic_header, 1, longitud_zsf_magic_header, ptr_zsf_file);
   }
   else {
-    memcpy(destination_memory,zsf_magic_header,strlen(zsf_magic_header) );
-    destination_memory +=strlen(zsf_magic_header);
-    (*longitud_total) +=strlen(zsf_magic_header);
+    memcpy(destination_memory,zsf_magic_header,longitud_zsf_magic_header );
+    destination_memory +=longitud_zsf_magic_header;
+    (*longitud_total) +=longitud_zsf_magic_header;
   }
   
 
@@ -1885,5 +1888,7 @@ void save_zsf_snapshot(char *filename)
   z80_byte *puntero;
   puntero=NULL;
   int longitud;
+  //Realmente el NULL del puntero a memoria no seria necesario, ya que como el filename no es NULL, se usa el archivo y no se usa el puntero a memoria
+  //Y la longitud no la usamos
   save_zsf_snapshot_file_mem(filename,NULL,&longitud);
 }
