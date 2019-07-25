@@ -896,7 +896,7 @@ struct s_items_ayuda items_ayuda[]={
 	"has the same effect as:\n"
 	"set-ui-io-ports 1f1f1f1f1f1f1f1f00\n"
 	"\n"
-	"Joystick value has always the same effect no matter whick kind of joystick you selected, so for example, sending a 01 value will allways mean press right direction\n"
+	"Joystick value has always the same effect no matter which kind of joystick you selected, so for example, sending a 01 value will allways mean press right direction\n"
 
 	},
 
