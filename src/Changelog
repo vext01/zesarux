@@ -10,6 +10,7 @@ Improved file selector: when asking for a directory, only shows directories, not
 
 Fixed f_seek call on esxdos handler
 Fixed segfault error when using breakpoints like peek/opcode in config file
+Fixed bug on zxuno changing video ram 5/7 when paging was disabled by bit DI7FFD
 
 Version 8.0. 19 July 2019 - World Destruction edition
 

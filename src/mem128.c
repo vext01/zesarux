@@ -611,6 +611,8 @@ void mem128_p2a_write_page_port(z80_int puerto, z80_byte value)
 				//printf ("Ram in ROM enabled. So RAM paging change with 32765 not allowed. out value:%d\n",value);
 				//Livingstone supongo II hace esto, continuamente cambia de Screen 5/7 y ademas cambia
 				//formato de paginas de 4,5,6,3 a 4,7,6,3 tambien continuamente
+				//Hay que tener en cuenta que pese a que no hace cambio de paginacion,
+				//si que permite cambiar de video shadow 5/7 ya que el puerto_32765 ya se ha escrito antes de entrar aqui				
 				return;
 			}
 
