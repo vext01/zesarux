@@ -1070,7 +1070,9 @@ void zxuno_p2a_write_page_port(z80_int puerto, z80_byte value)
 		Pero en zxuno esto ya lo detecto en la funcion siguiente zxuno_set_memory_pages,
 		ya que ahí verá que está la paginacion ram en rom y pondrá correctamente la paginacion que toca, sin poner una ram distinta en c000h
 		Realmente, si esta la paginación de ram en rom, los cambios en el puerto 32765 no tienen efecto a nivel de páginas (pero si 
-		a nivel de cambio video shadow 5/7 o incluso desactivar paginacion) 
+		a nivel de cambio video shadow 5/7 o incluso desactivar paginacion)
+		TODO: se deberia cambiar la paginacion habitual del 128kb tal y como la hago aqui, con una funcion comun set_memory_pages
+		para puertos 32765 y 8189 y detecte si esta paginacion ram en rom 
 		if ((puerto_8189&1)==1) {
 			//printf ("Ram in ROM enabled. So RAM paging change with 32765 not allowed. out value:%d\n",value);
 			//Livingstone supongo II hace esto, continuamente cambia de Screen 5/7 y ademas cambia
