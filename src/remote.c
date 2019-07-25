@@ -117,6 +117,9 @@ z80_bit remote_protocol_assembling={0};
 unsigned int direccion_assembling;
 
 
+
+
+
 //Crea un socket TCP per la connexio en xarxa
 int crear_socket_TCP(void)
 {
@@ -796,6 +799,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"get-stack-backtrace",NULL,"[items]","Get last 16-bit values from the stack. If no items parameter, it shows 5 by default"},
 	{"get-tstates",NULL,NULL,"Get the t-states counter"},
 	{"get-tstates-partial",NULL,NULL,"Get the t-states partial counter. Shows text OVERFLOW if value overflows"},
+	{"get-ui-io-ports",NULL,NULL,"Gets user interacton io ports values for 8 rows of keyboard and joystick. Format of the values received is the same as command set-ui-io-ports"},
 	  {"get-version",NULL,NULL,"Shows emulator version"},
 
 	{"get-video-driver",NULL,NULL,"Shows current video driver"},
@@ -4181,6 +4185,31 @@ char buffer_retorno[2048];
 		escribir_socket (misocket,buffer_partial);
 	}
 
+	//Este comando no se usa en la funcion de juegos online, aunque lo hago como complemento a set-ui-io-ports, por si resulta util para algo
+	else if (!strcmp(comando_sin_parametros,"get-ui-io-ports") ) {
+		
+
+		
+//;                    Bits:  4    3    2    1    0     ;desplazamiento puerto
+//puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+//puerto_65022   db    255  ; G    F    D    S    A     ;1
+//puerto_64510    db              255  ; T    R    E    W    Q     ;2
+//puerto_63486    db              255  ; 5    4    3    2    1     ;3
+//puerto_61438    db              255  ; 6    7    8    9    0     ;4
+//puerto_57342    db              255  ; Y    U    I    O    P     ;5
+//puerto_49150    db              255  ; H                J         K      L    Enter ;6
+//puerto_32766    db              255  ; B    N    M    Simb Space ;7
+
+		escribir_socket_format(misocket,"%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			puerto_65278,puerto_65022,puerto_64510,puerto_63486,
+			puerto_61438,puerto_57342,puerto_49150,puerto_32766,
+			puerto_especial_joystick);
+
+	}
+
+
+
+
 
 	else if (!strcmp(comando_sin_parametros,"get-version")) {
 		escribir_socket (misocket,EMULATOR_VERSION);
@@ -4567,9 +4596,8 @@ else if (!strcmp(comando_sin_parametros,"set-debug-settings") || !strcmp(comando
 	else remote_debug_settings=parse_string_to_number(parametros);
 }
 
-
+//Este comando se usa (o se usara) en la funcion de juegos online
 else if (!strcmp(comando_sin_parametros,"set-ui-io-ports") ) {
-		unsigned int direccion;
 		z80_byte valor;
 		if (parametros[0]==0) {
 			escribir_socket(misocket,"ERROR. No parameters set");
@@ -4577,19 +4605,11 @@ else if (!strcmp(comando_sin_parametros,"set-ui-io-ports") ) {
 
 		else {
 
-			direccion=parse_string_to_number(parametros);
-
-			menu_debug_set_memory_zone_attr();
-
-			//Ver si hay espacio
-			//char *s=find_space_or_end(parametros); 
-
 			char *s=parametros;
 			int parametros_recibidos=0;
 
 #define ZRCP_CMD_SET_UI_IO_PORTS_TOTAL_PARAMS 9
-
-		
+	
 
 			z80_byte buffer_destino[ZRCP_CMD_SET_UI_IO_PORTS_TOTAL_PARAMS];
 		

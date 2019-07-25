@@ -2,6 +2,7 @@ Version 8.1. 24 July 2019 - xxx edition
 
 Added ZRCP commands:
 -set-ui-io-ports: to change keyboard state and joystick
+-get-ui-io-ports: to get keyboard state and joystick
 
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
