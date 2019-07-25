@@ -56,6 +56,28 @@ But if this is not done it can lead to a significant delay on startup.
 Yes. Loading it at once (with a previous malloc) will be better.
 
 
+-Rutinas de tcp ip también valen para la sincronización de juegos entre dos instancias de ZEsarUX remotas. 
+
+-Sincronización si es por ZRCP , habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
+
+
+-Para juego en red:
+Comandos ZRCP:
+-envio de snapshot zsf. En base 64
+-envio de puertos teclado y joystick. Para que tenga sentido hay que jugar con diferentes teclas y/o joystick para que no se crucen entre las dos instancias
+Se puede enviar contenido de las 8 filas de teclado y del puerto Kempston por ejemplo. 
+Si está menú abierto no sincroniza
+Si se abre menú se resetean teclas y joystick. Esto creo que ya se hace así
+Envio de esos puertos como 9 valores hexadecimal
+Tipo:
+ZRCP set-ui-io-ports AABBCCDDEE...
+
+comando: set-ui-io-ports
+
+
+Lo mejor sería tener el puerto siempre abierto contra el ZRCP remoto
+
+
 
 -average cpu use en menu help parece que sale 0% si no esta habilitado footer
 

@@ -1286,7 +1286,7 @@ baseconf.o: baseconf.c baseconf.h cpu.h mem128.h debug.h contend.h menu.h screen
 prism.o: prism.c prism.h cpu.h timex.h mem128.h debug.h contend.h zxuno.h timex.h utils.h menu.h
 	\$(CC) \$(CFLAGS) -c prism.c
 
-remote.o: remote.c remote.h cpu.h debug.h utils.h compileoptions.h ql.h disassemble.h menu.h menu_items.h audio.h timer.h screen.h ay38912.h charset.h diviface.h ula.h superupgrade.h tbblue.h zxevo.h tsconf.h baseconf.h operaciones.h snap.h kartusho.h settings.h datagear.h esxdos_handler.h assemble.h expression_parser.h
+remote.o: remote.c remote.h cpu.h debug.h utils.h compileoptions.h ql.h disassemble.h menu.h menu_items.h audio.h timer.h screen.h ay38912.h charset.h diviface.h ula.h superupgrade.h tbblue.h zxevo.h tsconf.h baseconf.h operaciones.h snap.h kartusho.h settings.h datagear.h esxdos_handler.h assemble.h expression_parser.h joystick.h
 	\$(CC) \$(CFLAGS) -c remote.c
 
 esxdos_handler.o: esxdos_handler.c esxdos_handler.h cpu.h operaciones.h debug.h menu.h utils.h diviface.h screen.h

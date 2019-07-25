@@ -53,6 +53,7 @@
 #include "esxdos_handler.h"
 #include "assemble.h"
 #include "expression_parser.h"
+#include "joystick.h"
 
 
 
@@ -839,6 +840,9 @@ struct s_items_ayuda items_ayuda[]={
 	{"save-binary-internal",NULL,"pointer lenght file [offset]","Dumps internal memory to file for a given memory pointer. "
 				"Pointer can be any of the hexdump-internal command\n"
 				"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
+
+
+
 	{"send-keys-ascii",NULL,"time asciichar1 [asciichar2] [asciichar3] ... ","Simulates sending some ascii keys on parameters asciichar, separated by spaces. Every key is separated in time by a non-press time. Time is in miliseconds, a normal value for Basic writing is 100 miliseconds"},
 
 	{"send-keys-string",NULL,"time string","Simulates sending some keys on parameter string. Every key is separated in time by a non-press time. Time is in miliseconds, a normal value for Basic writing is 100 miliseconds"},
@@ -856,6 +860,34 @@ struct s_items_ayuda items_ayuda[]={
 				"Bit 4: Repeat last command only by pressing enter.\n"
 				"Bit 5: Step over interrupt when running cpu-step, cpu-step-over and run verbose. It's the same setting as Step Over Interrupt on menu\n"
 		},
+
+	{"set-ui-io-ports",NULL,"9-hex-values","Sets user interacton io ports values for 8 rows of keyboard and joystick. Bytes must be in hexadecimal and not separated\n"
+	"The order of sending the 8 rows of keyboard is:\n"
+
+	"0xFEFE keys:  V    C    X    Z    Sh    \n"
+	"0xFDFE keys:  G    F    D    S    A     \n"
+	"0xFBFE keys:  T    R    E    W    Q     \n"
+	"0xF7FE keys:  5    4    3    2    1     \n"
+	"0xEFFE keys:  6    7    8    9    0     \n"
+	"0xDFFE keys:  Y    U    I    O    P     \n"
+	"0xBFFE keys:  H    J    K    L    Enter \n"
+	"0x7FFE keys:  B    N    M    Simb Space \n"
+
+	"And the last one (the 9th) is the joystick value\n"
+
+	"So for example, sending the command:\n"
+	"set-ui-io-ports efffffffffffffff00\n"
+	"Will press key V (as EFH is 11101111 in binary)"
+	"Or another example:\n"
+	"set-ui-io-ports ffffffffffffffff01\n"
+	"Will press right direction when kempston selected\n"
+	"Actually you only have to set/reset 5 lower bits of every keyboard rows, so:\n"
+	"set-ui-io-ports ffffffffffffffff00\n"
+	"has the same effect as:\n"
+	"set-ui-io-ports 1f1f1f1f1f1f1f1f00\n"
+	},
+
+
 	{"set-machine","|sm","machine_name","Set machine"},
 	{"set-membreakpoint",NULL,"address type [items]","Sets a memory breakpoint starting at desired address entry for type. If items parameter is not set, the default is 1. type can be:\n"
 		"0: Disabled\n"
@@ -886,12 +918,12 @@ struct s_items_ayuda items_ayuda[]={
 
  {"tbblue-get-sprite",NULL,"index [items]","Get sprites at index, if not specified items parameters, returns only one. Returned values are in hexadecimal format. Only allowed on machine TBBlue"},
 
- {"tbblue-set-palette",NULL,"ula|layer2|sprite first|second index value","Sets palette values starting at desired starting index. You need to tell which palette. Values must be separed by one space each one"},
- {"tbblue-set-pattern",NULL,"index value","Sets pattern values starting at desired pattern index. Values must be separed by one space each one, you can only define one pattern maximum (so 256 values maximum)"},
+ {"tbblue-set-palette",NULL,"ula|layer2|sprite first|second index value","Sets palette values starting at desired starting index. You need to tell which palette. Values must be separated by one space each one"},
+ {"tbblue-set-pattern",NULL,"index value","Sets pattern values starting at desired pattern index. Values must be separated by one space each one, you can only define one pattern maximum (so 256 values maximum)"},
 
 {"tbblue-set-register",NULL,"index value","Set TBBlue register with value at index"},
 
- {"tbblue-set-sprite",NULL,"index value","Sets sprite values starting at desired sprite index. Values must be separed by one space each one, you can only define one sprite maximum (so 4 values maximum)"},
+ {"tbblue-set-sprite",NULL,"index value","Sets sprite values starting at desired sprite index. Values must be separated by one space each one, you can only define one sprite maximum (so 4 values maximum)"},
 
 
  {"tsconf-get-af-port",NULL,"index","Get TSConf XXAF port value"},
@@ -899,8 +931,8 @@ struct s_items_ayuda items_ayuda[]={
  {"tsconf-set-af-port",NULL,"index value","Set TSConf XXAF port value"},
 
 	{"view-basic",NULL,NULL,"Gets Basic program listing"},
-	{"write-memory","|wm","address value","Writes a sequence of bytes starting at desired address on memory. Bytes must be separed by one space each one"},
-	{"write-memory-raw",NULL,"address values","Writes a sequence of bytes starting at desired address on memory. Bytes must be in hexadecimal and not separed"},
+	{"write-memory","|wm","address value","Writes a sequence of bytes starting at desired address on memory. Bytes must be separated by one space each one"},
+	{"write-memory-raw",NULL,"address values","Writes a sequence of bytes starting at desired address on memory. Bytes must be in hexadecimal and not separated"},
 
  {"zxevo-get-nvram",NULL,"index","Get ZX-Evo NVRAM value at index"},
 
@@ -4448,6 +4480,9 @@ char buffer_retorno[2048];
 
 	}
 
+	
+
+
 	else if (!strcmp(comando_sin_parametros,"send-keys-string")) {
 		//remote_parse_commands_argvc(parametros);
 
@@ -4522,6 +4557,83 @@ else if (!strcmp(comando_sin_parametros,"set-debug-settings") || !strcmp(comando
 	if (parametros[0]==0) escribir_socket(misocket,"ERROR. No parameter set");
 	else remote_debug_settings=parse_string_to_number(parametros);
 }
+
+
+else if (!strcmp(comando_sin_parametros,"set-ui-io-ports") ) {
+		unsigned int direccion;
+		z80_byte valor;
+		if (parametros[0]==0) {
+			escribir_socket(misocket,"ERROR. No parameters set");
+		}
+
+		else {
+
+			direccion=parse_string_to_number(parametros);
+
+			menu_debug_set_memory_zone_attr();
+
+			//Ver si hay espacio
+			//char *s=find_space_or_end(parametros); 
+
+			char *s=parametros;
+			int parametros_recibidos=0;
+
+#define ZRCP_CMD_SET_UI_IO_PORTS_TOTAL_PARAMS 9
+
+		
+
+			z80_byte buffer_destino[ZRCP_CMD_SET_UI_IO_PORTS_TOTAL_PARAMS];
+		
+			while (*s) {
+				char buffer_valor[4];
+				buffer_valor[0]=s[0];
+				buffer_valor[1]=s[1];
+				buffer_valor[2]='H';
+				buffer_valor[3]=0;
+				//printf ("%s\n",buffer_valor);
+				valor=parse_string_to_number(buffer_valor);
+				//printf ("valor: %d\n",valor);
+				
+				buffer_destino[parametros_recibidos++]=valor;
+				//menu_debug_write_mapped_byte(direccion++,valor);
+
+				s++;
+				if (*s) s++;
+			}
+
+			//Ver si total de parametros recibidos correctos
+			if (parametros_recibidos!=ZRCP_CMD_SET_UI_IO_PORTS_TOTAL_PARAMS) {
+				escribir_socket_format(misocket,"ERROR. Number of bytes received different than %d",ZRCP_CMD_SET_UI_IO_PORTS_TOTAL_PARAMS);
+			}
+			else {
+				//Meterlo en los puertos tal cual
+//;                    Bits:  4    3    2    1    0     ;desplazamiento puerto
+//puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+//puerto_65022   db    255  ; G    F    D    S    A     ;1
+//puerto_64510    db              255  ; T    R    E    W    Q     ;2
+//puerto_63486    db              255  ; 5    4    3    2    1     ;3
+//puerto_61438    db              255  ; 6    7    8    9    0     ;4
+//puerto_57342    db              255  ; Y    U    I    O    P     ;5
+//puerto_49150    db              255  ; H                J         K      L    Enter ;6
+//puerto_32766    db              255  ; B    N    M    Simb Space ;7
+				puerto_65278=buffer_destino[0];		
+				puerto_65022=buffer_destino[1];		
+				puerto_64510=buffer_destino[2];		
+				puerto_63486=buffer_destino[3];		
+				puerto_61438=buffer_destino[4];		
+				puerto_57342=buffer_destino[5];		
+				puerto_49150=buffer_destino[6];		
+				puerto_32766=buffer_destino[7];	
+				puerto_especial_joystick=buffer_destino[8];	
+
+				//0xFEFE,0xFDFE,0xFBFE,0xF7FE,0xEFFE,0xDFFE,0xBFFE,0x7FFE
+			}
+
+
+		}
+
+	}
+
 
 else if (!strcmp(comando_sin_parametros,"set-machine") || !strcmp(comando_sin_parametros,"sm")) {
 	if (parametros[0]==0) escribir_socket(misocket,"ERROR. No parameter set");
