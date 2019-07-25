@@ -1966,3 +1966,19 @@ void save_zsf_snapshot(char *filename)
   //Y la longitud no la usamos
   save_zsf_snapshot_file_mem(filename,NULL,&longitud);
 }
+
+z80_byte *pending_zrcp_put_snapshot_buffer_destino=NULL;
+int pending_zrcp_put_snapshot_longitud;
+
+void check_pending_zrcp_put_snapshot(void)
+{
+  //Enviar un snapshot que se habia leido por ZRCP. Aqui se llama al final de cada frame de pantalla
+
+  if (pending_zrcp_put_snapshot_buffer_destino!=NULL) {
+    debug_printf (VERBOSE_DEBUG,"Putting snapshot coming from ZRCP");
+    load_zsf_snapshot_file_mem(NULL,pending_zrcp_put_snapshot_buffer_destino,pending_zrcp_put_snapshot_longitud);
+    free(pending_zrcp_put_snapshot_buffer_destino);
+    pending_zrcp_put_snapshot_buffer_destino=NULL;
+  }
+
+}

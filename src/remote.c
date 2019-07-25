@@ -4440,6 +4440,13 @@ void interpreta_comando(char *comando,int misocket)
 
 //Este comando se usa (o se usara) en la funcion de juegos online
 	else if (!strcmp(comando_sin_parametros,"put-snapshot") ) {
+		/*
+		Se puede enviar un snapshot por script asi:
+		#!/bin/bash
+
+		( sleep 1 ; echo -n "put-snapshot " ; cat pruebasnap.txt ; sleep 1 ) | telnet localhost 10000
+		//Teniendo en cuenta que pruebasnap.txt contiene el volcado que se ha generado con get-snapshot
+		 */
 		z80_byte valor;
 		if (parametros[0]==0) {
 			escribir_socket(misocket,"ERROR. No parameters set");
@@ -4472,8 +4479,11 @@ void interpreta_comando(char *comando,int misocket)
 				if (*s) s++;
 			}
 
-			//Enviarlo como snapshot
-			load_zsf_snapshot_file_mem(NULL,buffer_destino,parametros_recibidos);
+			//Enviarlo como snapshot, pero al final de un frame de pantalla
+			//load_zsf_snapshot_file_mem(NULL,buffer_destino,parametros_recibidos);
+			pending_zrcp_put_snapshot_buffer_destino=buffer_destino;
+			pending_zrcp_put_snapshot_longitud=parametros_recibidos;
+			
 
 
 		}
@@ -5631,12 +5641,11 @@ void *thread_remote_protocol_function(void *nada)
 								//if (indice_destino> DEBUG_MAX_MESSAGE_LENGTH-100)verbose_level=0;
 
 								//Para que no pete el emulador si el verbose level esta al menos 3 y el comando recibido excede el maximo que puede mostrar debug_printf
-								printf ("antes mostrar mensaje\n");
+								
 								if (strlen(buffer_lectura_socket)<DEBUG_MAX_MESSAGE_LENGTH) {
-									printf ("Mostrar mensaje. longitud: %d\n",strlen(buffer_lectura_socket));
 									debug_printf (VERBOSE_DEBUG,"Remote command. Read text: [%s]",buffer_lectura_socket);
 								}
-								printf ("despues mostrar mensaje\n");
+								
 
 								interpreta_comando(buffer_lectura_socket,sock_conectat);
 							//}

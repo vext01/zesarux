@@ -5,6 +5,7 @@
 
 -página man de ZEsarUX. que no diga opciones, que haga referencia a --help y --experthelp
 
+-check_pending_zrcp_put_snapshot de momento solo para el core de spectrum
 
 -Probar malloc en 32 bit de 2 gb
 
@@ -66,7 +67,7 @@ Yes. Loading it at once (with a previous malloc) will be better.
 
 -Para juego en red:
 Comandos ZRCP:
--envio de snapshot zsf. En base 64
+-envio de snapshot zsf. comando: put-snapshot
 -envio de puertos teclado y joystick. Para que tenga sentido hay que jugar con diferentes teclas y/o joystick para que no se crucen entre las dos instancias
 Se puede enviar contenido de las 8 filas de teclado y del puerto Kempston por ejemplo. 
 Si está menú abierto no sincroniza

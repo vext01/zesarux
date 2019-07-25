@@ -914,6 +914,9 @@ void cpu_core_loop_spectrum(void)
 			realjoystick_main();
 
 			//printf ("temp conta fifty: %d\n",tempcontafifty++);
+
+			//Enviar snapshot pendiente de ZRCP
+			check_pending_zrcp_put_snapshot();
 		}
 
 
