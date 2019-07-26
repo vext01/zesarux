@@ -5218,35 +5218,34 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 		char *host=remote_command_argv[0];
 		int port=parse_string_to_number(remote_command_argv[1]);
 
+		int indice_socket=z_sock_open_connection(host,port);
 
-		int test_socket;
-		
-
-		if ((test_socket=crear_socket_TCP())<0) {
+		if (indice_socket<0) {
 			escribir_socket(misocket,"ERROR. Can't create TCP socket");
 			return;
-        }
+		}
 
-		struct sockaddr_in adr;
-
-        if (omplir_adr_internet(&adr,host,port)<0) {
-                escribir_socket(misocket,"ERROR. Error parsing host");
-                return;
-        }
-
-		if (connectar_socket(test_socket,&adr)<0) {
-                escribir_socket_format(misocket,"ERROR. Error stablishing connection with %s",host);
-				return;
-        }
-
+		
+		
 		//Leer algo
 		char buffer[200];
 
-		int leidos=leer_socket(test_socket,buffer,199);
+		int leidos=z_sock_read(indice_socket,buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			escribir_socket_format(misocket,"Received text: %s",buffer);
 		}
+
+		//Enviar un get-version
+		z_sock_write_string(indice_socket,"get-version\n");
+
+		leidos=z_sock_read(indice_socket,buffer,199);
+		if (leidos>0) {
+			buffer[leidos]=0; //fin de texto
+			escribir_socket_format(misocket,"Received text for get-version: %s",buffer);
+		}		
+
+		z_sock_close_connection(indice_socket);
 
 
 

@@ -53,6 +53,23 @@ Estos ya vienen de network.h
 #endif
 */
 
+
+//Estructura para guardar sockets
+#define MAX_Z_SOCKETS 10
+
+struct s_z_sockets_struct {
+	int used;
+	struct sockaddr_in adr;
+	int socket_number;
+};
+
+
+typedef struct s_z_sockets_struct z_sockets_struct;
+
+//array de sockets
+z_sockets_struct sockets_list[MAX_Z_SOCKETS];
+
+
  
 #ifdef USE_PTHREADS
 
@@ -173,8 +190,8 @@ int leidos=recv(s,buffer,longitud,0);
 
 int connectar_socket(int s,struct sockaddr_in *adr) 
 {
-
-	int retorno=connect(s,(struct sockaddr *)&adr,sizeof(adr));
+	//TODO: como funciona esto en Windows?
+	int retorno=connect(s,(struct sockaddr *)adr,sizeof(struct sockaddr_in));
 
     if (retorno<0) {
         debug_printf (VERBOSE_ERR,"Error stablishing connection with host");
@@ -182,6 +199,12 @@ int connectar_socket(int s,struct sockaddr_in *adr)
 
 	return retorno;
 
+}
+
+int cerrar_socket(int s)
+{
+	//TODO: como funciona esto en Windows?
+	return close(s);
 }
 
 
@@ -252,6 +275,13 @@ int connectar_socket(int s GCC_UNUSED,struct sockaddr_in *adr GCC_UNUSED)
 }
 
 
+int cerrar_socket(int s GCC_UNUSED)
+{
+	debug_printf (VERBOSE_ERR,"Pthreads unavailable but trying to use TCP/IP sockets");
+
+    return -1;
+}
+
 
 
 
@@ -275,3 +305,114 @@ void escribir_socket_format (int misocket, const char * format , ...)
     escribir_socket(misocket,buffer_final);
 }
 
+
+
+void init_network_tables(void)
+{
+	int i;
+	for (i=0;i<MAX_Z_SOCKETS;i++) {
+		sockets_list[i].used=0;
+	}
+}
+
+int find_free_socket(void)
+{
+	int i;
+	for (i=0;i<MAX_Z_SOCKETS;i++) {
+		if (sockets_list[i].used==0) {
+			printf ("Found free socket at index %d\n",i);
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+//Retorna indice a la tabla de sockets. <0 si error
+int z_sock_open_connection(char *host,int port)
+{
+
+	int indice_tabla=find_free_socket();
+	if (indice_tabla<0) {
+		debug_printf(VERBOSE_ERR,"Too many open sockets (%d)",MAX_Z_SOCKETS);
+		return -1;		
+	}
+		
+	int test_socket;
+		
+
+	if ((test_socket=crear_socket_TCP())<0) {
+		debug_printf(VERBOSE_ERR,"Can't create TCP socket");
+		return -1;
+    }
+
+		//struct sockaddr_in adr;
+
+        if (omplir_adr_internet(&sockets_list[indice_tabla].adr,host,port)<0) {
+                debug_printf(VERBOSE_ERR,"Error parsing host");
+                return -1;
+        }
+
+		if (connectar_socket(test_socket,&sockets_list[indice_tabla].adr)<0) {
+                debug_printf(VERBOSE_ERR,"Error stablishing connection with %s:%d",host,port);
+				return -1;
+        }
+
+	sockets_list[indice_tabla].socket_number=test_socket;
+	sockets_list[indice_tabla].used=1;
+
+	return 0;
+
+}
+
+int get_socket_number(int indice_tabla)
+{
+	if (!sockets_list[indice_tabla].used) {
+				return -1;
+	}	
+
+	else return sockets_list[indice_tabla].socket_number;
+}
+	
+
+int z_sock_close_connection(int indice_tabla) 
+{
+
+	int sock=get_socket_number(indice_tabla);
+
+	if (sock<0) {
+                debug_printf(VERBOSE_ERR,"Socket is not open");
+				return -1;
+	}
+
+	sockets_list[indice_tabla].used=0;
+
+	return cerrar_socket(sock);
+}
+
+int z_sock_read(int indice_tabla, char *buffer, int longitud)
+{
+
+	int sock=get_socket_number(indice_tabla);
+
+	if (sock<0) {
+                debug_printf(VERBOSE_ERR,"Socket is not open");
+				return -1;
+	}
+
+	return leer_socket(sock,buffer,longitud);
+}
+
+
+int z_sock_write_string(int indice_tabla, char *buffer)
+{
+
+	int sock=get_socket_number(indice_tabla);
+
+	if (sock<0) {
+                debug_printf(VERBOSE_ERR,"Socket is not open");
+				return -1;
+	}
+
+	return escribir_socket(sock,buffer);
+}

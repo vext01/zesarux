@@ -7636,6 +7636,8 @@ struct sched_param sparam;
 	}
 
 
+	init_network_tables();
+
 	//Iniciar ZRCP
 	init_remote_protocol();
 
