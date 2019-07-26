@@ -851,6 +851,7 @@ struct s_items_ayuda items_ayuda[]={
 
 
 	{"send-keys-ascii",NULL,"time asciichar1 [asciichar2] [asciichar3] ... ","Simulates sending some ascii keys on parameters asciichar, separated by spaces. Every key is separated in time by a non-press time. Time is in miliseconds, a normal value for Basic writing is 100 miliseconds"},
+	{"send-keys-event",NULL,"key event","Simulates sending key press/release. See file utils.h, enum util_teclas for values. Event must be 0 for release, or different to 0 for press"},
 
 	{"send-keys-string",NULL,"time string","Simulates sending some keys on parameter string. Every key is separated in time by a non-press time. Time is in miliseconds, a normal value for Basic writing is 100 miliseconds"},
 	{"set-breakpoint","|sb","index [condition]","Sets a breakpoint at desired index entry with condition. If no condition set, breakpoint will be handled as disabled\n"
@@ -4602,7 +4603,28 @@ void interpreta_comando(char *comando,int misocket)
 
 	}
 
+
+	else if (!strcmp(comando_sin_parametros,"send-keys-event")) {
+
+		remote_parse_commands_argvc(parametros);
+
+		if (remote_command_argc<2) {
+			escribir_socket(misocket,"ERROR. Needs two parameters");
+			return;
+		}
+
+
 	
+
+		int tecla=parse_string_to_number(remote_command_argv[0]);
+		int evento=parse_string_to_number(remote_command_argv[1]);
+
+
+
+		util_set_reset_key(tecla,evento);
+
+
+	}	
 
 
 	else if (!strcmp(comando_sin_parametros,"send-keys-string")) {
