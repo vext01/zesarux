@@ -5206,7 +5206,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 	
 	else if (!strcmp(comando_sin_parametros,"test-tcp-connect")) {
-
+		/*
 		
 		remote_parse_commands_argvc(parametros);
 
@@ -5277,7 +5277,12 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 //puerto_49150    db              255  ; H                J         K      L    Enter ;6
 //puerto_32766    db              255  ; B    N    M    Simb Space ;7
 
-			escribir_socket_format(misocket,"Sending set-ui-io-ports to %s:%d\n",host,port);
+			if (!menu_abierto) {
+				escribir_socket_format(misocket,"Sending set-ui-io-ports to %s:%d\n",host,port);
+
+
+
+
 		sprintf(buffer_temp,"set-ui-io-ports %02X%02X%02X%02X%02X%02X%02X%02X%02X\n",
 			puerto_65278,puerto_65022,puerto_64510,puerto_63486,
 			puerto_61438,puerto_57342,puerto_49150,puerto_32766,
@@ -5285,6 +5290,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 			z_sock_write_string(indice_socket,buffer_temp);
 			leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+			}
 
 
 			//Enviar snapshot cada 20*250=5000 ms->5 segundos
@@ -5333,6 +5339,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 			}
 
 			usleep(20000); //cada 20 ms
+			veces++;
 
 		}
 
@@ -5342,7 +5349,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 	
 
 		z_sock_close_connection(indice_socket);
-		
+			*/
 		
 
 	}	
