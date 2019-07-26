@@ -803,6 +803,8 @@ struct s_items_ayuda items_ayuda[]={
   {"speech-empty-fifo",NULL,NULL,"Empty speech fifo"},
   {"speech-send",NULL,"message","Sends message to speech"},
 
+
+
   {"tbblue-get-clipwindow",NULL,"ula|layer2|sprite|tilemap","Get clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
   {"tbblue-set-clipwindow",NULL,"ula|layer2|sprite|tilemap x1 x2 y1 y2","Set clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
 
@@ -821,6 +823,8 @@ struct s_items_ayuda items_ayuda[]={
 
  {"tbblue-set-sprite",NULL,"index value","Sets sprite values starting at desired sprite index. Values must be separated by one space each one, you can only define one sprite maximum (so 4 values maximum)"},
 
+
+	{"test-tcp-connect",NULL,"host port","Test connection to host and port"},
 
  {"tsconf-get-af-port",NULL,"index","Get TSConf XXAF port value"},
 
@@ -5200,6 +5204,55 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 	}
 
 
+	
+	else if (!strcmp(comando_sin_parametros,"test-tcp-connect")) {
+
+		remote_parse_commands_argvc(parametros);
+
+		if (remote_command_argc<2) {
+			escribir_socket(misocket,"ERROR. Needs two parameters");
+			return;
+		}
+
+
+		char *host=remote_command_argv[0];
+		int port=parse_string_to_number(remote_command_argv[1]);
+
+
+		int test_socket;
+		
+
+		if ((test_socket=crear_socket_TCP())<0) {
+			escribir_socket(misocket,"ERROR. Can't create TCP socket");
+			return;
+        }
+
+		struct sockaddr_in adr;
+
+        if (omplir_adr_internet(&adr,host,port)<0) {
+                escribir_socket(misocket,"ERROR. Error parsing host");
+                return;
+        }
+
+		if (connectar_socket(test_socket,&adr)<0) {
+                escribir_socket_format(misocket,"ERROR. Error stablishing connection with %s",host);
+				return;
+        }
+
+		//Leer algo
+		char buffer[200];
+
+		int leidos=leer_socket(test_socket,buffer,199);
+		if (leidos>0) {
+			buffer[leidos]=0; //fin de texto
+			escribir_socket_format(misocket,"Received text: %s",buffer);
+		}
+
+
+
+	}	
+
+
 				else if (!strcmp(comando_sin_parametros,"tsconf-get-af-port") ) {
 
 			  	if (!MACHINE_IS_TSCONF) escribir_socket(misocket,"ERROR. Machine is not TSConf");
@@ -5469,7 +5522,7 @@ void *thread_remote_protocol_function(void *nada)
 				          //sprintf (bienvenida,"%s","Welcome to ZEsarUX remote protocol\n");
 				          //write(sock_conectat,bienvenida,strlen(bienvenida));
                   escribir_socket(sock_conectat,"Welcome to ZEsarUX remote command protocol (ZRCP)\nWrite help for available commands\n");
-
+ 
           //if ( (write(sock,buffer,longitut)) <0 ) return -1;
 
 					remote_salir_conexion=0;

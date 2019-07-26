@@ -35,10 +35,13 @@
 #include "compileoptions.h"
 
 
+/*
+Estos ya vienen de network.h
+#ifdef USE_PTHREADS
+	#include <pthread.h>
+#endif
 
 
-
-#include <pthread.h>
 #include <sys/types.h>
 
 #ifdef MINGW
@@ -48,9 +51,9 @@
 	#include <netdb.h>
 	#include <unistd.h>
 #endif
+*/
 
-
-
+ 
 #ifdef USE_PTHREADS
 
 
@@ -74,8 +77,7 @@ int crear_socket_TCP(void)
 }
 
 
-int omplir_adr_internet
-(struct sockaddr_in *adr,char *host,unsigned short n_port)
+int omplir_adr_internet(struct sockaddr_in *adr,char *host,unsigned short n_port)
 {
         struct hostent *h;
 
@@ -169,7 +171,18 @@ int leidos=recv(s,buffer,longitud,0);
 }
 
 
+int connectar_socket(int s,struct sockaddr_in *adr) 
+{
 
+	int retorno=connect(s,(struct sockaddr *)&adr,sizeof(adr));
+
+    if (retorno<0) {
+        debug_printf (VERBOSE_ERR,"Error stablishing connection with host");
+    }
+
+	return retorno;
+
+}
 
 
 //Fin de funciones CON pthreads
@@ -228,6 +241,15 @@ int leer_socket(int s GCC_UNUSED, char *buffer GCC_UNUSED, int longitud GCC_UNUS
 }
 
 
+
+int connectar_socket(int s GCC_UNUSED,struct sockaddr_in *adr GCC_UNUSED) 
+{
+
+	debug_printf (VERBOSE_ERR,"Pthreads unavailable but trying to use TCP/IP sockets");
+
+    return -1;
+
+}
 
 
 
