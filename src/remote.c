@@ -5231,10 +5231,11 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 		//Leer algo
 		char buffer[200];
 
-		int leidos=z_sock_read(indice_socket,buffer,199);
+		//int leidos=z_sock_read(indice_socket,buffer,199);
+		int leidos=zsock_read_all(indice_socket,buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
-			escribir_socket_format(misocket,"Received text:\n[\n%s\n]",buffer);
+			escribir_socket_format(misocket,"Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
 		}
 
 		zsock_wait_until_command_prompt(indice_socket);
@@ -5244,16 +5245,16 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 
 		//reintentar
-		leidos=z_sock_read(indice_socket,buffer,199);
+		leidos=zsock_read_all(indice_socket,buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
-			escribir_socket_format(misocket,"Received text for get-version (length %d): \n[\n%s\n]",leidos,buffer);
+			escribir_socket_format(misocket,"Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
 		}		
 
-		escribir_socket(misocket,"Waiting until command prompt final");
-		printf("Waiting until command prompt final\n");
+		//escribir_socket(misocket,"Waiting until command prompt final");
+		//printf("Waiting until command prompt final\n");
 
-		zsock_wait_until_command_prompt(indice_socket);
+		//zsock_wait_until_command_prompt(indice_socket);
 
 
 		//Enviar quit

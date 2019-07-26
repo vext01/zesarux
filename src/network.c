@@ -391,7 +391,7 @@ int z_sock_close_connection(int indice_tabla)
 	return cerrar_socket(sock);
 }
 
-int z_sock_read(int indice_tabla, char *buffer, int longitud)
+int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud)
 {
 
 	int sock=get_socket_number(indice_tabla);
@@ -420,7 +420,7 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 
 int zsock_wait_until_command_prompt(int indice_tabla)
 {
-	//Leemos hasta que no haya mas datos. Idealmente estara el "command> "
+	//Leemos hasta que no haya mas datos para leer. Idealmente estara el "command> "
 	int leidos;
 
 	int sock=get_socket_number(indice_tabla);
@@ -450,3 +450,41 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 		return 0;
 
 	}
+
+int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
+{
+
+	//Leemos hasta que no haya mas datos para leer. Idealmente estara el "command> "
+	int leidos;
+
+	int sock=get_socket_number(indice_tabla);
+
+	if (sock<0) {
+        debug_printf(VERBOSE_ERR,"Socket is not open");
+		return -1;
+	}	
+
+
+	int pos_destino=0;
+	int total_leidos=0;
+
+		do {
+			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
+			//la conexion se queda en read colgada
+			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+				leidos=z_sock_read(indice_tabla,&buffer[pos_destino],max_buffer);
+				printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
+				if (leidos<0) return -1;
+				else {
+					max_buffer -=leidos;
+					total_leidos +=leidos;
+				}
+			}
+			else {
+				leidos=0;
+			}
+		} while (leidos>0 && max_buffer>0);
+
+	return total_leidos;
+
+}
