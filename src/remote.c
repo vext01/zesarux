@@ -5207,7 +5207,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 	
 	else if (!strcmp(comando_sin_parametros,"test-tcp-connect")) {
 
-		
+		/*
 		remote_parse_commands_argvc(parametros);
 
 		if (remote_command_argc<2) {
@@ -5264,7 +5264,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 		z_sock_close_connection(indice_socket);
 		
-
+		*/
 
 	}	
 
