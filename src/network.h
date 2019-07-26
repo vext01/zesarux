@@ -19,23 +19,15 @@
 
 */
 
-#ifndef SNAP_ZSF_H
-#define SNAP_ZSF_H
+#ifndef NETWORK_H
+#define NETWORK_H
 
-extern void load_zsf_snapshot(char *filename);
-extern void save_zsf_snapshot(char *filename);
+extern int enviar_cr;
 
-extern char *zsf_get_block_id_name(int block_id);
-
-extern char zsf_magic_header[];
-
-extern int zsf_force_uncompressed;
-
-extern void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int *longitud_total);
-extern void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longitud_memoria);
-
-extern z80_byte *pending_zrcp_put_snapshot_buffer_destino;
-extern int pending_zrcp_put_snapshot_longitud;
-extern void check_pending_zrcp_put_snapshot(void);
+extern int crear_socket_TCP(void);
+extern int escribir_socket(int socket, char *buffer);
+extern int leer_socket(int s, char *buffer, int longitud);
+extern void escribir_socket_format (int misocket, const char * format , ...);
+extern int assignar_adr_internet(int sock,char *host,unsigned short n_port);
 
 #endif

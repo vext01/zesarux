@@ -57,6 +57,8 @@
 #include "settings.h"
 #include "datagear.h"
 
+#include "snap_zsf.h"
+
 z80_byte byte_leido_core_spectrum;
 
 

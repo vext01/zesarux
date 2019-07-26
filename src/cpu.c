@@ -7636,6 +7636,7 @@ struct sched_param sparam;
 	}
 
 
+	//Iniciar ZRCP
 	init_remote_protocol();
 
 	//Inicio bucle de emulacion
