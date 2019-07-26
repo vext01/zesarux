@@ -507,6 +507,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 	int pos_destino=0;
 	int total_leidos=0;
 	int leido_command_prompt=0;
+	int reintentos=0;
 	do {
 
 		do {
@@ -534,13 +535,17 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 			}
 		}
 
-		else {
+
+		if (!leido_command_prompt) {
 			printf ("NO recibido command prompt. Reintentar\n");
 			usleep(10000); //10 ms
 		}
 
+		reintentos++;
+
 		//TODO controlar maximo reintentos
-	} while (!leido_command_prompt);
+	} while (!leido_command_prompt && reintentos<500);
+	//5 segundos de reintentos
 
 	return total_leidos;
 

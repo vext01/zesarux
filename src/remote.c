@@ -5240,6 +5240,8 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 		//zsock_wait_until_command_prompt(indice_socket);
 
+		escribir_socket(misocket,"Sending get-version\n");
+
 		//Enviar un get-version
 		z_sock_write_string(indice_socket,"get-version\n");
 
@@ -5256,6 +5258,53 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 		//zsock_wait_until_command_prompt(indice_socket);
 
+		//Bucle de obtener snapshot y enviar
+
+		while (1) {
+
+		z80_byte *buffer_temp;
+		buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
+		if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
+
+		z80_byte *puntero=buffer_temp; 
+		int longitud;
+
+  		save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
+
+		//printf ("longitud: %d\n",longitud);
+
+		escribir_socket_format(misocket,"Sending put-snapshot length: %d\n",longitud);
+		z_sock_write_string(indice_socket,"put-snapshot ");
+
+		int i;
+		z80_byte *buffer_put_snapshot_temp;
+		buffer_put_snapshot_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
+
+		int char_destino=0;
+
+		
+		for (i=0;i<longitud;i++,char_destino +=2) {
+			sprintf (&buffer_put_snapshot_temp[char_destino],"%02X",buffer_temp[i]);
+		}
+
+		//metemos salto de linea al final
+		strcpy (&buffer_put_snapshot_temp[char_destino],"\n");
+
+		//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
+		z_sock_write_string(indice_socket,buffer_put_snapshot_temp);
+
+		free(buffer_put_snapshot_temp);
+
+		//z_sock_write_string(indice_socket,"\n");
+
+	 	free(buffer_temp);
+
+		//Leer hasta prompt
+		leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+
+		sleep(1);
+
+		}
 
 		//Enviar quit
 		z_sock_write_string(indice_socket,"quit\n");
