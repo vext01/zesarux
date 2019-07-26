@@ -5260,49 +5260,79 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 		//Bucle de obtener snapshot y enviar
 
+		int veces=0;
 		while (1) {
 
-		z80_byte *buffer_temp;
-		buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
-		if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
-
-		z80_byte *puntero=buffer_temp; 
-		int longitud;
-
-  		save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
-
-		//printf ("longitud: %d\n",longitud);
-
-		escribir_socket_format(misocket,"Sending put-snapshot length: %d\n",longitud);
-		z_sock_write_string(indice_socket,"put-snapshot ");
-
-		int i;
-		z80_byte *buffer_put_snapshot_temp;
-		buffer_put_snapshot_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
-
-		int char_destino=0;
+			//Enviar teclas cada 20ms
+			char buffer_temp[200];
 
 		
-		for (i=0;i<longitud;i++,char_destino +=2) {
-			sprintf (&buffer_put_snapshot_temp[char_destino],"%02X",buffer_temp[i]);
-		}
+//;                    Bits:  4    3    2    1    0     ;desplazamiento puerto
+//puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+//puerto_65022   db    255  ; G    F    D    S    A     ;1
+//puerto_64510    db              255  ; T    R    E    W    Q     ;2
+//puerto_63486    db              255  ; 5    4    3    2    1     ;3
+//puerto_61438    db              255  ; 6    7    8    9    0     ;4
+//puerto_57342    db              255  ; Y    U    I    O    P     ;5
+//puerto_49150    db              255  ; H                J         K      L    Enter ;6
+//puerto_32766    db              255  ; B    N    M    Simb Space ;7
 
-		//metemos salto de linea al final
-		strcpy (&buffer_put_snapshot_temp[char_destino],"\n");
+			escribir_socket_format(misocket,"Sending set-ui-io-ports to %s:%d\n",host,port);
+		sprintf(buffer_temp,"set-ui-io-ports %02X%02X%02X%02X%02X%02X%02X%02X%02X\n",
+			puerto_65278,puerto_65022,puerto_64510,puerto_63486,
+			puerto_61438,puerto_57342,puerto_49150,puerto_32766,
+			puerto_especial_joystick);
 
-		//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
-		z_sock_write_string(indice_socket,buffer_put_snapshot_temp);
+			z_sock_write_string(indice_socket,buffer_temp);
+			leidos=zsock_read_all_until_command(indice_socket,buffer,199);
 
-		free(buffer_put_snapshot_temp);
 
-		//z_sock_write_string(indice_socket,"\n");
+			//Enviar snapshot cada 20*250=5000 ms->5 segundos
+			if ((veces % 250)==0) {
 
-	 	free(buffer_temp);
+				z80_byte *buffer_temp;
+				buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
+				if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
 
-		//Leer hasta prompt
-		leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+				z80_byte *puntero=buffer_temp; 
+				int longitud;
 
-		sleep(1);
+  				save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
+
+				//printf ("longitud: %d\n",longitud);
+
+				escribir_socket_format(misocket,"Sending put-snapshot length: %d\n",longitud);
+				z_sock_write_string(indice_socket,"put-snapshot ");
+
+				int i;
+				z80_byte *buffer_put_snapshot_temp;
+				buffer_put_snapshot_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
+
+				int char_destino=0;
+
+		
+				for (i=0;i<longitud;i++,char_destino +=2) {
+					sprintf (&buffer_put_snapshot_temp[char_destino],"%02X",buffer_temp[i]);
+				}
+
+				//metemos salto de linea al final
+				strcpy (&buffer_put_snapshot_temp[char_destino],"\n");
+
+				//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
+				z_sock_write_string(indice_socket,buffer_put_snapshot_temp);
+
+				free(buffer_put_snapshot_temp);
+
+				//z_sock_write_string(indice_socket,"\n");
+
+	 			free(buffer_temp);
+
+				//Leer hasta prompt
+				leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+
+			}
+
+			usleep(20000); //cada 20 ms
 
 		}
 
