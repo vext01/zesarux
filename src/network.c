@@ -528,16 +528,21 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 		} while (leidos>0 && max_buffer>0);
 
 		//Ver si hay "command> al final"
-		if (total_leidos>10) {
+		if (total_leidos>=9) { //"command> " ocupa 9
+			printf ("Leido al final: [%c%c]\n",buffer[total_leidos-2],buffer[total_leidos-1]);
 			if (buffer[total_leidos-1]==' ' && buffer[total_leidos-2]=='>') {
 				leido_command_prompt=1;
 				printf ("Recibido command prompt\n");
 			}
 		}
 
+		else {
+			printf ("total leidos: %d\n",total_leidos);
+		}
+
 
 		if (!leido_command_prompt) {
-			printf ("NO recibido command prompt. Reintentar\n");
+			//printf ("NO recibido command prompt. Reintentar\n");
 			usleep(10000); //10 ms
 		}
 
