@@ -5207,7 +5207,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 	
 	else if (!strcmp(comando_sin_parametros,"test-tcp-connect")) {
 
-		/*
+		
 		remote_parse_commands_argvc(parametros);
 
 		if (remote_command_argc<2) {
@@ -5232,20 +5232,20 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 		char buffer[200];
 
 		//int leidos=z_sock_read(indice_socket,buffer,199);
-		int leidos=zsock_read_all(indice_socket,buffer,199);
+		int leidos=zsock_read_all_until_command(indice_socket,buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			escribir_socket_format(misocket,"Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
 		}
 
-		zsock_wait_until_command_prompt(indice_socket);
+		//zsock_wait_until_command_prompt(indice_socket);
 
 		//Enviar un get-version
 		z_sock_write_string(indice_socket,"get-version\n");
 
 
 		//reintentar
-		leidos=zsock_read_all(indice_socket,buffer,199);
+		leidos=zsock_read_all_until_command(indice_socket,buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			escribir_socket_format(misocket,"Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
@@ -5264,7 +5264,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 		z_sock_close_connection(indice_socket);
 		
-		*/
+		
 
 	}	
 
