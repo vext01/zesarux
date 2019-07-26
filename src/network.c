@@ -363,7 +363,7 @@ int z_sock_open_connection(char *host,int port)
 
 	return 0;
 
-}
+} 
 
 int get_socket_number(int indice_tabla)
 {
@@ -405,7 +405,7 @@ int z_sock_read(int indice_tabla, char *buffer, int longitud)
 
 
 int z_sock_write_string(int indice_tabla, char *buffer)
-{
+{ 
 
 	int sock=get_socket_number(indice_tabla);
 

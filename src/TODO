@@ -3,6 +3,71 @@
 --------Para próxima versión:
 
 
+-Para juego en red:
+Comandos ZRCP:
+-envio de snapshot zsf. comando: put-snapshot
+-envio de puertos teclado y joystick. Para que tenga sentido hay que jugar con diferentes teclas y/o joystick para que no se crucen entre las dos instancias
+Se puede enviar contenido de las 8 filas de teclado y del puerto Kempston por ejemplo. 
+Si está menú abierto no sincroniza
+Si se abre menú se resetean teclas y joystick. Esto creo que ya se hace así
+Envio de esos puertos como 9 valores hexadecimal
+Tipo:
+ZRCP set-ui-io-ports AABBCCDDEE...
+
+comando: set-ui-io-ports
+Lo mejor sería tener el puerto siempre abierto contra el ZRCP remoto
+send-keys-event: simulates key press/release
+
+Quizá se podría hacer un programa aparte para probar la sincronización. Sin tener que hacerlo en ZEsarUX, con lo que hay ahora:
+
+-probar de instancia 1 a 2 de momento:
+-leer estado teclas y enviarlas 50 veces por segundo de 1 a 2
+-enviar snapshot de 1 a 2 cada 5 segundos
+
+De ahí ir puliendo posibles problemas, como el cierre del emulador cuando se corta un comando ZRCP
+
+Luego agregar el envío de teclas de 2 a 1
+
+Aunque... como se envían las teclas? 
+Si envío estado puertos cada 1/50 segundos:
+-si pulso tecla A en 1, y tecla B en 2, al copiar de 1 a 2, la tecla B en 2 estará sin pulsar, solo la A
+
+Habría que hacer un comando nuevo que en vez de cambiar el puerto de tecla tal cual, tenga en cuenta pulsaciones actuales. Es decir, hacer un AND de cada valor de puerto:
+
+Ejemplo:
+En 1, tecla A. Puerto inventado 65278 
+Valor: 11110
+
+En 2, tecla B. Puerto inventado 65278
+Valor: 11101
+
+Al hacer el and en destino queda:
+11100
+Resultado: tecla A y B pulsadas :)
+
+
+Para valores joystick, hacer OR:
+
+00001
+00010
+
+Resulta: 00011
+
+Realmente el envío de teclas tiene que hacerlo así:
+
+-Cuando hay un press o Release, enviar lo mismo a través de red, un press o release de un código de tecla
+
+Había otra alternativa y era tener un estado de los puertos aparte, que se copie con los valores del otro nodo solamente. Luego al leer teclas en el emulador tendría que combinar con AND las dos tablas. Quizá resulte un poco lío tener que mezclar los dos.... o no? Pero me evitaría tener que enviar pulsaciones/liberaciones de teclas, y lo podría enviar a intervalos regulares el estado de teclas tal cual
+
+Inconveniente: creo que no funcionaría bien en un supuesto partida de triples o cuatro personas o más...
+
+-bugs: parece que las pruebas de test-socket no siempre obtiene numero de version . por que?
+A veces cierra el nodo remoto
+
+
+
+
+
 -página man de ZEsarUX. que no diga opciones, que haga referencia a --help y --experthelp
 
 -check_pending_zrcp_put_snapshot de momento solo para el core de spectrum
@@ -65,21 +130,7 @@ Yes. Loading it at once (with a previous malloc) will be better.
 -Sincronización si es por ZRCP , habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
 
 
--Para juego en red:
-Comandos ZRCP:
--envio de snapshot zsf. comando: put-snapshot
--envio de puertos teclado y joystick. Para que tenga sentido hay que jugar con diferentes teclas y/o joystick para que no se crucen entre las dos instancias
-Se puede enviar contenido de las 8 filas de teclado y del puerto Kempston por ejemplo. 
-Si está menú abierto no sincroniza
-Si se abre menú se resetean teclas y joystick. Esto creo que ya se hace así
-Envio de esos puertos como 9 valores hexadecimal
-Tipo:
-ZRCP set-ui-io-ports AABBCCDDEE...
 
-comando: set-ui-io-ports
-
-
-Lo mejor sería tener el puerto siempre abierto contra el ZRCP remoto
 
 
 

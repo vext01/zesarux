@@ -5207,6 +5207,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 	
 	else if (!strcmp(comando_sin_parametros,"test-tcp-connect")) {
 
+		/*
 		remote_parse_commands_argvc(parametros);
 
 		if (remote_command_argc<2) {
@@ -5225,7 +5226,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 			return;
 		}
 
-		
+		 
 		
 		//Leer algo
 		char buffer[200];
@@ -5245,8 +5246,14 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 			escribir_socket_format(misocket,"Received text for get-version: %s",buffer);
 		}		
 
-		z_sock_close_connection(indice_socket);
 
+		//Enviar quit
+		z_sock_write_string(indice_socket,"quit\n");
+		leidos=z_sock_read(indice_socket,buffer,199);
+	
+
+		z_sock_close_connection(indice_socket);
+		*/
 
 
 	}	
