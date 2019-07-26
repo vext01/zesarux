@@ -5250,6 +5250,8 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 			escribir_socket_format(misocket,"Received text for get-version (length %d): \n[\n%s\n]",leidos,buffer);
 		}		
 
+		escribir_socket(misocket,"Waiting until command prompt final");
+		printf("Waiting until command prompt final\n");
 
 		zsock_wait_until_command_prompt(indice_socket);
 
