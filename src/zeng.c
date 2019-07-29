@@ -139,7 +139,7 @@ int zeng_fifo_read_element(zeng_key_presses *elemento)
 }
 
 
-void zeng_key_event(enum util_teclas tecla,int pressrelease)
+void zeng_send_key_event(enum util_teclas tecla,int pressrelease)
 {
 	if (zeng_enabled.v==0) return;
 

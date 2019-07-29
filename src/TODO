@@ -14,6 +14,8 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 *network: en windows siempre retorna datos disponibles.
 *asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado
 *gestionar cortes de socket
+*envio de mensajes
+*mejor gestion de envio mensajes por ZRCP
 
 
 -Para juego en red:
