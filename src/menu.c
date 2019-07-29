@@ -22001,6 +22001,24 @@ void menu_write_message(MENU_ITEM_PARAMETERS)
 
 void menu_debug_zeng_enable(MENU_ITEM_PARAMETERS)
 {
+
+	//temporal pedir hostname, port y master
+	        int brkp_type,dir;
+
+        char string_port[6];
+		char string_master[2];
+
+        strcpy (string_port,"10010");
+		strcpy (string_master,"0");
+
+	menu_ventana_scanf("Remote host",zeng_remote_hostname,256);
+	menu_ventana_scanf("Remote port",string_port,6);
+
+	zeng_remote_port=parse_string_to_number(string_port);
+
+	menu_ventana_scanf("Master?",string_master,2);
+	zeng_i_am_master=parse_string_to_number(string_master);
+
 	zeng_enable();
 }
 

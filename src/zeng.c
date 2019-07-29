@@ -78,9 +78,11 @@ z80_bit zeng_enabled={0};
 char zeng_remote_hostname[256]="127.0.0.1";
 
 //Puerto remoto
-int zeng_remote_port=10010;
+int zeng_remote_port=10000;
 
 int segundos_cada_snapshot=5;
+
+int zeng_i_am_master=0;
 
 
 int zeng_next_position(int pos)
@@ -308,10 +310,11 @@ Poder enviar mensajes a otros jugadores
 
 		contador_veces++;
 
-		
 
-		if ( (contador_veces % (100*segundos_cada_snapshot) )==0) { //cada 5 segundos
-			zeng_send_snapshot(zeng_remote_socket);
+		if (zeng_i_am_master) {
+			if ( (contador_veces % (100*segundos_cada_snapshot) )==0) { //cada 5 segundos
+				zeng_send_snapshot(zeng_remote_socket);
+			}
 		}
 	}
 }

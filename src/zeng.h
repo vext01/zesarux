@@ -43,4 +43,11 @@ extern int zeng_fifo_read_element(zeng_key_presses *elemento);
 
 extern z80_bit zeng_enabled;
 
+
+extern char zeng_remote_hostname[];
+
+//Puerto remoto
+extern int zeng_remote_port;
+extern int zeng_i_am_master;
+
 #endif
