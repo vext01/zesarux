@@ -68,6 +68,36 @@ Inconveniente: creo que no funcionaría bien en un supuesto partida de triples o
 A veces cierra el nodo remoto
 
 
+Posibles nombres para el juego online:
+
+-ZENS: ZEsarUX Network Synchronization
+-ZENSS: ZEsarUX Network Synchronization System
+-ZENG: ZEsarUX Network Gaming
+-ZENGS: ZEsarUX Network Gaming System
+
+-ZEOG / ZOG / ZONG: ZEsarUX Online Gaming
+
+
+Hilo de sincronización de juego:
+
+-si flag de envío de snapshot, se envía. Ese flag lo activa el core al final de frame, cada X segundos, y cuando somos el máster
+
+-si hay que enviar mensaje al otro jugador, enviarlo
+
+-ver la fifo usada en envío de eventos:
+*tecla
+*press/release
+
+Dicha fifo hay que controlarla mediante semáforos
+Se mete elementos en fifo cuando se llama a util send press/release
+Se leen y envían eventos de la fifo desde este thread 
+
+-dormir durante 10ms - mitad de frame 
+
+Para las rutinas zsock también haría falta semáforos pero como no voy a llamarla desde dos sitios distintos a la vez pues..
+
+Poder enviar mensajes a otros jugadores 
+
 
 
 

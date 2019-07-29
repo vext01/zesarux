@@ -56,7 +56,7 @@ Estos ya vienen de network.h
 
 
 //Estructura para guardar sockets
-#define MAX_Z_SOCKETS 10
+#define MAX_Z_SOCKETS 30
 
 struct s_z_sockets_struct {
 	int used;
