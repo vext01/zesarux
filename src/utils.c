@@ -101,6 +101,7 @@
 #include "baseconf.h"
 #include "settings.h"
 #include "chloe.h"
+#include "zeng.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -6132,6 +6133,10 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
   //Ver si hay teclas F redefinidas
   if (util_set_reset_key_continue_f_functions(tecla,pressrelease)) return;
+
+
+  //No estoy seguro que este sea el mejor sitio para llamar a zeng, pero...
+  zeng_key_event(tecla,pressrelease);
 
         //temp reasignacion
         //if (tecla==UTIL_KEY_ALT_R) tecla=UTIL_KEY_ENTER;

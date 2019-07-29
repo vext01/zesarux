@@ -43,6 +43,7 @@
 #include "assemble.h"
 #include "expression_parser.h"
 #include "audio.h"
+#include "zeng.h"
 
 
 void codetests_repetitions(void)
@@ -978,6 +979,70 @@ FILE *ptr_midfile;
       fclose(ptr_midfile);	
 }
 
+void codetests_zeng(void)
+{
+	zeng_key_presses elemento;
+
+	int i;
+	int tecla=0;
+
+	for (i=0;i<ZENG_FIFO_SIZE;i++) {
+		elemento.tecla=tecla;
+		elemento.pressrelease=1;
+
+		if (zeng_fifo_add_element(&elemento)) {
+			printf ("Error adding zeng\n");
+			exit(1);
+		}
+
+		tecla++;
+	}
+
+	//Elemento adicional que no cabe
+	if (!zeng_fifo_add_element(&elemento)) {
+			printf ("Error adding zeng. fifo full but does not warn\n");
+			exit(1);
+	}
+
+	//Quitar dos
+	zeng_fifo_read_element(&elemento);
+	zeng_fifo_read_element(&elemento);
+
+	//Leer elementos
+	for (i=0;i<ZENG_FIFO_SIZE-2;i++) {
+
+
+		if (zeng_fifo_read_element(&elemento)) {
+			printf ("Error reading zeng\n");
+			exit(1);
+		}
+
+		printf ("Element %d tecla %d pressrelease %d\n",i,elemento.tecla,elemento.pressrelease);
+	}	
+
+	//Agregar dos
+	elemento.tecla=100;
+	elemento.pressrelease=0;
+	zeng_fifo_add_element(&elemento);
+
+	elemento.tecla=200;
+	elemento.pressrelease=1;
+	zeng_fifo_add_element(&elemento);	
+
+	//Leer elementos
+	for (i=0;i<2;i++) {
+
+
+		if (zeng_fifo_read_element(&elemento)) {
+			printf ("Error reading zeng\n");
+			exit(1);
+		}
+
+		printf ("Element %d tecla %d pressrelease %d\n",i,elemento.tecla,elemento.pressrelease);
+	}		
+
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -1004,8 +1069,11 @@ void codetests_main(int main_argc,char *main_argv[])
 	printf ("Note: %d\n",get_mid_number_note("KK"));
 	printf ("Note: %d\n",get_mid_number_note(""));*/
 
-	printf ("\nRunning assembler tests\n");
-	codetests_assembler();
+	//printf ("\nRunning assembler tests\n");
+	//codetests_assembler();
+
+	printf ("\nRunning zeng tests\n");
+	codetests_zeng();
 
 
 	//printf ("\nRunning tbblue layers strings\n");
