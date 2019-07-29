@@ -146,6 +146,30 @@ void zeng_key_event(enum util_teclas tecla,int pressrelease)
 	//Si esta menu abierto, tampoco enviar
 	if (menu_abierto) return;
 
+	//teclas F no enviar
+	switch (tecla) {
+		case UTIL_KEY_F1:
+		case UTIL_KEY_F2:
+		case UTIL_KEY_F3:
+		case UTIL_KEY_F4:
+		case UTIL_KEY_F5:
+		case UTIL_KEY_F6:
+		case UTIL_KEY_F7:
+		case UTIL_KEY_F8:
+		case UTIL_KEY_F9:
+		case UTIL_KEY_F10:
+		case UTIL_KEY_F11:
+		case UTIL_KEY_F12:
+		case UTIL_KEY_F13:
+		case UTIL_KEY_F14:
+		case UTIL_KEY_F15:
+			return;
+		break;
+
+		default:
+		break;
+	}
+
 	zeng_key_presses elemento;
 
 	elemento.tecla=tecla;

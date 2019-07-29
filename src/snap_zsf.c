@@ -992,7 +992,7 @@ int load_zsf_eof(FILE *ptr_zsf_file,int longitud_memoria)
 //Load snapshot de disco o desde memoria
 //Si leer de archivo, filename contiene nombre y no se usa origin_memory ni longitud_memoria
 //Si leer en memoria, filename es NULL y origin_memory contiene puntero origen memoria y longitud_memoria contiene longitud bloque memoria
-void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longitud_memoria)
+void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longitud_memoria,int load_fast_mode)
 {
 
   FILE *ptr_zsf_file;
@@ -1086,6 +1086,8 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
     z80_byte buffer_nothing;
     block_data=&buffer_nothing;
 
+    int cambio_maquina=1;
+
     if (block_lenght) {
       block_data=malloc(block_lenght);
 
@@ -1128,9 +1130,18 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
       break;
 
       case ZSF_MACHINEID:
-        current_machine_type=*block_data;
-        set_machine(NULL);
-        reset_cpu();
+        //Si modo rapido, no resetea maquina al cargar snapshot, esto se usa en zeng
+        if (load_fast_mode) {
+          if (current_machine_type==*block_data) {
+            cambio_maquina=0;
+          }
+        }
+
+        if (cambio_maquina) {
+          current_machine_type=*block_data;
+          set_machine(NULL);
+          reset_cpu();
+        }
       break;
 
       case ZSF_Z80_REGS_ID:
@@ -1221,7 +1232,7 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
 void load_zsf_snapshot(char *filename)
 {
-  load_zsf_snapshot_file_mem(filename,NULL,0);
+  load_zsf_snapshot_file_mem(filename,NULL,0,0);
 }
 
 
@@ -1976,7 +1987,9 @@ void check_pending_zrcp_put_snapshot(void)
 
   if (pending_zrcp_put_snapshot_buffer_destino!=NULL) {
     debug_printf (VERBOSE_DEBUG,"Putting snapshot coming from ZRCP");
-    load_zsf_snapshot_file_mem(NULL,pending_zrcp_put_snapshot_buffer_destino,pending_zrcp_put_snapshot_longitud);
+
+    load_zsf_snapshot_file_mem(NULL,pending_zrcp_put_snapshot_buffer_destino,pending_zrcp_put_snapshot_longitud,1);
+
     free(pending_zrcp_put_snapshot_buffer_destino);
     pending_zrcp_put_snapshot_buffer_destino=NULL;
   }
