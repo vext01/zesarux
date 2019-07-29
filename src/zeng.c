@@ -235,6 +235,7 @@ int zeng_connect_remote(void)
 int contador_envio_snapshot=0;
 z80_byte *zeng_send_snapshot_mem=NULL;
 int zeng_send_snapshot_longitud=0;
+int zeng_send_snapshot_pending=0;
 
 void zeng_send_snapshot(int socket)
 {
@@ -276,8 +277,11 @@ void zeng_send_snapshot(int socket)
 
 				//z_sock_write_string(indice_socket,"\n");
 
+
+				zeng_send_snapshot_longitud=0;
 	 			free(zeng_send_snapshot_mem);
 				zeng_send_snapshot_mem=NULL;
+				
 
 				char buffer[200];
 				//Leer hasta prompt
@@ -343,7 +347,8 @@ Poder enviar mensajes a otros jugadores
 
 
 		if (zeng_i_am_master) {
-			if (zeng_send_snapshot_mem!=NULL && zeng_send_snapshot_longitud!=0) {
+			if (zeng_send_snapshot_pending && zeng_send_snapshot_mem!=NULL && zeng_send_snapshot_longitud!=0) {
+				zeng_send_snapshot_pending=0;
 				zeng_send_snapshot(zeng_remote_socket);
 			}
 		}
@@ -358,6 +363,7 @@ void zeng_send_snapshot_if_needed(void)
 
 	if (zeng_i_am_master) {
 		contador_envio_snapshot++;
+		//printf ("%d %d\n",contador_envio_snapshot,(contador_envio_snapshot % (50*segundos_cada_snapshot) ));
 		if ( (contador_envio_snapshot % (50*segundos_cada_snapshot) )==0) { //cada 5 segundos
 				z80_byte *buffer_temp;
 				buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
@@ -370,8 +376,11 @@ void zeng_send_snapshot_if_needed(void)
 
 				zeng_send_snapshot_mem=buffer_temp;
 				zeng_send_snapshot_longitud=longitud;
+				
 
-				printf ("Poniendo en cola snapshot para enviar\n");
+				printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",zeng_send_snapshot_longitud);
+
+				zeng_send_snapshot_pending=1;
 		}
 	}
 }
