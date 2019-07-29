@@ -9,7 +9,6 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 -ZENG
 *jugar con diferente intervalo segundos
 *mejorar menu ZENG
-*intentar cargar mas rapido un snapshot
 *quiza cuando envia el snapshot habria que pausar el master??
 *semaforos en fifo zeng
 *network: en windows siempre retorna datos disponibles.

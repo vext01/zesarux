@@ -49,5 +49,6 @@ extern char zeng_remote_hostname[];
 //Puerto remoto
 extern int zeng_remote_port;
 extern int zeng_i_am_master;
+extern int segundos_cada_snapshot;
 
 #endif

@@ -80,7 +80,7 @@ char zeng_remote_hostname[256]="127.0.0.1";
 //Puerto remoto
 int zeng_remote_port=10000;
 
-int segundos_cada_snapshot=5;
+int segundos_cada_snapshot=2;
 
 int zeng_i_am_master=0;
 
