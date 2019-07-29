@@ -8,6 +8,12 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 
 -tabla de joystick to event siempre se resetea??
 
+-			check_pending_zrcp_put_snapshot();
+
+			zeng_send_snapshot_if_needed();		
+
+      deberian lanzarse en el core, cuando ha finalizado el frame de video, despues de haber gestionado interrupciones
+
 
 -ZENG "ZEsarUX Network Gaming"
 *jugar con diferente intervalo segundos:
