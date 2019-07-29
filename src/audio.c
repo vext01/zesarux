@@ -2937,15 +2937,19 @@ void audio_midi_output_beeper(char *nota_a)
 
 			int freq_a=frecuencia;
 
+		//alteramos frecuencia para que no considere los 4 bits inferiores, para "redondear" un poco
+		//freq_a &=(65535-7);
+
 
 			//char nota_a[4];
 			sprintf(nota_a,"%s",get_note_name(freq_a) );
 
 			//Si no hay sonido, suele dar frecuencia 5 o menos
-			if (frecuencia<=5) nota_a[0]=0;
+			if (freq_a<=5) nota_a[0]=0;
 }
 
 int contador_nota_igual_beeper=0;
+char nota_beeper_anterior[4]="";
 
 void audio_midi_output_frame_event(void)
 {
@@ -3028,6 +3032,42 @@ void audio_midi_output_frame_event(void)
 				if (!strcasecmp(nota,midi_output_nota_sonando[canal_final])) nota_igual=1;
 
 
+				//temp probar beeper
+				/*
+				if (canal==0 && chip==0) {
+					audio_midi_output_beeper(nota);
+					printf ("nota %s\n",nota);
+					strcpy(nota_beeper_anterior,nota);
+
+					int canal_final=3*chip+canal;
+					if (!strcasecmp(nota,nota_beeper_anterior)) {
+						contador_nota_igual_beeper++;
+					}
+					else {
+						contador_nota_igual_beeper=0;
+					}
+
+					nota_igual=1;
+
+					if (contador_nota_igual_beeper>=5) {
+						//decir cambio de nota si es que es diferente de la que sonaba
+						if (strcasecmp(nota,midi_output_nota_sonando[canal_final])) {
+							nota_igual=0;
+							printf ("cambio nota %s %s\n",nota,midi_output_nota_sonando[canal_final]);
+							contador_nota_igual_beeper=0;
+						}
+						else {
+							printf ("misma nota que la anterior %s %s\n",nota,midi_output_nota_sonando[canal_final]);
+						}
+					}
+
+					//Guardar nota actual como la anterior
+					strcpy(midi_output_nota_sonando[canal_final],nota);
+
+						
+				}
+				//fin temp probar beeper
+				*/
 				
 
 
