@@ -363,10 +363,10 @@ void zeng_send_snapshot_if_needed(void)
 				buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
 				if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
 
-				z80_byte *puntero=buffer_temp; 
+				//z80_byte *puntero=buffer_temp; 
 				int longitud;
 
-  				save_zsf_snapshot_file_mem(NULL,zeng_send_snapshot_mem,&longitud);	
+  				save_zsf_snapshot_file_mem(NULL,buffer_temp,&longitud);	
 
 				zeng_send_snapshot_mem=buffer_temp;
 				zeng_send_snapshot_longitud=longitud;
