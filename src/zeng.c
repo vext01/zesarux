@@ -34,6 +34,22 @@
 #include "zeng.h"
 
 
+
+#ifdef USE_PTHREADS
+
+#include <pthread.h>
+#include <sys/types.h>
+
+
+pthread_t thread_zeng;
+
+#endif
+
+//Si el thread se ha inicializado correctamente
+z80_bit thread_zeng_inicializado={0};
+
+
+
 //-ZENG: ZEsarUX Network Gaming
 
 
@@ -183,10 +199,54 @@ int zeng_connect_remote(void)
 	return 1;
 }
 
+void *thread_zeng_function(void *nada)
+{
+	while (1) {
+		usleep(10000); //dormir 10 ms
+
+		zeng_key_presses elemento;
+		while (!zeng_fifo_read_element(&elemento)) {
+			printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
+		}
+	}
+}
+
 void zeng_enable(void)
 {
+
+	//ya  inicializado
+	if (zeng_enabled.v) return;
+
 	if (zeng_remote_hostname[0]==0) return;
 
+#ifdef USE_PTHREADS
+
 	//Conectar a remoto
-	if (zeng_connect_remote()) zeng_enabled.v=1;
+	if (!zeng_connect_remote()) return;
+
+
+	//Inicializar thread
+
+	thread_zeng_inicializado.v=0;
+
+	if (pthread_create( &thread_zeng, NULL, &thread_zeng_function, NULL) ) {
+		debug_printf(VERBOSE_ERR,"Can not create zeng pthread");
+		return;
+	}
+
+
+	thread_zeng_inicializado.v=1;
+
+
+	zeng_enabled.v=1;
+#else
+	//sin threads
+	zeng_enabled.v=0;
+#endif
+
+
+
 }
+
+
+
