@@ -120,10 +120,15 @@ void zeng_key_event(enum util_teclas tecla,int pressrelease)
 {
 	if (zeng_enabled.v==0) return;
 
+	//Si esta menu abierto, tampoco enviar
+	if (menu_abierto) return;
+
 	zeng_key_presses elemento;
 
 	elemento.tecla=tecla;
 	elemento.pressrelease=pressrelease;
+
+	printf ("Adding zeng key event to fifo\n");
 
 	if (zeng_fifo_add_element(&elemento)) {
 		debug_printf (VERBOSE_DEBUG,"Error adding zeng key event. FIFO full");
@@ -132,14 +137,15 @@ void zeng_key_event(enum util_teclas tecla,int pressrelease)
 
 }
 
-void zeng_connect_remote(void)
+//Devuelve 0 si no conectado
+int zeng_connect_remote(void)
 {
 
 		int indice_socket=z_sock_open_connection(zeng_remote_hostname,zeng_remote_port);
 
 		if (indice_socket<0) {
 			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
-			return;
+			return 0;
 		}
 
 		 
@@ -173,6 +179,8 @@ void zeng_connect_remote(void)
 		//printf("Waiting until command prompt final\n");
 
 		//zsock_wait_until_command_prompt(indice_socket);
+
+	return 1;
 }
 
 void zeng_enable(void)
@@ -180,5 +188,5 @@ void zeng_enable(void)
 	if (zeng_remote_hostname[0]==0) return;
 
 	//Conectar a remoto
-	zeng_connect_remote();
+	if (zeng_connect_remote()) zeng_enabled.v=1;
 }

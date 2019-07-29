@@ -22205,7 +22205,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 	//pruebas
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_zeng_enable,NULL,"[%c] ZENG",
-					(zeng_enabled.v ? "Yes" : "No") );
+					(zeng_enabled.v ? 'X' : ' ') );
 
 
                 menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
