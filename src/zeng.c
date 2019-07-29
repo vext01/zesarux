@@ -31,6 +31,72 @@
 #include "utils.h"
 #include "network.h"
 #include "compileoptions.h"
+#include "zeng.h"
 
 
 //-ZENG: ZEsarUX Network Gaming
+
+
+
+//La fifo
+
+zeng_key_presses zeng_key_presses_array[ZENG_FIFO_SIZE];
+
+
+//Tamanyo de la fifo
+int zeng_fifo_current_size=0;
+
+//Posicion de agregar de la fifo
+int zeng_fifo_write_position=0;
+
+//Posicion de leer de la fifo
+int zeng_fifo_read_position=0;
+
+
+int zeng_next_position(int pos)
+{
+	pos++; 
+	if (pos==ZENG_FIFO_SIZE) pos=0;
+	return pos;
+}
+
+//Agregar elemento a la fifo
+void zeng_fifo_add_element(zeng_key_presses *elemento){
+	//Si esta llena, no hacer nada
+	//TODO: esperar a flush
+	//TODO: semaforo
+
+	if (zeng_fifo_current_size==ZENG_FIFO_SIZE) return;
+
+	//Escribir en la posicion actual
+	zeng_key_presses_array[zeng_fifo_write_position].tecla=elemento->tecla;
+	zeng_key_presses_array[zeng_fifo_write_position].pressrelease=elemento->pressrelease;
+
+	//Y poner siguiente posicion
+	zeng_fifo_write_position=zeng_next_position(zeng_fifo_write_position);
+
+	//Y sumar total elementos
+	zeng_fifo_current_size++;
+
+}
+
+//Leer elemento de la fifo
+//Retorna 0 si esta vacia
+int zeng_fifo_read_element(zeng_key_presses *elemento){
+	//TODO: semaforo
+
+	if (zeng_fifo_current_size==0) return 0;
+
+	//Leer de la posicion actual
+	elemento->tecla=zeng_key_presses_array[zeng_fifo_read_position].tecla;
+	elemento->pressrelease=zeng_key_presses_array[zeng_fifo_read_position].pressrelease;
+
+	//Y poner siguiente posicion
+	zeng_fifo_read_position=zeng_next_position(zeng_fifo_read_position);
+
+	//Y restar total elementos
+	zeng_fifo_current_size--;
+
+	return 1;
+
+}
