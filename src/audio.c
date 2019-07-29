@@ -1903,7 +1903,8 @@ typedef struct s_audiobuffer_stats audiobuffer_stats;
                 if (valor_sonido>audiomax) audiomax=valor_sonido;
                 if (valor_sonido<audiomin) audiomin=valor_sonido;
 
-                valor_sonido_sin_signo=valor_sonido;
+                valor_sonido_sin_signo=128+valor_sonido;
+				//if (valor_sonido<0) printf ("%d %d\n",valor_sonido,valor_sonido_sin_signo);
 
                 if (valor_sonido_sin_signo>valor_anterior_sin_signo) signoactual=+1;
                 if (valor_sonido_sin_signo<valor_anterior_sin_signo) signoactual=-1;
@@ -2922,6 +2923,29 @@ int audio_midi_output_init(void)
 
 int audio_midi_output_initialized=0;
 
+void audio_midi_output_beeper(char *nota_a)
+{
+	   audiobuffer_stats audiostats;
+        audio_get_audiobuffer_stats(&audiostats);
+
+
+        int frecuencia=audiostats.frecuencia;
+
+		//printf ("frecuencia %d\n",frecuencia);
+
+
+
+			int freq_a=frecuencia;
+
+
+			//char nota_a[4];
+			sprintf(nota_a,"%s",get_note_name(freq_a) );
+
+			//Si no hay sonido, suele dar frecuencia 5 o menos
+			if (frecuencia<=5) nota_a[0]=0;
+}
+
+int contador_nota_igual_beeper=0;
 
 void audio_midi_output_frame_event(void)
 {
@@ -2932,7 +2956,7 @@ void audio_midi_output_frame_event(void)
 		int chip;
 
 
-			char nota[4];
+		char nota[4];
 
 
 		for (chip=0;chip<ay_retorna_numero_chips();chip++) {
@@ -2997,11 +3021,20 @@ void audio_midi_output_frame_event(void)
 
 				if (!suena_nota) nota[0]=0;
 
-
 				int canal_final=3*chip+canal;
 
+				int nota_igual=0;
+
+				if (!strcasecmp(nota,midi_output_nota_sonando[canal_final])) nota_igual=1;
+
+
+				
+
+
+
+
 				//Comparar si igual o anterior
-				if (!strcasecmp(nota,midi_output_nota_sonando[canal_final])) {
+				if (nota_igual) {
 					//midi_output_nota_sonando_duracion[canal_final]++;
 					//printf ("nota igual [%s] duracion [%d]\n",
 					//nota,midi_output_nota_sonando_duracion[canal]);
