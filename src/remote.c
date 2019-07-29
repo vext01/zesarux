@@ -4503,8 +4503,8 @@ void interpreta_comando(char *comando,int misocket)
 		int evento=parse_string_to_number(remote_command_argv[1]);
 
 
-
-		util_set_reset_key(tecla,evento);
+		//Enviar la tecla pero que no vuelva a entrar por zeng
+		util_set_reset_key_continue_after_zeng(tecla,evento);
 
 
 	}	

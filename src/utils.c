@@ -6138,6 +6138,12 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
   //No estoy seguro que este sea el mejor sitio para llamar a zeng, pero...
   zeng_key_event(tecla,pressrelease);
 
+  util_set_reset_key_continue_after_zeng(tecla,pressrelease);
+}
+
+void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrelease)
+{
+
         //temp reasignacion
         //if (tecla==UTIL_KEY_ALT_R) tecla=UTIL_KEY_ENTER;
 
