@@ -56,10 +56,10 @@ int zeng_fifo_read_position=0;
 z80_bit zeng_enabled={0};
 
 //Hostname remoto
-char zeng_remote_hostname[256]="";
+char zeng_remote_hostname[256]="127.0.0.1";
 
 //Puerto remoto
-int zeng_remote_port=0;
+int zeng_remote_port=10010;
 
 
 int zeng_next_position(int pos)
@@ -130,4 +130,55 @@ void zeng_key_event(enum util_teclas tecla,int pressrelease)
 		return;
 	}
 
+}
+
+void zeng_connect_remote(void)
+{
+
+		int indice_socket=z_sock_open_connection(zeng_remote_hostname,zeng_remote_port);
+
+		if (indice_socket<0) {
+			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
+			return;
+		}
+
+		 
+		
+		//Leer algo
+		char buffer[200];
+
+		//int leidos=z_sock_read(indice_socket,buffer,199);
+		int leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+		if (leidos>0) {
+			buffer[leidos]=0; //fin de texto
+			printf("Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
+		}
+
+		//zsock_wait_until_command_prompt(indice_socket);
+
+		printf("Sending get-version\n");
+
+		//Enviar un get-version
+		z_sock_write_string(indice_socket,"get-version\n");
+
+
+		//reintentar
+		leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+		if (leidos>0) {
+			buffer[leidos]=0; //fin de texto
+			printf("Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
+		}		
+
+		//escribir_socket(misocket,"Waiting until command prompt final");
+		//printf("Waiting until command prompt final\n");
+
+		//zsock_wait_until_command_prompt(indice_socket);
+}
+
+void zeng_enable(void)
+{
+	if (zeng_remote_hostname[0]==0) return;
+
+	//Conectar a remoto
+	zeng_connect_remote();
 }

@@ -97,6 +97,7 @@
 #include "snap_zsf.h"
 #include "settings.h"
 #include "datagear.h"
+#include "zeng.h"
 
 
 #if defined(__APPLE__)
@@ -21998,6 +21999,11 @@ void menu_write_message(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_debug_zeng_enable(MENU_ITEM_PARAMETERS)
+{
+	zeng_enable();
+}
+
 
 //menu debug settings
 void menu_debug_settings(MENU_ITEM_PARAMETERS)
@@ -22196,6 +22202,10 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					(spritefinder_enabled.v ? "Yes" : "No") );
 		}
 		*/
+
+	//pruebas
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_zeng_enable,NULL,"[%c] ZENG",
+					(zeng_enabled.v ? "Yes" : "No") );
 
 
                 menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
