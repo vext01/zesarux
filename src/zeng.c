@@ -232,19 +232,23 @@ int zeng_connect_remote(void)
 	return 1;
 }
 
+int contador_envio_snapshot=0;
+z80_byte *zeng_send_snapshot_mem=NULL;
+int zeng_send_snapshot_longitud=0;
+
 void zeng_send_snapshot(int socket)
 {
 	//Enviar snapshot cada 20*250=5000 ms->5 segundos
-		
+		printf ("Enviando snapshot\n");
 
-				z80_byte *buffer_temp;
-				buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
-				if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
+				//z80_byte *buffer_temp;
+				//buffer_temp=zeng_send_snapshot_mem;
+				//if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
 
-				z80_byte *puntero=buffer_temp; 
-				int longitud;
+				//z80_byte *puntero=buffer_temp; 
+				int longitud=zeng_send_snapshot_longitud;
 
-  				save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
+  				//save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
 
 				//printf ("longitud: %d\n",longitud);
 
@@ -259,7 +263,7 @@ void zeng_send_snapshot(int socket)
 
 		
 				for (i=0;i<longitud;i++,char_destino +=2) {
-					sprintf (&buffer_put_snapshot_temp[char_destino],"%02X",buffer_temp[i]);
+					sprintf (&buffer_put_snapshot_temp[char_destino],"%02X",zeng_send_snapshot_mem[i]);
 				}
 
 				//metemos salto de linea al final
@@ -272,7 +276,8 @@ void zeng_send_snapshot(int socket)
 
 				//z_sock_write_string(indice_socket,"\n");
 
-	 			free(buffer_temp);
+	 			free(zeng_send_snapshot_mem);
+				zeng_send_snapshot_mem=NULL;
 
 				char buffer[200];
 				//Leer hasta prompt
@@ -280,6 +285,8 @@ void zeng_send_snapshot(int socket)
 
 		
 }
+
+
 
 void *thread_zeng_function(void *nada)
 {
@@ -336,9 +343,35 @@ Poder enviar mensajes a otros jugadores
 
 
 		if (zeng_i_am_master) {
-			if ( (contador_veces % (100*segundos_cada_snapshot) )==0) { //cada 5 segundos
+			if (zeng_send_snapshot_mem!=NULL && zeng_send_snapshot_longitud!=0) {
 				zeng_send_snapshot(zeng_remote_socket);
 			}
+		}
+	}
+}
+
+
+
+
+void zeng_send_snapshot_if_needed(void)
+{
+
+	if (zeng_i_am_master) {
+		contador_envio_snapshot++;
+		if ( (contador_envio_snapshot % (50*segundos_cada_snapshot) )==0) { //cada 5 segundos
+				z80_byte *buffer_temp;
+				buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
+				if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
+
+				z80_byte *puntero=buffer_temp; 
+				int longitud;
+
+  				save_zsf_snapshot_file_mem(NULL,zeng_send_snapshot_mem,&longitud);	
+
+				zeng_send_snapshot_mem=buffer_temp;
+				zeng_send_snapshot_longitud=longitud;
+
+				printf ("Poniendo en cola snapshot para enviar\n");
 		}
 	}
 }

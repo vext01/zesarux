@@ -917,8 +917,7 @@ void cpu_core_loop_spectrum(void)
 
 			//printf ("temp conta fifty: %d\n",tempcontafifty++);
 
-			//Enviar snapshot pendiente de ZRCP
-			check_pending_zrcp_put_snapshot();
+
 		}
 
 
@@ -944,6 +943,10 @@ void cpu_core_loop_spectrum(void)
 		//Fin gestion interrupciones
 
 
+		//Aplicar snapshot pendiente de ZRCP
+		check_pending_zrcp_put_snapshot();
+
+		zeng_send_snapshot_if_needed();
 
 		debug_get_t_stados_parcial_post();
 
