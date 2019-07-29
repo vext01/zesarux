@@ -22008,7 +22008,7 @@ void menu_debug_zeng_enable(MENU_ITEM_PARAMETERS)
         char string_port[6];
 		char string_master[2];
 
-        strcpy (string_port,"10010");
+        strcpy (string_port,"10000");
 		strcpy (string_master,"0");
 
 	menu_ventana_scanf("Remote host",zeng_remote_hostname,256);
