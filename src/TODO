@@ -7,7 +7,7 @@ o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
 
 -Para juego en red:
-Comandos ZRCP:
+Comandos ZRCP: 
 -envio de snapshot zsf. comando: put-snapshot
 -envio de puertos teclado y joystick. Para que tenga sentido hay que jugar con diferentes teclas y/o joystick para que no se crucen entre las dos instancias
 Se puede enviar contenido de las 8 filas de teclado y del puerto Kempston por ejemplo. 
