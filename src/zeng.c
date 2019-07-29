@@ -175,7 +175,7 @@ void zeng_key_event(enum util_teclas tecla,int pressrelease)
 	elemento.tecla=tecla;
 	elemento.pressrelease=pressrelease;
 
-	printf ("Adding zeng key event to fifo\n");
+	//printf ("Adding zeng key event to fifo\n");
 
 	if (zeng_fifo_add_element(&elemento)) {
 		debug_printf (VERBOSE_DEBUG,"Error adding zeng key event. FIFO full");
@@ -204,7 +204,7 @@ int zeng_connect_remote(void)
 		int leidos=zsock_read_all_until_command(indice_socket,buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
-			printf("Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
+			//printf("Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
 		}
 
 		//zsock_wait_until_command_prompt(indice_socket);
@@ -312,7 +312,7 @@ Poder enviar mensajes a otros jugadores
 
 		zeng_key_presses elemento;
 		while (!zeng_fifo_read_element(&elemento)) {
-			printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
+			//printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
 
 			//command> help send-keys-event
 			//Syntax: send-keys-event key event

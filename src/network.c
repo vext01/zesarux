@@ -439,7 +439,7 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 			//la conexion se queda en read colgada
 			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 				leidos=z_sock_read(indice_tabla,buffer,100);
-				printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
+				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
 				if (leidos<0) return -1;
 			}
 			else {
@@ -473,7 +473,7 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 			//la conexion se queda en read colgada
 			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 				leidos=z_sock_read(indice_tabla,&buffer[pos_destino],max_buffer);
-				printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
+				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
 				if (leidos<0) return -1;
 				else {
 					max_buffer -=leidos;
@@ -515,7 +515,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 			//la conexion se queda en read colgada
 			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 				leidos=z_sock_read(indice_tabla,&buffer[pos_destino],max_buffer);
-				printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
+				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
 				if (leidos<0) return -1;
 				else {
 					max_buffer -=leidos;
@@ -529,15 +529,15 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 		//Ver si hay "command> al final"
 		if (total_leidos>=9) { //"command> " ocupa 9
-			printf ("Leido al final: [%c%c]\n",buffer[total_leidos-2],buffer[total_leidos-1]);
+			//printf ("Leido al final: [%c%c]\n",buffer[total_leidos-2],buffer[total_leidos-1]);
 			if (buffer[total_leidos-1]==' ' && buffer[total_leidos-2]=='>') {
 				leido_command_prompt=1;
-				printf ("Recibido command prompt\n");
+				//printf ("Recibido command prompt\n");
 			}
 		}
 
 		else {
-			printf ("total leidos: %d\n",total_leidos);
+			//printf ("total leidos: %d\n",total_leidos);
 		}
 
 
