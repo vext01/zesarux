@@ -103,7 +103,7 @@ Y Windows sdl?
 -poder usar kempston mouse desde menu si ventana de menu no tiene el foco (al igual que sucede con el teclado)
 
 -AY partitura:
-*para el beeper tambien
+*para el beeper tambien -> no hasta que se mejore la rutina de deteccion de nota
 *ideal para probar duraciones: golden axe
 
 -Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drives null y simpletext? Con printf verbose error?
