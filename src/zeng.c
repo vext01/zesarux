@@ -32,6 +32,7 @@
 #include "network.h"
 #include "compileoptions.h"
 #include "zeng.h"
+#include "remote.h"
 
 
 
@@ -58,6 +59,8 @@ z80_bit thread_zeng_inicializado={0};
 
 zeng_key_presses zeng_key_presses_array[ZENG_FIFO_SIZE];
 
+int zeng_remote_socket;
+
 
 //Tamanyo de la fifo
 int zeng_fifo_current_size=0;
@@ -76,6 +79,8 @@ char zeng_remote_hostname[256]="127.0.0.1";
 
 //Puerto remoto
 int zeng_remote_port=10010;
+
+int segundos_cada_snapshot=5;
 
 
 int zeng_next_position(int pos)
@@ -196,17 +201,117 @@ int zeng_connect_remote(void)
 
 		//zsock_wait_until_command_prompt(indice_socket);
 
+	zeng_remote_socket=indice_socket;
+
 	return 1;
+}
+
+void zeng_send_snapshot(int socket)
+{
+	//Enviar snapshot cada 20*250=5000 ms->5 segundos
+		
+
+				z80_byte *buffer_temp;
+				buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
+				if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
+
+				z80_byte *puntero=buffer_temp; 
+				int longitud;
+
+  				save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
+
+				//printf ("longitud: %d\n",longitud);
+
+				printf ("Sending put-snapshot length: %d\n",longitud);
+				z_sock_write_string(socket,"put-snapshot ");
+
+				int i;
+				z80_byte *buffer_put_snapshot_temp;
+				buffer_put_snapshot_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
+
+				int char_destino=0;
+
+		
+				for (i=0;i<longitud;i++,char_destino +=2) {
+					sprintf (&buffer_put_snapshot_temp[char_destino],"%02X",buffer_temp[i]);
+				}
+
+				//metemos salto de linea al final
+				strcpy (&buffer_put_snapshot_temp[char_destino],"\n");
+
+				//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
+				z_sock_write_string(socket,buffer_put_snapshot_temp);
+
+				free(buffer_put_snapshot_temp);
+
+				//z_sock_write_string(indice_socket,"\n");
+
+	 			free(buffer_temp);
+
+				char buffer[200];
+				//Leer hasta prompt
+				int leidos=zsock_read_all_until_command(socket,buffer,199);
+
+		
 }
 
 void *thread_zeng_function(void *nada)
 {
+	/*
+Hilo de sincronización de juego:
+
+-si flag de envío de snapshot, se envía. Ese flag lo activa el core al final de frame, cada X segundos, y cuando somos el máster
+
+-si hay que enviar mensaje al otro jugador, enviarlo
+
+-ver la fifo usada en envío de eventos:
+*tecla
+*press/release
+
+Dicha fifo hay que controlarla mediante semáforos
+Se mete elementos en fifo cuando se llama a util send press/release
+Se leen y envían eventos de la fifo desde este thread 
+
+-dormir durante 10ms - mitad de frame 
+
+Para las rutinas zsock también haría falta semáforos pero como no voy a llamarla desde dos sitios distintos a la vez pues..
+
+Poder enviar mensajes a otros jugadores 	
+	 */
+
+	int contador_veces=0;
+
 	while (1) {
 		usleep(10000); //dormir 10 ms
 
 		zeng_key_presses elemento;
 		while (!zeng_fifo_read_element(&elemento)) {
 			printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
+
+			//command> help send-keys-event
+			//Syntax: send-keys-event key event
+
+
+				//printf ("longitud: %d\n",longitud);
+				char buffer_comando[256];
+				sprintf(buffer_comando,"send-keys-event %d %d\n",elemento.tecla,elemento.pressrelease);
+
+				z_sock_write_string(zeng_remote_socket,buffer_comando);
+
+				char buffer[200];
+
+				//Leer hasta prompt
+				int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199);
+
+
+		}
+
+		contador_veces++;
+
+		
+
+		if ( (contador_veces % (100*segundos_cada_snapshot) )==0) { //cada 5 segundos
+			zeng_send_snapshot(zeng_remote_socket);
 		}
 	}
 }

@@ -1292,7 +1292,7 @@ remote.o: remote.c remote.h cpu.h debug.h utils.h compileoptions.h network.h ql.
 network.o: network.c network.h cpu.h debug.h utils.h compileoptions.h chardevice.h
 	\$(CC) \$(CFLAGS) -c network.c
 
-zeng.o: zeng.c zeng.h cpu.h debug.h utils.h network.h compileoptions.h
+zeng.o: zeng.c zeng.h cpu.h debug.h utils.h network.h compileoptions.h remote.h
 	\$(CC) \$(CFLAGS) -c zeng.c
 
 esxdos_handler.o: esxdos_handler.c esxdos_handler.h cpu.h operaciones.h debug.h menu.h utils.h diviface.h screen.h
