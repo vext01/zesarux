@@ -6,6 +6,17 @@
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
 
+-ZENG
+*jugar con diferente intervalo segundos
+*mejorar menu ZENG
+*intentar cargar mas rapido un snapshot
+*quiza cuando envia el snapshot habria que pausar el master??
+*semaforos en fifo zeng
+*network: en windows siempre retorna datos disponibles.
+*asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado
+*gestionar cortes de socket
+
+
 -Para juego en red:
 Comandos ZRCP: 
 -envio de snapshot zsf. comando: put-snapshot
