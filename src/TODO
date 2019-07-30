@@ -20,6 +20,29 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 con 2: international match day se puede jugar bien
 target renegade se desfasa muy seguido
 
+*revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
+*con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
+
+-pruebas remotas:
+cliente remoto con Mac en Nueva Zelanda NZ, actuando como master
+cliente remoto con Linux en Spain (SP), actuando como master
+mi imac Local, actuando como slave
+*international match day: SP va fina. NZ a veces fina y otras no (del estilo de no tener snapshot hasta al cabo de 20 segundos o mas)
+*target renegade: desfase en NZ, dificil jugar. En SP peta al enviar snapshot. Quiza problema buffer snapshot?
+*bubble bobble: algo de desfase en SP pero se puede jugar
+*double dragon: desfase en SP, difícil de jugar
+*ping pong: algo de desfase en SP pero se puede jugar
+
+
+*joystick real deberia enviar tambien evento sobre esto. cuidado con eventos de joystick que generan teclas,
+estos no deberian generar doble evento (joystick y tecla)
+
+*que pregunte confirmacion en destino si quiere aceptar
+*ZRCP que haga log de la ip de origen que se conecta
+*que conecte solo si numero de version es igual la remota a la local
+*snapshot para enviar a remoto se deberia procesar tambien el comando "put-snapshot XXXX"
+antes del hilo de envio 
+
 *mejorar menu ZENG
 *quiza cuando envia el snapshot habria que pausar el master??
 *semaforos en fifo zeng
