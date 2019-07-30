@@ -20,6 +20,8 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 con 2: international match day se puede jugar bien
 target renegade se desfasa muy seguido
 
+*que se guarde la config de los parametros
+
 *revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
 *con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
 
