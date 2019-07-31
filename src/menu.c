@@ -27490,9 +27490,9 @@ void menu_inicio_bucle(void)
 
 		//if (retorno_menu==MENU_RETORNO_F2) salir_menu=1;
 
-		//opcion numero 10: ESC back
+		//opcion numero 11: ESC back
 
-		if (retorno_menu!=MENU_RETORNO_ESC && menu_inicio_opcion_seleccionada==10) salir_menu=1;
+		if (retorno_menu!=MENU_RETORNO_ESC && menu_inicio_opcion_seleccionada==11) salir_menu=1;
 		if (retorno_menu==MENU_RETORNO_ESC) salir_menu=1;
 
 	} while (!salir_menu && !salir_todos_menus);
