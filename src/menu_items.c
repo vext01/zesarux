@@ -99,6 +99,7 @@
 #include "assemble.h"
 #include "expression_parser.h"
 #include "uartbridge.h"
+#include "zeng.h"
 
 
 #ifdef COMPILE_ALSA
@@ -16303,6 +16304,35 @@ int menu_network_uartbridge_cond(void)
 	else return 0;
 }
 
+void menu_zeng_enable(MENU_ITEM_PARAMETERS)
+{
+
+
+        char string_port[6];
+		char string_master[2];
+		char string_seconds[2];
+
+        sprintf (string_port,"%d",zeng_remote_port);
+		sprintf (string_master,"%d",zeng_i_am_master);
+		sprintf (string_seconds,"%d",segundos_cada_snapshot);
+
+	menu_ventana_scanf("Remote host",zeng_remote_hostname,256);
+	menu_ventana_scanf("Remote port",string_port,6);
+
+	zeng_remote_port=parse_string_to_number(string_port);
+
+	menu_ventana_scanf("Master?",string_master,2);
+	zeng_i_am_master=parse_string_to_number(string_master);
+
+	if (zeng_i_am_master) {
+		menu_ventana_scanf("Snapshot seconds?",string_seconds,2);
+		segundos_cada_snapshot=parse_string_to_number(string_seconds);
+	}
+
+	zeng_enable();
+}
+
+
 void menu_network(MENU_ITEM_PARAMETERS)
 {
         //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
@@ -16312,17 +16342,28 @@ void menu_network(MENU_ITEM_PARAMETERS)
         do {
 
                 
-                        menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_uartbridge,menu_network_uartbridge_cond,"UART Bridge");
+            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_uartbridge,menu_network_uartbridge_cond,"~~UART Bridge emulation");
+			menu_add_item_menu_shortcut(array_menu_common,'u');
                         
+			menu_add_item_menu_tooltip(array_menu_common,"Bridge from emulated machine uart ports to a local serial uart device");
+			menu_add_item_menu_ayuda(array_menu_common,"Bridge from emulated machine uart ports to a local serial uart device\n"
+				"It does NOT emulate a full uart device, just links from the emulated machine ports to a physical local device\n"
+				"Available for ZX-Uno, TBBlue and ZX Evolution TSConf");
+			
 
+#ifdef USE_PTHREADS
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_enable,NULL,"[%c] ~~ZENG",(zeng_enabled.v ? 'X' : ' ') );
+			menu_add_item_menu_shortcut(array_menu_common,'z');
+			menu_add_item_menu_tooltip(array_menu_common,"Setup ZEsarUX Network Gaming");
+			menu_add_item_menu_ayuda(array_menu_common,"Setup ZEsarUX Network Gaming");
+#endif
+                       
+						
+			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-					
+            menu_add_ESC_item(array_menu_common);
 
-                        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-                menu_add_ESC_item(array_menu_common);
-
-                retorno_menu=menu_dibuja_menu(&network_opcion_seleccionada,&item_seleccionado,array_menu_common,"Network" );
+            retorno_menu=menu_dibuja_menu(&network_opcion_seleccionada,&item_seleccionado,array_menu_common,"Network" );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {

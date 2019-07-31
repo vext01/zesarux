@@ -97,7 +97,7 @@
 #include "snap_zsf.h"
 #include "settings.h"
 #include "datagear.h"
-#include "zeng.h"
+
 
 
 #if defined(__APPLE__)
@@ -16633,13 +16633,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'u');
 		}
 
-		if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_uartbridge,NULL,"UART bridge emulation");
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Bridge from emulated machine uart ports to a local serial uart device");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Bridge from emulated machine uart ports to a local serial uart device\n"
-					"It does NOT emulate a full uart device, just links from the emulated machine ports to a physical local device"
-				);
-		}		
+		
 
 
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_memory_settings,NULL,"~~Memory Settings");
@@ -21999,33 +21993,6 @@ void menu_write_message(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_debug_zeng_enable(MENU_ITEM_PARAMETERS)
-{
-
-
-        char string_port[6];
-		char string_master[2];
-		char string_seconds[2];
-
-        sprintf (string_port,"%d",zeng_remote_port);
-		sprintf (string_master,"%d",zeng_i_am_master);
-		sprintf (string_seconds,"%d",segundos_cada_snapshot);
-
-	menu_ventana_scanf("Remote host",zeng_remote_hostname,256);
-	menu_ventana_scanf("Remote port",string_port,6);
-
-	zeng_remote_port=parse_string_to_number(string_port);
-
-	menu_ventana_scanf("Master?",string_master,2);
-	zeng_i_am_master=parse_string_to_number(string_master);
-
-	if (zeng_i_am_master) {
-		menu_ventana_scanf("Snapshot seconds?",string_seconds,2);
-		segundos_cada_snapshot=parse_string_to_number(string_seconds);
-	}
-
-	zeng_enable();
-}
 
 
 //menu debug settings
@@ -22226,9 +22193,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 		*/
 
-	//pruebas
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_zeng_enable,NULL,"[%c] ZENG",
-					(zeng_enabled.v ? 'X' : ' ') );
+	
 
 
                 menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -27415,8 +27380,8 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"Audio related actions");
 
 
-		menu_add_item_menu(array_menu_principal,"~~Network",MENU_OPCION_NORMAL,menu_network,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'n');
+		menu_add_item_menu(array_menu_principal,"Net~~work",MENU_OPCION_NORMAL,menu_network,NULL);
+		menu_add_item_menu_shortcut(array_menu_principal,'w');
 		menu_add_item_menu_tooltip(array_menu_principal,"Network related actions");
 		menu_add_item_menu_ayuda(array_menu_principal,"Network related actions");
 

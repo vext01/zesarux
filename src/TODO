@@ -6,6 +6,8 @@
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
 
+-mejorar menu principal para que no tenga que leer numero opcion de items
+
 -tabla de joystick to event siempre se resetea??
 
 -			check_pending_zrcp_put_snapshot();

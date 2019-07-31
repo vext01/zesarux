@@ -44,6 +44,7 @@ extern int zeng_fifo_read_element(zeng_key_presses *elemento);
 extern void zeng_send_key_event(enum util_teclas tecla,int pressrelease);
 
 extern z80_bit zeng_enabled;
+extern void zeng_enable(void);
 
 
 extern char zeng_remote_hostname[];
