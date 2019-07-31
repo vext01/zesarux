@@ -29,3 +29,10 @@ printf "AT+CWMODE?\r\n" >/dev/ttyUSB0
 If it returns 2, you should set to 1 with:
 
 printf "AT+CWMODE=1\r\n" >/dev/ttyUSB0
+
+
+Note: if only garbae is read, try setting speed with command:
+
+screen /dev/ttyUSB0 115200
+
+and then kill this screen process (should be two in memory)
