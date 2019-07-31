@@ -2,6 +2,13 @@
 
 --------Para próxima versión:
 
+Nuevo menú Network?
+Para meter:
+ZENG
+UART
+Spectranet
+ 
+
 -rutinas zsock_read_all: deberia reintentar un par o dos de veces si no se ha alcanzado la longitud deseada
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
