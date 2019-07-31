@@ -37,7 +37,7 @@
 //Nombre de la ruta al dispositivo uart bridge
 //char uartbridge_name[PATH_MAX]="";
 //temp
-char uartbridge_name[PATH_MAX]="/dev/ttyS0";
+char uartbridge_name[PATH_MAX]="/dev/ttyUSB0";
 
 //Si esta habilitado uart bridge
 z80_bit uartbridge_enabled={0};
