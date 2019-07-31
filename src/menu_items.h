@@ -74,6 +74,7 @@ extern void menu_record_mid(MENU_ITEM_PARAMETERS);
 extern void menu_direct_midi_output(MENU_ITEM_PARAMETERS);
 extern void menu_ay_mixer(MENU_ITEM_PARAMETERS);
 extern void menu_uartbridge(MENU_ITEM_PARAMETERS);
+extern void menu_network(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_change_memory_zone_splash(void);
 

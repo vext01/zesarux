@@ -27356,6 +27356,11 @@ int menu_tape_settings_cond(void)
 }
 
 
+void menu_principal_salir_emulador(MENU_ITEM_PARAMETERS)
+{
+	menu_exit_emulator(0);	
+}
+
 
 void menu_inicio_bucle(void)
 {
@@ -27409,6 +27414,12 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Audio related actions");
 		menu_add_item_menu_ayuda(array_menu_principal,"Audio related actions");
 
+
+		menu_add_item_menu(array_menu_principal,"~~Network",MENU_OPCION_NORMAL,menu_network,NULL);
+		menu_add_item_menu_shortcut(array_menu_principal,'n');
+		menu_add_item_menu_tooltip(array_menu_principal,"Network related actions");
+		menu_add_item_menu_ayuda(array_menu_principal,"Network related actions");
+
 		menu_add_item_menu(array_menu_principal,"D~~ebug",MENU_OPCION_NORMAL,menu_debug_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'e');
 		menu_add_item_menu_tooltip(array_menu_principal,"Debug tools");
@@ -27436,7 +27447,7 @@ void menu_inicio_bucle(void)
 
 		menu_add_ESC_item(array_menu_principal);
 
-		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,NULL,NULL,"%sExit emulator",(f_functions==1 ? "F10 ": "") );
+		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,menu_principal_salir_emulador,NULL,"%sExit emulator",(f_functions==1 ? "F10 ": "") );
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
 		menu_add_item_menu_ayuda(array_menu_principal,"Exit emulator");
 
@@ -27449,11 +27460,11 @@ void menu_inicio_bucle(void)
 
 		
 
-		//opcion 11 es F10 salir del emulador
-		//if ( (retorno_menu!=MENU_RETORNO_ESC && retorno_menu!=MENU_RETORNO_F2) &&  (menu_inicio_opcion_seleccionada==15 || retorno_menu==MENU_RETORNO_F10)) {
-		if ( (retorno_menu!=MENU_RETORNO_ESC) &&  (menu_inicio_opcion_seleccionada==11 || retorno_menu==MENU_RETORNO_F10)) {
+		//opcion 12 es F10 salir del emulador
+		if ( (retorno_menu!=MENU_RETORNO_ESC) &&  (retorno_menu==MENU_RETORNO_F10)  ) {
 
-			menu_exit_emulator(0);
+			//menu_exit_emulator(0);
+			menu_principal_salir_emulador(0);
 
 	        }
 
@@ -27470,23 +27481,7 @@ void menu_inicio_bucle(void)
 				if (if_pending_error_message) salir_todos_menus=0;
 	                }
 
-			else {
-			//o por numero de opcion
-				//printf ("actuamos por numero de opcion\n");
-				switch (menu_inicio_opcion_seleccionada) {
-
-					//8 es opcion multitarea
-					/*case 8:
-						menu_multitarea=menu_multitarea^1;
-						if (menu_multitarea==0) {
-							//audio_thread_finish();
-							audio_playing.v=0;
-						}
-						timer_reset();
-					break;*/
-				}
-
-			}
+			
 		}
 
                 //printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);

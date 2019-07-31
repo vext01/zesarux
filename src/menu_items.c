@@ -177,6 +177,7 @@ int direct_midi_output_opcion_seleccionada=0;
 
 int ay_mixer_opcion_seleccionada=0;
 int uartbridge_opcion_seleccionada=0;
+int network_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -16229,6 +16230,8 @@ void menu_uartbridge_speed(MENU_ITEM_PARAMETERS)
 	else uartbridge_speed++;
 }
 
+
+
 void menu_uartbridge(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_uartbridge;
@@ -16274,6 +16277,52 @@ void menu_uartbridge(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_uartbridge);
 
                 retorno_menu=menu_dibuja_menu(&uartbridge_opcion_seleccionada,&item_seleccionado,array_menu_uartbridge,"UART Bridge" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
+
+
+int menu_network_uartbridge_cond(void)
+{
+	if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) return 1;
+	else return 0;
+}
+
+void menu_network(MENU_ITEM_PARAMETERS)
+{
+        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                
+                        menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_uartbridge,menu_network_uartbridge_cond,"UART Bridge");
+                        
+
+
+					
+
+                        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_ESC_item(array_menu_common);
+
+                retorno_menu=menu_dibuja_menu(&network_opcion_seleccionada,&item_seleccionado,array_menu_common,"Network" );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
