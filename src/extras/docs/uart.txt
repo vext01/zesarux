@@ -36,3 +36,6 @@ Note: if only garbae is read, try setting speed with command:
 screen /dev/ttyUSB0 115200
 
 and then kill this screen process (should be two in memory)
+
+Note for Mac OS X users:
+device can be found in path /dev/cu.usbserial or something similar
