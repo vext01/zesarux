@@ -399,6 +399,9 @@ void core_spectrum_fin_frame_pantalla(void)
 				}
 
 
+				core_end_frame_check_zrcp_zeng_snap.v=1;
+
+
 }
 
 void core_spectrum_fin_scanline(void)
@@ -918,9 +921,9 @@ void cpu_core_loop_spectrum(void)
 			//printf ("temp conta fifty: %d\n",tempcontafifty++);
 
 			//Aplicar snapshot pendiente de ZRCP
-			check_pending_zrcp_put_snapshot();
+			//check_pending_zrcp_put_snapshot();
 
-			zeng_send_snapshot_if_needed();			
+			//zeng_send_snapshot_if_needed();			
 
 
 		}
@@ -947,6 +950,14 @@ void cpu_core_loop_spectrum(void)
         }
 		//Fin gestion interrupciones
 
+
+		//Aplicar snapshot pendiente de ZRCP y ZENG envio snapshots. Despues de haber gestionado interrupciones
+
+		if (core_end_frame_check_zrcp_zeng_snap.v) {
+			core_end_frame_check_zrcp_zeng_snap.v=0;
+			check_pending_zrcp_put_snapshot();
+			zeng_send_snapshot_if_needed();			
+		}
 
 
 

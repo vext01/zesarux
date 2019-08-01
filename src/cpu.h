@@ -156,6 +156,7 @@ extern z80_byte im_mode;
 extern z80_bit cpu_step_mode;
 extern int core_refetch;
 extern int cpu_duracion_pulso_interrupcion;
+extern z80_bit core_end_frame_check_zrcp_zeng_snap;
 
 #ifndef GCC_UNUSED
 

@@ -480,6 +480,10 @@ z80_bit zxmmc_emulation={0};
 //Decir si hay que volver a hacer fetch en el core, esto pasa con instrucciones FD FD FD ... por ejemplo
 int core_refetch=0;
 
+
+//Decir que ha llegado a final de frame pantalla y tiene que revisar si enviar y recibir snapshots de ZRCP y ZENG
+z80_bit core_end_frame_check_zrcp_zeng_snap={0};
+
 //en spectrum, 32. en pentagon, 36
 int cpu_duracion_pulso_interrupcion=32;
 
