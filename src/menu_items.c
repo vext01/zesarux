@@ -16386,7 +16386,7 @@ void menu_zeng_port(MENU_ITEM_PARAMETERS)
 
 	menu_ventana_scanf("Remote port",string_port,6);
 	int numero=parse_string_to_number(string_port);
-	if (numero<1 || numero>65536) {
+	if (numero<1 || numero>65535) {
 		menu_error_message("Invalid port number");
 		return;
 	}
@@ -16437,7 +16437,7 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 
 			char string_host_shown[16]; 
 			menu_tape_settings_trunc_name(zeng_remote_hostname,string_host_shown,16);
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_host,menu_zeng_host_cond,"Host");
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_host,menu_zeng_host_cond,"Host [%s]",string_host_shown);
 
 
 			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_port,menu_zeng_host_cond,"[%d] Remote Port",zeng_remote_port);

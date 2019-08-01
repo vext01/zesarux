@@ -139,6 +139,18 @@ int zeng_fifo_read_element(zeng_key_presses *elemento)
 
 }
 
+void zeng_empty_fifo(void)
+{
+	//Tamanyo de la fifo
+	zeng_fifo_current_size=0;
+
+	//Posicion de agregar de la fifo
+	zeng_fifo_write_position=0;
+
+	//Posicion de leer de la fifo
+	zeng_fifo_read_position=0;
+}
+
 
 void zeng_send_key_event(enum util_teclas tecla,int pressrelease)
 {
@@ -327,7 +339,7 @@ Poder enviar mensajes a otros jugadores
 	int contador_veces=0;
 
 	while (1) {
-		usleep(10000); //dormir 10 ms
+		usleep(5000); //dormir 5 ms
 
 		zeng_key_presses elemento;
 		while (!zeng_fifo_read_element(&elemento)) {
@@ -441,19 +453,18 @@ void zeng_disable(void)
 
 #ifdef USE_PTHREADS
 
-
-
 	zeng_enabled.v=0;
 
 
 	//Finalizar thread
 	pthread_cancel(thread_zeng);
 
-	//thread_zeng_inicializado.v=0;
-
 
 	//Vaciar fifo
-	//TODO
+	zeng_empty_fifo();
+
+	//Decir que no hay snapshot pendiente
+	zeng_send_snapshot_pending=0;
 
 	//Cerrar conexión con ZRCP
 	zeng_disconnect_remote();

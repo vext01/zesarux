@@ -13,7 +13,6 @@ Spectranet
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
 
--mejorar menu principal para que no tenga que leer numero opcion de items
 
 -tabla de joystick to event siempre se resetea??
 
@@ -54,13 +53,12 @@ estos no deberian generar doble evento (joystick y tecla)
 *snapshot para enviar a remoto se deberia procesar tambien el comando "put-snapshot XXXX"
 antes del hilo de envio 
 
-*mejorar menu ZENG
 *quiza cuando envia el snapshot habria que pausar el master??
 *semaforos en fifo zeng
 *network: en windows siempre retorna datos disponibles.
 *asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado
 *gestionar cortes de socket
-*envio de mensajes
+*envio de mensajes-> que los muestre en el footer en destino
 *mejor gestion de envio mensajes por ZRCP
 *bucle de envio bajar el sleep de 10 ms a 5 ms?
 *lo ideal seria que al enviar tecla, no se envie la tecla en local hasta que el remoto la haya recibido
