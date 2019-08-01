@@ -204,8 +204,18 @@ int connectar_socket(int s,struct sockaddr_in *adr)
 
 int cerrar_socket(int s)
 {
-	//TODO: como funciona esto en Windows?
-	return close(s);
+
+
+#ifdef MINGW
+	closesocket(s);
+	//desactivo esto ya que esto implica que no se va a usar mas los windows sockets, cosa no cierta (se pueden usar en zeng por ejemplo)
+	//ademas no estamos llamando a WSAStartup al inicio
+	//Se deberia hacer el WSACleanup al finalizar el emulador
+	//WSACleanup();
+#else
+	close(s);
+#endif
+
 }
 
 

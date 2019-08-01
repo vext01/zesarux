@@ -5762,7 +5762,10 @@ void end_remote_protocol(void)
 	remote_cerrar_conexion();
 #ifdef MINGW
 	closesocket(sock_listen);
-	WSACleanup();
+	//desactivo esto ya que esto implica que no se va a usar mas los windows sockets, cosa no cierta (se pueden usar en zeng por ejemplo)
+	//ademas no estamos llamando a WSAStartup al inicio
+	//Se deberia hacer el WSACleanup al finalizar el emulador
+	//WSACleanup();
 #else
 	close(sock_listen);
 #endif

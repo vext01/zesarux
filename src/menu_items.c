@@ -179,6 +179,7 @@ int direct_midi_output_opcion_seleccionada=0;
 int ay_mixer_opcion_seleccionada=0;
 int uartbridge_opcion_seleccionada=0;
 int network_opcion_seleccionada=0;
+int zeng_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -16304,6 +16305,7 @@ int menu_network_uartbridge_cond(void)
 	else return 0;
 }
 
+/*
 void menu_zeng_enable(MENU_ITEM_PARAMETERS)
 {
 
@@ -16331,6 +16333,143 @@ void menu_zeng_enable(MENU_ITEM_PARAMETERS)
 
 	zeng_enable();
 }
+*/
+
+void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
+{
+	if (zeng_enabled.v) {
+		zeng_disable();
+	}
+	else {
+		zeng_enable();
+	}
+}
+
+int menu_zeng_enable_disable_cond(void)
+{
+	//Si esta habilitado, opcion siempre disponible para desactivar
+	if (zeng_enabled.v) return 1;
+
+	else {
+		//Si esta hostname vacio
+		if (zeng_remote_hostname[0]==0) return 0;
+	}
+
+	return 1;
+}
+
+
+//Si esta habilitado, no se puede cambiar parametro
+int menu_zeng_host_cond(void)
+{
+	if (zeng_enabled.v) return 0;
+	else return 1;
+}
+
+void menu_zeng_host(MENU_ITEM_PARAMETERS)
+{
+
+	menu_ventana_scanf("Remote host",zeng_remote_hostname,MAX_ZENG_HOSTNAME);
+	
+}
+
+
+void menu_zeng_port(MENU_ITEM_PARAMETERS)
+{
+
+
+        char string_port[6];
+
+
+        sprintf (string_port,"%d",zeng_remote_port);
+
+
+	menu_ventana_scanf("Remote port",string_port,6);
+	int numero=parse_string_to_number(string_port);
+	if (numero<1 || numero>65536) {
+		menu_error_message("Invalid port number");
+		return;
+	}
+
+	zeng_remote_port=numero;
+
+	
+}
+
+void menu_zeng_master(MENU_ITEM_PARAMETERS)
+{
+	zeng_i_am_master ^=1;	
+}
+
+
+void menu_zeng_snapshot_seconds(MENU_ITEM_PARAMETERS)
+{
+
+		char string_seconds[2];
+
+		sprintf (string_seconds,"%d",segundos_cada_snapshot);
+
+
+		menu_ventana_scanf("Snapshot seconds?",string_seconds,2);
+		int numero=parse_string_to_number(string_seconds);
+
+		if (numero<1 || numero>9) {
+			menu_error_message("Invalid interval");
+			return;
+		}
+
+
+		segundos_cada_snapshot=numero;
+
+}
+
+void menu_zeng(MENU_ITEM_PARAMETERS)
+{
+        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                
+            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_zeng_enable_disable,menu_zeng_enable_disable_cond,"[%c] ~~Enabled",(zeng_enabled.v ? 'X' : ' ') );
+					
+
+			char string_host_shown[16]; 
+			menu_tape_settings_trunc_name(zeng_remote_hostname,string_host_shown,16);
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_host,menu_zeng_host_cond,"Host");
+
+
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_port,menu_zeng_host_cond,"[%d] Remote Port",zeng_remote_port);
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_master,menu_zeng_host_cond,"[%c] Master",(zeng_i_am_master ? 'X' : ' ') );
+
+			if (zeng_i_am_master) {
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,menu_zeng_host_cond,"[%d] Snapshot seconds",segundos_cada_snapshot);
+			}
+                       
+						
+			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+            menu_add_ESC_item(array_menu_common);
+
+            retorno_menu=menu_dibuja_menu(&zeng_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZENG" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
 
 
 void menu_network(MENU_ITEM_PARAMETERS)
@@ -16352,7 +16491,7 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			
 
 #ifdef USE_PTHREADS
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_enable,NULL,"[%c] ~~ZENG",(zeng_enabled.v ? 'X' : ' ') );
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng,NULL,"~~ZENG");
 			menu_add_item_menu_shortcut(array_menu_common,'z');
 			menu_add_item_menu_tooltip(array_menu_common,"Setup ZEsarUX Network Gaming");
 			menu_add_item_menu_ayuda(array_menu_common,"Setup ZEsarUX Network Gaming");
@@ -16381,3 +16520,6 @@ void menu_network(MENU_ITEM_PARAMETERS)
 
 
 }
+
+
+

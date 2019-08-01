@@ -45,6 +45,7 @@ extern void zeng_send_key_event(enum util_teclas tecla,int pressrelease);
 
 extern z80_bit zeng_enabled;
 extern void zeng_enable(void);
+extern void zeng_disable(void);
 
 
 extern char zeng_remote_hostname[];
@@ -53,5 +54,7 @@ extern char zeng_remote_hostname[];
 extern int zeng_remote_port;
 extern int zeng_i_am_master;
 extern int segundos_cada_snapshot;
+
+#define MAX_ZENG_HOSTNAME 256
 
 #endif

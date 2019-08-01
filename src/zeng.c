@@ -33,6 +33,7 @@
 #include "compileoptions.h"
 #include "zeng.h"
 #include "remote.h"
+#include "snap_zsf.h"
 
 
 
@@ -47,7 +48,7 @@ pthread_t thread_zeng;
 #endif
 
 //Si el thread se ha inicializado correctamente
-z80_bit thread_zeng_inicializado={0};
+//z80_bit thread_zeng_inicializado={0};
 
 
 
@@ -75,7 +76,7 @@ int zeng_fifo_read_position=0;
 z80_bit zeng_enabled={0};
 
 //Hostname remoto
-char zeng_remote_hostname[256]="127.0.0.1";
+char zeng_remote_hostname[MAX_ZENG_HOSTNAME]="127.0.0.1";
 
 //Puerto remoto
 int zeng_remote_port=10000;
@@ -201,7 +202,7 @@ int zeng_connect_remote(void)
 		char buffer[200];
 
 		//int leidos=z_sock_read(indice_socket,buffer,199);
-		int leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+		int leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			//printf("Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
@@ -214,9 +215,9 @@ int zeng_connect_remote(void)
 		//Enviar un get-version
 		z_sock_write_string(indice_socket,"get-version\n");
 
-
+ 
 		//reintentar
-		leidos=zsock_read_all_until_command(indice_socket,buffer,199);
+		leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			printf("Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
@@ -229,6 +230,13 @@ int zeng_connect_remote(void)
 
 	zeng_remote_socket=indice_socket;
 
+	return 1;
+}
+
+//Devuelve 0 si error
+int zeng_disconnect_remote(void)
+{
+	z_sock_close_connection(zeng_remote_socket);
 	return 1;
 }
 
@@ -257,7 +265,7 @@ void zeng_send_snapshot(int socket)
 				z_sock_write_string(socket,"put-snapshot ");
 
 				int i;
-				z80_byte *buffer_put_snapshot_temp;
+				char *buffer_put_snapshot_temp;
 				buffer_put_snapshot_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
 
 				int char_destino=0;
@@ -283,9 +291,9 @@ void zeng_send_snapshot(int socket)
 				zeng_send_snapshot_mem=NULL;
 				
 
-				char buffer[200];
+				z80_byte buffer[200];
 				//Leer hasta prompt
-				int leidos=zsock_read_all_until_command(socket,buffer,199);
+				 int leidos=zsock_read_all_until_command(socket,buffer,199);
 
 		
 }
@@ -335,7 +343,7 @@ Poder enviar mensajes a otros jugadores
 
 				z_sock_write_string(zeng_remote_socket,buffer_comando);
 
-				char buffer[200];
+				z80_byte buffer[200];
 
 				//Leer hasta prompt
 				int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199);
@@ -401,7 +409,7 @@ void zeng_enable(void)
 
 	//Inicializar thread
 
-	thread_zeng_inicializado.v=0;
+	//thread_zeng_inicializado.v=0;
 
 	if (pthread_create( &thread_zeng, NULL, &thread_zeng_function, NULL) ) {
 		debug_printf(VERBOSE_ERR,"Can not create zeng pthread");
@@ -409,7 +417,7 @@ void zeng_enable(void)
 	}
 
 
-	thread_zeng_inicializado.v=1;
+	//thread_zeng_inicializado.v=1;
 
 
 	zeng_enabled.v=1;
@@ -423,4 +431,39 @@ void zeng_enable(void)
 }
 
 
+
+void zeng_disable(void)
+{
+
+	//ya  cerrado
+	if (zeng_enabled.v==0) return;
+
+
+#ifdef USE_PTHREADS
+
+
+
+	zeng_enabled.v=0;
+
+
+	//Finalizar thread
+	pthread_cancel(thread_zeng);
+
+	//thread_zeng_inicializado.v=0;
+
+
+	//Vaciar fifo
+	//TODO
+
+	//Cerrar conexión con ZRCP
+	zeng_disconnect_remote();
+
+#else
+	//sin threads
+	zeng_enabled.v=0;
+#endif
+
+
+
+}
 
