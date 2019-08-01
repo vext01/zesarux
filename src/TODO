@@ -58,6 +58,7 @@ Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZR
 
 *quiza cuando envia el snapshot habria que pausar el master??
 *semaforos en fifo zeng
+*parar thread zeng y cerrar socket zeng al salir emulador
 *network: en windows siempre retorna datos disponibles.
 *asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado
 *gestionar cortes de socket
