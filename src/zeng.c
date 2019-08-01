@@ -273,14 +273,13 @@ int zeng_disconnect_remote(void)
 
 int contador_envio_snapshot=0;
 
-//zona de memoria donde se guarda el snapshot pero sin pasar a hexa
-z80_byte *zeng_send_snapshot_mem=NULL;
-int zeng_send_snapshot_longitud=0;
+
+//int zeng_send_snapshot_longitud=0;
 int zeng_send_snapshot_pending=0;
 
 
 //zona memoria donde se guarda ya el snapshot con comando put-snapshot y valores hexadecimales
-char *zend_send_snapshot_mem_hexa; //zend_send_snapshot_mem_hexa
+char *zeng_send_snapshot_mem_hexa=NULL; //zeng_send_snapshot_mem_hexa
 
 void zeng_send_snapshot(int socket)
 {
@@ -290,42 +289,25 @@ void zeng_send_snapshot(int socket)
 		int posicion_command;
 
 				
-				//int longitud=zeng_send_snapshot_longitud;
-
-  				
-
-				//printf ("Sending put-snapshot length: %d\n",longitud);
+			
 				printf ("Sending put-snapshot\n");
 				z_sock_write_string(socket,"put-snapshot ");
 
-				//int i;
-
-
-				//zend_send_snapshot_mem_hexa=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
-
-				//int char_destino=0;
-
-		
-				//for (i=0;i<longitud;i++,char_destino +=2) {
-				//	sprintf (&zend_send_snapshot_mem_hexa[char_destino],"%02X",zeng_send_snapshot_mem[i]);
-				//}
-
-				//metemos salto de linea al final
-				//strcpy (&zend_send_snapshot_mem_hexa[char_destino],"\n");
+			
 
 
 
 				//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
-				z_sock_write_string(socket,zend_send_snapshot_mem_hexa);
+				z_sock_write_string(socket,zeng_send_snapshot_mem_hexa);
 
-				free(zend_send_snapshot_mem_hexa);
+				free(zeng_send_snapshot_mem_hexa);
+				zeng_send_snapshot_mem_hexa=NULL;
 
 				//z_sock_write_string(indice_socket,"\n");
 
 
-				zeng_send_snapshot_longitud=0;
-	 			free(zeng_send_snapshot_mem);
-				zeng_send_snapshot_mem=NULL;
+				//zeng_send_snapshot_longitud=0;
+	 		
 				
 
 				z80_byte buffer[200];
@@ -393,7 +375,7 @@ Poder enviar mensajes a otros jugadores
 
 
 		if (zeng_i_am_master) {
-			if (zeng_send_snapshot_pending && zeng_send_snapshot_mem!=NULL && zeng_send_snapshot_longitud!=0) {
+			if (zeng_send_snapshot_pending && zeng_send_snapshot_mem_hexa!=NULL) {
 				zeng_send_snapshot_pending=0;
 				zeng_send_snapshot(zeng_remote_socket);
 			}
@@ -427,8 +409,12 @@ void zeng_send_snapshot_if_needed(void)
 
   					save_zsf_snapshot_file_mem(NULL,buffer_temp,&longitud);	
 
+
+					//zona de memoria donde se guarda el snapshot pero sin pasar a hexa
+					z80_byte *zeng_send_snapshot_mem;
+
 					zeng_send_snapshot_mem=buffer_temp;
-					zeng_send_snapshot_longitud=longitud;
+					//zeng_send_snapshot_longitud=longitud;
 				
 
 					
@@ -439,20 +425,25 @@ void zeng_send_snapshot_if_needed(void)
 				//int longitud=zeng_send_snapshot_longitud;
 
 
-				zend_send_snapshot_mem_hexa=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
+				zeng_send_snapshot_mem_hexa=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
 
 				int char_destino=0;
 
 		
 				for (i=0;i<longitud;i++,char_destino +=2) {
-					sprintf (&zend_send_snapshot_mem_hexa[char_destino],"%02X",zeng_send_snapshot_mem[i]);
+					sprintf (&zeng_send_snapshot_mem_hexa[char_destino],"%02X",zeng_send_snapshot_mem[i]);
 				}
 
 				//metemos salto de linea al final
-				strcpy (&zend_send_snapshot_mem_hexa[char_destino],"\n");
+				strcpy (&zeng_send_snapshot_mem_hexa[char_destino],"\n");
 
 
-				printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",zeng_send_snapshot_longitud);
+				printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",longitud);
+
+
+				//Liberar memoria que ya no se usa
+				free(zeng_send_snapshot_mem);
+				zeng_send_snapshot_mem=NULL;
 
 
 					zeng_send_snapshot_pending=1;
