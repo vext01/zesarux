@@ -272,9 +272,15 @@ int zeng_disconnect_remote(void)
 }
 
 int contador_envio_snapshot=0;
+
+//zona de memoria donde se guarda el snapshot pero sin pasar a hexa
 z80_byte *zeng_send_snapshot_mem=NULL;
 int zeng_send_snapshot_longitud=0;
 int zeng_send_snapshot_pending=0;
+
+
+//zona memoria donde se guarda ya el snapshot con comando put-snapshot y valores hexadecimales
+char *zend_send_snapshot_mem_hexa; //zend_send_snapshot_mem_hexa
 
 void zeng_send_snapshot(int socket)
 {
@@ -283,38 +289,36 @@ void zeng_send_snapshot(int socket)
 
 		int posicion_command;
 
-				//z80_byte *buffer_temp;
-				//buffer_temp=zeng_send_snapshot_mem;
-				//if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
+				
+				//int longitud=zeng_send_snapshot_longitud;
 
-				//z80_byte *puntero=buffer_temp; 
-				int longitud=zeng_send_snapshot_longitud;
+  				
 
-  				//save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
-
-				//printf ("longitud: %d\n",longitud);
-
-				printf ("Sending put-snapshot length: %d\n",longitud);
+				//printf ("Sending put-snapshot length: %d\n",longitud);
+				printf ("Sending put-snapshot\n");
 				z_sock_write_string(socket,"put-snapshot ");
 
-				int i;
-				char *buffer_put_snapshot_temp;
-				buffer_put_snapshot_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
+				//int i;
 
-				int char_destino=0;
+
+				//zend_send_snapshot_mem_hexa=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
+
+				//int char_destino=0;
 
 		
-				for (i=0;i<longitud;i++,char_destino +=2) {
-					sprintf (&buffer_put_snapshot_temp[char_destino],"%02X",zeng_send_snapshot_mem[i]);
-				}
+				//for (i=0;i<longitud;i++,char_destino +=2) {
+				//	sprintf (&zend_send_snapshot_mem_hexa[char_destino],"%02X",zeng_send_snapshot_mem[i]);
+				//}
 
 				//metemos salto de linea al final
-				strcpy (&buffer_put_snapshot_temp[char_destino],"\n");
+				//strcpy (&zend_send_snapshot_mem_hexa[char_destino],"\n");
+
+
 
 				//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
-				z_sock_write_string(socket,buffer_put_snapshot_temp);
+				z_sock_write_string(socket,zend_send_snapshot_mem_hexa);
 
-				free(buffer_put_snapshot_temp);
+				free(zend_send_snapshot_mem_hexa);
 
 				//z_sock_write_string(indice_socket,"\n");
 
@@ -427,9 +431,33 @@ void zeng_send_snapshot_if_needed(void)
 					zeng_send_snapshot_longitud=longitud;
 				
 
-					printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",zeng_send_snapshot_longitud);
+					
+
+
+				int i;
+
+				//int longitud=zeng_send_snapshot_longitud;
+
+
+				zend_send_snapshot_mem_hexa=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); //16 MB es mas que suficiente
+
+				int char_destino=0;
+
+		
+				for (i=0;i<longitud;i++,char_destino +=2) {
+					sprintf (&zend_send_snapshot_mem_hexa[char_destino],"%02X",zeng_send_snapshot_mem[i]);
+				}
+
+				//metemos salto de linea al final
+				strcpy (&zend_send_snapshot_mem_hexa[char_destino],"\n");
+
+
+				printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",zeng_send_snapshot_longitud);
+
 
 					zeng_send_snapshot_pending=1;
+
+
 				}
 		}
 	}

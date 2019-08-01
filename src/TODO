@@ -53,7 +53,6 @@ estos no deberian generar doble evento (joystick y tecla)
 
 *que pregunte confirmacion en destino si quiere aceptar
 *ZRCP que haga log de la ip de origen que se conecta
-*que conecte solo si numero de version es igual la remota a la local
 *snapshot para enviar a remoto se deberia procesar tambien el comando "put-snapshot XXXX"
 antes del hilo de envio 
 
