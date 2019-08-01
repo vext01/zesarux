@@ -60,7 +60,7 @@ pthread_t thread_zeng;
 
 zeng_key_presses zeng_key_presses_array[ZENG_FIFO_SIZE];
 
-int zeng_remote_socket;
+int zeng_remote_socket=-1;
 
 
 //Tamanyo de la fifo
@@ -201,6 +201,9 @@ void zeng_send_key_event(enum util_teclas tecla,int pressrelease)
 int zeng_connect_remote(void)
 {
 
+		//Inicialmente desconectado
+		zeng_remote_socket=-1;
+
 		int indice_socket=z_sock_open_connection(zeng_remote_hostname,zeng_remote_port);
 
 		if (indice_socket<0) {
@@ -208,13 +211,13 @@ int zeng_connect_remote(void)
 			return 0;
 		}
 
-		 
+		 int posicion_command;
 		
 		//Leer algo
 		char buffer[200];
 
 		//int leidos=z_sock_read(indice_socket,buffer,199);
-		int leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199);
+		int leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199,&posicion_command);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			//printf("Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
@@ -229,11 +232,27 @@ int zeng_connect_remote(void)
 
  
 		//reintentar
-		leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199);
+		leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199,&posicion_command);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			printf("Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
 		}		
+
+		//1 mas para eliminar el salto de linea anterior a "command>"
+		if (posicion_command>=1) {
+			buffer[posicion_command-1]=0;
+			printf ("Recibida version: %s\n",buffer);
+		}
+		else {
+			debug_printf (VERBOSE_ERR,"Error receiving ZEsarUX remote version");
+			return 0;
+		}
+
+		//Comprobar que version remota sea como local
+		if (strcasecmp(EMULATOR_VERSION,buffer)) {
+			debug_printf (VERBOSE_ERR,"Local and remote ZEsarUX versions do not match");
+			return 0;
+		}
 
 		//escribir_socket(misocket,"Waiting until command prompt final");
 		//printf("Waiting until command prompt final\n");
@@ -261,6 +280,8 @@ void zeng_send_snapshot(int socket)
 {
 	//Enviar snapshot cada 20*250=5000 ms->5 segundos
 		printf ("Enviando snapshot\n");
+
+		int posicion_command;
 
 				//z80_byte *buffer_temp;
 				//buffer_temp=zeng_send_snapshot_mem;
@@ -305,7 +326,7 @@ void zeng_send_snapshot(int socket)
 
 				z80_byte buffer[200];
 				//Leer hasta prompt
-				 int leidos=zsock_read_all_until_command(socket,buffer,199);
+				 int leidos=zsock_read_all_until_command(socket,buffer,199,&posicion_command);
 
 		
 }
@@ -358,7 +379,8 @@ Poder enviar mensajes a otros jugadores
 				z80_byte buffer[200];
 
 				//Leer hasta prompt
-				int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199);
+				int posicion_command;
+				int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
 
 
 		}
@@ -416,7 +438,11 @@ void zeng_enable(void)
 #ifdef USE_PTHREADS
 
 	//Conectar a remoto
-	if (!zeng_connect_remote()) return;
+	if (!zeng_connect_remote()) {
+		//Desconectar solo si el socket estaba conectado
+		if (zeng_remote_socket>=0) zeng_disconnect_remote();
+		return;
+	}
 
 
 	//Inicializar thread

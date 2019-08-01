@@ -2053,8 +2053,9 @@ void menu_footer_z88(void)
 	//menu_putstring_footer(0,0,get_machine_name(current_machine_type),WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 
 	//borramos esa zona primero
-	//                         01234567890123456789012345678901
-	menu_putstring_footer(0,2,"                                ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+
+	menu_footer_clear_bottom_line();
+	
 	int i;
 	for (i=1;i<=3;i++) {
 		if (z88_memory_slots[i].size==0) sprintf (nombre_tarjeta," Empty ");
@@ -2157,6 +2158,13 @@ void menu_footer_bottom_line(void)
 	menu_footer_zesarux_emulator();
 }
 
+void menu_footer_clear_bottom_line(void)
+{
+
+	//                         01234567890123456789012345678901
+	menu_putstring_footer(0,2,"                                ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+
+}
 
 //Escribir textos iniciales en el footer
 void menu_init_footer(void)

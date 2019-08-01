@@ -544,6 +544,7 @@ extern void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte
 //extern void putchar_menu_second_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel);
 extern void new_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel);
 extern void menu_putstring_footer(int x,int y,char *texto,z80_byte tinta,z80_byte papel);
+extern void menu_footer_clear_bottom_line(void);
 extern void cls_menu_overlay(void);
 extern int menu_multitarea;
 extern int menu_abierto;

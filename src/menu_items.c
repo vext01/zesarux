@@ -16341,7 +16341,11 @@ void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
 		zeng_disable();
 	}
 	else {
+		menu_footer_clear_bottom_line();
+		menu_putstring_footer(0,2,"Connecting to remote...",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+		all_interlace_scr_refresca_pantalla();
 		zeng_enable();
+		menu_footer_bottom_line();
 	}
 }
 
@@ -16444,7 +16448,7 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_master,menu_zeng_host_cond,"[%c] Master",(zeng_i_am_master ? 'X' : ' ') );
 
 			if (zeng_i_am_master) {
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,menu_zeng_host_cond,"[%d] Snapshot seconds",segundos_cada_snapshot);
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,NULL,"[%d] Snapshot seconds",segundos_cada_snapshot);
 			}
                        
 						

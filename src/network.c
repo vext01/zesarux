@@ -378,6 +378,9 @@ int z_sock_open_connection(char *host,int port)
 
 int get_socket_number(int indice_tabla)
 {
+
+	if (indice_tabla<0 || indice_tabla>=MAX_Z_SOCKETS) return -1;
+
 	if (!sockets_list[indice_tabla].used) {
 				return -1;
 	}	
@@ -392,9 +395,10 @@ int z_sock_close_connection(int indice_tabla)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                debug_printf(VERBOSE_ERR,"Socket is not open");
+                //debug_printf(VERBOSE_ERR,"Socket is not open");
 				return -1;
 	}
+
 
 	sockets_list[indice_tabla].used=0;
 
@@ -499,12 +503,15 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 
 }
 
-
-int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffer)
+//devuelve en posicion_command donde empieza el "command>", si es >=0
+int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffer,int *posicion_command)
 {
 
 	//Leemos hasta que no haya mas datos para leer. Idealmente estara el "command> "
 	int leidos;
+
+	//Inicialmente no sabemos la posicion del command>
+	*posicion_command=-1;
 
 	int sock=get_socket_number(indice_tabla);
 
@@ -542,6 +549,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 			//printf ("Leido al final: [%c%c]\n",buffer[total_leidos-2],buffer[total_leidos-1]);
 			if (buffer[total_leidos-1]==' ' && buffer[total_leidos-2]=='>') {
 				leido_command_prompt=1;
+				*posicion_command=total_leidos-9;
 				//printf ("Recibido command prompt\n");
 			}
 		}
