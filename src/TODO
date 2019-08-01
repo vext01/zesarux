@@ -28,6 +28,10 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 con 2: international match day se puede jugar bien
 target renegade se desfasa muy seguido
 
+-que al activar ZENG, active ZRCP si no esta
+
+-que permita ZENG en todos los cores de maquinas
+
 *que se guarde la config de los parametros
 
 *revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
