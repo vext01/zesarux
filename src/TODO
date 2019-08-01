@@ -56,16 +56,17 @@ estos no deberian generar doble evento (joystick y tecla)
 *en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc
 Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZRCP_GET_PUT_SNAPSHOT_MEM
 
-*quiza cuando envia el snapshot habria que pausar el master??
+
 *semaforos en fifo zeng
 *parar thread zeng y cerrar socket zeng al salir emulador
 *network: en windows siempre retorna datos disponibles.
-*asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado
+*asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado. Ya lee version pero quiza 
+habria que hacer que leyera el primer prompt correcto
 *gestionar cortes de socket
 *envio de mensajes-> que los muestre en el footer en destino
 *mejor gestion de envio mensajes por ZRCP
-*bucle de envio bajar el sleep de 10 ms a 5 ms?
-*lo ideal seria que al enviar tecla, no se envie la tecla en local hasta que el remoto la haya recibido
+*lo ideal seria que al enviar tecla, no se envie la tecla en local hasta que el remoto la haya recibido??
+*quiza cuando envia el snapshot habria que pausar el master??
 *realjoystick_set_reset_key: quiza ahi deberia llamar a util_set_reset_key_continue, para que lo procese directamente zeng, y quitar
 zeng_send_key_event de la funcion realjoystick_set_reset_key
 
