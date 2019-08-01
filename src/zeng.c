@@ -409,22 +409,28 @@ void zeng_send_snapshot_if_needed(void)
 		contador_envio_snapshot++;
 		//printf ("%d %d\n",contador_envio_snapshot,(contador_envio_snapshot % (50*segundos_cada_snapshot) ));
 		if ( (contador_envio_snapshot % (50*segundos_cada_snapshot) )==0) { //cada 5 segundos
-				z80_byte *buffer_temp;
-				buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
-				if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
+				//Si esta el anterior snapshot aun pendiente de enviar
+				if (zeng_send_snapshot_pending) {
+					printf ("Anterior snapshot aun no se ha enviado\n");
+				}
+				else {
+					z80_byte *buffer_temp;
+					buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
+					if (buffer_temp==NULL) cpu_panic("Can not allocate memory for get-snapshot");
 
-				//z80_byte *puntero=buffer_temp; 
-				int longitud;
+					//z80_byte *puntero=buffer_temp; 
+					int longitud;
 
-  				save_zsf_snapshot_file_mem(NULL,buffer_temp,&longitud);	
+  					save_zsf_snapshot_file_mem(NULL,buffer_temp,&longitud);	
 
-				zeng_send_snapshot_mem=buffer_temp;
-				zeng_send_snapshot_longitud=longitud;
+					zeng_send_snapshot_mem=buffer_temp;
+					zeng_send_snapshot_longitud=longitud;
 				
 
-				printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",zeng_send_snapshot_longitud);
+					printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",zeng_send_snapshot_longitud);
 
-				zeng_send_snapshot_pending=1;
+					zeng_send_snapshot_pending=1;
+				}
 		}
 	}
 }
@@ -438,6 +444,9 @@ void zeng_enable(void)
 	if (zeng_remote_hostname[0]==0) return;
 
 #ifdef USE_PTHREADS
+
+	//No hay pendiente snapshot
+	zeng_send_snapshot_pending=0;
 
 	//Conectar a remoto
 	if (!zeng_connect_remote()) {
