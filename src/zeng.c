@@ -76,7 +76,7 @@ int zeng_fifo_read_position=0;
 z80_bit zeng_enabled={0};
 
 //Hostname remoto
-char zeng_remote_hostname[MAX_ZENG_HOSTNAME]="127.0.0.1";
+char zeng_remote_hostname[MAX_ZENG_HOSTNAME]="";
 
 //Puerto remoto
 int zeng_remote_port=10000;
