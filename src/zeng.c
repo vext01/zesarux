@@ -403,6 +403,8 @@ Poder enviar mensajes a otros jugadores
 void zeng_send_snapshot_if_needed(void)
 {
 
+	if (zeng_enabled.v==0) return;
+
 	if (zeng_i_am_master) {
 		contador_envio_snapshot++;
 		//printf ("%d %d\n",contador_envio_snapshot,(contador_envio_snapshot % (50*segundos_cada_snapshot) ));
