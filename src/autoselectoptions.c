@@ -1306,6 +1306,14 @@ f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel
 
 void put_footer_first_message(char *mensaje)
 {
+
+	//Indices de desplazamiento a cero
+	indice_first_message_mostrado=indice_second_message_mostrado=0;
+
+	//Por defecto dejar los contadores a cero
+	tape_options_set_first_message_counter=0;
+	tape_options_set_second_message_counter=0;
+
         strcpy(mostrar_footer_first_message,mensaje);
        
 

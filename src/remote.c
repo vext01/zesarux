@@ -4344,6 +4344,7 @@ void interpreta_comando(char *comando,int misocket)
 				s++;
 			}
 
+			//printf ("i: %d\n",i);
 			mensaje[i]=0;
 
 			put_footer_first_message(mensaje);

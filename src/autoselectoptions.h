@@ -37,8 +37,8 @@ extern char *mostrar_footer_game_name;
 extern void autoselect_options_put_footer(void);
 extern char *mostrar_footer_second_message;
 
-extern char mostrar_footer_first_message[255];
-extern char mostrar_footer_first_message_mostrado[255];
+extern char mostrar_footer_first_message[];
+extern char mostrar_footer_first_message_mostrado[];
 
 extern int indice_first_message_mostrado;
 
