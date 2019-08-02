@@ -16427,6 +16427,28 @@ void menu_zeng_snapshot_seconds(MENU_ITEM_PARAMETERS)
 
 }
 
+
+void menu_zeng_send_message(MENU_ITEM_PARAMETERS)
+{
+	char string_mensaje[AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH];
+	string_mensaje[0]=0;
+
+	menu_ventana_scanf("Message?",string_mensaje,AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH);	
+
+	zeng_add_pending_send_message_footer(string_mensaje);
+}
+
+
+int menu_zeng_send_message_cond(void)
+{
+	//Si hay un mensaje pendiente de enviar, no permitir aun
+	//Comprobamos tambien que zeng_enabled.v, esto no se usa en menu pero si en tecla directa F
+	if (zeng_enabled.v==0) return 0;
+	if (pending_zeng_send_message_footer) return 0;
+
+	return 1;
+}
+
 void menu_zeng(MENU_ITEM_PARAMETERS)
 {
         //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
@@ -16449,6 +16471,10 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 
 			if (zeng_i_am_master) {
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,NULL,"[%d] Snapshot seconds",segundos_cada_snapshot);
+			}
+
+			if (zeng_enabled.v) {
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_send_message,menu_zeng_send_message_cond,"Send message");
 			}
                        
 						

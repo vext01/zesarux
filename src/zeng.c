@@ -34,6 +34,7 @@
 #include "zeng.h"
 #include "remote.h"
 #include "snap_zsf.h"
+#include "autoselectoptions.h"
 
 
 
@@ -84,6 +85,12 @@ int zeng_remote_port=10000;
 int segundos_cada_snapshot=2;
 
 int zeng_i_am_master=0;
+
+//Mensaje de envio a footer remoto
+//Con margen +100 de sobra para agregar el comando print-footer
+char zeng_send_message_footer[AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH+100];
+
+int pending_zeng_send_message_footer=0;
 
 
 int zeng_next_position(int pos)
@@ -335,11 +342,12 @@ Para las rutinas zsock también haría falta semáforos pero como no voy a llama
 Poder enviar mensajes a otros jugadores 	
 	 */
 
-	int contador_veces=0;
+	//int contador_veces=0;
 
 	while (1) {
 		usleep(5000); //dormir 5 ms
 
+		//Si hay tecla pendiente de enviar
 		zeng_key_presses elemento;
 		while (!zeng_fifo_read_element(&elemento)) {
 			//printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
@@ -363,9 +371,22 @@ Poder enviar mensajes a otros jugadores
 
 		}
 
-		contador_veces++;
+		//Si hay mensaje pendiente de enviar
+		if (pending_zeng_send_message_footer) {
+			z_sock_write_string(zeng_remote_socket,zeng_send_message_footer);
 
+			//Leer hasta prompt
+			int posicion_command;
+			z80_byte buffer[200];
+			int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
+			
+			pending_zeng_send_message_footer=0;
 
+		}
+
+		//contador_veces++;
+
+		//Si hay snapshot pendiente de enviar
 		if (zeng_i_am_master) {
 			if (zeng_send_snapshot_pending && zeng_send_snapshot_mem_hexa!=NULL) {
 				zeng_send_snapshot(zeng_remote_socket);
@@ -509,6 +530,16 @@ void zeng_disable(void)
 #endif
 
 
+}
+
+void zeng_add_pending_send_message_footer(char *mensaje)
+{
+
+	if (!pending_zeng_send_message_footer) {
+		sprintf(zeng_send_message_footer,"print-footer %s\n",mensaje);
+		pending_zeng_send_message_footer=1;
+		printf ("Poniendo en cola enviar mensaje a remoto: %s\n",mensaje);
+	}
 
 }
 

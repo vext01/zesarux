@@ -173,6 +173,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Quicksave",F_FUNCION_QUICKSAVE},
 	{"LoadBinary",F_FUNCION_LOADBINARY},
 	{"SaveBinary",F_FUNCION_SAVEBINARY},
+	{"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE},
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD},
 	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD},
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER},
@@ -27583,6 +27584,10 @@ void menu_process_f_functions_by_action(int accion)
 
 		case F_FUNCION_SAVEBINARY:
 			menu_debug_save_binary(0);
+		break;
+
+		case F_FUNCION_ZENG_SENDMESSAGE:
+			if (menu_zeng_send_message_cond()) menu_zeng_send_message(0);
 		break;
 
 		case F_FUNCION_OSDKEYBOARD:
