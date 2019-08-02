@@ -90,40 +90,6 @@ Quizá se podría hacer un programa aparte para probar la sincronización. Sin t
 
 De ahí ir puliendo posibles problemas, como el cierre del emulador cuando se corta un comando ZRCP
 
-Luego agregar el envío de teclas de 2 a 1
-
-Aunque... como se envían las teclas? 
-Si envío estado puertos cada 1/50 segundos:
--si pulso tecla A en 1, y tecla B en 2, al copiar de 1 a 2, la tecla B en 2 estará sin pulsar, solo la A
-
-Habría que hacer un comando nuevo que en vez de cambiar el puerto de tecla tal cual, tenga en cuenta pulsaciones actuales. Es decir, hacer un AND de cada valor de puerto:
-
-Ejemplo:
-En 1, tecla A. Puerto inventado 65278 
-Valor: 11110
-
-En 2, tecla B. Puerto inventado 65278
-Valor: 11101
-
-Al hacer el and en destino queda:
-11100
-Resultado: tecla A y B pulsadas :)
-
-
-Para valores joystick, hacer OR:
-
-00001
-00010
-
-Resulta: 00011
-
-Realmente el envío de teclas tiene que hacerlo así:
-
--Cuando hay un press o Release, enviar lo mismo a través de red, un press o release de un código de tecla
-
-Había otra alternativa y era tener un estado de los puertos aparte, que se copie con los valores del otro nodo solamente. Luego al leer teclas en el emulador tendría que combinar con AND las dos tablas. Quizá resulte un poco lío tener que mezclar los dos.... o no? Pero me evitaría tener que enviar pulsaciones/liberaciones de teclas, y lo podría enviar a intervalos regulares el estado de teclas tal cual
-
-Inconveniente: creo que no funcionaría bien en un supuesto partida de triples o cuatro personas o más...
 
 -bugs: parece que las pruebas de test-socket no siempre obtiene numero de version . por que?
 A veces cierra el nodo remoto

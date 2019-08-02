@@ -507,6 +507,8 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffer,int *posicion_command)
 {
 
+	//printf ("inicio zsock_read_all_until_command\n");
+
 	//Leemos hasta que no haya mas datos para leer. Idealmente estara el "command> "
 	int leidos;
 
@@ -516,6 +518,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
+		//printf ("Socket is not open\n");
         debug_printf(VERBOSE_ERR,"Socket is not open");
 		return -1;
 	}	
@@ -525,6 +528,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 	int total_leidos=0;
 	int leido_command_prompt=0;
 	int reintentos=0;
+	//printf ("entrando bucle zsock_read_all_until_command\n");
 	do {
 
 		do {

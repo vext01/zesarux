@@ -360,13 +360,26 @@ Poder enviar mensajes a otros jugadores
 				char buffer_comando[256];
 				sprintf(buffer_comando,"send-keys-event %d %d\n",elemento.tecla,elemento.pressrelease);
 
-				z_sock_write_string(zeng_remote_socket,buffer_comando);
+				int escritos=z_sock_write_string(zeng_remote_socket,buffer_comando);
+
+				//printf ("despues de enviar send-keys. escritos en write string: %d\n",escritos);
+
+				/*
+				pruebas
+				if (escritos<0) {
+					//printf ("Error sending to socket\n");
+					//Aqui cerramos el thread desde mismo dentro del thread
+					zeng_disable();
+
+				}*/
 
 				z80_byte buffer[200];
 
 				//Leer hasta prompt
 				int posicion_command;
 				int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
+
+				//printf ("despues de leer hasta command prompt\n");
 
 
 		}
