@@ -45,6 +45,11 @@ extern int indice_first_message_mostrado;
 extern int indice_second_message_mostrado;
 
 extern void tape_options_corta_a_32(char *s);
+extern void put_footer_first_message(char *mensaje);
+
+
+#define AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH 255
+
 
 
 

@@ -7,6 +7,7 @@ Added ZRCP commands:
 -set-ui-io-ports: to change keyboard state and joystick
 -get-ui-io-ports: to get keyboard state and joystick
 -get-snapshot: get a ZSF snapshot from ZRCP
+-print-footer: print message on footer
 -put-snapshot: put a ZSF snapshot from ZRCP
 -send-keys-event: simulates key press/release
 -test-tcp-connect: testing tcp connection

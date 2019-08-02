@@ -111,14 +111,14 @@ int tape_options_set_second_message_counter=0;
 char *mostrar_footer_game_name;
 
 //Nombre del juego. donde se guarda el texto final
-char texto_mostrar_footer_game_name[255];
+char texto_mostrar_footer_game_name[AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH];
 
 //texto mostrado en pantalla para primer mensaje.
 //aunque en teoria deberia ser de 32, lo hacemos mayor porque se usa como buffer temporal y puede exceder 32
-char mostrar_footer_first_message_mostrado[255];
+char mostrar_footer_first_message_mostrado[AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH];
 
 //texto entero para el primer mensaje
-char mostrar_footer_first_message[255];
+char mostrar_footer_first_message[AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH];
 
 //Indices de texto mostrado. Usados cuando hay que desplazar texto hacia la izquierda porque no cabe
 int indice_first_message_mostrado,indice_second_message_mostrado;
@@ -1301,6 +1301,26 @@ f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel
 	}
 
 
+}
+
+
+void put_footer_first_message(char *mensaje)
+{
+        strcpy(mostrar_footer_first_message,mensaje);
+       
+
+		//Texto mostrado
+		sprintf (mostrar_footer_first_message_mostrado,"%s",mostrar_footer_first_message);
+
+		//Cortar a 32
+		tape_options_corta_a_32(mostrar_footer_first_message_mostrado);
+
+		tape_options_set_first_message_counter=4;
+
+		autoselect_options_put_footer();
+
+		
+	
 }
 
 //Pone el footer segun lo que corresponda, si primer mensaje o segundo mensaje activo

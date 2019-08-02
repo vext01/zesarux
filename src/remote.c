@@ -56,6 +56,7 @@
 #include "expression_parser.h"
 #include "joystick.h"
 #include "snap_zsf.h"
+#include "autoselectoptions.h"
 
 
 
@@ -707,6 +708,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"load-source-code","|lsc","file","Load source file to be used on disassemble opcode functions"},
 	{"ls",NULL,NULL,"Minimal command list"},
 	{"noop",NULL,NULL,"This command does nothing"},
+	{"print-footer",NULL,"message","Prints message on footer"},
 	{"put-snapshot",NULL,NULL,"Puts a zsf snapshot from console. Contents must be hexadecimal characters without spaces"}, 
   {"quit","|exit|logout",NULL,"Closes connection"},
 	{"read-memory",NULL,"[address] [length]","Dumps memory at address. "
@@ -4321,6 +4323,36 @@ void interpreta_comando(char *comando,int misocket)
 	else if (!strcmp(comando_sin_parametros,"noop")) {
 		//No hacer absolutamente nada
 	}
+
+
+	else if (!strcmp(comando_sin_parametros,"print-footer") ) {
+		
+		if (parametros[0]==0) {
+			escribir_socket(misocket,"ERROR. No message set");
+		}
+
+		else {
+
+			char *s=parametros;
+			int parametros_recibidos=0;
+			int i=0;
+
+			char mensaje[AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH];
+	
+			while (*s && i<AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH-1) {
+				mensaje[i++]=*s;
+				s++;
+			}
+
+			mensaje[i]=0;
+
+			put_footer_first_message(mensaje);
+			
+
+
+		}
+
+	}	
 
 //Este comando se usa (o se usara) en la funcion de juegos online
 	else if (!strcmp(comando_sin_parametros,"put-snapshot") ) {
