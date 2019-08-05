@@ -12,6 +12,8 @@ Added ZRCP commands:
 -send-keys-event: simulates key press/release
 -test-tcp-connect: testing tcp connection
 
+-Added Borland Gui Style
+
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
 Improved file selector: when asking for a directory, only shows directories, not files

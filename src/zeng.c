@@ -445,7 +445,7 @@ Poder enviar mensajes a otros jugadores
 		}
 
 		if (error_desconectar) {
-			debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling zeng");
+			debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling ZENG");
 
 			//Aqui cerramos el thread desde mismo dentro del thread
 			zeng_disable_forced();	

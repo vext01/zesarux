@@ -573,11 +573,25 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		1+8,7+8, 		//Colores para opcion seleccionada
 		7,2,1+8,2, 	//Colores para opcion no disponible
 		7+8,0,        	//Colores para el titulo y linea recuadro ventana
-		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+		7,0,    	//Colores para el titulo y linea recuadro ventana inactiva
 		0,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7,		//Color para opcion marcada
 		'.',
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		},
+
+{"Borland",1,7+8,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		4,1, 		//Colores para opcion seleccionada
+		1,7,7,1, 	//Colores para opcion no disponible
+		7+8,0,        	//Colores para el titulo y linea recuadro ventana
+		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		2,7+8,		//Color para opcion marcada
+		'*',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
