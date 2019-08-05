@@ -327,7 +327,7 @@ int esxdos_handler_get_attr_etc(char *nombre,z80_int puntero,z80_byte *atributo)
 
 	z80_long_int l=longitud_total;
 
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: lenght file: %d",l);
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: length file: %d",l);
 	esxdos_handler_fill_size_struct(puntero+4,l);
 
 	return 0;
@@ -1274,7 +1274,7 @@ int esxdos_handler_string_to_msdos(char *fullname,z80_int puntero)
 	poke_byte_no_time(puntero+i,0);
 	i++;
 
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: lenght name: %d",i);
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: length name: %d",i);
 	//if (i<11) poke_byte_no_time(puntero+i,0);
 
 	//return 12;

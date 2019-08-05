@@ -602,7 +602,7 @@ struct s_items_ayuda items_ayuda[]={
 	"get-elapsed-track: Prints elapsed track time in 1/50 of seconds\n"
 	"get-misc:          Prints misc information\n"
 	"get-total-tracks:  Prints total tracks\n"
-	"get-track-length:  Prints track lenght in 1/50 of seconds\n"
+	"get-track-length:  Prints track length in 1/50 of seconds\n"
 	"get-track-name:    Prints track name\n"
 	"get-track-number:  Prints current track number\n"
 
@@ -693,8 +693,8 @@ struct s_items_ayuda items_ayuda[]={
 #endif
   {"hard-reset-cpu",NULL,NULL,"Hard resets the machine"},
   {"help","|?","[command]","Shows help screen or command help"},
-	{"hexdump","|h","pointer lenght","Dumps memory at address, showing hex and ascii."},
-	{"hexdump-internal",NULL,"pointer lenght [offset]","Dumps internal memory (hexadecimal and ascii) for a given memory pointer. "
+	{"hexdump","|h","pointer length","Dumps memory at address, showing hex and ascii."},
+	{"hexdump-internal",NULL,"pointer length [offset]","Dumps internal memory (hexadecimal and ascii) for a given memory pointer. "
 							"Pointer can be:\n"
 							"diviface_memory: where divide/divmmc firmware and ram is located\n"
 							"emulator_memory: usually includes RAM+ROM emulated machine\n"
@@ -713,7 +713,7 @@ struct s_items_ayuda items_ayuda[]={
   {"quit","|exit|logout",NULL,"Closes connection"},
 	{"read-memory",NULL,"[address] [length]","Dumps memory at address. "
 																				"It not specify address, dumps all memory for current memory zone: 64 KB for mapped memory on Z80, 16 kb for Spectrum 48KB ROM, etc. "
-																				"If specify address but not lenght, only 1 byte is read"
+																				"If specify address but not length, only 1 byte is read"
 	},
   {"reset-cpu",NULL,NULL,"Resets CPU"},
 	{"reset-tstates-partial",NULL,NULL,"Resets the t-states partial counter"},
@@ -725,7 +725,7 @@ struct s_items_ayuda items_ayuda[]={
 	"The parameters can be written in different order, for example:\nrun verbose\nor\nrun 100\nor\nrun verbose 100\n"
    "Notice this command does not run the usual cpu loop, instead it is controlled from ZRCP. If you close the connection, the run loop will die\n"
 	 },
-	{"save-binary-internal",NULL,"pointer lenght file [offset]","Dumps internal memory to file for a given memory pointer. "
+	{"save-binary-internal",NULL,"pointer length file [offset]","Dumps internal memory to file for a given memory pointer. "
 				"Pointer can be any of the hexdump-internal command\n"
 				"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
 
@@ -3421,11 +3421,11 @@ void interpreta_comando(char *comando,int misocket)
 	int longitud_comando=strlen(comando);
 
 	if (longitud_comando<DEBUG_MAX_MESSAGE_LENGTH) {
-		debug_printf (VERBOSE_DEBUG,"Remote command: lenght: %d [%s]",longitud_comando,comando);
+		debug_printf (VERBOSE_DEBUG,"Remote command: length: %d [%s]",longitud_comando,comando);
 	}
 
 	else {
-		debug_printf (VERBOSE_DEBUG,"Remote command: lenght: %d",longitud_comando);
+		debug_printf (VERBOSE_DEBUG,"Remote command: length: %d",longitud_comando);
 	}
 
 	//Si enter y setting de repetir comando anterior solo pulsando enter
@@ -3434,7 +3434,7 @@ void interpreta_comando(char *comando,int misocket)
 		(remote_debug_settings&16)
 		) {
 		strcpy(comando,buffer_lectura_socket_anterior);
-		debug_printf (VERBOSE_DEBUG,"Repeating last command: lenght: %d [%s]",strlen(comando),comando);
+		debug_printf (VERBOSE_DEBUG,"Repeating last command: length: %d [%s]",strlen(comando),comando);
 		escribir_socket_format(misocket,"Repeating: %s\n",comando);
 	}
 
@@ -3497,13 +3497,13 @@ void interpreta_comando(char *comando,int misocket)
 
 	parametros[pindex]=0;
 
-	debug_printf (VERBOSE_DEBUG,"Remote command without parameters: lenght: %d [%s]",strlen(comando_sin_parametros),comando_sin_parametros);
+	debug_printf (VERBOSE_DEBUG,"Remote command without parameters: length: %d [%s]",strlen(comando_sin_parametros),comando_sin_parametros);
 
 	if (strlen(parametros)<DEBUG_MAX_MESSAGE_LENGTH) {
-		debug_printf (VERBOSE_DEBUG,"Remote command parameters: lenght: %d [%s]",strlen(parametros),parametros);
+		debug_printf (VERBOSE_DEBUG,"Remote command parameters: length: %d [%s]",strlen(parametros),parametros);
 	}
 	else {
-		debug_printf (VERBOSE_DEBUG,"Remote command parameters: lenght: %d",strlen(parametros));
+		debug_printf (VERBOSE_DEBUG,"Remote command parameters: length: %d",strlen(parametros));
 	}
 
 

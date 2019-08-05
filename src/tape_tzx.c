@@ -249,7 +249,7 @@ int tape_block_tzx_read(void *dir,int longitud)
 					//leemos longitud
 					z80_byte tzx_text_longitud;
 					fread(&tzx_text_longitud,1,1,ptr_mycinta_tzx);
-					debug_printf(VERBOSE_DEBUG,"TZX Block lenght: %d",tzx_text_longitud);
+					debug_printf(VERBOSE_DEBUG,"TZX Block length: %d",tzx_text_longitud);
 					z80_byte read_buffer[256];
 					fread(read_buffer,1,tzx_text_longitud,ptr_mycinta_tzx);
 					read_buffer[tzx_text_longitud]=0;

@@ -13826,7 +13826,7 @@ void menu_dandanator_rom_file(MENU_ITEM_PARAMETERS)
                         //Comprobar aqui tambien el tamanyo
                         long int size=get_file_size(dandanator_rom_file_name);
                         if (size!=DANDANATOR_SIZE) {
-                                menu_error_message("ROM file must be 512 KB lenght");
+                                menu_error_message("ROM file must be 512 KB length");
                                 dandanator_rom_file_name[0]=0;
                                 return;
                         }
@@ -13952,7 +13952,7 @@ void menu_kartusho_rom_file(MENU_ITEM_PARAMETERS)
                         //Comprobar aqui tambien el tamanyo
                         long int size=get_file_size(kartusho_rom_file_name);
                         if (size!=KARTUSHO_SIZE) {
-                                menu_error_message("ROM file must be 512 KB lenght");
+                                menu_error_message("ROM file must be 512 KB length");
                                 kartusho_rom_file_name[0]=0;
                                 return;
                         }
@@ -14282,7 +14282,7 @@ void menu_superupgrade_rom_file(MENU_ITEM_PARAMETERS)
                         //Comprobar aqui tambien el tamanyo
                         long int size=get_file_size(superupgrade_rom_file_name);
                         if (size!=SUPERUPGRADE_ROM_SIZE) {
-                                menu_error_message("Flash file must be 512 KB lenght");
+                                menu_error_message("Flash file must be 512 KB length");
                                 superupgrade_rom_file_name[0]=0;
                                 return;
                         }
@@ -16153,7 +16153,7 @@ void menu_multiface_rom_file(MENU_ITEM_PARAMETERS)
                         //Comprobar aqui tambien el tamanyo
                         long int size=get_file_size(multiface_rom_file_name);
                         if (size!=8192) {
-                                menu_error_message("ROM file must be 8 KB lenght");
+                                menu_error_message("ROM file must be 8 KB length");
                                 multiface_rom_file_name[0]=0;
                                 return;
                         }

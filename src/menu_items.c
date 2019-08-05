@@ -6418,7 +6418,7 @@ void menu_debug_dma_tsconf_zxuno_overlay(void)
 		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
 
-		sprintf (texto_dma,"Burst lenght: %3d",debug_tsconf_dma_burst_length);
+		sprintf (texto_dma,"Burst length: %3d",debug_tsconf_dma_burst_length);
 		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
 
@@ -7968,7 +7968,7 @@ void menu_display_timex_video(MENU_ITEM_PARAMETERS)
 void menu_display_minimo_vsync(MENU_ITEM_PARAMETERS)
 {
 
-        menu_hardware_advanced_input_value(100,999,"Minimum vsync lenght",&minimo_duracion_vsync);
+        menu_hardware_advanced_input_value(100,999,"Minimum vsync length",&minimo_duracion_vsync);
 }
 
 void menu_display_timex_video_512192(MENU_ITEM_PARAMETERS)
@@ -8714,9 +8714,9 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Video horizontal image offset, usually you don't need to change this");
 
 
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_minimo_vsync,menu_cond_zx8081_realvideo,"[%d] Video min. vsync lenght",minimo_duracion_vsync);
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Video minimum vsync lenght in t-states");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Video minimum vsync lenght in t-states");
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_minimo_vsync,menu_cond_zx8081_realvideo,"[%d] Video min. vsync length",minimo_duracion_vsync);
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Video minimum vsync length in t-states");
+			menu_add_item_menu_ayuda(array_menu_settings_display,"Video minimum vsync length in t-states");
 
 
                         menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_wrx,NULL,"[%c] Autodetect WRX",(autodetect_wrx.v==1 ? 'X' : ' '));

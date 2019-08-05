@@ -1426,7 +1426,7 @@ printf (
 
 		"--ayplayer-end-exit        Exit emulator when end playing current ay file\n"
 		"--ayplayer-end-no-repeat   Do not repeat playing from the beginning when end playing current ay file\n"
-		"--ayplayer-inf-length n    Limit to n seconds to ay tracks with infinite lenght\n"
+		"--ayplayer-inf-length n    Limit to n seconds to ay tracks with infinite length\n"
 		"--ayplayer-any-length n    Limit to n seconds to all ay tracks\n"
 		"--ayplayer-cpc             Set AY Player to CPC mode (default: Spectrum)\n"
 		"--enable-midi              Enable midi output\n"
@@ -1512,7 +1512,7 @@ printf (
 		"--enablezgx                Enable ZGX Sprite chip\n"
 		"--autodetectwrx            Enable WRX autodetect setting on ZX80/ZX81\n"
 		"--wrx                      Enable WRX mode on ZX80/ZX81\n"
-		"--vsync-minimum-length n   Set ZX80/81 Vsync minimum lenght in t-states (minimum 100, maximum 999)\n"
+		"--vsync-minimum-length n   Set ZX80/81 Vsync minimum length in t-states (minimum 100, maximum 999)\n"
 		"--chroma81                 Enable Chroma81 support on ZX80/ZX81\n"
 		"--videozx8081 n            Emulate ZX80/81 Display on Spectrum. n=pixel threshold (1..16. 4=normal)\n"
 		"--videofastblack           Emulate black screen on fast mode on ZX80/ZX81\n"
@@ -5288,7 +5288,7 @@ int parse_cmdline_options(void) {
 		                siguiente_parametro_argumento();
                                 int valor=atoi(argv[puntero_parametro]);
                                 if (valor<100 || valor>999) {
-                                        printf ("Invalid vsync lenght value\n");
+                                        printf ("Invalid vsync length value\n");
                                         exit(1);
                                 }
                                 command_line_vsync_minimum_lenght=valor;

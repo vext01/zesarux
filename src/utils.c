@@ -8130,7 +8130,7 @@ void parse_customfile_options(void)
                                 siguiente_parametro_argumento();
                                 int valor=atoi(argv[puntero_parametro]);
                                 if (valor<100 || valor>999) {
-                                        debug_printf (VERBOSE_ERR,"Invalid vsync lenght value");
+                                        debug_printf (VERBOSE_ERR,"Invalid vsync length value");
                                         return;
                                 }
                                 minimo_duracion_vsync=valor;

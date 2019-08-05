@@ -2845,7 +2845,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           unsigned int longitud=m68k_get_reg(NULL,M68K_REG_D2);
 
 
-            debug_printf (VERBOSE_PARANOID,"Loading file at address %05XH with lenght: %d",m68k_get_reg(NULL,M68K_REG_A1),longitud);
+            debug_printf (VERBOSE_PARANOID,"Loading file at address %05XH with length: %d",m68k_get_reg(NULL,M68K_REG_A1),longitud);
             //void load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
 
              //Indicar actividad en md flp

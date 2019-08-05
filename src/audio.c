@@ -1702,7 +1702,7 @@ do {
 
 
 		if (bloque_direccion!=0) {
-			debug_printf (VERBOSE_DEBUG,"Block: %d address: %04XH lenght: %d offset in ay file: %d",
+			debug_printf (VERBOSE_DEBUG,"Block: %d address: %04XH length: %d offset in ay file: %d",
 				bloque,bloque_direccion,bloque_longitud,bloque_offset);
 
 			z80_int origen_archivo=pdata+4+bloque_offset;
