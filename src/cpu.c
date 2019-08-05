@@ -107,6 +107,7 @@
 #include "baseconf.h"
 #include "settings.h"
 #include "datagear.h"
+#include "network.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -4401,8 +4402,10 @@ void sigpipe_signal_handler(int sig)
 {
 	//Saltara por ejemplo cuando se escribe en un socket que se ha cerrado
 	//para evitar warnings al compilar
-	debug_printf (VERBOSE_DEBUG,"Received signal sigpipe");
 	sig++;
+	
+	debug_printf (VERBOSE_DEBUG,"Received signal sigpipe");
+
 
 }
 

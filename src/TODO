@@ -16,7 +16,23 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 
 -tabla de joystick to event siempre se resetea??
 
+-Tema gui Borland. Parecido en colores a ZXSpectr 
 
+-Ventana de error con tema cpc como se ven las franjas moverse?
+
+-Tipo de ventana que pueda cerrarse automáticamente cuando una condición (función) sea cierta 
+Puede servir para diálogos de espera de conexión a red
+Que haga sleep de medio segundo por ejemplo 
+
+-Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá errror si no hay bytes para leer?
+
+Ejemplos generales socket
+https://www.binarytides.com/socket-programming-c-linux-tutorial/
+
+
+-Funciones de thread para permitir petición web simple tipo descargar url etc 
+
+-Actualitza pantalla en connect ZENG tiene que llamar a actualizar en driver. Sino no va en x11 por ejemplo 
 
 
 -ZENG "ZEsarUX Network Gaming"
@@ -53,12 +69,16 @@ estos no deberian generar doble evento (joystick y tecla)
 Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZRCP_GET_PUT_SNAPSHOT_MEM
 
 
+*Quizá en sigpipe puede averiguar que socket ha fallado?
+Quizá sigpipe se puede gestionar diferente para cada thread?
+*Comando send-keys-event con parámetro tercero adicional que diga que si está menú abierto, no aceptar Tecla. Por defecto con dos parámetros, aceptar evento con menú abierto 
 *semaforos en fifo zeng
 *parar thread zeng y cerrar socket zeng al salir emulador
 *network: en windows siempre retorna datos disponibles.
 *asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado. Ya lee version pero quiza 
 habria que hacer que leyera el primer prompt correcto
-*gestionar cortes de socket
+*gestionar cortes de socket. hecho en envio de teclas, snapshot y mensajes
+*revisar ZRCP: ahora al gestionar sigpipe quiza ya no peta al desconectarse el socket remoto
 *envio de mensajes-> que los muestre en el footer en destino. hecho
 
 *lo ideal seria que al enviar tecla, no se envie la tecla en local hasta que el remoto la haya recibido??

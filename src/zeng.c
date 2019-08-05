@@ -288,30 +288,35 @@ int zeng_send_snapshot_pending=0;
 //zona memoria donde se guarda ya el snapshot con comando put-snapshot y valores hexadecimales
 char *zeng_send_snapshot_mem_hexa=NULL; //zeng_send_snapshot_mem_hexa
 
-void zeng_send_snapshot(int socket)
+int zeng_send_snapshot(int socket)
 {
 	//Enviar snapshot cada 20*250=5000 ms->5 segundos
 		printf ("Enviando snapshot\n");
 
 		int posicion_command;
+		int escritos,leidos;
 
 				
 			
 				printf ("Sending put-snapshot\n");
-				z_sock_write_string(socket,"put-snapshot ");
+				escritos=z_sock_write_string(socket,"put-snapshot ");
+				if (escritos<0) return escritos;
 			
 
 				//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
-				z_sock_write_string(socket,zeng_send_snapshot_mem_hexa);
+				escritos=z_sock_write_string(socket,zeng_send_snapshot_mem_hexa);
 
 				free(zeng_send_snapshot_mem_hexa);
 				zeng_send_snapshot_mem_hexa=NULL;
+
+				if (escritos<0) return escritos;
 
 			
 
 				z80_byte buffer[200];
 				//Leer hasta prompt
-				 int leidos=zsock_read_all_until_command(socket,buffer,199,&posicion_command);
+				leidos=zsock_read_all_until_command(socket,buffer,199,&posicion_command);
+				return leidos;
 
 		
 }
@@ -344,6 +349,10 @@ Poder enviar mensajes a otros jugadores
 
 
 	int escritos;
+	int leidos;
+
+	//error conectando zeng. desactivarlo si se produce
+	int error_desconectar=0;
 
 	//TODO: controlar otros errores de envio de snapshot y mensaje. Al igual que se hace con send-keys
 
@@ -354,7 +363,7 @@ Poder enviar mensajes a otros jugadores
 
 		//Si hay tecla pendiente de enviar
 		zeng_key_presses elemento;
-		while (!zeng_fifo_read_element(&elemento) ) {
+		while (!zeng_fifo_read_element(&elemento) && !error_desconectar) {
 			//printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
 
 			//command> help send-keys-event
@@ -372,12 +381,7 @@ Poder enviar mensajes a otros jugadores
 				
 				//Si ha habido error al escribir en socket
 				if (escritos<0) {
-					debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling zeng");
-
-					//Aqui cerramos el thread desde mismo dentro del thread
-					zeng_disable_forced();
-
-
+					error_desconectar=1;
 				}
 
 				else {
@@ -391,6 +395,11 @@ Poder enviar mensajes a otros jugadores
 					int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
 
 					//printf ("despues de leer hasta command prompt\n");
+
+					//Si ha habido error al leer de socket
+					if (leidos<0) {
+						error_desconectar=1;
+					}
 				}
 
 		}
@@ -398,26 +407,48 @@ Poder enviar mensajes a otros jugadores
 
 
 		//Si hay mensaje pendiente de enviar
-		if (pending_zeng_send_message_footer) {
-			z_sock_write_string(zeng_remote_socket,zeng_send_message_footer);
+		if (pending_zeng_send_message_footer && !error_desconectar) {
+			escritos=z_sock_write_string(zeng_remote_socket,zeng_send_message_footer);
 
-			//Leer hasta prompt
-			int posicion_command;
-			z80_byte buffer[200];
-			int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
+			//Si ha habido error al escribir en socket
+			if (escritos<0) {
+				error_desconectar=1;
+			}
+
+			else {
+				//Leer hasta prompt
+				int posicion_command;
+				z80_byte buffer[200];
+				leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
 			
-			pending_zeng_send_message_footer=0;
+				pending_zeng_send_message_footer=0;
+
+				//Si ha habido error al leer de socket
+				if (leidos<0) {
+						error_desconectar=1;
+				}
+			}
 
 		}
 
 
 
 		//Si hay snapshot pendiente de enviar
-		if (zeng_i_am_master) {
+		if (zeng_i_am_master && !error_desconectar) {
 			if (zeng_send_snapshot_pending && zeng_send_snapshot_mem_hexa!=NULL) {
-				zeng_send_snapshot(zeng_remote_socket);
+				int error=zeng_send_snapshot(zeng_remote_socket);
 				zeng_send_snapshot_pending=0;
+				if (error<0) {
+					error_desconectar=1;
+				}
 			}
+		}
+
+		if (error_desconectar) {
+			debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling zeng");
+
+			//Aqui cerramos el thread desde mismo dentro del thread
+			zeng_disable_forced();	
 		}
 	}
 }

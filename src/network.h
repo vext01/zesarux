@@ -49,6 +49,7 @@ extern void escribir_socket_format (int misocket, const char * format , ...);
 extern int assignar_adr_internet(int sock,char *host,unsigned short n_port);
 extern int connectar_socket(int s,struct sockaddr_in *adr);
 extern int cerrar_socket(int s);
+extern void init_network_tables(void);
 
 extern int z_sock_open_connection(char *host,int port);
 extern int z_sock_close_connection(int indice_tabla);
