@@ -59,6 +59,7 @@ extern int segundos_cada_snapshot;
 
 extern void zeng_add_pending_send_message_footer(char *mensaje);
 extern int pending_zeng_send_message_footer;
+extern void zeng_disable_forced(void);
 
 #define MAX_ZENG_HOSTNAME 256
 

@@ -342,47 +342,60 @@ Para las rutinas zsock también haría falta semáforos pero como no voy a llama
 Poder enviar mensajes a otros jugadores 	
 	 */
 
-	//int contador_veces=0;
+
+	int escritos;
+
+	//TODO: controlar otros errores de envio de snapshot y mensaje. Al igual que se hace con send-keys
 
 	while (1) {
 		usleep(5000); //dormir 5 ms
 
+
+
 		//Si hay tecla pendiente de enviar
 		zeng_key_presses elemento;
-		while (!zeng_fifo_read_element(&elemento)) {
+		while (!zeng_fifo_read_element(&elemento) ) {
 			//printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
 
 			//command> help send-keys-event
 			//Syntax: send-keys-event key event
 
-
 				//printf ("longitud: %d\n",longitud);
 				char buffer_comando[256];
 				sprintf(buffer_comando,"send-keys-event %d %d\n",elemento.tecla,elemento.pressrelease);
 
-				int escritos=z_sock_write_string(zeng_remote_socket,buffer_comando);
+				escritos=z_sock_write_string(zeng_remote_socket,buffer_comando);
+
 
 				//printf ("despues de enviar send-keys. escritos en write string: %d\n",escritos);
 
-				/*
-				pruebas
+				
+				//Si ha habido error al escribir en socket
 				if (escritos<0) {
-					//printf ("Error sending to socket\n");
+					debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling zeng");
+
 					//Aqui cerramos el thread desde mismo dentro del thread
-					zeng_disable();
+					zeng_disable_forced();
 
-				}*/
 
-				z80_byte buffer[200];
+				}
 
-				//Leer hasta prompt
-				int posicion_command;
-				int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
+				else {
 
-				//printf ("despues de leer hasta command prompt\n");
+					z80_byte buffer[200];
 
+					//Leer hasta prompt
+					int posicion_command;
+
+					//printf ("antes de leer hasta command prompt\n");
+					int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
+
+					//printf ("despues de leer hasta command prompt\n");
+				}
 
 		}
+
+
 
 		//Si hay mensaje pendiente de enviar
 		if (pending_zeng_send_message_footer) {
@@ -397,7 +410,7 @@ Poder enviar mensajes a otros jugadores
 
 		}
 
-		//contador_veces++;
+
 
 		//Si hay snapshot pendiente de enviar
 		if (zeng_i_am_master) {
@@ -510,9 +523,10 @@ void zeng_enable(void)
 
 }
 
+//desactivar zeng sin cerrar socket pues ha fallado la conexion
 
 
-void zeng_disable(void)
+void zeng_disable_normal(int forced)
 {
 
 	//ya  cerrado
@@ -525,7 +539,11 @@ void zeng_disable(void)
 
 
 	//Finalizar thread
+	//printf ("antes de pthread_cancel\n");
+
 	pthread_cancel(thread_zeng);
+
+	//printf ("despues de pthread_cancel\n");
 
 
 	//Vaciar fifo
@@ -534,8 +552,15 @@ void zeng_disable(void)
 	//Decir que no hay snapshot pendiente
 	zeng_send_snapshot_pending=0;
 
-	//Cerrar conexión con ZRCP
-	zeng_disconnect_remote();
+	//Cerrar conexión con ZRCP.
+	if (!forced) {
+		//TODO: enviarle un "quit"
+		zeng_disconnect_remote();
+	}
+	else {
+		//Liberar socket z_sock pero sin desconectarlo realmente
+		z_sock_free_connection(zeng_remote_socket);
+	}
 
 #else
 	//sin threads
@@ -543,6 +568,16 @@ void zeng_disable(void)
 #endif
 
 
+}
+
+void zeng_disable(void)
+{
+	zeng_disable_normal(0);
+}
+
+void zeng_disable_forced(void)
+{
+	zeng_disable_normal(1);
 }
 
 void zeng_add_pending_send_message_footer(char *mensaje)

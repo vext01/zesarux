@@ -52,6 +52,7 @@ extern int cerrar_socket(int s);
 
 extern int z_sock_open_connection(char *host,int port);
 extern int z_sock_close_connection(int indice_tabla);
+extern int z_sock_free_connection(int indice_tabla);
 extern int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud);
 extern int z_sock_write_string(int indice_tabla, char *buffer);
 extern int zsock_wait_until_command_prompt(int indice_tabla);

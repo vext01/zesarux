@@ -4397,6 +4397,14 @@ void sigbus_signal_handler(int sig)
 }
 
 
+void sigpipe_signal_handler(int sig)
+{
+	//Saltara por ejemplo cuando se escribe en un socket que se ha cerrado
+	//para evitar warnings al compilar
+	debug_printf (VERBOSE_DEBUG,"Received signal sigpipe");
+	sig++;
+
+}
 
 
 void floatingpoint_signal_handler(int sig)
@@ -7467,6 +7475,9 @@ struct sched_param sparam;
 
 	//Capturar segterm
 	signal(SIGTERM, segterm_signal_handler);
+
+	//Capturar sigpipe
+	signal(SIGPIPE, sigpipe_signal_handler);	
 
 
 

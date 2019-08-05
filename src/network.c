@@ -207,13 +207,13 @@ int cerrar_socket(int s)
 
 
 #ifdef MINGW
-	closesocket(s);
+	return closesocket(s);
 	//desactivo esto ya que esto implica que no se va a usar mas los windows sockets, cosa no cierta (se pueden usar en zeng por ejemplo)
 	//ademas no estamos llamando a WSAStartup al inicio
 	//Se deberia hacer el WSACleanup al finalizar el emulador
 	//WSACleanup();
 #else
-	close(s);
+	return close(s);
 #endif
 
 }
@@ -403,6 +403,24 @@ int z_sock_close_connection(int indice_tabla)
 	sockets_list[indice_tabla].used=0;
 
 	return cerrar_socket(sock);
+}
+
+
+//Liberar el socket de la lista pero sin desconectar
+int z_sock_free_connection(int indice_tabla) 
+{
+
+	int sock=get_socket_number(indice_tabla);
+
+	if (sock<0) {
+                //debug_printf(VERBOSE_ERR,"Socket is not open");
+				return -1;
+	}
+
+
+	sockets_list[indice_tabla].used=0;
+
+	return 0;
 }
 
 int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud)
