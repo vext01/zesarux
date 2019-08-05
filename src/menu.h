@@ -697,7 +697,6 @@ typedef struct s_estilos_gui estilos_gui;
 #define ESTILOS_GUI 12
 
 
-#define ESTILO_GUI_BORLAND 9
 #define ESTILO_GUI_RETROMAC 8
 #define ESTILO_GUI_QL 7
 #define ESTILO_GUI_MANSOFTWARE 6
