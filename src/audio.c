@@ -689,7 +689,7 @@ void beeper_new_line(void) {
                 //Siguientes valores inicializamos a 65535
                 for (i=1;i<CURRENT_BEEPER_ARRAY_LENGTH;i++) buffer_beeper[i]=65535;
 
-		//printf ("beeper array lenght: %d\n",i);
+		//printf ("beeper array length: %d\n",i);
 }
 
 char get_value_beeper_sum_array(void)

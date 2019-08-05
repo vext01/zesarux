@@ -1511,7 +1511,7 @@ EXIT CONDITIONS
 				break;
 
 				case 274:
-					debug_printf(VERBOSE_DEBUG,"-----DOS READ. Address: %d Lenght: %d",reg_hl,reg_de);
+					debug_printf(VERBOSE_DEBUG,"-----DOS READ. Address: %d Length: %d",reg_hl,reg_de);
 					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					
 					//traps_plus3dos_handle_dos_read();

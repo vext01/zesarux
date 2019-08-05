@@ -520,8 +520,8 @@ void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
 
   if (block_lenght==0) block_lenght=65536;
 
-  debug_printf (VERBOSE_DEBUG,"Block start: %d Lenght: %d Compressed: %s Length_source: %d",block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
-  //printf ("Block start: %d Lenght: %d Compressed: %d Length_source: %d\n",block_start,block_lenght,block_flags&1,longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block start: %d Length: %d Compressed: %s Length_source: %d",block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+  //printf ("Block start: %d Length: %d Compressed: %d Length_source: %d\n",block_start,block_lenght,block_flags&1,longitud_original);
 
 
   longitud_original -=5;
@@ -551,7 +551,7 @@ void load_zsf_spec128_snapshot_block_data(z80_byte *block_data,int longitud_orig
   z80_byte ram_page=block_data[i];
   i++;
 
-  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
 
 
   longitud_original -=6;
@@ -580,7 +580,7 @@ void load_zsf_zxuno_snapshot_block_data(z80_byte *block_data,int longitud_origin
   z80_byte ram_page=block_data[i];
   i++;
 
-  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
 
 
   longitud_original -=6;
@@ -609,7 +609,7 @@ void load_zsf_cpc_snapshot_block_data(z80_byte *block_data,int longitud_original
   z80_byte ram_page=block_data[i];
   i++;
 
-  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
 
 
   longitud_original -=6;
@@ -636,7 +636,7 @@ void load_zsf_diviface_snapshot_block_data(z80_byte *block_data,int longitud_ori
 
   z80_int block_lenght=16384;
 
-  debug_printf (VERBOSE_DEBUG,"Block diviface ram_page: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block diviface ram_page: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
 
 
   longitud_original -=3;
@@ -669,7 +669,7 @@ void load_zsf_tsconf_snapshot_block_data(z80_byte *block_data,int longitud_origi
   z80_byte ram_page=block_data[i];
   i++;
 
-  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
 
 
   longitud_original -=6;
@@ -1077,7 +1077,7 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
     block_id=value_8_to_16(block_header[1],block_header[0]);
     unsigned int block_lenght=block_header[2]+(block_header[3]*256)+(block_header[4]*65536)+(block_header[5]*16777216);
 
-    debug_printf (VERBOSE_INFO,"Block id: %u (%s) Lenght: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
+    debug_printf (VERBOSE_INFO,"Block id: %u (%s) Length: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
 
     z80_byte *block_data;
 

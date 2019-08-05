@@ -6342,7 +6342,7 @@ void menu_debug_dma_tsconf_zxuno_overlay(void)
 		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
 
-		sprintf (texto_dma,"Lenght:      %5d",dma_len);
+		sprintf (texto_dma,"Length:      %5d",dma_len);
 		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
 
@@ -6465,7 +6465,7 @@ void menu_debug_dma_tsconf_zxuno_overlay(void)
 		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
 
-		sprintf (texto_dma,"Lenght:      %5d",dma_len);
+		sprintf (texto_dma,"Length:      %5d",dma_len);
 		//menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 		zxvision_print_string_defaults_fillspc(menu_debug_dma_tsconf_zxuno_overlay_window,1,linea++,texto_dma);
 

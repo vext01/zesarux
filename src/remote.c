@@ -5721,7 +5721,7 @@ void *thread_remote_protocol_function(void *nada)
 
 							//if (leidos) {
 								buffer_lectura_socket[indice_destino]=0;
-								debug_printf (VERBOSE_DEBUG,"Remote command. Lenght Read text: %d",indice_destino);
+								debug_printf (VERBOSE_DEBUG,"Remote command. Length Read text: %d",indice_destino);
 
 								//int j;
 								//for (j=0;buffer_lectura_socket[j];j++) printf ("%d %c\n",j,buffer_lectura_socket[j]);

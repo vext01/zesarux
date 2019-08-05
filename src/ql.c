@@ -1801,7 +1801,7 @@ void core_ql_trap_three(void)
     break;
 
     case 0x48:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.LOAD. Lenght: %d Channel: %d Address: %05XH"
+      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.LOAD. Length: %d Channel: %d Address: %05XH"
           ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
       //D2.L length of file. A0 channellD. A1 base address for load
 
@@ -2187,7 +2187,7 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
       int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
       int longitud_nombre=peek_byte_z80_moto(reg_a0)*256+peek_byte_z80_moto(reg_a0+1);
       reg_a0 +=2;
-      debug_printf (VERBOSE_PARANOID,"Lenght channel name: %d",longitud_nombre);
+      debug_printf (VERBOSE_PARANOID,"Length channel name: %d",longitud_nombre);
 
       char c;
       int i=0;

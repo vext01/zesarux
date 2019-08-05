@@ -291,7 +291,7 @@ To be able to use this rom, you must enable RAM on addresses 2000h-3fffh. So:
 2) Machine Selection->Custom machine. Select sponzy rom and machine type ZX81. It will load only the first 8 KB of ROM. It will hang the ZX81 and 
 the display will show "trash", also the "Real Video" setting is auto-enabled.
 3) The trick here is to load the rest of the ROM on addresses 2000h-3fffh. To do that, go to menu Debugging-> Load binary block. Select the same
-sponzy rom file, set address to 0, and set lenght to 0 (to load the whole file). The emulator will load the whole file, but addresses 0000-1fffh are
+sponzy rom file, set address to 0, and set length to 0 (to load the whole file). The emulator will load the whole file, but addresses 0000-1fffh are
 write protected, but it is not a problem so these addresses are already loaded since pass 2. Addresses 2000h-3fffh will be written (so we enabled RAM here) with the rest of the Sponzy ROM
 4) Go to menu debugging->Reset
 5) The rom is working now but you will probably see only a white display. So, Sponzy rom uses WRX display mode. You must enable it on menu Display Settings->WRX

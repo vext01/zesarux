@@ -2008,10 +2008,10 @@ int scrfbdev_init (void){
 	}
 
 	//Obtener Orden componentes R G B Alpha
-	debug_printf (VERBOSE_DEBUG,"Framebuffer: Red: Offset: %d Lenght: %d",varinfo.red.offset,varinfo.red.length);
-	debug_printf (VERBOSE_DEBUG,"Framebuffer: Green: Offset: %d Lenght: %d",varinfo.green.offset,varinfo.green.length);
-	debug_printf (VERBOSE_DEBUG,"Framebuffer: Blue: Offset: %d Lenght: %d",varinfo.blue.offset,varinfo.blue.length);
-	debug_printf (VERBOSE_DEBUG,"Framebuffer: Alpha: Offset: %d Lenght: %d",varinfo.transp.offset,varinfo.transp.length);
+	debug_printf (VERBOSE_DEBUG,"Framebuffer: Red: Offset: %d Length: %d",varinfo.red.offset,varinfo.red.length);
+	debug_printf (VERBOSE_DEBUG,"Framebuffer: Green: Offset: %d Length: %d",varinfo.green.offset,varinfo.green.length);
+	debug_printf (VERBOSE_DEBUG,"Framebuffer: Blue: Offset: %d Length: %d",varinfo.blue.offset,varinfo.blue.length);
+	debug_printf (VERBOSE_DEBUG,"Framebuffer: Alpha: Offset: %d Length: %d",varinfo.transp.offset,varinfo.transp.length);
 
 	/*
 	 *
