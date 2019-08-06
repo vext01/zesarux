@@ -321,6 +321,71 @@ int zeng_send_snapshot(int socket)
 		
 }
 
+//Retorna <0 si error
+int zeng_send_keys(zeng_key_presses *elemento)
+{
+				
+				char buffer_comando[256];
+				sprintf(buffer_comando,"send-keys-event %d %d\n",elemento->tecla,elemento->pressrelease);
+
+				int escritos=z_sock_write_string(zeng_remote_socket,buffer_comando);
+
+
+				//printf ("despues de enviar send-keys. escritos en write string: %d\n",escritos);
+
+				
+				//Si ha habido error al escribir en socket
+				if (escritos<0) return escritos;
+
+
+				else {
+
+					z80_byte buffer[200];
+
+					//Leer hasta prompt
+					int posicion_command;
+
+					//printf ("antes de leer hasta command prompt\n");
+					int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
+
+					//printf ("despues de leer hasta command prompt\n");
+
+					//Si ha habido error al leer de socket
+					if (leidos<0) return leidos;
+				}
+
+		
+
+	return 1;
+}
+
+//Retorna <0 si error
+int zeng_send_message(void)
+{
+
+	pending_zeng_send_message_footer=0;
+
+			int escritos=z_sock_write_string(zeng_remote_socket,zeng_send_message_footer);
+
+			//Si ha habido error al escribir en socket
+			if (escritos<0) return escritos;
+
+			else {
+				//Leer hasta prompt
+				int posicion_command;
+				z80_byte buffer[200];
+				int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
+			
+				
+
+				//Si ha habido error al leer de socket
+				if (leidos<0) return leidos;
+			}
+
+
+	return 1;
+
+}
 
 
 void *thread_zeng_function(void *nada)
@@ -348,8 +413,8 @@ Poder enviar mensajes a otros jugadores
 	 */
 
 
-	int escritos;
-	int leidos;
+	//int escritos;
+	//int leidos;
 
 	//error conectando zeng. desactivarlo si se produce
 	int error_desconectar=0;
@@ -368,39 +433,9 @@ Poder enviar mensajes a otros jugadores
 
 			//command> help send-keys-event
 			//Syntax: send-keys-event key event
+				int error=zeng_send_keys(&elemento);
 
-				//printf ("longitud: %d\n",longitud);
-				char buffer_comando[256];
-				sprintf(buffer_comando,"send-keys-event %d %d\n",elemento.tecla,elemento.pressrelease);
-
-				escritos=z_sock_write_string(zeng_remote_socket,buffer_comando);
-
-
-				//printf ("despues de enviar send-keys. escritos en write string: %d\n",escritos);
-
-				
-				//Si ha habido error al escribir en socket
-				if (escritos<0) {
-					error_desconectar=1;
-				}
-
-				else {
-
-					z80_byte buffer[200];
-
-					//Leer hasta prompt
-					int posicion_command;
-
-					//printf ("antes de leer hasta command prompt\n");
-					int leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
-
-					//printf ("despues de leer hasta command prompt\n");
-
-					//Si ha habido error al leer de socket
-					if (leidos<0) {
-						error_desconectar=1;
-					}
-				}
+				if (error<0) error_desconectar=1;
 
 		}
 
@@ -408,25 +443,11 @@ Poder enviar mensajes a otros jugadores
 
 		//Si hay mensaje pendiente de enviar
 		if (pending_zeng_send_message_footer && !error_desconectar) {
-			escritos=z_sock_write_string(zeng_remote_socket,zeng_send_message_footer);
+			int error=zeng_send_message();
 
-			//Si ha habido error al escribir en socket
-			if (escritos<0) {
+			if (error<0) {
 				error_desconectar=1;
-			}
-
-			else {
-				//Leer hasta prompt
-				int posicion_command;
-				z80_byte buffer[200];
-				leidos=zsock_read_all_until_command(zeng_remote_socket,buffer,199,&posicion_command);
-			
-				pending_zeng_send_message_footer=0;
-
-				//Si ha habido error al leer de socket
-				if (leidos<0) {
-						error_desconectar=1;
-				}
+				
 			}
 
 		}
@@ -438,11 +459,15 @@ Poder enviar mensajes a otros jugadores
 			if (zeng_send_snapshot_pending && zeng_send_snapshot_mem_hexa!=NULL) {
 				int error=zeng_send_snapshot(zeng_remote_socket);
 				zeng_send_snapshot_pending=0;
+
 				if (error<0) {
 					error_desconectar=1;
 				}
 			}
 		}
+
+
+
 
 		if (error_desconectar) {
 			debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling ZENG");
