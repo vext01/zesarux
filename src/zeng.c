@@ -219,31 +219,39 @@ int zeng_connect_remote(void)
 		}
 
 		 int posicion_command;
+
+#define ZENG_BUFFER_INITIAL_CONNECT 199
 		
 		//Leer algo
-		char buffer[200];
+		char buffer[ZENG_BUFFER_INITIAL_CONNECT+1];
 
 		//int leidos=z_sock_read(indice_socket,buffer,199);
-		int leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199,&posicion_command);
+		int leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,ZENG_BUFFER_INITIAL_CONNECT,&posicion_command);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			//printf("Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
 		}
+
+		if (leidos<0) return 0;
 
 		//zsock_wait_until_command_prompt(indice_socket);
 
 		printf("Sending get-version\n");
 
 		//Enviar un get-version
-		z_sock_write_string(indice_socket,"get-version\n");
+		int escritos=z_sock_write_string(indice_socket,"get-version\n");
+
+		if (escritos<0) return 0;	
 
  
 		//reintentar
-		leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,199,&posicion_command);
+		leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,ZENG_BUFFER_INITIAL_CONNECT,&posicion_command);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
 			printf("Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
-		}		
+		}	
+
+		if (leidos<0) return 0;	
 
 		//1 mas para eliminar el salto de linea anterior a "command>"
 		if (posicion_command>=1) {
@@ -405,7 +413,7 @@ Dicha fifo hay que controlarla mediante semáforos
 Se mete elementos en fifo cuando se llama a util send press/release
 Se leen y envían eventos de la fifo desde este thread 
 
--dormir durante 10ms - mitad de frame 
+-dormir durante 5ms - cuarto de frame 
 
 Para las rutinas zsock también haría falta semáforos pero como no voy a llamarla desde dos sitios distintos a la vez pues..
 
