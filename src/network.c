@@ -483,6 +483,10 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 
 	}
 
+
+//Esta funcion no la usa nadie de momento
+//Si se activa alguna vez, comparar con zsock_read_all_until_command pues son casi iguales (esta ultima comprueba el prompt final, y zsock_read_all no)
+/*
 int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 {
 
@@ -510,6 +514,7 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 				else {
 					max_buffer -=leidos;
 					total_leidos +=leidos;
+					pos_destino +=leidos;
 				}
 			}
 			else {
@@ -519,6 +524,14 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 
 	return total_leidos;
 
+}
+*/
+
+void zsock_debug_dump_ascii(char *buffer,int total_leidos)
+{
+	for (;total_leidos>0;total_leidos--,buffer++) {
+		printf ("%c",util_printable_char(*buffer));
+	}
 }
 
 //devuelve en posicion_command donde empieza el "command>", si es >=0
@@ -559,6 +572,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 				else {
 					max_buffer -=leidos;
 					total_leidos +=leidos;
+					pos_destino +=leidos;
 				}
 			}
 			else {
@@ -568,7 +582,13 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 		//Ver si hay "command> al final"
 		if (total_leidos>=9) { //"command> " ocupa 9
-			//printf ("Leido al final: [%c%c]\n",buffer[total_leidos-2],buffer[total_leidos-1]);
+			//printf ("Leido al final: %02XH %02XH [%c%c]\n",buffer[total_leidos-2],buffer[total_leidos-1],
+			//util_printable_char(buffer[total_leidos-2]),util_printable_char(buffer[total_leidos-1]));
+
+			//printf ("Leido todo: ");
+			//zsock_debug_dump_ascii(buffer,total_leidos);
+			//printf ("\n");
+
 			if (buffer[total_leidos-1]==' ' && buffer[total_leidos-2]=='>') {
 				leido_command_prompt=1;
 				*posicion_command=total_leidos-9;
@@ -592,6 +612,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 	} while (!leido_command_prompt && reintentos<500);
 	//5 segundos de reintentos
 
+	//TODO: si se llega aqui sin haber recibido command prompt. Se gestionara en retorno mediante posicion_command
 	return total_leidos;
 
 }

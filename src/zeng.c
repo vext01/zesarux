@@ -232,7 +232,10 @@ int zeng_connect_remote(void)
 			//printf("Received text (length: %d):\n[\n%s\n]\n",leidos,buffer);
 		}
 
-		if (leidos<0) return 0;
+		if (leidos<0) {
+			debug_printf(VERBOSE_ERR,"ERROR. Can't read remote prompt");
+			return 0;
+		}
 
 		//zsock_wait_until_command_prompt(indice_socket);
 
@@ -241,7 +244,10 @@ int zeng_connect_remote(void)
 		//Enviar un get-version
 		int escritos=z_sock_write_string(indice_socket,"get-version\n");
 
-		if (escritos<0) return 0;	
+		if (escritos<0) {
+			debug_printf(VERBOSE_ERR,"ERROR. Can't send version");
+			return 0;	
+		}
 
  
 		//reintentar
@@ -251,7 +257,10 @@ int zeng_connect_remote(void)
 			printf("Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
 		}	
 
-		if (leidos<0) return 0;	
+		if (leidos<0) {
+			debug_printf(VERBOSE_ERR,"ERROR. Can't receive version");
+			return 0;	
+		}
 
 		//1 mas para eliminar el salto de linea anterior a "command>"
 		if (posicion_command>=1) {

@@ -15382,4 +15382,8 @@ void util_str_del_char(char *texto,int posicion)
 }
 
 
-
+char util_printable_char(char c)
+{
+        if (c<32 || c>126) return '?';
+        else return c;
+}
