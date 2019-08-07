@@ -32,6 +32,8 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 -Funciones de thread para permitir petición web simple tipo descargar url etc 
 
 -Actualitza pantalla en connect ZENG tiene que llamar a actualizar en driver. Sino no va en x11 por ejemplo 
+o mejor: la conexión se deberia gestionar en un thread aparte. por que si se pone una ip incorrecta, puede que se quede conectando mucho rato
+y mientras tanto el emulador esta colgado
 
 
 -ZENG "ZEsarUX Network Gaming"
