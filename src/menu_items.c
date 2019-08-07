@@ -732,6 +732,12 @@ void menu_hardware_debug_port(MENU_ITEM_PARAMETERS)
 	hardware_debug_port.v ^=1;
 }
 
+
+void menu_debug_settings_dump_snap_panic(MENU_ITEM_PARAMETERS)
+{
+	debug_dump_zsf_on_cpu_panic.v ^=1;
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -791,7 +797,10 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');		
 
 
-					
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_dump_snap_panic,NULL,"[%c] Dump snapshot on panic",
+			( debug_dump_zsf_on_cpu_panic.v ? 'X' : ' ') );	
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Dump .zsf snapshot when a cpu panic is fired");	
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Dump .zsf snapshot when a cpu panic is fired");	
 
 
 

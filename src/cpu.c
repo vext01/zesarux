@@ -1364,7 +1364,8 @@ printf (
 		"Read file extras/docs/zesarux_zxi_registers.txt for more information\n"
 	  "--hardware-debug-ports-byte-file f  Sets the file used on register HARDWARE_DEBUG_BYTE_FILE\n"
 
-	  "-—dump-ram-to-file f       Dump memory from 4000h to ffffh to a file, when exiting emulator\n"
+	  "--dump-ram-to-file f       Dump memory from 4000h to ffffh to a file, when exiting emulator\n"
+	  "--dump-snapshot-panic      Dump .zsf snapshot when a cpu panic is fired\n"
 		"\n"
 		"\n"
 		"CPU Core\n"
@@ -6689,6 +6690,10 @@ int parse_cmdline_options(void) {
                                 siguiente_parametro_argumento();
 				strcpy(dump_ram_file,argv[puntero_parametro]);
                  }
+
+		else if (!strcmp(argv[puntero_parametro],"--dump-snapshot-panic")) {
+				 debug_dump_zsf_on_cpu_panic.v=1;
+		}
 
 			else if (!strcmp(argv[puntero_parametro],"--joystickemulated")) {
                                 siguiente_parametro_argumento();

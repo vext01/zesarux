@@ -4977,14 +4977,11 @@ void snapshot_load(void)
 	snapshot_load_name(snapfile);
 }
 
-
-//Realiza quicksave y retorna nombre en char nombre, siempre que no sea NULL
-void snapshot_quick_save(char *nombre)
+//Retorna texto %Y-%m-%d-%H-%M-%S, usado en quicksave y en dump zsf on panic
+//texto tiene que tener tamanyo 40, aunque cabe con menos, pero mejor asi  .   char time_string[40];
+void snapshot_get_date_time_string(char *texto)
 {
-  char final_name[PATH_MAX];
-
-
-  struct timeval tv;
+struct timeval tv;
   struct tm* ptm;
   //long microseconds;
 
@@ -4999,9 +4996,27 @@ void snapshot_quick_save(char *nombre)
   /* Format the date and time, down to a single second. */
   char time_string[40];
 
+  //buffer temporal para poderle indicar el sizeof
   strftime (time_string, sizeof(time_string), "%Y-%m-%d-%H-%M-%S", ptm);
 
-  if (snapshot_autosave_interval_quicksave_directory[0]==0) sprintf (final_name,"%s-%s.zx",snapshot_autosave_interval_quicksave_name,time_string);
+  //copiar a texto final
+  strcpy(texto,time_string);
+
+  //printf ("texto fecha: %s\n",texto);
+}
+
+//Realiza quicksave y retorna nombre en char nombre, siempre que no sea NULL
+void snapshot_quick_save(char *nombre)
+{
+  char final_name[PATH_MAX];
+
+
+  
+  char time_string[40];
+
+  snapshot_get_date_time_string(time_string);
+
+  if (snapshot_autosave_interval_quicksave_directory[0]==0) sprintf (final_name,"%s-%s.zsf",snapshot_autosave_interval_quicksave_name,time_string);
 
   else sprintf (final_name,"%s/%s-%s.zsf",snapshot_autosave_interval_quicksave_directory,snapshot_autosave_interval_quicksave_name,time_string);
 
@@ -5465,5 +5480,35 @@ y parámetro de color del tipo de fondo sólido
 	else {
 		fclose(ptr_nexfile);
 	}
+
+}
+
+//Volcar snapshot cuando hay cpu panic
+void snap_dump_zsf_on_cpu_panic(void)
+{
+
+	//Si volcar snapshot zsf cuando hay cpu_panic
+	if (debug_dump_zsf_on_cpu_panic.v==0) return;
+
+	//printf ("Intentando volcado zsf on panic\n");
+
+	//Si ya se ha volcado snapshot zsf cuando hay cpu_panic, para evitar un segundo volcado (y siguientes) si se genera otro panic al hacer el snapshot
+	if (dumped_debug_dump_zsf_on_cpu_panic.v) return;
+
+	//printf ("Volcando zsf on panic\n");
+	 dumped_debug_dump_zsf_on_cpu_panic.v=1;
+
+
+
+
+
+ 
+	 char time_string[40];
+
+  snapshot_get_date_time_string(time_string);
+
+  sprintf (dump_snapshot_panic_name,"cpu_panic-%s.zsf",time_string);
+
+  snapshot_save(dump_snapshot_panic_name);
 
 }

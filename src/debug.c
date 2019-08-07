@@ -244,6 +244,15 @@ void cpu_core_loop_debug_check_breakpoints(void);
 
 void debug_dump_nested_print(char *string_inicial, char *string_to_print);
 
+//Si volcar snapshot zsf cuando hay cpu_panic
+z80_bit debug_dump_zsf_on_cpu_panic={0};
+
+//Si ya se ha volcado snapshot zsf cuando hay cpu_panic, para evitar un segundo volcado (y siguientes) si se genera otro panic al hacer el snapshot
+z80_bit dumped_debug_dump_zsf_on_cpu_panic={0};
+
+//nombre del archivo volcado
+char dump_snapshot_panic_name[PATH_MAX]="";
+
 
 //empieza en el 163
 char *spectrum_rom_tokens[]={
@@ -705,6 +714,8 @@ void cpu_panic(char *mensaje)
 
 	debug_exec_show_backtrace();
 
+	snap_dump_zsf_on_cpu_panic();
+
     cpu_panic_last_x=cpu_panic_last_y=0;
 
     cpu_panic_current_tinta=6;
@@ -755,7 +766,13 @@ void cpu_panic(char *mensaje)
 			//los registros los mostramos dos lineas por debajo de la ultima usada
 			cpu_panic_printstring(buffer);
 
-
+			if (dumped_debug_dump_zsf_on_cpu_panic.v) {
+				cpu_panic_printstring("\n\nDumped cpu panic snapshot:\n");
+				cpu_panic_printstring(dump_snapshot_panic_name);
+				cpu_panic_printstring("\non current directory");
+				printf ("Dumped cpu panic snapshot: %s on current directory\n",dump_snapshot_panic_name);
+			}
+		
 			scr_refresca_pantalla_solo_driver();
 
 			//Para xwindows hace falta esto, sino no refresca

@@ -3467,6 +3467,8 @@ int util_write_configfile(void)
   if (hardware_debug_port.v)                  ADD_STRING_CONFIG,"--hardware-debug-ports");
   if (zesarux_zxi_hardware_debug_file[0]!=0)  ADD_STRING_CONFIG,"--hardware-debug-ports-byte-file \"%s\"",zesarux_zxi_hardware_debug_file);
 
+  if (debug_dump_zsf_on_cpu_panic.v)          ADD_STRING_CONFIG,"--dump-snapshot-panic");
+
   if (autoselect_snaptape_options.v==0)       ADD_STRING_CONFIG,"--noautoselectfileopt");
   if (screen_show_splash_texts.v==0)          ADD_STRING_CONFIG,"--nosplash");
   if (screen_show_cpu_usage.v)                ADD_STRING_CONFIG,"--cpu-usage");
