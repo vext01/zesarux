@@ -16467,16 +16467,18 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
         do {
 
                 
-            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_zeng_enable_disable,menu_zeng_enable_disable_cond,"[%c] ~~Enabled",(zeng_enabled.v ? 'X' : ' ') );
-					
+            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_zeng_enable_disable,menu_zeng_enable_disable_cond,"[%c] ~~Connected",(zeng_enabled.v ? 'X' : ' ') );
+			menu_add_item_menu_shortcut(array_menu_common,'c');
 
 			char string_host_shown[16]; 
 			menu_tape_settings_trunc_name(zeng_remote_hostname,string_host_shown,16);
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_host,menu_zeng_host_cond,"Host [%s]",string_host_shown);
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_host,menu_zeng_host_cond,"~~Host [%s]",string_host_shown);
+			menu_add_item_menu_shortcut(array_menu_common,'h');
 
 
 			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_port,menu_zeng_host_cond,"[%d] Remote Port",zeng_remote_port);
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_master,menu_zeng_host_cond,"[%c] Master",(zeng_i_am_master ? 'X' : ' ') );
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_master,menu_zeng_host_cond,"[%c] ~~Master",(zeng_i_am_master ? 'X' : ' ') );
+			menu_add_item_menu_shortcut(array_menu_common,'m');
 
 			if (zeng_i_am_master) {
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,NULL,"[%d] Snapshot seconds",segundos_cada_snapshot);

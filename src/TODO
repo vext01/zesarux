@@ -71,7 +71,12 @@ Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZR
 *Quizá en sigpipe puede averiguar que socket ha fallado?
 Quizá sigpipe se puede gestionar diferente para cada thread?
 *funciones de envio snapshot, teclas y mensajes, deberian ver si reciben remote prompt? al llamar a zsock_read_all_until_command
-*Comando send-keys-event con parámetro tercero adicional que diga que si está menú abierto, no aceptar Tecla. Por defecto con dos parámetros, aceptar evento con menú abierto 
+*detectar si no hay ningun master, o si los dos son master? como?
+:mirando estado local y remoto. Avisar si el estado no es 1 master y 1 slave. comando nuevo ZRCP para esto
+:quiza se puede permitir ningun master, pero lo que no deberia ser es dos master. Al menos avisar de esto y que el usuario ya decida
+
+
+
 *semaforos en fifo zeng
 *parar thread zeng y cerrar socket zeng al salir emulador
 *network: en windows siempre retorna datos disponibles.

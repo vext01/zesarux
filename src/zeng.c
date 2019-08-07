@@ -163,7 +163,7 @@ void zeng_send_key_event(enum util_teclas tecla,int pressrelease)
 {
 	if (zeng_enabled.v==0) return;
 
-	//Si esta menu abierto, tampoco enviar
+	//Si esta menu abierto en origen, tampoco enviar
 	if (menu_abierto) return;
 
 	//teclas F no enviar
@@ -343,7 +343,9 @@ int zeng_send_keys(zeng_key_presses *elemento)
 {
 				
 				char buffer_comando[256];
-				sprintf(buffer_comando,"send-keys-event %d %d\n",elemento->tecla,elemento->pressrelease);
+
+				sprintf(buffer_comando,"send-keys-event %d %d 1\n",elemento->tecla,elemento->pressrelease);
+				//el 1 del final indica que no se envia la tecla si el menu en remoto esta abierto
 
 				int escritos=z_sock_write_string(zeng_remote_socket,buffer_comando);
 
