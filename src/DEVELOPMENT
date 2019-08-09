@@ -108,8 +108,8 @@ Y subir el zip a sourceforge
 
 ** Linux 
 Generar estos dos binarios de Linux:
-ZEsarUX_linux-version-debian9_x32.tar.gz 
-ZEsarUX_linux-version-debian9_x64.tar.gz 
+ZEsarUX_linux-version-debian10_x32.tar.gz 
+ZEsarUX_linux-version-debian10_x64.tar.gz 
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
