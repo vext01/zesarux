@@ -85,16 +85,10 @@ habria que hacer que leyera el primer prompt correcto
 
 *revisar ZRCP: ahora al gestionar sigpipe quiza ya no peta al desconectarse el socket remoto
 
-*lo ideal seria que al enviar tecla, no se envie la tecla en local hasta que el remoto la haya recibido??
-*quiza cuando envia el snapshot habria que pausar el master??
 *realjoystick_set_reset_key: quiza ahi deberia llamar a util_set_reset_key_continue, para que lo procese directamente zeng, y quitar
 zeng_send_key_event de la funcion realjoystick_set_reset_key
 
-
-
-
--bugs: parece que las pruebas de test-socket no siempre obtiene numero de version . por que?
-A veces cierra el nodo remoto
+* ZRCP: habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
 
 
 
@@ -155,13 +149,6 @@ But if this is not done it can lead to a significant delay on startup.
 Yes. Loading it at once (with a previous malloc) will be better.
 
 
--Rutinas de tcp ip también valen para la sincronización de juegos entre dos instancias de ZEsarUX remotas. 
-
--Sincronización si es por ZRCP , habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
-
-
-
-
 
 
 -average cpu use en menu help parece que sale 0% si no esta habilitado footer
@@ -170,12 +157,11 @@ Yes. Loading it at once (with a previous malloc) will be better.
 Función simple que abra la conexión y devuelva datos http. Thread por debajo que indique cuando estén los datos listos
 1 sola petición cada vez?
 
--Si el config file no carga por error en parse siempre desactiva setting de auto grabar config?
+-Si el config file no carga por error en parse siempre desactiva setting de auto grabar config? si, se desactiva
 
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
 
--->no todo. Clasificar en otras secciones menos prioritarias!!
 
 -hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
 
