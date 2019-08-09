@@ -4335,7 +4335,7 @@ void interpreta_comando(char *comando,int misocket)
 		else {
 
 			char *s=parametros;
-			int parametros_recibidos=0;
+			//int parametros_recibidos=0;
 			int i=0;
 
 			char mensaje[AUTOSELECTOPTIONS_MAX_FOOTER_LENGTH];

@@ -554,13 +554,12 @@ void zeng_send_snapshot_if_needed(void)
 	}
 }
 
-void zeng_enable(void)
+int zeng_enable_thread_running=0;
+
+void *zeng_enable_thread_function(void *nada)
 {
 
-	//ya  inicializado
-	if (zeng_enabled.v) return;
-
-	if (zeng_remote_hostname[0]==0) return;
+	zeng_enable_thread_running=1; 
 
 #ifdef USE_PTHREADS
 
@@ -571,27 +570,61 @@ void zeng_enable(void)
 	if (!zeng_connect_remote()) {
 		//Desconectar solo si el socket estaba conectado
 		if (zeng_remote_socket>=0) zeng_disconnect_remote();
-		return;
+		zeng_enable_thread_running=0;
+		return 0;
 	}
 
 
 	//Inicializar thread
 
-	//thread_zeng_inicializado.v=0;
-
 	if (pthread_create( &thread_zeng, NULL, &thread_zeng_function, NULL) ) {
 		debug_printf(VERBOSE_ERR,"Can not create zeng pthread");
-		return;
+		zeng_enable_thread_running=0;
+		return 0;
 	}
 
 
-	//thread_zeng_inicializado.v=1;
-
-
 	zeng_enabled.v=1;
-#else
-	//sin threads
-	zeng_enabled.v=0;
+
+#endif
+	zeng_enable_thread_running=0;
+
+	return 0;
+
+}
+
+pthread_t zeng_thread_connect;
+
+//Cancelar thread de conexion zeng
+void zeng_cancel_connect(void)
+{
+
+	debug_printf(VERBOSE_DEBUG,"Cancelling ZENG connect");
+
+	#ifdef USE_PTHREADS
+		pthread_cancel(zeng_thread_connect);
+	#endif
+
+	zeng_enable_thread_running=0;
+}
+
+void zeng_enable(void)
+{
+
+	//ya  inicializado
+	if (zeng_enabled.v) return;
+
+	if (zeng_remote_hostname[0]==0) return;
+
+#ifdef USE_PTHREADS
+
+	//Inicializar thread
+	
+	if (pthread_create( &zeng_thread_connect, NULL, &zeng_enable_thread_function, NULL) ) {
+		debug_printf(VERBOSE_ERR,"Can not create zeng connect pthread");
+		return;
+	}
+
 #endif
 
 

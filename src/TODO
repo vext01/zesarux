@@ -13,15 +13,23 @@ Spectranet
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
 
+-llamar a void timer_check_interrupt(void) desde menu_cpu_core_loop cuando no hay multitarea. Esto permitiria acceder a los timers desde menu
+sin que este multitarea. Efectos colaterales? Seguramente muchos
 
 -tabla de joystick to event siempre se resetea??
 
+-en audiosdl, si en MINGW, desactivar threads. Asi podemos hacer compilacion de Windows, usando threads, pero el audio sin threads
+Esto hará que el audio se escuche bien en windows en la versión con threads (porque actualmente no se escucha bien en windows con threads)
 
 -Ventana de error con tema cpc como se ven las franjas moverse?
 
--Tipo de ventana que pueda cerrarse automáticamente cuando una condición (función) sea cierta 
-Puede servir para diálogos de espera de conexión a red
-Que haga sleep de medio segundo por ejemplo 
+-Ventana con progreso y funcion, que pasa si multitask esta off?
+pues que no hay timer, y no se llama ni a funcion print ni condicion
+->solucionado el print con 	 if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+	}
+  al principio
 
 -Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá errror si no hay bytes para leer?
 
@@ -524,6 +532,14 @@ probado agregando pausas al finalizar pero falla igualmente
 
 
 - En Mac, parece que timer mediante pthreads no va bien, se oye "lento". En cambio sin pthreads SI que va bien
+->pasa porque usleep tarda mas de lo que se dice: Ejemplo: usleep (500) deberia tardar medio milisegundo y tarda mas. Si se hace
+en bucle para que tarde 10 segundos , tarda unos 14 segundos:
+	int i;
+	for (i=0;i<20*1000;i++) {
+		usleep(500);
+	}
+en cambio un usleep de 10000000 tarda 10 segundos exactos. Parece que tiene problemas con valores pequeños en tiempo
+
 
 - En Mac, snap_tests/test3200z88.zx se oye entrecortado. En Linux por ejemplo con pulse se oye continuo (con algun cortecito de vez en cuando)
 

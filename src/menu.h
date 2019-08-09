@@ -140,6 +140,9 @@ extern void menu_espera_no_tecla_no_cpu_loop(void);
 extern void menu_espera_tecla_no_cpu_loop(void);
 extern int menu_generic_message_final_abajo(int primera_linea,int alto_ventana,int indice_linea);
 extern void menu_espera_tecla_timeout_window_splash(void);
+
+#define MENU_CPU_CORE_LOOP_SLEEP_NO_MULTITASK 500
+
 extern void menu_cpu_core_loop(void);
 extern z80_byte menu_get_pressed_key(void);
 extern void menu_about_read_file(char *title,char *aboutfile);
@@ -889,6 +892,8 @@ extern int menu_center_y(void);
 
 extern z80_bit no_close_menu_after_smartload;
 
+extern void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
+extern void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 

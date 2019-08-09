@@ -61,6 +61,8 @@ extern void zeng_add_pending_send_message_footer(char *mensaje);
 extern int pending_zeng_send_message_footer;
 extern void zeng_disable_forced(void);
 
+extern int zeng_enable_thread_running;
+
 #define MAX_ZENG_HOSTNAME 256
 
 #endif

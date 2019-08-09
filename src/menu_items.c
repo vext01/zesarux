@@ -16344,24 +16344,81 @@ void menu_zeng_enable(MENU_ITEM_PARAMETERS)
 }
 */
 
+int contador_menu_zeng_connect_print=0;
+/*void menu_zeng_connect_print(zxvision_window *w)
+{
+	char *mensaje="Connecting...";
+
+	int max=strlen(mensaje);
+	char mensaje_dest[32];
+	strcpy(mensaje_dest,mensaje);
+
+	mensaje_dest[contador_menu_zeng_connect_print]=0;
+
+	zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
+	zxvision_draw_window_contents(w);
+
+	contador_menu_zeng_connect_print++;
+	if (contador_menu_zeng_connect_print>max) contador_menu_zeng_connect_print=0;
+}
+*/
+
+void menu_zeng_connect_print(zxvision_window *w)
+{
+	char *mensaje="|/-\\";
+
+	int max=strlen(mensaje);
+	char mensaje_dest[32];
+
+	int pos=contador_menu_zeng_connect_print % max;
+
+	sprintf(mensaje_dest,"Connecting %c",mensaje[pos]);
+	//printf ("pos: %d\n",pos);
+
+	zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
+	zxvision_draw_window_contents(w);
+
+	contador_menu_zeng_connect_print++;
+
+}
+
+int menu_zeng_connect_cond(zxvision_window *w)
+{
+	return !zeng_enable_thread_running;
+}
+
 void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
 {
 	if (zeng_enabled.v) {
 		zeng_disable();
 	}
 	else {
-		menu_footer_clear_bottom_line();
-		menu_putstring_footer(0,2,"Connecting to remote...",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-		all_interlace_scr_refresca_pantalla();
+		//menu_footer_clear_bottom_line();
+		//menu_putstring_footer(0,2,"Connecting to remote...",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+		//all_interlace_scr_refresca_pantalla();
+
+		//Lanzar el thread de activacion
 		zeng_enable();
-		menu_footer_bottom_line();
+		
+		contador_menu_zeng_connect_print=0;
+
+		zxvision_simple_progress_window("ZENG connection", menu_zeng_connect_cond,menu_zeng_connect_print );
+
+
+		
+		//menu_footer_bottom_line();
 	}
 }
 
 int menu_zeng_enable_disable_cond(void)
 {
+	
+
+	
 	//Si esta habilitado, opcion siempre disponible para desactivar
 	if (zeng_enabled.v) return 1;
+
+
 
 	else {
 		//Si esta hostname vacio
@@ -16458,6 +16515,14 @@ int menu_zeng_send_message_cond(void)
 	return 1;
 }
 
+void menu_zeng_cancel_connect(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno_texto("Still connecting","Cancel?")) {
+		//printf ("cancelling zeng connect\n");
+		zeng_cancel_connect();
+	}
+}
+
 void menu_zeng(MENU_ITEM_PARAMETERS)
 {
         //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
@@ -16466,9 +16531,17 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-                
-            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_zeng_enable_disable,menu_zeng_enable_disable_cond,"[%c] ~~Connected",(zeng_enabled.v ? 'X' : ' ') );
-			menu_add_item_menu_shortcut(array_menu_common,'c');
+			menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+			//Si esta thread de conexion ejecutandose, mostrar otra opcion
+			if (zeng_enable_thread_running) {
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_cancel_connect,NULL,"Connecting...");
+			}
+
+            else {
+            	menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_enable_disable,menu_zeng_enable_disable_cond,"[%c] ~~Enabled",(zeng_enabled.v ? 'X' : ' ') );
+				menu_add_item_menu_shortcut(array_menu_common,'e');
+			}
 
 			char string_host_shown[16]; 
 			menu_tape_settings_trunc_name(zeng_remote_hostname,string_host_shown,16);

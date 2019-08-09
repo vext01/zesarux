@@ -7428,6 +7428,36 @@ int zxvision_key_not_sent_emulated_mach(void)
 	else return 0;
 }
 
+
+
+//Crea ventana simple de 1 de alto con funcion para condicion de salida, y funcion de print. 
+void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) )
+{
+	    zxvision_window ventana;
+
+		int alto_ventana=4;
+		int ancho_ventana=28;
+
+
+        int x_ventana=menu_center_x()-ancho_ventana/2; 
+        int y_ventana=menu_center_y()-alto_ventana/2; 
+
+        zxvision_new_window(&ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,titulo);
+
+        zxvision_draw_window(&ventana);
+
+
+        zxvision_draw_window_contents(&ventana);
+
+             
+		zxvision_espera_tecla_condicion_progreso(&ventana,funcioncond,funcionprint);
+
+
+        cls_menu_overlay();
+
+        zxvision_destroy_window(&ventana);
+}
+
 //Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {
@@ -7501,7 +7531,7 @@ void menu_cpu_core_loop(void)
 			realjoystick_main();
 
                         //0.5 ms
-                        usleep(500);
+                        usleep(MENU_CPU_CORE_LOOP_SLEEP_NO_MULTITASK);
 
 
 			//printf ("en menu_cpu_core_loop\n");
@@ -7885,6 +7915,87 @@ void zxvision_espera_tecla_timeout_window_splash(int tipo)
 	} while (tipo==2 && tecla==0);
 
 }
+
+//Esperar a tecla ESC, o que la condicion de funcion sea diferente de 0
+//Cada medio segundo se llama la condicion y tambien la funcion de print
+//Poner alguna a NULL si no se quiere llamar
+//Funciones de condicion y progreso tambien funcionan aun sin multitarea
+void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) )
+{
+
+	z80_byte tecla;
+	int condicion=0;
+	int contador_antes=menu_window_splash_counter_ms;
+	int intervalo=20*25; //25 frames de pantalla
+
+	//contador en us
+	int contador_no_multitask=0;
+
+	int conta_10=0;
+
+	/*int i;
+	for (i=0;i<20*1000;i++) {
+		usleep(500);
+	}*/
+	
+	//printf ("Pasado 10 segundos\n");
+
+
+	//printf ("espera splash\n");
+	do {
+
+                menu_cpu_core_loop();
+				int pasado_medio_segundo=0;
+
+
+
+	 			if (!menu_multitarea) {
+					contador_no_multitask+=MENU_CPU_CORE_LOOP_SLEEP_NO_MULTITASK;
+
+					//Cuando se llega a medio segundo ms
+					if (contador_no_multitask>=intervalo*1000) {
+						//printf ("Pasado medio segundo %d\n",contador_no_multitask);
+						contador_no_multitask=0;
+						pasado_medio_segundo=1;
+
+						//printf ("refresca pantalla\n");
+						menu_refresca_pantalla();	
+
+
+						//conta_10++;
+						//if (conta_10==20) printf ("pasado 10 segundos\n");					
+					}
+				}
+
+                //acumulado=menu_da_todas_teclas();
+				tecla=zxvision_read_keyboard();
+
+				//con boton izquierdo no salimos
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}				
+
+				if (menu_window_splash_counter_ms-contador_antes>intervalo) pasado_medio_segundo=1;
+
+                //Cada 400 ms
+                if (pasado_medio_segundo) {
+                	//trozos--;
+                	contador_antes=menu_window_splash_counter_ms;
+                	//printf ("dibujar franjas trozos: %d\n",trozos);
+                	//llamar a la condicion
+					if (funcioncond!=NULL) condicion=funcioncond(w);
+
+					//llamar a funcion print
+					if (funcionprint!=NULL) funcionprint(w);
+						
+                }
+		
+
+	} while (tecla==0 && !condicion);
+
+
+}
+
 
 
 void menu_espera_tecla(void)
