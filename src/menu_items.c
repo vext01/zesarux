@@ -16399,7 +16399,7 @@ void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
 
 		//Lanzar el thread de activacion
 		zeng_enable();
-		
+		 
 		contador_menu_zeng_connect_print=0;
 
 		zxvision_simple_progress_window("ZENG connection", menu_zeng_connect_cond,menu_zeng_connect_print );

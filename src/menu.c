@@ -7931,15 +7931,6 @@ void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcionco
 	//contador en us
 	int contador_no_multitask=0;
 
-	int conta_10=0;
-
-	/*int i;
-	for (i=0;i<20*1000;i++) {
-		usleep(500);
-	}*/
-	
-	//printf ("Pasado 10 segundos\n");
-
 
 	//printf ("espera splash\n");
 	do {
@@ -7960,10 +7951,7 @@ void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcionco
 
 						//printf ("refresca pantalla\n");
 						menu_refresca_pantalla();	
-
-
-						//conta_10++;
-						//if (conta_10==20) printf ("pasado 10 segundos\n");					
+				
 					}
 				}
 

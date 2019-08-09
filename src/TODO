@@ -15,6 +15,7 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 
 -llamar a void timer_check_interrupt(void) desde menu_cpu_core_loop cuando no hay multitarea. Esto permitiria acceder a los timers desde menu
 sin que este multitarea. Efectos colaterales? Seguramente muchos
+quiza llamar solo a una parte de timers que no son criticos, solo usados en menu y no en emulacion
 
 -tabla de joystick to event siempre se resetea??
 
@@ -23,13 +24,7 @@ Esto hará que el audio se escuche bien en windows en la versión con threads (p
 
 -Ventana de error con tema cpc como se ven las franjas moverse?
 
--Ventana con progreso y funcion, que pasa si multitask esta off?
-pues que no hay timer, y no se llama ni a funcion print ni condicion
-->solucionado el print con 	 if (!menu_multitarea) {
-			//printf ("refresca pantalla\n");
-			menu_refresca_pantalla();
-	}
-  al principio
+
 
 -Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá errror si no hay bytes para leer?
 
@@ -38,10 +33,6 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 
 -Funciones de thread para permitir petición web simple tipo descargar url etc 
-
--Actualitza pantalla en connect ZENG tiene que llamar a actualizar en driver. Sino no va en x11 por ejemplo 
-o mejor: la conexión se deberia gestionar en un thread aparte. por que si se pone una ip incorrecta, puede que se quede conectando mucho rato
-y mientras tanto el emulador esta colgado
 
 
 -ZENG "ZEsarUX Network Gaming"
@@ -86,7 +77,6 @@ Quizá sigpipe se puede gestionar diferente para cada thread?
 :quiza se puede permitir ningun master, pero lo que no deberia ser es dos master. Al menos avisar de esto y que el usuario ya decida
 
 
-
 *semaforos en fifo zeng
 *parar thread zeng y cerrar socket zeng al salir emulador
 *network: en windows siempre retorna datos disponibles.
@@ -101,64 +91,10 @@ habria que hacer que leyera el primer prompt correcto
 zeng_send_key_event de la funcion realjoystick_set_reset_key
 
 
--Para juego en red:
-Comandos ZRCP: 
--envio de snapshot zsf. comando: put-snapshot
--envio de puertos teclado y joystick. Para que tenga sentido hay que jugar con diferentes teclas y/o joystick para que no se crucen entre las dos instancias
-Se puede enviar contenido de las 8 filas de teclado y del puerto Kempston por ejemplo. 
-Si está menú abierto no sincroniza
-Si se abre menú se resetean teclas y joystick. Esto creo que ya se hace así
-Envio de esos puertos como 9 valores hexadecimal
-Tipo:
-ZRCP set-ui-io-ports AABBCCDDEE...
-
-comando: set-ui-io-ports
-Lo mejor sería tener el puerto siempre abierto contra el ZRCP remoto
-send-keys-event: simulates key press/release
-
-Quizá se podría hacer un programa aparte para probar la sincronización. Sin tener que hacerlo en ZEsarUX, con lo que hay ahora:
-
--probar de instancia 1 a 2 de momento:
--leer estado teclas y enviarlas 50 veces por segundo de 1 a 2
--enviar snapshot de 1 a 2 cada 5 segundos
-
-De ahí ir puliendo posibles problemas, como el cierre del emulador cuando se corta un comando ZRCP
 
 
 -bugs: parece que las pruebas de test-socket no siempre obtiene numero de version . por que?
 A veces cierra el nodo remoto
-
-
-Posibles nombres para el juego online:
-
--ZENS: ZEsarUX Network Synchronization
--ZENSS: ZEsarUX Network Synchronization System
--ZENG: ZEsarUX Network Gaming
--ZENGS: ZEsarUX Network Gaming System
-
--ZEOG / ZOG / ZONG: ZEsarUX Online Gaming
-
-
-Hilo de sincronización de juego:
-
--si flag de envío de snapshot, se envía. Ese flag lo activa el core al final de frame, cada X segundos, y cuando somos el máster
-
--si hay que enviar mensaje al otro jugador, enviarlo
-
--ver la fifo usada en envío de eventos:
-*tecla
-*press/release
-
-Dicha fifo hay que controlarla mediante semáforos
-Se mete elementos en fifo cuando se llama a util send press/release
-Se leen y envían eventos de la fifo desde este thread 
-
--dormir durante 10ms - mitad de frame 
-
-Para las rutinas zsock también haría falta semáforos pero como no voy a llamarla desde dos sitios distintos a la vez pues..
-
-Poder enviar mensajes a otros jugadores 
-
 
 
 
@@ -539,6 +475,10 @@ en bucle para que tarde 10 segundos , tarda unos 14 segundos:
 		usleep(500);
 	}
 en cambio un usleep de 10000000 tarda 10 segundos exactos. Parece que tiene problemas con valores pequeños en tiempo
+en developer apple dice:
+ "The actual time slept may be longer, due to
+     system latencies and possible limitations in the timer resolution of the
+     hardware."
 
 
 - En Mac, snap_tests/test3200z88.zx se oye entrecortado. En Linux por ejemplo con pulse se oye continuo (con algun cortecito de vez en cuando)
