@@ -27,7 +27,7 @@ Según la letra seleccionada, procesar la página y meter en un array de estruct
 
 -Interceptar salida midi chip ay y enviarlo a midi real. Probar con programa de addon midi de zxuno
 
-
+-Selección de instrumento midi en midi export y midi output, para cada canal
 
 -rutinas zsock_read_all: deberia reintentar un par o dos de veces si no se ha alcanzado la longitud deseada
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
