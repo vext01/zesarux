@@ -8,10 +8,33 @@ ZENG
 UART
 Spectranet
  
+-Simple web browser en menu network: hacer una petición web y visualice en modo texto el resultado
+
+-Browser para juegos zx81
+
+http://www.zx81.nl/files.html
+
+Dividirlo por letras 
+
+O aquí:
+http://www.zx81.nl/files/
+
+La mayoría en minúsculas. Pero algunos en mayúsculas que salen al principio
+
+Primero cargar esa pagina para leer todo el índice en memoria
+Según la letra seleccionada, procesar la página y meter en un array de estructura: nombre de juego y url. Aunque la url es siempre prefijo fijo y sumar el nombre de juego
+
+
+-Interceptar salida midi chip ay y enviarlo a midi real. Probar con programa de addon midi de zxuno
+
+
 
 -rutinas zsock_read_all: deberia reintentar un par o dos de veces si no se ha alcanzado la longitud deseada
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
+
+-Sockets no debían llamar a debug print error. Sino por ejemplo al comprobar actualizaciones pueden salir errores que el usuario no sepa que son
+ZENG connect por ejemplo que deje un texto de error y número de error si lo hay
 
 -llamar a void timer_check_interrupt(void) desde menu_cpu_core_loop cuando no hay multitarea. Esto permitiria acceder a los timers desde menu
 sin que este multitarea. Efectos colaterales? Seguramente muchos
@@ -83,6 +106,7 @@ Entonces:
 -cursor envía evento ZENG de cursor
 -pulsar joystick real debe agregar envío evento ZENG de código especial joystick 
 -joystick real a Tecla definida no debe llamar a ZENG por la Tecla. Solo envía ZENG el movimiento de joystick (caso anterior)
+
 
 
 *que pregunte confirmacion en destino si quiere aceptar
