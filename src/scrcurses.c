@@ -1619,6 +1619,12 @@ void scrcurses_actualiza_tablas_teclado(void)
 
                                         }
 		}
+		
+		//simular esc en menu con @
+		if (c=='@' && menu_abierto) {
+		  util_set_reset_key(UTIL_KEY_ESC,1);
+		  return;
+		}
 
 		if (c==KEY_F(1)) {
 			util_set_reset_key(UTIL_KEY_F1,1);
