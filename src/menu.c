@@ -26629,7 +26629,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"Press a key between a and z to select an entry with shortcuts; shortcut clues appear when you wait some seconds or press a key "
 			"not associated with any shortcut.\n"
 			"Disabled options may be hidden, or disabled, which are shown with red colour or with x cursor on some video drivers\n"
-			"ESC Key gives you to the previous menu, except in the case with aalib driver and pure text console, which is changed to another key (shown on the menu). On curses driver, ESC key is a bit slow, you have to wait one second after pressing it. "
+			"ESC Key gives you to the previous menu, except in the case with aalib driver and pure text console, which is changed to another key (shown on the menu). On curses driver, ESC key is a bit slow, you have to wait one second after pressing it; you can also use key @ to simulate ESC on menu on curses driver. "
 			"\n\n"
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
