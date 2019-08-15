@@ -231,7 +231,8 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -uso de settings.c y settings.h. revisar que tiene que ir ahi
 
 
--Copiar datos entre zonas memoria 
+-Copiar datos entre zonas memoria. Desde hex editor ya esta opción de copy. Solo hay que 
+agregar zona destino
 
 -unpaws con quill:
 *compression tokens existen?
