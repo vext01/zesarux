@@ -1002,7 +1002,7 @@ void menu_debug_set_memory_zone_mapped(void)
 
 
 //Retorna -1 si mapped memory. 0 o en adelante si otros. -2 si ESC
-int menu_change_memory_zone_list(void)
+int menu_change_memory_zone_list_title(char *titulo)
 {
 
         menu_item *array_menu_memory_zones;
@@ -1040,7 +1040,7 @@ int menu_change_memory_zone_list(void)
                 //menu_add_item_menu(array_menu_hardware_set_f_func_action,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_memory_zones);
 
-                retorno_menu=menu_dibuja_menu(&menu_change_memory_zone_list_opcion_seleccionada,&item_seleccionado,array_menu_memory_zones,"Zones" );
+                retorno_menu=menu_dibuja_menu(&menu_change_memory_zone_list_opcion_seleccionada,&item_seleccionado,array_menu_memory_zones,titulo );
 
                 
 
@@ -1056,18 +1056,29 @@ int menu_change_memory_zone_list(void)
 
 }
 
-void menu_debug_change_memory_zone(void)
+int menu_change_memory_zone_list(void)
 {
-	int valor_opcion=menu_change_memory_zone_list();
-	if (valor_opcion==-2) return; //Pulsado ESC
+  return menu_change_memory_zone_list_title("Zones");
+ }
 
-	if (valor_opcion<0) {
+void menu_set_memzone(int valor_opcion)
+{
+if (valor_opcion<0) {
 		menu_debug_set_memory_zone_mapped();
 	}
 	else {
 		menu_debug_show_memory_zones=1;
 		menu_debug_memory_zone=valor_opcion;
 	}	
+}
+
+void menu_debug_change_memory_zone(void)
+{
+	int valor_opcion=menu_change_memory_zone_list();
+	if (valor_opcion==-2) return; //Pulsado ESC
+	
+	menu_set_memzone(valor_opcion);
+
 
 	/*if (menu_debug_show_memory_zones==0) menu_debug_show_memory_zones=1;
 
