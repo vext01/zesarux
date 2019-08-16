@@ -16,6 +16,7 @@ Added Borland Gui Style
 
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired
+Improved Hex editor: can now copy to a different memory zone
 
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
