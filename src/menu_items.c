@@ -5379,13 +5379,34 @@ void menu_debug_hexdump_copy(void)
     sprintf (string_address,"%XH",source);
     menu_ventana_scanf("Destination?",string_address,10);
 	menu_z80_moto_int destination=parse_string_to_number(string_address);
+	
+	int destzone=menu_change_memory_zone_list_title("Destination Zone");
+	if (destzone==-2) return; //Pulsado ESC
+	
+	int origzone=menu_debug_memory_zone;
+	
 
     strcpy (string_address,"1");
     menu_ventana_scanf("Length?",string_address,10);
 	menu_z80_moto_int longitud=parse_string_to_number(string_address);	
+	
+	
 
 	if (menu_confirm_yesno("Copy bytes")) {
-		for (;longitud>0;source++,destination++,longitud--) poke_byte_z80_moto(destination,peek_byte_z80_moto(source) );
+		for (;longitud>0;source++,destination++,longitud--) {
+			menu_set_memzone(origzone);
+			//Antes de escribir o leer, normalizar zona memoria
+			menu_debug_set_memory_zone_attr();
+			z80_byte valor=peek_byte_z80_moto(source);
+			
+			menu_set_memzone(destzone);
+			//Antes de escribir o leer, normalizar zona memoria
+			menu_debug_set_memory_zone_attr();
+			poke_byte_z80_moto(destination,valor);
+		}
+		
+		//dejar la zona origen tal cual
+		menu_set_memzone(origzone);
 	}
 
 

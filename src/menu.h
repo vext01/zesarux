@@ -867,6 +867,8 @@ extern void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice
 
 extern void menu_copy_clipboard(char *texto);
 
+extern int menu_change_memory_zone_list_title(char *titulo);
+
 #define MAX_LAST_FILESUSED 18
 
 //#define ZXVISION_MAX_WINDOW_WIDTH 32
