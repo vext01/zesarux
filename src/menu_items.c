@@ -5397,12 +5397,15 @@ void menu_debug_hexdump_copy(void)
 			menu_set_memzone(origzone);
 			//Antes de escribir o leer, normalizar zona memoria
 			menu_debug_set_memory_zone_attr();
-			z80_byte valor=peek_byte_z80_moto(source);
+			source=adjust_address_memory_size(source);
+			z80_byte valor=menu_debug_get_mapped_byte(source);
+			
 			
 			menu_set_memzone(destzone);
 			//Antes de escribir o leer, normalizar zona memoria
 			menu_debug_set_memory_zone_attr();
-			poke_byte_z80_moto(destination,valor);
+			destination=adjust_address_memory_size(destination);
+			menu_debug_write_mapped_byte(destination,valor);
 		}
 		
 		//dejar la zona origen tal cual
