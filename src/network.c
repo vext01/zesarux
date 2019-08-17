@@ -623,8 +623,16 @@ int zsock_http(char *host, char *url)
 
 		if (indice_socket<0) {
 			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
-			return 0;
+			return -1;
 		}
+		
+		int sock=get_socket_number(indice_socket);
+
+	if (sock<0) {
+		//printf ("Socket is not open\n");
+        debug_printf(VERBOSE_ERR,"Socket is not open");
+		return -1;
+	}	
 		
 		char request[1024];
 		
@@ -640,21 +648,58 @@ int zsock_http(char *host, char *url)
 
 		if (escritos<0) {
 			debug_printf(VERBOSE_ERR,"ERROR. Can't send request");
-			return 0;	
+			return -1;	
 		}
 		
 		//todo buffer asignar
 		char response[65535];
 		
+		int leido_content_length=0;
+		int pos_destino=0;
+		int max_buffer=65535;
+		int leidos;
+		int salir=0;
+		int total_leidos=0;
 		
 		//todo leer cabeceras
+		//todo leer codigo http
 		//todo leer hasta content-length o hasta cierre de socket
 		//todo usar funcion parecida a zsock_read_all_until_command pero con condicion redefinible
-		int leidos=z_sock_read(indice_socket,response,65535);
+		//todo ver si el socket se ha cerrado
+		int reintentos=0;
+		do {
+		do {
+			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
+			//la conexion se queda en read colgada
+			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
+				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
+				if (leidos<0) salir=1;
+				else {
+					max_buffer -=leidos;
+					total_leidos +=leidos;
+					pos_destino +=leidos;
+				}
+			}
+			else {
+				leidos=0;
+			}
+		} while (leidos>0 && max_buffer>0 && !salir);
+		//int leidos=z_sock_read(indice_socket,&response[pos_destino],65535);
 		
-		if (leidos>0) {
-			response[leidos]=0;
-			printf ("leidos: %d\n",leidos);
+		if (!salir) {
+		usleep(10000); //10 ms
+		
+
+		reintentos++;
+		}
+
+		//controlar maximo reintentos
+	} while (reintentos<500 && !salir);
+		
+		if (total_leidos>0) {
+			response[total_leidos]=0;
+			printf ("leidos: %d\n",total_leidos);
 			printf ("respuesta:\n%s\n",response);
 			z_sock_close_connection(indice_socket);
 			return 0;
