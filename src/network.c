@@ -680,7 +680,7 @@ int zsock_http(char *host, char *url)
 			//la conexion se queda en read colgada
 			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
-				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
+				printf ("leidos en zsock_http_read: %d\n",leidos);
 				if (leidos<0) salir=1;
 				else {
 					max_buffer -=leidos;
