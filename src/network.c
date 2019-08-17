@@ -715,7 +715,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem)
 		if (total_leidos>0) {
 			response[total_leidos]=0;
 			printf ("leidos: %d\n",total_leidos);
-			printf ("respuesta:\n%s\n",response);
+			//printf ("respuesta:\n%s\n",response);
 			z_sock_close_connection(indice_socket);
 			*mem=response;
 			return 0;

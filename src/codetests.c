@@ -1048,7 +1048,11 @@ void codetests_http()
 	//http://www.zx81.nl/files.html
 	int http_code;
 	char *mem;
-	zsock_http("www.zx81.nl","/files.html",&http_code,&mem);
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem);
+	
+	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
+	
+	
 	if (mem!=NULL) free (mem);
 }
 
