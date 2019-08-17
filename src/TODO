@@ -23,7 +23,8 @@ La mayoría en minúsculas. Pero algunos en mayúsculas que salen al principio
 
 Primero cargar esa pagina para leer todo el índice en memoria
 Según la letra seleccionada, procesar la página y meter en un array de estructura: nombre de juego y url. Aunque la url es siempre prefijo fijo y sumar el nombre de juego
-
+-zsock http request: que sea capaz de encontrar final de cabeceras,
+Buffer response en z80_byte y no char
 
 -Interceptar salida midi chip ay y enviarlo a midi real. Probar con programa de addon midi de zxuno
 
