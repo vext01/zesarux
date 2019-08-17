@@ -637,7 +637,7 @@ int zsock_http(char *host, char *url)
 		int escritos=z_sock_write_string(indice_socket,request);
 
 		if (escritos<0) {
-			debug_printf(VERBOSE_ERR,"ERROR. Can't send version");
+			debug_printf(VERBOSE_ERR,"ERROR. Can't send request");
 			return 0;	
 		}
 		
@@ -648,7 +648,9 @@ int zsock_http(char *host, char *url)
 		
 		if (leidos>0) {
 			response[leidos]=0;
+			printf ("leidos: %d\n",leidos);
 			printf ("respuesta:\n%s\n",response);
+			z_sock_close_connection(indice_socket);
 			return 0;
 		}
 		
