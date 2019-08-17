@@ -652,11 +652,18 @@ int zsock_http(char *host, char *url)
 		}
 		
 		//todo buffer asignar
-		char response[65535];
+		char *response;
+		int max_buffer=655350;
+		
+		response=malloc(max_buffer);
+		if (response==NULL) cpu_panic ("Can not allocate memory for http response");
+		
+		//todo liberar buffer al salir
+		//char response[65535];
 		
 		int leido_content_length=0;
 		int pos_destino=0;
-		int max_buffer=65535;
+		
 		int leidos;
 		int salir=0;
 		int total_leidos=0;
