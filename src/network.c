@@ -630,8 +630,10 @@ int zsock_http(char *host, char *url)
 		
 		sprintf(request,"GET %s HTTP/1.0\r\n"
 						"Host: %s\r\n"
-						"User-Agent: ZEsarUX\r\n" 
+						"User-Agent: ZEsarUX " EMULATOR_VERSION " " COMPILATION_SYSTEM "\r\n" 
 						"\r\n",url,host);
+						
+		printf ("Request:\n%s\n",request);
 
 		
 		int escritos=z_sock_write_string(indice_socket,request);
@@ -644,6 +646,10 @@ int zsock_http(char *host, char *url)
 		//todo buffer asignar
 		char response[65535];
 		
+		
+		//todo leer cabeceras
+		//todo leer hasta content-length o hasta cierre de socket
+		//todo usar funcion parecida a zsock_read_all_until_command pero con condicion redefinible
 		int leidos=z_sock_read(indice_socket,response,65535);
 		
 		if (leidos>0) {
