@@ -616,3 +616,43 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 	return total_leidos;
 
 }
+
+int zsock_http(char *host, char *url)
+{
+	int indice_socket=z_sock_open_connection(host,80);
+
+		if (indice_socket<0) {
+			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
+			return 0;
+		}
+		
+		char request[1024];
+		
+		sprintf(request,"GET %s HTTP/1.0\r\n"
+						"Host: %s\r\n"
+						"User-Agent: ZEsarUX\r\n" 
+						"\r\n",url,host);
+
+		
+		int escritos=z_sock_write_string(indice_socket,request);
+
+		if (escritos<0) {
+			debug_printf(VERBOSE_ERR,"ERROR. Can't send version");
+			return 0;	
+		}
+		
+		//todo buffer asignar
+		char response[65535];
+		
+		int leidos=z_sock_read(indice_socket,response,65535);
+		
+		if (leidos>0) {
+			response[leidos]=0;
+			printf ("respuesta:\n%s\n",response);
+			return 0;
+		}
+		
+		else return -1;
+		
+		
+}
