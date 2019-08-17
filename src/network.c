@@ -682,6 +682,10 @@ int zsock_http(char *host, char *url)
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
 				printf ("leidos en zsock_http_read: %d\n",leidos);
 				if (leidos<0) salir=1;
+				else if (leidos==0) {
+					salir=1; //si lee 0, ha llegado al final
+					//todo aplicar lo mismo a funciones zeng
+				}
 				else {
 					max_buffer -=leidos;
 					total_leidos +=leidos;
