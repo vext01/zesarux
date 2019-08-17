@@ -1046,7 +1046,10 @@ void codetests_zeng(void)
 void codetests_http()
 {
 	//http://www.zx81.nl/files.html
-	zsock_http("www.zx81.nl","/files.html");
+	int http_code;
+	char *mem;
+	zsock_http("www.zx81.nl","/files.html",&http_code,&mem);
+	if (mem!=NULL) free (mem);
 }
 
 void codetests_main(int main_argc,char *main_argv[])

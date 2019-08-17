@@ -617,8 +617,10 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 }
 
-int zsock_http(char *host, char *url)
+int zsock_http(char *host, char *url,int *http_code,char **mem)
 {
+
+	*mem=NULL;
 	int indice_socket=z_sock_open_connection(host,80);
 
 		if (indice_socket<0) {
@@ -653,12 +655,12 @@ int zsock_http(char *host, char *url)
 		
 		//todo buffer asignar
 		char *response;
-		int max_buffer=655350;
+		int max_buffer=1024*1024; //1 mb max
 		
 		response=malloc(max_buffer);
 		if (response==NULL) cpu_panic ("Can not allocate memory for http response");
 		
-		//todo liberar buffer al salir
+		
 		//char response[65535];
 		
 		int leido_content_length=0;
@@ -715,6 +717,7 @@ int zsock_http(char *host, char *url)
 			printf ("leidos: %d\n",total_leidos);
 			printf ("respuesta:\n%s\n",response);
 			z_sock_close_connection(indice_socket);
+			*mem=response;
 			return 0;
 		}
 		
