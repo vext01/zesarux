@@ -1043,6 +1043,12 @@ void codetests_zeng(void)
 
 }
 
+void codetests_http()
+{
+	//http://www.zx81.nl/files.html
+	zsock_http("www.zx81.nl","/files.html");
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -1072,8 +1078,11 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("\nRunning assembler tests\n");
 	//codetests_assembler();
 
-	printf ("\nRunning zeng tests\n");
-	codetests_zeng();
+	//printf ("\nRunning zeng tests\n");
+	//codetests_zeng();
+	
+	printf ("\nRunning zsock http tests\n");
+	codetests_http();
 
 
 	//printf ("\nRunning tbblue layers strings\n");
