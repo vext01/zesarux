@@ -703,6 +703,8 @@ int zsock_http(char *host, char *url)
 
 		//controlar maximo reintentos
 	} while (reintentos<500 && !salir);
+	
+	printf ("reintentos: %d\n",reintentos);
 		
 		if (total_leidos>0) {
 			response[total_leidos]=0;
