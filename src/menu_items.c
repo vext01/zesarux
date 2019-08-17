@@ -16609,6 +16609,23 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_network_http_request(MENU_ITEM_PARAMETERS)
+{
+int http_code;
+	char *mem;
+	char host[100];
+	char url[100];
+	host[0]=0;
+	url[0]=0;
+	
+	menu_ventana_scanf("host?",host,100);
+	menu_ventana_scanf("url?",url,100);
+	int retorno=zsock_http(host,url,&http_code,&mem);
+	if (retorno==0 && mem!=NULL) menu_generic_message("Response",mem);
+	
+	if (mem!=NULL) free (mem);
+	}
+
 
 void menu_network(MENU_ITEM_PARAMETERS)
 {
@@ -16634,7 +16651,7 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tooltip(array_menu_common,"Setup ZEsarUX Network Gaming");
 			menu_add_item_menu_ayuda(array_menu_common,"Setup ZEsarUX Network Gaming");
 #endif
-                       
+             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_network_http_request,NULL,"Http request");          
 						
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
