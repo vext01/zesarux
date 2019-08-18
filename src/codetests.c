@@ -1064,7 +1064,10 @@ void codetests_http()
 		char *next_mem;
 		next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
 		total_leidos -=leidos;
-		if (buffer_linea[0]=='\n') salir=1;
+		if (buffer_linea[0]=='\n') {
+			salir=1;
+			mem=next_mem;
+		}
 		else if (buffer_linea[0]==0) salir=1;
 		else {
 			printf ("cabecera %d: %s\n",i,buffer_linea);
