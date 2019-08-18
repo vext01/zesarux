@@ -1075,6 +1075,8 @@ void codetests_http()
 		if (total_leidos<=0) salir=1;
 	} while (!salir);
 	
+	printf ("respuesta despues cabeceras:\n%s\n",mem);
+	
 	
 	if (orig_mem!=NULL) free (orig_mem);
 }
