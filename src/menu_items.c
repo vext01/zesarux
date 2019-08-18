@@ -16620,7 +16620,8 @@ int http_code;
 	
 	menu_ventana_scanf("host?",host,100);
 	menu_ventana_scanf("url?",url,100);
-	int retorno=zsock_http(host,url,&http_code,&mem);
+	int total_leidos;
+	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos);
 	if (retorno==0 && mem!=NULL) menu_generic_message("Response",mem);
 	
 	if (mem!=NULL) free (mem);

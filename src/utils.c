@@ -15389,3 +15389,26 @@ char util_printable_char(char c)
         if (c<32 || c>126) return '?';
         else return c;
 }
+
+//funcion para leer una linea desde origen, hasta codigo 10 NL
+//se puede limitar max en destino
+//retorna puntero a byte despues de salto linea
+char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,int *leidos)
+{
+	max_size_dest --;
+	*leidos=0;
+	for (;*origen && size_orig>0 && max_size_dest>0;origen++,size_orig--,(*leidos)--) {
+		//ignorar cr
+		if ( *origen=='\r' ) continue;
+		if ( *origen=='\n' ) {
+			origen++;
+			break; 
+		}
+		*destino=*origen;
+		destino++;
+		max_size_dest--;
+		
+	}
+	*destino=0;
+	return origen;
+}

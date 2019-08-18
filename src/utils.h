@@ -817,6 +817,8 @@ extern int get_file_lines(char *filename);
 
 extern char util_printable_char(char c);
 
+extern char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,int *leidos);
+
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 #define MEMORY_ZONE_NUM_TIMEX_EX 18

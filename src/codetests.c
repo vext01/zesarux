@@ -1048,9 +1048,30 @@ void codetests_http()
 	//http://www.zx81.nl/files.html
 	int http_code;
 	char *mem;
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem);
+	int total_leidos;
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos);
 	
 	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
+	
+	//leer linea a linea hasta fin cabecera
+	char buffer_linea[1024];
+	int i=0;
+	int salir=0;
+	do {
+		int leidos;
+		char *next_mem;
+		next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
+		total_leidos -=leidos;
+		if (buffer_linea[0]=='\n') salir=1;
+		else if (buffer_linea[0]==0) salir=1;
+		else {
+			printf ("cabecera %d: %s\n",i,buffer_linea);
+			i++;
+			mem=next_mem;
+		}
+		
+		if (total_leidos<=0) salir=1;
+	} while (!salir);
 	
 	
 	if (mem!=NULL) free (mem);

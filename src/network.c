@@ -617,10 +617,11 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 }
 
-int zsock_http(char *host, char *url,int *http_code,char **mem)
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos)
 {
 
 	*mem=NULL;
+	*t_leidos=0;
 	int indice_socket=z_sock_open_connection(host,80);
 
 		if (indice_socket<0) {
@@ -715,6 +716,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem)
 		if (total_leidos>0) {
 			response[total_leidos]=0;
 			printf ("leidos: %d\n",total_leidos);
+			*t_leidos=total_leidos;
 			//printf ("respuesta:\n%s\n",response);
 			z_sock_close_connection(indice_socket);
 			*mem=response;
