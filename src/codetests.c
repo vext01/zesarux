@@ -1067,6 +1067,7 @@ void codetests_http()
 		if (buffer_linea[0]=='\n') {
 			salir=1;
 			mem=next_mem;
+			printf ("salida con salto linea\n");
 		}
 		else if (buffer_linea[0]==0) salir=1;
 		else {
