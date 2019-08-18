@@ -1048,8 +1048,10 @@ void codetests_http()
 	//http://www.zx81.nl/files.html
 	int http_code;
 	char *mem;
+	char *orig_mem;
 	int total_leidos;
 	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos);
+	orig_mem=mem;
 	
 	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
 	
@@ -1074,7 +1076,7 @@ void codetests_http()
 	} while (!salir);
 	
 	
-	if (mem!=NULL) free (mem);
+	if (orig_mem!=NULL) free (orig_mem);
 }
 
 void codetests_main(int main_argc,char *main_argv[])
