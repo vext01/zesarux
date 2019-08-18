@@ -1074,6 +1074,7 @@ void codetests_http()
 			if (buffer_linea[0]==0) {
 				salir=1;
 				printf ("salir con linea vacia final\n");
+				mem=next_mem;
 			}
 			else {
 				printf ("cabecera %d: %s\n",i,buffer_linea);
