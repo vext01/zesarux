@@ -1418,7 +1418,7 @@ dandanator.o: dandanator.c dandanator.h cpu.h debug.h utils.h operaciones.h ula.
 betadisk.o: betadisk.c betadisk.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h tsconf.h tape.h
 	\$(CC) \$(CFLAGS) -c betadisk.c
 
-codetests.o: codetests.c codetests.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h tbblue.h assemble.h expression_parser.h audio.h zeng.h
+codetests.o: codetests.c codetests.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h tbblue.h assemble.h expression_parser.h audio.h zeng.h network.h
 	\$(CC) \$(CFLAGS) -c codetests.c
 
 assemble.o: assemble.c assemble.h cpu.h debug.h utils.h

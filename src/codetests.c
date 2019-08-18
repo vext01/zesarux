@@ -44,7 +44,7 @@
 #include "expression_parser.h"
 #include "audio.h"
 #include "zeng.h"
-
+#include "network.h"
 
 void codetests_repetitions(void)
 {
