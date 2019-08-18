@@ -1063,6 +1063,8 @@ void codetests_http()
 		int leidos;
 		char *next_mem;
 		if (*mem=='\n') {
+			//esto puede que no pase, linea con solo salto linea tendra un cr antes,
+			//por tanto la deteccion de esa linea se leera abajom cuando buffer linea vacia
 			salir=1;
 			mem++;
 			printf ("salir con salto linea inicial\n");
