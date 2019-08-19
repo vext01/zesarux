@@ -13,6 +13,7 @@ Added ZRCP commands:
 -test-tcp-connect: testing tcp connection
 
 Added Borland Gui Style
+Added ZX81 online game browser
 
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired
