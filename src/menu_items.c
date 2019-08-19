@@ -16624,15 +16624,15 @@ int menu_online_zx81_letra(char filtro,char letra)
 	}
 }
 
+char s_online_browse_zx81_letra[2]="a";
+
 void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 {
-	char s_letra[2];
-	s_letra[0]='a';
-	s_letra[1]=0;
 	
-	menu_ventana_scanf("Letter",s_letra,2);
 	
-	char letra=s_letra[0];
+	menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
+	
+	char letra=s_online_browse_zx81_letra[0];
 	
 
 	
