@@ -1049,8 +1049,9 @@ void codetests_http()
 	int http_code;
 	char *mem;
 	char *orig_mem;
+	char *mem_after_headers;
 	int total_leidos;
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos);
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0);
 	orig_mem=mem;
 	
 	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);

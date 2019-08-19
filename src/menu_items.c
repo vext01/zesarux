@@ -16613,6 +16613,7 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 {
 int http_code;
 	char *mem;
+	char *mem_after_headers;
 	char host[100];
 	char url[100];
 	host[0]=0;
@@ -16621,7 +16622,7 @@ int http_code;
 	menu_ventana_scanf("host?",host,100);
 	menu_ventana_scanf("url?",url,100);
 	int total_leidos;
-	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos);
+	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,0);
 	if (retorno==0 && mem!=NULL) menu_generic_message("Response",mem);
 	
 	if (mem!=NULL) free (mem);

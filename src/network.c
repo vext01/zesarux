@@ -617,10 +617,11 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 }
 
-int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos)
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers)
 {
 
 	*mem=NULL;
+	*mem_after_headers=NULL;
 	*t_leidos=0;
 	int indice_socket=z_sock_open_connection(host,80);
 
