@@ -16621,7 +16621,9 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
-		menu_generic_message("Games","mem_after_headers");
+		//temp limite
+		mem_after_headers[10000]=0;
+		menu_generic_message("Games",mem_after_headers);
 		if (mem!=NULL) free(mem);
 	}
 	
