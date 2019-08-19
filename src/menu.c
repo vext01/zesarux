@@ -9464,6 +9464,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	item_seleccionado->tipo_opcion=menu_sel->tipo_opcion;
 	item_seleccionado->valor_opcion=menu_sel->valor_opcion;
+	strcpy(item_seleccionado->texto_opcion,menu_sel->texto_opcion);
 
 
 	//Liberar memoria del menu

@@ -16718,7 +16718,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                                 juego=item_seleccionado.texto_opcion;
                                 printf ("juego %s\n",juego);
                                 sleep(3);
-                                return;
+                                //return;
                                 char url_juego[1024];
                                 sprintf(url_juego,"/files/%s",juego);
                                 //cargar
