@@ -617,7 +617,7 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 }
 
-char *zsock_http_skip_headers(char *mem)
+char *zsock_http_skip_headers(char *mem,int total_leidos)
 {
 //leer linea a linea hasta fin cabecera
 	char buffer_linea[1024];
@@ -762,7 +762,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 			*mem=response;
 			
 			if (skip_headers) {
-				*mem_after_headers=zsock_http_skip_headers(mem);
+				*mem_after_headers=zsock_http_skip_headers(&mem,total_leidos);
 			}
 			return 0;
 		}
