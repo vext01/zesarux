@@ -16713,7 +16713,53 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
                                 //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                char *juego;
+                                juego=item_seleccionado.texto_opcion;
+                                char url_juego[1024];
+                                sprintf(url_juego,"/files/%s",juego);
+                                //cargar
+                                retorno=zsock_http("www.zx81.nl",url_juego,&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	orig_mem=mem;
+	
+	if (mem_after_headers!=NULL) {
+		//temp limite
+		//mem_after_headers[10000]=0;
+		//menu_generic_message("Games",mem_after_headers);
+		char texto_final[30000];
+		
+		int indice_destino=0;
+		
+		int dif_header=mem_after_headers-mem;
+		total_leidos -=dif_header;
+		mem=mem_after_headers;
+		//grabar a disco
+		//todo usar funcion de utils comun, existe?
+		char archivo_temp[PATH_MAX];
+		sprintf (archivo_temp,"/tmp/%s",juego);
+		//todo sacar tempdir
+		FILE *ptr_destino;
+  ptr_destino=fopen(archivo_temp,"wb");
+
+  if (ptr_destino==NULL) {
+    debug_printf (VERBOSE_ERR,"Error writing game file");
+    return 1;
+  }
+
+
+
+  	fwrite(mem_after_headers,1,total_leidos,ptr_destino);
+
+
+  
+
+  fclose(ptr_destino);
+
+  //y cargar
+  quickload(archivo_temp);
+		
+	}
+                                
                                 
                         }
                 }
