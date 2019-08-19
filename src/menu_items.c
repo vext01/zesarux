@@ -16695,6 +16695,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	} while (!salir);
 	
 	texto_final[indice_destino]=0;
+	if (orig_mem!=NULL) free(orig_mem);
 	//menu_generic_message("Games",texto_final);
 	
 
@@ -16717,11 +16718,12 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                         }
                 }
 	}
+	//todo mejorar esto. el while no deberia estar debajo del cierre del if
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 	
-	if (orig_mem!=NULL) free(orig_mem);
+	
 	
 	
 	
