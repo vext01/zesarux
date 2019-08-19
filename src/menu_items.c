@@ -16722,7 +16722,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 
             menu_add_ESC_item(array_menu_common);
 
-            retorno_menu=menu_dibuja_menu(&juego_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZENG" );
+            retorno_menu=menu_dibuja_menu(&juego_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZX81 Games" );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
