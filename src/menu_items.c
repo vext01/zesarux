@@ -16655,6 +16655,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 				char *existe;
 				existe=strstr(buffer_linea,"/files");
 				if (existe!=NULL) {
+					printf ("add line %s\n",buffer_linea);
 					sprintf(&texto_final[indice_destino],"%s\n",buffer_linea);
 					indice_destino +=strlen(buffer_linea)+1;
 				}
