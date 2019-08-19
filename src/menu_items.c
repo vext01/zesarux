@@ -16757,7 +16757,8 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		//grabar a disco
 		//todo usar funcion de utils comun, existe?
 		char archivo_temp[PATH_MAX];
-		sprintf (archivo_temp,"/tmp/%s",juego);
+		//sprintf (archivo_temp,"/tmp/%s",juego);
+		sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
 		//todo sacar tempdir
 		FILE *ptr_destino;
   ptr_destino=fopen(archivo_temp,"wb");
