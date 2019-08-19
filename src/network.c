@@ -617,6 +617,45 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 }
 
+char *zsock_http_skip_headers(char *mem)
+{
+//leer linea a linea hasta fin cabecera
+	char buffer_linea[1024];
+	int i=0;
+	int salir=0;
+	do {
+		int leidos;
+		char *next_mem;
+		if (*mem=='\n') {
+			//esto puede que no pase, linea con solo salto linea tendra un cr antes,
+			//por tanto la deteccion de esa linea se leera abajom cuando buffer linea vacia
+			salir=1;
+			mem++;
+			printf ("salir con salto linea inicial\n");
+		}
+		else {
+			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
+			total_leidos -=leidos;
+		
+			if (buffer_linea[0]==0) {
+				salir=1;
+				printf ("salir con linea vacia final\n");
+				mem=next_mem;
+			}
+			else {
+				printf ("cabecera %d: %s\n",i,buffer_linea);
+				i++;
+				mem=next_mem;
+			}
+		
+			if (total_leidos<=0) salir=1;
+		}
+	} while (!salir);
+	
+	//printf ("respuesta despues cabeceras:\n%s\n",mem)
+	return mem;
+}
+
 int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers)
 {
 
@@ -721,6 +760,10 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 			//printf ("respuesta:\n%s\n",response);
 			z_sock_close_connection(indice_socket);
 			*mem=response;
+			
+			if (skip_headers) {
+				*mem_after_headers=zsock_http_skip_headers(mem);
+			}
 			return 0;
 		}
 		
