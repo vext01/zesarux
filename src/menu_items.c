@@ -16622,63 +16622,58 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 	if (mem_after_headers!=NULL) {
 		//temp limite
-		mem_after_headers[10000]=0;
-		menu_generic_message("Games",mem_after_headers);
-		if (mem!=NULL) free(mem);
-	}
+		//mem_after_headers[10000]=0;
+		//menu_generic_message("Games",mem_after_headers);
+		char texto_final[30000];
+		
+		int indice_destino=0;
+		
+		int dif_header=mem_after_headers-mem;
+		total_leidos -=dif_header;
 	
 	
-	
-	return;
-	
-	
-	
-	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
-	
-	//leer linea a linea hasta fin cabecera
+	//leer linea a linea 
 	char buffer_linea[1024];
 	int i=0;
 	int salir=0;
 	do {
 		int leidos;
 		char *next_mem;
-		if (*mem=='\n') {
-			//esto puede que no pase, linea con solo salto linea tendra un cr antes,
-			//por tanto la deteccion de esa linea se leera abajom cuando buffer linea vacia
-			salir=1;
-			mem++;
-			printf ("salir con salto linea inicial\n");
-		}
-		else {
+		
 			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
 			total_leidos -=leidos;
 		
 			if (buffer_linea[0]==0) {
 				salir=1;
-				printf ("salir con linea vacia final\n");
+				//printf ("salir con linea vacia final\n");
 				mem=next_mem;
 			}
 			else {
-				printf ("cabecera %d: %s\n",i,buffer_linea);
+				//printf ("cabecera %d: %s\n",i,buffer_linea);
+				//ver si contine texto de juego
+				
+				char *existe;
+				existe=strstr(buffer_linea,"/files");
+				if (existe!=NULL) {
+					sprintf(&texto_final[indice_destino],"%s\n",buffer_linea);
+					indice_destino +=strlen(buffer_linea)+1;
+				}
 				i++;
 				mem=next_mem;
 			}
 		
 			if (total_leidos<=0) salir=1;
-		}
+		
 	} while (!salir);
 	
-	printf ("respuesta despues cabeceras:\n%s\n",mem);
+	texto_final[indice_destino]=0;
+	menu_generic_message("Games",texto_final);
+	
+	if (mem!=NULL) free(mem);
+	
+	}
 	
 	
-	if (orig_mem!=NULL) free (orig_mem);
-	
-	//peticion saltando cabeceras
-	printf ("Request skipping headers\n");
-	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1);
-	if (mem_after_headers!=NULL) printf ("Answer after headers:\n%s\n",mem_after_headers);
-	
-	if (mem!=NULL) free (mem);
 	
 }
 
