@@ -16611,6 +16611,16 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 
 void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 {
+	char s_letra[2];
+	s_letra[0]='a';
+	s_letra[1]=0;
+	
+	menu_ventana_scanf("Letter",s_letra,2);
+	
+	char letra=s_letra[0];
+	
+
+
 	//http://www.zx81.nl/files.html
 	int http_code;
 	char *mem;
@@ -16653,11 +16663,14 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 				//ver si contine texto de juego
 				
 				char *existe;
-				existe=strstr(buffer_linea,"/files");
+				existe=strstr(buffer_linea,"/files/");
 				if (existe!=NULL) {
-					printf ("add line %s\n",buffer_linea);
-					sprintf(&texto_final[indice_destino],"%s\n",buffer_linea);
-					indice_destino +=strlen(buffer_linea)+1;
+					if (existe[7]==letra) {
+						printf ("add line %s\n",buffer_linea);
+						//Todo controlar maximo buffer y maximo que puede mostrar ventana
+						sprintf(&texto_final[indice_destino],"%s\n",buffer_linea);
+						indice_destino +=strlen(buffer_linea)+1;
+					}
 				}
 				i++;
 				mem=next_mem;
