@@ -16764,7 +16764,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 
   if (ptr_destino==NULL) {
     debug_printf (VERBOSE_ERR,"Error writing game file");
-    return 1;
+    return;
   }
 
 
