@@ -16711,7 +16711,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
+                        if (1/*item_seleccionado.menu_funcion!=NULL*/) {
                                 //printf ("actuamos por funcion\n");
                                 //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
                                 char *juego;
