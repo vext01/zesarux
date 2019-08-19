@@ -16609,6 +16609,21 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 
 }
 
+int menu_online_zx81_letra(char filtro,char letra)
+{
+	letra=letra_minuscula(letra);
+	filtro=letra_minuscula(filtro);
+	if (filtro>='a' && filtro<='z') {
+		if (letra==filtro) return 1;
+		else retrun 0;
+	}
+	else {
+		//todo lo que no son letras
+		if (letra<'a' || letra>'z') return 1;
+		else return 0;
+	}
+}
+
 void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 {
 	char s_letra[2];
@@ -16673,7 +16688,8 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 				char *existe;
 				existe=strstr(buffer_linea,"/files/");
 				if (existe!=NULL) {
-					if (existe[7]==letra) {
+					if (menu_online_zx81_letra(letra,existe[7])) {
+					//if (existe[7]==letra) {
 						//quitar desde comilla derecha
 						char *comilla;
 						comilla=strstr(&existe[7],"\"");
@@ -16837,7 +16853,7 @@ void menu_network(MENU_ITEM_PARAMETERS)
 #endif
              menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_network_http_request,NULL,"Http request");         
              
-              menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zx81,NULL,"zx81 browse");  
+              menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zx81,NULL,"zx81 online browser");  
 						
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
