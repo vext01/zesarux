@@ -180,6 +180,7 @@ int ay_mixer_opcion_seleccionada=0;
 int uartbridge_opcion_seleccionada=0;
 int network_opcion_seleccionada=0;
 int zeng_opcion_seleccionada=0;
+int zx81_online_browser_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -16628,13 +16629,14 @@ char s_online_browse_zx81_letra[2]="a";
 
 void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 {
-	
+	char oldletra=s_online_browse_zx81_letra[0];
 	
 	menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
 	
 	char letra=s_online_browse_zx81_letra[0];
 	
-
+	if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
+	//si cambia letra, poner cursor arriba
 	
 	     //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
         menu_item *array_menu_common;
@@ -16715,14 +16717,14 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	//menu_generic_message("Games",texto_final);
 	
 
-		int juego_opcion_seleccionada=0;	
+		
                        
 						
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
             menu_add_ESC_item(array_menu_common);
 
-            retorno_menu=menu_dibuja_menu(&juego_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZX81 Games" );
+            retorno_menu=menu_dibuja_menu(&zx81_online_browser_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZX81 Games" );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
