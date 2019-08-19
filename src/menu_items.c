@@ -16778,7 +16778,19 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
   fclose(ptr_destino);
 
   //y cargar
-  quickload(archivo_temp);
+  strcpy(quickload_file,archivo_temp);
+ 
+
+			quickfile=quickload_file;
+
+          
+
+
+			if (quickload(quickload_file)) {
+				debug_printf (VERBOSE_ERR,"Unknown file format");
+			}
+			
+			
   
   salir_todos_menus=1;
 		
