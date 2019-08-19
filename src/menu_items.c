@@ -16668,8 +16668,8 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 					if (existe[7]==letra) {
 						printf ("add line %s\n",buffer_linea);
 						//Todo controlar maximo buffer y maximo que puede mostrar ventana
-						sprintf(&texto_final[indice_destino],"%s\n",buffer_linea);
-						indice_destino +=strlen(buffer_linea)+1;
+						sprintf(&texto_final[indice_destino],"%s\n",&existe[7]);
+						indice_destino +=strlen(&existe[7])+1;
 					}
 				}
 				i++;
