@@ -16666,6 +16666,10 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 				existe=strstr(buffer_linea,"/files/");
 				if (existe!=NULL) {
 					if (existe[7]==letra) {
+						//quitar desde comilla derecha
+						char *comilla;
+						comilla=strstr(&existe[7],"\"");
+						if (comilla!=NULL) *comilla=0;
 						printf ("add line %s\n",buffer_linea);
 						//Todo controlar maximo buffer y maximo que puede mostrar ventana
 						sprintf(&texto_final[indice_destino],"%s\n",&existe[7]);
