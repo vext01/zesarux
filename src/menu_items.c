@@ -16630,7 +16630,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		
 		int dif_header=mem_after_headers-mem;
 		total_leidos -=dif_header;
-	
+		mem=mem_after_headers;
 	
 	//leer linea a linea 
 	char buffer_linea[1024];
@@ -16669,7 +16669,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	texto_final[indice_destino]=0;
 	menu_generic_message("Games",texto_final);
 	
-	if (mem!=NULL) free(mem);
+	if (orig_mem!=NULL) free(orig_mem);
 	
 	}
 	
