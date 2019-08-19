@@ -762,7 +762,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 			*mem=response;
 			
 			if (skip_headers) {
-				*mem_after_headers=zsock_http_skip_headers(&mem,total_leidos);
+				*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos);
 			}
 			return 0;
 		}
