@@ -16616,14 +16616,23 @@ int http_code;
 	char *mem_after_headers;
 	char host[100];
 	char url[100];
+	char s_skip_headers[2];
 	host[0]=0;
 	url[0]=0;
+	s_skip_headers[0]='0';
 	
 	menu_ventana_scanf("host?",host,100);
 	menu_ventana_scanf("url?",url,100);
+	menu_ventana_scanf("skip headers?",s_skip_headers,2);
+	int skip_headers=parse_string_to_number(s_skip_headers);
 	int total_leidos;
-	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,0);
-	if (retorno==0 && mem!=NULL) menu_generic_message("Response",mem);
+	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers);
+	if (retorno==0 && mem!=NULL) {
+		if (skip_headers) {
+			if (mem_after_headers) menu_generic_message("Response",mem_after_headers);
+		}
+		else menu_generic_message("Response",mem);
+	}
 	
 	if (mem!=NULL) free (mem);
 	}
