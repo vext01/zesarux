@@ -16615,7 +16615,7 @@ int menu_online_zx81_letra(char filtro,char letra)
 	filtro=letra_minuscula(filtro);
 	if (filtro>='a' && filtro<='z') {
 		if (letra==filtro) return 1;
-		else retrun 0;
+		else return 0;
 	}
 	else {
 		//todo lo que no son letras
