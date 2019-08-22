@@ -181,6 +181,7 @@ int uartbridge_opcion_seleccionada=0;
 int network_opcion_seleccionada=0;
 int zeng_opcion_seleccionada=0;
 int zx81_online_browser_opcion_seleccionada=0;
+int online_browse_zx81_letter_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -16627,13 +16628,113 @@ int menu_online_zx81_letra(char filtro,char letra)
 
 char s_online_browse_zx81_letra[2]="a";
 
+char menu_online_browse_zx81_letter(void)
+{
+
+menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+	zxvision_window ventana;
+	
+	int xventana=3;
+	int yventana=3;
+	int ancho_ventana=20;
+	int alto_ventana=15;
+	
+	char letra_seleccionada=0;
+
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"Initial letter");
+	zxvision_draw_window(&ventana);		
+
+       
+        menu_item *array_menu_osd_adventure_keyboard;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+		
+
+
+        //Como no sabemos cual sera el item inicial, metemos este sin asignar
+        menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
+	//osd_adv_kbd_defined
+		int i;
+		int last_x=1;
+		int last_y=0;
+		char letra='a';
+		int salir=0;
+
+		
+		
+		
+		for (;letra<='z'+1;letra++) {
+			char letra_mostrar=letra;
+			if (letra=='z'+1) letra_mostrar="#';
+		menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"%c",letra_mostrar);
+        		    menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
+					menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,letra_mostrar);
+				
+menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,letra_mostrar);
+
+			last_x +=2;
+			if (last_x >10) {
+				last_x=1;
+				last_y++; 
+			}
+		}
+
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+        retorno_menu=menu_dibuja_menu(&online_browse_zx81_letter_opcion_seleccionada,&item_seleccionado,array_menu_osd_adventure_keyboard,"Initial letter" );
+
+
+	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+        cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+				//printf ("Item seleccionado: %d\n",item_seleccionado.valor_opcion);
+                                //printf ("actuamos por funcion\n");
+
+	                        
+
+                                letra_seleccionada=item_seleccionado.valor_opcion;
+				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+				salir=1;
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir);
+
+
+
+        cls_menu_overlay();
+		
+
+		//printf ("en final de funcion\n");
+		zxvision_destroy_window(&ventana);
+
+	return letra_seleccionada;
+
+
+}
+
 void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 {
 	char oldletra=s_online_browse_zx81_letra[0];
 	
-	menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
+	//menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
 	
-	char letra=s_online_browse_zx81_letra[0];
+	//char letra=s_online_browse_zx81_letra[0];
+	
+	char letra=menu_online_browse_zx81_letter();
+	if (letra==0) return;
+	
 	
 	if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
 	//si cambia letra, poner cursor arriba
