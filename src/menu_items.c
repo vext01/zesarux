@@ -16651,6 +16651,7 @@ menu_espera_no_tecla();
         menu_item *array_menu_osd_adventure_keyboard;
         menu_item item_seleccionado;
         int retorno_menu;
+        int salir=0;
         do {
 
 		
@@ -16665,14 +16666,11 @@ menu_espera_no_tecla();
 		int last_x=1;
 		int last_y=0;
 		char letra='a';
-		int salir=0;
-
-		
 		
 		
 		for (;letra<='z'+1;letra++) {
 			char letra_mostrar=letra;
-			if (letra=='z'+1) letra_mostrar="#';
+			if (letra=='z'+1) letra_mostrar='#';
 		menu_add_item_menu_format(array_menu_osd_adventure_keyboard,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard_action,NULL,"%c",letra_mostrar);
         		    menu_add_item_menu_tabulado(array_menu_osd_adventure_keyboard,last_x,last_y);
 					menu_add_item_menu_valor_opcion(array_menu_osd_adventure_keyboard,letra_mostrar);
