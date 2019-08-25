@@ -3125,6 +3125,8 @@ int util_write_configfile(void)
   int indice_string=0;
 
   int i;
+  
+  
 
 //Macro para no repetir tantas veces lo mismo
 #define ADD_STRING_CONFIG indice_string +=util_write_config_add_string(&config_settings[indice_string]

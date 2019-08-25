@@ -26535,17 +26535,28 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 	else {
 		mensaje_cpu_usage[0]=0;
 	} 
+	
+	char mensaje_total_uptime[100];
 
+	//tiempo total de uso del emulador solo si esta guardado de config
+	if (save_configuration_file_on_exit.v) {
+		sprintf ("Total minutes use %d mins\n",
+  		total_minutes_use+uptime_seconds/60);
+	}
+	else {
+		mensaje_total_uptime[0]=0;
+	}
 
 	menu_generic_message_format("Running info",
 		"Video Driver: %s\nAvailable video drivers: %s\n\nAudio Driver: %s\nAvailable audio drivers: %s\n\n"
 		"Configuration file: %s\n\n"
 		"Start time: %s\n"
 		"Uptime %d secs (%d mins)\n"
+		"%s",
 		"%s"
 		,
 		scr_driver_name,string_video_drivers,audio_driver_name,string_audio_drivers,configfile,hora_inicio,
-		uptime_seconds,uptime_seconds/60,mensaje_cpu_usage);
+		uptime_seconds,uptime_seconds/60,mensaje_total_uptime,mensaje_cpu_usage);
 
 	//Average CPU use solo sale si screen_show_cpu_usage.v
 

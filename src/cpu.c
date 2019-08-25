@@ -7797,7 +7797,12 @@ void end_emulator(void)
 
 	menu_abierto=0;
 
-	if (save_configuration_file_on_exit.v) util_write_configfile();
+	if (save_configuration_file_on_exit.v) {
+		int uptime_seconds=timer_get_uptime_seconds();
+  
+  		total_minutes_use +=uptime_seconds/60;
+		util_write_configfile();
+	}
 
 	//end_remote_protocol(); porque si no, no se puede finalizar el emulador desde el puerto telnet
 	if (!remote_calling_end_emulator.v) {
