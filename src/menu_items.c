@@ -16666,6 +16666,7 @@ menu_espera_no_tecla();
 		int last_x=1;
 		int last_y=0;
 		char letra='a';
+      int nletra=0;
 		
 		
 		for (;letra<='z'+1;letra++) {
@@ -16678,9 +16679,11 @@ menu_espera_no_tecla();
 menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,letra_mostrar);
 
 			last_x +=3;
-			if (last_x >10) {
+        nletra++;
+			if (nletra==5) {
 				last_x=1;
 				last_y++; 
+           nletra=0;
 			}
 		}
 
