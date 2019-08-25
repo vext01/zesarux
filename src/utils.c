@@ -3576,6 +3576,11 @@ int util_write_configfile(void)
   if (menu_force_writing_inverse_color.v)     ADD_STRING_CONFIG,"--forcevisiblehotkeys");
   if (force_confirm_yes.v)                    ADD_STRING_CONFIG,"--forceconfirmyes");
                                               ADD_STRING_CONFIG,"--gui-style \"%s\"",definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
+                                              
+                                              ADD_STRING_CONFIG,"--total-minutes-use %d",total_minutes_use);	
+
+		
+
 
 					      ADD_STRING_CONFIG,"--last-version \"%s\"",BUILDNUMBER);
 

@@ -609,6 +609,8 @@ z80_bit set_machine_empties_audio_buffer={1};
 char parameter_disablebetawarning[100]="";
 
 
+//parametros de estadisticas
+int total_minutes_use=0;
 
 
 void cpu_set_turbo_speed(void)
@@ -1899,6 +1901,13 @@ printf (
 		"--cleareventlist           Clears joystick to events table\n"
 		"--enablejoysticksimulator  Enable real joystick simulator. Only useful on development\n"
 
+		"\n"
+		"\n"
+		"Statistics\n"
+		"-------------\n"
+		"\n"
+		
+		"--total-minutes-use n      Total minutes of use of ZEsarUX\n"
 
 
 		"\n"
@@ -6799,6 +6808,12 @@ int parse_cmdline_options(void) {
 				}
 				exit_emulator_after_seconds=valor;
                          }
+        	else if (!strcmp(argv[puntero_parametro],"--total-minutes-use")) {
+				siguiente_parametro_argumento();
+				total_minutes_use=parse_string_to_number(argv[puntero_parametro]);	
+
+			}	                 
+                         
 
 			else if (!strcmp(argv[puntero_parametro],"--last-version")) {
 				siguiente_parametro_argumento();
