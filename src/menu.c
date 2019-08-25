@@ -26529,7 +26529,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 
 	char mensaje_cpu_usage[100];
 
-	if (screen_show_cpu_usage.v) {
+	if (screen_show_cpu_usage.v && menu_footer) {
 		sprintf(mensaje_cpu_usage,"Average CPU Use: %d%%\n",media_cpu);
 	}
 	else {

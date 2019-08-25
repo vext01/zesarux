@@ -16,6 +16,8 @@ Envío de estadísticas a servidor
 -uuid anónimo
 -tiempo total de uso del emulador en minutos
 -fecha de uso del emulador 
+
+Mismo servidor remoto puede alojar número versión actual para comprobar updates desde ZEsarUX
  
 
 -zsock http request: que sea capaz de encontrar final de cabeceras,
@@ -192,8 +194,6 @@ Yes. Loading it at once (with a previous malloc) will be better.
 
 
 
-
--average cpu use en menu help parece que sale 0% si no esta habilitado footer
 
 -Thread aparte para descargas web. Útil para spectranet, browser juegos, comprobación updates, emulación uart 
 Función simple que abra la conexión y devuelva datos http. Thread por debajo que indique cuando estén los datos listos
