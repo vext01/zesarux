@@ -26540,7 +26540,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 
 	//tiempo total de uso del emulador solo si esta guardado de config
 	if (save_configuration_file_on_exit.v) {
-		sprintf ("Total minutes use %d mins\n",
+		sprintf (mensaje_total_uptime,"Total minutes use %d mins\n",
   		total_minutes_use+uptime_seconds/60);
 	}
 	else {
