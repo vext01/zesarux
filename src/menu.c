@@ -26552,7 +26552,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 		"Configuration file: %s\n\n"
 		"Start time: %s\n"
 		"Uptime %d secs (%d mins)\n"
-		"%s",
+		"%s"
 		"%s"
 		,
 		scr_driver_name,string_video_drivers,audio_driver_name,string_audio_drivers,configfile,hora_inicio,
