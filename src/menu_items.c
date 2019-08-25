@@ -16636,9 +16636,9 @@ menu_espera_no_tecla();
 
 	zxvision_window ventana;
 	
-	int xventana=3;
+	int xventana=2;
 	int yventana=3;
-	int ancho_ventana=20;
+	int ancho_ventana=23;
 	int alto_ventana=15;
 	
 	char letra_seleccionada=0;
@@ -16677,7 +16677,7 @@ menu_espera_no_tecla();
 				
 menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,letra_mostrar);
 
-			last_x +=2;
+			last_x +=3;
 			if (last_x >10) {
 				last_x=1;
 				last_y++; 
