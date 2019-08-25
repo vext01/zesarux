@@ -5969,6 +5969,10 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 			if (mouse_left) acumulado &=(255-2);
                         //right button
                         if (mouse_right) acumulado &=(255-1);
+                        
+                        //en Next, bits altos se usan para wheel, como no los emulamos, a 0
+                        //https://specnext.dev/wiki/Kempston_Mouse_Buttons
+                        if (MACHINE_IS_TBBLUE) acumulado &=0x0F;
                 }
 
 		//printf ("devolvemos valor: %d\n",acumulado);

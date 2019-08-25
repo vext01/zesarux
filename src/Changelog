@@ -29,6 +29,7 @@ Fixed f_seek call on esxdos handler
 Fixed segfault error when using breakpoints like peek/opcode in config file
 Fixed bug on zxuno changing video ram 5/7 when paging was disabled by bit DI7FFD
 Fixed average cpu statistics when footer is not enabled
+Fixed kempston mouse emulation on Next machine: wheel bits always return 0
 
 
 
