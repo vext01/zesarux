@@ -55,6 +55,8 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 -Funciones de thread para permitir petición web simple tipo descargar url etc 
 
+-zsock http que retorne texto asociado a código error http- va después del número http de error
+
 
 -ZENG "ZEsarUX Network Gaming"
 *jugar con diferente intervalo segundos:
