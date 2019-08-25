@@ -8,7 +8,14 @@ ZENG
 UART
 Spectranet
 
--prueba 25 agoato
+-Estadísticas de uso:
+-tiempo total de uso del emulador en minutos
+-uso medio de cpu?
+
+Envío de estadísticas a servidor
+-uuid anónimo
+-tiempo total de uso del emulador en minutos
+-fecha de uso del emulador 
  
 
 -zsock http request: que sea capaz de encontrar final de cabeceras,
