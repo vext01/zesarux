@@ -16935,7 +16935,10 @@ int http_code;
 	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
-			if (mem_after_headers) menu_generic_message("Response",mem_after_headers);
+			if (mem_after_headers) {
+				menu_generic_message_format("Http code","%d",http_code);
+				menu_generic_message("Response",mem_after_headers);
+			}
 		}
 		else menu_generic_message("Response",mem);
 	}

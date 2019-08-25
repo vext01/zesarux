@@ -617,12 +617,13 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 }
 
-char *zsock_http_skip_headers(char *mem,int total_leidos)
+char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
 {
 //leer linea a linea hasta fin cabecera
 	char buffer_linea[1024];
 	int i=0;
 	int salir=0;
+	int linea=0;
 	do {
 		int leidos;
 		char *next_mem;
@@ -636,6 +637,18 @@ char *zsock_http_skip_headers(char *mem,int total_leidos)
 		else {
 			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
 			total_leidos -=leidos;
+			
+			//si linea primera http code
+			if (linea==0) {
+				char *existe;
+				existe=strstr(buffer_linea," ");
+				if (existe!=NULL) {
+					//Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+					*http_code=parse_string_to_number(&existe[1]);
+				}
+			}
+			
+			linea++;
 		
 			if (buffer_linea[0]==0) {
 				salir=1;
@@ -662,6 +675,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 	*mem=NULL;
 	*mem_after_headers=NULL;
 	*t_leidos=0;
+	*http_code=200; //asumimos ok por defecto
 	int indice_socket=z_sock_open_connection(host,80);
 
 		if (indice_socket<0) {
@@ -762,7 +776,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 			*mem=response;
 			
 			if (skip_headers) {
-				*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos);
+				*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos,http_code);
 			}
 			return 0;
 		}
