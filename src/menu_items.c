@@ -16663,7 +16663,7 @@ menu_espera_no_tecla();
 	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 	//osd_adv_kbd_defined
 		int i;
-		int last_x=1;
+		int last_x=4;
 		int last_y=0;
 		char letra='a';
       int nletra=0;
@@ -16681,7 +16681,7 @@ menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,letra_mostrar);
 			last_x +=3;
         nletra++;
 			if (nletra==5) {
-				last_x=1;
+				last_x=4;
 				last_y++; 
            nletra=0;
 			}
