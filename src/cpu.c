@@ -6921,7 +6921,7 @@ void print_funny_message(void)
 	//printf ("random: %d\n",randomize_noise[0]);
 
 	//mensajes random de broma
-	#define MAX_RANDOM_FUNNY_MESSAGES 19
+	#define MAX_RANDOM_FUNNY_MESSAGES 20
 	char *random_funny_messajes[MAX_RANDOM_FUNNY_MESSAGES]={
 		"Detected SoundBlaster at A220 I5 D1 T2",
 		"DOS/4GW Protected Mode Run-time  Version 1.97",		//2
@@ -6941,7 +6941,9 @@ void print_funny_message(void)
 		"Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(179,2)",
 		"Invalid MSX-DOS call",
 		"B Integer out of range, 0:1",
-		"Your System ate a SPARC! Gah!"
+		"Your System ate a SPARC! Gah!",
+		"CMOS checksum error. The default values has been loaded"
+      
 	};
 
 
