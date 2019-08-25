@@ -496,5 +496,7 @@ extern z80_bit core_spectrum_uses_reduced;
 
 extern char parameter_disablebetawarning[];
 
+extern int total_minutes_use;
+
 
 #endif
