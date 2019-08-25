@@ -16637,9 +16637,9 @@ menu_espera_no_tecla();
 	zxvision_window ventana;
 	
 	int xventana=2;
-	int yventana=6;
+	int yventana=2;
 	int ancho_ventana=23;
-	int alto_ventana=12;
+	int alto_ventana=8;
 	
 	char letra_seleccionada=0;
 
