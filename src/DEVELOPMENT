@@ -85,26 +85,15 @@ make sourcetargz
 
 * Binarios a generar. Generarlos partiendo del codigo fuente generado antes
 
-Codigos de letras segun modulos habilitados (de momento esto solo es una idea, no se implementa aun):
-A-> aalib
-C-> curses
-D-> dsp
-K-> cacalib
-L-> alsa
-M-> memptr
-P-> pulse
-S-> stdout
-X-> xwindows
-
-De todos los archivos generados y subidos a sourceforge, crear suma MD5SUM en local de cada archivo y luego subirlo en archivo MD5SUM
+De todos los archivos generados y subidos a github, crear suma MD5SUM en local de cada archivo y luego subirlo en archivo MD5SUM
 con todos los archivos subidos comprimidos y README (y excluyendo este mismo MD5SUM)
 
 
 ** Extra files
 
 make extra_files
-Y subir el zip a sourceforge
-
+Y subir el zip a github
+Y
 
 ** Linux 
 Generar estos dos binarios de Linux:
