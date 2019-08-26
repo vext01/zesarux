@@ -16631,15 +16631,16 @@ char s_online_browse_zx81_letra[2]="a";
 char menu_online_browse_zx81_letter(void)
 {
 
-menu_espera_no_tecla();
+	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
 	zxvision_window ventana;
 	
-	int xventana=2;
-	int yventana=8;
 	int ancho_ventana=23;
 	int alto_ventana=8;
+	
+	int xventana=menu_center_x()-ancho_ventana/2; 
+	int yventana=menu_center_y()-alto_ventana/2; 
 	
 	char letra_seleccionada=0;
 
@@ -16658,7 +16659,7 @@ menu_espera_no_tecla();
 
 
         //Como no sabemos cual sera el item inicial, metemos este sin asignar
-        menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+        	menu_add_item_menu_inicial(&array_menu_osd_adventure_keyboard,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 	//osd_adv_kbd_defined
