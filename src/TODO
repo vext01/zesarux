@@ -16,12 +16,13 @@ Envío de estadísticas a servidor
 -uuid anónimo
 -tiempo total de uso del emulador en minutos
 -fecha de uso del emulador 
+-uso medio de cpu desde el arranque del emulador
+-sistema operativo usado 
 
 Mismo servidor remoto puede alojar número versión actual para comprobar updates desde ZEsarUX
  
 
--zsock http request: que sea capaz de encontrar final de cabeceras,
-Buffer response en z80_byte y no char
+-zsock http request: Buffer response en z80_byte y no char
 
 -Interceptar salida midi chip ay y enviarlo a midi real. Probar con programa de addon midi de zxuno
 
@@ -1004,7 +1005,7 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
 --- TBBlue ---
 
--Activar el kempston mouse entra en conflicto con el editor de basic. Al mover raton hace cosas raras.
+-Activar el kempston mouse entra en conflicto con el editor de basic. Al mover raton hace cosas raras. Quizá era por los bits wheel. Ya corregido?
 
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
@@ -1033,9 +1034,6 @@ Before this update, 512 tile mode was automatically entered when the ula was dis
 
 "ULA over tilemap" was only bit 8 of the tile number if the ULA was disabled.  We're getting rid of that requirement by making it bit 8 when the 512 tile mode is enabled.  So no need to have the ULA disabled to get there anymore.
 
-
--.nex file format info:
-https://specnext.dev/wiki/NEX_file_format
 
 
 
@@ -1187,7 +1185,6 @@ pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
 *Prism    
 *TSConf   
 *ACE      
-*CPC464  
 
 
 
@@ -2122,9 +2119,8 @@ http://www.worldofspectrum.org/forums/discussion/44669/clashbasher-a-new-interfa
 
 -Pantalla completa con resolución menor de lo habitual en sdl peta con seg fault
 
--kempston mouse o lightgun no se deberian leer cuando menu abierto:
-un poco mas dificil para mouse debido a que se basa en coordenadas. con menu abierto que retornamos? no puede retornarse 0xFF...
-para lightgun la mayoria de puertos son teclado o kempston, en que ya se controla menu abierto. en puerto DF seria la excepcion
+-lightgun no se deberian leer cuando menu abierto:
+upara lightgun la mayoria de puertos son teclado o kempston, en que ya se controla menu abierto. en puerto DF seria la excepcion
 
 -Poder activar dos drivers de video a la vez, en especial un grafico (sdl, x11) y otro de texto (stdout o simpletext).
 
@@ -2275,9 +2271,6 @@ si el cursor esta en un separador, que haga bajar el cursor -> esto parece que y
 //Nota: el separador no puede ser final de menu
 
 
--Estilo con tipo letra Chicago del Mac OS Classic 
-
--copy bytes desde menu debug quiza deberia usar memory zone
 
 -Buscar bytes en memory zone -> problema: ahora las direcciones en memory zone pueden ser > 65535
 En ql llega a buscar?
@@ -2296,13 +2289,8 @@ Hacer captura. Luego hacer captura de la derecha, etc
 
 -Quizá algunas operaciones de archivos que se cancelen con esc que avise con ventana temporal de dicha cancelación 
 
--secuenciador AY: linea para cada canal de audio que haga scroll horizontal de cada linea cuando nota cambie (teniendo en cuenta nota y octava, por ejemplo F#4)
-
 -Convertir automático de cinta a wav, mediante uso de mantransfe
 
--Mi nombre con acentos en el about, siempre que no sea driver de sólo texto 
-
--menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
 
 -Alternativa en los menús tabulares tipo como el de sprites o colores, que usan cursores y pgup y down
 -usar otras acciones / hotkeys para eso
@@ -2324,10 +2312,6 @@ Info de tamaño ventana. Y tamaño ventana sin zoom
 
 
 
-
-
-
-
 -mejorar deteccion frecuencia sonido en audio wave form
 
 
@@ -2346,8 +2330,6 @@ opcion tambien para bajar bit 7 final
 
 -joystick derecha para tab. solo en menu
 
--watches necesita que show splash texts este activo. bug o feature?
-
 -menu_ventana_scanf deberia retornar un codigo de retorno en caso de pulsado ESC
 
 -visualmem podria tener en cuenta toda la ram de una maquina: 128kb en +2, Z88 etc.... aunque dificil para +2 y Z88.... y necesario?
@@ -2364,11 +2346,7 @@ no-thread no funcionara tampoco
 
 -Mostrar consumo de cpu solo del proceso del emulador?
 
--acceso a cintas, snaps , etc de archive WOS. Hacer un browser sencillo html para poder navegar entre las cintas
-
 -Browser cintas que permita alterar la posición de la cinta
-
-
 
 -incluir pantallas de teclado spectrum, zx80,zx81, z88, etc
 
@@ -2395,45 +2373,6 @@ no gestiona bien nombres con espacios
 
 -Quizá agregar stack Trace en kernel panic. Que pasa con stack de mk14 y Motorola?
 Implica leer memoria para sacar el stack. Conviene hacerlo después de un panic?
-
--Idea para mejorar el parser de breakpoints:
-//Operadores AND, OR, XOR que ya esten calculados antes su indice (BREAKPOINT_CONDITION_OP_OR, BREAKPOINT_CONDITION_OP_AND, BREAKPOINT_CONDITION_OP_XOR) y no tener que hacer strcmp cada vez
-//Registros DE, PC etc no tener que hacer strcmp cada vez, interpretarlos antes
-
-
-Habria que hacer un parseo previo, evitando strcmp que convierta esto:
-
-"[EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR]  [EXPRESSION][CONDITION][EXPRESSION]  [OPERATOR] ... where: \n" \
-"[EXPRESSION] can be a COMPLEXVARIABLE or a VALUE  \n" \
-"[COMPLEXVARIABLE] is formed by [VARIABLE][VOP] \n" \
-"[VARIABLE] can be a CPU register or some pseudo variables: A,B,C,D,E,F,H,L,AF,BC,DE,HL,A',B',C',D',E',F',H',L',AF',BC',DE',HL',I,R,SP,PC,IX,IY\n" \
-"FS,FZ,FP,FV,FH,FN,FC: Flags\n" \
-"(BC),(DE),(HL),(SP),(PC),(IX),(IY), (NN), IFF1, IFF2, OPCODE,\n" \
-..
-"[VOP] is optional is made of a Variable Operator and Variable Value, joined together with no space. Variable Operator can be:\n" \
-"& : bitwise AND\n" \
-"| : bitwise OR\n" \
-"^ : bitwise XOR\n" \
-"Variable Value is any value you want to apply with the operator\n" \
-"Examples of [VOP]: \n" \
-"|3 : Makes a bitwise OR with 3 to the Variable value\n" \
-"&FH : Makes a bitwise AND with FH to the Variable value\n" \
-"\n" \
-"[CONDITION] must be one of: <,>,=,/  (/ means not equal)\n" \
-"[VALUE] must be a numeric value\n" \
-"[OPERATOR] must be one of the following: and, or, xor\n" \
-
-
-En indices a cada expresion:
--Si expression es value, que tenga el valor int ya calculado
--Si expression es complex variable: que tenga el id de variable, el id de vop,y el valor int ya calculado
--Condition tiene que estar tambien indexado
--Operator también indexado
-
-Haciendo estos cambios y eliminando funciones de strcmp , debería ser mas rápido
-
-
-
 
 
 Menu debugger:
@@ -2510,21 +2449,7 @@ y ademas, la funcion de debug_dump_nested_functions ya controla esos casos y no 
 *************
 
 
-*** Core CPU ***
-
-
-
--replica entre dos ZEsarUX
-
-*1 master y 1 slave
-*ambos envian actualizaciones de pulsaciones/liberaciones de teclas, mismos valores que util_set_reset_key
-*solo el master envia snapshots
-*1 nested core que gestione el envio y/o recepcion de actualizaciones de teclas, que a su vez llame a un thread por debajo que haga la conexión UDP
-*Como evitar problemas de acceso simultaneo a misma variable de thread? Por ejemplo longitud en la cola de envio/recepcion? 
-Semáforos? Todos sistemas operativos lo permitiran? Windows inclusive?
-*O quizá hacerlo por ZRCP?
-*comando que envie pulsaciones teclas, como util_set_reset_key
-*comando para enviar snapshot, pasando bytes del snapshot por comando. Quizá en base64? O en hexa?
+*** Core CPU 
 
 -Poner sondas de tiempo para saber que funciones tardan más en ejecutarse para poderlas optimizar 
 Que sea un tiempo que se acumule. Para hacer cálculos con más tiempo de muestreo
