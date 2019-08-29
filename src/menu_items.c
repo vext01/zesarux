@@ -16956,7 +16956,7 @@ void menu_online_browse_zxinfowos_query(char *query_result)
 	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
 
 	char query_url[1024];
-	sprintf (query_url,"http://a.zxinfo.dk/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0",query_search);
+	sprintf (query_url,"http://a.zxinfo.dk/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=70&offset=0",query_search);
 
 	int retorno=zsock_http("a.zxinfo.dk",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1);
 	orig_mem=mem;
@@ -16982,8 +16982,12 @@ void menu_online_browse_zxinfowos_query(char *query_result)
 	int existe_fulltitle;
 	int ultimo_indice_id;
 	int ultimo_indice_fulltitle;
-	char ultimo_id[100];
-	char ultimo_fulltitle[100];
+
+	//TODO: controlar esto mejor maximo, antes de hacer strcpy sobre ahi. y no tener longitud tan larga de estos array de char
+	//probar query "had", sale una entrada larga:
+	//"He Had Such A Big Head That If He Were A Cat He Would Have To Toss The Mice From Under The Bed With A Brow"
+	char ultimo_id[1024];
+	char ultimo_fulltitle[1024];
 
 	existe_id=0;
 	existe_fulltitle=0;
@@ -17043,8 +17047,9 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 					if (ultimo_indice_id==ultimo_indice_fulltitle) {
 						
 						//temp controlar maximo. ponemos a voleo
+						printf ("Agregando item menu [%s] id [%s]\n",ultimo_fulltitle,ultimo_id);
 						ultimo_fulltitle[32]=0;
-						printf ("Agregando item menu %s\n",ultimo_fulltitle);
+						
 
 						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
 						menu_add_item_menu_misc(array_menu_common,ultimo_id);
