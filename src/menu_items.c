@@ -16916,6 +16916,170 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
+void menu_online_browse_zxinfowos_query(char *query_result)
+{
+	char query_search[256];
+	query_search[0]=0;
+	
+	menu_ventana_scanf("Query",query_search,256);
+
+	//return;
+	
+	//char letra=s_online_browse_zx81_letra[0];
+	
+	//char letra=menu_online_browse_zx81_letter();
+	//if (letra==0) return;
+	
+	
+	//if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
+	//si cambia letra, poner cursor arriba
+	
+	     //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+		int zxinfo_wos_opcion_seleccionada=0;
+        do {
+
+			menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+	//http://www.zx81.nl/files.html
+	int http_code;
+	char *mem;
+	char *orig_mem;
+	char *mem_after_headers;
+	int total_leidos;
+
+	//TODO cambiar espacios por %20
+
+	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
+
+	char query_url[1024];
+	sprintf (query_url,"http://a.zxinfo.dk/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=10&offset=0",query_search);
+
+	int retorno=zsock_http("a.zxinfo.dk",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	orig_mem=mem;
+	
+	if (mem_after_headers!=NULL) {
+		//temp limite
+		//mem_after_headers[10000]=0;
+		//menu_generic_message("Games",mem_after_headers);
+		char texto_final[30000];
+		
+		int indice_destino=0;
+		
+		int dif_header=mem_after_headers-mem;
+		total_leidos -=dif_header;
+		mem=mem_after_headers;
+	
+	//leer linea a linea 
+	char buffer_linea[1024];
+	int i=0;
+	int salir=0;
+	do {
+		int leidos;
+		char *next_mem;
+		
+			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
+			total_leidos -=leidos;
+		
+			if (buffer_linea[0]==0) {
+				salir=1;
+				//printf ("salir con linea vacia final\n");
+				mem=next_mem;
+			}
+			else {
+				//printf ("cabecera %d: %s\n",i,buffer_linea);
+				//ver si contine texto de juego
+				
+				char *existe;
+				existe=strstr(buffer_linea,"_id=");
+				if (existe!=NULL) {
+					
+						
+						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,buffer_linea);
+
+						//temp
+						char temp_buf[100];
+						sprintf (temp_buf,"hola esto es la url %d",i);
+						menu_add_item_menu_misc(array_menu_common,temp_buf);
+					//}
+				}
+				i++;
+				mem=next_mem;
+			}
+		
+			if (total_leidos<=0) salir=1;
+		
+	} while (!salir);
+	
+	texto_final[indice_destino]=0;
+	if (orig_mem!=NULL) free(orig_mem);
+			
+                       
+						
+			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+            menu_add_ESC_item(array_menu_common);
+
+            retorno_menu=menu_dibuja_menu(&zxinfo_wos_opcion_seleccionada,&item_seleccionado,array_menu_common,"Spectrum games" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (1/*item_seleccionado.menu_funcion!=NULL*/) {
+                                //printf ("actuamos por funcion\n");
+                                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                char *juego;
+                                juego=item_seleccionado.texto_opcion;
+
+								char *url;
+								url=item_seleccionado.texto_misc;
+                                printf ("juego [%s] url [%s]\n",juego,url);
+
+								strcpy(query_result,juego);
+								return;
+	
+                               
+                                
+                        }
+                }
+	}
+	//todo mejorar esto. el while no deberia estar debajo del cierre del if
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+	
+	
+	query_result[0]=0;
+}
+
+void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
+{
+	//char oldletra=s_online_browse_zx81_letra[0];
+
+	char query_id[256];
+	menu_online_browse_zxinfowos_query(query_id);
+	//TODO gestionar resultado vacio
+	if (query_id[0]==0) {
+		//TODO resultado con ESC
+		return;
+	}
+
+	printf ("query resultado: %s\n",query_id);
+	
+	
+	 
+	
+	
+	
+	
+}
+
+
+
+
 void menu_network_http_request(MENU_ITEM_PARAMETERS)
 {
 int http_code;
@@ -16979,6 +17143,9 @@ void menu_network(MENU_ITEM_PARAMETERS)
              menu_add_item_menu_tooltip(array_menu_common,"Connects to the www.zx81.nl site to download ZX81 games. Many thanks to ZXwebmaster for allowing it"); 
              
               menu_add_item_menu_ayuda(array_menu_common,"Connects to the www.zx81.nl site to download ZX81 games. Many thanks to ZXwebmaster for allowing it"); 
+
+
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zxinfowos,NULL,"ZXInfo/WOS online browser");  
               
 						
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);

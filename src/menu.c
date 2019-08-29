@@ -8354,6 +8354,7 @@ int menu_dibuja_menu_stdout(int *opcion_inicial,menu_item *item_seleccionado,men
 	item_seleccionado->valor_opcion=menu_sel->valor_opcion;
 	
 		strcpy(item_seleccionado->texto_opcion,menu_sel->texto_opcion);
+		strcpy(item_seleccionado->texto_misc,menu_sel->texto_misc);
 
 
         //Liberar memoria del menu
@@ -9465,6 +9466,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	item_seleccionado->tipo_opcion=menu_sel->tipo_opcion;
 	item_seleccionado->valor_opcion=menu_sel->valor_opcion;
 	strcpy(item_seleccionado->texto_opcion,menu_sel->texto_opcion);
+	strcpy(item_seleccionado->texto_misc,menu_sel->texto_misc);
+
+	printf ("misc selected: %s %s\n",item_seleccionado->texto_misc,menu_sel->texto_misc);
 
 
 	//Liberar memoria del menu
@@ -9537,11 +9541,17 @@ void menu_add_item_menu_inicial(menu_item **p,char *texto,int tipo_opcion,t_menu
 
 
 
+
+
 	m->tipo_opcion=tipo_opcion;
 	m->menu_funcion=menu_funcion;
 	m->menu_funcion_activo=menu_funcion_activo;
 	m->texto_ayuda=NULL;
 	m->texto_tooltip=NULL;
+
+	//Por defecto inicializado a ""
+	m->texto_misc[0]=0;
+
 	m->atajo_tecla=0;
 	m->menu_funcion_espacio=NULL;
 
@@ -9598,11 +9608,17 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
 	//next->texto=texto;
 	strcpy(next->texto_opcion,texto);
 
+
+
 	next->tipo_opcion=tipo_opcion;
 	next->menu_funcion=menu_funcion;
 	next->menu_funcion_activo=menu_funcion_activo;
 	next->texto_ayuda=NULL;
 	next->texto_tooltip=NULL;
+
+	//Por defecto inicializado a ""
+	next->texto_misc[0]=0;
+
 	next->atajo_tecla=0;
 	next->menu_funcion_espacio=NULL;
 	next->es_menu_tabulado=es_menu_tabulado;
@@ -9696,6 +9712,24 @@ void menu_add_item_menu_valor_opcion(menu_item *m,int valor_opcion)
         m->valor_opcion=valor_opcion;
 }
 
+
+//Agregar texto misc al ultimo item de menu
+//Esto sirve, por ejemplo, para guardar url en navegador online
+void menu_add_item_menu_misc(menu_item *m,char *texto_misc)
+{
+       //busca el ultimo item i le añade el indicado
+
+        while (m->next!=NULL)
+        {
+                m=m->next;
+        }
+
+		
+
+        strcpy(m->texto_misc,texto_misc);
+
+		printf ("agregado texto misc %s\n",m->texto_misc);
+}
 
 
 //Agregar un item al menu

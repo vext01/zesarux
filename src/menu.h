@@ -426,6 +426,7 @@ typedef int (*t_menu_funcion_activo)(void);
 
 //Aunque en driver xwindows no cabe mas de 30 caracteres, en stdout, por ejemplo, cabe mucho mas.
 #define MAX_TEXTO_OPCION 60
+#define MENU_MAX_TEXTO_MISC 1024
 
 struct s_menu_item {
 	//texto de la opcion
@@ -433,6 +434,9 @@ struct s_menu_item {
 
 	//Aunque en driver xwindows no cabe mas de 30 caracteres, en stdout, por ejemplo, cabe mucho mas
 	char texto_opcion[MAX_TEXTO_OPCION];
+
+	//Texto misc para usuario, para guardar url por ejemplo en online browser
+	char texto_misc[MENU_MAX_TEXTO_MISC];
 
 	//texto de ayuda
 	char *texto_ayuda;
@@ -490,6 +494,7 @@ extern void menu_add_item_menu_shortcut(menu_item *m,z80_byte tecla);
 extern void menu_add_item_menu_valor_opcion(menu_item *m,int valor_opcion);
 extern void menu_add_item_menu_tabulado(menu_item *m,int x,int y);
 extern void menu_add_item_menu_espacio(menu_item *m,t_menu_funcion menu_funcion_espacio);
+extern void menu_add_item_menu_misc(menu_item *m,char *texto_misc);
 
 
 extern void menu_warn_message(char *texto);
