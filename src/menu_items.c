@@ -16956,7 +16956,7 @@ void menu_online_browse_zxinfowos_query(char *query_result)
 	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
 
 	char query_url[1024];
-	sprintf (query_url,"http://a.zxinfo.dk/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=10&offset=0",query_search);
+	sprintf (query_url,"http://a.zxinfo.dk/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0",query_search);
 
 	int retorno=zsock_http("a.zxinfo.dk",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1);
 	orig_mem=mem;
@@ -16965,7 +16965,7 @@ void menu_online_browse_zxinfowos_query(char *query_result)
 		//temp limite
 		//mem_after_headers[10000]=0;
 		//menu_generic_message("Games",mem_after_headers);
-		char texto_final[30000];
+		//char texto_final[30000];
 		
 		int indice_destino=0;
 		
@@ -16977,6 +16977,20 @@ void menu_online_browse_zxinfowos_query(char *query_result)
 	char buffer_linea[1024];
 	int i=0;
 	int salir=0;
+
+	int existe_id;
+	int existe_fulltitle;
+	int ultimo_indice_id;
+	int ultimo_indice_fulltitle;
+	char ultimo_id[100];
+	char ultimo_fulltitle[100];
+
+	existe_id=0;
+	existe_fulltitle=0;
+	ultimo_id[0]=0;
+	ultimo_fulltitle[0]=0;
+	ultimo_indice_id=0;
+	ultimo_indice_fulltitle=0;	
 	do {
 		int leidos;
 		char *next_mem;
@@ -16992,20 +17006,61 @@ void menu_online_browse_zxinfowos_query(char *query_result)
 			else {
 				//printf ("cabecera %d: %s\n",i,buffer_linea);
 				//ver si contine texto de juego
+
+				/*
+				Campos a buscar:
+
+hits.0._id=0002258
+hits.0.fulltitle=Headcoach
+
+Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén los dos y tengan mismo .n., agregar a menu
+				*/
 				
 				char *existe;
 				existe=strstr(buffer_linea,"_id=");
 				if (existe!=NULL) {
-					
-						
-						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,buffer_linea);
-
-						//temp
-						char temp_buf[100];
-						sprintf (temp_buf,"hola esto es la url %d",i);
-						menu_add_item_menu_misc(array_menu_common,temp_buf);
-					//}
+						strcpy(ultimo_id,&existe[4]);
+						existe_id=1;
+						char *existe_indice;
+						existe_indice=strstr(buffer_linea,"hits.");
+						if (existe_indice!=NULL) {
+							ultimo_indice_id=parse_string_to_number(&existe_indice[1]);
+						}
 				}
+
+				existe=strstr(buffer_linea,"fulltitle=");
+				if (existe!=NULL) {
+						strcpy(ultimo_fulltitle,&existe[10]);
+						existe_fulltitle=1;
+						char *existe_indice;
+						existe_indice=strstr(buffer_linea,"hits.");
+						if (existe_indice!=NULL) {
+							ultimo_indice_fulltitle=parse_string_to_number(&existe_indice[1]);
+						}						
+				}				
+					
+				if (existe_id && existe_fulltitle) {
+					if (ultimo_indice_id==ultimo_indice_fulltitle) {
+						
+						//temp controlar maximo. ponemos a voleo
+						ultimo_fulltitle[32]=0;
+						printf ("Agregando item menu %s\n",ultimo_fulltitle);
+
+						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
+						menu_add_item_menu_misc(array_menu_common,ultimo_id);
+					}
+
+					existe_id=0;
+					existe_fulltitle=0;
+					ultimo_id[0]=0;
+					ultimo_fulltitle[0]=0;
+					ultimo_indice_id=0;
+					ultimo_indice_fulltitle=0;	
+
+				}
+									
+				
+				
 				i++;
 				mem=next_mem;
 			}
@@ -17014,7 +17069,7 @@ void menu_online_browse_zxinfowos_query(char *query_result)
 		
 	} while (!salir);
 	
-	texto_final[indice_destino]=0;
+	//texto_final[indice_destino]=0;
 	if (orig_mem!=NULL) free(orig_mem);
 			
                        
