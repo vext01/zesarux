@@ -17092,6 +17092,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 
 	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
 
+	do {
 	char query_url[1024];
 	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search);
 
@@ -17119,10 +17120,9 @@ releases.1.type=Tape image
 	
 	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
 	//TODO gestionar resultado vacio
-	if (query_id[0]==0) {
-		//TODO resultado con ESC
-		return;
-	}
+	if (query_id[0]!=0) {
+		// resultado no ESC
+		
 
 	printf ("query resultado: %s\n",query_id);
 	
@@ -17149,8 +17149,9 @@ releases.1.type=Tape image
 
 			quickfile=quickload_file;
 	menu_quickload(0);
-	
-	
+	return;
+	} 
+	} while (1);
 }
 
 
