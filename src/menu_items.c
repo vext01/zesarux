@@ -16916,7 +16916,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
-void menu_online_browse_zxinfowos_query(char *query_result)
+void menu_online_browse_zxinfowos_query(char *query_result,char *preffix)
 {
 	char query_search[256];
 	query_search[0]=0;
@@ -17026,7 +17026,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						strcpy(ultimo_id,&existe[4]);
 						existe_id=1;
 						char *existe_indice;
-						existe_indice=strstr(buffer_linea,"hits.");
+						existe_indice=strstr(buffer_linea,preffix);
 						if (existe_indice!=NULL) {
 							ultimo_indice_id=parse_string_to_number(&existe_indice[1]);
 						}
@@ -17037,7 +17037,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						strcpy(ultimo_fulltitle,&existe[10]);
 						existe_fulltitle=1;
 						char *existe_indice;
-						existe_indice=strstr(buffer_linea,"hits.");
+						existe_indice=strstr(buffer_linea,preffix);
 						if (existe_indice!=NULL) {
 							ultimo_indice_fulltitle=parse_string_to_number(&existe_indice[1]);
 						}						
@@ -17120,7 +17120,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	//char oldletra=s_online_browse_zx81_letra[0];
 
 	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id);
+	menu_online_browse_zxinfowos_query(query_id,"hits.");
 	//TODO gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
