@@ -17149,14 +17149,16 @@ releases.1.type=Tape image
 		sprintf (archivo_temp,"%s/%s",tempdir,juego);
 		
 		//chapuza  links a wos quitar la letra final. esto para cursor draw. temp
-		char url_dir[PATH_MAX];
+		/*char url_dir[PATH_MAX];
 		util_get_dir(url_juego,url_dir);
 		int l=strlen(url_dir);
-		//url_dir[l-2]=0;
+		url_dir[l-2]=0;
 		char url2[PATH_MAX];
 		sprintf(url2,"%s/%s",url_dir,juego);
 		
                                 util_download_file("www.worldofspectrum.org",url2,archivo_temp);
+                                */
+        util_download_file("www.worldofspectrum.org",url_juego,archivo_temp); 
                                 
 
   //y cargar
