@@ -15419,3 +15419,47 @@ char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,
 	*destino=0;
 	return origen;
 }
+
+void util_download_file(char *hostname,char *url,char *archivo)
+{
+  int http_code;
+	char *mem;
+	char *orig_mem;
+	char *mem_after_headers;
+	int total_leidos;
+	int retorno;
+                                retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	orig_mem=mem;
+	
+	if (mem_after_headers!=NULL) {
+		//temp limite
+		//mem_after_headers[10000]=0;
+		//menu_generic_message("Games",mem_after_headers);
+		char texto_final[30000];
+		
+		int indice_destino=0;
+		
+		int dif_header=mem_after_headers-mem;
+		total_leidos -=dif_header;
+		mem=mem_after_headers;
+		//grabar a disco
+		//todo usar funcion de utils comun, existe?
+		
+		FILE *ptr_destino;
+  ptr_destino=fopen(archivo,"wb");
+
+  if (ptr_destino==NULL) {
+    debug_printf (VERBOSE_ERR,"Error writing game file");
+    return;
+  }
+
+
+
+  	fwrite(mem_after_headers,1,total_leidos,ptr_destino);
+
+
+  
+
+  fclose(ptr_destino);
+  free(orig_mem);
+}
