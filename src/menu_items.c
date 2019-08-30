@@ -17136,8 +17136,25 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	printf ("query resultado: %s\n",query_id);
 	
 	
-	 
+	//http://a.zxinfo.dk/api/zxinfo/games/0002259?mode=compact
 	
+	 /*
+	 releases.1.as_title=Foot and Mouth
+releases.1.releaseprice=£7.95
+releases.1.url=/pub/sinclair/games/h/HeadOverHeels.tap.zip
+releases.1.type=Tape image
+	*/
+	
+	sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
+	
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
+	//TODO gestionar resultado vacio
+	if (query_id[0]==0) {
+		//TODO resultado con ESC
+		return;
+	}
+
+	printf ("query resultado: %s\n",query_id);
 	
 	
 	
