@@ -17123,7 +17123,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
 
 	char query_url[1024];
-	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=70&offset=0",query_search);
+	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search);
 
 	char query_id[256];
 	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=");
