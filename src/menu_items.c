@@ -17118,7 +17118,10 @@ releases.1.type=Tape image
 	
 	sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
 	
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
+	//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
+	
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=");
+	
 	//TODO gestionar resultado vacio
 	if (query_id[0]!=0) {
 		// resultado no ESC
