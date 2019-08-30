@@ -16916,12 +16916,9 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
-void menu_online_browse_zxinfowos_query(char *query_result,char *preffix)
+void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix)
 {
-	char query_search[256];
-	query_search[0]=0;
 	
-	menu_ventana_scanf("Query",query_search,256);
 
 	//return;
 	
@@ -16951,14 +16948,9 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *preffix)
 	char *mem_after_headers;
 	int total_leidos;
 
-	//TODO cambiar espacios por %20
+	
 
-	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
-
-	char query_url[1024];
-	sprintf (query_url,"http://a.zxinfo.dk/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=70&offset=0",query_search);
-
-	int retorno=zsock_http("a.zxinfo.dk",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1);
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
@@ -17118,9 +17110,21 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 {
 	//char oldletra=s_online_browse_zx81_letra[0];
+	
+	char query_search[256];
+	query_search[0]=0;
+	
+	menu_ventana_scanf("Query",query_search,256);
+	
+	//TODO cambiar espacios por %20
+
+	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
+
+	char query_url[1024];
+	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=70&offset=0",query_search);
 
 	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id,"hits.");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.");
 	//TODO gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
