@@ -16916,7 +16916,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
-void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix)
+void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index)
 {
 	
 
@@ -17013,9 +17013,10 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 				*/
 				
 				char *existe;
-				existe=strstr(buffer_linea,"_id=");
+				existe=strstr(buffer_linea,string_index); //"_id=");
 				if (existe!=NULL) {
-						strcpy(ultimo_id,&existe[4]);
+						int pos=strlen(string_index);
+						strcpy(ultimo_id,&existe[pos]);
 						existe_id=1;
 						char *existe_indice;
 						existe_indice=strstr(buffer_linea,preffix);
@@ -17124,7 +17125,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=70&offset=0",query_search);
 
 	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=");
 	//TODO gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
