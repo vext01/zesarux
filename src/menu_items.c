@@ -17143,7 +17143,15 @@ releases.1.type=Tape image
 		util_get_file_no_directory(query_id,juego);
 		sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
 		
-                                util_download_file("www.worldofspectrum.org",url_juego,archivo_temp);
+		//chapuza  links a wos quitar la letra final
+		char url_dir[PATH_MAX];
+		util_get_dir(url_juego,url_dir);
+		int l=strlen(url_dir);
+		url_dir[l-2]=0;
+		char url2[PATH_MAX];
+		sprintf(url2,"%s/%s",url_dir,juego);
+		
+                                util_download_file("www.worldofspectrum.org",url2,archivo_temp);
                                 
 
   //y cargar
