@@ -17092,7 +17092,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 								url=item_seleccionado.texto_misc;
                                 printf ("juego [%s] url [%s]\n",juego,url);
 
-								strcpy(query_result,juego);
+								strcpy(query_result,url);
 								return;
 	
                                
