@@ -17038,7 +17038,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 				}				
 					
 				if (existe_id && existe_fulltitle) {
-					if (ultimo_indice_id==ultimo_indice_fulltitle) {
+					if (1 /* temp ultimo_indice_id==ultimo_indice_fulltitle */) {
 						
 						//temp controlar maximo. ponemos a voleo
 						printf ("Agregando item menu [%s] id [%s]\n",ultimo_fulltitle,ultimo_id);
