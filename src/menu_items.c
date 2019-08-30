@@ -17127,6 +17127,29 @@ releases.1.type=Tape image
 	printf ("query resultado: %s\n",query_id);
 	
 	
+	char url_juego[1024];
+                                sprintf(url_juego,"/files/%s",query_id);
+                                //cargar
+                                char archivo_temp[PATH_MAX];
+                                
+                                
+                                /* TODO Local file links starting with /zxdb/sinclair/ refer to content added afterwards. These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/  */
+		//sprintf (archivo_temp,"/tmp/%s",juego);
+		
+		char juego[PATH_MAX];
+		util_get_file_no_directory(query_id,juego);
+		sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
+		
+                                util_download_file("www.worldofspectrum.org",url_juego,archivo_temp);
+                                
+
+  //y cargar
+  strcpy(quickload_file,archivo_temp);
+ 
+
+			quickfile=quickload_file;
+	menu_quickload(0);
+	
 	
 }
 
