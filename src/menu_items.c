@@ -17141,6 +17141,7 @@ releases.1.type=Tape image
 		
 		char juego[PATH_MAX];
 		util_get_file_no_directory(query_id,juego);
+		util_normalize_name(juego);
 		
 		char tempdir[PATH_MAX];
 		sprintf (tempdir,"%s/download",get_tmpdir_base() );

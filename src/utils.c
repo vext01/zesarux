@@ -15464,3 +15464,14 @@ void util_download_file(char *hostname,char *url,char *archivo)
   free(orig_mem);
    }
 }
+
+void util_normalize_name(char *texto)
+{
+	while (*texto) {
+		char c=*texto;
+		if (c=='(' || c==')') {
+			*texto='_';
+		}
+		texto++;
+	}
+}
