@@ -16843,42 +16843,12 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                                 char url_juego[1024];
                                 sprintf(url_juego,"/files/%s",juego);
                                 //cargar
-                                retorno=zsock_http("www.zx81.nl",url_juego,&http_code,&mem,&total_leidos,&mem_after_headers,1);
-	orig_mem=mem;
-	
-	if (mem_after_headers!=NULL) {
-		//temp limite
-		//mem_after_headers[10000]=0;
-		//menu_generic_message("Games",mem_after_headers);
-		char texto_final[30000];
-		
-		int indice_destino=0;
-		
-		int dif_header=mem_after_headers-mem;
-		total_leidos -=dif_header;
-		mem=mem_after_headers;
-		//grabar a disco
-		//todo usar funcion de utils comun, existe?
-		char archivo_temp[PATH_MAX];
+                                char archivo_temp[PATH_MAX];
 		//sprintf (archivo_temp,"/tmp/%s",juego);
 		sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
-		//todo sacar tempdir
-		FILE *ptr_destino;
-  ptr_destino=fopen(archivo_temp,"wb");
-
-  if (ptr_destino==NULL) {
-    debug_printf (VERBOSE_ERR,"Error writing game file");
-    return;
-  }
-
-
-
-  	fwrite(mem_after_headers,1,total_leidos,ptr_destino);
-
-
-  
-
-  fclose(ptr_destino);
+		
+                                util_download_file("www.zx81.nl",url_juego,archivo_temp);
+                                
 
   //y cargar
   strcpy(quickload_file,archivo_temp);
