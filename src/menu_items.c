@@ -16871,7 +16871,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                                 
                                 
                         }
-                }
+                
 	}
 	//todo mejorar esto. el while no deberia estar debajo del cierre del if
 

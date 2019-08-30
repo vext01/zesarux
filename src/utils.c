@@ -15462,4 +15462,5 @@ void util_download_file(char *hostname,char *url,char *archivo)
 
   fclose(ptr_destino);
   free(orig_mem);
+   }
 }
