@@ -17141,7 +17141,11 @@ releases.1.type=Tape image
 		
 		char juego[PATH_MAX];
 		util_get_file_no_directory(query_id,juego);
-		sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
+		
+		char tempdir[PATH_MAX];
+		sprintf (tempdir,"%s/download",get_tmpdir_base() );
+		menu_filesel_mkdir(tempdir);
+		sprintf (archivo_temp,"%s/%s",tempdir,juego);
 		
 		//chapuza  links a wos quitar la letra final
 		char url_dir[PATH_MAX];
