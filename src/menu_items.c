@@ -17131,7 +17131,7 @@ releases.1.type=Tape image
 	
 	
 	char url_juego[1024];
-                                sprintf(url_juego,"/files/%s",query_id);
+                                sprintf(url_juego,"%s",query_id);
                                 //cargar
                                 char archivo_temp[PATH_MAX];
                                 
