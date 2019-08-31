@@ -16991,7 +16991,9 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						char *existe_indice;
 						existe_indice=strstr(buffer_linea,preffix);
 						if (existe_indice!=NULL) {
-							ultimo_indice_id=parse_string_to_number(&existe_indice[1]);
+							//saltar el prefijo para obtener el numero
+							int l=strlen(preffix);
+							ultimo_indice_id=parse_string_to_number(&existe_indice[l]);
 						}
 				}
 
@@ -17003,16 +17005,21 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						char *existe_indice;
 						existe_indice=strstr(buffer_linea,preffix);
 						if (existe_indice!=NULL) {
-							ultimo_indice_fulltitle=parse_string_to_number(&existe_indice[1]);
+							//saltar el prefijo para obtener el numero
+							int l=strlen(preffix);
+							ultimo_indice_fulltitle=parse_string_to_number(&existe_indice[l]);
 						}						
 				}				
 					
 				if (existe_id && existe_fulltitle) {
-					if (1 /* temp ultimo_indice_id==ultimo_indice_fulltitle */) {
+					if (ultimo_indice_id==ultimo_indice_fulltitle) {
 						
 						//temp controlar maximo. ponemos a voleo
 						printf ("Agregando item menu [%s] id [%s]\n",ultimo_fulltitle,ultimo_id);
 						ultimo_fulltitle[32]=0;
+						
+						//temp
+						sprintf (ultimo_fulltitle,"%d",ultimo_indice_id);
 						
 
 						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
