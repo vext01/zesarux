@@ -7782,6 +7782,20 @@ void dump_ram_file_on_exit(void)
 void end_emulator(void)
 {
 	debug_printf (VERBOSE_INFO,"End emulator");
+	
+	
+	//prueba tonta de enviar una conexion http a mi servidor
+	int http_code;
+	char *mem;
+	char *orig_mem;
+	char *mem_after_headers;
+	int total_leidos;
+	int retorno;
+                                retorno=zsock_http("51.83.33.13","/prueba-con",&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	
+	
+	
+	
 
 	dump_ram_file_on_exit();
 
