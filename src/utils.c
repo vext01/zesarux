@@ -15475,3 +15475,27 @@ void util_normalize_name(char *texto)
 		texto++;
 	}
 }
+
+void util_normalize_query_http(char *orig,char *dest)
+{
+	while (*orig) {
+		char c=*orig;
+		if (c==32) {
+			*dest='%';
+			dest++;
+			*dest='2';
+			dest++;
+			*dest='0';
+			dest++;
+		}
+		
+		else {
+			*dest=c;
+			dest++;
+		}
+		
+		orig++;
+	}
+	
+	*dest=0;
+}
