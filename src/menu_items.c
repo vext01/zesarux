@@ -16982,6 +16982,12 @@ hits.0.fulltitle=Headcoach
 Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén los dos y tengan mismo .n., agregar a menu
 				*/
 				
+				//filtrar antes los que tienen prefijo
+				char *existe_prefijo;
+				
+				existe_prefijo=strstr(buffer_linea,preffix);
+				if (existe_prefijo!=NULL) {
+				
 				char *existe;
 				existe=strstr(buffer_linea,string_index); //"_id=");
 				if (existe!=NULL) {
@@ -17016,10 +17022,17 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						
 						//temp controlar maximo. ponemos a voleo
 						printf ("Agregando item menu [%s] id [%s]\n",ultimo_fulltitle,ultimo_id);
-						ultimo_fulltitle[32]=0;
 						
 						//temp
-						sprintf (ultimo_fulltitle,"%d",ultimo_indice_id);
+						char buf[1034];
+						sprintf (buf,"%d %s",ultimo_indice_id,ultimo_fulltitle);
+						strcpy(ultimo_fulltitle,buf);
+						
+						
+						
+						ultimo_fulltitle[32]=0;
+						
+						
 						
 
 						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
@@ -17033,6 +17046,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 					ultimo_indice_id=0;
 					ultimo_indice_fulltitle=0;	
 
+				}
 				}
 									
 				
