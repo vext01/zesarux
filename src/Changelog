@@ -113,7 +113,7 @@ Fixed bug drawing menu window boxes when char width less than 8
 Fixed zxvision left button handling: no longer sends enter when the user is dragging the window
 Fixed machine names to be completely right: for example, "Spectrum 48k" becomes "ZX Spectrum 48k", etc
 Fixed saving sprites when memory zone is not default zone
-Fixed bug when writing divmmv memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
+Fixed bug when writing divmmc memory on Chloe machine and underlying RAM in space 0000-3fffh become overwritten
 Fixed bug crash when a message error was generated from ZRCP and menu had a tooltip open
 
 
