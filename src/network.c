@@ -695,8 +695,10 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 		
 		sprintf(request,"GET %s HTTP/1.0\r\n"
 						"Host: %s\r\n"
-						"User-Agent: ZEsarUX " EMULATOR_VERSION " " COMPILATION_SYSTEM "\r\n" 
-						"\r\n",url,host);
+						"User-Agent: ZEsarUX " EMULATOR_VERSION " " COMPILATION_SYSTEM "\r\n"
+						"%s" 
+						"\r\n",
+						url,host,add_headers);
 						
 		printf ("Request:\n%s\n",request);
 
