@@ -16886,7 +16886,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
-void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display)
+void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers)
 {
 	
 
@@ -16920,7 +16920,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 	
 
-	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers);
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
@@ -17123,7 +17123,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search_normalized);
 
 	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","");
 	//TODO gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
@@ -17146,7 +17146,7 @@ releases.1.type=Tape image
 	
 	//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
 	
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","Accept-Encoding: identity\r\n");
 	
 	//TODO gestionar resultado vacio
 	if (query_id[0]!=0) {
