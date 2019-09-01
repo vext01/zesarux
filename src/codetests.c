@@ -1051,7 +1051,7 @@ void codetests_http()
 	char *orig_mem;
 	char *mem_after_headers;
 	int total_leidos;
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0);
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0,"");
 	orig_mem=mem;
 	
 	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
@@ -1096,7 +1096,7 @@ void codetests_http()
 	
 	//peticion saltando cabeceras
 	printf ("Request skipping headers\n");
-	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 	if (mem_after_headers!=NULL) printf ("Answer after headers:\n%s\n",mem_after_headers);
 	
 	if (mem!=NULL) free (mem);
