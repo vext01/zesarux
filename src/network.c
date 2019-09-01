@@ -669,7 +669,7 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
 	return mem;
 }
 
-int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers)
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers)
 {
 
 	*mem=NULL;

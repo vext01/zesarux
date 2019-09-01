@@ -16755,7 +16755,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	char *orig_mem;
 	char *mem_after_headers;
 	int total_leidos;
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
@@ -16920,7 +16920,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 	
 
-	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1);
+	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
@@ -17218,7 +17218,7 @@ int http_code;
 	menu_ventana_scanf("skip headers?",s_skip_headers,2);
 	int skip_headers=parse_string_to_number(s_skip_headers);
 	int total_leidos;
-	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers);
+	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,"");
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
 			if (mem_after_headers) {
