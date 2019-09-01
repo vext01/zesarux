@@ -17218,6 +17218,15 @@ int http_code;
 	menu_ventana_scanf("host?",host,100);
 	menu_ventana_scanf("url?",url,100);
 	menu_ventana_scanf("add headers",s_add_headers,200);
+	
+	int l=strlen(s_add_headers);
+if (l>0) {
+s_add_headers[l++]='\r';
+s_add_headers[l++]='\n';
+s_add_headers[l++]=0;
+
+}
+	
 	menu_ventana_scanf("skip return headers?",s_skip_headers,2);
 	int skip_headers=parse_string_to_number(s_skip_headers);
 	int total_leidos;
