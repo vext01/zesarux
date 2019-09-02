@@ -16921,17 +16921,8 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers)
 {
 	
-
-	//return;
-	
-	//char letra=s_online_browse_zx81_letra[0];
-	
-	//char letra=menu_online_browse_zx81_letter();
-	//if (letra==0) return;
-	
-	
-	//if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
-	//si cambia letra, poner cursor arriba
+	//Por defecto
+	query_result[0]=0;
 	
 	     //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
         menu_item *array_menu_common;
@@ -16989,6 +16980,8 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 	ultimo_fulltitle[0]=0;
 	ultimo_indice_id=0;
 	ultimo_indice_fulltitle=0;	
+
+	int total_items=0;
 	do {
 		int leidos;
 		char *next_mem;
@@ -17069,6 +17062,8 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
 						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
 						menu_add_item_menu_misc(array_menu_common,ultimo_id);
+
+						total_items++;
 					}
 
 					existe_id=0;
@@ -17100,7 +17095,9 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
             menu_add_ESC_item(array_menu_common);
 
-            retorno_menu=menu_dibuja_menu(&zxinfo_wos_opcion_seleccionada,&item_seleccionado,array_menu_common,"Spectrum games" );
+			if (total_items) {
+
+            	retorno_menu=menu_dibuja_menu(&zxinfo_wos_opcion_seleccionada,&item_seleccionado,array_menu_common,"Spectrum games" );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -17122,14 +17119,20 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
                                 
                         } 
                 }
-	}
-	//todo mejorar esto. el while no deberia estar debajo del cierre del if
+			}
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+			else {
+				menu_error_message("No results found");
+				return;
+			}
+		}
+	
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 	
 	
-	query_result[0]=0;
+
 }
 
 char zxinfowos_query_search[256]="";
