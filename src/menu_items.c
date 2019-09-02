@@ -16747,88 +16747,83 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
 	//si cambia letra, poner cursor arriba
 	
-	     //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
-        menu_item *array_menu_common;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
 
-			menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-	//http://www.zx81.nl/files.html
-	int http_code;
-	char *mem;
-	char *orig_mem;
-	char *mem_after_headers;
-	int total_leidos;
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
-	orig_mem=mem;
+		//http://www.zx81.nl/files.html
+		int http_code;
+		char *mem;
+		char *orig_mem;
+		char *mem_after_headers;
+		int total_leidos;
+		int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+		orig_mem=mem;
 	
-	if (mem_after_headers!=NULL) {
-		//temp limite
-		//mem_after_headers[10000]=0;
-		//menu_generic_message("Games",mem_after_headers);
-		char texto_final[30000];
+		if (mem_after_headers!=NULL/* && http_code==200*/) {
+			//temp limite
+			
+			char texto_final[30000];
 		
-		int indice_destino=0;
+			int indice_destino=0;
 		
-		int dif_header=mem_after_headers-mem;
-		total_leidos -=dif_header;
-		mem=mem_after_headers;
+			int dif_header=mem_after_headers-mem;
+			total_leidos -=dif_header;
+			mem=mem_after_headers;
 	
-	//leer linea a linea 
-	char buffer_linea[1024];
-	int i=0;
-	int salir=0;
-	do {
-		int leidos;
-		char *next_mem;
+			//leer linea a linea 
+			char buffer_linea[1024];
+			int i=0;
+			int salir=0;
+			do {
+				int leidos;
+				char *next_mem;
 		
-			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
-			total_leidos -=leidos;
+				next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
+				total_leidos -=leidos;
 		
-			if (buffer_linea[0]==0) {
-				salir=1;
-				//printf ("salir con linea vacia final\n");
-				mem=next_mem;
-			}
-			else {
-				//printf ("cabecera %d: %s\n",i,buffer_linea);
-				//ver si contine texto de juego
-				
-				char *existe;
-				existe=strstr(buffer_linea,"/files/");
-				if (existe!=NULL) {
-					if (menu_online_zx81_letra(letra,existe[7])) {
-					//if (existe[7]==letra) {
-						//quitar desde comilla derecha
-						char *comilla;
-						comilla=strstr(&existe[7],"\"");
-						if (comilla!=NULL) *comilla=0;
-						debug_printf (VERBOSE_PARANOID,"Adding raw html line %s",buffer_linea);
-						//Todo controlar maximo buffer y maximo que puede mostrar ventana
-						sprintf(&texto_final[indice_destino],"%s\n",&existe[7]);
-						indice_destino +=strlen(&existe[7])+1;
-						
-						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,&existe[7]);
-						debug_printf (VERBOSE_DEBUG,"Adding menu entry %s",&existe[7]);
-					}
+				if (buffer_linea[0]==0) {
+					salir=1;
+					//printf ("salir con linea vacia final\n");
+					mem=next_mem;
 				}
-				i++;
-				mem=next_mem;
-			}
-		
-			if (total_leidos<=0) salir=1;
-		
-	} while (!salir);
-	
-	texto_final[indice_destino]=0;
-	if (orig_mem!=NULL) free(orig_mem);
-	//menu_generic_message("Games",texto_final);
-	
+				else {
+					//printf ("cabecera %d: %s\n",i,buffer_linea);
+					//ver si contine texto de juego
+				
+					char *existe;
+					existe=strstr(buffer_linea,"/files/");
+					if (existe!=NULL) {
+						if (menu_online_zx81_letra(letra,existe[7])) {
+						//if (existe[7]==letra) {
+							//quitar desde comilla derecha
+							char *comilla;
+							comilla=strstr(&existe[7],"\"");
+							if (comilla!=NULL) *comilla=0;
+							debug_printf (VERBOSE_PARANOID,"Adding raw html line %s",buffer_linea);
+							//Todo controlar maximo buffer y maximo que puede mostrar ventana
+							sprintf(&texto_final[indice_destino],"%s\n",&existe[7]);
+							indice_destino +=strlen(&existe[7])+1;
 
+							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,&existe[7]);
+							debug_printf (VERBOSE_DEBUG,"Adding menu entry %s",&existe[7]);
+						}
+					}
+					i++;
+					mem=next_mem;
+				}
+
+				if (total_leidos<=0) salir=1;
 		
-                       
+			} while (!salir);
+	
+			texto_final[indice_destino]=0;
+			
+	                      
 						
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
@@ -16837,58 +16832,47 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
             retorno_menu=menu_dibuja_menu(&zx81_online_browser_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZX81 Games" );
 
                 
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (1/*item_seleccionado.menu_funcion!=NULL*/) {
-                                //printf ("actuamos por funcion\n");
-                                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                char *juego;
-                                juego=item_seleccionado.texto_opcion;
-                                debug_printf (VERBOSE_INFO,"Selected game: %s",juego);
-                                //sleep(3);
-                                //return;
-                                char url_juego[1024];
-                                sprintf(url_juego,"/files/%s",juego);
-                                //cargar
-                                char archivo_temp[PATH_MAX];
-		//sprintf (archivo_temp,"/tmp/%s",juego);
-		sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
-		
-                                util_download_file("www.zx81.nl",url_juego,archivo_temp);
-                                
+            if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                //que juego se ha seleccionado
 
-  //y cargar
-  strcpy(quickload_file,archivo_temp);
- 
-
-			quickfile=quickload_file;
-
-          
-
-
-			if (quickload(quickload_file)) {
-				debug_printf (VERBOSE_ERR,"Unknown file format");
-			}
-			
-			
-  
-  salir_todos_menus=1;
-		
-	}
-                                
-                                
-                        }
+                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                char *juego;
+                juego=item_seleccionado.texto_opcion;
+                debug_printf (VERBOSE_INFO,"Selected game: %s",juego);
                 
-	}
-	//todo mejorar esto. el while no deberia estar debajo del cierre del if
+				char url_juego[1024];
+                sprintf(url_juego,"/files/%s",juego);
+                //cargar
+                char archivo_temp[PATH_MAX];
+				//sprintf (archivo_temp,"/tmp/%s",juego);
+				sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
+		
+                util_download_file("www.zx81.nl",url_juego,archivo_temp);
+                                
+  				//y cargar
+  				strcpy(quickload_file,archivo_temp);
+ 
+				quickfile=quickload_file;
+        
+				if (quickload(quickload_file)) {
+					debug_printf (VERBOSE_ERR,"Unknown file format");
+				}
+			
+				//Y salir todos menus
+				salir_todos_menus=1;                           
+                        
+			}
+			//Fin seleccion juego
+                
+		}
+		//Fin resultado http correcto
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+		if (orig_mem!=NULL) free(orig_mem);
 
-	
-	
-	
-	
-	
+		//todo mejorar esto. el while no deberia estar debajo del cierre del if
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
 	
 	
 }
