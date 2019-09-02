@@ -15422,7 +15422,8 @@ char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,
 	return origen;
 }
 
-void util_download_file(char *hostname,char *url,char *archivo)
+//Retorna el codigo http o <0 si otros errores
+int util_download_file(char *hostname,char *url,char *archivo)
 {
   int http_code;
 	char *mem;
@@ -15430,7 +15431,7 @@ void util_download_file(char *hostname,char *url,char *archivo)
 	char *mem_after_headers;
 	int total_leidos;
 	int retorno;
-                                retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+        retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
@@ -15452,7 +15453,7 @@ void util_download_file(char *hostname,char *url,char *archivo)
 
   if (ptr_destino==NULL) {
     debug_printf (VERBOSE_ERR,"Error writing game file");
-    return;
+    return -1;
   }
 
 
@@ -15465,6 +15466,8 @@ void util_download_file(char *hostname,char *url,char *archivo)
   fclose(ptr_destino);
   free(orig_mem);
    }
+
+   return http_code;
 }
 
 void util_normalize_name(char *texto)

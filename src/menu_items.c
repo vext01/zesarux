@@ -16881,28 +16881,35 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 					//sprintf (archivo_temp,"/tmp/%s",juego);
 					sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
 		
-                	util_download_file("www.zx81.nl",url_juego,archivo_temp);
-                                
-  					//y cargar
-  					strcpy(quickload_file,archivo_temp);
- 
-					quickfile=quickload_file;
-        
-					if (quickload(quickload_file)) {
-						debug_printf (VERBOSE_ERR,"Unknown file format");
-					}
+                	int ret=util_download_file("www.zx81.nl",url_juego,archivo_temp);
 
-					//Y salir todos menus
-					salir_todos_menus=1;  
+					if (ret==200) {
+                                
+  						//y cargar
+  						strcpy(quickload_file,archivo_temp);
+ 
+						quickfile=quickload_file;
+        
+						if (quickload(quickload_file)) {
+							debug_printf (VERBOSE_ERR,"Unknown file format");
+						}
+
+						//Y salir todos menus
+						salir_todos_menus=1;  
+					}
 			
-  
+  					
+					else {		
+						debug_printf(VERBOSE_ERR,"Error downloading game. Return code: %d",ret);
+					}	
 				}                      
                         
 		}
 		//Fin resultado http correcto
-		else {
-			menu_error_message("Error downloading game list");
-		}
+		else {		
+			debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+		}			
+		
 
 		if (orig_mem!=NULL) free(orig_mem);
 
@@ -17058,7 +17065,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						ultimo_fulltitle[32]=0;
 						
 						
-						
+						//TODO controlar maximo items en menu. De momento esta limitado por la query a la api (100)
 
 						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
 						menu_add_item_menu_misc(array_menu_common,ultimo_id);
@@ -17125,19 +17132,21 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 	query_result[0]=0;
 }
 
+char zxinfowos_query_search[256]="";
+
 void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 {
 	//char oldletra=s_online_browse_zx81_letra[0];
 	
-	char query_search[1024];
-	query_search[0]=0;
+	//char query_search[1024];
+	//query_search[0]=0;
 	
-	menu_ventana_scanf("Query",query_search,256);
+	menu_ventana_scanf("Query",zxinfowos_query_search,256);
 	
 	//TODO podria pasar que al normalizar ocupe mas de 1024, pero la cadena de entrada tendria que ser muy grande
 	char query_search_normalized[1024];
 	
-	util_normalize_query_http(query_search,query_search_normalized);
+	util_normalize_query_http(zxinfowos_query_search,query_search_normalized);
 	
 	//TODO cambiar espacios por %20
 
@@ -17178,11 +17187,11 @@ releases.1.type=Tape image
 		// resultado no ESC
 		
 
-	debug_printf (VERBOSE_DEBUG,"Entry url result: %s",query_id);
+		debug_printf (VERBOSE_DEBUG,"Entry url result: %s",query_id);
 	
 	
 	
-	char url_juego[1024];
+		char url_juego[1024];
                                 sprintf(url_juego,"%s",query_id);
                                 //cargar
                                 char archivo_temp[PATH_MAX];
@@ -17210,16 +17219,22 @@ releases.1.type=Tape image
 		
                                 util_download_file("www.worldofspectrum.org",url2,archivo_temp);
                                 */
-        util_download_file("www.worldofspectrum.org",url_juego,archivo_temp); 
-                                
+        int ret=util_download_file("www.worldofspectrum.org",url_juego,archivo_temp); 
 
-  //y cargar
-  strcpy(quickload_file,archivo_temp);
+        if (ret==200) {                    
+
+  			//y cargar
+  			strcpy(quickload_file,archivo_temp);
  
 
 			quickfile=quickload_file;
-	menu_quickload(0);
-	return;
+			menu_quickload(0);
+	
+			return;
+		}
+		else {
+			debug_printf(VERBOSE_ERR,"Error downloading file. Return code: %d",ret);
+		}
 	} 
 	} while (1);
 }
