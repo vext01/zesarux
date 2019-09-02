@@ -16632,7 +16632,7 @@ int menu_online_zx81_letra(char filtro,char letra)
 	}
 }
 
-char s_online_browse_zx81_letra[2]="a";
+char online_browse_zx81_ultima_letra='a';
 
 char menu_online_browse_zx81_letter(void)
 {
@@ -16747,7 +16747,9 @@ void menu_online_browse_zx81_create_menu(char *mem, char *mem_after_headers,int 
 	menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 	//temp limite
-char texto_final[30000];
+	char texto_final[30000];
+
+	int total_items=0;
 		
 			int indice_destino=0;
 		
@@ -16791,6 +16793,7 @@ char texto_final[30000];
 
 							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,&existe[7]);
 							debug_printf (VERBOSE_DEBUG,"Adding menu entry %s",&existe[7]);
+							total_items++;
 						}
 					}
 					i++;
@@ -16809,40 +16812,50 @@ char texto_final[30000];
 
             menu_add_ESC_item(array_menu_common);
 
-            retorno_menu=menu_dibuja_menu(&zx81_online_browser_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZX81 Games" );
+			if (total_items) {
+				//Si hay resultados con esa letra, normalmente si..
+            	retorno_menu=menu_dibuja_menu(&zx81_online_browser_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZX81 Games" );
 
                 
-            if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                //que juego se ha seleccionado
+            	if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                	//que juego se ha seleccionado
 
-                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                //char *juego;
-                strcpy(juego,item_seleccionado.texto_opcion);
-                debug_printf (VERBOSE_INFO,"Selected game: %s",juego);
+                	//item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                	//char *juego;
+                	strcpy(juego,item_seleccionado.texto_opcion);
+                	debug_printf (VERBOSE_INFO,"Selected game: %s",juego);
                 
-                sprintf(url_juego,"/files/%s",juego);
+                	sprintf(url_juego,"/files/%s",juego);
+				}
 			}
-	return;
+
+			else {
+				menu_error_message("No results found");
+			}
+
 
 }
 
 void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 {
-	char oldletra=s_online_browse_zx81_letra[0];
-	
-	//menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
-	
-	//char letra=s_online_browse_zx81_letra[0];
-	
-	char letra=menu_online_browse_zx81_letter();
-	if (letra==0) return;
-	
-	
-	if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
-	//si cambia letra, poner cursor arriba
-	
 
-    
+	do {
+		//char oldletra=s_online_browse_zx81_letra[0];
+	
+		//menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
+	
+		//char letra=s_online_browse_zx81_letra[0];
+	
+		char letra=menu_online_browse_zx81_letter();
+		if (letra==0) return;
+
+		//printf ("old letra %c new letra %c\n",online_browse_zx81_ultima_letra,letra);
+	
+		//si cambia letra, poner cursor arriba
+		if (letra!=online_browse_zx81_ultima_letra) zx81_online_browser_opcion_seleccionada=0;
+
+		online_browse_zx81_ultima_letra=letra;
+		
 
 		//http://www.zx81.nl/files.html
 		int http_code;
@@ -16850,10 +16863,10 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		char *orig_mem;
 		char *mem_after_headers;
 		int total_leidos;
-		int retorno=zsock_http("www.zx81.nl","/filess.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+		int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 		orig_mem=mem;
 	
-		printf("%s\n",mem);
+		//printf("%s\n",mem);
 
 		if (mem_after_headers!=NULL && http_code==200) {
 				char url_juego[1024];
@@ -16878,22 +16891,23 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 					if (quickload(quickload_file)) {
 						debug_printf (VERBOSE_ERR,"Unknown file format");
 					}
+
+					//Y salir todos menus
+					salir_todos_menus=1;  
 			
   
-				}      
-
-				//Y salir todos menus
-				salir_todos_menus=1;                   
+				}                      
                         
-                
 		}
 		//Fin resultado http correcto
+		else {
+			menu_error_message("Error downloading game list");
+		}
 
 		if (orig_mem!=NULL) free(orig_mem);
 
-		//todo mejorar esto. el while no deberia estar debajo del cierre del if
-
-	
+	} while (!salir_todos_menus);
+	//Se saldra al seleccionar juego o al pulsar ESC desde seleccion letra (ahi se sale con return tal cual)
 	
 }
 
