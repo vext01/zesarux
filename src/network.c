@@ -331,7 +331,7 @@ int find_free_socket(void)
 	int i;
 	for (i=0;i<MAX_Z_SOCKETS;i++) {
 		if (sockets_list[i].used==0) {
-			printf ("Found free socket at index %d\n",i);
+			debug_printf (VERBOSE_PARANOID,"Found free socket at index %d",i);
 			return i;
 		}
 	}
@@ -632,7 +632,7 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
 			//por tanto la deteccion de esa linea se leera abajom cuando buffer linea vacia
 			salir=1;
 			mem++;
-			printf ("salir con salto linea inicial\n");
+			//printf ("salir con salto linea inicial\n");
 		}
 		else {
 			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
@@ -652,11 +652,11 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
 		
 			if (buffer_linea[0]==0) {
 				salir=1;
-				printf ("salir con linea vacia final\n");
+				//printf ("salir con linea vacia final\n");
 				mem=next_mem;
 			}
 			else {
-				printf ("cabecera %d: %s\n",i,buffer_linea);
+				debug_printf (VERBOSE_PARANOID,"header %d: %s",i,buffer_linea);
 				i++;
 				mem=next_mem;
 			}
@@ -700,7 +700,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 						"\r\n",
 						url,host,add_headers);
 						
-		printf ("Request:\n%s\n",request);
+		debug_printf (VERBOSE_DEBUG,"zsock_http Request:\n%s\n",request);
 
 		
 		int escritos=z_sock_write_string(indice_socket,request);
@@ -739,7 +739,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 			//la conexion se queda en read colgada
 			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
-				printf ("leidos en zsock_http_read: %d\n",leidos);
+				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d",leidos);
 				if (leidos<0) salir=1;
 				else if (leidos==0) {
 					salir=1; //si lee 0, ha llegado al final
@@ -767,11 +767,11 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 		//controlar maximo reintentos
 	} while (reintentos<500 && !salir);
 	
-	printf ("reintentos: %d\n",reintentos);
+	debug_printf (VERBOSE_PARANOID,"zsock_http: Retries: %d",reintentos);
 		
 		if (total_leidos>0) {
 			response[total_leidos]=0;
-			printf ("leidos: %d\n",total_leidos);
+			debug_printf (VERBOSE_DEBUG,"zsock_http: Total read data: %d",total_leidos);
 			*t_leidos=total_leidos;
 			//printf ("respuesta:\n%s\n",response);
 			z_sock_close_connection(indice_socket);
