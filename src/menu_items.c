@@ -16732,42 +16732,22 @@ menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,letra_mostrar);
 
 }
 
-void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
+void menu_online_browse_zx81_create_menu(char *mem, char *mem_after_headers,int total_leidos,char letra,char *juego,char *url_juego)
 {
-	char oldletra=s_online_browse_zx81_letra[0];
-	
-	//menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
-	
-	//char letra=s_online_browse_zx81_letra[0];
-	
-	char letra=menu_online_browse_zx81_letter();
-	if (letra==0) return;
-	
-	
-	if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
-	//si cambia letra, poner cursor arriba
-	
+
+	//Por defecto
+	url_juego[0]=0;
+	juego[0]=0;
+
 	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
     menu_item *array_menu_common;
     menu_item item_seleccionado;
     int retorno_menu;
-    do {
 
-		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+	menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-		//http://www.zx81.nl/files.html
-		int http_code;
-		char *mem;
-		char *orig_mem;
-		char *mem_after_headers;
-		int total_leidos;
-		int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
-		orig_mem=mem;
-	
-		if (mem_after_headers!=NULL/* && http_code==200*/) {
-			//temp limite
-			
-			char texto_final[30000];
+	//temp limite
+char texto_final[30000];
 		
 			int indice_destino=0;
 		
@@ -16836,33 +16816,75 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                 //que juego se ha seleccionado
 
                 //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                char *juego;
-                juego=item_seleccionado.texto_opcion;
+                //char *juego;
+                strcpy(juego,item_seleccionado.texto_opcion);
                 debug_printf (VERBOSE_INFO,"Selected game: %s",juego);
                 
-				char url_juego[1024];
                 sprintf(url_juego,"/files/%s",juego);
-                //cargar
-                char archivo_temp[PATH_MAX];
-				//sprintf (archivo_temp,"/tmp/%s",juego);
-				sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
-		
-                util_download_file("www.zx81.nl",url_juego,archivo_temp);
-                                
-  				//y cargar
-  				strcpy(quickload_file,archivo_temp);
- 
-				quickfile=quickload_file;
-        
-				if (quickload(quickload_file)) {
-					debug_printf (VERBOSE_ERR,"Unknown file format");
-				}
-			
-				//Y salir todos menus
-				salir_todos_menus=1;                           
-                        
 			}
-			//Fin seleccion juego
+	return;
+
+}
+
+void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
+{
+	char oldletra=s_online_browse_zx81_letra[0];
+	
+	//menu_ventana_scanf("Letter",s_online_browse_zx81_letra,2);
+	
+	//char letra=s_online_browse_zx81_letra[0];
+	
+	char letra=menu_online_browse_zx81_letter();
+	if (letra==0) return;
+	
+	
+	if (letra!=oldletra) zx81_online_browser_opcion_seleccionada=0;
+	//si cambia letra, poner cursor arriba
+	
+
+    
+
+		//http://www.zx81.nl/files.html
+		int http_code;
+		char *mem;
+		char *orig_mem;
+		char *mem_after_headers;
+		int total_leidos;
+		int retorno=zsock_http("www.zx81.nl","/filess.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+		orig_mem=mem;
+	
+		printf("%s\n",mem);
+
+		if (mem_after_headers!=NULL && http_code==200) {
+				char url_juego[1024];
+				char juego[MAX_TEXTO_OPCION];
+			
+				menu_online_browse_zx81_create_menu(mem, mem_after_headers,total_leidos,letra,juego,url_juego);
+
+				if (url_juego[0]!=0) {
+
+                	//cargar
+                	char archivo_temp[PATH_MAX];
+					//sprintf (archivo_temp,"/tmp/%s",juego);
+					sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
+		
+                	util_download_file("www.zx81.nl",url_juego,archivo_temp);
+                                
+  					//y cargar
+  					strcpy(quickload_file,archivo_temp);
+ 
+					quickfile=quickload_file;
+        
+					if (quickload(quickload_file)) {
+						debug_printf (VERBOSE_ERR,"Unknown file format");
+					}
+			
+  
+				}      
+
+				//Y salir todos menus
+				salir_todos_menus=1;                   
+                        
                 
 		}
 		//Fin resultado http correcto
@@ -16870,8 +16892,6 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		if (orig_mem!=NULL) free(orig_mem);
 
 		//todo mejorar esto. el while no deberia estar debajo del cierre del if
-
-	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 	
 	
