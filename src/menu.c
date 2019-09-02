@@ -812,7 +812,7 @@ int debug_tsconf_opcion_seleccionada;
 
 int accessibility_settings_opcion_seleccionada=0;
 
-
+int licenses_opcion_seleccionada=0;
 
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
@@ -26488,17 +26488,17 @@ void menu_about_faq(MENU_ITEM_PARAMETERS)
 
 void menu_about_license(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("License","LICENSE");
+        menu_about_read_file("ZEsarUX License","LICENSE");
 }
 
 void menu_about_license_motorola_core(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Motorola License","LICENSE_MOTOROLA_CORE");
+        menu_about_read_file("Motorola Core License","LICENSE_MOTOROLA_CORE");
 }
 
 void menu_about_license_scmp_core(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("SCMP License","LICENSE_SCMP_CORE");
+        menu_about_read_file("SCMP Core License","LICENSE_SCMP_CORE");
 }
 
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
@@ -26755,6 +26755,46 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_licenses(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+            
+            menu_add_item_menu_inicial(&array_menu_common,"~~ZEsarUX",MENU_OPCION_NORMAL,menu_about_license,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'z');
+
+			menu_add_item_menu(array_menu_common,"~~Motorola Core",MENU_OPCION_NORMAL,menu_about_license_motorola_core,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'m');
+
+			menu_add_item_menu(array_menu_common,"~~SCM~~P Core",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'s');
+
+
+            menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+            menu_add_ESC_item(array_menu_common);
+
+            retorno_menu=menu_dibuja_menu(&licenses_opcion_seleccionada,&item_seleccionado,array_menu_common,"Licenses" );
+
+			
+
+            if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            	//llamamos por valor de funcion
+                if (item_seleccionado.menu_funcion!=NULL) {
+                	//printf ("actuamos por funcion\n");
+                    item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                    
+                }
+            }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
+
 //menu about settings
 void menu_about(MENU_ITEM_PARAMETERS)
 {
@@ -26813,6 +26853,10 @@ void menu_about(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_about,"R~~unning info",MENU_OPCION_NORMAL,menu_about_running_info,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'u');
 
+			menu_add_item_menu(array_menu_about,"Lic~~enses",MENU_OPCION_NORMAL,menu_licenses,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'e');
+
+			/*
             menu_add_item_menu(array_menu_about,"Lic~~ense",MENU_OPCION_NORMAL,menu_about_license,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'e');
 
@@ -26820,6 +26864,7 @@ void menu_about(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_about,"SCM~~P Core License",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'p');
+			*/
 
 
             menu_add_item_menu(array_menu_about,"",MENU_OPCION_SEPARADOR,NULL,NULL);
