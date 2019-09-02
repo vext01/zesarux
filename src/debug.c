@@ -245,6 +245,10 @@ void cpu_core_loop_debug_check_breakpoints(void);
 
 void debug_dump_nested_print(char *string_inicial, char *string_to_print);
 
+
+//mostrar ademas mensajes de debug en consola con printf, adicionalmente de donde lo muestre ya (en curses, aa, caca salen en dentro ventana)
+z80_bit debug_always_show_messages_in_console={0};
+
 //Si volcar snapshot zsf cuando hay cpu_panic
 z80_bit debug_dump_zsf_on_cpu_panic={0};
 
@@ -882,6 +886,13 @@ void debug_printf (int debuglevel, const char * format , ...)
 
     	if (scr_messages_debug!=NULL) scr_messages_debug (buffer_final);
     	else printf ("%s\n",buffer_final);
+
+		//Si tambien queremos mostrar log en consola,
+		//esto es un caso un tanto especial pues la mayoria de drivers ya muestra mensajes en consola,
+		//excepto curses, caca y aa lib, pues muestran 1 solo mensaje dentro de la interfaz del emulador
+		//En esos casos puede ser necesario que el mensaje salga tal cual en consola, con scroll, aunque se desplace toda la interfaz
+		//pero ayudara a que se vean los mensajes
+		if (debug_always_show_messages_in_console.v) printf ("%s\n",buffer_final);
 
     	//Hacer aparecer menu, siempre que el driver no sea null ni.. porque no inicializado tambien? no inicializado
     	if (debuglevel==VERBOSE_ERR) {

@@ -415,4 +415,6 @@ extern z80_bit dumped_debug_dump_zsf_on_cpu_panic;
 extern char dump_snapshot_panic_name[];
 extern void debug_printf_sem_init(void);
 
+extern z80_bit debug_always_show_messages_in_console;
+
 #endif

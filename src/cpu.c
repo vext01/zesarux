@@ -1297,8 +1297,9 @@ void cpu_help_expert(void)
 		"---------\n"
 		"\n"
 		"--verbose n                Verbose level n (0=only errors, 1=warning and errors, 2=info, warning and errors, 3=debug, 4=lots of messages)\n"
+		"--verbose-always-console   Always show messages in console (using simple printf) additionally to the default video driver, interesting in some cases as curses, aa or caca video drivers\n"
 		"--debugregisters           Debug CPU Registers on text console\n"
-	        "--showcompileinfo          Show compilation information\n"
+	    "--showcompileinfo          Show compilation information\n"
 		"--debugconfigfile          Debug parsing of configuration file (and .config files). This parameter must be the first and it's ignored if written on config file\n"
 		"--testconfig               Test configuration and exit without starting emulator\n"
 
@@ -4850,14 +4851,18 @@ int parse_cmdline_options(void) {
 				ventana_fullscreen=1;
 			}
 
-                        else if (!strcmp(argv[puntero_parametro],"--verbose")) {
+            else if (!strcmp(argv[puntero_parametro],"--verbose")) {
                                 siguiente_parametro_argumento();
                                 verbose_level=atoi(argv[puntero_parametro]);
 				if (verbose_level<0 || verbose_level>4) {
 					printf ("Invalid Verbose level\n");
 					exit(1);
 				}
-                        }
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--verbose-always-console")) {
+                debug_always_show_messages_in_console.v=1;
+            }			
 
 			else if (!strcmp(argv[puntero_parametro],"--nodisableconsole")) {
 				//Parametro que solo es de Windows, pero lo admitimos en cualquier sistema

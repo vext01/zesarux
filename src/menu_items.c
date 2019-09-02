@@ -100,6 +100,7 @@
 #include "expression_parser.h"
 #include "uartbridge.h"
 #include "zeng.h"
+#include "network.h"
 
 
 #ifdef COMPILE_ALSA
@@ -740,6 +741,11 @@ void menu_debug_settings_dump_snap_panic(MENU_ITEM_PARAMETERS)
 	debug_dump_zsf_on_cpu_panic.v ^=1;
 }
 
+void menu_debug_verbose_always_console(MENU_ITEM_PARAMETERS)
+{
+	debug_always_show_messages_in_console.v ^=1;
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -765,19 +771,13 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 
 
-
-
-        
+       
 
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"[%c] Step ~~over interrupt",(remote_debug_settings&32 ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'o');
-
-
-
-
 
 
 
@@ -797,6 +797,12 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"[%d] Verbose ~~level",verbose_level);
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');		
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose_always_console,NULL,"[%c] Always verbose console",
+			( debug_always_show_messages_in_console.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Always show messages in console (using simple printf) additionally to the default video driver");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Always show messages in console (using simple printf) additionally to the default video driver. Interesting in some cases as curses, aa or caca video drivers");
+				
 
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_dump_snap_panic,NULL,"[%c] Dump snapshot on panic",
@@ -16799,12 +16805,13 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 						char *comilla;
 						comilla=strstr(&existe[7],"\"");
 						if (comilla!=NULL) *comilla=0;
-						printf ("add line %s\n",buffer_linea);
+						debug_printf (VERBOSE_PARANOID,"Adding raw html line %s",buffer_linea);
 						//Todo controlar maximo buffer y maximo que puede mostrar ventana
 						sprintf(&texto_final[indice_destino],"%s\n",&existe[7]);
 						indice_destino +=strlen(&existe[7])+1;
 						
 						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,&existe[7]);
+						debug_printf (VERBOSE_DEBUG,"Adding menu entry %s",&existe[7]);
 					}
 				}
 				i++;
@@ -16837,7 +16844,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                                 //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
                                 char *juego;
                                 juego=item_seleccionado.texto_opcion;
-                                printf ("juego %s\n",juego);
+                                debug_printf (VERBOSE_INFO,"Selected game: %s",juego);
                                 //sleep(3);
                                 //return;
                                 char url_juego[1024];
@@ -17081,14 +17088,14 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
 								char *url;
 								url=item_seleccionado.texto_misc;
-                                debug_printf (VERBOSE_DEBUG,"Game [%s] url [%s]",juego,url);
+                                debug_printf (VERBOSE_INFO,"Game [%s] url [%s]",juego,url);
 
 								strcpy(query_result,url);
 								return;
 	
                                
                                 
-                        }
+                        } 
                 }
 	}
 	//todo mejorar esto. el while no deberia estar debajo del cierre del if
@@ -17153,7 +17160,8 @@ releases.1.type=Tape image
 		// resultado no ESC
 		
 
-	printf ("query resultado: %s\n",query_id);
+	debug_printf (VERBOSE_DEBUG,"Entry url result: %s",query_id);
+	
 	
 	
 	char url_juego[1024];

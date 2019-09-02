@@ -102,6 +102,7 @@
 #include "settings.h"
 #include "chloe.h"
 #include "zeng.h"
+#include "network.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -3172,6 +3173,7 @@ int util_write_configfile(void)
   if (no_cambio_parametros_maquinas_lentas.v) ADD_STRING_CONFIG,"--nochangeslowparameters");
   if (ventana_fullscreen)                     ADD_STRING_CONFIG,"--fullscreen");
   if (verbose_level)                          ADD_STRING_CONFIG,"--verbose %d",verbose_level);
+  if (debug_always_show_messages_in_console.v) ADD_STRING_CONFIG,"--verbose-always-console");
   if (windows_no_disable_console.v)           ADD_STRING_CONFIG,"--nodisableconsole");
   if (porcentaje_velocidad_emulador!=100)     ADD_STRING_CONFIG,"--cpuspeed %d",porcentaje_velocidad_emulador);
   if (zxuno_deny_turbo_bios_boot.v)           ADD_STRING_CONFIG,"--denyturbozxunoboot");
@@ -15435,9 +15437,9 @@ void util_download_file(char *hostname,char *url,char *archivo)
 		//temp limite
 		//mem_after_headers[10000]=0;
 		//menu_generic_message("Games",mem_after_headers);
-		char texto_final[30000];
+		//char texto_final[30000];
 		
-		int indice_destino=0;
+		//int indice_destino=0;
 		
 		int dif_header=mem_after_headers-mem;
 		total_leidos -=dif_header;

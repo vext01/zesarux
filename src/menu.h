@@ -644,6 +644,7 @@ extern char menu_realtape_name[];
 extern z80_bit menu_force_writing_inverse_color;
 
 extern void menu_filesel_chdir(char *dir);
+extern int menu_filesel_mkdir(char *directory);
 
 extern z80_bit force_confirm_yes;
 
@@ -821,6 +822,7 @@ extern int menu_escribe_linea_startx;
 extern z80_bit menu_disable_special_chars;
 
 extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
+extern void menu_quickload(MENU_ITEM_PARAMETERS);
 
 extern int timer_osd_keyboard_menu;
 
@@ -873,6 +875,7 @@ extern void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice
 extern void menu_copy_clipboard(char *texto);
 
 extern int menu_change_memory_zone_list_title(char *titulo);
+extern void menu_set_memzone(int valor_opcion);
 
 #define MAX_LAST_FILESUSED 18
 

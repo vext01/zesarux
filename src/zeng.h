@@ -48,6 +48,8 @@ extern void zeng_empty_fifo(void);
 extern z80_bit zeng_enabled;
 extern void zeng_enable(void);
 extern void zeng_disable(void);
+extern void zeng_cancel_connect(void);
+extern void zeng_send_snapshot_if_needed(void);
 
 
 extern char zeng_remote_hostname[];

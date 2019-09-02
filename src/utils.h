@@ -807,18 +807,6 @@ extern void daad_poke(z80_int dir,z80_byte value);
 extern z80_int util_daad_get_pc_parser(void);
 extern z80_int util_paws_get_pc_parser(void); 
 
-extern char *util_unpaws_get_parser_name(void);
-extern char *util_undaad_unpaws_get_parser_name(void);
-extern int util_paws_is_in_parser(void);
-
-extern void util_str_add_char(char *texto,int posicion,char letra);
-extern void util_str_del_char(char *texto,int posicion);
-extern int get_file_lines(char *filename);
-
-extern char util_printable_char(char c);
-
-extern char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,int *leidos);
-
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 
 #define MEMORY_ZONE_NUM_TIMEX_EX 18
@@ -834,5 +822,22 @@ extern char *util_read_line(char *origen,char *destino,int size_orig,int max_siz
 //0x14df
 
 #define DAAD_PARSER_CONDACT_BREAKPOINT 220
+
+extern char *util_unpaws_get_parser_name(void);
+extern char *util_undaad_unpaws_get_parser_name(void);
+extern int util_paws_is_in_parser(void);
+
+extern void util_str_add_char(char *texto,int posicion,char letra);
+extern void util_str_del_char(char *texto,int posicion);
+extern int get_file_lines(char *filename);
+
+extern char util_printable_char(char c);
+
+extern char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,int *leidos);
+extern void util_normalize_name(char *texto);
+extern void util_download_file(char *hostname,char *url,char *archivo);
+extern void util_normalize_query_http(char *orig,char *dest);
+
+
 
 #endif
