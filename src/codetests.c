@@ -45,6 +45,8 @@
 #include "audio.h"
 #include "zeng.h"
 #include "network.h"
+#include "settings.h"
+#include "atomic.h"
 
 void codetests_repetitions(void)
 {
@@ -1103,6 +1105,80 @@ void codetests_http()
 	
 }
 
+#ifdef USE_PTHREADS
+
+pthread_t thread_codetests;
+z_atomic_semaphore codetest_semaforo;
+
+
+
+void codetests_messages_debug(char *s)
+{
+        printf ("%s\n",s);
+		fflush(stdout);
+}
+
+void *thread_codetests_function(void *nada)
+{
+	while (1) {
+		//Adquirir lock
+		/*while(z_atomic_test_and_set(&codetest_semaforo)) {
+			printf ("Esperando a adquirir lock en secondary pthread\n");
+		}*/
+
+
+		//printf("Message from secondary pthread\n");
+		debug_printf(VERBOSE_DEBUG,"Message from secondary pthread\n");
+		usleep(1000);
+		//printf ("hola\n");
+
+		//Liberar lock
+		z_atomic_reset(&codetest_semaforo);
+
+
+		//Pausa de test
+		usleep(1000);		
+	}
+}
+
+void codetests_atomic(void)
+{
+		//Inicializar thread
+
+	if (pthread_create( &thread_codetests, NULL, &thread_codetests_function, NULL) ) {
+		debug_printf(VERBOSE_ERR,"Can not create codetests pthread");
+		exit(1);
+	}
+
+	scr_messages_debug=codetests_messages_debug;
+	verbose_level=VERBOSE_PARANOID;
+	z_atomic_reset(&codetest_semaforo);
+
+	//Empezar a escribir debug info en este pthread y en el otro
+	while (1) {
+		//Adquirir lock
+		/*while(z_atomic_test_and_set(&codetest_semaforo)) {
+			printf ("Esperando a adquirir lock en primary pthread\n");
+		}*/
+
+
+		//printf("Message from primary pthread\n");
+		debug_printf(VERBOSE_DEBUG,"Message from primary pthread\n");
+		usleep(1000);
+		//printf ("hola\n");
+
+		//Liberar lock
+		z_atomic_reset(&codetest_semaforo);
+
+
+		//Pausa de test
+		usleep(1000);
+	}	
+
+}
+
+#endif
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -1135,8 +1211,13 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("\nRunning zeng tests\n");
 	//codetests_zeng();
 	
-	printf ("\nRunning zsock http tests\n");
-	codetests_http();
+	//printf ("\nRunning zsock http tests\n");
+	//codetests_http();
+
+#ifdef USE_PTHREADS
+	printf ("\nRunning atomic tests\n");
+	codetests_atomic();
+#endif
 
 
 	//printf ("\nRunning tbblue layers strings\n");

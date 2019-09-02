@@ -28,10 +28,10 @@
 #include <string.h>
 #include <unistd.h>
 
+
 #if defined(linux) || defined(__APPLE__)
 #include <execinfo.h>
 #endif
-
 
 
 #include "cpu.h"
@@ -84,6 +84,7 @@
 #include "charset.h"
 #include "settings.h"
 #include "expression_parser.h"
+#include "atomic.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -708,6 +709,9 @@ void cpu_panic(char *mensaje)
 {
 	char buffer[1024];
 
+	//Liberar bloqueo de semaforo de print, por si acaso
+	debug_printf_sem_init();
+
 	//por si acaso, antes de hacer nada mas, vamos con el printf, para que muestre el error (si es que el driver de video lo permite)
 	//hacemos pantalla de panic en xwindows y fbdev, y despues de finalizar el driver, volvemos a mostrar error
 	cpu_panic_printf_mensaje(mensaje);
@@ -816,72 +820,94 @@ void debug_tiempo_final(void)
         printf("Elapsed time: %ld milliseconds\n\r", debug_timer_mtime);
 }
 
+z_atomic_semaphore debug_printf_semaforo;
+
+void debug_printf_sem_init(void)
+{
+	z_atomic_reset(&debug_printf_semaforo);
+}
 
 void debug_printf (int debuglevel, const char * format , ...)
 {
-  int copia_verbose_level;
+	//Adquirir lock
+	while(z_atomic_test_and_set(&debug_printf_semaforo)) {
+		//printf("Esperando a liberar lock en debug_printf\n");
+	} 
+  	int copia_verbose_level;
 
-  copia_verbose_level=verbose_level;
+  	copia_verbose_level=verbose_level;
 
-  if (debuglevel<=copia_verbose_level) {
-	//tamaño del buffer bastante mas grande que el valor constante definido
-    char buffer_final[DEBUG_MAX_MESSAGE_LENGTH*2];
-    char buffer_inicial[DEBUG_MAX_MESSAGE_LENGTH*2+64];
-    char *verbose_message;
-    va_list args;
-    va_start (args, format);
-    vsprintf (buffer_inicial,format, args);
-    va_end (args);
+  	if (debuglevel<=copia_verbose_level) {
+		//tamaño del buffer bastante mas grande que el valor constante definido
+	    char buffer_final[DEBUG_MAX_MESSAGE_LENGTH*2];
+	    char buffer_inicial[DEBUG_MAX_MESSAGE_LENGTH*2+64];
+	    char *verbose_message;
+	    va_list args;
+	    va_start (args, format);
+    	vsprintf (buffer_inicial,format, args);
+    	va_end (args);
 
-	//TODO: controlar maximo mensaje
-
-    switch (debuglevel) {
-	case VERBOSE_ERR:
-		verbose_message=VERBOSE_MESSAGE_ERR;
-	break;
-
-	case VERBOSE_WARN:
-		verbose_message=VERBOSE_MESSAGE_WARN;
-	break;
-
-	case VERBOSE_INFO:
-		verbose_message=VERBOSE_MESSAGE_INFO;
-	break;
-
-	case VERBOSE_DEBUG:
-		verbose_message=VERBOSE_MESSAGE_DEBUG;
-	break;
-
-        case VERBOSE_PARANOID:
-                verbose_message=VERBOSE_MESSAGE_PARANOID;
-        break;
+		//TODO: controlar maximo mensaje
 
 
-	default:
-		verbose_message="UNKNOWNVERBOSELEVEL";
-	break;
+    	switch (debuglevel) {
+			case VERBOSE_ERR:
+				verbose_message=VERBOSE_MESSAGE_ERR;
+			break;
 
-    }
+			case VERBOSE_WARN:
+				verbose_message=VERBOSE_MESSAGE_WARN;
+			break;
 
-    sprintf (buffer_final,"%s%s",verbose_message,buffer_inicial);
+			case VERBOSE_INFO:
+				verbose_message=VERBOSE_MESSAGE_INFO;
+			break;
 
-    if (scr_messages_debug!=NULL) scr_messages_debug (buffer_final);
-    else printf ("%s\n",buffer_final);
+			case VERBOSE_DEBUG:
+				verbose_message=VERBOSE_MESSAGE_DEBUG;
+			break;
 
-    //Hacer aparecer menu, siempre que el driver no sea null ni.. porque no inicializado tambien? no inicializado
-    if (debuglevel==VERBOSE_ERR) {
+        	case VERBOSE_PARANOID:
+            	verbose_message=VERBOSE_MESSAGE_PARANOID;
+        	break;
 
-	//en el caso de stdout, no aparecera ventana igualmente, pero el error ya se vera por consola
-        if (!strcmp(scr_driver_name,"stdout")) return;
-        if (!strcmp(scr_driver_name,"simpletext")) return;
-        if (!strcmp(scr_driver_name,"null")) return;
-        //if (!strcmp(scr_driver_name,"")) return;
-        sprintf (pending_error_message,"%s",buffer_inicial);
-        if_pending_error_message=1;
-        menu_fire_event_open_menu();
-    }
 
-}
+			default:
+				verbose_message="UNKNOWNVERBOSELEVEL";
+			break;
+
+    	}
+
+    	sprintf (buffer_final,"%s%s",verbose_message,buffer_inicial);
+
+    	if (scr_messages_debug!=NULL) scr_messages_debug (buffer_final);
+    	else printf ("%s\n",buffer_final);
+
+    	//Hacer aparecer menu, siempre que el driver no sea null ni.. porque no inicializado tambien? no inicializado
+    	if (debuglevel==VERBOSE_ERR) {
+
+			//en el caso de stdout, no aparecera ventana igualmente, pero el error ya se vera por consola
+        	if (
+				!strcmp(scr_driver_name,"stdout") ||
+        		!strcmp(scr_driver_name,"simpletext") ||
+        		!strcmp(scr_driver_name,"null") 
+			)
+			{
+				//nada
+			}
+
+        	else {
+	        	sprintf (pending_error_message,"%s",buffer_inicial);
+    	    	if_pending_error_message=1;
+        		menu_fire_event_open_menu();
+			}
+    	}
+
+	}
+
+
+	//Liberar lock
+	z_atomic_reset(&debug_printf_semaforo);
 
 }
 

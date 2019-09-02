@@ -9468,7 +9468,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	strcpy(item_seleccionado->texto_opcion,menu_sel->texto_opcion);
 	strcpy(item_seleccionado->texto_misc,menu_sel->texto_misc);
 
-	printf ("misc selected: %s %s\n",item_seleccionado->texto_misc,menu_sel->texto_misc);
+	//printf ("misc selected: %s %s\n",item_seleccionado->texto_misc,menu_sel->texto_misc);
 
 
 	//Liberar memoria del menu

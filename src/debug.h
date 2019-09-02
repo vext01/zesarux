@@ -413,5 +413,6 @@ extern void debug_memory_zone_debug_write_value(z80_byte valor);
 extern z80_bit debug_dump_zsf_on_cpu_panic;
 extern z80_bit dumped_debug_dump_zsf_on_cpu_panic;
 extern char dump_snapshot_panic_name[];
+extern void debug_printf_sem_init(void);
 
 #endif

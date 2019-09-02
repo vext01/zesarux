@@ -7154,6 +7154,8 @@ audio_driver_name="";
 
 transaction_log_filename[0]=0;
 
+debug_printf_sem_init();
+
 #ifdef COMPILE_XWINDOWS
 	#ifdef USE_XEXT
 	#else
