@@ -17021,7 +17021,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 					if (ultimo_indice_id==ultimo_indice_fulltitle) {
 						
 						
-						printf ("Agregando item menu [%s] id [%s]\n",ultimo_fulltitle,ultimo_id);
+						debug_printf (VERBOSE_DEBUG,"Adding menu item [%s] id [%s]",ultimo_fulltitle,ultimo_id);
 						
 						//meter en entrada linea indice
 						char buf[1024];
@@ -17081,7 +17081,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
 								char *url;
 								url=item_seleccionado.texto_misc;
-                                printf ("juego [%s] url [%s]\n",juego,url);
+                                debug_printf (VERBOSE_DEBUG,"Game [%s] url [%s]",juego,url);
 
 								strcpy(query_result,url);
 								return;
@@ -17130,7 +17130,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 		return;
 	}
 
-	printf ("query resultado: %s\n",query_id);
+	debug_printf (VERBOSE_DEBUG,"Entry id result: %s",query_id);
 	
 	
 	//http://a.zxinfo.dk/api/zxinfo/games/0002259?mode=compact

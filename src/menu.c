@@ -9728,7 +9728,7 @@ void menu_add_item_menu_misc(menu_item *m,char *texto_misc)
 
         strcpy(m->texto_misc,texto_misc);
 
-		printf ("agregado texto misc %s\n",m->texto_misc);
+		//printf ("agregado texto misc %s\n",m->texto_misc);
 }
 
 
