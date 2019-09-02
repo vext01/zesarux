@@ -70,16 +70,18 @@ void z_atomic_reset(z_atomic_semaphore *s)
         #else
 
             //En Linux
+            //Son builtins de Gcc
+            //https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html#_005f_005fatomic-Builtins
 
 
 int z_atomic_test_and_set(z_atomic_semaphore *s)
 {
-	return atomic_inc_and_test(s);
+	return __atomic_test_and_set(s,__ATOMIC_RELAXED);
 }
 
 void z_atomic_reset(z_atomic_semaphore *s)
 {
-	atomic_set(s,0);
+	__atomic_clear(s,__ATOMIC_RELAXED);
 }
 		
 

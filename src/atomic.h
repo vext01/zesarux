@@ -42,8 +42,8 @@
         #else
 
             //En Linux
-            #include <asm/atomic.h>
-            typedef atomic_t z_atomic_semaphore;
+            //#include <asm/atomic.h>
+            typedef char z_atomic_semaphore;
 
     #endif
 
