@@ -46,7 +46,7 @@ void generate_stats_uuid(void)
 
 	//Hay un id anterior. conservarlo
 	if (stats_uuid[0]!=0) {
-		printf ("Found previous uuid. Use it\n");
+		debug_printf (VERBOSE_DEBUG,"Found previous uuid. Preserve it");
 		return;
 	}
 
