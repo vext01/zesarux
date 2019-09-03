@@ -3586,11 +3586,10 @@ int util_write_configfile(void)
 
 
   if (stats_asked.v)                          ADD_STRING_CONFIG,"--stats-send-already-asked");
-  if (stats_enabled.v) {
-          ADD_STRING_CONFIG,"--stats-send-enabled");
-          ADD_STRING_CONFIG,"--stats-uuid %s",stats_uuid);
-  }
-				
+  if (stats_enabled.v)                        ADD_STRING_CONFIG,"--stats-send-enabled");
+          
+
+                                                ADD_STRING_CONFIG,"--stats-uuid %s",stats_uuid);
 
 
 
@@ -15506,24 +15505,24 @@ void util_normalize_name(char *texto)
 
 void util_normalize_query_http(char *orig,char *dest)
 {
+
 	while (*orig) {
 		char c=*orig;
-		if (c==32) {
-			*dest='%';
-			dest++;
-			*dest='2';
-			dest++;
-			*dest='0';
-			dest++;
-		}
-		
-		else {
-			*dest=c;
+                if (c<=32 || c>=127 || c=='/') {
+                        sprintf (dest,"%%%02x",c);
+                        dest+=3;
+                }
+
+                else {
+                        *dest=c;
 			dest++;
 		}
+                
 		
 		orig++;
 	}
 	
 	*dest=0;
+
+
 }

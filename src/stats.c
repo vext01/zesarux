@@ -36,13 +36,20 @@
                 	//printf ("randomize vale: %d\n",randomize_noise);
 					*/
 
-char stats_uuid[128]="UNKNOWN";
+char stats_uuid[128]="";
 
 z80_bit stats_enabled={0};
 z80_bit stats_asked={0};
 
 void generate_stats_uuid(void)
 {
+
+	//Hay un id anterior. conservarlo
+	if (stats_uuid[0]!=0) {
+		printf ("Found previous uuid. Use it\n");
+		return;
+	}
+
 	struct timeval fecha;
 
 	gettimeofday(&fecha, NULL);
@@ -61,6 +68,18 @@ void generate_stats_uuid(void)
 
 }
 
+void stats_enable(void)
+{
+	stats_enabled.v=1;
+	generate_stats_uuid();
+}
+
+void stats_disable(void)
+{
+	stats_enabled.v=0;
+}
+
+
 void stats_ask_if_enable(void)
 {
 	int valor_opcion;
@@ -76,9 +95,10 @@ void stats_ask_if_enable(void)
 
 	//printf ("Valor opcion: %d\n",valor_opcion);
 
-	stats_enabled.v=valor_opcion;
+	if (valor_opcion) stats_enable();
+	else stats_disable();
 
-	if (stats_enabled.v) generate_stats_uuid();
+	
 }
 
 
@@ -96,11 +116,15 @@ void send_stats_server(void)
 	int retorno;
 
 	char query_url[1024];
+	char query_url_normalized[1024];
 
 	int uptime_seconds=timer_get_uptime_seconds();
 	int minutes=total_minutes_use+uptime_seconds/60;
 
 	sprintf (query_url,"/prueba-con?UUID=%s&OS=%s&total_minutes_use=%d",stats_uuid,COMPILATION_SYSTEM,minutes);
+
+	util_normalize_query_http(query_url,query_url_normalized);
+
     
-	retorno=zsock_http("51.83.33.13",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+	retorno=zsock_http("51.83.33.13",query_url_normalized,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 }
