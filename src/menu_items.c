@@ -12336,17 +12336,7 @@ void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
 
 	int alto_ventana=menu_debug_registers_get_height_ventana_vista();
 
-        /* if (menu_debug_registers_current_view==7) {
-                alto_ventana=5;
-        }
-
-        else if (menu_debug_registers_current_view==8) {
-                alto_ventana=16;
-        }		
-
-        else {
-                alto_ventana=24;
-        }*/
+    
 
 	zxvision_set_visible_height(w,alto_ventana);
 }
@@ -12386,7 +12376,7 @@ void menu_debug_registers_set_title(zxvision_window *w)
 
 void menu_debug_registers_ventana_common(zxvision_window *ventana)
 {
-	//Cambiar el ancho visible segun la vista actual
+	//Cambiar el alto visible segun la vista actual
 	menu_debug_registers_zxvision_ventana_set_height(ventana);
 
 	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll	
@@ -12417,14 +12407,12 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 	zxvision_new_window_nocheck_staticsize(ventana,xorigin,yorigin,ancho_ventana,alto_ventana,ancho_ventana,alto_ventana-2,"Debug CPU");
 
 
-	menu_debug_registers_ventana_common(ventana);
+	//Preservar ancho y alto anterior
+	//menu_debug_registers_ventana_common(ventana);
 
-/* 
-	//Cambiar el ancho visible segun la vista actual
-	menu_debug_registers_zxvision_ventana_set_height(ventana);
 
-	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
-*/
+	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll	
+
 
 
 }
