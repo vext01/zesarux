@@ -115,16 +115,26 @@ void send_stats_server(void)
 	int total_leidos;
 	int retorno;
 
-	char query_url[1024];
-	char query_url_normalized[1024];
+	
+
+
 
 	int uptime_seconds=timer_get_uptime_seconds();
 	int minutes=total_minutes_use+uptime_seconds/60;
 
-	sprintf (query_url,"/prueba-con?UUID=%s&OS=%s&total_minutes_use=%d",stats_uuid,COMPILATION_SYSTEM,minutes);
+	char query_url_parameters[1024];
+	char query_url_parameters_normalized[1024];
 
-	util_normalize_query_http(query_url,query_url_normalized);
+	sprintf (query_url_parameters,"UUID=%s&OS=%s&total_minutes_use=%d",stats_uuid,COMPILATION_SYSTEM,minutes);
+	//Normalizar solo la parte de parametros. Si hicieramos toda la url, el "/" del inicio de la url se convertiria a %2f
+	util_normalize_query_http(query_url_parameters,query_url_parameters_normalized);
+
+
+	char query_url[1024];
+	sprintf (query_url,"/prueba-con?%s",query_url_parameters_normalized);
+
+	//printf ("query url: %s\n",query_url);
 
     
-	retorno=zsock_http("51.83.33.13",query_url_normalized,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+	retorno=zsock_http("51.83.33.13",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 }
