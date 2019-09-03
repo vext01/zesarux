@@ -13590,6 +13590,7 @@ UnPAWS takes snapshot files (.SNA, .SP, .Z80) of  Spectrum  games written  with 
   end;
         */
 
+//Valores validos van de 0 hasta 6 inclusive
 #define  MAXTVOC 6
 /*
 FUNCTION Type_Voc(C:Integer):String;
@@ -13607,11 +13608,11 @@ END;
 
   //Precargo palabras (solo 1 sinonimo de cada, la mas corta) antes en un array
   //tipo, indice
-  char lista_palabras[MAXTVOC][256][PAWS_LONGITUD_PALABRAS+1];
+  char lista_palabras[MAXTVOC+1][256][PAWS_LONGITUD_PALABRAS+1];
 
   //Inicializarlas vacias
   int i,j;
-  for (i=0;i<MAXTVOC;i++) {
+  for (i=0;i<=MAXTVOC;i++) {
         for (j=0;j<256;j++) lista_palabras[i][j][0]=0;
   }
 
@@ -13676,6 +13677,7 @@ END;
           else {
                   strcpy(buf_tipo_palabra,"RESERVED");
                   reservado=1;
+                  //printf ("tipo palabra: %d\n",tipo_palabra);
           }
 
           if (quillversion==0) debug_printf (VERBOSE_DEBUG,"unPAWs dump. Vocabulary word: %s Index: %d Type: %s",palabra,indice_palabra,buf_tipo_palabra);
@@ -13698,6 +13700,8 @@ END;
 
                   if (insertar) {
                         //if (strlen(palabra_sin_espacios)>5) printf ("ERROR");
+                        //if (tipo_palabra>=MAXTVOC) printf ("tipo palabra: %d\n",tipo_palabra);
+
                         strcpy(lista_palabras[tipo_palabra][indice_palabra],palabra_sin_espacios);
                         debug_printf (VERBOSE_DEBUG,"Adding word %s to array list",palabra_sin_espacios);
                         total_palabras++;
@@ -13729,7 +13733,7 @@ END;
 
   //Y ahora agregamos la lista total del array
   if (quillversion==0) debug_printf (VERBOSE_DEBUG,"Adding words to OSD Adventure text keyboard");
-  for (i=0;i<MAXTVOC;i++) {
+  for (i=0;i<=MAXTVOC;i++) {
         debug_printf (VERBOSE_DEBUG,"Adding words type %s",unpaws_tvocs[i]);
         for (j=0;j<256;j++) {
                 //printf ("i %d j %d\n",i,j);
@@ -13739,13 +13743,17 @@ END;
                 }
         }
   }
-  printf ("despues cargar palabras\n");
+  //printf ("despues cargar palabras\n");
 
   *p_quillversion=quillversion;
 
-  printf ("justo antes del return\n");
+  //printf ("justo antes del return\n");
   return total_palabras;
-
+/*
+Debug: unPAWs dump. Vocabulary word: IT    Index: 2 Type: Pronoun
+tipo palabra: 6
+Debug: Adding word IT to array list
+*/
 
 }
 
@@ -14074,7 +14082,7 @@ int util_unpawsetc_dump_words(char *mensaje)
 
 	int palabras=util_paws_dump_vocabulary(&version);      
 
-        printf ("Despues extraer palabras\n");  
+        //printf ("Despues extraer palabras\n");  
 
 	//Es Paws?
 	if (version>=0) {

@@ -1,9 +1,6 @@
  
 --------Para próxima versión:
 
--unpaws de tickett peta al extraer palabras en util_paws_dump_vocabulary
-->falla justo al final de la funcion, un __stack_chk_fail
-con -O2 no falla. sin eso, si que falla
 
 Thread 8 Crashed:
 0   libsystem_kernel.dylib        	0x00007fff736102c6 __pthread_kill + 10
