@@ -823,6 +823,9 @@ extern z80_int util_paws_get_pc_parser(void);
 
 #define DAAD_PARSER_CONDACT_BREAKPOINT 220
 
+#define PAWS_LONGITUD_PALABRAS 5
+#define QUILL_LONGITUD_PALABRAS 4
+
 extern char *util_unpaws_get_parser_name(void);
 extern char *util_undaad_unpaws_get_parser_name(void);
 extern int util_paws_is_in_parser(void);

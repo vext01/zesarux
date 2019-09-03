@@ -13607,7 +13607,7 @@ END;
 
   //Precargo palabras (solo 1 sinonimo de cada, la mas corta) antes en un array
   //tipo, indice
-  char lista_palabras[MAXTVOC][256][6];
+  char lista_palabras[MAXTVOC][256][PAWS_LONGITUD_PALABRAS+1];
 
   //Inicializarlas vacias
   int i,j;
@@ -13646,13 +13646,13 @@ END;
 
 
   while (vocptr < limite_voc && peek_byte_no_time(vocptr)!=0) {
-          char palabra[6];
+          char palabra[PAWS_LONGITUD_PALABRAS+1];
           z80_byte indice_palabra;
           z80_byte tipo_palabra;
 
           if (quillversion==0) {
 
-                for (j=0;j<5;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
+                for (j=0;j<PAWS_LONGITUD_PALABRAS;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
 
                 indice_palabra=peek_byte_no_time(vocptr+j);
                 palabra[j]=0;
@@ -13661,7 +13661,7 @@ END;
           }
 
           else {
-                for (j=0;j<4;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
+                for (j=0;j<QUILL_LONGITUD_PALABRAS;j++) palabra[j]=peek_byte_no_time(vocptr+j)^255;
 
                 indice_palabra=peek_byte_no_time(vocptr+j);
                 palabra[j]=0;
@@ -13683,7 +13683,7 @@ END;
 
           if (!reservado) {
                   //Meter en array. Quitar antes espacios del final
-                  char palabra_sin_espacios[6];
+                  char palabra_sin_espacios[PAWS_LONGITUD_PALABRAS+1];
                   util_clear_final_spaces(palabra,palabra_sin_espacios);
 
                   int insertar=1;
@@ -13697,6 +13697,7 @@ END;
                   }
 
                   if (insertar) {
+                        //if (strlen(palabra_sin_espacios)>5) printf ("ERROR");
                         strcpy(lista_palabras[tipo_palabra][indice_palabra],palabra_sin_espacios);
                         debug_printf (VERBOSE_DEBUG,"Adding word %s to array list",palabra_sin_espacios);
                         total_palabras++;
@@ -13729,16 +13730,20 @@ END;
   //Y ahora agregamos la lista total del array
   if (quillversion==0) debug_printf (VERBOSE_DEBUG,"Adding words to OSD Adventure text keyboard");
   for (i=0;i<MAXTVOC;i++) {
-          debug_printf (VERBOSE_DEBUG,"Adding words type %s",unpaws_tvocs[i]);
+        debug_printf (VERBOSE_DEBUG,"Adding words type %s",unpaws_tvocs[i]);
         for (j=0;j<256;j++) {
-                  if (lista_palabras[i][j][0]!=0) {
-                          debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",lista_palabras[i][j]);
+                //printf ("i %d j %d\n",i,j);
+                if (lista_palabras[i][j][0]!=0) {
+                        debug_printf (VERBOSE_DEBUG,"Adding word %s to OSD Adventure text keyboard",lista_palabras[i][j]);
                         util_unpawsgac_add_word_kb(lista_palabras[i][j]);   
                 }
         }
   }
+  printf ("despues cargar palabras\n");
 
   *p_quillversion=quillversion;
+
+  printf ("justo antes del return\n");
   return total_palabras;
 
 
@@ -14067,7 +14072,9 @@ int util_unpawsetc_dump_words(char *mensaje)
 
         int version;
 
-	int palabras=util_paws_dump_vocabulary(&version);        
+	int palabras=util_paws_dump_vocabulary(&version);      
+
+        printf ("Despues extraer palabras\n");  
 
 	//Es Paws?
 	if (version>=0) {

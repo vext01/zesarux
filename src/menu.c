@@ -8644,28 +8644,28 @@ int menu_dibuja_menu_cursor_arriba_tabulado(int linea_seleccionada,int max_opcio
 }
 
 
-int old_menu_dibuja_menu_cursor_arriba_tabulado(int linea_seleccionada,int max_opciones,menu_item *m)
+int menu_dibuja_menu_cursor_abajo_common(int linea_seleccionada,int max_opciones,menu_item *m)
 {
-
-	//Ubicarnos primero en el item de menu seleccionado
-	menu_item *m_aux=menu_retorna_item(m,linea_seleccionada);
-
-	//Su coordenada y original
-	int orig_tabulado_y=m_aux->menu_tabulado_y;
-
-	//Y vamos hacia arriba hasta que coordenada y sea diferente
-	do {
-		printf ("antes orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-		linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
-		m_aux=menu_retorna_item(m,linea_seleccionada);
-		printf ("despues orig y: %d y: %d linea_seleccionada: %d texto: %s\n",orig_tabulado_y,m_aux->menu_tabulado_y,linea_seleccionada,m_aux->texto_opcion);
-	} while (m_aux->menu_tabulado_y==orig_tabulado_y);
-
-	//Decir que se ha pulsado tecla
-	menu_speech_tecla_pulsada=1;
-
+	//Mover abajo
+			
+	if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
+	else linea_seleccionada=menu_dibuja_menu_cursor_abajo_tabulado(linea_seleccionada,max_opciones,m);
+			
 	return linea_seleccionada;
 }
+
+
+int menu_dibuja_menu_cursor_arriba_common(int linea_seleccionada,int max_opciones,menu_item *m)
+{
+	//Mover arriba
+			
+	if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+	else linea_seleccionada=menu_dibuja_menu_cursor_arriba_tabulado(linea_seleccionada,max_opciones,m);
+
+	return linea_seleccionada;
+
+}
+
 
 
 void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
@@ -9287,18 +9287,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			//Mover abajo
 			case '6':
-				if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
-				else {
-					linea_seleccionada=menu_dibuja_menu_cursor_abajo_tabulado(linea_seleccionada,max_opciones,m);
-					//printf ("linea seleccionada: %d\n",linea_seleccionada);
-				}
+				linea_seleccionada=menu_dibuja_menu_cursor_abajo_common(linea_seleccionada,max_opciones,m);
 			break;
 
 			//Mover arriba
 			case '7':
-				if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
-				else linea_seleccionada=menu_dibuja_menu_cursor_arriba_tabulado(linea_seleccionada,max_opciones,m);
-
+				linea_seleccionada=menu_dibuja_menu_cursor_arriba_common(linea_seleccionada,max_opciones,m);
 			break;			
 
 
