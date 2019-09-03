@@ -26,6 +26,7 @@
 
 #include "cpu.h"
 #include "stats.h"
+#include "menu.h"
 
 /*
 	                gettimeofday(&z80_interrupts_timer_antes, NULL);
