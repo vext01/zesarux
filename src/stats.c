@@ -27,6 +27,8 @@
 #include "cpu.h"
 #include "stats.h"
 #include "menu.h"
+#include "compileoptions.h"
+#include "debug.h"
 
 /*
 	                gettimeofday(&z80_interrupts_timer_antes, NULL);
@@ -49,13 +51,13 @@ void generate_stats_uuid(void)
 	int secs=fecha.tv_sec;
 	int microsecs=fecha.tv_usec;
 
-	printf ("secs %d microsecs %d\n",secs,microsecs);
+	//printf ("secs %d microsecs %d\n",secs,microsecs);
 	//tv_usec
 
 	//El uuid del usuario consta de los segundos.microsegundos cuando se genera
 
 	sprintf(stats_uuid,"%d.%d",secs,microsecs);
-	printf ("Generated uuid: %s\n",stats_uuid);
+	debug_printf (VERBOSE_INFO,"Generated uuid: %s",stats_uuid);
 
 }
 
@@ -72,7 +74,7 @@ void stats_ask_if_enable(void)
 
 	stats_asked.v=1;
 
-	printf ("Valor opcion: %d\n",valor_opcion);
+	//printf ("Valor opcion: %d\n",valor_opcion);
 
 	stats_enabled.v=valor_opcion;
 
@@ -94,7 +96,11 @@ void send_stats_server(void)
 	int retorno;
 
 	char query_url[1024];
-	sprintf (query_url,"/prueba-con?UUID=%s",stats_uuid);
+
+	int uptime_seconds=timer_get_uptime_seconds();
+	int minutes=total_minutes_use+uptime_seconds/60;
+
+	sprintf (query_url,"/prueba-con?UUID=%s&OS=%s&total_minutes_use=%d",stats_uuid,COMPILATION_SYSTEM,minutes);
     
 	retorno=zsock_http("51.83.33.13",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 }
