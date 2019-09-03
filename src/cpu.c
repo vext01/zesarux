@@ -108,6 +108,7 @@
 #include "settings.h"
 #include "datagear.h"
 #include "network.h"
+#include "stats.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -1909,6 +1910,9 @@ printf (
 		"\n"
 		
 		"--total-minutes-use n      Total minutes of use of ZEsarUX\n"
+		"--stats-send-already-asked Do not ask to send statistics\n"
+		"--stats-send-enabled       Enable send statistics\n"
+		"--stats-uuid s             UUID to send statistics\n"
 
 
 		"\n"
@@ -6817,9 +6821,21 @@ int parse_cmdline_options(void) {
 				siguiente_parametro_argumento();
 				total_minutes_use=parse_string_to_number(argv[puntero_parametro]);	
 
-			}	                 
-                         
+			}	    
 
+			else if (!strcmp(argv[puntero_parametro],"--stats-send-already-asked")) {
+				stats_asked.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--stats-send-enabled")) {
+				stats_enabled.v=1;
+			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--stats-uuid")) {
+				siguiente_parametro_argumento();
+				strcpy(stats_uuid,argv[puntero_parametro]);
+			}
+                         
 			else if (!strcmp(argv[puntero_parametro],"--last-version")) {
 				siguiente_parametro_argumento();
 				strcpy(last_version_string,argv[puntero_parametro]);
@@ -7649,6 +7665,12 @@ struct sched_param sparam;
 				menu_abierto=1;
 			}
 		}
+	}
+
+	//Si se pregunta si se quiere enviar estadisticas, solo si esta el grabado de configuracion
+	if (save_configuration_file_on_exit.v && stats_asked.v==0) {
+		menu_event_ask_if_stats.v=1;
+		menu_abierto=1;
 	}
 
 

@@ -26,4 +26,7 @@ extern char stats_uuid[];
 
 extern void generate_stats_uuid(void);
 
+extern z80_bit stats_enabled;
+extern z80_bit stats_asked;
+
 #endif

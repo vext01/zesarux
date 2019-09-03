@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sys/time.h>
 
+#include "cpu.h"
 #include "stats.h"
 
 /*
@@ -32,7 +33,10 @@
                 	//printf ("randomize vale: %d\n",randomize_noise);
 					*/
 
-char stats_uuid[128];
+char stats_uuid[128]="UNKNOWN";
+
+z80_bit stats_enabled={0};
+z80_bit stats_asked={0};
 
 void generate_stats_uuid(void)
 {
@@ -50,4 +54,17 @@ void generate_stats_uuid(void)
 	//El uuid del usuario consta de los segundos.microsegundos cuando se genera
 
 	sprintf(stats_uuid,"%d.%d",secs,microsecs);
+	printf ("Generated uuid: %s\n",stats_uuid);
+
+}
+
+void stats_ask_if_enable(void)
+{
+	int valor_opcion;
+
+	zxvision_menu_generic_message_setting("Send Statistics","Do you want to send anoymous statistics use?","Send statistics",&valor_opcion);
+
+	stats_asked.v=1;
+
+	printf ("Valor opcion: %d\n",valor_opcion);
 }

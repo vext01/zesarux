@@ -351,6 +351,8 @@ z80_bit menu_event_drag_drop={0};
 
 z80_bit menu_event_new_version_show_changes={0};
 
+z80_bit menu_event_ask_if_stats={0};
+
 z80_bit menu_button_f_function={0};
 
 //tecla f pulsada
@@ -28208,6 +28210,14 @@ void menu_inicio(void)
 
 		cls_menu_overlay();
 	}
+
+	if (menu_event_ask_if_stats.v) {
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
+		menu_event_ask_if_stats.v=0;
+		stats_ask_if_enable();
+
+		cls_menu_overlay();
+	}	
 
 	if (menu_event_open_menu.v) {
 
