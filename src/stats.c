@@ -67,4 +67,28 @@ void stats_ask_if_enable(void)
 	stats_asked.v=1;
 
 	printf ("Valor opcion: %d\n",valor_opcion);
+
+	stats_enabled.v=valor_opcion;
+
+	if (stats_enabled.v) generate_stats_uuid();
+}
+
+
+void send_stats_server(void)
+{
+
+	if (stats_enabled.v==0) return;
+
+	//prueba tonta de enviar una conexion http a mi servidor
+	int http_code;
+	char *mem;
+
+	char *mem_after_headers;
+	int total_leidos;
+	int retorno;
+
+	char query_url[1024];
+	sprintf (query_url,"/prueba-con?UUID=%s",stats_uuid);
+    
+	retorno=zsock_http("51.83.33.13",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 }

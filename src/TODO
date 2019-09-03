@@ -3,6 +3,8 @@
 
 -no lee enlaces simbolicos en filesystem: ejemplo /home/pi/PREPARADOS de raspiboy
 
+-crear menu settings->statistics para poder volver a habilitarlas
+
 Thread 8 Crashed:
 0   libsystem_kernel.dylib        	0x00007fff736102c6 __pthread_kill + 10
 1   libsystem_pthread.dylib       	0x00007fff736cbbf1 pthread_kill + 284

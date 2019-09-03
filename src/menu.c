@@ -97,6 +97,7 @@
 #include "snap_zsf.h"
 #include "settings.h"
 #include "datagear.h"
+#include "stats.h"
 
 
 
@@ -351,7 +352,7 @@ z80_bit menu_event_drag_drop={0};
 
 z80_bit menu_event_new_version_show_changes={0};
 
-z80_bit menu_event_ask_if_stats={0};
+
 
 z80_bit menu_button_f_function={0};
 
@@ -27593,6 +27594,12 @@ void menu_inicio_bucle(void)
 
 		menu_first_aid("initial_menu");
 
+		//Si descargar stats
+		//Si se pregunta si se quiere enviar estadisticas, solo si esta el grabado de configuracion
+		if (save_configuration_file_on_exit.v && stats_asked.v==0) {
+			stats_ask_if_enable();
+		}
+
 		int retorno_menu;
 
 		menu_item *array_menu_principal;
@@ -28211,13 +28218,7 @@ void menu_inicio(void)
 		cls_menu_overlay();
 	}
 
-	if (menu_event_ask_if_stats.v) {
-		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
-		menu_event_ask_if_stats.v=0;
-		stats_ask_if_enable();
 
-		cls_menu_overlay();
-	}	
 
 	if (menu_event_open_menu.v) {
 

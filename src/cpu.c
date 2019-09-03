@@ -7177,8 +7177,6 @@ transaction_log_filename[0]=0;
 
 debug_printf_sem_init();
 
-//temp
-generate_stats_uuid();
 
 #ifdef COMPILE_XWINDOWS
 	#ifdef USE_XEXT
@@ -7667,11 +7665,7 @@ struct sched_param sparam;
 		}
 	}
 
-	//Si se pregunta si se quiere enviar estadisticas, solo si esta el grabado de configuracion
-	if (save_configuration_file_on_exit.v && stats_asked.v==0) {
-		menu_event_ask_if_stats.v=1;
-		menu_abierto=1;
-	}
+
 
 
 	start_timer_thread();
@@ -7811,18 +7805,7 @@ void dump_ram_file_on_exit(void)
 	}
 }
 
-void test_send_stats(void)
-{
-	//prueba tonta de enviar una conexion http a mi servidor
-	int http_code;
-	char *mem;
 
-	char *mem_after_headers;
-	int total_leidos;
-	int retorno;
-    
-	retorno=zsock_http("51.83.33.13","/prueba-con",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
-}
 
 void end_emulator(void)
 {
@@ -7830,7 +7813,7 @@ void end_emulator(void)
 	
 	
 
-	test_send_stats();
+	send_stats_server();
 	
 	
 	
