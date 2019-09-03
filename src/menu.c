@@ -9157,6 +9157,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			else if (tecla_leida==11) tecla='7';
 			else if (tecla_leida==10) tecla='6';
 			else if (tecla_leida==13) tecla=13;
+			else if (tecla_leida==24) tecla=24;
+			else if (tecla_leida==25) tecla=25;
 
 
 			//Teclas para menus tabulados
@@ -9255,6 +9257,11 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		if (tecla!=0) menu_tooltip_counter=0;
 
+		int lineas_mover_pgup_dn;
+		int conta_mover_pgup_dn;
+
+		//printf ("tecla: %d\n",tecla);
+
 		switch (tecla) {
 			case 13:
 				//ver si la opcion seleccionada esta activa
@@ -9295,7 +9302,36 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				linea_seleccionada=menu_dibuja_menu_cursor_arriba_common(linea_seleccionada,max_opciones,m);
 			break;			
 
+			//PgUp
+			case 24:
+				lineas_mover_pgup_dn=ventana->visible_height-3;
+				//Ver si al limite de arriba
+				if (linea_seleccionada-lineas_mover_pgup_dn<0) {
+					lineas_mover_pgup_dn=linea_seleccionada-1; //el -1 final es por tener en cuenta el separador de siempre
+				}
 
+				//TODO esto movera el cursor tantas lineas como lineas visibles tiene el menu,
+				//si hay algun item como separador, se lo saltara, moviendo el cursor mas lineas de lo deseado
+				//printf ("lineas mover: %d\n",lineas_mover_pgup_dn);
+				for (conta_mover_pgup_dn=0;conta_mover_pgup_dn<lineas_mover_pgup_dn;conta_mover_pgup_dn++) linea_seleccionada=menu_dibuja_menu_cursor_arriba_common(linea_seleccionada,max_opciones,m);
+				
+			break;
+
+			//PgUp
+			case 25:
+				lineas_mover_pgup_dn=ventana->visible_height-3;
+				//Ver si al limite de abajo
+				if (linea_seleccionada+lineas_mover_pgup_dn>=max_opciones) {
+					lineas_mover_pgup_dn=max_opciones-linea_seleccionada-1-1; //el -1 final es por tener en cuenta el separador de siempre
+				}
+
+				//TODO esto movera el cursor tantas lineas como lineas visibles tiene el menu,
+				//si hay algun item como separador, se lo saltara, moviendo el cursor mas lineas de lo deseado
+				//printf ("lineas mover: %d\n",lineas_mover_pgup_dn);
+				int i;
+				for (conta_mover_pgup_dn=0;conta_mover_pgup_dn<lineas_mover_pgup_dn;conta_mover_pgup_dn++) linea_seleccionada=menu_dibuja_menu_cursor_abajo_common(linea_seleccionada,max_opciones,m);
+				
+			break;
 
 
 
