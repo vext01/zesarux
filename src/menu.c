@@ -9267,6 +9267,16 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                         break;
 
 
+			//Mover Izquierda, solo en tabulados
+            case '5':
+            	//en menus tabulados, misma funcion que arriba para un no tabulado
+                if (m->es_menu_tabulado==0) break;
+
+                //Si es tabulado, seguira hasta la opcion '7'
+				linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
+			break; 
+
+
 			//Mover Derecha, solo en tabulados
 			case '8':
 				//en menus tabulados, misma funcion que abajo para un no tabulado
@@ -9284,22 +9294,14 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				}
 			break;
 
-
-			//Mover Izquierda, solo en tabulados
-            case '5':
-            	//en menus tabulados, misma funcion que arriba para un no tabulado
-                if (m->es_menu_tabulado==0) break;
-
-                //Si es tabulado, seguira hasta la opcion '7'
-				linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
-			break; 
-
 			//Mover arriba
 			case '7':
 				if (m->es_menu_tabulado==0) linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
 				else linea_seleccionada=menu_dibuja_menu_cursor_arriba_tabulado(linea_seleccionada,max_opciones,m);
 
-			break;
+			break;			
+
+
 
 
 
