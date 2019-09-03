@@ -11013,7 +11013,12 @@ int menu_debug_registers_current_view=1;
 //Ultima direccion mostrada en menu_disassemble
 menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
-const int menu_debug_num_lineas_full=14;
+//const int menu_debug_num_lineas_full=14;
+
+int get_menu_debug_num_lineas_full(void)
+{
+	return 14;
+}
 
 
 void menu_debug_registers_print_register_aux_moto(zxvision_window *w,char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
@@ -11411,8 +11416,8 @@ int menu_debug_get_main_list_view(void)
 	int lineas=1;
 
     if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
-    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=menu_debug_num_lineas_full;
-	if (menu_debug_registers_current_view==8) lineas=menu_debug_num_lineas_full-2;
+    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=get_menu_debug_num_lineas_full();
+	if (menu_debug_registers_current_view==8) lineas=get_menu_debug_num_lineas_full()-2;
 
 	return lineas;
 }
@@ -11438,7 +11443,7 @@ menu_z80_moto_int menu_debug_disassemble_subir_veces(menu_z80_moto_int posicion,
 menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
 {
 	int i;
-	for (i=0;i<menu_debug_num_lineas_full/2;i++) {
+	for (i=0;i<get_menu_debug_num_lineas_full()/2;i++) {
 		posicion=menu_debug_disassemble_subir(posicion);
 	}
 	return posicion;
@@ -11898,7 +11903,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 
                                 size_t longitud_op;
-                                int limite=menu_debug_num_lineas_full;
+                                int limite=get_menu_debug_num_lineas_full();
 
 
 				int columna_registros=19;
@@ -12815,7 +12820,7 @@ void menu_debug_cursor_up(void)
 
 void menu_debug_cursor_down(void)
 {
-		if (menu_debug_line_cursor<menu_debug_num_lineas_full-1) {
+		if (menu_debug_line_cursor<get_menu_debug_num_lineas_full()-1) {
 			menu_debug_line_cursor++;
 		}
 
@@ -13560,8 +13565,8 @@ int menu_debug_registers_print_legend(zxvision_window *w,int linea)
 int menu_debug_registers_get_line_legend(void)
 {
 
-	if (menu_debug_registers_current_view!=8) return 19;
-	else return 11;
+	if (menu_debug_registers_current_view!=8) return get_menu_debug_num_lineas_full()+5; //19;
+	else return get_menu_debug_num_lineas_full()-3; //11;
 
 
 }	
