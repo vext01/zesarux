@@ -7161,6 +7161,9 @@ transaction_log_filename[0]=0;
 
 debug_printf_sem_init();
 
+//temp
+generate_stats_uuid();
+
 #ifdef COMPILE_XWINDOWS
 	#ifdef USE_XEXT
 	#else
