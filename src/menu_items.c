@@ -11015,9 +11015,16 @@ menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
 //const int menu_debug_num_lineas_full=14;
 
-int get_menu_debug_num_lineas_full(void)
+int get_menu_debug_num_lineas_full(zxvision_window *w)
 {
-	return 14;
+	//return 14;
+
+	//24->14
+	int lineas=w->visible_height-10;
+
+	if (lineas<2) lineas=2;
+
+	return lineas;
 }
 
 
@@ -11411,13 +11418,13 @@ menu_z80_moto_int menu_debug_memory_pointer_last=0;
 //menu_z80_moto_int menu_debug_lines_addresses[24];
 
 //Numero de lineas del listado principal de la vista
-int menu_debug_get_main_list_view(void)
+int menu_debug_get_main_list_view(zxvision_window *w)
 {
 	int lineas=1;
 
     if (menu_debug_registers_current_view==3 || menu_debug_registers_current_view==5) lineas=9;
-    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=get_menu_debug_num_lineas_full();
-	if (menu_debug_registers_current_view==8) lineas=get_menu_debug_num_lineas_full()-2;
+    if (menu_debug_registers_current_view==1 || menu_debug_registers_current_view==4 || menu_debug_registers_current_view==6) lineas=get_menu_debug_num_lineas_full(w);
+	if (menu_debug_registers_current_view==8) lineas=get_menu_debug_num_lineas_full(w)-2;
 
 	return lineas;
 }
@@ -11440,10 +11447,10 @@ menu_z80_moto_int menu_debug_disassemble_subir_veces(menu_z80_moto_int posicion,
 }
 
 
-menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion)
+menu_z80_moto_int menu_debug_register_decrement_half(menu_z80_moto_int posicion,zxvision_window *w)
 {
 	int i;
-	for (i=0;i<get_menu_debug_num_lineas_full()/2;i++) {
+	for (i=0;i<get_menu_debug_num_lineas_full(w)/2;i++) {
 		posicion=menu_debug_disassemble_subir(posicion);
 	}
 	return posicion;
@@ -11741,7 +11748,7 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 				int longitud_op;
 				
 
-				int limite=menu_debug_get_main_list_view();
+				int limite=menu_debug_get_main_list_view(w);
 
 				for (i=0;i<limite;i++) {
 					menu_debug_dissassemble_una_instruccion(dumpassembler,menu_debug_memory_pointer_copia,&longitud_op);
@@ -11902,8 +11909,8 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
                 if (menu_debug_registers_current_view==1) {
 
 
-                                size_t longitud_op;
-                                int limite=get_menu_debug_num_lineas_full();
+                    size_t longitud_op;
+                    int limite=get_menu_debug_num_lineas_full(w);
 
 
 				int columna_registros=19;
@@ -12080,7 +12087,7 @@ int menu_debug_registers_subview_type=0;
 			int longitud_linea=8;
 			
 
-			int limite=menu_debug_get_main_list_view();
+			int limite=menu_debug_get_main_list_view(w);
 
 			for (i=0;i<limite;i++) {
 					menu_debug_hexdump_with_ascii(dumpassembler,menu_debug_memory_pointer_copia,longitud_linea,0);
@@ -12818,9 +12825,9 @@ void menu_debug_cursor_up(void)
 }
 
 
-void menu_debug_cursor_down(void)
+void menu_debug_cursor_down(zxvision_window *w)
 {
-		if (menu_debug_line_cursor<get_menu_debug_num_lineas_full()-1) {
+		if (menu_debug_line_cursor<get_menu_debug_num_lineas_full(w)-1) {
 			menu_debug_line_cursor++;
 		}
 
@@ -12836,10 +12843,10 @@ void menu_debug_cursor_down(void)
 
 
 
-void menu_debug_cursor_pgup(void)
+void menu_debug_cursor_pgup(zxvision_window *w)
 {
 
-                                        int lineas=menu_debug_get_main_list_view();
+                                        int lineas=menu_debug_get_main_list_view(w);
 
 
                                         int i;
@@ -12849,15 +12856,15 @@ void menu_debug_cursor_pgup(void)
 }
 
 
-void menu_debug_cursor_pgdn(void)
+void menu_debug_cursor_pgdn(zxvision_window *w)
 {
 
-                                        int lineas=menu_debug_get_main_list_view();
+                                        int lineas=menu_debug_get_main_list_view(w);
 
 
                                         int i;
                                         for (i=0;i<lineas;i++) {
-                                                menu_debug_cursor_down();
+                                                menu_debug_cursor_down(w);
                                         }
 
 }
@@ -13562,11 +13569,11 @@ int menu_debug_registers_print_legend(zxvision_window *w,int linea)
 
 
 
-int menu_debug_registers_get_line_legend(void)
+int menu_debug_registers_get_line_legend(zxvision_window *w)
 {
 
-	if (menu_debug_registers_current_view!=8) return get_menu_debug_num_lineas_full()+5; //19;
-	else return get_menu_debug_num_lineas_full()-3; //11;
+	if (menu_debug_registers_current_view!=8) return get_menu_debug_num_lineas_full(w)+5; //19;
+	else return 11; //get_menu_debug_num_lineas_full(w)-3; //11;
 
 
 }	
@@ -13891,7 +13898,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				linea=menu_debug_registers_print_registers(&ventana,linea);
 				//linea=19;
 
-				linea=menu_debug_registers_get_line_legend();
+				linea=menu_debug_registers_get_line_legend(&ventana);
 				linea=menu_debug_registers_print_legend(&ventana,linea);
 
 
@@ -14071,7 +14078,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (tecla==10) {
                     //abajo
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_cursor_down();
+					menu_debug_cursor_down(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
@@ -14079,7 +14086,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				//24 pgup
                 if (tecla==24) {
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_cursor_pgup();
+					menu_debug_cursor_pgup(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
@@ -14088,7 +14095,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (tecla==25) {
 					//PgDn
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_cursor_pgdn();
+					menu_debug_cursor_pgdn(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
@@ -14126,7 +14133,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
             linea=menu_debug_registers_print_registers(&ventana,linea);
 
 			//linea=19;
-			linea=menu_debug_registers_get_line_legend();
+			linea=menu_debug_registers_get_line_legend(&ventana);
 
         	//Forzar a mostrar atajos
 	        z80_bit antes_menu_writing_inverse_color;
@@ -14502,7 +14509,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 if (tecla==10) {
                 	//abajo
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-                    menu_debug_cursor_down();
+                    menu_debug_cursor_down(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
@@ -14512,7 +14519,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 //24 pgup
                 if (tecla==24) {
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-                    menu_debug_cursor_pgup();
+                    menu_debug_cursor_pgup(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
@@ -14523,7 +14530,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 if (tecla==25) {
                     //PgDn
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-                    menu_debug_cursor_pgdn();
+                    menu_debug_cursor_pgdn(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
