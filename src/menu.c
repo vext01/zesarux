@@ -352,7 +352,7 @@ z80_bit menu_event_drag_drop={0};
 
 z80_bit menu_event_new_version_show_changes={0};
 
-
+z80_bit menu_event_new_update={0};
 
 z80_bit menu_button_f_function={0};
 
@@ -28223,6 +28223,13 @@ void menu_inicio(void)
 		cls_menu_overlay();
 	}
 
+	if (menu_event_new_update.v) {
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
+		menu_event_new_update.v=0;
+		menu_generic_message_format("New version available","ZEsarUX version %s is available on github",stats_last_remote_version);
+
+		cls_menu_overlay();
+	}
 
 
 	if (menu_event_open_menu.v) {

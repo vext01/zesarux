@@ -696,10 +696,16 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 		sprintf(request,"GET %s HTTP/1.0\r\n"
 						"Host: %s\r\n"
 						"User-Agent: ZEsarUX " EMULATOR_VERSION " " COMPILATION_SYSTEM "\r\n"
+						"Accept-Encoding: identity\r\n"
 						"%s" 
 						"\r\n",
 						url,host,add_headers);
-						
+
+		//Agregamos siempre "Accept-Encoding: identity\r\n" para decir que no aceptamos contenido comprimido
+		//Esto es especialmente sensible en zxinfo.dk, pues habia a veces que retornaba contenido gz
+		//Ejemplo: query "target renegade" y luego seleccionar el juego target renegade
+
+		//Cuidado que este debug_printf no exceda el valor de DEBUG_MAX_MESSAGE_LENGTH, que no llegará, pero por si acaso...			
 		debug_printf (VERBOSE_DEBUG,"zsock_http Request:\n%s\n",request);
 
 		

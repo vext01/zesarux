@@ -17185,7 +17185,7 @@ releases.1.type=Tape image
 	
 	//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
 	
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","Accept-Encoding: identity\r\n");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","");
 	
 	//TODO gestionar resultado vacio
 	if (query_id[0]!=0) {
@@ -17356,6 +17356,11 @@ void menu_settings_enable_statistics(MENU_ITEM_PARAMETERS)
 	else stats_enable();
 }
 
+void menu_settings_enable_check_updates(MENU_ITEM_PARAMETERS)
+{
+	stats_check_updates_enabled.v ^=1;	
+}
+
 
 void menu_settings_statistics(MENU_ITEM_PARAMETERS)
 {
@@ -17365,8 +17370,12 @@ void menu_settings_statistics(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
+			menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_settings_enable_check_updates,NULL,"[%c] Check updates",
+					(stats_check_updates_enabled.v ? 'X' : ' ') );
+
+
                 
-            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_settings_enable_statistics,NULL,"[%c] Send Statistics",
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_settings_enable_statistics,NULL,"[%c] Send Statistics",
 					(stats_enabled.v ? 'X' : ' ') );
 			
                         

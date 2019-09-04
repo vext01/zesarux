@@ -37,6 +37,9 @@ char stats_uuid[128]="";
 
 z80_bit stats_enabled={0};
 z80_bit stats_asked={0};
+z80_bit stats_check_updates_enabled={1};
+
+char stats_last_remote_version[MAX_UPDATE_VERSION_STRING]="";
 
 void generate_stats_uuid(void)
 {
@@ -139,3 +142,83 @@ int stats_get_current_total_minutes_use(void)
 	int uptime_seconds=timer_get_uptime_seconds();
 	return total_minutes_use+uptime_seconds/60;
 }
+
+void stats_check_updates(void)
+{
+	//opcion de comprobar updates desactivada
+	if (stats_check_updates_enabled.v==0) return;
+
+	//opcion de guardar config desactivada. importante: si no se puede guardar config, no se podria decir que ese update ya ha aparecido,
+	//y estaria molestando siempre al usuario
+	if (save_configuration_file_on_exit.v==0) return;
+
+	char url_update[1024];
+#ifdef SNAPSHOT_VERSION
+	strcpy(url_update,STATS_URL_UPDATE_SNAPSHOT_VERSION);
+#else
+	strcpy(url_update,STATS_URL_UPDATE_STABLE_VERSION);
+#endif
+
+
+	int http_code;
+	char *mem;
+	char *orig_mem;
+
+	char *mem_after_headers;
+	int total_leidos;
+	int retorno;
+
+	    
+	retorno=zsock_http(REMOTE_ZESARUX_SERVER,url_update,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+
+	orig_mem=mem;
+	
+	if (mem_after_headers!=NULL) {
+		if (http_code==200) {
+			int dif_header=mem_after_headers-mem;
+			total_leidos -=dif_header;
+			mem=mem_after_headers;
+
+			char update_version_string[MAX_UPDATE_VERSION_STRING];
+			if (total_leidos<=MAX_UPDATE_VERSION_STRING) {
+				//Leemos la linea, con funcion de utils, para evitar leer saltos de linea y similares
+				int leidos_linea;
+				util_read_line(mem_after_headers,update_version_string,total_leidos,MAX_UPDATE_VERSION_STRING,&leidos_linea);
+				if (leidos_linea) {
+					printf ("update version string [%s]\n",update_version_string);
+
+					//Comparar si ese string es diferente de la version actual
+					if (strcmp(EMULATOR_VERSION,update_version_string)) {
+						printf ("Remote version string different than current\n");
+
+						//Y ver si ya se ha avisado al usuario de esta nueva version
+						if (strcmp(stats_last_remote_version,update_version_string)) {
+							printf ("There's a new version %s on github\n",update_version_string);
+
+							//Y guardar dicha version como ultima
+							strcpy(stats_last_remote_version,update_version_string);
+
+							//Y avisar al usuario
+							//Si la version actual es mas nueva que la anterior, eso solo si el autoguardado de config esta activado
+
+							//Y si driver permite menu normal
+							if (si_normal_menu_video_driver()) {
+								menu_event_new_update.v=1;
+								menu_abierto=1;
+							}
+
+						}
+						else {
+							printf ("Already told the user about that version\n");
+						}
+					}
+				}
+			}
+		}
+	
+		free(orig_mem);
+	}
+
+
+}	
+	

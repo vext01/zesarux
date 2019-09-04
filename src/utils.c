@@ -3589,9 +3589,10 @@ int util_write_configfile(void)
   if (stats_enabled.v)                        ADD_STRING_CONFIG,"--stats-send-enabled");
           
 
-   if (stats_uuid[0]!=0)                      ADD_STRING_CONFIG,"--stats-uuid %s",stats_uuid);
+  if (stats_uuid[0]!=0)                      ADD_STRING_CONFIG,"--stats-uuid %s",stats_uuid);
 
-
+  if (stats_last_remote_version[0]!=0)       ADD_STRING_CONFIG,"--stats-last-avail-version %s",stats_last_remote_version);
+   
 
 					      ADD_STRING_CONFIG,"--last-version \"%s\"",BUILDNUMBER);
 

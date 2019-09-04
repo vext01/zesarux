@@ -31,4 +31,11 @@ extern z80_bit stats_asked;
 extern void send_stats_server(void);
 extern int stats_get_current_total_minutes_use(void);
 
+#define STATS_URL_UPDATE_STABLE_VERSION "/check_updates/stable.txt"
+#define STATS_URL_UPDATE_SNAPSHOT_VERSION "/check_updates/snapshot.txt"
+
+#define MAX_UPDATE_VERSION_STRING 1024
+extern char stats_last_remote_version[];
+extern z80_bit stats_check_updates_enabled;
+
 #endif
