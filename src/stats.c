@@ -29,6 +29,7 @@
 #include "menu.h"
 #include "compileoptions.h"
 #include "debug.h"
+#include "network.h"
 
 
 
@@ -124,12 +125,12 @@ void send_stats_server(void)
 
 
 	char query_url[1024];
-	sprintf (query_url,"/prueba-con?%s",query_url_parameters_normalized);
+	sprintf (query_url,"/zesarux-stats?%s",query_url_parameters_normalized);
 
 	//printf ("query url: %s\n",query_url);
 
     
-	retorno=zsock_http("51.83.33.13",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+	retorno=zsock_http(REMOTE_ZESARUX_SERVER,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
 }
 
 int stats_get_current_total_minutes_use(void)

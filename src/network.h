@@ -39,6 +39,8 @@
 	#include <unistd.h>
 #endif
 
+#define REMOTE_ZESARUX_SERVER "51.83.33.13"
+
 extern int enviar_cr;
 
 extern int crear_socket_TCP(void);
