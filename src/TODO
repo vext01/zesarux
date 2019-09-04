@@ -33,6 +33,10 @@ Se corregiria con:
 
 Per si corrijo esto, luego no centra menus en zona zxdesktop
 
+*Corregido
+
+
+
 
 -no lee enlaces simbolicos en filesystem: ejemplo /home/pi/PREPARADOS de raspiboy
 

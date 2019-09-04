@@ -194,22 +194,23 @@ typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 #define OVERLAY_SCREEN_MAX_HEIGTH 128
 
 //Tamanyo inicial maximo. Aunque luego se puede hacer mas grande
+/*
 #define ZXVISION_MAX_ANCHO_VENTANA 32
 #define ZXVISION_MAX_ALTO_VENTANA 24
 
 
 #define ZXVISION_MAX_X_VENTANA (scr_get_menu_width()-1)
 #define ZXVISION_MAX_Y_VENTANA (scr_get_menu_height()-1)
+*/
 
 
-/*
 #define ZXVISION_MAX_ANCHO_VENTANA (scr_get_menu_width())
 #define ZXVISION_MAX_ALTO_VENTANA (scr_get_menu_height())
 
 
 #define ZXVISION_MAX_X_VENTANA (ZXVISION_MAX_ANCHO_VENTANA-1)
 #define ZXVISION_MAX_Y_VENTANA (ZXVISION_MAX_ALTO_VENTANA-1)
-*/
+
 
 
 

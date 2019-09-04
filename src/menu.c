@@ -4989,7 +4989,14 @@ int menu_origin_x(void)
 		int ancho_total=scr_get_menu_width();
 
 		//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
-		int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA;
+		//int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA;
+		int restar=screen_ext_desktop_width/8;
+		//al menos 32 de ancho para zona de menu
+		if (restar<32) restar=32;
+		int pos_x=ancho_total-restar;
+
+		//Por si acaso
+		if (pos_x<0) pos_x=0;
 		return pos_x;
 	}
 
@@ -5006,7 +5013,14 @@ int menu_center_x(void)
 		int ancho_total=scr_get_menu_width();
 
 		//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
-		int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA/2;
+		//int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA/2;
+		int restar=screen_ext_desktop_width/8;
+		//al menos 32 de ancho para zona de menu
+		if (restar<32) restar=32;
+		int pos_x=ancho_total-restar/2;
+
+		//Por si acaso
+		if (pos_x<0) pos_x=0;		
 		return pos_x;
 	}
 
