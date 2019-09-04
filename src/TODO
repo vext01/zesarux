@@ -2360,7 +2360,6 @@ no-thread no funcionara tampoco
 -descomprimir rar,gz, etc con espacio en nombres a veces falla. el comando system le envia las "" pero el propio comando
 no gestiona bien nombres con espacios
 
--comprobacion de si hay actualizacion
 
 -tecla ',' en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB para el menu
 

@@ -185,18 +185,16 @@ void stats_check_updates(void)
 				int leidos_linea;
 				util_read_line(mem_after_headers,update_version_string,total_leidos,MAX_UPDATE_VERSION_STRING,&leidos_linea);
 				if (leidos_linea) {
-					printf ("update version string [%s]\n",update_version_string);
-
+					debug_printf (VERBOSE_DEBUG,"Update version string [%s]",update_version_string);
+	
 					//Comparar si ese string es diferente de la version actual
 					if (strcmp(EMULATOR_VERSION,update_version_string)) {
-						printf ("Remote version string different than current\n");
+						debug_printf (VERBOSE_DEBUG,"Remote version string different than current");
 
 						//Y ver si ya se ha avisado al usuario de esta nueva version
 						if (strcmp(stats_last_remote_version,update_version_string)) {
-							printf ("There's a new version %s on github\n",update_version_string);
+							debug_printf (VERBOSE_DEBUG,"There's a new version %s on github",update_version_string);
 
-							//Y guardar dicha version como ultima
-							strcpy(stats_last_remote_version,update_version_string);
 
 							//Y avisar al usuario
 							//Si la version actual es mas nueva que la anterior, eso solo si el autoguardado de config esta activado
@@ -209,9 +207,13 @@ void stats_check_updates(void)
 
 						}
 						else {
-							printf ("Already told the user about that version\n");
+							debug_printf (VERBOSE_DEBUG,"Already told the user about that version");
 						}
 					}
+
+					//Y guardar dicha version como ultima
+					strcpy(stats_last_remote_version,update_version_string);	
+
 				}
 			}
 		}

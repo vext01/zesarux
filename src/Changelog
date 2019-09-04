@@ -16,6 +16,8 @@ Added Borland Gui Style
 Added ZX81 online game browser
 Added ZXInfo/WOS game browser
 Added total run time statistics 
+Added checking for updates
+Added sending anonymous statistics use
 
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired

@@ -1909,11 +1909,12 @@ printf (
 		"-------------\n"
 		"\n"
 		
-		"--total-minutes-use n        Total minutes of use of ZEsarUX\n"
-		"--stats-send-already-asked   Do not ask to send statistics\n"
-		"--stats-send-enabled         Enable send statistics\n"
-		"--stats-uuid s               UUID to send statistics\n"
-		"--stats-last-avail-version s ZEsarUX last available version to download\n"
+		"--total-minutes-use n          Total minutes of use of ZEsarUX\n"
+		"--stats-send-already-asked     Do not ask to send statistics\n"
+		"--stats-send-enabled           Enable send statistics\n"
+		"--stats-uuid s                 UUID to send statistics\n"
+		"--stats-disable-check-updates  Disable checking of available ZEsarUX updates\n"
+		"--stats-last-avail-version s   ZEsarUX last available version to download\n"
 
 
 		"\n"
@@ -6835,6 +6836,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--stats-uuid")) {
 				siguiente_parametro_argumento();
 				strcpy(stats_uuid,argv[puntero_parametro]);
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--stats-disable-check-updates")) {
+				stats_check_updates_enabled.v=0;
 			}
 	
 			else if (!strcmp(argv[puntero_parametro],"--stats-last-avail-version")) {

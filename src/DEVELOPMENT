@@ -88,6 +88,11 @@ make sourcetargz
 De todos los archivos generados y subidos a github, crear suma MD5SUM en local de cada archivo y luego subirlo en archivo MD5SUM
 con todos los archivos subidos comprimidos y README (y excluyendo este mismo MD5SUM)
 
+Generar en servidor ZEsarUX, en ruta
+STATS_URL_UPDATE_STABLE_VERSION
+con contenido numero de version, ejemplo:
+"8.1"
+
 
 ** Extra files
 
