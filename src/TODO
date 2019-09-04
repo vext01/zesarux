@@ -1,11 +1,46 @@
  
 --------Para próxima versión:
 
+-tamanyos ventanas menus:
+si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango
+no deberia hacerlo, ventana deberia ser de 32x24 maximo
+ejemplo en browser juegos zx81
+letra a:
+Info: zxvision_new_window: window out of range: 13,0 19x38
+
+O si se sale de rango, centrar en border??
+
+lio porque depende de scr_get_menu_height
+ y scr_get_menu_width
+
+Ver también variables ZXVISION_MAX etc
+Max height y Max y por ejemplo deberían coincidir 
+
+O hago que al crear menú, los máximos sean igual que zxvision_max etc, o hago que zxvision al crear ventana permita más grande que 32x24
+
+O que Max ancho sea igual que Max x+1, y Max alto sea igual que Max y+1
+Ver en todos los sitios donde se usa variable que se vaya a cambiar
+
+Y probar en driver curses etc navegador de juegos zx81 
+
+Se corregiria con:
+#define ZXVISION_MAX_ANCHO_VENTANA (scr_get_menu_width())
+#define ZXVISION_MAX_ALTO_VENTANA (scr_get_menu_height())
+
+
+#define ZXVISION_MAX_X_VENTANA (ZXVISION_MAX_ANCHO_VENTANA-1)
+#define ZXVISION_MAX_Y_VENTANA (ZXVISION_MAX_ALTO_VENTANA-1)
+
+Per si corrijo esto, luego no centra menus en zona zxdesktop
+
+
 -no lee enlaces simbolicos en filesystem: ejemplo /home/pi/PREPARADOS de raspiboy
 
 -Stats en windows sin thread: que lo haga igualmente pero al final. 
 
 -como gestionar comprobacion de updates: en sistemas con threads como lo hace?
+
+-Envío de estadísticas y comprobación de updates tiene que ir en segundo plano, por si fallan que no afecten al usuario
 
 Thread 8 Crashed:
 0   libsystem_kernel.dylib        	0x00007fff736102c6 __pthread_kill + 10

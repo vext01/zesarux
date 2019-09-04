@@ -704,6 +704,17 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 		//Agregamos siempre "Accept-Encoding: identity\r\n" para decir que no aceptamos contenido comprimido
 		//Esto es especialmente sensible en zxinfo.dk, pues habia a veces que retornaba contenido gz
 		//Ejemplo: query "target renegade" y luego seleccionar el juego target renegade
+		/*
+		Info del RFC
+		https://tools.ietf.org/html/rfc2616#section-14
+
+If no Accept-Encoding field is present in a request, the server MAY
+   assume that the client will accept any content coding. In this case,
+   if "identity" is one of the available content-codings, then the
+   server SHOULD use the "identity" content-coding, unless it has
+   additional information that a different content-coding is meaningful
+   to the client.
+		*/
 
 		//Cuidado que este debug_printf no exceda el valor de DEBUG_MAX_MESSAGE_LENGTH, que no llegará, pero por si acaso...			
 		debug_printf (VERBOSE_DEBUG,"zsock_http Request:\n%s\n",request);
