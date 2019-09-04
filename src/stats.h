@@ -29,5 +29,6 @@ extern void generate_stats_uuid(void);
 extern z80_bit stats_enabled;
 extern z80_bit stats_asked;
 extern void send_stats_server(void);
+extern int stats_get_current_total_minutes_use(void);
 
 #endif

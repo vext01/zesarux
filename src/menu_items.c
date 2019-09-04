@@ -101,6 +101,7 @@
 #include "uartbridge.h"
 #include "zeng.h"
 #include "network.h"
+#include "stats.h"
 
 
 #ifdef COMPILE_ALSA
@@ -183,6 +184,7 @@ int network_opcion_seleccionada=0;
 int zeng_opcion_seleccionada=0;
 int zx81_online_browser_opcion_seleccionada=0;
 int online_browse_zx81_letter_opcion_seleccionada=0;
+int settings_statistics_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -17347,6 +17349,62 @@ void menu_network(MENU_ITEM_PARAMETERS)
 
 
 }
+
+void menu_settings_enable_statistics(MENU_ITEM_PARAMETERS)
+{
+	if (stats_enabled.v) stats_disable();
+	else stats_enable();
+}
+
+
+void menu_settings_statistics(MENU_ITEM_PARAMETERS)
+{
+        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                
+            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_settings_enable_statistics,NULL,"[%c] Send Statistics",
+					(stats_enabled.v ? 'X' : ' ') );
+			
+                        
+			menu_add_item_menu_tooltip(array_menu_common,"Send anonymous statistics to a remote server");
+			menu_add_item_menu_ayuda(array_menu_common,"Send anonymous statistics to a remote server");
+
+			if (stats_enabled.v) {
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"    UUID: %s",stats_uuid);
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"    System: %s",COMPILATION_SYSTEM);
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"    Minutes: %d",stats_get_current_total_minutes_use() );
+			}
+
+              
+						
+			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+            menu_add_ESC_item(array_menu_common);
+
+            retorno_menu=menu_dibuja_menu(&settings_statistics_opcion_seleccionada,&item_seleccionado,array_menu_common,"Statistics Settings" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
+
 
 
 

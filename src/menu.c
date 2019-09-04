@@ -26611,7 +26611,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 	//tiempo total de uso del emulador solo si esta guardado de config
 	if (save_configuration_file_on_exit.v) {
 		sprintf (mensaje_total_uptime,"Total minutes use %d mins\n",
-  		total_minutes_use+uptime_seconds/60);
+  		stats_get_current_total_minutes_use() );
 	}
 	else {
 		mensaje_total_uptime[0]=0;
@@ -27503,6 +27503,11 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings,'s');
 		menu_add_item_menu_tooltip(array_menu_settings,"Snapshot settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Snapshot settings");
+
+		menu_add_item_menu(array_menu_settings,"Stat~~istics",MENU_OPCION_NORMAL,menu_settings_statistics,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'i');
+		menu_add_item_menu_tooltip(array_menu_settings,"Statistics settings");
+		menu_add_item_menu_ayuda(array_menu_settings,"Statistics settings");		
 
 		menu_add_item_menu(array_menu_settings,"S~~torage",MENU_OPCION_NORMAL,menu_settings_storage,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'t');

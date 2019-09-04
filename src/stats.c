@@ -30,11 +30,7 @@
 #include "compileoptions.h"
 #include "debug.h"
 
-/*
-	                gettimeofday(&z80_interrupts_timer_antes, NULL);
-        	        randomize_noise[i]=z80_interrupts_timer_antes.tv_sec & 0xFFFF;
-                	//printf ("randomize vale: %d\n",randomize_noise);
-					*/
+
 
 char stats_uuid[128]="";
 
@@ -117,10 +113,7 @@ void send_stats_server(void)
 
 	
 
-
-
-	int uptime_seconds=timer_get_uptime_seconds();
-	int minutes=total_minutes_use+uptime_seconds/60;
+	int minutes=stats_get_current_total_minutes_use();
 
 	char query_url_parameters[1024];
 	char query_url_parameters_normalized[1024];
@@ -137,4 +130,11 @@ void send_stats_server(void)
 
     
 	retorno=zsock_http("51.83.33.13",query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+}
+
+int stats_get_current_total_minutes_use(void)
+{
+	//El tiempo total de config + el tiempo actual desde que arranca
+	int uptime_seconds=timer_get_uptime_seconds();
+	return total_minutes_use+uptime_seconds/60;
 }
