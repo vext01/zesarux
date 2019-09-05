@@ -37,6 +37,58 @@ Per si corrijo esto, luego no centra menus en zona zxdesktop
 *Corregido. Revisar!
 
 
+-Descargas del browser wos que no van:
+-paw
+
+-Acceso telnet a servidor público para usar ZEsarUX. Con menú de borrado limitado. U otro usuario con permisos restringidos
+
+-Programar conexiones https
+
+https://stackoverflow.com/questions/16255323/make-an-https-request-using-sockets-on-linux
+
+include <openssl/ssl.h>
+
+// first connect to the remote as usual, but use the port 443 instead of 80
+
+// initialize OpenSSL - do this once and stash ssl_ctx in a global var
+SSL_load_error_strings ();
+SSL_library_init ();
+SSL_CTX *ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
+
+// create an SSL connection and attach it to the socket
+SSL *conn = SSL_new(ssl_ctx);
+SSL_set_fd(conn, sock);
+
+// perform the SSL/TLS handshake with the server - when on the
+// server side, this would use SSL_accept()
+int err = SSL_connect(conn);
+if (err != 1)
+   abort(); // handle error
+
+// now proceed with HTTP traffic, using SSL_read instead of recv() and
+// SSL_write instead of send(), and SSL_shutdown/SSL_free before close()
+
+-enlaces zxinfo/wos:
+
+Local file links starting with /pub/sinclair/ refer to content previously available at the original WorldOfSpectrum archive. 
+These files are currently accessible from Archive.org mirror at https://archive.org/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/
+Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/
+
+https://github.com/zxdb/ZXDB/blob/master/README.md
+
+
+-Acortar nombre juego y id ya desde buffer línea a 28 o así aprox
+
+Otros acortar: url: a lo que de maximo el ítem misc de menú
+
+
+-Librería para zip
+
+https://github.com/kuba--/zip
+
+-Spool file funciona en cpc?
+
 
 
 -no lee enlaces simbolicos en filesystem: ejemplo /home/pi/PREPARADOS de raspiboy
