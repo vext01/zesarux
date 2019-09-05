@@ -1298,7 +1298,7 @@ zeng.o: zeng.c zeng.h cpu.h debug.h utils.h network.h compileoptions.h remote.h 
 atomic.o: atomic.c atomic.h compileoptions.h
 	\$(CC) \$(CFLAGS) -c atomic.c
 
-stats.o: stats.c stats.h cpu.h menu.h compileoptions.h debug.h network.h
+stats.o: stats.c stats.h cpu.h menu.h compileoptions.h debug.h network.h screen.h timer.h
 	\$(CC) \$(CFLAGS) -c stats.c
 
 esxdos_handler.o: esxdos_handler.c esxdos_handler.h cpu.h operaciones.h debug.h menu.h utils.h diviface.h screen.h

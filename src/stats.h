@@ -37,5 +37,9 @@ extern int stats_get_current_total_minutes_use(void);
 #define MAX_UPDATE_VERSION_STRING 1024
 extern char stats_last_remote_version[];
 extern z80_bit stats_check_updates_enabled;
+extern void stats_check_updates(void);
+extern void stats_ask_if_enable(void);
+extern void stats_enable(void);
+extern void stats_disable(void);
 
 #endif

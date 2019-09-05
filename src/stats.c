@@ -30,6 +30,8 @@
 #include "compileoptions.h"
 #include "debug.h"
 #include "network.h"
+#include "screen.h"
+#include "timer.h"
 
 
 
