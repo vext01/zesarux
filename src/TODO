@@ -1,6 +1,7 @@
   
 --------Para próxima versión:
 
+
 -tamanyos ventanas menus:
 si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango
 no deberia hacerlo, ventana deberia ser de 32x24 maximo
@@ -33,7 +34,7 @@ Se corregiria con:
 
 Per si corrijo esto, luego no centra menus en zona zxdesktop
 
-*Corregido
+*Corregido. Revisar!
 
 
 

@@ -27963,6 +27963,12 @@ void menu_inicio_reset_emulated_keys(void)
 void menu_inicio(void)
 {
 
+	//Pulsado boton salir del emulador, en drivers xwindows, sdl, etc, en casos con menu desactivado, sale del todo
+	if (menu_button_exit_emulator.v && (menu_desactivado.v || menu_desactivado_andexit.v)
+		) {
+		end_emulator();
+	}
+
 	//Menu desactivado y volver
 	if (menu_desactivado.v) {
 		menu_inicio_pre_retorno_reset_flags();
@@ -28123,13 +28129,13 @@ void menu_inicio(void)
 
 	if (menu_button_exit_emulator.v) {
 		//Pulsado salir del emulador
-                //para evitar que entre con la pulsacion de teclas activa
-                //menu_espera_no_tecla_con_repeticion();
-                //menu_espera_no_tecla();
+        //para evitar que entre con la pulsacion de teclas activa
+        //menu_espera_no_tecla_con_repeticion();
+        //menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
-                menu_exit_emulator(0);
-                cls_menu_overlay();
+        menu_exit_emulator(0);
+        cls_menu_overlay();
 	}
 
         if (menu_event_drag_drop.v) {
