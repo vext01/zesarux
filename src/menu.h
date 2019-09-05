@@ -120,6 +120,7 @@ extern char *esc_key_message;
 extern char *openmenu_key_message;
 
 extern z80_bit menu_desactivado;
+extern z80_bit menu_desactivado_andexit;
 
 extern void set_menu_overlay_function(void (*funcion)(void) );
 extern void reset_menu_overlay_function(void);

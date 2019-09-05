@@ -286,9 +286,11 @@ int menu_footer=1;
 
 
 
+//Si el menu esta desactivado completamente. Si es asi, cualquier evento que abra el menu, no hará nada
+z80_bit menu_desactivado={0};
 
 //Si el menu esta desactivado completamente. Si es asi, cualquier evento que abra el menu, provocará la salida del emulador
-z80_bit menu_desactivado={0};
+z80_bit menu_desactivado_andexit={0};
 
 //indica que el menu aparece en modo multitarea - mientras ejecuta codigo de emulacion de cpu
 int menu_multitarea=1;
@@ -2388,7 +2390,8 @@ void redraw_footer(void)
 
 }
 
-
+//Esta funcion antes se usaba para poner color oscuro o no al abrir el menu
+//Actualmente solo cambia el valor de menu_abierto
 void menu_set_menu_abierto(int valor)
 {
 
@@ -27756,7 +27759,7 @@ void menu_inicio_bucle(void)
 
 }
 
-void menu_inicio_pre_retorno(void)
+void menu_inicio_pre_retorno_reset_flags(void)
 {
     //desactivar botones de acceso directo
     menu_button_quickload.v=0;
@@ -27769,6 +27772,11 @@ void menu_inicio_pre_retorno(void)
     menu_event_remote_protocol_enterstep.v=0;
     menu_button_f_function.v=0;
 	menu_event_open_menu.v=0;
+}
+
+void menu_inicio_pre_retorno(void)
+{
+	menu_inicio_pre_retorno_reset_flags();
 
     reset_menu_overlay_function();
     menu_set_menu_abierto(0);
@@ -27954,7 +27962,17 @@ void menu_inicio_reset_emulated_keys(void)
 //menu principal
 void menu_inicio(void)
 {
-	if (menu_desactivado.v) end_emulator();
+
+	//Menu desactivado y volver
+	if (menu_desactivado.v) {
+		menu_inicio_pre_retorno_reset_flags();
+
+    	menu_set_menu_abierto(0);		
+		return;
+	}
+
+	//Menu desactivado y salida del emulador
+	if (menu_desactivado_andexit.v) end_emulator();
 
 	//No permitir aparecer osd keyboard desde aqui. Luego se reactiva en cada gestion de tecla
 	osd_kb_no_mostrar_desde_menu=1;

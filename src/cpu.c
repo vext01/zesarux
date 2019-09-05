@@ -1661,7 +1661,8 @@ printf (
 		"\n"
 		"--hide-dirs                Do not show directories on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
-		"--disablemenu              Disable menu. Any event that opens the menu will exit the emulator\n"
+		"--disablemenu              Disable menu\n"
+		"--disablemenuandexit       Disable menu. Any event that opens the menu will exit the emulator\n"
 		"--text-keyboard-add text   Add a string to the Adventure Text OSD Keyboard. The first addition erases the default text keyboard.\n"
 		" You can use hotkeys by using double character ~~ just before the letter, for example:\n"
 		" --text-keyboard-add ~~north   --text-keyboard-add e~~xamine\n");
@@ -6533,6 +6534,10 @@ int parse_cmdline_options(void) {
 				menu_desactivado.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--disablemenuandexit")) {
+				menu_desactivado_andexit.v=1;
+			}
+
 			else if (!strcmp(argv[puntero_parametro],"--forcevisiblehotkeys")) {
                                 menu_force_writing_inverse_color.v=1;
 			}
@@ -7671,7 +7676,8 @@ struct sched_param sparam;
 			//Y si driver permite menu normal
 			if (si_normal_menu_video_driver()) {
 				menu_event_new_version_show_changes.v=1;
-				menu_abierto=1;
+				menu_set_menu_abierto(1);
+				//menu_abierto=1;
 			}
 		}
 	}

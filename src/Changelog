@@ -18,6 +18,7 @@ Added ZXInfo/WOS game browser
 Added total run time statistics 
 Added checking for updates
 Added sending anonymous statistics use
+Added setting --disablemenuandexit: it closes the emulator when the menu is going to be opened. It's the same behaviour as previous --disablemenu. Now --disablemenu only disables the menu but does not close the emulator
 
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired
