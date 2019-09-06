@@ -1152,6 +1152,8 @@ void codetests_atomic(void)
 
 	scr_messages_debug=codetests_messages_debug;
 	verbose_level=VERBOSE_PARANOID;
+	scr_driver_name="";
+
 	z_atomic_reset(&codetest_semaforo);
 
 	//Empezar a escribir debug info en este pthread y en el otro
@@ -1176,6 +1178,63 @@ void codetests_atomic(void)
 	}	
 
 }
+
+
+void *thread_codetests_network_function(void *nada)
+{
+	while (1) {
+		printf ("Abriendo conexion desde thread secundario\n");
+		fflush(stdout);
+		int sock=z_sock_open_connection("google.es",80);
+		printf ("socket para thread secundario: %d\n",sock);
+		fflush(stdout);
+
+		usleep(200000);
+		if (sock>=0) {
+			printf ("cerrando socket %d\n",sock);
+			fflush(stdout);
+			z_sock_close_connection(sock);
+		}
+
+	}
+}
+
+
+pthread_t thread_network_codetests;
+
+void codetests_network_atomic(void)
+{
+		//Inicializar thread
+
+	if (pthread_create( &thread_network_codetests, NULL, &thread_codetests_network_function, NULL) ) {
+		debug_printf(VERBOSE_ERR,"Can not create codetests network pthread");
+		exit(1);
+	}
+
+	scr_messages_debug=codetests_messages_debug;
+	verbose_level=VERBOSE_PARANOID;
+	scr_driver_name="";
+
+	//Empezar a abrir conexiones tcpen este pthread y en el otro
+	while (1) {
+
+		printf ("Abriendo conexion desde thread primario\n");
+		fflush(stdout);
+		int sock=z_sock_open_connection("google.es",80);
+		printf ("socket para thread primario: %d\n",sock);
+		fflush(stdout);
+
+		usleep(200000);
+		if (sock>=0) {
+			printf ("cerrando socket %d\n",sock);
+			fflush(stdout);
+			z_sock_close_connection(sock);
+		}
+
+	}	
+
+}
+
 
 #endif
 
@@ -1214,11 +1273,16 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("\nRunning zsock http tests\n");
 	//codetests_http();
 
-#ifdef USE_PTHREADS
-	printf ("\nRunning atomic tests\n");
-	codetests_atomic();
-#endif
+//#ifdef USE_PTHREADS
+//	printf ("\nRunning atomic tests\n");
+//	codetests_atomic();
+//#endif
 
+
+#ifdef USE_PTHREADS
+	printf ("\nRunning network atomic tests\n");
+	codetests_network_atomic();
+#endif
 
 	//printf ("\nRunning tbblue layers strings\n");
 	//codetests_tbblue_layers();

@@ -34,6 +34,7 @@
 #include "network.h"
 #include "compileoptions.h"
 #include "chardevice.h"
+#include "atomic.h"
 
 
 /*
@@ -317,6 +318,7 @@ void escribir_socket_format (int misocket, const char * format , ...)
 }
 
 
+z_atomic_semaphore network_semaforo;
 
 void init_network_tables(void)
 {
@@ -324,6 +326,9 @@ void init_network_tables(void)
 	for (i=0;i<MAX_Z_SOCKETS;i++) {
 		sockets_list[i].used=0;
 	}
+
+	z_atomic_reset(&network_semaforo);
+
 }
 
 int find_free_socket(void)
@@ -339,16 +344,61 @@ int find_free_socket(void)
 	return -1;
 }
 
+int z_sock_assign_socket(void)
+{
+	//Adquirir lock
+	while(z_atomic_test_and_set(&network_semaforo)) {
+		//printf("Esperando a liberar lock en network_semaforo en z_sock_assign_socket\n");
+	} 
+
+	int indice_tabla=find_free_socket();
+	if (indice_tabla<0) {
+		debug_printf(VERBOSE_ERR,"Too many open sockets (%d)",MAX_Z_SOCKETS);	
+	}
+	else {
+		//Asignar el socket
+		sockets_list[indice_tabla].used=1;
+		//Y de momento con numero socket invalido
+		sockets_list[indice_tabla].socket_number=-1;
+	}
+
+	//Liberar lock
+	z_atomic_reset(&network_semaforo);	
+
+	return indice_tabla;
+}
+
+
+/*
+Supuestamente usaria esto en z_sock_close_connection pero dado que ahi solo hay que decir que el socket esta disponible, se puede modificar tal cual,
+no hace falta lock
+void z_sock_free_socket(int indice_tabla)
+{
+
+	//Adquirir lock
+	while(z_atomic_test_and_set(&network_semaforo)) {
+		//printf("Esperando a liberar lock en network_semaforo en z_sock_free_socket\n");
+	} 
+
+	sockets_list[indice_tabla].used=0;
+
+	//Liberar lock
+	z_atomic_reset(&network_semaforo);	
+
+
+}
+*/
+
 //Retorna indice a la tabla de sockets. <0 si error
 int z_sock_open_connection(char *host,int port)
 {
 
-	int indice_tabla=find_free_socket();
+
+	int indice_tabla=z_sock_assign_socket();
 	if (indice_tabla<0) {
-		debug_printf(VERBOSE_ERR,"Too many open sockets (%d)",MAX_Z_SOCKETS);
 		return -1;		
 	}
-		
+	
 	int test_socket;
 		
 
@@ -370,22 +420,27 @@ int z_sock_open_connection(char *host,int port)
         }
 
 	sockets_list[indice_tabla].socket_number=test_socket;
-	sockets_list[indice_tabla].used=1;
 
-	return 0;
+	return indice_tabla;
 
 } 
 
 int get_socket_number(int indice_tabla)
 {
 
-	if (indice_tabla<0 || indice_tabla>=MAX_Z_SOCKETS) return -1;
+	if (indice_tabla<0 || indice_tabla>=MAX_Z_SOCKETS) {
+		//printf ("indice fuera de rango\n");
+		return -1;
+	}
 
 	if (!sockets_list[indice_tabla].used) {
-				return -1;
+		//printf ("socket indice %d no esta usado\n",indice_tabla);
+		return -1;
 	}	
 
-	else return sockets_list[indice_tabla].socket_number;
+	else {
+		return sockets_list[indice_tabla].socket_number;
+	}
 }
 	
 
@@ -395,7 +450,7 @@ int z_sock_close_connection(int indice_tabla)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                //debug_printf(VERBOSE_ERR,"Socket is not open");
+                debug_printf(VERBOSE_ERR,"Socket is not open");
 				return -1;
 	}
 

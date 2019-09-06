@@ -1,7 +1,8 @@
   
 --------Para próxima versión:
 
-
+-pulsar ESC en item que se esta escuchando en el menu, cierra el menu
+-items [X] no son amigables en speech, no se entienden. Deberian decir "yes" o "no"
 -tamanyos ventanas menus:
 si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango
 no deberia hacerlo, ventana deberia ser de 32x24 maximo
@@ -226,7 +227,6 @@ Quizá sigpipe se puede gestionar diferente para cada thread?
 :quiza se puede permitir ningun master, pero lo que no deberia ser es dos master. Al menos avisar de esto y que el usuario ya decida
 
 
-*semaforos en fifo zeng
 *parar thread zeng y cerrar socket zeng al salir emulador
 *network: en windows siempre retorna datos disponibles.
 *asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado. Ya lee version pero quiza 

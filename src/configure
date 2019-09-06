@@ -1289,7 +1289,7 @@ prism.o: prism.c prism.h cpu.h timex.h mem128.h debug.h contend.h zxuno.h timex.
 remote.o: remote.c remote.h cpu.h debug.h utils.h compileoptions.h network.h ql.h disassemble.h menu.h menu_items.h audio.h timer.h screen.h ay38912.h charset.h diviface.h ula.h superupgrade.h tbblue.h zxevo.h tsconf.h baseconf.h operaciones.h snap.h kartusho.h settings.h datagear.h esxdos_handler.h assemble.h expression_parser.h joystick.h snap_zsf.h autoselectoptions.h
 	\$(CC) \$(CFLAGS) -c remote.c
 
-network.o: network.c network.h cpu.h debug.h utils.h compileoptions.h chardevice.h
+network.o: network.c network.h cpu.h debug.h utils.h compileoptions.h chardevice.h atomic.h
 	\$(CC) \$(CFLAGS) -c network.c
 
 zeng.o: zeng.c zeng.h cpu.h debug.h utils.h network.h compileoptions.h remote.h snap_zsf.h autoselectoptions.h
