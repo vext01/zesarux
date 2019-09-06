@@ -195,9 +195,10 @@ int connectar_socket(int s,struct sockaddr_in *adr)
 	//TODO: como funciona esto en Windows?
 	int retorno=connect(s,(struct sockaddr *)adr,sizeof(struct sockaddr_in));
 
-    if (retorno<0) {
-        debug_printf (VERBOSE_ERR,"Error stablishing connection with host");
-    }
+	//El error ya lo muestra zsock_open_connection, que es el unico sitio que lo usa
+    //if (retorno<0) {
+    //    debug_printf (VERBOSE_ERR,"Error stablishing connection with host");
+    //}
 
 	return retorno;
 
@@ -353,7 +354,7 @@ int z_sock_assign_socket(void)
 
 	int indice_tabla=find_free_socket();
 	if (indice_tabla<0) {
-		debug_printf(VERBOSE_ERR,"Too many open sockets (%d)",MAX_Z_SOCKETS);	
+		debug_printf(VERBOSE_ERR,"Too many ZEsarUX open sockets (%d)",MAX_Z_SOCKETS);	
 	}
 	else {
 		//Asignar el socket
@@ -400,24 +401,35 @@ int z_sock_open_connection(char *host,int port)
 	}
 	
 	int test_socket;
-		
+
+	//Aqui ya se ha asignado socket en la lista. Si hay error posterior, liberar dicho socket		
+	int error=0;
 
 	if ((test_socket=crear_socket_TCP())<0) {
 		debug_printf(VERBOSE_ERR,"Can't create TCP socket");
-		return -1;
+		error=1;
     }
 
-		//struct sockaddr_in adr;
+	else {
 
         if (omplir_adr_internet(&sockets_list[indice_tabla].adr,host,port)<0) {
-                debug_printf(VERBOSE_ERR,"Error parsing host");
-                return -1;
+                debug_printf(VERBOSE_ERR,"Error: host not found");
+                error=1;
         }
 
-		if (connectar_socket(test_socket,&sockets_list[indice_tabla].adr)<0) {
-                debug_printf(VERBOSE_ERR,"Error stablishing connection with %s:%d",host,port);
-				return -1;
-        }
+		else {
+
+			if (connectar_socket(test_socket,&sockets_list[indice_tabla].adr)<0) {
+            	    debug_printf(VERBOSE_ERR,"Error stablishing connection with %s:%d",host,port);
+					error=1;
+        	}
+		}
+	}
+
+	if (error) {
+		sockets_list[indice_tabla].used=0;
+		return -1;
+	}
 
 	sockets_list[indice_tabla].socket_number=test_socket;
 

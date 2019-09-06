@@ -1195,6 +1195,11 @@ void *thread_codetests_network_function(void *nada)
 			fflush(stdout);
 			z_sock_close_connection(sock);
 		}
+		else {
+			printf ("socket no abierto en thread secundario\n");
+			fflush(stdout);
+		}
+
 
 	}
 }
@@ -1229,6 +1234,10 @@ void codetests_network_atomic(void)
 			printf ("cerrando socket %d\n",sock);
 			fflush(stdout);
 			z_sock_close_connection(sock);
+		}
+		else {
+			printf ("socket no abierto en thread primario\n");
+			fflush(stdout);
 		}
 
 	}	
