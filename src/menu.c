@@ -17522,8 +17522,8 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
 
 			quickfile=quickload_file;
 
-                //sin overlay de texto, que queremos ver las franjas de carga con el color normal (no apagado)
-                reset_menu_overlay_function();
+            //sin overlay de texto, que queremos ver las franjas de carga con el color normal (no apagado)
+            reset_menu_overlay_function();
 
 
 			if (quickload(quickload_file)) {

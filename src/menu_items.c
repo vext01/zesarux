@@ -16896,6 +16896,9 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 							debug_printf (VERBOSE_ERR,"Unknown file format");
 						}
 
+						//Agregar a ultimos archivos usados
+						last_filesused_insert(quickload_file);
+
 						//Y salir todos menus
 						salir_todos_menus=1;  
 					}
@@ -17147,6 +17150,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	//query_search[0]=0;
 	
 	menu_ventana_scanf("Query",zxinfowos_query_search,256);
+	if (zxinfowos_query_search[0]==0) return;
 	
 	//TODO podria pasar que al normalizar ocupe mas de 1024, pero la cadena de entrada tendria que ser muy grande
 	char query_search_normalized[1024];
