@@ -124,7 +124,7 @@ void send_stats_server(void)
 	char query_url_parameters[1024];
 	char query_url_parameters_normalized[1024];
 
-	sprintf (query_url_parameters,"UUID=%s&OS=%s&total_minutes_use=%d",stats_uuid,COMPILATION_SYSTEM,minutes);
+	sprintf (query_url_parameters,"UUID=%s&OS=%s&total_minutes_use=%d&version=%s&buildnumber=%s",stats_uuid,COMPILATION_SYSTEM,minutes,EMULATOR_VERSION,BUILDNUMBER);
 	//Normalizar solo la parte de parametros. Si hicieramos toda la url, el "/" del inicio de la url se convertiria a %2f
 	util_normalize_query_http(query_url_parameters,query_url_parameters_normalized);
 
