@@ -7269,7 +7269,15 @@ acts as expected unless this registe is explicitly changed by the user/software.
 				}
 
 				if (MACHINE_IS_PENTAGON) {
-					if (puerto==0xeff7) pentagon_port_eff7=value;
+					if (puerto==0xeff7) {
+						z80_byte estado_antes=pentagon_port_eff7 & 1;
+						pentagon_port_eff7=value;
+
+						if ( (value&1) != estado_antes) {
+							if (value) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling 16C mode");
+							else screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling 16C mode");
+						}
+					}
 				}
 
 
