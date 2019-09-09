@@ -519,21 +519,25 @@ z80_byte mem_get_ram_page(void)
 
 	z80_byte bit3=0;
 	z80_byte bit4=0;
+	z80_byte bit5=0;
 
-	if (mem128_multiplicador==2 || mem128_multiplicador==4) {
+	if (mem128_multiplicador==2 || mem128_multiplicador==4 || mem128_multiplicador==8) {
 		bit3=puerto_32765&64;  //Bit 6
 		//Lo movemos a bit 3
 		bit3=bit3>>3;
 	}
 
-  if (mem128_multiplicador==4) {
+  if (mem128_multiplicador==4 || mem128_multiplicador==4) {
       bit4=puerto_32765&128;  //Bit 7
       //Lo movemos a bit 4
       bit4=bit4>>3;
   }
 
+	if (mem128_multiplicador==8) {
+		bit5=puerto_32765&32;  //Bit 5 tal cual
+	}
 
-	ram_entra=ram_entra|bit3|bit4;
+	ram_entra=ram_entra|bit3|bit4|bit5;
 
 	//printf ("ram entra: %d\n",ram_entra);
 
@@ -542,7 +546,7 @@ z80_byte mem_get_ram_page(void)
 
 void mem_set_multiplicador_128(z80_byte valor)
 {
-	if (valor==1 || valor==2 || valor==4) {
+	if (valor==1 || valor==2 || valor==4 || valor==8) {
 		mem128_multiplicador=valor;
 	}
 	else {
@@ -603,7 +607,10 @@ void mem128_p2a_write_page_port(z80_int puerto, z80_byte value)
 		// the hardware will respond only to those port addresses with bit 1 reset, bit 14 set and bit 15 reset (as opposed to just bits 1 and 15 reset on the 128K/+2).
 	        if ( (puerto & 49154) == 16384 ) {
 			//ver si paginacion desactivada
-			if (puerto_32765 & 32) return;
+			//if (puerto_32765 & 32) return;
+
+			if (!mem_128_is_enabled()) return;
+
 			puerto_32765=value;
 
 			//si modo de paginacion ram en rom, volver
@@ -674,7 +681,8 @@ void mem_init_memory_tables_128k(void)
                         puntero +=16384;
                 }
 
-                for (i=0;i<32;i++) {
+				//1 MB
+                for (i=0;i<64;i++) {
                         ram_mem_table[i]=&memoria_spectrum[puntero];
                         puntero +=16384;
                 }
@@ -691,8 +699,19 @@ void mem_init_memory_tables_p2a(void)
                         puntero +=16384;
                 }
 
-                for (i=0;i<32;i++) {
+				//1 MB
+                for (i=0;i<64;i++) {
                         ram_mem_table[i]=&memoria_spectrum[puntero];
                         puntero +=16384;
                 }
+}
+
+
+int mem_128_is_enabled(void)
+{
+	//Si emulamos 1024 KB, paginacion siempre activa
+	if (mem128_multiplicador==8) return 1;
+
+	if ((puerto_32765 & 32)==0) return 1;
+	else return 0;
 }

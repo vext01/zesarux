@@ -2482,9 +2482,9 @@ void malloc_mem_machine(void) {
 
         else if (MACHINE_IS_SPECTRUM_128_P2) {
 
-                //32 kb rom, 128-512 ram
-                malloc_machine((32+512)*1024);
-                random_ram(memoria_spectrum+32768,512*1024);
+                //32 kb rom, 128-1024 ram
+                malloc_machine((32+1024)*1024);
+                random_ram(memoria_spectrum+32768,1024*1024);
 
 		mem_init_memory_tables_128k();
                 mem_set_normal_pages_128k();
@@ -2493,9 +2493,9 @@ void malloc_mem_machine(void) {
 
 	 else if (MACHINE_IS_SPECTRUM_P2A_P3) {
 
-                //64 kb rom, 128-512 ram
-                malloc_machine((64+512)*1024);
-                random_ram(memoria_spectrum+65536,512*1024);
+                //64 kb rom, 128-1024 ram
+                malloc_machine((64+1024)*1024);
+                random_ram(memoria_spectrum+65536,1024*1024);
 
 		mem_init_memory_tables_p2a();
                 mem_set_normal_pages_p2a();

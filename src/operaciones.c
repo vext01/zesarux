@@ -6962,7 +6962,8 @@ Port: 10-- ---- ---- --0-
 			//ver si paginacion desactivada
 			//if (puerto_32765 & 32) return;
 
-			if ((puerto_32765 & 32)==0) {
+			//if ((puerto_32765 & 32)==0) {
+			if (mem_128_is_enabled()) {
 
 				puerto_32765=value;
 				//Paginar RAM y ROM
@@ -6978,7 +6979,7 @@ Port: 10-- ---- ---- --0-
 
 
 
-                }
+        }
 	}
 
 	if (MACHINE_IS_SPECTRUM_P2A_P3)

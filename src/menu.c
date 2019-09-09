@@ -16903,7 +16903,7 @@ void menu_hardware_memory_128k_multiplier(MENU_ITEM_PARAMETERS)
 
 	z80_byte valor=mem128_multiplicador;
 
-	if (valor==4) valor=1;
+	if (valor==8) valor=1;
 	else valor <<=1;
 
 	mem_set_multiplicador_128(valor);
@@ -16933,7 +16933,7 @@ void menu_hardware_memory_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"Allow write in ROM. Only allowed on Spectrum 48k/16k models, ZX80, ZX81, Sam Coupe and Jupiter Ace (and not on Inves)");
 
 		if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
-			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_memory_128k_multiplier,NULL,"RAM size [%d KB]",128*mem128_multiplicador);
+			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_memory_128k_multiplier,NULL,"RAM size [%4d KB]",128*mem128_multiplicador);
 			menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"Allows setting more than 128k RAM on a 128k type machine");
 			menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"Allows setting more than 128k RAM on a 128k type machine");
 		}
