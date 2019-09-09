@@ -5409,7 +5409,7 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 
         int x;
         z80_int direccion=0;
-        z80_byte byte_leido,byte_leido2,byte_leido3,byte_leido4;
+        z80_byte byte_leido;
 
         int color_rada;
         z80_byte *screen;
@@ -5427,59 +5427,83 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 
 		direccion=screen_addr_table[(scanline_copia<<5)];
 
-		//int offset_array[4]={0xc000,0x4000,0xe000,0x6000};
-		//int offset_array[4]={0x4000,0x4000,0x6000,0x6000};
-		int offset_array[4]={0x0000,0x2000,0x0000,0x2000};
-
-		int indice_array;
-
-
-		int page1=4;
-		int page2=5;
+		
+		int page1=5;
+		int page2=4;
 		if (puerto_32765 & 8) {
-			page1=6;
-			page2=7;
+			page1=7;
+			page2=6;
 		}
+
+		
 
 		int pix;
         for (x=0;x<32;x++) {
-			indice_array=0;
+
 			for (pix=0;pix<4;pix++) {
 				int color_izq,color_der;
 				z80_byte byte_leido;
 
 				z80_byte *puntero;
 
-				switch (pix) {
-					case 0:
-						puntero=ram_mem_table[page1]+direccion;
-					break;
+				//Bytes orden @RAM4 , @RAM5, @RAM4|0x2000, @RAM5|0x2000
 
-					case 1:
+				switch (pix) {
+
+
+					case 0:
 						puntero=ram_mem_table[page2]+direccion;
 					break;
 
 
-					case 2:
-						puntero=ram_mem_table[page1]+direccion+0x2000;
+					case 1:
+						puntero=ram_mem_table[page1]+direccion;
 					break;
 
+					case 2:
+						puntero=ram_mem_table[page2]+direccion+0x2000;
+					break;	
 
 					default:
-						puntero=ram_mem_table[page2]+direccion+0x2000;
-					break;
+						puntero=ram_mem_table[page1]+direccion+0x2000;
+					break;									
+
 
 				}
 
 				byte_leido=*puntero;
 
-				color_izq=(byte_leido >> 4)&0x0f;
-				store_value_rainbow(puntero_buf_rainbow,color_izq);
+				z80_byte brillo_izq,brillo_der;
 
-				color_der=byte_leido & 0x0f;
+				//Codificacion en byte:
+				// 7 6  5  4  3  2  1  0
+				//BD BI CD CD CD CI CI CI
+				//BD: brillo pixel derecho
+				//BI: brillo pixel izquierdo
+				//CD: color pixel derecho
+				//CI: color pixel izquierdo 
+
+				//de bit 6 a bit 3
+				brillo_izq=(byte_leido >>3)&0x8;
+
+				color_izq=byte_leido & 0x07;
+				color_izq |=brillo_izq;
+
+
+
+				//de bit 7 a bit 3
+				brillo_der=(byte_leido >>4)&0x8;
+
+				color_der=(byte_leido >> 3)&0x07;
+				color_der |=brillo_der;
+				
+
+
+
+				store_value_rainbow(puntero_buf_rainbow,color_izq);
 				store_value_rainbow(puntero_buf_rainbow,color_der);
 
-				indice_array++;
+				
 
 			}
 			direccion++;
@@ -14557,6 +14581,7 @@ int screen_ega_to_spectrum_colour(int ega_col)
 
 int screen_mode_16c_is_enabled(void)
 {
+
 	if (pentagon_16c_mode_available.v && (pentagon_port_eff7 & 1) ) return 1;
 	else return 0;
 }
