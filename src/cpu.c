@@ -1404,7 +1404,7 @@ printf (
 		"--autosavesnap             Save snapshot on exit\n"
 		"--autosnappath path        Folder to save/load automatic snapshots\n"
 		"--tempdir path             Folder to save temporary files. Folder must exist and have read and write permissions\n"
-		"--sna-no-change-machine    Do not change machine when loading sna snapshots. Just load it on memory\n"
+		"--snap-no-change-machine   Do not change machine when loading sna or z80 snapshots. Just load it on memory\n"
 		"--no-close-after-smartload Do not close menu after SmartLoad\n"
 		
 
@@ -5477,7 +5477,9 @@ int parse_cmdline_options(void) {
                                 sprintf(emulator_tmpdir_set_by_user,"%s/",argv[puntero_parametro]);
                         }
 
-			else if (!strcmp(argv[puntero_parametro],"--sna-no-change-machine")) {
+			//--sna-no-change-machine deprecated
+			else if (!strcmp(argv[puntero_parametro],"--sna-no-change-machine") || !strcmp(argv[puntero_parametro],"--snap-no-change-machine")
+			) {
 				sna_setting_no_change_machine.v=1;
 			}
 

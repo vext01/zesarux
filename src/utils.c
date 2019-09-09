@@ -3310,7 +3310,7 @@ int util_write_configfile(void)
  	ADD_STRING_CONFIG,"--tempdir \"%s\"",buffer_temp);
   }
 
-  if (sna_setting_no_change_machine.v)      ADD_STRING_CONFIG,"--sna-no-change-machine");
+  if (sna_setting_no_change_machine.v)      ADD_STRING_CONFIG,"--snap-no-change-machine");
 
   if (no_close_menu_after_smartload.v)      ADD_STRING_CONFIG,"--no-close-after-smartload");
   		

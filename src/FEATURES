@@ -118,6 +118,8 @@
 
 * Experimental simulation of the Sam Coupe Audio Chip (SAA1099)
 
+* Supports RAM size up to 1024 KB on Spectrum and Pentagon
+
 * Supports RAM packs on ZX80/81 up to 56 KB
 
 * Supports RAM packs on Jupiter Ace up to 35 KB
@@ -143,6 +145,8 @@
 * Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on Linux only (Windows, Mac can simulate it)
 
 * Can browse online ZX81 games
+
+* Can browse online ZXInfo/WOS games
 
 * Supports Input spool text file to simulate keyboard press
 

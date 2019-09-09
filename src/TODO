@@ -19,6 +19,17 @@ Tener en cuenta que bit de bloqueo de paginacion no funcionara cuando esté acti
 
 -puerto eff7 deberia ser comun pentagon, evo etc
 
+-agregar puerto eff7 en .zsf pentagon
+
+-emular estos bits de eff7 en pentagon:
+port EFF7: (adressation 1110xxxx xxxx0xxx )
+D2 = 1 - set 128 kB mode
+0 - enable 1MB memory
+(if D2 of port EFF7=1 then D5 of port 7FFD is used for disable paging)
+D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
+
+
+
 -tamanyos ventanas menus:
 si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango
 no deberia hacerlo, ventana deberia ser de 32x24 maximo

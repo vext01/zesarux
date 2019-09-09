@@ -134,6 +134,8 @@ __FEATURES__
 
 * Supports Timex Video modes (Mode 0 standard, 1 dual screen, 2 hires colour 8x1, 6 512x192 monochrome)
 
+* Supports Pentagon 16C mode
+
 * Supports All Video modes from Prism machine
 
 * Supports ZGX Sprite Chip
@@ -208,6 +210,8 @@ __FEATURES__
 
 * Experimental simulation of the Sam Coupe Audio Chip (SAA1099)
 
+* Supports RAM size up to 1024 KB on Spectrum and Pentagon
+
 * Supports RAM packs on ZX80/81 up to 56 KB
 
 * Supports RAM packs on Jupiter Ace up to 35 KB
@@ -231,6 +235,10 @@ __FEATURES__
 * Supports Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
 
 * Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on Linux only (Windows, Mac can simulate it)
+
+* Can browse online ZX81 games
+
+* Can browse online ZXInfo/WOS games
 
 * Supports Input spool text file to simulate keyboard press
 
