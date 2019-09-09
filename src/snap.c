@@ -2942,6 +2942,8 @@ void load_z80_snapshot(char *archivo)
 
 			debug_printf(VERBOSE_DEBUG,"Header machine type: %d Modify hardware flag: %d",maquina_leida,modify_hardware);
 
+			if (load_sna_snapshot_must_change_machine() ) {
+
 			switch (maquina_leida) {
 				//If bit 7 of byte 37 is set, the hardware types are modified slightly: any 48K machine becomes a 16K machine, any 128K machines becomes a +2 and any +3 machine becomes a +2A.
 
@@ -3028,8 +3030,11 @@ void load_z80_snapshot(char *archivo)
 				break;
 			}
 
-                        set_machine(NULL);
-                        reset_cpu();
+            
+				set_machine(NULL);
+			}
+
+            reset_cpu();
 
 			reg_pc=value_8_to_16(z80_header_adicional[3],z80_header_adicional[2]);
 			load_z80_snapshot_common_registers(z80_header);

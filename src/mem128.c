@@ -527,7 +527,7 @@ z80_byte mem_get_ram_page(void)
 		bit3=bit3>>3;
 	}
 
-  if (mem128_multiplicador==4 || mem128_multiplicador==4) {
+  if (mem128_multiplicador==4 || mem128_multiplicador==8) {
       bit4=puerto_32765&128;  //Bit 7
       //Lo movemos a bit 4
       bit4=bit4>>3;

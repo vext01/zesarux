@@ -13,7 +13,7 @@ Added ZRCP commands:
 -test-tcp-connect: testing tcp connection
 
 Added Pentagon 16C colour mode emulation
-Added 1024 KB memory emulation for Spectrum & Pentagon
+Added 1024 KB RAM emulation for Spectrum & Pentagon
 
 Added Borland Gui Style
 Added ZX81 online game browser

@@ -17,7 +17,7 @@ https://zx-pk.ru/archive/index.php/t-11490.html
 Lógicamente asignar 512kb más de ram al iniciar y generar tablas de memoria de paginación 
 Tener en cuenta que bit de bloqueo de paginacion no funcionara cuando esté activado 1024 kb
 
-
+-puerto eff7 deberia ser comun pentagon, evo etc
 
 -tamanyos ventanas menus:
 si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango

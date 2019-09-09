@@ -4969,6 +4969,10 @@ int parse_cmdline_options(void) {
 						multiplicador=4;
 					break;
 
+					case 1024:
+						multiplicador=8;
+					break;					
+
 
 					default:
 						printf ("Invalid RAM value\n");
