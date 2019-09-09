@@ -836,6 +836,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"view-basic",NULL,NULL,"Gets Basic program listing"},
 	{"write-memory","|wm","address value","Writes a sequence of bytes starting at desired address on memory. Bytes must be separated by one space each one"},
 	{"write-memory-raw",NULL,"address values","Writes a sequence of bytes starting at desired address on memory. Bytes must be in hexadecimal and not separated"},
+	{"write-port",NULL,"port value","Writes value at port"},
 
  {"zxevo-get-nvram",NULL,"index","Get ZX-Evo NVRAM value at index"},
 
@@ -5540,6 +5541,28 @@ else if (!strcmp(comando_sin_parametros,"write-memory-raw") ) {
 
 	}
 
+}
+
+else if (!strcmp(comando_sin_parametros,"write-port") ) {
+
+	if (!CPU_IS_Z80) escribir_socket(misocket,"ERROR. CPU is not Z80");
+	else {
+
+              remote_parse_commands_argvc(parametros);
+
+              if (remote_command_argc<2) {
+                      escribir_socket(misocket,"ERROR. Needs two parameters");
+                      return;
+              }
+
+			z80_int port=parse_string_to_number(remote_command_argv[0]);
+
+            z80_byte value=parse_string_to_number(remote_command_argv[1]);
+
+			out_port(port,value);
+
+
+	}
 }
 
 		else if (!strcmp(comando_sin_parametros,"zxevo-get-nvram") ) {

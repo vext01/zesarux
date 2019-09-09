@@ -14,6 +14,7 @@ Added ZRCP commands:
 
 Added Pentagon 16C colour mode emulation
 Added 1024 KB RAM emulation for Spectrum & Pentagon
+Aded ZRCP commands: write-port
 
 Added Borland Gui Style
 Added ZX81 online game browser
