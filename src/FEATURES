@@ -42,6 +42,8 @@
 
 * Supports Timex Video modes (Mode 0 standard, 1 dual screen, 2 hires colour 8x1, 6 512x192 monochrome)
 
+* Supports Pentagon 16C mode
+
 * Supports All Video modes from Prism machine
 
 * Supports ZGX Sprite Chip

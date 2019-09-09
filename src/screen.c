@@ -14585,3 +14585,17 @@ int screen_mode_16c_is_enabled(void)
 	if (pentagon_16c_mode_available.v && (pentagon_port_eff7 & 1) ) return 1;
 	else return 0;
 }
+
+void enable_16c_mode(void)
+{
+    //necesita real video
+    enable_rainbow();
+	pentagon_16c_mode_available.v ^=1;
+}
+
+
+void disable_16c_mode(void)
+{
+
+	pentagon_16c_mode_available.v ^=1;
+}

@@ -8553,8 +8553,10 @@ void menu_display_cpc_double_vsync(MENU_ITEM_PARAMETERS)
 
 void menu_display_16c_mode(MENU_ITEM_PARAMETERS)
 {
-	pentagon_16c_mode_available.v ^=1;
+    if (pentagon_16c_mode_available.v) disable_16c_mode();
+    else enable_16c_mode();
 }
+
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
