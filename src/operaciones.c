@@ -7273,10 +7273,14 @@ acts as expected unless this registe is explicitly changed by the user/software.
 					if (puerto==0xeff7) {
 						z80_byte estado_antes=pentagon_port_eff7 & 1;
 						pentagon_port_eff7=value;
+						
+						//splash si el modo esta disponible
+						if (pentagon_16c_mode_available.v) {
 
 						if ( (value&1) != estado_antes) {
 							if (value) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling 16C mode");
 							else screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling 16C mode");
+						}
 						}
 					}
 				}

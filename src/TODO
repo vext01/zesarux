@@ -19,6 +19,8 @@ https://zx-pk.ru/archive/index.php/t-11490.html
 
 -agregar puerto eff7 en .zsf pentagon
 
+ZX evo baseconf está arrancando en modo 16C?
+
 -emular estos bits de eff7 en pentagon:
 port EFF7: (adressation 1110xxxx xxxx0xxx )
 D2 = 1 - set 128 kB mode
