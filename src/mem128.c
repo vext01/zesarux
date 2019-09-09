@@ -41,9 +41,9 @@
 
 //Direcciones donde estan cada pagina de ram
 //Antes habian 8 solo (8 paginas de 16kb cada una)
-//Ahora hay 32 (para un maximo de 512 kb)
+//Ahora hay 64 (para un maximo de 1024 kb)
 //z80_byte *ram_mem_table[8];
-z80_byte *ram_mem_table[32];
+z80_byte *ram_mem_table[64];
 
 //Direcciones donde estan cada pagina de rom
 //array para +2a usamos 4 elementos

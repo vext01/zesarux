@@ -14,8 +14,6 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 
 https://zx-pk.ru/archive/index.php/t-11490.html
 
-Lógicamente asignar 512kb más de ram al iniciar y generar tablas de memoria de paginación 
-Tener en cuenta que bit de bloqueo de paginacion no funcionara cuando esté activado 1024 kb
 
 -puerto eff7 deberia ser comun pentagon, evo etc
 
@@ -31,7 +29,6 @@ D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 -preguntar si incluir algunas demos de 16C
 
--opcion ZRCP out puerto
 
 -tamanyos ventanas menus:
 si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango
@@ -147,14 +144,6 @@ Thread 8 Crashed:
 -tiempo total de uso del emulador en minutos. Ok
 -uso medio de cpu?
 
-Envío de estadísticas a servidor
--uuid anónimo
--tiempo total de uso del emulador en minutos
--fecha de uso del emulador 
--uso medio de cpu desde el arranque del emulador
--sistema operativo usado 
-
-Mismo servidor remoto puede alojar número versión actual para comprobar updates desde ZEsarUX
  
 
 -zsock http request: Buffer response en z80_byte y no char
