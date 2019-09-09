@@ -208,6 +208,9 @@ total_palette_colours total_palette_colours_array[TOTAL_PALETAS_COLORES]={
 //simular modo video zx80/81 en spectrum
 z80_bit simulate_screen_zx8081;
 
+//Modo 16C de pentagon
+z80_bit pentagon_16c_mode_available={0};
+
 //Refrescar pantalla spectrum sin colores. Solo para modo no realvideo
 z80_bit scr_refresca_sin_colores={0};
 
@@ -5377,6 +5380,115 @@ void screen_store_scanline_rainbow_solo_display_ulaplus_lineal(void)
 
 }
 
+//Para modo 16C de pentagon
+void screen_store_scanline_rainbow_solo_display_16c(void)
+{
+
+        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+
+        //linea que se debe leer
+        int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+
+        int veces_ancho_pixel=1;
+       
+
+        //la copiamos a buffer rainbow
+        z80_int *puntero_buf_rainbow;
+        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+        int y;
+
+        y=t_scanline_draw-screen_invisible_borde_superior;
+        if (border_enabled.v==0) y=y-screen_borde_superior;
+
+        puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
+
+        puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
+
+	int resta_offset=0;
+
+
+        int x;
+        z80_int direccion=0;
+        z80_byte byte_leido,byte_leido2,byte_leido3,byte_leido4;
+
+        int color_rada;
+        z80_byte *screen;
+
+		//Para los otros 3 pixeles
+		//z80_byte *screen2;
+		//z80_byte *screen3;
+		//z80_byte *screen4;
+
+		//#c000 #4000 #e000 #6000
+
+
+
+		screen=get_base_mem_pantalla();
+
+		direccion=screen_addr_table[(scanline_copia<<5)];
+
+		//int offset_array[4]={0xc000,0x4000,0xe000,0x6000};
+		//int offset_array[4]={0x4000,0x4000,0x6000,0x6000};
+		int offset_array[4]={0x0000,0x2000,0x0000,0x2000};
+
+		int indice_array;
+
+
+		int page1=4;
+		int page2=5;
+		if (puerto_32765 & 8) {
+			page1=6;
+			page2=7;
+		}
+
+		int pix;
+        for (x=0;x<32;x++) {
+			indice_array=0;
+			for (pix=0;pix<4;pix++) {
+				int color_izq,color_der;
+				z80_byte byte_leido;
+
+				z80_byte *puntero;
+
+				switch (pix) {
+					case 0:
+						puntero=ram_mem_table[page1]+direccion;
+					break;
+
+					case 1:
+						puntero=ram_mem_table[page2]+direccion;
+					break;
+
+
+					case 2:
+						puntero=ram_mem_table[page1]+direccion+0x2000;
+					break;
+
+
+					default:
+						puntero=ram_mem_table[page2]+direccion+0x2000;
+					break;
+
+				}
+
+				byte_leido=*puntero;
+
+				color_izq=(byte_leido >> 4)&0x0f;
+				store_value_rainbow(puntero_buf_rainbow,color_izq);
+
+				color_der=byte_leido & 0x0f;
+				store_value_rainbow(puntero_buf_rainbow,color_der);
+
+				indice_array++;
+
+			}
+			direccion++;
+		}
+	        
+
+
+}
+
 
 z80_int spectra_get_which_ram_display(void)
 {
@@ -6907,6 +7019,12 @@ void screen_store_scanline_rainbow_solo_display(void)
 	if (MACHINE_IS_PRISM) {
 		screen_store_scanline_rainbow_solo_display_prism();
 		//TODO: no hace sprite chip
+		return;
+	}
+
+	//Si modo 16C pentagon
+	if (screen_mode_16c_is_enabled()) {
+		screen_store_scanline_rainbow_solo_display_16c();
 		return;
 	}
 
@@ -14436,3 +14554,9 @@ int screen_ega_to_spectrum_colour(int ega_col)
 }
 
 
+
+int screen_mode_16c_is_enabled(void)
+{
+	if (pentagon_16c_mode_available.v && (pentagon_port_eff7 & 1) ) return 1;
+	else return 0;
+}

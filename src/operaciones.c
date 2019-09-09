@@ -6209,6 +6209,10 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		if (puerto==8189) return puerto_8189;
 	}
 
+		if (MACHINE_IS_PENTAGON) {
+					if (puerto==0xeff7) return pentagon_port_eff7;
+				}	
+
 	if (MACHINE_IS_TSCONF) {
 
 		//Puertos nvram
@@ -7262,6 +7266,10 @@ acts as expected unless this registe is explicitly changed by the user/software.
 										chrome_set_memory_pages();
 						}
 
+				}
+
+				if (MACHINE_IS_PENTAGON) {
+					if (puerto==0xeff7) pentagon_port_eff7=value;
 				}
 
 

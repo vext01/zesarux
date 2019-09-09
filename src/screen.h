@@ -168,6 +168,10 @@ extern z80_bit video_interlaced_scanlines;
 
 extern z80_bit gigascreen_enabled;
 
+extern z80_bit pentagon_16c_mode_available;
+
+extern int screen_mode_16c_is_enabled(void);
+
 
 //Tamanyos pantalla para zxspectrum. Usados en funciones de repintado
 #define LEFT_BORDER_NO_ZOOM 48

@@ -8551,7 +8551,10 @@ void menu_display_cpc_double_vsync(MENU_ITEM_PARAMETERS)
 	cpc_send_double_vsync.v ^=1;
 }
 
-
+void menu_display_16c_mode(MENU_ITEM_PARAMETERS)
+{
+	pentagon_16c_mode_available.v ^=1;
+}
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
@@ -8814,6 +8817,10 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 						"Mode 7: Linear mode 128x192, 16 colours per pixel (ZEsarUX mode 1)\n"
 						"Mode 9: Linear mode 256x192, 16 colours per pixel (ZEsarUX mode 2)\n"
 			);
+		}
+
+		if (MACHINE_IS_PENTAGON) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_16c_mode,NULL,"[%c] 16C mode support",(pentagon_16c_mode_available.v ? 'X' : ' '));
 		}
 
 		if (MACHINE_IS_SPECTRUM) {

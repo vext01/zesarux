@@ -12,6 +12,8 @@ Added ZRCP commands:
 -send-keys-event: simulates key press/release
 -test-tcp-connect: testing tcp connection
 
+Added Pentagon 16C colour mode emulation
+
 Added Borland Gui Style
 Added ZX81 online game browser
 Added ZXInfo/WOS game browser
