@@ -7047,7 +7047,7 @@ void screen_store_scanline_rainbow_solo_display(void)
 	}
 
 	//Si modo 16C pentagon
-	if (screen_mode_16c_is_enabled()) {
+	if (MACHINE_IS_PENTAGON && screen_mode_16c_is_enabled()) {
 		screen_store_scanline_rainbow_solo_display_16c();
 		return;
 	}
