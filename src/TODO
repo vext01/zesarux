@@ -29,6 +29,9 @@ D2 = 1 - set 128 kB mode
 D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 
+-preguntar si incluir algunas demos de 16C
+
+-opcion ZRCP out puerto
 
 -tamanyos ventanas menus:
 si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango

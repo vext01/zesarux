@@ -14581,7 +14581,6 @@ int screen_ega_to_spectrum_colour(int ega_col)
 
 int screen_mode_16c_is_enabled(void)
 {
-
 	if (pentagon_16c_mode_available.v && (pentagon_port_eff7 & 1) ) return 1;
 	else return 0;
 }
