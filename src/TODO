@@ -12,10 +12,14 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
 
+-Modo sin colores que ya hay ahora pero cogiendo 4 o 16 colores del pixel tal cual
+
 -Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
 Desactivar threads en uno u otro caso según lo que corrija el sonido 
 
 -Info video mode 16c ventana. Que diga modo activo en ventana vídeo info
+
+-Quizá al arrancar no salgan todas las licencias. Solo la de ZEsarUX y decir que el resto se pueden consultar de archivos de licencias y de menú
 
 -Emular 1024 kB de modo pentagon. Bit 5 de 7ffd y puerto eff7
 
@@ -31,6 +35,8 @@ D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 -funciones network no deberian generar mensajes verbose_err. Gestionar mediante valores retorno. 
 Importante para funciones background tipo enviar estadisticas o comprobar updates
+Quizá se pueda guardar en fifo de sockets un código de mensaje del último error. Entonces con esto pueden pasar más de 1 mensaje de error seguido del mismo socket? 
+No debería, a nivel de Zsock, si hay un error, se deja de usar ese socket?
 
 -preguntar si incluir algunas demos de 16C
 
