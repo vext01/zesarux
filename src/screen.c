@@ -5434,18 +5434,19 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 		vram3=ram_mem_table[page2]+0x2000;
 		vram4=ram_mem_table[page1]+0x2000;
 
-	
+		vram1 +=direccion;
+		vram2 +=direccion;
+		vram3 +=direccion;
+		vram4 +=direccion;
 
 		int pix;
-		z80_byte *puntero;
+
 		z80_byte byte_leido;
-		
+
         for (x=0;x<32;x++) {
 
 			for (pix=0;pix<4;pix++) {
-				int color_izq,color_der;
-
-				
+				int color_izq,color_der;			
 
 				//Bytes orden @RAM4 , @RAM5, @RAM4|0x2000, @RAM5|0x2000
 
@@ -5453,26 +5454,24 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 
 
 					case 0:
-						puntero=vram1+direccion;
+						byte_leido=*vram1;
 					break;
 
 
 					case 1:
-						puntero=vram2+direccion;
+						byte_leido=*vram2;
 					break;
 
 					case 2:
-						puntero=vram3+direccion;
+						byte_leido=*vram3;
 					break;	
 
 					default:
-						puntero=vram4+direccion;
+						byte_leido=*vram4;
 					break;									
 
 
 				}
-
-				byte_leido=*puntero;
 
 				z80_byte brillo_izq,brillo_der;
 
@@ -5499,15 +5498,17 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 				color_der |=brillo_der;
 				
 
-
-
 				store_value_rainbow(puntero_buf_rainbow,color_izq);
 				store_value_rainbow(puntero_buf_rainbow,color_der);
 
 				
 
 			}
-			direccion++;
+			//direccion++;
+			vram1++;
+			vram2++;
+			vram3++;
+			vram4++;
 		}
 	        
 
