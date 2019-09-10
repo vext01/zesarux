@@ -1517,6 +1517,7 @@ printf (
 		"--enablespectra            Enable Spectra video modes\n"
 		"--enabletimexvideo         Enable Timex video modes\n"
 		"--disablerealtimex512      Disable real Timex mode 512x192. In this case, it's scalled to 256x192 but allows scanline effects\n"
+		"--enable16c                Enable 16C video mode support\n"
 		"--enablezgx                Enable ZGX Sprite chip\n"
 		"--autodetectwrx            Enable WRX autodetect setting on ZX80/ZX81\n"
 		"--wrx                      Enable WRX mode on ZX80/ZX81\n"
@@ -4646,6 +4647,7 @@ z80_bit command_line_timex_video={0};
 z80_bit command_line_spritechip={0};
 z80_bit command_line_ulaplus={0};
 z80_bit command_line_gigascreen={0};
+z80_bit command_line_16c={0};
 z80_bit command_line_interlaced={0};
 z80_bit command_line_chroma81={0};
 z80_bit command_line_zxpand={0};
@@ -6189,6 +6191,10 @@ int parse_cmdline_options(void) {
 				command_line_gigascreen.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--enable16c")) {
+				command_line_16c.v=1;
+			}			
+
 			else if (!strcmp(argv[puntero_parametro],"--enableinterlaced")) {
 				command_line_interlaced.v=1;
 			}						
@@ -7590,6 +7596,8 @@ struct sched_param sparam;
 	if (command_line_ulaplus.v) enable_ulaplus();
 
 	if (command_line_gigascreen.v) enable_gigascreen();
+
+	if (command_line_16c.v) enable_16c_mode();
 
 	if (command_line_interlaced.v) enable_interlace();		
 

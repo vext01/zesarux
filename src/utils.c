@@ -3515,6 +3515,7 @@ int util_write_configfile(void)
   if (spectra_enabled.v)                      ADD_STRING_CONFIG,"--enablespectra");
   if (timex_video_emulation.v)                ADD_STRING_CONFIG,"--enabletimexvideo");
   if (timex_mode_512192_real.v==0)	      ADD_STRING_CONFIG,"--disablerealtimex512");
+  if (pentagon_16c_mode_available.v)          ADD_STRING_CONFIG,"--enable16c");
 
 
   if (spritechip_enabled.v)                   ADD_STRING_CONFIG,"--enablezgx");

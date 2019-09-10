@@ -12,6 +12,11 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
 
+-Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
+Desactivar threads en uno u otro caso según lo que corrija el sonido 
+
+-Info video mode 16c ventana. Que diga modo activo en ventana vídeo info
+
 -Emular 1024 kB de modo pentagon. Bit 5 de 7ffd y puerto eff7
 
 https://zx-pk.ru/archive/index.php/t-11490.html
@@ -127,7 +132,6 @@ https://github.com/kuba--/zip
 
 -como gestionar comprobacion de updates: en sistemas con threads como lo hace?
 
--Envío de estadísticas y comprobación de updates tiene que ir en segundo plano, por si fallan que no afecten al usuario
 
 Thread 8 Crashed:
 0   libsystem_kernel.dylib        	0x00007fff736102c6 __pthread_kill + 10
@@ -141,7 +145,6 @@ Thread 8 Crashed:
 
 
 -Estadísticas de uso:
--tiempo total de uso del emulador en minutos. Ok
 -uso medio de cpu?
 
  
