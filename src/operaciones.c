@@ -6210,7 +6210,7 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 	}
 
 		if (MACHINE_IS_PENTAGON) {
-					if (puerto==0xeff7) return pentagon_port_eff7;
+					if (puerto==0xeff7) return puerto_eff7;
 				}	
 
 	if (MACHINE_IS_TSCONF) {
@@ -7271,8 +7271,8 @@ acts as expected unless this registe is explicitly changed by the user/software.
 
 				if (MACHINE_IS_PENTAGON) {
 					if (puerto==0xeff7) {
-						z80_byte estado_antes=pentagon_port_eff7 & 1;
-						pentagon_port_eff7=value;
+						z80_byte estado_antes=puerto_eff7 & 1;
+						puerto_eff7=value;
 						
 						//splash si el modo esta disponible
 						if (pentagon_16c_mode_available.v) {

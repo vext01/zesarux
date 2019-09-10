@@ -1008,7 +1008,7 @@ util_stats_init();
 	timex_port_f4=0;
 
 	//Resetear puerto eff7 pentagon
-	pentagon_port_eff7=0;
+	puerto_eff7=0;
 
 
 	if (MACHINE_IS_CHLOE) chloe_set_memory_pages();
