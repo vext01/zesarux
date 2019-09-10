@@ -115,10 +115,11 @@ void stats_ask_if_enable(void)
 }
 
 
-void send_stats_server(void)
+void *send_stats_server_pthread(void *nada)
 {
 
-	if (stats_enabled.v==0) return;
+	if (stats_enabled.v==0) return NULL;
+	debug_printf(VERBOSE_INFO,"Starting sending statistics pthread");
 
 	//prueba tonta de enviar una conexion http a mi servidor
 	int http_code;
@@ -147,7 +148,32 @@ void send_stats_server(void)
 
     
 	retorno=zsock_http(REMOTE_ZESARUX_SERVER,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+
+	debug_printf(VERBOSE_INFO,"Finishing sending statistics pthread");
+
+	return NULL;
 }
+
+
+
+#ifdef USE_PTHREADS
+pthread_t thread_send_stats_server;
+#endif
+
+
+void send_stats_server(void)
+{
+	//Si no hay pthreads, no hacerlo
+	#ifdef USE_PTHREADS
+	//Inicializar thread
+
+	if (pthread_create( &thread_send_stats_server, NULL, &send_stats_server_pthread, NULL) ) {
+		debug_printf(VERBOSE_ERR,"Can not create send_stats_server pthread");
+	}	
+	#endif
+}
+
+
 
 int stats_get_current_total_minutes_use(void)
 {
@@ -159,14 +185,14 @@ int stats_get_current_total_minutes_use(void)
 void *stats_check_updates_pthread(void *nada)
 {
 
-	printf ("Inicio pthread comprobar updates\n");
-
 	//opcion de comprobar updates desactivada
 	if (stats_check_updates_enabled.v==0) return NULL;
 
 	//opcion de guardar config desactivada. importante: si no se puede guardar config, no se podria decir que ese update ya ha aparecido,
 	//y estaria molestando siempre al usuario
 	if (save_configuration_file_on_exit.v==0) return NULL;
+
+	debug_printf(VERBOSE_INFO,"Starting check updates pthread");
 
 	char url_update[1024];
 #ifdef SNAPSHOT_VERSION
@@ -237,7 +263,7 @@ void *stats_check_updates_pthread(void *nada)
 		free(orig_mem);
 	}
 
-	printf ("Final pthread comprobar updates\n");
+	debug_printf(VERBOSE_INFO,"Finishing check updates pthread");
 	return NULL;
 
 }	

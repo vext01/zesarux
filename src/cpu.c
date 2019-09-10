@@ -7691,8 +7691,7 @@ struct sched_param sparam;
 		}
 	}
 
-	stats_check_updates();
-	send_stats_server();
+
 
 
 	start_timer_thread();
@@ -7734,6 +7733,10 @@ struct sched_param sparam;
 
 	//Iniciar ZRCP
 	init_remote_protocol();
+
+	//Funciones de red en background
+	stats_check_updates();
+	send_stats_server();
 
 	//Inicio bucle de emulacion
 
