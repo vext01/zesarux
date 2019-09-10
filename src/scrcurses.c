@@ -24,7 +24,7 @@
 #include <curses.h>
 #include <string.h>
 #include <unistd.h>
-
+ 
 
 #include "cpu.h"
 #include "scrcurses.h"
