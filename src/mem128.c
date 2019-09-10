@@ -733,8 +733,23 @@ void mem_init_memory_tables_p2a(void)
 
 int mem_128_is_enabled(void)
 {
-	//Si emulamos 1024 KB, paginacion siempre activa
-	if (mem128_multiplicador==8) return 1;
+	//Si emulamos 1024 KB, paginacion siempre activa, excepto pentagon 1024 con bit 2 puerto eff7
+	if (mem128_multiplicador==8) {
+	  if (MACHINE_IS_PENTAGON) {
+	    if ((puerto_eff7 & 4)==0) {
+	      //pentagon con bit 2 de eff7 a cero  paginamos 1024 y por tanto no hay bloqueo de paginacion
+	      return 1;
+	    }
+	    //pentagon 1024 pero bloqueado a 128kb
+	    //dejar que siga al ultimo if
+	  }
+	  
+	  //no es pentagon
+	  else {
+	    return 1;
+	  }
+	  
+	}
 
 	if ((puerto_32765 & 32)==0) return 1;
 	else return 0;
