@@ -5389,8 +5389,7 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
         //linea que se debe leer
         int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
-        int veces_ancho_pixel=1;
-       
+              
 
         //la copiamos a buffer rainbow
         z80_int *puntero_buf_rainbow;
@@ -5404,23 +5403,13 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 
         puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
 
-	int resta_offset=0;
 
 
         int x;
-        z80_int direccion=0;
-        z80_byte byte_leido;
+        z80_int direccion;
+        
 
-        int color_rada;
         z80_byte *screen;
-
-		//Para los otros 3 pixeles
-		//z80_byte *screen2;
-		//z80_byte *screen3;
-		//z80_byte *screen4;
-
-		//#c000 #4000 #e000 #6000
-
 
 
 		screen=get_base_mem_pantalla();
@@ -5435,16 +5424,28 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 			page2=6;
 		}
 
-		
+		z80_byte *vram1;
+		z80_byte *vram2;
+		z80_byte *vram3;
+		z80_byte *vram4;
+
+		vram1=ram_mem_table[page2];
+		vram2=ram_mem_table[page1];
+		vram3=ram_mem_table[page2]+0x2000;
+		vram4=ram_mem_table[page1]+0x2000;
+
+	
 
 		int pix;
+		z80_byte *puntero;
+		z80_byte byte_leido;
+		
         for (x=0;x<32;x++) {
 
 			for (pix=0;pix<4;pix++) {
 				int color_izq,color_der;
-				z80_byte byte_leido;
 
-				z80_byte *puntero;
+				
 
 				//Bytes orden @RAM4 , @RAM5, @RAM4|0x2000, @RAM5|0x2000
 
@@ -5452,20 +5453,20 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 
 
 					case 0:
-						puntero=ram_mem_table[page2]+direccion;
+						puntero=vram1+direccion;
 					break;
 
 
 					case 1:
-						puntero=ram_mem_table[page1]+direccion;
+						puntero=vram2+direccion;
 					break;
 
 					case 2:
-						puntero=ram_mem_table[page2]+direccion+0x2000;
+						puntero=vram3+direccion;
 					break;	
 
 					default:
-						puntero=ram_mem_table[page1]+direccion+0x2000;
+						puntero=vram4+direccion;
 					break;									
 
 
