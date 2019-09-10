@@ -41,6 +41,9 @@
 
 #define REMOTE_ZESARUX_SERVER "51.83.33.13"
 
+//Maxima longitud de una url (valor inventado por mi)
+#define NETWORK_MAX_URL 1024
+
 extern int enviar_cr;
 
 extern int crear_socket_TCP(void);

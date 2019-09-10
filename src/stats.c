@@ -133,15 +133,17 @@ void *send_stats_server_pthread(void *nada)
 
 	int minutes=stats_get_current_total_minutes_use();
 
-	char query_url_parameters[1024];
-	char query_url_parameters_normalized[1024];
+	//La url sin normalizar deberia ser menor que NETWORK_MAX_URL. Incluso la normalizada, pues hay que agregar "/zesarux-stats?"
+	//Si se pasa del maximo, habrá un segfault
+	char query_url_parameters[NETWORK_MAX_URL];
+	char query_url_parameters_normalized[NETWORK_MAX_URL];
 
 	sprintf (query_url_parameters,"UUID=%s&OS=%s&total_minutes_use=%d&version=%s&buildnumber=%s",stats_uuid,COMPILATION_SYSTEM,minutes,EMULATOR_VERSION,BUILDNUMBER);
 	//Normalizar solo la parte de parametros. Si hicieramos toda la url, el "/" del inicio de la url se convertiria a %2f
 	util_normalize_query_http(query_url_parameters,query_url_parameters_normalized);
 
 
-	char query_url[1024];
+	char query_url[NETWORK_MAX_URL];
 	sprintf (query_url,"/zesarux-stats?%s",query_url_parameters_normalized);
 
 	//printf ("query url: %s\n",query_url);
@@ -194,7 +196,7 @@ void *stats_check_updates_pthread(void *nada)
 
 	debug_printf(VERBOSE_INFO,"Starting check updates pthread");
 
-	char url_update[1024];
+	char url_update[NETWORK_MAX_URL];
 #ifdef SNAPSHOT_VERSION
 	strcpy(url_update,STATS_URL_UPDATE_SNAPSHOT_VERSION);
 #else
