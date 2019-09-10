@@ -20,6 +20,7 @@ Desactivar threads en uno u otro caso según lo que corrija el sonido
 -Info video mode 16c ventana. Que diga modo activo en ventana vídeo info
 
 -Quizá al arrancar no salgan todas las licencias. Solo la de ZEsarUX y decir que el resto se pueden consultar de archivos de licencias y de menú
+->de momento puesto con texto temporal
 
 -Emular 1024 kB de modo pentagon. Bit 5 de 7ffd y puerto eff7
 

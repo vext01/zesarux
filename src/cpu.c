@@ -7075,17 +7075,18 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
     "You should have received a copy of the GNU General Public License\n"
     "along with this program.  If not, see <https://www.gnu.org/licenses/>.\n"
 	"\n"
-	"\n"
 	);
 
-			printf ("ZEsarUX includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.\n"
+	printf ("Please read the other licenses used in ZEsarUX, from the menu Help->Licenses or just open files with LICENSE* prefix\n\n\n");
+
+			/*printf ("\nZEsarUX includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.\n"
 						"Copyright 1998-2002 Karl Stenerud. All rights reserved.\n"
 						"You should have received a copy of the license on the LICENSE_MOTOROLA_CORE file\n\n"
 						);
 			printf ("ZEsarUX includes National Semiconductor SC/MP CPU Emulator.\n"
 						"Copyright 2017 Miodrag Milanovic.\n"
 						"You should have received a copy of the license on the LICENSE_SCMP_CORE file\n\n\n"
-						);
+						);*/
 
 			printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
 			
