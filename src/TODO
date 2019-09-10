@@ -12,12 +12,51 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
 
+-Códigos de error de network en negativo 
+
+-Semáforo en debug print tiene sentido??
+Quiza por el sprintf (pending_error_message
+ para que no se pudiera escribir desde dos sitios?
+
+-Opción para denegar acceso a menú file utils. Opción sólo de command line (y autograbado de config claro). Pero no visible en menú
+
+-si la primera vez arranca con driver stdout, se abre el menu directamente, quiza por que va a mostrar tooltips o changelog
+
+-Cambio de tipo de máquina no borra ZX Desktop. Quizá falta un cls?
+Falla también sin ZX Desktop?
+
+
+
 -Modo sin colores que ya hay ahora pero cogiendo 4 o 16 colores del pixel tal cual
 
 -Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
 Desactivar threads en uno u otro caso según lo que corrija el sonido 
 
 -Info video mode 16c ventana. Que diga modo activo en ventana vídeo info
+
+-16c. hay modo con paleta?
+
+http://zxpress.ru/article.php?id=8610
+
+Probar en zxevo fisico
+
+Ball quest en formato trd
+http://www.pouet.net/prod.php?which=33976
+
+http://www.pouet.net/groups.php?which=10734
+
+https://github.com/tslabs/zx-evo/blob/master/pentevo/docs/ZX/zx-ports-full-table.txt
+
+https://cs.wikipedia.org/wiki/Pentagon_1024SL
+
+Modo 384 x 304 ?
+
+http://speccy.info/Pentagon
+
+Misma wiki para info de cosas de TSConf, como el z controller ide 
+
+
+
 
 -Quizá al arrancar no salgan todas las licencias. Solo la de ZEsarUX y decir que el resto se pueden consultar de archivos de licencias y de menú
 ->de momento puesto con texto temporal
@@ -255,6 +294,7 @@ Quizá sigpipe se puede gestionar diferente para cada thread?
 :mirando estado local y remoto. Avisar si el estado no es 1 master y 1 slave. comando nuevo ZRCP para esto
 :quiza se puede permitir ningun master, pero lo que no deberia ser es dos master. Al menos avisar de esto y que el usuario ya decida
 
+Ampliar buffer de recepción y el de copia. Y asignarlos por malloc 
 
 *parar thread zeng y cerrar socket zeng al salir emulador
 *network: en windows siempre retorna datos disponibles.
@@ -359,6 +399,14 @@ y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulad
 -filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
 
 -uso de settings.c y settings.h. revisar que tiene que ir ahi
+
+-Como puede ser que al redimensionar ay sheet la ventana tenga más tamaño total... se crea de nuevo al redimensionar?
+
+Creo que el putpixel en overlay no controla ancho total sino ancho visible
+
+Efectivamente. Se usa tamaño visible
+Hacerlo constar en zxvision_putpixel como un TODO. Aunque si no hubiera este “fallo”, al redimensionar ay sheet no se vería el tamaño adicional , habría que cerrar la ventana y volverla a abrir ya con el tamaño total nuevo (ya que guarda geometría)
+Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al no recrearse la ventana , y hay que salir y volver a entrar. Ejemplos??
 
 
 
