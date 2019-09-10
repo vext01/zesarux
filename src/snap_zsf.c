@@ -95,6 +95,7 @@
 #define ZSF_DIVIFACE_MEM 17
 #define ZSF_CPC_RAMBLOCK 18
 #define ZSF_CPC_CONF 19
+#define ZSF_PENTAGON_CONF 20
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -284,8 +285,10 @@ Byte fields:
 56: Border color
 57: last crtc selected register
 
-
-
+-Block ID 20: ZSF_PENTAGON_CONF
+Ports and internal registers of Pentagon machine
+Byte fields:
+0: Port EFF7
 
 
 
@@ -299,7 +302,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 20
+#define MAX_ZSF_BLOCK_ID_NAMES 21
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -322,6 +325,7 @@ char *zsf_block_id_names[]={
   "ZSF_DIVIFACE_MEM",
   "ZSF_CPC_RAMBLOCK",
   "ZSF_CPC_CONF",
+  "ZSF_PENTAGON_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -868,6 +872,18 @@ void load_zsf_zxevo_nvram(z80_byte *header)
 
 }
 
+void load_zsf_pentagon_conf(z80_byte *header)
+{
+
+  int i;
+
+  //Puerto pentagon interno
+  puerto_eff7=header[0];
+
+
+
+}
+
 
 void load_zsf_zxuno_conf(z80_byte *header)
 {
@@ -1211,7 +1227,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_CPC_CONF:
         load_zsf_cpc_conf(block_data);
-      break;      
+      break;     
+
+      case ZSF_PENTAGON_CONF:
+        load_zsf_pentagon_conf(block_data);
+      break;         
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1531,6 +1551,17 @@ if (MACHINE_IS_ZXEVO) {
   for (i=0;i<256;i++) nvramblock[i+2]=zxevo_nvram[i];
 
   zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, nvramblock,ZSF_ZXEVO_NVRAM, 258);
+
+
+}
+
+if (MACHINE_IS_PENTAGON) {
+  //Grabar estado puertos
+  z80_byte pentagonconf[1];
+
+  pentagonconf[0]=puerto_eff7;
+
+  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, pentagonconf,ZSF_PENTAGON_CONF, 1);
 
 
 }
