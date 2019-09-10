@@ -859,7 +859,7 @@ void load_zsf_zxevo_nvram(z80_byte *header)
   int i;
 
   //Control de acceso a celdas nvram
-  zxevo_last_port_eff7=header[0];
+  puerto_eff7=header[0];
 
   //celda nvram seleccionada
   zxevo_last_port_dff7=header[1];
@@ -1524,7 +1524,7 @@ if (MACHINE_IS_ZXEVO) {
   //Grabar nvram
   z80_byte nvramblock[258];
 
-  nvramblock[0]=zxevo_last_port_eff7;
+  nvramblock[0]=puerto_eff7;
   nvramblock[1]=zxevo_last_port_dff7;
 
   int i;

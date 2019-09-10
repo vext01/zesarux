@@ -6216,7 +6216,7 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 	if (MACHINE_IS_TSCONF) {
 
 		//Puertos nvram
-		if (puerto==0xeff7) return zxevo_last_port_eff7;
+		if (puerto==0xeff7) return puerto_eff7;
 		if (puerto==0xdff7) return zxevo_last_port_dff7;
 		if (puerto==0xbff7) return zxevo_nvram[zxevo_last_port_dff7];
 		if (puerto_l==0xaf) return tsconf_get_af_port(puerto_h);
@@ -6240,7 +6240,7 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		//printf ("Baseconf reading port %04XH\n",puerto);
 
 		//Puertos nvram. TODO gestion puertos shadow
-		if (puerto==0xeff7 && !baseconf_shadow_ports_available() ) return zxevo_last_port_eff7;
+		if (puerto==0xeff7 && !baseconf_shadow_ports_available() ) return puerto_eff7;
 
 		if (puerto==0xdff7 && !baseconf_shadow_ports_available() ) return zxevo_last_port_dff7;
 		if (puerto==0xdef7 && baseconf_shadow_ports_available() ) return zxevo_last_port_dff7;
@@ -7342,13 +7342,13 @@ acts as expected unless this registe is explicitly changed by the user/software.
 			    }
 
 					//Puertos NVRAM
-					if (puerto==0xeff7) zxevo_last_port_eff7=value;
+					if (puerto==0xeff7) puerto_eff7=value;
 					if (puerto==0xdff7) zxevo_last_port_dff7=value;
 
 
 					if (puerto==0xbff7) {
 						//Si esta permitida la escritura
-						if (zxevo_last_port_eff7&128) zxevo_nvram[zxevo_last_port_dff7]=value;
+						if (puerto_eff7&128) zxevo_nvram[zxevo_last_port_dff7]=value;
 					}
 
 					if (puerto_l==0xaf) tsconf_write_af_port(puerto_h,value);

@@ -69,6 +69,9 @@ z80_bit ula_im2_slow={0};
 
 z80_bit pentagon_timing={0};
 
+//Puerto de Pentagon y ZX Evo
+//Bit 0: activar modo 16C
+//Bit XXX: Control de acceso a celdas nvram
 z80_byte puerto_eff7=0;
 
 
