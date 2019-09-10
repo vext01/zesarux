@@ -17,12 +17,6 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 https://zx-pk.ru/archive/index.php/t-11490.html
 
 
--puerto eff7 deberia ser comun pentagon, evo etc
-
--agregar puerto eff7 en .zsf pentagon
-
-ZX evo baseconf está arrancando en modo 16C?
-
 -emular estos bits de eff7 en pentagon:
 port EFF7: (adressation 1110xxxx xxxx0xxx )
 D2 = 1 - set 128 kB mode
@@ -30,6 +24,8 @@ D2 = 1 - set 128 kB mode
 (if D2 of port EFF7=1 then D5 of port 7FFD is used for disable paging)
 D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
+-funciones network no deberian generar mensajes verbose_err. Gestionar mediante valores retorno. 
+Importante para funciones background tipo enviar estadisticas o comprobar updates
 
 -preguntar si incluir algunas demos de 16C
 

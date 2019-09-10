@@ -34,6 +34,15 @@
 #include "timer.h"
 
 
+#ifdef USE_PTHREADS
+
+#include <pthread.h>
+#include <sys/types.h>
+
+
+#endif
+
+
 
 char stats_uuid[128]="";
 
@@ -147,14 +156,17 @@ int stats_get_current_total_minutes_use(void)
 	return total_minutes_use+uptime_seconds/60;
 }
 
-void stats_check_updates(void)
+void *stats_check_updates_pthread(void *nada)
 {
+
+	printf ("Inicio pthread comprobar updates\n");
+
 	//opcion de comprobar updates desactivada
-	if (stats_check_updates_enabled.v==0) return;
+	if (stats_check_updates_enabled.v==0) return NULL;
 
 	//opcion de guardar config desactivada. importante: si no se puede guardar config, no se podria decir que ese update ya ha aparecido,
 	//y estaria molestando siempre al usuario
-	if (save_configuration_file_on_exit.v==0) return;
+	if (save_configuration_file_on_exit.v==0) return NULL;
 
 	char url_update[1024];
 #ifdef SNAPSHOT_VERSION
@@ -225,6 +237,25 @@ void stats_check_updates(void)
 		free(orig_mem);
 	}
 
+	printf ("Final pthread comprobar updates\n");
+	return NULL;
 
 }	
 	
+
+#ifdef USE_PTHREADS
+pthread_t thread_check_updates;
+#endif
+
+
+void stats_check_updates(void)
+{
+	//Si no hay pthreads, no hacerlo
+	#ifdef USE_PTHREADS
+	//Inicializar thread
+
+	if (pthread_create( &thread_check_updates, NULL, &stats_check_updates_pthread, NULL) ) {
+		debug_printf(VERBOSE_ERR,"Can not create check_updates pthread");
+	}	
+	#endif
+}

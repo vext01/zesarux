@@ -7692,6 +7692,7 @@ struct sched_param sparam;
 	}
 
 	stats_check_updates();
+	send_stats_server();
 
 
 	start_timer_thread();
@@ -7839,7 +7840,7 @@ void end_emulator(void)
 	
 	
 
-	send_stats_server();
+	
 	
 	
 	
