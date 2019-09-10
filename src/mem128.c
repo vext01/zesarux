@@ -538,6 +538,30 @@ z80_byte mem_get_ram_page(void)
 	}
 
 	ram_entra=ram_entra|bit3|bit4|bit5;
+	
+	//en pentagon 1024, puerto eff7 bit 2 puede forzar 128kb
+	/*
+	Pentagon 1024 kB
+port 7FFD: (adressation 01xxxxxx xxxxxx0x )
+D0 = bank 0 ;128 kB memory
+D1 = bank 1 ;128 kB memory
+D2 = bank 2 ;128 kB memory
+D3 = videoram
+D4 = rom
+D5 = bank 5 ;1024 kB memory (if D2 of port EFF7=0)
+D6 = bank 3 ;256 kB memory
+D7 = bank 4 ;512 kB memory
+port EFF7: (adressation 1110xxxx xxxx0xxx )
+D2 = 1 - set 128 kB mode
+0 - enable 1MB memory
+(if D2 of port EFF7=1 then D5 of port 7FFD is used for disable paging)
+D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
+	*/
+	
+	if (MACHINE_IS_PENTAGON && mem128_multiplicador==8 && (puerto_eff7 & 4) ) {
+	   ram_entra &= 7;
+	}
+	
 
 	//printf ("ram entra: %d\n",ram_entra);
 
