@@ -16427,7 +16427,7 @@ void menu_zeng_connect_print(zxvision_window *w)
 
 }
 
-int menu_zeng_connect_cond(zxvision_window *w)
+int menu_zeng_connect_cond(zxvision_window *w GCC_UNUSED)
 {
 	return !zeng_enable_thread_running;
 }
@@ -16682,7 +16682,7 @@ char menu_online_browse_zx81_letter(void)
 
 	//if (osd_adv_kbd_list[adventure_keyboard_selected_item][adventure_keyboard_index_selected_item]==0) {
 	//osd_adv_kbd_defined
-		int i;
+		//int i;
 		int last_x=4;
 		int last_y=0;
 		char letra='a';
@@ -16968,7 +16968,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 		//menu_generic_message("Games",mem_after_headers);
 		//char texto_final[30000];
 		
-		int indice_destino=0;
+		//int indice_destino=0;
 		
 		int dif_header=mem_after_headers-mem;
 		total_leidos -=dif_header;

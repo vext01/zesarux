@@ -875,7 +875,7 @@ void load_zsf_zxevo_nvram(z80_byte *header)
 void load_zsf_pentagon_conf(z80_byte *header)
 {
 
-  int i;
+  
 
   //Puerto pentagon interno
   puerto_eff7=header[0];

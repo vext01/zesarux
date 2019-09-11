@@ -171,6 +171,8 @@ extern z80_bit gigascreen_enabled;
 extern z80_bit pentagon_16c_mode_available;
 
 extern int screen_mode_16c_is_enabled(void);
+extern void enable_16c_mode(void);
+extern void disable_16c_mode(void);
 
 
 //Tamanyos pantalla para zxspectrum. Usados en funciones de repintado

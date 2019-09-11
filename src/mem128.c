@@ -633,7 +633,7 @@ void mem128_p2a_write_page_port(z80_int puerto, z80_byte value)
 			//ver si paginacion desactivada
 			//if (puerto_32765 & 32) return;
 
-			if (!mem_128_is_enabled()) return;
+			if (!mem_paging_is_enabled()) return;
 
 			puerto_32765=value;
 
@@ -731,7 +731,7 @@ void mem_init_memory_tables_p2a(void)
 }
 
 
-int mem_128_is_enabled(void)
+int mem_paging_is_enabled(void)
 {
 	//Si emulamos 1024 KB, paginacion siempre activa, excepto pentagon 1024 con bit 2 puerto eff7
 	if (mem128_multiplicador==8) {

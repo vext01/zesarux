@@ -9348,7 +9348,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//TODO esto movera el cursor tantas lineas como lineas visibles tiene el menu,
 				//si hay algun item como separador, se lo saltara, moviendo el cursor mas lineas de lo deseado
 				//printf ("lineas mover: %d\n",lineas_mover_pgup_dn);
-				int i;
+				//int i;
 				for (conta_mover_pgup_dn=0;conta_mover_pgup_dn<lineas_mover_pgup_dn;conta_mover_pgup_dn++) linea_seleccionada=menu_dibuja_menu_cursor_abajo_common(linea_seleccionada,max_opciones,m);
 				
 			break;
