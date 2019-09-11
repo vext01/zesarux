@@ -33,10 +33,10 @@ char scl_inputfile[PATH_MAX];
 char scl_outputfile[PATH_MAX];
 
 
-uint16_t drive;
+//uint16_t drive;
 FILE *iStream;
 FILE *oStream;
-uint8_t buff[256];
+z80_byte buff[256];
 unsigned freeTrack = 1;
 unsigned freeSec = 0;
 unsigned char count;
@@ -45,7 +45,8 @@ unsigned int totalFreeSect = 2544;
 
 void cleanBuffer()
 {
-    for (uint16_t i=0;i<256;buff[i++] = 0); 
+  int i;
+    for (i=0;i<256;buff[i++] = 0); 
 }
 
 void showMessage(char *e) 
@@ -130,7 +131,7 @@ void writeDiskInfo()
 
 void writeCatalog()
 {
-    uint8_t i;
+    int i;
     totalFreeSect = 2544;
     freeTrack = 1;
     freeSec = 0;
