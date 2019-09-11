@@ -30333,7 +30333,7 @@ char *first_aid_string_initial_menu="This is the Main Menu. You can select an it
 
 int first_aid_no_startup_aid=0;
 char *first_aid_string_startup_aid="This is a first aid help message. You will be shown some of these at the emulator startup, but also "
-	"when opening some menus. All of them are suggestions, advice and pieces of help of ZEsarUX. You can disable entirely them by going to Settings-> "
+	"when opening some menus. All of them are suggestions, advices and pieces of help of ZEsarUX. You can disable entirely them by going to Settings-> "
 	"GUI Settings-> First aid help";
 
 int first_aid_no_multiplattform=0;

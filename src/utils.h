@@ -841,6 +841,6 @@ extern void util_normalize_name(char *texto);
 extern int util_download_file(char *hostname,char *url,char *archivo);
 extern void util_normalize_query_http(char *orig,char *dest);
 
-
+extern int util_extract_scl(char *sclname, char *dest_dir);
 
 #endif
