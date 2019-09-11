@@ -14419,7 +14419,7 @@ menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
                         menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"[%c] ~~Betadisk Enabled", (betadisk_enabled.v ? 'X' : ' '));
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"[%c] Betadis~~k Enabled", (betadisk_enabled.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_betadisk,'k');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"Enable betadisk");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Enable betadisk");
