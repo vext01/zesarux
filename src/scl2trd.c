@@ -12,6 +12,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 //https://github.com/nihirash/esxdos-scl2trd
 
+//More info:
+//http://www.zx-modules.de/fileformats/sclformat.html
+
 //#include <input.h>
 #include <stdlib.h>
 #include <stdio.h>
