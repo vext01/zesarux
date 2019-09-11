@@ -26873,8 +26873,8 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_common,"S~~PG loader (from unrealspeccy)",MENU_OPCION_NORMAL,menu_about_license_unrealspeccy,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'p');				
 
-			menu_add_item_menu(array_menu_common,"~~mdvtool",MENU_OPCION_NORMAL,menu_about_license_mdvtool,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'m');						
+			menu_add_item_menu(array_menu_common,"m~~dvtool",MENU_OPCION_NORMAL,menu_about_license_mdvtool,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'d');						
 
 
             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
