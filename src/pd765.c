@@ -33,7 +33,7 @@
 #include "screen.h"
 #include "mem128.h"
 #include "operaciones.h"
-
+#include "tape.h"
 
 z80_bit pd765_enabled={0};
 
