@@ -26754,7 +26754,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
-			"- Use Space to expand files, currently supported: tap, tzx, trd, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash) and also all the compressed supported files\n"
+			"- Use Space to expand files, currently supported: tap, tzx, trd, scl, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash) and also all the compressed supported files\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"
@@ -30315,9 +30315,13 @@ int first_aid_no_filesel_uppercase_keys=0;
 char *first_aid_string_filesel_uppercase_keys="If you want to select a file by its initial letter, please press the letter as it is. "
 							"If you want to execute actions shown in the bottom of the window, in inverted colour, please press shift+letter";
 
+int first_aid_no_filesel_enter_key=0;
+char *first_aid_string_filesel_enter_key="Press ENTER to select a file or change directory.\n"
+							"Press Space to expand files, like tap, tzx, trd, scl... etc and also all the compressed supported files";							
+
 
 int first_aid_no_smartload=0;
-char *first_aid_string_smartload="This smartload window allows you to load any file known by the emulator. Just select it and go! "
+char *first_aid_string_smartload="This smartload window allows you to load any file known by the emulator. Just select it and go!\n"
 							"Press TAB to change between areas in the file selector";
 
 
@@ -30400,6 +30404,7 @@ void menu_first_aid_init(void)
 
 	//Items que se disparan en ciertos eventos, con parametro si_startup=0
 	menu_first_aid_add("filesel_uppercase_keys",&first_aid_no_filesel_uppercase_keys,first_aid_string_filesel_uppercase_keys,0);
+	menu_first_aid_add("filesel_enter_key",&first_aid_no_filesel_enter_key,first_aid_string_filesel_enter_key,0);
 	menu_first_aid_add("smartload",&first_aid_no_smartload,first_aid_string_smartload,0);
 	menu_first_aid_add("initial_menu",&first_aid_no_initial_menu,first_aid_string_initial_menu,0);
 
@@ -31032,6 +31037,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 					//Expandir archivos
 					case 32:
+						menu_first_aid("filesel_enter_key");
 
                                                 item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
                                                 menu_reset_counters_tecla_repeticion();
@@ -31071,6 +31077,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					break;
 
 					case 13:
+
+						menu_first_aid("filesel_enter_key");
 
 						//si seleccion es directorio
 						item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
