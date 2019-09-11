@@ -17264,6 +17264,9 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si es trd, tambien lo soportamos
 	if (!strcasecmp(extension,"trd")) return 1;		
 
+	//Si es scl, tambien lo soportamos
+	if (!strcasecmp(extension,"scl")) return 1;			
+
 	//Si es epr, eprom o flash, tambien lo soportamos
 	if (!strcasecmp(extension,"epr")) return 1;
 	if (!strcasecmp(extension,"eprom")) return 1;
@@ -26554,6 +26557,11 @@ void menu_about_license_scmp_core(MENU_ITEM_PARAMETERS)
         menu_about_read_file("SCMP Core License","LICENSE_SCMP_CORE");
 }
 
+void menu_about_license_scl2trd(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("scl2trd License","LICENSE_scl2trd");
+}
+
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
 {
 
@@ -26823,6 +26831,9 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_common,"~~SCM~~P Core",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'s');
+
+			menu_add_item_menu(array_menu_common,"s~~cl2trd",MENU_OPCION_NORMAL,menu_about_license_scl2trd,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'c');
 
 
             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -29749,6 +29760,11 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
                 debug_printf (VERBOSE_DEBUG,"Is a mdv file");
                 return util_extract_mdv(archivo,tmpdir);
         }
+
+        else if ( !util_compare_file_extension(archivo,"scl") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a scl file");
+                return util_extract_scl(archivo,tmpdir);
+        }		
 
 		else if (menu_filesel_is_compressed(archivo)) {
 			debug_printf (VERBOSE_DEBUG,"Expanding Compressed file");

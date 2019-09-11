@@ -15536,3 +15536,20 @@ void util_normalize_query_http(char *orig,char *dest)
 
 
 }
+
+
+
+int util_extract_scl(char *sclname, char *dest_dir)
+{
+        //Archivo orig
+        char name[PATH_MAX];
+        //char dir[PATH_MAX];
+        util_get_file_no_directory(sclname,name);
+        //util_get_dir(sclname,dir);
+
+        char destname[PATH_MAX];
+        sprintf(destname,"%s/%s.trd",dest_dir,name);
+        printf ("Calling scl2trd_main %s %s\n",sclname,destname);
+        scl2trd_main(sclname,destname);
+        return 0;
+}

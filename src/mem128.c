@@ -541,6 +541,8 @@ z80_byte mem_get_ram_page(void)
 	
 	//en pentagon 1024, puerto eff7 bit 2 puede forzar 128kb
 	/*
+	From:
+	https://zx-pk.ru/archive/index.php/t-11490.html
 	Pentagon 1024 kB
 port 7FFD: (adressation 01xxxxxx xxxxxx0x )
 D0 = bank 0 ;128 kB memory

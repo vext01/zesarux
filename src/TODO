@@ -61,16 +61,9 @@ Misma wiki para info de cosas de TSConf, como el z controller ide
 -Quizá al arrancar no salgan todas las licencias. Solo la de ZEsarUX y decir que el resto se pueden consultar de archivos de licencias y de menú
 ->de momento puesto con texto temporal
 
--Emular 1024 kB de modo pentagon. Bit 5 de 7ffd y puerto eff7
-
-https://zx-pk.ru/archive/index.php/t-11490.html
-
 
 -emular estos bits de eff7 en pentagon:
 port EFF7: (adressation 1110xxxx xxxx0xxx )
-D2 = 1 - set 128 kB mode
-0 - enable 1MB memory
-(if D2 of port EFF7=1 then D5 of port 7FFD is used for disable paging)
 D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 -funciones network no deberian generar mensajes verbose_err. Gestionar mediante valores retorno. 
