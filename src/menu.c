@@ -26574,7 +26574,7 @@ void menu_about_license_fuse(MENU_ITEM_PARAMETERS)
 
 void menu_about_license_atomlite(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Atomlite License","licenses/LICENSE_simcoupe");
+        menu_about_read_file("SimCoupe License","licenses/LICENSE_simcoupe");
 }
 
 void menu_about_license_unrealspeccy(MENU_ITEM_PARAMETERS)
