@@ -15360,14 +15360,16 @@ void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
                 }
         }
 
+	char dskfile[PATH_MAX];
+	dskfile[0]="";
 
-        int ret=menu_filesel("Select DSK File",filtros,dskplusthree_file_name);
+        int ret=menu_filesel("Select DSK File",filtros,dskfile);
         //volvemos a directorio inicial
         menu_filesel_chdir(directorio_actual);
 
         if (ret==1) {
 
-		if (!si_existe_archivo(dskplusthree_file_name)) {
+		if (!si_existe_archivo(dskfile)) {
 
 			menu_warn_message("File does not exist");
 			return;
@@ -15392,6 +15394,7 @@ void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
 				*/
 
 		}
+		dsk_insert_disk(dskfile);
 
 		dskplusthree_enable();
 		pd765_enable();
