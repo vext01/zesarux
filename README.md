@@ -49,7 +49,8 @@ Copyright 1998-2002 Karl Stenerud. All rights reserved. Distributed under MIT Li
 ZEsarUX includes National Semiconductor SC/MP CPU Emulator
 Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read it on the LICENSE_SCMP_CORE
 
-
+ZEsarUX includes scl2trd
+Copyright 2019 Alexander Sharikhin. Distributed under MIT License, you may read it on the LICENSE_scl2trd file
 
 
 Available versions for download here:
@@ -180,7 +181,7 @@ __FEATURES__
 
 * Emulates +3 Disk
 
-* Emulates Betadisk/TR-DOS
+* Emulates Betadisk/TR-DOS. Direct support for .trd files. scl files can be converted from file selector pressing space
 
 * Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC. Support for raw (.mmc) files and hdf files
 
