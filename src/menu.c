@@ -15361,7 +15361,7 @@ void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
         }
 
 	char dskfile[PATH_MAX];
-	dskfile[0]="";
+	dskfile[0]=0;
 
         int ret=menu_filesel("Select DSK File",filtros,dskfile);
         //volvemos a directorio inicial
