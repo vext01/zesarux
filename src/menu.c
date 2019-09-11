@@ -26547,19 +26547,44 @@ void menu_about_license(MENU_ITEM_PARAMETERS)
         menu_about_read_file("ZEsarUX License","LICENSE");
 }
 
+void menu_about_licenses_info(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("Licenses information","LICENSES_info");
+}
+
 void menu_about_license_motorola_core(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Motorola Core License","LICENSE_MOTOROLA_CORE");
+        menu_about_read_file("Motorola Core License","licenses/LICENSE_MOTOROLA_CORE");
 }
 
 void menu_about_license_scmp_core(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("SCMP Core License","LICENSE_SCMP_CORE");
+        menu_about_read_file("SCMP Core License","licenses/LICENSE_SCMP_CORE");
 }
 
 void menu_about_license_scl2trd(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("scl2trd License","LICENSE_scl2trd");
+        menu_about_read_file("scl2trd License","licenses/LICENSE_scl2trd");
+}
+
+void menu_about_license_fuse(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("Fuse License","licenses/LICENSE_fuse");
+}
+
+void menu_about_license_atomlite(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("Atomlite License","licenses/LICENSE_simcoupe");
+}
+
+void menu_about_license_unrealspeccy(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("UnrealSpeccy License","licenses/LICENSE_unrealspeccy");
+}
+
+void menu_about_license_mdvtool(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("mdvtool License","licenses/LICENSE_mdvtool");
 }
 
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
@@ -26822,18 +26847,34 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
         do {
-            
-            menu_add_item_menu_inicial(&array_menu_common,"~~ZEsarUX",MENU_OPCION_NORMAL,menu_about_license,NULL);
+        
+            menu_add_item_menu_inicial(&array_menu_common,"~~Information",MENU_OPCION_NORMAL,menu_about_licenses_info,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'i');
+
+            menu_add_item_menu(array_menu_common,"~~ZEsarUX",MENU_OPCION_NORMAL,menu_about_license,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'z');
 
 			menu_add_item_menu(array_menu_common,"~~Motorola Core",MENU_OPCION_NORMAL,menu_about_license_motorola_core,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'m');
 
-			menu_add_item_menu(array_menu_common,"~~SCM~~P Core",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
+			menu_add_item_menu(array_menu_common,"~~SCMP Core",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'s');
 
 			menu_add_item_menu(array_menu_common,"s~~cl2trd",MENU_OPCION_NORMAL,menu_about_license_scl2trd,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'c');
+
+			menu_add_item_menu(array_menu_common,"~~Fuse disassembler",MENU_OPCION_NORMAL,menu_about_license_fuse,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'f');			
+
+
+			menu_add_item_menu(array_menu_common,"~~Atomlite (from simcoupe)",MENU_OPCION_NORMAL,menu_about_license_atomlite,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'a');	
+
+			menu_add_item_menu(array_menu_common,"S~~PG loader (from unrealspeccy)",MENU_OPCION_NORMAL,menu_about_license_unrealspeccy,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'p');				
+
+			menu_add_item_menu(array_menu_common,"~~mdvtool",MENU_OPCION_NORMAL,menu_about_license_mdvtool,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'m');						
 
 
             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
