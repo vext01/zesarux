@@ -15549,7 +15549,7 @@ int util_extract_scl(char *sclname, char *dest_dir)
 
         char destname[PATH_MAX];
         sprintf(destname,"%s/%s.trd",dest_dir,name);
-        printf ("Calling scl2trd_main %s %s\n",sclname,destname);
+        debug_printf (VERBOSE_INFO,"Calling scl2trd_main %s %s",sclname,destname);
         scl2trd_main(sclname,destname);
         return 0;
 }

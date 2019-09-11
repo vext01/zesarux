@@ -11,10 +11,11 @@ Added ZRCP commands:
 -put-snapshot: put a ZSF snapshot from ZRCP
 -send-keys-event: simulates key press/release
 -test-tcp-connect: testing tcp connection
+-write-port: write value to a port
 
 Added Pentagon 16C colour mode emulation
 Added 1024 KB RAM emulation for Spectrum & Pentagon
-Aded ZRCP commands: write-port
+Added support for .scf files: can be converted from file selector menu pressing space
 
 Added Borland Gui Style
 Added ZX81 online game browser

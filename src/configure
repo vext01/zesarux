@@ -1298,7 +1298,7 @@ zeng.o: zeng.c zeng.h cpu.h debug.h utils.h network.h compileoptions.h remote.h 
 atomic.o: atomic.c atomic.h compileoptions.h
 	\$(CC) \$(CFLAGS) -c atomic.c
 
-scl2trd.o: scl2trd.c scl2trd.h
+scl2trd.o: scl2trd.c scl2trd.h debug.h utils.h
 	\$(CC) \$(CFLAGS) -c scl2trd.c
 
 stats.o: stats.c stats.h cpu.h menu.h compileoptions.h debug.h network.h screen.h timer.h
