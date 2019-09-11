@@ -1910,3 +1910,12 @@ void dskplusthree_flush_contents_to_disk(void)
         }
 
 }
+
+void dsk_insert_disk(char *nombre)
+{
+                strcpy(dskplusthree_file_name,nombre);
+                
+    if (noautoload.v==0) {
+		reset_cpu();
+	}
+}

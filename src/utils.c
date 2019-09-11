@@ -4626,8 +4626,8 @@ int quickload_continue(char *nombre) {
                       
                        
                 }
-                
-                strcpy(dskplusthree_file_name,nombre);
+                dsk_insert_disk(nombre);
+                //strcpy(dskplusthree_file_name,nombre);
                 
                 dskplusthree_enable();
 		pd765_enable();
