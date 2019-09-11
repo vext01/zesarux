@@ -8,6 +8,8 @@ Corregir speech menus:
 -si item empieza por [, buscar hasta cierre ]. Y eso se reproduce al final de linea
 -Si [X], se dice "enabled". Si [ ], se dice "disabled"
 
+-smartload que permita usar .dsk
+
 Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Funcion solo para esto y que no se use en otros sitios
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
