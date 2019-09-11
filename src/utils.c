@@ -4251,6 +4251,7 @@ int quickload_valid_extension(char *nombre) {
                 || !util_compare_file_extension(nombre,"spg")
                 || !util_compare_file_extension(nombre,"nex")
                 || !util_compare_file_extension(nombre,"trd")
+                || !util_compare_file_extension(nombre,"dsk")
                 || !util_compare_file_extension(nombre,"z80")
                 || !util_compare_file_extension(nombre,"tzx")
                 || !util_compare_file_extension(nombre,"sna")
@@ -4603,6 +4604,38 @@ int quickload_continue(char *nombre) {
                                
                 betadisk_enable();
                 trd_insert_disk(nombre);
+
+
+		return 0;
+
+	}        
+	
+	
+	//DSK
+	else if (
+		!util_compare_file_extension(nombre,"dsk")
+	) {
+		//Aqui el autoload da igual. cambiamos siempre a P3 si conviene
+		if (!MACHINE_IS_SPECTRUM_P3) {
+			current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
+			set_machine(NULL);
+
+                        //establecer parametros por defecto. Incluido quitar slots de memoria
+                        set_machine_params();
+                        reset_cpu();
+                      
+                       
+                }
+                
+                strcpy(dskplusthree_file_name,nombre);
+                
+                dskplusthree_enable();
+		pd765_enable();
+		plus3dos_traps.v=1;
+		
+                               
+               
+                
 
 
 		return 0;

@@ -17438,7 +17438,7 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
 
 	menu_first_aid("smartload");
 
-        char *filtros[29];
+        char *filtros[30];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -17482,8 +17482,10 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
 	filtros[26]="trd";
 
 	filtros[27]="nex";
+	
+	filtros[28]="dsk";
 
-	filtros[28]=0;
+	filtros[29]=0;
 
 
         //guardamos directorio actual
