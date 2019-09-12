@@ -6804,6 +6804,12 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
 						//Con esto se ve la ukflag, la confusio y la rage se ven perfectas
 						if (pentagon_timing.v) i -=2;
 
+						//pruebo esto en maquinas 128k
+						//esto hace que se vea bien la ula128 y scroll2017
+						else {
+							if (MACHINE_IS_SPECTRUM_128_P2) i+=2;
+						}
+
 			//Este i>=0 no haria falta en teoria
 			//pero ocurre a veces que justo al activar rainbow, t_estados_linea_actual tiene un valor descontrolado
                         if (i>=0 && i<CURRENT_FULLBORDER_ARRAY_LENGTH) {
