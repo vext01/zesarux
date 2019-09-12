@@ -6804,9 +6804,9 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
 						//Con esto se ve la ukflag, la confusio y la rage se ven perfectas
 						if (pentagon_timing.v) i -=2;
 
-						//pruebo esto en maquinas 128k
-						//esto hace que se vea bien la ula128 y scroll2017
 						else {
+							//Maquinas no pentagon, pero de 128k
+							//esto hace que se vea bien la ula128 y scroll2017							
 							if (MACHINE_IS_SPECTRUM_128_P2) i+=2;
 						}
 
