@@ -1,6 +1,12 @@
    
 --------Para próxima versión:
  
+-Separar archivo TODO en varios:
+*Para proxima version
+*Cosas menos prioritarias
+*Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
+
+
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
 -items [X] no son amigables en speech, no se entienden. Deberian decir "yes" o "no"
 Corregir speech menus:
@@ -25,7 +31,7 @@ Quiza por el sprintf (pending_error_message
 -Cambio de tipo de máquina no borra ZX Desktop. Quizá falta un cls?
 Falla también sin ZX Desktop?
 
-
+-Query zsock http que detecte si query es mayor que 1024 y de error
 
 -Modo sin colores que ya hay ahora pero cogiendo 4 o 16 colores del pixel tal cual
 
@@ -57,12 +63,7 @@ Misma wiki para info de cosas de TSConf, como el z controller ide
 
 
 
-
--Quizá al arrancar no salgan todas las licencias. Solo la de ZEsarUX y decir que el resto se pueden consultar de archivos de licencias y de menú
-->de momento puesto con texto temporal
-
-
--emular estos bits de eff7 en pentagon:
+-emular este bit de eff7 en pentagon:
 port EFF7: (adressation 1110xxxx xxxx0xxx )
 D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
@@ -166,10 +167,6 @@ https://github.com/kuba--/zip
 
 
 -no lee enlaces simbolicos en filesystem: ejemplo /home/pi/PREPARADOS de raspiboy
-
--Stats en windows sin thread: que lo haga igualmente pero al final. 
-
--como gestionar comprobacion de updates: en sistemas con threads como lo hace?
 
 
 Thread 8 Crashed:

@@ -17394,10 +17394,14 @@ void menu_settings_statistics(MENU_ITEM_PARAMETERS)
 					(stats_enabled.v ? 'X' : ' ') );
 			
                         
-			menu_add_item_menu_tooltip(array_menu_common,"Send anonymous statistics to a remote server");
-			menu_add_item_menu_ayuda(array_menu_common,"Send anonymous statistics to a remote server");
+			menu_add_item_menu_tooltip(array_menu_common,"Send anonymous statistics to a remote server, every time ZEsarUX starts");
+			menu_add_item_menu_ayuda(array_menu_common,"Send anonymous statistics to a remote server, every time ZEsarUX starts");
 
 			if (stats_enabled.v) {
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"The following data is sent:");
+				//menu_add_item_menu_tooltip(array_menu_common,"This data is sent every time ZEsarUX starts");
+				//menu_add_item_menu_ayuda(array_menu_common,"This data is sent every time ZEsarUX starts");
+				
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"    UUID: %s",stats_uuid);
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"    System: %s",COMPILATION_SYSTEM);
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"    Minutes: %d",stats_get_current_total_minutes_use() );

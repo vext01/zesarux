@@ -5416,6 +5416,16 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
 
 		direccion=screen_addr_table[(scanline_copia<<5)];
 
+		/*
+		Pentagon 16C mode
+		More info:
+
+		http://speccy.info/16col
+
+		http://zxpress.ru/article.php?id=8610
+
+		*/
+
 		
 		int page1=5;
 		int page2=4;
