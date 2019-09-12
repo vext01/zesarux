@@ -6801,6 +6801,7 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
 			i=t_estados;
                         //printf ("t_estados %d screen_testados_linea %d bord: %d\n",t_estados,screen_testados_linea,i);
 
+						//Con esto se ve la ukflag, la confusio y la rage se ven perfectas
 						if (pentagon_timing.v) i -=2;
 
 			//Este i>=0 no haria falta en teoria
