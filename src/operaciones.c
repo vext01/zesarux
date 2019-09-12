@@ -6801,6 +6801,8 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
 			i=t_estados;
                         //printf ("t_estados %d screen_testados_linea %d bord: %d\n",t_estados,screen_testados_linea,i);
 
+						if (pentagon_timing.v) i -=2;
+
 			//Este i>=0 no haria falta en teoria
 			//pero ocurre a veces que justo al activar rainbow, t_estados_linea_actual tiene un valor descontrolado
                         if (i>=0 && i<CURRENT_FULLBORDER_ARRAY_LENGTH) {
