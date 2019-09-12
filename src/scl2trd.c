@@ -21,6 +21,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <string.h>
 
 #include "debug.h"
+
+//Para usar definiciones de PATH_MAX
 #include "utils.h"
 
 //#include "lib/textUtils.h"
@@ -41,7 +43,7 @@ unsigned freeTrack = 1;
 unsigned freeSec = 0;
 unsigned char count;
 unsigned char isFull = 0;
-unsigned int totalFreeSect = 2544;
+int totalFreeSect = 2544;
 
 void cleanBuffer()
 {
@@ -175,7 +177,7 @@ void writeCatalog()
 
 void validateScl()
 {
-    unsigned char expected[] = "SINCLAIR";
+    char *expected = "SINCLAIR";
     //drive = ESXDOS_getDefaultDrive();
     //iStream = ESXDOS_fopen(filePath, ESXDOS_FILEMODE_READ, drive );
     iStream = fopen(scl_inputfile,"rb");
@@ -187,7 +189,7 @@ void validateScl()
     cleanBuffer();
     //ESXDOS_fread(&buff, 8, iStream);
     fread(&buff, 1,8, iStream);
-    if (strcmp(expected, &buff)) {
+    if (strcmp(expected, (char *)&buff)) {
         showMessage("Wrong file! Select only SCL files");
         return;
     }
