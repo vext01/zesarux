@@ -1,4 +1,4 @@
-* Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Linux RetroPie, Mac OS X, Windows native, Windows + Cygwin
+* Runs on any Unix system and Windows: tested on GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, Mac OS X, Windows native, Windows + Cygwin
 
 * Emulates:
 * Science of Cambridge MK14
@@ -124,7 +124,7 @@
 
 * Supports RAM packs on Jupiter Ace up to 35 KB
 
-* Joystick emulation with real joystick (on Linux) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Autofire function also
+* Joystick emulation with real joystick (on GNU/Linux) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Autofire function also
 
 * On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, and another with words, useful for playing Text Adventures. Also a tool to extract words from text adventures (Daad, Paws, Quill and Gac) and configure this on screen text keyboard
 
@@ -142,7 +142,7 @@
 
 * Supports Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
 
-* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on Linux only (Windows, Mac can simulate it)
+* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on GNU/Linux only (Windows, Mac can simulate it)
 
 * Can browse online ZX81 games
 

@@ -61,7 +61,7 @@ A: Yes. There is a speech script which can be specified with --textspeechprogram
 Q: How can I create my own speech script?
 A: Windows scripts receive on parameter %1 a file containing the text to send to speech, and on parameter %2 a temporal file that must be deleted
 just at the end of the script (this temporal file indicates ZEsarUX when the script has finished).
-Rest of operating systems (Linux, Mac, Raspberry and other Unix systems) receive the text to send to speech from standard input.
+Rest of operating systems (GNU/Linux, Mac, Raspberry and other Unix systems) receive the text to send to speech from standard input.
 See folder speech_filters for examples
 
 
@@ -113,8 +113,8 @@ Then enable IDE emulation,  and enable DIVIDE on the menu. Then reset the machin
 
 Q: What are file formats with extensions .mmc and .ide?
 A: They are both the same, both are dumps of mmc or ide cards. I use different extensions to distinguish between mmc images and ide images.
-Besides using esxdos or other divide/divmmc firmware, you can also access those file image cards from Linux, Mac OS X, or Windows:
--Linux: you can use command "mount" with option -o loop to mount these images. It file image has a partition, you must first use losetup utility
+Besides using esxdos or other divide/divmmc firmware, you can also access those file image cards from GNU/Linux, Mac OS X, or Windows:
+-GNU/Linux: you can use command "mount" with option -o loop to mount these images. It file image has a partition, you must first use losetup utility
 -Mac OS X: change extension to .img and you can mount it using Finder. You should unmount it and change the extension back to .mmc or .ide for ZEsarUX 
 to list it in File Selector
 -Windows: Windows doesn't have native support for mounting file images. You may use ImDisk:
@@ -140,7 +140,7 @@ also disabling auto-enable real video) solves it. You may also hear some audio n
 Audio Drivers
 -------------
 
-Q: Audio has much latency using SDL audio driver. This audio is used on Linux/Unix and Windows. What can I do to reduce latency?
+Q: Audio has much latency using SDL audio driver. This audio is used on GNU/Linux/Unix and Windows. What can I do to reduce latency?
 A: Try setting a lower value for --sdlsamplesize parameter
 
 
@@ -163,7 +163,7 @@ A: There are three kind of video drivers:
 -XWindows: X11 Driver. Can run on Unix systems
 -SDL: SDL Driver. Can run on Unix systems and Windows (Mingw)
 -Cocoa: Cocoa Driver. Used on Mac OS X
--FBdev: Framebuffer driver. Used on Linux
+-FBdev: Framebuffer driver. Used on GNU/Linux
 
 2) Mixed graphical/text drivers. They are text drivers but simulate a graphical window using text:
 -AA. Ascii-Art video driver. Black & White text. Can run any support that has the library
@@ -222,7 +222,7 @@ export CFLAGS="-g -rdynamic"
 export LDFLAGS="-g -rdynamic"
 
 Before ./configure, then ./configure (with your desired settings) ; make clean ; make
-Then, when a ZEsarUX kernel panic is generated, you will see the call names on the backtrace. This is only valid on Linux or Mac (and Mac seems to enable these compilation settings by default)
+Then, when a ZEsarUX kernel panic is generated, you will see the call names on the backtrace. This is only valid on GNU/Linux or Mac (and Mac seems to enable these compilation settings by default)
 
 ----------------------------------------------------------------------------
 
@@ -247,9 +247,9 @@ A: Try disabling Windows firewall
 
 
 Q: I hear some audio "clicking" when no sound is being generated from the emulated machine
-A: If you hear those annoying sounds, for example, in the copyright message of the Spectrum 48kb, without pressing any key, I'm sorry that problem doesn't have fix yet. The same audio libraries I use (SDL) works perfect on Linux or Mac, but not on Windows. Seems there's some kind of problem with Mingw+SDL+Windows and it doesn't happen always, it also depends on your sound card and the driver. You may reduce a bit this effect by enabling the Silence detector on Audio settings. More details:
+A: If you hear those annoying sounds, for example, in the copyright message of the Spectrum 48kb, without pressing any key, I'm sorry that problem doesn't have fix yet. The same audio libraries I use (SDL) works perfect on GNU/Linux or Mac, but not on Windows. Seems there's some kind of problem with Mingw+SDL+Windows and it doesn't happen always, it also depends on your sound card and the driver. You may reduce a bit this effect by enabling the Silence detector on Audio settings. More details:
 After spending two days testing the Windows audio clicking issue I can confirm:
--It has nothing to do with my sdl audio module. The same is used in Mac and Linux and they don't have the same problem
+-It has nothing to do with my sdl audio module. The same is used in Mac and GNU/Linux and they don't have the same problem
 -Tested by filling the audio buffer with fixed value and the clicking also appears. Seems the clicking happens when a sample value of 0 "appears" in the final hardware buffer. If I fill the audio buffer with 0, no change is produced in the hardware buffer and you don't hear any clicking. If you fill the buffer with something else different than 0, you may hear a clicking
 -There's no difference on enabling real audio, ay audio chip, etc. So as I said, I can confirm there's not a bug in my module
 -My Windows development machine is Virtual box. The default virtual audio card is a Intel HD. That has a lot of clicking. I changed it to a AC97 virtual card and the clicking has gone in the 90% of cases
@@ -614,7 +614,7 @@ S like s on sing
 A like a on cat
 R like r on round 
 U like u on put
-X like x on linux
+X like x on GNU/Linux
 And saying the accent on the final syllable 
 You can also play zesarux.mp3 to hear how it sounds
 
@@ -627,14 +627,14 @@ ZsEarUX :P
 Second because it's my second emulator. The first was ZXSpectr:
 https://github.com/chernandezba/zxspectr
 Why the capital letters? Because one of the first names I thought was ZEUX, but there's another emulator called zeus... 
-Then I thought some name like mine (Cesar) and adding letters zx (for zx spectrum) and also UX for UNIX/Linux, so Linux was the first supported platform. Then I simply joined all these letters and have a translation for every letter to a word, on a phrase with sense: 
+Then I thought some name like mine (Cesar) and adding letters zx (for zx spectrum) and also UX for UNIX/Linux, so GNU/Linux was the first supported platform. Then I simply joined all these letters and have a translation for every letter to a word, on a phrase with sense: 
 ZX Second-Emulator And Released for UniX.
 It's important to write lowercase and uppercase characters correctly. Uppercase letters refer to the most important part of the name: "ZX", "Emulator", "UniX"
 And lowercase letters refer to the less important part : "second", "and", "released"
 
 
 Q: Can this emulator run on MS-DOS?
-A: No, it can not, you can only run it on Windows, Mac, Linux, Raspberry pi and other Unix compatible systems. But you can try my old ZXSpectr emulator:
+A: No, it can not, you can only run it on Windows, Mac, GNU/Linux, Raspberry pi and other Unix compatible systems. But you can try my old ZXSpectr emulator:
 https://github.com/chernandezba/zxspectr
 It does run on MS-DOS. It was created on June 1996, so it's more than 20 years old!
 
@@ -671,7 +671,7 @@ You can also specify a limit for "infinite" tracks (tracks defined with no limit
 
 ./zesarux --noconfigfile extras/media/ay_files/Spectrum/Games/CHASEHQ.AY --ayplayer-inf-length 60 --ayplayer-end-exit --vo null
 
-Using Linux or Mac you can also use ZEsarUX as a random ay file player, with the following piece of code:
+Using GNU/Linux or Mac you can also use ZEsarUX as a random ay file player, with the following piece of code:
 
 while [ 1 == 1 ]; do
     ARCH=`ls -1 extras/media/ay_files/Spectrum/Games/| python -c "import sys; import random; print(random.choice(sys.stdin.readlines()).rstrip())"`
@@ -713,7 +713,7 @@ A: No, you can't. Because I want that final video has that watermark, so anyone 
 However, you can move the letter, go to Settings->GUI->OSD->Watermark position
 
 
-Q: Why the emulator doesn't use more beautiful menus, like the usual menus on Windows/Mac/Linux etc? / Why are you limiting the GUI interface to these simple menus? / Why don't you have a better file selector?
+Q: Why the emulator doesn't use more beautiful menus, like the usual menus on Windows/Mac/GNU/Linux etc? / Why are you limiting the GUI interface to these simple menus? / Why don't you have a better file selector?
 A: The GUI interface is a custom one, I did it copying the style of the menus of Spectrum 128k machines. I'm not using any native menus on Mac, Windows, etc, because my menus are integrated inside the emulator window.
 This has the advantage of having the same style menus (and all the emulator) in all operating systems that you run ZEsarUX. All have the same appearance.
 Also, using some GUI needs additional libraries, and I want it to have the minimum dependencies.
@@ -727,7 +727,7 @@ Q: How do I uninstall ZEsarUX
 A: It's very easy. ZEsarUX doesn't create more files when installed, it only saves the configuration file.
 Depending on the operating system:
 
--Linux: 
+-GNU/Linux: 
 --if you compiled from sources and did a "make install", all your files were installed starting on the installation prefix, that can be changed with the "--prefix" setting to the configure folder, and by default it's /usr/local. Supose the instalation prefix it's called "INSTALLPREFIX", you need to remove:
 
 *executable emulator: INSTALLPREFIX/bin/zesarux
@@ -742,7 +742,7 @@ Depending on the operating system:
 
 -Mac:
 
---if you compiled from sources and did a "make install", follow the same procedure as Linux
+--if you compiled from sources and did a "make install", follow the same procedure as GNU/Linux
 --if you installed a binary version downloaded from the ZEsarUX web page, you only need to drag the ZEsarUX icon app to the Trash
 
 
@@ -751,7 +751,7 @@ Depending on the operating system:
 
 
 Finally, if you want to remove also the configuration file:
--Linux: located on $HOME/.zesaruxrc
+-GNU/Linux: located on $HOME/.zesaruxrc
 -Mac: located on $HOME/.zesaruxrc
 -Windows: located on your home folder, name ".zesaruxrc". Your home folder is something like "c:\users\myusername\"
 

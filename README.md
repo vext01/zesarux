@@ -5,7 +5,7 @@ Created by Cesar Hernandez Bano
 https://github.com/chernandezba/zesarux
 
 
-It's a ZX Machines Emulator for Unix, including all the Sinclair computers:
+It's a ZX Machines Emulator for UNIX based operating systems (and Windows), including all the Sinclair computers:
 
 * MK14
 * ZX80
@@ -43,20 +43,13 @@ You can open them from the help menu or from an external viewer.
 
 ZEsarUX distributed under GNU GENERAL PUBLIC LICENSE v3. You may read it on the LICENSE file.
 
-ZEsarUX includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.
-Copyright 1998-2002 Karl Stenerud. All rights reserved. Distributed under MIT License, you may read it on the LICENSE_MOTOROLA_CORE file
-
-ZEsarUX includes National Semiconductor SC/MP CPU Emulator
-Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read it on the LICENSE_SCMP_CORE
-
-ZEsarUX includes scl2trd
-Copyright 2019 Alexander Sharikhin. Distributed under MIT License, you may read it on the LICENSE_scl2trd file
+Please read the other licenses used in ZEsarUX, from the menu Help->Licenses or just open files from folder licenses/
 
 
 Available versions for download here:
 * Source code
 * Binary compiled versions:
-* Linux 32/64 Bits
+* GNU/Linux 32/64 Bits
 * Mac OS X
 * Windows
 * Raspberry pi (raspbian)
@@ -91,7 +84,7 @@ Thanks!
 
 __FEATURES__
 
-* Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Linux RetroPie, Mac OS X, Windows native, Windows + Cygwin
+* Runs on any Unix system and Windows: tested on GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, Mac OS X, Windows native, Windows + Cygwin
 
 * Emulates:
 * Science of Cambridge MK14
@@ -217,7 +210,7 @@ __FEATURES__
 
 * Supports RAM packs on Jupiter Ace up to 35 KB
 
-* Joystick emulation with real joystick (on Linux) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Autofire function also
+* Joystick emulation with real joystick (on GNU/Linux) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Autofire function also
 
 * On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, and another with words, useful for playing Text Adventures. Also a tool to extract words from text adventures (Daad, Paws, Quill and Gac) and configure this on screen text keyboard
 
@@ -235,7 +228,7 @@ __FEATURES__
 
 * Supports Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
 
-* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on Linux only (Windows, Mac can simulate it)
+* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on GNU/Linux only (Windows, Mac can simulate it)
 
 * Can browse online ZX81 games
 
