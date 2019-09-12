@@ -1,7 +1,21 @@
 Version 8.1. 24 July 2019 - xxx edition
 
 
-Added ZEsarUX Network Gaming protocol (ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
+Added ZEsarUX Network Gaming protocol (ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, 
+located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
+
+Added Pentagon 16C colour mode emulation
+Added 1024 KB RAM emulation for Spectrum & Pentagon
+Added support for .scf files: can be converted from file selector menu pressing space
+Added ZX81 online game browser
+Added ZXInfo/WOS game browser
+Added total run time statistics 
+Added checking for updates
+Added sending anonymous statistics use
+Added setting --disablemenuandexit: it closes the emulator when the menu is going to be opened. 
+ It's the same behaviour as previous --disablemenu. Now --disablemenu only disables the menu but does not close the emulator
+ 
+Added Borland Gui Style
 
 Added ZRCP commands:
 -set-ui-io-ports: to change keyboard state and joystick
@@ -13,24 +27,12 @@ Added ZRCP commands:
 -test-tcp-connect: testing tcp connection
 -write-port: write value to a port
 
-Added Pentagon 16C colour mode emulation
-Added 1024 KB RAM emulation for Spectrum & Pentagon
-Added support for .scf files: can be converted from file selector menu pressing space
-
-Added Borland Gui Style
-Added ZX81 online game browser
-Added ZXInfo/WOS game browser
-Added total run time statistics 
-Added checking for updates
-Added sending anonymous statistics use
-Added setting --disablemenuandexit: it closes the emulator when the menu is going to be opened. It's the same behaviour as previous --disablemenu. Now --disablemenu only disables the menu but does not close the emulator
-
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired
+-debug CPU window: can now resize height and have more debug lines
+
 Improved Hex editor: can now copy to a different memory zone
 Improved menu: can now use PgUp,PgDn to jump between menu items
-Improved Debug CPU Window: can now resize height and have more debug lines
-
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
 Improved file selector: when asking for a directory, only shows directories, not files
@@ -44,7 +46,7 @@ Fixed segfault error when using breakpoints like peek/opcode in config file
 Fixed bug on zxuno changing video ram 5/7 when paging was disabled by bit DI7FFD
 Fixed average cpu statistics when footer is not enabled
 Fixed kempston mouse emulation on Next machine: wheel bits always return 0
-Fixed bug extracting PAWS words when a word is type Pronoun
+Fixed bug extracting PAWS words when a word is a pronoun
 
 
 

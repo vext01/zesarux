@@ -31,6 +31,7 @@ extern z80_bit stats_asked;
 extern void send_stats_server(void);
 extern int stats_get_current_total_minutes_use(void);
 
+#define REMOTE_ZESARUX_SERVER "51.83.33.13"
 #define STATS_URL_UPDATE_STABLE_VERSION "/check_updates/stable.txt"
 #define STATS_URL_UPDATE_SNAPSHOT_VERSION "/check_updates/snapshot.txt"
 

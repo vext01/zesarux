@@ -804,7 +804,7 @@ If no Accept-Encoding field is present in a request, the server MAY
 		
 		//char response[65535];
 		
-		int leido_content_length=0;
+		//int leido_content_length=0;
 		int pos_destino=0;
 		
 		int leidos;
