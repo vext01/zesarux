@@ -15595,7 +15595,7 @@ int util_extract_scl(char *sclname, char *dest_dir)
 int on_extract_entry(const char *filename, void *arg) {
     static int i = 0;
     int n = *(int *)arg;
-    printf("Internal zip decompressor: Extracted: %s (%d of %d)\n", filename, ++i, n);
+    debug_printf (VERBOSE_INFO,"Internal zip decompressor: Extracted: %s (%d of %d)", filename, ++i, n);
 
     return 0;
 }
