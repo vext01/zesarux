@@ -26592,6 +26592,11 @@ void menu_about_license_mdvtool(MENU_ITEM_PARAMETERS)
         menu_about_read_file("mdvtool License","licenses/LICENSE_mdvtool");
 }
 
+void menu_about_license_zip(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("zip License","licenses/LICENSE_zip");
+}
+
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
 {
 
@@ -26881,6 +26886,8 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_common,"m~~dvtool",MENU_OPCION_NORMAL,menu_about_license_mdvtool,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'d');						
 
+			menu_add_item_menu(array_menu_common,"z~~ip",MENU_OPCION_NORMAL,menu_about_license_zip,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'i');		
 
             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
@@ -29692,6 +29699,11 @@ switch (compressed_type) {
 		sprintf (uncompress_program,"%s",external_tool_unzip);
  		//-n no sobreescribir
 		sprintf (uncompress_command,"%s -n \"%s\" -d %s",external_tool_unzip,archivo,tmpdir);
+
+
+		printf ("Using internal zip decompressor\n");
+		util_extract_zip(archivo,tmpdir);
+		return 0;
 	break;
 
         case COMPRESSED_GZ:

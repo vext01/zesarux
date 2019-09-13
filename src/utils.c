@@ -15587,3 +15587,22 @@ int util_extract_scl(char *sclname, char *dest_dir)
         scl2trd_main(sclname,destname);
         return 0;
 }
+
+
+
+
+int on_extract_entry(const char *filename, void *arg) {
+    static int i = 0;
+    int n = *(int *)arg;
+    printf("Internal zip decompressor: Extracted: %s (%d of %d)\n", filename, ++i, n);
+
+    return 0;
+}
+
+int util_extract_zip(char *zipname, char *dest_dir)
+{
+        int arg = 2;
+        zip_extract(zipname, dest_dir, on_extract_entry, &arg);
+
+        return 0;
+}
