@@ -148,7 +148,7 @@ int write_rom_nested_id_poke_byte_no_time;
 
 //Utilidades externas
 char external_tool_sox[PATH_MAX]="/usr/bin/sox";
-char external_tool_unzip[PATH_MAX]="/usr/bin/unzip";
+//char external_tool_unzip[PATH_MAX]="/usr/bin/unzip";
 char external_tool_gunzip[PATH_MAX]="/bin/gunzip";
 char external_tool_tar[PATH_MAX]="/bin/tar";
 char external_tool_unrar[PATH_MAX]="/usr/bin/unrar";
@@ -3338,7 +3338,7 @@ int util_write_configfile(void)
   if (textspeech_also_send_menu.v)            ADD_STRING_CONFIG,"--textspeechmenu");
   if (textspeech_timeout_no_enter)            ADD_STRING_CONFIG,"--textspeechtimeout %d",textspeech_timeout_no_enter);
                                               ADD_STRING_CONFIG,"--tool-sox-path \"%s\"",external_tool_sox);
-                                              ADD_STRING_CONFIG,"--tool-unzip-path \"%s\"",external_tool_unzip);
+                                              //ADD_STRING_CONFIG,"--tool-unzip-path \"%s\"",external_tool_unzip);
                                               ADD_STRING_CONFIG,"--tool-gunzip-path \"%s\"",external_tool_gunzip);
                                               ADD_STRING_CONFIG,"--tool-tar-path \"%s\"",external_tool_tar);
                                               ADD_STRING_CONFIG,"--tool-unrar-path \"%s\"",external_tool_unrar);

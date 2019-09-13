@@ -22927,10 +22927,10 @@ void menu_external_tool_sox(MENU_ITEM_PARAMETERS)
 	menu_tool_path(external_tool_sox,"sox");
 }
 
-void menu_external_tool_unzip(MENU_ITEM_PARAMETERS)
+/*void menu_external_tool_unzip(MENU_ITEM_PARAMETERS)
 {
 	menu_tool_path(external_tool_unzip,"unzip");
-}
+}*/
 
 void menu_external_tool_gunzip(MENU_ITEM_PARAMETERS)
 {
@@ -22957,7 +22957,7 @@ void menu_external_tools_config(MENU_ITEM_PARAMETERS)
 
 
 	char string_sox[20];
-	char string_unzip[20];
+	//char string_unzip[20];
 	char string_gunzip[20];
 	char string_tar[20];
 	char string_unrar[20];
@@ -22966,7 +22966,7 @@ void menu_external_tools_config(MENU_ITEM_PARAMETERS)
         do {
 
 		menu_tape_settings_trunc_name(external_tool_sox,string_sox,20);
-		menu_tape_settings_trunc_name(external_tool_unzip,string_unzip,20);
+		//menu_tape_settings_trunc_name(external_tool_unzip,string_unzip,20);
 		menu_tape_settings_trunc_name(external_tool_gunzip,string_gunzip,20);
 		menu_tape_settings_trunc_name(external_tool_tar,string_tar,20);
 		menu_tape_settings_trunc_name(external_tool_unrar,string_unrar,20);
@@ -22977,10 +22977,10 @@ void menu_external_tools_config(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Sox Path. Path can not include spaces");
 
 
-                menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_unzip,NULL,"Un~~zip [%s]",string_unzip);
+                /*menu_add_item_menu_format(array_menu_external_tools_config,MENU_OPCION_NORMAL,menu_external_tool_unzip,NULL,"Un~~zip [%s]",string_unzip);
 		menu_add_item_menu_shortcut(array_menu_external_tools_config,'z');
                 menu_add_item_menu_tooltip(array_menu_external_tools_config,"Change Unzip Path");
-                menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Unzip Path. Path can not include spaces");
+                menu_add_item_menu_ayuda(array_menu_external_tools_config,"Change Unzip Path. Path can not include spaces");*/
 
 
 
@@ -29696,9 +29696,9 @@ switch (compressed_type) {
  		//-n no sobreescribir
 		//sprintf (uncompress_command,"unzip -n \"%s\" -d %s",archivo,tmpdir);
 
-		sprintf (uncompress_program,"%s",external_tool_unzip);
+		/*sprintf (uncompress_program,"%s",external_tool_unzip);
  		//-n no sobreescribir
-		sprintf (uncompress_command,"%s -n \"%s\" -d %s",external_tool_unzip,archivo,tmpdir);
+		sprintf (uncompress_command,"%s -n \"%s\" -d %s",external_tool_unzip,archivo,tmpdir);*/
 
 
 		printf ("Using internal zip decompressor\n");

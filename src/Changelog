@@ -27,6 +27,8 @@ Added ZRCP commands:
 -test-tcp-connect: testing tcp connection
 -write-port: write value to a port
 
+Added internal zip decompressor: no more need to use external unzip program
+
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired
 -debug CPU window: can now resize height and have more debug lines

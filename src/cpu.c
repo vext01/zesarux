@@ -1845,7 +1845,6 @@ printf (
 
 
                 "--tool-sox-path p          Set external tool sox path. Path can not include spaces\n"
-                "--tool-unzip-path p        Set external tool unzip path. Path can not include spaces\n"
                 "--tool-gunzip-path p       Set external tool gunzip path. Path can not include spaces\n"
                 "--tool-tar-path p          Set external tool tar path. Path can not include spaces\n"
                 "--tool-unrar-path p        Set external tool unrar path. Path can not include spaces\n"
@@ -5650,9 +5649,10 @@ int parse_cmdline_options(void) {
                                 sprintf (external_tool_sox,"%s",argv[puntero_parametro]);
 			}
 
+						//deprecated
                         else if (!strcmp(argv[puntero_parametro],"--tool-unzip-path")) {
                                 siguiente_parametro_argumento();
-                                sprintf (external_tool_unzip,"%s",argv[puntero_parametro]);
+                                //sprintf (external_tool_unzip,"%s",argv[puntero_parametro]);
 			}
 
                         else if (!strcmp(argv[puntero_parametro],"--tool-gunzip-path")) {

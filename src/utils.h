@@ -438,7 +438,7 @@ extern int si_ruta_absoluta(char *ruta);
 extern int get_file_type(int d_type, char *nombre);
 
 extern char external_tool_sox[];
-extern char external_tool_unzip[];
+//extern char external_tool_unzip[];
 extern char external_tool_gunzip[];
 extern char external_tool_tar[];
 extern char external_tool_unrar[];
