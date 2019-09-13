@@ -6,6 +6,11 @@
 *Cosas menos prioritarias
 *Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
 
+-en windows no compila network con threads…
+tampoco zip.h
+y error de un pthread que esta fuera de ifdef phread
+
+
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
 -items [X] no son amigables en speech, no se entienden. Deberian decir "yes" o "no"

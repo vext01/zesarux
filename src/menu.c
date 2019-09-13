@@ -29701,7 +29701,7 @@ switch (compressed_type) {
 		sprintf (uncompress_command,"%s -n \"%s\" -d %s",external_tool_unzip,archivo,tmpdir);*/
 
 
-		printf ("Using internal zip decompressor\n");
+		//printf ("Using internal zip decompressor\n");
 		util_extract_zip(archivo,tmpdir);
 		return 0;
 	break;

@@ -7052,7 +7052,7 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 
 /*
 Note for developers: If you are doing modifications to ZEsarUX, you should follow the rules from GPL license, as well as 
-the licenses that cover the MK14 and Motorola cores engines. 
+the licenses that cover all the external modules
 Also, you should keep the following copyright message, beginning with "Begin Copyright message" and ending with "End Copyright message"
 */
 
@@ -7079,14 +7079,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
 	printf ("Please read the other licenses used in ZEsarUX, from the menu Help->Licenses or just open files from folder licenses/\n\n\n");
 
-			/*printf ("\nZEsarUX includes Musashi 3.4 - A portable Motorola M680x0 processor emulation engine.\n"
-						"Copyright 1998-2002 Karl Stenerud. All rights reserved.\n"
-						"You should have received a copy of the license on the LICENSE_MOTOROLA_CORE file\n\n"
-						);
-			printf ("ZEsarUX includes National Semiconductor SC/MP CPU Emulator.\n"
-						"Copyright 2017 Miodrag Milanovic.\n"
-						"You should have received a copy of the license on the LICENSE_SCMP_CORE file\n\n\n"
-						);*/
+		
 
 			printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
 			
@@ -7558,9 +7551,10 @@ struct sched_param sparam;
 	//Capturar segterm
 	signal(SIGTERM, segterm_signal_handler);
 
+#ifndef MINGW	
 	//Capturar sigpipe
 	signal(SIGPIPE, sigpipe_signal_handler);	
-
+#endif
 
 
 	//Inicio bucle principal
