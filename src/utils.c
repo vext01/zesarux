@@ -105,6 +105,7 @@
 #include "network.h"
 #include "stats.h"
 #include "scl2trd.h"
+#include "zip.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
