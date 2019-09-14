@@ -26607,6 +26607,10 @@ void menu_about_license_undaad(MENU_ITEM_PARAMETERS)
         menu_about_read_file("undaad License","licenses/LICENSE_undaad");
 }
 
+void menu_about_license_grackle(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("grackle License","licenses/LICENSE_grackle");
+}
 
 
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
@@ -26905,10 +26909,12 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 	menu_add_item_menu(array_menu_common,"unpa~~ws/unquill",MENU_OPCION_NORMAL,menu_about_license_unpaws,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'w');		
 			
-							
-	menu_add_item_menu(array_menu_common,"~~undaad",MENU_OPCION_NORMAL,menu_about_license_undaad,NULL);
+			
+			menu_add_item_menu(array_menu_common,"~~undaad",MENU_OPCION_NORMAL,menu_about_license_undaad,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'u');		
 			
+			menu_add_item_menu(array_menu_common,"un~~gac",MENU_OPCION_NORMAL,menu_about_license_grackle,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'g');	
 					
 
             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
