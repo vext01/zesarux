@@ -984,7 +984,7 @@ extern void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zx
 "SP<32768 : it will match when SP register is below 32768\n" \
 "PWA & FFH=FEH : it will match when last port write address, doing an AND bitwise (&) with FFH, is equal to FEH\n" \
 "A|1=255 : it will match when register A, doing OR bitwise (|), it equal to 255\n" \
-"(32768)&0FH=3 : it will match when memory address 32768 has the low 4 bits set to value 3\n" \
+"PEEK(32768)&0FH=3 : it will match when memory address 32768 has the lower 4 bits set to value 3\n" \
 "OUTFIRED=1 AND PWA&00FFH=FEH AND PWV&7=1 : it will match when changing border color to blue\n" \
 "HL=DE : it will mach when HL is equal to DE register\n" \
 "32768>PC : it will match when PC<32768\n" \
