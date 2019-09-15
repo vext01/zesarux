@@ -17065,10 +17065,14 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						
 						debug_printf (VERBOSE_DEBUG,"Adding menu item [%s] id [%s]",ultimo_fulltitle,ultimo_id);
 						
-						//meter en entrada linea indice
-						char buf[1024];
-						sprintf (buf,"%d %s",ultimo_indice_id,ultimo_fulltitle);
-						strcpy(ultimo_fulltitle,buf);
+						//meter en entrada linea indice. Realmente para que la queremos?
+						//solo la muestro en la busqueda inicial, en la seleccion del formato de archivo ya no
+						if (!showindex) {
+							//Remodificamos ultimo_fulltitle para meterle el indice delante
+							char buf[1024];
+							sprintf (buf,"%d %s",ultimo_indice_id,ultimo_fulltitle);
+							strcpy(ultimo_fulltitle,buf);
+						}
 						
 						
 						//temp controlar maximo. ponemos a voleo
@@ -17088,6 +17092,9 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 							char nombre_sin_ext[PATH_MAX];
 
 							util_get_file_no_directory(ultimo_id,nombre_sin_dir);
+
+							//TODO Pillamos el nombre sin extension (sin puntos), pero en juegos como "Chase H.Q.tap.zip"
+							//quedará: "Chase H"
 							util_get_file_without_extension(nombre_sin_dir,nombre_sin_ext);
 
 							//Acortar el nombre por si acaso
