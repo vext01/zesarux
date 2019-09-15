@@ -16934,7 +16934,8 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
-void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers)
+//showindex dice si muestra contenido texto variable index en el item->usado para mostrar el archivo de la url en las diferentes descargas de un mismo juego
+void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers,int showindex)
 {
 	
 	//Por defecto
@@ -17078,6 +17079,18 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
 						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
 						menu_add_item_menu_misc(array_menu_common,ultimo_id);
+						if (showindex) {
+							//printf ("%s\n",ultimo_id);
+							//obtener archivo sin extension de la descarga
+							char nombre_sin_dir[PATH_MAX];
+							char nombre_sin_ext[PATH_MAX];
+
+							util_get_file_no_directory(ultimo_id,nombre_sin_dir);
+							util_get_file_without_extension(nombre_sin_dir,nombre_sin_ext);
+							//printf ("%s\n",nombre_sin_ext);
+
+							menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"-%s",nombre_sin_ext);
+						}
 
 						total_items++;
 					}
@@ -17177,7 +17190,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search_normalized);
 
 	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0);
 	//TODO gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
@@ -17200,7 +17213,7 @@ releases.1.type=Tape image
 	
 	//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
 	
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1);
 	
 	//TODO gestionar resultado vacio
 	if (query_id[0]!=0) {

@@ -10,7 +10,10 @@
 tampoco zip.h
 y error de un pthread que esta fuera de ifdef phread
 
+-snapshots z80 implementar +3:
+snap.c:                                        debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
 
+-menu browser WOS que dé mas información de nombre cinta, etc al seleccionar un juego
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
 -items [X] no son amigables en speech, no se entienden. Deberian decir "yes" o "no"
