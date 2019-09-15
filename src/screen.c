@@ -4158,7 +4158,9 @@ void scr_refresca_pantalla_comun(void)
                 	        byte_leido=screen[direccion];
 	                        attribute=screen[dir_atributo];
 
-				if (scr_refresca_sin_colores.v) attribute=56;
+				if (scr_refresca_sin_colores.v) {
+					attribute=56;
+				}
 
 
         	                ink=attribute &7;
