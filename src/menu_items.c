@@ -17077,9 +17077,11 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 						
 						//TODO controlar maximo items en menu. De momento esta limitado por la query a la api (100)
 
-						menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
-						menu_add_item_menu_misc(array_menu_common,ultimo_id);
-						if (showindex) {
+						if (!showindex) {
+							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
+							menu_add_item_menu_misc(array_menu_common,ultimo_id);
+						}
+						else {
 							//printf ("%s\n",ultimo_id);
 							//obtener archivo sin extension de la descarga
 							char nombre_sin_dir[PATH_MAX];
@@ -17087,9 +17089,19 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
 							util_get_file_no_directory(ultimo_id,nombre_sin_dir);
 							util_get_file_without_extension(nombre_sin_dir,nombre_sin_ext);
+
+							//Acortar el nombre por si acaso
+							char nombre_shown[28];
+
+							//strcpy(nombre_sin_ext,"01234567890123456789012345678901234567890123456789");
+
+    	                    menu_tape_settings_trunc_name(nombre_sin_ext,nombre_shown,28);
 							//printf ("%s\n",nombre_sin_ext);
 
-							menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"-%s",nombre_sin_ext);
+							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,nombre_shown);
+							menu_add_item_menu_misc(array_menu_common,ultimo_id);
+
+							menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL," %s",ultimo_fulltitle);							
 						}
 
 						total_items++;
