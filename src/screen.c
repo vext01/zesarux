@@ -4158,8 +4158,13 @@ void scr_refresca_pantalla_comun(void)
                 	        byte_leido=screen[direccion];
 	                        attribute=screen[dir_atributo];
 
+				//Prueba de un modo de video inventado en que el color de la tinta sale de los 4 bits de la zona de pixeles
+				//int ink1,ink2;
+
 				if (scr_refresca_sin_colores.v) {
 					attribute=56;
+					//ink1=(byte_leido >>4)&0xF;
+					//ink2=(byte_leido    )&0xF;					
 				}
 
 
@@ -4184,6 +4189,10 @@ void scr_refresca_pantalla_comun(void)
                         	for (bit=0;bit<8;bit++) {
 
 					color= ( byte_leido & 128 ? ink : paper );
+					//if (scr_refresca_sin_colores.v) {
+					//	if (bit<=3) color= ( byte_leido & 128 ? ink1 : paper );
+					//	else color= ( byte_leido & 128 ? ink2 : paper );
+					//}
 					scr_putpixel_zoom(x_hi+bit,y,color);
 
 	                                byte_leido=byte_leido<<1;
