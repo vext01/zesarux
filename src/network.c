@@ -810,13 +810,19 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 }
 
-char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
+char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *redirect)
 {
 //leer linea a linea hasta fin cabecera
 	char buffer_linea[1024];
 	int i=0;
 	int salir=0;
 	int linea=0;
+	
+	//de momento
+	redirect[0]=0;
+
+	int redireccion=0;
+
 	do {
 		int leidos;
 		char *next_mem;
@@ -838,6 +844,7 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
 				if (existe!=NULL) {
 					//Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
 					*http_code=parse_string_to_number(&existe[1]);
+					if ((*http_code)==302) redireccion=1;
 				}
 			}
 			
@@ -850,6 +857,19 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
 			}
 			else {
 				debug_printf (VERBOSE_PARANOID,"header %d: %s",i,buffer_linea);
+
+				//Ver si redirect
+				if (redireccion) {
+					char *existe;
+					char *pref_location="Location: ";
+					existe=strstr(buffer_linea,"Location: ");
+					if (existe!=NULL) {			
+						int longitud=strlen(pref_location);
+						printf ("Detected redirect %s\n",buffer_linea);
+						strcpy(redirect,&buffer_linea[longitud]);
+					}
+				}
+
 				i++;
 				mem=next_mem;
 			}
@@ -993,7 +1013,57 @@ If no Accept-Encoding field is present in a request, the server MAY
 			*mem=response;
 			
 			if (skip_headers) {
-				*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos,http_code);
+				char redirect_url[NETWORK_MAX_URL];
+				*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos,http_code,redirect_url);
+				if ((*http_code)==302 && redirect_url[0]!=0) {
+					printf ("redirect to %s\n",redirect_url);
+					//TODO: gestionar maximo redirect
+
+					//obtener protocolo
+					int nuevo_ssl=0;
+
+
+					//  http://
+					int index_host=7;
+
+
+					//https
+					if (redirect_url[4]=='s') {
+						nuevo_ssl=1;
+						index_host++;
+					}
+
+					//obtener host
+					char nuevo_host[NETWORK_MAX_URL];
+					int i;
+					int dest=0;
+					for (i=index_host;redirect_url[i] && redirect_url[i]!='/';i++,dest++) {
+						nuevo_host[dest]=redirect_url[i];
+					}
+
+					nuevo_host[dest]=0;
+
+					//obtener nueva url
+
+					char nueva_url[NETWORK_MAX_URL];
+					
+					dest=0;
+					if (redirect_url[i]) {
+						//i++;
+						for (;redirect_url[i];i++,dest++) {
+							nueva_url[dest]=redirect_url[i];
+						}
+					}
+
+					nueva_url[dest]=0;
+					//int nuevo_http_code;
+
+					printf ("querying again host %s (SSL=%d) url %s\n",nuevo_host,nuevo_ssl,nueva_url);
+
+					//TODO: esta bien pasar tal cual http_code,mem,t_leidos,mem_after_headers,skip_headers,add_headers?
+					//El redirect sucede con las url a archive.org
+					return zsock_http(nuevo_host, nueva_url,http_code,mem,t_leidos,mem_after_headers,skip_headers,add_headers,nuevo_ssl);
+				}
 			}
 			return 0;
 		}

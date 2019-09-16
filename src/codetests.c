@@ -1054,7 +1054,10 @@ void codetests_https()
 	char *orig_mem;
 	char *mem_after_headers;
 	int total_leidos;
-	int retorno=zsock_http("www.google.es","/",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1);
+	//int retorno=zsock_http("www.google.es","/",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1);
+
+	int retorno=zsock_http("archive.org","/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/games/m/Mandroid.tzx.zip",
+				&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1);
 
 	if (retorno<0) {
 		printf ("Error zsock_http\n");

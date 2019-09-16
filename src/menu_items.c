@@ -17202,7 +17202,7 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 
 		
 #ifdef COMPILE_SSL
-		*ssl_use=0;
+		*ssl_use=1;
 		char *pref_wos="/pub/sinclair/";
 		char *pref_zxdb="/zxdb/sinclair/";
 
@@ -17216,13 +17216,16 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 			int longitud_pref=strlen(pref_wos);
 			int longitud_url=strlen(url_orig);
 
-			longitud_url -=longitud_pref;
-			url_modif[longitud_url]=0;
+			//longitud_url -=longitud_pref;
+			//url_modif[longitud_url]=0;
+
+			char *puntero_url;
+			puntero_url=&url_modif[longitud_pref];
 
 			printf ("url modificada primero: %s\n",url_modif);
 
 			strcpy(host_final,"archive.org");
-			sprintf(url_final,"/download/World_of_Spectrum_June_2017_Mirror/World%%20of%%20Spectrum%%20June%%202017%%20Mirror.zip/World%%20of%%20Spectrum%%20June%%202017%%20Mirror/sinclair/%s",url_modif);
+			sprintf(url_final,"/download/World_of_Spectrum_June_2017_Mirror/World%%20of%%20Spectrum%%20June%%202017%%20Mirror.zip/World%%20of%%20Spectrum%%20June%%202017%%20Mirror/sinclair/%s",puntero_url);
 			printf ("url modificada final: %s\n",url_final);
 
 		}
