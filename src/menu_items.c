@@ -16895,7 +16895,9 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 					//sprintf (archivo_temp,"/tmp/%s",juego);
 					sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
 		
-                	int ret=util_download_file("www.zx81.nl",url_juego,archivo_temp,0);
+                	//int ret=util_download_file("www.zx81.nl",url_juego,archivo_temp,0);
+					//usamos misma funcion thread de download wos
+					int ret=menu_download_wos("www.zx81.nl",url_juego,archivo_temp,0); 
 
 					if (ret==200) {
                                 
@@ -16960,10 +16962,16 @@ void *menu_download_wos_thread_function(void *entrada)
 
 #ifdef USE_PTHREADS
 
+	printf ("Starting download content thread. Host=%s Url=%s\n",
+	((struct download_wos_struct *)entrada)->host,
+								((struct download_wos_struct *)entrada)->url);
+
 	((struct download_wos_struct *)entrada)->return_code=util_download_file( ((struct download_wos_struct *)entrada)->host,
 								((struct download_wos_struct *)entrada)->url,
 								((struct download_wos_struct *)entrada)->archivo_temp,
 								((struct download_wos_struct *)entrada)->ssl_use); 
+
+	printf ("Finishing download content thread\n");
 
 #endif
 	download_wos_thread_running=0;
