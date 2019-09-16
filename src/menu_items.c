@@ -17254,6 +17254,10 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	
 	//char query_search[1024];
 	//query_search[0]=0;
+
+#ifndef COMPILE_SSL
+menu_first_aid("no_ssl_wos");	
+#endif
 	
 	menu_ventana_scanf("Query",zxinfowos_query_search,256);
 	if (zxinfowos_query_search[0]==0) return;

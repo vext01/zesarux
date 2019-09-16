@@ -30406,6 +30406,10 @@ char *first_aid_string_filesel_enter_key="Press ENTER to select a file or change
 							"Press Space to expand files, like tap, tzx, trd, scl... etc and also all the compressed supported files";							
 
 
+int first_aid_no_ssl_wos=0;
+char *first_aid_string_no_ssl_wos="Warning: as SSL support is not compiled, results newer than 2013 may fail";	
+
+
 int first_aid_no_smartload=0;
 char *first_aid_string_smartload="This smartload window allows you to load any file known by the emulator. Just select it and go!\n"
 							"Press TAB to change between areas in the file selector";
@@ -30493,6 +30497,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("filesel_enter_key",&first_aid_no_filesel_enter_key,first_aid_string_filesel_enter_key,0);
 	menu_first_aid_add("smartload",&first_aid_no_smartload,first_aid_string_smartload,0);
 	menu_first_aid_add("initial_menu",&first_aid_no_initial_menu,first_aid_string_initial_menu,0);
+	menu_first_aid_add("no_ssl_wos",&first_aid_no_ssl_wos,first_aid_string_no_ssl_wos,0);
 
 	//Items que se disparan en startup
 	menu_first_aid_add("startup_aid",&first_aid_no_startup_aid,first_aid_string_startup_aid,1);
