@@ -56,20 +56,12 @@ Estos ya vienen de network.h
 */
 
 
-//Inicio funciones SSL
+//Inicio includes SSL
 #ifdef COMPILE_SSL
 
-#if defined(__APPLE__)
-#  define COMMON_DIGEST_FOR_OPENSSL
-#  include <CommonCrypto/CommonDigest.h>
-#  define SHA1 CC_SHA1
-#else
-#  include <openssl/md5.h>
-#endif
+#include <openssl/ssl.h>
 
 #endif
-//Fin funciones SSL
-
 
 
 //Estructura para guardar sockets
@@ -80,6 +72,12 @@ struct s_z_sockets_struct {
 	struct sockaddr_in adr;
 	int socket_number;
 	z80_bit use_ssl;
+
+#ifdef COMPILE_SSL
+	SSL_CTX *ssl_ctx;
+	SSL *ssl_conn;
+#endif
+
 };
 
 
@@ -87,6 +85,47 @@ typedef struct s_z_sockets_struct z_sockets_struct;
 
 //array de sockets
 z_sockets_struct sockets_list[MAX_Z_SOCKETS];
+
+
+
+
+
+//Inicio funciones SSL
+#ifdef COMPILE_SSL
+
+
+void z_init_ssl(void)
+{
+	SSL_load_error_strings ();
+	SSL_library_init ();
+}
+
+
+int z_connect_ssl(int indice_tabla)
+{
+	printf ("Connecting SSL\n");
+	sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
+
+	// create an SSL connection and attach it to the socket
+	sockets_list[indice_tabla].ssl_conn = SSL_new(sockets_list[indice_tabla].ssl_ctx);
+	SSL_set_fd(sockets_list[indice_tabla].ssl_conn, sockets_list[indice_tabla].socket_number);
+
+	// perform the SSL/TLS handshake with the server - when on the
+	// server side, this would use SSL_accept()
+	int err = SSL_connect(sockets_list[indice_tabla].ssl_conn);
+	if (err != 1) {
+   		return -1;
+	}
+
+	return 0;
+}
+
+#endif
+//Fin funciones SSL
+
+
+
+
 
 
  
@@ -188,6 +227,12 @@ int escribir_socket(int socket, char *buffer)
 //int leidos = read(sock_conectat, buffer_lectura_socket, 1023);
 int leer_socket(int s, char *buffer, int longitud)
 {
+
+
+
+
+
+
 #ifdef MINGW
 
 int leidos=recv(s,buffer,longitud,0);
@@ -348,6 +393,10 @@ void init_network_tables(void)
 
 	z_atomic_reset(&network_semaforo);
 
+#ifdef COMPILE_SSL
+	z_init_ssl();
+#endif
+
 }
 
 int find_free_socket(void)
@@ -451,6 +500,23 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 
 	sockets_list[indice_tabla].socket_number=test_socket;
 
+	sockets_list[indice_tabla].use_ssl.v=use_ssl;
+
+	if (use_ssl) {
+
+#ifdef COMPILE_SSL
+		int ret=z_connect_ssl(indice_tabla);
+		if (ret!=0) {
+			printf ("Error connecting ssl\n");
+			return -1;
+		}
+#else
+		printf ("SSL requested but ssl libraries unavailable\n");
+		return -1;
+	
+#endif
+	}
+
 	return indice_tabla;
 
 } 
@@ -518,6 +584,19 @@ int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud)
 				return -1;
 	}
 
+	if (sockets_list[indice_tabla].use_ssl.v) {
+
+#ifdef COMPILE_SSL
+		//int SSL_read(SSL *ssl, void *buf, int num);
+		return SSL_read(sockets_list[indice_tabla].ssl_conn,buffer,longitud);
+#else
+		printf ("SSL requested but ssl libraries unavailable\n");
+		return -1;
+	
+#endif
+	}
+
+
 	return leer_socket(sock,buffer,longitud);
 }
 
@@ -531,6 +610,20 @@ int z_sock_write_string(int indice_tabla, char *buffer)
                 debug_printf(VERBOSE_ERR,"Socket is not open");
 				return -1;
 	}
+
+	if (sockets_list[indice_tabla].use_ssl.v) {
+
+#ifdef COMPILE_SSL
+		//int SSL_write(SSL *ssl, const void *buf, int num);
+		int longitud=strlen(buffer);
+		return SSL_write(sockets_list[indice_tabla].ssl_conn,buffer,longitud);
+#else
+		printf ("SSL requested but ssl libraries unavailable\n");
+		return -1;
+	
+#endif
+	}
+
 
 	return escribir_socket(sock,buffer);
 }
