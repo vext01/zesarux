@@ -15510,27 +15510,14 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 					int nuevo_ssl=0;
 
 
-					//  http://
-					int index_host=7;
-
-
 					//https
                                         if (util_url_is_https(redirect_url)) {
-					//if (redirect_url[4]=='s') {
 						nuevo_ssl=1;
-						index_host++;
 					}
 
 					//obtener host
 					char nuevo_host[NETWORK_MAX_URL];
-                                        /*
-					int i;
-					int dest=0;
-					for (i=index_host;redirect_url[i] && redirect_url[i]!='/';i++,dest++) {
-						nuevo_host[dest]=redirect_url[i];
-					}
-
-					nuevo_host[dest]=0;*/
+                                       
 
                                         util_get_host_url(redirect_url,nuevo_host);
 
@@ -15538,16 +15525,8 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 
 					char nueva_url[NETWORK_MAX_URL];
 					
-					/*dest=0;
-					if (redirect_url[i]) {
-						//i++;
-						for (;redirect_url[i];i++,dest++) {
-							nueva_url[dest]=redirect_url[i];
-						}
-					}
-
-					nueva_url[dest]=0;*/
-					//int nuevo_http_code;
+					
+					
 
                                         util_get_url_no_host(redirect_url,nueva_url);
 
