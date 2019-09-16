@@ -16935,6 +16935,89 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
+struct download_wos_struct
+{
+	char *host;
+	char *url;
+	char *archivo_temp;
+	int ssl_use;
+	int return_code;
+};
+
+int download_wos_thread_running=0;
+
+int menu_download_wos_cond(zxvision_window *w GCC_UNUSED)
+{
+	return !download_wos_thread_running;
+}
+
+
+
+void *menu_download_wos_thread_function(void *entrada)
+{
+
+	download_wos_thread_running=1; 
+
+#ifdef USE_PTHREADS
+
+	((struct download_wos_struct *)entrada)->return_code=util_download_file( ((struct download_wos_struct *)entrada)->host,
+								((struct download_wos_struct *)entrada)->url,
+								((struct download_wos_struct *)entrada)->archivo_temp,
+								((struct download_wos_struct *)entrada)->ssl_use); 
+
+#endif
+	download_wos_thread_running=0;
+
+	return 0;
+
+}
+
+#ifdef USE_PTHREADS
+pthread_t download_wos_thread;
+#endif
+
+int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
+{
+	
+	//int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
+	//Lanzar el thread de descarga
+	struct download_wos_struct parametros;
+
+	parametros.host=host;
+	parametros.url=url;
+	parametros.archivo_temp=archivo_temp;
+	parametros.ssl_use=ssl_use;
+
+	//de momento not found
+	parametros.return_code=404;
+
+
+#ifdef USE_PTHREADS
+
+	//Inicializar thread
+	
+	if (pthread_create( &download_wos_thread, NULL, &menu_download_wos_thread_function, (void *)&parametros) ) {
+		debug_printf(VERBOSE_ERR,"Can not create download wos thread");
+		return -1;
+	}
+
+#endif
+
+		 
+	contador_menu_zeng_connect_print=0;
+
+	//Usamos misma ventana de progreso que zeng. TODO: si se lanzan los dos a la vez (cosa poco probable) se moverian uno con el otro
+	zxvision_simple_progress_window("Downloading software", menu_download_wos_cond,menu_zeng_connect_print );
+
+	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
+	//ya que la variable download_wos_thread_running es global y única
+	if (download_wos_thread_running) menu_warn_message("Download has not ended yet");
+
+	return parametros.return_code;
+
+}
+
+
 //showindex dice si muestra contenido texto variable index en el item->usado para mostrar el archivo de la url en las diferentes descargas de un mismo juego
 void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers,int showindex)
 {
@@ -17274,7 +17357,8 @@ menu_first_aid("no_ssl_wos");
 
 	do {
 	char query_url[1024];
-	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search_normalized);
+	//sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search_normalized);
+	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search_normalized);
 
 	char query_id[256];
 	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0);
@@ -17363,7 +17447,9 @@ releases.1.type=Tape image
 
         //int ret=util_download_file("www.worldofspectrum.org",url_juego_final,archivo_temp); 
 		printf ("Downloading file from host %s (SSL=%d) url %s\n",host_final,ssl_use,url_juego_final);
-		int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
+		//int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
+
+		int ret=menu_download_wos(host_final,url_juego_final,archivo_temp,ssl_use); 
 
         if (ret==200) {                    
 
