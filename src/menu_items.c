@@ -17223,7 +17223,7 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 			char *puntero_url;
 			puntero_url=&url_modif[longitud_pref];
 
-			printf ("url modificada primero: %s\n",url_modif);
+			printf ("url modificada primero: %s\n",puntero_url);
 
 			strcpy(host_final,"archive.org");
 			sprintf(url_final,"/download/World_of_Spectrum_June_2017_Mirror/World%%20of%%20Spectrum%%20June%%202017%%20Mirror.zip/World%%20of%%20Spectrum%%20June%%202017%%20Mirror/sinclair/%s",puntero_url);
