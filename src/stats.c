@@ -149,7 +149,7 @@ void *send_stats_server_pthread(void *nada)
 	//printf ("query url: %s\n",query_url);
 
     
-	retorno=zsock_http(REMOTE_ZESARUX_SERVER,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+	retorno=zsock_http(REMOTE_ZESARUX_SERVER,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0);
 
 	debug_printf(VERBOSE_INFO,"Finishing sending statistics pthread");
 
@@ -213,7 +213,7 @@ void *stats_check_updates_pthread(void *nada)
 	int retorno;
 
 	    
-	retorno=zsock_http(REMOTE_ZESARUX_SERVER,url_update,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+	retorno=zsock_http(REMOTE_ZESARUX_SERVER,url_update,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0);
 
 	orig_mem=mem;
 	

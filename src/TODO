@@ -12,6 +12,8 @@
 tampoco zip.h
 y error de un pthread que esta fuera de ifdef phread
 
+-funciones zsock no permite usarlas sin pthreads. Por que?
+
 -snapshots z80 implementar +3:
 snap.c:                                        debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
 

@@ -15490,7 +15490,7 @@ char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,
 }
 
 //Retorna el codigo http o <0 si otros errores
-int util_download_file(char *hostname,char *url,char *archivo)
+int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 {
   int http_code;
 	char *mem;
@@ -15498,7 +15498,7 @@ int util_download_file(char *hostname,char *url,char *archivo)
 	char *mem_after_headers;
 	int total_leidos;
 	int retorno;
-        retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+        retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl);
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {

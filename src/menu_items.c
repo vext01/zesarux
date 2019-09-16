@@ -16876,7 +16876,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		char *orig_mem;
 		char *mem_after_headers;
 		int total_leidos;
-		int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+		int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0);
 		orig_mem=mem;
 	
 		//printf("%s\n",mem);
@@ -16894,7 +16894,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 					//sprintf (archivo_temp,"/tmp/%s",juego);
 					sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
 		
-                	int ret=util_download_file("www.zx81.nl",url_juego,archivo_temp);
+                	int ret=util_download_file("www.zx81.nl",url_juego,archivo_temp,0);
 
 					if (ret==200) {
                                 
@@ -16960,7 +16960,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 	
 
-	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers);
+	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0);
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
@@ -17183,6 +17183,66 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
 }
 
+void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,int *ssl_use)
+{
+	    /* TODO Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+		These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/  */
+
+		/*
+		Local file links starting with /pub/sinclair/ refer to content previously available at the original WorldOfSpectrum archive. 
+		These files are currently accessible from Archive.org mirror at 
+		https://archive.org/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/
+		Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+		These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/
+
+
+		https://github.com/zxdb/ZXDB/blob/master/README.md
+		*/
+		//sprintf (archivo_temp,"/tmp/%s",juego);
+
+		
+#ifdef COMPILE_SSL
+		*ssl_use=0;
+		char *pref_wos="/pub/sinclair/";
+		char *pref_zxdb="/zxdb/sinclair/";
+
+		if (strstr(url_orig,pref_wos)!=NULL) {
+			printf ("Prefijo es de WOS\n");
+
+			//Quitar /pub/sinclair
+			char url_modif[NETWORK_MAX_URL];
+			strcpy(url_modif,url_orig);
+
+			int longitud_pref=strlen(pref_wos);
+			int longitud_url=strlen(url_orig);
+
+			longitud_url -=longitud_pref;
+			url_modif[longitud_url]=0;
+
+			printf ("url modificada primero: %s\n",url_modif);
+
+			strcpy(host_final,"archive.org");
+			sprintf(url_final,"/download/World_of_Spectrum_June_2017_Mirror/World%%20of%%20Spectrum%%20June%%202017%%20Mirror.zip/World%%20of%%20Spectrum%%20June%%202017%%20Mirror/sinclair/%s",url_modif);
+			printf ("url modificada final: %s\n",url_final);
+
+		}
+
+		else {
+			//Asumimos que es zxdb
+			strcpy(host_final,"spectrumcomputing.co.uk");
+			strcpy(url_final,url_orig);
+		}
+#else
+		//Si no tenemos ssl, solo podemos descargar contenido de wos tal cual
+		*ssl_use=0;
+		strcpy(host_final,"www.worldofspectrum.org");
+		strcpy(url_final,url_orig);
+#endif
+		
+		
+	
+}
+
 char zxinfowos_query_search[256]="";
 
 void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
@@ -17249,7 +17309,19 @@ releases.1.type=Tape image
                                 char archivo_temp[PATH_MAX];
                                 
                                 
-                                /* TODO Local file links starting with /zxdb/sinclair/ refer to content added afterwards. These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/  */
+        /* TODO Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+		These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/  */
+
+		/*
+		Local file links starting with /pub/sinclair/ refer to content previously available at the original WorldOfSpectrum archive. 
+		These files are currently accessible from Archive.org mirror at 
+		https://archive.org/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/
+		Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+		These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/
+
+
+		https://github.com/zxdb/ZXDB/blob/master/README.md
+		*/
 		//sprintf (archivo_temp,"/tmp/%s",juego);
 		
 		char juego[PATH_MAX];
@@ -17271,7 +17343,19 @@ releases.1.type=Tape image
 		
                                 util_download_file("www.worldofspectrum.org",url2,archivo_temp);
                                 */
-        int ret=util_download_file("www.worldofspectrum.org",url_juego,archivo_temp); 
+
+
+		char url_juego_final[PATH_MAX];
+		char host_final[PATH_MAX];
+
+		int ssl_use;
+
+		menu_zxinfo_get_final_url(url_juego,host_final,url_juego_final,&ssl_use);
+
+
+        //int ret=util_download_file("www.worldofspectrum.org",url_juego_final,archivo_temp); 
+		printf ("Downloading file from host %s (SSL=%d) url %s\n",host_final,ssl_use,url_juego_final);
+		int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
 
         if (ret==200) {                    
 
@@ -17323,7 +17407,7 @@ s_add_headers[l++]=0;
 	menu_ventana_scanf("skip return headers?",s_skip_headers,2);
 	int skip_headers=parse_string_to_number(s_skip_headers);
 	int total_leidos;
-	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers);
+	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
 			if (mem_after_headers) {

@@ -104,14 +104,29 @@ void z_init_ssl(void)
 int z_connect_ssl(int indice_tabla)
 {
 	printf ("Connecting SSL\n");
+
+	printf ("SSL_CTX_new\n");
 	sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
 
 	// create an SSL connection and attach it to the socket
 	sockets_list[indice_tabla].ssl_conn = SSL_new(sockets_list[indice_tabla].ssl_ctx);
+
+	if (sockets_list[indice_tabla].ssl_conn==NULL) {
+		printf ("Error creating SSL context\n");
+
+		//mostrar error
+		ERR_print_errors_fp(stderr);
+
+		return -1;
+	}
+
+	printf ("SSL_set_fd %d %d\n",sockets_list[indice_tabla].ssl_conn,sockets_list[indice_tabla].socket_number);
 	SSL_set_fd(sockets_list[indice_tabla].ssl_conn, sockets_list[indice_tabla].socket_number);
 
 	// perform the SSL/TLS handshake with the server - when on the
 	// server side, this would use SSL_accept()
+
+	printf ("SSL_connect\n");
 	int err = SSL_connect(sockets_list[indice_tabla].ssl_conn);
 	if (err != 1) {
    		return -1;
@@ -847,14 +862,19 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code)
 	return mem;
 }
 
-int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers)
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl)
 {
 
 	*mem=NULL;
 	*mem_after_headers=NULL;
 	*t_leidos=0;
 	*http_code=200; //asumimos ok por defecto
-	int indice_socket=z_sock_open_connection(host,80,0);
+
+	int puerto=80;
+
+	if (use_ssl) puerto=443;
+
+	int indice_socket=z_sock_open_connection(host,puerto,use_ssl);
 
 		if (indice_socket<0) {
 			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");

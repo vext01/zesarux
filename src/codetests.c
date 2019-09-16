@@ -1045,6 +1045,74 @@ void codetests_zeng(void)
 
 }
 
+
+void codetests_https()
+{
+	//http://www.zx81.nl/files.html
+	int http_code;
+	char *mem;
+	char *orig_mem;
+	char *mem_after_headers;
+	int total_leidos;
+	int retorno=zsock_http("www.google.es","/",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1);
+
+	if (retorno<0) {
+		printf ("Error zsock_http\n");
+		exit(1);
+	}
+
+	orig_mem=mem;
+	
+	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
+	
+	//leer linea a linea hasta fin cabecera
+	char buffer_linea[1024];
+	int i=0;
+	int salir=0;
+	do {
+		int leidos;
+		char *next_mem;
+		if (*mem=='\n') {
+			//esto puede que no pase, linea con solo salto linea tendra un cr antes,
+			//por tanto la deteccion de esa linea se leera abajom cuando buffer linea vacia
+			salir=1;
+			mem++;
+			printf ("salir con salto linea inicial\n");
+		}
+		else {
+			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
+			total_leidos -=leidos;
+		
+			if (buffer_linea[0]==0) {
+				salir=1;
+				printf ("salir con linea vacia final\n");
+				mem=next_mem;
+			}
+			else {
+				printf ("cabecera %d: %s\n",i,buffer_linea);
+				i++;
+				mem=next_mem;
+			}
+		
+			if (total_leidos<=0) salir=1;
+		}
+	} while (!salir);
+	
+	printf ("respuesta despues cabeceras:\n%s\n",mem);
+	
+	
+	if (orig_mem!=NULL) free (orig_mem);
+	
+	//peticion saltando cabeceras
+	//printf ("Request skipping headers\n");
+	//retorno=zsock_http("www.google.es","/",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",1);
+	//if (mem_after_headers!=NULL) printf ("Answer after headers:\n%s\n",mem_after_headers);
+	
+	//if (mem!=NULL) free (mem);
+	
+}
+
+
 void codetests_http()
 {
 	//http://www.zx81.nl/files.html
@@ -1053,7 +1121,7 @@ void codetests_http()
 	char *orig_mem;
 	char *mem_after_headers;
 	int total_leidos;
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0,"");
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",0);
 	orig_mem=mem;
 	
 	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
@@ -1098,12 +1166,21 @@ void codetests_http()
 	
 	//peticion saltando cabeceras
 	printf ("Request skipping headers\n");
-	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"");
+	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0);
 	if (mem_after_headers!=NULL) printf ("Answer after headers:\n%s\n",mem_after_headers);
 	
 	if (mem!=NULL) free (mem);
 	
 }
+
+void codetests_messages_debug(char *s)
+{
+        printf ("%s\n",s);
+		fflush(stdout);
+}
+
+
+
 
 #ifdef USE_PTHREADS
 
@@ -1112,11 +1189,7 @@ z_atomic_semaphore codetest_semaforo;
 
 
 
-void codetests_messages_debug(char *s)
-{
-        printf ("%s\n",s);
-		fflush(stdout);
-}
+
 
 void *thread_codetests_function(void *nada)
 {
@@ -1256,6 +1329,10 @@ void codetests_main(int main_argc,char *main_argv[])
 		exit(0);
 	}
 
+	scr_messages_debug=codetests_messages_debug;
+	verbose_level=VERBOSE_PARANOID;
+	scr_driver_name="";	
+
 	//printf ("\nRunning expression parser tests\n");
 	//codetests_expression_parser();
 
@@ -1277,21 +1354,29 @@ void codetests_main(int main_argc,char *main_argv[])
 	//codetests_assembler();
 
 	//printf ("\nRunning zeng tests\n");
+	//init_network_tables();
 	//codetests_zeng();
 	
 	//printf ("\nRunning zsock http tests\n");
+	//init_network_tables();
 	//codetests_http();
+
+	printf ("\nRunning zsock https tests\n");
+	init_network_tables();
+	codetests_https();	
 
 //#ifdef USE_PTHREADS
 //	printf ("\nRunning atomic tests\n");
+//  init_network_tables();
 //	codetests_atomic();
 //#endif
 
 
-#ifdef USE_PTHREADS
-	printf ("\nRunning network atomic tests\n");
-	codetests_network_atomic();
-#endif
+//#ifdef USE_PTHREADS
+//	printf ("\nRunning network atomic tests\n");
+// init_network_tables();
+//	codetests_network_atomic();
+//#endif
 
 	//printf ("\nRunning tbblue layers strings\n");
 	//codetests_tbblue_layers();
