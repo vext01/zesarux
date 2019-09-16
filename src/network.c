@@ -304,7 +304,7 @@ int cerrar_socket(int s)
 
 
 //No hacer nada, no hay pthreads disponibles
-//funciones nulas de socket. Nadie deberia usarlas si no hay sockets pero por si acaso...
+//funciones nulas de socket. Nadie deberia usarlas si no hay pthreads pero por si acaso...
 
 
 

@@ -45,6 +45,7 @@
 
 
 pthread_t thread_zeng;
+pthread_t zeng_thread_connect;
 
 #endif
 
@@ -593,7 +594,7 @@ void *zeng_enable_thread_function(void *nada)
 
 }
 
-pthread_t zeng_thread_connect;
+
 
 //Cancelar thread de conexion zeng
 void zeng_cancel_connect(void)

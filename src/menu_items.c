@@ -17540,7 +17540,7 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_common,'z');
 			menu_add_item_menu_tooltip(array_menu_common,"Setup ZEsarUX Network Gaming");
 			menu_add_item_menu_ayuda(array_menu_common,"Setup ZEsarUX Network Gaming");
-#endif
+
              menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_network_http_request,NULL,"Http request");         
              
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zx81,NULL,"zx81 online browser");  
@@ -17560,7 +17560,12 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			//Versión sin SSL usa servidor WOS
 			menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo and WOS to download the software");
 			menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo and WOS to download the software");
-#endif              
+#endif    
+
+
+//Fin de condicion si hay pthreads
+#endif
+
 						
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
