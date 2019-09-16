@@ -115,7 +115,7 @@ int z_connect_ssl(int indice_tabla)
 		printf ("Error creating SSL context\n");
 
 		//mostrar error
-		ERR_print_errors_fp(stderr);
+		//ERR_print_errors_fp(stderr);
 
 		return -1;
 	}
@@ -865,7 +865,7 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *re
 					existe=strstr(buffer_linea,"Location: ");
 					if (existe!=NULL) {			
 						int longitud=strlen(pref_location);
-						printf ("Detected redirect %s\n",buffer_linea);
+						printf ("zsock_http_skip_headers Detected redirect %s\n",buffer_linea);
 						strcpy(redirect,&buffer_linea[longitud]);
 					}
 				}
@@ -897,10 +897,10 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 
 	int indice_socket=z_sock_open_connection(host,puerto,use_ssl);
 
-		if (indice_socket<0) {
-			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
-			return -1;
-		}
+	if (indice_socket<0) {
+		debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
+		return -1;
+	}
 		
 		int sock=get_socket_number(indice_socket);
 
@@ -910,15 +910,15 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 		return -1;
 	}	
 		
-		char request[1024];
-		
-		sprintf(request,"GET %s HTTP/1.0\r\n"
-						"Host: %s\r\n"
-						"User-Agent: ZEsarUX " EMULATOR_VERSION " " COMPILATION_SYSTEM "\r\n"
-						"Accept-Encoding: identity\r\n"
-						"%s" 
-						"\r\n",
-						url,host,add_headers);
+	char request[1024];
+	
+	sprintf(request,"GET %s HTTP/1.0\r\n"
+					"Host: %s\r\n"
+					"User-Agent: ZEsarUX " EMULATOR_VERSION " " COMPILATION_SYSTEM "\r\n"
+					"Accept-Encoding: identity\r\n"
+					"%s" 
+					"\r\n",
+					url,host,add_headers);
 
 		//Agregamos siempre "Accept-Encoding: identity\r\n" para decir que no aceptamos contenido comprimido
 		//Esto es especialmente sensible en zxinfo.dk, pues habia a veces que retornaba contenido gz
@@ -935,41 +935,39 @@ If no Accept-Encoding field is present in a request, the server MAY
    to the client.
 		*/
 
-		//Cuidado que este debug_printf no exceda el valor de DEBUG_MAX_MESSAGE_LENGTH, que no llegará, pero por si acaso...			
-		debug_printf (VERBOSE_DEBUG,"zsock_http Request:\n%s\n",request);
+	//Cuidado que este debug_printf no exceda el valor de DEBUG_MAX_MESSAGE_LENGTH, que no llegará, pero por si acaso...			
+	debug_printf (VERBOSE_DEBUG,"zsock_http Request:\n%s\n",request);
 
-		
-		int escritos=z_sock_write_string(indice_socket,request);
+	
+	int escritos=z_sock_write_string(indice_socket,request);
 
-		if (escritos<0) {
-			debug_printf(VERBOSE_ERR,"ERROR. Can't send request");
-			return -1;	
-		}
-		
-		//todo buffer asignar
-		char *response;
-		int max_buffer=1024*1024; //1 mb max
-		
-		response=malloc(max_buffer);
-		if (response==NULL) cpu_panic ("Can not allocate memory for http response");
-		
-		
-		//char response[65535];
-		
-		//int leido_content_length=0;
-		int pos_destino=0;
-		
-		int leidos;
-		int salir=0;
-		int total_leidos=0;
-		
-		//todo leer cabeceras
-		//todo leer codigo http
-		//todo leer hasta content-length o hasta cierre de socket
-		//todo usar funcion parecida a zsock_read_all_until_command pero con condicion redefinible
-		//todo ver si el socket se ha cerrado
-		int reintentos=0;
-		do {
+	if (escritos<0) {
+		debug_printf(VERBOSE_ERR,"ERROR. Can't send request");
+		return -1;	
+	}
+	
+	//todo buffer asignar
+	char *response;
+	int max_buffer=1024*1024; //1 mb max
+	
+	response=malloc(max_buffer);
+	if (response==NULL) cpu_panic ("Can not allocate memory for http response");
+	
+	
+	//char response[65535];
+	
+	//int leido_content_length=0;
+	int pos_destino=0;
+	
+	int leidos;
+	int salir=0;
+	int total_leidos=0;
+	
+	//todo leer hasta content-length o hasta cierre de socket
+	//todo usar funcion parecida a zsock_read_all_until_command pero con condicion redefinible
+	//todo ver si el socket se ha cerrado
+	int reintentos=0;
+	do {
 		do {
 			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
 			//la conexion se queda en read colgada
@@ -994,10 +992,8 @@ If no Accept-Encoding field is present in a request, the server MAY
 		//int leidos=z_sock_read(indice_socket,&response[pos_destino],65535);
 		
 		if (!salir) {
-		usleep(10000); //10 ms
-		
-
-		reintentos++;
+			usleep(10000); //10 ms
+			reintentos++;
 		}
 
 		//controlar maximo reintentos
@@ -1005,23 +1001,23 @@ If no Accept-Encoding field is present in a request, the server MAY
 	
 	debug_printf (VERBOSE_PARANOID,"zsock_http: Retries: %d",reintentos);
 		
-		if (total_leidos>0) {
-			response[total_leidos]=0;
-			debug_printf (VERBOSE_DEBUG,"zsock_http: Total read data: %d",total_leidos);
-			*t_leidos=total_leidos;
-			//printf ("respuesta:\n%s\n",response);
-			z_sock_close_connection(indice_socket);
-			*mem=response;
-			
-			if (skip_headers) {
-				
-				*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos,http_code,redirect_url);
-				
-			}
-			return 0;
-		}
+	if (total_leidos>0) {
+		response[total_leidos]=0;
+		debug_printf (VERBOSE_DEBUG,"zsock_http: Total read data: %d",total_leidos);
+		*t_leidos=total_leidos;
+		//printf ("respuesta:\n%s\n",response);
+		z_sock_close_connection(indice_socket);
+		*mem=response;
 		
-		else return -1;
+		if (skip_headers) {
+			
+			*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos,http_code,redirect_url);
+			
+		}
+		return 0;
+	}
+	
+	else return -1;
 		
 		
 }

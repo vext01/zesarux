@@ -15503,46 +15503,30 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 
         
         if (http_code==302 && redirect_url[0]!=0) {
-					printf ("util_download_file: detected redirect to %s\n",redirect_url);
-					//TODO: solo gestino 1 redirect
+                printf ("util_download_file: detected redirect to %s\n",redirect_url);
+                //TODO: solo gestino 1 redirect
 
-					//obtener protocolo
-					int nuevo_ssl=0;
+                //obtener protocolo
+                use_ssl=util_url_is_https(redirect_url);
 
+                //obtener host
+                char nuevo_host[NETWORK_MAX_URL];
+                util_get_host_url(redirect_url,nuevo_host);
 
-					//https
-                                        if (util_url_is_https(redirect_url)) {
-						nuevo_ssl=1;
-					}
+                //obtener nueva url (sin host)
+                char nueva_url[NETWORK_MAX_URL];
+                util_get_url_no_host(redirect_url,nueva_url);
 
-					//obtener host
-					char nuevo_host[NETWORK_MAX_URL];
-                                       
+                //liberar memoria anterior
+                if (mem!=NULL) free(mem);
 
-                                        util_get_host_url(redirect_url,nuevo_host);
+                printf ("querying again host %s (SSL=%d) url %s\n",nuevo_host,use_ssl,nueva_url);
 
-					//obtener nueva url (sin host)
+                //El redirect sucede con las url a archive.org
 
-					char nueva_url[NETWORK_MAX_URL];
-					
-					
-					
+                retorno=zsock_http(nuevo_host,nueva_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url);
 
-                                        util_get_url_no_host(redirect_url,nueva_url);
-
-                                        //liberar memoria anterior
-                                        if (mem!=NULL) free(mem);
-
-					printf ("querying again host %s (SSL=%d) url %s\n",nuevo_host,nuevo_ssl,nueva_url);
-
-					//TODO: esta bien pasar tal cual http_code,mem,t_leidos,mem_after_headers,skip_headers,add_headers?
-					//El redirect sucede con las url a archive.org
-
-                                        retorno=zsock_http(nuevo_host,nueva_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url);
-
-
-					//return zsock_http(nuevo_host, nueva_url,http_code,mem,t_leidos,mem_after_headers,skip_headers,add_headers,nuevo_ssl);
-				}
+	}
 
                                 
 	orig_mem=mem;
