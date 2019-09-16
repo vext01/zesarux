@@ -15503,7 +15503,7 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 
         
         if (http_code==302 && redirect_url[0]!=0) {
-					printf ("detected redirect to %s\n",redirect_url);
+					printf ("util_download_file: detected redirect to %s\n",redirect_url);
 					//TODO: solo gestino 1 redirect
 
 					//obtener protocolo
@@ -15515,26 +15515,30 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 
 
 					//https
-					if (redirect_url[4]=='s') {
+                                        if (util_url_is_https(redirect_url)) {
+					//if (redirect_url[4]=='s') {
 						nuevo_ssl=1;
 						index_host++;
 					}
 
 					//obtener host
 					char nuevo_host[NETWORK_MAX_URL];
+                                        /*
 					int i;
 					int dest=0;
 					for (i=index_host;redirect_url[i] && redirect_url[i]!='/';i++,dest++) {
 						nuevo_host[dest]=redirect_url[i];
 					}
 
-					nuevo_host[dest]=0;
+					nuevo_host[dest]=0;*/
 
-					//obtener nueva url
+                                        util_get_host_url(redirect_url,nuevo_host);
+
+					//obtener nueva url (sin host)
 
 					char nueva_url[NETWORK_MAX_URL];
 					
-					dest=0;
+					/*dest=0;
 					if (redirect_url[i]) {
 						//i++;
 						for (;redirect_url[i];i++,dest++) {
@@ -15542,8 +15546,10 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 						}
 					}
 
-					nueva_url[dest]=0;
+					nueva_url[dest]=0;*/
 					//int nuevo_http_code;
+
+                                        util_get_url_no_host(redirect_url,nueva_url);
 
                                         //liberar memoria anterior
                                         if (mem!=NULL) free(mem);
@@ -15667,4 +15673,63 @@ int util_extract_zip(char *zipname, char *dest_dir)
         zip_extract(zipname, dest_dir, on_extract_entry, &arg);
 
         return 0;
+}
+
+int util_url_is_https(char *url)
+{
+
+        char *encontrado;
+
+        encontrado=strstr(url,"https://");
+        if (encontrado==url) return 1;
+        else return 0;
+}
+
+void util_get_host_url(char *url, char *host)
+{
+        //buscar primero si hay ://
+
+        char *encontrado;
+        char *inicio_host;
+
+        encontrado=strstr(url,"://");
+        if (encontrado!=NULL) {
+                encontrado +=3; //saltar 3 caracteres ://
+        }
+        else encontrado=url;
+
+        //Copiar hasta la primera / o final de string
+        int i=0;
+        
+        for (i=0;(*encontrado)!=0 && (*encontrado)!='/';i++,host++,encontrado++) {
+                *host=*encontrado;
+        }
+
+        *host=0;
+
+}
+
+void util_get_url_no_host(char *url, char *url_no_host)
+{
+        //buscar primero si hay ://
+
+        char *encontrado;
+        char *inicio_host;
+
+        encontrado=strstr(url,"://");
+        if (encontrado!=NULL) {
+                encontrado +=3; //saltar 3 caracteres ://
+        }
+        else encontrado=url;
+
+        //Buscar hasta la primera / o final de string 
+        for (;(*encontrado)!=0 && (*encontrado)!='/';encontrado++);
+
+        //copiar desde ahi hasta final de string
+        for (;(*encontrado)!=0;encontrado++,url_no_host++) {
+                *url_no_host=*encontrado;
+        }
+
+        *url_no_host=0;
+
 }
