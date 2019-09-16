@@ -6,6 +6,8 @@
 *Cosas menos prioritarias
 *Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
 
+-si ventana no tiene el foco, que no salten tooltips de menu
+
 -en windows no compila network con threads…
 tampoco zip.h
 y error de un pthread que esta fuera de ifdef phread

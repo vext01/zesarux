@@ -56,6 +56,22 @@ Estos ya vienen de network.h
 */
 
 
+//Inicio funciones SSL
+#ifdef COMPILE_SSL
+
+#if defined(__APPLE__)
+#  define COMMON_DIGEST_FOR_OPENSSL
+#  include <CommonCrypto/CommonDigest.h>
+#  define SHA1 CC_SHA1
+#else
+#  include <openssl/md5.h>
+#endif
+
+#endif
+//Fin funciones SSL
+
+
+
 //Estructura para guardar sockets
 #define MAX_Z_SOCKETS 30
 
@@ -63,6 +79,7 @@ struct s_z_sockets_struct {
 	int used;
 	struct sockaddr_in adr;
 	int socket_number;
+	z80_bit use_ssl;
 };
 
 
@@ -326,6 +343,7 @@ void init_network_tables(void)
 	int i;
 	for (i=0;i<MAX_Z_SOCKETS;i++) {
 		sockets_list[i].used=0;
+		sockets_list[i].use_ssl.v=0;
 	}
 
 	z_atomic_reset(&network_semaforo);
@@ -391,7 +409,7 @@ void z_sock_free_socket(int indice_tabla)
 */
 
 //Retorna indice a la tabla de sockets. <0 si error
-int z_sock_open_connection(char *host,int port)
+int z_sock_open_connection(char *host,int port,int use_ssl)
 {
 
 
@@ -743,7 +761,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 	*mem_after_headers=NULL;
 	*t_leidos=0;
 	*http_code=200; //asumimos ok por defecto
-	int indice_socket=z_sock_open_connection(host,80);
+	int indice_socket=z_sock_open_connection(host,80,0);
 
 		if (indice_socket<0) {
 			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");

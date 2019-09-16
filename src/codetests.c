@@ -1185,7 +1185,7 @@ void *thread_codetests_network_function(void *nada)
 	while (1) {
 		printf ("Abriendo conexion desde thread secundario\n");
 		fflush(stdout);
-		int sock=z_sock_open_connection("google.es",80);
+		int sock=z_sock_open_connection("google.es",80,0);
 		printf ("socket para thread secundario: %d\n",sock);
 		fflush(stdout);
 
@@ -1225,7 +1225,7 @@ void codetests_network_atomic(void)
 
 		printf ("Abriendo conexion desde thread primario\n");
 		fflush(stdout);
-		int sock=z_sock_open_connection("google.es",80);
+		int sock=z_sock_open_connection("google.es",80,0);
 		printf ("socket para thread primario: %d\n",sock);
 		fflush(stdout);
 

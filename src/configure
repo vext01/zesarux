@@ -631,6 +631,13 @@ echo -n "Checking for SSL libraries ... "
 if [ "$OPTIONOBJSSL" != "" ]; then
 #en principio activo, probemos a compilar
 
+#parece que homebrew tiene las cabeceras aqui
+if [ -d /usr/local/opt/openssl/include/ ]; then
+	CFLAGS="$CFLAGS -I/usr/local/opt/openssl/include/"
+	LDFLAGS="$LDFLAGS -L/usr/local/opt/openssl/lib"
+fi
+	
+
         TEMPFILE="configure.compile.c"
 
         cat > $TEMPFILE << _EOF

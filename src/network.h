@@ -56,7 +56,7 @@ extern int connectar_socket(int s,struct sockaddr_in *adr);
 extern int cerrar_socket(int s);
 extern void init_network_tables(void);
 
-extern int z_sock_open_connection(char *host,int port);
+extern int z_sock_open_connection(char *host,int port,int use_ssl);
 extern int z_sock_close_connection(int indice_tabla);
 extern int z_sock_free_connection(int indice_tabla);
 extern int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud);
