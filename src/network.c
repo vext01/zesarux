@@ -882,13 +882,14 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *re
 	return mem;
 }
 
-int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl)
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
 {
 
 	*mem=NULL;
 	*mem_after_headers=NULL;
 	*t_leidos=0;
 	*http_code=200; //asumimos ok por defecto
+	redirect_url[0]=0;
 
 	int puerto=80;
 
@@ -1013,57 +1014,9 @@ If no Accept-Encoding field is present in a request, the server MAY
 			*mem=response;
 			
 			if (skip_headers) {
-				char redirect_url[NETWORK_MAX_URL];
+				
 				*mem_after_headers=zsock_http_skip_headers(*mem,total_leidos,http_code,redirect_url);
-				if ((*http_code)==302 && redirect_url[0]!=0) {
-					printf ("redirect to %s\n",redirect_url);
-					//TODO: gestionar maximo redirect
-
-					//obtener protocolo
-					int nuevo_ssl=0;
-
-
-					//  http://
-					int index_host=7;
-
-
-					//https
-					if (redirect_url[4]=='s') {
-						nuevo_ssl=1;
-						index_host++;
-					}
-
-					//obtener host
-					char nuevo_host[NETWORK_MAX_URL];
-					int i;
-					int dest=0;
-					for (i=index_host;redirect_url[i] && redirect_url[i]!='/';i++,dest++) {
-						nuevo_host[dest]=redirect_url[i];
-					}
-
-					nuevo_host[dest]=0;
-
-					//obtener nueva url
-
-					char nueva_url[NETWORK_MAX_URL];
-					
-					dest=0;
-					if (redirect_url[i]) {
-						//i++;
-						for (;redirect_url[i];i++,dest++) {
-							nueva_url[dest]=redirect_url[i];
-						}
-					}
-
-					nueva_url[dest]=0;
-					//int nuevo_http_code;
-
-					printf ("querying again host %s (SSL=%d) url %s\n",nuevo_host,nuevo_ssl,nueva_url);
-
-					//TODO: esta bien pasar tal cual http_code,mem,t_leidos,mem_after_headers,skip_headers,add_headers?
-					//El redirect sucede con las url a archive.org
-					return zsock_http(nuevo_host, nueva_url,http_code,mem,t_leidos,mem_after_headers,skip_headers,add_headers,nuevo_ssl);
-				}
+				
 			}
 			return 0;
 		}
