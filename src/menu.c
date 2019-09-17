@@ -31584,5 +31584,5 @@ void last_filesused_insert(char *s)
 
 void menu_network_error(int error)
 {
-	menu_error_message(z_get_error(error));
+	menu_error_message(z_sock_get_error(error));
 }

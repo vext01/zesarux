@@ -1368,9 +1368,12 @@ void codetests_main(int main_argc,char *main_argv[])
 	//init_network_tables();
 	//codetests_http();
 
-	printf ("\nRunning zsock https tests\n");
-	init_network_tables();
-	codetests_https();	
+	//printf ("\nRunning zsock https tests\n");
+	//init_network_tables();
+	//codetests_https();	
+
+	//int r=z_sock_close_connection(44);
+	//if (r<0) printf ("Error: %s\n",z_sock_get_error(r));
 
 //#ifdef USE_PTHREADS
 //	printf ("\nRunning atomic tests\n");

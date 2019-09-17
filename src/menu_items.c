@@ -16929,7 +16929,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		else {	
 			if (retorno<0) {	
 				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
-				printf ("Error: %d %s\n",retorno,z_get_error(retorno));
+				printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
 				menu_network_error(retorno);
 			}
 			else {

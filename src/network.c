@@ -94,10 +94,10 @@ char *z_err_msg_generic="Network error";
 char *z_err_msg_tcp_sock="Can't create TCP socket";
 char *z_err_msg_host_not_found="Host not found";
 char *z_err_msg_sta_conn="Error establishing connection with destination";
-
 char *z_err_msg_ssl_unavail="SSL requested but ssl libraries unavailable";
+char *z_err_msg_sock_not_open="Socket is not open";
 
-char *z_get_error(int error)
+char *z_sock_get_error(int error)
 {
 	switch (error) {
 		case Z_ERR_NUM_TCP_SOCK:
@@ -115,6 +115,10 @@ char *z_get_error(int error)
 		case Z_ERR_NUM_SSL_UNAVAIL:
 			return z_err_msg_ssl_unavail;
 		break;	
+
+		case Z_ERR_NUM_SOCK_NOT_OPEN:
+        	return z_err_msg_sock_not_open; 
+		break;		
 
 		default:
 			return z_err_msg_generic;
@@ -540,7 +544,7 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 
 			if (connectar_socket(test_socket,&sockets_list[indice_tabla].adr)<0) {
             	    //debug_printf(VERBOSE_ERR,"Error stablishing connection with %s:%d",host,port);
-					debug_printf(VERBOSE_DEBUG,"%s: %s:%d",z_get_error(Z_ERR_NUM_STA_CONN),host,port);
+					debug_printf(VERBOSE_DEBUG,"%s: %s:%d",z_sock_get_error(Z_ERR_NUM_STA_CONN),host,port);
 					error=1;
 					error_num=Z_ERR_NUM_STA_CONN;
         	}
@@ -580,12 +584,12 @@ int get_socket_number(int indice_tabla)
 
 	if (indice_tabla<0 || indice_tabla>=MAX_Z_SOCKETS) {
 		//printf ("indice fuera de rango\n");
-		return -1;
+		return Z_ERR_NUM_SOCK_NOT_OPEN;
 	}
 
 	if (!sockets_list[indice_tabla].used) {
 		//printf ("socket indice %d no esta usado\n",indice_tabla);
-		return -1;
+		return Z_ERR_NUM_SOCK_NOT_OPEN;
 	}	
 
 	else {
@@ -600,8 +604,8 @@ int z_sock_close_connection(int indice_tabla)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                debug_printf(VERBOSE_ERR,"Socket is not open");
-				return -1;
+                //debug_printf(VERBOSE_ERR,"Socket is not open");
+				return sock;
 	}
 
 
@@ -619,7 +623,7 @@ int z_sock_free_connection(int indice_tabla)
 
 	if (sock<0) {
                 //debug_printf(VERBOSE_ERR,"Socket is not open");
-				return -1;
+				return sock;
 	}
 
 
@@ -634,8 +638,8 @@ int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                debug_printf(VERBOSE_ERR,"Socket is not open");
-				return -1;
+                //debug_printf(VERBOSE_ERR,"Socket is not open");
+				return sock;
 	}
 
 	if (sockets_list[indice_tabla].use_ssl.v) {
@@ -661,8 +665,8 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                debug_printf(VERBOSE_ERR,"Socket is not open");
-				return -1;
+                //debug_printf(VERBOSE_ERR,"Socket is not open");
+				return sock;
 	}
 
 	if (sockets_list[indice_tabla].use_ssl.v) {
@@ -690,8 +694,8 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                debug_printf(VERBOSE_ERR,"Socket is not open");
-				return -1;
+                //debug_printf(VERBOSE_ERR,"Socket is not open");
+				return sock;
 	}	
 
 
@@ -782,8 +786,8 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 
 	if (sock<0) {
 		//printf ("Socket is not open\n");
-        debug_printf(VERBOSE_ERR,"Socket is not open");
-		return -1;
+        //debug_printf(VERBOSE_ERR,"Socket is not open");
+		return sock;
 	}	
 
 
@@ -937,8 +941,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 	int indice_socket=z_sock_open_connection(host,puerto,use_ssl);
 
 	if (indice_socket<0) {
-		//debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
-		printf ("retornamos desde zsock http. errnum: %d\n",indice_socket);
+		//printf ("retornamos desde zsock http. errnum: %d\n",indice_socket);
 		return indice_socket;
 	}
 		
@@ -946,8 +949,8 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 
 	if (sock<0) {
 		//printf ("Socket is not open\n");
-        debug_printf(VERBOSE_ERR,"Socket is not open");
-		return -1;
+        //debug_printf(VERBOSE_ERR,"Socket is not open");
+		return Z_ERR_NUM_SOCK_NOT_OPEN;
 	}	
 		
 	char request[1024];
