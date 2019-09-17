@@ -7958,7 +7958,7 @@ void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcionco
 	z80_byte tecla;
 	int condicion=0;
 	int contador_antes=menu_window_splash_counter_ms;
-	int intervalo=20*25; //25 frames de pantalla
+	int intervalo=20*12; //12 frames de pantalla
 
 	//contador en us
 	int contador_no_multitask=0;
@@ -7968,18 +7968,21 @@ void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcionco
 	do {
 
                 menu_cpu_core_loop();
-				int pasado_medio_segundo=0;
+				int pasado_cuarto_segundo=0;
 
-
+				//TODO: se puede dar el caso que se llame aqui pero el thread aun no se haya creado, lo que provoca
+				//que dice que el thread no esta en ejecucion aun y por tanto cree que esta finalizado, diciendo que la condicion de salida es verdadera
+				//y salga cuando aun no ha finalizado
+				//Seria raro, porque el intervalo de comprobacion es cada 1/4 de segundo, y en ese tiempo se tiene que haber lanzado el thread de sobra
 
 	 			if (!menu_multitarea) {
 					contador_no_multitask+=MENU_CPU_CORE_LOOP_SLEEP_NO_MULTITASK;
 
-					//Cuando se llega a medio segundo ms
+					//Cuando se llega a 1/4 segundo ms
 					if (contador_no_multitask>=intervalo*1000) {
 						//printf ("Pasado medio segundo %d\n",contador_no_multitask);
 						contador_no_multitask=0;
-						pasado_medio_segundo=1;
+						pasado_cuarto_segundo=1;
 
 						//printf ("refresca pantalla\n");
 						menu_refresca_pantalla();	
@@ -7995,10 +7998,10 @@ void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcionco
 					tecla=0;
 				}				
 
-				if (menu_window_splash_counter_ms-contador_antes>intervalo) pasado_medio_segundo=1;
+				if (menu_window_splash_counter_ms-contador_antes>intervalo) pasado_cuarto_segundo=1;
 
-                //Cada 400 ms
-                if (pasado_medio_segundo) {
+                //Cada 224 ms
+                if (pasado_cuarto_segundo) {
                 	//trozos--;
                 	contador_antes=menu_window_splash_counter_ms;
                 	//printf ("dibujar franjas trozos: %d\n",trozos);

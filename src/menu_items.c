@@ -17117,7 +17117,7 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	contador_menu_zeng_connect_print=0;
 
 	//Usamos misma ventana de progreso que zeng. TODO: si se lanzan los dos a la vez (cosa poco probable) se moverian uno con el otro
-	zxvision_simple_progress_window("Downloading software", menu_menu_zsock_http_cond,menu_zeng_connect_print );
+	zxvision_simple_progress_window("Downloading", menu_menu_zsock_http_cond,menu_zeng_connect_print );
 
 	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
 	//ya que la variable menu_zsock_http_thread_running es global y única
@@ -17205,7 +17205,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 	orig_mem=mem;
 	
-	if (mem_after_headers!=NULL) {
+	if (mem_after_headers!=NULL && http_code==200) {
 		//temp limite
 		//mem_after_headers[10000]=0;
 		//menu_generic_message("Games",mem_after_headers);
@@ -17416,6 +17416,20 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 				return;
 			}
 		}
+
+			//Fin resultado http correcto
+		else {	
+			if (retorno<0) {	
+				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+				printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
+				menu_network_error(retorno);
+				return;
+			}
+			else {
+				debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+				return;
+			}
+		}	
 	
 
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
@@ -17520,7 +17534,7 @@ menu_first_aid("no_ssl_wos");
 
 	char query_id[256];
 	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0);
-	//TODO gestionar resultado vacio
+	//gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
 		return;
@@ -17543,8 +17557,14 @@ releases.1.type=Tape image
 	//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
 	
 	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1);
+
+	//gestionar resultado vacio
+	if (query_id[0]==0) {
+		//TODO resultado con ESC
+		return;
+	}	
 	
-	//TODO gestionar resultado vacio
+	//gestionar resultado no vacio
 	if (query_id[0]!=0) {
 		// resultado no ESC
 		
