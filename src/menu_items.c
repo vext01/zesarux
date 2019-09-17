@@ -16955,54 +16955,6 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 }
 
-struct download_wos_struct
-{
-	char *host;
-	char *url;
-	char *archivo_temp;
-	int ssl_use;
-	int return_code;
-};
-
-int download_wos_thread_running=0;
-
-int menu_download_wos_cond(zxvision_window *w GCC_UNUSED)
-{
-	return !download_wos_thread_running;
-}
-
-
-
-void *menu_download_wos_thread_function(void *entrada)
-{
-
-	download_wos_thread_running=1; 
-
-#ifdef USE_PTHREADS
-
-	printf ("Starting download content thread. Host=%s Url=%s\n",
-	((struct download_wos_struct *)entrada)->host,
-								((struct download_wos_struct *)entrada)->url);
-
-	((struct download_wos_struct *)entrada)->return_code=util_download_file( ((struct download_wos_struct *)entrada)->host,
-								((struct download_wos_struct *)entrada)->url,
-								((struct download_wos_struct *)entrada)->archivo_temp,
-								((struct download_wos_struct *)entrada)->ssl_use); 
-
-	printf ("Finishing download content thread\n");
-
-#endif
-	download_wos_thread_running=0;
-
-	return 0;
-
-}
-
-#ifdef USE_PTHREADS
-pthread_t download_wos_thread;
-#endif
-
-
 
 
 
@@ -17037,7 +16989,7 @@ int menu_menu_zsock_http_cond(zxvision_window *w GCC_UNUSED)
 void *menu_menu_zsock_http_thread_function(void *entrada)
 {
 
-	menu_zsock_http_thread_running=1; 
+	//menu_zsock_http_thread_running=1; 
 
 #ifdef USE_PTHREADS
 
@@ -17106,6 +17058,10 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	//Inicializar thread
 	printf ("Initializing thread menu_menu_zsock_http_thread_function\n");
 	
+
+	//Antes de lanzarlo, decir que se ejecuta
+	menu_zsock_http_thread_running=1;
+	
 	if (pthread_create( &menu_zsock_http_thread, NULL, &menu_menu_zsock_http_thread_function, (void *)&parametros) ) {
 		debug_printf(VERBOSE_ERR,"Can not create zsock http thread");
 		return -1;
@@ -17126,6 +17082,56 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	return parametros.return_code;
 
 }
+
+
+struct download_wos_struct
+{
+	char *host;
+	char *url;
+	char *archivo_temp;
+	int ssl_use;
+	int return_code;
+};
+
+int download_wos_thread_running=0;
+
+int menu_download_wos_cond(zxvision_window *w GCC_UNUSED)
+{
+	return !download_wos_thread_running;
+}
+
+
+
+void *menu_download_wos_thread_function(void *entrada)
+{
+
+	//download_wos_thread_running=1; 
+
+#ifdef USE_PTHREADS
+
+	printf ("Starting download content thread. Host=%s Url=%s\n",
+	((struct download_wos_struct *)entrada)->host,
+								((struct download_wos_struct *)entrada)->url);
+
+	((struct download_wos_struct *)entrada)->return_code=util_download_file( ((struct download_wos_struct *)entrada)->host,
+								((struct download_wos_struct *)entrada)->url,
+								((struct download_wos_struct *)entrada)->archivo_temp,
+								((struct download_wos_struct *)entrada)->ssl_use); 
+
+	printf ("Finishing download content thread\n");
+
+#endif
+	download_wos_thread_running=0;
+
+	return 0;
+
+}
+
+#ifdef USE_PTHREADS
+pthread_t download_wos_thread;
+#endif
+
+
 
 
 
@@ -17149,6 +17155,9 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
 #ifdef USE_PTHREADS
 
 	//Inicializar thread
+
+	//Antes de lanzarlo, decir que se ejecuta
+	download_wos_thread_running=1;	
 	
 	if (pthread_create( &download_wos_thread, NULL, &menu_download_wos_thread_function, (void *)&parametros) ) {
 		debug_printf(VERBOSE_ERR,"Can not create download wos thread");
