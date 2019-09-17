@@ -16871,7 +16871,6 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		online_browse_zx81_ultima_letra=letra;
 		
 
-		//http://www.zx81.nl/files.html
 		int http_code;
 		char *mem;
 		char *orig_mem;
@@ -17451,16 +17450,6 @@ releases.1.type=Tape image
 		menu_filesel_mkdir(tempdir);
 		sprintf (archivo_temp,"%s/%s",tempdir,juego);
 		
-		//chapuza  links a wos quitar la letra final. esto para cursor draw. temp
-		/*char url_dir[PATH_MAX];
-		util_get_dir(url_juego,url_dir);
-		int l=strlen(url_dir);
-		url_dir[l-2]=0;
-		char url2[PATH_MAX];
-		sprintf(url2,"%s/%s",url_dir,juego);
-		
-                                util_download_file("www.worldofspectrum.org",url2,archivo_temp);
-                                */
 
 
 		char url_juego_final[PATH_MAX];

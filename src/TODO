@@ -10,6 +10,28 @@
 
 -si ventana no tiene el foco, que no salten tooltips de menu
 
+-las busquedas de ambos browser tambien en thread?
+
+-Configure debería decir al final si soporta ssl
+
+Comentar que se compile con ssl para soportar descargas completas de spectrum
+
+-en wos browser, Aliens neoplasma no carga
+
+-en menu En http browse, parámetro para https (si está ssl compilado)
+
+-finalizacion socket en ssl , llamar a alguna funcion supongo
+
+-ZXInfo browser segunda ventana debe tener de titulo el del juego 
+
+-Ensamblador opcodes extendidos next
+
+-permitir que las direcciones de breakpoints se pongan con 0xNNNN ademas de NNNNh y decimal
+incluso con $NNNN
+
+-Puerto dffd next
+https://specnext.dev/wiki/Next_Memory_Bank_Select
+
 -el compilado final de mac hay que hacerlo sin ssl? O ver si enlaza con la ssl del sistema operativo. Si no, igual se puede incluir la de homebrew de manera estática
 
 -en windows no compila network con threads…
