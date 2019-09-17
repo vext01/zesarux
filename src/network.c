@@ -194,8 +194,8 @@ int crear_socket_TCP(void)
 	#ifdef MINGW
 	WSADATA wsadata;
 	if (WSAStartup(MAKEWORD(1,1), &wsadata) == SOCKET_ERROR) {
-		debug_printf(VERBOSE_ERR,"Error creating socket.");
-		return -1;
+		//debug_printf(VERBOSE_ERR,"Error creating socket.");
+		return Z_ERR_NUM_TCP_SOCK;
 	}
 	#endif
 
@@ -258,7 +258,7 @@ int escribir_socket(int socket, char *buffer)
 
 	int smsg=send(socket,buffer,strlen(buffer),0);
 	 if(smsg==SOCKET_ERROR){
-			 debug_printf(VERBOSE_ERR,"Error writing to socket");
+			 //debug_printf(VERBOSE_ERR,"Error writing to socket");
 			 return -1;
 	 }
 	 if (efectivo_enviar_cr) send(socket,&cr,1,0);
@@ -289,7 +289,7 @@ int leer_socket(int s, char *buffer, int longitud)
 
 int leidos=recv(s,buffer,longitud,0);
  if(leidos==SOCKET_ERROR){
-	 	debug_printf(VERBOSE_ERR,"Error reading from socket");
+	 	//debug_printf(VERBOSE_ERR,"Error reading from socket");
 		return -1;
  }
  return leidos;
@@ -526,8 +526,6 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 	int error_num=-1;
 
 	if ((test_socket=crear_socket_TCP())<0) {
-		//debug_printf(VERBOSE_ERR,"Can't create TCP socket");
-		printf ("error en zsock_open Can't create TCP socket\n");
 		error=1;
 		error_num=Z_ERR_NUM_TCP_SOCK;
     }
@@ -535,7 +533,6 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 	else {
 
         if (omplir_adr_internet(&sockets_list[indice_tabla].adr,host,port)<0) {
-                //debug_printf(VERBOSE_ERR,"Error: host not found");
                 error=1;
 				error_num=Z_ERR_NUM_HOST_NOT_FOUND;
         }
@@ -543,7 +540,6 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 		else {
 
 			if (connectar_socket(test_socket,&sockets_list[indice_tabla].adr)<0) {
-            	    //debug_printf(VERBOSE_ERR,"Error stablishing connection with %s:%d",host,port);
 					debug_printf(VERBOSE_DEBUG,"%s: %s:%d",z_sock_get_error(Z_ERR_NUM_STA_CONN),host,port);
 					error=1;
 					error_num=Z_ERR_NUM_STA_CONN;
@@ -604,7 +600,6 @@ int z_sock_close_connection(int indice_tabla)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                //debug_printf(VERBOSE_ERR,"Socket is not open");
 				return sock;
 	}
 
@@ -622,7 +617,6 @@ int z_sock_free_connection(int indice_tabla)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                //debug_printf(VERBOSE_ERR,"Socket is not open");
 				return sock;
 	}
 
@@ -638,7 +632,6 @@ int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                //debug_printf(VERBOSE_ERR,"Socket is not open");
 				return sock;
 	}
 
@@ -665,7 +658,6 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                //debug_printf(VERBOSE_ERR,"Socket is not open");
 				return sock;
 	}
 
@@ -694,7 +686,6 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-                //debug_printf(VERBOSE_ERR,"Socket is not open");
 				return sock;
 	}	
 
@@ -732,8 +723,7 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-        debug_printf(VERBOSE_ERR,"Socket is not open");
-		return -1;
+		return sock;
 	}	
 
 
@@ -785,8 +775,6 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 	int sock=get_socket_number(indice_tabla);
 
 	if (sock<0) {
-		//printf ("Socket is not open\n");
-        //debug_printf(VERBOSE_ERR,"Socket is not open");
 		return sock;
 	}	
 
@@ -948,9 +936,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 		int sock=get_socket_number(indice_socket);
 
 	if (sock<0) {
-		//printf ("Socket is not open\n");
-        //debug_printf(VERBOSE_ERR,"Socket is not open");
-		return Z_ERR_NUM_SOCK_NOT_OPEN;
+		return sock;
 	}	
 		
 	char request[1024];
@@ -985,8 +971,8 @@ If no Accept-Encoding field is present in a request, the server MAY
 	int escritos=z_sock_write_string(indice_socket,request);
 
 	if (escritos<0) {
-		debug_printf(VERBOSE_ERR,"ERROR. Can't send request");
-		return -1;	
+		//debug_printf(VERBOSE_ERR,"ERROR. Can't send request");
+		return escritos;	
 	}
 	
 	//todo buffer asignar

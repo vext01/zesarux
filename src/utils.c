@@ -15531,7 +15531,7 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
                                 
 	orig_mem=mem;
 	
-	if (mem_after_headers!=NULL) {
+	if (mem_after_headers!=NULL && http_code==200) {
 		//temp limite
 		//mem_after_headers[10000]=0;
 		//menu_generic_message("Games",mem_after_headers);
@@ -15546,25 +15546,35 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 		//todo usar funcion de utils comun, existe?
 		
 		FILE *ptr_destino;
-  ptr_destino=fopen(archivo,"wb");
+                ptr_destino=fopen(archivo,"wb");
 
-  if (ptr_destino==NULL) {
-    debug_printf (VERBOSE_ERR,"Error writing game file");
-    return -1;
-  }
-
-
-
-  	fwrite(mem_after_headers,1,total_leidos,ptr_destino);
+                if (ptr_destino==NULL) {
+                        debug_printf (VERBOSE_ERR,"Error writing game file");
+                        return -1;
+                }
 
 
-  
 
-  fclose(ptr_destino);
-  free(orig_mem);
-   }
+  	        fwrite(mem_after_headers,1,total_leidos,ptr_destino);
 
-   return http_code;
+
+                fclose(ptr_destino);
+                free(orig_mem);
+        }
+
+        //Fin resultado http correcto
+        else {	
+                if (retorno<0) {	
+                        //debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+                        //printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
+                        return retorno;
+                }
+                else {
+                        debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+                }
+        }	        
+
+        return http_code;
 }
 
 void util_normalize_name(char *texto)

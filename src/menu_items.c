@@ -16920,7 +16920,17 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 			
   					
 					else {		
-						debug_printf(VERBOSE_ERR,"Error downloading game. Return code: %d",ret);
+						//debug_printf(VERBOSE_ERR,"Error downloading game. Return code: %d",ret);
+
+						if (ret<0) {	
+							//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+							//printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
+							menu_network_error(ret);
+						}
+						else {
+							debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",ret);
+						}
+
 					}	
 				}                      
                         
@@ -17479,7 +17489,21 @@ releases.1.type=Tape image
 			return;
 		}
 		else {
-			debug_printf(VERBOSE_ERR,"Error downloading file. Return code: %d",ret);
+			//debug_printf(VERBOSE_ERR,"Error downloading file. Return code: %d",ret);
+
+
+
+			if (ret<0) {	
+				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+				//printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
+				menu_network_error(ret);
+			}
+			else {
+				debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",ret);
+			}
+
+
+
 		}
 	} 
 	} while (1);
@@ -17490,7 +17514,7 @@ releases.1.type=Tape image
 
 void menu_network_http_request(MENU_ITEM_PARAMETERS)
 {
-int http_code;
+	int http_code;
 	char *mem;
 	char *mem_after_headers;
 	char host[100];
@@ -17507,12 +17531,12 @@ int http_code;
 	menu_ventana_scanf("add headers",s_add_headers,200);
 	
 	int l=strlen(s_add_headers);
-if (l>0) {
-s_add_headers[l++]='\r';
-s_add_headers[l++]='\n';
-s_add_headers[l++]=0;
+	if (l>0) {
+		s_add_headers[l++]='\r';
+		s_add_headers[l++]='\n';
+		s_add_headers[l++]=0;
 
-}
+	}
 	
 	menu_ventana_scanf("skip return headers?",s_skip_headers,2);
 	int skip_headers=parse_string_to_number(s_skip_headers);
