@@ -16877,7 +16877,8 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		char *mem_after_headers;
 		int total_leidos;
 		char redirect_url[NETWORK_MAX_URL];
-		int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
+		//int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
+		int retorno=menu_zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
 		orig_mem=mem;
 	
 		//printf("%s\n",mem);
@@ -17001,6 +17002,134 @@ void *menu_download_wos_thread_function(void *entrada)
 pthread_t download_wos_thread;
 #endif
 
+
+
+
+
+struct menu_zsock_http_struct
+{
+
+	char *host;
+	char *url;
+	int *http_code;
+	char **mem;
+	int *t_leidos;
+	char **mem_after_headers;
+	int skip_headers;
+	char *add_headers;
+	int use_ssl;
+	char *redirect_url;
+
+
+	int return_code;
+    //menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
+};
+
+int menu_zsock_http_thread_running=0;
+
+int menu_menu_zsock_http_cond(zxvision_window *w GCC_UNUSED)
+{
+	return !menu_zsock_http_thread_running;
+}
+
+
+
+void *menu_menu_zsock_http_thread_function(void *entrada)
+{
+
+	menu_zsock_http_thread_running=1; 
+
+#ifdef USE_PTHREADS
+
+	printf ("Starting zsock http thread. Host=%s Url=%s\n",
+								((struct menu_zsock_http_struct *)entrada)->host,
+								((struct menu_zsock_http_struct *)entrada)->url);
+
+//((struct menu_zsock_http_struct *)entrada)->return_code=-1;
+
+
+	((struct menu_zsock_http_struct *)entrada)->return_code=
+			zsock_http( 
+								((struct menu_zsock_http_struct *)entrada)->host,
+								((struct menu_zsock_http_struct *)entrada)->url,
+								((struct menu_zsock_http_struct *)entrada)->http_code,
+								((struct menu_zsock_http_struct *)entrada)->mem,
+								((struct menu_zsock_http_struct *)entrada)->t_leidos,
+								((struct menu_zsock_http_struct *)entrada)->mem_after_headers,
+								((struct menu_zsock_http_struct *)entrada)->skip_headers,
+								((struct menu_zsock_http_struct *)entrada)->add_headers,
+								((struct menu_zsock_http_struct *)entrada)->use_ssl,
+								((struct menu_zsock_http_struct *)entrada)->redirect_url
+							); 
+
+//int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)                                
+
+	printf ("Finishing zsock http thread\n");
+
+#endif
+	menu_zsock_http_thread_running=0;
+
+	return 0;
+
+}
+
+#ifdef USE_PTHREADS
+pthread_t menu_zsock_http_thread;
+#endif
+
+//int menu_zsock_http(char *host,char *url,char *archivo_temp,int ssl_use)
+int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
+{
+	
+	//int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
+	//Lanzar el thread de descarga
+	struct menu_zsock_http_struct parametros;
+
+	parametros.host=host;
+	parametros.url=url;
+	parametros.http_code=http_code;
+	parametros.mem=mem;
+	parametros.t_leidos=t_leidos;
+	parametros.mem_after_headers=mem_after_headers;
+	parametros.skip_headers=skip_headers;
+	parametros.add_headers=add_headers;
+	parametros.use_ssl=use_ssl;
+	parametros.redirect_url=redirect_url;
+
+	//de momento not found y error
+	parametros.return_code=-1;
+	*(parametros.http_code)=404;
+
+
+#ifdef USE_PTHREADS
+
+	//Inicializar thread
+	printf ("Initializing thread menu_menu_zsock_http_thread_function\n");
+	
+	if (pthread_create( &menu_zsock_http_thread, NULL, &menu_menu_zsock_http_thread_function, (void *)&parametros) ) {
+		debug_printf(VERBOSE_ERR,"Can not create zsock http thread");
+		return -1;
+	}
+
+#endif
+
+		 
+	contador_menu_zeng_connect_print=0;
+
+	//Usamos misma ventana de progreso que zeng. TODO: si se lanzan los dos a la vez (cosa poco probable) se moverian uno con el otro
+	zxvision_simple_progress_window("Downloading software", menu_menu_zsock_http_cond,menu_zeng_connect_print );
+
+	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
+	//ya que la variable menu_zsock_http_thread_running es global y única
+	if (menu_zsock_http_thread_running) menu_warn_message("Download has not ended yet");
+
+	return parametros.return_code;
+
+}
+
+
+
+
 int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
 {
 	
@@ -17069,7 +17198,11 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 	
 	char redirect_url[NETWORK_MAX_URL];
-	int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
+	//int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
+	int retorno=menu_zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
+
+
+
 	orig_mem=mem;
 	
 	if (mem_after_headers!=NULL) {
@@ -17531,7 +17664,8 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 	int skip_headers=parse_string_to_number(s_skip_headers);
 	int total_leidos;
 	char redirect_url[NETWORK_MAX_URL];
-	int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
+	//int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
+	int retorno=menu_zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
 			if (mem_after_headers) {

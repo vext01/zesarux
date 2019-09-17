@@ -10,8 +10,6 @@
 
 -si ventana no tiene el foco, que no salten tooltips de menu
 
--las busquedas de ambos browser tambien en thread?
-
 -Configure debería decir al final si soporta ssl
 
 Comentar que se compile con ssl para soportar descargas completas de spectrum
