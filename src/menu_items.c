@@ -16878,6 +16878,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		int total_leidos;
 		char redirect_url[NETWORK_MAX_URL];
 		//int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
+
 		int retorno=menu_zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
 		orig_mem=mem;
 	
@@ -16974,7 +16975,7 @@ struct menu_zsock_http_struct
 
 
 	int return_code;
-    //menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
+    
 };
 
 int menu_zsock_http_thread_running=0;
@@ -17014,7 +17015,7 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 								((struct menu_zsock_http_struct *)entrada)->redirect_url
 							); 
 
-//int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)                                
+
 
 	printf ("Finishing zsock http thread\n");
 
@@ -17029,7 +17030,6 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 pthread_t menu_zsock_http_thread;
 #endif
 
-//int menu_zsock_http(char *host,char *url,char *archivo_temp,int ssl_use)
 int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
 {
 	
@@ -17048,9 +17048,13 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	parametros.use_ssl=use_ssl;
 	parametros.redirect_url=redirect_url;
 
-	//de momento not found y error
+	//de momento not found y error, y mem a null
 	parametros.return_code=-1;
 	*(parametros.http_code)=404;
+	*(parametros.mem)=NULL;
+	*(parametros.mem_after_headers)=NULL;
+	*(parametros.t_leidos)=0;
+	parametros.redirect_url[0]=0;	
 
 
 #ifdef USE_PTHREADS
@@ -17059,7 +17063,7 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	printf ("Initializing thread menu_menu_zsock_http_thread_function\n");
 	
 
-	//Antes de lanzarlo, decir que se ejecuta
+	//Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
 	menu_zsock_http_thread_running=1;
 	
 	if (pthread_create( &menu_zsock_http_thread, NULL, &menu_menu_zsock_http_thread_function, (void *)&parametros) ) {
@@ -17077,7 +17081,11 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 
 	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
 	//ya que la variable menu_zsock_http_thread_running es global y única
+	
 	if (menu_zsock_http_thread_running) menu_warn_message("Download has not ended yet");
+
+	//despues de mostrar el aviso, si la tarea sigue en ejecucion, retornamos error 404
+	if (menu_zsock_http_thread_running) return 404;	
 
 	return parametros.return_code;
 
@@ -17156,7 +17164,7 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
 
 	//Inicializar thread
 
-	//Antes de lanzarlo, decir que se ejecuta
+	//Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
 	download_wos_thread_running=1;	
 	
 	if (pthread_create( &download_wos_thread, NULL, &menu_download_wos_thread_function, (void *)&parametros) ) {
@@ -17174,7 +17182,11 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
 
 	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
 	//ya que la variable download_wos_thread_running es global y única
+	
 	if (download_wos_thread_running) menu_warn_message("Download has not ended yet");
+
+	//despues de mostrar el aviso, si la tarea sigue en ejecucion, retornamos error 404
+	if (download_wos_thread_running) return 404;
 
 	return parametros.return_code;
 
@@ -17208,6 +17220,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 	
 	char redirect_url[NETWORK_MAX_URL];
 	//int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
+	
 	int retorno=menu_zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
 
 
@@ -17694,6 +17707,7 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 	int total_leidos;
 	char redirect_url[NETWORK_MAX_URL];
 	//int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
+
 	int retorno=menu_zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
