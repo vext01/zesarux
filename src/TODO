@@ -8,6 +8,8 @@
 *Cosas menos prioritarias
 *Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
 
+-codigos de error para otras funciones network que faltan: read, write, zsock_read_all_until_command, etc
+
 -si ventana no tiene el foco, que no salten tooltips de menu
 
 -Configure debería decir al final si soporta ssl

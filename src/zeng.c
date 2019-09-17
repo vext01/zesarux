@@ -215,7 +215,7 @@ int zeng_connect_remote(void)
 		int indice_socket=z_sock_open_connection(zeng_remote_hostname,zeng_remote_port,0);
 
 		if (indice_socket<0) {
-			debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
+			debug_printf(VERBOSE_ERR,"%s",z_sock_get_error(indice_socket));
 			return 0;
 		}
 
@@ -234,7 +234,7 @@ int zeng_connect_remote(void)
 		}
 
 		if (leidos<0) {
-			debug_printf(VERBOSE_ERR,"ERROR. Can't read remote prompt");
+			debug_printf(VERBOSE_ERR,"ERROR. Can't read remote prompt: %s",z_sock_get_error(leidos));
 			return 0;
 		}
 
@@ -246,7 +246,7 @@ int zeng_connect_remote(void)
 		int escritos=z_sock_write_string(indice_socket,"get-version\n");
 
 		if (escritos<0) {
-			debug_printf(VERBOSE_ERR,"ERROR. Can't send version");
+			debug_printf(VERBOSE_ERR,"ERROR. Can't send version: %s",z_sock_get_error(escritos));
 			return 0;	
 		}
 
@@ -259,7 +259,7 @@ int zeng_connect_remote(void)
 		}	
 
 		if (leidos<0) {
-			debug_printf(VERBOSE_ERR,"ERROR. Can't receive version");
+			debug_printf(VERBOSE_ERR,"ERROR. Can't receive version: %s",z_sock_get_error(leidos));
 			return 0;	
 		}
 
