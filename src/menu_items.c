@@ -16852,6 +16852,7 @@ void menu_online_browse_zx81_create_menu(char *mem, char *mem_after_headers,int 
 void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 {
 
+
 	do {
 		//char oldletra=s_online_browse_zx81_letra[0];
 	
@@ -16925,8 +16926,15 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
                         
 		}
 		//Fin resultado http correcto
-		else {		
-			debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+		else {	
+			if (retorno<0) {	
+				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+				printf ("Error: %d %s\n",retorno,z_get_error(retorno));
+				menu_network_error(retorno);
+			}
+			else {
+				debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+			}
 		}			
 		
 

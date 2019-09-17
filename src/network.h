@@ -64,5 +64,13 @@ extern int z_sock_write_string(int indice_tabla, char *buffer);
 extern int zsock_wait_until_command_prompt(int indice_tabla);
 extern int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffer,int *posicion_command);
 extern int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url);
+extern char *z_get_error(int error);
+
+//el -1 es un error generico
+#define Z_ERR_NUM_TCP_SOCK -2
+#define Z_ERR_NUM_HOST_NOT_FOUND -3
+#define Z_ERR_NUM_STA_CONN -4
+#define Z_ERR_NUM_SSL_UNAVAIL -5
+
 
 #endif

@@ -10,6 +10,8 @@
 
 -si ventana no tiene el foco, que no salten tooltips de menu
 
+-el compilado final de mac hay que hacerlo sin ssl? O ver si enlaza con la ssl del sistema operativo. Si no, igual se puede incluir la de homebrew de manera estática
+
 -en windows no compila network con threads…
 tampoco zip.h
 y error de un pthread que esta fuera de ifdef phread

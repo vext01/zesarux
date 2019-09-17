@@ -88,6 +88,39 @@ z_sockets_struct sockets_list[MAX_Z_SOCKETS];
 
 
 
+//Mensajes de error de red
+
+char *z_err_msg_generic="Network error";
+char *z_err_msg_tcp_sock="Can't create TCP socket";
+char *z_err_msg_host_not_found="Host not found";
+char *z_err_msg_sta_conn="Error establishing connection with destination";
+
+char *z_err_msg_ssl_unavail="SSL requested but ssl libraries unavailable";
+
+char *z_get_error(int error)
+{
+	switch (error) {
+		case Z_ERR_NUM_TCP_SOCK:
+			return z_err_msg_tcp_sock;
+		break;
+
+		case Z_ERR_NUM_HOST_NOT_FOUND:
+			return z_err_msg_host_not_found;
+		break;
+
+		case Z_ERR_NUM_STA_CONN:
+			return z_err_msg_sta_conn;
+		break;
+
+		case Z_ERR_NUM_SSL_UNAVAIL:
+			return z_err_msg_ssl_unavail;
+		break;	
+
+		default:
+			return z_err_msg_generic;
+		break;
+	}
+}
 
 
 //Inicio funciones SSL
@@ -486,31 +519,37 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 
 	//Aqui ya se ha asignado socket en la lista. Si hay error posterior, liberar dicho socket		
 	int error=0;
+	int error_num=-1;
 
 	if ((test_socket=crear_socket_TCP())<0) {
-		debug_printf(VERBOSE_ERR,"Can't create TCP socket");
+		//debug_printf(VERBOSE_ERR,"Can't create TCP socket");
+		printf ("error en zsock_open Can't create TCP socket\n");
 		error=1;
+		error_num=Z_ERR_NUM_TCP_SOCK;
     }
 
 	else {
 
         if (omplir_adr_internet(&sockets_list[indice_tabla].adr,host,port)<0) {
-                debug_printf(VERBOSE_ERR,"Error: host not found");
+                //debug_printf(VERBOSE_ERR,"Error: host not found");
                 error=1;
+				error_num=Z_ERR_NUM_HOST_NOT_FOUND;
         }
 
 		else {
 
 			if (connectar_socket(test_socket,&sockets_list[indice_tabla].adr)<0) {
-            	    debug_printf(VERBOSE_ERR,"Error stablishing connection with %s:%d",host,port);
+            	    //debug_printf(VERBOSE_ERR,"Error stablishing connection with %s:%d",host,port);
+					debug_printf(VERBOSE_DEBUG,"%s: %s:%d",z_get_error(Z_ERR_NUM_STA_CONN),host,port);
 					error=1;
+					error_num=Z_ERR_NUM_STA_CONN;
         	}
 		}
 	}
 
 	if (error) {
 		sockets_list[indice_tabla].used=0;
-		return -1;
+		return error_num;
 	}
 
 	sockets_list[indice_tabla].socket_number=test_socket;
@@ -526,8 +565,8 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 			return -1;
 		}
 #else
-		printf ("SSL requested but ssl libraries unavailable\n");
-		return -1;
+		//printf ("SSL requested but ssl libraries unavailable\n");
+		return Z_ERR_NUM_SSL_UNAVAIL;
 	
 #endif
 	}
@@ -605,8 +644,8 @@ int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud)
 		//int SSL_read(SSL *ssl, void *buf, int num);
 		return SSL_read(sockets_list[indice_tabla].ssl_conn,buffer,longitud);
 #else
-		printf ("SSL requested but ssl libraries unavailable\n");
-		return -1;
+		//printf ("SSL requested but ssl libraries unavailable\n");
+		return Z_ERR_NUM_SSL_UNAVAIL;
 	
 #endif
 	}
@@ -633,8 +672,8 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 		int longitud=strlen(buffer);
 		return SSL_write(sockets_list[indice_tabla].ssl_conn,buffer,longitud);
 #else
-		printf ("SSL requested but ssl libraries unavailable\n");
-		return -1;
+		//printf ("SSL requested but ssl libraries unavailable\n");
+		return Z_ERR_NUM_SSL_UNAVAIL;
 	
 #endif
 	}
@@ -898,8 +937,9 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 	int indice_socket=z_sock_open_connection(host,puerto,use_ssl);
 
 	if (indice_socket<0) {
-		debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
-		return -1;
+		//debug_printf(VERBOSE_ERR,"ERROR. Can't create TCP socket");
+		printf ("retornamos desde zsock http. errnum: %d\n",indice_socket);
+		return indice_socket;
 	}
 		
 		int sock=get_socket_number(indice_socket);

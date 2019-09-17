@@ -98,6 +98,7 @@
 #include "settings.h"
 #include "datagear.h"
 #include "stats.h"
+#include "network.h"
 
 
 
@@ -31578,4 +31579,10 @@ void last_filesused_insert(char *s)
 	//for (i=0;i<MAX_LAST_FILESUSED;i++) {
 	//	printf ("Entry %d: [%s]\n",i,last_files_used_array[i]);
 	//}
+}
+
+
+void menu_network_error(int error)
+{
+	menu_error_message(z_get_error(error));
 }
