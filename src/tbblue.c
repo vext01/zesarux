@@ -5011,20 +5011,20 @@ void tbblue_do_ula_lores_overlay()
 
 
         int x,bit;
-        z80_int direccion;
+        //z80_int direccion;
         z80_byte byte_leido;
 
 
         int color=0;
 
-        z80_byte attribute;
-		z80_int ink,paper;
+        //z80_byte attribute;
+		//z80_int ink,paper;
 
 
 
-        z80_byte *screen=get_base_mem_pantalla();
+        //z80_byte *screen=get_base_mem_pantalla();
 
-        direccion=screen_addr_table[(scanline_copia<<5)];
+        //direccion=screen_addr_table[(scanline_copia<<5)];
 
 
 
@@ -5036,7 +5036,7 @@ void tbblue_do_ula_lores_overlay()
 
 
 
-		z80_byte *puntero_buffer_atributos;
+		//z80_byte *puntero_buffer_atributos;
 
 
 	
@@ -5044,17 +5044,17 @@ void tbblue_do_ula_lores_overlay()
 
 		//temporal modo 6 timex 512x192 pero hacemos 256x192
 		//z80_byte temp_prueba_modo6[SCANLINEBUFFER_ONE_ARRAY_LENGTH];
-		z80_byte col6;
-		z80_byte tin6, pap6;
+		//z80_byte col6;
+		//z80_byte tin6, pap6;
 
-		z80_byte timex_video_mode=timex_port_ff&7;
+		//z80_byte timex_video_mode=timex_port_ff&7;
 		//z80_byte timexhires_resultante;
 		//z80_int timexhires_origen;
 
-		z80_bit si_timex_hires={0};
+		//z80_bit si_timex_hires={0};
 
 		//Por defecto
-		puntero_buffer_atributos=scanline_buffer;
+		//puntero_buffer_atributos=scanline_buffer;
 
 	/* modo lores
 	(R/W) 0x15 (21) => Sprite and Layers system
@@ -5087,28 +5087,16 @@ void tbblue_do_ula_lores_overlay()
   		}
 
 
-		if (timex_video_emulation.v) {
+		/*if (timex_video_emulation.v) {
 		//Modos de video Timex
-		/*
-000 - Video data at address 16384 and 8x8 color attributes at address 22528 (like on ordinary Spectrum);
-
-001 - Video data at address 24576 and 8x8 color attributes at address 30720;
-
-010 - Multicolor mode: video data at address 16384 and 8x1 color attributes at address 24576;
-
-110 - Extended resolution: without color attributes, even columns of video data are taken from address 16384, and odd columns of video data are taken from address 24576
-		*/
+		
 			switch (timex_video_mode) {
 
 				case 4:
 				case 6:
 				//512x192 monocromo. aunque hacemos 256x192
 				//y color siempre fijo
-				/*
-bits D3-D5: Selection of ink and paper color in extended screen resolution mode (000=black/white, 001=blue/yellow, 010=red/cyan, 011=magenta/green, 100=green/magenta, 101=cyan/red, 110=yellow/blue, 111=white/black); these bits are ignored when D2=0
-
-				black, blue, red, magenta, green, cyan, yellow, white
-				*/
+				
 
 				//Si D2==0, these bits are ignored when D2=0?? Modo 4 que es??
 
@@ -5135,42 +5123,42 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
 			}
-		}
+		}*/
 
 		int posicion_array_layer=0;
 
 		posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
 
 
-		int posicion_array_pixeles_atributos=0;
+		//int posicion_array_pixeles_atributos=0;
 
 		int columnas=32;
 
-		if (si_timex_hires.v) {
+		/*if (si_timex_hires.v) {
 			columnas=64;
-		}
+		}*/
 
     for (x=0;x<columnas;x++) {
 
-            byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+            //byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
-			      attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+			      //attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
-			if (si_timex_hires.v) {
+			/*if (si_timex_hires.v) {
 
 				if ((x&1)==0) byte_leido=screen[direccion];
 				else byte_leido=screen[direccion+8192];
 
 				attribute=col6;
-			}			
+			}*/			
                
 
-			get_pixel_color_tbblue(attribute,&ink,&paper);
+			//get_pixel_color_tbblue(attribute,&ink,&paper);
 			
 
       for (bit=0;bit<8;bit++) {
 				
-				color= ( byte_leido & 128 ? ink : paper ) ;
+				//color= ( byte_leido & 128 ? ink : paper ) ;
 
 				if (tbblue_lores) {
 					
@@ -5186,7 +5174,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				}
 
 				int posx=x*8+bit; //Posicion pixel. Para clip window registers	
-				if (si_timex_hires.v) posx /=2;
+				//if (si_timex_hires.v) posx /=2;
 
 
 				//Capa ula
@@ -5201,7 +5189,9 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 						if (tbblue_si_transparent(color_final)) color_final=TBBLUE_SPRITE_TRANS_FICT;
 
 						tbblue_layer_ula[posicion_array_layer]=color_final;
-						if (si_timex_hires.v==0) tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
+						//if (si_timex_hires.v==0) {
+							tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
+						//}
 
 					}
 				}
@@ -5209,17 +5199,21 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 		
 				posicion_array_layer++;
 
-				if (si_timex_hires.v==0) posicion_array_layer++; //doble de ancho
+				//if (si_timex_hires.v==0) {
+					posicion_array_layer++; //doble de ancho
+				//}
 
         byte_leido=byte_leido<<1;
 				
       }
 
-			if (si_timex_hires.v) {
+			/*if (si_timex_hires.v) {
 					if (x&1) direccion++;
-			}
+			}*/
 
-			else direccion++;
+			//else {
+				//direccion++;
+			//}
 
 	  }
 
