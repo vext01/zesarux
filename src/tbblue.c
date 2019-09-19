@@ -4740,8 +4740,6 @@ void tbblue_do_ula_standard_overlay()
 	z80_int ink,paper;
 
 
-
-
 	z80_byte *screen=get_base_mem_pantalla();
 
 
@@ -4778,10 +4776,6 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 	//Usado cuando hay scroll vertical y por tanto los pixeles y atributos salen de la pantalla tal cual (modo sin rainbow)
 	int pos_no_rainbow_pix_x;
-	//int pos_no_rainbow_pix_y;
-
-
-	//pos_no_rainbow_pix_y=scanline_copia;
 
 
 	//scroll x para modo no rainbow (es decir, cuando hay scroll vertical)
@@ -4853,12 +4847,9 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 		}
 	}
 
+	//Capa de destino
 	int posicion_array_layer=0;
 	posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
-
-
-	//int posicion_array_pixeles_atributos=0;
-
 
 
 	int columnas=32;
@@ -4878,7 +4869,6 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 			//de todas maneras esto es algo extraño que suceda: que alguien le de por hacer efectos en color en alta resolucion, en capa ula,
 			//y activar el scroll vertical. En teoria tambien puede hacer parpadeos en juegos normales, pero quien va a querer cambiar el scroll en juegos
 			//que no estan preparados para hacer scroll?
-			//TODO: modo 8x1 timex cuando hay scroll vertical, muestra modo estandard ula 256x192
 			byte_leido=screen[direccion+pos_no_rainbow_pix_x];
 
 
@@ -4899,13 +4889,10 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 			//Modo sin scroll vertical. Permite scroll horizontal. Es modo rainbow
 
-			//byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos];
 			byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
-			//posicion_array_pixeles_atributos++;
 
-			//attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos];
 			attribute=puntero_buffer_atributos[indice_origen_bytes++];
-			//posicion_array_pixeles_atributos++;
+
 		}
 
 
