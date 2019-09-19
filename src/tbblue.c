@@ -4743,8 +4743,25 @@ void tbblue_do_ula_standard_overlay()
 	z80_byte attribute;
 	z80_int ink,paper;
 
+	int pos_no_rainbow_pix_x,pos_no_rainbow_pix_y;
+	//int pos_no_rainbow_attr_x;
+	//int pos_no_rainbow_attr_y;
+
 
 	z80_byte *screen=get_base_mem_pantalla();
+
+
+	/*
+	(R/W) 0x32 (50) => ULA / LoRes Offset X
+bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
+ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect at this time.
+	*/
+
+	//entonces sumar 1 posicion por cada 8 del scroll
+
+	z80_byte ula_offset_x=tbblue_registers[50];
+	ula_offset_x /=8;
+	int indice_origen_bytes=ula_offset_x*2; //dado que leemos del puntero_buffer_atributos que guarda 2 bytes: pixel y atributo	
 
 	/*
 	(R/W) 0x33 (51) => ULA / LoRes Offset Y
@@ -4758,11 +4775,31 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 	*/
 
-	scanline_copia +=tbblue_registers[51];
+	z80_byte tbblue_scroll_y=tbblue_registers[51];
+	
+
+	scanline_copia +=tbblue_scroll_y;
 	scanline_copia=scanline_copia % 192;
 
 
+	pos_no_rainbow_pix_y=scanline_copia;
+	//pos_no_rainbow_attr_y=scanline_copia;	
+
+
+	//scroll x para modo no rainbow (es decir, cuando hay scroll vertical)
+	pos_no_rainbow_pix_x=ula_offset_x;
+	pos_no_rainbow_pix_x %=32;	
+
+
 	direccion=screen_addr_table[(scanline_copia<<5)];
+
+	int fila=scanline_copia/8;
+	int dir_atributo=6144+(fila*32);
+
+	/*
+	                fila=y/8;
+                dir_atributo=6144+(fila*32);
+	*/
 
 
 	z80_byte *puntero_buffer_atributos;
@@ -4771,6 +4808,9 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 	z80_byte timex_video_mode=timex_port_ff&7;
 	z80_bit si_timex_hires={0};
+	z80_bit si_timex_8_1={0};
+
+	if (timex_video_mode==2) si_timex_8_1.v=1;
 
 	//Por defecto
 	puntero_buffer_atributos=scanline_buffer;
@@ -4790,7 +4830,7 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 			case 4:
 			case 6:
-				//512x192 monocromo. aunque hacemos 256x192
+				//512x192 monocromo. 
 				//y color siempre fijo
 				/*
 	bits D3-D5: Selection of ink and paper color in extended screen resolution mode (000=black/white, 001=blue/yellow, 010=red/cyan, 011=magenta/green, 100=green/magenta, 101=cyan/red, 110=yellow/blue, 111=white/black); these bits are ignored when D2=0
@@ -4823,16 +4863,6 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 
 	int posicion_array_pixeles_atributos=0;
-	/*
-	(R/W) 0x32 (50) => ULA / LoRes Offset X
-bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
-ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect at this time.
-	*/
-
-	//entonces sumar 1 posicion por cada 8 del scroll
-	z80_byte ula_offset_x=tbblue_registers[50];
-	ula_offset_x /=8;
-	int indice_origen_bytes=ula_offset_x*2; //dado que leemos del puntero_buffer_atributos que guarda 2 bytes: pixel y atributo
 
 
 
@@ -4845,22 +4875,52 @@ ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect
 
     for (x=0;x<columnas;x++) {
 
-		//byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos];
-		byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
-		posicion_array_pixeles_atributos++;
+		if (tbblue_scroll_y) {
+			//Si hay scroll vertical (no es 0) entonces el origen de los bytes no se obtiene del buffer de pixeles y color en alta resolucion,
+			//Si no que se obtiene de la pantalla tal cual
+			//TODO: esto es una limitacion de tal y como hace el render el tbblue, en que hago render de una linea cada vez,
+			//para corregir esto, habria que tener un buffer destino con todas las lineas de ula y hacer luego overlay con cada
+			//capa por separado, algo completamente impensable
+			//de todas maneras esto es algo extraño que suceda: que alguien le de por hacer efectos en color en alta resolucion, en capa ula,
+			//y activar el scroll vertical. En teoria tambien puede hacer parpadeos en juegos normales, pero quien va a querer cambiar el scroll en juegos
+			//que no estan preparados para hacer scroll?
+			//TODO: modo 8x1 timex cuando hay scroll vertical, muestra modo estandard ula 256x192
+			byte_leido=screen[direccion+pos_no_rainbow_pix_x];
 
-		//attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos];
-		attribute=puntero_buffer_atributos[indice_origen_bytes++];
-		posicion_array_pixeles_atributos++;
+
+			if (si_timex_8_1.v==0) {
+				attribute=screen[dir_atributo+pos_no_rainbow_pix_x];	
+			}
+
+			else {
+				//timex 8x1
+				attribute=screen[direccion+pos_no_rainbow_pix_x+8192];
+			}
+
+
+
+		}
+
+		else {
+
+			//byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos];
+			byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
+			posicion_array_pixeles_atributos++;
+
+			//attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos];
+			attribute=puntero_buffer_atributos[indice_origen_bytes++];
+			posicion_array_pixeles_atributos++;
+		}
+
+
 
 		//32 columnas
 		//truncar siempre a modulo 64 (2 bytes: pixel y atributo)
 		indice_origen_bytes %=64;
 
-		//TODO scroll timex x,y
 		if (si_timex_hires.v) {
-			if ((x&1)==0) byte_leido=screen[direccion];
-			else byte_leido=screen[direccion+8192];
+			if ((x&1)==0) byte_leido=screen[direccion+pos_no_rainbow_pix_x];
+			else byte_leido=screen[direccion+pos_no_rainbow_pix_x+8192];
 
 			attribute=col6;
 		}			
@@ -4897,10 +4957,20 @@ ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect
       	}
 
 		if (si_timex_hires.v) {
-				if (x&1) direccion++;
+				if (x&1) {
+					pos_no_rainbow_pix_x++;
+					//direccion++;
+				}
 		}
 
-		else direccion++;
+		else {
+			//direccion++;
+			pos_no_rainbow_pix_x++;
+		}
+
+
+			
+		pos_no_rainbow_pix_x %=32;		
 
 	  }
 	
