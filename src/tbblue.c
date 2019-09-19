@@ -4748,14 +4748,6 @@ void tbblue_do_ula_standard_overlay()
 	direccion=screen_addr_table[(scanline_copia<<5)];
 
 
-	//Mantener el offset y en 0..191
-	z80_byte tbblue_reg_23=tbblue_registers[23]; 
-
-	int offset_scroll=tbblue_reg_23+scanline_copia;
-	offset_scroll %=192;
-
-
-
 	z80_byte *puntero_buffer_atributos;
 	z80_byte col6;
 	z80_byte tin6, pap6;
@@ -4891,17 +4883,9 @@ void tbblue_do_ula_lores_overlay()
 	y=t_scanline_draw-screen_invisible_borde_superior;
 	if (border_enabled.v==0) y=y-screen_borde_superior;
 
-	int x,bit;
 
 
-	int color=0;
-
-	//Mantener el offset y en 0..191
-	z80_byte tbblue_reg_23=tbblue_registers[23]; 
-
-	int offset_scroll=tbblue_reg_23+scanline_copia;
-	offset_scroll %=192;
-
+	int color;
 
 	/* modo lores
 	(R/W) 0x15 (21) => Sprite and Layers system
@@ -4938,47 +4922,38 @@ void tbblue_do_ula_lores_overlay()
 	posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
 
 
+	int posx;
+	z80_int color_final;
 
-	for (x=0;x<32;x++) {
-
-    	for (bit=0;bit<8;bit++) {
+	for (posx=0;posx<256;posx++) {
 				
-			z80_byte lorescolor=lores_pointer[posicion_x_lores_pointer/2];
-			//tenemos indice color de paleta
-			//transformar a color final segun paleta ula activa
-			//color=tbblue_get_palette_active_ula(lorescolor);
+		color=lores_pointer[posicion_x_lores_pointer/2];
+		//tenemos indice color de paleta
+		//transformar a color final segun paleta ula activa
+		//color=tbblue_get_palette_active_ula(lorescolor);
 
-			color=lorescolor;
+		posicion_x_lores_pointer++; 
+		
+		//Tener en cuenta valor clip window
+		
+		//(W) 0x1A (26) => Clip Window ULA/LoRes
+		if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][1] && scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]) {
+			if (!tbblue_force_disable_layer_ula.v) {
+				color_final=tbblue_get_palette_active_ula(color);
 
-			posicion_x_lores_pointer++; 
-			
+				//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+				if (tbblue_si_transparent(color_final)) color_final=TBBLUE_SPRITE_TRANS_FICT;
 
-			int posx=x*8+bit; //Posicion pixel. Para clip window registers	
+				tbblue_layer_ula[posicion_array_layer]=color_final;
+				tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
 
-
-			//Capa ula
-			//Tener en cuenta valor clip window
-			
-			//(W) 0x1A (26) => Clip Window ULA/LoRes
-			if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][1] && scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]) {
-				if (!tbblue_force_disable_layer_ula.v) {
-					z80_int color_final=tbblue_get_palette_active_ula(color);
-
-					//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
-					if (tbblue_si_transparent(color_final)) color_final=TBBLUE_SPRITE_TRANS_FICT;
-
-					tbblue_layer_ula[posicion_array_layer]=color_final;
-					tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
-
-				}
 			}
+		}
 
-			posicion_array_layer++;
-			posicion_array_layer++; //doble de ancho
+		posicion_array_layer+=2; //doble de ancho
 				
-    	}
+    }
 
-	}
 
 }
 
