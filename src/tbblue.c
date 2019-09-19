@@ -4717,7 +4717,264 @@ z80_bit tbblue_reveal_layer_ula={0};
 z80_bit tbblue_reveal_layer_layer2={0};
 z80_bit tbblue_reveal_layer_sprites={0};
 
-void tbblue_do_ula_overlay()
+void tbblue_do_ula_standard_overlay()
+{
+
+
+				//Render de capa ULA 
+
+        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+
+        //linea que se debe leer
+        int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+
+
+                //Dado que es 192, dividir linea entre dos para duplicar pixeles en altura
+                //printf ("dividir scanline copia\n");
+                //scanline_copia /=2;
+
+
+        //la copiamos a buffer rainbow
+        //z80_int *puntero_buf_rainbow;
+        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+        int y;
+
+        y=t_scanline_draw-screen_invisible_borde_superior;
+        if (border_enabled.v==0) y=y-screen_borde_superior;
+
+                //Dado que es 192, dividir linea entre dos para duplicar pixeles en altura
+                //printf ("dividir scanline copia\n");
+                //y /=2;				
+
+				//int ancho_rainbow=get_total_ancho_rainbow();
+
+        //puntero_buf_rainbow=&rainbow_buffer[ y*ancho_rainbow ];
+
+        //puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v*2; //doble de ancho
+
+
+        int x,bit;
+        z80_int direccion;
+        z80_byte byte_leido;
+
+
+        int color=0;
+
+        z80_byte attribute;
+		z80_int ink,paper;
+
+
+
+        z80_byte *screen=get_base_mem_pantalla();
+
+        direccion=screen_addr_table[(scanline_copia<<5)];
+
+
+
+		//Mantener el offset y en 0..191
+		z80_byte tbblue_reg_23=tbblue_registers[23]; 
+
+		int offset_scroll=tbblue_reg_23+scanline_copia;
+		offset_scroll %=192;
+
+
+
+		z80_byte *puntero_buffer_atributos;
+
+
+	
+
+
+		//temporal modo 6 timex 512x192 pero hacemos 256x192
+		//z80_byte temp_prueba_modo6[SCANLINEBUFFER_ONE_ARRAY_LENGTH];
+		z80_byte col6;
+		z80_byte tin6, pap6;
+
+		z80_byte timex_video_mode=timex_port_ff&7;
+		//z80_byte timexhires_resultante;
+		//z80_int timexhires_origen;
+
+		z80_bit si_timex_hires={0};
+
+		//Por defecto
+		puntero_buffer_atributos=scanline_buffer;
+
+	/* modo lores
+	(R/W) 0x15 (21) => Sprite and Layers system
+  bit 7 - LoRes mode, 128 x 96 x 256 colours (1 = enabled)
+  	*/
+
+	  	int tbblue_lores=tbblue_registers[0x15] & 128;
+
+  		z80_byte *lores_pointer;
+  		z80_byte posicion_x_lores_pointer=0;
+
+  		if (tbblue_lores) {
+	  		int linea_lores=scanline_copia;  
+  			//Sumamos offset y
+	  		/*
+  			(R/W) 0x33 (51) => LoRes Offset Y
+  			bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+  			Being only 96 pixels, this allows the display to scroll in "half-pixels",
+  			at the same resolution and smoothness as Layer 2.
+  			*/
+  			linea_lores +=tbblue_registers[0x33];
+
+  			linea_lores=linea_lores % 192;
+  			//if (linea_lores>=192) linea_lores -=192;
+
+  			lores_pointer=get_lores_pointer(linea_lores/2);  //admite hasta y=95, dividimos entre 2 linea actual
+
+	  		//Y scroll horizontal
+  			posicion_x_lores_pointer=tbblue_registers[0x32];
+  		}
+
+
+		if (timex_video_emulation.v) {
+		//Modos de video Timex
+		/*
+000 - Video data at address 16384 and 8x8 color attributes at address 22528 (like on ordinary Spectrum);
+
+001 - Video data at address 24576 and 8x8 color attributes at address 30720;
+
+010 - Multicolor mode: video data at address 16384 and 8x1 color attributes at address 24576;
+
+110 - Extended resolution: without color attributes, even columns of video data are taken from address 16384, and odd columns of video data are taken from address 24576
+		*/
+			switch (timex_video_mode) {
+
+				case 4:
+				case 6:
+				//512x192 monocromo. aunque hacemos 256x192
+				//y color siempre fijo
+				/*
+bits D3-D5: Selection of ink and paper color in extended screen resolution mode (000=black/white, 001=blue/yellow, 010=red/cyan, 011=magenta/green, 100=green/magenta, 101=cyan/red, 110=yellow/blue, 111=white/black); these bits are ignored when D2=0
+
+				black, blue, red, magenta, green, cyan, yellow, white
+				*/
+
+				//Si D2==0, these bits are ignored when D2=0?? Modo 4 que es??
+
+				//col6=(timex_port_ff>>3)&7;
+				tin6=get_timex_ink_mode6_color();
+
+
+				//Obtenemos color
+				//tin6=col6;
+				pap6=get_timex_paper_mode6_color();
+				//printf ("papel: %d\n",pap6);
+
+				//Y con brillo
+				col6=((pap6*8)+tin6)+64;
+
+				//Nos inventamos un array de colores, con mismo color siempre, correspondiente a lo que dice el registro timex
+				//Saltamos de dos en dos
+				//De manera similar al buffer scanlines_buffer, hay pixel, atributo, pixel, atributo, etc
+				//por eso solo llenamos la parte que afecta al atributo
+
+			
+				si_timex_hires.v=1;
+				break;
+
+
+			}
+		}
+
+		int posicion_array_layer=0;
+
+		posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
+
+
+		int posicion_array_pixeles_atributos=0;
+
+		int columnas=32;
+
+		if (si_timex_hires.v) {
+			columnas=64;
+		}
+
+    for (x=0;x<columnas;x++) {
+
+            byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+
+			      attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+
+			if (si_timex_hires.v) {
+
+				if ((x&1)==0) byte_leido=screen[direccion];
+				else byte_leido=screen[direccion+8192];
+
+				attribute=col6;
+			}			
+               
+
+			get_pixel_color_tbblue(attribute,&ink,&paper);
+			
+
+      for (bit=0;bit<8;bit++) {
+				
+				color= ( byte_leido & 128 ? ink : paper ) ;
+
+				if (tbblue_lores) {
+					
+
+					z80_byte lorescolor=lores_pointer[posicion_x_lores_pointer/2];
+					//tenemos indice color de paleta
+					//transformar a color final segun paleta ula activa
+					//color=tbblue_get_palette_active_ula(lorescolor);
+
+					color=lorescolor;
+
+					posicion_x_lores_pointer++; 
+				}
+
+				int posx=x*8+bit; //Posicion pixel. Para clip window registers	
+				if (si_timex_hires.v) posx /=2;
+
+
+				//Capa ula
+				//Tener en cuenta valor clip window
+				
+				//(W) 0x1A (26) => Clip Window ULA/LoRes
+				if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][1] && scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]) {
+					if (!tbblue_force_disable_layer_ula.v) {
+						z80_int color_final=tbblue_get_palette_active_ula(color);
+
+						//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+						if (tbblue_si_transparent(color_final)) color_final=TBBLUE_SPRITE_TRANS_FICT;
+
+						tbblue_layer_ula[posicion_array_layer]=color_final;
+						if (si_timex_hires.v==0) tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
+
+					}
+				}
+
+		
+				posicion_array_layer++;
+
+				if (si_timex_hires.v==0) posicion_array_layer++; //doble de ancho
+
+        byte_leido=byte_leido<<1;
+				
+      }
+
+			if (si_timex_hires.v) {
+					if (x&1) direccion++;
+			}
+
+			else direccion++;
+
+	  }
+
+
+
+
+	
+
+}
+
+
+void tbblue_do_ula_lores_overlay()
 {
 
 
@@ -5015,7 +5272,10 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 			int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
-		  tbblue_do_ula_overlay();
+
+			int tbblue_lores=tbblue_registers[0x15] & 128;
+			if (tbblue_lores) tbblue_do_ula_lores_overlay();
+		  	else tbblue_do_ula_standard_overlay();
 
 		//Overlay de layer2
 							//Capa layer2
