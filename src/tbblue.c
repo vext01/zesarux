@@ -4728,10 +4728,6 @@ void tbblue_do_ula_standard_overlay()
 	//linea que se debe leer
 	int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
-	int y;
-
-	y=t_scanline_draw-screen_invisible_borde_superior;
-	if (border_enabled.v==0) y=y-screen_borde_superior;
 
 
 	int x,bit;
@@ -4990,12 +4986,6 @@ void tbblue_do_ula_lores_overlay()
 	int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
 
-	//int y;
-	//y=t_scanline_draw-screen_invisible_borde_superior;
-	//if (border_enabled.v==0) y=y-screen_borde_superior;
-
-
-
 	int color;
 
 	/* modo lores
@@ -5006,7 +4996,7 @@ void tbblue_do_ula_lores_overlay()
 	  	
 
 	z80_byte *lores_pointer;
-	z80_byte posicion_x_lores_pointer=0;
+	z80_byte posicion_x_lores_pointer;
 
 	
 	int linea_lores=scanline_copia;  
