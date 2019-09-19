@@ -4881,33 +4881,26 @@ void tbblue_do_ula_lores_overlay()
 
 	//Render de capa ULA LORES
 
-        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+	//printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
-        //linea que se debe leer
-        int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
-
-
+	//linea que se debe leer
+	int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
 
-        int y;
+	int y;
+	y=t_scanline_draw-screen_invisible_borde_superior;
+	if (border_enabled.v==0) y=y-screen_borde_superior;
 
-        y=t_scanline_draw-screen_invisible_borde_superior;
-        if (border_enabled.v==0) y=y-screen_borde_superior;
-
-
-
-        int x,bit;
-        z80_byte byte_leido;
+	int x,bit;
 
 
-        int color=0;
+	int color=0;
 
+	//Mantener el offset y en 0..191
+	z80_byte tbblue_reg_23=tbblue_registers[23]; 
 
-		//Mantener el offset y en 0..191
-		z80_byte tbblue_reg_23=tbblue_registers[23]; 
-
-		int offset_scroll=tbblue_reg_23+scanline_copia;
-		offset_scroll %=192;
+	int offset_scroll=tbblue_reg_23+scanline_copia;
+	offset_scroll %=192;
 
 
 	/* modo lores
@@ -4915,107 +4908,77 @@ void tbblue_do_ula_lores_overlay()
   bit 7 - LoRes mode, 128 x 96 x 256 colours (1 = enabled)
   	*/
 
-	  	//int tbblue_lores=tbblue_registers[0x15] & 128;
+	  	
 
-  		z80_byte *lores_pointer;
-  		z80_byte posicion_x_lores_pointer=0;
-
-  		//if (tbblue_lores) {
-	  		int linea_lores=scanline_copia;  
-  			//Sumamos offset y
-	  		/*
-  			(R/W) 0x33 (51) => LoRes Offset Y
-  			bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
-  			Being only 96 pixels, this allows the display to scroll in "half-pixels",
-  			at the same resolution and smoothness as Layer 2.
-  			*/
-  			linea_lores +=tbblue_registers[0x33];
-
-  			linea_lores=linea_lores % 192;
-  			//if (linea_lores>=192) linea_lores -=192;
-
-  			lores_pointer=get_lores_pointer(linea_lores/2);  //admite hasta y=95, dividimos entre 2 linea actual
-
-	  		//Y scroll horizontal
-  			posicion_x_lores_pointer=tbblue_registers[0x32];
-  		//}
-
+	z80_byte *lores_pointer;
+	z80_byte posicion_x_lores_pointer=0;
 
 	
+	int linea_lores=scanline_copia;  
+	//Sumamos offset y
+	/*
+	(R/W) 0x33 (51) => LoRes Offset Y
+	bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+	Being only 96 pixels, this allows the display to scroll in "half-pixels",
+	at the same resolution and smoothness as Layer 2.
+	*/
+	linea_lores +=tbblue_registers[0x33];
 
-		int posicion_array_layer=0;
+	linea_lores=linea_lores % 192;
+	//if (linea_lores>=192) linea_lores -=192;
 
-		posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
+	lores_pointer=get_lores_pointer(linea_lores/2);  //admite hasta y=95, dividimos entre 2 linea actual
+
+	//Y scroll horizontal
+	posicion_x_lores_pointer=tbblue_registers[0x32];
+  		
+
+
+	int posicion_array_layer=0;
+	posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
 
 
 
-		int columnas=32;
+	for (x=0;x<32;x++) {
 
+    	for (bit=0;bit<8;bit++) {
+				
+			z80_byte lorescolor=lores_pointer[posicion_x_lores_pointer/2];
+			//tenemos indice color de paleta
+			//transformar a color final segun paleta ula activa
+			//color=tbblue_get_palette_active_ula(lorescolor);
 
+			color=lorescolor;
 
-    for (x=0;x<columnas;x++) {
-
- 
+			posicion_x_lores_pointer++; 
 			
 
-      for (bit=0;bit<8;bit++) {
-				
-
-				//if (tbblue_lores) {
-					
-
-					z80_byte lorescolor=lores_pointer[posicion_x_lores_pointer/2];
-					//tenemos indice color de paleta
-					//transformar a color final segun paleta ula activa
-					//color=tbblue_get_palette_active_ula(lorescolor);
-
-					color=lorescolor;
-
-					posicion_x_lores_pointer++; 
-				//}
-
-				int posx=x*8+bit; //Posicion pixel. Para clip window registers	
+			int posx=x*8+bit; //Posicion pixel. Para clip window registers	
 
 
+			//Capa ula
+			//Tener en cuenta valor clip window
+			
+			//(W) 0x1A (26) => Clip Window ULA/LoRes
+			if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][1] && scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]) {
+				if (!tbblue_force_disable_layer_ula.v) {
+					z80_int color_final=tbblue_get_palette_active_ula(color);
 
-				//Capa ula
-				//Tener en cuenta valor clip window
-				
-				//(W) 0x1A (26) => Clip Window ULA/LoRes
-				if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][1] && scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_ULA][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]) {
-					if (!tbblue_force_disable_layer_ula.v) {
-						z80_int color_final=tbblue_get_palette_active_ula(color);
+					//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+					if (tbblue_si_transparent(color_final)) color_final=TBBLUE_SPRITE_TRANS_FICT;
 
-						//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
-						if (tbblue_si_transparent(color_final)) color_final=TBBLUE_SPRITE_TRANS_FICT;
+					tbblue_layer_ula[posicion_array_layer]=color_final;
+					tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
 
-						tbblue_layer_ula[posicion_array_layer]=color_final;
-
-							tbblue_layer_ula[posicion_array_layer+1]=color_final; //doble de ancho
-
-
-					}
 				}
+			}
 
-		
-				posicion_array_layer++;
-
-
-					posicion_array_layer++; //doble de ancho
-
-
-        byte_leido=byte_leido<<1;
+			posicion_array_layer++;
+			posicion_array_layer++; //doble de ancho
 				
-      }
+    	}
 
-
-
-	  }
-
-
-
-
-	
+	}
 
 }
 
