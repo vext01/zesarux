@@ -4745,6 +4745,23 @@ void tbblue_do_ula_standard_overlay()
 
 
 	z80_byte *screen=get_base_mem_pantalla();
+
+	/*
+	(R/W) 0x33 (51) => ULA / LoRes Offset Y
+bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+
+
+	linea_lores +=tbblue_registers[0x33];
+
+	linea_lores=linea_lores % 192;
+	//if (linea_lores>=192) linea_lores -=192;
+
+	*/
+
+	scanline_copia +=tbblue_registers[51];
+	scanline_copia=scanline_copia % 192;
+
+
 	direccion=screen_addr_table[(scanline_copia<<5)];
 
 
@@ -4818,6 +4835,8 @@ ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect
 	int indice_origen_bytes=ula_offset_x*2; //dado que leemos del puntero_buffer_atributos que guarda 2 bytes: pixel y atributo
 
 
+
+
 	int columnas=32;
 
 	if (si_timex_hires.v) {
@@ -4836,8 +4855,6 @@ ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect
 
 		//32 columnas
 		//truncar siempre a modulo 64 (2 bytes: pixel y atributo)
-
-
 		indice_origen_bytes %=64;
 
 		//TODO scroll timex x,y
