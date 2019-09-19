@@ -4804,30 +4804,12 @@ void tbblue_do_ula_standard_overlay()
   bit 7 - LoRes mode, 128 x 96 x 256 colours (1 = enabled)
   	*/
 
-	  	int tbblue_lores=tbblue_registers[0x15] & 128;
+	  	//int tbblue_lores=tbblue_registers[0x15] & 128;
 
-  		z80_byte *lores_pointer;
-  		z80_byte posicion_x_lores_pointer=0;
+  		//z80_byte *lores_pointer;
+  		//z80_byte posicion_x_lores_pointer=0;
 
-  		if (tbblue_lores) {
-	  		int linea_lores=scanline_copia;  
-  			//Sumamos offset y
-	  		/*
-  			(R/W) 0x33 (51) => LoRes Offset Y
-  			bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
-  			Being only 96 pixels, this allows the display to scroll in "half-pixels",
-  			at the same resolution and smoothness as Layer 2.
-  			*/
-  			linea_lores +=tbblue_registers[0x33];
-
-  			linea_lores=linea_lores % 192;
-  			//if (linea_lores>=192) linea_lores -=192;
-
-  			lores_pointer=get_lores_pointer(linea_lores/2);  //admite hasta y=95, dividimos entre 2 linea actual
-
-	  		//Y scroll horizontal
-  			posicion_x_lores_pointer=tbblue_registers[0x32];
-  		}
+  		
 
 
 		if (timex_video_emulation.v) {
@@ -4915,18 +4897,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 				
 				color= ( byte_leido & 128 ? ink : paper ) ;
 
-				if (tbblue_lores) {
-					
-
-					z80_byte lorescolor=lores_pointer[posicion_x_lores_pointer/2];
-					//tenemos indice color de paleta
-					//transformar a color final segun paleta ula activa
-					//color=tbblue_get_palette_active_ula(lorescolor);
-
-					color=lorescolor;
-
-					posicion_x_lores_pointer++; 
-				}
+				
 
 				int posx=x*8+bit; //Posicion pixel. Para clip window registers	
 				if (si_timex_hires.v) posx /=2;
