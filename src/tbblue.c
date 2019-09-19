@@ -4739,9 +4739,7 @@ void tbblue_do_ula_standard_overlay()
 	z80_byte attribute;
 	z80_int ink,paper;
 
-	int pos_no_rainbow_pix_x,pos_no_rainbow_pix_y;
-	//int pos_no_rainbow_attr_x;
-	//int pos_no_rainbow_attr_y;
+
 
 
 	z80_byte *screen=get_base_mem_pantalla();
@@ -4757,7 +4755,7 @@ ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect
 
 	z80_byte ula_offset_x=tbblue_registers[50];
 	ula_offset_x /=8;
-	int indice_origen_bytes=ula_offset_x*2; //dado que leemos del puntero_buffer_atributos que guarda 2 bytes: pixel y atributo	
+	int indice_origen_bytes=ula_offset_x*2; //*2 dado que leemos del puntero_buffer_atributos que guarda 2 bytes: pixel y atributo	
 
 	/*
 	(R/W) 0x33 (51) => ULA / LoRes Offset Y
@@ -4767,7 +4765,6 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 	linea_lores +=tbblue_registers[0x33];
 
 	linea_lores=linea_lores % 192;
-	//if (linea_lores>=192) linea_lores -=192;
 
 	*/
 
@@ -4778,8 +4775,13 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 	scanline_copia=scanline_copia % 192;
 
 
-	pos_no_rainbow_pix_y=scanline_copia;
-	//pos_no_rainbow_attr_y=scanline_copia;	
+
+	//Usado cuando hay scroll vertical y por tanto los pixeles y atributos salen de la pantalla tal cual (modo sin rainbow)
+	int pos_no_rainbow_pix_x;
+	//int pos_no_rainbow_pix_y;
+
+
+	//pos_no_rainbow_pix_y=scanline_copia;
 
 
 	//scroll x para modo no rainbow (es decir, cuando hay scroll vertical)
@@ -4787,15 +4789,12 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 	pos_no_rainbow_pix_x %=32;	
 
 
+	//Estos direccion y dir_atributo usados cuando hay scroll vertical y por tanto los pixeles y atributos salen de la pantalla tal cual (modo sin rainbow),
+	//y tambien en timex 512x192
 	direccion=screen_addr_table[(scanline_copia<<5)];
 
 	int fila=scanline_copia/8;
 	int dir_atributo=6144+(fila*32);
-
-	/*
-	                fila=y/8;
-                dir_atributo=6144+(fila*32);
-	*/
 
 
 	z80_byte *puntero_buffer_atributos;
@@ -4858,8 +4857,7 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 	posicion_array_layer +=(screen_total_borde_izquierdo*border_enabled.v*2); //Doble de ancho
 
 
-	int posicion_array_pixeles_atributos=0;
-
+	//int posicion_array_pixeles_atributos=0;
 
 
 
@@ -4899,13 +4897,15 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 		else {
 
+			//Modo sin scroll vertical. Permite scroll horizontal. Es modo rainbow
+
 			//byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos];
 			byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
-			posicion_array_pixeles_atributos++;
+			//posicion_array_pixeles_atributos++;
 
 			//attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos];
 			attribute=puntero_buffer_atributos[indice_origen_bytes++];
-			posicion_array_pixeles_atributos++;
+			//posicion_array_pixeles_atributos++;
 		}
 
 
