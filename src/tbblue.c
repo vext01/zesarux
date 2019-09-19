@@ -4806,6 +4806,17 @@ void tbblue_do_ula_standard_overlay()
 
 
 	int posicion_array_pixeles_atributos=0;
+	/*
+	(R/W) 0x32 (50) => ULA / LoRes Offset X
+bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
+ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect at this time.
+	*/
+
+	//entonces sumar 1 posicion por cada 8 del scroll
+	z80_byte ula_offset_x=tbblue_registers[50];
+	ula_offset_x /=8;
+	int indice_origen_bytes=ula_offset_x*2; //dado que leemos del puntero_buffer_atributos que guarda 2 bytes: pixel y atributo
+
 
 	int columnas=32;
 
@@ -4815,9 +4826,21 @@ void tbblue_do_ula_standard_overlay()
 
     for (x=0;x<columnas;x++) {
 
-		byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
-		attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+		//byte_leido=puntero_buffer_atributos[posicion_array_pixeles_atributos];
+		byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
+		posicion_array_pixeles_atributos++;
 
+		//attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos];
+		attribute=puntero_buffer_atributos[indice_origen_bytes++];
+		posicion_array_pixeles_atributos++;
+
+		//32 columnas
+		//truncar siempre a modulo 64 (2 bytes: pixel y atributo)
+
+
+		indice_origen_bytes %=64;
+
+		//TODO scroll timex x,y
 		if (si_timex_hires.v) {
 			if ((x&1)==0) byte_leido=screen[direccion];
 			else byte_leido=screen[direccion+8192];
