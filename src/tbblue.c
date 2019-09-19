@@ -4717,45 +4717,8 @@ z80_bit tbblue_reveal_layer_ula={0};
 z80_bit tbblue_reveal_layer_layer2={0};
 z80_bit tbblue_reveal_layer_sprites={0};
 
-//Guardar en buffer rainbow la linea actual. Para Spectrum. solo display
-//Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
-//en cambio, si border esta activado, la primera linea del buffer sera de border
-void screen_store_scanline_rainbow_solo_display_tbblue(void)
+void tbblue_do_ula_overlay()
 {
-
-	//si linea no coincide con entrelazado, volvemos
-	if (if_store_scanline_interlace(t_scanline_draw)==0) return;
-
-	
-
-	int i;
-
-	z80_int *clear_p_ula=tbblue_layer_ula;
-	z80_int *clear_p_layer2=tbblue_layer_layer2;
-	z80_int *clear_p_sprites=tbblue_layer_sprites;
-
-	for (i=0;i<TBBLUE_LAYERS_PIXEL_WIDTH;i++) {
-
-		//Esto es un pelin mas rapido hacerlo asi, con punteros e incrementarlos, en vez de indices a array
-		*clear_p_ula=TBBLUE_SPRITE_TRANS_FICT;
-		//*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
-		*clear_p_layer2=TBBLUE_SPRITE_TRANS_FICT;
-		*clear_p_sprites=TBBLUE_SPRITE_TRANS_FICT;
-
-		clear_p_ula++;
-		clear_p_layer2++;
-		clear_p_sprites++;
-
-	}
-
-	//int bordesupinf=0;
-
-	int capalayer2=0;
-	int capasprites=0;
-	//int capatiles=0;
-
-  	//En zona visible pantalla (no borde superior ni inferior)
-  	if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
 
 
 				//Render de capa ULA 
@@ -5006,7 +4969,55 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
 
-			//Overlay de layer2
+	
+
+}
+
+//Guardar en buffer rainbow la linea actual. Para Spectrum. solo display
+//Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
+//en cambio, si border esta activado, la primera linea del buffer sera de border
+void screen_store_scanline_rainbow_solo_display_tbblue(void)
+{
+
+	//si linea no coincide con entrelazado, volvemos
+	if (if_store_scanline_interlace(t_scanline_draw)==0) return;
+
+	
+
+	int i;
+
+	z80_int *clear_p_ula=tbblue_layer_ula;
+	z80_int *clear_p_layer2=tbblue_layer_layer2;
+	z80_int *clear_p_sprites=tbblue_layer_sprites;
+
+	for (i=0;i<TBBLUE_LAYERS_PIXEL_WIDTH;i++) {
+
+		//Esto es un pelin mas rapido hacerlo asi, con punteros e incrementarlos, en vez de indices a array
+		*clear_p_ula=TBBLUE_SPRITE_TRANS_FICT;
+		//*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
+		*clear_p_layer2=TBBLUE_SPRITE_TRANS_FICT;
+		*clear_p_sprites=TBBLUE_SPRITE_TRANS_FICT;
+
+		clear_p_ula++;
+		clear_p_layer2++;
+		clear_p_sprites++;
+
+	}
+
+	//int bordesupinf=0;
+
+	int capalayer2=0;
+	int capasprites=0;
+	//int capatiles=0;
+
+  	//En zona visible pantalla (no borde superior ni inferior)
+  	if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
+
+			int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+
+		  tbblue_do_ula_overlay();
+
+		//Overlay de layer2
 							//Capa layer2
 				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
 					if (scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]) {
@@ -5018,7 +5029,6 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 						}
 					}
 				}
-
 
 	}
 
