@@ -33,6 +33,9 @@ Improved Debugging:
 -added setting to dump .zsf snapshot when a cpu panic is fired
 -debug CPU window: can now resize height and have more debug lines
 
+Improved TBBlue emulation:
+-added scroll x,y on ula layer
+-optimized ula,lores render routines: 2% less cpu on my computer
 Improved Hex editor: can now copy to a different memory zone
 Improved menu: can now use PgUp,PgDn to jump between menu items
 Improved assembler: added defs command

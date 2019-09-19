@@ -4977,21 +4977,22 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 }
 
 
+
+
 void tbblue_do_ula_lores_overlay()
 {
 
 
 	//Render de capa ULA LORES
-
 	//printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
 	//linea que se debe leer
 	int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
 
-	int y;
-	y=t_scanline_draw-screen_invisible_borde_superior;
-	if (border_enabled.v==0) y=y-screen_borde_superior;
+	//int y;
+	//y=t_scanline_draw-screen_invisible_borde_superior;
+	//if (border_enabled.v==0) y=y-screen_borde_superior;
 
 
 
@@ -5043,6 +5044,7 @@ void tbblue_do_ula_lores_overlay()
 		//color=tbblue_get_palette_active_ula(lorescolor);
 
 		posicion_x_lores_pointer++; 
+		//nota: dado que es una variable de 8 bits, automaticamente se trunca al pasar de 255 a 0, por tanto no hay que sacar el modulo de division con 256
 		
 		//Tener en cuenta valor clip window
 		
