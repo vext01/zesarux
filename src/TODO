@@ -14,9 +14,7 @@
 
 -codigos de error para otras funciones network que faltan: read, write, zsock_read_all_until_command, etc
 
--Configure debería decir al final si soporta ssl
-
-Comentar que se compile con ssl para soportar descargas completas de spectrum
+-Comentar que se compile con ssl para soportar descargas completas de spectrum
 
 -en wos browser, Aliens neoplasma no carga
 
