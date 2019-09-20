@@ -2289,6 +2289,15 @@ else
 fi
 
 
+echo -n " SSL support: "
+
+if [ "$OPTIONOBJSSL" == "" ]; then
+        echo "no"
+else
+        echo "yes"
+fi
+
+
 echo -n " Remote command protocol support: "
 
 if [ "$OPTIONPTHREADS" == "" ]; then

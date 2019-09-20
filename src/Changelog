@@ -46,7 +46,7 @@ Improved curses driver: symbol @ simulates ESC on menu
 Improved snapshot loading: now setting "--sna-no-change-machine" becomes "--snap-no-change-machine" and applies to .sna and .z80
 
 Fixed Pentagon border: now ukflag demo is perfect
-Fixed Spectrum 128k machines border: now ula128,scroll2017 demos are perfect
+Fixed Spectrum 128k machines border: now ula128, scroll2017 demos are perfect
 Fixed f_seek call on esxdos handler
 Fixed segfault error when using breakpoints like peek/opcode in config file
 Fixed bug on zxuno changing video ram 5/7 when paging was disabled by bit DI7FFD

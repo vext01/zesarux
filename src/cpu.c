@@ -1938,7 +1938,9 @@ printf (
 		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
 		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
 		"--clear-all-windowgeometry Clear all windows geometry thay may be loaded from the configuration file\n"
-		"--codetests                Run develoment code tests\n"
+		
+		//Esto no hace falta que lo vea un usuario, solo lo uso yo para probar partes del emulador 
+		//"--codetests                Run develoment code tests\n"
 		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n"
 
 

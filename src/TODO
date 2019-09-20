@@ -8,9 +8,11 @@
 *Cosas menos prioritarias
 *Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
 
--codigos de error para otras funciones network que faltan: read, write, zsock_read_all_until_command, etc
+-Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
 
--si ventana no tiene el foco, que no salten tooltips de menu
+-tbblue video info que salga centrado
+
+-codigos de error para otras funciones network que faltan: read, write, zsock_read_all_until_command, etc
 
 -Configure debería decir al final si soporta ssl
 

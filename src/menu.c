@@ -9448,7 +9448,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	if (menu_tooltip_counter>=TOOLTIP_SECONDS) {
 
-        	redibuja_ventana=1;
+        redibuja_ventana=1;
 
 		//Por defecto asumimos que no saltara tooltip y por tanto que no queremos que vuelva a enviar a speech la ventana
 		//Aunque si que volvera a decir el "active item: ..." en casos que se este en una opcion sin tooltip,
@@ -9459,7 +9459,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Si no tiene tooltip, no salta tooltip, pero vuelve a decir "Active item: ..."
 		menu_speech_tecla_pulsada=1;
 
-		if (tooltip_enabled.v) {
+		//Si ventana no esta activa, no mostrar tooltips,
+		//porque esto hace que, por ejemplo, si el foco está en la máquina emulada, al saltar el tooltip, cambiaria el foco a la ventana de menu
+		if (tooltip_enabled.v && ventana_tipo_activa) {
 			char *texto_tooltip;
 			texto_tooltip=menu_retorna_item(m,linea_seleccionada)->texto_tooltip;
 			if (texto_tooltip!=NULL) {
@@ -9497,6 +9499,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		}
 
+		//else printf ("No mostrar tooltip\n");
 
 		//Hay que dibujar las letras correspondientes en texto inverso
 		menu_writing_inverse_color.v=1;
@@ -9817,6 +9820,8 @@ void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_func
 
 }
 
+char *string_esc_go_back="ESC always go back to the previous menu, or return back to the emulated machine if you are in main menu";
+
 //Agrega item de ESC normalmente.  En caso de aalib y consola es con tecla TAB
 void menu_add_ESC_item(menu_item *array_menu_item)
 {
@@ -9826,6 +9831,8 @@ void menu_add_ESC_item(menu_item *array_menu_item)
         sprintf (mensaje_esc_back,"%s Back",esc_key_message);
 
         menu_add_item_menu(array_menu_item,mensaje_esc_back,MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_item_menu_tooltip(array_menu_item,string_esc_go_back);
+		menu_add_item_menu_ayuda(array_menu_item,string_esc_go_back);
 
 }
 
