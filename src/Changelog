@@ -6,9 +6,9 @@ located each one on any part of the world or in a local network. Games doesn't h
 
 Added Pentagon 16C colour mode emulation
 Added 1024 KB RAM emulation for Spectrum & Pentagon
-Added support for .scf files: can be converted from file selector menu pressing space
+Added support for .scl files: can be converted from file selector menu pressing space
 Added ZX81 online game browser
-Added ZXInfo/WOS game browser
+Added Spectrum online game browser
 Added total run time statistics 
 Added checking for updates
 Added sending anonymous statistics use
@@ -38,7 +38,7 @@ Improved TBBlue emulation:
 -optimized ula,lores render routines: 2% less cpu on my computer
 
 Improved Hex editor: can now copy to a different memory zone
-Improved menu: can now use PgUp,PgDn to jump between menu items
+Improved menu: can now use PgUp,PgDn to jump menu pages
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
 Improved file selector: when asking for a directory, only shows directories, not files

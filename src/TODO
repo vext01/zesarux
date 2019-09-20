@@ -40,10 +40,8 @@ y error de un pthread que esta fuera de ifdef phread
 
 -funciones zsock no permite usarlas sin pthreads. Por que?
 
--finalizacion socket en ssl , llamar a alguna funcion supongo
-
 -snapshots z80 implementar +3:
-snap.c:                                        debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
+snap.c: debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
 
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
@@ -57,7 +55,6 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
 
--Códigos de error de network en negativo 
 
 -Semáforo en debug print tiene sentido??
 Quiza por el sprintf (pending_error_message
@@ -213,7 +210,7 @@ Esto hará que el audio se escuche bien en windows en la versión con threads (p
 
 
 
--Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá errror si no hay bytes para leer?
+-Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer?
 
 Ejemplos generales socket
 https://www.binarytides.com/socket-programming-c-linux-tutorial/
@@ -416,7 +413,6 @@ Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al 
 
 -al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
 
--menu debug cpu: lineas desensamblado que aumente si ventana mas grande
 
 -leer audio casette
 

@@ -232,7 +232,7 @@ __FEATURES__
 
 * Can browse online ZX81 games
 
-* Can browse online ZXInfo/WOS games
+* Can browse online Spectrum games
 
 * Supports Input spool text file to simulate keyboard press
 
