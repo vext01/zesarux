@@ -2990,8 +2990,8 @@ void load_z80_snapshot(char *archivo)
 
                                 case 7:
                                         //+3
-                                        current_machine_type=11;
-                                        debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
+                                        current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
+                                        //debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
                                 break;
 
 
