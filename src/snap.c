@@ -2459,15 +2459,41 @@ void save_z80_snapshot(char *filename)
 		break;
 
 		//Amstrad +2A (ROM v4.0)
-		case 11:
+		case MACHINE_ID_SPECTRUM_P2A_40:
 			maquina_header=13;
 		break;
 
-                //Amstrad +2A (ROM v4.1)
-                case 12:
-                        maquina_header=13;
+        //Amstrad +2A (ROM v4.1)
+        case MACHINE_ID_SPECTRUM_P2A_41:
+            maquina_header=13;
 			debug_printf (VERBOSE_ERR,"Saved Amstrad +2A (ROM v4.1) as Z80 snapshot. It will be loaded as Amstrad +2A (ROM v4.0), so it may fail");
-                break;
+    	break;
+
+		//Amstrad +2A (Spanish ROM)
+		case MACHINE_ID_SPECTRUM_P2A_SPA:
+				maquina_header=13;
+				debug_printf (VERBOSE_ERR,"Saved Amstrad +2A (Spanish ROM) as Z80 snapshot. It will be loaded as Amstrad +2A (ROM v4.0), so it may fail");
+		break;				
+
+
+
+		//Amstrad +3 (ROM v4.0)
+		case MACHINE_ID_SPECTRUM_P3_40:
+			maquina_header=7;
+		break;
+
+        //Amstrad +3 (ROM v4.1)
+        case MACHINE_ID_SPECTRUM_P3_41:
+            maquina_header=7;
+			debug_printf (VERBOSE_ERR,"Saved Amstrad +3 (ROM v4.1) as Z80 snapshot. It will be loaded as Amstrad +3 (ROM v4.0), so it may fail");
+    	break;
+
+		//Amstrad +3 (Spanish ROM)
+		case MACHINE_ID_SPECTRUM_P3_SPA:
+				maquina_header=7;
+				debug_printf (VERBOSE_ERR,"Saved Amstrad +3 (Spanish ROM) as Z80 snapshot. It will be loaded as Amstrad +3 (ROM v4.0), so it may fail");
+		break;			
+
 
 		//Pentagon 128
 		case 21:
