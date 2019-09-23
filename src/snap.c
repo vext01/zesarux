@@ -2970,91 +2970,111 @@ void load_z80_snapshot(char *archivo)
 
 			if (load_sna_snapshot_must_change_machine() ) {
 
-			switch (maquina_leida) {
-				//If bit 7 of byte 37 is set, the hardware types are modified slightly: any 48K machine becomes a 16K machine, any 128K machines becomes a +2 and any +3 machine becomes a +2A.
+				switch (maquina_leida) {
+					//If bit 7 of byte 37 is set, the hardware types are modified slightly: any 48K machine becomes a 16K machine, any 128K machines becomes a +2 and any +3 machine becomes a +2A.
 
-				case 0:
-				case 1:
-					//48k
-					current_machine_type=1;
-					if (modify_hardware) current_machine_type=0;
+					case 0:
+					case 1:
+						//48k
+						current_machine_type=1;
+						if (modify_hardware) current_machine_type=0;
 
-				break;
+					break;
 
-				case 3:
-					if (z80_version==2) {
-						//En v2, 128k
-	                                        current_machine_type=6;
-        	                                if (modify_hardware) current_machine_type=8;
+					case 3:
+						if (z80_version==2) {
+							//En v2, 128k
+												current_machine_type=6;
+												if (modify_hardware) current_machine_type=8;
 
-					}
+						}
 
-					if (z80_version==3) {
-						debug_printf (VERBOSE_WARN,"Setting 48k machine but header says 48k + M.G.T.");
-						//En v3, 48k + M.G.T.
-	                                        current_machine_type=1;
-        	                                if (modify_hardware) current_machine_type=0;
-					}
-				break;
-				case 4:
-					//128k
-					current_machine_type=6;
-					if (modify_hardware) current_machine_type=8;
-				break;
+						if (z80_version==3) {
+							debug_printf (VERBOSE_WARN,"Setting 48k machine but header says 48k + M.G.T.");
+							//En v3, 48k + M.G.T.
+												current_machine_type=1;
+												if (modify_hardware) current_machine_type=0;
+						}
+					break;
+					case 4:
+						//128k
+						current_machine_type=6;
+						if (modify_hardware) current_machine_type=8;
+					break;
 
-				case 5:
-					//128k + If.1
-					current_machine_type=6;
-                                        debug_printf (VERBOSE_WARN,"128k + If.1 is not emulated yet. Setting to Spectrum 128k");
-                                break;
+					case 5:
+						//128k + If.1
+						current_machine_type=6;
+											debug_printf (VERBOSE_ERR,"128k + If.1 is not emulated yet. Setting to Spectrum 128k");
+									break;
 
-				case 6:
-					//128k + M.G.T.
-					current_machine_type=6;
-                                        debug_printf (VERBOSE_WARN,"128k + M.G.T. is not emulated yet. Setting to Spectrum 128k");
-                                break;
+					case 6:
+						//128k + M.G.T.
+						current_machine_type=6;
+											debug_printf (VERBOSE_ERR,"128k + M.G.T. is not emulated yet. Setting to Spectrum 128k");
+					break;
 
-                                case 7:
-                                        //+3
-                                        current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
-                                        //debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
-                                break;
+					case 7:
+							//+3
+							current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
+							//debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
+					break;
 
-
-				case 9:
-					//Pentagon 128k
-					current_machine_type=21;
-					//debug_printf (VERBOSE_WARN,"Pentagon 128k is not emulated yet. Setting to Spectrum 128k");
-				break;
-
-                                case 10:
-                                        //Scorpion 256k
-                                        current_machine_type=6;
-                                        debug_printf (VERBOSE_WARN,"Scorpion 256k is not emulated yet. Setting to Spectrum 128k");
-                                break;
-
-                                case 11:
-                                        //Didaktik-Kompakt
-                                        current_machine_type=6;
-                                        debug_printf (VERBOSE_WARN,"Didaktik-Kompakt is not emulated yet. Setting to Spectrum 128k");
-                                break;
+					case 8:
+							//[mistakenly used by some versions of XZX-Pro to indicate a +3]
+							current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
+							//debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
+					break;
 
 
-				case 12:
-					//+2
-					current_machine_type=8;
-				break;
 
-				case 13:
-					//+2A
-					current_machine_type=11;
-				break;
+					case 9:
+						//Pentagon 128k
+						current_machine_type=21;
+						//debug_printf (VERBOSE_WARN,"Pentagon 128k is not emulated yet. Setting to Spectrum 128k");
+					break;
 
-				default:
-					debug_printf(VERBOSE_ERR,"Unknown machine type %d",maquina_leida);
-					return;
-				break;
-			}
+					case 10:
+							//Scorpion 256k
+							current_machine_type=6;
+							debug_printf (VERBOSE_ERR,"Scorpion 256k is not emulated yet. Setting to Spectrum 128k");
+					break;
+
+					case 11:
+							//Didaktik-Kompakt
+							current_machine_type=6;
+							debug_printf (VERBOSE_ERR,"Didaktik-Kompakt is not emulated yet. Setting to Spectrum 128k");
+					break;
+
+
+					case 12:
+						//+2
+						current_machine_type=MACHINE_ID_SPECTRUM_P2;
+					break;
+
+					case 13:
+						//+2A
+						current_machine_type=MACHINE_ID_SPECTRUM_P2A_40;
+					break;
+
+					case 14:
+					case 15:
+						//TC2048
+						debug_printf(VERBOSE_ERR,"Unsupported machine type TC2048");
+						return;
+					break;			
+
+					case 128:
+						//TS2068
+						debug_printf(VERBOSE_ERR,"Unsupported machine type TS2068");
+						return;
+					break;									
+
+					default:
+						debug_printf(VERBOSE_ERR,"Unknown machine type %d",maquina_leida);
+						return;
+					break;
+				}
 
             
 				set_machine(NULL);
@@ -3064,13 +3084,6 @@ void load_z80_snapshot(char *archivo)
 
 			reg_pc=value_8_to_16(z80_header_adicional[3],z80_header_adicional[2]);
 			load_z80_snapshot_common_registers(z80_header);
-
-
-
-//        char buffer[1024];
-
-//        print_registers(buffer);
-//        printf ("%s\n\n",buffer);
 
 
 
@@ -3088,16 +3101,16 @@ void load_z80_snapshot(char *archivo)
 			ay_3_8912_registro_sel[0]=z80_header_adicional[8];
 
 
-                        //AY CHIP
-                        if ( (z80_header_adicional[7] &4) ) {
-                                debug_printf(VERBOSE_DEBUG,"AY Chip enabled on z80 snapshot");
-                                ay_chip_present.v=1;
-                        }
+			//AY CHIP
+			if ( (z80_header_adicional[7] &4) ) {
+					debug_printf(VERBOSE_DEBUG,"AY Chip enabled on z80 snapshot");
+					ay_chip_present.v=1;
+			}
 
-                        else {
-                                debug_printf(VERBOSE_DEBUG,"AY Chip disabled on z80 snapshot");
-                                ay_chip_present.v=0;
-                        }
+			else {
+					debug_printf(VERBOSE_DEBUG,"AY Chip disabled on z80 snapshot");
+					ay_chip_present.v=0;
+			}
 
 /* Esto no lo uso
 if (long_cabecera_adicional>25) {
