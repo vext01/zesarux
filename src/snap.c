@@ -2984,16 +2984,16 @@ void load_z80_snapshot(char *archivo)
 					case 3:
 						if (z80_version==2) {
 							//En v2, 128k
-												current_machine_type=6;
-												if (modify_hardware) current_machine_type=8;
+							current_machine_type=6;
+							if (modify_hardware) current_machine_type=8;
 
 						}
 
 						if (z80_version==3) {
 							debug_printf (VERBOSE_WARN,"Setting 48k machine but header says 48k + M.G.T.");
 							//En v3, 48k + M.G.T.
-												current_machine_type=1;
-												if (modify_hardware) current_machine_type=0;
+							current_machine_type=1;
+							if (modify_hardware) current_machine_type=0;
 						}
 					break;
 					case 4:
@@ -3005,47 +3005,41 @@ void load_z80_snapshot(char *archivo)
 					case 5:
 						//128k + If.1
 						current_machine_type=6;
-											debug_printf (VERBOSE_ERR,"128k + If.1 is not emulated yet. Setting to Spectrum 128k");
-									break;
+						debug_printf (VERBOSE_ERR,"128k + If.1 is not emulated yet. Setting to Spectrum 128k");
+					break;
 
 					case 6:
 						//128k + M.G.T.
 						current_machine_type=6;
-											debug_printf (VERBOSE_ERR,"128k + M.G.T. is not emulated yet. Setting to Spectrum 128k");
+						debug_printf (VERBOSE_ERR,"128k + M.G.T. is not emulated yet. Setting to Spectrum 128k");
 					break;
 
 					case 7:
-							//+3
-							current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
-							//debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
+						//+3
+						current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
 					break;
 
 					case 8:
-							//[mistakenly used by some versions of XZX-Pro to indicate a +3]
-							current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
-							//debug_printf (VERBOSE_WARN,"Spectrum +3 is not emulated yet. Setting to Spectrum +2A");
+						//[mistakenly used by some versions of XZX-Pro to indicate a +3]
+						current_machine_type=MACHINE_ID_SPECTRUM_P3_40;
 					break;
-
-
 
 					case 9:
 						//Pentagon 128k
 						current_machine_type=21;
-						//debug_printf (VERBOSE_WARN,"Pentagon 128k is not emulated yet. Setting to Spectrum 128k");
 					break;
 
 					case 10:
-							//Scorpion 256k
-							current_machine_type=6;
-							debug_printf (VERBOSE_ERR,"Scorpion 256k is not emulated yet. Setting to Spectrum 128k");
+						//Scorpion 256k
+						current_machine_type=6;
+						debug_printf (VERBOSE_ERR,"Scorpion 256k is not emulated yet. Setting to Spectrum 128k");
 					break;
 
 					case 11:
-							//Didaktik-Kompakt
-							current_machine_type=6;
-							debug_printf (VERBOSE_ERR,"Didaktik-Kompakt is not emulated yet. Setting to Spectrum 128k");
+						//Didaktik-Kompakt
+						current_machine_type=6;
+						debug_printf (VERBOSE_ERR,"Didaktik-Kompakt is not emulated yet. Setting to Spectrum 128k");
 					break;
-
 
 					case 12:
 						//+2
