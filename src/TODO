@@ -8,9 +8,9 @@
 *Cosas menos prioritarias
 *Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
 
--Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
+-opcion "open menu on zx desktop" no va bien con maquinas que usan zoom doble en menu: tsconf, tbblue, ql, cpc
 
--tbblue video info que salga centrado
+-Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
 
 -codigos de error para otras funciones network que faltan: read, write, zsock_read_all_until_command, etc
 

@@ -2765,22 +2765,24 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
 
-	int xventana=menu_origin_x();
 	int ancho_ventana=32;
+	int xventana=menu_center_x()-ancho_ventana/2;
 
 	int yventana;
 	int alto_ventana;
     
 
 	if (MACHINE_IS_TBBLUE) {
-		yventana=0;
+		//yventana=0;
 		alto_ventana=24;
 	}
 
 	else {
-		yventana=7;
+		//yventana=7;
 		alto_ventana=8;
 	}
+
+	yventana=menu_center_y()-alto_ventana/2;
 
 	zxvision_window ventana;
 
@@ -3006,16 +3008,10 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 
 
-//int tsconf_spritenav_window_y=2;
-//int tsconf_spritenav_window_alto=20;
-
-#define TSCONF_SPRITENAV_WINDOW_X (menu_origin_x() )
-#define TSCONF_SPRITENAV_WINDOW_Y 2
 #define TSCONF_SPRITENAV_WINDOW_ANCHO 32
 #define TSCONF_SPRITENAV_WINDOW_ALTO 20
-//#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 8
-//#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW ((tsconf_spritenav_window_alto-4)/2)
-
+#define TSCONF_SPRITENAV_WINDOW_X (menu_center_x()-TSCONF_SPRITENAV_WINDOW_ANCHO/2 )
+#define TSCONF_SPRITENAV_WINDOW_Y (menu_center_y()-TSCONF_SPRITENAV_WINDOW_ALTO/2)
 
 
 
@@ -3233,14 +3229,10 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 
 
-
-
-
-
-#define TSCONF_TILENAV_WINDOW_X (menu_origin_x() )
-#define TSCONF_TILENAV_WINDOW_Y 0
 #define TSCONF_TILENAV_WINDOW_ANCHO 32
 #define TSCONF_TILENAV_WINDOW_ALTO 24
+#define TSCONF_TILENAV_WINDOW_X (menu_center_x()-TSCONF_TILENAV_WINDOW_ANCHO/2 )
+#define TSCONF_TILENAV_WINDOW_Y (menu_center_y()-TSCONF_TILENAV_WINDOW_ALTO/2)
 #define TSCONF_TILENAV_TILES_VERT_PER_WINDOW 64
 #define TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW 64
 
@@ -6936,18 +6928,20 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-
-	int x=menu_origin_x()+7;
-	int y=1;
-
 	int ancho=20;
 	int alto=22;
 
+	int x=menu_center_x()-ancho/2;
+	int y;
+	//y=1;	
+
 	if (MACHINE_IS_TBBLUE) {
 		alto=20;
-		y=1;
+		//y=1;
 	}
 
+
+	y=menu_center_y()-alto/2;
 
 	zxvision_window ventana;
 
