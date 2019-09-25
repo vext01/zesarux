@@ -4982,7 +4982,22 @@ int zxvision_generic_message_cursor_up(zxvision_window *ventana)
 }		
 
 
+int menu_get_origin_x_zxdesktop_aux(int divisor)
+{
+	//Esta zxdesktop. Intentamos mantener ventanas localizadas ahi por defecto, si hay esa opcion activada
+	int ancho_total=scr_get_menu_width();
 
+	//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
+	//int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA/2;
+	int restar=screen_ext_desktop_width/8/menu_gui_zoom;
+	//al menos 32 de ancho para zona de menu
+	if (restar<32) restar=32;
+	int pos_x=ancho_total-restar/divisor;
+
+	//Por si acaso
+	if (pos_x<0) pos_x=0;		
+	return pos_x;
+}
 
 int menu_origin_x(void)
 {
@@ -4990,18 +5005,7 @@ int menu_origin_x(void)
 
 	if (screen_ext_desktop_place_menu && screen_ext_desktop_enabled*scr_driver_can_ext_desktop()) {
 		//Esta zxdesktop. Intentamos mantener ventanas localizadas ahi por defecto, si hay esa opcion activada
-		int ancho_total=scr_get_menu_width();
-
-		//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
-		//int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA;
-		int restar=screen_ext_desktop_width/8;
-		//al menos 32 de ancho para zona de menu
-		if (restar<32) restar=32;
-		int pos_x=ancho_total-restar;
-
-		//Por si acaso
-		if (pos_x<0) pos_x=0;
-		return pos_x;
+		return menu_get_origin_x_zxdesktop_aux(1);
 	}
 
 	return 0;
@@ -5014,18 +5018,7 @@ int menu_center_x(void)
 
 	if (screen_ext_desktop_place_menu && screen_ext_desktop_enabled*scr_driver_can_ext_desktop()) {
 		//Esta zxdesktop. Intentamos mantener ventanas localizadas ahi por defecto, si hay esa opcion activada
-		int ancho_total=scr_get_menu_width();
-
-		//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
-		//int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA/2;
-		int restar=screen_ext_desktop_width/8;
-		//al menos 32 de ancho para zona de menu
-		if (restar<32) restar=32;
-		int pos_x=ancho_total-restar/2;
-
-		//Por si acaso
-		if (pos_x<0) pos_x=0;		
-		return pos_x;
+		return menu_get_origin_x_zxdesktop_aux(2);
 	}
 
 	return scr_get_menu_width()/2;

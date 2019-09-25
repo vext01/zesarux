@@ -6555,12 +6555,12 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 	char texto_ventana[33];
 	//por defecto por si acaso
 	strcpy(texto_ventana,"DMA");
-	int alto=11;
+	int alto_ventana=11;
 
 
 	if (MACHINE_IS_ZXUNO) {
 		strcpy(texto_ventana,"ZXUNO DMA");
-		alto++;
+		alto_ventana++;
 	}
 
 	if (MACHINE_IS_TSCONF) strcpy(texto_ventana,"TSConf DMA");
@@ -6571,10 +6571,14 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
 	//menu_dibuja_ventana(2,6,27,alto,texto_ventana);
 	zxvision_window ventana;
 
-	int posicionx=menu_origin_x()+2;
+	//int posicionx=menu_origin_x()+2;
+	int ancho_ventana=27;
+	int posicionx=menu_center_x()-ancho_ventana/2;
 
-	zxvision_new_window(&ventana,posicionx,6,27,alto,
-							27-1,alto-2,texto_ventana);
+	int posiciony=menu_center_y()-alto_ventana/2;
+
+	zxvision_new_window(&ventana,posicionx,posiciony,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,texto_ventana);
 	zxvision_draw_window(&ventana);			
 
 
