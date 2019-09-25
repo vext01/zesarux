@@ -1,0 +1,446 @@
+--------Para próxima versión:
+ 
+-decir que ssl mac requiere "brew install openssl"
+ 
+-Separar archivo TODO en varios:
+*Para proxima version
+*Cosas menos prioritarias
+*Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
+
+-tbblue: the "disable ULA" bit in $68 doesn't work, so ULA is visible over the tilemap ( https://specnext.dev/wiki/ULA_Control_Register )
+
+-Im modo 0 la interrupción es un testado más rápido que con Im modo 1
+
+-Quitar rutinas de autodetect mediante md5
+
+-Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
+
+-codigos de error para otras funciones network que faltan: read, write, zsock_read_all_until_command, etc
+
+-Comentar que se compile con ssl para soportar descargas completas de spectrum
+
+-en wos browser, Aliens neoplasma no carga
+
+-en menu En http browse, parámetro para https (si está ssl compilado)
+
+-finalizacion socket en ssl , llamar a alguna funcion supongo
+
+-ZXInfo browser segunda ventana debe tener de titulo el del juego 
+
+-Ensamblador opcodes extendidos next
+
+-permitir que las direcciones de breakpoints se pongan con 0xNNNN ademas de NNNNh y decimal
+incluso con $NNNN
+
+-Puerto dffd next
+https://specnext.dev/wiki/Next_Memory_Bank_Select
+
+-el compilado final de mac hay que hacerlo sin ssl? O ver si enlaza con la ssl del sistema operativo. Si no, igual se puede incluir la de homebrew de manera estática
+
+-en windows no compila network con threads…
+tampoco zip.h
+y error de un pthread que esta fuera de ifdef phread
+
+-funciones zsock no permite usarlas sin pthreads. Por que?
+
+
+
+-pulsar ESC en item que se esta escuchando en el menu, cierra el menu
+-items [X] no son amigables en speech, no se entienden. Deberian decir "yes" o "no"
+Corregir speech menus:
+
+-si item empieza por [, buscar hasta cierre ]. Y eso se reproduce al final de linea
+-Si [X], se dice "enabled". Si [ ], se dice "disabled"
+
+Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Funcion solo para esto y que no se use en otros sitios
+
+-opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
+
+
+-Semáforo en debug print tiene sentido??
+Quiza por el sprintf (pending_error_message
+ para que no se pudiera escribir desde dos sitios?
+
+-Opción para denegar acceso a menú file utils. Opción sólo de command line (y autograbado de config claro). Pero no visible en menú
+
+-si la primera vez arranca con driver stdout, se abre el menu directamente, quiza por que va a mostrar tooltips o changelog
+
+-Cambio de tipo de máquina no borra ZX Desktop. Quizá falta un cls?
+Falla también sin ZX Desktop?
+
+-Query zsock http que detecte si query es mayor que 1024 y de error
+
+-Modo sin colores que ya hay ahora pero cogiendo 4 o 16 colores del pixel tal cual
+
+-Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
+Desactivar threads en uno u otro caso según lo que corrija el sonido 
+
+-Info video mode 16c ventana. Que diga modo activo en ventana vídeo info
+
+-16c. hay modo con paleta?
+
+http://zxpress.ru/article.php?id=8610
+
+Probar en zxevo fisico
+
+Ball quest en formato trd
+http://www.pouet.net/prod.php?which=33976
+
+http://www.pouet.net/groups.php?which=10734
+
+https://github.com/tslabs/zx-evo/blob/master/pentevo/docs/ZX/zx-ports-full-table.txt
+
+https://cs.wikipedia.org/wiki/Pentagon_1024SL
+
+Modo 384 x 304 ?
+
+http://speccy.info/Pentagon
+
+Misma wiki para info de cosas de TSConf, como el z controller ide 
+
+
+
+-emular este bit de eff7 en pentagon:
+port EFF7: (adressation 1110xxxx xxxx0xxx )
+D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
+
+-funciones network no deberian generar mensajes verbose_err. Gestionar mediante valores retorno. 
+Importante para funciones background tipo enviar estadisticas o comprobar updates
+Quizá se pueda guardar en fifo de sockets un código de mensaje del último error. Entonces con esto pueden pasar más de 1 mensaje de error seguido del mismo socket? 
+No debería, a nivel de Zsock, si hay un error, se deja de usar ese socket?
+
+-preguntar si incluir algunas demos de 16C
+
+
+-tamanyos ventanas menus:
+si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango
+no deberia hacerlo, ventana deberia ser de 32x24 maximo
+ejemplo en browser juegos zx81
+letra a:
+Info: zxvision_new_window: window out of range: 13,0 19x38
+
+O si se sale de rango, centrar en border??
+
+lio porque depende de scr_get_menu_height
+ y scr_get_menu_width
+
+Ver también variables ZXVISION_MAX etc
+Max height y Max y por ejemplo deberían coincidir 
+
+O hago que al crear menú, los máximos sean igual que zxvision_max etc, o hago que zxvision al crear ventana permita más grande que 32x24
+
+O que Max ancho sea igual que Max x+1, y Max alto sea igual que Max y+1
+Ver en todos los sitios donde se usa variable que se vaya a cambiar
+
+Y probar en driver curses etc navegador de juegos zx81 
+
+Se corregiria con:
+#define ZXVISION_MAX_ANCHO_VENTANA (scr_get_menu_width())
+#define ZXVISION_MAX_ALTO_VENTANA (scr_get_menu_height())
+
+
+#define ZXVISION_MAX_X_VENTANA (ZXVISION_MAX_ANCHO_VENTANA-1)
+#define ZXVISION_MAX_Y_VENTANA (ZXVISION_MAX_ALTO_VENTANA-1)
+
+Per si corrijo esto, luego no centra menus en zona zxdesktop
+
+*Corregido. Revisar!
+
+
+-Descargas del browser wos que no van:
+-paw
+
+-Acceso telnet a servidor público para usar ZEsarUX. Con menú de borrado limitado. U otro usuario con permisos restringidos
+
+
+
+-Acortar nombre juego y id ya desde buffer línea a 28 o así aprox
+
+Otros acortar: url: a lo que de maximo el ítem misc de menú
+
+
+
+-Spool file funciona en cpc?
+
+
+-pantalla view sprites que adapte el texto leyenda al alto ventana
+
+
+-no lee enlaces simbolicos en filesystem: ejemplo /home/pi/PREPARADOS de raspiboy
+
+
+Thread 8 Crashed:
+0   libsystem_kernel.dylib        	0x00007fff736102c6 __pthread_kill + 10
+1   libsystem_pthread.dylib       	0x00007fff736cbbf1 pthread_kill + 284
+2   libsystem_c.dylib             	0x00007fff7357a745 __abort + 144
+3   libsystem_c.dylib             	0x00007fff7357aff3 __stack_chk_fail + 205
+4   zesarux                       	0x0000000106702e13 util_paws_dump_vocabulary + 2019
+5   zesarux                       	0x0000000106703a08 util_unpawsetc_dump_words + 104 (utils.c:14074)
+6   zesarux                       	0x00000001066a1c5e menu_unpaws_ungac + 46 (menu.c:22138)
+
+
+
+-Estadísticas de uso:
+-uso medio de cpu?
+
+ 
+
+-zsock http request: Buffer response en z80_byte y no char
+
+-Interceptar salida midi chip ay y enviarlo a midi real. Probar con programa de addon midi de zxuno
+
+-Selección de instrumento midi en midi export y midi output, para cada canal
+
+-rutinas zsock_read_all: deberia reintentar un par o dos de veces si no se ha alcanzado la longitud deseada
+o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
+o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
+
+-Sockets no debían llamar a debug print error. Sino por ejemplo al comprobar actualizaciones pueden salir errores que el usuario no sepa que son
+ZENG connect por ejemplo que deje un texto de error y número de error si lo hay
+
+-llamar a void timer_check_interrupt(void) desde menu_cpu_core_loop cuando no hay multitarea. Esto permitiria acceder a los timers desde menu
+sin que este multitarea. Efectos colaterales? Seguramente muchos
+quiza llamar solo a una parte de timers que no son criticos, solo usados en menu y no en emulacion
+
+-tabla de joystick to event siempre se resetea??
+
+-en audiosdl, si en MINGW, desactivar threads. Asi podemos hacer compilacion de Windows, usando threads, pero el audio sin threads
+Esto hará que el audio se escuche bien en windows en la versión con threads (porque actualmente no se escucha bien en windows con threads)
+
+-Ventana de error con tema cpc como se ven las franjas moverse?
+
+
+
+-Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer?
+
+Ejemplos generales socket
+https://www.binarytides.com/socket-programming-c-linux-tutorial/
+
+
+
+
+-ZENG "ZEsarUX Network Gaming"
+*jugar con diferente intervalo segundos:
+con 2: international match day se puede jugar bien
+target renegade se desfasa muy seguido
+-probar doom mania (juego a dobles al doom)
+
+-que al activar ZENG, active ZRCP si no esta
+
+-que permita ZENG en todos los cores de maquinas
+
+*que se guarde la config de los parametros
+
+*revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
+*con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
+
+-pruebas remotas:
+cliente remoto con Mac en Nueva Zelanda NZ, 200 Mbit/100 fibra, conectado por wifi, actuando como master
+cliente remoto con Linux en Spain (SP), 100 MBit simétrico fibra, conectado por ethernet, actuando como master
+mi imac Local, actuando como slave
+*international match day: SP va fina. NZ a veces fina y otras no (del estilo de no tener snapshot hasta al cabo de 20 segundos o mas)
+*target renegade: desfase en NZ, dificil jugar. En SP peta al enviar snapshot. Quiza problema buffer snapshot?
+*bubble bobble: algo de desfase en SP pero se puede jugar
+*double dragon: desfase en SP, difícil de jugar
+*ping pong: algo de desfase en SP pero se puede jugar
+
+
+*joystick real deberia enviar tambien evento sobre esto. cuidado con eventos de joystick que generan teclas,
+estos no deberian generar doble evento (joystick y tecla)
+
+-joystick y ZENG:
+--Joystick físico o cursores debe generar eventos de envía Tecla con código especial. Entra en función Antes de envío por ZENG. Quizá en funciones de joystick_send_**?
+--Joystick que activa Kempston, Sinclair, qaop, fuller etc activa esos puertos desde operaciones.c y no llama a envía Tecla
+--Joystick que genera Tecla redefinida, entra a envía Tecla pero después de ZENG, para no generar dos eventos
+
+Así los dos usuarios deben tener seleccionado el mismo tipo de joystick en menú. Así también como si hay redefinido joystick a Tecla, deben estar iguales en ambos 
+Lo ideal en dos jugadores es que si uno usa joystick, lo haga con tipo de joystick de menú: Kempston, qaop, Fuller etc. Y no use definición de joystick a Tecla, para evitar tener que redefinir los dos usuarios lo mismo
+
+PERO:
+-cursor llama a joystick_set_**
+Se generarían dos eventos de esta manera. Pero se llama después de ZENG
+Entonces envía cursor pero no joystick. Esto enviaría cursor remotamente por ZENG y generaría al final movimiento de joystick
+
+-real joystick también llama a joystick_set_**. Quizá este joystick set no debe generar evento ZENG. Hay que generar evento ZENG al pulsar real joystick quizá 
+
+
+Entonces:
+-cursor envía evento ZENG de cursor
+-pulsar joystick real debe agregar envío evento ZENG de código especial joystick 
+-joystick real a Tecla definida no debe llamar a ZENG por la Tecla. Solo envía ZENG el movimiento de joystick (caso anterior)
+
+
+
+*que pregunte confirmacion en destino si quiere aceptar
+*ZRCP que haga log de la ip de origen que se conecta
+*en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc
+Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZRCP_GET_PUT_SNAPSHOT_MEM
+
+
+*Quizá en sigpipe puede averiguar que socket ha fallado?
+Quizá sigpipe se puede gestionar diferente para cada thread?
+*funciones de envio snapshot, teclas y mensajes, deberian ver si reciben remote prompt? al llamar a zsock_read_all_until_command
+*detectar si no hay ningun master, o si los dos son master? como?
+:mirando estado local y remoto. Avisar si el estado no es 1 master y 1 slave. comando nuevo ZRCP para esto
+:quiza se puede permitir ningun master, pero lo que no deberia ser es dos master. Al menos avisar de esto y que el usuario ya decida
+
+Ampliar buffer de recepción y el de copia. Y asignarlos por malloc 
+
+*parar thread zeng y cerrar socket zeng al salir emulador
+*network: en windows siempre retorna datos disponibles.
+*asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado. Ya lee version pero quiza 
+habria que hacer que leyera el primer prompt correcto
+
+*revisar ZRCP: ahora al gestionar sigpipe quiza ya no peta al desconectarse el socket remoto
+
+*realjoystick_set_reset_key: quiza ahi deberia llamar a util_set_reset_key_continue, para que lo procese directamente zeng, y quitar
+zeng_send_key_event de la funcion realjoystick_set_reset_key
+
+* ZRCP: habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
+
+
+
+-página man de ZEsarUX. que no diga opciones, que haga referencia a --help y --experthelp
+
+-check_pending_zrcp_put_snapshot de momento solo para el core de spectrum
+
+-Probar malloc en 32 bit de 2 gb
+
+-Joystick en Mac
+Parece que en Mac es complicado
+Ver
+https://stackoverflow.com/questions/2234364/how-to-detect-a-gamepad-button-press-on-osx-10-5-and-higher
+y
+https://code.google.com/archive/p/ddribin/
+
+https://github.com/suzukiplan/gamepad-osx
+
+https://github.com/ThemsAllTook/libstem_gamepad
+
+
+Quizá en OSX superiores lo han simplificado. Pero hace falta swift o funciona con C?
+
+
+Y Windows sdl?
+
+-explorador archivos imagenes mmc etc con chanfatfs?
+
+-separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
+
+-a veces al cambiar numero chips en settings-audio-ay chips se cuelga
+
+-poder usar kempston mouse desde menu si ventana de menu no tiene el foco (al igual que sucede con el teclado)
+
+-AY partitura:
+*para el beeper tambien -> no hasta que se mejore la rutina de deteccion de nota
+*ideal para probar duraciones: golden axe
+
+-Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drives null y simpletext? Con printf verbose error?
+
+-Incluir sonic y otros en juegos TSConf. Pedir permiso a autores 
+
+-utils.c: In function ‘util_extract_hdf’:
+utils.c:11099:18: warning: this decimal constant is unsigned only in ISO C90
+                  2147483648L, //8. 2 GB
+                  ^
+utils.c: In function ‘util_ascii_to_binary’:
+utils.c:11248:9: warning: this decimal constant is unsigned only in ISO C90
+         const unsigned int mascara=(unsigned int)2147483648;
+
+
+Puede dar problemas?
+
+-- get_file_lines could be more efficient. Data is read byte by byte: leidos=fread(&buffer,1,1,ptr_archivo);
+For 700MB this takes about 20 secs. This is just a note. For me it is normally not an issue as I will truncate the file before usage.
+But if this is not done it can lead to a significant delay on startup.
+
+Yes. Loading it at once (with a previous malloc) will be better.
+
+
+
+
+-Thread aparte para descargas web. Útil para spectranet, browser juegos, comprobación updates, emulación uart 
+Función simple que abra la conexión y devuelva datos http. Thread por debajo que indique cuando estén los datos listos
+1 sola petición cada vez?
+
+-Si el config file no carga por error en parse siempre desactiva setting de auto grabar config? si, se desactiva
+
+
+-Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
+
+
+-hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
+
+
+-para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
+-quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
+
+-file browser no muestra dispositivos. importante para uart
+Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
+o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
+arriba)
+
+-ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
+la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
+
+-alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
+y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
+
+-filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
+
+-uso de settings.c y settings.h. revisar que tiene que ir ahi
+
+-Como puede ser que al redimensionar ay sheet la ventana tenga más tamaño total... se crea de nuevo al redimensionar?
+
+Creo que el putpixel en overlay no controla ancho total sino ancho visible
+
+Efectivamente. Se usa tamaño visible
+Hacerlo constar en zxvision_putpixel como un TODO. Aunque si no hubiera este “fallo”, al redimensionar ay sheet no se vería el tamaño adicional , habría que cerrar la ventana y volverla a abrir ya con el tamaño total nuevo (ya que guarda geometría)
+Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al no recrearse la ventana , y hay que salir y volver a entrar. Ejemplos??
+
+
+
+-unpaws con quill:
+*compression tokens existen?
+
+-unpaws: 
+*compression tokens no siempre estan hasta el 255
+
+
+-Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar la velocidad de la cpu en nextos
+
+-ejemplos para spool, como:
+./txt_to_basic_lines.sh FAQ 3 si si no > pruebaspool2.txt
+
+-al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
+
+
+-leer audio casette
+
+-En mostrar registros IR
+Decir cuál es el vector de interrupción 
+
+--Formato pzx
+
+-cpuid ("zxid") según especificación de mcleod
+
+-al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
+cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
+
+-reorganizar capturas de pantalla del readme.md para que esten todas las maquinas
+-en github, Screenshot sir Fred pixel y ascii todo junto. el de ascii, esta cortado
+-Revisar archivo install. En caso de Linux y otros binarios ya compilados, enseñarlo más fácilmente. Otro documento quizá que diga cómo compilarlo  
+
+
+-temperatura cpu en mac
+https://github.com/lavoiesl/osx-cpu-temp
+
+
+-parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
+
+-quiza version mac debe tener dos versiones: una compilada con O2, otra sin
+Que hacemos con cocoa no opengl?
+
+
+-------- Fin cosas para la siguiente version
+
