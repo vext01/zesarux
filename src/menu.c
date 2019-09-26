@@ -4989,7 +4989,8 @@ int menu_get_origin_x_zxdesktop_aux(int divisor)
 
 	//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
 	//int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA/2;
-	int restar=screen_ext_desktop_width/8/menu_gui_zoom;
+	int restar=screen_ext_desktop_width/menu_char_width/menu_gui_zoom;
+	//printf ("restar: %d\n",restar);
 	//al menos 32 de ancho para zona de menu
 	if (restar<32) restar=32;
 	int pos_x=ancho_total-restar/divisor;

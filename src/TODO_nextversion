@@ -1,8 +1,6 @@
 --------Para próxima versión:
  
 -decir que ssl mac requiere "brew install openssl"
-
--calculo de centro y origen x, que utiliza 8 como divisor, no deberia ser el ancho del caracter de menu? Le afecta tambien el 32?
  
 -Separar archivo TODO en varios:
 *Para proxima version
