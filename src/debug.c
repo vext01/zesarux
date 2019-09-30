@@ -1865,40 +1865,8 @@ z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GC
 			//10:00:01.0005
 			//10:00:02.0008
 
-			//microsegundos
-			long trans_useconds;
-
-			struct timeval trans_timer;
-
-
-		        gettimeofday(&trans_timer, NULL);
-
-        		trans_useconds = trans_timer.tv_usec;
-			sprintf (&transaction_log_line_to_store[index],"%04d/%02d/%02d %02d:%02d:%02d.%06ld ",
-				tm.tm_year + 1900,tm.tm_mon+1,tm.tm_mday,tm.tm_hour,tm.tm_min,tm.tm_sec,trans_useconds);
+			/
 			*/
-
-
-			struct timeval tv;
-			struct tm* ptm;
-			long microseconds;
-
-
-            // 2015/01/01 11:11:11.999999 "
-            // 123456789012345678901234567
-			const int longitud_timestamp=27;
-
-			/* Obtain the time of day, and convert it to a tm struct. */
-			gettimeofday (&tv, NULL);
-			ptm = localtime (&tv.tv_sec);
-			/* Format the date and time, down to a single second. */
-			char time_string[40];
-
-			strftime (time_string, sizeof(time_string), "%Y/%m/%d %H:%M:%S", ptm);
-
-			microseconds = tv.tv_usec;
-			 /* Print the formatted time, in seconds, followed by a decimal point and the microseconds. */
-			//sprintf (&transaction_log_line_to_store[index],"%s.%06ld ", time_string, microseconds);
 
 			int longitud=debug_get_timestamp(&transaction_log_line_to_store[index]);
 
@@ -5322,57 +5290,29 @@ int debug_get_timestamp(char *destino)
 {
 	
 
-	                //fecha grabacion
-			/*
-        	        time_t tiempo = time(NULL);
-                	struct tm tm = *localtime(&tiempo);
-
-			//funciones localtime no son tan precisas como gettimeofday
-			//parece que localtime tarda unos milisegundos en actualizar los segundos
-			//y aparecen tiempos como
-			//10:00:01.9999
-			//10:00:01.0003   <-aqui deberia haber saltado el segundo
-			//10:00:01.0005
-			//10:00:02.0008
-
-			//microsegundos
-			long trans_useconds;
-
-			struct timeval trans_timer;
+	struct timeval tv;
+	struct tm* ptm;
+	long microseconds;
 
 
-		        gettimeofday(&trans_timer, NULL);
+	// 2015/01/01 11:11:11.999999"
+	// 12345678901234567890123456
+	const int longitud_timestamp=26;
 
-        		trans_useconds = trans_timer.tv_usec;
-			sprintf (&transaction_log_line_to_store[index],"%04d/%02d/%02d %02d:%02d:%02d.%06ld ",
-				tm.tm_year + 1900,tm.tm_mon+1,tm.tm_mday,tm.tm_hour,tm.tm_min,tm.tm_sec,trans_useconds);
-			*/
+	/* Obtain the time of day, and convert it to a tm struct. */
+	gettimeofday (&tv, NULL);
+	ptm = localtime (&tv.tv_sec);
+	/* Format the date and time, down to a single second. */
+	char time_string[40];
 
+	strftime (time_string, sizeof(time_string), "%Y/%m/%d %H:%M:%S", ptm);
 
-			struct timeval tv;
-			struct tm* ptm;
-			long microseconds;
-
-
-            // 2015/01/01 11:11:11.999999"
-            // 12345678901234567890123456
-			const int longitud_timestamp=26;
-
-			/* Obtain the time of day, and convert it to a tm struct. */
-			gettimeofday (&tv, NULL);
-			ptm = localtime (&tv.tv_sec);
-			/* Format the date and time, down to a single second. */
-			char time_string[40];
-
-			strftime (time_string, sizeof(time_string), "%Y/%m/%d %H:%M:%S", ptm);
-
-			microseconds = tv.tv_usec;
-			 /* Print the formatted time, in seconds, followed by a decimal point and the microseconds. */
-			sprintf (destino,"%s.%06ld ", time_string, microseconds);
+	microseconds = tv.tv_usec;
+		/* Print the formatted time, in seconds, followed by a decimal point and the microseconds. */
+	sprintf (destino,"%s.%06ld ", time_string, microseconds);
 
 
-			return longitud_timestamp;
+	return longitud_timestamp;
 			 
-
         
 }
