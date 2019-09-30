@@ -4853,6 +4853,9 @@ long int get_file_size(char *nombre)
 }
 
 
+
+
+
 //Retorna numero lineas archivo.
 int get_file_lines(char *filename)
 {
@@ -4860,23 +4863,56 @@ int get_file_lines(char *filename)
 	int leidos;
         int total_lineas=0;
 
-                FILE *ptr_archivo;
-                ptr_archivo=fopen(filename,"rb");
-                if (!ptr_archivo) {
-                        debug_printf (VERBOSE_DEBUG,"Can not open %s",filename);
-                        return 0;
-                }
+        //Leemos primero todo el archivo en memoria
+        long int tamanyo_archivo=get_file_size(filename);
 
-        z80_byte buffer;
+        z80_byte *buffer_memoria;
+        z80_byte *buffer_memoria_copia;
 
-        do {
-                leidos=fread(&buffer,1,1,ptr_archivo);
-                if (leidos) {
-                        if (buffer=='\n') total_lineas++;
-                }
-        } while (leidos>0);
-                
+        if (tamanyo_archivo>0) {
+                //printf ("asignando memoria\n");
+                buffer_memoria=malloc(tamanyo_archivo);
+                if (buffer_memoria==NULL) cpu_panic("Can not allocate memory for counting file lines");
+                buffer_memoria_copia=buffer_memoria;
+        }
+
+        FILE *ptr_archivo;
+        ptr_archivo=fopen(filename,"rb");
+        if (!ptr_archivo) {
+                debug_printf (VERBOSE_DEBUG,"Can not open %s",filename);
+                return 0;
+        }
+
+        leidos=fread(buffer_memoria,1,tamanyo_archivo,ptr_archivo);
         fclose(ptr_archivo);
+
+        /*
+        Nota: leyendo de fread todo de golpe, o byte a byte, suele tardar lo mismo, EXCEPTO, en el caso que el archivo este en cache
+        del sistema operativo, parece que leer byte a byte no tira de cache. En cambio, leyendo todo de golpe, si que usa la cache
+        Ejemplo:
+        Leer archivo de 371 MB. lineas total: 14606365
+        25 segundos aprox en leer y contar lineas, usando fread byte a byte
+        Si uso fread leyendo todo de golpe, tarda menos de 1 segundo
+        */
+
+        z80_byte byte_leido;
+
+        while (leidos>0) {
+                byte_leido=*buffer_memoria_copia;
+                buffer_memoria_copia++;
+                leidos--;
+
+                if (byte_leido=='\n') total_lineas++;
+
+                //if (leidos<5) printf ("leyendo de memoria\n");
+        } 
+                
+        if (tamanyo_archivo>0) {
+                //printf ("liberando memoria\n");
+                free(buffer_memoria);
+        }
+
+        //printf ("lineas total: %d\n",total_lineas);
 
 	return total_lineas;
 

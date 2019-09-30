@@ -1996,7 +1996,15 @@ int transaction_log_open_file(void)
 	 
 
 	 //tiempo antes
-	 transaction_log_tamanyo_lineas=get_file_lines(transaction_log_filename);
+	//char tiempo[200];
+	//debug_get_timestamp(tiempo);
+	//printf ("tiempo antes leer archivo: %s\n",tiempo);
+
+	transaction_log_tamanyo_lineas=get_file_lines(transaction_log_filename);
+
+	//debug_get_timestamp(tiempo);
+	//printf ("tiempo despues leer archivo: %s\n",tiempo);
+
 	 //tiempo despues
 
   }
