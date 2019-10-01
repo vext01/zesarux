@@ -175,6 +175,8 @@ Otros TODO menos prioritarios, de aqui hasta el final del archivo:
 
 *** Proceso compilacion ***
 
+-Acceso telnet a servidor público para usar ZEsarUX. Con menú de borrado limitado. U otro usuario con permisos restringidos
+
 * probar en html ->emscripten
 http://kripken.github.io/emscripten-site/
 

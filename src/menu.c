@@ -6535,19 +6535,16 @@ void zxvision_putpixel(zxvision_window *w,int x,int y,int color)
 	//int final_x,final_y;
 
 	/*
-	//Nuevas ventanas zxvision
-struct s_zxvision_window {
-	overlay_screen *memory;
-	int visible_width,visible_height;
-	int x,y;
 
-	int offset_x,offset_y;
+-Como puede ser que al redimensionar ay sheet la ventana tenga más tamaño total... se crea de nuevo al redimensionar?
+->no, porque dibuja pixeles con overlay y eso no comprueba si sale del limite virtual de la ventana
+Creo que el putpixel en overlay no controla ancho total sino ancho visible. Exacto
 
-	int total_width,total_height;
-	char window_title[256];
+Efectivamente. Se usa tamaño visible
+Hacerlo constar en zxvision_putpixel como un TODO. Aunque si no hubiera este “fallo”, al redimensionar ay sheet no se vería el tamaño adicional , habría que cerrar la ventana y volverla a abrir ya con el tamaño total nuevo (ya que guarda geometría)
+Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al no recrearse la ventana , y hay que salir y volver a entrar. Ejemplos??
 
-	int can_be_resized;
-};
+
 */
 	/*
 	    int offsetx=PIANO_GRAPHIC_BASE_X*menu_char_width+12;
@@ -21532,7 +21529,8 @@ void menu_debug_input_file_keyboard(MENU_ITEM_PARAMETERS)
 			if (!MACHINE_IS_TBBLUE) {
 				menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_turbo,menu_input_file_keyboard_turbo_cond,"[%c] Turbo mode",(input_file_keyboard_turbo.v ? 'X' : ' ') );
 				menu_add_item_menu_tooltip(array_menu_input_file_keyboard,"Allow turbo mode on Spectrum models");
-				menu_add_item_menu_ayuda(array_menu_input_file_keyboard,"Allow turbo mode on Spectrum models. It traps calls to function ROMS when keyboard is read");
+				menu_add_item_menu_ayuda(array_menu_input_file_keyboard,"Allow turbo mode on Spectrum models. It traps calls to function ROMS when keyboard is read.\n"
+									"Works well with Spectrum basic but also with Text Adventures made with Daad, Paws and Quill");
 			}
 
 

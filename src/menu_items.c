@@ -15584,10 +15584,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         //Se establece a la de funcion de piano + texto
         set_menu_overlay_function(menu_ay_partitura_overlay);
 
-
-
-
-		
+	
 		
 		//Si solo hay 1 chip, no mostrar selector de chip
 		if (total_ay_chips==1) zxvision_wait_until_esc(ventana);
@@ -15636,19 +15633,16 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 				
 
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
+	//restauramos modo normal de texto de menu
+	set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-        cls_menu_overlay();
+    cls_menu_overlay();
 
 
 	util_add_window_geometry_compact("aysheet",ventana);
 	zxvision_destroy_window(ventana);			
 	
-
-
-			
 
 }
 

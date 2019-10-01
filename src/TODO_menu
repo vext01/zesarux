@@ -122,6 +122,41 @@ Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que 
 Lo hace realmente con visible_width y visible_height
 
 
+-tamanyos ventanas menus. Ya corregido!
+si menu genera ventana de 24 lineas o mas, da error de zx vision por ventana fuera de rango
+no deberia hacerlo, ventana deberia ser de 32x24 maximo
+ejemplo en browser juegos zx81
+letra a:
+Info: zxvision_new_window: window out of range: 13,0 19x38
+
+O si se sale de rango, centrar en border??
+
+lio porque depende de scr_get_menu_height
+ y scr_get_menu_width
+
+Ver también variables ZXVISION_MAX etc
+Max height y Max y por ejemplo deberían coincidir 
+
+O hago que al crear menú, los máximos sean igual que zxvision_max etc, o hago que zxvision al crear ventana permita más grande que 32x24
+
+O que Max ancho sea igual que Max x+1, y Max alto sea igual que Max y+1
+Ver en todos los sitios donde se usa variable que se vaya a cambiar
+
+Y probar en driver curses etc navegador de juegos zx81 
+
+Se corregiria con:
+#define ZXVISION_MAX_ANCHO_VENTANA (scr_get_menu_width())
+#define ZXVISION_MAX_ALTO_VENTANA (scr_get_menu_height())
+
+
+#define ZXVISION_MAX_X_VENTANA (ZXVISION_MAX_ANCHO_VENTANA-1)
+#define ZXVISION_MAX_Y_VENTANA (ZXVISION_MAX_ALTO_VENTANA-1)
+
+Per si corrijo esto, luego no centra menus en zona zxdesktop
+
+-Fin tamanyos ventanas menus. Ya corregido!
+
+
 
 --- FIN ZX Vision
 
@@ -135,6 +170,17 @@ Lo hace realmente con visible_width y visible_height
 -------------
 
 --- menu - mejoras ---
+
+-Info video mode Pentagon 16c ventana. Que diga modo activo en ventana vídeo info. Problema: en maquina no tsconf o tbblue no hay ventana de video info
+
+-AY partitura:
+*para el beeper tambien -> no hasta que se mejore la rutina de deteccion de nota
+*ideal para probar duraciones: golden axe
+
+
+-llamar a void timer_check_interrupt(void) desde menu_cpu_core_loop cuando no hay multitarea. Esto permitiria acceder a los timers desde menu
+sin que este multitarea. Efectos colaterales? Seguramente muchos
+quiza llamar solo a una parte de timers que no son criticos, solo usados en menu y no en emulacion
 
 -Color rojo de stick osd en tema clean, no se ve
 
@@ -156,6 +202,10 @@ en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
 
 -Al insertar mmc o ide debe ir primero a rutas shared, tal y como hace smartload por ejemplo. y tambien ir a ultima ruta al abrir selector archivos
 
+-alguna vez al abrir ay piano, pulsar boton derecho fuera de la ventana, desaparece la ventana y no vuelve a menu anterior
+y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
+
+-filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
 
 -------------
 
@@ -165,6 +215,10 @@ Otros TODO menos prioritarios, de aqui hasta el final del archivo:
 
 
 *** Menu  ***
+
+-explorador archivos imagenes mmc etc con chanfatfs?
+
+-poder usar kempston mouse desde menu si ventana de menu no tiene el foco (al igual que sucede con el teclado)
 
 -Snapshots automáticos de nombre que depende del archivo cargado. Para tener siempre uno cuando se cambia de juego 
 

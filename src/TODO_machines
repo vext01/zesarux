@@ -121,6 +121,14 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 -Puerto 57 tsconf es mmc?? usado en zifi demo
 
+
+http://speccy.info/Pentagon
+
+Misma wiki para info de cosas de TSConf, como el z controller ide 
+
+
+
+
 -tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
 
 -Tsconf render modo spectrum compatible debería leer de buffer atributos y pixeles ; para que demos como overscan se vean bien
@@ -264,16 +272,24 @@ Edición de colores de paleta 2
 
 --- Pentagon ---
 
--snapshot .zx
 -No deja desactivar timing pentagon cuando la maquina seleccionada es pentagon. dado que reinicializa el valor
--pentagon 512 y superiores modos de paginacion ram
-http://www.zxuno.com/forum/viewtopic.php?f=12&t=400
-relacionado:
-http://www.zxuno.com/forum/viewtopic.php?f=37&t=552&sid=88847dce1ad30a54353f35884937ef1f
--Demo across the edge se ve ligeramente mejor si se pone setting IM2 slow a yes
-Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
+-16c. hay modo con paleta?
 
+http://zxpress.ru/article.php?id=8610
+
+Probar en zxevo fisico
+
+Ball quest en formato trd
+http://www.pouet.net/prod.php?which=33976
+
+http://www.pouet.net/groups.php?which=10734
+
+https://github.com/tslabs/zx-evo/blob/master/pentevo/docs/ZX/zx-ports-full-table.txt
+
+https://cs.wikipedia.org/wiki/Pentagon_1024SL
+
+Modo 384 x 304 ?
 
 
 -------------
