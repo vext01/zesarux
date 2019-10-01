@@ -74,7 +74,7 @@ Falla también sin ZX Desktop?
 
 -Query zsock http que detecte si query es mayor que 1024 y de error
 
--Modo sin colores que ya hay ahora pero cogiendo 4 o 16 colores del pixel tal cual
+
 
 -Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
 Desactivar threads en uno u otro caso según lo que corrija el sonido 
