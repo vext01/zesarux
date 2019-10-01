@@ -3584,6 +3584,8 @@ int util_write_configfile(void)
   if (menu_desactivado_andexit.v)              ADD_STRING_CONFIG,"--disablemenuandexit");
 			
 
+  if (menu_desactivado_file_utilities.v)      ADD_STRING_CONFIG,"--disablemenufileutils");
+
 
   if (menu_force_writing_inverse_color.v)     ADD_STRING_CONFIG,"--forcevisiblehotkeys");
   if (force_confirm_yes.v)                    ADD_STRING_CONFIG,"--forceconfirmyes");

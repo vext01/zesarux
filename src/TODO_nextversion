@@ -1,11 +1,6 @@
 --------Para próxima versión:
  
 -decir que ssl mac requiere "brew install openssl"
- 
--Separar archivo TODO en varios:
-*Para proxima version
-*Cosas menos prioritarias
-*Cosas de audio, video, etc. Clasificados. Cuantas clasificaciones?
 
 -tbblue: the "disable ULA" bit in $68 doesn't work, so ULA is visible over the tilemap ( https://specnext.dev/wiki/ULA_Control_Register )
 
@@ -37,7 +32,7 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 -el compilado final de mac hay que hacerlo sin ssl? O ver si enlaza con la ssl del sistema operativo. Si no, igual se puede incluir la de homebrew de manera estática
 
--en windows no compila network con threads…
+-en windows no compila network con threads...
 tampoco zip.h
 y error de un pthread que esta fuera de ifdef phread
 
@@ -61,7 +56,6 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 Quiza por el sprintf (pending_error_message
  para que no se pudiera escribir desde dos sitios?
 
--Opción para denegar acceso a menú file utils. Opción sólo de command line (y autograbado de config claro). Pero no visible en menú
 
 -si la primera vez arranca con driver stdout, se abre el menu directamente, quiza por que va a mostrar tooltips o changelog
 

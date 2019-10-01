@@ -293,6 +293,9 @@ z80_bit menu_desactivado={0};
 //Si el menu esta desactivado completamente. Si es asi, cualquier evento que abra el menu, provocará la salida del emulador
 z80_bit menu_desactivado_andexit={0};
 
+//Si el menu de file utilities esta deshabilitado
+z80_bit menu_desactivado_file_utilities={0};
+
 //indica que el menu aparece en modo multitarea - mientras ejecuta codigo de emulacion de cpu
 int menu_multitarea=1;
 
@@ -22364,15 +22367,17 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_save_binary,NULL,"S~~ave binary block");
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'a');
 
-		//menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_viewer,NULL,"Fi~~le viewer");
-		//menu_add_item_menu_shortcut(array_menu_debug_settings,'l');
 
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_utils,NULL,"File ~~utilities");
-		menu_add_item_menu_shortcut(array_menu_debug_settings,'u');
-		menu_add_item_menu_tooltip(array_menu_debug_settings,"Some file utilities. NOTE: Shortcuts must be chosen pressing Shift+Key");
-		menu_add_item_menu_ayuda(array_menu_debug_settings,"Some file utilities.\nNOTE: Shortcuts in file utilities must be chosen by pressing Shift+Key, "
-							"I mean, shortcuts are in capital letters to differentiate from quick selecting a file, so for example, "
-							"to view a file you must press Shift+v");
+		if (menu_desactivado_file_utilities.v==0) {
+
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_utils,NULL,"File ~~utilities");
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'u');
+			menu_add_item_menu_tooltip(array_menu_debug_settings,"Some file utilities. NOTE: Shortcuts must be chosen pressing Shift+Key");
+			menu_add_item_menu_ayuda(array_menu_debug_settings,"Some file utilities.\nNOTE: Shortcuts in file utilities must be chosen by pressing Shift+Key, "
+								"I mean, shortcuts are in capital letters to differentiate from quick selecting a file, so for example, "
+								"to view a file you must press Shift+v");
+
+		}
 		
 
 

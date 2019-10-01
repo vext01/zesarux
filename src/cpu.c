@@ -1667,6 +1667,9 @@ printf (
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
 		"--disablemenu              Disable menu\n"
 		"--disablemenuandexit       Disable menu. Any event that opens the menu will exit the emulator\n"
+		"--disablemenufileutils     Disable File Utilities menu\n"
+
+
 		"--text-keyboard-add text   Add a string to the Adventure Text OSD Keyboard. The first addition erases the default text keyboard.\n"
 		" You can use hotkeys by using double character ~~ just before the letter, for example:\n"
 		" --text-keyboard-add ~~north   --text-keyboard-add e~~xamine\n");
@@ -6553,6 +6556,10 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--disablemenuandexit")) {
 				menu_desactivado_andexit.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--disablemenufileutils")) {
+				menu_desactivado_file_utilities.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--forcevisiblehotkeys")) {
