@@ -203,10 +203,8 @@ void set_snaptape_filemachine(char *filename GCC_UNUSED)
 
 
 
-        /*if (!strcmp(md5file,"b31851af2c54a676cd50163146d68e4b")) {
-		set_snaptape_filemachine_setreset("Detected ROBOCOP3. Resetting to 128k machine",6);
-	}*/
-
+ 
+	/*
 
         if (!strcmp(md5file,"5b1c8a978c59983761558ce2f33635d5")) {
                 set_snaptape_filemachine_setreset("Detected viewgiga. Resetting to 128k machine",6);
@@ -268,7 +266,7 @@ void set_snaptape_filemachine(char *filename GCC_UNUSED)
                 set_snaptape_filemachine_setreset("Detected Interlace. Setting 128k machine",6);
         }
 
-
+	*/
 
 
 
@@ -398,7 +396,7 @@ void set_snaptape_fileoptions(char *filename)
 	// Fin cambios en joystick
 	//
 
-
+/*
 
 	else if (!strcmp(md5file,"0d7e4bbb6ffda3a80b138ff88c32af71")) {
 		split_game_name_info ("ZX Music Interpreter. Enabling Tape Sound, Real Video");
@@ -422,13 +420,7 @@ void set_snaptape_fileoptions(char *filename)
 		mostrar_footer_game_name="OverScan";
 	}
 
-	/*
-	else if (!strcmp(md5file,"13bf4482985dd93421bd82188ac41a29")) {
-                split_game_name_info ("Fuller Box & Orator Demonstration. Enabling AY Chip");
-                ay_chip_present.v=1;
 
-        }
-	*/
 
 
 	else if (!strcmp(md5file,"e24ed8361218b5905cf7a41f7db207be")) {
@@ -462,20 +454,20 @@ void set_snaptape_fileoptions(char *filename)
 
 
 	//Some rainbow games & demos
-/*
-7e5a02a5086c5f04c6331e44f4cfe28a  Bozxle.tap
-e6486e5842f71d4d9154ea14f84cfaa8  ColorPRINT48.tzx
-f25e4159a7a69f7113d856cc8a75265e  endlessforms0.tap
-b205fa5e8ec08d9cd0bf8a7b155befc3  RainbowProcessor.tap
-c6c70cf11e2e96cdbf4c09b4412630b3  Rotatrix (TK90X).tzx
-5e8f8f1456833c23dc625db2ed4db565  Rotatrix.tzx
-c3e7a660f4ce7b1f7dcdff39c5ce0ed9  STARTIP1.TAP
-dea011a55f3a629c61a88ec6369c88fc  thelosttapesofalbion0.tap
-64e5647478ff7c263e5e360a4e179db4  over128.z80
-9fa069661be0fc6d4ff22156a0268210  over48.z80
-053ee0857a91b0f4902a0b5b80dee375  BorderTrix.tap
 
-*/
+//7e5a02a5086c5f04c6331e44f4cfe28a  Bozxle.tap
+//e6486e5842f71d4d9154ea14f84cfaa8  ColorPRINT48.tzx
+//f25e4159a7a69f7113d856cc8a75265e  endlessforms0.tap
+//b205fa5e8ec08d9cd0bf8a7b155befc3  RainbowProcessor.tap
+//c6c70cf11e2e96cdbf4c09b4412630b3  Rotatrix (TK90X).tzx
+//5e8f8f1456833c23dc625db2ed4db565  Rotatrix.tzx
+//c3e7a660f4ce7b1f7dcdff39c5ce0ed9  STARTIP1.TAP
+//dea011a55f3a629c61a88ec6369c88fc  thelosttapesofalbion0.tap
+//64e5647478ff7c263e5e360a4e179db4  over128.z80
+//9fa069661be0fc6d4ff22156a0268210  over48.z80
+//053ee0857a91b0f4902a0b5b80dee375  BorderTrix.tap
+
+
 
 	else if (
 	!strcmp(md5file,"7e5a02a5086c5f04c6331e44f4cfe28a") ||
@@ -755,12 +747,12 @@ dea011a55f3a629c61a88ec6369c88fc  thelosttapesofalbion0.tap
 
 
 
-/*
-8ec7b8cd5c682bbfd4fa1fc5b29d0255  tapes/zx81/hires/wrx/NU3.P
-cfdf935dde293c85766d0f5f735ef253  tapes/zx81/hires/wrx/NU4.P
-d9c5e4b08ae79869fe8898529209c061  tapes/zx81/hires/wrx/NU5.P
-ebc6ac140491b9662a19cbba06e63886  tapes/zx81/hires/wrx/NU9.P
-*/
+
+//8ec7b8cd5c682bbfd4fa1fc5b29d0255  tapes/zx81/hires/wrx/NU3.P
+//cfdf935dde293c85766d0f5f735ef253  tapes/zx81/hires/wrx/NU4.P
+//d9c5e4b08ae79869fe8898529209c061  tapes/zx81/hires/wrx/NU5.P
+//ebc6ac140491b9662a19cbba06e63886  tapes/zx81/hires/wrx/NU9.P
+
 	else if (
 	!strcmp(md5file,"8ec7b8cd5c682bbfd4fa1fc5b29d0255") ||
 	!strcmp(md5file,"cfdf935dde293c85766d0f5f735ef253") ||
@@ -846,17 +838,6 @@ ebc6ac140491b9662a19cbba06e63886  tapes/zx81/hires/wrx/NU9.P
 
 
 
-	/*
-        else if (!strcmp(md5file,"fa2defc8cd5350a23c2b9464786c7755")) {
-                split_game_name_info ("HiRes Pacman. Enabling Real Video, enabling lnctr video adjust");
-                enable_rainbow();
-                video_zx8081_lnctr_adjust.v=1;
-
-        }
-	*/
-
-
-
 	else if (!strcmp(md5file,"202d2fe74dbd7c72ee0d6acff6bc3cb1")) {
                 split_game_name_info ("Spirograph. Enabling Real Video, WRX, RAM Pack");
                 enable_rainbow();
@@ -890,15 +871,6 @@ ebc6ac140491b9662a19cbba06e63886  tapes/zx81/hires/wrx/NU9.P
         }
 
 
-
-
-	/*
-	else if (!strcmp(md5file,"51898f5733a5b0ca72feb5caee48fd40")) {
-                split_game_name_info ("Tetris HR.  Enabling Real Video, enabling lnctr video adjust");
-                enable_rainbow();
-                video_zx8081_lnctr_adjust.v=1;
-        }
-	*/
 
 	else if (!strcmp(md5file,"e9a2b79b316f09a7a01adc09b3585072")) {
                 split_game_name_info ("wrx1k1. Enabling Real Video, WRX");
@@ -993,14 +965,14 @@ ebc6ac140491b9662a19cbba06e63886  tapes/zx81/hires/wrx/NU9.P
         }
 
 	//programas que usan magnum light phaser
-/*
-6bf66b0972ca6f91412981d96cf73116  American Turbo King (1989)(Mastertronic)[Lightgun].tap
-6c9958a804f352eb42bf431e07bb5484  Billy The Kid - Lightgun (1989)(Mastertronic).tap
-59859057a5376c890c5cc2e617157e0f  Bronx Street Cop - Joystick (1989)(Mastertronic).tap
-aade525753c4572d11e10af9cb344e18  SINCLACT.TAP
-051c1e304acd4d08c3d7cc9fd60efa2b  Sinclair Action Pack - Side A.tzx
-7d30da869544aed29181749bcbdf16b0  Sinclair Action Pack - Side B.tzx
-*/
+
+//6bf66b0972ca6f91412981d96cf73116  American Turbo King (1989)(Mastertronic)[Lightgun].tap
+//6c9958a804f352eb42bf431e07bb5484  Billy The Kid - Lightgun (1989)(Mastertronic).tap
+//59859057a5376c890c5cc2e617157e0f  Bronx Street Cop - Joystick (1989)(Mastertronic).tap
+//aade525753c4572d11e10af9cb344e18  SINCLACT.TAP
+//051c1e304acd4d08c3d7cc9fd60efa2b  Sinclair Action Pack - Side A.tzx
+//7d30da869544aed29181749bcbdf16b0  Sinclair Action Pack - Side B.tzx
+
 	else if (
 	!strcmp(md5file,"6bf66b0972ca6f91412981d96cf73116") ||
 	!strcmp(md5file,"6c9958a804f352eb42bf431e07bb5484") ||
@@ -1048,12 +1020,12 @@ aade525753c4572d11e10af9cb344e18  SINCLACT.TAP
                 gunstick_emulation=GUNSTICK_SINCLAIR_1;
         }
 
-/*
-064792146542ada54d8177fa36f25d39  tapes/spectrum/mouse/kempston_mouse_interface_driver.z80
-9f26f8265931eca1d713142676276d03  tapes/spectrum/mouse/The OCP Art Studio (Datel) - Side A.tzx
-f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel) - Side B.tzx
 
-*/
+//064792146542ada54d8177fa36f25d39  tapes/spectrum/mouse/kempston_mouse_interface_driver.z80
+//9f26f8265931eca1d713142676276d03  tapes/spectrum/mouse/The OCP Art Studio (Datel) - Side A.tzx
+//f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel) - Side B.tzx
+
+
 
 	//programas que usan kempston mouse
 	else if (
@@ -1129,15 +1101,21 @@ f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel
 		chardetect_line_width_wait_space.v=1;
         }
 
+
+
+*/
+
+
+
 	//Hobbit v1.0. tzx. utiliza dos traps
-        else if (
+/*        else if (
         !strcmp(md5file,"957e4e8be02ad8d1d36dbeeefa6fc8bd") ||
         !strcmp(md5file,"84228f97e581e5bd730587bbfa04483d") ||
 	!strcmp(md5file,"3a09fe06a679644738b2d20470df9912")
 
 
 
-        ) {
+        ) {*/
 	/*
 		second_trap entra como common 1:
                 PUSH AF
@@ -1168,7 +1146,7 @@ f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel
 		LD DE,3D00H
 		ADD HL,DE
 	*/
-
+/*
                 split_game_name_info ("The Hobbit v10. Setting stdout second and third trap address");
                 chardetect_second_trap_char_dir=30652;
                 chardetect_third_trap_char_dir=30317;
@@ -1256,7 +1234,7 @@ f09b92fc3fa4e58aa21f0a029a73e308  tapes/spectrum/mouse/The OCP Art Studio (Datel
                 enable_gigascreen();
         }
 
-
+*/
 
 
 	else {

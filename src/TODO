@@ -233,6 +233,8 @@ Lo que pasa es que cuando asigno memoria vram hago los 32 k de golpe, por eso cu
 
 *** Misc ***
 
+-sumas md5 que ya no se usan de autoselect. Ver si hay archivos .config alternativos para todo esto
+
 -Convertir cintas paws
 -Otros componentes mas extraños, como "descubrir" puntuaciones actuales en un juego u otros parámetros,
 como descubrir rutinas de pintado de sprites

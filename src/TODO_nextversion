@@ -6,8 +6,6 @@
 
 -Im modo 0 la interrupción es un testado más rápido que con Im modo 1
 
--Quitar rutinas de autodetect mediante md5
-
 -tabla de joystick to event siempre se resetea??
 
 -Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
