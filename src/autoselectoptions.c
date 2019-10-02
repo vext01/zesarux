@@ -41,6 +41,8 @@
 #endif
 
 //Inicio funciones SSL
+//Ya no se usan
+/*
 #ifdef COMPILE_SSL
 
 #if defined(__APPLE__)
@@ -95,7 +97,7 @@ void return_md5sum_file(char *md5string,char *filename)
 
 #endif
 //Fin funciones SSL
-
+*/
 
 
 
@@ -189,15 +191,15 @@ void set_snaptape_filemachine(char *filename GCC_UNUSED)
 
 
 
-#ifdef COMPILE_SSL
-        char md5file[MD5_DIGEST_LENGTH*2+1];
-        return_md5sum_file(md5file,filename);
-        debug_printf (VERBOSE_INFO,"md5sum of file %s : %s",filename,md5file);
-#else
+//#ifdef COMPILE_SSL
+//        char md5file[MD5_DIGEST_LENGTH*2+1];
+//        return_md5sum_file(md5file,filename);
+//        debug_printf (VERBOSE_INFO,"md5sum of file %s : %s",filename,md5file);
+//#else
 	char md5file[255];
 	//Si no hay ssl, md5 nos lo inventamos...
 	sprintf (md5file,"no ssl functions available");
-#endif
+//#endif
 
 
 
@@ -292,15 +294,15 @@ void set_snaptape_fileoptions(char *filename)
 
 	if (autoselect_snaptape_options.v==0) return;
 
-#ifdef COMPILE_SSL
-	char md5file[MD5_DIGEST_LENGTH*2+1];
-	return_md5sum_file(md5file,filename);
-	debug_printf (VERBOSE_INFO,"md5sum of file %s : %s",filename,md5file);
-#else
+//#ifdef COMPILE_SSL
+//	char md5file[MD5_DIGEST_LENGTH*2+1];
+//	return_md5sum_file(md5file,filename);
+//	debug_printf (VERBOSE_INFO,"md5sum of file %s : %s",filename,md5file);
+//#else
 	char md5file[255];
 	//Si no hay ssl, md5 nos lo inventamos...
         sprintf (md5file,"no ssl functions available");
-#endif
+//#endif
 
 
 	//Indices de desplazamiento a cero
