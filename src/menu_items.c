@@ -17677,9 +17677,12 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 	char url[100];
 	char s_skip_headers[2];
 	char s_add_headers[200];
+
 	host[0]=0;
 	url[0]=0;
-	s_skip_headers[0]='0';
+
+	strcpy(s_skip_headers,"0");
+	//s_skip_headers[0]='0';
 	s_add_headers[0]=0;
 	
 	menu_ventana_scanf("host?",host,100);
@@ -17694,13 +17697,23 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 
 	}
 	
-	menu_ventana_scanf("skip return headers?",s_skip_headers,2);
+	menu_ventana_scanf("skip ret headers? (0/1)",s_skip_headers,2);
 	int skip_headers=parse_string_to_number(s_skip_headers);
 	int total_leidos;
 	char redirect_url[NETWORK_MAX_URL];
+
+	int use_ssl=0;
+
+#ifdef COMPILE_SSL
+	char s_use_ssl[2];
+	strcpy(s_use_ssl,"0");
+	menu_ventana_scanf("use ssl? (0/1)",s_use_ssl,2);
+	use_ssl=parse_string_to_number(s_use_ssl);
+#endif
+
 	//int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
 
-	int retorno=menu_zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
+	int retorno=menu_zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,use_ssl,redirect_url);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
 			if (mem_after_headers) {

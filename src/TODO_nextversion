@@ -18,13 +18,11 @@ ZENG connect por ejemplo que deje un texto de error y número de error si lo hay
 
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
--en wos browser, Aliens neoplasma no carga
 -Descargas del browser wos que no van:
+-Aliens neoplasma 
 -paw
 
 
-
--en menu En http browse, parámetro para https (si está ssl compilado)
 
 -finalizacion socket en ssl , llamar a alguna funcion supongo
 
