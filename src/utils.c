@@ -15701,7 +15701,7 @@ void util_get_host_url(char *url, char *host)
         //buscar primero si hay ://
 
         char *encontrado;
-        char *inicio_host;
+        //char *inicio_host;
 
         encontrado=strstr(url,"://");
         if (encontrado!=NULL) {
@@ -15725,7 +15725,7 @@ void util_get_url_no_host(char *url, char *url_no_host)
         //buscar primero si hay ://
 
         char *encontrado;
-        char *inicio_host;
+        //char *inicio_host;
 
         encontrado=strstr(url,"://");
         if (encontrado!=NULL) {

@@ -890,6 +890,7 @@ extern void menu_copy_clipboard(char *texto);
 
 extern int menu_change_memory_zone_list_title(char *titulo);
 extern void menu_set_memzone(int valor_opcion);
+extern void menu_network_error(int error);
 
 #define MAX_LAST_FILESUSED 18
 
