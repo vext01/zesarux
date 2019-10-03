@@ -17474,7 +17474,7 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 #ifdef COMPILE_SSL
 		*ssl_use=1;
 		char *pref_wos="/pub/sinclair/";
-		char *pref_zxdb="/zxdb/sinclair/";
+		//char *pref_zxdb="/zxdb/sinclair/";
 
 		if (strstr(url_orig,pref_wos)!=NULL) {
 			printf ("Prefijo es de WOS\n");
@@ -17484,7 +17484,7 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 			strcpy(url_modif,url_orig);
 
 			int longitud_pref=strlen(pref_wos);
-			int longitud_url=strlen(url_orig);
+			//int longitud_url=strlen(url_orig);
 
 			//longitud_url -=longitud_pref;
 			//url_modif[longitud_url]=0;
@@ -17730,23 +17730,33 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 		}
 	}
 
-	//Controlar maximo mensaje
+	if (retorno>=0) {
 
-	int longitud_mensaje=strlen(mem_mensaje);
+		//Controlar maximo mensaje
 
-	int max_longitud=MAX_TEXTO_GENERIC_MESSAGE-1024;
-	//Asumimos el maximo restando 1024, de los posibles altos de linea
+		int longitud_mensaje=strlen(mem_mensaje);
 
-    if (longitud_mensaje>max_longitud) {
-		//TODO: realmente habria que trocear aqui el mensaje en lineas y ver si el resultado excede el maximo de lineas o el maximo de bytes
-        debug_printf (VERBOSE_ERR,"Response too long. Showing only the first %d bytes",max_longitud);
-        mem_mensaje[max_longitud]=0;
+		int max_longitud=MAX_TEXTO_GENERIC_MESSAGE-1024;
+		//Asumimos el maximo restando 1024, de los posibles altos de linea
+
+		if (longitud_mensaje>max_longitud) {
+			//TODO: realmente habria que trocear aqui el mensaje en lineas y ver si el resultado excede el maximo de lineas o el maximo de bytes
+			debug_printf (VERBOSE_ERR,"Response too long. Showing only the first %d bytes",max_longitud);
+			mem_mensaje[max_longitud]=0;
+		}
+
+		menu_generic_message("Response",mem_mensaje);
+
 	}
 
-	menu_generic_message("Response",mem_mensaje);
-	
+	else {
+		menu_network_error(retorno);
+	}
+
+
+
 	if (mem!=NULL) free (mem);
-	}
+}
 
 
 void menu_network(MENU_ITEM_PARAMETERS)

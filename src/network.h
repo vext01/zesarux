@@ -72,6 +72,9 @@ extern char *z_sock_get_error(int error);
 #define Z_ERR_NUM_STA_CONN -4
 #define Z_ERR_NUM_SSL_UNAVAIL -5
 #define Z_ERR_NUM_SOCK_NOT_OPEN -6
+#define Z_ERR_NUM_WRITE_SOCKET -7
+#define Z_ERR_NUM_READ_SOCKET -8
+#define Z_ERR_NUM_TOO_MANY_SOCKETS -9
 
 
 #endif

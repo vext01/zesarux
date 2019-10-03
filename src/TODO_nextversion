@@ -10,11 +10,6 @@
 
 -Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
 
--codigos de error para otras funciones network que faltan: read, write, zsock_read_all_until_command, etc
--Sockets no debían llamar a debug print error. Sino por ejemplo al comprobar actualizaciones pueden salir errores que el usuario no sepa que son
-ZENG connect por ejemplo que deje un texto de error y número de error si lo hay
-
-
 
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 

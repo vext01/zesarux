@@ -1324,6 +1324,20 @@ void codetests_network_atomic(void)
 
 }
 
+void codetests_open_sockets_infinite(void)
+{
+	int i;
+
+	for (i=0;i<9999;i++) {
+		printf ("Creating socket %d\n",i);
+		int socket=z_sock_assign_socket();
+		if (socket<0) {
+			printf ("Error: %s\n",z_sock_get_error(socket));
+			return;
+		}
+	}
+}
+
 
 #endif
 
@@ -1363,6 +1377,10 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("\nRunning zeng tests\n");
 	//init_network_tables();
 	//codetests_zeng();
+	
+	//printf ("error: %s\n",z_sock_get_error(Z_ERR_NUM_READ_SOCKET));
+
+	//codetests_open_sockets_infinite();
 	
 	//printf ("\nRunning zsock http tests\n");
 	//init_network_tables();

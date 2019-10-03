@@ -96,6 +96,9 @@ char *z_err_msg_host_not_found="Host not found";
 char *z_err_msg_sta_conn="Error establishing connection with destination";
 char *z_err_msg_ssl_unavail="SSL requested but ssl libraries unavailable";
 char *z_err_msg_sock_not_open="Socket is not open";
+char *z_err_msg_write_socket="Error writing to socket";
+char *z_err_msg_read_socket="Error reading from socket";
+char *z_err_msg_too_many_sockets="Too many open sockets";
 
 char *z_sock_get_error(int error)
 {
@@ -119,6 +122,18 @@ char *z_sock_get_error(int error)
 		case Z_ERR_NUM_SOCK_NOT_OPEN:
         	return z_err_msg_sock_not_open; 
 		break;		
+
+		case Z_ERR_NUM_WRITE_SOCKET:
+			return z_err_msg_write_socket;
+		break;
+
+		case Z_ERR_NUM_READ_SOCKET:
+			return z_err_msg_read_socket;
+		break;
+
+		case Z_ERR_NUM_TOO_MANY_SOCKETS:
+			return z_err_msg_too_many_sockets;
+		break;
 
 		default:
 			return z_err_msg_generic;
@@ -194,7 +209,6 @@ int crear_socket_TCP(void)
 	#ifdef MINGW
 	WSADATA wsadata;
 	if (WSAStartup(MAKEWORD(1,1), &wsadata) == SOCKET_ERROR) {
-		//debug_printf(VERBOSE_ERR,"Error creating socket.");
 		return Z_ERR_NUM_TCP_SOCK;
 	}
 	#endif
@@ -258,8 +272,7 @@ int escribir_socket(int socket, char *buffer)
 
 	int smsg=send(socket,buffer,strlen(buffer),0);
 	 if(smsg==SOCKET_ERROR){
-			 //debug_printf(VERBOSE_ERR,"Error writing to socket");
-			 return -1;
+			 return Z_ERR_NUM_WRITE_SOCKET;
 	 }
 	 if (efectivo_enviar_cr) send(socket,&cr,1,0);
 	 return smsg;
@@ -289,8 +302,7 @@ int leer_socket(int s, char *buffer, int longitud)
 
 int leidos=recv(s,buffer,longitud,0);
  if(leidos==SOCKET_ERROR){
-	 	//debug_printf(VERBOSE_ERR,"Error reading from socket");
-		return -1;
+		return Z_ERR_NUM_READ_SOCKET;
  }
  return leidos;
 
@@ -473,7 +485,9 @@ int z_sock_assign_socket(void)
 
 	int indice_tabla=find_free_socket();
 	if (indice_tabla<0) {
+		//Dado que es un error grave, que lo muestre como error y por ventana. Tambien retornamos numero error
 		debug_printf(VERBOSE_ERR,"Too many ZEsarUX open sockets (%d)",MAX_Z_SOCKETS);	
+		indice_tabla=Z_ERR_NUM_TOO_MANY_SOCKETS;
 	}
 	else {
 		//Asignar el socket
@@ -970,9 +984,10 @@ If no Accept-Encoding field is present in a request, the server MAY
 	
 	int escritos=z_sock_write_string(indice_socket,request);
 
+
 	if (escritos<0) {
-		//debug_printf(VERBOSE_ERR,"ERROR. Can't send request");
-		return escritos;	
+		//Error escribiendo en el socket
+		return Z_ERR_NUM_WRITE_SOCKET;
 	}
 	
 	//todo buffer asignar
