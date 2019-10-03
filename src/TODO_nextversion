@@ -14,11 +14,13 @@
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
 -Descargas del browser wos que no van:
--Aliens neoplasma 
+-Aliens neoplasma -> en la api no esta disponible para descargar. En spectrum computing tampoco
 -paw
 
 
 -ZXInfo browser segunda ventana debe tener de titulo el del juego 
+-Acortar nombre juego y id ya desde buffer línea a 28 o así aprox
+-Otros acortar: url: a lo que de maximo el ítem misc de menú
 
 -Ensamblador opcodes extendidos next
 
@@ -62,9 +64,7 @@ D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 -preguntar si incluir algunas demos de 16C
 
--Acortar nombre juego y id ya desde buffer línea a 28 o así aprox
 
-Otros acortar: url: a lo que de maximo el ítem misc de menú
 
 -Spool file funciona en cpc?
 
@@ -227,12 +227,9 @@ Y Windows sdl?
 
 
 
-
-
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
 -a veces al cambiar numero chips en settings-audio-ay chips se cuelga
-
 
 
 -Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drives null y simpletext? Con printf verbose error?
@@ -247,15 +244,12 @@ utils.c: In function ‘util_ascii_to_binary’:
 utils.c:11248:9: warning: this decimal constant is unsigned only in ISO C90
          const unsigned int mascara=(unsigned int)2147483648;
 
-
 Puede dar problemas?
 
 
 -Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
 
-
 -hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
-
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
@@ -269,8 +263,7 @@ arriba)
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
 
-
--uso de settings.c y settings.h. revisar que tiene que ir ahi
+-uso de settings.c y settings.h. revisar que tiene que ir ahi ?
 
 
 -unpaws con quill:
