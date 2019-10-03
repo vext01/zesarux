@@ -3,6 +3,11 @@
 -decir que ssl mac requiere "brew install openssl"
 
 -tbblue: the "disable ULA" bit in $68 doesn't work, so ULA is visible over the tilemap ( https://specnext.dev/wiki/ULA_Control_Register )
+-1 bit tile mode next. hecho. falta que pille bien el color??
+Subir versión core
+-parece que lee version 0?? en boot
+-aumentar tbblue mmc a 64 mb?
+-tbblue mmc no puede incluir archivos de cpm que hay que descargarse
 
 -Im modo 0 la interrupción es un testado más rápido que con Im modo 1
 

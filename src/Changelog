@@ -36,6 +36,7 @@ Improved Debugging:
 Improved TBBlue emulation:
 -added scroll x,y on ula layer
 -optimized ula,lores render routines: 2% less cpu on my computer
+-added 1-bit tile mode
 
 Improved Hex editor: can now copy to a different memory zone
 Improved menu: 

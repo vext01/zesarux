@@ -3955,7 +3955,7 @@ void tbblue_do_tile_putpixel(z80_byte pixel_color,z80_byte transparent_colour,z8
 }
 
 //Devuelve el color del pixel dentro de un tilemap
-z80_byte tbblue_get_pixel_tile_xy(int x,int y,z80_byte *puntero_this_tiledef)
+z80_byte tbblue_get_pixel_tile_xy_4bpp(int x,int y,z80_byte *puntero_this_tiledef)
 {
 	//4bpp
 	int offset_x=x/2;
@@ -3976,7 +3976,49 @@ z80_byte tbblue_get_pixel_tile_xy(int x,int y,z80_byte *puntero_this_tiledef)
 		return (byte_leido>>4) & 0xF;
 	}
 
+}
 
+int tbblue_tiles_are_monocrome(void)
+{
+	//TODO
+	//return 0;
+	//return 1;
+	return !(tbblue_registers[0x6b] & 32);
+	//bit 5: 0=attributes in tilemap, 1=no attributes in tilemap
+	//-Parece que va al reves el bit
+}
+
+
+//Devuelve el color del pixel dentro de un tilemap
+z80_byte tbblue_get_pixel_tile_xy_monocromo(int x,int y,z80_byte *puntero_this_tiledef)
+{
+	//4bpp
+	int offset_x=0;
+
+	//int pixel_a_derecha=x%2;
+
+	int offset_y=y; //Cada linea ocupa 1 bytes
+
+	int offset_final=offset_y+offset_x;
+
+
+	z80_byte byte_leido=puntero_this_tiledef[offset_final];
+
+	return (byte_leido>> (7-x) ) & 0x1;
+
+}
+
+
+z80_byte tbblue_get_pixel_tile_xy(int x,int y,z80_byte *puntero_this_tiledef)
+{
+	//si monocromo
+	if (tbblue_tiles_are_monocrome() ) {
+		return tbblue_get_pixel_tile_xy_monocromo(x,y,puntero_this_tiledef);
+	}
+
+	else {
+		return tbblue_get_pixel_tile_xy_4bpp(x,y,puntero_this_tiledef);
+	}
 }
 
 /*int temp_tile_rebote_x=10;
@@ -4227,8 +4269,17 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 			}
 		}
 
-		//Sacar puntero a principio tiledef. cada tiledef ocupa 4 bytes * 8 = 32
-		int offset_tiledef=tnum*(TBBLUE_TILE_WIDTH/2)*TBBLUE_TILE_HEIGHT;
+		//Sacar puntero a principio tiledef. 
+		int offset_tiledef;
+
+
+		if (tbblue_tiles_are_monocrome()) {
+			offset_tiledef=tnum*TBBLUE_TILE_HEIGHT;
+		}
+		else {
+			//4 bpp. cada tiledef ocupa 4 bytes * 8 = 32
+			offset_tiledef=tnum*(TBBLUE_TILE_WIDTH/2)*TBBLUE_TILE_HEIGHT;
+		}
 
 		//sumar posicion y
 		//offset_tiledef += linea_en_tile*4;
