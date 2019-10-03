@@ -330,6 +330,8 @@ void set_snaptape_fileoptions(char *filename)
 	// Cambios en joystick. Solo si joystick esta detectado
 	//
 
+	/*
+
 		else if (!strcmp(md5file,"03f575af86144cde6efb7f2dba36c3bb") && realjoystick_present.v) {
         	        split_game_name_info ("Mazogs. Setting realjoystick buttons to keys. Setting joystick to none");
 			realjoystick_clear_keys_array();
@@ -376,20 +378,7 @@ void set_snaptape_fileoptions(char *filename)
 			joystick_emulation=JOYSTICK_CURSOR;
 		}
 
-	        else if (!strcmp(md5file,"051b42a39931984cb1592615c89f5fe0") && realjoystick_present.v) {
-        	        debug_printf (VERBOSE_INFO,"Detected Chase HQ. Setting joystick to kempston. Assigning R to Space");
-                	realjoystick_clear_keys_array();
-
-	                //letra ' '
-			realjoystick_copy_event_button_key(REALJOYSTICK_EVENT_AUX2,0,' ');
-			//Asignacion manual de numero de boton a letra. Desactivado
-        	        //realjoystick_keys_array[0].asignado.v=1;
-                	//realjoystick_keys_array[0].button=5;
-	                //realjoystick_keys_array[0].button_type=0;
-        	        //realjoystick_keys_array[0].caracter=' ';
-
-                	joystick_emulation=JOYSTICK_KEMPSTON;
-	        }
+	*/
 
 
 	//
