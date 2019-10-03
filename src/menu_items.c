@@ -17697,7 +17697,7 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 
 	}
 	
-	menu_ventana_scanf("skip ret headers? (0/1)",s_skip_headers,2);
+	menu_ventana_scanf("skip ret headers?(0/1)",s_skip_headers,2);
 	int skip_headers=parse_string_to_number(s_skip_headers);
 	int total_leidos;
 	char redirect_url[NETWORK_MAX_URL];
@@ -17713,16 +17713,37 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 
 	//int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
 
+	char *mem_mensaje;
+
 	int retorno=menu_zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,use_ssl,redirect_url);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
 			if (mem_after_headers) {
 				menu_generic_message_format("Http code","%d",http_code);
-				menu_generic_message("Response",mem_after_headers);
+				mem_mensaje=mem_after_headers;
+				//menu_generic_message("Response",mem_after_headers);
 			}
 		}
-		else menu_generic_message("Response",mem);
+		else {
+			mem_mensaje=mem;
+			//menu_generic_message("Response",mem);
+		}
 	}
+
+	//Controlar maximo mensaje
+
+	int longitud_mensaje=strlen(mem_mensaje);
+
+	int max_longitud=MAX_TEXTO_GENERIC_MESSAGE-1024;
+	//Asumimos el maximo restando 1024, de los posibles altos de linea
+
+    if (longitud_mensaje>max_longitud) {
+		//TODO: realmente habria que trocear aqui el mensaje en lineas y ver si el resultado excede el maximo de lineas o el maximo de bytes
+        debug_printf (VERBOSE_ERR,"Response too long. Showing only the first %d bytes",max_longitud);
+        mem_mensaje[max_longitud]=0;
+	}
+
+	menu_generic_message("Response",mem_mensaje);
 	
 	if (mem!=NULL) free (mem);
 	}
