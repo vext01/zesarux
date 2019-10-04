@@ -2864,10 +2864,11 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 					linea++;
 
 					//menu_escribe_linea_opcion(linea++,-1,1,"Palette format:");
-					zxvision_print_string_defaults(&ventana,1,linea++,"Palette format:");
+					//zxvision_print_string_defaults(&ventana,1,linea++,"Palette:");
 
-					tbblue_get_string_palette_format(texto_buffer);
-					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					tbblue_get_string_palette_format(texto_buffer2);
+					sprintf (texto_buffer,"Palette: %s",texto_buffer2);
+					
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 					linea++;
@@ -2896,6 +2897,9 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);					
 
 					sprintf (texto_buffer,"Tile width: %d columns",tbblue_get_tilemap_width() );					
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tile bpp: %d", (tbblue_tiles_are_monocrome() ? 1 : 4)  );
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);							
 
 					/*

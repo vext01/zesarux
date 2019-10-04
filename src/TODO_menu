@@ -45,6 +45,8 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 -Cuando se hace resize de ventana y desaparecen barras desplazamientos, habría que mover offset a 0?
 O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir siempre que offset sea mayor que 0, Y que quepa en pantalla
 
+-Ventana scanf con texto descriptivo dentro
+
 -Background windows
 -activarlas con: int menu_allow_background_windows=1;
 -Si ventana en background, no dejar volverla a llamar desde menu normal

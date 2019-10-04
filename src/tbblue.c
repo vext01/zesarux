@@ -873,12 +873,15 @@ z80_int tbblue_get_palette_active_ula(z80_byte index)
 z80_int tbblue_get_palette_active_tilemap(z80_byte index)
 {
 /*
-(R/W) 0x6B (107) => Tilemap Control
-  bit 7    = 1 to enable the tilemap
-  bit 6    = 0 for 40x32, 1 for 80x32
-  bit 5    = 1 to eliminate the attribute entry in the tilemap
-  bit 4    = palette select
-  bits 3-0 = Reserved set to 0
+Bit	Function
+7	1 to enable the tilemap
+6	0 for 40x32, 1 for 80x32
+5	1 to eliminate the attribute entry in the tilemap
+4	palette select (0 = first Tilemap palette, 1 = second)
+3	(core 3.0) enable "text mode"
+2	Reserved, must be 0
+1	1 to activate 512 tile mode (bit 0 of tile attribute is ninth bit of tile-id)
+0 to use bit 0 of tile attribute as "ULA over tilemap" per-tile-selector
 */
 	if (tbblue_registers[0x6B] & 16) return tbblue_palette_tilemap_second[index];
         else return tbblue_palette_tilemap_first[index];
@@ -2713,12 +2716,15 @@ void tbblue_reset_common(void)
 
 	//Aunque no esté especificado como tal, ponemos este a 0
 	/*
-	(R/W) 0x6B (107) => Tilemap Control
-  bit 7    = 1 to enable the tilemap
-  bit 6    = 0 for 40x32, 1 for 80x32
-  bit 5    = 1 to eliminate the attribute entry in the tilemap
-  bit 4    = palette select
-  bits 3-0 = Reserved set to 0
+Bit	Function
+7	1 to enable the tilemap
+6	0 for 40x32, 1 for 80x32
+5	1 to eliminate the attribute entry in the tilemap
+4	palette select (0 = first Tilemap palette, 1 = second)
+3	(core 3.0) enable "text mode"
+2	Reserved, must be 0
+1	1 to activate 512 tile mode (bit 0 of tile attribute is ninth bit of tile-id)
+0 to use bit 0 of tile attribute as "ULA over tilemap" per-tile-selector
 	*/
 
 	tbblue_registers[107]=0;
@@ -3980,12 +3986,46 @@ z80_byte tbblue_get_pixel_tile_xy_4bpp(int x,int y,z80_byte *puntero_this_tilede
 
 int tbblue_tiles_are_monocrome(void)
 {
-	//TODO
-	//return 0;
-	//return 1;
-	return !(tbblue_registers[0x6b] & 32);
-	//bit 5: 0=attributes in tilemap, 1=no attributes in tilemap
-	//-Parece que va al reves el bit
+/*
+Registro 6BH
+
+
+  
+    (R/W) 0x6B (107) => Tilemap Control
+
+
+Bit	Function
+7	1 to enable the tilemap
+6	0 for 40x32, 1 for 80x32
+5	1 to eliminate the attribute entry in the tilemap
+4	palette select (0 = first Tilemap palette, 1 = second)
+3	(core 3.0) enable "text mode"
+2	Reserved, must be 0
+1	1 to activate 512 tile mode (bit 0 of tile attribute is ninth bit of tile-id)
+0 to use bit 0 of tile attribute as "ULA over tilemap" per-tile-selector
+
+0	1 to enforce "tilemap over ULA" layer priority
+
+Bits 7 & 6 enable the tilemap and select resolution.
+
+Bit 5 changes the structure of the tilemap so that it contains only 8-bit tilemap-id entries instead of 16-bit tilemap-id and tile-attribute entries.
+
+If 8-bit tilemap is selected, the tilemap contains only tile numbers and the attributes are taken from Default Tilemap Attribute Register ($6C).
+
+Bit 4 selects one of two tilemap palettes used for final colour lookup.
+
+Bit 1 enables the 512-tile-mode when the tile attribute (either global in $6C or per tile in map data) contains ninth bit of tile-id value. 
+In this mode the tiles are drawn under ULA pixels, unless bit 0 is used to force whole tilemap over ULA.
+
+Bit 0 can enforce tilemap over ULA either in 512-tile-mode, or even override the per-tile bit selector from tile attributes. 
+If zero, the tilemap priority is either decided by attribute bit or in 512-tile-mode it is under ULA.
+
+
+*/
+
+
+	return tbblue_registers[0x6b] & 8; //bit "text mode"/monocromo
+
 }
 
 
@@ -4063,12 +4103,15 @@ z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
 	orig_puntero_a_layer=puntero_a_layer;
 
   /*
-    (R/W) 0x6B (107) => Tilemap Control
-  bit 7    = 1 to enable the tilemap
-  bit 6    = 0 for 40x32, 1 for 80x32
-  bit 5    = 1 to eliminate the attribute entry in the tilemap
-  bit 4    = palette select
-  bits 3-0 = Reserved set to 0
+Bit	Function
+7	1 to enable the tilemap
+6	0 for 40x32, 1 for 80x32
+5	1 to eliminate the attribute entry in the tilemap
+4	palette select (0 = first Tilemap palette, 1 = second)
+3	(core 3.0) enable "text mode"
+2	Reserved, must be 0
+1	1 to activate 512 tile mode (bit 0 of tile attribute is ninth bit of tile-id)
+0 to use bit 0 of tile attribute as "ULA over tilemap" per-tile-selector
    */
 	z80_byte tbblue_tilemap_control=tbblue_registers[107];
 

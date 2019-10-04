@@ -28,7 +28,7 @@
 //#define TBBLUE_CORE_VERSION_MINOR     10
 //#define TBBLUE_CORE_VERSION_SUBMINOR  47
 
-#define TBBLUE_CORE_VERSION_MAJOR     2
+#define TBBLUE_CORE_VERSION_MAJOR     3
 #define TBBLUE_CORE_VERSION_MINOR     0
 #define TBBLUE_CORE_VERSION_SUBMINOR  28
 
@@ -297,5 +297,6 @@ extern z80_byte tbblue_uartbridge_readdata(void);
 extern void tbblue_uartbridge_writedata(z80_byte value);
 
 extern z80_byte tbblue_uartbridge_readstatus(void);
+extern int tbblue_tiles_are_monocrome(void);
 
 #endif
