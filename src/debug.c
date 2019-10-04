@@ -1644,6 +1644,8 @@ z80_bit cpu_transaction_log_enabled={0};
 char transaction_log_dumpassembler[32];
 size_t transaction_log_longitud_opcode;
 
+z80_bit cpu_code_coverage_enabled={0};
+
 
 FILE *ptr_transaction_log=NULL;
 
@@ -1678,6 +1680,8 @@ int cpu_transaction_log_rotate_lines=1000000;
 
 
 int transaction_log_nested_id_core;
+
+int cpu_code_coverage_nested_id_core;
 
 
 //Para tener una memory zone que apunte a un archivo
@@ -1840,7 +1844,6 @@ int transaction_log_set_rotate_lines(int numero)
 
 
 
-///void cpu_core_loop_transaction_log(void)
 z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
 
@@ -2071,12 +2074,7 @@ void set_cpu_core_transaction_log(void)
 
 
 	if (transaction_log_open_file()) return;
-  /*ptr_transaction_log=fopen(transaction_log_filename,"ab");
-  if (!ptr_transaction_log) {
- 		debug_printf (VERBOSE_ERR,"Unable to open Transaction log");
-		debug_nested_core_del(transaction_log_nested_id_core);
-		return;
-	}*/
+
 
 
 	cpu_transaction_log_enabled.v=1;																
@@ -2095,11 +2093,60 @@ void reset_cpu_core_transaction_log(void)
 	cpu_transaction_log_enabled.v=0;
 
 	transaction_log_close_file();
-	/*if (ptr_transaction_log!=NULL) {
-		fclose(ptr_transaction_log);
-		ptr_transaction_log=NULL;
-	}*/
+
 }
+
+
+z80_byte cpu_core_loop_code_coverage(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
+{
+
+
+	//hacer cosas antes...
+	printf ("running cpu code coverage addr: %04XH\n",reg_pc);
+
+	//Llamar a core anterior
+	debug_nested_core_call_previous(cpu_code_coverage_nested_id_core);
+
+	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+
+	return 0;
+}
+
+
+
+void set_cpu_core_code_coverage(void)
+{
+    debug_printf(VERBOSE_INFO,"Enabling Cpu code coverage");
+
+	if (cpu_code_coverage_enabled.v) {
+		debug_printf(VERBOSE_INFO,"Already enabled");
+		return;
+	}
+
+	cpu_code_coverage_nested_id_core=debug_nested_core_add(cpu_core_loop_code_coverage,"CPU code coverage Core");
+
+
+
+	cpu_code_coverage_enabled.v=1;																
+
+}
+
+void reset_cpu_core_code_coverage(void)
+{
+  debug_printf(VERBOSE_INFO,"Disabling Cpu code coverage");
+	if (cpu_code_coverage_enabled.v==0) {
+		debug_printf(VERBOSE_INFO,"Already disabled");
+		return;
+	}
+
+	debug_nested_core_del(cpu_code_coverage_nested_id_core);
+	cpu_code_coverage_enabled.v=0;
+
+
+}
+
+
+
 
 
 int debug_antes_t_estados_parcial=0;

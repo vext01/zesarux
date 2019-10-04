@@ -614,6 +614,12 @@ struct s_items_ayuda items_ayuda[]={
 },
 
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
+
+	{"cpu-code-coverage",NULL,"parameter value","Sets cpu code coverage parameters. Parameters and values are the following:\n"
+	"enabled         yes|no: Enable or disable the cpu code coverage\n"
+	},
+
+
   {"cpu-panic",NULL,"text","Triggers the cpu panic function with the desired text. Note: It sets cpu-step-mode before doing it, so it ensures the emulation is paused"},
   {"cpu-step","|cs",NULL,"Run single opcode cpu step. Note: if 'real video' and 'shows electron on debug' settings are enabled, display will be updated immediately"},
   {"cpu-step-over","|cso",NULL,"Runs until returning from the current opcode. In case if current opcode is RET or JP (with or without flag conditions) it will run a cpu-step instead of cpu-step-over"},
@@ -1278,6 +1284,65 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 
 
 }
+
+
+
+void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
+{
+	if (!strcasecmp(parameter,"logfile????")) {
+		strcpy(transaction_log_filename,value);
+	}
+
+	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
+	else if (!strcasecmp(parameter,"enabled") 
+	//||
+	//				!strcasecmp(parameter,"truncate") ||
+	//				!strcasecmp(parameter,"truncaterotated")
+	) {
+
+		
+
+
+		//Pausar la emulacion para evitar que ese core transaction log este en ejecucion. Si eso pasa,
+		//puede provocar segfault al desactivarlo, pues intenta llamar a debug_nested_core_call_previous y este mismo core ya ha desaparecido
+		int antes_menu_event_remote_protocol_enterstep=menu_event_remote_protocol_enterstep.v;
+			remote_cpu_enter_step(misocket);
+			if (menu_event_remote_protocol_enterstep.v==0) return;
+
+
+			
+		if (!strcasecmp(parameter,"enabled")) {
+			if (remote_eval_yes_no(value)) {
+				set_cpu_core_code_coverage();
+			}
+
+			else {
+				reset_cpu_core_code_coverage();
+			}
+		}
+
+
+		//Salir del cpu step si no estaba en ese modo
+		if (!antes_menu_event_remote_protocol_enterstep) remote_cpu_exit_step(misocket);
+
+
+
+	}
+
+	else if (!strcasecmp(parameter,"autorotate??????")) {
+		cpu_transaction_log_rotate_enabled.v=remote_eval_yes_no(value);
+	}	
+
+
+
+
+	else {
+		escribir_socket(misocket,"Error. Unknown parameter");
+	}
+
+
+}
+
 
 void remote_disassemble(int misocket,unsigned int direccion,int lineas,int mostrar_direccion)
 {
@@ -3606,6 +3671,19 @@ void interpreta_comando(char *comando,int misocket)
 	 clear_mem_breakpoints();
   }
 
+
+
+  else if (!strcmp(comando_sin_parametros,"cpu-code-coverage") ) {
+    remote_parse_commands_argvc(parametros);
+
+    if (remote_command_argc<2) {
+      escribir_socket(misocket,"ERROR. Needs two parameters");
+      return;
+    }
+
+
+    remote_cpu_code_coverage(misocket,remote_command_argv[0],remote_command_argv[1]);
+  }
 
 
 
