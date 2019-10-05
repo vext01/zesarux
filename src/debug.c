@@ -2097,6 +2097,11 @@ void reset_cpu_core_transaction_log(void)
 
 }
 
+void cpu_code_coverage_clear(void)
+{
+  int i;
+  for (i=0;i<65536;i++) cpu_code_coverage_array[i]=0;
+}
 
 z80_byte cpu_core_loop_code_coverage(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
@@ -2132,7 +2137,9 @@ void set_cpu_core_code_coverage(void)
 
 
 
-	cpu_code_coverage_enabled.v=1;																
+	cpu_code_coverage_enabled.v=1;
+		cpu_code_coverage_clear();
+																
 
 }
 
