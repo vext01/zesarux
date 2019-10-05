@@ -3683,8 +3683,8 @@ void interpreta_comando(char *comando,int misocket)
   else if (!strcmp(comando_sin_parametros,"cpu-code-coverage") ) {
     remote_parse_commands_argvc(parametros);
 
-    if (remote_command_argc<2) {
-      escribir_socket(misocket,"ERROR. Needs two parameters");
+    if (remote_command_argc<1) {
+      escribir_socket(misocket,"ERROR. Needs at least one parameter");
       return;
     }
 
