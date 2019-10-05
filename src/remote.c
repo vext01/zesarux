@@ -1341,7 +1341,7 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 		escribir_socket(misocket,"\n");
 	}	
 
-else if (!strcasecmp(parameter,"get")) {
+else if (!strcasecmp(parameter,"clear")) {
   cpu_code_coverage_clear();
 }
 
