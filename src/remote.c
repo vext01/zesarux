@@ -617,6 +617,7 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"cpu-code-coverage",NULL,"parameter value","Sets cpu code coverage parameters. Parameters and values are the following:\n"
 	"enabled         yes|no: Enable or disable the cpu code coverage\n"
+	"get                     Get all run addresses\n"
 	},
 
 
@@ -1329,8 +1330,14 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 
 	}
 
-	else if (!strcasecmp(parameter,"autorotate??????")) {
-		cpu_transaction_log_rotate_enabled.v=remote_eval_yes_no(value);
+	else if (!strcasecmp(parameter,"get")) {
+		int i;
+		for (i=0;i<65536;i++) {
+		  if (cpu_code_coverage_array[i]) {
+		    escribir_socket_format(misocket,"%04X ",i);
+		  }
+		}
+		escribir_socket(misocket,"\n");
 	}	
 
 

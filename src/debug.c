@@ -1646,6 +1646,7 @@ size_t transaction_log_longitud_opcode;
 
 z80_bit cpu_code_coverage_enabled={0};
 
+z80_byte cpu_code_coverage_array[65536];
 
 FILE *ptr_transaction_log=NULL;
 
@@ -2102,7 +2103,11 @@ z80_byte cpu_core_loop_code_coverage(z80_int dir GCC_UNUSED, z80_byte value GCC_
 
 
 	//hacer cosas antes...
-	printf ("running cpu code coverage addr: %04XH\n",reg_pc);
+	//printf ("running cpu code coverage addr: %04XH\n",reg_pc);
+	
+	int indice=reg_pc & 0xffff;
+	
+	cpu_code_coverage_array[indice]=1;
 
 	//Llamar a core anterior
 	debug_nested_core_call_previous(cpu_code_coverage_nested_id_core);

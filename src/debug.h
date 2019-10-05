@@ -421,4 +421,6 @@ extern z80_bit debug_always_show_messages_in_console;
 
 extern int debug_get_timestamp(char *destino);
 
+extern z80_byte cpu_code_coverage_array[];
+
 #endif
