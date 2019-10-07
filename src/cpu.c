@@ -2820,6 +2820,7 @@ void set_machine_params(void)
 		//desactivar ram refresh emulation, cpu transaction log y cualquier otra funcion que altere el cpu_core, el peek_byte, etc
 		cpu_transaction_log_enabled.v=0;
 		cpu_code_coverage_enabled.v=0;
+		cpu_history_enabled.v=0;
 		machine_emulate_memory_refresh=0;
 
 

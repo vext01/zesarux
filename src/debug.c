@@ -1644,7 +1644,11 @@ z80_bit cpu_transaction_log_enabled={0};
 char transaction_log_dumpassembler[32];
 size_t transaction_log_longitud_opcode;
 
+z80_bit cpu_history_enabled={0};
+int cpu_history_nested_id_core;
+
 z80_bit cpu_code_coverage_enabled={0};
+int cpu_code_coverage_nested_id_core;
 
 //Array para el code coverage. De momento solo tiene el contenido:
 //0: no ha ejecutado la cpu esa dirección
@@ -1686,7 +1690,7 @@ int cpu_transaction_log_rotate_lines=1000000;
 
 int transaction_log_nested_id_core;
 
-int cpu_code_coverage_nested_id_core;
+
 
 
 //Para tener una memory zone que apunte a un archivo
@@ -2161,6 +2165,55 @@ void reset_cpu_core_code_coverage(void)
 
 }
 
+
+z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
+{
+
+
+	//hacer cosas antes...
+	//printf ("running cpu history addr: %04XH\n",reg_pc);
+	
+
+
+	//Llamar a core anterior
+	debug_nested_core_call_previous(cpu_history_nested_id_core);
+
+	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+
+	return 0;
+}
+
+
+
+void set_cpu_core_history(void)
+{
+    debug_printf(VERBOSE_INFO,"Enabling Cpu history");
+
+	if (cpu_history_enabled.v) {
+		debug_printf(VERBOSE_INFO,"Already enabled");
+		return;
+	}
+
+	cpu_history_nested_id_core=debug_nested_core_add(cpu_core_loop_history,"CPU history Core");
+
+	cpu_history_enabled.v=1;
+																
+
+}
+
+void reset_cpu_core_history(void)
+{
+  debug_printf(VERBOSE_INFO,"Disabling Cpu history");
+	if (cpu_history_enabled.v==0) {
+		debug_printf(VERBOSE_INFO,"Already disabled");
+		return;
+	}
+
+	debug_nested_core_del(cpu_history_nested_id_core);
+	cpu_history_enabled.v=0;
+
+
+}
 
 
 

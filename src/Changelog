@@ -18,12 +18,14 @@ Added setting --disablemenuandexit: it closes the emulator when the menu is goin
 Added Borland Gui Style
 
 Added ZRCP commands:
--set-ui-io-ports: to change keyboard state and joystick
+-cpu-code-coverage: working with code coverage
+-cpu-history: working with cpu history
 -get-ui-io-ports: to get keyboard state and joystick
 -get-snapshot: get a ZSF snapshot from ZRCP
 -print-footer: print message on footer
 -put-snapshot: put a ZSF snapshot from ZRCP
 -send-keys-event: simulates key press/release
+-set-ui-io-ports: to change keyboard state and joystick
 -write-port: write value to a port
 
 Added internal zip decompressor: no more need to use external unzip program

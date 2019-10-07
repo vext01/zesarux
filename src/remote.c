@@ -615,10 +615,15 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
 
-	{"cpu-code-coverage",NULL,"parameter value","Sets cpu code coverage parameters. Parameters and values are the following:\n"
+	{"cpu-code-coverage",NULL,"parameter [value]","Sets cpu code coverage parameters. Parameters and values are the following:\n"
 	"enabled         yes|no: Enable or disable the cpu code coverage\n"
 	"get:                    Get all run addresses\n"
 	"clear:                  Clear address list\n"
+	},
+
+
+	{"cpu-history",NULL,"parameter [value]","Sets cpu history parameters. Parameters and values are the following:\n"
+	"enabled         yes|no: Enable or disable the cpu history\n"
 	},
 
 
@@ -1311,10 +1316,12 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 			
 		if (!strcasecmp(parameter,"enabled")) {
 			if (remote_eval_yes_no(value)) {
-				set_cpu_core_code_coverage();
+				if (cpu_code_coverage_enabled.v) escribir_socket(misocket,"Error. Already enabled");
+				else set_cpu_core_code_coverage();
 			}
 
 			else {
+				if (cpu_code_coverage_enabled.v==0) escribir_socket(misocket,"Error. Already disabled");
 				reset_cpu_core_code_coverage();
 			}
 		}
@@ -1328,18 +1335,82 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 	}
 
 	else if (!strcasecmp(parameter,"get")) {
-		int i;
-		for (i=0;i<65536;i++) {
-		  if (cpu_code_coverage_array[i]) {
-		    escribir_socket_format(misocket,"%04X ",i);
-		  }
+		if (cpu_code_coverage_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled");
+		else {
+			int i;
+			for (i=0;i<65536;i++) {
+		  	if (cpu_code_coverage_array[i]) {
+			    escribir_socket_format(misocket,"%04X ",i);
+			  }
+			}
+			//escribir_socket(misocket,"\n");
 		}
-		escribir_socket(misocket,"\n");
 	}	
 
-else if (!strcasecmp(parameter,"clear")) {
-  cpu_code_coverage_clear();
+	else if (!strcasecmp(parameter,"clear")) {
+	cpu_code_coverage_clear();
+	}
+
+
+
+	else {
+		escribir_socket(misocket,"Error. Unknown parameter");
+	}
+
+
 }
+
+
+
+void remote_cpu_history(int misocket,char *parameter,char *value)
+{
+
+	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
+	if (!strcasecmp(parameter,"enabled") ) {
+
+
+		//Pausar la emulacion para evitar que ese core transaction log este en ejecucion. Si eso pasa,
+		//puede provocar segfault al desactivarlo, pues intenta llamar a debug_nested_core_call_previous y este mismo core ya ha desaparecido
+		int antes_menu_event_remote_protocol_enterstep=menu_event_remote_protocol_enterstep.v;
+			remote_cpu_enter_step(misocket);
+			if (menu_event_remote_protocol_enterstep.v==0) return;
+
+
+			
+		if (!strcasecmp(parameter,"enabled")) {
+			if (remote_eval_yes_no(value)) {
+				if (cpu_history_enabled.v) escribir_socket(misocket,"Error. Already enabled");
+				else set_cpu_core_history();
+			}
+
+			else {
+				if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. Already disabled");
+				reset_cpu_core_history();
+			}
+		}
+
+
+		//Salir del cpu step si no estaba en ese modo
+		if (!antes_menu_event_remote_protocol_enterstep) remote_cpu_exit_step(misocket);
+
+
+
+	}
+
+	else if (!strcasecmp(parameter,"get???????")) {
+		if (cpu_code_coverage_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled");
+		else {
+			int i;
+			for (i=0;i<65536;i++) {
+		  	if (cpu_code_coverage_array[i]) {
+			    escribir_socket_format(misocket,"%04X ",i);
+			  }
+			}
+
+		}
+	}	
+
+
 
 
 
@@ -3690,6 +3761,19 @@ void interpreta_comando(char *comando,int misocket)
 
 
     remote_cpu_code_coverage(misocket,remote_command_argv[0],remote_command_argv[1]);
+  }
+
+
+  else if (!strcmp(comando_sin_parametros,"cpu-history") ) {
+    remote_parse_commands_argvc(parametros);
+
+    if (remote_command_argc<1) {
+      escribir_socket(misocket,"ERROR. Needs at least one parameter");
+      return;
+    }
+
+
+    remote_cpu_history(misocket,remote_command_argv[0],remote_command_argv[1]);
   }
 
 

@@ -157,7 +157,7 @@ extern void transaction_log_truncate(void);
 extern void transaction_log_close_file(void);
 extern int transaction_log_open_file(void);
 
-extern z80_bit cpu_code_coverage_enabled;
+
 
 extern z80_bit cpu_transaction_log_store_datetime;
 extern z80_bit cpu_transaction_log_store_address;
@@ -425,6 +425,10 @@ extern z80_byte cpu_code_coverage_array[];
 extern void set_cpu_core_code_coverage(void);
 extern void reset_cpu_core_code_coverage(void);
 extern void cpu_code_coverage_clear(void);
+extern z80_bit cpu_code_coverage_enabled;
+
+
+extern z80_bit cpu_history_enabled;
 
 
 #endif
