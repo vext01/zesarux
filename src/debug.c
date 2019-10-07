@@ -1646,6 +1646,10 @@ size_t transaction_log_longitud_opcode;
 
 z80_bit cpu_code_coverage_enabled={0};
 
+//Array para el code coverage. De momento solo tiene el contenido:
+//0: no ha ejecutado la cpu esa dirección
+//diferente de 0: ha ejecutado la cpu esa dirección
+//en el futuro se pueden usar mas bits de cada elemento
 z80_byte cpu_code_coverage_array[65536];
 
 FILE *ptr_transaction_log=NULL;

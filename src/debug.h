@@ -422,5 +422,9 @@ extern z80_bit debug_always_show_messages_in_console;
 extern int debug_get_timestamp(char *destino);
 
 extern z80_byte cpu_code_coverage_array[];
+extern void set_cpu_core_code_coverage(void);
+extern void reset_cpu_core_code_coverage(void);
+extern void cpu_code_coverage_clear(void);
+
 
 #endif

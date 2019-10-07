@@ -617,8 +617,8 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"cpu-code-coverage",NULL,"parameter value","Sets cpu code coverage parameters. Parameters and values are the following:\n"
 	"enabled         yes|no: Enable or disable the cpu code coverage\n"
-	"get                     Get all run addresses\n"
-	"clear                   Clear address list\n"
+	"get:                    Get all run addresses\n"
+	"clear:                  Clear address list\n"
 	},
 
 
@@ -1291,16 +1291,12 @@ void remote_cpu_transaction_log(int misocket,char *parameter,char *value)
 
 void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 {
-	if (!strcasecmp(parameter,"logfile????")) {
+	/*if (!strcasecmp(parameter,"logfile????")) {
 		strcpy(transaction_log_filename,value);
-	}
+	}*/
 
 	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
-	else if (!strcasecmp(parameter,"enabled") 
-	//||
-	//				!strcasecmp(parameter,"truncate") ||
-	//				!strcasecmp(parameter,"truncaterotated")
-	) {
+	if (!strcasecmp(parameter,"enabled") ) {
 
 		
 
