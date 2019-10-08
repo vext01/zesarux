@@ -624,6 +624,8 @@ struct s_items_ayuda items_ayuda[]={
 
 	{"cpu-history",NULL,"parameter [value]","Sets cpu history parameters. Parameters and values are the following:\n"
 	"enabled         yes|no: Enable or disable the cpu history\n"
+	"started         yes|no: Start recording cpu history\n"
+	"get             index:  Get registers at position\n"
 	},
 
 
@@ -1366,7 +1368,10 @@ void remote_cpu_history(int misocket,char *parameter,char *value)
 {
 
 	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
-	if (!strcasecmp(parameter,"enabled") ) {
+	if (!strcasecmp(parameter,"enabled") ||
+	    !strcasecmp(parameter,"started")
+	
+	) {
 
 
 		//Pausar la emulacion para evitar que ese core transaction log este en ejecucion. Si eso pasa,
@@ -1389,6 +1394,11 @@ void remote_cpu_history(int misocket,char *parameter,char *value)
 			}
 		}
 
+		if (!strcasecmp(parameter,"started")) {
+			if (remote_eval_yes_no(value)) cpu_history_started.v=1;
+			else cpu_history_started.v=0;
+		}		
+
 
 		//Salir del cpu step si no estaba en ese modo
 		if (!antes_menu_event_remote_protocol_enterstep) remote_cpu_exit_step(misocket);
@@ -1397,17 +1407,12 @@ void remote_cpu_history(int misocket,char *parameter,char *value)
 
 	}
 
-	else if (!strcasecmp(parameter,"get???????")) {
+	else if (!strcasecmp(parameter,"get")) {
 		if (cpu_code_coverage_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled");
-		else {
-			int i;
-			for (i=0;i<65536;i++) {
-		  	if (cpu_code_coverage_array[i]) {
-			    escribir_socket_format(misocket,"%04X ",i);
-			  }
-			}
-
-		}
+		int indice=parse_string_to_number(value);
+		char string_destino[1024];
+		cpu_history_get_registers_element(indice,string_destino);
+		escribir_socket(misocket,string_destino);
 	}	
 
 

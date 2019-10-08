@@ -429,6 +429,7 @@ extern z80_bit cpu_code_coverage_enabled;
 
 
 extern z80_bit cpu_history_enabled;
+extern z80_bit cpu_history_started;
 
 
 #endif

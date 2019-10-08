@@ -2267,6 +2267,8 @@ int cpu_history_siguiente_posicion=0;
 
 z80_byte *cpu_history_memory_buffer=NULL;
 
+z80_bit cpu_history_started={0};
+
 int cpu_history_increment_pointer(int indice)
 {
 	//Si va mas alla del final, retornar 0
@@ -2321,6 +2323,34 @@ void cpu_history_add_element(void)
 
 }
 
+int cpu_history_get_array_pos_element(int indice)
+{
+	//Retorna indice a posicion de un elemento teniendo en cuenta que el primero (indice=0) sera donde apunte cpu_history_primer_elemento
+	//Aplicar retorno a 0 si se "da la vuelta"
+
+	if (cpu_history_primer_elemento+indice<cpu_history_max_elements) {
+		//No da la vuelta. Retornar tal cual
+		//TODO: ver si no pide por un elemento mas alla del total escritos
+		return cpu_history_primer_elemento+indice;
+	}
+	else {
+		//Ha dado la vuelta. Resetear
+		int indice_final=cpu_history_max_elements-indice;
+		return indice_final;
+		//Ejemplo:  array de 1000. Estamos en 900 y pedimos el 200 -> habra que pedir el numero 100
+		//1000-900=100
+	}
+}
+
+void cpu_history_get_registers_element(int indice,char *string_destino)
+{
+	int posicion=cpu_history_get_array_pos_element(indice);
+
+	long int offset_memoria=cpu_history_get_offset_index(posicion);
+
+	cpu_history_regs_bin_to_string(&cpu_history_memory_buffer[offset_memoria],string_destino);
+}
+
 
 z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
@@ -2351,7 +2381,7 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 	printf ("\n");
 	*/
 
-	cpu_history_add_element();
+	if (cpu_history_started.v) cpu_history_add_element();
 
 	//Llamar a core anterior
 	debug_nested_core_call_previous(cpu_history_nested_id_core);
