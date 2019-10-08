@@ -2165,6 +2165,33 @@ void reset_cpu_core_code_coverage(void)
 
 }
 
+//Dado un puntero z80_byte, con contenido de registros en binario, retorna valores registros
+//Registros 16 bits guardados en little endian
+void cpu_core_loop_history_printregs(z80_byte *p,char *destino)
+{
+
+  sprintf (destino,"PC=%02x%02x SP=%02x%02x BC=%02x%02x AF=%02x%02x HL=%02x%02x DE=%02x%02x IX=%02x%02x IY=%02x%02x "
+  				   "AF'=%02x%02x BC'=%02x%02x HL'=%02x%02x DE'=%02x%02x "
+				   "I=%02x R=%02x  IM%d IFF%c%c ",
+  p[1],p[0], //pc
+  p[3],p[2], //sp
+  p[5],p[4], //bc
+  p[7],p[6], //af
+  p[9],p[8], //hl
+  p[11],p[10], //de
+  p[13],p[12], //ix
+  p[15],p[14], //iy
+  p[17],p[16], //af'
+  p[19],p[18], //bc'
+  p[21],p[20], //hl'
+  p[23],p[22], //de'
+  p[24], //I
+  p[25], //R
+  p[26], //IM
+  DEBUG_STRING_IFF12_PARAM(p[27])  
+  );
+}
+
 
 z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
@@ -2173,6 +2200,18 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 	//hacer cosas antes...
 	//printf ("running cpu history addr: %04XH\n",reg_pc);
 	
+	/*
+	  else {
+  sprintf (buffer,"PC=%04x SP=%04x BC=%04x AF=%04x HL=%04x DE=%04x IX=%04x IY=%04x AF'=%04x BC'=%04x HL'=%04x DE'=%04x I=%02x R=%02x  "
+                  "F=%c%c%c%c%c%c%c%c F'=%c%c%c%c%c%c%c%c MEMPTR=%04x IM%d IFF%c%c ",
+  reg_pc,reg_sp, (reg_b<<8)|reg_c,(reg_a<<8)|Z80_FLAGS,(reg_h<<8)|reg_l,(reg_d<<8)|reg_e,reg_ix,reg_iy,(reg_a_shadow<<8)|Z80_FLAGS_SHADOW,(reg_b_shadow<<8)|reg_c_shadow,
+  (reg_h_shadow<<8)|reg_l_shadow,(reg_d_shadow<<8)|reg_e_shadow,reg_i,(reg_r&127)|(reg_r_bit7&128),DEBUG_STRING_FLAGS,
+  DEBUG_STRING_FLAGS_SHADOW,memptr,im_mode, DEBUG_STRING_IFF12 
+                        );
+  }
+
+			//printf ("128k. p32765=%d p8189=%d\n\r",puerto_32765,puerto_8189);
+	*/
 
 
 	//Llamar a core anterior

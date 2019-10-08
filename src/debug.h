@@ -25,17 +25,17 @@
 #include "cpu.h"
 #include "expression_parser.h"
 
-//#define DEBUG_STRING_FLAGS         ( Z80_FLAGS & FLAG_S ? 'S' : '-'), ( Z80_FLAGS & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS & FLAG_5 ? '5' : '-'), ( Z80_FLAGS & FLAG_PV ? 'P' : '-'), ( Z80_FLAGS & FLAG_3 ? '3' : '-'), ( Z80_FLAGS & FLAG_H ? 'H' : '-'), ( Z80_FLAGS & FLAG_N ? 'N' : '-'), ( Z80_FLAGS & FLAG_C ? 'C' : '-')
-
 
 #define DEBUG_STRING_FLAGS         ( Z80_FLAGS & FLAG_S ? 'S' : '-'), ( Z80_FLAGS & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS & FLAG_5 ? '5' : '-'), ( Z80_FLAGS & FLAG_H ? 'H' : '-'),  ( Z80_FLAGS & FLAG_3 ? '3' : '-'), ( Z80_FLAGS & FLAG_PV ? 'P' : '-'), ( Z80_FLAGS & FLAG_N ? 'N' : '-'), ( Z80_FLAGS & FLAG_C ? 'C' : '-')
 
-//#define DEBUG_STRING_FLAGS_SHADOW         ( Z80_FLAGS_SHADOW & FLAG_S ? 'S' : '-'), ( Z80_FLAGS_SHADOW & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS_SHADOW & FLAG_5 ? '5' : '-'), ( Z80_FLAGS_SHADOW & FLAG_PV ? 'P' : '-'), ( Z80_FLAGS_SHADOW & FLAG_3 ? '3' : '-'), ( Z80_FLAGS_SHADOW & FLAG_H ? 'H' : '-'), ( Z80_FLAGS_SHADOW & FLAG_N ? 'N' : '-'), ( Z80_FLAGS_SHADOW & FLAG_C ? 'C' : '-')
-
-
 #define DEBUG_STRING_FLAGS_SHADOW         ( Z80_FLAGS_SHADOW & FLAG_S ? 'S' : '-'), ( Z80_FLAGS_SHADOW & FLAG_Z ? 'Z' : '-'), ( Z80_FLAGS_SHADOW & FLAG_5 ? '5' : '-'), ( Z80_FLAGS_SHADOW & FLAG_H ? 'H' : '-'),  ( Z80_FLAGS_SHADOW & FLAG_3 ? '3' : '-'), ( Z80_FLAGS_SHADOW & FLAG_PV ? 'P' : '-'),( Z80_FLAGS_SHADOW & FLAG_N ? 'N' : '-'), ( Z80_FLAGS_SHADOW & FLAG_C ? 'C' : '-')
 
+#define DEBUG_STRING_FLAGS_PARAM(x)         ( x & FLAG_S ? 'S' : '-'), ( x & FLAG_Z ? 'Z' : '-'), ( x & FLAG_5 ? '5' : '-'), ( x & FLAG_H ? 'H' : '-'),  ( x & FLAG_3 ? '3' : '-'), ( x & FLAG_PV ? 'P' : '-'), ( x & FLAG_N ? 'N' : '-'), ( x & FLAG_C ? 'C' : '-')
+
 #define DEBUG_STRING_IFF12 ( iff1.v ? '1' : '-') , ( iff2.v ? '2' : '-')
+
+//bit 0: iff1. bit 1: iff2
+#define DEBUG_STRING_IFF12_PARAM(x) ( x&1 ? '1' : '-') , ( x&2 ? '2' : '-')
 
 extern void print_registers(char *buffer);
 
