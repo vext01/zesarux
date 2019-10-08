@@ -2294,7 +2294,7 @@ long int cpu_history_get_offset_index(int indice)
 	return indice*CPU_HISTORY_REGISTERS_SIZE;
 }
 
-//int temp_conta=0;
+int temp_conta=0;
 
 void cpu_history_add_element(void)
 {
@@ -2323,8 +2323,8 @@ void cpu_history_add_element(void)
 		cpu_history_primer_elemento=cpu_history_increment_pointer(cpu_history_primer_elemento);
 	} 
 
-	//temp_conta++;
-	//if (temp_conta==1000) cpu_history_started.v=0;
+	temp_conta++;
+	if (temp_conta==100) cpu_history_started.v=0;
 
 }
 
@@ -2387,10 +2387,9 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 		cpu_history_regs_bin_to_string(registers_history_binary,registros_history_string);
 		printf ("Newbin registers: %s\n",registros_history_string);
 		
-		printf ("\n");
-		
-
 		cpu_history_add_element();
+
+		printf ("\n");
 	}
 
 	//Llamar a core anterior

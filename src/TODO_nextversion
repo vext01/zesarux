@@ -1,6 +1,6 @@
 --------Para próxima versión:
 
--cpu-history get X -> coge posicion +1??? error 
+-cpu-history get X -> coge posicion +1??? error parece que ya va bien
 
 -decir que ssl mac requiere "brew install openssl"
 
