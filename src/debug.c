@@ -2146,7 +2146,7 @@ void set_cpu_core_code_coverage(void)
 
 
 	cpu_code_coverage_enabled.v=1;
-		cpu_code_coverage_clear();
+	cpu_code_coverage_clear();
 																
 
 }
@@ -2362,26 +2362,27 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 	//Test
 	//Imprimir registros de debug. 
 
-	/*
-	char registros_string_legacgy[1024];
-	print_registers(registros_string_legacgy);
-	printf ("Legacy registers: %s\n",registros_string_legacgy);
+	if (cpu_history_started.v) {
+		char registros_string_legacgy[1024];
+		print_registers(registros_string_legacgy);
+		printf ("Legacy registers: %s\n",registros_string_legacgy);
 
 
-	//Guardar en binario y obtener de nuevo 
-	char registros_history_string[1024];
-	z80_byte registers_history_binary[CPU_HISTORY_REGISTERS_SIZE];
+		//Guardar en binario y obtener de nuevo 
+		char registros_history_string[1024];
+		z80_byte registers_history_binary[CPU_HISTORY_REGISTERS_SIZE];
 
-	//Guardar en binario
-	cpu_history_regs_to_bin(registers_history_binary);
-	//Obtener en string
-	cpu_history_regs_bin_to_string(registers_history_binary,registros_history_string);
-	printf ("Newbin registers: %s\n",registros_history_string);
-	
-	printf ("\n");
-	*/
+		//Guardar en binario
+		cpu_history_regs_to_bin(registers_history_binary);
+		//Obtener en string
+		cpu_history_regs_bin_to_string(registers_history_binary,registros_history_string);
+		printf ("Newbin registers: %s\n",registros_history_string);
+		
+		printf ("\n");
+		
 
-	if (cpu_history_started.v) cpu_history_add_element();
+		cpu_history_add_element();
+	}
 
 	//Llamar a core anterior
 	debug_nested_core_call_previous(cpu_history_nested_id_core);

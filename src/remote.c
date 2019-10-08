@@ -1408,11 +1408,13 @@ void remote_cpu_history(int misocket,char *parameter,char *value)
 	}
 
 	else if (!strcasecmp(parameter,"get")) {
-		if (cpu_code_coverage_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled");
-		int indice=parse_string_to_number(value);
-		char string_destino[1024];
-		cpu_history_get_registers_element(indice,string_destino);
-		escribir_socket(misocket,string_destino);
+		if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
+		else {
+			int indice=parse_string_to_number(value);
+			char string_destino[1024];
+			cpu_history_get_registers_element(indice,string_destino);
+			escribir_socket(misocket,string_destino);
+		}
 	}	
 
 
