@@ -2294,12 +2294,14 @@ long int cpu_history_get_offset_index(int indice)
 	return indice*CPU_HISTORY_REGISTERS_SIZE;
 }
 
+//int temp_conta=0;
+
 void cpu_history_add_element(void)
 {
 
 	//-Insertar elemento: Meter contenido en posicion indicada por indice de siguiente posicion. Incrementar indice y si va mas alla del final, poner a 0
-	printf ("Insertando elemento en posicion %d. Primer elemento: %d Total_elementos: %d\n",
-			cpu_history_siguiente_posicion,cpu_history_primer_elemento,cpu_history_total_elementos);
+	//printf ("Insertando elemento en posicion %d. Primer elemento: %d Total_elementos: %d\n",
+	//		cpu_history_siguiente_posicion,cpu_history_primer_elemento,cpu_history_total_elementos);
 
 
 	//Obtener posicion en memoria
@@ -2320,6 +2322,9 @@ void cpu_history_add_element(void)
 	else {
 		cpu_history_primer_elemento=cpu_history_increment_pointer(cpu_history_primer_elemento);
 	} 
+
+	//temp_conta++;
+	//if (temp_conta==1000) cpu_history_started.v=0;
 
 }
 
@@ -2363,6 +2368,10 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 	//Imprimir registros de debug. 
 
 	if (cpu_history_started.v) {
+		printf ("array elemento en posicion %d. Primer elemento: %d Total_elementos: %d\n",
+				cpu_history_siguiente_posicion,cpu_history_primer_elemento,cpu_history_total_elementos);
+
+
 		char registros_string_legacgy[1024];
 		print_registers(registros_string_legacgy);
 		printf ("Legacy registers: %s\n",registros_string_legacgy);
