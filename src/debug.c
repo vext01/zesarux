@@ -2175,9 +2175,10 @@ void reset_cpu_core_code_coverage(void)
 void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
 {
 
+	//Nota: funcion print_registers escribe antes BC que AF. Aqui ponemos AF antes, que es mas lógico
   sprintf (destino,"PC=%02x%02x SP=%02x%02x AF=%02x%02x BC=%02x%02x HL=%02x%02x DE=%02x%02x IX=%02x%02x IY=%02x%02x "
   				   "AF'=%02x%02x BC'=%02x%02x HL'=%02x%02x DE'=%02x%02x "
-				   "I=%02x R=%02x  IM%d IFF%c%c ",
+				   "I=%02x R=%02x IM%d IFF%c%c ",
   p[1],p[0], 	//pc
   p[3],p[2], 	//sp
   p[5],p[4], 	//af
@@ -2249,6 +2250,78 @@ void cpu_history_regs_to_bin(z80_byte *p)
 }
 
 
+
+int cpu_history_max_elements=1000000; //1 millon
+//multiplicado por 28 bytes, esto da que ocupa aproximadamente 28 MB por defecto
+
+/*
+Historial se guarda como un ring buffer
+Tenemos indice que apunta a primer elemento en el ring. Esta inicializado a 0
+Tenemos contador de total elementos en el ring. Inicializado a 0
+Tenemos indice de siguiente posicion a insertar. Inicializado a 0
+*/ 
+
+int cpu_history_primer_elemento=0;
+int cpu_history_total_elementos=0;
+int cpu_history_siguiente_posicion=0;
+
+z80_byte *cpu_history_memory_buffer=NULL;
+
+int cpu_history_increment_pointer(int indice)
+{
+	//Si va mas alla del final, retornar 0
+	indice++;
+
+	if (indice>=cpu_history_max_elements) indice=0;
+	return indice;
+}
+
+void cpu_history_init_buffer(void)
+{
+	cpu_history_primer_elemento=0;
+	cpu_history_total_elementos=0;
+	cpu_history_siguiente_posicion=0;
+
+	cpu_history_memory_buffer=malloc(cpu_history_max_elements*CPU_HISTORY_REGISTERS_SIZE);
+	if (cpu_history_memory_buffer==NULL) cpu_panic("Can not allocate memory for cpu history");
+
+}
+
+long int cpu_history_get_offset_index(int indice)
+{
+	return indice*CPU_HISTORY_REGISTERS_SIZE;
+}
+
+void cpu_history_add_element(void)
+{
+
+	//-Insertar elemento: Meter contenido en posicion indicada por indice de siguiente posicion. Incrementar indice y si va mas alla del final, poner a 0
+	printf ("Insertando elemento en posicion %d. Primer elemento: %d Total_elementos: %d\n",
+			cpu_history_siguiente_posicion,cpu_history_primer_elemento,cpu_history_total_elementos);
+
+
+	//Obtener posicion en memoria
+	long int offset_memoria;
+	offset_memoria=cpu_history_get_offset_index(cpu_history_siguiente_posicion);
+	printf ("Offset en memoria: %ld\n",offset_memoria);
+
+	//Meter registros en memoria
+	cpu_history_regs_to_bin(&cpu_history_memory_buffer[offset_memoria]);
+
+	
+	cpu_history_siguiente_posicion=cpu_history_increment_pointer(cpu_history_siguiente_posicion);
+
+	//Si total elementos es menor que maximo, incrementar
+	if (cpu_history_total_elementos<cpu_history_max_elements) cpu_history_total_elementos++;
+
+	//Si total elementos es igual que maximo, no incrementar y aumentar posicion de indice del primer elemento. Si va mas alla del final, poner a 0
+	else {
+		cpu_history_primer_elemento=cpu_history_increment_pointer(cpu_history_primer_elemento);
+	} 
+
+}
+
+
 z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
 
@@ -2258,6 +2331,8 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 
 	//Test
 	//Imprimir registros de debug. 
+
+	/*
 	char registros_string_legacgy[1024];
 	print_registers(registros_string_legacgy);
 	printf ("Legacy registers: %s\n",registros_string_legacgy);
@@ -2273,7 +2348,10 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 	cpu_history_regs_bin_to_string(registers_history_binary,registros_history_string);
 	printf ("Newbin registers: %s\n",registros_history_string);
 	
+	printf ("\n");
+	*/
 
+	cpu_history_add_element();
 
 	//Llamar a core anterior
 	debug_nested_core_call_previous(cpu_history_nested_id_core);
@@ -2294,6 +2372,8 @@ void set_cpu_core_history(void)
 		return;
 	}
 
+	cpu_history_init_buffer();
+
 	cpu_history_nested_id_core=debug_nested_core_add(cpu_core_loop_history,"CPU history Core");
 
 	cpu_history_enabled.v=1;
@@ -2303,7 +2383,7 @@ void set_cpu_core_history(void)
 
 void reset_cpu_core_history(void)
 {
-  debug_printf(VERBOSE_INFO,"Disabling Cpu history");
+	debug_printf(VERBOSE_INFO,"Disabling Cpu history");
 	if (cpu_history_enabled.v==0) {
 		debug_printf(VERBOSE_INFO,"Already disabled");
 		return;
@@ -2312,6 +2392,12 @@ void reset_cpu_core_history(void)
 	debug_nested_core_del(cpu_history_nested_id_core);
 	cpu_history_enabled.v=0;
 
+	if (cpu_history_memory_buffer!=NULL) {
+		free(cpu_history_memory_buffer);
+		cpu_history_memory_buffer=NULL;
+
+		//TODO: liberar buffer al inicializar cpu_core en set_machine
+	}
 
 }
 
