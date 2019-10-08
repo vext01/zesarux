@@ -2165,31 +2165,87 @@ void reset_cpu_core_code_coverage(void)
 
 }
 
+//IMPORTANTE: Aqui se define el tamaño del los registros en binario en la estructura
+//Si se modifica dicho tamaño, actualizar este valor
+
+#define CPU_HISTORY_REGISTERS_SIZE 28
+
 //Dado un puntero z80_byte, con contenido de registros en binario, retorna valores registros
 //Registros 16 bits guardados en little endian
-void cpu_core_loop_history_printregs(z80_byte *p,char *destino)
+void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
 {
 
-  sprintf (destino,"PC=%02x%02x SP=%02x%02x BC=%02x%02x AF=%02x%02x HL=%02x%02x DE=%02x%02x IX=%02x%02x IY=%02x%02x "
+  sprintf (destino,"PC=%02x%02x SP=%02x%02x AF=%02x%02x BC=%02x%02x HL=%02x%02x DE=%02x%02x IX=%02x%02x IY=%02x%02x "
   				   "AF'=%02x%02x BC'=%02x%02x HL'=%02x%02x DE'=%02x%02x "
 				   "I=%02x R=%02x  IM%d IFF%c%c ",
-  p[1],p[0], //pc
-  p[3],p[2], //sp
-  p[5],p[4], //bc
-  p[7],p[6], //af
-  p[9],p[8], //hl
-  p[11],p[10], //de
-  p[13],p[12], //ix
-  p[15],p[14], //iy
-  p[17],p[16], //af'
-  p[19],p[18], //bc'
-  p[21],p[20], //hl'
-  p[23],p[22], //de'
-  p[24], //I
-  p[25], //R
-  p[26], //IM
-  DEBUG_STRING_IFF12_PARAM(p[27])  
+  p[1],p[0], 	//pc
+  p[3],p[2], 	//sp
+  p[5],p[4], 	//af
+  p[7],p[6], 	//bc
+  p[9],p[8], 	//hl
+  p[11],p[10], 	//de
+  p[13],p[12], 	//ix
+  p[15],p[14], 	//iy
+  p[17],p[16], 	//af'
+  p[19],p[18], 	//bc'
+  p[21],p[20], 	//hl'
+  p[23],p[22], 	//de'
+  p[24], 		//I
+  p[25], 		//R
+  p[26], 		//IM
+  DEBUG_STRING_IFF12_PARAM(p[27])  //IFF1,2
   );
+}
+
+
+//Guarda en puntero z80_byte en con contenido de registros en binario
+//Registros 16 bits guardados en little endian
+void cpu_history_regs_to_bin(z80_byte *p)
+{
+
+	p[0]=value_16_to_8l(reg_pc);
+	p[1]=value_16_to_8h(reg_pc);
+
+	p[2]=value_16_to_8l(reg_sp);
+	p[3]=value_16_to_8h(reg_sp);
+
+	p[4]=Z80_FLAGS;
+	p[5]=reg_a;	
+
+	p[6]=reg_c;
+	p[7]=reg_b;
+
+	p[8]=reg_l;
+	p[9]=reg_h;
+
+	p[10]=reg_e;
+	p[11]=reg_d;
+
+	p[12]=value_16_to_8l(reg_ix);
+	p[13]=value_16_to_8h(reg_ix);
+
+	p[14]=value_16_to_8l(reg_iy);
+	p[15]=value_16_to_8h(reg_iy);
+
+	p[16]=Z80_FLAGS_SHADOW;
+	p[17]=reg_a_shadow;	
+
+	p[18]=reg_c_shadow;
+	p[19]=reg_b_shadow;
+
+	p[20]=reg_l_shadow;
+	p[21]=reg_h_shadow;
+
+	p[22]=reg_e_shadow;
+	p[23]=reg_d_shadow;
+
+	p[24]=reg_i;
+  	p[25]=(reg_r&127)|(reg_r_bit7&128);
+  	p[26]=im_mode;
+	p[27]=iff1.v | (iff2.v<<1);
+
+
+ 
 }
 
 
@@ -2199,19 +2255,24 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 
 	//hacer cosas antes...
 	//printf ("running cpu history addr: %04XH\n",reg_pc);
-	
-	/*
-	  else {
-  sprintf (buffer,"PC=%04x SP=%04x BC=%04x AF=%04x HL=%04x DE=%04x IX=%04x IY=%04x AF'=%04x BC'=%04x HL'=%04x DE'=%04x I=%02x R=%02x  "
-                  "F=%c%c%c%c%c%c%c%c F'=%c%c%c%c%c%c%c%c MEMPTR=%04x IM%d IFF%c%c ",
-  reg_pc,reg_sp, (reg_b<<8)|reg_c,(reg_a<<8)|Z80_FLAGS,(reg_h<<8)|reg_l,(reg_d<<8)|reg_e,reg_ix,reg_iy,(reg_a_shadow<<8)|Z80_FLAGS_SHADOW,(reg_b_shadow<<8)|reg_c_shadow,
-  (reg_h_shadow<<8)|reg_l_shadow,(reg_d_shadow<<8)|reg_e_shadow,reg_i,(reg_r&127)|(reg_r_bit7&128),DEBUG_STRING_FLAGS,
-  DEBUG_STRING_FLAGS_SHADOW,memptr,im_mode, DEBUG_STRING_IFF12 
-                        );
-  }
 
-			//printf ("128k. p32765=%d p8189=%d\n\r",puerto_32765,puerto_8189);
-	*/
+	//Test
+	//Imprimir registros de debug. 
+	char registros_string_legacgy[1024];
+	print_registers(registros_string_legacgy);
+	printf ("Legacy registers: %s\n",registros_string_legacgy);
+
+
+	//Guardar en binario y obtener de nuevo 
+	char registros_history_string[1024];
+	z80_byte registers_history_binary[CPU_HISTORY_REGISTERS_SIZE];
+
+	//Guardar en binario
+	cpu_history_regs_to_bin(registers_history_binary);
+	//Obtener en string
+	cpu_history_regs_bin_to_string(registers_history_binary,registros_history_string);
+	printf ("Newbin registers: %s\n",registros_history_string);
+	
 
 
 	//Llamar a core anterior
