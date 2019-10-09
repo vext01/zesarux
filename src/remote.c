@@ -631,7 +631,7 @@ struct s_items_ayuda items_ayuda[]={
 	"get-size              Return total elements in history\n"
 	"is-enabled            Tells if the cpu history is enabled or not\n"
 	"is-started            Tells if the cpu history is started or not\n"
-	"started  yes|no       Start recording cpu history. Requires it to be enabled first\n"
+	"started yes|no        Start recording cpu history. Requires it to be enabled first\n"
 	"set-max-size number   Sets maximum allowed elements in history\n"
 	},
 
