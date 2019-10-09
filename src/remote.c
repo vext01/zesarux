@@ -616,16 +616,19 @@ struct s_items_ayuda items_ayuda[]={
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
 
 	{"cpu-code-coverage",NULL,"parameter [value]","Sets cpu code coverage parameters. Parameters and values are the following:\n"
+	"clear:                  Clear address list\n"
 	"enabled         yes|no: Enable or disable the cpu code coverage\n"
 	"get:                    Get all run addresses\n"
-	"clear:                  Clear address list\n"
 	},
 
 
 	{"cpu-history",NULL,"parameter [value]","Sets cpu history parameters. Parameters and values are the following:\n"
 	"enabled         yes|no: Enable or disable the cpu history\n"
-	"started         yes|no: Start recording cpu history\n"
 	"get             index:  Get registers at position\n"
+	"get-max-size:           Return maximum allowed elements in history\n"	
+	"get-size:               Return total elements in history\n"
+	"started         yes|no: Start recording cpu history\n"
+	"set-max-size    number: Sets maximum allowed elements in history\n"
 	},
 
 
@@ -1367,9 +1370,10 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 void remote_cpu_history(int misocket,char *parameter,char *value)
 {
 
-	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
+	//Comun para activar el core y para iniciarlo y otros. Ambos requieren detener el core para hacer esto
 	if (!strcasecmp(parameter,"enabled") ||
-	    !strcasecmp(parameter,"started")
+	    !strcasecmp(parameter,"started") ||
+		!strcasecmp(parameter,"set-max-size") 
 	
 	) {
 
@@ -1395,9 +1399,24 @@ void remote_cpu_history(int misocket,char *parameter,char *value)
 		}
 
 		if (!strcasecmp(parameter,"started")) {
-			if (remote_eval_yes_no(value)) cpu_history_started.v=1;
-			else cpu_history_started.v=0;
+			if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
+			else {
+				if (remote_eval_yes_no(value)) cpu_history_started.v=1;
+				else cpu_history_started.v=0;
+			}
 		}		
+
+		if (!strcasecmp(parameter,"set-max-size")) {
+			if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
+			else {
+				int total=parse_string_to_number(value);
+
+				if (cpu_history_set_max_size(total)!=0) {
+					escribir_socket(misocket,"ERROR: Value out of range");
+				}
+			}
+		}	
+
 
 
 		//Salir del cpu step si no estaba en ese modo
@@ -1418,7 +1437,20 @@ void remote_cpu_history(int misocket,char *parameter,char *value)
 	}	
 
 
+	else if (!strcasecmp(parameter,"get-size")) {
+		if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
+		else {
+			escribir_socket_format(misocket,"%d",cpu_history_get_total_elements() );
+		}
+	}	
 
+
+	else if (!strcasecmp(parameter,"get-max-size")) {
+		if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
+		else {
+			escribir_socket_format(misocket,"%d",cpu_history_get_max_size() );
+		}
+	}	
 
 
 	else {

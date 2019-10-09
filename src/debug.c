@@ -2349,6 +2349,17 @@ int cpu_history_get_array_pos_element(int indice)
 
 void cpu_history_get_registers_element(int indice,char *string_destino)
 {
+
+	if (indice<0) {
+		strcpy(string_destino,"ERROR: index can't be negative");
+		return;
+	}
+
+	if (indice>=cpu_history_total_elementos) {
+		sprintf(string_destino,"ERROR: index beyond total elements (%d)",cpu_history_total_elementos);
+		return;
+	}
+
 	int posicion=cpu_history_get_array_pos_element(indice);
 
 	long int offset_memoria=cpu_history_get_offset_index(posicion);
@@ -2356,6 +2367,27 @@ void cpu_history_get_registers_element(int indice,char *string_destino)
 	cpu_history_regs_bin_to_string(&cpu_history_memory_buffer[offset_memoria],string_destino);
 }
 
+
+
+int cpu_history_get_total_elements(void)
+{
+
+	return cpu_history_total_elementos;
+}
+
+int cpu_history_get_max_size(void)
+{
+	return cpu_history_max_elements;
+}
+
+int cpu_history_set_max_size(int total)
+{
+	if (total<1 || total>CPU_HISTORY_MAX_ALLOWED_ELEMENTS) return -1;
+	else {
+		cpu_history_max_elements=total;
+		cpu_history_init_buffer();
+	}
+}
 
 z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {

@@ -432,4 +432,8 @@ extern z80_bit cpu_history_enabled;
 extern z80_bit cpu_history_started;
 
 
+#define CPU_HISTORY_MAX_ALLOWED_ELEMENTS 10000000
+//10 millones
+
+
 #endif
