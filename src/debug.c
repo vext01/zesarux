@@ -2295,6 +2295,13 @@ void cpu_history_init_buffer(void)
 	cpu_history_total_elementos=0;
 	cpu_history_siguiente_posicion=0;
 
+
+	if (cpu_history_memory_buffer!=NULL) {
+		free(cpu_history_memory_buffer);
+		//TODO: liberar buffer al inicializar cpu_core en set_machine
+	}
+
+
 	cpu_history_memory_buffer=malloc(cpu_history_max_elements*CPU_HISTORY_REGISTERS_SIZE);
 	if (cpu_history_memory_buffer==NULL) cpu_panic("Can not allocate memory for cpu history");
 
@@ -2305,7 +2312,7 @@ long int cpu_history_get_offset_index(int indice)
 	return indice*CPU_HISTORY_REGISTERS_SIZE;
 }
 
-int temp_conta=0;
+//int temp_conta=0;
 
 void cpu_history_add_element(void)
 {
@@ -2318,7 +2325,8 @@ void cpu_history_add_element(void)
 	//Obtener posicion en memoria
 	long int offset_memoria;
 	offset_memoria=cpu_history_get_offset_index(cpu_history_siguiente_posicion);
-	printf ("Offset en memoria: %ld\n",offset_memoria);
+	
+	//printf ("Offset en memoria: %ld\n",offset_memoria);
 
 	//Meter registros en memoria
 	cpu_history_regs_to_bin(&cpu_history_memory_buffer[offset_memoria]);
@@ -2334,8 +2342,9 @@ void cpu_history_add_element(void)
 		cpu_history_primer_elemento=cpu_history_increment_pointer(cpu_history_primer_elemento);
 	} 
 
-	temp_conta++;
-	if (temp_conta==100) cpu_history_started.v=0;
+	//temp_conta++;
+	//if (temp_conta==100) cpu_history_started.v=0;
+
 
 }
 
@@ -2428,12 +2437,13 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 	//hacer cosas antes...
 	//printf ("running cpu history addr: %04XH\n",reg_pc);
 
-	//Test
-	//Imprimir registros de debug. 
+
 
 	if (cpu_history_started.v) {
-		printf ("array elemento en posicion %d. Primer elemento: %d Total_elementos: %d\n",
-				cpu_history_siguiente_posicion,cpu_history_primer_elemento,cpu_history_total_elementos);
+
+		//Prueba comparar legacy registers con nuevo
+		/*
+		printf ("array elemento en posicion %d. Primer elemento: %d Total_elementos: %d\n",cpu_history_siguiente_posicion,cpu_history_primer_elemento,cpu_history_total_elementos);
 
 
 		char registros_string_legacgy[1024];
@@ -2450,10 +2460,13 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 		//Obtener en string
 		cpu_history_regs_bin_to_string(registers_history_binary,registros_history_string);
 		printf ("Newbin registers: %s\n",registros_history_string);
+		*/
+
+
 		
 		cpu_history_add_element();
 
-		printf ("\n");
+		//printf ("\n");
 	}
 
 	//Llamar a core anterior
@@ -2495,12 +2508,12 @@ void reset_cpu_core_history(void)
 	debug_nested_core_del(cpu_history_nested_id_core);
 	cpu_history_enabled.v=0;
 
-	if (cpu_history_memory_buffer!=NULL) {
+	/*if (cpu_history_memory_buffer!=NULL) {
 		free(cpu_history_memory_buffer);
 		cpu_history_memory_buffer=NULL;
 
 		//TODO: liberar buffer al inicializar cpu_core en set_machine
-	}
+	}*/
 
 }
 

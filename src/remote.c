@@ -598,38 +598,40 @@ struct s_items_ayuda items_ayuda[]={
   {"assemble","|a","[address] [instruction]","Assemble at address. If no instruction specified, "
                                         "opens assemble prompt"},	
   {"ayplayer","|ayp","command parameter","Runs a command on the AY Player. command can be:\n"
-	"get-author:        Prints the author\n"
-	"get-elapsed-track: Prints elapsed track time in 1/50 of seconds\n"
-	"get-misc:          Prints misc information\n"
-	"get-total-tracks:  Prints total tracks\n"
-	"get-track-length:  Prints track length in 1/50 of seconds\n"
-	"get-track-name:    Prints track name\n"
-	"get-track-number:  Prints current track number\n"
+	"get-author          Prints the author\n"
+	"get-elapsed-track   Prints elapsed track time in 1/50 of seconds\n"
+	"get-misc            Prints misc information\n"
+	"get-total-tracks    Prints total tracks\n"
+	"get-track-length    Prints track length in 1/50 of seconds\n"
+	"get-track-name      Prints track name\n"
+	"get-track-number    Prints current track number\n"
 
-	"load:              Loads the .ay file indicated by parameter\n"
-	"next:              Go to next track\n"
-	"prev:              Go to previous track\n"
-	"stop:              Stops playing\n"
+	"load                Loads the .ay file indicated by parameter\n"
+	"next                Go to next track\n"
+	"prev                Go to previous track\n"
+	"stop                Stops playing\n"
 
 },
 
 	{"clear-membreakpoints",NULL,NULL,"Clear all memory breakpoints"},
 
-	{"cpu-code-coverage",NULL,"parameter [value]","Sets cpu code coverage parameters. Parameters and values are the following:\n"
-	"clear:                  Clear address list\n"
-	"enabled         yes|no: Enable or disable the cpu code coverage\n"
-	"get:                    Get all run addresses\n"
+	{"cpu-code-coverage",NULL,"action [parameter]","Sets cpu code coverage parameters. Action and parameters are the following:\n"
+	"clear            Clear address list\n"
+	"enabled yes|no   Enable or disable the cpu code coverage\n"
+	"get              Get all run addresses\n"
 	},
 
 
-	{"cpu-history",NULL,"parameter [value]","Sets cpu history parameters. Parameters and values are the following:\n"
-	"enabled             yes|no: Enable or disable the cpu history\n"
-	"get                  index: Get registers at position\n"
-	"get-max-size:               Return maximum allowed elements in history\n"	
-	"get-size:                   Return total elements in history\n"
-	"pc               start end: Return PC register from position start to end"
-	"started             yes|no: Start recording cpu history\n"
-	"set-max-size        number: Sets maximum allowed elements in history\n"
+	{"cpu-history",NULL,"action [parameter] [parameter]","Runs cpu history actions. Action and parameters are the following:\n"
+	"enabled yes|no        Enable or disable the cpu history\n"
+	"get index             Get registers at position\n"
+	"get-max-size          Return maximum allowed elements in history\n"	
+	"get-pc start end      Return PC register from position start to end\n"
+	"get-size              Return total elements in history\n"
+	"is-enabled            Tells if the cpu history is enabled or not\n"
+	"is-started            Tells if the cpu history is started or not\n"
+	"started  yes|no       Start recording cpu history. Requires it to be enabled first\n"
+	"set-max-size number   Sets maximum allowed elements in history\n"
 	},
 
 
@@ -1453,7 +1455,7 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 		}
 	}	
 
-	else if (!strcasecmp(parameter,"pc")) {
+	else if (!strcasecmp(parameter,"get-pc")) {
 		if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
 		else {
 			int indice=parse_string_to_number(value);
@@ -1463,16 +1465,29 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 				escribir_socket(misocket,"Error. End must be greater than start");
 			}
 			else {
-				while (total) {
-					char string_destino[1024];
-					cpu_history_get_pc_register_element(indice++,string_destino);
-					escribir_socket(misocket,string_destino);
-					total--;
+				//Validar que no se pidan mas de los que hay
+				if (total>cpu_history_get_total_elements() ) {
+					escribir_socket(misocket,"Error. End goes beyond total elements");
+				}
+				else {
+					while (total) {
+						char string_destino[1024]; 
+						cpu_history_get_pc_register_element(indice++,string_destino);
+						escribir_socket_format(misocket,"%s ",string_destino);
+						total--;
+					}
 				}
 			}
 		}
-	}		
+	}	
 
+	else if (!strcasecmp(parameter,"is-enabled")) {
+		escribir_socket_format(misocket,"%d",cpu_history_enabled.v);
+	}	
+
+	else if (!strcasecmp(parameter,"is-started")) {
+		escribir_socket_format(misocket,"%d",cpu_history_started.v);
+	}	
 
 	else {
 		escribir_socket(misocket,"Error. Unknown parameter");

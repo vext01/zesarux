@@ -1,6 +1,6 @@
 --------Para próxima versión:
 
--cpu-history get X -> coge posicion +1??? error parece que ya va bien
+-cpu-history: cuando se devuelven valores (get-pc y get-registers) se debe interrumpir antes el core?
 
 -decir que ssl mac requiere "brew install openssl"
 
