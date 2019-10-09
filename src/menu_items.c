@@ -13274,12 +13274,12 @@ void menu_debug_get_legend(int linea,char *s)
 			else {
 				if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
-							// Stepmode Disassemble Mode
+							// Stepmode Disassem Assem Mode
 					sprintf(s,"~~StepMode ~~Disassem ~~Assem ~~Mode");
 				}
 				else {
 							//01234567890123456789012345678901
-							// Stepmode Disassemble 					
+							// Stepmode Disassem Assem				
 					sprintf(s,"~~StepMode ~~Disassem ~~Assem");
 				}
 			}
@@ -13300,14 +13300,14 @@ void menu_debug_get_legend(int linea,char *s)
 
 			if (menu_debug_registers_current_view==1) {
 							//01234567890123456789012345678901
-							// chReg Brkp. Toggle Runto Watch		
-				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch Togg~~le R~~unto ");
+							// Chrg brkp wtch Toggl Run Runto		
+				sprintf(s,"Ch~~rg ~~brkp ~~wtch Togg~~l Ru~~n R~~unto");
 			}
 
 			else {
 							//01234567890123456789012345678901
-							// chReg Brkp. Watch					
-				sprintf(s,"Ch~~Reg ~~Brkp ~~Watch");
+							// changeReg Breakpoint Watches					
+				sprintf(s,"Change~~reg ~~breakpoint ~~watch");
 			}
 		break;
 
@@ -13327,7 +13327,7 @@ void menu_debug_get_legend(int linea,char *s)
 			}
 			else {
 							//01234567890123456789012345678901
-							// Clr.tstpart. 1-5 View MZone 99
+							// Clrtstpart Write MZone 99
 				sprintf (s,"ClrTst~~Part Wr~~ite M~~Zone %d",menu_debug_memory_zone);
 			}
 		break;
@@ -14010,7 +14010,13 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					menu_debug_runto();
                     tecla=2; //Simular ESC
 					salir_todos_menus=1;
-                }								
+                }			
+
+				if (tecla=='n' && menu_debug_registers_current_view==1) {
+					//run tal cual. como runto pero sin poner breakpoint
+                    tecla=2; //Simular ESC
+					salir_todos_menus=1;
+                }										
 
 				if (tecla=='w') {
                     menu_watches();
@@ -14401,6 +14407,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					acumulado=0; //teclas pulsadas
 					//Con esto saldremos
                 }	
+
+				
+				if (tecla=='n' && menu_debug_registers_current_view==1) {
+					//run tal cual. como runto pero sin poner breakpoint
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+					salir_todos_menus=1;
+					cpu_step_mode.v=0;
+					acumulado=0; //teclas pulsadas
+					//Con esto saldremos
+                }					
 
 
                 if (tecla=='p') {

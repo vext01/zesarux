@@ -34,6 +34,7 @@ Improved Debugging:
 -added setting to dump .zsf snapshot when a cpu panic is fired
 -debug CPU window: can now resize height and have more debug lines
 -cpu transaction log: faster when opening transaction log file
+-added key 'n' for "run" on debug cpu. Does the same as closing all menus and returning back to emulation
 
 Improved TBBlue emulation:
 -added scroll x,y on ula layer
