@@ -2198,6 +2198,17 @@ void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
   );
 }
 
+//Dado un puntero z80_byte, con contenido de registros en binario, retorna valor registro PC
+//Registros 16 bits guardados en little endian
+void cpu_history_reg_pc_bin_to_string(z80_byte *p,char *destino)
+{
+
+//Nota: funcion print_registers escribe antes BC que AF. Aqui ponemos AF antes, que es mas lógico
+  sprintf (destino,"%02x%02x",
+  p[1],p[0] 	//pc
+  );
+}
+
 
 //Guarda en puntero z80_byte en con contenido de registros en binario
 //Registros 16 bits guardados en little endian
@@ -2367,6 +2378,26 @@ void cpu_history_get_registers_element(int indice,char *string_destino)
 	cpu_history_regs_bin_to_string(&cpu_history_memory_buffer[offset_memoria],string_destino);
 }
 
+void cpu_history_get_pc_register_element(int indice,char *string_destino)
+{
+
+	if (indice<0) {
+		strcpy(string_destino,"ERROR: index can't be negative");
+		return;
+	}
+
+	if (indice>=cpu_history_total_elementos) {
+		sprintf(string_destino,"ERROR: index beyond total elements (%d)",cpu_history_total_elementos);
+		return;
+	}
+
+	int posicion=cpu_history_get_array_pos_element(indice);
+
+	long int offset_memoria=cpu_history_get_offset_index(posicion);
+
+	cpu_history_reg_pc_bin_to_string(&cpu_history_memory_buffer[offset_memoria],string_destino);
+}
+
 
 
 int cpu_history_get_total_elements(void)
@@ -2386,6 +2417,7 @@ int cpu_history_set_max_size(int total)
 	else {
 		cpu_history_max_elements=total;
 		cpu_history_init_buffer();
+		return 0;
 	}
 }
 
