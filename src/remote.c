@@ -623,6 +623,7 @@ struct s_items_ayuda items_ayuda[]={
 
 
 	{"cpu-history",NULL,"action [parameter] [parameter]","Runs cpu history actions. Action and parameters are the following:\n"
+	"clear                 Clear the cpu history\n"
 	"enabled yes|no        Enable or disable the cpu history\n"
 	"get index             Get registers at position\n"
 	"get-max-size          Return maximum allowed elements in history\n"	
@@ -1376,7 +1377,8 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 	//Comun para activar el core y para iniciarlo y otros. Ambos requieren detener el core para hacer esto
 	if (!strcasecmp(parameter,"enabled") ||
 	    !strcasecmp(parameter,"started") ||
-		!strcasecmp(parameter,"set-max-size") 
+		!strcasecmp(parameter,"set-max-size") ||
+		!strcasecmp(parameter,"clear") 
 	
 	) {
 
@@ -1420,6 +1422,12 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 			}
 		}	
 
+		if (!strcasecmp(parameter,"clear")) {
+			if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
+			else {
+				cpu_history_init_buffer();
+			}
+		}	
 
 
 		//Salir del cpu step si no estaba en ese modo
