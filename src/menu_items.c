@@ -17214,237 +17214,225 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 	//Por defecto
 	query_result[0]=0;
 	
-	     //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
-        menu_item *array_menu_common;
-        menu_item item_seleccionado;
-        int retorno_menu;
+	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
 
-		int zxinfo_wos_opcion_seleccionada=0;
-        do {
-
-			menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
-
-	//http://www.zx81.nl/files.html
-	int http_code;
-	char *mem;
-	char *orig_mem;
-	char *mem_after_headers;
-	int total_leidos;
-
-	
-	char redirect_url[NETWORK_MAX_URL];
-	//int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
-	
-	int retorno=menu_zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
-
-
-
-	orig_mem=mem;
-	
-	if (mem_after_headers!=NULL && http_code==200) {
-		//temp limite
-		//mem_after_headers[10000]=0;
-		//menu_generic_message("Games",mem_after_headers);
-		//char texto_final[30000];
-		
-		//int indice_destino=0;
-		
-		int dif_header=mem_after_headers-mem;
-		total_leidos -=dif_header;
-		mem=mem_after_headers;
-	
-	//leer linea a linea 
-	char buffer_linea[1024];
-	int i=0;
-	int salir=0;
-
-	int existe_id;
-	int existe_fulltitle;
-	int ultimo_indice_id;
-	int ultimo_indice_fulltitle;
-
-	//TODO: controlar esto mejor maximo, antes de hacer strcpy sobre ahi. y no tener longitud tan larga de estos array de char
-	//probar query "had", sale una entrada larga:
-	//"He Had Such A Big Head That If He Were A Cat He Would Have To Toss The Mice From Under The Bed With A Brow"
-	char ultimo_id[1024];
-	char ultimo_fulltitle[1024];
-
-	existe_id=0;
-	existe_fulltitle=0;
-	ultimo_id[0]=0;
-	ultimo_fulltitle[0]=0;
-	ultimo_indice_id=0;
-	ultimo_indice_fulltitle=0;	
-
-	int total_items=0;
+	int zxinfo_wos_opcion_seleccionada=0;
 	do {
-		int leidos;
-		char *next_mem;
+
+		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+		//http://www.zx81.nl/files.html
+		int http_code;
+		char *mem;
+		char *orig_mem;
+		char *mem_after_headers;
+		int total_leidos;
+
 		
-			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
-			total_leidos -=leidos;
+		char redirect_url[NETWORK_MAX_URL];
+		//int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
 		
-			if (buffer_linea[0]==0) {
-				salir=1;
-				//printf ("salir con linea vacia final\n");
-				mem=next_mem;
-			}
-			else {
-				//printf ("cabecera %d: %s\n",i,buffer_linea);
-				//ver si contine texto de juego
+		int retorno=menu_zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
 
-				/*
-				Campos a buscar:
 
-hits.0._id=0002258
-hits.0.fulltitle=Headcoach
 
-Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén los dos y tengan mismo .n., agregar a menu
-				*/
-				
-				//filtrar antes los que tienen prefijo
-				char *existe_prefijo;
-				
-				existe_prefijo=strstr(buffer_linea,preffix);
-				if (existe_prefijo!=NULL) {
-				
-				char *existe;
-				existe=strstr(buffer_linea,string_index); //"_id=");
-				if (existe!=NULL) {
-						int pos=strlen(string_index);
-						strcpy(ultimo_id,&existe[pos]);
-						existe_id=1;
-						char *existe_indice;
-						existe_indice=strstr(buffer_linea,preffix);
-						if (existe_indice!=NULL) {
-							//saltar el prefijo para obtener el numero
-							int l=strlen(preffix);
-							ultimo_indice_id=parse_string_to_number(&existe_indice[l]);
-						}
-				}
-
-				existe=strstr(buffer_linea,string_display); //"fulltitle=");
-				if (existe!=NULL) {
-						int pos=strlen(string_display);
-						strcpy(ultimo_fulltitle,&existe[pos]);
-						existe_fulltitle=1;
-						char *existe_indice;
-						existe_indice=strstr(buffer_linea,preffix);
-						if (existe_indice!=NULL) {
-							//saltar el prefijo para obtener el numero
-							int l=strlen(preffix);
-							ultimo_indice_fulltitle=parse_string_to_number(&existe_indice[l]);
-						}						
-				}				
-					
-				if (existe_id && existe_fulltitle) {
-					if (ultimo_indice_id==ultimo_indice_fulltitle) {
-						
-						
-						debug_printf (VERBOSE_DEBUG,"Adding menu item [%s] id [%s]",ultimo_fulltitle,ultimo_id);
-						
-						//meter en entrada linea indice. Realmente para que la queremos?
-						//solo la muestro en la busqueda inicial, en la seleccion del formato de archivo ya no
-						if (!showindex) {
-							//Remodificamos ultimo_fulltitle para meterle el indice delante
-							char buf[1024];
-							sprintf (buf,"%d %s",ultimo_indice_id,ultimo_fulltitle);
-							strcpy(ultimo_fulltitle,buf);
-						}
-						
-						
-						//temp controlar maximo. ponemos a voleo
-						ultimo_fulltitle[32]=0;
-						
-						
-						//TODO controlar maximo items en menu. De momento esta limitado por la query a la api (100)
-
-						if (!showindex) {
-							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
-							menu_add_item_menu_misc(array_menu_common,ultimo_id);
-						}
-						else {
-							//printf ("%s\n",ultimo_id);
-							//obtener archivo sin extension de la descarga
-							char nombre_sin_dir[PATH_MAX];
-							char nombre_sin_ext[PATH_MAX];
-
-							util_get_file_no_directory(ultimo_id,nombre_sin_dir);
-
-							//TODO Pillamos el nombre sin extension (sin puntos), pero en juegos como "Chase H.Q.tap.zip"
-							//quedará: "Chase H"
-							util_get_file_without_extension(nombre_sin_dir,nombre_sin_ext);
-
-							//Acortar el nombre por si acaso
-							char nombre_shown[28];
-
-							//strcpy(nombre_sin_ext,"01234567890123456789012345678901234567890123456789");
-
-    	                    menu_tape_settings_trunc_name(nombre_sin_ext,nombre_shown,28);
-							//printf ("%s\n",nombre_sin_ext);
-
-							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,nombre_shown);
-							menu_add_item_menu_misc(array_menu_common,ultimo_id);
-
-							menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL," %s",ultimo_fulltitle);							
-						}
-
-						total_items++;
-					}
-
-					existe_id=0;
-					existe_fulltitle=0;
-					ultimo_id[0]=0;
-					ultimo_fulltitle[0]=0;
-					ultimo_indice_id=0;
-					ultimo_indice_fulltitle=0;	
-
-				}
-				}
-									
-				
-				
-				i++;
-				mem=next_mem;
-			}
-		
-			if (total_leidos<=0) salir=1;
-		
-	} while (!salir);
+		orig_mem=mem;
 	
-	//texto_final[indice_destino]=0;
-	if (orig_mem!=NULL) free(orig_mem);
+		if (mem_after_headers!=NULL && http_code==200) {
 			
-                       
+			int dif_header=mem_after_headers-mem;
+			total_leidos -=dif_header;
+			mem=mem_after_headers;
+		
+			//leer linea a linea 
+			char buffer_linea[1024];
+			int i=0;
+			int salir=0;
+
+			int existe_id;
+			int existe_fulltitle;
+			int ultimo_indice_id;
+			int ultimo_indice_fulltitle;
+
+			//TODO: controlar esto mejor maximo, antes de hacer strcpy sobre ahi. y no tener longitud tan larga de estos array de char
+			//probar query "had", sale una entrada larga:
+			//"He Had Such A Big Head That If He Were A Cat He Would Have To Toss The Mice From Under The Bed With A Brow"
+			char ultimo_id[1024];
+			char ultimo_fulltitle[1024];
+
+			existe_id=0;
+			existe_fulltitle=0;
+			ultimo_id[0]=0;
+			ultimo_fulltitle[0]=0;
+			ultimo_indice_id=0;
+			ultimo_indice_fulltitle=0;	
+
+			int total_items=0;
+			do {
+				int leidos;
+				char *next_mem;
+			
+				next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
+				total_leidos -=leidos;
+			
+				if (buffer_linea[0]==0) {
+					salir=1;
+					//printf ("salir con linea vacia final\n");
+					mem=next_mem;
+				}
+				else {
+					//printf ("cabecera %d: %s\n",i,buffer_linea);
+					//ver si contine texto de juego
+
+					/*
+					Campos a buscar:
+
+	hits.0._id=0002258
+	hits.0.fulltitle=Headcoach
+
+	Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén los dos y tengan mismo .n., agregar a menu
+					*/
+					
+					//filtrar antes los que tienen prefijo
+					char *existe_prefijo;
+					
+					existe_prefijo=strstr(buffer_linea,preffix);
+					if (existe_prefijo!=NULL) {
+					
+						char *existe;
+						existe=strstr(buffer_linea,string_index); //"_id=");
+						if (existe!=NULL) {
+								int pos=strlen(string_index);
+								strcpy(ultimo_id,&existe[pos]);
+								existe_id=1;
+								char *existe_indice;
+								existe_indice=strstr(buffer_linea,preffix);
+								if (existe_indice!=NULL) {
+									//saltar el prefijo para obtener el numero
+									int l=strlen(preffix);
+									ultimo_indice_id=parse_string_to_number(&existe_indice[l]);
+								}
+						}
+
+						existe=strstr(buffer_linea,string_display); //"fulltitle=");
+						if (existe!=NULL) {
+								int pos=strlen(string_display);
+								strcpy(ultimo_fulltitle,&existe[pos]);
+								existe_fulltitle=1;
+								char *existe_indice;
+								existe_indice=strstr(buffer_linea,preffix);
+								if (existe_indice!=NULL) {
+									//saltar el prefijo para obtener el numero
+									int l=strlen(preffix);
+									ultimo_indice_fulltitle=parse_string_to_number(&existe_indice[l]);
+								}						
+						}				
+							
+						if (existe_id && existe_fulltitle) {
+							if (ultimo_indice_id==ultimo_indice_fulltitle) {
+								
+								
+								debug_printf (VERBOSE_DEBUG,"Adding menu item [%s] id [%s]",ultimo_fulltitle,ultimo_id);
+								
+								//meter en entrada linea indice. Realmente para que la queremos?
+								//solo la muestro en la busqueda inicial, en la seleccion del formato de archivo ya no
+								if (!showindex) {
+									//Remodificamos ultimo_fulltitle para meterle el indice delante
+									char buf[1024];
+									sprintf (buf,"%d %s",ultimo_indice_id,ultimo_fulltitle);
+									strcpy(ultimo_fulltitle,buf);
+								}
+								
+								
+								//temp controlar maximo. ponemos a voleo
+								ultimo_fulltitle[32]=0;
+								
+								
+								//TODO controlar maximo items en menu. De momento esta limitado por la query a la api (100)
+
+								if (!showindex) {
+									menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
+									menu_add_item_menu_misc(array_menu_common,ultimo_id);
+								}
+								else {
+									//printf ("%s\n",ultimo_id);
+									//obtener archivo sin extension de la descarga
+									char nombre_sin_dir[PATH_MAX];
+									char nombre_sin_ext[PATH_MAX];
+
+									util_get_file_no_directory(ultimo_id,nombre_sin_dir);
+
+									//TODO Pillamos el nombre sin extension (sin puntos), pero en juegos como "Chase H.Q.tap.zip"
+									//quedará: "Chase H"
+									util_get_file_without_extension(nombre_sin_dir,nombre_sin_ext);
+
+									//Acortar el nombre por si acaso
+									char nombre_shown[28];
+
+									//strcpy(nombre_sin_ext,"01234567890123456789012345678901234567890123456789");
+
+									menu_tape_settings_trunc_name(nombre_sin_ext,nombre_shown,28);
+									//printf ("%s\n",nombre_sin_ext);
+
+									menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,nombre_shown);
+									menu_add_item_menu_misc(array_menu_common,ultimo_id);
+
+									menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL," %s",ultimo_fulltitle);							
+								}
+
+								total_items++;
+							}
+
+							existe_id=0;
+							existe_fulltitle=0;
+							ultimo_id[0]=0;
+							ultimo_fulltitle[0]=0;
+							ultimo_indice_id=0;
+							ultimo_indice_fulltitle=0;	
+
+						}
+					}
+												
+					i++;
+					mem=next_mem;
+				}
+			
+				if (total_leidos<=0) salir=1;
+			
+			} while (!salir);
+		
+			//texto_final[indice_destino]=0;
+			if (orig_mem!=NULL) free(orig_mem);
+				
 						
+							
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-            menu_add_ESC_item(array_menu_common);
+			menu_add_ESC_item(array_menu_common);
 
 			if (total_items) {
 
-            	retorno_menu=menu_dibuja_menu(&zxinfo_wos_opcion_seleccionada,&item_seleccionado,array_menu_common,windowtitle );
+				retorno_menu=menu_dibuja_menu(&zxinfo_wos_opcion_seleccionada,&item_seleccionado,array_menu_common,windowtitle );
 
-                
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (1/*item_seleccionado.menu_funcion!=NULL*/) {
-                                //printf ("actuamos por funcion\n");
-                                //item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                char *juego;
-                                juego=item_seleccionado.texto_opcion;
+				
+				if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 
-								char *url;
-								url=item_seleccionado.texto_misc;
-                                debug_printf (VERBOSE_INFO,"Game [%s] url [%s]",juego,url);
+					//printf ("actuamos por funcion\n");
+					//item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+					char *juego;
+					juego=item_seleccionado.texto_opcion;
 
-								strcpy(query_result,url);
-								return;
-	
-                               
-                                
-                        } 
-                }
+					char *url;
+					url=item_seleccionado.texto_misc;
+					debug_printf (VERBOSE_INFO,"Game [%s] url [%s]",juego,url);
+
+					strcpy(query_result,url);
+					return;
+										
+				}
 			}
 
 			else {
@@ -17452,7 +17440,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 				menu_error_message(error_not_found_message);
 				return;
 			}
-		}
+		}  //Aqui cierra mem_after_headers!=NULL && http_code==200
 
 			//Fin resultado http correcto
 		else {	
@@ -17471,7 +17459,6 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
-	
 	
 
 }
@@ -17543,13 +17530,9 @@ char zxinfowos_query_search[256]="";
 
 void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 {
-	//char oldletra=s_online_browse_zx81_letra[0];
-	
-	//char query_search[1024];
-	//query_search[0]=0;
 
 #ifndef COMPILE_SSL
-menu_first_aid("no_ssl_wos");	
+	menu_first_aid("no_ssl_wos");	
 #endif
 	
 	menu_ventana_scanf("Query",zxinfowos_query_search,256);
@@ -17560,131 +17543,114 @@ menu_first_aid("no_ssl_wos");
 	
 	util_normalize_query_http(zxinfowos_query_search,query_search_normalized);
 	
-	//TODO cambiar espacios por %20
 
 	//http://a.zxinfo.dk/api/zxinfo/v2/search?query=head%20over%20heels&mode=compact&sort=rel_desc&size=10&offset=0
 
 	do {
-	char query_url[1024];
-	//sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search_normalized);
-	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search_normalized);
+		char query_url[1024];
+		//sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search_normalized);
+		sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search_normalized);
 
-	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0,"Spectrum games","No results found");
-	//gestionar resultado vacio
-	if (query_id[0]==0) {
-		//TODO resultado con ESC
-		return;
-	}
-
-	debug_printf (VERBOSE_DEBUG,"Entry id result: %s",query_id);
-	
-	
-	//http://a.zxinfo.dk/api/zxinfo/games/0002259?mode=compact
-	
-	 /*
-	 releases.1.as_title=Foot and Mouth
-releases.1.releaseprice=£7.95
-releases.1.url=/pub/sinclair/games/h/HeadOverHeels.tap.zip
-releases.1.type=Tape image
-	*/
-	
-	sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
-
-	
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1,"Releases",
-										"No results found. Maybe there are no releases available or the game is copyright protected");
-
-	//gestionar resultado vacio
-	if (query_id[0]==0) {
-		//TODO resultado con ESC
-		return;
-	}	
-	
-	//gestionar resultado no vacio
-	if (query_id[0]!=0) {
-		// resultado no ESC
-		
-
-		debug_printf (VERBOSE_DEBUG,"Entry url result: %s",query_id);
-	
-	
-	
-		char url_juego[1024];
-                                sprintf(url_juego,"%s",query_id);
-                                //cargar
-                                char archivo_temp[PATH_MAX];
-                                
-                                
-        /* TODO Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
-		These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/  */
-
-		/*
-		Local file links starting with /pub/sinclair/ refer to content previously available at the original WorldOfSpectrum archive. 
-		These files are currently accessible from Archive.org mirror at 
-		https://archive.org/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/
-		Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
-		These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/
-
-
-		https://github.com/zxdb/ZXDB/blob/master/README.md
-		*/
-		//sprintf (archivo_temp,"/tmp/%s",juego);
-		
-		char juego[PATH_MAX];
-		util_get_file_no_directory(query_id,juego);
-		util_normalize_name(juego);
-		
-		char tempdir[PATH_MAX];
-		sprintf (tempdir,"%s/download",get_tmpdir_base() );
-		menu_filesel_mkdir(tempdir);
-		sprintf (archivo_temp,"%s/%s",tempdir,juego);
-		
-
-
-		char url_juego_final[PATH_MAX];
-		char host_final[PATH_MAX];
-
-		int ssl_use;
-
-		menu_zxinfo_get_final_url(url_juego,host_final,url_juego_final,&ssl_use);
-
-
-        //int ret=util_download_file("www.worldofspectrum.org",url_juego_final,archivo_temp); 
-		printf ("Downloading file from host %s (SSL=%d) url %s\n",host_final,ssl_use,url_juego_final);
-		//int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
-
-		int ret=menu_download_wos(host_final,url_juego_final,archivo_temp,ssl_use); 
-
-        if (ret==200) {                    
-
-  			//y cargar
-  			strcpy(quickload_file,archivo_temp);
- 
-
-			quickfile=quickload_file;
-			menu_quickload(0);
-	
+		char query_id[256];
+		menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0,"Spectrum games","No results found");
+		//gestionar resultado vacio
+		if (query_id[0]==0) {
+			//TODO resultado con ESC
 			return;
 		}
-		else {
-			//debug_printf(VERBOSE_ERR,"Error downloading file. Return code: %d",ret);
+
+		debug_printf (VERBOSE_DEBUG,"Entry id result: %s",query_id);
+		
+		
+		//http://a.zxinfo.dk/api/zxinfo/games/0002259?mode=compact
+		
+		/*
+		releases.1.as_title=Foot and Mouth
+	releases.1.releaseprice=£7.95
+	releases.1.url=/pub/sinclair/games/h/HeadOverHeels.tap.zip
+	releases.1.type=Tape image
+		*/
+		
+		sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
+
+		
+		menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1,"Releases",
+											"No results found. Maybe there are no releases available or the game is copyright protected");
+
+		//gestionar resultado vacio
+		if (query_id[0]==0) {
+			//TODO resultado con ESC
+			return;
+		}	
+		
+		//gestionar resultado no vacio
+		if (query_id[0]!=0) {
+			// resultado no ESC
+			
+
+			debug_printf (VERBOSE_DEBUG,"Entry url result: %s",query_id);
+		
+			char url_juego[1024];
+			sprintf(url_juego,"%s",query_id);
+			//cargar
+			char archivo_temp[PATH_MAX];
+									
+									
+			/* Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+			These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/  */
+
+			/*
+			Local file links starting with /pub/sinclair/ refer to content previously available at the original WorldOfSpectrum archive. 
+			These files are currently accessible from Archive.org mirror at 
+			https://archive.org/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/
+			Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+			These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/
 
 
+			https://github.com/zxdb/ZXDB/blob/master/README.md
+			*/
+			
+			
+			char juego[PATH_MAX];
+			util_get_file_no_directory(query_id,juego);
+			util_normalize_name(juego);
+			
+			char tempdir[PATH_MAX];
+			sprintf (tempdir,"%s/download",get_tmpdir_base() );
+			menu_filesel_mkdir(tempdir);
+			sprintf (archivo_temp,"%s/%s",tempdir,juego);
+			
 
-			if (ret<0) {	
-				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
-				//printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
-				menu_network_error(ret);
+			char url_juego_final[PATH_MAX];
+			char host_final[PATH_MAX];
+
+			int ssl_use;
+
+			menu_zxinfo_get_final_url(url_juego,host_final,url_juego_final,&ssl_use);
+
+			printf ("Downloading file from host %s (SSL=%d) url %s\n",host_final,ssl_use,url_juego_final);
+
+			int ret=menu_download_wos(host_final,url_juego_final,archivo_temp,ssl_use); 
+
+			if (ret==200) {                    
+				//y habrimos menu de smartload
+				strcpy(quickload_file,archivo_temp);
+	
+				quickfile=quickload_file;
+				menu_quickload(0);
+		
+				return;
 			}
 			else {
-				debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",ret);
+				if (ret<0) {	
+					menu_network_error(ret);
+				}
+				else {
+					debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",ret);
+				}
+
 			}
-
-
-
-		}
-	} 
+		} 
 	} while (1);
 }
 

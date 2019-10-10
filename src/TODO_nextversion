@@ -30,10 +30,9 @@ Tilemap Control Register - SpecNext official Wiki
 
 -tabla de joystick to event siempre se resetea??
 
-
-
-
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
+
+-probar ssl en windows
 
 
 -Acortar nombre juego y id ya desde buffer línea a 28 o así aprox
