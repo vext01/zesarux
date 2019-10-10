@@ -127,7 +127,6 @@ y error de un pthread que esta fuera de ifdef phread
 
 -Query zsock http que detecte si query es mayor que 1024 y de error
 
--finalizacion socket en ssl , llamar a alguna funcion supongo
 
 -zsock http request: Buffer response en z80_byte y no char
 

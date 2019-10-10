@@ -631,7 +631,7 @@ int z_sock_close_connection(int indice_tabla)
 
 	sockets_list[indice_tabla].used=0;
 
-	if (sockets_list[indice_tabla].use_ssl) {
+	if (sockets_list[indice_tabla].use_ssl.v) {
 
 #ifdef COMPILE_SSL
 		z_disconnect_ssl(indice_tabla);
