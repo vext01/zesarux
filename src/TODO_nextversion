@@ -23,7 +23,6 @@ Tilemap Control Register - SpecNext official Wiki
 -Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
 ---Fin cosas Next
 
--Si no encuentra descargables de wos, decir que quizá es porque tiene copyright o es de pago o no tiene releases
 
 -porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
 

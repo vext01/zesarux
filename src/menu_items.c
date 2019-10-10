@@ -17207,7 +17207,8 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
 
 
 //showindex dice si muestra contenido texto variable index en el item->usado para mostrar el archivo de la url en las diferentes descargas de un mismo juego
-void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers,int showindex,char *windowtitle)
+void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,
+     char *add_headers,int showindex,char *windowtitle,char *error_not_found_message)
 {
 	
 	//Por defecto
@@ -17447,7 +17448,8 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 			}
 
 			else {
-				menu_error_message("No results found");
+				//menu_error_message("No results found");
+				menu_error_message(error_not_found_message);
 				return;
 			}
 		}
@@ -17568,7 +17570,7 @@ menu_first_aid("no_ssl_wos");
 	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search_normalized);
 
 	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0,"Spectrum games");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0,"Spectrum games","No results found");
 	//gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
@@ -17590,7 +17592,8 @@ releases.1.type=Tape image
 	sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
 
 	
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1,"Releases");
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1,"Releases",
+										"No results found. Maybe there are no releases available or the game is copyright protected");
 
 	//gestionar resultado vacio
 	if (query_id[0]==0) {
