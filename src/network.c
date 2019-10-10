@@ -187,6 +187,17 @@ int z_connect_ssl(int indice_tabla)
 	return 0;
 }
 
+void z_disconnect_ssl(int indice_tabla)
+{
+	printf ("Disconnecting SSL\n");
+
+	printf ("SSL_CTX_free\n");
+	SSL_CTX_free(sockets_list[indice_tabla].ssl_ctx);
+	
+}
+
+
+
 #endif
 //Fin funciones SSL
 
@@ -619,6 +630,20 @@ int z_sock_close_connection(int indice_tabla)
 
 
 	sockets_list[indice_tabla].used=0;
+
+	if (sockets_list[indice_tabla].use_ssl) {
+
+#ifdef COMPILE_SSL
+		z_disconnect_ssl(indice_tabla);
+#else
+		//printf ("SSL requested but ssl libraries unavailable\n");
+		return Z_ERR_NUM_SSL_UNAVAIL;
+	
+#endif
+
+	}	
+
+
 
 	return cerrar_socket(sock);
 }

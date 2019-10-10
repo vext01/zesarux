@@ -17207,7 +17207,7 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
 
 
 //showindex dice si muestra contenido texto variable index en el item->usado para mostrar el archivo de la url en las diferentes descargas de un mismo juego
-void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers,int showindex)
+void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,char *add_headers,int showindex,char *windowtitle)
 {
 	
 	//Por defecto
@@ -17422,7 +17422,7 @@ Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén l
 
 			if (total_items) {
 
-            	retorno_menu=menu_dibuja_menu(&zxinfo_wos_opcion_seleccionada,&item_seleccionado,array_menu_common,"Spectrum games" );
+            	retorno_menu=menu_dibuja_menu(&zxinfo_wos_opcion_seleccionada,&item_seleccionado,array_menu_common,windowtitle );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -17568,7 +17568,7 @@ menu_first_aid("no_ssl_wos");
 	sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search_normalized);
 
 	char query_id[256];
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0);
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0,"Spectrum games");
 	//gestionar resultado vacio
 	if (query_id[0]==0) {
 		//TODO resultado con ESC
@@ -17588,10 +17588,9 @@ releases.1.type=Tape image
 	*/
 	
 	sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
+
 	
-	//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","as_title=");
-	
-	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1);
+	menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1,"Releases");
 
 	//gestionar resultado vacio
 	if (query_id[0]==0) {
@@ -17799,32 +17798,34 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			
 
 #ifdef USE_PTHREADS
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng,NULL,"~~ZENG");
-			menu_add_item_menu_shortcut(array_menu_common,'z');
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng,NULL,"Z~~ENG");
+			menu_add_item_menu_shortcut(array_menu_common,'e');
 			menu_add_item_menu_tooltip(array_menu_common,"Setup ZEsarUX Network Gaming");
 			menu_add_item_menu_ayuda(array_menu_common,"Setup ZEsarUX Network Gaming");
 
-             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_network_http_request,NULL,"Http request");         
+                     
              
-            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zx81,NULL,"zx81 online browser");  
-             
-             menu_add_item_menu_tooltip(array_menu_common,"Connects to the www.zx81.nl site to download ZX81 games. Many thanks to ZXwebmaster for allowing it"); 
-             
-              menu_add_item_menu_ayuda(array_menu_common,"Connects to the www.zx81.nl site to download ZX81 games. Many thanks to ZXwebmaster for allowing it"); 
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zx81,NULL,"~~ZX81 online browser"); 
+			menu_add_item_menu_shortcut(array_menu_common,'z'); 
+            menu_add_item_menu_tooltip(array_menu_common,"Connects to the www.zx81.nl site to download ZX81 games. Many thanks to ZXwebmaster for allowing it"); 
+            menu_add_item_menu_ayuda(array_menu_common,"Connects to the www.zx81.nl site to download ZX81 games. Many thanks to ZXwebmaster for allowing it"); 
 
 
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zxinfowos,NULL,"Speccy online browser");  
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zxinfowos,NULL,"~~Speccy online browser"); 
+			menu_add_item_menu_shortcut(array_menu_common,'s');  
 
 #ifdef COMPILE_SSL
-			//Versión con SSL usa servidor spectrum computing y mirror archive.org
-			menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo, spectrum computing and archive.org to download the software");
-			menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo, spectrum computing and archive.org to download the software");
+			//Versión con SSL usa zxinfo, spectrum computing y mirror archive.org
+			menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo, spectrum computing and archive.org to download the software. Thanks to Thomas Heckmann and Peter Jones for allowing it");
+			menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo, spectrum computing and archive.org to download the software. Thanks to Thomas Heckmann and Peter Jones for allowing it");
 #else
-			//Versión sin SSL usa servidor WOS
-			menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo and WOS to download the software");
-			menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo and WOS to download the software");
+			//Versión sin SSL usa zxinfo, servidor WOS
+			menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
+			menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
 #endif    
 
+
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_network_http_request,NULL,"Test Http request"); 
 
 //Fin de condicion si hay pthreads
 #endif

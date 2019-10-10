@@ -2,6 +2,7 @@
 
 -decir que ssl mac requiere "brew install openssl"
 
+---Cosas Next
 -tbblue: the "disable ULA" bit in $68 doesn't work, so ULA is visible over the tilemap ( https://specnext.dev/wiki/ULA_Control_Register )
 
 -aumentar tbblue mmc a 64 mb?
@@ -19,6 +20,8 @@ but the top 7 bits are extended palette offset. The transparency is then checked
 Tilemap Control Register - SpecNext official Wiki
 -tbblue modo turbo 28 MHz
 -warhawk no se ven sprites!!
+-Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
+---Fin cosas Next
 
 -Si no encuentra descargables de wos, decir que quizá es porque tiene copyright o es de pago o no tiene releases
 
@@ -28,17 +31,12 @@ Tilemap Control Register - SpecNext official Wiki
 
 -tabla de joystick to event siempre se resetea??
 
--Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
+
 
 
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
--Descargas del browser wos que no van:
--Aliens neoplasma -> en la api no esta disponible para descargar. En spectrum computing tampoco
--paw
 
-
--ZXInfo browser segunda ventana debe tener de titulo el del juego 
 -Acortar nombre juego y id ya desde buffer línea a 28 o así aprox
 -Otros acortar: url: a lo que de maximo el ítem misc de menú
 
