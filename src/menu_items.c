@@ -17257,9 +17257,6 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 			int ultimo_indice_id;
 			int ultimo_indice_fulltitle;
 
-			//TODO: controlar esto mejor maximo, antes de hacer strcpy sobre ahi. y no tener longitud tan larga de estos array de char
-			//probar query "had", sale una entrada larga:
-			//"He Had Such A Big Head That If He Were A Cat He Would Have To Toss The Mice From Under The Bed With A Brow"
 			char ultimo_id[1024];
 			char ultimo_fulltitle[1024];
 
@@ -17271,6 +17268,8 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 			ultimo_indice_fulltitle=0;	
 
 			int total_items=0;
+
+			//Leer linea a linea la respuesta http, y meterlo en items de menu
 			do {
 				int leidos;
 				char *next_mem;
@@ -17347,11 +17346,14 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 								}
 								
 								
-								//temp controlar maximo. ponemos a voleo
-								ultimo_fulltitle[32]=0;
+								//controlar maximo 30 caracteres
+								//TODO: si hacemos que se guarde geometria de ventana, teniendo ancho mayor que 32, esta maximo podria ser el ancho 
+								//maximo que permite un item de menu (MAX_TEXTO_OPCION)
+								ultimo_fulltitle[30]=0;
 								
 								
 								//TODO controlar maximo items en menu. De momento esta limitado por la query a la api (100)
+								//Porque? realmente no hay un limite como tal en items de menu, no?
 
 								if (!showindex) {
 									menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,ultimo_fulltitle);
@@ -17427,7 +17429,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 					char *url;
 					url=item_seleccionado.texto_misc;
-					debug_printf (VERBOSE_INFO,"Game [%s] url [%s]",juego,url);
+					debug_printf (VERBOSE_INFO,"Game [%s] url/id [%s]",juego,url);
 
 					strcpy(query_result,url);
 					return;

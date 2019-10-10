@@ -34,10 +34,6 @@ Tilemap Control Register - SpecNext official Wiki
 
 -probar ssl en windows
 
-
--Acortar nombre juego y id ya desde buffer línea a 28 o así aprox
--Otros acortar: url: a lo que de maximo el ítem misc de menú
-
 -Ensamblador opcodes extendidos next
 
 -permitir que las direcciones de breakpoints se pongan con 0xNNNN ademas de NNNNh y decimal
