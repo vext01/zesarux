@@ -173,10 +173,10 @@ void ifrom_set_peek_poke_functions(void)
                 debug_printf (VERBOSE_DEBUG,"Setting ifrom poke / peek functions");
 
 	//Asignar mediante nuevas funciones de core anidados
-	ifrom_nested_id_poke_byte=debug_nested_poke_byte_add(ifrom_poke_byte,"Kartusho poke_byte");
-	ifrom_nested_id_poke_byte_no_time=debug_nested_poke_byte_no_time_add(ifrom_poke_byte_no_time,"Kartusho poke_byte_no_time");
-	ifrom_nested_id_peek_byte=debug_nested_peek_byte_add(ifrom_peek_byte,"Kartusho peek_byte");
-	ifrom_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(ifrom_peek_byte_no_time,"Kartusho peek_byte_no_time");
+	ifrom_nested_id_poke_byte=debug_nested_poke_byte_add(ifrom_poke_byte,"iFrom poke_byte");
+	ifrom_nested_id_poke_byte_no_time=debug_nested_poke_byte_no_time_add(ifrom_poke_byte_no_time,"iFrom poke_byte_no_time");
+	ifrom_nested_id_peek_byte=debug_nested_peek_byte_add(ifrom_peek_byte,"iFrom peek_byte");
+	ifrom_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(ifrom_peek_byte_no_time,"iFrom peek_byte_no_time");
 
 }
 
@@ -254,7 +254,7 @@ void ifrom_enable(void)
 	}
 
 	if (ifrom_rom_file_name[0]==0) {
-		debug_printf (VERBOSE_ERR,"Trying to enable Kartusho but no ROM file selected");
+		debug_printf (VERBOSE_ERR,"Trying to enable iFrom but no ROM file selected");
 		return;
 	}
 
@@ -291,7 +291,7 @@ void ifrom_press_button(void)
 {
 
         if (ifrom_enabled.v==0) {
-                debug_printf (VERBOSE_ERR,"Trying to press Kartusho button when it is disabled");
+                debug_printf (VERBOSE_ERR,"Trying to press iFrom button when it is disabled");
                 return;
         }
 
