@@ -100,7 +100,7 @@ bit 7: bit de bloqueo (a 1), impide futuras escrituras en este byte de paginacio
 		//Si se habilita proteccion
 		if (value&128) ifrom_protected.v=1;
 
-		printf ("Cambiando a banco %d proteccion %d\n",ifrom_active_bank,ifrom_protected.v);
+		//printf ("Cambiando a banco %d proteccion %d\n",ifrom_active_bank,ifrom_protected.v);
 	}
 
 }
