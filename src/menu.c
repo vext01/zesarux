@@ -90,6 +90,7 @@
 #include "esxdos_handler.h"
 #include "tsconf.h"
 #include "kartusho.h"
+#include "ifrom.h"
 #include "spritefinder.h"
 #include "snap_spg.h"
 #include "betadisk.h"
@@ -788,6 +789,7 @@ int ula_settings_opcion_seleccionada=0;
 //int debug_configuration_opcion_seleccionada=0;
 int dandanator_opcion_seleccionada=0;
 int kartusho_opcion_seleccionada=0;
+int ifrom_opcion_seleccionada=0;
 int superupgrade_opcion_seleccionada=0;
 int multiface_opcion_seleccionada=0;
 int betadisk_opcion_seleccionada=0;
@@ -14254,6 +14256,126 @@ void menu_kartusho(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_ifrom_rom_file(MENU_ITEM_PARAMETERS)
+{
+	ifrom_disable();
+
+        char *filtros[2];
+
+        filtros[0]="rom";
+        filtros[1]=0;
+
+
+        if (menu_filesel("Select ifrom File",filtros,ifrom_rom_file_name)==1) {
+                if (!si_existe_archivo(ifrom_rom_file_name)) {
+                        menu_error_message("File does not exist");
+                        ifrom_rom_file_name[0]=0;
+                        return;
+
+
+
+                }
+
+                else {
+                        //Comprobar aqui tambien el tamanyo
+                        long int size=get_file_size(ifrom_rom_file_name);
+                        if (size!=IFROM_SIZE) {
+                                menu_error_message("ROM file must be 512 KB length");
+                                ifrom_rom_file_name[0]=0;
+                                return;
+                        }
+                }
+
+
+        }
+        //Sale con ESC
+        else {
+                //Quitar nombre
+                ifrom_rom_file_name[0]=0;
+
+
+        }
+
+}
+
+int menu_storage_ifrom_emulation_cond(void)
+{
+	if (ifrom_rom_file_name[0]==0) return 0;
+        return 1;
+}
+
+int menu_storage_ifrom_press_button_cond(void)
+{
+	return ifrom_enabled.v;
+}
+
+
+void menu_storage_ifrom_emulation(MENU_ITEM_PARAMETERS)
+{
+	if (ifrom_enabled.v) ifrom_disable();
+	else ifrom_enable();
+}
+
+void menu_storage_ifrom_press_button(MENU_ITEM_PARAMETERS)
+{
+	ifrom_press_button();
+	//Y salimos de todos los menus
+	salir_todos_menus=1;
+
+}
+
+void menu_ifrom(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_ifrom;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                char string_ifrom_file_shown[13];
+
+
+                        menu_tape_settings_trunc_name(ifrom_rom_file_name,string_ifrom_file_shown,13);
+                        menu_add_item_menu_inicial_format(&array_menu_ifrom,MENU_OPCION_NORMAL,menu_ifrom_rom_file,NULL,"~~ROM File [%s]",string_ifrom_file_shown);
+                        menu_add_item_menu_shortcut(array_menu_ifrom,'r');
+                        menu_add_item_menu_tooltip(array_menu_ifrom,"ROM Emulation file");
+                        menu_add_item_menu_ayuda(array_menu_ifrom,"ROM Emulation file");
+
+
+                        			menu_add_item_menu_format(array_menu_ifrom,MENU_OPCION_NORMAL,menu_storage_ifrom_emulation,menu_storage_ifrom_emulation_cond,"[%c] ~~iFrom Enabled", (ifrom_enabled.v ? 'X' : ' '));
+                        menu_add_item_menu_shortcut(array_menu_ifrom,'k');
+                        menu_add_item_menu_tooltip(array_menu_ifrom,"Enable ifrom");
+                        menu_add_item_menu_ayuda(array_menu_ifrom,"Enable ifrom");
+
+
+			menu_add_item_menu_format(array_menu_ifrom,MENU_OPCION_NORMAL,menu_storage_ifrom_press_button,menu_storage_ifrom_press_button_cond,"~~Press button");
+			menu_add_item_menu_shortcut(array_menu_ifrom,'p');
+                        menu_add_item_menu_tooltip(array_menu_ifrom,"Press button");
+                        menu_add_item_menu_ayuda(array_menu_ifrom,"Press button");
+
+
+                                menu_add_item_menu(array_menu_ifrom,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_ESC_item(array_menu_ifrom);
+
+                retorno_menu=menu_dibuja_menu(&ifrom_opcion_seleccionada,&item_seleccionado,array_menu_ifrom,"iFrom" );
+
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
 void menu_storage_betadisk_emulation(MENU_ITEM_PARAMETERS)
 {
 	if (betadisk_enabled.v) betadisk_disable();
@@ -15725,6 +15847,12 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
+                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ifrom,NULL,"i~~From");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'f');
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"iFrom settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"iFrom settings");
+		}
 
               
 

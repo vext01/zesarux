@@ -55,6 +55,16 @@ int ifrom_nested_id_peek_byte_no_time;
 z80_byte ifrom_active_bank=0;
 
 
+/*
+byte paginacion: al escribir en rom (a14=a15=0), con mreq=0 y wr=0
+5 bits bajos: es la pagina de los 512 kb de eeprom
+bit 7: bit de bloqueo (a 1), impide futuras escrituras en este byte de paginacion
+
+botones: reset, nmi. nmi solo salta a la 66h
+en un reset (y al arrancar) byte de paginacion=0
+*/
+
+
 int ifrom_check_if_rom_area(z80_int dir)
 {
                 if (dir<16384) {
@@ -71,27 +81,26 @@ z80_byte ifrom_read_byte(z80_int dir)
 }
 
 
-void ifrom_handle_special_dirs(z80_int dir)
+void ifrom_handle_special_dirs(z80_int dir,z80_byte value)
 {
 
 	if (ifrom_protected.v) return;
 
-	if (dir>=0x3FFC && dir<=0x3FFF) {
-		//Valor bit A0
-		z80_byte value_a0=dir&1;
-
-		//Mover banco * 2
-		ifrom_active_bank = ifrom_active_bank << 1;
-
-		ifrom_active_bank |=value_a0;
-
-		//Mascara final
-		ifrom_active_bank=ifrom_active_bank&31;
-
+	if (dir<=0x3FFF) {
+		/*
+		byte paginacion: al escribir en rom (a14=a15=0), con mreq=0 y wr=0
+5 bits bajos: es la pagina de los 512 kb de eeprom
+bit 7: bit de bloqueo (a 1), impide futuras escrituras en este byte de paginacion
+		*/
+		
+		//Banco final
+		ifrom_active_bank=value&31;
 
 
 		//Si se habilita proteccion
-		if (dir&2) ifrom_protected.v=1;
+		if (value&128) ifrom_protected.v=1;
+
+		printf ("Cambiando a banco %d proteccion %d\n",ifrom_active_bank,ifrom_protected.v);
 	}
 
 }
@@ -104,7 +113,7 @@ z80_byte ifrom_poke_byte(z80_int dir,z80_byte valor)
         //Llamar a anterior
         debug_nested_poke_byte_call_previous(ifrom_nested_id_poke_byte,dir,valor);
 
-	ifrom_handle_special_dirs(dir);
+	ifrom_handle_special_dirs(dir,valor);
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -119,7 +128,7 @@ z80_byte ifrom_poke_byte_no_time(z80_int dir,z80_byte valor)
         debug_nested_poke_byte_no_time_call_previous(ifrom_nested_id_poke_byte_no_time,dir,valor);
 
 
-	ifrom_handle_special_dirs(dir);
+	ifrom_handle_special_dirs(dir,valor);
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -132,7 +141,7 @@ z80_byte ifrom_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor_leido=debug_nested_peek_byte_call_previous(ifrom_nested_id_peek_byte,dir);
 
-	ifrom_handle_special_dirs(dir);
+	//ifrom_handle_special_dirs(dir);
 
 	if (ifrom_check_if_rom_area(dir)) {
 		return ifrom_read_byte(dir);
@@ -147,7 +156,7 @@ z80_byte ifrom_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(ifrom_nested_id_peek_byte_no_time,dir);
 
-	ifrom_handle_special_dirs(dir);
+	//ifrom_handle_special_dirs(dir);
 
 	if (ifrom_check_if_rom_area(dir)) {
                 return ifrom_read_byte(dir);

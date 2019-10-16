@@ -100,6 +100,7 @@
 #include "mk14.h"
 #include "esxdos_handler.h"
 #include "kartusho.h"
+#include "ifrom.h"
 #include "betadisk.h"
 #include "codetests.h"
 #include "pd765.h"
@@ -2741,6 +2742,7 @@ void set_machine_params(void)
 		dandanator_enabled.v=0;
 		superupgrade_enabled.v=0;
 		kartusho_enabled.v=0;
+		ifrom_enabled.v=0;
 		betadisk_enabled.v=0;
 
 		plus3dos_traps.v=0;
