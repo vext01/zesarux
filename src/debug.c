@@ -2371,7 +2371,7 @@ void cpu_history_get_registers_element(int indice,char *string_destino)
 {
 
 	if (indice<0) {
-		strcpy(string_destino,"ERROR: index can't be negative");
+		strcpy(string_destino,"ERROR: index out of range");
 		return;
 	}
 
