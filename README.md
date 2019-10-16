@@ -188,7 +188,7 @@ __FEATURES__
 
 * Emulates Speccy Superupgrade
 
-* Emulates Kartusho
+* Emulates Kartusho,iFrom interfaces by Antonio Villena
 
 * Handles RAM, EPROM, Intel Flash and Hybrid (RAM+EPROM) cards on Z88
 
