@@ -485,9 +485,9 @@ unsigned int registro_sr=m68k_get_reg(NULL, M68K_REG_SR);
   }
 
   else {
-  sprintf (buffer,"PC=%04x SP=%04x BC=%04x AF=%04x HL=%04x DE=%04x IX=%04x IY=%04x AF'=%04x BC'=%04x HL'=%04x DE'=%04x I=%02x R=%02x  "
+  sprintf (buffer,"PC=%04x SP=%04x AF=%04x BC=%04x HL=%04x DE=%04x IX=%04x IY=%04x AF'=%04x BC'=%04x HL'=%04x DE'=%04x I=%02x R=%02x  "
                   "F=%c%c%c%c%c%c%c%c F'=%c%c%c%c%c%c%c%c MEMPTR=%04x IM%d IFF%c%c VPS: %d ",
-  reg_pc,reg_sp, (reg_b<<8)|reg_c,(reg_a<<8)|Z80_FLAGS,(reg_h<<8)|reg_l,(reg_d<<8)|reg_e,reg_ix,reg_iy,(reg_a_shadow<<8)|Z80_FLAGS_SHADOW,(reg_b_shadow<<8)|reg_c_shadow,
+  reg_pc,reg_sp,(reg_a<<8)|Z80_FLAGS,(reg_b<<8)|reg_c,(reg_h<<8)|reg_l,(reg_d<<8)|reg_e,reg_ix,reg_iy,(reg_a_shadow<<8)|Z80_FLAGS_SHADOW,(reg_b_shadow<<8)|reg_c_shadow,
   (reg_h_shadow<<8)|reg_l_shadow,(reg_d_shadow<<8)|reg_e_shadow,reg_i,(reg_r&127)|(reg_r_bit7&128),DEBUG_STRING_FLAGS,
   DEBUG_STRING_FLAGS_SHADOW,memptr,im_mode, DEBUG_STRING_IFF12 ,last_vsync_per_second
                         );

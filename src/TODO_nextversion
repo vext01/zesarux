@@ -114,6 +114,19 @@ Esto hará que el audio se escuche bien en windows en la versión con threads (p
 --RED:
 
 -el compilado final de mac hay que hacerlo sin ssl? O ver si enlaza con la ssl del sistema operativo. Si no, igual se puede incluir la de homebrew de manera estática
+Parece que depende del de brew:
+~iMac-de-Cesar:src cesarhernandez$ ./zesarux --noconfigfile --ao null
+dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+  Referenced from: /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/./zesarux
+  Reason: image not found
+Abort trap: 6
+iMac-de-Cesar:src cesarhernandez$ cat /Users/cesarhernandez/Desktop/brew_instalados.txt
+iMac-de-Cesar:~ cesarhernandez$ brew list
+cabextract	gettext		libidn2		libpng		libvorbis	openssl		smartmontools	telnet		wget
+flac		lame		libogg		libunistring	mad		p7zip		sox		unrar
+iMac-de-Cesar:src cesarhernandez$ brew install openssl
+
+Habra otra libssl de sistema?
 
 -en windows no compila network con threads...
 tampoco zip.h
