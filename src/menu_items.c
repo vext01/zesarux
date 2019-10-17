@@ -88,6 +88,7 @@
 #include "esxdos_handler.h"
 #include "tsconf.h"
 #include "kartusho.h"
+#include "ifrom.h"
 #include "spritefinder.h"
 #include "snap_spg.h"
 #include "betadisk.h"

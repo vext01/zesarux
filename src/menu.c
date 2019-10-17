@@ -11165,6 +11165,7 @@ int menu_cond_allow_write_rom(void)
 	if (superupgrade_enabled.v) return 0;
 	if (dandanator_enabled.v) return 0;
 	if (kartusho_enabled.v) return 0;
+	if (ifrom_enabled.v) return 0;
 	if (betadisk_enabled.v) return 0;
 
 	if (MACHINE_IS_INVES) return 0;

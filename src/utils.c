@@ -94,6 +94,7 @@
 #include "tbblue.h"
 #include "tsconf.h"
 #include "kartusho.h"
+#include "ifrom.h"
 #include "mdvtool.h"
 #include "betadisk.h"
 #include "multiface.h"
@@ -3393,6 +3394,9 @@ int util_write_configfile(void)
   if (dandanator_enabled.v)                   ADD_STRING_CONFIG,"--enable-dandanator");
   if (kartusho_rom_file_name[0]!=0)         ADD_STRING_CONFIG,"--kartusho-rom \"%s\"",kartusho_rom_file_name);
   if (kartusho_enabled.v)                   ADD_STRING_CONFIG,"--enable-kartusho");
+
+  if (ifrom_rom_file_name[0]!=0)         ADD_STRING_CONFIG,"--ifrom-rom \"%s\"",ifrom_rom_file_name);
+  if (ifrom_enabled.v)                   ADD_STRING_CONFIG,"--enable-ifrom");  
 
   if (betadisk_enabled.v)                   ADD_STRING_CONFIG,"--enable-betadisk");
 
@@ -10294,6 +10298,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         break;           
 	
 
+    //ifrom
+    case MEMORY_ZONE_IFROM:
+	if (ifrom_enabled.v) {
+          *readwrite=1;      
+	  size=IFROM_SIZE;
+	}
+    break;        
+
   }
 
   return size;
@@ -10590,7 +10602,14 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
                 if (memory_zone_current_size) {
                         p=&memory_zone_debug_ptr[address];
                 }
-        break;        
+        break;    
+
+    //ifrom
+    case MEMORY_ZONE_IFROM:
+        if (ifrom_enabled.v) {
+	p=&ifrom_memory_pointer[address];
+      }
+    break;            
 
 
   }
@@ -10917,6 +10936,14 @@ void machine_get_memory_zone_name(int zone, char *name)
                         strcpy(name,"Debug");
                 }
         break;
+
+    //ifrom
+    case MEMORY_ZONE_IFROM:
+        if (ifrom_enabled.v) {
+		           //123456789012345
+		strcpy(name,"iFrom rom");
+	}
+    break;        
 
 
   }
