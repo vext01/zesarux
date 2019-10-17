@@ -2,6 +2,8 @@
 
 -decir que ssl mac requiere "brew install openssl"
 
+-vertificar roms ifrom, lista que sea valida de distribucion
+
 ---Cosas Next
 -tbblue: the "disable ULA" bit in $68 doesn't work, so ULA is visible over the tilemap ( https://specnext.dev/wiki/ULA_Control_Register )
 
