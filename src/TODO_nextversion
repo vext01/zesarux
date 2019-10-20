@@ -61,6 +61,7 @@ Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Fu
 Quiza por el sprintf (pending_error_message
  para que no se pudiera escribir desde dos sitios?
 
+-semáforos en Windows. Como? De momento no hace bloqueo si es Windows 
 
 -si la primera vez arranca con driver stdout, se abre el menu directamente, quiza porque va a mostrar tooltips o changelog
 
