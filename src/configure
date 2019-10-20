@@ -35,6 +35,7 @@ show_help()
         echo "--disable-stdout             Disable stdout driver"
 	echo "--disable-simpletext         Disable simpletext driver"
         echo "--disable-curses             Disable curses driver"
+        echo "--disable-cursesw             Disable cursesw driver (extended characters)"
         echo "--disable-aa                 Disable aalib driver"
         echo "--disable-caca               Disable cacalib driver"
         echo "--disable-xwindows           Disable xwindows driver"
@@ -179,6 +180,10 @@ while [ $# -gt 0 ]; do
 
  	--disable-curses)
 	OPTIONOBJCURSES=""
+	;;
+
+--disable-cursesw)
+	OPTIONOBJCURSESW=""
 	;;
 
 	--disable-aa)
@@ -2166,6 +2171,10 @@ if [ "$OPTIONOBJCURSES" != "" ]; then
         echo -n "curses "
 fi
 
+if [ "$OPTIONOBJCURSESW" != "" ]; then
+        echo -n "cursesw "
+fi
+
 if [ "$OPTIONOBJAA" != "" ]; then
         echo -n "aa "
 fi
@@ -2216,6 +2225,11 @@ fi
 if [ "$OPTIONOBJCURSES" == "" ]; then
         echo -n "curses "
 fi
+
+if [ "$OPTIONOBJCURSESW" == "" ]; then
+        echo -n "cursesw "
+fi
+
 
 if [ "$OPTIONOBJAA" == "" ]; then
         echo -n "aa "
