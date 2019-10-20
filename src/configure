@@ -568,6 +568,7 @@ _EOF
 		echo "found"
 		    CFLAGS="$CFLAGS -I/usr/include/ncursesw -D_GNU_SOURCE -D_DEFAULT_SOURCE"
         	LDFLAGS="$LDFLAGS -lncursesw"
+        	OPTIONOBJCURSES=""
 	fi
 	
 	
