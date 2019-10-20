@@ -628,7 +628,7 @@ struct s_items_ayuda items_ayuda[]={
 	"enabled yes|no        Enable or disable the cpu history\n"
 	"get index             Get registers at position, being 0 the most recent item\n"
 	"get-max-size          Return maximum allowed elements in history\n"	
-	"get-pc start end      Return PC register from position start to end\n"
+	"get-pc start items    Return PC register from position start, being 0 the most recent item, total items. Goes backwards\n"
 	"get-size              Return total elements in history\n"
 	"is-enabled            Tells if the cpu history is enabled or not\n"
 	"is-started            Tells if the cpu history is started or not\n"
@@ -1480,24 +1480,29 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 		if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
 		else {
 			int indice=parse_string_to_number(value);
-			int final=parse_string_to_number(value2);
-			int total=final-indice+1;
-			if (total<1) {
-				escribir_socket(misocket,"Error. End must be greater than start");
+						//Al solicitarlo, el 0 es el item mas reciente. el 1 es el anterior a este
+			indice=total_elementos-indice-1;
+			
+			
+			int total=parse_string_to_number(value2);
+			//int total=final-indice+1;
+			if (total<0) {
+				escribir_socket(misocket,"Error. Can't be negative");
 			}
 			else {
 				//Validar que no se pidan mas de los que hay
 				if (total>cpu_history_get_total_elements() ) {
-					escribir_socket(misocket,"Error. End goes beyond total elements");
+					//escribir_socket(misocket,"Error. End goes beyond total elements");
+					total=cpu_history_get_total_elements();
 				}
-				else {
+				
 					while (total) {
 						char string_destino[1024]; 
-						cpu_history_get_pc_register_element(indice++,string_destino);
+						cpu_history_get_pc_register_element(indice--,string_destino);
 						escribir_socket_format(misocket,"%s ",string_destino);
 						total--;
 					}
-				}
+				
 			}
 		}
 	}	
