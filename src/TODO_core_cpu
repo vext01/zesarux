@@ -49,9 +49,7 @@ Si al final es saber por donde se ha estado ejecutando un programa, se puede usa
 -Multiface 128 falla en algunos juegos, como abadia del crimen. En eightyone tambien falla en este caso
 
 -Borrar enterrom y exitrom como debug breakpoint, que ya no tienen sentido
-
-
--Transaction log que también incluya byte anterior a operación de escritura 
+ 
 
 -Opción de transaction log adicional que permita ir hacia atrás en el tiempo:
 -apuntar en cada momento valores registros

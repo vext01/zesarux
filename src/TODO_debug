@@ -18,11 +18,6 @@ Menu debugger:
 
 -posicion electron no va bien en: zx81, tsconf. Revisar otras maquinas. En 48k funciona bien
 
--Reducir el numero de breakpoints posibles (100 a menos) no mejora mucho el rendimiento
-Pasamos de un programa de ejemplo que consume 14% con breakpoints desactivados. Si habilito breakpoints, con todos sin enabled, consume 19%. 
-Si uso solo 15 breakpoints, consume 15%
-Solo hay un 4% de incremento de cpu entre tener 15 o 100. Por tanto no vale la pena reducirlo
-
 -poder indicar mas de una accion en misma breakpoint condition, ejemplo
 condition: pc=4000h
 
