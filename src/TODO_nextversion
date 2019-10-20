@@ -121,10 +121,7 @@ dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
   Referenced from: /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/./zesarux
   Reason: image not found
 Abort trap: 6
-iMac-de-Cesar:src cesarhernandez$ cat /Users/cesarhernandez/Desktop/brew_instalados.txt
-iMac-de-Cesar:~ cesarhernandez$ brew list
-cabextract	gettext		libidn2		libpng		libvorbis	openssl		smartmontools	telnet		wget
-flac		lame		libogg		libunistring	mad		p7zip		sox		unrar
+
 iMac-de-Cesar:src cesarhernandez$ brew install openssl
 
 Habra otra libssl de sistema?
