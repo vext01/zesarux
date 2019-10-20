@@ -576,7 +576,7 @@ fi
 	#si no hay cursesw, probamos con curses sólo
 	#nota: no debemos linkar contra las dos a la vez 
 	
-if [ "$OPTIONOBJCURSESW" == ""]; then
+if [ "$OPTIONOBJCURSESW" == "" ]; then
 
 echo -n "Checking for curses libraries ... "
 if [ "$OPTIONOBJCURSES" != "" ]; then
