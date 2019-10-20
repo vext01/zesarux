@@ -2360,10 +2360,16 @@ int cpu_history_get_array_pos_element(int indice)
 	}
 	else {
 		//Ha dado la vuelta. Resetear
-		int indice_final=cpu_history_max_elements-indice;
+		int indice_final=cpu_history_primer_elemento+indice-cpu_history_max_elements;
 		return indice_final;
-		//Ejemplo:  array de 1000. Estamos en 900 y pedimos el 200 -> habra que pedir el numero 100
-		//1000-900=100
+		//Ejemplo: 
+		//array de 3. primero es el 1 y pedimos el 2
+		//tiene que retornar el 0:
+		//1+2-3=0
+		//array de 3. primero es el 2 y pedimos el 2
+		//tiene que retornar el 1:
+		//2+2-3=1
+		//primero+indice-maximo
 	}
 }
 
