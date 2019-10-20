@@ -2360,7 +2360,7 @@ int cpu_history_get_array_pos_element(int indice)
 		return cpu_history_primer_elemento+indice;
 	}
 	else {
-		//Ha dado la vuelta. Resetear
+		//Ha dado la vuelta.
 		int indice_final=cpu_history_primer_elemento+indice-cpu_history_max_elements;
 		return indice_final;
 		//Ejemplo: 
