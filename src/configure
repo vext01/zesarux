@@ -564,6 +564,34 @@ _EOF
 		echo "found"
         	LDFLAGS="$LDFLAGS -lncurses"
 	fi
+	
+	
+	rm -f $TEMPFILE $TEMPFILE.o
+	
+	#ver si ncursesw
+	echo -n "Checking for cursesw libraries ... "
+
+	TEMPFILE="configure.compile.c"
+
+	cat > $TEMPFILE << _EOF
+#include <ncursesw/curses.h>
+int main () {
+return 0;
+}
+_EOF
+
+	gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+	RESULTCODE=$?
+	if [ $RESULTCODE != 0 ]; then
+		echo "not found"
+		OPTIONOBJCURSESW=""
+	else
+		echo "found"
+        	LDFLAGS="$LDFLAGS -lncursesw"
+	fi
+	
+	
+	
 	rm -f $TEMPFILE $TEMPFILE.o
 
 else
