@@ -1,5 +1,10 @@
 --------Para próxima versión:
 
+-funciones cursesw:
+En archivo aparte cursesw_ext.c
+Agregar en configure para que se compile. De manera similar a otros módulos
+Desde curses.c se llama ahí para escribir caracteres utf solo si está compilado 
+
 -decir que ssl mac requiere "brew install openssl"
 
 -vertificar roms ifrom, lista que sea valida de distribucion
