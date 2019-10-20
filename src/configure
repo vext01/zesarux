@@ -568,7 +568,6 @@ _EOF
 		echo "found"
 		    CFLAGS="$CFLAGS -I/usr/include/ncursesw -D_GNU_SOURCE -D_DEFAULT_SOURCE"
         	LDFLAGS="$LDFLAGS -lncursesw"
-        	OPTIONOBJCURSES=""
 	fi
 	
 	
@@ -580,9 +579,8 @@ else
 fi
 	
 	#si no hay cursesw, probamos con curses sólo
-	#nota: no debemos linkar contra las dos a la vez 
-	
-if [ "$OPTIONOBJCURSESW" == "" ]; then
+
+
 
 echo -n "Checking for curses libraries ... "
 if [ "$OPTIONOBJCURSES" != "" ]; then
@@ -604,7 +602,11 @@ _EOF
 		OPTIONOBJCURSES=""
 	else
 		echo "found"
+			#nota: no debemos linkar contra las dos a la vez 
+	
+		if [ "$OPTIONOBJCURSESW" == "" ]; then
         	LDFLAGS="$LDFLAGS -lncurses"
+        fi
 	fi
 	
 	
@@ -616,7 +618,7 @@ else
 	echo "disabled"
 fi
 
-fi
+
 
 echo -n "Checking for aa libraries ... "
 if [ "$OPTIONOBJAA" != "" ]; then
