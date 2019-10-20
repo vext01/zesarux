@@ -98,6 +98,7 @@ echo "Configure sentence: $0 $@">>$LOGFILE
 #Valores por defecto
 
 OPTIONOBJCURSES="scrcurses.o"
+OPTIONOBJCURSESW="cursesw_ext.o"
 OPTIONOBJSTDOUT="scrstdout.o"
 OPTIONOBJSIMPLETEXT="scrsimpletext.o"
 OPTIONOBJFBDEV="scrfbdev.o"
@@ -540,7 +541,42 @@ else
         echo "disabled"
 fi
 
+#ver si ncursesw
+	echo -n "Checking for cursesw libraries ... "
+if [ "$OPTIONOBJCURSESW" != "" ]; then
 
+	TEMPFILE="configure.compile.c"
+
+	cat > $TEMPFILE << _EOF
+#include <ncursesw/curses.h>
+int main () {
+return 0;
+}
+_EOF
+
+	gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+	RESULTCODE=$?
+	if [ $RESULTCODE != 0 ]; then
+		echo "not found"
+		OPTIONOBJCURSESW=""
+	else
+		echo "found"
+		    CFLAGS="$CFLAGS -I/usr/include/ncursesw -D_GNU_SOURCE -D_DEFAULT_SOURCE"
+        	LDFLAGS="$LDFLAGS -lncursesw"
+	fi
+	
+	
+	
+	rm -f $TEMPFILE $TEMPFILE.o
+	
+else
+        echo "disabled"
+fi
+	
+	#si no hay cursesw, probamos con curses sólo
+	#nota: no debemos linkar contra las dos a la vez 
+	
+if [ "$OPTIONOBJCURSESW" == ""]; then
 
 echo -n "Checking for curses libraries ... "
 if [ "$OPTIONOBJCURSES" != "" ]; then
@@ -568,35 +604,12 @@ _EOF
 	
 	rm -f $TEMPFILE $TEMPFILE.o
 	
-	#ver si ncursesw
-	echo -n "Checking for cursesw libraries ... "
-
-	TEMPFILE="configure.compile.c"
-
-	cat > $TEMPFILE << _EOF
-#include <ncursesw/curses.h>
-int main () {
-return 0;
-}
-_EOF
-
-	gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
-	RESULTCODE=$?
-	if [ $RESULTCODE != 0 ]; then
-		echo "not found"
-		OPTIONOBJCURSESW=""
-	else
-		echo "found"
-		    CFLAGS="$CFLAGS -I/usr/include/ncursesw -D_GNU_SOURCE -D_DEFAULT_SOURCE"
-        	LDFLAGS="$LDFLAGS -lncursesw"
-	fi
 	
-	
-	
-	rm -f $TEMPFILE $TEMPFILE.o
 
 else
 	echo "disabled"
+fi
+
 fi
 
 echo -n "Checking for aa libraries ... "
