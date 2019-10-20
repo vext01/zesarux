@@ -587,6 +587,7 @@ _EOF
 		OPTIONOBJCURSESW=""
 	else
 		echo "found"
+		    CFLAGS="$CFLAGS -I/usr/include/ncursesw"
         	LDFLAGS="$LDFLAGS -lncursesw"
 	fi
 	
