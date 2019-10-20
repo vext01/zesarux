@@ -1492,7 +1492,7 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 			}
 			else {
 				//Validar que no se pidan mas de los que hay
-				if (total>total_elememtos) {
+				if (total>total_elementos) {
 					//escribir_socket(misocket,"Error. End goes beyond total elements");
 					total=total_elementos;
 				}
