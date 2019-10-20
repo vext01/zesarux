@@ -1817,8 +1817,12 @@ printf (
                 "--dandanator-press-button  Simulates pressing button on ZX Dandanator. Requires --enable-dandanator\n"
 		"--superupgrade-flash f     Set Superupgrade flash file\n"
 		"--enable-superupgrade      Enable Superupgrade emulation. Requires --superupgrade-flash\n"
+
                 "--kartusho-rom f           Set Kartusho rom file\n"
                 "--enable-kartusho          Enable Kartusho emulation. Requires --kartusho-rom\n"
+
+                "--ifrom-rom f              Set iFrom rom file\n"
+                "--enable-ifrom             Enable iFrom emulation. Requires --ifrom-rom\n"
 
                 
 
@@ -4678,6 +4682,7 @@ z80_bit command_line_dandanator={0};
 z80_bit command_line_dandanator_push_button={0};
 z80_bit command_line_superupgrade={0};
 z80_bit command_line_kartusho={0};
+z80_bit command_line_ifrom={0};
 z80_bit command_line_betadisk={0};
 z80_bit command_line_trd={0};
 z80_bit command_line_dsk={0};
@@ -6023,6 +6028,33 @@ int parse_cmdline_options(void) {
                         else if (!strcmp(argv[puntero_parametro],"--enable-kartusho")) {
                                 command_line_kartusho.v=1;
                         }
+
+						else if (!strcmp(argv[puntero_parametro],"--ifrom-rom")) {
+                                siguiente_parametro_argumento();
+
+                                //Si es ruta relativa, poner ruta absoluta
+                                if (!si_ruta_absoluta(argv[puntero_parametro])) {
+                                        //printf ("es ruta relativa\n");
+
+                                        //TODO: quiza hacer esto con convert_relative_to_absolute pero esa funcion es para directorios,
+                                        //no para directorios con archivo, por tanto quiza habria que hacer un paso intermedio separando
+                                        //directorio de archivo
+                                        char directorio_actual[PATH_MAX];
+                                        getcwd(directorio_actual,PATH_MAX);
+
+                                        sprintf (ifrom_rom_file_name,"%s/%s",directorio_actual,argv[puntero_parametro]);
+
+                                }
+
+                                else {
+                                        sprintf (ifrom_rom_file_name,"%s",argv[puntero_parametro]);
+                                }
+
+                        }
+
+                        else if (!strcmp(argv[puntero_parametro],"--enable-ifrom")) {
+                                command_line_ifrom.v=1;
+                        }						
 
                          else if (!strcmp(argv[puntero_parametro],"--enable-betadisk")) {
                                 command_line_betadisk.v=1;
@@ -7668,6 +7700,9 @@ struct sched_param sparam;
 
 	//Kartusho
 	if (command_line_kartusho.v) kartusho_enable();
+
+	//iFrom
+	if (command_line_ifrom.v) ifrom_enable();	
 
 	//Betadisk
 	if (command_line_betadisk.v) {

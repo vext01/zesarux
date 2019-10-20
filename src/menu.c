@@ -11165,6 +11165,7 @@ int menu_cond_allow_write_rom(void)
 	if (superupgrade_enabled.v) return 0;
 	if (dandanator_enabled.v) return 0;
 	if (kartusho_enabled.v) return 0;
+	if (ifrom_enabled.v) return 0;
 	if (betadisk_enabled.v) return 0;
 
 	if (MACHINE_IS_INVES) return 0;
@@ -26758,7 +26759,7 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 		"Source code lines: %d\n"
 		"Total time invested on programming ZEsarUX: ^^%d^^ hours (and growing)\n\n"
 		"Edited with vim, VSCode and CLion\n"
-		"Developed on Debian 9, Raspbian, macOS Mojave, and MinGW environment on Windows\n"
+		"Developed on Debian 9, Raspbian, macOS Catalina, and MinGW environment on Windows\n"
 		,LINES_SOURCE,tiempo_trabajado_en_zesarux);
 
 }

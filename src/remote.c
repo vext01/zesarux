@@ -49,6 +49,7 @@
 #include "operaciones.h"
 #include "snap.h"
 #include "kartusho.h"
+#include "ifrom.h"
 #include "zxevo.h"
 #include "settings.h"
 #include "esxdos_handler.h"
@@ -725,6 +726,7 @@ struct s_items_ayuda items_ayuda[]={
 							"superupgrade_ram: where the superupgrade RAM is located\n"
 							"\n"
 							"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
+	{"ifrom-press-button",NULL,NULL,"Press button on the iFrom interface"},
 	{"kartusho-press-button",NULL,NULL,"Press button on the Kartusho interface"},
 	{"load-binary",NULL,"file addr len","Load binary file \"file\" at address \"addr\" with length \"len\". Set ln to 0 to load the entire file in memory"},
 	{"load-source-code","|lsc","file","Load source file to be used on disassemble opcode functions"},
@@ -4544,6 +4546,10 @@ void interpreta_comando(char *comando,int misocket)
 	else if (!strcmp(comando_sin_parametros,"kartusho-press-button")) {
 			kartusho_press_button();
 	}
+
+	else if (!strcmp(comando_sin_parametros,"ifrom-press-button")) {
+			ifrom_press_button();
+	}	
 
 
         else if (!strcmp(comando_sin_parametros,"load-binary")) {

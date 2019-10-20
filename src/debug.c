@@ -73,6 +73,7 @@
 
 #include "snap.h"
 #include "kartusho.h"
+#include "ifrom.h"
 #include "diviface.h"
 #include "betadisk.h"
 
@@ -4638,6 +4639,13 @@ void debug_registers_get_mem_page_extended(z80_byte segmento,char *texto_pagina,
                 return;
         }
 
+        //Si es ifrom
+        if (segmento==0 && ifrom_enabled.v==1) {
+                sprintf (texto_pagina_short,"IB%d",ifrom_active_bank);
+                sprintf (texto_pagina,"iFrom Block %d",ifrom_active_bank);
+                return;
+        }		
+
         //Si es betadisk
         if (segmento==0 && betadisk_enabled.v && betadisk_active.v) {
                 sprintf (texto_pagina_short,"BDSK");
@@ -4871,6 +4879,11 @@ typedef struct s_debug_memory_segment debug_memory_segment;
                         if (MACHINE_IS_SPECTRUM_16_48 && kartusho_enabled.v) {
                                 debug_registers_get_mem_page_extended(0,segmentos[0].longname,segmentos[0].shortname);
                         }
+
+                        //Si ifrom y maquina 48kb
+                        if (MACHINE_IS_SPECTRUM_16_48 && ifrom_enabled.v) {
+                                debug_registers_get_mem_page_extended(0,segmentos[0].longname,segmentos[0].shortname);
+                        }						
 
                         //Si betadisk y maquina 48kb
                         if (MACHINE_IS_SPECTRUM_16_48 && betadisk_enabled.v && betadisk_active.v) {
@@ -5142,6 +5155,13 @@ typedef struct s_debug_memory_segment debug_memory_segment;
                 				sprintf (segmentos[pagina].shortname,"KB%d",kartusho_active_bank);
                 				sprintf (segmentos[pagina].longname,"Kartusho Block %d",kartusho_active_bank);
 							}
+
+
+							//Si es ifrom
+        					if (pagina==0 && ifrom_enabled.v==1) {
+                				sprintf (segmentos[pagina].shortname,"IB%d",ifrom_active_bank);
+                				sprintf (segmentos[pagina].longname,"iFrom Block %d",ifrom_active_bank);
+							}							
 
 
   							segmentos[pagina].length=16384;

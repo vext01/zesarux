@@ -2,7 +2,7 @@
 
 -decir que ssl mac requiere "brew install openssl"
 
--emular IFrom de Antonio Villena: falta agregar config, cmdline, etc. en todos sitios que salia kartusho, agregar iFrom
+-vertificar roms ifrom, lista que sea valida de distribucion
 
 ---Cosas Next
 -tbblue: the "disable ULA" bit in $68 doesn't work, so ULA is visible over the tilemap ( https://specnext.dev/wiki/ULA_Control_Register )
