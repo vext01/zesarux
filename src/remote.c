@@ -1479,6 +1479,7 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 	else if (!strcasecmp(parameter,"get-pc")) {
 		if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
 		else {
+		int total_elementos=cpu_history_get_total_elements();
 			int indice=parse_string_to_number(value);
 						//Al solicitarlo, el 0 es el item mas reciente. el 1 es el anterior a este
 			indice=total_elementos-indice-1;
@@ -1491,9 +1492,9 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 			}
 			else {
 				//Validar que no se pidan mas de los que hay
-				if (total>cpu_history_get_total_elements() ) {
+				if (total>total_elememtos) {
 					//escribir_socket(misocket,"Error. End goes beyond total elements");
-					total=cpu_history_get_total_elements();
+					total=total_elementos;
 				}
 				
 					while (total) {
