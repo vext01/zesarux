@@ -596,15 +596,16 @@ void scrcurses_refresca_pantalla_no_rainbow(void)
 
                                 inv=0;
 
+								//Calculamos valor pixel, para artistico o para cursesw
+ 								valor_get_pixel=0;
+								if (scr_get_4pixel(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
+								if (scr_get_4pixel(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
+								if (scr_get_4pixel(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
+								if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;								
+
 
                                 if (texto_artistico.v==1) {
                                         //si caracter desconocido, hacerlo un poco mas artistico
-                                        valor_get_pixel=0;
-                                        if (scr_get_4pixel(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
-                                        if (scr_get_4pixel(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
-                                        if (scr_get_4pixel(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
-                                        if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
-
                                         caracter=caracteres_artisticos[valor_get_pixel];
        							}
 
