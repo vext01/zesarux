@@ -3320,6 +3320,10 @@ int util_write_configfile(void)
 
   if (texto_artistico.v==0)                   ADD_STRING_CONFIG,"--disablearttext");
                                               ADD_STRING_CONFIG,"--arttextthresold %d",umbral_arttext);
+
+  if (use_scrcursesw.v)                       ADD_STRING_CONFIG,"--curses-ext-utf");
+
+
   if (chardetect_printchar_enabled.v)         ADD_STRING_CONFIG,"--enableprintchartrap");
   if (stdout_simpletext_automatic_redraw.v)   ADD_STRING_CONFIG,"--autoredrawstdout");
   if (screen_text_accept_ansi)                ADD_STRING_CONFIG,"--sendansi");

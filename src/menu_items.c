@@ -141,6 +141,9 @@
 	#include "scrxwindows.h"
 #endif
 
+#ifdef COMPILE_CURSESW
+	#include "cursesw_ext.h"
+#endif
 
 //
 // Archivo para entradas de menu, excluyendo funciones auxiliares de soporte de menu
@@ -8498,7 +8501,7 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                         //solo en caso de curses o stdout
 
 						
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"[%c] Text artistic emulation", (texto_artistico.v==1 ? 'X' : ' ') );
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"[%c]  Text artistic emulation", (texto_artistico.v==1 ? 'X' : ' ') );
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
                                         "on stdout and curses drivers");
 

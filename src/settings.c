@@ -208,5 +208,6 @@ int adventure_keyboard_send_final_spc=0;
 int adventure_keyboard_key_length=DEFAULT_ADV_KEYBOARD_KEY_LENGTH;
 
 
-//Usar caracteres extendidos de cursesw
+//Usar caracteres extendidos de cursesw. La opcion se puede usar aunque no este compilado cursesw
+//(se cargará y grabará de config aunque no tenga ningún efecto)
 z80_bit use_scrcursesw={0};

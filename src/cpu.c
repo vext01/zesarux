@@ -1550,6 +1550,13 @@ printf (
 
 	    "--arttextthresold n        Pixel threshold for artistic emulation for curses & stdout & simpletext (1..16. 4=normal)\n"
 	    "--disablearttext           Disable artistic emulation for curses & stdout & simpletext\n"
+
+#ifdef COMPILE_CURSESW
+		"--curses-ext-utf           Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers\n"
+#endif
+
+
+
 		"--autoredrawstdout         Enable automatic display redraw for stdout & simpletext drivers\n"
 		"--sendansi                 Sends ANSI terminal control escape sequences for stdout & simpletext drivers, to use colours and cursor control\n"
 
@@ -5518,6 +5525,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--disablearttext")) {
 				texto_artistico.v=0;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--curses-ext-utf")) {
+				use_scrcursesw.v=1;
+			}			
 
 
                         else if (!strcmp(argv[puntero_parametro],"--arttextthresold")) {
