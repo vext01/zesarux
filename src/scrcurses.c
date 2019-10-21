@@ -1477,6 +1477,10 @@ int scrcurses_init (void) {
 //		else colores=0;
 	}
 
+#ifdef COMPILE_CURSESW
+void cursesw_ext_init(void)
+#endif
+
 
 scr_putchar_zx8081=scrcurses_putchar_zx8081;
 scr_debug_registers=scrcurses_debug_registers;

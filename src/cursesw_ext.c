@@ -136,3 +136,8 @@ void cursesw_ext_print_pixel(int valor_get_pixel)
 }
 
 
+void cursesw_ext_init(void)
+{
+	if (use_scrcursesw.v) setlocale(LC_ALL, "");
+}
+
