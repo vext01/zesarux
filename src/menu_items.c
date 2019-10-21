@@ -8484,12 +8484,12 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
                 //para stdout y simpletext
                 if (menu_cond_stdout_simpletext() ) {
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"[%c] Stdout automatic redraw", (stdout_simpletext_automatic_redraw.v==1 ? 'X' : ' ') );
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"[%c]   Stdout automatic redraw", (stdout_simpletext_automatic_redraw.v==1 ? 'X' : ' ') );
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"It enables automatic display redraw");
                         menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"It enables automatic display redraw");
 
 
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"[%c] Send ANSI Control Sequence",(screen_text_accept_ansi==1 ? 'X' : ' ') );
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"[%c]   Send ANSI Control Sequence",(screen_text_accept_ansi==1 ? 'X' : ' ') );
 
 						if (stdout_simpletext_automatic_redraw.v) {
 							menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_fps,NULL,"[%2d]  Redraw fps", 50/scrstdout_simpletext_refresh_factor);
@@ -8501,7 +8501,7 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                         //solo en caso de curses o stdout
 
 						
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"[%c]  Text artistic emulation", (texto_artistico.v==1 ? 'X' : ' ') );
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"[%c]   Text artistic emulation", (texto_artistico.v==1 ? 'X' : ' ') );
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
                                         "on stdout and curses drivers");
 
