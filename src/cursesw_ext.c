@@ -127,6 +127,10 @@ void cursesw_ext_print_pixel(int valor_get_pixel)
 				add_wch(&wch);
    }
 
+   else {
+				const cchar_t wch = {A_NORMAL, L" "};
+				add_wch(&wch);
+   }
    
 
 }
