@@ -45,6 +45,7 @@
 #include "settings.h"
 #include "chloe.h"
 #include "timex.h"
+#include "compileoptions.h"
 
 
 #define CURSES_IZQ_BORDER 4
