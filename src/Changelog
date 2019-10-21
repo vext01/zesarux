@@ -50,6 +50,7 @@ Improved AY Sheet: now you can select which AY Chip to show
 Improved file selector: when asking for a directory, only shows directories, not files
 Improved curses driver: symbol @ simulates ESC on menu
 Improved snapshot loading: now setting "--sna-no-change-machine" becomes "--snap-no-change-machine" and applies to .sna and .z80
+Improved curses driver: now can use utf "blocky" characters and have 64x48 resolution
 
 Fixed Pentagon border: now ukflag demo is perfect
 Fixed Spectrum 128k machines border: now ula128, scroll2017 demos are perfect
