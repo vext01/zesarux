@@ -19,24 +19,10 @@
 
 */
 
-#ifndef SCRCURSES_H
-#define SCRCURSES_H
+#ifndef CURSESW_EXT_H
+#define CURSESW_EXT_H
 
-#include "cpu.h"
-
-extern int scrcurses_init (void);
-extern void scrcurses_end(void);
-extern void scrcurses_refresca_pantalla(void);
-extern void scrcurses_refresca_pantalla_solo_driver(void);
-extern z80_byte scrcurses_lee_puerto(z80_byte puerto_h,z80_byte puerto_l);
-extern void scrcurses_actualiza_tablas_teclado(void);
-extern void scrcurses_debug_registers(void);
-extern void scrcurses_messages_debug(char *s);
-extern void scrcurses_inicializa_colores(void);
-
-extern void scrcurses_z88_draw_lower_screen(void);
-extern int scrcurses_return_gunstick_view_white(void);
-extern void scrcurses_fade_color(int color);
+extern void cursesw_ext_print_pixel(int valor_get_pixel);
 
 
 #endif
