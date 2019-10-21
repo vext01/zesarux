@@ -23,6 +23,7 @@
 #define CURSESW_EXT_H
 
 extern void cursesw_ext_print_pixel(int valor_get_pixel);
+extern void cursesw_ext_init(void);
 
 
 #endif

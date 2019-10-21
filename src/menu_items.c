@@ -8450,6 +8450,20 @@ void menu_display_stdout_simpletext_fps(MENU_ITEM_PARAMETERS)
 }
 
 
+
+#ifdef COMPILE_CURSESW
+void menu_display_cursesw_ext(MENU_ITEM_PARAMETERS)
+{
+	use_scrcursesw.v ^=1;
+
+	if (use_scrcursesw.v) {
+		//Reiniciar locale
+		cursesw_ext_init();
+	}
+}
+#endif
+						
+
 void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_textdrivers_settings;
@@ -8482,6 +8496,8 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
 		if (menu_display_cursesstdout_cond() ) {
                         //solo en caso de curses o stdout
+
+						
                         menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
                                         "on stdout and curses drivers");
@@ -8489,6 +8505,13 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
                                         "on curses, stdout and simpletext drivers. "
                                         "If disabled, unknown characters are written with ?");
+
+#ifdef COMPILE_CURSESW
+						menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_cursesw_ext,NULL,"[%c] Extended utf blocky: %s", (use_scrcursesw.v ? 'X' : ' ') ));
+                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers");
+						menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers");
+#endif
+								
 
 
                         menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"Pixel threshold: %d",umbral_arttext);

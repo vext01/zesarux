@@ -209,4 +209,4 @@ int adventure_keyboard_key_length=DEFAULT_ADV_KEYBOARD_KEY_LENGTH;
 
 
 //Usar caracteres extendidos de cursesw
-z80_bit use_scrcursesw={1};
+z80_bit use_scrcursesw={0};
