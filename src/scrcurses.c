@@ -601,7 +601,7 @@ void scrcurses_refresca_pantalla_no_rainbow(void)
                                         if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
 
                                         caracter=caracteres_artisticos[valor_get_pixel];
-       				}
+       							}
 
                                 else caracter='?';
 
@@ -609,8 +609,24 @@ void scrcurses_refresca_pantalla_no_rainbow(void)
 
                                 move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
                                 //addch('~'|brillo);
-                                if (inv) addch(caracter | WA_REVERSE | brillo );
-                                else addch(caracter|brillo);
+
+								int going_to_use_cursesw=0;
+#ifdef COMPILE_CURSESW
+	//Solo usarlo si esta compilado y el setting esta activo
+								if (use_scrcursesw.v) going_to_use_cursesw=1;
+#endif
+
+
+								if (going_to_use_cursesw) {
+#ifdef COMPILE_CURSESW									
+									cursesw_ext_print_pixel(valor_get_pixel);
+#endif
+								}
+
+								else {
+                                	if (inv) addch(caracter | WA_REVERSE | brillo );
+                                	else addch(caracter|brillo);
+								}
 
                         }
 
