@@ -8481,15 +8481,15 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
                 //para stdout y simpletext
                 if (menu_cond_stdout_simpletext() ) {
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"Stdout automatic redraw: %s", (stdout_simpletext_automatic_redraw.v==1 ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"[%c] Stdout automatic redraw", (stdout_simpletext_automatic_redraw.v==1 ? 'X' : ' ') );
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"It enables automatic display redraw");
                         menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"It enables automatic display redraw");
 
 
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"Send ANSI Control Sequence: %s",(screen_text_accept_ansi==1 ? "On" : "Off"));
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"[%c] Send ANSI Control Sequence",(screen_text_accept_ansi==1 ? 'X' : ' ') );
 
 						if (stdout_simpletext_automatic_redraw.v) {
-							menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_fps,NULL,"Redraw fps: %d", 50/scrstdout_simpletext_refresh_factor);
+							menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_fps,NULL,"[%2d]  Redraw fps", 50/scrstdout_simpletext_refresh_factor);
 						}
 
                 }
@@ -8507,21 +8507,21 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                                         "If disabled, unknown characters are written with ?");
 
 #ifdef COMPILE_CURSESW
-						menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_cursesw_ext,NULL,"[%c]  Extended utf blocky", (use_scrcursesw.v ? 'X' : ' ') );
+						menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_cursesw_ext,NULL,"[%c]   Extended utf blocky", (use_scrcursesw.v ? 'X' : ' ') );
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers");
 						menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers");
 #endif
 								
 
 
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"[%d]  Pixel threshold",umbral_arttext);
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"[%2d]  Pixel threshold",umbral_arttext);
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
                                         "on curses, stdout and simpletext drivers with text artistic emulation enabled");
                         menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
                                         "on curses, stdout and simpletext drivers with text artistic emulation enabled");
 
                         if (rainbow_enabled.v) {
-                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"[%3d] Text brightness: %d",screen_text_brightness);
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"[%3d] Text brightness",screen_text_brightness);
                                 menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
                                 menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
                         }
