@@ -47,14 +47,15 @@ ncursesw5-config --cflags --libs
 
 
 
-void cursesw_ext_print_pixel(int valor_get_pixel)
+void cursesw_ext_print_pixel(int valor_get_pixel,int brillo)
 {
 
         
 
    if (valor_get_pixel==13) {
 				const cchar_t wch = {A_NORMAL, L"▙"};
-				add_wch(&wch);
+				add_wch(&wch|brillo);
+                                	
    }
 
    else if (valor_get_pixel==14) {

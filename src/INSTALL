@@ -87,7 +87,7 @@ The following is a list of complete features, all of which are optional.
 - SDL 1.2 (on GNU/Linux and Raspberry): needs sdllib-1.2. SDL2 is experimental
 - caca: cacalib
 - aa: aalib
-- curses: curses-dev
+- curses: curses-dev. You can also install cursesw to have 64x48 text resolution
 - stdout: termios includes
 
 
