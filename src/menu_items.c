@@ -8489,7 +8489,7 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"It enables automatic display redraw");
 
 
-                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"[%c]   Send ANSI Control Sequence",(screen_text_accept_ansi==1 ? 'X' : ' ') );
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"[%c]   Send ANSI Ctrl Sequence",(screen_text_accept_ansi==1 ? 'X' : ' ') );
 
 						if (stdout_simpletext_automatic_redraw.v) {
 							menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_fps,NULL,"[%2d]  Redraw fps", 50/scrstdout_simpletext_refresh_factor);
