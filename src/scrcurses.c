@@ -1478,7 +1478,7 @@ int scrcurses_init (void) {
 	}
 
 #ifdef COMPILE_CURSESW
-void cursesw_ext_init(void)
+	cursesw_ext_init();
 #endif
 
 
