@@ -22,7 +22,7 @@
 #ifndef CURSESW_EXT_H
 #define CURSESW_EXT_H
 
-extern void cursesw_ext_print_pixel(int valor_get_pixel,int brillo);
+extern void cursesw_ext_print_pixel(int valor_get_pixel);
 extern void cursesw_ext_init(void);
 
 

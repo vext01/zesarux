@@ -46,29 +46,12 @@ ncursesw5-config --cflags --libs
 
 
 
-
-void cursesw_ext_print_pixel(int valor_get_pixel,int brillo)
+//Parece que este tipo de caracteres no permite brillo
+void cursesw_ext_print_pixel(int valor_get_pixel)
 {
 
         
-
-   if (valor_get_pixel==13) {
-				const cchar_t wch = {A_NORMAL, L"▙"};
-				add_wch(&wch|brillo);
-                                	
-   }
-
-   else if (valor_get_pixel==14) {
-				const cchar_t wch = {A_NORMAL, L"▟"};
-				add_wch(&wch);
-   }
-
-   else if (valor_get_pixel==15) {
-				const cchar_t wch = {A_NORMAL, L"█"};
-				add_wch(&wch);
-   }
-
-   else if (valor_get_pixel==1) {
+   if (valor_get_pixel==1) {
 				const cchar_t wch = {A_NORMAL, L"▘"};
 				add_wch(&wch);
    }
@@ -128,7 +111,26 @@ void cursesw_ext_print_pixel(int valor_get_pixel,int brillo)
 				add_wch(&wch);
    }
 
+   else if (valor_get_pixel==13) {
+				const cchar_t wch = {A_NORMAL, L"▙"};
+				add_wch(&wch);
+                                	
+   }   
+
+
+   else if (valor_get_pixel==14) {
+				const cchar_t wch = {A_NORMAL, L"▟"};
+				add_wch(&wch);
+   }
+
+   else if (valor_get_pixel==15) {
+				const cchar_t wch = {A_NORMAL, L"█"};
+				add_wch(&wch);
+   }
+
+
    else {
+	   //0 o cualquier otro.
 				const cchar_t wch = {A_NORMAL, L" "};
 				add_wch(&wch);
    }
