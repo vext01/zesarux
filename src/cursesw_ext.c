@@ -72,7 +72,7 @@ void cursesw_ext_print_pixel(int valor_get_pixel)
    }
 
    else if (valor_get_pixel==5) {
-				const cchar_t wch = {A_NORMAL, L"▖"};
+				const cchar_t wch = {A_NORMAL, L"▌"};
 				add_wch(&wch);
    }
 
