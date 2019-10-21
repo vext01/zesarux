@@ -8369,8 +8369,10 @@ int menu_display_arttext_cond(void)
 
 	//en zx80 y 81 no hay umbral, no tiene sentido. ahora si. hay rainbow de zx8081
 	//if (machine_type>=20 && machine_type<=21) return 0;
+	if (use_scrcursesw.v) return 1;
+	if (texto_artistico.v) return 1;
 
-        return texto_artistico.v;
+    return 0;
 }
 
 int menu_cond_stdout_simpletext(void)
@@ -8519,9 +8521,9 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"[%2d]  Pixel threshold",umbral_arttext);
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-                                        "on curses, stdout and simpletext drivers with text artistic emulation enabled");
+                                        "on curses, stdout and simpletext drivers with text artistic emulation or utf enabled");
                         menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-                                        "on curses, stdout and simpletext drivers with text artistic emulation enabled");
+                                        "on curses, stdout and simpletext drivers with text artistic emulation or utf enabled");
 
                         if (rainbow_enabled.v) {
                                 menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"[%3d] Text brightness",screen_text_brightness);
