@@ -47,6 +47,10 @@
 #include "timex.h"
 #include "compileoptions.h"
 
+#ifdef COMPILE_CURSESW
+	#include "cursesw_ext.h"
+#endif
+
 
 #define CURSES_IZQ_BORDER 4
 #define CURSES_TOP_BORDER 4
