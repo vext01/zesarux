@@ -2259,6 +2259,10 @@ void cpu_history_regs_to_bin(z80_byte *p)
   	p[26]=im_mode;
 	p[27]=iff1.v | (iff2.v<<1);
 
+    p[28]=peek_byte_no_time(reg_pc);
+    p[29]=peek_byte_no_time(reg_pc+1);
+    p[30]=peek_byte_no_time(reg_pc+2);
+    p[31]=peek_byte_no_time(reg_pc+3);
 
  
 }
