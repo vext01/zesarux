@@ -7,6 +7,7 @@ located each one on any part of the world or in a local network. Games doesn't h
 Added Pentagon 16C colour mode emulation
 Added 1024 KB RAM emulation for Spectrum & Pentagon
 Added support for .scl files: can be converted from file selector menu pressing space
+Added SNA saving support
 Added ZX81 online game browser
 Added Spectrum online game browser
 Added total run time statistics 

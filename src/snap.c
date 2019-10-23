@@ -1973,9 +1973,13 @@ void load_sna_snapshot_common_registers(z80_byte *header)
 	//valor fuera de rango
 	if (im_mode==3) im_mode=2;
 
-	//printf ("header 19: %d\n",header[19]);
-	if (header[19] & 4) iff1.v=iff2.v=1;
-	else iff1.v=iff2.v=0;
+	//19       1      byte   Interrupt (bit 2 contains IFF2, 1=EI/0=DI)
+	if (header[19] & 4) iff2.v=1;
+	else iff2.v=0;
+
+	if (header[19] & 1) iff1.v=1;
+	else iff1.v=0;	
+
 
 
 }
@@ -2014,11 +2018,11 @@ int load_sna_snapshot_must_change_machine(void)
 void load_sna_snapshot(char *archivo)
 {
 
-        #define SNA_48K_HEADER_SIZE 27
+        
         //Cabeceras
         z80_byte sna_48k_header[SNA_48K_HEADER_SIZE];
 
-	#define SNA_128K_HEADER_SIZE 4
+	
 	//cabecera adicional para 128k
         z80_byte sna_128k_header[SNA_128K_HEADER_SIZE];
 
@@ -4467,6 +4471,129 @@ void save_sp_snapshot(char *filename)
 
 }
 
+
+//Comun para grabar registros en formato SNA 48k y 128k
+void save_sna_snapshot_registers(z80_byte *header)
+{
+
+/*
+   Offset   Size   Description
+   ------------------------------------------------------------------------
+   0        1      byte   I
+   1        8      word   HL',DE',BC',AF'
+   9        10     word   HL,DE,BC,IY,IX
+   19       1      byte   Interrupt (bit 2 contains IFF2, 1=EI/0=DI)
+   20       1      byte   R
+   21       4      words  AF,SP
+   25       1      byte   IntMode (0=IM0/1=IM1/2=IM2)
+   26       1      byte   BorderColor (0..7, not used by Spectrum 1.7)
+   27       49152  bytes  RAM dump 16384..65535
+   ------------------------------------------------------------------------
+   Total: 49179 bytes
+*/
+
+	header[0]=reg_i;
+	header[1]=reg_l_shadow;
+	header[2]=reg_h_shadow;	
+	header[3]=reg_e_shadow;
+	header[4]=reg_d_shadow;		
+	header[5]=reg_c_shadow;
+	header[6]=reg_b_shadow;
+	header[7]=get_flags_shadow();
+	header[8]=reg_a_shadow;
+
+	header[9]=reg_l;
+	header[10]=reg_h;
+	header[11]=reg_e;
+	header[12]=reg_d;		
+	header[13]=reg_c;
+	header[14]=reg_b;
+	header[15]=value_16_to_8l(reg_iy);
+	header[16]=value_16_to_8h(reg_iy);
+	header[17]=value_16_to_8l(reg_ix);
+	header[18]=value_16_to_8h(reg_ix);
+
+	//   19       1      byte   Interrupt (bit 2 contains IFF2, 1=EI/0=DI)
+	z80_byte bits_estado=(iff1.v) | (iff2.v ? 4 : 0);
+	header[19]=bits_estado;
+
+	header[20]=(reg_r&127) | (reg_r_bit7&128);
+
+	header[21]=get_flags();
+	header[22]=reg_a;
+
+	header[23]=value_16_to_8l(reg_sp);
+	header[24]=value_16_to_8h(reg_sp);
+
+	header[25]=im_mode;
+	header[26]=out_254  & 7;
+
+
+}
+
+//Grabar Snapshot SNA
+void save_sna_snapshot(char *filename)
+{
+/*
+   Offset   Size   Description
+   ------------------------------------------------------------------------
+   0        1      byte   I
+   1        8      word   HL',DE',BC',AF'
+   9        10     word   HL,DE,BC,IY,IX
+   19       1      byte   Interrupt (bit 2 contains IFF2, 1=EI/0=DI)
+   20       1      byte   R
+   21       4      words  AF,SP
+   25       1      byte   IntMode (0=IM0/1=IM1/2=IM2)
+   26       1      byte   BorderColor (0..7, not used by Spectrum 1.7)
+   27       49152  bytes  RAM dump 16384..65535
+   ------------------------------------------------------------------------
+   Total: 49179 bytes
+*/
+
+
+    z80_byte header[SNA_48K_HEADER_SIZE];
+
+
+	if (!(MACHINE_IS_SPECTRUM_16_48)) {
+		debug_printf(VERBOSE_ERR,"SNA snapshots are only allowed on Spectrum 48k models");
+		//Aqui se soporta 16kb,48kb, inves y modelos tk
+		return;
+	}
+
+
+       FILE *ptr_spfile;
+
+
+	if (MACHINE_IS_SPECTRUM_16_48) {
+		//Meter PC en stack
+		push_valor(reg_pc);
+	}
+
+    save_sna_snapshot_registers(header);
+
+
+        //Save header File
+        ptr_spfile=fopen(filename,"wb");
+        if (!ptr_spfile) {
+                debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
+                return;
+        }
+
+        fwrite(header, 1, SNA_48K_HEADER_SIZE, ptr_spfile);
+
+        //Escritura de datos
+	debug_printf (VERBOSE_INFO,"Saving 48kb block");
+	fwrite(&memoria_spectrum[16384],1,49152,ptr_spfile);
+
+    fclose(ptr_spfile);
+
+	if (MACHINE_IS_SPECTRUM_16_48) {
+		//Sacar PC del stack
+		reg_pc=pop_valor();
+	}
+
+}
+
 void save_ace_snapshot_store_header(void)
 {
 	//Meter cabecera archivo .ace en direcciones de memoria ram del ace 2000H-21FFH
@@ -4861,6 +4988,11 @@ void snapshot_save(char *filename)
                 debug_printf(VERBOSE_INFO,"Saving SP snapshot %s",filename);
                 save_sp_snapshot(filename);
         }
+
+	else if (!util_compare_file_extension(filename,"sna") ) {
+                debug_printf(VERBOSE_INFO,"Saving SNA snapshot %s",filename);
+                save_sna_snapshot(filename);
+        }		
 
         else if (!util_compare_file_extension(filename,"zsf") ) {
                       debug_printf(VERBOSE_INFO,"Saving ZSF snapshot %s",filename);
