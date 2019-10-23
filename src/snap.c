@@ -2154,6 +2154,10 @@ The third RAM bank saved is always the one currently paged, even if this is page
                                         reset_cpu();
 
                                         load_sna_snapshot_common_registers(sna_48k_header);
+
+					//Suponemos primero pagina 0, para habilitar paginacion, por si estuviera deshabilitada
+					puerto_32765=0;
+
 					z80_byte valor_puerto_32765;
 
                                         //cargar datos
@@ -2196,8 +2200,8 @@ The third RAM bank saved is always the one currently paged, even if this is page
 					}
 
 					//Y dejar pagina RAM normal
-					valor_puerto_32765=(puerto_32765&(255-7));
-					out_port_spectrum_no_time(32765,valor_puerto_32765 | ram_paged);
+					//valor_puerto_32765=(puerto_32765&(255-7));
+					out_port_spectrum_no_time(32765,valor_puerto_32765);
 
                                         fclose(ptr_snafile);
 
@@ -4537,6 +4541,10 @@ void save_sna_snapshot_bytes_128k(FILE *ptr_sna_file,z80_byte pagina_entra)
 	debug_printf (VERBOSE_INFO,"Writing 16Kb block from RAM page %d",pagina_entra);
 
 	z80_byte valor_puerto_32765=(puerto_32765&(255-7));
+
+		//Esto es una solucion un tanto fea pero funciona,
+		//asi no tengo que andar mirando si es maquina 128k, plus2 o plus3, o zxuno, etc
+
 	out_port_spectrum_no_time(32765,valor_puerto_32765 | pagina_entra);
 
 	z80_int direccion_origen=49152;
@@ -4628,6 +4636,21 @@ void save_sna_snapshot(char *filename)
 		*/
 
 
+		//Fuse por ejemplo carga snapshots de 128kb como Pentagon 128k.... a saber...
+
+		z80_byte puerto_32765_antes=puerto_32765;
+
+
+		//Preparamos antes la cabecera pues hay que meter el puerto_32765 original
+		z80_byte header128[SNA_128K_HEADER_SIZE];
+		header128[0]=value_16_to_8l(reg_pc);
+		header128[1]=value_16_to_8h(reg_pc);
+		header128[2]=puerto_32765_antes;
+		header128[3]=0;		
+
+					//Suponemos primero pagina 0, para habilitar paginacion, por si estuviera deshabilitada
+					puerto_32765=0;
+
 
 		//grabar datos
 		//grabar ram 5. 
@@ -4637,11 +4660,11 @@ void save_sna_snapshot(char *filename)
 		save_sna_snapshot_bytes_128k(ptr_spfile,2);	
 
 		//grabar ram N. luego la excluimos de la lista restante
-		z80_byte puerto_32768_antes=puerto_32765;
-
-		z80_byte ram_paginada=puerto_32765 & 7;
-		save_sna_snapshot_bytes_128k(ptr_spfile,ram_paginada);
 		
+
+		z80_byte ram_paginada=puerto_32765_antes & 7;
+		save_sna_snapshot_bytes_128k(ptr_spfile,ram_paginada);
+
 		/*
 			49179    2      word   PC
 			49181    1      byte   port 0x7ffd setting
@@ -4649,11 +4672,7 @@ void save_sna_snapshot(char *filename)
 			49183    16Kb   bytes  remaining RAM banks in ascending order
 		*/
 
-		z80_byte header128[SNA_128K_HEADER_SIZE];
-		header128[0]=value_16_to_8l(reg_pc);
-		header128[1]=value_16_to_8h(reg_pc);
-		header128[2]=puerto_32765;
-		header128[3]=0;
+
 
 		fwrite(header128, 1, SNA_128K_HEADER_SIZE, ptr_spfile);					
 				
@@ -4668,8 +4687,10 @@ void save_sna_snapshot(char *filename)
 			}
 		}
 
-		//dejamos las paginas como estaban
-		out_port_spectrum_no_time(32765,puerto_32768_antes);
+		//dejamos las paginas como estaban. Esto es una solucion un tanto fea pero funciona,
+		//asi no tengo que andar mirando si es maquina 128k, plus2 o plus3, o zxuno, etc
+		printf ("puerto antes: %d\n",puerto_32765_antes);
+		out_port_spectrum_no_time(32765,puerto_32765_antes);
 
 	}
 
