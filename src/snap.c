@@ -4531,6 +4531,24 @@ void save_sna_snapshot_registers(z80_byte *header)
 
 }
 
+void save_sna_snapshot_bytes_128k(FILE *ptr_sna_file,z80_byte pagina_entra)
+{
+
+	debug_printf (VERBOSE_INFO,"Writing 16Kb block from RAM page %d",pagina_entra);
+
+	z80_byte valor_puerto_32765=(puerto_32765&(255-7));
+	out_port_spectrum_no_time(32765,valor_puerto_32765 | pagina_entra);
+
+	z80_int direccion_origen=49152;
+	int l;
+	z80_byte byte_leido;
+	for (l=0;l<16384;l++) {
+		byte_leido=peek_byte_no_time(direccion_origen++);
+		fwrite(&byte_leido, 1, 1, ptr_sna_file);
+	}
+}
+
+
 //Grabar Snapshot SNA
 void save_sna_snapshot(char *filename)
 {
@@ -4553,9 +4571,8 @@ void save_sna_snapshot(char *filename)
 
     z80_byte header[SNA_48K_HEADER_SIZE];
 
-
-	if (!(MACHINE_IS_SPECTRUM_16_48)) {
-		debug_printf(VERBOSE_ERR,"SNA snapshots are only allowed on Spectrum 48k models");
+	if (!MACHINE_IS_SPECTRUM) {
+		debug_printf(VERBOSE_ERR,"SNA snapshots are only allowed on Spectrum machines");
 		//Aqui se soporta 16kb,48kb, inves y modelos tk
 		return;
 	}
@@ -4572,24 +4589,96 @@ void save_sna_snapshot(char *filename)
     save_sna_snapshot_registers(header);
 
 
-        //Save header File
-        ptr_spfile=fopen(filename,"wb");
-        if (!ptr_spfile) {
-                debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
-                return;
-        }
+	//Save header 
+	ptr_spfile=fopen(filename,"wb");
+	if (!ptr_spfile) {
+			debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
+			return;
+	}
 
-        fwrite(header, 1, SNA_48K_HEADER_SIZE, ptr_spfile);
+	fwrite(header, 1, SNA_48K_HEADER_SIZE, ptr_spfile);
 
-        //Escritura de datos
-	debug_printf (VERBOSE_INFO,"Saving 48kb block");
-	fwrite(&memoria_spectrum[16384],1,49152,ptr_spfile);
+    //Escritura de datos
+	//if (MACHINE_IS_SPECTRUM_16_48) {
+		debug_printf (VERBOSE_INFO,"Saving 48kb block");
+		fwrite(&memoria_spectrum[16384],1,49152,ptr_spfile);
+	//}
+
+
+	if (!MACHINE_IS_SPECTRUM_16_48) {
+		//En 128k guardar mas cosas
+		/*
+		The 128K version of the .sna format is the same as above, with extensions to include the extra memory banks of the 128K/+2 machines, and fixes the problem with the PC being pushed onto the stack - now it is located in an extra variable in the file (and is not pushed onto the stack at all). The first 49179 bytes of the snapshot are otherwise exactly as described above, so the full description is:
+
+		Offset   Size   Description
+		------------------------------------------------------------------------
+		0        27     bytes  SNA header (see above)
+		27       16Kb   bytes  RAM bank 5 \
+		16411    16Kb   bytes  RAM bank 2  } - as standard 48Kb SNA file
+		32795    16Kb   bytes  RAM bank n / (currently paged bank)
+		49179    2      word   PC
+		49181    1      byte   port 0x7ffd setting
+		49182    1      byte   TR-DOS rom paged (1) or not (0)
+		49183    16Kb   bytes  remaining RAM banks in ascending order
+		...
+		------------------------------------------------------------------------
+		Total: 131103 or 147487 bytes
+
+		The third RAM bank saved is always the one currently paged, even if this is page 5 or 2 - in this case, the bank is actually included twice. The remaining RAM banks are saved in ascending order - e.g. if RAM bank 4 is paged in, the snapshot is made up of banks 5, 2 and 4 to start with, and banks 0, 1, 3, 6 and 7 afterwards. If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, followed by banks 0, 1, 3, 4, 6 and 7.
+		*/
+
+
+
+		//grabar datos
+		//grabar ram 5. ya la tenemos antes
+		//save_sna_snapshot_bytes_128k(ptr_spfile,5);
+
+		//grabar ram 2. ya la tenemos antes
+		//save_sna_snapshot_bytes_128k(ptr_spfile,2);	
+
+
+		//grabar ram N. ya la tenemos antes. luego la excluimos de la lista restante
+		z80_byte ram_paginada=puerto_32765 & 7;
+		//save_sna_snapshot_bytes_128k(ptr_spfile,ram_paginada);
+		/*
+			49179    2      word   PC
+			49181    1      byte   port 0x7ffd setting
+			49182    1      byte   TR-DOS rom paged (1) or not (0)
+			49183    16Kb   bytes  remaining RAM banks in ascending order
+		*/
+
+		z80_byte header128[SNA_128K_HEADER_SIZE];
+		header128[0]=value_16_to_8l(reg_pc);
+		header128[1]=value_16_to_8h(reg_pc);
+		header128[2]=puerto_32765;
+		header128[3]=0;
+
+		fwrite(header128, 1, SNA_128K_HEADER_SIZE, ptr_spfile);					
+				
+
+		//Grabar RAMS 0,1,3,4,6,7. Si ram_paged es alguna de esas, no cargarla
+		z80_byte paginas[6]={0,1,3,4,6,7};
+		int i;
+		for (i=0;i<6;i++) {
+			z80_byte pagina_entra=paginas[i];
+			if (pagina_entra!=ram_paginada) {
+				save_sna_snapshot_bytes_128k(ptr_spfile,pagina_entra);
+			}
+		}
+
+	}
+
 
     fclose(ptr_spfile);
 
 	if (MACHINE_IS_SPECTRUM_16_48) {
 		//Sacar PC del stack
 		reg_pc=pop_valor();
+	}
+
+	//Aviso de posible grabacion con error
+	if (!MACHINE_IS_SPECTRUM_16_48 && !MACHINE_IS_SPECTRUM_128_P2) {
+		menu_warn_message("SNA snapshot only work well on 48k and 128k/+2 models");
 	}
 
 }
