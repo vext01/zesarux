@@ -2119,7 +2119,10 @@ The 128K version of the .sna format is the same as above, with extensions to inc
    ------------------------------------------------------------------------
    Total: 131103 or 147487 bytes
 
-The third RAM bank saved is always the one currently paged, even if this is page 5 or 2 - in this case, the bank is actually included twice. The remaining RAM banks are saved in ascending order - e.g. if RAM bank 4 is paged in, the snapshot is made up of banks 5, 2 and 4 to start with, and banks 0, 1, 3, 6 and 7 afterwards. If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, followed by banks 0, 1, 3, 4, 6 and 7.
+The third RAM bank saved is always the one currently paged, even if this is page 5 or 2 - in this case, the bank is actually included twice. 
+The remaining RAM banks are saved in ascending order - e.g. if RAM bank 4 is paged in, 
+the snapshot is made up of banks 5, 2 and 4 to start with, and banks 0, 1, 3, 6 and 7 afterwards. 
+If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, followed by banks 0, 1, 3, 4, 6 and 7.
 */
 
 				case 131103:
@@ -4689,7 +4692,7 @@ void save_sna_snapshot(char *filename)
 
 		//dejamos las paginas como estaban. Esto es una solucion un tanto fea pero funciona,
 		//asi no tengo que andar mirando si es maquina 128k, plus2 o plus3, o zxuno, etc
-		printf ("puerto antes: %d\n",puerto_32765_antes);
+		//printf ("puerto antes: %d\n",puerto_32765_antes);
 		out_port_spectrum_no_time(32765,puerto_32765_antes);
 
 	}
