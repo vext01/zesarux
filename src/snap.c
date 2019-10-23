@@ -4599,13 +4599,13 @@ void save_sna_snapshot(char *filename)
 	fwrite(header, 1, SNA_48K_HEADER_SIZE, ptr_spfile);
 
     //Escritura de datos
-	//if (MACHINE_IS_SPECTRUM_16_48) {
+	if (MACHINE_IS_SPECTRUM_16_48) {
 		debug_printf (VERBOSE_INFO,"Saving 48kb block");
 		fwrite(&memoria_spectrum[16384],1,49152,ptr_spfile);
-	//}
+	}
 
 
-	if (!MACHINE_IS_SPECTRUM_16_48) {
+	else {
 		//En 128k guardar mas cosas
 		/*
 		The 128K version of the .sna format is the same as above, with extensions to include the extra memory banks of the 128K/+2 machines, and fixes the problem with the PC being pushed onto the stack - now it is located in an extra variable in the file (and is not pushed onto the stack at all). The first 49179 bytes of the snapshot are otherwise exactly as described above, so the full description is:
@@ -4630,16 +4630,18 @@ void save_sna_snapshot(char *filename)
 
 
 		//grabar datos
-		//grabar ram 5. ya la tenemos antes
-		//save_sna_snapshot_bytes_128k(ptr_spfile,5);
+		//grabar ram 5. 
+		save_sna_snapshot_bytes_128k(ptr_spfile,5);
 
-		//grabar ram 2. ya la tenemos antes
-		//save_sna_snapshot_bytes_128k(ptr_spfile,2);	
+		//grabar ram 2. 
+		save_sna_snapshot_bytes_128k(ptr_spfile,2);	
 
+		//grabar ram N. luego la excluimos de la lista restante
+		z80_byte puerto_32768_antes=puerto_32765;
 
-		//grabar ram N. ya la tenemos antes. luego la excluimos de la lista restante
 		z80_byte ram_paginada=puerto_32765 & 7;
-		//save_sna_snapshot_bytes_128k(ptr_spfile,ram_paginada);
+		save_sna_snapshot_bytes_128k(ptr_spfile,ram_paginada);
+		
 		/*
 			49179    2      word   PC
 			49181    1      byte   port 0x7ffd setting
@@ -4665,6 +4667,9 @@ void save_sna_snapshot(char *filename)
 				save_sna_snapshot_bytes_128k(ptr_spfile,pagina_entra);
 			}
 		}
+
+		//dejamos las paginas como estaban
+		out_port_spectrum_no_time(32765,puerto_32768_antes);
 
 	}
 
