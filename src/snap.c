@@ -2127,51 +2127,51 @@ If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, fo
 
 				case 131103:
 				case 147487:
-                                        //Archivo de 128k
-                                        debug_printf (VERBOSE_INFO,".SNA 128k file");
+					//Archivo de 128k
+					debug_printf (VERBOSE_INFO,".SNA 128k file");
 
-                                        //leer datos
-                                        buffer_lectura=malloc(16384);
-                                        if (buffer_lectura==NULL) cpu_panic("Cannot allocate memory when loading .sna file");
+					//leer datos
+					buffer_lectura=malloc(16384);
+					if (buffer_lectura==NULL) cpu_panic("Cannot allocate memory when loading .sna file");
 
 
-                                        //Load File
-                                        ptr_snafile=fopen(archivo,"rb");
-                                        if (ptr_snafile==NULL) {
-                                                debug_printf(VERBOSE_ERR,"Error opening %s",archivo);
-                                                return;
-                                        }
+					//Load File
+					ptr_snafile=fopen(archivo,"rb");
+					if (ptr_snafile==NULL) {
+							debug_printf(VERBOSE_ERR,"Error opening %s",archivo);
+							return;
+					}
 
-                                        leidos=fread(sna_48k_header,1,SNA_48K_HEADER_SIZE,ptr_snafile);
-                                        if (leidos!=SNA_48K_HEADER_SIZE) {
-                                                debug_printf(VERBOSE_ERR,"Error reading %d bytes of header",SNA_48K_HEADER_SIZE);
-                                                return;
-                                        }
+					leidos=fread(sna_48k_header,1,SNA_48K_HEADER_SIZE,ptr_snafile);
+					if (leidos!=SNA_48K_HEADER_SIZE) {
+							debug_printf(VERBOSE_ERR,"Error reading %d bytes of header",SNA_48K_HEADER_SIZE);
+							return;
+					}
 
-                                        if (load_sna_snapshot_must_change_machine() ) {
-                                            //maquina Spectrum 128k
-                                            current_machine_type=6;
+					if (load_sna_snapshot_must_change_machine() ) {
+						//maquina Spectrum 128k
+						current_machine_type=6;
 
-                                            set_machine(NULL);
-                                        }
-                                        reset_cpu();
+						set_machine(NULL);
+					}
+					reset_cpu();
 
-                                        load_sna_snapshot_common_registers(sna_48k_header);
+					load_sna_snapshot_common_registers(sna_48k_header);
 
 					//Suponemos primero pagina 0, para habilitar paginacion, por si estuviera deshabilitada
 					puerto_32765=0;
 
 					z80_byte valor_puerto_32765;
 
-                                        //cargar datos
+					//cargar datos
 					//leemos ram 5
-                                        leidos=fread(buffer_lectura,1,16384,ptr_snafile);
+					leidos=fread(buffer_lectura,1,16384,ptr_snafile);
 					load_sna_snapshot_bytes_128k(buffer_lectura,5);
 
-                                        //cargar datos
-                                        //leemos ram 2
-                                        leidos=fread(buffer_lectura,1,16384,ptr_snafile);
-                                        load_sna_snapshot_bytes_128k(buffer_lectura,2);
+					//cargar datos
+					//leemos ram 2
+					leidos=fread(buffer_lectura,1,16384,ptr_snafile);
+					load_sna_snapshot_bytes_128k(buffer_lectura,2);
 
 					//leer ram N. luego veremos a donde corresponde
 					leidos=fread(buffer_lectura,1,16384,ptr_snafile);
@@ -2206,10 +2206,10 @@ If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, fo
 					//valor_puerto_32765=(puerto_32765&(255-7));
 					out_port_spectrum_no_time(32765,valor_puerto_32765);
 
-                                        fclose(ptr_snafile);
+					fclose(ptr_snafile);
 
 					free(buffer_lectura);
-                                        return;
+					return;
 
 
 				break;
@@ -2218,7 +2218,7 @@ If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, fo
 					debug_printf(VERBOSE_ERR,".SNA file corrupt");
 				break;
 			}
-                }
+		}
 
 
 }
@@ -4545,8 +4545,8 @@ void save_sna_snapshot_bytes_128k(FILE *ptr_sna_file,z80_byte pagina_entra)
 
 	z80_byte valor_puerto_32765=(puerto_32765&(255-7));
 
-		//Esto es una solucion un tanto fea pero funciona,
-		//asi no tengo que andar mirando si es maquina 128k, plus2 o plus3, o zxuno, etc
+	//Esto es una solucion un tanto fea pero funciona,
+	//asi no tengo que andar mirando si es maquina 128k, plus2 o plus3, o zxuno, etc
 
 	out_port_spectrum_no_time(32765,valor_puerto_32765 | pagina_entra);
 
@@ -4589,7 +4589,7 @@ void save_sna_snapshot(char *filename)
 	}
 
 
-       FILE *ptr_spfile;
+	FILE *ptr_spfile;
 
 
 	if (MACHINE_IS_SPECTRUM_16_48) {
@@ -4603,8 +4603,8 @@ void save_sna_snapshot(char *filename)
 	//Save header 
 	ptr_spfile=fopen(filename,"wb");
 	if (!ptr_spfile) {
-			debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
-			return;
+		debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
+		return;
 	}
 
 	fwrite(header, 1, SNA_48K_HEADER_SIZE, ptr_spfile);
@@ -4640,19 +4640,24 @@ void save_sna_snapshot(char *filename)
 
 
 		//Fuse por ejemplo carga snapshots de 128kb como Pentagon 128k.... a saber...
-
 		z80_byte puerto_32765_antes=puerto_32765;
 
 
 		//Preparamos antes la cabecera pues hay que meter el puerto_32765 original
+		/*
+			49179    2      word   PC
+			49181    1      byte   port 0x7ffd setting
+			49182    1      byte   TR-DOS rom paged (1) or not (0)
+			49183    16Kb   bytes  remaining RAM banks in ascending order
+		*/		
 		z80_byte header128[SNA_128K_HEADER_SIZE];
 		header128[0]=value_16_to_8l(reg_pc);
 		header128[1]=value_16_to_8h(reg_pc);
 		header128[2]=puerto_32765_antes;
 		header128[3]=0;		
 
-					//Suponemos primero pagina 0, para habilitar paginacion, por si estuviera deshabilitada
-					puerto_32765=0;
+		//Suponemos primero pagina 0, para habilitar paginacion, por si estuviera deshabilitada
+		puerto_32765=0;
 
 
 		//grabar datos
@@ -4663,24 +4668,14 @@ void save_sna_snapshot(char *filename)
 		save_sna_snapshot_bytes_128k(ptr_spfile,2);	
 
 		//grabar ram N. luego la excluimos de la lista restante
-		
-
 		z80_byte ram_paginada=puerto_32765_antes & 7;
 		save_sna_snapshot_bytes_128k(ptr_spfile,ram_paginada);
-
-		/*
-			49179    2      word   PC
-			49181    1      byte   port 0x7ffd setting
-			49182    1      byte   TR-DOS rom paged (1) or not (0)
-			49183    16Kb   bytes  remaining RAM banks in ascending order
-		*/
-
 
 
 		fwrite(header128, 1, SNA_128K_HEADER_SIZE, ptr_spfile);					
 				
 
-		//Grabar RAMS 0,1,3,4,6,7. Si ram_paged es alguna de esas, no cargarla
+		//Grabar RAMS 0,1,3,4,6,7. Si ram_paged es alguna de esas, no grabarla
 		z80_byte paginas[6]={0,1,3,4,6,7};
 		int i;
 		for (i=0;i<6;i++) {
