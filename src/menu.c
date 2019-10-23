@@ -20428,17 +20428,17 @@ void menu_snapshot_load(MENU_ITEM_PARAMETERS)
 void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[5];
+    char *filtros[6];
 
-  if (MACHINE_IS_ZX8081) {
-        	filtros[0]="zx";
+  	if (MACHINE_IS_ZX8081) {
+		filtros[0]="zx";
 
-					if (MACHINE_IS_ZX80) filtros[1]="o";
-					else filtros[1]="p";
+		if (MACHINE_IS_ZX80) filtros[1]="o";
+		else filtros[1]="p";
 
-					filtros[2]="zsf";
-	        filtros[3]=0;
-	}
+		filtros[2]="zsf";
+		filtros[3]=0;
+}
 
 	else if (MACHINE_IS_Z88) {
 		filtros[0]="zx";
@@ -20447,11 +20447,12 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 	}
 
 	else if (MACHINE_IS_SPECTRUM_16_48) {
-        	filtros[0]="zx";
-	        filtros[1]="z80";
-        	filtros[2]="sp";
-					filtros[3]="zsf";
-	        filtros[4]=0;
+		filtros[0]="zx";
+		filtros[1]="z80";
+		filtros[2]="sp";
+		filtros[3]="zsf";
+		filtros[4]="sna";
+		filtros[5]=0;
 	}
 
 	else if (MACHINE_IS_ACE) {
@@ -20462,17 +20463,17 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 	}
 
 	else if (MACHINE_IS_CPC) {
-                filtros[0]="zx";
-								filtros[1]="zsf";
-                filtros[2]=0;
-        }
+		filtros[0]="zx";
+		filtros[1]="zsf";
+		filtros[2]=0;
+    }
 
 
 	else {
-        	filtros[0]="zx";
-	        filtros[1]="z80";
-					filtros[2]="zsf";
-	        filtros[3]=0;
+		filtros[0]="zx";
+		filtros[1]="z80";
+		filtros[2]="zsf";
+		filtros[3]=0;
 	}
 
 
