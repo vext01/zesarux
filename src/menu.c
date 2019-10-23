@@ -870,7 +870,7 @@ char menu_realtape_name[PATH_MAX];
 
 //snapshot load. snapfile apuntara aqui
 char snapshot_load_file[PATH_MAX];
-char snapshot_save_file[PATH_MAX];
+char snapshot_save_file[PATH_MAX]="";
 
 char binary_file_load[PATH_MAX]="";
 char binary_file_save[PATH_MAX];
@@ -20478,16 +20478,45 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 	}
 
 
-        if (menu_filesel("Snapshot file",filtros,snapshot_save_file)==1) {
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
 
-                //Ver si archivo existe y preguntar
-                struct stat buf_stat;
 
-                if (stat(snapshot_save_file, &buf_stat)==0) {
+ 		//Obtenemos directorio de snap save
+        //si no hay directorio, vamos a rutas predefinidas
+        if (snapshot_save_file[0]==0) menu_chdir_sharedfiles();
+
+		else {
+			char directorio[PATH_MAX];
+			util_get_dir(snapshot_save_file,directorio);
+			//printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+			//cambiamos a ese directorio, siempre que no sea nulo
+			if (directorio[0]!=0) {
+					debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+					menu_filesel_chdir(directorio);
+			}
+		}
+
+
+
+		int ret;
+
+		ret=menu_filesel("Snapshot file",filtros,snapshot_save_file);
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
+        if (ret==1) {
+
+			//Ver si archivo existe y preguntar
+			struct stat buf_stat;
+
+			if (stat(snapshot_save_file, &buf_stat)==0) {
 
 			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
 
-                }
+		}
 
 
 		snapshot_save(snapshot_save_file);
@@ -20495,10 +20524,12 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 		//Si ha ido bien la grabacion
 		if (!if_pending_error_message) menu_generic_message_splash("Save Snapshot","OK. Snapshot saved");
 
-                //Y salimos de todos los menus
-                salir_todos_menus=1;
+			//Y salimos de todos los menus
+			salir_todos_menus=1;
 
         }
+
+
 
 
 }
