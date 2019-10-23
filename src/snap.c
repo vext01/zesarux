@@ -2188,6 +2188,8 @@ If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, fo
 					valor_puerto_32765=sna_128k_header[2];
 					z80_byte ram_paged=valor_puerto_32765&7;
 
+					//TODO: usar el byte de TR-DOS rom paged (1) or not (0)
+
 					//cargar esa pagina
 					load_sna_snapshot_bytes_128k(buffer_lectura,ram_paged);
 
@@ -4655,6 +4657,7 @@ void save_sna_snapshot(char *filename)
 		header128[1]=value_16_to_8h(reg_pc);
 		header128[2]=puerto_32765_antes;
 		header128[3]=0;		
+		//TODO: usar el byte de TR-DOS rom paged (1) or not (0)
 
 		//Suponemos primero pagina 0, para habilitar paginacion, por si estuviera deshabilitada
 		puerto_32765=0;
