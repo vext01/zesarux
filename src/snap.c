@@ -2130,6 +2130,8 @@ If RAM bank 5 is paged in, the snapshot is made up of banks 5, 2 and 5 again, fo
 					//Archivo de 128k
 					debug_printf (VERBOSE_INFO,".SNA 128k file");
 
+					//TODO: Fuse carga esto como maquina Pentagon. Normal?
+
 					//leer datos
 					buffer_lectura=malloc(16384);
 					if (buffer_lectura==NULL) cpu_panic("Cannot allocate memory when loading .sna file");
