@@ -509,10 +509,8 @@ void cpu_core_loop_zx8081(void)
 						if (im_mode==0 || im_mode==1) {
 							cpu_common_jump_im01();
 
+							//Ajuste tiempos en zx80/81
 							t_estados -=6;
-
-
-
 						}
 						else {
 						//IM 2.
