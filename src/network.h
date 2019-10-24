@@ -32,7 +32,10 @@
 #include <sys/types.h>
 
 #ifdef MINGW
-	#include <winsock2.h>
+//	#include <winsock2.h>
+// Si lo activamos aqui, da error al compilar menu.h con:
+// including winsock2.h after winsock.h is unsupported
+// se supone que lo carga antes en otro sitio...
 #else
 	#include <sys/socket.h>
 	#include <netdb.h>
@@ -48,11 +51,13 @@ extern int enviar_cr;
 
 extern int crear_socket_TCP(void);
 extern int escribir_socket(int socket, char *buffer);
+
 extern int omplir_adr_internet(struct sockaddr_in *adr,char *host,unsigned short n_port);
+extern int connectar_socket(int s,struct sockaddr_in *adr);
+
 extern int leer_socket(int s, char *buffer, int longitud);
 extern void escribir_socket_format (int misocket, const char * format , ...);
 extern int assignar_adr_internet(int sock,char *host,unsigned short n_port);
-extern int connectar_socket(int s,struct sockaddr_in *adr);
 extern int cerrar_socket(int s);
 extern void init_network_tables(void);
 
