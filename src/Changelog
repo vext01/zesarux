@@ -52,6 +52,7 @@ Improved file selector: when asking for a directory, only shows directories, not
 Improved curses driver: symbol @ simulates ESC on menu
 Improved snapshot loading: now setting "--sna-no-change-machine" becomes "--snap-no-change-machine" and applies to .sna and .z80
 Improved curses driver: now can use utf "blocky" characters and have 64x48 resolution
+Improved accurate Z80 timing: IM mode 0 is 1 t-state shorter than IM mode 1
 
 Fixed Pentagon border: now ukflag demo is perfect
 Fixed Spectrum 128k machines border: now ula128, scroll2017 demos are perfect
@@ -65,6 +66,7 @@ Fixed undocumented opcode ED76: I had IM0 but it's IM1
 Fixed loading and saving +3 .z80 snapshots
 Fixed placing menu windows when using zx desktop and machines TSConf, TBBlue, CPC and QL
 Fixed bug loading .sna files when rom 1 paged in
+
 
 
 

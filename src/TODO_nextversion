@@ -45,8 +45,6 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 -porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
 
--Im modo 0 la interrupción es un testado más rápido que con Im modo 1
-->Hay que aplicarlo a todo lo que lleve un Z80
 
 -tabla de joystick to event siempre se resetea??
 
