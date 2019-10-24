@@ -241,8 +241,7 @@ void z88_gestionar_interrupcion(void)
 						iff1.v=iff2.v=0;
 
                                                 if (im_mode==0 || im_mode==1) {
-                                                        reg_pc=56;
-                                                        t_estados += 7;
+                                                        cpu_common_jump_im01();
                                                 }
                                                 else {
                                                 //IM 2.

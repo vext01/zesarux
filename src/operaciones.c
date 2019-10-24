@@ -453,6 +453,17 @@ void neg(void)
 
 
 
+//Comun al generar interrupcion en im0/1
+void cpu_common_jump_im01(void)
+{
+	//if (im_mode==0 || im_mode==1) {
+	reg_pc=56;
+	t_estados += 7;
+
+
+	//Im modo 0 la interrupción es un testado más rápido que con Im modo 1
+}
+
 
 //Rutinas de cpu core vacias para que, al parsear breakpoints del config file, donde aun no hay inicializada maquina,
 //funciones como opcode1=XX , peek(x), etc no peten porque utilizan funciones peek. Inicializar también las de puerto por si acaso

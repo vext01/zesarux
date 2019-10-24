@@ -442,8 +442,7 @@ void cpu_core_loop_sam(void)
 						//Modelos spectrum
 
 						if (im_mode==0 || im_mode==1) {
-							reg_pc=56;
-							t_estados += 7;
+							cpu_common_jump_im01();
 						}
 						else {
 						//IM 2.

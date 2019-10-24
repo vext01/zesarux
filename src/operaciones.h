@@ -199,7 +199,7 @@ extern void init_cpu_tables(void);
 //extern void set_flags_rld_rrd(z80_byte rh,z80_byte rl);
 extern void set_flags_in_reg(z80_byte value);
 
-
+extern void cpu_common_jump_im01(void);
 
 extern z80_byte peek_byte_vacio(z80_int dir GCC_UNUSED);
 extern void poke_byte_vacio(z80_int dir GCC_UNUSED,z80_byte valor GCC_UNUSED);
