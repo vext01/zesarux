@@ -2,6 +2,15 @@
 
 
 -decir que ssl mac requiere "brew install openssl"
+Habra otra libssl de sistema?
+
+-Comentar que se compile con ssl para soportar descargas completas de spectrum
+
+-probar ssl en windows
+
+
+
+
 
 -vertificar roms ifrom, lista que sea valida de distribucion
 
@@ -24,27 +33,21 @@ Tilemap Control Register - SpecNext official Wiki
 -tbblue modo turbo 28 MHz
 -warhawk no se ven sprites!!
 -Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
+-Ensamblador opcodes extendidos next
+-Puerto dffd next
+https://specnext.dev/wiki/Next_Memory_Bank_Select
 ---Fin cosas Next
 
 
 -porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
 
 -Im modo 0 la interrupción es un testado más rápido que con Im modo 1
-Pendiente de confirmar si solo es en spectrum
+->Pendiente de confirmar si solo es en spectrum
 
 -tabla de joystick to event siempre se resetea??
 
--Comentar que se compile con ssl para soportar descargas completas de spectrum
-
--probar ssl en windows
-
--Ensamblador opcodes extendidos next
-
 -permitir que las direcciones de breakpoints se pongan con 0xNNNN ademas de NNNNh y decimal
 incluso con $NNNN
-
--Puerto dffd next
-https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
@@ -124,9 +127,7 @@ dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
   Reason: image not found
 Abort trap: 6
 
-iMac-de-Cesar:src cesarhernandez$ brew install openssl
 
-Habra otra libssl de sistema?
 
 -en windows no compila network con threads...
 tampoco zip.h
@@ -255,10 +256,10 @@ Y Windows sdl?
 
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
--a veces al cambiar numero chips en settings-audio-ay chips se cuelga
 
 
--Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drives null y simpletext? Con printf verbose error?
+
+-Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? Con printf verbose error?
 
 -Incluir sonic y otros en juegos TSConf. Pedir permiso a autores 
 
