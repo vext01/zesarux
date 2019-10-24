@@ -6,9 +6,13 @@ Habra otra libssl de sistema?
 
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
--probar ssl en windows
+-probar ssl en windows. Descargando prebuilds de ssl para mingw
+https://wiki.openssl.org/index.php/Binaries
+https://bintray.com/vszakats/generic/openssl
+https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win32-mingw.zip
 
-
+copiar libcrypto-1_1.dll y libssl-1_1.dll en ruta de ZEsarUX exe
+Funciona ssl en windows ok!
 
 
 
@@ -42,7 +46,7 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 -porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
 
 -Im modo 0 la interrupción es un testado más rápido que con Im modo 1
-->Pendiente de confirmar si solo es en spectrum
+->Hay que aplicarlo a todo lo que lleve un Z80
 
 -tabla de joystick to event siempre se resetea??
 
@@ -143,6 +147,11 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 
 
 -Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer?
+Prueba en windows:
+-http browser y juegos funciona
+-zeng recibe conexiones pero peta al cabo de unos segundos
+-zeng haciendo como master inicia la conexion pero no parece recibir el prompt
+
 
 Ejemplos generales socket
 https://www.binarytides.com/socket-programming-c-linux-tutorial/

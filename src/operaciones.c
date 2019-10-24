@@ -461,7 +461,8 @@ void cpu_common_jump_im01(void)
 	t_estados += 7;
 
 
-	//Im modo 0 la interrupción es un testado más rápido que con Im modo 1
+	//Im modo 0 la interrupción es un t-estado más rápido que con Im modo 1
+	if (im_mode==0) t_estados--;
 }
 
 
