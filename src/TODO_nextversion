@@ -30,6 +30,7 @@ Tilemap Control Register - SpecNext official Wiki
 -porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
 
 -Im modo 0 la interrupción es un testado más rápido que con Im modo 1
+Pendiente de confirmar si solo es en spectrum
 
 -tabla de joystick to event siempre se resetea??
 
