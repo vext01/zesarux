@@ -723,6 +723,12 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 	return escribir_socket(sock,buffer);
 }
 
+int zsock_available_data(int socket)
+{
+	if (chardevice_status(socket) & CHDEV_ST_RD_AVAIL_DATA) return 1;
+	else return 0;
+}
+
 int zsock_wait_until_command_prompt(int indice_tabla)
 {
 	//Leemos hasta que no haya mas datos para leer. Idealmente estara el "command> "
@@ -741,7 +747,8 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 		do {
 			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
 			//la conexion se queda en read colgada
-			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_tabla,buffer,100);
 				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
 				if (leidos<0) return -1;
@@ -778,7 +785,8 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 		do {
 			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
 			//la conexion se queda en read colgada
-			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_tabla,&buffer[pos_destino],max_buffer);
 				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
 				if (leidos<0) return -1;
@@ -834,7 +842,8 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 		do {
 			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
 			//la conexion se queda en read colgada
-			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_tabla,&buffer[pos_destino],max_buffer);
 				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
 				if (leidos<0) return -1;
@@ -1046,7 +1055,8 @@ If no Accept-Encoding field is present in a request, the server MAY
 		do {
 			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
 			//la conexion se queda en read colgada
-			if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
+			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
 				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d",leidos);
 				if (leidos<0) salir=1;
