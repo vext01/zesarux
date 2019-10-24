@@ -725,6 +725,9 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 
 int zsock_available_data(int socket)
 {
+			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
+			//la conexion se queda en read colgada
+
 	if (chardevice_status(socket) & CHDEV_ST_RD_AVAIL_DATA) return 1;
 	else return 0;
 }
@@ -745,8 +748,6 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 		char buffer[100];
 
 		do {
-			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
-			//la conexion se queda en read colgada
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_tabla,buffer,100);
@@ -783,8 +784,6 @@ int zsock_read_all(int indice_tabla,z80_byte *buffer,int max_buffer)
 	int total_leidos=0;
 
 		do {
-			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
-			//la conexion se queda en read colgada
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_tabla,&buffer[pos_destino],max_buffer);
@@ -840,8 +839,6 @@ int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffe
 	do {
 
 		do {
-			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
-			//la conexion se queda en read colgada
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_tabla,&buffer[pos_destino],max_buffer);
@@ -1053,8 +1050,6 @@ If no Accept-Encoding field is present in a request, the server MAY
 	int reintentos=0;
 	do {
 		do {
-			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
-			//la conexion se queda en read colgada
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
