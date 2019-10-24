@@ -401,8 +401,8 @@ void cpu_core_loop_ace(void)
 
 						//IM0/1
 						if (im_mode==0 || im_mode==1) {
-                                                        reg_pc=56;
-                                                        //oficial: 
+                            reg_pc=56;
+                            //oficial: 
 							t_estados += 7;
 
 							t_estados -=6;

@@ -508,8 +508,8 @@ void cpu_core_loop_zx8081(void)
 						//IM0/1
 						if (im_mode==0 || im_mode==1) {
 							//printf ("Calling zx80/81 interrupt address 56 :%d \r",temp_veces_interrupt_zx80++);
-                                                        reg_pc=56;
-                                                        //oficial: 
+                            reg_pc=56;
+                            //oficial: 
 							t_estados += 7;
 
 							t_estados -=6;
