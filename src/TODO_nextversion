@@ -129,9 +129,6 @@ Abort trap: 6
 
 
 
--en windows no compila network con threads...
-tampoco zip.h
-y error de un pthread que esta fuera de ifdef phread
 
 -funciones zsock no permito usarlas sin pthreads. Por que?
 

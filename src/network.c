@@ -28,6 +28,12 @@
 #include <stdarg.h>
 
 
+#ifdef MINGW
+	#include <winsock2.h>
+#endif
+
+
+
 #include "cpu.h"
 #include "debug.h"
 #include "utils.h"
