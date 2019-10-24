@@ -728,8 +728,27 @@ int zsock_available_data(int socket)
 			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
 			//la conexion se queda en read colgada
 
+//-Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer?			
+#ifdef MINGW
+
+int longitud_leer=0;
+
+char buffer;
+
+int leidos=recv(socket,&buffer,longitud_leer,0);
+ if(leidos==SOCKET_ERROR){
+		return 0;
+ }
+ return 1;
+
+
+
+#else
+
+
 	if (chardevice_status(socket) & CHDEV_ST_RD_AVAIL_DATA) return 1;
 	else return 0;
+#endif
 }
 
 int zsock_wait_until_command_prompt(int indice_tabla)
