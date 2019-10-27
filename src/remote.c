@@ -5769,10 +5769,7 @@ struct sockaddr_in sockaddr_client;
 
  socklen_t long_sockaddr;
 	char *direccio_client; //Adreça IP del client en format text
-	struct hostent *nom_client; //Nom del client
-
-
-
+	
 
 	//Obtenir socket client
 	long_sockaddr=sizeof(sockaddr_client);
