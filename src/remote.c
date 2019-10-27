@@ -5760,6 +5760,51 @@ int remote_initialize_port(void)
   return 0;
 }
 
+void remote_show_client_ip(int sock_conectat)
+{
+
+//Estructura del socket client, obtinguda per saber el nom del client
+struct sockaddr_in sockaddr_client;
+
+int long_sockaddr;
+	char *direccio_client; //Adreça IP del client en format text
+	struct hostent *nom_client; //Nom del client
+	char **alies;
+	int i;
+	int trobat,index_client_trobat;
+
+
+
+	//Obtenir socket client
+	long_sockaddr=sizeof(sockaddr_client);
+	if (getpeername(sock_conectat,(struct sockaddr *)&sockaddr_client,&long_sockaddr)<0) {
+		printf ("ncdd_servidor_fill: Error al fer getpeername (%s)\n",strerror(errno));
+		return;
+	}
+
+
+
+	printf ("ncdd_servidor_fill: %x\n",sockaddr_client.sin_addr.s_addr);
+
+
+	//Obtenir direccio IP client, en format text ("A.B.C.D")
+	direccio_client=inet_ntoa(sockaddr_client.sin_addr);
+	if (direccio_client==NULL) {
+		printf ("ncdd_servidor_fill: Error al fer inet_ntoa\n");
+		return;
+	}
+
+//#ifdef DEBUG
+	printf ("ncdd_servidor_fill: IP Client: %s\n",direccio_client);
+//#endif
+
+
+
+
+
+
+}
+
 void *thread_remote_protocol_function(void *nada)
 {
         /*while (1) {
@@ -5806,6 +5851,9 @@ void *thread_remote_protocol_function(void *nada)
 				else {
 
 					debug_printf (VERBOSE_DEBUG,"Received remote command connection petition");
+					
+					//debugar direccion ip origen
+					remote_show_client_ip(sock_conectat);
 
 				          //Enviamos mensaje bienvenida
 				          //char bienvenida[1024];
