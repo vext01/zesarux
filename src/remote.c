@@ -81,6 +81,7 @@ z80_bit remote_calling_end_emulator={0};
 	#include <sys/socket.h>
 	#include <netdb.h>
 	#include <unistd.h>
+	#include <arpa/inet.h>
 #endif
 
 #include <stdarg.h>
