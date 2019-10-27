@@ -5766,7 +5766,7 @@ void remote_show_client_ip(int sock_conectat)
 //Estructura del socket client, obtinguda per saber el nom del client
 struct sockaddr_in sockaddr_client;
 
-int long_sockaddr;
+ socklen_t long_sockaddr;
 	char *direccio_client; //Adreça IP del client en format text
 	struct hostent *nom_client; //Nom del client
 	char **alies;
