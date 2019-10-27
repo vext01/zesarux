@@ -15,6 +15,9 @@
 --Fbdev debe permitir ZX Desktop?
 --sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
+-Cambio de tipo de máquina no borra ZX Desktop. Quizá falta un cls?
+Falla también sin ZX Desktop?
+
 --- FIN ZX Desktop
 
 
@@ -84,6 +87,7 @@ Ideas para background windows:
 
 -Fin Background windows
 
+-pantalla view sprites que adapte el texto leyenda al alto ventana
 
 
 -Osd keyboard sin multitarea en ZX81 no va fino

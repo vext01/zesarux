@@ -812,7 +812,7 @@ void esxdos_handler_call_f_seek(void)
 
 	long initial_offset=ftell(esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
 
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: offset was before at now at %ld",initial_offset);
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: offset was at %ld",initial_offset);
 
 /*
 F_SEEK: Seek BCDE bytes. A=handle

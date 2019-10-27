@@ -72,8 +72,7 @@ Quiza por el sprintf (pending_error_message
 
 -si la primera vez arranca con driver stdout, se abre el menu directamente, quiza porque va a mostrar tooltips o changelog
 
--Cambio de tipo de máquina no borra ZX Desktop. Quizá falta un cls?
-Falla también sin ZX Desktop?
+
 
 
 -Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
@@ -90,7 +89,7 @@ D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 -Spool file funciona en cpc?
 
--pantalla view sprites que adapte el texto leyenda al alto ventana
+
 
 -no lee enlaces simbolicos en filesystem: ejemplo /home/pi/PREPARADOS de raspiboy
 
