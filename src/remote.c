@@ -5770,9 +5770,7 @@ struct sockaddr_in sockaddr_client;
  socklen_t long_sockaddr;
 	char *direccio_client; //Adreça IP del client en format text
 	struct hostent *nom_client; //Nom del client
-	char **alies;
-	int i;
-	int trobat,index_client_trobat;
+
 
 
 
