@@ -5779,25 +5779,25 @@ struct sockaddr_in sockaddr_client;
 	//Obtenir socket client
 	long_sockaddr=sizeof(sockaddr_client);
 	if (getpeername(sock_conectat,(struct sockaddr *)&sockaddr_client,&long_sockaddr)<0) {
-		printf ("ncdd_servidor_fill: Error al fer getpeername\n");
+		debug_printf (VERBOSE_DEBUG,"ZRCP: Error getting client IP");
 		return;
 	}
 
 
 
-	printf ("ncdd_servidor_fill: %x\n",sockaddr_client.sin_addr.s_addr);
+	//debug_printf (VERBOSE_DEBUG,"ncdd_servidor_fill: %x",sockaddr_client.sin_addr.s_addr);
 
 
 	//Obtenir direccio IP client, en format text ("A.B.C.D")
 	direccio_client=inet_ntoa(sockaddr_client.sin_addr);
 	if (direccio_client==NULL) {
-		printf ("ncdd_servidor_fill: Error al fer inet_ntoa\n");
+		debug_printf (VERBOSE_DEBUG,"ZRCP: Error getting client IP string");
 		return;
 	}
 
-//#ifdef DEBUG
-	printf ("ncdd_servidor_fill: IP Client: %s\n",direccio_client);
-//#endif
+
+	debug_printf (VERBOSE_DEBUG,"ZRCP: Client IP: %s",direccio_client);
+
 
 
 

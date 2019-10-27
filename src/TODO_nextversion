@@ -198,8 +198,7 @@ Entonces:
 
 
 
-*que pregunte confirmacion en destino si quiere aceptar
-*ZRCP que haga log de la ip de origen que se conecta
+*que pregunte confirmacion en destino si quiere aceptar, mostrando la ip de origen
 *en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc
 Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZRCP_GET_PUT_SNAPSHOT_MEM
 
