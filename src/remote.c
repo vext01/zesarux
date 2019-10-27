@@ -5778,7 +5778,7 @@ int long_sockaddr;
 	//Obtenir socket client
 	long_sockaddr=sizeof(sockaddr_client);
 	if (getpeername(sock_conectat,(struct sockaddr *)&sockaddr_client,&long_sockaddr)<0) {
-		printf ("ncdd_servidor_fill: Error al fer getpeername (%s)\n",strerror(errno));
+		printf ("ncdd_servidor_fill: Error al fer getpeername\n");
 		return;
 	}
 
