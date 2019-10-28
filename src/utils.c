@@ -7945,6 +7945,57 @@ Spectrum Cassette Blocks
 //cada cuantos estados escribimos un sample de audio
 //224 significa a final de cada scanline -> 312*50=15600 hz
 #define CONVERT_PZX_TSTATES_AUDIO_SAMPLE 224
+#define CONVERT_PZX_AMPLITUD_PULSE 50
+
+void convert_pzx_to_rwa_write_one_pulse(int valor_pulso,FILE *ptr_destino)
+{
+     	z80_byte escrito;
+
+        if (valor_pulso) escrito=128+CONVERT_PZX_AMPLITUD_PULSE;
+        else escrito=128-CONVERT_PZX_AMPLITUD_PULSE;
+
+	fwrite(&escrito,1,1,ptr_destino);   
+}
+
+void convert_pzx_to_rwa_write_pulses(int *p_t_estado_actual,int duracion_pulsos,int *p_valor_pulso_inicial,FILE *ptr_destino)
+{
+       
+
+
+       //Usar los valores iniciales pasandolos a variables
+       int t_estado_actual=*p_t_estado_actual;
+       int valor_pulso_inicial=*p_valor_pulso_inicial;
+
+
+/*
+Bucle while (
+mientras contador >=224
+meter siguiente byte sample audio
+contador -=224
+)
+*/
+        t_estado_actual +=duracion_pulsos;
+
+
+        while (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE) {
+
+
+                //meter siguiente byte sample audio
+                printf ("Escribiendo pulso %d en t-estado %d\n",valor_pulso_inicial,t_estado_actual);
+                convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
+                //invertir pulso
+                valor_pulso_inicial=!valor_pulso_inicial;
+                
+
+                t_estado_actual -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+        }
+
+
+       //Retornar los valores finales
+       *p_t_estado_actual=t_estado_actual;
+       *p_valor_pulso_inicial=valor_pulso_inicial;
+
+}
 
 void convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
 {
@@ -8034,6 +8085,9 @@ stick to this scheme.
         z80_int count;
         z80_int duration;
 
+        int valor_pulso_inicial=1;
+        int t_estado_actual=0;
+
 
         while (block_size>0) {
 
@@ -8061,6 +8115,10 @@ stick to this scheme.
                 }
 
                 printf ("count: %d duration: %d\n",count,duration);
+                while (count) {
+                        convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
+                        count--;
+                }
         }
 
         
