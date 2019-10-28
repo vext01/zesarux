@@ -7969,6 +7969,8 @@ void convert_pzx_to_rwa_write_pulses(int *p_t_estado_actual,int duracion_pulsos,
        //Usar los valores iniciales pasandolos a variables
        int t_estado_actual=*p_t_estado_actual;
        int valor_pulso_inicial=*p_valor_pulso_inicial;
+       
+         t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
 
        int final_final_estado=t_estado_actual+duracion_pulsos;
 
@@ -7987,7 +7989,7 @@ contador -=224
   int meter_pulso_anterior=0;
 
 
-        t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+      
         if (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE/2) {
                 //Para no perder sample anterior
                 meter_pulso_anterior=1;
@@ -7997,7 +7999,7 @@ contador -=224
         t_estado_actual +=duracion_pulsos;
 
 
-        while (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE) {
+        while (t_estado_actual<final_final_estado) {
 
 
                 //meter siguiente byte sample audio
@@ -8011,7 +8013,7 @@ contador -=224
 
                 
 
-                t_estado_actual -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+                t_estado_actual +=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
         }
 
         /*int estado_final=t_estado_actual+duracion_pulsos;
