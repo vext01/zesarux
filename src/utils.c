@@ -8002,6 +8002,8 @@ contador -=224
 
         int estado_final=t_estado_actual+duracion_pulsos;
 
+        printf ("Inicio pulso %d final %d\n",t_estado_actual,estado_final);
+
         while (t_estado_actual<estado_final) {
                 t_estado_actual +=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
 
@@ -8108,6 +8110,8 @@ stick to this scheme.
 
         int valor_pulso_inicial=1;
         int t_estado_actual=*p_t_estado_actual;
+
+        //TODO: truncar estado a multiple 224
 
 
         while (block_size>0) {
@@ -8232,6 +8236,8 @@ offset      type             name  meaning
 
         int t_estado_actual=*p_t_estado_actual;
 
+        //TODO: truncar estado a multiple 224
+
         count=memoria[0]+
                 (memoria[1]*256)+
                 (memoria[2]*65536)+
@@ -8309,14 +8315,7 @@ offset      type             name  meaning
                                 longitud_sequence_bit=num_pulses_zero;
                         }
 
-                        /*
-                                        while (count) {
-                        printf ("count=%d\n",count);
-                        convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
-                        count--;
-                        //invertir pulso
-                        valor_pulso_inicial=!valor_pulso_inicial;
-                        */
+                       
                         int contador_seq=0; 
                         while (longitud_sequence_bit) {
                                 z80_int duration=sequence_bit[contador_seq++];
