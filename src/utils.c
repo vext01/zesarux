@@ -7971,7 +7971,7 @@ void convert_pzx_to_rwa_write_pulses(int *p_t_estado_actual,int duracion_pulsos,
        int valor_pulso_inicial=*p_valor_pulso_inicial;
 
 
-       printf ("convert_pzx_to_rwa_write_pulses: state %d length %d initial_pulse %d\n",t_estado_actual,duracion_pulsos,valor_pulso_inicial);
+       //printf ("convert_pzx_to_rwa_write_pulses: state %d length %d initial_pulse %d\n",t_estado_actual,duracion_pulsos,valor_pulso_inicial);
 
 
 /*
@@ -7988,7 +7988,7 @@ contador -=224
 
 
                 //meter siguiente byte sample audio
-                printf ("Escribiendo pulso %d en t-estado %d\n",valor_pulso_inicial,t_estado_actual);
+                //printf ("Escribiendo pulso %d en t-estado %d\n",valor_pulso_inicial,t_estado_actual);
                 convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
 
                 
@@ -8122,9 +8122,9 @@ stick to this scheme.
                         block_size -=2;
                 }
 
-                printf ("count: %d duration: %d\n",count,duration);
+                //printf ("count: %d duration: %d\n",count,duration);
                 while (count) {
-                        printf ("count=%d\n",count);
+                        //printf ("count=%d\n",count);
                         convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
                         count--;
                         //invertir pulso
@@ -8278,20 +8278,20 @@ offset      type             name  meaning
 
         z80_int *sequence_bit;
         int longitud_sequence_bit;
-        for (i=0;i<count;i++) {
+        for (i=0;i<count;i+=8) {
                 processing_byte=*memoria;
                 for (bit_number=7;bit_number>0;bit_number--) {
 
                         if (processing_byte & 128) {
                                 //Writing bit to 1
-                                printf ("Writing bit to 1\n");
+                                //printf ("Writing bit to 1\n");
                                 sequence_bit=&seq_pulses_one[0];
                                 longitud_sequence_bit=num_pulses_one;
                         }
                         else {
                                 //Writing bit to 0
-                                printf ("Writing bit to 0\n");
-                                sequence_bit=&seq_pulses_zero[1];
+                                //printf ("Writing bit to 0\n");
+                                sequence_bit=&seq_pulses_zero[0];
                                 longitud_sequence_bit=num_pulses_zero;
                         }
 
