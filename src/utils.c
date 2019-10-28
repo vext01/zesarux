@@ -7981,6 +7981,10 @@ meter siguiente byte sample audio
 contador -=224
 )
 */
+
+
+        /*
+
         t_estado_actual +=duracion_pulsos;
 
 
@@ -7994,11 +7998,20 @@ contador -=224
                 
 
                 t_estado_actual -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+        }*/
+
+        int estado_final=t_estado_actual+duracion_pulsos;
+
+        while (t_estado_actual<estado_final) {
+                t_estado_actual +=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+
+                convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
+
         }
 
 
        //Retornar los valores finales
-       *p_t_estado_actual=t_estado_actual;
+       *p_t_estado_actual=estado_final; //t_estado_actual;
        *p_valor_pulso_inicial=valor_pulso_inicial;
 
 }
@@ -8320,7 +8333,7 @@ offset      type             name  meaning
         }
 
 
-        //Generar tail. Temp *10
+        //Generar tail. Temp *1000
         convert_pzx_to_rwa_write_pulses(&t_estado_actual,tail*1000,&initial_pulse,ptr_destino); 
 
 }
