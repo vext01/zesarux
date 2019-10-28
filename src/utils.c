@@ -4269,6 +4269,7 @@ int quickload_valid_extension(char *nombre) {
                 || !util_compare_file_extension(nombre,"dsk")
                 || !util_compare_file_extension(nombre,"z80")
                 || !util_compare_file_extension(nombre,"tzx")
+                || !util_compare_file_extension(nombre,"pzx")
                 || !util_compare_file_extension(nombre,"sna")
                 || !util_compare_file_extension(nombre,"tap")
 
@@ -4513,10 +4514,11 @@ int quickload_continue(char *nombre) {
         }
 
 
-	//wav y smp suponemos real audio tape Spectrum
+	//wav, smp y pzx suponemos real audio tape Spectrum
         else if (
                    !util_compare_file_extension(nombre,"wav")
                 || !util_compare_file_extension(nombre,"smp")
+                || !util_compare_file_extension(nombre,"pzx")
 
         ) {
 		quickload_real_tape(nombre);
