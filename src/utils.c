@@ -8021,7 +8021,7 @@ void convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
         printf ("TODO PZXT\n");
 }
 
-void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino)
+void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
 {
 
 
@@ -8107,7 +8107,7 @@ stick to this scheme.
         z80_int duration;
 
         int valor_pulso_inicial=1;
-        int t_estado_actual=0;
+        int t_estado_actual=*p_t_estado_actual;
 
 
         while (block_size>0) {
@@ -8145,11 +8145,12 @@ stick to this scheme.
                 }
         }
 
+        *p_t_estado_actual=t_estado_actual;
         
 
 }
 
-void convert_pzx_to_rwa_tag_data(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino)
+void convert_pzx_to_rwa_tag_data(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
 {
         printf ("Start DATA\n");
 /*
@@ -8229,7 +8230,7 @@ offset      type             name  meaning
 
         z80_long_int count;   
 
-        int t_estado_actual=0;
+        int t_estado_actual=*p_t_estado_actual;
 
         count=memoria[0]+
                 (memoria[1]*256)+
@@ -8336,6 +8337,8 @@ offset      type             name  meaning
         //Generar tail. Temp *1000
         convert_pzx_to_rwa_write_pulses(&t_estado_actual,tail*1000,&initial_pulse,ptr_destino); 
 
+        *p_t_estado_actual=t_estado_actual;        
+
 }
 
 
@@ -8370,6 +8373,7 @@ int convert_pzx_to_rwa(char *origen, char *destino)
                 return 1;
         }
 
+        int estado_actual=0;
 
         //Ir leyendo hasta llegar al final del archivo
         z80_long_int puntero_lectura=0;
@@ -8406,11 +8410,11 @@ int convert_pzx_to_rwa(char *origen, char *destino)
                 }
 
                 else if (!strcmp(tag_name,"PULS")) {
-                      convert_pzx_to_rwa_tag_puls(&pzx_file_mem[puntero_lectura],block_size,ptr_destino);
+                      convert_pzx_to_rwa_tag_puls(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
                 }
 
                 else if (!strcmp(tag_name,"DATA")) {
-                      convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino);
+                      convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
                 }                
 
 
