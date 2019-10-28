@@ -7993,6 +7993,9 @@ contador -=224
         if (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE/2) {
                 //Para no perder sample anterior
                 meter_pulso_anterior=1;
+
+                //temp
+                meter_pulso_anterior=0;
               
         }
 
@@ -8316,7 +8319,7 @@ offset      type             name  meaning
         int longitud_sequence_bit;
         for (i=0;i<count;i+=8) {
                 processing_byte=*memoria;
-                for (bit_number=7;bit_number>0;bit_number--) {
+                for (bit_number=7;bit_number>=0;bit_number--) {
 
                         if (processing_byte & 128) {
                                 //Writing bit to 1
@@ -8349,8 +8352,8 @@ offset      type             name  meaning
         }
 
 
-        //Generar tail. Temp *1000
-        convert_pzx_to_rwa_write_pulses(&t_estado_actual,tail*1000,&initial_pulse,ptr_destino); 
+        //Generar tail. 
+        convert_pzx_to_rwa_write_pulses(&t_estado_actual,tail,&initial_pulse,ptr_destino); 
 
         *p_t_estado_actual=t_estado_actual;        
 
