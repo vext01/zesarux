@@ -8285,13 +8285,13 @@ offset      type             name  meaning
                         if (processing_byte & 128) {
                                 //Writing bit to 1
                                 printf ("Writing bit to 1\n");
-                                sequence_bit=&seq_pulses_one;
+                                sequence_bit=&seq_pulses_one[0];
                                 longitud_sequence_bit=num_pulses_one;
                         }
                         else {
                                 //Writing bit to 0
                                 printf ("Writing bit to 0\n");
-                                sequence_bit=&seq_pulses_zero;
+                                sequence_bit=&seq_pulses_zero[1];
                                 longitud_sequence_bit=num_pulses_zero;
                         }
 
@@ -8306,7 +8306,7 @@ offset      type             name  meaning
                         int contador_seq=0; 
                         while (longitud_sequence_bit) {
                                 z80_int duration=sequence_bit[contador_seq++];
-                                convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&initial_pulse,ptr_destino);
+                                convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&initial_pulse,ptr_destino); 
                                 longitud_sequence_bit--;
 
                                 //invertir pulso
