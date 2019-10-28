@@ -8213,7 +8213,7 @@ offset      type             name  meaning
 8+2*(p0+p1) u8[ceil(bits/8)] data  data stream, see below.
 */
 
-        z80_byte initial_pulse;
+        int initial_pulse;
 
         z80_long_int count;   
 
@@ -8304,7 +8304,7 @@ offset      type             name  meaning
                         //invertir pulso
                         valor_pulso_inicial=!valor_pulso_inicial;
                         */
-                        int contador_seq=0;
+                        int contador_seq=0; 
                         while (longitud_sequence_bit) {
                                 z80_int duration=sequence_bit[contador_seq++];
                                 convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&initial_pulse,ptr_destino);
