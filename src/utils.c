@@ -8362,6 +8362,55 @@ offset      type             name  meaning
 }
 
 
+void convert_pzx_to_rwa_tag_paus(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
+{
+        printf ("Start PAUS\n");
+/*
+offset type   name      meaning
+0      u32    duration  bits 0-30 duration of the pause
+                        bit 31 initial pulse level: 0 low 1 high
+
+This block may be used to produce pauses during which the pulse level is not
+particularly important. The pause consists of pulse of given duration and
+given level. However note that some emulators may choose to simulate random
+noise during this period, occasionally toggling the pulse level. In such case
+the level must not be toggled during the first 70000 T cycles and then more
+than once during each 70000 T cycles.
+
+For example, in case of ZX Spectrum program saved by standard SAVE command
+there is a low pulse of about one second (49-50 frames) between the header
+and data blocks. On the other hand, there is usually no pause between the
+blocks necessary at all, as long as the tail pulse of the preceding block was
+used properly.
+
+*/
+
+        int initial_pulse;
+
+        z80_long_int count;   
+
+        int t_estado_actual=*p_t_estado_actual;
+
+        //TODO: truncar estado a multiple 224
+
+        count=memoria[0]+
+                (memoria[1]*256)+
+                (memoria[2]*65536)+
+                ((memoria[3]&127)*16777216);
+
+        initial_pulse=(memoria[3]&128)>>7;
+
+        memoria +=4;
+
+
+        convert_pzx_to_rwa_write_pulses(&t_estado_actual,count,&initial_pulse,ptr_destino);
+
+        
+        *p_t_estado_actual=t_estado_actual;        
+
+}
+
+
 
 //Convierte archivo pzx a rwa en destino indicado
 int convert_pzx_to_rwa(char *origen, char *destino)
@@ -8435,6 +8484,10 @@ int convert_pzx_to_rwa(char *origen, char *destino)
 
                 else if (!strcmp(tag_name,"DATA")) {
                       convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
+                }                
+
+                else if (!strcmp(tag_name,"PAUS")) {
+                      convert_pzx_to_rwa_tag_paus(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
                 }                
 
 
