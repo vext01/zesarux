@@ -1,5 +1,7 @@
 --------Para próxima versión:
  
+ -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
+ ejemplo: ./zesarux --realtape tetris2.pzx
 
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?

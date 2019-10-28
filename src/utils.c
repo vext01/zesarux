@@ -8007,6 +8007,9 @@ void convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
 
 void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino)
 {
+
+        //temp 
+        return;
         printf ("Start PULS\n");
 
 /*
@@ -8133,7 +8136,139 @@ stick to this scheme.
 
 void convert_pzx_to_rwa_tag_data(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino)
 {
-        printf ("TODO DATA\n");
+        printf ("Start DATA\n");
+/*
+DATA - Data block
+-----------------
+
+offset      type             name  meaning
+0           u32              count bits 0-30 number of bits in the data stream
+                                   bit 31 initial pulse level: 0 low 1 high
+4           u16              tail  duration of extra pulse after last bit of the block
+6           u8               p0    number of pulses encoding bit equal to 0.
+7           u8               p1    number of pulses encoding bit equal to 1.
+8           u16[p0]          s0    sequence of pulse durations encoding bit equal to 0.
+8+2*p0      u16[p1]          s1    sequence of pulse durations encoding bit equal to 1.
+8+2*(p0+p1) u8[ceil(bits/8)] data  data stream, see below.
+
+This block is used to represent binary data using specified sequences of
+pulses. The data bytes are processed bit by bit, most significant bits first.
+Each bit of the data is represented by one of the sequences, s0 if its value
+is 0 and s1 if its value is 1, respectively. Each sequence consists of
+pulses of specified durations, p0 pulses for sequence s0 and p1 pulses for
+sequence s1, respectively.
+
+The initial pulse level is specified by bit 31 of the count field. For data
+saved with standard ROM routines, it should be always set to high, as
+mentioned in PULS description above. Also note that pulse of zero duration
+may be used to invert the pulse level at start and/or the end of the
+sequence. It would be also possible to use it for pulses longer than 65535 T
+cycles in the middle of the sequence, if it was ever necessary.
+
+For example, the sequences for standard ZX Spectrum bit encoding are:
+(initial pulse level is high):
+
+bit 0: 855,855
+bit 1: 1710,1710
+
+The sequences for ZX81 encoding would be (initial pulse level is high):
+
+bit 0: 530, 520, 530, 520, 530, 520, 530, 4689
+bit 1: 530, 520, 530, 520, 530, 520, 530, 520, 530, 520, 530, 520, 530, 520, 530, 520, 530, 4689
+
+The sequence for direct recording at 44100kHz would be (assuming initial pulse level is low):
+
+bit 0: 79,0
+bit 1: 0,79
+
+The sequence for direct recording resampled to match the common denominator
+of standard pulse width would be (assuming initial pulse level is low):
+
+bit 0: 855,0
+bit 1: 0,855
+
+After the very last pulse of the last bit of the data stream is output, one
+last tail pulse of specified duration is output. Non zero duration is
+usually necessary to terminate the last bit of the block properly, for
+example for data block saved with standard ROM routine the duration of the
+tail pulse is 945 T cycles and only then goes the level low again. Of course
+the specified duration may be zero as well, in which case this pulse has no
+effect on the output. This is often the case when multiple data blocks are
+used to represent continuous stream of pulses.
+*/
+
+
+/*
+offset      type             name  meaning
+0           u32              count bits 0-30 number of bits in the data stream
+                                   bit 31 initial pulse level: 0 low 1 high
+4           u16              tail  duration of extra pulse after last bit of the block
+6           u8               p0    number of pulses encoding bit equal to 0.
+7           u8               p1    number of pulses encoding bit equal to 1.
+8           u16[p0]          s0    sequence of pulse durations encoding bit equal to 0.
+8+2*p0      u16[p1]          s1    sequence of pulse durations encoding bit equal to 1.
+8+2*(p0+p1) u8[ceil(bits/8)] data  data stream, see below.
+*/
+
+        z80_byte initial_pulse;
+
+        z80_long_int count;   
+
+        count=memoria[0]+
+                (memoria[1]*256)+
+                (memoria[2]*65536)+
+                ((memoria[3]&127)*16777216);
+
+        initial_pulse=(memoria[3]&127)>>7;
+
+        memoria +=4;
+
+        z80_int tail=memoria[0]+
+                (memoria[1]*256);
+
+        memoria +=2;
+        
+        z80_byte num_pulses_zero=*memoria;
+        memoria++;
+
+        z80_byte num_pulses_one=*memoria;
+        memoria++;
+
+        //Secuencias que identifican a un cero y un uno
+        z80_int seq_pulses_zero[256];
+        z80_int seq_pulses_one[256];
+
+        //Metemos las secuencias de 0 y 1 en array
+        int i;
+        for (i=0;i<num_pulses_zero;i++) {
+               seq_pulses_zero[i]=memoria[0]+(memoria[1]*256);
+
+                memoria +=2;
+        }
+
+
+        for (i=0;i<num_pulses_one;i++) {
+               seq_pulses_one[i]=memoria[0]+(memoria[1]*256);
+
+                memoria +=2;
+        }
+        printf ("count: %d initial_pulse %d tail %d num_pulses_0 %d num_pulses_1 %d\n",
+                count,initial_pulse,tail,num_pulses_zero,num_pulses_one); 
+
+        printf ("Secuence 0: ");
+        for (i=0;i<num_pulses_zero;i++) {
+               printf ("%d ",seq_pulses_zero[i]);
+        }
+        printf ("\n");
+
+        printf ("Secuence 1: ");
+        for (i=0;i<num_pulses_one;i++) {
+               printf ("%d ",seq_pulses_one[i]);
+        }
+        printf ("\n");
+
+
+
 }
 
 
