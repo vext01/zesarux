@@ -7942,6 +7942,137 @@ Spectrum Cassette Blocks
         return 0;
 }
 
+//cada cuantos estados escribimos un sample de audio
+//224 significa a final de cada scanline -> 312*50=15600 hz
+#define CONVERT_PZX_TSTATES_AUDIO_SAMPLE 224
+
+void convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
+{
+        printf ("TODO PZXT\n");
+}
+
+void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino)
+{
+        printf ("Start PULS\n");
+
+/*
+PULS - Pulse sequence
+---------------------
+
+offset type   name      meaning
+0      u16    count     bits 0-14 optional repeat count (see bit 15), always greater than zero
+                        bit 15 repeat count present: 0 not present 1 present
+2      u16    duration1 bits 0-14 low/high (see bit 15) pulse duration bits
+                        bit 15 duration encoding: 0 duration1 1 ((duration1<<16)+duration2)
+4      u16    duration2 optional low bits of pulse duration (see bit 15 of duration1) 
+6      ...    ...       ditto repeated until the end of the block
+
+This block is used to represent arbitrary sequence of pulses. The sequence
+consists of pulses of given duration, with each pulse optionally repeated
+given number of times. The duration may be up to 0x7FFFFFFF T cycles,
+however longer durations may be achieved by concatenating the pulses by use
+of zero pulses. The repeat count may be up to 0x7FFF times, however more
+repetitions may be achieved by simply storing the same pulse again together
+with another repeat count.
+
+The optional repeat count is stored first. When present, it is stored as
+16 bit value with bit 15 set. When not present, the repeat count is considered to be 1.
+Note that the stored repeat count must be always greater than zero, so when
+decoding, a value 0x8000 is not a zero repeat count, but prefix indicating the
+presence of extended duration, see below.
+
+The pulse duration itself is stored next. When it fits within 15 bits, it is
+stored as 16 bit value as it is, with bit 15 not set. Otherwise the 15 high
+bits are stored as 16 bit value with bit 15 set, followed by 16 bit value
+containing the low 16 bits. Note that in the latter case the repeat count
+must be present unless the duration fits within 16 bits, otherwise the
+decoding implementation would treat the high bits as a repeat count.
+
+The above can be summarized with the following pseudocode for decoding:
+
+    count = 1 ;
+    duration = fetch_u16() ;
+    if ( duration > 0x8000 ) {
+        count = duration & 0x7FFF ;
+        duration = fetch_u16() ;
+    }
+    if ( duration >= 0x8000 ) {
+        duration &= 0x7FFF ;
+        duration <<= 16 ;
+        duration |= fetch_u16() ;
+    }
+
+The pulse level is low at start of the block by default. However initial
+pulse of zero duration may be easily used to make it high. Similarly, pulse
+of zero duration may be used to achieve pulses lasting longer than
+0x7FFFFFFF T cycles. Note that if the repeat count is present in case of
+zero pulse for some reason, any decoding implementation must consistently
+behave as if there was one zero pulse if the repeat count is odd and as if
+there was no such pulse at all if it is even.
+
+For example, the standard pilot tone of Spectrum header block (leader < 128)
+may be represented by following sequence:
+
+0x8000+8063,2168,667,735
+
+The standard pilot tone of Spectrum data block (leader >= 128) would be:
+
+0x8000+3223,2168,667,735
+
+For the record, the standard ROM save routines create the pilot tone in such
+a way that the level of the first sync pulse is high and the level of the
+second sync pulse is low. The bit pulses then follow, each bit starting with
+high pulse. The creators of the PZX files should use this information to
+determine if they got the polarity of their files right. Note that although
+most loaders are not polarity sensitive and would work even if the polarity
+is inverted, there are some loaders which won't, so it is better to always
+stick to this scheme.
+
+*/
+
+
+        z80_int count;
+        z80_int duration;
+
+
+        while (block_size>0) {
+
+                count = 1 ;
+
+                //duration = fetch_u16() ;
+                duration = (*memoria)|((memoria[1])<<8);
+                memoria +=2;
+                block_size -=2;
+
+                if ( duration > 0x8000 ) {
+                        count = duration & 0x7FFF ;
+                        //duration = fetch_u16() ;
+                        duration = (*memoria)|((memoria[1])<<8);
+                        memoria +=2;
+                        block_size -=2;
+                }
+                if ( duration >= 0x8000 ) {
+                        duration &= 0x7FFF ;
+                        duration <<= 16 ;
+                        //duration |= fetch_u16() ;
+                        duration |= (*memoria)|((memoria[1])<<8);
+                        memoria +=2;
+                        block_size -=2;
+                }
+
+                printf ("count: %d duration: %d\n",count,duration);
+        }
+
+        
+
+}
+
+void convert_pzx_to_rwa_tag_data(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino)
+{
+        printf ("TODO DATA\n");
+}
+
+
 
 //Convierte archivo pzx a rwa en destino indicado
 int convert_pzx_to_rwa(char *origen, char *destino)
@@ -8004,6 +8135,17 @@ int convert_pzx_to_rwa(char *origen, char *destino)
 
 
                 //Tratar cada tag
+                if (!strcmp(tag_name,"PZXT")) {
+                      convert_pzx_to_rwa_tag_pzxt(&pzx_file_mem[puntero_lectura],block_size);
+                }
+
+                else if (!strcmp(tag_name,"PULS")) {
+                      convert_pzx_to_rwa_tag_puls(&pzx_file_mem[puntero_lectura],block_size,ptr_destino);
+                }
+
+                else if (!strcmp(tag_name,"DATA")) {
+                      convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino);
+                }                
 
 
                 //Y saltar al siguiente bloque
