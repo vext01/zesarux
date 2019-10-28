@@ -8011,8 +8011,7 @@ void convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
 void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino)
 {
 
-        //temp 
-        return;
+
         printf ("Start PULS\n");
 
 /*
