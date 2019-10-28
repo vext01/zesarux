@@ -317,8 +317,6 @@ la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que s
 -En mostrar registros IR
 Decir cuál es el vector de interrupción 
 
---Formato pzx
-
 -cpuid ("zxid") según especificación de mcleod
 
 -al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, pero al subir para arriba desplaza desde scroll sin mover
