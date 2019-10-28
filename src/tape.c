@@ -80,7 +80,7 @@ int autoload_spectrum_loadpp_mode;
 //z80_bit autodetect_loaders={1};
 
 //Si hay que acelerar rutinas de cargadores
-z80_bit accelerate_loaders={1};
+z80_bit accelerate_loaders={0};
 
 int (*tape_block_open)(void);
 int (*tape_block_readlength)(void);

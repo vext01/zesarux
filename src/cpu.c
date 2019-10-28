@@ -1397,7 +1397,8 @@ printf (
 		"--fastautoload             Do the autoload process at top speed\n"
 		"--noautoselectfileopt      Do not autoselect emulation options for known snap and tape files\n"
 		"--simulaterealload         Simulate real tape loading\n"
-		"--simulaterealloadfast     Enable fast real tape loading\n"
+		"--simulaterealloadfast     Enable fast simulate real tape loading\n"
+		"--realloadfast             Fast loading of real tape\n"
 		"--smartloadpath path       Select initial smartload path\n"
 		"--addlastfile file     Add a file to the last files used\n"
 		"--quicksavepath path       Select path for quicksave & continous autosave\n" 
@@ -6563,6 +6564,11 @@ int parse_cmdline_options(void) {
                         else if (!strcmp(argv[puntero_parametro],"--simulaterealloadfast")) {
                                 tape_loading_simulate_fast.v=1;
                         }
+
+
+                        else if (!strcmp(argv[puntero_parametro],"--realloadfast")) {
+                                accelerate_loaders.v=1;
+                        }						
 
                         else if (!strcmp(argv[puntero_parametro],"--blue")) {
                                 screen_gray_mode |=1;

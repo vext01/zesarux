@@ -3564,6 +3564,10 @@ int util_write_configfile(void)
   
   if (tape_loading_simulate.v)                ADD_STRING_CONFIG,"--simulaterealload");
   if (tape_loading_simulate_fast.v)           ADD_STRING_CONFIG,"--simulaterealloadfast");
+
+  if (accelerate_loaders.v)                   ADD_STRING_CONFIG,"--realloadfast");
+		
+
   if (screen_gray_mode&1)                     ADD_STRING_CONFIG,"--blue");
   if (screen_gray_mode&2)                     ADD_STRING_CONFIG,"--green");
   if (screen_gray_mode&4)                     ADD_STRING_CONFIG,"--red");
@@ -7983,8 +7987,7 @@ contador -=224
                 //meter siguiente byte sample audio
                 printf ("Escribiendo pulso %d en t-estado %d\n",valor_pulso_inicial,t_estado_actual);
                 convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
-                //invertir pulso
-                valor_pulso_inicial=!valor_pulso_inicial;
+
                 
 
                 t_estado_actual -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
@@ -8116,8 +8119,11 @@ stick to this scheme.
 
                 printf ("count: %d duration: %d\n",count,duration);
                 while (count) {
+                        printf ("count=%d\n",count);
                         convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
                         count--;
+                        //invertir pulso
+                        valor_pulso_inicial=!valor_pulso_inicial;
                 }
         }
 
