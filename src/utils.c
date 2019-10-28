@@ -7970,6 +7970,8 @@ void convert_pzx_to_rwa_write_pulses(int *p_t_estado_actual,int duracion_pulsos,
        int t_estado_actual=*p_t_estado_actual;
        int valor_pulso_inicial=*p_valor_pulso_inicial;
 
+       int final_final_estado=t_estado_actual+duracion_pulsos;
+
 
        //printf ("convert_pzx_to_rwa_write_pulses: state %d length %d initial_pulse %d\n",t_estado_actual,duracion_pulsos,valor_pulso_inicial);
 
@@ -7983,7 +7985,7 @@ contador -=224
 */
 
 
-        /*
+        t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
 
         t_estado_actual +=duracion_pulsos;
 
@@ -7998,9 +8000,9 @@ contador -=224
                 
 
                 t_estado_actual -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
-        }*/
+        }
 
-        int estado_final=t_estado_actual+duracion_pulsos;
+        /*int estado_final=t_estado_actual+duracion_pulsos;
 
         printf ("Inicio pulso %d final %d\n",t_estado_actual,estado_final);
 
@@ -8009,11 +8011,11 @@ contador -=224
 
                 convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
 
-        }
+        }*/
 
 
        //Retornar los valores finales
-       *p_t_estado_actual=estado_final; //t_estado_actual;
+       *p_t_estado_actual=final_final_estado; //t_estado_actual;
        *p_valor_pulso_inicial=valor_pulso_inicial;
 
 }
