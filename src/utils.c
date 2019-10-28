@@ -7942,6 +7942,83 @@ Spectrum Cassette Blocks
         return 0;
 }
 
+
+//Convierte archivo pzx a rwa en destino indicado
+int convert_pzx_to_rwa(char *origen, char *destino)
+{
+ 
+
+        //Leemos archivo en memoria
+        z80_byte *pzx_file_mem;
+        long int bytes_to_load=get_file_size(origen); 
+
+        pzx_file_mem=malloc(bytes_to_load);
+        if (pzx_file_mem==NULL) cpu_panic("Can not allocate memory for loading PZX file");
+
+        FILE *ptr_origen;
+        ptr_origen=fopen(origen,"rb");
+        if (ptr_origen==NULL) {
+                debug_printf (VERBOSE_ERR,"Error reading source file");
+                return 1;
+        }
+
+        int leidos=fread(pzx_file_mem,1,bytes_to_load,ptr_origen);
+
+        fclose(ptr_origen);
+
+        FILE *ptr_destino;
+        ptr_destino=fopen(destino,"wb");
+        if (ptr_destino==NULL) {
+                debug_printf (VERBOSE_ERR,"Error creating target file: %s",destino);
+                return 1;
+        }
+
+
+        //Ir leyendo hasta llegar al final del archivo
+        z80_long_int puntero_lectura=0;
+
+        while (puntero_lectura<bytes_to_load) {
+                /*
+                Leer datos identificador de bloque
+                offset type     name   meaning
+                0      u32      tag    unique identifier for the block type.
+                4      u32      size   size of the block in bytes, excluding the tag and size fields themselves.
+                8      u8[size] data   arbitrary amount of block data.
+                */
+
+                char tag_name[5];
+                tag_name[0]=pzx_file_mem[puntero_lectura++];
+                tag_name[1]=pzx_file_mem[puntero_lectura++];
+                tag_name[2]=pzx_file_mem[puntero_lectura++];
+                tag_name[3]=pzx_file_mem[puntero_lectura++];
+                tag_name[4]=0;
+
+                z80_long_int block_size;
+                
+                block_size=pzx_file_mem[puntero_lectura++]+
+                        (pzx_file_mem[puntero_lectura++]*256)+
+                        (pzx_file_mem[puntero_lectura++]*65536)+
+                        (pzx_file_mem[puntero_lectura++]*16777216);
+
+                printf ("Block tag name: [%s] size: [%u]\n",tag_name,block_size);
+
+
+                //Tratar cada tag
+
+
+                //Y saltar al siguiente bloque
+                puntero_lectura +=block_size;
+        }
+
+
+
+        fclose(ptr_destino);
+        free(pzx_file_mem);
+
+        return 0;
+}
+
+
 int convert_any_to_wav(char *origen, char *destino)
 {
         //Primero pasar a rwa y luego a wav
@@ -7954,6 +8031,7 @@ int convert_any_to_wav(char *origen, char *destino)
 	else if (!util_compare_file_extension(origen,"smp")) result_first_convert=convert_smp_to_rwa_tmpdir(origen,rwa_temp_file);
 	else if (!util_compare_file_extension(origen,"o")) result_first_convert=convert_o_to_rwa_tmpdir(origen,rwa_temp_file);
 	else if (!util_compare_file_extension(origen,"p")) result_first_convert=convert_p_to_rwa_tmpdir(origen,rwa_temp_file);
+        else if (!util_compare_file_extension(origen,"pzx")) result_first_convert=convert_pzx_to_rwa_tmpdir(origen,rwa_temp_file);
 	else return 1;
 
          if (result_first_convert) {
@@ -8039,51 +8117,6 @@ int convert_hdf_to_raw(char *origen, char *destino)
         return 0;
 }
 
-/*
-int convert_tap_to_wav(char *origen, char *destino)
-{
-	//Primero pasar a rwa y luego a wav
-	char rwa_temp_file[PATH_MAX];
-
-	 if (convert_tap_to_rwa_tmpdir(origen,rwa_temp_file)) {
-                        return 1;
-                }
-
-                if (!si_existe_archivo(rwa_temp_file)) {
-                        //debug_printf(VERBOSE_ERR,"Error converting input file. Target file not found");
-                        return 1;
-                }
-
-	if (convert_rwa_to_wav(rwa_temp_file,destino)) {
-		return 1;
-	}
-
-
-	return 0;
-}
-
-int convert_tzx_to_wav(char *origen, char *destino)
-{
-        //Primero pasar a rwa y luego a wav
-        char rwa_temp_file[PATH_MAX];
-
-         if (convert_tzx_to_rwa_tmpdir(origen,rwa_temp_file)) {
-                        return 1;
-                }
-
-                if (!si_existe_archivo(rwa_temp_file)) {
-                        //debug_printf(VERBOSE_ERR,"Error converting input file. Target file not found");
-                        return 1;
-                }
-
-        if (convert_rwa_to_wav(rwa_temp_file,destino)) {
-                return 1;
-        }
-
-
-        return 0;
-}
-*/
 
 //Crea carpeta temporal y asigna nombre para archivo temporal rwa
 void convert_to_rwa_common_tmp(char *origen, char *destino)
@@ -8104,6 +8137,13 @@ int convert_tap_to_rwa_tmpdir(char *origen, char *destino)
 	return convert_tap_to_rwa(origen,destino);
 }
 
+//Convierte archivo pzx a rwa en carpeta temporal, generando nombre de archivo destino
+int convert_pzx_to_rwa_tmpdir(char *origen, char *destino)
+{
+	convert_to_rwa_common_tmp(origen,destino);
+
+	return convert_pzx_to_rwa(origen,destino);
+}
 
 //Convierte archivo tzx a rwa en carpeta temporal, generando nombre de archivo destino
 int convert_tzx_to_rwa_tmpdir(char *origen, char *destino)

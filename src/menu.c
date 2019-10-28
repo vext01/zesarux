@@ -17883,7 +17883,7 @@ int menu_realtape_inserted_cond(void)
 void menu_realtape_open(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[9];
+        char *filtros[10];
 
         filtros[0]="smp";
         filtros[1]="rwa";
@@ -17893,7 +17893,8 @@ void menu_realtape_open(MENU_ITEM_PARAMETERS)
         filtros[5]="o";
         filtros[6]="tap";
         filtros[7]="cdt";
-        filtros[8]=0;
+		filtros[8]="pzx";
+        filtros[9]=0;
 
 
         //guardamos directorio actual
@@ -29446,6 +29447,31 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                 }
         }
+
+        else if (!util_compare_file_extension(archivo,"pzx")) {
+                char *opciones[]={
+                        "PZX to RWA",
+			"PZX to WAV",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+                                convert_pzx_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
+                                convert_any_to_wav(fullpath,archivo_destino);
+                        break;
+
+                }
+        }		
 
 
         else if (!util_compare_file_extension(archivo,"hdf")) {

@@ -1662,6 +1662,7 @@ char realtape_wave_offset=0;
 //4= P
 //5= O
 //6= TAP
+//7= PZX
 int realtape_tipo=0;
 
 
@@ -1760,6 +1761,12 @@ void realtape_get_byte_cont(void)
                 realtape_get_byte_rwa();
                 return;
         }
+
+        if (realtape_tipo==7) {
+                //PZX
+                realtape_get_byte_rwa();
+                return;
+        }        
 
 
 }
@@ -1948,6 +1955,8 @@ void realtape_insert(void)
                 realtape_file_size=get_file_size(realtape_name_rwa);
         }
 
+    
+
         else if (!util_compare_file_extension(realtape_name,"tap")) {
                 debug_printf (VERBOSE_INFO,"Detected TAP file");
                 realtape_tipo=6;
@@ -1967,7 +1976,22 @@ void realtape_insert(void)
         }
 
 
+        else if (!util_compare_file_extension(realtape_name,"pzx")) {
+                debug_printf (VERBOSE_INFO,"Detected PZX file");
+                realtape_tipo=7;
+                if (convert_pzx_to_rwa_tmpdir(realtape_name,realtape_name_rwa)) {
+                        //debug_printf(VERBOSE_ERR,"Error converting input file");
+                        return;
+                }
 
+                if (!si_existe_archivo(realtape_name_rwa)) {
+                        debug_printf(VERBOSE_ERR,"Error converting input file. Target file not found");
+                        return;
+                }
+
+                ptr_realtape=fopen(realtape_name_rwa,"rb");
+                realtape_file_size=get_file_size(realtape_name_rwa);
+        }    
 
 
 
