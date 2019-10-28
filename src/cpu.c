@@ -6567,7 +6567,7 @@ int parse_cmdline_options(void) {
 
 
                         else if (!strcmp(argv[puntero_parametro],"--realloadfast")) {
-                                accelerate_loaders.v=1;
+							    accelerate_loaders.v=1;
                         }						
 
                         else if (!strcmp(argv[puntero_parametro],"--blue")) {
