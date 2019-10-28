@@ -7984,26 +7984,34 @@ contador -=224
 )
 */
 
+  int meter_pulso_anterior=0;
+
 
         t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
         if (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE/2) {
                 //Para no perder sample anterior
-             convert_pzx_to_rwa_write_one_pulse(!valor_pulso_inicial,ptr_destino);   
+                meter_pulso_anterior=1;
+              
         }
 
-        //t_estado_actual +=duracion_pulsos;
+        t_estado_actual +=duracion_pulsos;
 
 
-        while (duracion_pulsos>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE) {
+        while (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE) {
 
 
                 //meter siguiente byte sample audio
                 //printf ("Escribiendo pulso %d en t-estado %d\n",valor_pulso_inicial,t_estado_actual);
+                if (meter_pulso_anterior) {
+                 convert_pzx_to_rwa_write_one_pulse(!valor_pulso_inicial,ptr_destino);  
+                 meter_pulso_anterior=0;
+               
+                }
                 convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
 
                 
 
-                duracion_pulsos -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+                t_estado_actual -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
         }
 
         /*int estado_final=t_estado_actual+duracion_pulsos;
