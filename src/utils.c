@@ -7971,6 +7971,9 @@ void convert_pzx_to_rwa_write_pulses(int *p_t_estado_actual,int duracion_pulsos,
        int valor_pulso_inicial=*p_valor_pulso_inicial;
 
 
+       printf ("convert_pzx_to_rwa_write_pulses: state %d length %d initial_pulse %d\n",t_estado_actual,duracion_pulsos,valor_pulso_inicial);
+
+
 /*
 Bucle while (
 mientras contador >=224
@@ -8214,6 +8217,8 @@ offset      type             name  meaning
 
         z80_long_int count;   
 
+        int t_estado_actual=0;
+
         count=memoria[0]+
                 (memoria[1]*256)+
                 (memoria[2]*65536)+
@@ -8267,6 +8272,53 @@ offset      type             name  meaning
         }
         printf ("\n");
 
+
+        //Procesar el total de bits
+        int bit_number=7;
+        z80_byte processing_byte;
+
+        z80_int *sequence_bit;
+        int longitud_sequence_bit;
+        for (i=0;i<count;i++) {
+                processing_byte=*memoria;
+                for (bit_number=7;bit_number>0;bit_number--) {
+
+                        if (processing_byte & 128) {
+                                //Writing bit to 1
+                                printf ("Writing bit to 1\n");
+                                sequence_bit=&seq_pulses_one;
+                                longitud_sequence_bit=num_pulses_one;
+                        }
+                        else {
+                                //Writing bit to 0
+                                printf ("Writing bit to 0\n");
+                                sequence_bit=&seq_pulses_zero;
+                                longitud_sequence_bit=num_pulses_zero;
+                        }
+
+                        /*
+                                        while (count) {
+                        printf ("count=%d\n",count);
+                        convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
+                        count--;
+                        //invertir pulso
+                        valor_pulso_inicial=!valor_pulso_inicial;
+                        */
+                        int contador_seq=0;
+                        while (longitud_sequence_bit) {
+                                z80_int duration=sequence_bit[contador_seq++];
+                                convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&initial_pulse,ptr_destino);
+                                longitud_sequence_bit--;
+
+                                //invertir pulso
+                                initial_pulse=!initial_pulse;  
+                        }
+
+                        processing_byte=processing_byte<<1;
+                       
+                }
+                memoria++;
+        }
 
 
 }
