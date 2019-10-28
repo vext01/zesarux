@@ -8124,7 +8124,7 @@ stick to this scheme.
         z80_int count;
         z80_int duration;
 
-        int valor_pulso_inicial=1;
+        int valor_pulso_inicial=0;
         int t_estado_actual=*p_t_estado_actual;
 
         //TODO: truncar estado a multiple 224
@@ -8259,7 +8259,7 @@ offset      type             name  meaning
                 (memoria[2]*65536)+
                 ((memoria[3]&127)*16777216);
 
-        initial_pulse=(memoria[3]&127)>>7;
+        initial_pulse=(memoria[3]&128)>>7;
 
         memoria +=4;
 
