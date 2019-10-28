@@ -7986,11 +7986,15 @@ contador -=224
 
 
         t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+        if (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE/2) {
+                //Para no perder sample anterior
+             convert_pzx_to_rwa_write_one_pulse(!valor_pulso_inicial,ptr_destino);   
+        }
 
-        t_estado_actual +=duracion_pulsos;
+        //t_estado_actual +=duracion_pulsos;
 
 
-        while (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE) {
+        while (duracion_pulsos>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE) {
 
 
                 //meter siguiente byte sample audio
@@ -7999,7 +8003,7 @@ contador -=224
 
                 
 
-                t_estado_actual -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
+                duracion_pulsos -=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;
         }
 
         /*int estado_final=t_estado_actual+duracion_pulsos;
