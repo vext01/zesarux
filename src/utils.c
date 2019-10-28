@@ -8320,6 +8320,9 @@ offset      type             name  meaning
         }
 
 
+        //Generar tail. Temp *10
+        convert_pzx_to_rwa_write_pulses(&t_estado_actual,tail*1000,&initial_pulse,ptr_destino); 
+
 }
 
 
