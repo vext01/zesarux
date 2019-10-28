@@ -7996,7 +7996,7 @@ contador -=224
               
         }
 
-        t_estado_actual +=duracion_pulsos;
+        //t_estado_actual +=duracion_pulsos;
 
 
         while (t_estado_actual<final_final_estado) {
