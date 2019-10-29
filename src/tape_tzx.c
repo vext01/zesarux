@@ -434,7 +434,7 @@ void tape_write_tzx_header(void)
 }
 
 
-void tape_block_tzx_begin_save(void)
+void tape_block_tzx_begin_save(int longitud)
 {
 
 

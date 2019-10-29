@@ -90,7 +90,9 @@ int (*tape_block_seek)(int longitud,int direccion);
 int (*tape_out_block_open)(void);
 int (*tape_out_block_close)(void);
 int (*tape_block_save)(void *dir,int longitud);
-void (*tape_block_begin_save)(void);
+void (*tape_block_begin_save)(int longitud);
+
+int tape_out_inserted_is_pzx=0;
 
 
 //Indica si hay cintas insertadas
@@ -297,6 +299,8 @@ void tape_out_init(void)
 if (tape_out_file!=0) {
                         debug_printf (VERBOSE_INFO,"Initializing Out Tape File");
 
+                        tape_out_inserted_is_pzx=0;
+
                         //if (strstr(tape_out_file,".tap")!=NULL  || strstr(tape_out_file,".TAP")!=NULL) {
                         if (!util_compare_file_extension(tape_out_file,"tap") ) {
                                         debug_printf (VERBOSE_INFO,"Out TAP file detected");
@@ -315,11 +319,31 @@ if (tape_out_file!=0) {
                                 }
 
                         else if (!util_compare_file_extension(tape_out_file,"pzx") ) {
+
+                                       
+
+                                        
                                         debug_printf (VERBOSE_INFO,"Out PZX file detected");
                                         tape_out_block_open=tape_out_block_pzx_open;
                                         tape_out_block_close=tape_out_block_pzx_close;
                                         tape_block_save=tape_block_pzx_save;
                                         tape_block_begin_save=tape_block_pzx_begin_save;
+                                        tape_out_inserted_is_pzx=1;
+                                        
+
+                                       /*
+                                       Problema: las funciones de save están pensadas para formatos tap y tzx binarios,
+                                       en que al escribir el bloque, antes se le envian dos bytes con la longitud del bloque,
+                                       luego el flag, luego los datos y luego el checksum, usando siempre funcion tape_block_save
+                                       Esto para tzx y tap va perfecto. Para pzx no, dado que la longitud del bloque no viene
+                                       exactamente antes de los datos en sí
+                                       Ya he modificado la funcion tape_block_begin_save para permitir enviar longitud, antes del bloque 
+                                       en si
+                                       
+                                       Todo esto se corrige usando variable tape_out_inserted_is_pzx
+
+                                       
+                                       */
                                 }                                
 
                         else if (!util_compare_file_extension(tape_out_file,"o") ) {
@@ -441,7 +465,7 @@ void tap_save_ace(void)
         if (tape_out_block_open()) return;
 
         //Avisamos que vamos a escribir un bloque... en tzx se usa para meter el id correspondiente
-        tape_block_begin_save();
+        tape_block_begin_save(longitud);
 
         //Escribimos longitud (contando checksum)
 		//TAP en jupiter ace no incluye el flag, aunque la cinta real si
@@ -457,17 +481,7 @@ void tap_save_ace(void)
         }
 
 
-		/*
-        //Escribimos flag
-        if (tape_block_save(&flag, 1)!=1) {
-                debug_printf(VERBOSE_ERR,"Error writing flag");
-                //tape_out_file=0;
-                eject_tape_save();
-                //tape_save_inserted.v=0;
-                tape_out_block_close();
-                return;
-        }
-		*/
+		
 
         //Escribimos bytes
         longitud-=1;
@@ -868,11 +882,15 @@ void tap_save(void)
 
         if (tape_out_block_open()) return;
 
-	//Avisamos que vamos a escribir un bloque... en tzx se usa para meter el id correspondiente
-	tape_block_begin_save();
-
         //Escribimos longitud (contando flag+checksum)
         longitud+=2;
+
+	//Avisamos que vamos a escribir un bloque... en tzx se usa para meter el id correspondiente
+	tape_block_begin_save(longitud);        
+
+
+        //Solo hacer esto si no es un archivo tipo PZX
+        if (!tape_out_inserted_is_pzx) {
 
         if (tape_block_save(&longitud, 2)!=2) {
                 debug_printf(VERBOSE_ERR,"Error writing length");
@@ -881,6 +899,8 @@ void tap_save(void)
 		//tape_save_inserted.v=0;
 		tape_out_block_close();
                 return;
+        }
+
         }
 
 
@@ -2555,6 +2575,10 @@ void tape_write_pzx_header_ptr(FILE *ptr_archivo)
 
 void tape_write_pzx_header(void)
 {
+
+        //TODO: de momento pasamos de esto
+        return;
+
 	struct stat buf_stat;
 
               //Escribir cabecera pzx. Pero si el archivo lo reutilizamos, tendra longitud>0, y no debemos reescribir la cabecera
@@ -2616,16 +2640,75 @@ int tape_block_pzx_save(void *dir,int longitud)
 }
 
 
-void tape_block_pzx_begin_save(void)
+void tape_block_pzx_begin_save(int longitud)
 {
        
-        //Escribir cabecera pzx
+        //Escribir cabecera pzx si conviene
         tape_write_pzx_header();
 	
 
+
+
 	//Escribir id 10	
 	//pausa de 1000 ms
-	char buffer[]={0x10,232,3};
-	fwrite(buffer, 1, sizeof(buffer), ptr_mycinta_pzx_out);
+	/*char buffer[]={0x10,232,3};
+	fwrite(buffer, 1, sizeof(buffer), ptr_mycinta_pzx_out);*/
+
+        //Meter pulso tono guia
+        /*
+        offset type     name   meaning
+0      u32      tag    unique identifier for the block type.
+4      u32      size   size of the block in bytes, excluding the tag and size fields themselves.
+8      u8[size] data   arbitrary amount of block data.
+        */
+
+       /*
+       
+       PULS - Pulse sequence
+---------------------
+
+offset type   name      meaning
+0      u16    count     bits 0-14 optional repeat count (see bit 15), always greater than zero
+                        bit 15 repeat count present: 0 not present 1 present
+2      u16    duration1 bits 0-14 low/high (see bit 15) pulse duration bits
+                        bit 15 duration encoding: 0 duration1 1 ((duration1<<16)+duration2)
+4      u16    duration2 optional low bits of pulse duration (see bit 15 of duration1) 
+6      ...    ...       ditto repeated until the end of the block
+
+       
+       For example, the standard pilot tone of Spectrum header block (leader < 128)
+may be represented by following sequence:
+
+0x8000+8063,2168,667,735
+
+The standard pilot tone of Spectrum data block (leader >= 128) would be:
+
+0x8000+3223,2168,667,735
+        */
+
+       z80_byte block_buffer[256];
+       block_buffer[0]='P';
+       block_buffer[1]='U';
+       block_buffer[2]='L';
+       block_buffer[3]='S';
+
+        //longitud
+       block_buffer[4]=8;
+       block_buffer[5]=0;
+       block_buffer[6]=0;
+       block_buffer[7]=0;    
+
+        //0x8000+8063,2168,667,735 para flag 0
+        block_buffer[8]=value_16_to_8l(0x8000+8063);
+        block_buffer[9]=value_16_to_8h(0x8000+8063);
+
+        block_buffer[10]=value_16_to_8l(2168);
+        block_buffer[11]=value_16_to_8h(2168);
+
+        block_buffer[12]=value_16_to_8l(667);
+        block_buffer[13]=value_16_to_8h(667);
+
+        block_buffer[14]=value_16_to_8l(735);
+        block_buffer[15]=value_16_to_8h(735);                        
 	
 }
