@@ -7988,18 +7988,18 @@ contador -=224
 )
 */
 
-  int meter_pulso_anterior=0;
+  //int meter_pulso_anterior=0;
 
 
       
-        if (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE/2) {
+        /*if (t_estado_actual>=CONVERT_PZX_TSTATES_AUDIO_SAMPLE/2) {
                 //Para no perder sample anterior
                 meter_pulso_anterior=1;
 
                 //temp
-                meter_pulso_anterior=0;
+                //meter_pulso_anterior=0;
               
-        }
+        }*/
 
         //t_estado_actual +=duracion_pulsos;
 
@@ -8009,12 +8009,14 @@ contador -=224
 
                 //meter siguiente byte sample audio
                 //printf ("Escribiendo pulso %d en t-estado %d\n",valor_pulso_inicial,t_estado_actual);
-                if (meter_pulso_anterior) {
+                /*if (meter_pulso_anterior) {
                  convert_pzx_to_rwa_write_one_pulse(!valor_pulso_inicial,ptr_destino);  
                  meter_pulso_anterior=0;
                
-                }
-                convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
+                }*/
+                //else {
+                        convert_pzx_to_rwa_write_one_pulse(valor_pulso_inicial,ptr_destino);
+                //}
 
                 
 
@@ -8039,16 +8041,147 @@ contador -=224
 
 }
 
-void convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
+int convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
 {
-        printf ("TODO PZXT\n");
+        debug_printf (VERBOSE_DEBUG,"PZX: Start PZXT block");
+/*
+PZXT - PZX header block
+-----------------------
+
+offset type     name   meaning
+0      u8       major  major version number (currently 1).
+1      u8       minor  minor version number (currently 0).
+2      u8[?]    info   tape info, see below.
+
+This block distinguishes the PZX files from other files and may provide
+additional info about the file as well. This block must be always present as
+the first block of any PZX file.
+
+Any implementation should check the version number before processing the
+rest of the PZX file or even the rest of this block itself. Any
+implementation should accept only files whose major version it implements
+and reject anything else. However an implementation may report a warning in
+case it encounters minor greater than it implements for given major, if the
+implementor finds it convenient to do so.
+
+Note that this block also allows for simple concatenation of PZX files. Any
+implementation should thus check the version number not only in case of the
+first block, but anytime it encounters this block anywhere in the file. This
+in fact suggests that an implementation might decide not to treat the first
+block specially in any way, except checking the file starts with this block
+type, which is usually done because of file type recognition anyway.
+
+The rest of the block data may provide additional info about the tape. Note
+that an implementation is not required to process any of this information in
+any way and may as well safely ignore it.
+
+The additional information consists of sequence of strings, each terminated
+either by character 0x00 or end of the block, whichever comes first.
+This means the last string in the sequence may or may not be terminated.
+
+The first string (if there is any) in the sequence is always the title of
+the tape. The following strings (if there are any) form key and value pairs,
+each value providing particular type of information according to the key.
+In case the last value is missing, it should be treated as empty string.
+The following keys are defined (for reference, the value in brackets is the
+corresponding type byte as specified by the TZX standard):
+
+Publisher  [0x01] - Software house/publisher
+Author     [0x02] - Author(s)
+Year       [0x03] - Year of publication
+Language   [0x04] - Language
+Type       [0x05] - Game/utility type
+Price      [0x06] - Original price
+Protection [0x07] - Protection scheme/loader
+Origin     [0x08] - Origin
+Comment    [0xFF] - Comment(s)
+
+Note that some keys (like Author or Comment) may be used more than once.
+
+Any encoding implementation must use any of the key names as they are listed
+above, including the case. For any type of information not covered above, it
+should use either the generic Comment field or invent new sensible key name
+following the style used above. This allows any decoding implementation to
+classify and/or localize any of the key names it understands, and use any
+others verbatim.
+
+Overall, same rules as for use in TZX files apply, for example it is not
+necessary to specify the Language field in case all texts are in English.
+
+*/
+
+
+/*
+PZXT - PZX header block
+-----------------------
+
+offset type     name   meaning
+0      u8       major  major version number (currently 1).
+1      u8       minor  minor version number (currently 0).
+2      u8[?]    info   tape info, see below.
+*/
+
+        z80_byte pzx_version_major=memoria[0];
+        z80_byte pzx_version_minor=memoria[1];
+
+        debug_printf (VERBOSE_DEBUG,"PZX: file version: %d.%d",pzx_version_major,pzx_version_minor);
+
+/*
+ Any
+implementation should accept only files whose major version it implements
+and reject anything else. However an implementation may report a warning in
+case it encounters minor greater than it implements for given major, if the
+implementor finds it convenient to do so.
+*/
+
+        if (pzx_version_major>PZX_CURRENT_MAJOR_VERSION) {
+                debug_printf (VERBOSE_ERR,"PZX: Can not handle this PZX version");
+                return 1;
+        }
+
+
+        block_size -=2;
+        memoria +=2;
+
+        //Los strings los vamos guardando en un array de char separado. Asumimos que ninguno ocupa mas de 1024. Si es asi, esto petara...
+
+        char text_string[1024];
+        int index_string=0;
+
+        while (block_size>0) {
+                char caracter=*memoria;
+
+                if (caracter==0) {
+                        text_string[index_string++]=0;
+                        //fin de cadena
+                        debug_printf (VERBOSE_DEBUG,"PZX: info: %s",text_string);
+                        index_string=0;
+                }
+
+                else {
+                        text_string[index_string++]=util_return_valid_ascii_char(caracter);
+                }
+
+                memoria++;
+                block_size--;
+
+        }
+
+        //Final puede haber acabado con byte 0 o no. Lo metemos por si acaso
+        if (index_string!=0) {
+                text_string[index_string++]=0;
+                debug_printf (VERBOSE_DEBUG,"PZX: info: %s",text_string);
+        }
+
+        return 0;
+
 }
 
 void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
 {
 
 
-        printf ("Start PULS\n");
+        debug_printf (VERBOSE_DEBUG,"PZX: Start PULS block");
 
 /*
 PULS - Pulse sequence
@@ -8177,7 +8310,7 @@ stick to this scheme.
 
 void convert_pzx_to_rwa_tag_data(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
 {
-        printf ("Start DATA\n");
+        debug_printf (VERBOSE_DEBUG,"Start DATA block");
 /*
 DATA - Data block
 -----------------
@@ -8297,10 +8430,10 @@ offset      type             name  meaning
 
                 memoria +=2;
         }
-        printf ("count: %d initial_pulse %d tail %d num_pulses_0 %d num_pulses_1 %d\n",
-                count,initial_pulse,tail,num_pulses_zero,num_pulses_one); 
+        debug_printf (VERBOSE_DEBUG,"PZX: count: %d initial_pulse %d tail %d num_pulses_0 %d num_pulses_1 %d",
+               count,initial_pulse,tail,num_pulses_zero,num_pulses_one); 
 
-        printf ("Secuence 0: ");
+        /*printf ("Secuence 0: ");
         for (i=0;i<num_pulses_zero;i++) {
                printf ("%d ",seq_pulses_zero[i]);
         }
@@ -8310,7 +8443,7 @@ offset      type             name  meaning
         for (i=0;i<num_pulses_one;i++) {
                printf ("%d ",seq_pulses_one[i]);
         }
-        printf ("\n");
+        printf ("\n");*/
 
 
         //Procesar el total de bits
@@ -8364,7 +8497,7 @@ offset      type             name  meaning
 
 void convert_pzx_to_rwa_tag_paus(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
 {
-        printf ("Start PAUS\n");
+        debug_printf (VERBOSE_DEBUG,"PZX: Start PAUS block");
 /*
 offset type   name      meaning
 0      u32    duration  bits 0-30 duration of the pause
@@ -8427,7 +8560,7 @@ int convert_pzx_to_rwa(char *origen, char *destino)
         FILE *ptr_origen;
         ptr_origen=fopen(origen,"rb");
         if (ptr_origen==NULL) {
-                debug_printf (VERBOSE_ERR,"Error reading source file");
+                debug_printf (VERBOSE_ERR,"PZX: Error reading source file");
                 return 1;
         }
 
@@ -8438,7 +8571,7 @@ int convert_pzx_to_rwa(char *origen, char *destino)
         FILE *ptr_destino;
         ptr_destino=fopen(destino,"wb");
         if (ptr_destino==NULL) {
-                debug_printf (VERBOSE_ERR,"Error creating target file: %s",destino);
+                debug_printf (VERBOSE_ERR,"PZX: Error creating target file: %s",destino);
                 return 1;
         }
 
@@ -8465,17 +8598,27 @@ int convert_pzx_to_rwa(char *origen, char *destino)
 
                 z80_long_int block_size;
                 
-                block_size=pzx_file_mem[puntero_lectura++]+
+                /*block_size=pzx_file_mem[puntero_lectura++]+
                         (pzx_file_mem[puntero_lectura++]*256)+
                         (pzx_file_mem[puntero_lectura++]*65536)+
-                        (pzx_file_mem[puntero_lectura++]*16777216);
+                        (pzx_file_mem[puntero_lectura++]*16777216);*/
 
-                printf ("Block tag name: [%s] size: [%u]\n",tag_name,block_size);
+                block_size=pzx_file_mem[puntero_lectura]+
+                          (pzx_file_mem[puntero_lectura+1]*256)+
+                          (pzx_file_mem[puntero_lectura+2]*65536)+
+                          (pzx_file_mem[puntero_lectura+3]*16777216);   
+                puntero_lectura +=4;                     
+
+                //printf ("Block tag name: [%s] size: [%u]\n",tag_name,block_size);
 
 
                 //Tratar cada tag
                 if (!strcmp(tag_name,"PZXT")) {
-                      convert_pzx_to_rwa_tag_pzxt(&pzx_file_mem[puntero_lectura],block_size);
+                      int ret=convert_pzx_to_rwa_tag_pzxt(&pzx_file_mem[puntero_lectura],block_size);
+                      if (ret!=0) {
+                              //La version es superior a la que gestionamos. Salir
+                              return 1;
+                      }
                 }
 
                 else if (!strcmp(tag_name,"PULS")) {
@@ -8488,7 +8631,12 @@ int convert_pzx_to_rwa(char *origen, char *destino)
 
                 else if (!strcmp(tag_name,"PAUS")) {
                       convert_pzx_to_rwa_tag_paus(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
-                }                
+                }   
+
+                else {
+                        debug_printf (VERBOSE_DEBUG,"PZX: Unknown block type: %02XH %02XH %02XH %02XH. Skipping it",
+                        tag_name[0],tag_name[1],tag_name[2],tag_name[3]);
+                }             
 
 
                 //Y saltar al siguiente bloque
@@ -16299,4 +16447,12 @@ void util_get_url_no_host(char *url, char *url_no_host)
 
         *url_no_host=0;
 
+}
+
+
+//Retorna ? si caracter esta fuera de rango. Si no , retorna caracter
+char util_return_valid_ascii_char(char c)
+{
+        if (c>=32 && c<=126) return c;
+        else return '?';
 }

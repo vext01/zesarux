@@ -849,4 +849,11 @@ extern void util_get_host_url(char *url, char *host);
 extern void util_get_url_no_host(char *url, char *url_no_host);
 extern int util_url_is_https(char *url);
 
+extern char util_return_valid_ascii_char(char c);
+
+extern int convert_pzx_to_rwa_tmpdir(char *origen, char *destino);
+extern int convert_pzx_to_rwa(char *origen, char *destino);
+
+#define PZX_CURRENT_MAJOR_VERSION 1
+
 #endif
