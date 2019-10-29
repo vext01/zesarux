@@ -2714,4 +2714,94 @@ The standard pilot tone of Spectrum data block (leader >= 128) would be:
 
         //Escribir bloque PULS
         fwrite(block_buffer, 1, 16, ptr_mycinta_pzx_out);
+
+
+
+        //Preparar bloque DATA
+        /*
+        DATA - Data block
+-----------------
+
+offset      type             name  meaning
+0           u32              count bits 0-30 number of bits in the data stream
+                                   bit 31 initial pulse level: 0 low 1 high
+4           u16              tail  duration of extra pulse after last bit of the block
+6           u8               p0    number of pulses encoding bit equal to 0.
+7           u8               p1    number of pulses encoding bit equal to 1.
+8           u16[p0]          s0    sequence of pulse durations encoding bit equal to 0.
+8+2*p0      u16[p1]          s1    sequence of pulse durations encoding bit equal to 1.
+8+2*(p0+p1) u8[ceil(bits/8)] data  data stream, see below.
+        */
+
+       /*
+       For example, the sequences for standard ZX Spectrum bit encoding are:
+(initial pulse level is high):
+
+bit 0: 855,855
+bit 1: 1710,1710
+        */
+
+       //z80_byte block_buffer[256];
+       block_buffer[0]='D';
+       block_buffer[1]='A';
+       block_buffer[2]='T';
+       block_buffer[3]='A';
+
+        //longitud
+        z80_long_int longitud_bloque=longitud+16; //estos 16 son desde block_buffer[8] hasta block_buffer[23]
+       block_buffer[4]=longitud_bloque & 0xFF;
+       block_buffer[5]=(longitud_bloque>>8) & 0xFF;
+       block_buffer[6]=(longitud_bloque>>16) & 0xFF;
+       block_buffer[7]=(longitud_bloque>>24) & 0xFF;      
+
+       /*
+offset      type             name  meaning
+0           u32              count bits 0-30 number of bits in the data stream
+                                   bit 31 initial pulse level: 0 low 1 high
+4           u16              tail  duration of extra pulse after last bit of the block
+6           u8               p0    number of pulses encoding bit equal to 0.
+7           u8               p1    number of pulses encoding bit equal to 1.
+8           u16[p0]          s0    sequence of pulse durations encoding bit equal to 0.
+8+2*p0      u16[p1]          s1    sequence of pulse durations encoding bit equal to 1.
+8+2*(p0+p1) u8[ceil(bits/8)] data  data stream, see below.       
+       */ 
+
+      z80_long_int numero_bits=longitud_bloque*8;
+
+       block_buffer[8]=numero_bits & 0xFF;
+       block_buffer[9]=(numero_bits>>8) & 0xFF;
+       block_buffer[10]=(numero_bits>>16) & 0xFF;
+       block_buffer[11]=(numero_bits>>24) & 0xFF;   
+
+       z80_int tail=945;
+
+       block_buffer[12]=tail & 0xFF;
+       block_buffer[13]=(tail>>8) & 0xFF;       
+
+/*
+6           u8               p0    number of pulses encoding bit equal to 0.
+7           u8               p1    number of pulses encoding bit equal to 1.
+*/
+        block_buffer[14]=2;
+        block_buffer[15]=2;
+
+/*
+bit 0: 855,855
+bit 1: 1710,1710
+*/
+        block_buffer[16]=value_16_to_8l(855);
+        block_buffer[17]=value_16_to_8h(855);
+        block_buffer[18]=value_16_to_8l(855);
+        block_buffer[19]=value_16_to_8h(855);       
+
+        block_buffer[20]=value_16_to_8l(1710);
+        block_buffer[21]=value_16_to_8h(1710);
+        block_buffer[22]=value_16_to_8l(1710);
+        block_buffer[23]=value_16_to_8h(1710);   
+
+        //Escribir bloque DATA
+        fwrite(block_buffer, 1, 24, ptr_mycinta_pzx_out);        
+
+        //Y a partir de aqui ya vienen los datos, que los escribe desde tape_block_pzx_save     
+
 }
