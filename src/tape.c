@@ -2699,6 +2699,7 @@ The standard pilot tone of Spectrum data block (leader >= 128) would be:
        block_buffer[7]=0;    
 
         //0x8000+8063,2168,667,735 para flag 0
+        //TODO para flag 255
         block_buffer[8]=value_16_to_8l(0x8000+8063);
         block_buffer[9]=value_16_to_8h(0x8000+8063);
 
@@ -2771,7 +2772,7 @@ offset      type             name  meaning
        block_buffer[8]=numero_bits & 0xFF;
        block_buffer[9]=(numero_bits>>8) & 0xFF;
        block_buffer[10]=(numero_bits>>16) & 0xFF;
-       block_buffer[11]=(numero_bits>>24) & 0xFF;   
+       block_buffer[11]=((numero_bits>>24) & 0x7F) | 128; //estado inicial high   
 
        z80_int tail=945;
 
