@@ -314,6 +314,14 @@ if (tape_out_file!=0) {
                                         tape_block_begin_save=tape_block_tzx_begin_save;
                                 }
 
+                        else if (!util_compare_file_extension(tape_out_file,"pzx") ) {
+                                        debug_printf (VERBOSE_INFO,"Out PZX file detected");
+                                        tape_out_block_open=tape_out_block_pzx_open;
+                                        tape_out_block_close=tape_out_block_pzx_close;
+                                        tape_block_save=tape_block_pzx_save;
+                                        tape_block_begin_save=tape_block_pzx_begin_save;
+                                }                                
+
                         else if (!util_compare_file_extension(tape_out_file,"o") ) {
                                         debug_printf (VERBOSE_INFO,"Out .O file detected");
 					if (!(MACHINE_IS_ZX80)) {
@@ -2525,3 +2533,99 @@ End loader detection
    Copyright (c) 2006 Philip Kendall
 
 */
+
+
+//Para PZX save
+
+FILE *ptr_mycinta_pzx_out;
+
+void tape_write_pzx_header_ptr(FILE *ptr_archivo)
+{
+	//"ZXTape!",0x1a,version 1,subversion 20
+	//30, longitud, "Created by ZEsarUX emulator"
+	char cabecera[]={0x5a,0x58,0x54, 0x61, 0x70, 0x65, 0x21, 0x1a, 0x01, 0x14,
+	0x30,27,
+	0x43,0x72,0x65,0x61,0x74,0x65,0x64,0x20,0x62,0x79,0x20,0x5a,0x45,0x73,
+        0x61,0x72,0x55,0x58,0x20,0x65,0x6d,0x75,0x6c,0x61,0x74,0x6f,0x72
+	};
+
+	//no contamos el 0 del final
+	fwrite(cabecera, 1, sizeof(cabecera), ptr_archivo);
+}
+
+void tape_write_pzx_header(void)
+{
+	struct stat buf_stat;
+
+              //Escribir cabecera pzx. Pero si el archivo lo reutilizamos, tendra longitud>0, y no debemos reescribir la cabecera
+
+                if (stat(tape_out_file, &buf_stat)!=0) {
+			debug_printf(VERBOSE_INFO,"Unable to get status of file %s",tape_out_file);
+		}
+
+		else {
+			//Tamaño del archivo es >0
+			if (buf_stat.st_size!=0) {
+				debug_printf(VERBOSE_INFO,"PZX File already has header");
+				return;
+			}
+		}
+
+
+	debug_printf(VERBOSE_INFO,"Writing PZX header");
+
+	tape_write_pzx_header_ptr(ptr_mycinta_pzx_out);
+
+	
+}
+
+int tape_out_block_pzx_open(void)
+{
+
+        ptr_mycinta_pzx_out=fopen(tape_out_file,"ab");
+
+        if (!ptr_mycinta_pzx_out)
+        {
+                debug_printf(VERBOSE_ERR,"Unable to open output file %s",tape_out_file);
+                tape_out_file=0;
+                return 1;
+        }
+
+        return 0;
+
+}
+
+
+
+int tape_out_block_pzx_close(void)
+{
+        if (ptr_mycinta_pzx_out) fclose(ptr_mycinta_pzx_out);
+	else debug_printf (VERBOSE_ERR,"Tape uninitialized");
+        return 0;
+}
+
+
+int tape_block_pzx_save(void *dir,int longitud)
+{
+
+	if (ptr_mycinta_pzx_out) return fwrite(dir, 1, longitud, ptr_mycinta_pzx_out);
+	else {
+		debug_printf (VERBOSE_ERR,"Tape uninitialized");
+        	return -1;
+	}
+}
+
+
+void tape_block_pzx_begin_save(void)
+{
+       
+        //Escribir cabecera pzx
+        tape_write_pzx_header();
+	
+
+	//Escribir id 10	
+	//pausa de 1000 ms
+	char buffer[]={0x10,232,3};
+	fwrite(buffer, 1, sizeof(buffer), ptr_mycinta_pzx_out);
+	
+}

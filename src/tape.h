@@ -135,4 +135,11 @@ extern void draw_tape_text_top_speed(void);
 
 extern void realtape_print_footer(void);
 
+extern int tape_out_block_pzx_open(void);
+extern int tape_out_block_pzx_close(void);
+extern int tape_block_pzx_save(void *dir,int longitud);
+extern void tape_block_pzx_begin_save(void);
+
+
+
 #endif

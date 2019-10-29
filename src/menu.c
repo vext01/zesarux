@@ -17694,20 +17694,21 @@ void menu_tape_out_open(MENU_ITEM_PARAMETERS)
 
         if (MACHINE_IS_ZX8081) {
 
-		if (MACHINE_IS_ZX80) filtros[0]="o";
-		else filtros[0]="p";
+			if (MACHINE_IS_ZX80) filtros[0]="o";
+			else filtros[0]="p";
 
-		filtros[1]=0;
+			filtros[1]=0;
 
-		strcpy(mensaje_existe,"Overwrite?");
-        }
+			strcpy(mensaje_existe,"Overwrite?");
+		}
 
-        else {
-        filtros[0]="tzx";
-        filtros[1]="tap";
-        filtros[2]=0;
-		strcpy(mensaje_existe,"Append?");
-        }
+		else {
+			filtros[0]="tzx";
+			filtros[1]="tap";
+			filtros[2]="pzx";
+			filtros[3]=0;
+			strcpy(mensaje_existe,"Append?");
+		}
 
 
         if (menu_filesel("Select Output Tape",filtros,tape_out_open_file)==1) {
@@ -17751,7 +17752,7 @@ void menu_tape_out_open(MENU_ITEM_PARAMETERS)
 
         else {
                 tape_out_file=NULL;
-		tap_out_close();
+			tap_out_close();
         }
 
 
