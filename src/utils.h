@@ -855,5 +855,6 @@ extern int convert_pzx_to_rwa_tmpdir(char *origen, char *destino);
 extern int convert_pzx_to_rwa(char *origen, char *destino);
 
 #define PZX_CURRENT_MAJOR_VERSION 1
+#define PZX_CURRENT_MINOR_VERSION 0
 
 #endif
