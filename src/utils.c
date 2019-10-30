@@ -8294,6 +8294,7 @@ stick to this scheme.
                 }
 
                 //printf ("count: %d duration: %d\n",count,duration);
+                debug_printf(VERBOSE_DEBUG,"PZX: count: %d duration: %d",count,duration);
                 while (count) {
                         //printf ("count=%d\n",count);
                         convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
