@@ -16,7 +16,7 @@ https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win3
 copiar libcrypto-1_1.dll y libssl-1_1.dll en ruta de ZEsarUX exe
 Funciona ssl en windows ok!
 
-
+-puls de pzx en out acortar cuando flag no es 0. Cual es la formula real de la longitud?
 
 -vertificar roms ifrom, lista que sea valida de distribucion
 
