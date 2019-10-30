@@ -90,7 +90,7 @@ int (*tape_block_seek)(int longitud,int direccion);
 int (*tape_out_block_open)(void);
 int (*tape_out_block_close)(void);
 int (*tape_block_save)(void *dir,int longitud);
-void (*tape_block_begin_save)(int longitud);
+void (*tape_block_begin_save)(int longitud,z80_byte flag);
 
 int tape_out_inserted_is_pzx=0;
 
@@ -465,7 +465,7 @@ void tap_save_ace(void)
         if (tape_out_block_open()) return;
 
         //Avisamos que vamos a escribir un bloque... en tzx se usa para meter el id correspondiente
-        tape_block_begin_save(longitud);
+        tape_block_begin_save(longitud,0);
 
         //Escribimos longitud (contando checksum)
 		//TAP en jupiter ace no incluye el flag, aunque la cinta real si
@@ -886,7 +886,7 @@ void tap_save(void)
         longitud+=2;
 
 	//Avisamos que vamos a escribir un bloque... en tzx se usa para meter el id correspondiente
-	tape_block_begin_save(longitud);        
+	tape_block_begin_save(longitud,flag);        
 
 
         //Solo hacer esto si no es un archivo tipo PZX
@@ -2646,7 +2646,7 @@ int tape_block_pzx_save(void *dir,int longitud)
 }
 
 
-void tape_block_pzx_begin_save(int longitud)
+void tape_block_pzx_begin_save(int longitud,z80_byte flag)
 {
        
         //Escribir cabecera pzx si conviene
@@ -2704,10 +2704,27 @@ The standard pilot tone of Spectrum data block (leader >= 128) would be:
        block_buffer[6]=0;
        block_buffer[7]=0;    
 
-        //0x8000+8063,2168,667,735 para flag 0
-        //TODO para flag 255
-        block_buffer[8]=value_16_to_8l(0x8000+8063);
-        block_buffer[9]=value_16_to_8h(0x8000+8063);
+
+
+
+/*
+For example, the standard pilot tone of Spectrum header block (leader < 128)
+may be represented by following sequence:
+
+0x8000+8063,2168,667,735
+
+The standard pilot tone of Spectrum data block (leader >= 128) would be:
+
+0x8000+3223,2168,667,735
+*/
+
+       z80_int longitud_tono_guia=8063;
+
+       if (flag>=128) longitud_tono_guia=3223;
+
+
+        block_buffer[8]=value_16_to_8l(0x8000+longitud_tono_guia);
+        block_buffer[9]=value_16_to_8h(0x8000+longitud_tono_guia);
 
         block_buffer[10]=value_16_to_8l(2168);
         block_buffer[11]=value_16_to_8h(2168);
