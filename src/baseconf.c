@@ -375,14 +375,15 @@ segmento 0 pagina 0
                 //baseconf_shadow_ports |=1;
 
                 //ram
-                baseconf_memory_segments[3]=valor&7;
-                baseconf_memory_segments_type[3]=1;
+                baseconf_memory_segments[3+inc_memory_card]=valor&7;
+                baseconf_memory_segments_type[3+inc_memory_card]=1;
 
                 //rom
+                /*
                 baseconf_memory_segments[0] &=254;
                 if (valor&16) baseconf_memory_segments[0] |= 1;
                 baseconf_memory_segments_type[0]=0;       
-
+*/
 
                 puerto_32765=valor;
 
