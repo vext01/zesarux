@@ -51,11 +51,12 @@ z80_byte *baseconf_memory_paged[4];
 
 
 //Numeros de bloques de memoria asignados
-z80_byte baseconf_memory_segments[4];
+//segun si bit 4 de 7ffd se cambian 0-3 o 4-7
+z80_byte baseconf_memory_segments[8];
 
 //Tipos de bloques de memoria asignados
 //0: rom. otra cosa: ram
-z80_byte baseconf_memory_segments_type[4];
+z80_byte baseconf_memory_segments_type[8];
 
 z80_byte baseconf_last_port_77;
 
@@ -124,10 +125,12 @@ void baseconf_set_memory_pages(void)
 {
 
         int i=0;
+        int inc_memory_card=0;
+        if (puerto_32765 & 16) inc_memory_card=4;
 
         for (i=0;i<4;i++) {
-                z80_byte pagina=baseconf_memory_segments[i];
-                z80_byte pagina_es_ram=baseconf_memory_segments_type[i];
+                z80_byte pagina=baseconf_memory_segments[i+inc_memory_card];
+                z80_byte pagina_es_ram=baseconf_memory_segments_type[i+inc_memory_card];
 
                 if ((baseconf_shadow_mode_port_77&1)==0) {
                         //A8: if 0, then disable the memory manager. In each window processor is installed the last page of ROM. 0 after reset.
@@ -176,14 +179,21 @@ void baseconf_hard_reset(void)
   debug_printf(VERBOSE_DEBUG,"BaseConf Hard reset cpu");
 
   //Asignar bloques memoria
-  baseconf_memory_segments[0]=baseconf_memory_segments[1]=baseconf_memory_segments[2]=baseconf_memory_segments[3]=255;
-  baseconf_memory_segments_type[0]=baseconf_memory_segments_type[1]=baseconf_memory_segments_type[2]=baseconf_memory_segments_type[3]=0;
+  
+  int i;
+  
+  for (i=0;i<8;i++) {
+  
+  baseconf_memory_segments[i]=255;
+  baseconf_memory_segments_type[i]=0;
+  
+  }
 
  
   reset_cpu();
 
 
-	int i;
+	
 
 
        //Borrar toda memoria ram
@@ -259,6 +269,9 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 {
 
         z80_byte puerto_h=puerto>>8;
+        
+        int inc_memory_card=0;
+        if (puerto_32765 & 16) inc_memory_card=4;
 
       
 
@@ -297,6 +310,8 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
 
                       z80_byte segmento=puerto_h>>6;
+                      
+                      segmento += inc_memory_card;
                      if (es_ram==0) {
                            pagina=pagina&31;
                          if (valor&128) pagina=baseconf_change_rom_page_trdos(pagina);
@@ -344,6 +359,7 @@ segmento 0 pagina 0
 
                 z80_byte segmento=puerto_h>>6;
 
+   segmento += inc_memory_card;
 
                 if (valor&128) pagina=baseconf_change_ram_page_7ffd(pagina);
 
