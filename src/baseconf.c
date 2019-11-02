@@ -375,8 +375,12 @@ segmento 0 pagina 0
                 //baseconf_shadow_ports |=1;
 
                 //ram
+                
+                /*
                 baseconf_memory_segments[3+inc_memory_card]=valor&7;
                 baseconf_memory_segments_type[3+inc_memory_card]=1;
+                
+                */
 
                 //rom
                 /*
