@@ -126,6 +126,7 @@ typedef struct {
 	char* msg;			// message ptr for displaying outside
 
 	//DiskIF* dif;
+	Memory* mem;
 	
 	int tickCount;
 	int frmtCount;
