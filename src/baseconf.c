@@ -307,6 +307,8 @@ void evoMapMem(Computer* comp) {
 
 // in
 
+/*
+
 unsigned char evoIn1F(Computer* comp, unsigned short port) {	// !dos
 	return joyInput(comp->joy);
 }
@@ -320,6 +322,8 @@ unsigned char evoIn77(Computer* comp, unsigned short port) {	// !dos
 	if (comp->sdc->image != NULL) res |= 0x01;
 	return res;
 }
+
+*/
 
 unsigned char evoInBE(Computer* comp, unsigned short port) {
 	unsigned char res = 0xff;
