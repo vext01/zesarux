@@ -145,12 +145,7 @@ typedef struct {
 		unsigned char blVer[16];	// bootloader info
 		unsigned char bcVer[16];	// baseconf info
 	} evo;
-	struct {
-		DMAaddr src;
-		DMAaddr dst;
-		unsigned char len;
-		unsigned char num;
-	} dma;
+	
 	struct {
 		int flag;
 		unsigned short tsMapAdr;	// adr for altera mapping
@@ -216,19 +211,9 @@ typedef struct {
 		unsigned char iram[256];	// internal ram (FF80..FFFE)
 		unsigned short iomap[128];
 	} gb;
-	struct {
-		unsigned char reg00;
-		unsigned char reg01;
-		unsigned char memMode;
-		unsigned char keyrow;
-		unsigned char vicBank;	// b0,1 = b14,15 of VIC address
-		unsigned char rs232a;	// rs232 output line
-		unsigned char rs232b;
-		c64cia cia1;
-		c64cia cia2;
-	} c64;
+	
 //	int romsize;
-	CMOS cmos;
+	
 	int resbank;			// rompart active after reset
 //	int tapCount;
 } Computer;
