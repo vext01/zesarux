@@ -73,7 +73,23 @@ extern int baseconf_shadow_ports_available(void);
 
 
 
+typedef struct {
+	int type;			// type of page data
+	int num;			// 16K page number
+	void* data;			// ptr for rd/wr func
+	//extmrd rd;			// external rd (for type MEM_EXT)
+	//extmwr wr;			// external wr (for type MEM_EXT)
+} MemPage;
 
+typedef struct {
+	MemPage map[256];			// 4 x 16K | 256 x 256
+	unsigned char ramData[0x400000];	// 4M
+	unsigned char romData[0x80000];		// 512K
+	int ramSize;
+	int ramMask;
+	int romSize;
+	int romMask;
+} Memory;
 
 typedef struct {
 	unsigned brk:1;			// breakpoint
@@ -117,6 +133,8 @@ typedef struct {
 	unsigned char reg[256];		// internal registers
 	unsigned char iomap[0x10000];
 	unsigned short wdata;
+	
+	memEntry memMap[16];
 	
 	unsigned char brkRamMap[0x400000];	// ram brk/type : b0..3:brk flags, b4..7:type
 	unsigned char brkRomMap[0x80000];	// rom brk/type : b0..3:brk flags, b4..7:type
