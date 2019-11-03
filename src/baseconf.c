@@ -508,9 +508,13 @@ void evoOutBEF7(Computer* comp, unsigned short port, unsigned char val) {	// dos
 	cmsWr(comp,val);
 }
 
+/*
+
 void evoOutDEF7(Computer* comp, unsigned short port, unsigned char val) {	// dos
 	comp->cmos.adr = val;
 }
+
+*/
 
 void evoOutBFF7(Computer* comp, unsigned short port, unsigned char val) {	// !dos
 	if (comp->pEFF7 & 0x80) cmsWr(comp,val);
