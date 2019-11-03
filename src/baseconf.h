@@ -103,50 +103,7 @@ typedef struct {
 
 	char* msg;			// message ptr for displaying outside
 
-	struct HardWare *hw;
-	CPU* cpu;
-	Memory* mem;
-	Video* vid;
-
-	Keyboard* keyb;
-	Joystick* joy;
-	Mouse* mouse;
-
-	Tape* tape;
-	DiskIF* dif;
-	IDE* ide;
-
-	bitChan* beep;
-	SDCard* sdc;
-	TSound* ts;
-	GSound* gs;
-	SDrive* sdrv;
-	saaChip* saa;
-	gbSound* gbsnd;
-	nesAPU* nesapu;
-
-	xCartridge* slot;		// cartrige slot (MSX, GB, NES)
-
-#ifdef HAVEZLIB
-
-	struct {
-		unsigned start:1;
-		unsigned play:1;
-		unsigned overio:1;
-		int fTotal;
-		int fCurrent;
-		int fCount;
-		FILE* file;		// converted tmp-file
-		struct {
-			int fetches;
-			int size;
-			unsigned char data[0x10000];
-			int pos;
-		} frm;
-	} rzx;
-
-#endif
-
+	
 	int tickCount;
 	int frmtCount;
 	int nsPerTick;
