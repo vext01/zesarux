@@ -233,6 +233,9 @@ void evoReset(Computer* comp) {
 }
 
 
+typedef unsigned char(*extmrd)(unsigned short, void*);
+typedef void(*extmwr)(unsigned short, unsigned char, void*);
+
 
 void memSetBank(Memory* mem, int page, int type, int bank, int siz, extmrd rd, extmwr wr, void* data) {
 	}
