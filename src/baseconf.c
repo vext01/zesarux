@@ -252,7 +252,7 @@ void memSetBank(Memory* mem, int page, int type, int bank, int siz, extmrd rd, e
 int pagina_es_ram=1;
 
 if (type==MEM_ROM) pagina_es_ram=0;
-int i=page >> 14;
+int i=page >> 6;
 int pagina=bank;
 
 if (pagina_es_ram) {
