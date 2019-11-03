@@ -362,11 +362,14 @@ unsigned char evoInBF(Computer* comp, unsigned short port) {
 	return comp->evo.evoBF;
 }
 
+
+/*
 unsigned char evoInBDI(Computer* comp, unsigned short port) {
 	unsigned char res;
 	difIn(comp->dif, port, &res, 1);
 	return res;
 }
+*/
 
 unsigned char evoIn2F(Computer* comp, unsigned short port) {
 	return comp->evo.evo2F;
