@@ -232,6 +232,12 @@ void evoReset(Computer* comp) {
 	comp->prt2 = 0x03;
 }
 
+
+
+void memSetBank(Memory* mem, int page, int type, int bank, int siz, extmrd rd, extmwr wr, void* data) {
+	}
+
+
 /*
 
 void evoSetVideoMode(Computer* comp) {
@@ -387,6 +393,8 @@ unsigned char evoIn8F(Computer* comp, unsigned short port) {
 	return comp->evo.evo8F;
 }
 
+/*
+
 unsigned char evoInBEF7(Computer* comp, unsigned short port) {	// dos
 	return cmsRd(comp);
 }
@@ -394,6 +402,8 @@ unsigned char evoInBEF7(Computer* comp, unsigned short port) {	// dos
 unsigned char evoInBFF7(Computer* comp, unsigned short port) {	// !dos
 	return (comp->pEFF7 & 0x80) ? cmsRd(comp) : 0xff;
 }
+
+*/
 
 // out
 
@@ -448,8 +458,8 @@ void evoOut77(Computer* comp, unsigned short port, unsigned char val) {
 */
 void evoOut77d(Computer* comp, unsigned short port, unsigned char val) {
 	comp->prt2 = ((port & 0x4000) >> 7) | ((port & 0x0300) >> 3) | (val & 0x0f);	// a14.a9.a8.0.b3.b2.b1.b0
-	compSetTurbo(comp,(val & 0x08) ? 4 : ((comp->pEFF7 & 0x10) ? 1 : 2));
-	evoSetVideoMode(comp);
+	//compSetTurbo(comp,(val & 0x08) ? 4 : ((comp->pEFF7 & 0x10) ? 1 : 2));
+	//evoSetVideoMode(comp);
 	evoMapMem(comp);
 }
 
