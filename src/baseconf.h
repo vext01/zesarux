@@ -91,6 +91,12 @@ typedef struct {
 	int romMask;
 } Memory;
 
+
+typedef struct {
+	unsigned char flag;
+	unsigned char page;
+} memEntry;
+
 typedef struct {
 	unsigned brk:1;			// breakpoint
 	unsigned debug:1;		// dont' do breakpoints
