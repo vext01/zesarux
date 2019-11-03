@@ -250,6 +250,8 @@ void evoSetVideoMode(Computer* comp) {
 
 
 */
+
+/*
 unsigned char evoMRd(Computer* comp, unsigned short adr, int m1) {
 	if (m1 && (comp->dif->type == DIF_BDI)) {
 		if (comp->dos && (comp->mem->map[(adr >> 8) & 0xff].type == MEM_RAM) && (comp->prt2 & 0x40)) {
@@ -268,7 +270,7 @@ void evoMWr(Computer* comp, unsigned short adr, unsigned char val) {
 	if (comp->evo.evoBF & 4) comp->vid->font[adr & 0x7ff] = val;	// PentEvo: write font byte
 	memWr(comp->mem,adr,val);
 }
-
+*/
 void evoSetBank(Computer* comp, int bank, memEntry me) {
 	unsigned char page = me.page ^ 0xff;
 	if (me.flag & 0x80) {
