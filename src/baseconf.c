@@ -183,6 +183,16 @@ void baseconf_set_memory_pages(void)
 }
 
 
+Computer mybaseconf;
+
+void evoReset(Computer* comp) {
+	comp->dos = 1;
+	comp->prt2 = 0x03;
+}
+
+
+
+
 void baseconf_hard_reset(void)
 {
 
@@ -201,6 +211,8 @@ void baseconf_hard_reset(void)
 
  
   reset_cpu();
+  
+  evoReset(&mybaseconf);
 
 
 	
@@ -227,10 +239,7 @@ baseconf_last_port_eff7=0;
 
 
 
-void evoReset(Computer* comp) {
-	comp->dos = 1;
-	comp->prt2 = 0x03;
-}
+
 
 
 typedef unsigned char(*extmrd)(unsigned short, void*);
