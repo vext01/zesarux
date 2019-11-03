@@ -423,11 +423,14 @@ void evoOut57(Computer* comp, unsigned short port, unsigned char val) {
 	sdcWrite(comp->sdc,val);
 }
 
+/*
 void evoOut77(Computer* comp, unsigned short port, unsigned char val) {
 	comp->sdc->on = val & 1;
 	comp->sdc->cs = (val & 2) ? 1 : 0;
 }
 
+
+*/
 void evoOut77d(Computer* comp, unsigned short port, unsigned char val) {
 	comp->prt2 = ((port & 0x4000) >> 7) | ((port & 0x0300) >> 3) | (val & 0x0f);	// a14.a9.a8.0.b3.b2.b1.b0
 	compSetTurbo(comp,(val & 0x08) ? 4 : ((comp->pEFF7 & 0x10) ? 1 : 2));
