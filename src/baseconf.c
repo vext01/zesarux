@@ -707,7 +707,8 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
         if ( (puerto&0x00FF)==0xBF ) {
                baseconf_last_port_bf=valor; 
 
-               baseconf_set_memory_pages();
+               //baseconf_set_memory_pages();
+               evoOutBF(&mybaseconf,puerto,valor);
         }        
 
         //xx77H
@@ -715,13 +716,15 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                 baseconf_shadow_mode_port_77=puerto_h;
                baseconf_last_port_77=valor; 
 
-               baseconf_set_memory_pages();
+               //baseconf_set_memory_pages();
         }
 
         else if (puerto==0xEFF7) {
                 //printf ("setting port EFF7 value\n");
                 baseconf_last_port_eff7=valor;
-                baseconf_set_memory_pages();
+                //baseconf_set_memory_pages();
+                evoOutEFF7(&mybaseconf,puerto,valor);
+                
         }
 
 
