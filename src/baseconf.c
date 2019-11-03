@@ -502,6 +502,7 @@ void evoOutEFF7(Computer* comp, unsigned short port, unsigned char val) {	// !do
 	evoMapMem(comp);
 }
 
+/*
 static xPort evoPortMap[] = {
 	{0x00f7,0x00fe,2,2,2,xInFE,	xOutFE},	// A3 = border bright
 //	{0x00ff,0x00fb,2,2,2,NULL,	evoOutFB},	// covox
@@ -535,6 +536,8 @@ static xPort evoPortMap[] = {
 
 	{0x0000,0x0000,2,2,2,NULL,	NULL}
 };
+
+*/
 
 void evoOut(Computer* comp, unsigned short port, unsigned char val, int dos) {
 	if (comp->evo.evoBF & 0x01) dos = 1;	// force open ports
