@@ -733,7 +733,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                  baseconf_memory_segments_type[segmento]=es_ram;
                  
                  
-                evoOutF7(mybaseconf,puerto,valor);
+                evoOutF7(&mybaseconf,puerto,valor);
 
 
                baseconf_set_memory_pages();
@@ -777,7 +777,7 @@ segmento 0 pagina 0
                 baseconf_memory_segments_type[segmento]=es_ram;      
 
 
-     evoOutF7(mybaseconf,puerto,valor);
+     evoOutF7(&mybaseconf,puerto,valor);
 
                baseconf_set_memory_pages();
         }        
