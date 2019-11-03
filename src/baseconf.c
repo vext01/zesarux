@@ -142,7 +142,7 @@ void baseconf_set_memory_pages(void)
                 //TODO: esto es mas complejo...
                 //en modo pentagon1024 por ejenplo entran mas bits de puerto 32765
                 
-                if (i==3) {
+                if (i==3 && pagina_es_ram) {
                   pagina &= (255-7);
                   pagina |= (puerto_32765 & 7);
                 }
