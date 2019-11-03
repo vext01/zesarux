@@ -517,9 +517,13 @@ void evoOut7FFD(Computer* comp, unsigned short port, unsigned char val) {
 	evoMapMem(comp);
 }
 
+/*
+
 void evoOutBEF7(Computer* comp, unsigned short port, unsigned char val) {	// dos
 	cmsWr(comp,val);
 }
+
+*/
 
 /*
 
@@ -529,10 +533,14 @@ void evoOutDEF7(Computer* comp, unsigned short port, unsigned char val) {	// dos
 
 */
 
+/*
+
 void evoOutBFF7(Computer* comp, unsigned short port, unsigned char val) {	// !dos
 	if (comp->pEFF7 & 0x80) cmsWr(comp,val);
 }
 
+
+*/
 
 /*
 void evoOutDFF7(Computer* comp, unsigned short port, unsigned char val) {	// !dos
@@ -542,8 +550,8 @@ void evoOutDFF7(Computer* comp, unsigned short port, unsigned char val) {	// !do
 
 void evoOutEFF7(Computer* comp, unsigned short port, unsigned char val) {	// !dos
 	comp->pEFF7 = val;
-	compSetTurbo(comp,(comp->prt2 & 0x08) ? 4 : (val & 0x08) ? 2 : 1);
-	evoSetVideoMode(comp);
+	//compSetTurbo(comp,(comp->prt2 & 0x08) ? 4 : (val & 0x08) ? 2 : 1);
+	//evoSetVideoMode(comp);
 	evoMapMem(comp);
 }
 
