@@ -247,6 +247,26 @@ typedef void(*extmwr)(unsigned short, unsigned char, void*);
 
 
 void memSetBank(Memory* mem, int page, int type, int bank, int siz, extmrd rd, extmwr wr, void* data) {
+
+
+int pagina_es_ram=1;
+
+if (type==MEM_ROM) pagina_es_ram=0;
+int i=page >> 14;
+int pagina=bank;
+
+if (pagina_es_ram) {
+                        baseconf_memory_paged[i]=baseconf_ram_mem_table[pagina];
+                        debug_paginas_memoria_mapeadas[i]=pagina;
+                }
+                else {
+                        pagina=pagina & 31;
+                        baseconf_memory_paged[i]=baseconf_rom_mem_table[pagina];
+                        debug_paginas_memoria_mapeadas[i]=DEBUG_PAGINA_MAP_ES_ROM+pagina;
+                }
+
+
+
 	}
 
 
@@ -736,7 +756,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                 evoOutF7(&mybaseconf,puerto,valor);
 
 
-               baseconf_set_memory_pages();
+               //baseconf_set_memory_pages();
         }
         /*Out port baseconf port FFF7H value 40H. PC=03AAH
 segmento 0 pagina 24
@@ -779,7 +799,7 @@ segmento 0 pagina 0
 
      evoOutF7(&mybaseconf,puerto,valor);
 
-               baseconf_set_memory_pages();
+               //baseconf_set_memory_pages();
         }        
 
         else if (puerto==0x7ffd) {
@@ -805,7 +825,7 @@ segmento 0 pagina 0
                 
                 evoOut7FFD(&mybaseconf,puerto,valor);
 
-                baseconf_set_memory_pages();
+                //baseconf_set_memory_pages();
 
                 //printf ("mapping segun puerto 32765\n");
         }
