@@ -232,6 +232,8 @@ void evoReset(Computer* comp) {
 	comp->prt2 = 0x03;
 }
 
+/*
+
 void evoSetVideoMode(Computer* comp) {
 	int mode = (comp->pEFF7 & 0x20) | ((comp->pEFF7 & 0x01) << 1) | (comp->prt2 & 0x07);	// z5.z0.0.b2.b1.b0	b:FF77, z:eff7
 	switch (mode) {
@@ -246,6 +248,8 @@ void evoSetVideoMode(Computer* comp) {
 	}
 }
 
+
+*/
 unsigned char evoMRd(Computer* comp, unsigned short adr, int m1) {
 	if (m1 && (comp->dif->type == DIF_BDI)) {
 		if (comp->dos && (comp->mem->map[(adr >> 8) & 0xff].type == MEM_RAM) && (comp->prt2 & 0x40)) {
