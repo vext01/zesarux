@@ -257,6 +257,9 @@ int pagina=bank;
 
 printf ("mapeando pagina %d en %d tipo %d\n",pagina,i,type);
 
+
+baseconf_memory_segments_type[i]=es_ram;
+
 if (pagina_es_ram) {
                         baseconf_memory_paged[i]=baseconf_ram_mem_table[pagina];
                         debug_paginas_memoria_mapeadas[i]=pagina;
