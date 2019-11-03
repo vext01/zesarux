@@ -432,9 +432,11 @@ void evoOut8F(Computer* comp, unsigned short port, unsigned char val) {
 	comp->evo.evo8F = val;
 }
 
+/*
 void evoOut57(Computer* comp, unsigned short port, unsigned char val) {
 	sdcWrite(comp->sdc,val);
 }
+*/
 
 /*
 void evoOut77(Computer* comp, unsigned short port, unsigned char val) {
@@ -463,12 +465,17 @@ void evoOutF7(Computer* comp, unsigned short port, unsigned char val) {
 	evoMapMem(comp);
 }
 
+/*
+
 void evoOutBDI(Computer* comp, unsigned short port, unsigned char val) {		// dos
 	difOut(comp->dif, port, val, 1);
 }
+*/
 
 static const unsigned char atm3clev[16] = {0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
 
+
+/*
 void evoOutFF(Computer* comp, unsigned short port, unsigned char val) {		// dos
 	difOut(comp->dif, 0xff, val, 1);
 	if (comp->prt2 & 0x80) return;
@@ -486,6 +493,8 @@ void evoOutFF(Computer* comp, unsigned short port, unsigned char val) {		// dos
 	comp->vid->pal[adr].g = ((val & 0x10) ? 0xaa : 0x00) + ((val & 0x80) ? 0x55 : 0x00);
 #endif
 }
+
+*/
 
 void evoOut7FFD(Computer* comp, unsigned short port, unsigned char val) {
 	if ((comp->pEFF7 & 4) && (comp->p7FFD & 0x20)) return;
