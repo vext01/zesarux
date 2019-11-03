@@ -797,6 +797,8 @@ segmento 0 pagina 0
 */
 
                 puerto_32765=valor;
+                
+                evoOut7FFD(&mybaseconf,puerto,valor);
 
                 baseconf_set_memory_pages();
 
