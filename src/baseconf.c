@@ -137,6 +137,16 @@ void baseconf_set_memory_pages(void)
                         pagina=255;
                         pagina_es_ram=0;
                 }
+                
+                else {
+                //TODO: esto es mas complejo...
+                //en modo pentagon1024 por ejenplo entran mas bits de puerto 32765
+                
+                if (i==3) {
+                  pagina &= (255-7);
+                  pagina |= (puerto_32765 & 7);
+                }
+                }
 
                 if (baseconf_last_port_eff7&8) {
                         /* 3: When placing a 1 in box # 0000 .. # 3FFF forces the zero page RAM. 
