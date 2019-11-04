@@ -721,7 +721,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                 baseconf_shadow_mode_port_77=puerto_h;
                baseconf_last_port_77=valor; 
                
-               evoOut77d(&mybaseconf,puerto,valor);
+               evoOut77(&mybaseconf,puerto,valor);
 
                //baseconf_set_memory_pages();
         }
