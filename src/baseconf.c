@@ -721,7 +721,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
         }        
 
         //xx77H
-        else if ( (puerto&0x00FF)==0x77 && baseconf_shadow_ports_available() ) {
+        else if ( (puerto&0x00FF)==0x77 /*&& baseconf_shadow_ports_available() */) {
                 baseconf_shadow_mode_port_77=puerto_h;
                baseconf_last_port_77=valor; 
                
