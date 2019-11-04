@@ -2131,15 +2131,14 @@ void poke_byte_no_time_baseconf(z80_int dir,z80_byte valor)
 		puntero=baseconf_return_segment_memory(dir);
 
 
-		if (dir<16384) {
-	//desactivado de momento escritura en rom
-	return;
+		//if (dir<16384) {
+	//return;
 
 			if (baseconf_memory_segments_type[dir/16384]==0) {
 				//0 rom
 				return;
 			}
-		}
+		//}
 
 		dir = dir & 16383;
 		puntero=puntero+dir;
