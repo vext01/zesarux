@@ -8260,12 +8260,11 @@ stick to this scheme.
 
 
         z80_int count;
-        z80_int duration;
+        int duration;
 
         int valor_pulso_inicial=0;
         int t_estado_actual=*p_t_estado_actual;
 
-        //TODO: truncar estado a multiple 224
 
 
         while (block_size>0) {
@@ -8301,6 +8300,10 @@ stick to this scheme.
                         count--;
                         //invertir pulso
                         valor_pulso_inicial=!valor_pulso_inicial;
+
+                        //Truncar estados a multiple de scanline
+                        t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;       
+
                 }
         }
 
@@ -8309,7 +8312,7 @@ stick to this scheme.
 
 }
 
-void convert_pzx_to_rwa_tag_data(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
+void convert_pzx_to_rwa_tag_data(z80_byte *memoria,z80_long_int block_size GCC_UNUSED,FILE *ptr_destino,int *p_t_estado_actual)
 {
         debug_printf (VERBOSE_DEBUG,"Start DATA block");
 /*
@@ -8391,7 +8394,6 @@ offset      type             name  meaning
 
         int t_estado_actual=*p_t_estado_actual;
 
-        //TODO: truncar estado a multiple 224
 
         count=memoria[0]+
                 (memoria[1]*256)+
@@ -8453,7 +8455,11 @@ offset      type             name  meaning
 
         z80_int *sequence_bit;
         int longitud_sequence_bit;
-        for (i=0;i<count;i+=8) {
+
+        z80_long_int total_bits_read;                   
+
+        for (total_bits_read=0;total_bits_read<count;total_bits_read+=8) {
+        //for (i=0;i<count;i+=8) {
                 processing_byte=*memoria;
                 for (bit_number=7;bit_number>=0;bit_number--) {
 
@@ -8485,6 +8491,10 @@ offset      type             name  meaning
                        
                 }
                 memoria++;
+
+                //Truncar estados a multiple de scanline
+                t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;       
+
         }
 
 
@@ -8496,7 +8506,7 @@ offset      type             name  meaning
 }
 
 
-void convert_pzx_to_rwa_tag_paus(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
+void convert_pzx_to_rwa_tag_paus(z80_byte *memoria,z80_long_int block_size GCC_UNUSED,FILE *ptr_destino,int *p_t_estado_actual)
 {
         debug_printf (VERBOSE_DEBUG,"PZX: Start PAUS block");
 /*
@@ -8525,7 +8535,6 @@ used properly.
 
         int t_estado_actual=*p_t_estado_actual;
 
-        //TODO: truncar estado a multiple 224
 
         count=memoria[0]+
                 (memoria[1]*256)+
@@ -8565,7 +8574,8 @@ int convert_pzx_to_rwa(char *origen, char *destino)
                 return 1;
         }
 
-        int leidos=fread(pzx_file_mem,1,bytes_to_load,ptr_origen);
+        //int leidos=fread(pzx_file_mem,1,bytes_to_load,ptr_origen);
+        fread(pzx_file_mem,1,bytes_to_load,ptr_origen);
 
         fclose(ptr_origen);
 
@@ -8642,6 +8652,9 @@ int convert_pzx_to_rwa(char *origen, char *destino)
 
                 //Y saltar al siguiente bloque
                 puntero_lectura +=block_size;
+
+                //Truncar estados a multiple de scanline
+                estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;                
         }
 
 
