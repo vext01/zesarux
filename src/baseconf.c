@@ -188,6 +188,10 @@ Computer mybaseconf;
 void evoReset(Computer* comp) {
 	comp->dos = 1;
 	comp->prt2 = 0x03;
+	
+	//no se por que queremos mapear trdos en reset
+	
+	comp->dos = 0;
 }
 
 
