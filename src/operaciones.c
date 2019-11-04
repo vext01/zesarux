@@ -2132,6 +2132,8 @@ void poke_byte_no_time_baseconf(z80_int dir,z80_byte valor)
 
 
 		if (dir<16384) {
+	//desactivado de momento escritura en rom
+	return;
 
 			if (baseconf_memory_segments_type[dir/16384]==0) {
 				//0 rom
