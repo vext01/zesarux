@@ -19,6 +19,34 @@
 
 */
 
+/*
+
+Note for curious: I'm testing MMU from XSpeccy emulator
+https://github.com/samstyle/Xpeccy
+If I manage to get it working, I will add the needed License files to the emulator
+Meanwhile, here is the XSpeccy License:
+
+Copyright (c) 2009-..., SAM style
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -250,7 +278,7 @@ typedef unsigned char(*extmrd)(unsigned short, void*);
 typedef void(*extmwr)(unsigned short, unsigned char, void*);
 
 
-void memSetBank(Memory* mem, int page, int type, int bank, int siz, extmrd rd, extmwr wr, void* data) {
+void memSetBank(Memory* mem GCC_UNUSED, int page, int type, int bank, int siz, extmrd rd, extmwr wr, void* data) {
 
 
 int pagina_es_ram=1;
@@ -259,7 +287,7 @@ if (type==MEM_ROM) pagina_es_ram=0;
 int i=page >> 6;
 int pagina=bank;
 
-printf ("mapeando pagina %d en %d tipo %d\n",pagina,i,type);
+printf ("mapeando pagina %d en %d tipo %d pc=%04XH\n",pagina,i,type,reg_pc);
 
 
 baseconf_memory_segments_type[i]=pagina_es_ram;
@@ -298,10 +326,12 @@ void evoSetVideoMode(Computer* comp) {
 
 */
 
-/*
-unsigned char evoMRd(Computer* comp, unsigned short adr, int m1) {
-	if (m1 && (comp->dif->type == DIF_BDI)) {
-		if (comp->dos && (comp->mem->map[(adr >> 8) & 0xff].type == MEM_RAM) && (comp->prt2 & 0x40)) {
+
+void evoMRd(Computer* comp, unsigned short adr, int m1) {
+	//if (m1 && (comp->dif->type == DIF_BDI)) {
+	if (1) {	
+		//if (comp->dos && (comp->mem->map[(adr >> 8) & 0xff].type == MEM_RAM) && (comp->prt2 & 0x40)) {
+		if (comp->dos && (  baseconf_memory_segments_type[adr/16384]) && (comp->prt2 & 0x40)) {
 			comp->dos = 0;
 			if (comp->rom) comp->hw->mapMem(comp);
 		}
@@ -310,14 +340,21 @@ unsigned char evoMRd(Computer* comp, unsigned short adr, int m1) {
 			comp->hw->mapMem(comp);
 		}
 	}
-	return memRd(comp->mem,adr);
+	//return memRd(comp->mem,adr);
+}
+
+void lee_byte_evo_aux(z80_int direccion)
+{
+	evoMRd(&mybaseconf,direccion,1);
 }
 
 void evoMWr(Computer* comp, unsigned short adr, unsigned char val) {
-	if (comp->evo.evoBF & 4) comp->vid->font[adr & 0x7ff] = val;	// PentEvo: write font byte
-	memWr(comp->mem,adr,val);
+	//if (comp->evo.evoBF & 4) comp->vid->font[adr & 0x7ff] = val;	// PentEvo: write font byte
+	//memWr(comp->mem,adr,val);
 }
-*/
+
+
+
 void evoSetBank(Computer* comp, int bank, memEntry me) {
 	unsigned char page = me.page ^ 0xff;
 	if (me.flag & 0x80) {
@@ -348,8 +385,12 @@ void evoMapMem(Computer* comp) {
 		memSetBank(comp->mem,0x80,MEM_ROM,0xff, MEM_16K, NULL, NULL, NULL);
 		memSetBank(comp->mem,0xc0,MEM_ROM,0xff, MEM_16K, NULL, NULL, NULL);
 	}
-	if (comp->pEFF7 & 8)				// b3.EFF7: ram0 @ 0x0000 : high priority
+	if (comp->pEFF7 & 8)	{
+		printf ("mapping ram 0 to 0\n");
+					// b3.EFF7: ram0 @ 0x0000 : high priority
+
 		memSetBank(comp->mem,0x00,MEM_RAM,0x00, MEM_16K, NULL, NULL, NULL);
+	}
 }
 
 // in
@@ -613,14 +654,20 @@ static xPort evoPortMap[] = {
 	{0x00ff,0x006f,1,2,2,evoIn6F,	evoOut6F},
 	{0x00ff,0x008f,1,2,2,evoIn8F,	evoOut8F},
 	{0x00ff,0x0057,1,2,2,NULL,	evoOut77},	// 55,77 : spi. 55 dos = 77 !dos
+
+
 	{0x00ff,0x0077,1,2,2,NULL,	evoOut77d},
+
+
 	{0xffff,0xbef7,1,2,2,evoInBEF7,	evoOutBEF7},	// nvram
 	{0xffff,0xdef7,1,2,2,NULL,	evoOutDEF7},
 	{0x07ff,0x07f7,1,2,2,NULL,	evoOutF7},	// x7f7
 	// !dos only
 	{0x00ff,0x001f,0,2,2,evoIn1F,	NULL},		// k-joy
 	{0x00ff,0x0057,0,2,2,evoIn57,	evoOut57},	// 57,77 : spi
+
 	{0x00ff,0x0077,0,2,2,evoIn77,	evoOut77},
+
 	{0xffff,0xbff7,0,2,2,evoInBFF7,	evoOutBFF7},	// nvram
 	{0xffff,0xdff7,0,2,2,NULL,	evoOutDFF7},
 	{0xffff,0xeff7,0,2,2,NULL,	evoOutEFF7},
@@ -725,13 +772,13 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                 baseconf_shadow_mode_port_77=puerto_h;
                baseconf_last_port_77=valor; 
                
-               evoOut77d(&mybaseconf,puerto,valor);
-//TODO que diferencia hay con evoOut77?
+			   if (mybaseconf.dos) evoOut77d(&mybaseconf,puerto,valor);
+			   else evoOut77(&mybaseconf,puerto,valor);
                //baseconf_set_memory_pages();
         }
 
         else if (puerto==0xEFF7) {
-                //printf ("setting port EFF7 value\n");
+                printf ("setting port EFF7 value\n");
                 baseconf_last_port_eff7=valor;
                 //baseconf_set_memory_pages();
                 evoOutEFF7(&mybaseconf,puerto,valor);

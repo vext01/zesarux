@@ -70,10 +70,20 @@ extern int baseconf_sd_enabled;
 extern int baseconf_sd_cs;
 
 extern int baseconf_shadow_ports_available(void);
-
+extern z80_byte baseconf_last_port_bf;
+extern void lee_byte_evo_aux(z80_int direccion);
 
 
 #define MEM_SMALL_PAGES 0
+
+
+enum {
+        DIF_NONE = 0,
+        DIF_BDI,
+        DIF_P3DOS,
+        DIF_SMK512,
+        DIF_END = -1
+};
 
 // mempage type
 enum {
@@ -128,6 +138,10 @@ typedef struct {
 	unsigned char page;
 } memEntry;
 
+
+
+
+
 typedef struct {
 	unsigned brk:1;			// breakpoint
 	unsigned debug:1;		// dont' do breakpoints
@@ -158,6 +172,8 @@ typedef struct {
 
 	//DiskIF* dif;
 	Memory* mem;
+
+	struct HardWare *hw;
 	
 	int tickCount;
 	int frmtCount;
@@ -277,7 +293,44 @@ typedef struct {
 
 
 
+// reset
+typedef void(*cbHwRes)(Computer*);
+// map memory
+typedef void(*cbHwMap)(Computer*);
+// sync: calls after every CPU command
+typedef void(*cbHwSnc)(Computer*, int);
+// memory read
+typedef unsigned char(*cbHwMrd)(Computer*, unsigned short, int);
+// memory write
+typedef void(*cbHwMwr)(Computer*, unsigned short, unsigned char);
+// io read; TODO:remove last argument (bdi activity)
+typedef unsigned char(*cbHwIrd)(Computer*, unsigned short, int);
+// io write
+typedef void(*cbHwIwr)(Computer*, unsigned short, unsigned char, int);
+// key press/release
+//typedef void(*cbHwKey)(Computer*, keyEntry);
+// get volume
+//typedef sndPair(*cbHwVol)(Computer*, sndVolume*);
 
 
+
+struct HardWare {
+        int id;                 // id
+        int grp;
+        const char* name;       // name used for conf file
+        const char* optName;    // name used for setup window
+        int base;
+        int mask;               // mem size bits (see memory.h)
+        cbHwMap mapMem;
+        cbHwIwr out;            // io wr
+        cbHwIrd in;             // io rd
+        cbHwMrd mrd;            // mem rd
+        cbHwMwr mwr;            // mem wr
+        cbHwRes reset;          // reset
+        cbHwSnc sync;           // sync time
+        //cbHwKey keyp;           // key press
+        //cbHwKey keyr;           // key release
+        //cbHwVol vol;            // read volume
+};
 
 #endif

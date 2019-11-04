@@ -2168,6 +2168,9 @@ int segmento;
 
 z80_byte peek_byte_no_time_baseconf(z80_int dir)
 {
+
+	lee_byte_evo_aux(dir);
+
 	#ifdef EMULATE_VISUALMEM
 		set_visualmemreadbuffer(dir);
 	#endif
@@ -6250,28 +6253,35 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 	}
 
 	if (MACHINE_IS_BASECONF) {
-		//printf ("Baseconf reading port %04XH\n",puerto);
+		//printf ("Baseconf reading port %04XH on pc=%04XH\n",puerto,reg_pc);
 
 		//Puertos nvram. TODO gestion puertos shadow
-		if (puerto==0xeff7 && !baseconf_shadow_ports_available() ) return puerto_eff7;
+		if (puerto==0xeff7 /*&& !baseconf_shadow_ports_available()*/ ) return puerto_eff7;
 
-		if (puerto==0xdff7 && !baseconf_shadow_ports_available() ) return zxevo_last_port_dff7;
-		if (puerto==0xdef7 && baseconf_shadow_ports_available() ) return zxevo_last_port_dff7;
+		if (puerto==0xdff7 /*&& !baseconf_shadow_ports_available()*/ ) return zxevo_last_port_dff7;
+		if (puerto==0xdef7 /*&& baseconf_shadow_ports_available()*/ ) return zxevo_last_port_dff7;
 
-		if (puerto==0xbff7 && !baseconf_shadow_ports_available() ) {
+		if (puerto==0xbff7 /*&& !baseconf_shadow_ports_available()*/ ) {
 			//printf ("baseconf reading nvram register %02XH\n",zxevo_last_port_dff7);
+			//return zxevo_nvram[zxevo_last_port_dff7];
+
+
+			return (puerto_eff7 & 0x80) ? zxevo_nvram[zxevo_last_port_dff7] : 0xff;
+		}
+
+        if ( (puerto&0x00FF)==0xBF ) {
+               return baseconf_last_port_bf;
+        }        
+
+
+
+		if (puerto==0xbef7 /*&& baseconf_shadow_ports_available()*/ ) {
+			//printf ("baseconf reading nvram register %02XH\n",zxevo_last_port_dff7);
+
 			return zxevo_nvram[zxevo_last_port_dff7];
 		}
-		if (puerto==0xbef7 && baseconf_shadow_ports_available() ) {
-			//printf ("baseconf reading nvram register %02XH\n",zxevo_last_port_dff7);
 
-			//prueba chorra
-			/*if (zxevo_last_port_dff7==0xef) {
-				printf ("retornando 3\n");
-				return 3;
-			}*/
-			return zxevo_nvram[zxevo_last_port_dff7];
-		}
+		printf ("Baseconf reading unhandled port %04XH on pc=%04XH\n",puerto,reg_pc);
 
 	}
 
