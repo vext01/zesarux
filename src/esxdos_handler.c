@@ -832,7 +832,10 @@ On return BCDE=current file pointer. FIXME-Should return bytes actually seeked
 
 	z80_byte f_seek_mode;
 
-	f_seek_mode=(z80_byte) *registro_parametros_hl_ix;
+	//f_seek_mode=(z80_byte) *registro_parametros_hl_ix;
+
+	//Mas elegante asi:
+	f_seek_mode=(z80_byte) ((*registro_parametros_hl_ix) & 0xff);
 
 	switch (f_seek_mode) {
 		case 0:
@@ -1949,7 +1952,11 @@ void esxdos_handler_begin_handling_commands(void)
 		break;
 
 		case ESXDOS_RST8_F_SEEK:
-			f_seek_mode=(z80_byte) *registro_parametros_hl_ix;
+			//f_seek_mode=(z80_byte) *registro_parametros_hl_ix;
+
+			//Mas elegante asi:
+			f_seek_mode=(z80_byte) ((*registro_parametros_hl_ix) & 0xff);
+
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_SEEK. Move %04X%04XH bytes mode %d from file handle %d",reg_bc,reg_de,f_seek_mode,reg_a);
 			esxdos_handler_call_f_seek();
 			esxdos_handler_new_return_call();

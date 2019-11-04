@@ -21,8 +21,9 @@
 
 /*
 
-Note for curious: I'm testing MMU from XSpeccy emulator
+Note for curious: I'm testing MMU from XSpeccy emulator 
 https://github.com/samstyle/Xpeccy
+here mixed with my code
 If I manage to get it working, I will add the needed License files to the emulator
 Meanwhile, here is the XSpeccy License:
 
