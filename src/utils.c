@@ -8545,7 +8545,7 @@ used properly.
 
         memoria +=4;
 
-
+        debug_printf(VERBOSE_DEBUG,"PZX: PAUS: count: %d",count);
         convert_pzx_to_rwa_write_pulses(&t_estado_actual,count,&initial_pulse,ptr_destino);
 
         
