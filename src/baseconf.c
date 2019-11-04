@@ -191,7 +191,7 @@ void evoReset(Computer* comp) {
 	
 	//no se por que queremos mapear trdos en reset
 	
-	comp->dos = 0;
+	//comp->dos = 0;
 }
 
 
