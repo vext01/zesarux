@@ -593,6 +593,8 @@ extern void get_machine_config_name_by_number(char *machine_name,int machine_num
 
 extern int util_write_configfile(void);
 
+extern int util_create_sample_configfile(int additional);
+
 extern z80_bit save_configuration_file_on_exit;
 
 extern z80_byte peek_byte_z80_moto(unsigned int address);

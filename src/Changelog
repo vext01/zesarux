@@ -31,6 +31,7 @@ Added ZRCP commands:
 -write-port: write value to a port
 
 Added internal zip decompressor: no more need to use external unzip program
+Added setting to reset configuration file to default values
 
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired

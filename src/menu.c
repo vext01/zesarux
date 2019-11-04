@@ -27682,6 +27682,20 @@ void menu_settings_config_file_show(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_settings_config_file_reset(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno_texto("Reset defaults","Need to exit. Sure?")==0) return;
+	
+	util_create_sample_configfile(1);
+	menu_generic_message_splash("Reset defaults","OK. Press enter to close ZEsarUX. You should start ZEsarUX again to read default configuration");
+
+	//Y nos aseguramos que al salir no se guarde configuración con lo que tenemos en memoria
+	save_configuration_file_on_exit.v=0;
+	end_emulator();
+
+}
+
+
 //menu config_file settings
 void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 {
@@ -27707,6 +27721,12 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings_config_file,'v');
 		menu_add_item_menu_tooltip(array_menu_settings_config_file,"View configuration file");
 		menu_add_item_menu_ayuda(array_menu_settings_config_file,"View configuration file");
+
+
+		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_reset,NULL,"    ~~Reset config file");
+		menu_add_item_menu_shortcut(array_menu_settings_config_file,'r');
+		menu_add_item_menu_tooltip(array_menu_settings_config_file,"Reset configuration file to default values");
+		menu_add_item_menu_ayuda(array_menu_settings_config_file,"Reset configuration file to default values");		
 
 
 
