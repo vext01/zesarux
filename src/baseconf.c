@@ -270,8 +270,8 @@ if (pagina_es_ram) {
                 }
                 else {
                         pagina=pagina & 31;
-                        baseconf_memory_paged[i]=baseconf_rom_mem_table[pagina];
-                        debug_paginas_memoria_mapeadas[i]=DEBUG_PAGINA_MAP_ES_ROM+pagina;
+                        baseconf_memory_paged[i]=baseconf_rom_mem_table[pagina]+3;
+                        debug_paginas_memoria_mapeadas[i]=DEBUG_PAGINA_MAP_ES_ROM+pagina+3;
                 }
 
 
