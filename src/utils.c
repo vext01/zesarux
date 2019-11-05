@@ -12960,15 +12960,11 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 
                 //Tratar cada tag
-                if (!strcmp(tag_name,"PZXT")) {
-                      
-                }
+                
 
-                else if (!strcmp(tag_name,"PULS")) {
-                      
-                }
+                
 
-                else if (!strcmp(tag_name,"DATA")) {
+                 if (!strcmp(tag_name,"DATA")) {
                       //convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
 
 z80_byte *memoria;
@@ -13068,7 +13064,7 @@ z80_byte *memoria;
 		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
 		z80_byte flag=copia_puntero[2];
 
-		printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+		//printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
 
 		int longitud_segun_cabecera=-1;
 
@@ -13147,13 +13143,7 @@ z80_byte *memoria;
 
 	   }
 
-                else if (!strcmp(tag_name,"PAUS")) {
-                      
-                }
-
-                else {
-                      
-                }
+             
 
 
 
