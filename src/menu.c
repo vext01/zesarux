@@ -29827,6 +29827,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
         else if (!util_compare_file_extension(archivo,"pzx")) {
                 char *opciones[]={
+					"PZX to TAP",
                         "PZX to RWA",
 			"PZX to WAV",
                         NULL};
@@ -29838,11 +29839,16 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 		}				
                 switch (opcion) {
                         case 0:
+                                sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
+								util_extract_pzx(fullpath,NULL,archivo_destino);
+                        break;
+
+                        case 1:
                                 sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
                                 convert_pzx_to_rwa(fullpath,archivo_destino);
                         break;
 
-                        case 1:
+                        case 2:
                                 sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
                                 convert_any_to_wav(fullpath,archivo_destino);
                         break;
@@ -30385,6 +30391,12 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
                 debug_printf (VERBOSE_DEBUG,"Is a tzx file");
                 return util_extract_tzx(archivo,tmpdir,NULL);
         }
+
+
+        else if (!util_compare_file_extension(archivo,"pzx") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a pzx file");
+                return util_extract_pzx(archivo,tmpdir,NULL);
+        }		
 
         else if (!util_compare_file_extension(archivo,"trd") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a trd file");
