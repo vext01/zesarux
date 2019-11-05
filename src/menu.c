@@ -20422,7 +20422,7 @@ void menu_file_pzx_browser_show(char *filename)
 		    sprintf(buffer_bloque," Length: %d (%d bits)",count/8,count);
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
 
-        	sprintf(buffer_bloque," count: %d initial_pulse %d tail %d num_pulses_0 %d num_pulses_1 %d",
+        	sprintf(buffer_bloque," count: %d initial_pulse: %d tail: %d num_pulses_0: %d num_pulses_1: %d",
             		count,initial_pulse,tail,num_pulses_zero,num_pulses_one); 
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);		             
 

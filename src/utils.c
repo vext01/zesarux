@@ -13058,80 +13058,85 @@ z80_byte *memoria;
 
 		int longitud_segun_cabecera=-1;
 
-		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
-			if (tapfile==NULL) {
-                                util_tape_get_info_tapeblock(&copia_puntero[3],flag,longitud_final+2,buffer_texto);
-                                sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdirectory,filenumber,buffer_texto);
-                                //printf ("%s/%02d-header-%s\n",tempdirectory,filenumber,buffer_texto);
+                if (longitud_final>=0) {
+
+                        if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
+                                if (tapfile==NULL) {
+                                        util_tape_get_info_tapeblock(&copia_puntero[3],flag,longitud_final+2,buffer_texto);
+                                        sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdirectory,filenumber,buffer_texto);
+                                        //printf ("%s/%02d-header-%s\n",tempdirectory,filenumber,buffer_texto);
+                                }
+
+                                tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
+
+                                //printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
+
+                                //Longitud segun cabecera
+                                longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
+
+                        }
+                        else {
+                                char extension_agregar[10];
+                                extension_agregar[0]=0; //Por defecto
+
+                                //Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0
+                                if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
+                                        //Corresponde. Agregar extensiones bas o scr segun el caso
+                                        if (previo_tipo_bloque==0) {
+                                                //Basic
+                                                strcpy(extension_agregar,".bas");
+                                        }
+
+                                        if (previo_tipo_bloque==3 && longitud_final==6912) {
+                                                //Screen
+                                                strcpy(extension_agregar,".scr");
+                                        }
+                                }
+
+                                if (tapfile==NULL) sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
                         }
 
-			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
 
-			//printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
+                        //Si expandir
+                        if (tapfile==NULL) {
+                                //Generar bloque con datos, saltando los dos de cabecera y el flag
+                                util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                        }
 
-			//Longitud segun cabecera
-			longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
-
-		}
-		else {
-			char extension_agregar[10];
-			extension_agregar[0]=0; //Por defecto
-
-			//Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0
-			if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
-				//Corresponde. Agregar extensiones bas o scr segun el caso
-				if (previo_tipo_bloque==0) {
-					//Basic
-					strcpy(extension_agregar,".bas");
-				}
-
-				if (previo_tipo_bloque==3 && longitud_final==6912) {
-					//Screen
-                                        strcpy(extension_agregar,".scr");
-                                }
-			}
-
-			if (tapfile==NULL) sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
-		}
+                        //Convertir a tap
+                        else {
+                                //Generar bloque con datos
+                                //Meter longitud, flag
+                                z80_byte buffer_tap[3];
+                                z80_int longitud_cabecera_tap=longitud_final+2;
+                                buffer_tap[0]=value_16_to_8l(longitud_cabecera_tap);
+                                buffer_tap[1]=value_16_to_8h(longitud_cabecera_tap);
+                                buffer_tap[2]=flag;
+                                fwrite(buffer_tap,1,3,ptr_tapfile);
 
 
-                //Si expandir
-                if (tapfile==NULL) {
-		        //Generar bloque con datos, saltando los dos de cabecera y el flag
-		        util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
-                }
+                                //Meter datos
+                                fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
 
-                //Convertir a tap
-                else {
-                        //Generar bloque con datos
-                        //Meter longitud, flag
-                        z80_byte buffer_tap[3];
-                        z80_int longitud_cabecera_tap=longitud_final+2;
-                        buffer_tap[0]=value_16_to_8l(longitud_cabecera_tap);
-                        buffer_tap[1]=value_16_to_8h(longitud_cabecera_tap);
-                        buffer_tap[2]=flag;
-                        fwrite(buffer_tap,1,3,ptr_tapfile);
+                                //Agregar CRC
+                                z80_byte byte_crc=*(copia_puntero+3+longitud_final);
 
+                                buffer_tap[0]=byte_crc;
+                                fwrite(buffer_tap,1,1,ptr_tapfile);
 
-                        //Meter datos
-                        fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
+                        }
 
-                        //Agregar CRC
-                        z80_byte byte_crc=*(copia_puntero+3+longitud_final);
+                        filenumber++;
 
-                        buffer_tap[0]=byte_crc;
-                        fwrite(buffer_tap,1,1,ptr_tapfile);
+                        previo_flag=flag;
+                        previo_longitud_segun_cabecera=longitud_segun_cabecera;
+                        previo_tipo_bloque=tipo_bloque;
 
                 }
-
-		filenumber++;
-
-		previo_flag=flag;
-		previo_longitud_segun_cabecera=longitud_segun_cabecera;
-		previo_tipo_bloque=tipo_bloque;
-
 
 	   }
+
+
 
              
 
