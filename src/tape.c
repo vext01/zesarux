@@ -2790,7 +2790,8 @@ offset      type             name  meaning
 8+2*(p0+p1) u8[ceil(bits/8)] data  data stream, see below.       
        */ 
 
-      z80_long_int numero_bits=longitud_bloque*8;
+      //z80_long_int numero_bits=longitud_bloque*8;
+      z80_long_int numero_bits=longitud*8;
 
        block_buffer[8]=numero_bits & 0xFF;
        block_buffer[9]=(numero_bits>>8) & 0xFF;
