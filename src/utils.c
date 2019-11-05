@@ -8585,7 +8585,9 @@ int convert_pzx_to_rwa(char *origen, char *destino)
                           (pzx_file_mem[puntero_lectura+1]*256)+
                           (pzx_file_mem[puntero_lectura+2]*65536)+
                           (pzx_file_mem[puntero_lectura+3]*16777216);   
-                puntero_lectura +=4;                     
+                puntero_lectura +=4;   
+                
+                                 
 
                 //printf ("Block tag name: [%s] size: [%u]\n",tag_name,block_size);
 
@@ -12953,6 +12955,8 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                           (puntero_lectura[2]*65536)+
                           (puntero_lectura[3]*16777216);
                 puntero_lectura +=4;
+                
+                total_mem -=8; 
 
 
                 //Tratar cada tag
@@ -13155,6 +13159,8 @@ z80_byte *memoria;
 
 		//Y saltar al siguiente bloque
 		puntero_lectura +=block_size;
+		
+		total_mem -=block_size;
 
 	}
 
