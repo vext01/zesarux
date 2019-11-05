@@ -12964,7 +12964,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                       
                 }
 
-                else if (!strcmp(tag_name,"DATA")) {
+                else if (!strcmp(tag_name,"DATAXXX")) {
                       //convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
 
 z80_byte *memoria;
