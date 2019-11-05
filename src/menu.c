@@ -20173,7 +20173,7 @@ void menu_file_pzx_browser_show(char *filename)
         fclose(ptr_file_pzx_browser);
 
       
-	char buffer_texto[300]; //Para poder contener info de pzx extensa
+	//char buffer_texto[300]; //Para poder contener info de pzx extensa
 
  
 
@@ -20185,8 +20185,8 @@ void menu_file_pzx_browser_show(char *filename)
 	long int puntero_lectura=0;
 
 	char buffer_bloque[512];
-	char buffer_bloque2[512];
-	char buffer_bloque3[512];
+	//char buffer_bloque2[512];
+	//char buffer_bloque3[512];
 
 	int salir=0;
 
@@ -20289,9 +20289,9 @@ void menu_file_pzx_browser_show(char *filename)
 				memoria=&pzx_file_mem[puntero_lectura];
 
 			z80_int count;
-			int duration;
+			int duration; 
 
-			int valor_pulso_inicial=0;
+			//int valor_pulso_inicial=0;
 			//int t_estado_actual=*p_t_estado_actual;
 
 			int block_size_tag=block_size;
@@ -20397,13 +20397,13 @@ void menu_file_pzx_browser_show(char *filename)
 
     
         //Procesar el total de bits
-        int bit_number=7;
-        z80_byte processing_byte;
+        //int bit_number=7;
+        //z80_byte processing_byte;
 
-        z80_int *sequence_bit;
-        int longitud_sequence_bit;
+        //z80_int *sequence_bit;
+        //int longitud_sequence_bit;
 
-        z80_long_int total_bits_read; 
+        //z80_long_int total_bits_read; 
 
 	     
 
@@ -29852,7 +29852,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                                 sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
                                 convert_any_to_wav(fullpath,archivo_destino);
                         break;
-
+ 
                 }
         }		
 

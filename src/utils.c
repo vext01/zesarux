@@ -12980,14 +12980,13 @@ z80_byte *memoria;
         count=memoria[0]+
                 (memoria[1]*256)+
                 (memoria[2]*65536)+
-                ((memoria[3]&127)*16777216);
+                ((memoria[3]&127)*16777216); 
 
         initial_pulse=(memoria[3]&128)>>7;
 
         memoria +=4;
 
-        z80_int tail=memoria[0]+
-                (memoria[1]*256);
+        //z80_int tail=memoria[0]+(memoria[1]*256);
 
         memoria +=2;
         
@@ -13020,29 +13019,20 @@ z80_byte *memoria;
 
     
         //Procesar el total de bits
-        int bit_number=7;
-        z80_byte processing_byte;
+        //int bit_number=7;
+        //z80_byte processing_byte;
 
-        z80_int *sequence_bit;
-        int longitud_sequence_bit;
+        //z80_int *sequence_bit;
+        //int longitud_sequence_bit;
 
-        z80_long_int total_bits_read; 
-
+        //z80_long_int total_bits_read; 
+ 
 	     
 
                 z80_byte *puntero_lectura_copia=memoria;
 
               
-                /*if (tzx_id==0x11) {
-                        copia_puntero=puntero_lectura;
-                        longitud_bloque=puntero_lectura[15]+256*puntero_lectura[16]+65536*puntero_lectura[17];
-                        puntero_lectura+=18;
-                }*/
-
-                
-		        //puntero_lectura +=2;
-		        //total_mem -=2;
-                        //copia_puntero=puntero_lectura;
+              
                         longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
                 
 
@@ -13072,7 +13062,7 @@ z80_byte *memoria;
 			if (tapfile==NULL) {
                                 util_tape_get_info_tapeblock(&copia_puntero[3],flag,longitud_final+2,buffer_texto);
                                 sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdirectory,filenumber,buffer_texto);
-                                printf ("%s/%02d-header-%s\n",tempdirectory,filenumber,buffer_texto);
+                                //printf ("%s/%02d-header-%s\n",tempdirectory,filenumber,buffer_texto);
                         }
 
 			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc

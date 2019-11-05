@@ -724,6 +724,8 @@ extern int util_extract_o(char *filename,char *tempdir);
 
 extern int util_extract_tzx(char *filename,char *tempdir,char *tapfile);
 
+extern int util_extract_pzx(char *filename,char *tempdir,char *tapfile);
+
 extern int util_extract_trd(char *filename,char *tempdir);
 
 extern void util_file_append(char *filename,z80_byte *puntero, int tamanyo);
