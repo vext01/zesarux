@@ -20182,6 +20182,8 @@ void menu_file_pzx_browser_show(char *filename)
 	long int puntero_lectura=0;
 
 	char buffer_bloque[512];
+	char buffer_bloque2[512];
+	char buffer_bloque3[512];
 
 	int salir=0;
 
@@ -20288,23 +20290,10 @@ void menu_file_pzx_browser_show(char *filename)
 
                 memoria +=2;
         }
-        sprintf(buffer_bloque," count: %d initial_pulse %d tail %d num_pulses_0 %d num_pulses_1 %d",
-               count,initial_pulse,tail,num_pulses_zero,num_pulses_one); 
-			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);			   
 
-        /*printf ("Secuence 0: ");
-        for (i=0;i<num_pulses_zero;i++) {
-               printf ("%d ",seq_pulses_zero[i]);
-        }
-        printf ("\n");
+					   
 
-        printf ("Secuence 1: ");
-        for (i=0;i<num_pulses_one;i++) {
-               printf ("%d ",seq_pulses_one[i]);
-        }
-        printf ("\n");*/
-
-
+    
         //Procesar el total de bits
         int bit_number=7;
         z80_byte processing_byte;
@@ -20314,15 +20303,26 @@ void menu_file_pzx_browser_show(char *filename)
 
         z80_long_int total_bits_read; 
 
-		       sprintf(buffer_bloque," Length: %d (%d bits)",count/8,count);
-			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);	                  
+	     
 
-        for (total_bits_read=0;total_bits_read<count;total_bits_read+=8) {
-        //for (i=0;i<count;i+=8) {
-                processing_byte=*memoria;
 
-				 memoria++;
-		}
+			//Saltamos flag
+			z80_byte flag=*memoria;
+			memoria++;
+
+			//Metemos un espacio delante
+			buffer_bloque[0]=' ';
+			util_tape_get_info_tapeblock(memoria,flag,count/8,&buffer_bloque[1]);	
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);	
+
+
+			//Y debug del bloque
+		    sprintf(buffer_bloque," Length: %d (%d bits)",count/8,count);
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+        	sprintf(buffer_bloque," count: %d initial_pulse %d tail %d num_pulses_0 %d num_pulses_1 %d",
+            		count,initial_pulse,tail,num_pulses_zero,num_pulses_one); 
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);		             
 
 
 		}                
