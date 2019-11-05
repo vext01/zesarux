@@ -8005,7 +8005,9 @@ contador -=224
 
 }
 
-int convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,z80_long_int block_size)
+//Nota: block_size entra como z80_long_int pero aqui tratamos con int con signo, para evitar que en 
+//el bucle while de abajo pueda irse a menor que 0 y nunca acabaria (esto pasaria en bloques corruptos)
+int convert_pzx_to_rwa_tag_pzxt(z80_byte *memoria,int block_size)
 {
         debug_printf (VERBOSE_DEBUG,"PZX: Start PZXT block");
 /*
@@ -8141,7 +8143,10 @@ implementor finds it convenient to do so.
 
 }
 
-void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,z80_long_int block_size,FILE *ptr_destino,int *p_t_estado_actual)
+
+//Nota: block_size entra como z80_long_int pero aqui tratamos con int con signo, para evitar que en 
+//el bucle while de abajo pueda irse a menor que 0 y nunca acabaria (esto pasaria en bloques corruptos)
+void convert_pzx_to_rwa_tag_puls(z80_byte *memoria,int block_size,FILE *ptr_destino,int *p_t_estado_actual)
 {
 
 

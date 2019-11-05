@@ -20233,10 +20233,111 @@ void menu_file_pzx_browser_show(char *filename)
 
         	sprintf(buffer_bloque," file version: %d.%d",pzx_version_major,pzx_version_minor);
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+			z80_byte *memoria;
+			memoria=&pzx_file_mem[puntero_lectura];			
+
+
+			int block_size_tag=block_size;
+			block_size_tag -=2;
+			memoria +=2;
+
+			//Los strings los vamos guardando en un array de char separado. Asumimos que ninguno ocupa mas de 1024. Si es asi, esto petara...
+
+			char text_string[1024];
+			int index_string=0;
+
+			while (block_size_tag>0) {
+					char caracter=*memoria;
+
+					if (caracter==0) {
+							text_string[index_string++]=0;
+							//fin de cadena
+							sprintf(buffer_bloque," %s",text_string);
+							indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+							index_string=0;
+					}
+
+					else {
+							text_string[index_string++]=util_return_valid_ascii_char(caracter);
+					}
+
+					memoria++;
+					block_size_tag--;
+
+			}
+
+			//Final puede haber acabado con byte 0 o no. Lo metemos por si acaso
+			if (index_string!=0) {
+					text_string[index_string++]=0;
+					sprintf(buffer_bloque," %s",text_string);
+					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+			}
+
+
+
 		}
 
 		else if (!strcmp(tag_name,"PULS")) {
 				//convert_pzx_to_rwa_tag_puls(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
+
+				z80_byte *memoria;
+				memoria=&pzx_file_mem[puntero_lectura];
+
+			z80_int count;
+			int duration;
+
+			int valor_pulso_inicial=0;
+			//int t_estado_actual=*p_t_estado_actual;
+
+			int block_size_tag=block_size;
+
+			while (block_size_tag>0) {
+
+					count = 1 ;
+
+					//duration = fetch_u16() ;
+					duration = (*memoria)|((memoria[1])<<8);
+					memoria +=2;
+					block_size_tag -=2;
+
+					if ( duration > 0x8000 ) {
+							count = duration & 0x7FFF ;
+							//duration = fetch_u16() ;
+							duration = (*memoria)|((memoria[1])<<8);
+							memoria +=2;
+							block_size_tag -=2;
+					}
+					if ( duration >= 0x8000 ) {
+							duration &= 0x7FFF ;
+							duration <<= 16 ;
+							//duration |= fetch_u16() ;
+							duration |= (*memoria)|((memoria[1])<<8);
+							memoria +=2;
+							block_size_tag -=2;
+					}
+
+					//printf ("count: %d duration: %d\n",count,duration);
+					//printf("size: %d count: %d duration: %d\n",block_size_tag,count,duration);
+
+					sprintf(buffer_bloque," count: %d duration: %d",count,duration);
+					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+					while (count) {
+							//printf ("count=%d\n",count);
+							//convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
+							count--;
+							//invertir pulso
+							valor_pulso_inicial=!valor_pulso_inicial;
+
+							//Truncar estados a multiple de scanline
+							//t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;       
+
+					}
+			}
+
+
+
 		}
 
 		else if (!strcmp(tag_name,"DATA")) {
@@ -20329,6 +20430,30 @@ void menu_file_pzx_browser_show(char *filename)
 
 		else if (!strcmp(tag_name,"PAUS")) {
 				//convert_pzx_to_rwa_tag_paus(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
+
+			int initial_pulse;
+
+			z80_long_int count;   
+
+							z80_byte *memoria;
+					memoria=&pzx_file_mem[puntero_lectura];
+
+	
+
+
+			count=memoria[0]+
+					(memoria[1]*256)+
+					(memoria[2]*65536)+
+					((memoria[3]&127)*16777216);
+
+			initial_pulse=(memoria[3]&128)>>7;
+
+			memoria +=4;
+
+			sprintf(buffer_bloque," count: %d",count);
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+
 		}   
 
 		else {

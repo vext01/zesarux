@@ -7,7 +7,8 @@
 
 -Version windows desactivando threads solo en timer.c y/o audio.c.... mejora el sonido?
 Lo ideal sería tener una versión con threads, pero que se escuche bien...
-- probar todos pzx de ejemplos
+
+-extractor cintas pzx
 
 -Ping pong sonido en Inves?
 
