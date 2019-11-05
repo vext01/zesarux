@@ -20135,6 +20135,225 @@ void menu_file_tzx_browser_show(char *filename)
 
 
 
+
+void menu_file_pzx_browser_show(char *filename)
+{
+
+	int filesize=get_file_size(filename);
+	z80_byte *pzx_file_mem;
+
+	pzx_file_mem=malloc(filesize);
+	if (pzx_file_mem==NULL) {
+		debug_printf(VERBOSE_ERR,"Can not allocate memory for pzx browser");
+		return;
+	}
+
+
+	//Leemos cabecera archivo pzx
+        FILE *ptr_file_pzx_browser;
+        ptr_file_pzx_browser=fopen(filename,"rb");
+
+    if (!ptr_file_pzx_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+        int leidos=fread(pzx_file_mem,1,filesize,ptr_file_pzx_browser);
+
+	if (leidos!=filesize) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+		free(pzx_file_mem);
+                return;
+        }
+
+
+        fclose(ptr_file_pzx_browser);
+
+      
+	char buffer_texto[300]; //Para poder contener info de pzx extensa
+
+ 
+
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	//Ir leyendo hasta llegar al final del archivo
+	//z80_long_int puntero_lectura=0;
+	long int puntero_lectura=0;
+
+	char buffer_bloque[512];
+
+	int salir=0;
+
+	while (puntero_lectura<filesize && !salir) {
+
+		if (indice_buffer>=MAX_TEXTO_BROWSER-1024) {
+			debug_printf(VERBOSE_ERR,"Too many entries. Showing only what is allowed on memory");
+			salir=1;
+			break;
+		}
+
+		/*
+		Leer datos identificador de bloque
+		offset type     name   meaning
+		0      u32      tag    unique identifier for the block type.
+		4      u32      size   size of the block in bytes, excluding the tag and size fields themselves.
+		8      u8[size] data   arbitrary amount of block data.
+		*/
+
+		char tag_name[5];
+		tag_name[0]=util_return_valid_ascii_char(pzx_file_mem[puntero_lectura++]);
+		tag_name[1]=util_return_valid_ascii_char(pzx_file_mem[puntero_lectura++]);
+		tag_name[2]=util_return_valid_ascii_char(pzx_file_mem[puntero_lectura++]);
+		tag_name[3]=util_return_valid_ascii_char(pzx_file_mem[puntero_lectura++]);
+		tag_name[4]=0;
+
+		z80_long_int block_size;
+		
+		
+
+		block_size=pzx_file_mem[puntero_lectura]+
+					(pzx_file_mem[puntero_lectura+1]*256)+
+					(pzx_file_mem[puntero_lectura+2]*65536)+
+					(pzx_file_mem[puntero_lectura+3]*16777216);   
+		puntero_lectura +=4;                     
+
+		//printf ("Block tag name: [%s] size: [%u]\n",tag_name,block_size);
+
+		sprintf(buffer_bloque,"%s Block",tag_name);
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+
+		//Tratar cada tag
+		if (!strcmp(tag_name,"PZXT")) {
+			z80_byte pzx_version_major=pzx_file_mem[puntero_lectura];
+        	z80_byte pzx_version_minor=pzx_file_mem[puntero_lectura+1];
+
+        	sprintf(buffer_bloque," file version: %d.%d",pzx_version_major,pzx_version_minor);
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+		}
+
+		else if (!strcmp(tag_name,"PULS")) {
+				//convert_pzx_to_rwa_tag_puls(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
+		}
+
+		else if (!strcmp(tag_name,"DATA")) {
+				//convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
+
+				z80_byte *memoria;
+				memoria=&pzx_file_mem[puntero_lectura];
+
+  				int initial_pulse;
+
+        z80_long_int count;   
+
+        //int t_estado_actual=*p_t_estado_actual;
+
+
+        count=memoria[0]+
+                (memoria[1]*256)+
+                (memoria[2]*65536)+
+                ((memoria[3]&127)*16777216);
+
+        initial_pulse=(memoria[3]&128)>>7;
+
+        memoria +=4;
+
+        z80_int tail=memoria[0]+
+                (memoria[1]*256);
+
+        memoria +=2;
+        
+        z80_byte num_pulses_zero=*memoria;
+        memoria++;
+
+        z80_byte num_pulses_one=*memoria;
+        memoria++;
+
+        //Secuencias que identifican a un cero y un uno
+        z80_int seq_pulses_zero[256];
+        z80_int seq_pulses_one[256];
+
+        //Metemos las secuencias de 0 y 1 en array
+        int i;
+        for (i=0;i<num_pulses_zero;i++) {
+               seq_pulses_zero[i]=memoria[0]+(memoria[1]*256);
+
+                memoria +=2;
+        }
+
+
+        for (i=0;i<num_pulses_one;i++) {
+               seq_pulses_one[i]=memoria[0]+(memoria[1]*256);
+
+                memoria +=2;
+        }
+        sprintf(buffer_bloque," count: %d initial_pulse %d tail %d num_pulses_0 %d num_pulses_1 %d",
+               count,initial_pulse,tail,num_pulses_zero,num_pulses_one); 
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);			   
+
+        /*printf ("Secuence 0: ");
+        for (i=0;i<num_pulses_zero;i++) {
+               printf ("%d ",seq_pulses_zero[i]);
+        }
+        printf ("\n");
+
+        printf ("Secuence 1: ");
+        for (i=0;i<num_pulses_one;i++) {
+               printf ("%d ",seq_pulses_one[i]);
+        }
+        printf ("\n");*/
+
+
+        //Procesar el total de bits
+        int bit_number=7;
+        z80_byte processing_byte;
+
+        z80_int *sequence_bit;
+        int longitud_sequence_bit;
+
+        z80_long_int total_bits_read; 
+
+		       sprintf(buffer_bloque," Length: %d (%d bits)",count/8,count);
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);	                  
+
+        for (total_bits_read=0;total_bits_read<count;total_bits_read+=8) {
+        //for (i=0;i<count;i+=8) {
+                processing_byte=*memoria;
+
+				 memoria++;
+		}
+
+
+		}                
+
+		else if (!strcmp(tag_name,"PAUS")) {
+				//convert_pzx_to_rwa_tag_paus(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
+		}   
+
+		else {
+			//debug_printf (VERBOSE_DEBUG,"PZX: Unknown block type: %02XH %02XH %02XH %02XH. Skipping it",
+			//    tag_name[0],tag_name[1],tag_name[2],tag_name[3]);
+		}             
+
+
+		//Y saltar al siguiente bloque
+		puntero_lectura +=block_size;
+		
+	}
+
+
+	texto_browser[indice_buffer]=0;
+	zxvision_generic_message_tooltip("PZX file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
+
+	free(pzx_file_mem);
+
+}
+
+
+
+
+
 void menu_tape_browser_show(char *filename)
 {
 
@@ -20145,6 +20364,13 @@ void menu_tape_browser_show(char *filename)
 		menu_file_tzx_browser_show(filename);
 		return;
 	}
+
+	//Si pzx
+	if (!util_compare_file_extension(filename,"pzx") 
+		) {
+		menu_file_pzx_browser_show(filename);
+		return;
+	}	
 
 	//tapefile
 	if (util_compare_file_extension(filename,"tap")!=0) {
@@ -21992,6 +22218,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"dsk")) menu_file_dsk_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"pzx")) menu_file_pzx_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
 

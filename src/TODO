@@ -231,6 +231,8 @@ Lo que pasa es que cuando asigno memoria vram hago los 32 k de golpe, por eso cu
 
 *** Misc ***
 
+-pzx: falla con speedlock: wtss.pzx (where time stool still), myth.pzx
+
 -sumas md5 que ya no se usan de autoselect. Ver si hay archivos .config alternativos para todo esto
 
 -Convertir cintas paws
