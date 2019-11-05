@@ -157,7 +157,10 @@ int menu_overlay_activo=0;
 int menu_gui_zoom=1;
 
 //Tamanyo del array de char asignado para el browser de file utils
-#define MAX_TEXTO_BROWSER 65536
+//#define MAX_TEXTO_BROWSER 65536
+//Debe ser algo menor que MAX_TEXTO_GENERIC_MESSAGE
+#define MAX_TEXTO_BROWSER (MAX_TEXTO_GENERIC_MESSAGE-1024)
+
 
 //Ancho de caracter de menu
 int menu_char_width=8;
@@ -20191,6 +20194,7 @@ void menu_file_pzx_browser_show(char *filename)
 
 		if (indice_buffer>=MAX_TEXTO_BROWSER-1024) {
 			debug_printf(VERBOSE_ERR,"Too many entries. Showing only what is allowed on memory");
+			//printf ("bucle inicial %d %d %d\n",indice_buffer,MAX_TEXTO_BROWSER,MAX_TEXTO_GENERIC_MESSAGE);
 			salir=1;
 			break;
 		}
@@ -20292,7 +20296,7 @@ void menu_file_pzx_browser_show(char *filename)
 
 			int block_size_tag=block_size;
 
-			while (block_size_tag>0) {
+			while (block_size_tag>0 && !salir) {
 
 					count = 1 ;
 
@@ -20323,17 +20327,14 @@ void menu_file_pzx_browser_show(char *filename)
 					sprintf(buffer_bloque," count: %d duration: %d",count,duration);
 					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
 
-					while (count) {
-							//printf ("count=%d\n",count);
-							//convert_pzx_to_rwa_write_pulses(&t_estado_actual,duration,&valor_pulso_inicial,ptr_destino);
-							count--;
-							//invertir pulso
-							valor_pulso_inicial=!valor_pulso_inicial;
+					//Proteccion aqui tambien porque pueden generarse muchos bloques en este bucle
+					if (indice_buffer>=MAX_TEXTO_BROWSER-1024) {
+							debug_printf(VERBOSE_ERR,"Too many entries. Showing only what is allowed on memory");
+							salir=1;
+							break;
+					}					
 
-							//Truncar estados a multiple de scanline
-							//t_estado_actual %=CONVERT_PZX_TSTATES_AUDIO_SAMPLE;       
-
-					}
+					
 			}
 
 
