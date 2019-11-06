@@ -2564,22 +2564,53 @@ void tape_write_pzx_header_ptr(FILE *ptr_archivo)
 	//"PZXT",longitud,longitud,longitud,longitud,
         //version 1,subversion 0,
 	//"Created by ZEsarUX emulator"
-        z80_long_int longitud_bloque=30;
-	char cabecera[]={'P','Z','X','T',
-                longitud_bloque & 0xFF,
-                (longitud_bloque>>8) & 0xFF,
-                (longitud_bloque>>16) & 0xFF,
-                (longitud_bloque>>24) & 0xFF,
+        //z80_long_int longitud_bloque=30;
+
+        z80_long_int longitud_bloque;
+	char oldcabecera[]={'P','Z','X','T',
+                0,0,0,0, //Reservados primero para meter longitud de bloque
+                //longitud_bloque & 0xFF,
+                //(longitud_bloque>>8) & 0xFF,
+                //(longitud_bloque>>16) & 0xFF,
+                //(longitud_bloque>>24) & 0xFF,
         PZX_CURRENT_MAJOR_VERSION, PZX_CURRENT_MINOR_VERSION,
 
 
         //"Created by ZEsarUX emulator"
         //1   2    3    4    5    6    7   8    9    10    11   12   13   14
 	0x43,0x72,0x65,0x61,0x74,0x65,0x64,0x20,0x62,0x79,0x20,0x5a,0x45,0x73,
-        0x61,0x72,0x55,0x58,0x20,0x65,0x6d,0x75,0x6c,0x61,0x74,0x6f,0x72,0
+        0x61,0x72,0x55,0x58,0x20,0x65,0x6d,0x75,0x6c,0x61,0x74,0x6f,0x72,
+        0
 	};
+
+        char cabecera[256];
+
+        //de momento todo ascii para poder sacar stren
+        //----: reservado para longitud bloque.  00: reservado para version. se modifican luego
+        char time_string[40];
+        snapshot_get_date_time_string(time_string);
+
+
+        sprintf(cabecera,"PZXT----00Created by ZEsarUX emulator on %s",time_string);
+
+        int longitud_cabecera=strlen(cabecera)+1;
+
+        printf ("longitud cabecera: %d\n",longitud_cabecera);
+
+        longitud_bloque=longitud_cabecera-8; //-8 porque saltamos "PZXT" y los 4 bytes que indican la longitud
+        printf ("longitud bloque: %d\n",longitud_bloque);
+
+        //Metemos longitud de bloque
+        cabecera[4]=longitud_bloque & 0xFF;
+        cabecera[5]=(longitud_bloque>>8) & 0xFF;
+        cabecera[6]=(longitud_bloque>>16) & 0xFF;
+        cabecera[7]=(longitud_bloque>>24) & 0xFF;
+
+        //Metemos version
+        cabecera[8]=PZX_CURRENT_MAJOR_VERSION;
+        cabecera[9]=PZX_CURRENT_MINOR_VERSION;   
  
-	fwrite(cabecera, 1, sizeof(cabecera), ptr_archivo);
+	fwrite(cabecera, 1, longitud_cabecera, ptr_archivo);
 }
 
 void tape_write_pzx_header(void)
