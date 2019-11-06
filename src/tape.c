@@ -855,6 +855,20 @@ void tap_load(void)
 				reg_ix=cinta_pedido_inicio++;
 
 
+                                //En principio la salida de carga siempre retorna flag Z a 0
+                                //esto corrige un problema en la carga de Rocman:
+                                //carga bloque de atributos, con "any flag loading" (flag Z' a 1), en 22527, con longitud 769
+                                //al volver de ese bloque, carga el siguiente (tal cual como esté flag Z, no lo toca),
+                                //y si no lo ponemos a 0, entonces el siguiente bloque lo cargaria como any flag loading, de nuevo,
+                                //cosa que es error, pues el siguiente bloque lo carga en 16384
+                                //de ahi que reseteemos siempre flag Z al volver
+                                //Probablemente este comportamiento sea un bug en el juego, en como carga,
+                                //pues antes de cargar el primer bloque, hace un XOR A, esto activa flag Z, cosa que no tiene sentido,
+                                //probablemente el programador vio que cargaba los atributos en 22529, sin saber por qué (metiendo en 22528 el flag),
+                                //y simplemente cambió la carga a 225287 y aumentó la longitud en 1. O no... quien sabe
+                                Z80_FLAGS &=(255-FLAG_Z);
+
+
 				debug_printf(VERBOSE_INFO,"Returning H=0x%x IX=%d",reg_h,reg_ix);
 
 			}

@@ -69,7 +69,8 @@ Fixed undocumented opcode ED76: I had IM0 but it's IM1
 Fixed loading and saving +3 .z80 snapshots
 Fixed placing menu windows when using zx desktop and machines TSConf, TBBlue, CPC and QL
 Fixed bug loading .sna files when rom 1 paged in
-
+Fixed very-old bug when loading Rocman game. This bug existed even on ZXSpectr. It fixes return flags when using tape traps.
+  Rocman loading screen was shown wrong (having the "any flag loading setting" disabled), but loaded. Enabling that setting crashed the game
 
 
 
