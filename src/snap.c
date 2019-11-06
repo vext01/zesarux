@@ -5267,7 +5267,7 @@ void snapshot_load(void)
 
 //Retorna texto %Y-%m-%d-%H-%M-%S, usado en quicksave y en dump zsf on panic
 //texto tiene que tener tamanyo 40, aunque cabe con menos, pero mejor asi  .   char time_string[40];
-void snapshot_get_date_time_string(char *texto)
+void snapshot_get_date_time_string_common(char *texto,int todos_guiones)
 {
 struct timeval tv;
   struct tm* ptm;
@@ -5285,12 +5285,26 @@ struct timeval tv;
   char time_string[40];
 
   //buffer temporal para poderle indicar el sizeof
-  strftime (time_string, sizeof(time_string), "%Y-%m-%d-%H-%M-%S", ptm);
+  if (todos_guiones) strftime (time_string, sizeof(time_string), "%Y-%m-%d-%H-%M-%S", ptm);
+  else strftime (time_string, sizeof(time_string), "%Y/%m/%d %H:%M:%S", ptm);
 
   //copiar a texto final
   strcpy(texto,time_string);
 
   //printf ("texto fecha: %s\n",texto);
+}
+
+
+void snapshot_get_date_time_string(char *texto)
+{
+	//Para formatos de quicksave y dump zsf en panic. Todo guiones
+	snapshot_get_date_time_string_common(texto,1);
+}
+
+void snapshot_get_date_time_string_human(char *texto)
+{
+	//Para formatos de texto incluidos por ejemplo en cabecera pzx
+	snapshot_get_date_time_string_common(texto,0);
 }
 
 //Realiza quicksave y retorna nombre en char nombre, siempre que no sea NULL

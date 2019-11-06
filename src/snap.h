@@ -73,6 +73,8 @@ extern void snapshot_get_date_time_string(char *texto);
 
 extern void snap_dump_zsf_on_cpu_panic(void);
 
+extern void snapshot_get_date_time_string_human(char *texto);
+
 #define SNA_48K_HEADER_SIZE 27
 #define SNA_128K_HEADER_SIZE 4
 
