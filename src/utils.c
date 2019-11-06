@@ -3561,7 +3561,9 @@ int util_write_configfile(void)
 
   //Este setting lo permitimos siempre, aunque no se haya compilado driver sdl, pues es una variable global, aunque no se verá en la ayuda,
   if (sdl_raw_keyboard_read.v)                ADD_STRING_CONFIG,"--sdlrawkeyboard");
-  
+
+  if (tape_any_flag_loading.v)                ADD_STRING_CONFIG,"--anyflagloading");
+                                
   if (tape_loading_simulate.v)                ADD_STRING_CONFIG,"--simulaterealload");
   if (tape_loading_simulate_fast.v)           ADD_STRING_CONFIG,"--simulaterealloadfast");
 

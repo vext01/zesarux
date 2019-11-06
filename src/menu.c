@@ -27587,7 +27587,7 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_any_flag,NULL,"[%c] A~~ny flag loading", (tape_any_flag_loading.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_settings_tape,'n');
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"Enables tape load routine to load without knowing block flag");
-		menu_add_item_menu_ayuda(array_menu_settings_tape,"Enables tape load routine to load without knowing block flag. You must enable it on Tape Copy programs");
+		menu_add_item_menu_ayuda(array_menu_settings_tape,"Enables tape load routine to load without knowing block flag. You must enable it on Tape Copy programs and also on Rocman game");
 
 
 

@@ -60,13 +60,6 @@ esta haciendo bien el timing
 - Cabecera tzx que incluya versión emulador
 
 
--Rutina cargar cualquier flag en copion
-Usa
-CP A
-SCF
-Quizá usa otro flag diferente del Z?
-Eso explicaría que el rocman no me cargue cuando permito el any flag loading
-
 
 -tzx:
 *funciona way exploding fist, por ejemplo. lord of chaos tambien, este ademas tiene tags id 32

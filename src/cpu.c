@@ -1396,11 +1396,12 @@ printf (
 		"--noautoload               No autoload tape file on Spectrum, ZX80 or ZX81\n"
 		"--fastautoload             Do the autoload process at top speed\n"
 		"--noautoselectfileopt      Do not autoselect emulation options for known snap and tape files\n"
+        "--anyflagloading           Enables tape load routine to load without knowing block flag\n"
 		"--simulaterealload         Simulate real tape loading\n"
 		"--simulaterealloadfast     Enable fast simulate real tape loading\n"
 		"--realloadfast             Fast loading of real tape\n"
 		"--smartloadpath path       Select initial smartload path\n"
-		"--addlastfile file     Add a file to the last files used\n"
+		"--addlastfile file         Add a file to the last files used\n"
 		"--quicksavepath path       Select path for quicksave & continous autosave\n" 
 		"--autoloadsnap             Load last snapshot on start\n"
 		"--autosavesnap             Save snapshot on exit\n"
@@ -6148,6 +6149,8 @@ int parse_cmdline_options(void) {
                                 autoselect_snaptape_options.v=0;
                         }
 
+ 							
+
 
 			else if (!strcmp(argv[puntero_parametro],"--nosplash")) {
                                 screen_show_splash_texts.v=0;
@@ -6556,6 +6559,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--sdlrawkeyboard")) {
 					sdl_raw_keyboard_read.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--anyflagloading")) {
+                                tape_any_flag_loading.v=1;
+                        }			
 
 			else if (!strcmp(argv[puntero_parametro],"--simulaterealload")) {
                                 tape_loading_simulate.v=1;
