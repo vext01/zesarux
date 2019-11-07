@@ -77,6 +77,9 @@ z80_bit remote_calling_end_emulator={0};
 
 #ifdef MINGW
 	#include <winsock2.h>
+
+	//para usar socklen_t
+	#include <ws2tcpip.h>
 #else
 	#include <sys/socket.h>
 	#include <netdb.h>
