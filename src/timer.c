@@ -64,7 +64,10 @@
 #endif
 
 
-
+#ifdef MINGW
+	//Parece que en Windows el timer en pthreads no funciona bien... lo desactivamos
+	#undef USE_PTHREADS
+#endif
 
 
 
