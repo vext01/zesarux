@@ -311,10 +311,6 @@ int leer_socket(int s, char *buffer, int longitud)
 {
 
 
-
-
-
-
 #ifdef MINGW
 
 int leidos=recv(s,buffer,longitud,0);
@@ -362,6 +358,37 @@ int cerrar_socket(int s)
 #endif
 
 }
+
+
+int zsock_available_data(int socket)
+{
+			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
+			//la conexion se queda en read colgada
+
+//-Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer?			
+#ifdef MINGW
+//En Windows
+int longitud_leer=0;
+
+char buffer;
+
+
+int leidos=recv(socket,&buffer,longitud_leer,0);
+ if(leidos==SOCKET_ERROR){
+		return 0;
+ }
+ return 1;
+
+
+
+#else
+//En Unix
+
+	if (chardevice_status(socket) & CHDEV_ST_RD_AVAIL_DATA) return 1;
+	else return 0;
+#endif
+}
+
 
 
 //Fin de funciones CON pthreads
@@ -437,6 +464,14 @@ int cerrar_socket(int s GCC_UNUSED)
 
     return -1;
 }
+
+
+int zsock_available_data(int socket GCC_UNUSED)
+{
+	//Esto no se usara sin pthreads pero bueno, retornamos 1
+	return 1;
+}
+
 
 
 
@@ -723,33 +758,7 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 	return escribir_socket(sock,buffer);
 }
 
-int zsock_available_data(int socket)
-{
-			//TODO: en windows siempre retorna datos disponibles. lo cual seria un problema por que si no hay datos,
-			//la conexion se queda en read colgada
 
-//-Quizá en Windows para saber si un socket tiene datos para leer, usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer?			
-#ifdef MINGW
-
-int longitud_leer=0;
-
-char buffer;
-
-int leidos=recv(socket,&buffer,longitud_leer,0);
- if(leidos==SOCKET_ERROR){
-		return 0;
- }
- return 1;
-
-
-
-#else
-
-
-	if (chardevice_status(socket) & CHDEV_ST_RD_AVAIL_DATA) return 1;
-	else return 0;
-#endif
-}
 
 int zsock_wait_until_command_prompt(int indice_tabla)
 {

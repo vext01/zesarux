@@ -26,6 +26,8 @@ Esto evitaria en teoría que por ejemplo en great escape salen caracteres parén
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?
 
+-con ssl pero sin threads en windows da error en link de: undefined reference to read
+
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
 -probar ssl en windows. Descargando prebuilds de ssl para mingw
