@@ -1,12 +1,22 @@
 --------Para próxima versión:
  
- -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
+-meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
 -Revisar al expulsar cinta si Windows lo libera 
 
--Version windows desactivando threads solo en timer.c y/o audio.c.... mejora el sonido?
-Lo ideal sería tener una versión con threads, pero que se escuche bien...
+-Compilar windows con:
+export CFLAGS "-I/c/openssl-1.1.1d-win32-mingw/include"
+export LDFLAGS "-L/c/openssl-1.1.1d-win32-mingw/lib"
+./configure --enable-ssl --enable-memptr --enable-visualmem --enable-cpustats
+
+-probar ssl en windows. Descargando prebuilds de ssl para mingw
+https://wiki.openssl.org/index.php/Binaries
+https://bintray.com/vszakats/generic/openssl
+https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win32-mingw.zip
+
+copiar libcrypto-1_1.dll y libssl-1_1.dll en ruta de ZEsarUX exe
+Funciona ssl en windows ok!
 
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
@@ -14,8 +24,6 @@ Lo ideal sería tener una versión con threads, pero que se escuche bien...
 
 -Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
 
-
--Incluir demo de Alexander 
 
 -Opción para que ocr no busque en caracteres que diga 23606/7. Que lo haga solo en la de la rom y listo
 Esto evitaria en teoría que por ejemplo en great escape salen caracteres paréntesis a veces en el escenario 
@@ -26,19 +34,11 @@ Esto evitaria en teoría que por ejemplo en great escape salen caracteres parén
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?
 
--con ssl pero sin threads en windows da error en link de: undefined reference to read
-
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
--probar ssl en windows. Descargando prebuilds de ssl para mingw
-https://wiki.openssl.org/index.php/Binaries
-https://bintray.com/vszakats/generic/openssl
-https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win32-mingw.zip
-
-copiar libcrypto-1_1.dll y libssl-1_1.dll en ruta de ZEsarUX exe
-Funciona ssl en windows ok!
-
 -puls de pzx en out acortar cuando flag no es 0. Cual es la formula real de la longitud?
+
+-como incluir libreria ssl en mac? hace falta /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
 
 -vertificar roms ifrom, lista que sea valida de distribucion
 
