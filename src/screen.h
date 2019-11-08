@@ -133,6 +133,8 @@ extern void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level);
 
 extern int scr_tiene_colores;
 
+extern z80_bit ocr_settings_not_look_23606;
+
 
 #define WINDOW_FOOTER_LINES 3
 #define WINDOW_FOOTER_COLUMNS 32

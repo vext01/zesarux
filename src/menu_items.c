@@ -8455,6 +8455,14 @@ void menu_display_stdout_simpletext_fps(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_display_ocr_23606(MENU_ITEM_PARAMETERS)
+{
+
+ocr_settings_not_look_23606.v ^=1;
+
+}
+
+
 
 #ifdef COMPILE_CURSESW
 void menu_display_cursesw_ext(MENU_ITEM_PARAMETERS)
@@ -8524,6 +8532,12 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                                         "on curses, stdout and simpletext drivers with text artistic emulation or utf enabled");
                         menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
                                         "on curses, stdout and simpletext drivers with text artistic emulation or utf enabled");
+                                        
+                                        
+
+menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_ocr_23606,NULL,"[%c]   OCR Alternate chars", (ocr_settings_not_look_23606.v==0 ? 'X' : ' ') );
+
+
 
                         if (rainbow_enabled.v) {
                                 menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"[%3d] Text brightness",screen_text_brightness);
