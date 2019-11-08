@@ -30,6 +30,7 @@ Quizá mostrar C en caso de 127
 
 -Opción para que ocr no busque en caracteres que diga 23606/7. Que lo haga solo en la de la rom y listo
 Esto evitaria en teoría que por ejemplo en great escape salen caracteres paréntesis a veces en el escenario 
+->falta setting command line y grabado config
 
 -Opción para formato de grabación de autosave snap
 
