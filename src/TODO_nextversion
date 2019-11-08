@@ -16,7 +16,9 @@ https://bintray.com/vszakats/generic/openssl
 https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win32-mingw.zip
 
 copiar libcrypto-1_1.dll y libssl-1_1.dll en ruta de ZEsarUX exe
+Incluir pthreadGC-3.DLL
 Funciona ssl en windows ok!
+
 
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
@@ -36,7 +38,6 @@ Habra otra libssl de sistema?
 
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
--puls de pzx en out acortar cuando flag no es 0. Cual es la formula real de la longitud?
 
 -como incluir libreria ssl en mac? hace falta /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
 
@@ -186,7 +187,7 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 -probar doom mania (juego a dobles al doom)
 
--que al activar ZENG, active ZRCP si no esta
+-que al activar ZENG, active ZRCP si no esta. Pero solo cuando hay soporte de threads
 
 -que permita ZENG en todos los cores de maquinas
 
@@ -300,7 +301,7 @@ utils.c:11248:9: warning: this decimal constant is unsigned only in ISO C90
 Puede dar problemas?
 
 
--Agregar incluir pthreadGC3.dll en ZEsarUX win ? en mi windows no lo usa
+
 
 -hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
 
