@@ -25,6 +25,7 @@ Funciona ssl en windows ok!
 -Ping pong sonido en Inves?
 
 -Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
+Quizá mostrar C en caso de 127
 
 
 -Opción para que ocr no busque en caracteres que diga 23606/7. Que lo haga solo en la de la rom y listo

@@ -94,6 +94,9 @@ z80_bit screen_reduce_075_antialias={1};
 int screen_reduce_offset_x=0;
 int screen_reduce_offset_y=0;
 
+
+z80_bit ocr_settings_not_look_23606={0};
+
 //Rutinas de pantalla
 void (*scr_refresca_pantalla) (void);
 void (*scr_refresca_pantalla_solo_driver) (void);
@@ -987,6 +990,10 @@ z80_byte compare_char_step(z80_byte *origen,z80_byte *inverse,int step)
 
 	caracter=compare_char_tabla_step(origen,inverse,tabla_leemos,step);
 	if (caracter!=0) return caracter;
+	
+	
+	//si no consultamos a 23606/7, retornar 0
+	if (ocr_settings_not_look_23606.v) return 0;
 
 	z80_int puntero_tabla_caracteres;
 	if (MACHINE_IS_SPECTRUM_16_48) {
