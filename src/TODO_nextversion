@@ -1,5 +1,9 @@
 --------Para próxima versión:
  
+ -agregar a estadísticas:
+ .total consultas realizadas con browser speccy
+ .total consultas realizadas con browser zx81
+ 
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
