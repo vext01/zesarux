@@ -16,7 +16,7 @@ https://bintray.com/vszakats/generic/openssl
 https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win32-mingw.zip
 
 copiar libcrypto-1_1.dll y libssl-1_1.dll en ruta de ZEsarUX exe
-Incluir pthreadGC-3.DLL
+Incluir pthreadGC-3.DLL. Estará en carpeta bin de mingw
 Funciona ssl en windows ok!
 
 
