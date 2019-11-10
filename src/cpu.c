@@ -1936,6 +1936,15 @@ printf (
 		"--stats-uuid s                 UUID to send statistics\n"
 		"--stats-disable-check-updates  Disable checking of available ZEsarUX updates\n"
 		"--stats-last-avail-version s   ZEsarUX last available version to download\n"
+		
+		
+		"--stats-speccy-queries n       Total queries on the speccy online browser\n"
+		"--stats-zx81-queries n         Total queries on the zx81 online browser\n"
+		
+			
+		
+			
+		
 
 
 		"\n"
@@ -6935,7 +6944,24 @@ int parse_cmdline_options(void) {
 				siguiente_parametro_argumento();
 				strcpy(stats_last_remote_version,argv[puntero_parametro]);
 			}			
+			
+			else if (!strcmp(argv[puntero_parametro],"--stats-speccy-queries")) {
+				siguiente_parametro_argumento();
+				stats_total_speccy_browser_queries=parse_string_to_number(argv[puntero_parametro]));
+			}	
+			
+			else if (!strcmp(argv[puntero_parametro],"--stats-zx81-queries")) {
+				siguiente_parametro_argumento();
+				stats_total_zx81_browser_queries=parse_string_to_number(argv[puntero_parametro]));
+			}	
+			
+			
+			
+
                          
+			
+			
+			
 			else if (!strcmp(argv[puntero_parametro],"--last-version")) {
 				siguiente_parametro_argumento();
 				strcpy(last_version_string,argv[puntero_parametro]);

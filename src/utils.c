@@ -3613,6 +3613,14 @@ int util_write_configfile(void)
           
 
   if (stats_uuid[0]!=0)                      ADD_STRING_CONFIG,"--stats-uuid %s",stats_uuid);
+  
+  			ADD_STRING_CONFIG,"--stats-speccy-queries",stats_total_speccy_browser_queries);
+			
+			ADD_STRING_CONFIG,"--stats-zx81-queries",stats_total_zx81_browser_queries);
+			
+  
+  
+  
 
   if (stats_check_updates_enabled.v==0)        ADD_STRING_CONFIG,"--stats-disable-check-updates");
 		
