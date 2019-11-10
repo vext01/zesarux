@@ -16918,6 +16918,8 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 	
 		char letra=menu_online_browse_zx81_letter();
 		if (letra==0) return;
+		
+	    stats_total_zx81_browser_queries++;
 
 		//printf ("old letra %c new letra %c\n",online_browse_zx81_ultima_letra,letra);
 	
@@ -17582,6 +17584,10 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	
 	menu_ventana_scanf("Query",zxinfowos_query_search,256);
 	if (zxinfowos_query_search[0]==0) return;
+	
+    stats_total_speccy_browser_queries++;
+	
+	
 	
 	//TODO podria pasar que al normalizar ocupe mas de 1024, pero la cadena de entrada tendria que ser muy grande
 	char query_search_normalized[1024];

@@ -52,6 +52,11 @@ z80_bit stats_check_updates_enabled={1};
 
 char stats_last_remote_version[MAX_UPDATE_VERSION_STRING]="";
 
+//total consultas realizadas con browser speccy
+int stats_total_speccy_browser_queries=0;
+//total consultas realizadas con browser zx81
+int stats_total_zx81_browser_queries=0;
+
 void generate_stats_uuid(void)
 {
 
@@ -64,7 +69,6 @@ void generate_stats_uuid(void)
 	struct timeval fecha;
 
 	gettimeofday(&fecha, NULL);
-
 
 	int secs=fecha.tv_sec;
 	int microsecs=fecha.tv_usec;
@@ -139,7 +143,11 @@ void *send_stats_server_pthread(void *nada)
 	char query_url_parameters[NETWORK_MAX_URL];
 	char query_url_parameters_normalized[NETWORK_MAX_URL];
 
-	sprintf (query_url_parameters,"UUID=%s&OS=%s&total_minutes_use=%d&version=%s&buildnumber=%s",stats_uuid,COMPILATION_SYSTEM,minutes,EMULATOR_VERSION,BUILDNUMBER);
+	sprintf (query_url_parameters,"UUID=%s&OS=%s&total_minutes_use=%d&speccy_queries=%d&zx81_queries=%d&version=%s&buildnumber=%s",stats_uuid,COMPILATION_SYSTEM,minutes,
+	 stats_total_speccy_browser_queries,
+  stats_total_zx81_browser_queries,
+	
+	EMULATOR_VERSION,BUILDNUMBER);
 	//Normalizar solo la parte de parametros. Si hicieramos toda la url, el "/" del inicio de la url se convertiria a %2f
 	util_normalize_query_http(query_url_parameters,query_url_parameters_normalized);
 

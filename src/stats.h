@@ -43,4 +43,7 @@ extern void stats_ask_if_enable(void);
 extern void stats_enable(void);
 extern void stats_disable(void);
 
+extern int stats_total_speccy_browser_queries;
+extern int stats_total_zx81_browser_queries;
+
 #endif
