@@ -4,6 +4,13 @@
  .total consultas realizadas con browser speccy
  .total consultas realizadas con browser zx81
  
+-Al pulsar en footer cuando está con real tape, que se ponga cinta en pausa
+
+-Opción im0 parece que solo es en mostek. Y no en nec
+Z88 tiene un cmos? Pero que marca?
+Quizá tener uno genérico y luego otro
+Tipo que cambie según máquina o parámetro personalizable
+ 
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
