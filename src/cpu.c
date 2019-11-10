@@ -6947,12 +6947,12 @@ int parse_cmdline_options(void) {
 			
 			else if (!strcmp(argv[puntero_parametro],"--stats-speccy-queries")) {
 				siguiente_parametro_argumento();
-				stats_total_speccy_browser_queries=parse_string_to_number(argv[puntero_parametro]));
+				stats_total_speccy_browser_queries=parse_string_to_number(argv[puntero_parametro]);
 			}	
 			
 			else if (!strcmp(argv[puntero_parametro],"--stats-zx81-queries")) {
 				siguiente_parametro_argumento();
-				stats_total_zx81_browser_queries=parse_string_to_number(argv[puntero_parametro]));
+				stats_total_zx81_browser_queries=parse_string_to_number(argv[puntero_parametro]);
 			}	
 			
 			
