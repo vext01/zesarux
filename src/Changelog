@@ -15,6 +15,7 @@ Added checking for updates
 Added sending anonymous statistics use
 Added setting --disablemenuandexit: it closes the emulator when the menu is going to be opened. 
  It's the same behaviour as previous --disablemenu. Now --disablemenu only disables the menu but does not close the emulator
+Added setting to disable looking for alternate character sets from sysvar 23606/7 on ocr functions
  
 Added Borland Gui Style
 
@@ -68,9 +69,7 @@ Fixed undocumented opcode ED76: I had IM0 but it's IM1
 Fixed loading and saving +3 .z80 snapshots
 Fixed placing menu windows when using zx desktop and machines TSConf, TBBlue, CPC and QL
 Fixed bug loading .sna files when rom 1 paged in
-Fixed very-old bug when loading Rocman game. This bug existed even on ZXSpectr. It fixes return flags when using tape traps.
-  Rocman loading screen was shown wrong (having the "any flag loading setting" disabled), but loaded. Enabling that setting crashed the game
-
+Fixed bug on return flags from tape load trap. It only affected Rocman game and enabling "any flag loading" setting
 
 
 Version 8.0. 19 July 2019 - World Destruction edition

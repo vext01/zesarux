@@ -8535,7 +8535,7 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                                         
                                         
 
-menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_ocr_23606,NULL,"[%c]   OCR Alternate chars", (ocr_settings_not_look_23606.v==0 ? 'X' : ' ') );
+
 
 
 
@@ -8972,6 +8972,12 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			
 
 		}
+
+		menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_ocr_23606,NULL,"[%c] OCR Alternate chars", (ocr_settings_not_look_23606.v==0 ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_settings_display,"Tells to look for an alternate character set other than the ROM default on OCR functions");
+		menu_add_item_menu_ayuda(array_menu_settings_display,"Tells to look for an alternate character set other than the ROM default on OCR functions. "
+							"It will look also for another character set which table is set on sysvar 23606/7. It may generate false positives "
+							"on some games. It's used on text drivers (curses, stdout, simpletext) but also on OCR function");
 
 
 		if (menu_display_cursesstdoutsimpletext_cond() || menu_display_aa_cond() ) {

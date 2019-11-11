@@ -1503,8 +1503,8 @@ printf (
 
 		"\n"
 		"\n"
-		"Video Features\n"
-		"--------------\n"
+		"Display Settings\n"
+		"----------------\n"
 		"\n"
 
 		"--realvideo                Enable real video display - for Spectrum (rainbow and other advanced effects) and ZX80/81 (non standard & hi-res modes)\n"
@@ -1528,6 +1528,7 @@ printf (
 		"--chroma81                 Enable Chroma81 support on ZX80/ZX81\n"
 		"--videozx8081 n            Emulate ZX80/81 Display on Spectrum. n=pixel threshold (1..16. 4=normal)\n"
 		"--videofastblack           Emulate black screen on fast mode on ZX80/ZX81\n"
+		"--no-ocr-alternatechars    Disable looking for an alternate character set other than the ROM default on OCR functions\n"
 		"--scr file                 Load Screen File at startup\n"
 
 
@@ -5320,6 +5321,12 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--videofastblack")) {
 				video_fast_mode_emulation.v=1;
 			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--no-ocr-alternatechars")) {
+				ocr_settings_not_look_23606.v=1;
+			}
+
 
 
 			else if (!strcmp(argv[puntero_parametro],"--zx8081vsyncsound")) {

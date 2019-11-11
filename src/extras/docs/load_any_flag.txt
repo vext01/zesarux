@@ -1,3 +1,10 @@
+Fixed very-old bug when loading Rocman game. 
+This bug existed even on ZXSpectr. It fixes return flags when using tape traps.
+Rocman loading screen was shown wrong (having the "any flag loading setting" disabled), but loaded. Enabling that setting crashed the game
+
+Tests:
+
+
 -copion method:
 
 cp a
