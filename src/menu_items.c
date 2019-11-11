@@ -7838,6 +7838,12 @@ void menu_zxuno_deny_turbo_bios_boot(MENU_ITEM_PARAMETERS)
 	zxuno_deny_turbo_bios_boot.v ^=1;
 }
 
+void menu_cpu_type(MENU_ITEM_PARAMETERS)
+{
+	z80_cpu_current_type++;
+	if (z80_cpu_current_type>=TOTAL_Z80_CPU_TYPES) z80_cpu_current_type=0;
+}
+
 //menu cpu settings
 void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 {
@@ -7873,6 +7879,10 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_cpu_settings,"Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. "
 					"Some machines, like ZX-Uno or Chloe, change this setting");
 
+
+
+
+
 		if (MACHINE_IS_ZXUNO) {
 					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"[%c] ~~Deny turbo on boot",
 							(zxuno_deny_turbo_bios_boot.v ? 'X' : ' ') );
@@ -7898,6 +7908,12 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 						"accelerate loaders setting is enabled. Not available on Z88");
 
 		}	  
+
+		if (CPU_IS_Z80) {
+			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_cpu_type,NULL,"CPU Type [%s]",z80_cpu_types_strings[z80_cpu_current_type]);
+			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Chooses the cpu type");
+			menu_add_item_menu_ayuda(array_menu_cpu_settings,"CPU type modifies the way machine fires an IM0 interrupt, or the behaviour of opcode OUT (C),0, for example");
+		}		
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum ~~core [%s]",

@@ -207,6 +207,18 @@ z80_byte current_machine_type;
 //Ultima maquina seleccionada desde post_set_machine
 z80_byte last_machine_type=255;
 
+
+//Tipos de CPU Z80 activa
+enum z80_cpu_types z80_cpu_current_type=Z80_TYPE_GENERIC;
+
+
+char *z80_cpu_types_strings[TOTAL_Z80_CPU_TYPES]={
+	"Generic",
+	"Mostek",
+	"CMOS"
+};
+
+
 char *scrfile;
 
 int zoom_x=2,zoom_y=2;
@@ -2798,6 +2810,9 @@ void set_machine_params(void)
 		cpu_duracion_pulso_interrupcion=32;
 
 
+		z80_cpu_current_type=Z80_TYPE_GENERIC;		
+
+
 		//cpu_core_loop=cpu_core_loop_spectrum;
 		if (MACHINE_IS_SPECTRUM) {
 			cpu_core_loop_active=CPU_CORE_SPECTRUM;
@@ -3107,6 +3122,8 @@ You don't need timings for H/V sync =)
                         	screen_total_borde_derecho=64;
                         	screen_invisible_borde_derecho=64;
 
+							z80_cpu_current_type=Z80_TYPE_CMOS;	
+
 
 							
 				}
@@ -3118,6 +3135,8 @@ You don't need timings for H/V sync =)
 
 				 			ula_contend_port_early=ula_contend_port_early_baseconf;
 				 			ula_contend_port_late=ula_contend_port_late_baseconf;
+
+							 z80_cpu_current_type=Z80_TYPE_CMOS;	
 
                                         //Temp timings 128k
                         screen_testados_linea=228;
@@ -3149,6 +3168,8 @@ You don't need timings for H/V sync =)
 
                         ula_contend_port_early=ula_contend_port_early_z88;
                         ula_contend_port_late=ula_contend_port_late_z88;
+
+						z80_cpu_current_type=Z80_TYPE_CMOS;		
 
 			//timer_sleep_machine=original_timer_sleep_machine=5000;
 			original_timer_sleep_machine=5000;

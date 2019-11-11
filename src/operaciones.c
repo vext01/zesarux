@@ -461,8 +461,9 @@ void cpu_common_jump_im01(void)
 	t_estados += 7;
 
 
-	//Im modo 0 la interrupción es un t-estado más rápido que con Im modo 1
-	if (im_mode==0) t_estados--;
+	//Im modo 0 la interrupción es un t-estado más rápido que con Im modo 1, en cpu mostek
+
+	if (im_mode==0 && z80_cpu_current_type==Z80_TYPE_MOSTEK) t_estados--;
 }
 
 

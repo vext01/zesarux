@@ -32,6 +32,7 @@ Added ZRCP commands:
 
 Added internal zip decompressor: no more need to use external unzip program
 Added setting to reset configuration file to default values
+Added setting to choose cpu type
 
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired

@@ -1253,8 +1253,9 @@ void instruccion_ed_113 ()
         set_memptr(BC+1);
 #endif
 
-	//Esto es diferente en NMOS y en CMOS
-	if (MACHINE_IS_Z88 || MACHINE_IS_TSCONF) {
+	//Esto es diferente entre NMOS y CMOS
+        if (z80_cpu_current_type==Z80_TYPE_CMOS) {
+	//if (MACHINE_IS_Z88 || MACHINE_IS_TSCONF) {
 		//CMOS
 		out_port(BC, 255);
 	}

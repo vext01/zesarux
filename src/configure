@@ -836,7 +836,7 @@ _EOF
 
 
 		#para la sentencia make windows
-		LIBPTHREADS_WIN="pthreadGC2.dll libgcc_s_dw2-1.dll libcrypto-1_1.dll libssl-1_1.dll"
+		LIBPTHREADS_WIN="pthreadGC2.dll pthreadGC-3.dll libgcc_s_dw2-1.dll libcrypto-1_1.dll libssl-1_1.dll"
 
         fi
         rm -f $TEMPFILE $TEMPFILE.o

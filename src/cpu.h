@@ -432,7 +432,18 @@ extern z80_byte last_inves_low_ram_poke_menu;
 
 extern void random_ram_inves(z80_byte *puntero,int longitud);
 
+//Tipos de CPU Z80
+#define TOTAL_Z80_CPU_TYPES 3
+enum z80_cpu_types
+{
+  Z80_TYPE_GENERIC,
+  Z80_TYPE_MOSTEK,
+  Z80_TYPE_CMOS
+};
 
+extern enum z80_cpu_types z80_cpu_current_type;
+
+extern char *z80_cpu_types_strings[];
 
 //valor obtenido probando
 #define MAX_EMULATE_MEMORY_REFRESH_COUNTER 1500000
