@@ -6989,7 +6989,7 @@ int parse_cmdline_options(void) {
 						exit(1);
 				}
 
-				segundos_cada_snapshot=valor;
+				zeng_segundos_cada_snapshot=valor;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--zeng-iam-master")) {

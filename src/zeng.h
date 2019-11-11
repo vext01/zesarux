@@ -57,7 +57,7 @@ extern char zeng_remote_hostname[];
 //Puerto remoto
 extern int zeng_remote_port;
 extern int zeng_i_am_master;
-extern int segundos_cada_snapshot;
+extern int zeng_segundos_cada_snapshot;
 
 extern void zeng_add_pending_send_message_footer(char *mensaje);
 extern int pending_zeng_send_message_footer;

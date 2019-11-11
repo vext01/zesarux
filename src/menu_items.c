@@ -16436,35 +16436,7 @@ int menu_network_uartbridge_cond(void)
 	else return 0;
 }
 
-/*
-void menu_zeng_enable(MENU_ITEM_PARAMETERS)
-{
 
-
-        char string_port[6];
-		char string_master[2];
-		char string_seconds[2];
-
-        sprintf (string_port,"%d",zeng_remote_port);
-		sprintf (string_master,"%d",zeng_i_am_master);
-		sprintf (string_seconds,"%d",segundos_cada_snapshot);
-
-	menu_ventana_scanf("Remote host",zeng_remote_hostname,256);
-	menu_ventana_scanf("Remote port",string_port,6);
-
-	zeng_remote_port=parse_string_to_number(string_port);
-
-	menu_ventana_scanf("Master?",string_master,2);
-	zeng_i_am_master=parse_string_to_number(string_master);
-
-	if (zeng_i_am_master) {
-		menu_ventana_scanf("Snapshot seconds?",string_seconds,2);
-		segundos_cada_snapshot=parse_string_to_number(string_seconds);
-	}
-
-	zeng_enable();
-}
-*/
 
 int contador_menu_zeng_connect_print=0;
 /*void menu_zeng_connect_print(zxvision_window *w)
@@ -16603,7 +16575,7 @@ void menu_zeng_snapshot_seconds(MENU_ITEM_PARAMETERS)
 
 		char string_seconds[2];
 
-		sprintf (string_seconds,"%d",segundos_cada_snapshot);
+		sprintf (string_seconds,"%d",zeng_segundos_cada_snapshot);
 
 
 		menu_ventana_scanf("Snapshot seconds?",string_seconds,2);
@@ -16615,7 +16587,7 @@ void menu_zeng_snapshot_seconds(MENU_ITEM_PARAMETERS)
 		}
 
 
-		segundos_cada_snapshot=numero;
+		zeng_segundos_cada_snapshot=numero;
 
 }
 
@@ -16680,7 +16652,7 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_common,'m');
 
 			if (zeng_i_am_master) {
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,NULL,"[%d] Snapshot seconds",segundos_cada_snapshot);
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,NULL,"[%d] Snapshot seconds",zeng_segundos_cada_snapshot);
 			}
 
 			if (zeng_enabled.v) {
