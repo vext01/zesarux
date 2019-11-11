@@ -1,7 +1,5 @@
 --------Para próxima versión:
  
--quitar debug ssl
- 
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
@@ -169,10 +167,7 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 -probar doom mania (juego a dobles al doom)
 
-
 -que permita ZENG en todos los cores de maquinas
-
-*que se guarde la config de los parametros
 
 *revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
 *con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
@@ -200,8 +195,6 @@ Entonces:
 -cursor envía evento ZENG de cursor
 -pulsar joystick real debe agregar envío evento ZENG de código especial joystick 
 -joystick real a Tecla definida no debe llamar a ZENG por la Tecla. Solo envía ZENG el movimiento de joystick (caso anterior)
-
-
 
 *que pregunte confirmacion en destino si quiere aceptar, mostrando la ip de origen
 *en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc
