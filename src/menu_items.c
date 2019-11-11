@@ -16516,8 +16516,8 @@ void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
 	}
 	else {
 
-		//Activamos ZRCP, que es lo logico
-		enable_and_init_remote_protocol();		
+		//Activamos ZRCP, que es lo logico, si es que no esta habilitado ya
+		if (remote_protocol_enabled.v==0) enable_and_init_remote_protocol();		
 
 		//menu_footer_clear_bottom_line();
 		//menu_putstring_footer(0,2,"Connecting to remote...",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);

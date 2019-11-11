@@ -167,16 +167,16 @@ void z_init_ssl(void)
 
 int z_connect_ssl(int indice_tabla)
 {
-	printf ("Connecting SSL\n");
+	debug_printf (VERBOSE_DEBUG,"Connecting SSL");
 
-	printf ("SSL_CTX_new\n");
+	debug_printf (VERBOSE_DEBUG,"SSL_CTX_new");
 	sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
 
 	// create an SSL connection and attach it to the socket
 	sockets_list[indice_tabla].ssl_conn = SSL_new(sockets_list[indice_tabla].ssl_ctx);
 
 	if (sockets_list[indice_tabla].ssl_conn==NULL) {
-		printf ("Error creating SSL context\n");
+		debug_printf (VERBOSE_DEBUG,"Error creating SSL context");
 
 		//mostrar error
 		//ERR_print_errors_fp(stderr);
@@ -184,13 +184,13 @@ int z_connect_ssl(int indice_tabla)
 		return -1;
 	}
 
-	printf ("SSL_set_fd %d %d\n",sockets_list[indice_tabla].ssl_conn,sockets_list[indice_tabla].socket_number);
+	debug_printf (VERBOSE_DEBUG,"SSL_set_fd %d %d",sockets_list[indice_tabla].ssl_conn,sockets_list[indice_tabla].socket_number);
 	SSL_set_fd(sockets_list[indice_tabla].ssl_conn, sockets_list[indice_tabla].socket_number);
 
 	// perform the SSL/TLS handshake with the server - when on the
 	// server side, this would use SSL_accept()
 
-	printf ("SSL_connect\n");
+	debug_printf (VERBOSE_DEBUG,"Running SSL_connect");
 	int err = SSL_connect(sockets_list[indice_tabla].ssl_conn);
 	if (err != 1) {
    		return -1;
@@ -201,9 +201,9 @@ int z_connect_ssl(int indice_tabla)
 
 void z_disconnect_ssl(int indice_tabla)
 {
-	printf ("Disconnecting SSL\n");
+	debug_printf (VERBOSE_DEBUG,"Disconnecting SSL");
 
-	printf ("SSL_CTX_free\n");
+	debug_printf (VERBOSE_DEBUG,"SSL_CTX_free");
 	SSL_CTX_free(sockets_list[indice_tabla].ssl_ctx);
 	
 }
@@ -633,7 +633,7 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 #ifdef COMPILE_SSL
 		int ret=z_connect_ssl(indice_tabla);
 		if (ret!=0) {
-			printf ("Error connecting ssl\n");
+			debug_printf (VERBOSE_DEBUG,"Error connecting ssl");
 			return -1;
 		}
 #else
