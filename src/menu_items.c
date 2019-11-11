@@ -7910,9 +7910,9 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 		}	  
 
 		if (CPU_IS_Z80) {
-			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_cpu_type,NULL,"CPU Type [%s]",z80_cpu_types_strings[z80_cpu_current_type]);
+			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_cpu_type,NULL,"Z80 CPU Type [%s]",z80_cpu_types_strings[z80_cpu_current_type]);
 			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Chooses the cpu type");
-			menu_add_item_menu_ayuda(array_menu_cpu_settings,"CPU type modifies the way machine fires an IM0 interrupt, or the behaviour of opcode OUT (C),0, for example");
+			menu_add_item_menu_ayuda(array_menu_cpu_settings,"CPU type modifies the way the CPU fires an IM0 interrupt, or the behaviour of opcode OUT (C),0, for example");
 		}		
 
 		if (MACHINE_IS_SPECTRUM) {
