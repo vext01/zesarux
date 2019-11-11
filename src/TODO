@@ -233,6 +233,10 @@ Lo que pasa es que cuando asigno memoria vram hago los 32 k de golpe, por eso cu
 
 -pzx: falla con speedlock: wtss.pzx (where time stool still), myth.pzx
 
+-permitir que las direcciones de breakpoints se pongan con 0xNNNN ademas de NNNNh y decimal
+incluso con $NNNN
+
+
 -sumas md5 que ya no se usan de autoselect. Ver si hay archivos .config alternativos para todo esto
 
 -Convertir cintas paws

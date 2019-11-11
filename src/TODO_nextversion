@@ -36,11 +36,9 @@ Quizá mostrar C en caso de 127
 
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?
-
+-como incluir libreria ssl en mac? hace falta /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
 
-
--como incluir libreria ssl en mac? hace falta /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
 
 -vertificar roms ifrom, lista que sea valida de distribucion
 
@@ -73,9 +71,6 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 
 -tabla de joystick to event siempre se resetea??
-
--permitir que las direcciones de breakpoints se pongan con 0xNNNN ademas de NNNNh y decimal
-incluso con $NNNN
 
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
@@ -113,7 +108,7 @@ D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 
 
--Spool file funciona en cpc?
+-Spool file funciona en cpc? SI
 
 
 
