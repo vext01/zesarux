@@ -700,8 +700,7 @@ void menu_debug_configuration_remoteproto(MENU_ITEM_PARAMETERS)
 	}
 
 	else {
-		remote_protocol_enabled.v=1;
-		init_remote_protocol();
+		enable_and_init_remote_protocol();
 	}
 }
 
@@ -16516,6 +16515,10 @@ void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
 		zeng_disable();
 	}
 	else {
+
+		//Activamos ZRCP, que es lo logico
+		enable_and_init_remote_protocol();		
+
 		//menu_footer_clear_bottom_line();
 		//menu_putstring_footer(0,2,"Connecting to remote...",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
 		//all_interlace_scr_refresca_pantalla();
@@ -17843,7 +17846,16 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng,NULL,"Z~~ENG");
 			menu_add_item_menu_shortcut(array_menu_common,'e');
 			menu_add_item_menu_tooltip(array_menu_common,"Setup ZEsarUX Network Gaming");
-			menu_add_item_menu_ayuda(array_menu_common,"Setup ZEsarUX Network Gaming");
+			menu_add_item_menu_ayuda(array_menu_common,"ZEsarUX Network Gaming protocol (ZENG) allows you to play to any emulated game, using two ZEsarUX instances, "
+			  "located each one on any part of the world or in a local network.\n"
+			  "Games doesn't have to be modified, you can use any existing game. "
+			  "ZENG works by sending special commands through the ZRCP protocol, so in order to use ZENG you must enable ZRCP protocol on menu settings-debug. "
+			  "This protocol listens on tcp port 10000 so you should open your firewall/router to use it. "
+			  "One ZEsarUX instance will be the master node and the other instance will be the slave node.\n"
+			  "When you enable ZENG on both nodes:\n"
+			  "-all key/joystick presses will be sent between the two nodes\n"
+			  "-every two seconds a snapshot will be sent from the master to the slave node\n"
+			);
 
                      
              

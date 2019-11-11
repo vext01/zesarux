@@ -24,6 +24,7 @@
 
 extern void init_remote_protocol(void);
 extern void end_remote_protocol(void);
+extern void enable_and_init_remote_protocol(void);
 
 extern z80_bit remote_ack_enter_cpu_step;
 extern z80_bit remote_calling_end_emulator;

@@ -5969,7 +5969,7 @@ void init_remote_protocol(void)
 
   if (remote_protocol_enabled.v==0) return;
 
-	debug_printf (VERBOSE_INFO,"Starting remote protocol listener on port %d",remote_protocol_port);
+	debug_printf (VERBOSE_INFO,"Starting ZEsarUX remote protocol (ZRCP) listener on port %d",remote_protocol_port);
 	thread_remote_inicializado.v=0;
 
 	if (pthread_create( &thread_remote_protocol, NULL, &thread_remote_protocol_function, NULL) ) {
@@ -5981,6 +5981,12 @@ void init_remote_protocol(void)
 	remote_protocol_ended.v=0;
 
 
+}
+
+void enable_and_init_remote_protocol(void)
+{
+	remote_protocol_enabled.v=1;
+	init_remote_protocol();
 }
 
 void end_remote_protocol(void)
@@ -6021,6 +6027,12 @@ void init_remote_protocol(void)
 }
 
 void end_remote_protocol(void)
+{
+
+}
+
+
+void enable_and_init_remote_protocol(void)
 {
 
 }

@@ -3608,6 +3608,14 @@ int util_write_configfile(void)
   if (menu_force_writing_inverse_color.v)     ADD_STRING_CONFIG,"--forcevisiblehotkeys");
   if (force_confirm_yes.v)                    ADD_STRING_CONFIG,"--forceconfirmyes");
                                               ADD_STRING_CONFIG,"--gui-style \"%s\"",definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
+
+  if (zeng_remote_hostname[0]!=0)             ADD_STRING_CONFIG,"--zeng-remote-hostname %s",zeng_remote_hostname);
+                                              ADD_STRING_CONFIG,"--zeng-remote-port %d",zeng_remote_port);
+                                              ADD_STRING_CONFIG,"--zeng-snapshot-interval %d",segundos_cada_snapshot);
+  if (zeng_i_am_master)                       ADD_STRING_CONFIG,"--zeng-iam-master");
+		
+
+
                                               
                                               ADD_STRING_CONFIG,"--total-minutes-use %d",total_minutes_use);	
 

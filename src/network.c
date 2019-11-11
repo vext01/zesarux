@@ -87,6 +87,12 @@ struct s_z_sockets_struct {
 };
 
 
+//funciones zsock no permito usarlas sin pthreads. Por que? Porque no tiene sentido realizar funciones de red si no se pueden meter 
+//las funciones en background, que se quedaria el emulador congelado al usar el speccy browser (por ejemplo, aunque seria un mal menor),
+//o al usar ZENG (ahi es imposible usarlo si no hay threads, como todo ZRCP). Al final se trata de simplificar las rutinas:
+//Si no hay soporte de threads, no hay funciones de red. Y punto
+
+
 typedef struct s_z_sockets_struct z_sockets_struct;
 
 //array de sockets

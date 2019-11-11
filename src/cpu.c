@@ -110,6 +110,7 @@
 #include "datagear.h"
 #include "network.h"
 #include "stats.h"
+#include "zeng.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -1937,10 +1938,24 @@ printf (
 		"--cleareventlist           Clears joystick to events table\n"
 		"--enablejoysticksimulator  Enable real joystick simulator. Only useful on development\n"
 
+
+		"\n"
+		"\n"
+		"Network\n"
+		"-------\n"
+		"\n"
+		
+		"--zeng-remote-hostname s   ZENG last remote hostname\n"
+		"--zeng-remote-port n       ZENG last remote port\n"
+		"--zeng-snapshot-interval n ZENG snapshot interval\n"
+		"--zeng-iam-master          Tells this machine is a ZENG master\n"
+
+
+
 		"\n"
 		"\n"
 		"Statistics\n"
-		"-------------\n"
+		"----------\n"
 		"\n"
 		
 		"--total-minutes-use n          Total minutes of use of ZEsarUX\n"
@@ -6945,6 +6960,44 @@ int parse_cmdline_options(void) {
 				}
 				exit_emulator_after_seconds=valor;
                          }
+
+
+			else if (!strcmp(argv[puntero_parametro],"--zeng-remote-hostname")) {
+				siguiente_parametro_argumento();
+				strcpy(zeng_remote_hostname,argv[puntero_parametro]);
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zeng-remote-port")) {
+				siguiente_parametro_argumento();
+
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<1 || valor>65535) {
+						printf ("Invalid value %d for setting --zeng-remote-port\n",valor);
+						exit(1);
+				}
+
+				zeng_remote_port=valor;
+			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--zeng-snapshot-interval")) {
+				siguiente_parametro_argumento();
+
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<1 || valor>9) {
+						printf ("Invalid value %d for setting --zeng-snapshot-interval\n",valor);
+						exit(1);
+				}
+
+				segundos_cada_snapshot=valor;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zeng-iam-master")) {
+				zeng_i_am_master=1;
+			}
+
+
+
         	else if (!strcmp(argv[puntero_parametro],"--total-minutes-use")) {
 				siguiente_parametro_argumento();
 				total_minutes_use=parse_string_to_number(argv[puntero_parametro]);	
