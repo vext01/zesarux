@@ -71,6 +71,9 @@ Fixed loading and saving +3 .z80 snapshots
 Fixed placing menu windows when using zx desktop and machines TSConf, TBBlue, CPC and QL
 Fixed bug loading .sna files when rom 1 paged in
 Fixed bug on return flags from tape load trap. It only affected Rocman game and enabling "any flag loading" setting
+Fixed Accessibility bugs: 
+-now menu settings (anything between square brackets []) are played at the end of the menu line
+-now menu settings ([ ] and [X]) are played as "enabled"/"disabled"
 
 
 Version 8.0. 19 July 2019 - World Destruction edition

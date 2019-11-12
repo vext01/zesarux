@@ -80,11 +80,7 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 -tabla de joystick to event siempre se resetea??
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
--items [X] no son amigables en speech, no se entienden. Deberian decir "yes" o "no"
-Corregir speech menus:
 
--si item empieza por [, buscar hasta cierre ]. Y eso se reproduce al final de linea
--Si [X], se dice "enabled". Si [ ], se dice "disabled"
 
 Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Funcion solo para esto y que no se use en otros sitios
 
