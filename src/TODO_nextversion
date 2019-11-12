@@ -1,6 +1,5 @@
 --------Para próxima versión:
 
-
  
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
@@ -30,9 +29,7 @@ Funciona ssl en windows ok!
 -Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
 Quizá mostrar C en caso de 127
 
-
 -Opción para formato de grabación de autosave snap
-
 
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?
@@ -80,9 +77,7 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 -porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
 
-
 -tabla de joystick to event siempre se resetea??
-
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
 -items [X] no son amigables en speech, no se entienden. Deberian decir "yes" o "no"
@@ -92,6 +87,7 @@ Corregir speech menus:
 -Si [X], se dice "enabled". Si [ ], se dice "disabled"
 
 Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Funcion solo para esto y que no se use en otros sitios
+
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
 
@@ -103,8 +99,6 @@ Quiza por el sprintf (pending_error_message
 -semáforos en Windows. Como? De momento no hace bloqueo si es Windows 
 
 -si la primera vez arranca con driver stdout, se abre el menu directamente, quiza porque va a mostrar tooltips o changelog
-
-
 
 
 -Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
