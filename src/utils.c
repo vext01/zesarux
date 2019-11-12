@@ -16560,8 +16560,8 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
 
         
         if (http_code==302 && redirect_url[0]!=0) {
-                printf ("util_download_file: detected redirect to %s\n",redirect_url);
-                //TODO: solo gestino 1 redirect
+                debug_printf (VERBOSE_DEBUG,"util_download_file: detected redirect to %s",redirect_url);
+                //TODO: solo gestiono 1 redirect
 
                 //obtener protocolo
                 use_ssl=util_url_is_https(redirect_url);
@@ -16577,7 +16577,7 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl)
                 //liberar memoria anterior
                 if (mem!=NULL) free(mem);
 
-                printf ("querying again host %s (SSL=%d) url %s\n",nuevo_host,use_ssl,nueva_url);
+                debug_printf (VERBOSE_DEBUG,"util_download_file: querying again host %s (SSL=%d) url %s",nuevo_host,use_ssl,nueva_url);
 
                 //El redirect sucede con las url a archive.org
 

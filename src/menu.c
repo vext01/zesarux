@@ -2744,7 +2744,7 @@ void menu_get_cpu_use_perc(void)
 		long dif_segundos=menu_cpu_use_seconds_ahora-menu_cpu_use_seconds_antes;
 		long dif_cpu_idle=menu_cpu_use_idle_ahora-menu_cpu_use_idle_antes;
 
-		debug_printf (VERBOSE_DEBUG,"sec now: %ld before: %ld cpu now: %ld before: %ld",menu_cpu_use_seconds_ahora,menu_cpu_use_seconds_antes,
+		debug_printf (VERBOSE_PARANOID,"sec now: %ld before: %ld cpu now: %ld before: %ld",menu_cpu_use_seconds_ahora,menu_cpu_use_seconds_antes,
 			menu_cpu_use_idle_ahora,menu_cpu_use_idle_antes);
 
 		long uso_cpu_idle;
@@ -2754,10 +2754,10 @@ void menu_get_cpu_use_perc(void)
 		else uso_cpu_idle=dif_cpu_idle/dif_segundos/menu_cpu_use_num_cpus;
 
 #if defined(__APPLE__)
-		debug_printf (VERBOSE_DEBUG,"cpu use: %ld",uso_cpu_idle);
+		debug_printf (VERBOSE_PARANOID,"cpu use: %ld",uso_cpu_idle);
 		usocpu=uso_cpu_idle;
 #else
-		debug_printf (VERBOSE_DEBUG,"cpu idle: %ld",uso_cpu_idle);
+		debug_printf (VERBOSE_PARANOID,"cpu idle: %ld",uso_cpu_idle);
 		//pasamos a int
 		usocpu=100-uso_cpu_idle;
 #endif
@@ -2776,7 +2776,7 @@ void menu_draw_cpu_use_last(void)
 {
 
 	int cpu_use=menu_last_cpu_use;
-	debug_printf (VERBOSE_DEBUG,"cpu: %d",cpu_use );
+	debug_printf (VERBOSE_PARANOID,"cpu: %d",cpu_use );
 
 	//error
 	if (cpu_use<0) return;
@@ -2821,7 +2821,7 @@ void menu_draw_cpu_use(void)
 	menu_get_cpu_use_perc();
 
 	int cpu_use=menu_last_cpu_use;
-	debug_printf (VERBOSE_DEBUG,"cpu: %d",cpu_use );
+	debug_printf (VERBOSE_PARANOID,"cpu: %d",cpu_use );
 
 	//error
 	if (cpu_use<0) return;
@@ -2932,7 +2932,7 @@ void menu_draw_last_fps(void)
 
 
         int fps=ultimo_fps;
-        debug_printf (VERBOSE_DEBUG,"FPS: %d",fps);
+        debug_printf (VERBOSE_PARANOID,"FPS: %d",fps);
 
         //algun error al leer fps
         if (fps<0) return;

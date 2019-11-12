@@ -981,7 +981,7 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *re
 					existe=strstr(buffer_linea,"Location: ");
 					if (existe!=NULL) {			
 						int longitud=strlen(pref_location);
-						printf ("zsock_http_skip_headers Detected redirect %s\n",buffer_linea);
+						debug_printf (VERBOSE_DEBUG,"zsock_http_skip_headers Detected redirect %s",buffer_linea);
 						strcpy(redirect,&buffer_linea[longitud]);
 					}
 				}
@@ -1050,7 +1050,7 @@ If no Accept-Encoding field is present in a request, the server MAY
 		*/
 
 	//Cuidado que este debug_printf no exceda el valor de DEBUG_MAX_MESSAGE_LENGTH, que no llegará, pero por si acaso...			
-	debug_printf (VERBOSE_DEBUG,"zsock_http Request:\n%s\n",request);
+	debug_printf (VERBOSE_DEBUG,"zsock_http Request:\n%s",request);
 
 	
 	int escritos=z_sock_write_string(indice_socket,request);
