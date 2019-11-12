@@ -3412,7 +3412,7 @@ int menu_if_speech_enabled(void)
 }
 
 
-void menu_textspeech_send_text(char *texto)
+void menu_textspeech_send_text(char *texto_orig)
 {
 
 	if (!menu_if_speech_enabled() ) return;
@@ -3421,7 +3421,51 @@ void menu_textspeech_send_text(char *texto)
 	//if (textspeech_also_send_menu.v==0) return;
 	//if (menu_speech_tecla_pulsada) return;
 
-	debug_printf (VERBOSE_DEBUG,"Send text to speech: %s",texto);
+	debug_printf (VERBOSE_DEBUG,"Send text to speech: %s",texto_orig);
+	
+	
+	
+		//-si item empieza por [, buscar hasta cierre ]. Y eso se reproduce al final de linea
+	//-Si [X], se dice "enabled". Si [ ], se dice "disabled"
+	//TODO: aqui se llama tambien al decir directorios por ejemplo. Si hay directorio con [ ] (cosa rara) se interpretaria como una opcion
+	//y se diria al final
+	//TODO: la letra de tooltip viene aqui al final del texto. Cuando movemos las opciones de corchetes del principio al final en estas rutinas,
+	//se oye por ejemplo: "Real video R enabled", cosa que no es tampoco muy raro, pero lo ideal seria:
+	//"Real video enabled R"
+	//o incluso mejor:
+	//"Real video enabled , hotkey R"
+	char texto[MAX_BUFFER_SPEECH+1];
+
+	//buscar primero si hay [ ] al principio
+	int cambiado=0;
+	if (texto_orig[0]=='[') {
+		//posible
+		int i;
+		for (i=0;i<strlen(texto_orig) && !cambiado;i++) {
+			if (texto_orig[i]==']') {
+				//Hay inicio con [..]. Ponerlo al final en nueva string
+				char buf_opcion[MAX_BUFFER_SPEECH+1];
+				strcpy(buf_opcion,texto_orig);
+				buf_opcion[i+1]=0;  //buf_opcion contiene solo los corchetes y lo de dentro de corchetes
+
+				//Y ahora ademas, si la opcion es [ ] dice disabled. Si es [x] dice enabled
+				//TODO: solo estamos detectando esto a principio de linea. Creo que no hay ningun menu en que diga [ ] o [X] en otro
+				//sitio que no sea principio de linea. Si estuviera en otro sitio, no funcionaria
+				if (!strcmp(buf_opcion,"[ ]")) strcpy(buf_opcion,"Disabled");
+				else if (!strcmp(buf_opcion,"[X]")) strcpy(buf_opcion,"Enabled");
+
+				sprintf(texto,"%s %s",&texto_orig[i+1],buf_opcion);
+				printf ("Detected setting at the beginning of the line. Changing speech to menu item and setting: %s\n",texto);
+				cambiado=1;
+			}
+		}
+	}
+
+	if (!cambiado) strcpy(texto,texto_orig);
+	
+	
+	
+	
 
 
 	//Eliminamos las ~~ o ^^ del texto. Realmente eliminamos cualquier ~ aunque solo haya una
@@ -3499,47 +3543,11 @@ void menu_textspeech_send_text(char *texto)
 	}
 
 
-	//-si item empieza por [, buscar hasta cierre ]. Y eso se reproduce al final de linea
-	//-Si [X], se dice "enabled". Si [ ], se dice "disabled"
-	//TODO: aqui se llama tambien al decir directorios por ejemplo. Si hay directorio con [ ] (cosa rara) se interpretaria como una opcion
-	//y se diria al final
-	//TODO: la letra de tooltip viene aqui al final del texto. Cuando movemos las opciones de corchetes del principio al final en estas rutinas,
-	//se oye por ejemplo: "Real video R enabled", cosa que no es tampoco muy raro, pero lo ideal seria:
-	//"Real video enabled R"
-	//o incluso mejor:
-	//"Real video enabled , hotkey R"
-	char buf_speech_final[MAX_BUFFER_SPEECH+1];
-
-	//buscar primero si hay [ ] al principio
-	int cambiado=0;
-	if (buf_speech[0]=='[') {
-		//posible
-		int i;
-		for (i=0;i<strlen(buf_speech);i++) {
-			if (buf_speech[i]==']') {
-				//Hay inicio con [..]. Ponerlo al final en nueva string
-				char buf_opcion[MAX_BUFFER_SPEECH+1];
-				strcpy(buf_opcion,buf_speech);
-				buf_opcion[i+1]=0;  //buf_opcion contiene solo los corchetes y lo de dentro de corchetes
-
-				//Y ahora ademas, si la opcion es [ ] dice disabled. Si es [x] dice enabled
-				//TODO: solo estamos detectando esto a principio de linea. Creo que no hay ningun menu en que diga [ ] o [X] en otro
-				//sitio que no sea principio de linea. Si estuviera en otro sitio, no funcionaria
-				if (!strcmp(buf_opcion,"[ ]")) strcpy(buf_opcion,"Disabled");
-				else if (!strcmp(buf_opcion,"[X]")) strcpy(buf_opcion,"Enabled");
-
-				sprintf(buf_speech_final,"%s %s",&buf_speech[i+1],buf_opcion);
-				printf ("Detected setting at the beginning of the line. Changing speech to menu item and setting: %s\n",buf_speech_final);
-				cambiado=1;
-			}
-		}
-	}
-
-	if (!cambiado) strcpy(buf_speech_final,buf_speech);
 
 
-	debug_printf (VERBOSE_DEBUG,"Final sent text to speech after processing filters: %s",buf_speech_final);
-	textspeech_print_speech(buf_speech_final);
+
+	debug_printf (VERBOSE_DEBUG,"Final sent text to speech after processing filters: %s",buf_speech);
+	textspeech_print_speech(buf_speech);
 	//printf ("textspeech_print_speech: %s\n",buf_speech);
 
 	//hacemos que el timeout de tooltip se reinicie porque sino cuando se haya leido el menu, acabara saltando el timeout
