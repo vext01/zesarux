@@ -1,6 +1,7 @@
 --------Para próxima versión:
 
--probar speech menus. A ver que tal se comporta con cambio ultimo de los corchetes. quitar printf en consola de esto
+-probar speech menus. A ver que tal se comporta con cambio ultimo de los corchetes. quitar printf en consola de esto. Creo que ya no hay debug
+Falta en "active item", se envía texto tal cual sin detección corchetes -> esto será porque solo miramos al principio corchete pero al principio hay "active ítem.."
  
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx

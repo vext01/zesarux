@@ -3455,7 +3455,7 @@ void menu_textspeech_send_text(char *texto_orig)
 				else if (!strcmp(buf_opcion,"[X]")) strcpy(buf_opcion,"Enabled");
 
 				sprintf(texto,"%s %s",&texto_orig[i+1],buf_opcion);
-				printf ("Detected setting at the beginning of the line. Changing speech to menu item and setting: %s\n",texto);
+				//printf ("Detected setting at the beginning of the line. Changing speech to menu item and setting: %s\n",texto);
 				cambiado=1;
 			}
 		}
