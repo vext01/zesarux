@@ -1,7 +1,6 @@
 --------Para próxima versión:
 
 
--maximo tamanyo archivo config .zesaruxrc? estamos cerca del limite? 
  
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx

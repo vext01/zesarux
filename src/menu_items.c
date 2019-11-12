@@ -16995,7 +16995,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		else {	
 			if (retorno<0) {	
 				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
-				printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
+				debug_printf (VERBOSE_DEBUG,"Error: %d %s",retorno,z_sock_get_error(retorno));
 				menu_network_error(retorno);
 			}
 			else {
@@ -17049,7 +17049,7 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 
 #ifdef USE_PTHREADS
 
-	printf ("Starting zsock http thread. Host=%s Url=%s\n",
+	debug_printf (VERBOSE_DEBUG,"Starting zsock http thread. Host=%s Url=%s",
 								((struct menu_zsock_http_struct *)entrada)->host,
 								((struct menu_zsock_http_struct *)entrada)->url);
 
@@ -17072,7 +17072,7 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 
 
 
-	printf ("Finishing zsock http thread\n");
+	debug_printf (VERBOSE_DEBUG,"Finishing zsock http thread");
 
 #endif
 	menu_zsock_http_thread_running=0;
@@ -17115,7 +17115,7 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 #ifdef USE_PTHREADS
 
 	//Inicializar thread
-	printf ("Initializing thread menu_menu_zsock_http_thread_function\n");
+	debug_printf (VERBOSE_DEBUG,"Initializing thread menu_menu_zsock_http_thread_function");
 	
 
 	//Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
@@ -17172,7 +17172,7 @@ void *menu_download_wos_thread_function(void *entrada)
 
 #ifdef USE_PTHREADS
 
-	printf ("Starting download content thread. Host=%s Url=%s\n",
+	debug_printf (VERBOSE_DEBUG,"Starting download content thread. Host=%s Url=%s",
 	((struct download_wos_struct *)entrada)->host,
 								((struct download_wos_struct *)entrada)->url);
 
@@ -17181,7 +17181,7 @@ void *menu_download_wos_thread_function(void *entrada)
 								((struct download_wos_struct *)entrada)->archivo_temp,
 								((struct download_wos_struct *)entrada)->ssl_use); 
 
-	printf ("Finishing download content thread\n");
+	debug_printf (VERBOSE_DEBUG,"Finishing download content thread");
 
 #endif
 	download_wos_thread_running=0;
@@ -17509,7 +17509,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,int *ssl_use)
 {
-	    /* TODO Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
+	    /*  Local file links starting with /zxdb/sinclair/ refer to content added afterwards. 
 		These files are currently stored at https://spectrumcomputing.co.uk/zxdb/sinclair/  */
 
 		/*
@@ -17522,7 +17522,6 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 
 		https://github.com/zxdb/ZXDB/blob/master/README.md
 		*/
-		//sprintf (archivo_temp,"/tmp/%s",juego);
 
 		
 #ifdef COMPILE_SSL
@@ -17531,7 +17530,7 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 		//char *pref_zxdb="/zxdb/sinclair/";
 
 		if (strstr(url_orig,pref_wos)!=NULL) {
-			printf ("Prefijo es de WOS\n");
+			debug_printf (VERBOSE_DEBUG,"WOS preffix");
 
 			//Quitar /pub/sinclair
 			char url_modif[NETWORK_MAX_URL];
@@ -17546,21 +17545,23 @@ void menu_zxinfo_get_final_url(char *url_orig,char *host_final,char *url_final,i
 			char *puntero_url;
 			puntero_url=&url_modif[longitud_pref];
 
-			printf ("url modificada primero: %s\n",puntero_url);
+			//printf ("url modificada primero: %s\n",puntero_url);
 
 			strcpy(host_final,"archive.org");
 			sprintf(url_final,"/download/World_of_Spectrum_June_2017_Mirror/World%%20of%%20Spectrum%%20June%%202017%%20Mirror.zip/World%%20of%%20Spectrum%%20June%%202017%%20Mirror/sinclair/%s",puntero_url);
-			printf ("url modificada final: %s\n",url_final);
+			debug_printf (VERBOSE_DEBUG,"Final URL: %s",url_final);
 
 		}
 
 		else {
+			debug_printf (VERBOSE_DEBUG,"Spectrumcomputing preffix");
 			//Asumimos que es zxdb
 			strcpy(host_final,"spectrumcomputing.co.uk");
 			strcpy(url_final,url_orig);
 		}
 #else
 		//Si no tenemos ssl, solo podemos descargar contenido de wos tal cual
+		debug_printf (VERBOSE_DEBUG,"Trying to download from WOS using HTTP as we don't have SSL support compiled in");
 		*ssl_use=0;
 		strcpy(host_final,"www.worldofspectrum.org");
 		strcpy(url_final,url_orig);
@@ -17676,7 +17677,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 
 			menu_zxinfo_get_final_url(url_juego,host_final,url_juego_final,&ssl_use);
 
-			printf ("Downloading file from host %s (SSL=%d) url %s\n",host_final,ssl_use,url_juego_final);
+			debug_printf (VERBOSE_DEBUG,"Downloading file from host %s (SSL=%d) url %s",host_final,ssl_use,url_juego_final);
 
 			int ret=menu_download_wos(host_final,url_juego_final,archivo_temp,ssl_use); 
 

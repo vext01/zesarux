@@ -3749,8 +3749,8 @@ int util_write_configfile(void)
 
 //Leer archivo de configuracion en buffer
 //Devuelve 0 si no existe
-//Max 64 kb
-int configfile_read(char *mem)
+//Detecta que no exceda el limite
+int configfile_read(char *mem,int limite)
 {
 
 
@@ -3763,6 +3763,7 @@ int configfile_read(char *mem)
   }
 
 
+
 	//Ver si archivo existe
 
 	if (!si_existe_archivo(configfile)) {
@@ -3771,6 +3772,12 @@ int configfile_read(char *mem)
     if (util_create_sample_configfile(1)==0) return 0;
 
 	}
+
+        int tamanyo_archivo=get_file_size(configfile);
+
+        if (tamanyo_archivo>limite) {
+             cpu_panic("Configuration file larger than maximum allowed size. Exiting");  
+        }
 
 	return configfile_read_aux(configfile,mem);
 
@@ -3890,7 +3897,7 @@ void configfile_parse(void)
 		cpu_panic("Unable to allocate memory for configuration file");
 	}
 
-	if (configfile_read(mem_config)==0) {
+	if (configfile_read(mem_config,MAX_SIZE_CONFIG_FILE)==0) {
 		//No hay archivo de configuracion. Parametros vacios
 		configfile_argv[0]="";
 		configfile_argc=1;

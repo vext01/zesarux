@@ -62,7 +62,6 @@ extern void open_sharedfile(char *archivo,FILE **f);
 
 //128 kb
 #define MAX_SIZE_CONFIG_FILE 131072
-//65535
 
 extern void get_compile_info(char *s);
 
