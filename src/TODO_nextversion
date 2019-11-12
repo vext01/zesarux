@@ -1,5 +1,6 @@
 --------Para próxima versión:
 
+-probar speech menus. A ver que tal se comporta con cambio ultimo de los corchetes
  
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
