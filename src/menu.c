@@ -3297,6 +3297,16 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 					}
 				}
 
+				//я
+				if (caracter==0x8F) {
+					if (si_complete_video_driver()) {
+						return 136; //я
+					}
+					else {
+						return 'a'; //no es lo mismo, sonaria como una "ja" en dutch, pero bueno
+					}
+				}				
+
         }
 
 	return '?';
@@ -3454,11 +3464,12 @@ void menu_textspeech_send_text(char *texto_orig)
 
 	//buscar primero si hay [ ] al principio
 	int cambiado=0;
-	
+	printf ("texto: %s\n",texto_orig);
 	if (texto_orig[inicio_corchete]=='[') {
 		//posible
 		int i;
-		for (i=inicio_corchete;i<strlen(texto_orig) && !cambiado;i++) {
+		for (i=inicio_corchete;texto_orig[i]!=0 && !cambiado;i++) { 
+			printf ("%d\n",i);
 			if (texto_orig[i]==']') {
 				//Hay inicio con [..]. Ponerlo al final en nueva string
 				char buf_opcion[MAX_BUFFER_SPEECH+1];
