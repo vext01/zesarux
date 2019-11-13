@@ -3449,7 +3449,7 @@ void menu_textspeech_send_text(char *texto_orig)
 		//Y metemos cadena "prefijo"
 		strcpy(texto_active_item,cadena_buscar);
 
-		printf ("Encontrado texto Active item en %s\n",texto_orig);
+		//printf ("Encontrado texto Active item en %s\n",texto_orig);
 	}
 
 	//buscar primero si hay [ ] al principio
@@ -3476,7 +3476,7 @@ void menu_textspeech_send_text(char *texto_orig)
 				else if (!strcmp(buf_opcion,"[X]")) strcpy(buf_opcion,"Enabled");
 
 				sprintf(texto,"%s%s. %s",texto_active_item,&texto_orig[i+1],buf_opcion);
-				printf ("Detected setting at the beginning of the line. Changing speech to menu item and setting: %s\n",texto);
+				//printf ("Detected setting at the beginning of the line. Changing speech to menu item and setting: %s\n",texto);
 				cambiado=1;
 			}
 		}
