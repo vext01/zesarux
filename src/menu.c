@@ -3464,12 +3464,12 @@ void menu_textspeech_send_text(char *texto_orig)
 
 	//buscar primero si hay [ ] al principio
 	int cambiado=0;
-	printf ("texto: %s\n",texto_orig);
+	//printf ("texto: %s. inicio corchete %d\n",texto_orig,inicio_corchete);
 	if (texto_orig[inicio_corchete]=='[') {
 		//posible
 		int i;
 		for (i=inicio_corchete;texto_orig[i]!=0 && !cambiado;i++) { 
-			printf ("%d\n",i);
+			//printf ("%d\n",i);
 			if (texto_orig[i]==']') {
 				//Hay inicio con [..]. Ponerlo al final en nueva string
 				char buf_opcion[MAX_BUFFER_SPEECH+1];
