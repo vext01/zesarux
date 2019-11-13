@@ -1,7 +1,4 @@
 --------Para próxima versión:
-
--probar speech menus. A ver que tal se comporta con cambio ultimo de los corchetes. quitar printf en consola de esto. Creo que ya no hay debug
-Falta en "active item", se envía texto tal cual sin detección corchetes -> esto será porque solo miramos al principio corchete pero al principio hay "active ítem.."
  
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
@@ -46,8 +43,6 @@ dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
 Abort trap: 6
 
 -Comentar que se compile con ssl para soportar descargas completas de spectrum
-
-
 
 
 -vertificar roms ifrom, lista que sea valida de distribucion
