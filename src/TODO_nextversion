@@ -1,5 +1,7 @@
 --------Para próxima versión:
  
+-correcciones de speech en menus no va en stdout (corchetes , X enabled)
+
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
@@ -78,8 +80,6 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
 
-
-Esto hacerlo en stdout y menu normal. En decir linea entera y en active item. Funcion solo para esto y que no se use en otros sitios
 
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
