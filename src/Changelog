@@ -50,6 +50,8 @@ Improved menu:
 -can now use PgUp,PgDn to jump menu pages
 -added setting to disable File Utilities menu
 -added more cyrillic characters support
+-accesibility improvement: say when a selected menu item is not available
+
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
 Improved file selector: when asking for a directory, only shows directories, not files

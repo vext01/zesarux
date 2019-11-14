@@ -1280,6 +1280,9 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_change_ay_chips,menu_cond_ay_chip,"[%d] AY ~~Chips %s",total_ay_chips,
 				(total_ay_chips>1 ? "(Turbosound)" : "") );
 			menu_add_item_menu_shortcut(array_menu_settings_audio,'c');
+			menu_add_item_menu_tooltip(array_menu_settings_audio,"Total number of AY Chips");
+			menu_add_item_menu_ayuda(array_menu_settings_audio,"Total number of AY Chips");
+
 
 		if (si_complete_video_driver() ) {
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"    Show ~~Piano: %s",

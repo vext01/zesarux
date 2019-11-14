@@ -8531,8 +8531,8 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 		char texto_opcion_seleccionada[100];
 		//Asumimos por si acaso que no hay ninguna activa
 		texto_opcion_seleccionada[0]=0;
-		//La opcion donde esta el cursor, si esta activada o no
-		
+		//La opcion donde esta el cursor, si esta activada o no. Asumimos que si, por si acaso
+		int opcion_seleccionada_activada=1;
 		
 
 
@@ -8555,6 +8555,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 				opcion_activada=1;
 			}
 
+			//Al listar opciones de menu, decir si la opcion está desabilitada
 			if (!opcion_activada) menu_textspeech_send_text("Disabled option: ");
 
 			//Cuando haya opcion_activa, nos la apuntamos para decirla al final en speech.
@@ -8568,6 +8569,8 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 				else {
 					sprintf (texto_opcion_seleccionada,"%s",aux->texto_opcion);
 				}
+
+				opcion_seleccionada_activada=opcion_activada;
 			}
 
 			if (menu_tabulado) {
@@ -8601,6 +8604,10 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 			//Guardamos estado actual
 			int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
 			menu_speech_tecla_pulsada=0;
+
+
+			//Al decir la linea seleccionada de menu, decir si la opcion está desabilitada
+			if (!opcion_seleccionada_activada) menu_textspeech_send_text("Disabled option: ");
 
 			menu_textspeech_send_text(texto_opcion_seleccionada);
 
