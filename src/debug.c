@@ -1245,8 +1245,12 @@ void debug_set_mem_breakpoint(z80_int dir,z80_byte brkp_type)
 
 
 //Ver si salta breakpoint y teniendo en cuenta setting de saltar siempre o con cambio
-int cpu_core_loop_debug_check_mem_brkp_aux(z80_int dir, z80_byte tipo_mascara, int anterior_dir)
+int cpu_core_loop_debug_check_mem_brkp_aux(unsigned int dir, z80_byte tipo_mascara, unsigned int anterior_dir)
 {
+
+	//dir no deberia estar fuera de rango 0...65535. Pero por si acaso...
+	if (dir<0 || dir>65535) return 0;
+
 	if (mem_breakpoint_array[dir] & tipo_mascara) {
 		//Coincide condicion
 
@@ -1300,7 +1304,7 @@ int anterior_debug_mmu_mwa=-1;
 	}
 
 	//Probar mwa
-        if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,2,anterior_debug_mmu_mwa)) {
+    if (cpu_core_loop_debug_check_mem_brkp_aux(debug_mmu_mwa,2,anterior_debug_mmu_mwa)) {
                 //Hacer saltar breakpoint MWA
                 //printf ("Saltado breakpoint MWA en %04XH PC=%04XH\n",debug_mmu_mwa,reg_pc);
 		catch_breakpoint_index=-1;
