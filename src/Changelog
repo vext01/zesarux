@@ -50,6 +50,7 @@ Improved menu:
 -can now use PgUp,PgDn to jump menu pages
 -added setting to disable File Utilities menu
 -added more cyrillic characters support
+-disabled menu items (the ones in red) are now called as "unavailable" instead of "disabled"
 -accesibility improvement: say when a selected menu item is not available
 
 Improved assembler: added defs command

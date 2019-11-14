@@ -8322,7 +8322,7 @@ int menu_dibuja_menu_stdout(int *opcion_inicial,menu_item *item_seleccionado,men
 				else {
 					printf ("x  ");
 					if (!menu_speech_tecla_pulsada) {
-						scrstdout_menu_print_speech_macro("Disabled option: ");
+						scrstdout_menu_print_speech_macro("Unavailable option: ");
 					}
 				}
 			}
@@ -8556,7 +8556,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 			}
 
 			//Al listar opciones de menu, decir si la opcion está desabilitada
-			if (!opcion_activada) menu_textspeech_send_text("Disabled option: ");
+			if (!opcion_activada) menu_textspeech_send_text("Unavailable option: ");
 
 			//Cuando haya opcion_activa, nos la apuntamos para decirla al final en speech.
 			//Y si es la primera vez en ese menu, dice "Active item". Sino, solo dice el nombre de la opcion
@@ -8607,7 +8607,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 
 
 			//Al decir la linea seleccionada de menu, decir si la opcion está desabilitada
-			if (!opcion_seleccionada_activada) menu_textspeech_send_text("Disabled option: ");
+			if (!opcion_seleccionada_activada) menu_textspeech_send_text("Unavailable option: ");
 
 			menu_textspeech_send_text(texto_opcion_seleccionada);
 
@@ -27429,7 +27429,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"Press Space on some menu items to enable/disable\n"
 			"Press a key between a and z to select an entry with shortcuts; shortcut clues appear when you wait some seconds or press a key "
 			"not associated with any shortcut.\n"
-			"Disabled options may be hidden, or disabled, which are shown with red colour or with x cursor on some video drivers\n"
+			"Unavailable options may be hidden, or disabled, which are shown with red colour or with x cursor on some video drivers\n"
 			"ESC Key gives you to the previous menu, except in the case with aalib driver and pure text console, which is changed to another key (shown on the menu). On curses driver, ESC key is a bit slow, you have to wait one second after pressing it; you can also use key @ to simulate ESC on menu on curses driver. "
 			"\n\n"
 			"On fileselector:\n"
@@ -27487,7 +27487,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 	else {
 		menu_generic_message("Help","Press h<num> to see help for <num> option, for example: h3\n"
 				"Press t<num> to see tooltip for <num> option\n"
-				"Disabled options may be hidden, or disabled, which are shown with x cursor\n"
+				"Unavailable options may be hidden, or disabled, which are shown with x cursor\n"
 				"ESC text gives you to the previous menu\n"
 				"On fileselector, write the file without spaces\n"
 				"On input fields, numbers can be written on decimal or hexadecimal (with suffix H)\n"
