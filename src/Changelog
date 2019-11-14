@@ -51,7 +51,11 @@ Improved menu:
 -added setting to disable File Utilities menu
 -added more cyrillic characters support
 -disabled menu items (the ones in red) are now called as "unavailable" instead of "disabled"
--accesibility improvement: say when a selected menu item is not available
+
+
+Improved accesibility: 
+-say when a selected menu item is not available
+-Mac OS speech filter doesn't fail anymore when message has "-"
 
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
