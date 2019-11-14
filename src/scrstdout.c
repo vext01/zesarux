@@ -93,7 +93,7 @@ int pos_buffer_tecla_comando=0;
 	
 
 //Usado en funciones de print del menu, para que hagan speech y pausa
-void scrstdout_menu_print_speech(char *texto)
+void scrstdout_menu_print_speech(char *texto_orig)
 {
 
 	//Para que el texto que se ha enviado a consola se fuerce a mostrar con fflush antes de enviar a speech	
@@ -102,7 +102,9 @@ void scrstdout_menu_print_speech(char *texto)
 	if (textspeech_filter_program==NULL) return;
 	if (textspeech_also_send_menu.v==0) return;
 
-	//TODO: pasar filtros de conversion de corchetes de menu [ ] [X] en "Disabled" o "Enabled"
+	//pasar filtros de conversion de corchetes de menu [ ] [X] en "Disabled" o "Enabled"
+	char texto[MAX_BUFFER_SPEECH+1];
+	menu_textspeech_filter_corchetes(texto_orig,texto);	
 
 	textspeech_print_speech(texto);
 	

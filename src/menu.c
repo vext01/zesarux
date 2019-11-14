@@ -3423,7 +3423,7 @@ int menu_if_speech_enabled(void)
 
 void menu_textspeech_filter_corchetes(char *texto_orig,char *texto)
 {
-char texto_active_item[32]=""; //Inicializado a vacio de momento
+	char texto_active_item[32]=""; //Inicializado a vacio de momento
 	int inicio_corchete=0;
 
 	//Buscar si empieza con "Active item: "

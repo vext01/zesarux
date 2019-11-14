@@ -1,6 +1,5 @@
 --------Para próxima versión:
  
--correcciones de speech en menus no va en stdout (corchetes , X enabled)
 
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
