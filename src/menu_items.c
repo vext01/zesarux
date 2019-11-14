@@ -11267,7 +11267,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 	}
 	
 	//para mostrar vector interrupcion
-	char string_vector_int[10]="";
+	char string_vector_int[10]="     ";
 	if (im_mode==2) {
 	
 	
