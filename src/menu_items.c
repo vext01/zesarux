@@ -11265,6 +11265,24 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 
 		return;
 	}
+	
+	//para mostrar vector interrupcion
+	char string_vector_int[10]="";
+	if (im_mode==2) {
+	
+	
+	z80_int temp_i;
+z80_int puntero_int;
+z80_byte dir_l,dir_h;
+
+							temp_i=reg_i*256+255;
+							dir_l=peek_byte_no_time(temp_i++);
+							dir_h=peek_byte_no_time(temp_i);
+							puntero_int=value_8_to_16(dir_h,dir_l);
+							
+	sprintf(string_vector_int,"@%04X",puntero_int);
+	
+	}
 
 	if (CPU_IS_Z80) {
 
@@ -11306,7 +11324,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 		break;
 
 		case 9:
-			sprintf (textoregistros,"IR %02X%02X",reg_i,(reg_r&127)|(reg_r_bit7&128) );
+			sprintf (textoregistros,"IR %02X%02X%s",reg_i,(reg_r&127)|(reg_r_bit7&128) , string_vector_int);
 		break;
 
 		case 10:
