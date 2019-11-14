@@ -1,5 +1,12 @@
 --------Para próxima versión:
  
+-En mostrar registros IR
+Decir cuál es el vector de interrupción. Que caracter usar? IR 3F11@8000   @, !, etc
+
+-debug cpu: que extienda texto leyenda si el ancho de ventana es mayor
+
+
+-seguir probando speech menu con stdout y con drivers no-stdout
 
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
@@ -78,8 +85,6 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 -tabla de joystick to event siempre se resetea??
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu
-
-
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
 
@@ -245,8 +250,6 @@ Y Windows sdl?
 -separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
 
-
-
 -Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? Con printf verbose error?
 
 -Incluir sonic y otros en juegos TSConf. Pedir permiso a autores 
@@ -260,8 +263,6 @@ utils.c:11248:9: warning: this decimal constant is unsigned only in ISO C90
          const unsigned int mascara=(unsigned int)2147483648;
 
 Puede dar problemas?
-
-
 
 
 -hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
@@ -298,8 +299,7 @@ la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que s
 
 -leer audio casette
 
--En mostrar registros IR
-Decir cuál es el vector de interrupción 
+
 
 -cpuid ("zxid") según especificación de mcleod
 
@@ -311,8 +311,7 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 -Revisar archivo install. En caso de Linux y otros binarios ya compilados, enseñarlo más fácilmente. Otro documento quizá que diga cómo compilarlo  
 
 
--temperatura cpu en mac
-https://github.com/lavoiesl/osx-cpu-temp
+
 
 
 -parece que cocoa no opengl no redibuja... que hago? lo corrijo o solo dejo cocoa opengl?
