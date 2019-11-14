@@ -8519,50 +8519,59 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 {
 
         int i;
-        int opcion_activa;
+
+		//Opcion esta permitida seleccionarla (no esta en rojo)
+        int opcion_activada;
 
 		int menu_tabulado=0;
 		if (aux->es_menu_tabulado) menu_tabulado=1;
 
-		char texto_opcion_activa[100];
+
+		//Opcion de donde esta el cursor
+		char texto_opcion_seleccionada[100];
 		//Asumimos por si acaso que no hay ninguna activa
-		texto_opcion_activa[0]=0;
+		texto_opcion_seleccionada[0]=0;
+		//La opcion donde esta el cursor, si esta activada o no
+		
+		
 
 
 
         for (i=0;i<max_opciones;i++) {
 
-                        //si la opcion seleccionada es un separador, el cursor saltara a la siguiente
-                        //Nota: el separador no puede ser final de menu
-                        //if (linea_seleccionada==i && aux->tipo_opcion==MENU_OPCION_SEPARADOR) linea_seleccionada++;
+			//si la opcion seleccionada es un separador, el cursor saltara a la siguiente
+			//Nota: el separador no puede ser final de menu
+			//if (linea_seleccionada==i && aux->tipo_opcion==MENU_OPCION_SEPARADOR) linea_seleccionada++;
 
-                        t_menu_funcion_activo menu_funcion_activo;
+			t_menu_funcion_activo menu_funcion_activo;
 
-                        menu_funcion_activo=aux->menu_funcion_activo;
+			menu_funcion_activo=aux->menu_funcion_activo;
 
-                        if (menu_funcion_activo!=NULL) {
-                                opcion_activa=menu_funcion_activo();
-                        }
-
-                        else {
-				opcion_activa=1;
+			if (menu_funcion_activo!=NULL) {
+				opcion_activada=menu_funcion_activo();
 			}
+
+			else {
+				opcion_activada=1;
+			}
+
+			if (!opcion_activada) menu_textspeech_send_text("Disabled option: ");
 
 			//Cuando haya opcion_activa, nos la apuntamos para decirla al final en speech.
 			//Y si es la primera vez en ese menu, dice "Active item". Sino, solo dice el nombre de la opcion
 			if (linea_seleccionada==i) {
 				if (menu_active_item_primera_vez) {
-					sprintf (texto_opcion_activa,"Active item: %s",aux->texto_opcion);
+					sprintf (texto_opcion_seleccionada,"Active item: %s",aux->texto_opcion);
 					menu_active_item_primera_vez=0;
 				}
 
 				else {
-					sprintf (texto_opcion_activa,"%s",aux->texto_opcion);
+					sprintf (texto_opcion_seleccionada,"%s",aux->texto_opcion);
 				}
 			}
 
 			if (menu_tabulado) {
-				menu_escribe_linea_opcion_tabulado_zxvision(ventana,i,linea_seleccionada,opcion_activa,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
+				menu_escribe_linea_opcion_tabulado_zxvision(ventana,i,linea_seleccionada,opcion_activada,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
 			}
             
 			
@@ -8572,7 +8581,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 
 				if (y_destino>=0) {
 				
-						menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,opcion_activa,aux->texto_opcion);
+						menu_escribe_linea_opcion_zxvision(ventana,y_destino,linea_seleccionada_destino,opcion_activada,aux->texto_opcion);
 					
 				}
 				
@@ -8586,14 +8595,14 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 
 
 
-		if (texto_opcion_activa[0]!=0) {
+		if (texto_opcion_seleccionada[0]!=0) {
 			//Active item siempre quiero que se escuche
 
 			//Guardamos estado actual
 			int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
 			menu_speech_tecla_pulsada=0;
 
-			menu_textspeech_send_text(texto_opcion_activa);
+			menu_textspeech_send_text(texto_opcion_seleccionada);
 
 
 
