@@ -3426,10 +3426,10 @@ void menu_textspeech_filter_corchetes(char *texto_orig,char *texto)
 	char texto_active_item[32]=""; //Inicializado a vacio de momento
 	int inicio_corchete=0;
 
-	//Buscar si empieza con "Active item: "
+	//Buscar si empieza con "Selected item: "
 	char *encontrado;
 
-	char *cadena_buscar="Active item: ";
+	char *cadena_buscar="Selected item: ";
 
     encontrado=strstr(texto_orig,cadena_buscar);
     if (encontrado==texto_orig) {
@@ -3438,7 +3438,7 @@ void menu_textspeech_filter_corchetes(char *texto_orig,char *texto)
 		//Y metemos cadena "prefijo"
 		strcpy(texto_active_item,cadena_buscar);
 
-		//printf ("Encontrado texto Active item en %s\n",texto_orig);
+		//printf ("Encontrado texto Selected item en %s\n",texto_orig);
 	}
 
 	//char texto[MAX_BUFFER_SPEECH+1];
@@ -3495,8 +3495,8 @@ void menu_textspeech_send_text(char *texto_orig)
 	//TODO: aqui se llama tambien al decir directorios por ejemplo. Si hay directorio con [ ] (cosa rara) se interpretaria como una opcion
 	//y se diria al final
 
-	//Detectar tambien si al principio se dice "Active item: "
-	//Esto por tanto solo servira cuando el [] esta a principio de linea o bien despues de "Active item: "
+	//Detectar tambien si al principio se dice "Selected item: "
+	//Esto por tanto solo servira cuando el [] esta a principio de linea o bien despues de "Selected item: "
 	//Se podria extender a localizar los [] en cualquier sitio pero entonces el problema podria venir por alguna linea
 	//que tuviera [] en medio y no fuera de menu, y la moviese al final
 
@@ -3561,8 +3561,8 @@ void menu_textspeech_send_text(char *texto_orig)
 	}
 
 	//Si directorio es ".."
-	if (!strcmp(buf_speech,"Active item: .. directory")) {
-		strcpy(buf_speech,"Active item: dot dot directory");
+	if (!strcmp(buf_speech,"Selected item: .. directory")) {
+		strcpy(buf_speech,"Selected item: dot dot directory");
 	}
 
 
@@ -8559,10 +8559,10 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 			if (!opcion_activada) menu_textspeech_send_text("Unavailable option: ");
 
 			//Cuando haya opcion_activa, nos la apuntamos para decirla al final en speech.
-			//Y si es la primera vez en ese menu, dice "Active item". Sino, solo dice el nombre de la opcion
+			//Y si es la primera vez en ese menu, dice "Selected item". Sino, solo dice el nombre de la opcion
 			if (linea_seleccionada==i) {
 				if (menu_active_item_primera_vez) {
-					sprintf (texto_opcion_seleccionada,"Active item: %s",aux->texto_opcion);
+					sprintf (texto_opcion_seleccionada,"Selected item: %s",aux->texto_opcion);
 					menu_active_item_primera_vez=0;
 				}
 
@@ -8599,7 +8599,7 @@ void menu_escribe_opciones_zxvision(zxvision_window *ventana,menu_item *aux,int 
 
 
 		if (texto_opcion_seleccionada[0]!=0) {
-			//Active item siempre quiero que se escuche
+			//Selected item siempre quiero que se escuche
 
 			//Guardamos estado actual
 			int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
@@ -8923,7 +8923,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Si se fuerza siempre que aparezcan letras de atajos
 	if (menu_force_writing_inverse_color.v) menu_writing_inverse_color.v=1;
 
-	//Primera vez decir active item. Luego solo el nombre del item
+	//Primera vez decir selected item. Luego solo el nombre del item
 	menu_active_item_primera_vez=1;
 
         if (!strcmp(scr_driver_name,"stdout") ) {
@@ -9323,7 +9323,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 					redibuja_ventana=1;
 					menu_tooltip_counter=0;
-					//Y volver a decir "active item"
+					//Y volver a decir "selected item"
 					menu_active_item_primera_vez=1;
 
 				}
@@ -9551,12 +9551,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
         redibuja_ventana=1;
 
 		//Por defecto asumimos que no saltara tooltip y por tanto que no queremos que vuelva a enviar a speech la ventana
-		//Aunque si que volvera a decir el "active item: ..." en casos que se este en una opcion sin tooltip,
+		//Aunque si que volvera a decir el "Selected item: ..." en casos que se este en una opcion sin tooltip,
 		//no aparecera el tooltip pero vendra aqui con el timeout y esto hara redibujar la ventana por redibuja_ventana=1
 		//si quitase ese redibujado, lo que pasaria es que no aparecerian los atajos de teclado para cada opcion
 		//Entonces tal y como esta ahora:
 		//Si la opcion seleccionada tiene tooltip, salta el tooltip
-		//Si no tiene tooltip, no salta tooltip, pero vuelve a decir "Active item: ..."
+		//Si no tiene tooltip, no salta tooltip, pero vuelve a decir "Selected item: ..."
 		menu_speech_tecla_pulsada=1;
 
 		//Si ventana no esta activa, no mostrar tooltips,
@@ -9579,7 +9579,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				menu_espera_no_tecla();
 
 
-				//Y volver a decir "active item"
+				//Y volver a decir "Selected item"
 				menu_active_item_primera_vez=1;
 
 
@@ -30768,7 +30768,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	                                if (menu_active_item_primera_vez) {
 						
 
-        	                                sprintf (texto_opcion_activa,"Active item: %s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
+        	                                sprintf (texto_opcion_activa,"Selected item: %s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
                 	                        menu_active_item_primera_vez=0;
                         	        }
 
@@ -30819,7 +30819,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
                 if (texto_opcion_activa[0]!=0) {
 
 			debug_printf (VERBOSE_DEBUG,"Send active line to speech: %s",texto_opcion_activa);
-                        //Active item siempre quiero que se escuche
+                        //Selected item siempre quiero que se escuche
 
                         //Guardamos estado actual
                         int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
@@ -31778,7 +31778,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							zxvision_menu_filesel_cursor_abajo(ventana);
 						//releer todas entradas
 						menu_speech_tecla_pulsada=0;
-						//y decir active item
+						//y decir selected item
 						menu_active_item_primera_vez=1;
                     break;
 
@@ -31788,7 +31788,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							zxvision_menu_filesel_cursor_arriba(ventana);
 						//releer todas entradas
 						menu_speech_tecla_pulsada=0;
-						//y decir active item
+						//y decir selected item
 						menu_active_item_primera_vez=1;
                     break;
 

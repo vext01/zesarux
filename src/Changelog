@@ -56,6 +56,7 @@ Improved menu:
 Improved accesibility: 
 -say when a selected menu item is not available
 -Mac OS speech filter doesn't fail anymore when message has "-"
+-selected item menu is called now "Selected item" (was called "Active item" before)
 
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show

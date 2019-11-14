@@ -14,6 +14,27 @@ El emulador se ejecuta desde consola, y recomiendo usar  los siguientes parámet
 
 Hay, por supuesto más opciones, pero estos os sirven para empezar a jugar (escribid --help y --experthelp para una lista completa). Por ejemplo, si queréis podéis ajustar el ancho de línea a enviar al programa de síntesis para que la lectura sea más fluida.
 
+Acerca de los menus, cada vez que se abre uno, ZEsarUX nos leerá el listado de opciones (cada línea del menú). Al leer cada línea se pueden dar varias circunstancias:
+1) Que la opción no esté disponible. Se escucha el texto "Unavailable option" y la linea de menu.
+Esto sucede por ejemplo con la opcíon de Tape Browser, cuando no hay cinta insertada. En ese caso se lee como:
+Unavailable option. Tape Browser
+2) Que la opción tenga un setting para activar/desactivar opciones. Se escucha la linea de menu y a continuación el texto "Enabled" o "Disabled"
+Por ejemplo con la opción de "Trap print" que se puede activar o no. En este caso se lee como:
+Trap print. Enabled
+(en el caso que esté activada la opción)
+ó
+Trap print. Disabled
+(en el caso que esté desactivada la opción)
+
+No confundir opciones que se pueden activar/desactivar, con opciones no disponibles (caso 1)
+
+3) Opción que está seleccionando el cursor. Cuando se entra en un menu, se leen todas las opciones y al final se indica qué linea está seleccionada. 
+Se escucha el texto "Selected item" y la linea seleccionada.
+Por ejemplo si seleccionamos el ítem de menu "Print char traps" se lee como:
+Selected item: Print char traps
+
+Las circunstancias 1,2 y 3 se pueden dar por separado o simultáneamente varias de ellas, por ejemplo, se podria seleccionar un item con una opción activa, o un item no disponible, etc
+
 Y ya para acabar, espero que se me disculpe hacer algo de publicidad hacia mi persona. En http://github.com/sukiletxe/zesarux-ao2 tenéis un filtro que funciona con lectores de pantalla y SAPI 5 en Windows y VoiceOver en Mac, aunque en esta última plataforma está sin testear. Esto, si se utiliza con lectores de pantalla en Windows, no requiere de scripts de paro para que se detenga al pulsar una tecla (probado con JAWS y NVDA). Con SAPI 5 y VoiceOver sí que lo requiere.
 
 Con esto me despido. Juegos para esta plataforma los podéis conseguir en World of Spectrum (http://www.worldofspectrum.org/textadv/index.html) y en wiki.caad.es .
