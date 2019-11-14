@@ -3421,30 +3421,9 @@ int menu_if_speech_enabled(void)
 	return 1;
 }
 
-
-void menu_textspeech_send_text(char *texto_orig)
+void menu_textspeech_filter_corchetes(char *texto_orig,char *texto)
 {
-
-	if (!menu_if_speech_enabled() ) return;
-
-
-	debug_printf (VERBOSE_DEBUG,"Send text to speech: %s",texto_orig);
-	
-	
-	
-	//-si item empieza por [, buscar hasta cierre ]. Y eso se reproduce al final de linea
-	//-Si [X], se dice "enabled". Si [ ], se dice "disabled"
-	//TODO: aqui se llama tambien al decir directorios por ejemplo. Si hay directorio con [ ] (cosa rara) se interpretaria como una opcion
-	//y se diria al final
-
-	//Detectar tambien si al principio se dice "Active item: "
-	//Esto por tanto solo servira cuando el [] esta a principio de linea o bien despues de "Active item: "
-	//Se podria extender a localizar los [] en cualquier sitio pero entonces el problema podria venir por alguna linea
-	//que tuviera [] en medio y no fuera de menu, y la moviese al final
-
-	char texto[MAX_BUFFER_SPEECH+1];
-
-	char texto_active_item[32]=""; //Inicializado a vacio de momento
+char texto_active_item[32]=""; //Inicializado a vacio de momento
 	int inicio_corchete=0;
 
 	//Buscar si empieza con "Active item: "
@@ -3462,7 +3441,10 @@ void menu_textspeech_send_text(char *texto_orig)
 		//printf ("Encontrado texto Active item en %s\n",texto_orig);
 	}
 
+	//char texto[MAX_BUFFER_SPEECH+1];
+
 	//buscar primero si hay [ ] al principio
+	
 	int cambiado=0;
 	//printf ("texto: %s. inicio corchete %d\n",texto_orig,inicio_corchete);
 	if (texto_orig[inicio_corchete]=='[') {
@@ -3495,6 +3477,88 @@ void menu_textspeech_send_text(char *texto_orig)
 
 	if (!cambiado) strcpy(texto,texto_orig);
 	
+	
+}
+
+void menu_textspeech_send_text(char *texto_orig)
+{
+
+	if (!menu_if_speech_enabled() ) return;
+
+
+	debug_printf (VERBOSE_DEBUG,"Send text to speech: %s",texto_orig);
+	
+	
+	
+	//-si item empieza por [, buscar hasta cierre ]. Y eso se reproduce al final de linea
+	//-Si [X], se dice "enabled". Si [ ], se dice "disabled"
+	//TODO: aqui se llama tambien al decir directorios por ejemplo. Si hay directorio con [ ] (cosa rara) se interpretaria como una opcion
+	//y se diria al final
+
+	//Detectar tambien si al principio se dice "Active item: "
+	//Esto por tanto solo servira cuando el [] esta a principio de linea o bien despues de "Active item: "
+	//Se podria extender a localizar los [] en cualquier sitio pero entonces el problema podria venir por alguna linea
+	//que tuviera [] en medio y no fuera de menu, y la moviese al final
+
+	char texto[MAX_BUFFER_SPEECH+1];
+	menu_textspeech_filter_corchetes(texto_orig,texto);
+
+	/*
+	char texto_active_item[32]=""; //Inicializado a vacio de momento
+	int inicio_corchete=0;
+
+	//Buscar si empieza con "Active item: "
+	char *encontrado;
+
+	char *cadena_buscar="Active item: ";
+
+    encontrado=strstr(texto_orig,cadena_buscar);
+    if (encontrado==texto_orig) {
+		//Avanzamos el indice a inicio a buscar
+		inicio_corchete=strlen(cadena_buscar);
+		//Y metemos cadena "prefijo"
+		strcpy(texto_active_item,cadena_buscar);
+
+		//printf ("Encontrado texto Active item en %s\n",texto_orig);
+	}
+
+	char texto[MAX_BUFFER_SPEECH+1];
+
+	//buscar primero si hay [ ] al principio
+	
+	int cambiado=0;
+	//printf ("texto: %s. inicio corchete %d\n",texto_orig,inicio_corchete);
+	if (texto_orig[inicio_corchete]=='[') {
+		//posible
+		int i;
+		for (i=inicio_corchete;texto_orig[i]!=0 && !cambiado;i++) { 
+			//printf ("%d\n",i);
+			if (texto_orig[i]==']') {
+				//Hay inicio con [..]. Ponerlo al final en nueva string
+				char buf_opcion[MAX_BUFFER_SPEECH+1];
+				strcpy(buf_opcion,&texto_orig[inicio_corchete]);
+
+				int longitud_opcion=(i+1)-inicio_corchete;
+
+				//buf_opcion[i+1]=0;  //buf_opcion contiene solo los corchetes y lo de dentro de corchetes
+				buf_opcion[longitud_opcion]=0;  //buf_opcion contiene solo los corchetes y lo de dentro de corchetes
+
+				//Y ahora ademas, si la opcion es [ ] dice disabled. Si es [x] dice enabled
+				//TODO: solo estamos detectando esto a principio de linea. Creo que no hay ningun menu en que diga [ ] o [X] en otro
+				//sitio que no sea principio de linea. Si estuviera en otro sitio, no funcionaria
+				if (!strcmp(buf_opcion,"[ ]")) strcpy(buf_opcion,"Disabled");
+				else if (!strcmp(buf_opcion,"[X]")) strcpy(buf_opcion,"Enabled");
+
+				sprintf(texto,"%s%s. %s",texto_active_item,&texto_orig[i+1],buf_opcion);
+				//printf ("Detected setting at the beginning of the line. Changing speech to menu item and setting: %s\n",texto);
+				cambiado=1;
+			}
+		}
+	}
+
+	if (!cambiado) strcpy(texto,texto_orig);
+	
+	*/
 	
 	
 	

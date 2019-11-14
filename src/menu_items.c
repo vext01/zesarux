@@ -128,12 +128,6 @@
 
 #ifdef COMPILE_STDOUT
 	#include "scrstdout.h"
-//macro llama a funcion real
-	#define scrstdout_menu_print_speech_macro scrstdout_menu_print_speech
-//funcion llama
-#else
-//funcion no llama a nada
-	#define scrstdout_menu_print_speech_macro(x)
 #endif
 
 
