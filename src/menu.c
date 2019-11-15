@@ -8363,10 +8363,10 @@ int menu_dibuja_menu_stdout(int *opcion_inicial,menu_item *item_seleccionado,men
 	do {
 
 		salir_opcion=1;
-		printf("Option number? (prepend the option with h for help, t for tooltip)");
+		printf("Option number? (prepend the option with h for help, t for tooltip). Write ESC to go back");
 		//printf ("menu_speech_tecla_pulsada: %d\n",menu_speech_tecla_pulsada);
 		if (!menu_speech_tecla_pulsada) {
-			scrstdout_menu_print_speech_macro("Option number? (prepend the option with h for help, t for tooltip)");
+			scrstdout_menu_print_speech_macro("Option number? (prepend the option with h for help, t for tooltip). Write ESC to go back");
 		}
 
 		//paso de curses a stdout deja stdout que no hace flush nunca. forzar
