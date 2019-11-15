@@ -1845,7 +1845,10 @@ int scrfbdev_init (void){
 
 	// Get fixed screen information
 	if (ioctl(fbdev_filedescriptor, FBIOGET_FSCREENINFO, &fixinfo)) {
-		debug_printf(VERBOSE_ERR,"fbdev: Error reading fixed information.");
+	//ponemos este mensaje en debug y no en error para que no se active menu y 
+	//salga error cuando hace autodeteccion de driver de video. es especialmente molesto si el driver es stdout
+	//mensaje de abajo de variable information tambien seria susceptible de cambiar a debug
+		debug_printf(VERBOSE_DEBUG,"fbdev: Error reading fixed information.");
 		return 1;
 	}
 

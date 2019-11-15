@@ -82,6 +82,7 @@ Fixed placing menu windows when using zx desktop and machines TSConf, TBBlue, CP
 Fixed bug loading .sna files when rom 1 paged in
 Fixed bug on return flags from tape load trap. It only affected Rocman game and enabling "any flag loading" setting
 Fixed setting a configured memory breakpoint like this "--set-mem-breakpoint 0000H 2" which was fired on startup
+Fixed opening the menu on stdout driver on the first start of ZEsarUX
 
 Fixed Accessibility bugs: 
 -now menu settings (anything between square brackets []) are played at the end of the menu line
