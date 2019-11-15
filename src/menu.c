@@ -26942,6 +26942,12 @@ void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char
 	*valor_opcion=1;
 	
 	zxvision_generic_message_tooltip(titulo , lineas_agregar , 0, 0, 0, NULL, 1, "%s", texto);
+	
+	if (!strcmp(scr_driver_name,"stdout")) {
+		printf ("%s\n",texto_opcion);
+		scrstdout_menu_print_speech_macro (texto_opcion);
+		return;
+	}
 
 	zxvision_window *ventana;
 
