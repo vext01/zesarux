@@ -28368,11 +28368,11 @@ void menu_inicio_bucle(void)
 		menu_first_aid("initial_menu");
 
 		//Si descargar stats
-		//Si se pregunta si se quiere enviar estadisticas, solo si esta el grabado de configuracion
-		if (save_configuration_file_on_exit.v && stats_asked.v==0) {
+		//Si se pregunta si se quiere enviar estadisticas, solo si esta el grabado de configuracion, e interfaz permite menu (no stdout ni simpletext ni null)
+		if (save_configuration_file_on_exit.v && stats_asked.v==0 && si_normal_menu_video_driver()) {
 			stats_ask_if_enable();
 		}
-
+		
 		int retorno_menu;
 
 		menu_item *array_menu_principal;
