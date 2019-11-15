@@ -31228,6 +31228,9 @@ void menu_first_aid_random_startup(void)
 
 	//Si desactivado multitask
 	if (!menu_multitarea) return;
+	
+	//si video driver no permite menu normal (no stdout ni simpletext ni null)
+	if (!si_normal_menu_video_driver() ) return;
 
 	//Lanzar la primera que este activa y sea de tipo si_startup=1
 	int i;
