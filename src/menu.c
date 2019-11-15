@@ -8373,7 +8373,7 @@ int menu_dibuja_menu_stdout(int *opcion_inicial,menu_item *item_seleccionado,men
 		fflush(stdout);
 		scanf("%s",texto_opcion);
 
-		if (!strcmp(texto_opcion,"ESC")) {
+		if (!strcasecmp(texto_opcion,"ESC")) {
 			tecla=MENU_RETORNO_ESC;
 		}
 
