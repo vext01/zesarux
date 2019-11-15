@@ -26946,7 +26946,7 @@ void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char
 	if (!strcmp(scr_driver_name,"stdout")) {
 		printf ("%s\n",texto_opcion);
 		scrstdout_menu_print_speech_macro (texto_opcion);
-		printf("Enable or disable setting? 0 or 1?"\n);
+		printf("Enable or disable setting? 0 or 1?\n");
 		scrstdout_menu_print_speech_macro("Enable or disable setting? 0 or 1?");
 		scanf("%d",valor_opcion);
 		return;
