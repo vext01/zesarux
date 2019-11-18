@@ -18,6 +18,16 @@
 <string>zesarux.sh</string>
 <key>CFBundleIconFile</key>
 <string>zesarux.icns</string>
+<key>NSFileProviderDomainUsageDescription</key>
+<string></string>
+<key>NSFileProviderPresenceUsageDescription</key>
+<string></string>
+<key>NSDesktopFolderUsageDescription</key>
+<string></string>
+<key>NSDocumentsFolderUsageDescription</key>
+<string>to be able to load user documents</string>
+<key>NSDownloadsFolderUsageDescription</key>
+<string>to be able to load user documents</string>
 </dict>
 </plist>
 
