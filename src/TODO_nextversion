@@ -1,6 +1,14 @@
 --------Para próxima versión:
  
  -en app  Mac no permite abrir carpeta /Users/xxx/Documents. probablemente hay que poner regla de permitir hacerlo en firewall
+ ->pruebo con acceso total al disco y no funciona. Quiza acceso solo a documents pero no puedo agregar regla manual ahi
+
+ ver:
+ https://developer.apple.com/documentation/bundleresources/information_property_list/protected_resources?language=objc
+
+ https://gitlab.gnome.org/GNOME/gimp/issues/3710
+
+ Agregadas lineas a plist. Quiza falta reiniciar?
 
 -online browser . Búsquedas con . Como chase h.q. corta en el
 Primer punto como si fuera extensión 
