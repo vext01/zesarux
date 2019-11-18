@@ -17560,7 +17560,7 @@ int menu_filesel_alphasort(const struct dirent **d1, const struct dirent **d2)
 	return (strcasecmp((*d1)->d_name,(*d2)->d_name));
 }
 
-void menu_filesel_readdir(void)
+int menu_filesel_readdir(void)
 {
 
 /*
@@ -17608,7 +17608,10 @@ primer_filesel_item=NULL;
 	n = scandir_mingw(".", &namelist, menu_filesel_filter_func, menu_filesel_alphasort);
 #endif
 
-    if (n < 0) debug_printf (VERBOSE_ERR,"Error scandir");
+    if (n < 0) {
+		debug_printf (VERBOSE_ERR,"Error reading directory contents: %s",strerror(errno));
+		return 1;
+	}
 
     else {
         int i;
@@ -17646,9 +17649,12 @@ primer_filesel_item=NULL;
 		filesel_total_items++;
         }
 
+		free(namelist);
+
     }
 
-	free(namelist);
+	return 0;
+	//free(namelist);
 
 }
 
@@ -31508,7 +31514,20 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		filesel_linea_seleccionada=0;
 		filesel_archivo_seleccionado=0;
 		//leer todos archivos
-		menu_filesel_readdir();
+		int ret=menu_filesel_readdir();
+		if (ret) {
+			//Error leyendo directorio
+   
+			cls_menu_overlay();
+			menu_espera_no_tecla();
+			menu_filesel_chdir(filesel_directorio_inicial);
+			menu_filesel_free_mem();
+			zxvision_destroy_window(ventana);
+			return 0;
+                                		
+		}
+
+
 		//printf ("Total archivos en directorio: %d\n",filesel_total_items);
 		//printf ("despues leer directorio\n");
 		//Crear ventana. Si ya existia, borrarla

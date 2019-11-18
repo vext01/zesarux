@@ -72,6 +72,7 @@ Fixed Pentagon border: now ukflag demo is perfect
 Fixed Spectrum 128k machines border: now ula128, scroll2017 demos are perfect
 Fixed f_seek call on esxdos handler
 Fixed segfault error when using breakpoints like peek/opcode in config file
+Fixed segfault error when failing to open a directory
 Fixed bug on zxuno changing video ram 5/7 when paging was disabled by bit DI7FFD
 Fixed average cpu statistics when footer is not enabled
 Fixed kempston mouse emulation on Next machine: wheel bits always return 0

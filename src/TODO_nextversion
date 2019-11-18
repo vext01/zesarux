@@ -1,14 +1,16 @@
 --------Para próxima versión:
  
--Parece que siempre habilita print char traps en stdout
-Solo debería hacerlo la primera vez
-O bien hacerlo solo si no está el automatic redraw activado
-
+ -en app  Mac no permite abrir carpeta /Users/xxx/Documents. probablemente hay que poner regla de permitir hacerlo en firewall
 
 -online browser . Búsquedas con . Como chase h.q. corta en el
 Primer punto como si fuera extensión 
 
 -debug cpu: que extienda texto leyenda si el ancho de ventana es mayor
+
+-stdout file selector. Poder hacer ls, cd etc.
+
+-Siguiente versión hay que decir en servidor versión.txt que es 8.1-beta2
+Pero eso debe coincidir con version.h de código 
 
 
 -seguir probando speech menu con stdout y con drivers no-stdout
