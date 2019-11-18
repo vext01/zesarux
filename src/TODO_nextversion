@@ -1,7 +1,12 @@
 --------Para próxima versión:
  
--En mostrar registros IR
-Decir cuál es el vector de interrupción. Que caracter usar? IR 3F11@8000   @, !, etc
+-Parece que siempre habilita print char traps en stdout
+Solo debería hacerlo la primera vez
+O bien hacerlo solo si no está el automatic redraw activado
+
+
+-online browser . Búsquedas con . Como chase h.q. corta en el
+Primer punto como si fuera extensión 
 
 -debug cpu: que extienda texto leyenda si el ancho de ventana es mayor
 
@@ -24,7 +29,7 @@ https://bintray.com/vszakats/generic/openssl
 https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win32-mingw.zip
 
 copiar libcrypto-1_1.dll y libssl-1_1.dll en ruta de ZEsarUX exe
-Incluir pthreadGC-3.DLL. Estará en carpeta bin de mingw
+Incluir pthreadGC-3.DLL. Estará en carpeta bin de mingw?
 Funciona ssl en windows ok!
 ->agregado de momento en configure
 

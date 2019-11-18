@@ -259,11 +259,15 @@ int scrstdout_init (void){
 
 	scr_detectedchar_print=scrstdout_detectedchar_print;
 
-	//por defecto activamos esto en stdout, para que se capture el texto
-	chardetect_printchar_enabled.v=1;
+	//activamos esto en stdout, para que se capture el texto, pero si no tenemos el automatic redraw activado, 
+	//para evitar hacer redraw y a la vez hacer print de trap
+	if (stdout_simpletext_automatic_redraw.v==0) {
+		debug_printf(VERBOSE_DEBUG,"Enabling print char trap as the --autoredrawstdout setting is off");
+		chardetect_printchar_enabled.v=1;
+	}
 
 	//tambien activar que los textos de menus se envien a filtro (si es que hay filtro)
-	textspeech_also_send_menu.v=1;
+	//textspeech_also_send_menu.v=1;
 	
 	
 	scr_driver_name="stdout";

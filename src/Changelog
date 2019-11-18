@@ -88,6 +88,9 @@ Fixed Accessibility bugs:
 -now menu settings (anything between square brackets []) are played at the end of the menu line
 -now menu settings ([ ] and [X]) are played as "enabled"/"disabled"
 
+Some other minor bugfixes and improvements
+
+
 
 Version 8.0. 19 July 2019 - World Destruction edition
 
