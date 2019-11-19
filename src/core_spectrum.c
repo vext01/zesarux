@@ -624,7 +624,7 @@ void core_spectrum_handle_interrupts(void)
 
                                                 //poke_byte(--reg_sp,reg_pc_h);
                                                 //poke_byte(--reg_sp,reg_pc_l);
-												push_valor(value_8_to_16(reg_pc_h,reg_pc_l);
+												push_valor(value_8_to_16(reg_pc_h,reg_pc_l));
 
 						reg_r++;
 
