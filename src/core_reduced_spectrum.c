@@ -390,9 +390,11 @@ void cpu_core_loop_reduced_spectrum(void)
                                                 reg_pc_l=value_16_to_8l(reg_pc);
 
                                                 //3 estados
-                                                poke_byte(--reg_sp,reg_pc_h);
+                                                //poke_byte(--reg_sp,reg_pc_h);
                                                 //3 estados
-                                                poke_byte(--reg_sp,reg_pc_l);
+                                                //poke_byte(--reg_sp,reg_pc_l);
+
+												push_valor(value_8_to_16(reg_pc_h,reg_pc_l));
 
 
                                                 reg_r++;
@@ -444,8 +446,10 @@ void cpu_core_loop_reduced_spectrum(void)
                                                 reg_pc_h=value_16_to_8h(reg_pc);
                                                 reg_pc_l=value_16_to_8l(reg_pc);
 
-                                                poke_byte(--reg_sp,reg_pc_h);
-                                                poke_byte(--reg_sp,reg_pc_l);
+                                                //poke_byte(--reg_sp,reg_pc_h);
+                                                //poke_byte(--reg_sp,reg_pc_l);
+
+												push_valor(value_8_to_16(reg_pc_h,reg_pc_l));
 
 						reg_r++;
 
