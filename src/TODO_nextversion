@@ -35,10 +35,12 @@ ok-llamadas a interrupciones en el core deben usar push
  cambiando 
 
 
--reset permisos carpetas mac:
+-para probar reset permisos carpetas mac:
 tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
 tccutil reset SystemPolicyDownloadsFolder com.cesarhernandez.zesarux
 tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
+
+
 
 
 -online browser . Búsquedas con . Como chase h.q. corta en el
