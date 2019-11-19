@@ -10,6 +10,13 @@
 
  Agregadas lineas a plist. Quiza falta reiniciar?
 
+
+-reset permisos carpetas mac:
+tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
+tccutil reset SystemPolicyDownloadsFolder com.cesarhernandez.zesarux
+tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
+
+
 -online browser . Búsquedas con . Como chase h.q. corta en el
 Primer punto como si fuera extensión 
 

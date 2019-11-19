@@ -15,19 +15,15 @@
 <key>CFBundleSignature</key>
 <string>zeux</string>
 <key>CFBundleExecutable</key>
-<string>zesarux.sh</string>
+<string>zesarux</string>
 <key>CFBundleIconFile</key>
 <string>zesarux.icns</string>
-<key>NSFileProviderDomainUsageDescription</key>
-<string></string>
-<key>NSFileProviderPresenceUsageDescription</key>
-<string></string>
 <key>NSDesktopFolderUsageDescription</key>
-<string></string>
+<string>To be able to load user files from Downloads folder</string>
 <key>NSDocumentsFolderUsageDescription</key>
-<string>to be able to load user documents</string>
+<string>To be able to load user files from Documents folder but also save configuration</string>
 <key>NSDownloadsFolderUsageDescription</key>
-<string>to be able to load user documents</string>
+<string>To be able to load user files from Downloads folder</string>
 </dict>
 </plist>
 

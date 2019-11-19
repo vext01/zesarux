@@ -68,6 +68,7 @@ Improved curses driver: now can use utf "blocky" characters and have 64x48 resol
 Improved accurate Z80 timing: IM mode 0 is 1 t-state shorter than IM mode 1
 Improved real tape loading: acceleration is disabled by default, added setting to save configuration
 
+Fixed error when trying to open user documents folder on MacOS Catalina
 Fixed Pentagon border: now ukflag demo is perfect
 Fixed Spectrum 128k machines border: now ula128, scroll2017 demos are perfect
 Fixed f_seek call on esxdos handler

@@ -7226,6 +7226,33 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	//de momento ponemos esto a null y los mensajes siempre saldran por un printf normal
 	scr_messages_debug=NULL;
 
+#if defined(__APPLE__)
+	//Si estamos en Mac y estamos ejecutando desde bundle de la App, cambiar carpeta a directorio de trabajo
+	//Esto antes estaba en el zesarux.sh, pero ahora se llama al binario para poder usar los permisos de Documents, Downloads etc
+	//de MacOS Catalina
+
+	//Cambiar a la carpeta donde estamos ejecutando el binario
+	
+	//Algunas comprobaciones, por si acaso
+	if (main_argv[0]!=NULL) { 
+		if (main_argv[0][0]!=0) {
+
+			char dir[PATH_MAX];
+			util_get_dir(main_argv[0],dir);
+
+			printf ("Changing to Mac App bundle directory: %s\n",dir);
+			chdir(dir);
+		}
+	}
+	/*
+	Para testeo, para eliminar permisos de acceso en Catalina, ejecutar:
+	tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
+	tccutil reset SystemPolicyDownloadsFolder com.cesarhernandez.zesarux
+	tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
+	*/
+#endif
+
+
 /*
 Note for developers: If you are doing modifications to ZEsarUX, you should follow the rules from GPL license, as well as 
 the licenses that cover all the external modules
