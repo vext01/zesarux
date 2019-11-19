@@ -8,6 +8,8 @@ Cambios para crear esto:
 
  uso cpu con
   ./zesarux --noconfigfile --ao null --vo null
+  no cflags
+  #define CONFIGURE_OPTIONS "./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl"
  
  uso cpu inicial:
  6% 
@@ -15,7 +17,8 @@ Cambios para crear esto:
 OK -función push pasa de ser una macro a ser función. Ver si hay cambio de uso de cpu de antes a después
 uso cpu despues: 6%
 
--llamadas a interrupciones en el core deben usar push
+ok-llamadas a interrupciones en el core deben usar push
+6%
 
 -cambiar función push para que use parámetro adicional que es un enum con el tipo de push
 

@@ -351,6 +351,17 @@ extern z80_byte sub_value(z80_byte value);
 extern z80_int desp8_to_16(z80_byte desp);
 extern void neg(void);
 
+
+enum push_value_type {
+	PUSH_VALUE_TYPE_DEFAULT,
+	PUSH_VALUE_TYPE_CALL,
+	PUSH_VALUE_TYPE_RST,
+	PUSH_VALUE_TYPE_PUSH,
+	PUSH_VALUE_TYPE_INTERRUPT
+};
+
+
+
 extern void push_valor(z80_int valor);
 
 extern z80_int pop_valor();

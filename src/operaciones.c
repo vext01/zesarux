@@ -3237,6 +3237,8 @@ z80_int pop_valor()
 }
 
 
+
+//TODO: meter push_value_type como parametro
 void push_valor(z80_int valor) 
 { 
         reg_sp -=2; 

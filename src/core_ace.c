@@ -343,14 +343,18 @@ void cpu_core_loop_ace(void)
 						t_estados += 14;
 
 
-                                                z80_byte reg_pc_h,reg_pc_l;
-                                                reg_pc_h=value_16_to_8h(reg_pc);
-                                                reg_pc_l=value_16_to_8l(reg_pc);
+                                                //z80_byte reg_pc_h,reg_pc_l;
+                                                //reg_pc_h=value_16_to_8h(reg_pc);
+                                                //reg_pc_l=value_16_to_8l(reg_pc);
 
 						//3 estados	
-                                                poke_byte(--reg_sp,reg_pc_h);
+                                                //poke_byte(--reg_sp,reg_pc_h);
 						//3 estados
-                                                poke_byte(--reg_sp,reg_pc_l);
+                                                //poke_byte(--reg_sp,reg_pc_l);
+
+												//push_valor(value_8_to_16(reg_pc_h,reg_pc_l));
+
+												push_valor(reg_pc);
 
 
 						reg_r++;
@@ -386,12 +390,16 @@ void cpu_core_loop_ace(void)
 
 						interrupcion_maskable_generada.v=0;
 
-						z80_byte reg_pc_h,reg_pc_l;
-						reg_pc_h=value_16_to_8h(reg_pc);
-						reg_pc_l=value_16_to_8l(reg_pc);
+						//z80_byte reg_pc_h,reg_pc_l;
+						//reg_pc_h=value_16_to_8h(reg_pc);
+						//reg_pc_l=value_16_to_8l(reg_pc);
 
-						poke_byte(--reg_sp,reg_pc_h);
-						poke_byte(--reg_sp,reg_pc_l);
+						//poke_byte(--reg_sp,reg_pc_h);
+						//poke_byte(--reg_sp,reg_pc_l);
+
+						//push_valor(value_8_to_16(reg_pc_h,reg_pc_l));
+
+						push_valor(reg_pc);
 						
 						reg_r++;
 
