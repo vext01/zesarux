@@ -3237,6 +3237,14 @@ z80_int pop_valor()
 }
 
 
+void push_valor(z80_int valor) 
+{ 
+        reg_sp -=2; 
+        poke_word(reg_sp,valor); 
+} 
+
+
+
 z80_byte rlc_valor_comun(z80_byte value)
 {
         if (value & 128) Z80_FLAGS |=FLAG_C;
