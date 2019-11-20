@@ -3237,8 +3237,8 @@ z80_int pop_valor()
 }
 
 
-
-void push_valor(z80_int valor,enum push_value_type tipo)
+//En la funcion por defecto no usamos el tipo
+void push_valor(z80_int valor,enum push_value_type tipo GCC_UNUSED) 
 { 
         reg_sp -=2; 
         poke_word(reg_sp,valor); 
