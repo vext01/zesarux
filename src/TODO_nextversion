@@ -24,9 +24,9 @@ uso cpu despues: 6%
 ok-llamadas a interrupciones en el core deben usar push
 6%
 
--cambiar función push para que use parámetro adicional que es un enum con el tipo de push
+ok -cambiar función push para que use parámetro adicional que es un enum con el tipo de push
 
--call, push, int, rst deben llamar a esa función push de dos parámetros
+ok -call, push, int, rst deben llamar a esa función push de dos parámetros
 
 -convertir esa función push en un puntero a función. Ver si hay cambio de uso de cpu de antes (al inicio del todo) a después
 

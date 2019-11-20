@@ -83,6 +83,8 @@ z80_byte (*lee_puerto)(z80_byte puerto_h,z80_byte puerto_l);
 void (*out_port)(z80_int puerto,z80_byte value);
 z80_byte (*fetch_opcode)(void);
 
+void (*push_valor)(z80_int valor,enum push_value_type tipo); 
+
 z80_byte lee_puerto_teclado(z80_byte puerto_h);
 z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l);
 
@@ -3238,7 +3240,7 @@ z80_int pop_valor()
 
 
 //En la funcion por defecto no usamos el tipo
-void push_valor(z80_int valor,enum push_value_type tipo GCC_UNUSED) 
+void push_valor_default(z80_int valor,enum push_value_type tipo GCC_UNUSED) 
 { 
         reg_sp -=2; 
         poke_word(reg_sp,valor); 

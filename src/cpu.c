@@ -2878,6 +2878,7 @@ void set_machine_params(void)
 		cpu_history_enabled.v=0;
 		machine_emulate_memory_refresh=0;
 
+		push_valor=push_valor_default;
 
 
 		//Valores usados en real video
@@ -7446,6 +7447,9 @@ tooltip_enabled.v=1;
 	lee_puerto=lee_puerto_vacio;
 	out_port=out_port_vacio;	
 	fetch_opcode=fetch_opcode_vacio;
+
+	//Inicializo tambien la de push
+	push_valor=push_valor_default;
 
 
 

@@ -357,7 +357,11 @@ enum push_value_type {
 
 
 
-extern void push_valor(z80_int valor,enum push_value_type tipo);
+//extern void push_valor(z80_int valor,enum push_value_type tipo);
+
+extern void (*push_valor)(z80_int valor,enum push_value_type tipo); 
+
+extern void push_valor_default(z80_int valor,enum push_value_type tipo GCC_UNUSED) ;
 
 extern z80_int pop_valor();
 
