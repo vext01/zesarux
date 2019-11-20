@@ -680,9 +680,9 @@ struct s_items_ayuda items_ayuda[]={
   {"exit-cpu-step","|ecs",NULL,"Exit cpu step to step mode"},
   {"exit-emulator",NULL,NULL,"Ends emulator"},
 
-	{"extended-stack",NULL,"action [parameter]","Sets extended stack parameters. Action and parameters are the following:\n"
-	"enabled yes|no   Enable or disable the extended stack\n"
-	"get     n        Get n values\n"
+	{"extended-stack",NULL,"action [parameter]","Sets extended stack parameters, which allows you to see what kind of values are in the stack. Action and parameters are the following:\n"
+	"enabled yes|no     Enable or disable the extended stack\n"
+	"get     n [index]  Get n values. The index default value is the SP register\n"
 	},
 
 
@@ -1322,6 +1322,8 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 		strcpy(transaction_log_filename,value);
 	}*/
 
+	//printf ("%p\n",value);
+
 	//Comun para activar el logfile y tambien para truncar. Ambos requieren detener el core para hacer esto
 	if (!strcasecmp(parameter,"enabled") ) {
 
@@ -1384,8 +1386,10 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 
 
 
-void remote_extended_stack(int misocket,char *parameter,char *value)
+void remote_extended_stack(int misocket,char *parameter,char *value,char *second_value)
 {
+
+	//printf ("%p (%s)\n",second_value,second_value);
 
 
 	//If comun para acciones que requieren detener el core momentaneamente
@@ -1425,7 +1429,10 @@ void remote_extended_stack(int misocket,char *parameter,char *value)
 		else {
 			int items=parse_string_to_number(value);
 
-			
+			z80_int registro_inicial_stack=reg_sp;
+
+			//Ver si hay un segundo parametro
+			if (second_value[0]!=0) registro_inicial_stack=parse_string_to_number(second_value);
 
 			z80_int indice_l;
 			z80_int indice_h;
@@ -1436,7 +1443,7 @@ void remote_extended_stack(int misocket,char *parameter,char *value)
 					z80_byte tipo;
 
 					//Para asegurarnos que los indices siempre estan en rango 0...65535 (el tamanyo del array)
-					indice_l=reg_sp+i*2;
+					indice_l=registro_inicial_stack+i*2;
 					indice_h=indice_l+1;
 
 
@@ -1464,6 +1471,8 @@ void remote_extended_stack(int misocket,char *parameter,char *value)
 
 void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 {
+
+	//printf ("(%s) (%s)\n",value,value2);
 
 	//Comun para activar el core y para iniciarlo y otros. Ambos requieren detener el core para hacer esto
 	if (!strcasecmp(parameter,"enabled") ||
@@ -3950,8 +3959,17 @@ void interpreta_comando(char *comando,int misocket)
       return;
     }
 
+	//Asignar punteros. Si no existen parametros adicionales, cadenas vacias
 
-    remote_cpu_code_coverage(misocket,remote_command_argv[0],remote_command_argv[1]);
+	//En este caso un parametros adicionales. Inicializados a cadenas vacias
+	char *second_parameter="";
+	//second_parameter=NULL;
+
+
+	if (remote_command_argc>1) second_parameter=remote_command_argv[1];
+
+
+    remote_cpu_code_coverage(misocket,remote_command_argv[0],second_parameter);
   }
 
 
@@ -3963,9 +3981,24 @@ void interpreta_comando(char *comando,int misocket)
       return;
     }
 
+	//Asignar punteros. Si no existen parametros adicionales, cadenas vacias
 
-    remote_cpu_history(misocket,remote_command_argv[0],remote_command_argv[1],remote_command_argv[2]);
+	//En este caso dos parametros adicionales. Inicializados a cadenas vacias
+	char *second_parameter="";
+	//second_parameter=NULL;
+
+	char *third_parameter="";
+	//third_parameter=NULL;
+
+	if (remote_command_argc>1) second_parameter=remote_command_argv[1];
+	if (remote_command_argc>2) third_parameter=remote_command_argv[2];
+
+	//El primero y segundo parametro no seran nunca cero porque ya estamos haciendo comprobacion por remote_command_argc antes
+    remote_cpu_history(misocket,remote_command_argv[0],second_parameter,third_parameter);
   }
+
+
+
 
 
 
@@ -4123,13 +4156,22 @@ void interpreta_comando(char *comando,int misocket)
   else if (!strcmp(comando_sin_parametros,"extended-stack") ) {
     remote_parse_commands_argvc(parametros);
 
-    if (remote_command_argc<1) {
-      escribir_socket(misocket,"ERROR. Needs at least one parameter");
+    if (remote_command_argc<2) {
+      escribir_socket(misocket,"ERROR. Needs at least two parameters");
       return;
     }
 
+	//Asignar punteros. Si no existen parametros adicionales, cadenas vacias
 
-    remote_extended_stack(misocket,remote_command_argv[0],remote_command_argv[1]);
+	//En este caso solo un parametro adicional
+	char *third_parameter="";
+	//third_parameter=NULL;
+
+	if (remote_command_argc>2) third_parameter=remote_command_argv[2];
+
+
+	//El primero y segundo parametro no seran nunca cero porque ya estamos haciendo comprobacion por remote_command_argc antes
+    remote_extended_stack(misocket,remote_command_argv[0],remote_command_argv[1],third_parameter);
   }
 
 
