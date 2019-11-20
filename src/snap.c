@@ -4598,7 +4598,9 @@ void save_sna_snapshot(char *filename)
 
 	if (MACHINE_IS_SPECTRUM_16_48) {
 		//Meter PC en stack
-		push_valor(reg_pc);
+		//Indicar como si fuera non_maskable_interrupt, pues originalmente los .sna venian en no-se-que interfaz
+		//y se generaba snapshot al pulsar boton nmi
+		push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
 	}
 
     save_sna_snapshot_registers(header);

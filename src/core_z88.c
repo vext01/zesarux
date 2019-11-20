@@ -198,7 +198,7 @@ void z88_gestionar_interrupcion(void)
                                                 //printf ("Calling NMI with pc=0x%x\n",reg_pc);
                                                 //call_address(0x66);
 						iff1.v=0;
-                                                push_valor(reg_pc);
+                                                push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
                                                 reg_pc=0x66;
 
 
@@ -226,16 +226,9 @@ void z88_gestionar_interrupcion(void)
                                                 interrupcion_maskable_generada.v=0;
 
 
-                                                //z80_byte reg_pc_h,reg_pc_l;
-                                                //reg_pc_h=value_16_to_8h(reg_pc);
-                                                //reg_pc_l=value_16_to_8l(reg_pc);
+                                              
 
-                                                //poke_byte(--reg_sp,reg_pc_h);
-                                                //poke_byte(--reg_sp,reg_pc_l);
-
-                                                //push_valor(value_8_to_16(reg_pc_h,reg_pc_l));
-
-                                                push_valor(reg_pc);
+                                                push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
 
                                                 reg_r++;
 

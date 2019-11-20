@@ -4531,7 +4531,7 @@ int i;
         debug_printf (VERBOSE_DEBUG,"Running call command address : %d",direccion);
         if (CPU_IS_MOTOROLA) debug_printf (VERBOSE_DEBUG,"Unimplemented call command for motorola");
         else {
-          push_valor(reg_pc);
+          push_valor(reg_pc,PUSH_VALUE_TYPE_CALL);
           reg_pc=direccion;
         }
       }

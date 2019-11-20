@@ -1465,7 +1465,7 @@ void instruccion_ed_138 ()
                 z80_int value=0;
                 value |= (lee_byte_pc()<<8);
                 value |= lee_byte_pc();
-                push_valor( value );
+                push_valor( value , PUSH_VALUE_TYPE_PUSH);
         }
 
         else invalid_opcode_ed("237 138");

@@ -12844,7 +12844,7 @@ void menu_hardware_zxprinter_ocrfile(MENU_ITEM_PARAMETERS)
 
 void menu_hardware_zxprinter_copy(MENU_ITEM_PARAMETERS)
 {
-        push_valor(reg_pc);
+        push_valor(reg_pc,PUSH_VALUE_TYPE_CALL);
 
 	if (MACHINE_IS_SPECTRUM) {
 	        reg_pc=0x0eac;
@@ -21455,7 +21455,7 @@ void menu_run_mantransfer(MENU_ITEM_PARAMETERS)
 
 	//y saltar a la rutina de grabacion de mantransfe
 	//Si se cambia la rutina, hay que cambiar este salto tambien
-        push_valor(reg_pc);
+        push_valor(reg_pc,PUSH_VALUE_TYPE_CALL);
         reg_pc=16384+0x32;
 
         //Y salimos de todos los menus

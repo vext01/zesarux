@@ -121,17 +121,11 @@ extern z80_byte sz53p_table[];
         reg_pc +=desp16; \
 } \
 
-/*
-#define call_address(dir) \
-{ \
-        push_valor(reg_pc); \
-        reg_pc=dir; \
-} \
-*/
+
 
 #define rst(dir)\
 {\
-        push_valor(reg_pc); \
+        push_valor(reg_pc,PUSH_VALUE_TYPE_RST); \
         reg_pc=dir; \
 } \
 
@@ -143,7 +137,7 @@ extern z80_byte sz53p_table[];
   calltemph=peek_byte(reg_pc); \
   contend_read_no_mreq(reg_pc, 1 );  \
   reg_pc++;\
-  push_valor(reg_pc); \
+  push_valor(reg_pc,PUSH_VALUE_TYPE_CALL); \
   reg_pc=value_8_to_16(calltemph,calltempl); \
   set_memptr(reg_pc); \
 } \
@@ -357,12 +351,13 @@ enum push_value_type {
 	PUSH_VALUE_TYPE_CALL,
 	PUSH_VALUE_TYPE_RST,
 	PUSH_VALUE_TYPE_PUSH,
-	PUSH_VALUE_TYPE_INTERRUPT
+	PUSH_VALUE_TYPE_MASKABLE_INTERRUPT,
+        PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT
 };
 
 
 
-extern void push_valor(z80_int valor);
+extern void push_valor(z80_int valor,enum push_value_type tipo);
 
 extern z80_int pop_valor();
 

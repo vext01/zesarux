@@ -2011,7 +2011,7 @@ void instruccion_ddfd_229 ()
 {
 //PUSH IX
 	contend_read_no_mreq( IR, 1 );
-	push_valor(*registro_ixiy);
+	push_valor(*registro_ixiy,PUSH_VALUE_TYPE_PUSH);
 }
 
 void instruccion_ddfd_230 ()
