@@ -278,11 +278,19 @@ extern debug_nested_function_element *nested_list_core;
 
 extern void debug_dump_nested_functions(char *result);
 
+//Estructura de cada item de extended stack
+struct s_extended_stack_item {
+	z80_byte valor;
+	z80_byte tipo;
+};
 
+//Array con todo el extended stack
+extern struct s_extended_stack_item extended_stack_array_items[];
 
 extern z80_bit extended_stack_enabled;
 extern void set_extended_stack(void);
 extern void reset_extended_stack(void);
+extern char *extended_stack_get_string_type(z80_byte tipo);
 
 
 extern int debug_change_register(char *texto);

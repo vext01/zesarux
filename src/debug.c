@@ -2177,6 +2177,12 @@ void reset_cpu_core_code_coverage(void)
 
 // Codigo para extended stack
 
+
+
+
+//Array con todo el extended stack
+struct s_extended_stack_item extended_stack_array_items[65536];
+
 //Retornar el tipo de valor de extended stack 
 char *extended_stack_get_string_type(z80_byte tipo)
 {
@@ -2195,7 +2201,14 @@ char *extended_stack_get_string_type(z80_byte tipo)
 z80_byte push_valor_extended_stack(z80_int valor,z80_byte tipo)
 {
 
-	printf ("Putting in stack value: %04XH type: %d (%s) SP=%04XH\n",valor,tipo,extended_stack_get_string_type(tipo),reg_sp);
+	//printf ("Putting in stack value: %04XH type: %d (%s) SP=%04XH\n",valor,tipo,extended_stack_get_string_type(tipo),reg_sp);
+
+	extended_stack_array_items[reg_sp-1].valor=value_16_to_8h(valor);
+	extended_stack_array_items[reg_sp-1].tipo=tipo;
+
+	extended_stack_array_items[reg_sp-2].valor=value_16_to_8l(valor);
+	extended_stack_array_items[reg_sp-2].tipo=tipo;
+
 
 	debug_nested_push_valor_call_previous(extended_stack_nested_id_core,valor,tipo);
 

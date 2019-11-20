@@ -22,6 +22,7 @@ Added Borland Gui Style
 Added ZRCP commands:
 -cpu-code-coverage: working with code coverage
 -cpu-history: working with cpu history
+-extended-stack: having an internal stack for debugging stack value types
 -get-ui-io-ports: to get keyboard state and joystick
 -get-snapshot: get a ZSF snapshot from ZRCP
 -print-footer: print message on footer

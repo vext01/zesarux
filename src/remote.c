@@ -1421,16 +1421,34 @@ void remote_extended_stack(int misocket,char *parameter,char *value)
 	}
 
 	else if (!strcasecmp(parameter,"get")) {
-		/*if (extended_stack_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled");
+		if (extended_stack_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled");
 		else {
+			int items=parse_string_to_number(value);
+
+			
+
+			z80_int indice_l;
+			z80_int indice_h;
 			int i;
-			for (i=0;i<65536;i++) {
-		  	if (cpu_code_coverage_array[i]) {
-			    escribir_socket_format(misocket,"%04X ",i);
-			  }
+
+			for (i=0;i<items;i++) {
+					z80_int valor_resultante;
+					z80_byte tipo;
+
+					//Para asegurarnos que los indices siempre estan en rango 0...65535 (el tamanyo del array)
+					indice_l=reg_sp+i*2;
+					indice_h=indice_l+1;
+
+
+					//realmente el extended stack guarda valor y tipo para cada byte, aqui solo mostramos word
+					valor_resultante=extended_stack_array_items[indice_l].valor+256*extended_stack_array_items[indice_h].valor;
+
+					//Los dos bytes deberian tener el mismo tipo
+					tipo=extended_stack_array_items[indice_l].tipo;
+					escribir_socket_format(misocket,"%04XH %s\n",valor_resultante,extended_stack_get_string_type(tipo));
 			}
-			//escribir_socket(misocket,"\n");
-		}*/
+
+		}
 	}	
 
 
