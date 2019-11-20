@@ -28,11 +28,13 @@ ok -cambiar función push para que use parámetro adicional que es un enum con e
 
 ok -call, push, int, rst deben llamar a esa función push de dos parámetros
 
--convertir esa función push en un puntero a función. Ver si hay cambio de uso de cpu de antes (al inicio del todo) a después
+ok-convertir esa función push en un puntero a función. Ver si hay cambio de uso de cpu de antes (al inicio del todo) a después
+uso cpu: 6%
 
--hacer una función nested para esta función push. Ver qué sucede al hacer set_machine. Ver nested similares. Cuando se llama a set_machine la lista de funciones nested se borra a 0?
 
- cambiando 
+ok-hacer una función nested para esta función push. Ver qué sucede al hacer set_machine. Ver nested similares. Cuando se llama a set_machine la lista de funciones nested se borra a 0?
+
+
 
 
 -para probar reset permisos carpetas mac:

@@ -1655,6 +1655,10 @@ int cpu_history_nested_id_core;
 z80_bit cpu_code_coverage_enabled={0};
 int cpu_code_coverage_nested_id_core;
 
+
+z80_bit extended_stack_enabled={0};
+int extended_stack_nested_id_core;
+
 //Array para el code coverage. De momento solo tiene el contenido:
 //0: no ha ejecutado la cpu esa dirección
 //diferente de 0: ha ejecutado la cpu esa dirección
@@ -2169,6 +2173,73 @@ void reset_cpu_core_code_coverage(void)
 
 
 }
+
+
+// Codigo para extended stack
+
+//Retornar el tipo de valor de extended stack 
+char *extended_stack_get_string_type(z80_byte tipo)
+{
+
+	//Algunas comprobaciones por si acaso
+	if (tipo>=TOTAL_PUSH_VALUE_TYPES) {
+		//Si se sale de rango, devolver default
+		return push_value_types_strings[0];
+	}
+
+	else return push_value_types_strings[tipo];
+
+}
+
+
+z80_byte push_valor_extended_stack(z80_int valor,z80_byte tipo)
+{
+
+	printf ("Putting in stack value: %04XH type: %d (%s) SP=%04XH\n",valor,tipo,extended_stack_get_string_type(tipo),reg_sp);
+
+	debug_nested_push_valor_call_previous(extended_stack_nested_id_core,valor,tipo);
+
+	//Para que no se queje el compilador
+	return 0;
+
+}
+
+void set_extended_stack(void)
+{
+    debug_printf(VERBOSE_INFO,"Enabling Extended stack");
+
+	if (extended_stack_enabled.v) {
+		debug_printf(VERBOSE_INFO,"Already enabled");
+		return;
+	}
+
+	extended_stack_nested_id_core=debug_nested_push_valor_add(push_valor_extended_stack,"Extended stack");
+
+
+
+	extended_stack_enabled.v=1;
+
+
+}
+
+void reset_extended_stack(void)
+{
+  debug_printf(VERBOSE_INFO,"Disabling Extended stack");
+	if (extended_stack_enabled.v==0) {
+		debug_printf(VERBOSE_INFO,"Already disabled");
+		return;
+	}
+
+	debug_nested_push_valor_del(extended_stack_nested_id_core);
+	extended_stack_enabled.v=0;
+
+
+}
+
+// Fin codigo para extended stack
+
+
+
 
 //IMPORTANTE: Aqui se define el tamaño del los registros en binario en la estructura
 //Si se modifica dicho tamaño, actualizar este valor
@@ -3140,11 +3211,12 @@ void debug_nested_core_call_previous(int id)
 //
 
 /*
-Los siguientes 4 secciones generados mediante:
+Los siguientes 5 secciones generados mediante:
 cat template_nested_peek.tpl | sed 's/NOMBRE_FUNCION/peek_byte/g' > debug_nested_functions.c
 cat template_nested_peek.tpl | sed 's/NOMBRE_FUNCION/peek_byte_no_time/g' >> debug_nested_functions.c
 cat template_nested_poke.tpl | sed 's/NOMBRE_FUNCION/poke_byte/g' >> debug_nested_functions.c
 cat template_nested_poke.tpl | sed 's/NOMBRE_FUNCION/poke_byte_no_time/g' >> debug_nested_functions.c
+cat template_nested_push.tpl | sed 's/NOMBRE_FUNCION/push_valor/g' >> debug_nested_functions.c
 
 */
 
@@ -3161,6 +3233,7 @@ void debug_nested_cores_pokepeek_init(void)
         nested_list_poke_byte_no_time=NULL;
         nested_list_peek_byte=NULL;
         nested_list_peek_byte_no_time=NULL;
+		nested_list_push_valor=NULL;
 }
 
 
@@ -3222,6 +3295,12 @@ void debug_dump_nested_functions(char *result)
 		debug_dump_nested_print (result,"\nNested peek_byte_no_time functions\n");
 		debug_test_needed_adelante(nested_list_peek_byte_no_time,result);
 	}
+
+	if (nested_list_push_valor!=NULL && push_valor==push_valor_nested_handler) {
+		debug_dump_nested_print (result,"\nNested push_valor functions\n");
+		debug_test_needed_adelante(nested_list_push_valor,result);
+	}
+
 }
 
 

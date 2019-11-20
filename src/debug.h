@@ -211,6 +211,7 @@ extern void debug_anota_retorno_step_maskable(void);
 
 #define MAX_DEBUG_FUNCTION_NAME 255
 
+//Funcion anidada siempre sera funcion que retorna un z80_byte, y tiene parametros de direccion (z80_int) y valor (z80_byte)
 typedef z80_byte (*debug_nested_function)(z80_int dir, z80_byte value);
 
 struct s_debug_nested_function_element {
@@ -244,6 +245,7 @@ extern void debug_nested_cores_pokepeek_init(void);
 extern int debug_nested_poke_byte_add(debug_nested_function funcion,char *nombre);
 extern void debug_nested_poke_byte_del(int id);
 extern void debug_nested_poke_byte_call_previous(int id,z80_int dir,z80_byte value);
+
 extern int debug_nested_poke_byte_no_time_add(debug_nested_function funcion,char *nombre);
 extern void debug_nested_poke_byte_no_time_del(int id);
 extern void debug_nested_poke_byte_no_time_call_previous(int id,z80_int dir,z80_byte value);
@@ -251,9 +253,16 @@ extern void debug_nested_poke_byte_no_time_call_previous(int id,z80_int dir,z80_
 extern int debug_nested_peek_byte_add(debug_nested_function funcion,char *nombre);
 extern void debug_nested_peek_byte_del(int id);
 extern z80_byte debug_nested_peek_byte_call_previous(int id,z80_int dir);
+
 extern int debug_nested_peek_byte_no_time_add(debug_nested_function funcion,char *nombre);
 extern void debug_nested_peek_byte_no_time_del(int id);
 extern z80_byte debug_nested_peek_byte_no_time_call_previous(int id,z80_int dir);
+
+
+extern int debug_nested_push_valor_add(debug_nested_function funcion,char *nombre);
+extern void debug_nested_push_valor_del(int id);
+extern void debug_nested_push_valor_call_previous(int id,z80_int valor,z80_byte tipo);
+
 
 
 extern debug_nested_function_element *debug_nested_find_id(debug_nested_function_element *e,int id);
@@ -268,6 +277,13 @@ extern debug_nested_function_element *nested_list_poke_byte;
 extern debug_nested_function_element *nested_list_core;
 
 extern void debug_dump_nested_functions(char *result);
+
+
+
+extern z80_bit extended_stack_enabled;
+extern void set_extended_stack(void);
+extern void reset_extended_stack(void);
+
 
 extern int debug_change_register(char *texto);
 

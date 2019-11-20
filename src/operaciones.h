@@ -346,8 +346,10 @@ extern z80_int desp8_to_16(z80_byte desp);
 extern void neg(void);
 
 
+#define TOTAL_PUSH_VALUE_TYPES 6
+
 enum push_value_type {
-	PUSH_VALUE_TYPE_DEFAULT,
+	PUSH_VALUE_TYPE_DEFAULT=0,
 	PUSH_VALUE_TYPE_CALL,
 	PUSH_VALUE_TYPE_RST,
 	PUSH_VALUE_TYPE_PUSH,
@@ -355,13 +357,13 @@ enum push_value_type {
         PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT
 };
 
+extern char *push_value_types_strings[];
 
 
-//extern void push_valor(z80_int valor,enum push_value_type tipo);
 
-extern void (*push_valor)(z80_int valor,enum push_value_type tipo); 
+extern void (*push_valor)(z80_int valor,z80_byte tipo); 
 
-extern void push_valor_default(z80_int valor,enum push_value_type tipo GCC_UNUSED) ;
+extern void push_valor_default(z80_int valor,z80_byte tipo) ;
 
 extern z80_int pop_valor();
 

@@ -83,7 +83,7 @@ z80_byte (*lee_puerto)(z80_byte puerto_h,z80_byte puerto_l);
 void (*out_port)(z80_int puerto,z80_byte value);
 z80_byte (*fetch_opcode)(void);
 
-void (*push_valor)(z80_int valor,enum push_value_type tipo); 
+void (*push_valor)(z80_int valor,z80_byte tipo); 
 
 z80_byte lee_puerto_teclado(z80_byte puerto_h);
 z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l);
@@ -3238,9 +3238,33 @@ z80_int pop_valor()
 
 }
 
+//Tener en cuenta los valores de tipo para los strings:
+/*enum push_value_type {
+	PUSH_VALUE_TYPE_DEFAULT=0,
+	PUSH_VALUE_TYPE_CALL,
+	PUSH_VALUE_TYPE_RST,
+	PUSH_VALUE_TYPE_PUSH,
+	PUSH_VALUE_TYPE_MASKABLE_INTERRUPT,
+        PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT
+};
+*/
+
+char *push_value_types_strings[TOTAL_PUSH_VALUE_TYPES]={
+	"default",
+	"call",
+	"rst",
+	"push",
+	"maskable_interrupt",
+	"non_maskable_interrupt"
+};
+
+
 
 //En la funcion por defecto no usamos el tipo
-void push_valor_default(z80_int valor,enum push_value_type tipo GCC_UNUSED) 
+//El tipo realmente sera un valor en el rango del enum de push_value_type
+//lo pongo como z80_byte y no como enum porque luego al activar extended_stack, las funciones de nested
+//requieren que ese parametro sea z80_byte
+void push_valor_default(z80_int valor,z80_byte tipo GCC_UNUSED) 
 { 
         reg_sp -=2; 
         poke_word(reg_sp,valor); 

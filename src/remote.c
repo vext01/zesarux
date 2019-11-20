@@ -679,6 +679,13 @@ struct s_items_ayuda items_ayuda[]={
   //{"evaluate-condition","|ec","condition","Evaluate condition. It's the same as using evaluate condition on the breakpoints debug menu"},
   {"exit-cpu-step","|ecs",NULL,"Exit cpu step to step mode"},
   {"exit-emulator",NULL,NULL,"Ends emulator"},
+
+	{"extended-stack",NULL,"action [parameter]","Sets extended stack parameters. Action and parameters are the following:\n"
+	"enabled yes|no   Enable or disable the extended stack\n"
+	"get     n        Get n values\n"
+	},
+
+
 {"find-label",NULL,"label","Finds label on source code"},
   {"generate-nmi",NULL,NULL,"Generates a NMI"},
 	{"get-audio-buffer-info",NULL,NULL,"Get audio buffer information"},
@@ -1375,6 +1382,66 @@ void remote_cpu_code_coverage(int misocket,char *parameter,char *value)
 
 }
 
+
+
+void remote_extended_stack(int misocket,char *parameter,char *value)
+{
+
+
+	//If comun para acciones que requieren detener el core momentaneamente
+	if (!strcasecmp(parameter,"enabled") ) {
+
+
+		//Pausar la emulacion para evitar que ese core transaction log este en ejecucion. Si eso pasa,
+		//puede provocar segfault al desactivarlo, pues intenta llamar a debug_nested_core_call_previous y este mismo core ya ha desaparecido
+		int antes_menu_event_remote_protocol_enterstep=menu_event_remote_protocol_enterstep.v;
+		remote_cpu_enter_step(misocket);
+		if (menu_event_remote_protocol_enterstep.v==0) return;
+
+
+			
+		if (!strcasecmp(parameter,"enabled")) {
+			if (remote_eval_yes_no(value)) {
+				if (extended_stack_enabled.v) escribir_socket(misocket,"Error. Already enabled");
+				else set_extended_stack();
+			}
+
+			else {
+				if (extended_stack_enabled.v==0) escribir_socket(misocket,"Error. Already disabled");
+				reset_extended_stack();
+			}
+		}
+
+
+		//Salir del cpu step si no estaba en ese modo
+		if (!antes_menu_event_remote_protocol_enterstep) remote_cpu_exit_step(misocket);
+
+
+ 
+	}
+
+	else if (!strcasecmp(parameter,"get")) {
+		/*if (extended_stack_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled");
+		else {
+			int i;
+			for (i=0;i<65536;i++) {
+		  	if (cpu_code_coverage_array[i]) {
+			    escribir_socket_format(misocket,"%04X ",i);
+			  }
+			}
+			//escribir_socket(misocket,"\n");
+		}*/
+	}	
+
+
+
+
+	else {
+		escribir_socket(misocket,"Error. Unknown parameter");
+	}
+
+
+}
 
 
 void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
@@ -4033,6 +4100,20 @@ void interpreta_comando(char *comando,int misocket)
 		remote_calling_end_emulator.v=1;
 		end_emulator();
   }
+
+
+  else if (!strcmp(comando_sin_parametros,"extended-stack") ) {
+    remote_parse_commands_argvc(parametros);
+
+    if (remote_command_argc<1) {
+      escribir_socket(misocket,"ERROR. Needs at least one parameter");
+      return;
+    }
+
+
+    remote_extended_stack(misocket,remote_command_argv[0],remote_command_argv[1]);
+  }
+
 
 
   else if (!strcmp(comando_sin_parametros,"find-label")) {
