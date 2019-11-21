@@ -4154,12 +4154,20 @@ void interpreta_comando(char *comando,int misocket)
 
 
   else if (!strcmp(comando_sin_parametros,"extended-stack") ) {
+
+	  if (!CPU_IS_Z80) {
+		  escribir_socket(misocket,"ERROR. CPU is not Z80");
+		  return;
+	  }
+
     remote_parse_commands_argvc(parametros);
 
     if (remote_command_argc<2) {
       escribir_socket(misocket,"ERROR. Needs at least two parameters");
       return;
     }
+
+
 
 	//Asignar punteros. Si no existen parametros adicionales, cadenas vacias
 

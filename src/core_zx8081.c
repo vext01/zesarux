@@ -47,6 +47,10 @@
 #include "ula.h"
 #include "settings.h"
 
+#include "snap_zsf.h"
+#include "zeng.h"
+
+
 void init_zx8081_scanline_y_x(int y,int x,int ancho)
 {
 
@@ -358,6 +362,8 @@ void cpu_core_loop_zx8081(void)
 					esperando_tiempo_final_t_estados.v=0;
 				}
 
+				core_end_frame_check_zrcp_zeng_snap.v=1;
+
 				//para el detector de vsync sound
 				if (zx8081_detect_vsync_sound.v) {
 					if (zx8081_detect_vsync_sound_counter==0) {
@@ -524,9 +530,16 @@ void cpu_core_loop_zx8081(void)
 
 			}
 
-                }
+    }
 
-                debug_get_t_stados_parcial_post();
+	//Aplicar snapshot pendiente de ZRCP y ZENG envio snapshots. Despues de haber gestionado interrupciones
+	if (core_end_frame_check_zrcp_zeng_snap.v) {
+		core_end_frame_check_zrcp_zeng_snap.v=0;
+		check_pending_zrcp_put_snapshot();
+		zeng_send_snapshot_if_needed();			
+	}
+
+    debug_get_t_stados_parcial_post();
 
 }
 
