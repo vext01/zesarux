@@ -28718,7 +28718,7 @@ void menu_inicio_reset_emulated_keys(void)
 
 
 	//Desactivar fire, por si esta disparador automatico
-	joystick_release_fire();	
+	joystick_release_fire(1);	
 
 	menu_espera_no_tecla();
 }

@@ -188,10 +188,10 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 estos no deberian generar doble evento (joystick y tecla)
 
 -joystick y ZENG:
---Joystick físico o cursores debe generar eventos de envía Tecla con código especial. Entra en función Antes 
+OK --Joystick físico o cursores debe generar eventos de envía Tecla con código especial. Entra en función Antes 
 de envío por ZENG. Quizá en funciones de joystick_send_**?
 
---Joystick que activa Kempston, Sinclair, qaop, fuller etc activa esos puertos desde operaciones.c y no llama a envía Tecla
+OK --Joystick que activa Kempston, Sinclair, qaop, fuller etc activa esos puertos desde operaciones.c y no llama a envía Tecla
 --Joystick que genera Tecla redefinida, entra a envía Tecla pero después de ZENG, para no generar dos eventos
 
 Así los dos usuarios deben tener seleccionado el mismo tipo de joystick en menú. Así también como si hay redefinido 

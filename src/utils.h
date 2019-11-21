@@ -300,7 +300,14 @@ enum util_teclas
 	UTIL_KEY_KP9,
 	UTIL_KEY_KP_COMMA,
 	UTIL_KEY_KP_ENTER,
-	UTIL_KEY_WINKEY
+	UTIL_KEY_WINKEY,
+
+	//Estos 5 son para enviar eventos de joystick mediante ZENG
+	UTIL_KEY_JOY_FIRE,
+	UTIL_KEY_JOY_UP,
+	UTIL_KEY_JOY_DOWN,
+	UTIL_KEY_JOY_LEFT,
+	UTIL_KEY_JOY_RIGHT
 };
 
 //valores usados en funcion util_set_reset_key_z88_keymap

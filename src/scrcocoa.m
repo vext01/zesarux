@@ -1455,13 +1455,17 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                                 util_set_reset_key(UTIL_KEY_UP,pressrelease);
                         break;
 
-                    case COCOA_KEY_LEFT:
+                        case COCOA_KEY_LEFT:
                                 util_set_reset_key(UTIL_KEY_LEFT,pressrelease);
                         break;
 
                         case COCOA_KEY_RIGHT:
                                 util_set_reset_key(UTIL_KEY_RIGHT,pressrelease);
                         break;
+
+                        case COCOA_KEY_HOME:
+				util_set_reset_key(UTIL_KEY_HOME,pressrelease);
+                        break;                        
 
 
                         case ' ':
@@ -1501,9 +1505,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 
 
 
-                        case COCOA_KEY_HOME:
-				util_set_reset_key(UTIL_KEY_HOME,pressrelease);
-                        break;
+
 
 			/* Estos parece que no existen en mac
                         case COCOA_KEY_KP_Left:

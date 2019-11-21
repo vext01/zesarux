@@ -936,29 +936,29 @@ void realjoystick_set_reset_action(int index,int value)
 
 	switch (index) {
 		case REALJOYSTICK_EVENT_UP:
-			if (value) joystick_set_up();
-			else joystick_release_up();
+			if (value) joystick_set_up(1);
+			else joystick_release_up(1);
 		break;
 
 		case REALJOYSTICK_EVENT_DOWN:
-			 if (value) joystick_set_down();
-			 else joystick_release_down();
+			 if (value) joystick_set_down(1);
+			 else joystick_release_down(1);
 		break;
 
-                case REALJOYSTICK_EVENT_LEFT:
-                         if (value) joystick_set_left();
-                         else joystick_release_left();
-                break;
+		case REALJOYSTICK_EVENT_LEFT:
+			if (value) joystick_set_left(1);
+			else joystick_release_left(1);
+		break;
 
-                case REALJOYSTICK_EVENT_RIGHT:
-                         if (value) joystick_set_right();
-                         else joystick_release_right();
-                break;
+		case REALJOYSTICK_EVENT_RIGHT:
+			if (value) joystick_set_right(1);
+			else joystick_release_right(1);
+		break;
 
-                case REALJOYSTICK_EVENT_FIRE:
-                         if (value) joystick_set_fire();
-                         else joystick_release_fire();
-                break;
+		case REALJOYSTICK_EVENT_FIRE:
+			if (value) joystick_set_fire(1);
+			else joystick_release_fire(1);
+		break;
 
 
 		//Evento de ESC representa ESC para navegar entre menus y tambien abrir el menu (lo que ahora es con F5 y antes era ESC)
@@ -1119,27 +1119,27 @@ void realjoystick_main(void)
 					switch (index) {
 						case REALJOYSTICK_EVENT_UP:
 							//reset abajo
-							joystick_release_down();
+							joystick_release_down(1);
 							realjoystick_set_reset_action(index,value);
 						break;
 
-                                                case REALJOYSTICK_EVENT_DOWN:
-                                                        //reset arriba
-                                                        joystick_release_up();
-                                                        realjoystick_set_reset_action(index,value);
-                                                break;
+						case REALJOYSTICK_EVENT_DOWN:
+								//reset arriba
+								joystick_release_up(1);
+								realjoystick_set_reset_action(index,value);
+						break;
 
-                                                case REALJOYSTICK_EVENT_LEFT:
-                                                        //reset derecha
-                                                        joystick_release_right();
-                                                        realjoystick_set_reset_action(index,value);
-                                                break;
+						case REALJOYSTICK_EVENT_LEFT:
+								//reset derecha
+								joystick_release_right(1);
+								realjoystick_set_reset_action(index,value);
+						break;
 
-                                                case REALJOYSTICK_EVENT_RIGHT:
-                                                        //reset izquierda
-                                                        joystick_release_left();
-                                                        realjoystick_set_reset_action(index,value);
-                                                break;
+						case REALJOYSTICK_EVENT_RIGHT:
+								//reset izquierda
+								joystick_release_left(1);
+								realjoystick_set_reset_action(index,value);
+						break;
 
 
 

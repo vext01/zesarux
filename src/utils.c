@@ -6545,13 +6545,13 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                         case UTIL_KEY_HOME:
                                 if (pressrelease) {
-                                        joystick_set_fire();
+                                        joystick_set_fire(1);
 
 					//Home en cpc es copy
 					cpc_keyboard_table[1] &=(255-2);
                                 }
                                 else {
-                                        joystick_release_fire();
+                                        joystick_release_fire(1);
 
 					//Home en cpc es copy
 					cpc_keyboard_table[1] |=2;
@@ -6562,7 +6562,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_63486 &=255-16;
-                                        joystick_set_left();
+                                        joystick_set_left(1);
                                         blink_kbd_a12 &= (255-64);
 					cpc_keyboard_table[1] &=(255-1);
 
@@ -6572,7 +6572,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_63486 |=16;
-                                        joystick_release_left();
+                                        joystick_release_left(1);
                                         blink_kbd_a12 |= 64;
 					                              cpc_keyboard_table[1] |=1;
                                         ql_keyboard_table[1] |= 2;
@@ -6582,7 +6582,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_61438 &=255-4;
-                                        joystick_set_right();
+                                        joystick_set_right(1);
                                         blink_kbd_a11 &= (255-64);
 					                              cpc_keyboard_table[0] &=(255-2);
                                         ql_keyboard_table[1] &= (255-16);
@@ -6590,7 +6590,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_61438 |=4;
-                                        joystick_release_right();
+                                        joystick_release_right(1);
                                         blink_kbd_a11 |= 64;
                                         cpc_keyboard_table[0] |=2;
                                         ql_keyboard_table[1] |= 16;
@@ -6601,7 +6601,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_61438 &=255-16;
-                                        joystick_set_down();
+                                        joystick_set_down(1);
 
                                         blink_kbd_a10 &= (255-64);
 					cpc_keyboard_table[0] &=(255-4);
@@ -6611,7 +6611,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_61438 |=16;
-                                        joystick_release_down();
+                                        joystick_release_down(1);
 
                                         blink_kbd_a10 |= 64;
 					cpc_keyboard_table[0] |=4;
@@ -6623,7 +6623,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_61438 &=255-8;
-                                        joystick_set_up();
+                                        joystick_set_up(1);
                                         blink_kbd_a9 &= (255-64);
 					cpc_keyboard_table[0] &=(255-1);
                                         ql_keyboard_table[1] &= (255-4);
@@ -6631,12 +6631,98 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_61438 |=8;
-                                        joystick_release_up();
+                                        joystick_release_up(1);
                                         blink_kbd_a9 |= 64;
 					cpc_keyboard_table[0] |=1;
                                         ql_keyboard_table[1] |=4;
                                 }
                         break;
+
+
+                        //las 5 son botones de joystick que vienen desde ZENG (entrade de comando por ZRCP) exclusivamente. 
+                        //Se diferencian de las anteriores en que no vuelven a generar evento ZENG de nuevo
+                        case UTIL_KEY_JOY_FIRE:
+                                if (pressrelease) {
+                                        joystick_set_fire(0);
+
+					//Home en cpc es copy
+					cpc_keyboard_table[1] &=(255-2);
+                                }
+                                else {
+                                        joystick_release_fire(0);
+
+					//Home en cpc es copy
+					cpc_keyboard_table[1] |=2;
+                                }
+                        break;
+
+                        case UTIL_KEY_JOY_LEFT:
+                                if (pressrelease) {
+                                        joystick_set_left(0);
+                                        blink_kbd_a12 &= (255-64);
+					cpc_keyboard_table[1] &=(255-1);
+
+          // 1|   Ret   Left     Up    Esc  Right      \  Space   Down
+                                        ql_keyboard_table[1] &= (255-2);
+                                }
+                                else {
+                                        joystick_release_left(0);
+                                        blink_kbd_a12 |= 64;
+					                              cpc_keyboard_table[1] |=1;
+                                        ql_keyboard_table[1] |= 2;
+                                }
+                        break;
+                        case UTIL_KEY_JOY_RIGHT:
+                                if (pressrelease) {
+                                        joystick_set_right(0);
+                                        blink_kbd_a11 &= (255-64);
+					                              cpc_keyboard_table[0] &=(255-2);
+                                        ql_keyboard_table[1] &= (255-16);
+                                }
+                                else {
+                                        joystick_release_right(0);
+                                        blink_kbd_a11 |= 64;
+                                        cpc_keyboard_table[0] |=2;
+                                        ql_keyboard_table[1] |= 16;
+                                }
+                        break;
+
+                        case UTIL_KEY_JOY_DOWN:
+                                if (pressrelease) {
+                                        joystick_set_down(0);
+
+                                        blink_kbd_a10 &= (255-64);
+					cpc_keyboard_table[0] &=(255-4);
+                                        ql_keyboard_table[1] &= (255-128);
+
+                                }
+                                else {
+                                        joystick_release_down(0);
+
+                                        blink_kbd_a10 |= 64;
+					cpc_keyboard_table[0] |=4;
+                                        ql_keyboard_table[1] |= 128;
+                                }
+                        break;
+
+                        case UTIL_KEY_JOY_UP:
+                                if (pressrelease) {
+                                        joystick_set_up(0);
+                                        blink_kbd_a9 &= (255-64);
+					cpc_keyboard_table[0] &=(255-1);
+                                        ql_keyboard_table[1] &= (255-4);
+                                }
+                                else {
+                                        joystick_release_up(0);
+                                        blink_kbd_a9 |= 64;
+					cpc_keyboard_table[0] |=1;
+                                        ql_keyboard_table[1] |=4;
+                                }
+                        break;
+
+
+
+
 
                         case UTIL_KEY_TAB:
                                 if (pressrelease) {

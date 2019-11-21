@@ -1699,29 +1699,52 @@ void scrcurses_actualiza_tablas_teclado(void)
 
 
 		switch (c) {
+			        /*case KEY_HOME:
+							joystick_set_fire();
+                    break;
+
+					case KEY_LEFT:
+							joystick_set_left();
+							blink_kbd_a12 &= (255-64);
+					break;
+
+					case KEY_RIGHT:
+							joystick_set_right();
+							blink_kbd_a11 &= (255-64);
+					break;
+
+					case KEY_DOWN:
+							joystick_set_down();
+							blink_kbd_a10 &= (255-64);
+					break;
+
+					case KEY_UP:
+							joystick_set_up();
+							blink_kbd_a9 &= (255-64);
+					break;*/
+
+
+
 			        case KEY_HOME:
-                                        joystick_set_fire();
-                                break;
+							util_set_reset_key(UTIL_KEY_HOME,1);
+                    break;
 
-                                case KEY_LEFT:
-                                        joystick_set_left();
-                           		blink_kbd_a12 &= (255-64);
-                                break;
+					case KEY_LEFT:
+							util_set_reset_key(UTIL_KEY_LEFT,1);
+					break;
 
-                                case KEY_RIGHT:
-                                        joystick_set_right();
-					blink_kbd_a11 &= (255-64);
-                                break;
+					case KEY_RIGHT:
+							util_set_reset_key(UTIL_KEY_RIGHT,1);
+					break;
 
-                                case KEY_DOWN:
-                                        joystick_set_down();
-					blink_kbd_a10 &= (255-64);
-                                break;
+					case KEY_DOWN:
+							util_set_reset_key(UTIL_KEY_DOWN,1);
+					break;
 
-                                case KEY_UP:
-                                        joystick_set_up();
-					blink_kbd_a9 &= (255-64);
-                                break;
+					case KEY_UP:
+							util_set_reset_key(UTIL_KEY_UP,1);
+					break;
+
 
                                 case KEY_BACKSPACE:
 				//En algunos terminales, como Mac, genera 127
