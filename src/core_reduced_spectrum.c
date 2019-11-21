@@ -57,6 +57,9 @@
 #include "scrstdout.h"
 #include "settings.h"
 
+#include "snap_zsf.h"
+#include "zeng.h"
+
 
 
 
@@ -318,8 +321,11 @@ void cpu_core_loop_reduced_spectrum(void)
 					esperando_tiempo_final_t_estados.v=0;
 				}
 
+				core_end_frame_check_zrcp_zeng_snap.v=1;
 
 			}
+			//Fin bloque final de pantalla
+
 
 		}
 
@@ -472,6 +478,16 @@ void cpu_core_loop_reduced_spectrum(void)
 			}
 
 		
-  	  }
+  	  	}
+	  	//Fin gestion interrupciones
+
+		//Aplicar snapshot pendiente de ZRCP y ZENG envio snapshots. Despues de haber gestionado interrupciones
+		if (core_end_frame_check_zrcp_zeng_snap.v) {
+			core_end_frame_check_zrcp_zeng_snap.v=0;
+			check_pending_zrcp_put_snapshot();
+			zeng_send_snapshot_if_needed();			
+		}
+
+
 
 }

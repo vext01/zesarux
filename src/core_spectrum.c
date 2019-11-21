@@ -58,6 +58,7 @@
 #include "datagear.h"
 
 #include "snap_zsf.h"
+#include "zeng.h"
 
 z80_byte byte_leido_core_spectrum;
 
@@ -908,12 +909,6 @@ void cpu_core_loop_spectrum(void)
 			//lectura de joystick
 			realjoystick_main();
 
-			//printf ("temp conta fifty: %d\n",tempcontafifty++);
-
-			//Aplicar snapshot pendiente de ZRCP
-			//check_pending_zrcp_put_snapshot();
-
-			//zeng_send_snapshot_if_needed();			
 
 
 		}
@@ -942,7 +937,6 @@ void cpu_core_loop_spectrum(void)
 
 
 		//Aplicar snapshot pendiente de ZRCP y ZENG envio snapshots. Despues de haber gestionado interrupciones
-
 		if (core_end_frame_check_zrcp_zeng_snap.v) {
 			core_end_frame_check_zrcp_zeng_snap.v=0;
 			check_pending_zrcp_put_snapshot();
