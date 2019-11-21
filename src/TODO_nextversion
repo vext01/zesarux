@@ -9,7 +9,7 @@ tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
 tccutil reset SystemPolicyDownloadsFolder com.cesarhernandez.zesarux
 tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
 
-
+-opcion para cambiar ruta a dev de realjoystick
 
 
 -online browser . Búsquedas con . Como chase h.q. corta en el
@@ -179,6 +179,7 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 --ZENG:
 
 -probar doom mania (juego a dobles al doom)
+
 
 
 *revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
