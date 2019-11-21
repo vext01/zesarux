@@ -1,39 +1,6 @@
 --------Para próxima versión:
 
-
--crear funciones para meter valores en extended stack alterando esta función nested 
-
-Esta función nested se debería llamar algo así como push_stack_value o similar
-
-Agregar extended stack cómo creará una función nested se debería poder ver también en ZRCP command de debug nested 
-
-Cambios para crear esto:
-
-
- uso cpu con
-  ./zesarux --noconfigfile --ao null --vo null
-  no cflags
-  #define CONFIGURE_OPTIONS "./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl"
- 
- uso cpu inicial:
- 6% 
-
-OK -función push pasa de ser una macro a ser función. Ver si hay cambio de uso de cpu de antes a después
-uso cpu despues: 6%
-
-ok-llamadas a interrupciones en el core deben usar push
-6%
-
-ok -cambiar función push para que use parámetro adicional que es un enum con el tipo de push
-
-ok -call, push, int, rst deben llamar a esa función push de dos parámetros
-
-ok-convertir esa función push en un puntero a función. Ver si hay cambio de uso de cpu de antes (al inicio del todo) a después
-uso cpu: 6%
-
-
-ok-hacer una función nested para esta función push. Ver qué sucede al hacer set_machine. Ver nested similares. Cuando se llama a set_machine la lista de funciones nested se borra a 0?
-
+-Mostrar info en menu network de descargas, commits etc. Solo si hay ssl (porque github solo esta con https)
 
 
 
@@ -150,6 +117,7 @@ Quiza por el sprintf (pending_error_message
 
 -Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
 Desactivar threads en uno u otro caso según lo que corrija el sonido 
+->aplicado en timer.c no usar threads en windows solo en caso de timer.c
 
 
 -emular este bit de eff7 en pentagon:
