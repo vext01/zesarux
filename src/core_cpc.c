@@ -48,6 +48,9 @@
 #include "cpc.h"
 #include "settings.h"
 
+#include "snap_zsf.h"
+#include "zeng.h"
+
 z80_byte byte_leido_core_cpc;
 
 
@@ -317,6 +320,8 @@ void cpu_core_loop_cpc(void)
 					esperando_tiempo_final_t_estados.v=0;
 				}
 
+				core_end_frame_check_zrcp_zeng_snap.v=1;
+
 
 			}
 
@@ -436,7 +441,7 @@ void cpu_core_loop_cpc(void)
 
 						
 
-												push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
+						push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
 
 						reg_r++;
 
@@ -480,8 +485,17 @@ void cpu_core_loop_cpc(void)
 
 			}
 
-                }
-                debug_get_t_stados_parcial_post();
+    }
+	//Fin gestion interrupciones
+
+	//Aplicar snapshot pendiente de ZRCP y ZENG envio snapshots. Despues de haber gestionado interrupciones
+	if (core_end_frame_check_zrcp_zeng_snap.v) {
+		core_end_frame_check_zrcp_zeng_snap.v=0;
+		check_pending_zrcp_put_snapshot();
+		zeng_send_snapshot_if_needed();			
+	}				
+     
+	debug_get_t_stados_parcial_post();
 
 }
 

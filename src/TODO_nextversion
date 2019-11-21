@@ -22,6 +22,7 @@ Primer punto como si fuera extensión
 -Siguiente versión hay que decir en servidor versión.txt que es 8.1-beta2
 Pero eso debe coincidir con version.h de código 
 
+-ZENG en CPC: no soporta teclas como [] etc
 
 -seguir probando speech menu con stdout y con drivers no-stdout
 
