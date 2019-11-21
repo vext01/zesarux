@@ -449,7 +449,7 @@ Poder enviar mensajes a otros jugadores
 		//Si hay tecla pendiente de enviar
 		zeng_key_presses elemento;
 		while (!zeng_fifo_read_element(&elemento) && !error_desconectar) {
-			//printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
+			printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
 
 			//command> help send-keys-event
 			//Syntax: send-keys-event key event

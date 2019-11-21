@@ -23,6 +23,7 @@ Primer punto como si fuera extensión
 Pero eso debe coincidir con version.h de código 
 
 -ZENG en CPC: no soporta teclas como [] etc
+-ZENG para el resto de maquinas y cores. Va ligado a poder generar snapshot ZSF
 
 -seguir probando speech menu con stdout y con drivers no-stdout
 
@@ -179,7 +180,6 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 -probar doom mania (juego a dobles al doom)
 
--que permita ZENG en todos los cores de maquinas
 
 *revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
 *con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
@@ -188,19 +188,24 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 estos no deberian generar doble evento (joystick y tecla)
 
 -joystick y ZENG:
---Joystick físico o cursores debe generar eventos de envía Tecla con código especial. Entra en función Antes de envío por ZENG. Quizá en funciones de joystick_send_**?
+--Joystick físico o cursores debe generar eventos de envía Tecla con código especial. Entra en función Antes 
+de envío por ZENG. Quizá en funciones de joystick_send_**?
+
 --Joystick que activa Kempston, Sinclair, qaop, fuller etc activa esos puertos desde operaciones.c y no llama a envía Tecla
 --Joystick que genera Tecla redefinida, entra a envía Tecla pero después de ZENG, para no generar dos eventos
 
-Así los dos usuarios deben tener seleccionado el mismo tipo de joystick en menú. Así también como si hay redefinido joystick a Tecla, deben estar iguales en ambos 
-Lo ideal en dos jugadores es que si uno usa joystick, lo haga con tipo de joystick de menú: Kempston, qaop, Fuller etc. Y no use definición de joystick a Tecla, para evitar tener que redefinir los dos usuarios lo mismo
+Así los dos usuarios deben tener seleccionado el mismo tipo de joystick en menú. Así también como si hay redefinido 
+joystick a Tecla, deben estar iguales en ambos 
+Lo ideal en dos jugadores es que si uno usa joystick, lo haga con tipo de joystick de menú: Kempston, qaop, Fuller etc. 
+Y no use definición de joystick a Tecla, para evitar tener que redefinir los dos usuarios lo mismo
 
 PERO:
 -cursor llama a joystick_set_**
 Se generarían dos eventos de esta manera. Pero se llama después de ZENG
 Entonces envía cursor pero no joystick. Esto enviaría cursor remotamente por ZENG y generaría al final movimiento de joystick
 
--real joystick también llama a joystick_set_**. Quizá este joystick set no debe generar evento ZENG. Hay que generar evento ZENG al pulsar real joystick quizá 
+-real joystick también llama a joystick_set_**. Quizá este joystick set no debe generar evento ZENG. 
+Hay que generar evento ZENG al pulsar real joystick quizá 
 
 
 Entonces:
