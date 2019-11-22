@@ -3676,7 +3676,7 @@ int util_write_configfile(void)
 
   if (realjoystick_disabled.v==1)              ADD_STRING_CONFIG,"--disablerealjoystick");
   
-                          ADD_STRING_CONFIG,"--realjoystickpath %s,string_dev_joystick);
+                          ADD_STRING_CONFIG,"--realjoystickpath %s",string_dev_joystick);
 
 
   //real joystick buttons to events
