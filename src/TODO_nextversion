@@ -9,7 +9,6 @@ tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
 tccutil reset SystemPolicyDownloadsFolder com.cesarhernandez.zesarux
 tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
 
--opcion para cambiar ruta a dev de realjoystick
 
 
 -online browser . Búsquedas con . Como chase h.q. corta en el
