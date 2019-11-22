@@ -2880,6 +2880,7 @@ void set_machine_params(void)
 		machine_emulate_memory_refresh=0;
 
 		push_valor=push_valor_default;
+		extended_stack_enabled.v=0;
 
 
 		//Valores usados en real video
