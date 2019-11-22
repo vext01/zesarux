@@ -1897,6 +1897,7 @@ printf (
 
 	printf(""
 		"--disablerealjoystick      Disable real joystick emulation\n"
+		"--realjoystickpath f       Change default real joystick device path\n"
 
                 "--joystickevent but evt    Set a joystick button or axis to an event (changes joystick to event table)\n"
                 "                           If it's a button (not axis), must be specified with its number, without sign, for example: 2\n"
@@ -6870,6 +6871,13 @@ int parse_cmdline_options(void) {
 				realjoystick_present.v=0;
 				realjoystick_disabled.v=1;
 			}
+			
+			else if (!strcmp(argv[puntero_parametro],"--realjoystickpath")) {
+				siguiente_parametro_argumento();
+				strcpy(string_dev_joystick,argv[puntero_parametro]);
+				
+			}
+			
 
 			else if (!strcmp(argv[puntero_parametro],"--joystickevent")) {
 				char *text_button;
