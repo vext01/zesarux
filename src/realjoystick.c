@@ -367,7 +367,9 @@ EOF
 
 
 
-#define STRING_DEV_JOYSTICK "/dev/input/js0"
+//#define STRING_DEV_JOYSTICK "/dev/input/js0"
+
+char string_dev_joystick[1024]="/dev/input/js0";
 
 int ptr_realjoystick;
 
@@ -647,9 +649,9 @@ int realjoystick_init(void)
 
 
 #ifndef MINGW
-	ptr_realjoystick=open(STRING_DEV_JOYSTICK,O_RDONLY|O_NONBLOCK);
+	ptr_realjoystick=open(string_dev_joystick,O_RDONLY|O_NONBLOCK);
 	if (ptr_realjoystick==-1) {
-		debug_printf(VERBOSE_INFO,"Unable to open joystick %s : %s",STRING_DEV_JOYSTICK,strerror(errno));
+		debug_printf(VERBOSE_INFO,"Unable to open joystick %s : %s",string_dev_joystick,strerror(errno));
                 return 1;
         }
 
