@@ -889,17 +889,12 @@ void realjoystick_set_reset_key(int index,int value)
 	if (value) {
 		debug_printf (VERBOSE_DEBUG,"set key %c",tecla);
 		ascii_to_keyboard_port(tecla);
-		//prueba zeng
-		//zeng_send_key_event(tecla,1);
 	}
 
 
         else {
 		debug_printf (VERBOSE_DEBUG,"reset key %c",tecla);
-		ascii_to_keyboard_port_set_clear(tecla,0);
-		//reset_keyboard_ports();
-		//prueba zeng
-		//zeng_send_key_event(tecla,0);		
+		ascii_to_keyboard_port_set_clear(tecla,0);	
 	}
 
 }

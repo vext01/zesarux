@@ -177,34 +177,6 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 *con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
 
-*joystick real deberia enviar tambien evento sobre esto. cuidado con eventos de joystick que generan teclas,
-estos no deberian generar doble evento (joystick y tecla)
-
--joystick y ZENG:
-OK --Joystick físico o cursores debe generar eventos de envía Tecla con código especial. Entra en función Antes 
-de envío por ZENG. Quizá en funciones de joystick_send_**?
-
-OK --Joystick que activa Kempston, Sinclair, qaop, fuller etc activa esos puertos desde operaciones.c y no llama a envía Tecla
---Joystick que genera Tecla redefinida, entra a envía Tecla pero no genera evento ZENG
-
-Así los dos usuarios deben tener seleccionado el mismo tipo de joystick en menú. Así también como si hay redefinido 
-joystick a Tecla, deben estar iguales en ambos 
-Lo ideal en dos jugadores es que si uno usa joystick, lo haga con tipo de joystick de menú: Kempston, qaop, Fuller etc. 
-Y no use definición de joystick a Tecla, para evitar tener que redefinir los dos usuarios lo mismo
-
-PERO:
--cursor llama a joystick_set_**
-Se generarían dos eventos de esta manera. Pero se llama después de ZENG
-Entonces envía cursor pero no joystick. Esto enviaría cursor remotamente por ZENG y generaría al final movimiento de joystick
-
--real joystick también llama a joystick_set_**. Quizá este joystick set no debe generar evento ZENG. 
-Hay que generar evento ZENG al pulsar real joystick quizá 
-
-
-Entonces:
--cursor envía evento ZENG de cursor
--pulsar joystick real debe agregar envío evento ZENG de código especial joystick 
--joystick real a Tecla definida no debe llamar a ZENG por la Tecla. Solo envía ZENG el movimiento de joystick (caso anterior)
 
 *que pregunte confirmacion en destino si quiere aceptar, mostrando la ip de origen
 *en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc
@@ -225,7 +197,6 @@ Ampliar buffer de recepción y el de copia. Y asignarlos por malloc
 *asegurarse que cuando conecte zeng contra remoto al principio, retorna el prompt esperado. Ya lee version pero quiza 
 habria que hacer que leyera el primer prompt correcto
 
-*revisar ZRCP: ahora al gestionar sigpipe quiza ya no peta al desconectarse el socket remoto
 
 *realjoystick_set_reset_key: quiza ahi deberia llamar a util_set_reset_key_continue, para que lo procese directamente zeng, y quitar
 zeng_send_key_event de la funcion realjoystick_set_reset_key
@@ -233,6 +204,8 @@ zeng_send_key_event de la funcion realjoystick_set_reset_key
 * ZRCP: habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
 
 -check_pending_zrcp_put_snapshot de momento solo para el core de spectrum
+
+ZENG: eliminar debug de zeng y zrcp al pulsar teclas, joystick, envio snapshot
 
 --Fin ZENG
 

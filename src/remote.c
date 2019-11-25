@@ -4970,7 +4970,10 @@ void interpreta_comando(char *comando,int misocket)
 
 
 		//Enviar la tecla pero que no vuelva a entrar por zeng
-		if (enviar) util_set_reset_key_continue_after_zeng(tecla,evento);
+		if (enviar) {
+			printf ("Procesando desde ZRCP comando send-keys-event: tecla %d evento %d\n",tecla,evento);
+			util_set_reset_key_continue_after_zeng(tecla,evento);
+		}
 
 
 	}	

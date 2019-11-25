@@ -17933,9 +17933,13 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			  "ZENG works by sending special commands through the ZRCP protocol, so in order to use ZENG you must enable ZRCP protocol on menu settings-debug. "
 			  "This protocol listens on tcp port 10000 so you should open your firewall/router to use it. "
 			  "One ZEsarUX instance will be the master node and the other instance will be the slave node.\n"
+			  "Please do NOT set both nodes as master\n"
 			  "When you enable ZENG on both nodes:\n"
 			  "-all key/joystick presses will be sent between the two nodes\n"
-			  "-every two seconds a snapshot will be sent from the master to the slave node\n"
+			  "-every two seconds a snapshot will be sent from the master to the slave node\n\n"
+			  "Note about using joystick: real joystick (and cursors on keyboard) are sent to the other node as "
+			  "the direction/button (left,right,up,down or fire) but not the type of joystick emulated (kempston, fuller, etc). "
+			  "So you must configure same joystick emulation on both nodes. Also, real joystick to key configuration is not sent by ZENG"
 			);
 
                      
