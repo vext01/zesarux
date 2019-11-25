@@ -434,16 +434,11 @@ void tape_write_tzx_header(void)
 }
 
 
-void tape_block_tzx_begin_save(int longitud,z80_byte flag)
+void tape_block_tzx_begin_save(int longitud GCC_UNUSED,z80_byte flag GCC_UNUSED)
 {
-
-
-        //if (tzx_save_no_header_yet==1) {
-                //Escribir cabecera tzx
-                tape_write_tzx_header();
-	//	tzx_save_no_header_yet=0;
-        //}
-
+ 
+	tape_write_tzx_header();
+	
 
 	//Escribir id 10	
 	//pausa de 1000 ms

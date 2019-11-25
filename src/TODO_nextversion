@@ -94,10 +94,9 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 
 
-
 -tabla de joystick to event siempre se resetea??
 
--pulsar ESC en item que se esta escuchando en el menu, cierra el menu
+-pulsar ESC en item que se esta escuchando en el menu, cierra el menu?
 
 -opción nueva para curses, stout y simpletext para forzar render gráfico tipo tsconf
 
