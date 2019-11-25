@@ -7,6 +7,7 @@ tccutil reset SystemPolicyDownloadsFolder com.cesarhernandez.zesarux
 tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
 
 
+-ZENG: eliminar debug de zeng y zrcp al pulsar teclas, joystick, envio snapshot
 
 -online browser . Búsquedas con . Como chase h.q. corta en el
 Primer punto como si fuera extensión 
@@ -16,8 +17,7 @@ Primer punto como si fuera extensión
 -Siguiente versión hay que decir en servidor versión.txt que es 8.1-beta2
 Pero eso debe coincidir con version.h de código 
 
--ZENG en CPC: no soporta teclas como [] etc
--ZENG para el resto de maquinas y cores. Va ligado a poder generar snapshot ZSF
+
 
 -seguir probando speech menu con stdout y con drivers no-stdout
 
@@ -44,12 +44,12 @@ Funciona ssl en windows ok!
 
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
--Ping pong sonido en Inves?
-
 -Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
 Quizá mostrar C en caso de 127
 
 -Opción para formato de grabación de autosave snap
+
+
 
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?
@@ -93,7 +93,7 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 ---Fin cosas Next
 
 
--porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
+
 
 -tabla de joystick to event siempre se resetea??
 
@@ -175,18 +175,14 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 -probar doom mania (juego a dobles al doom)
 
 
-*con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
 
-
-*que pregunte confirmacion en destino si quiere aceptar, mostrando la ip de origen
 *en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc
 Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZRCP_GET_PUT_SNAPSHOT_MEM
-
 
 *Quizá en sigpipe puede averiguar que socket ha fallado?
 Quizá sigpipe se puede gestionar diferente para cada thread?
 *funciones de envio snapshot, teclas y mensajes, deberian ver si reciben remote prompt? al llamar a zsock_read_all_until_command
-*detectar si no hay ningun master, o si los dos son master? como?
+
 :mirando estado local y remoto. Avisar si el estado no es 1 master y 1 slave. comando nuevo ZRCP para esto
 :quiza se puede permitir ningun master, pero lo que no deberia ser es dos master. Al menos avisar de esto y que el usuario ya decida
 
@@ -198,14 +194,7 @@ Ampliar buffer de recepción y el de copia. Y asignarlos por malloc
 habria que hacer que leyera el primer prompt correcto
 
 
-*realjoystick_set_reset_key: quiza ahi deberia llamar a util_set_reset_key_continue, para que lo procese directamente zeng, y quitar
-zeng_send_key_event de la funcion realjoystick_set_reset_key
 
-* ZRCP: habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
-
--check_pending_zrcp_put_snapshot de momento solo para el core de spectrum
-
-ZENG: eliminar debug de zeng y zrcp al pulsar teclas, joystick, envio snapshot
 
 --Fin ZENG
 

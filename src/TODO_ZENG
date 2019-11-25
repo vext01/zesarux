@@ -17,4 +17,9 @@ mi imac Local, actuando como slave
 *ping pong: algo de desfase en SP pero se puede jugar
 
 
+* ZRCP: habría que protegerlo con user y password, por si alguien abre ese puerto en remoto en el router 
+*que pregunte confirmacion en destino si quiere aceptar, mostrando la ip de origen
+*asegurarse que el nodo master, el remoto no sea master. detectar si no hay ningun master, o si los dos son master? como?
 
+-ZENG en CPC: no soporta teclas como [] etc
+-ZENG para el resto de maquinas y cores. Va ligado a poder generar snapshot ZSF
