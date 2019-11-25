@@ -12160,6 +12160,7 @@ int menu_debug_registers_subview_type=0;
 						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 					}
 
+					//Linea de user stack
 					if (CPU_IS_MOTOROLA) {
 						int valores=5;
 						sprintf(buffer_linea,"(USP) ");
@@ -12167,6 +12168,11 @@ int menu_debug_registers_subview_type=0;
 						debug_get_user_stack_values(valores,&buffer_linea[5]);
 						//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+					}
+
+					else {
+						//En caso de Z80 o SCMP meter linea vacia
+						zxvision_print_string_defaults_fillspc(w,1,linea++,"");
 					}
 
 
@@ -13368,9 +13374,9 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 								//012345678901234567890123456789012345678901234567890123456789012
 							//     StepMode DisAssemble Enter:Step StepOver ContinuosStep Mode
 
-							"~~StepMode ~~Dis~~Assemble ~~E~~nter:Step Step~~Over ~~ContinousStep ~~Mode"
+							"~~StepMode ~~Dis~~Assemble ~~E~~n~~t~~e~~r:Step Step~~Over ~~ContinousStep ~~Mode"
 					
-					);
+					); 
 
 				
 				}
@@ -14065,6 +14071,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				linea=menu_debug_registers_print_registers(&ventana,linea);
 				//linea=19;
 
+
+				//En que linea aparece la leyenda
 				linea=menu_debug_registers_get_line_legend(&ventana);
 				linea=menu_debug_registers_print_legend(&ventana,linea);
 

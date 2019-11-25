@@ -633,7 +633,7 @@ extern int menu_button_f_function_index;
 extern int osd_adv_kbd_defined;
 extern char osd_adv_kbd_list[MAX_OSD_ADV_KEYB_WORDS][MAX_OSD_ADV_KEYB_TEXT_LENGTH];
 
-
+extern int menu_calcular_ancho_string_item(char *texto);
 
 
 extern int menu_contador_teclas_repeticion;

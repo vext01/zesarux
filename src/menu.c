@@ -906,7 +906,7 @@ char filesel_directorio_inicial[PATH_MAX];
 
 
 
-int menu_calcular_ancho_string_item(char *texto);
+
 
 int menu_debug_show_memory_zones=0;
 int menu_debug_memory_zone=-1;
