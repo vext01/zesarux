@@ -408,7 +408,7 @@ int zeng_send_message(void)
 }
 
 
-void *thread_zeng_function(void *nada)
+void *thread_zeng_function(void *nada GCC_UNUSED)
 {
 	/*
 Hilo de sincronización de juego:
@@ -557,7 +557,7 @@ void zeng_send_snapshot_if_needed(void)
 
 int zeng_enable_thread_running=0;
 
-void *zeng_enable_thread_function(void *nada)
+void *zeng_enable_thread_function(void *nada GCC_UNUSED)
 {
 
 	zeng_enable_thread_running=1; 

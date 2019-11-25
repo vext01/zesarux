@@ -1198,7 +1198,7 @@ z_atomic_semaphore codetest_semaforo;
 
 
 
-void *thread_codetests_function(void *nada)
+void *thread_codetests_function(void *nada GCC_UNUSED)
 {
 	while (1) {
 		//Adquirir lock
@@ -1260,7 +1260,7 @@ void codetests_atomic(void)
 }
 
 
-void *thread_codetests_network_function(void *nada)
+void *thread_codetests_network_function(void *nada GCC_UNUSED)
 {
 	while (1) {
 		printf ("Abriendo conexion desde thread secundario\n");
