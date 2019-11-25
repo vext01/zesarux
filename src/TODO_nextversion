@@ -107,7 +107,6 @@ Quiza por el sprintf (pending_error_message
 
 -semáforos en Windows. Como? De momento no hace bloqueo si es Windows 
 
--si la primera vez arranca con driver stdout, se abre el menu directamente, quiza porque va a mostrar tooltips o changelog
 
 
 -Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
