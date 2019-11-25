@@ -13311,13 +13311,30 @@ void menu_debug_switch_follow_pc(void)
 }
 
 
-
-
-
-
-void menu_debug_get_legend(int linea,char *s)
+void menu_debug_get_legend_short_long(char *destination_string,int ancho_visible,char *short_string,char *long_string)
 {
+
+	int longitud_largo=menu_calcular_ancho_string_item(long_string);
+
+	//Texto mas largo cuando tenemos mas ancho
+
+	//+2 por contar 1 espacio a la izquierda y otro a la derecha
+	if (ancho_visible>=longitud_largo+2) strcpy(destination_string,long_string);
+
+
+	else strcpy(destination_string,short_string);	
+}
+
+
+
+void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
+{
+
+	int ancho_visible=w->visible_width;
+
 	switch (linea) {
+
+		//Primera linea
 		case 0:
 
 
@@ -13338,34 +13355,71 @@ void menu_debug_get_legend(int linea,char *s)
 				return;
 			}
 
+
+			//Modo step mode
 			if (cpu_step_mode.v) {
 				if (menu_debug_registers_current_view==1) {
+
+					menu_debug_get_legend_short_long(s,ancho_visible,
 							//01234567890123456789012345678901
-							// StM DAsm En:Stp StOvr CntSt Md
-					sprintf(s,"~~StM ~~D~~Asm ~~E~~n:Stp St~~Ovr ~~CntSt ~~Md");
+							// StM DAsm En:Stp StOvr CntSt Md	
+							"~~StM ~~D~~Asm ~~E~~n:Stp St~~Ovr ~~CntSt ~~Md",
+								//          10        20        30        40        50        60
+								//012345678901234567890123456789012345678901234567890123456789012
+							//     StepMode DisAssemble Enter:Step StepOver ContinuosStep Mode
+
+							"~~StepMode ~~Dis~~Assemble ~~E~~nter:Step Step~~Over ~~ContinousStep ~~Mode"
+					
+					);
+
+				
 				}
+
 				else {
+
+					menu_debug_get_legend_short_long(s,ancho_visible,
 							//01234567890123456789012345678901
 							// StpM DAsm Ent:Stp Stovr ContSt
-					sprintf(s,"~~StpM ~~D~~Asm ~~E~~n~~t:Stp St~~Ovr ~~ContSt");
+							"~~StpM ~~D~~Asm ~~E~~n~~t:Stp St~~Ovr ~~ContSt",
+								//          10        20        30        40        50        60
+								//012345678901234567890123456789012345678901234567890123456789012
+							//     StepMode Disassemble Enter:Step StepOver ContinuosStep 
+
+							"~~StepMode ~~Dis~~Assemble ~~E~~nter:Step Step~~Over ~~ContinousStep"
+					
+					);
+
 				}
 			}
+
+			//Modo NO step mode
 			else {
 				if (menu_debug_registers_current_view==1) {
+
+					menu_debug_get_legend_short_long(s,ancho_visible,
+
 							//01234567890123456789012345678901
 							// Stepmode Disassem Assem Mode
-					sprintf(s,"~~StepMode ~~Disassem ~~Assem ~~Mode");
+							"~~StepMode ~~Disassem ~~Assem ~~Mode",
+
+							//012345678901234567890123456789012345678901234567890123456789012
+							// StepMode Disassemble Assemble Mode
+							"~~StepMode ~~Disassemble ~~Assemble ~~Mode"
+					);
+
+
+
 				}
-				else {
+				else {			
 							//01234567890123456789012345678901
-							// Stepmode Disassem Assem				
-					sprintf(s,"~~StepMode ~~Disassem ~~Assem");
+							// Stepmode Disassemble Assemble				
+					sprintf(s,"~~StepMode ~~Disassemble ~~Assemble");
 				}
 			}
 		break;
 
 
-
+		//Segunda linea
 		case 1:
 
 
@@ -13378,18 +13432,36 @@ void menu_debug_get_legend(int linea,char *s)
 			}
 
 			if (menu_debug_registers_current_view==1) {
+
+				menu_debug_get_legend_short_long(s,ancho_visible,
 							//01234567890123456789012345678901
 							// Chrg brkp wtch Toggl Run Runto		
-				sprintf(s,"Ch~~rg ~~brkp ~~wtch Togg~~l Ru~~n R~~unto");
+							  "Ch~~rg ~~brkp ~~wtch Togg~~l Ru~~n R~~unto",
+
+							// Changeregisters breakpoints watch Toggle Run Runto	
+							//012345678901234567890123456789012345678901234567890123456789012
+							  "Change~~registers ~~breakpoints ~~watches Togg~~le Ru~~n R~~unto"
+				);
 			}
 
 			else {
+
+				menu_debug_get_legend_short_long(s,ancho_visible,
 							//01234567890123456789012345678901
-							// changeReg Breakpoint Watches					
-				sprintf(s,"Change~~reg ~~breakpoint ~~watch");
+							// changeReg Breakpoints Watches					
+							  "Change~~reg ~~breakpoints ~~watches",
+
+							// Changeregisters breakpoints watches
+							//012345678901234567890123456789012345678901234567890123456789012
+							  "Change~~registers ~~breakpoints ~~watches"
+
+				);
+
 			}
 		break;
 
+
+		//Tercera linea
 		case 2:
 
 			if (menu_debug_registers_current_view==8) {
@@ -13398,16 +13470,32 @@ void menu_debug_get_legend(int linea,char *s)
 				return;
 			}
 
+			char buffer_intermedio_short[128];
+			char buffer_intermedio_long[128];
 
 			if (cpu_step_mode.v) {
+
 							//01234567890123456789012345678901
-							// ClrTstPart 1-5:View ViewScr	
-				sprintf (s,"ClrTst~~Part Wr~~ite ~~VScr M~~Z %d",menu_debug_memory_zone);
+							// ClrTstPart Write VScr MemZn 99	
+				sprintf (buffer_intermedio_short,"ClrTst~~Part Wr~~ite ~~VScr Mem~~Zm %d",menu_debug_memory_zone);
+							//012345678901234567890123456789012345678901234567890123456789012
+							// ClearTstatesPartial Write ViewScreen MemoryZone 99	
+				sprintf (buffer_intermedio_long,"ClearTstates~~Partial Wr~~ite ~~ViewScreen Memory~~Zone %d",menu_debug_memory_zone);
+
+
+				menu_debug_get_legend_short_long(s,ancho_visible,buffer_intermedio_short,buffer_intermedio_long);
 			}
 			else {
 							//01234567890123456789012345678901
-							// Clrtstpart Write MZone 99
-				sprintf (s,"ClrTst~~Part Wr~~ite M~~Zone %d",menu_debug_memory_zone);
+							// Clrtstpart Write MemZone 99
+				sprintf (buffer_intermedio_short,"ClrTst~~Part Wr~~ite Mem~~Zone %d",menu_debug_memory_zone);
+
+							//012345678901234567890123456789012345678901234567890123456789012
+							// ClearTstatesPartial Write MemoryZone 99	
+				sprintf (buffer_intermedio_long,"ClearTstates~~Partial Wr~~ite Memory~~Zone %d",menu_debug_memory_zone);
+
+				menu_debug_get_legend_short_long(s,ancho_visible,buffer_intermedio_short,buffer_intermedio_long);
+
 			}
 		break;
 	}
@@ -13628,18 +13716,15 @@ int menu_debug_registers_print_legend(zxvision_window *w,int linea)
 
 
      if (menu_debug_registers_current_view!=7) {
-		char buffer_mensaje[64];
+		char buffer_mensaje[128];
 
-                                menu_debug_get_legend(0,buffer_mensaje);
-                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				menu_debug_get_legend(0,buffer_mensaje,w);                                
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
 
-                                menu_debug_get_legend(1,buffer_mensaje);
-                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				menu_debug_get_legend(1,buffer_mensaje,w);                            
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
 
-                                menu_debug_get_legend(2,buffer_mensaje);
-                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+				menu_debug_get_legend(2,buffer_mensaje,w);                                
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
 
       }

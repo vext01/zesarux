@@ -1,8 +1,5 @@
 --------Para próxima versión:
 
--Mostrar info en menu network de descargas, commits etc. Solo si hay ssl (porque github solo esta con https)
-
-
 
 -para probar reset permisos carpetas mac:
 tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
@@ -14,7 +11,7 @@ tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
 -online browser . Búsquedas con . Como chase h.q. corta en el
 Primer punto como si fuera extensión 
 
--debug cpu: que extienda texto leyenda si el ancho de ventana es mayor
+
 
 -stdout file selector. Poder hacer ls, cd etc.
 
