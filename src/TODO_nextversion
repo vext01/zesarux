@@ -11,8 +11,6 @@ tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
 -online browser . Búsquedas con . Como chase h.q. corta en el
 Primer punto como si fuera extensión 
 
-
-
 -stdout file selector. Poder hacer ls, cd etc.
 
 -Siguiente versión hay que decir en servidor versión.txt que es 8.1-beta2
@@ -177,8 +175,6 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 -probar doom mania (juego a dobles al doom)
 
 
-
-*revisar buffers envio snapshot: con target renegade y cliente linux ha petado varias veces. bubble bobble ha petado al cabo de un rato
 *con remoto y cliente mac, target renegade, bubble bobble y match day ok. match sin apenas delay, el resto con mucho delay (remoto en nueva zelanda)
 
 *joystick real deberia enviar tambien evento sobre esto. cuidado con eventos de joystick que generan teclas,
@@ -189,7 +185,7 @@ OK --Joystick físico o cursores debe generar eventos de envía Tecla con códig
 de envío por ZENG. Quizá en funciones de joystick_send_**?
 
 OK --Joystick que activa Kempston, Sinclair, qaop, fuller etc activa esos puertos desde operaciones.c y no llama a envía Tecla
---Joystick que genera Tecla redefinida, entra a envía Tecla pero después de ZENG, para no generar dos eventos
+--Joystick que genera Tecla redefinida, entra a envía Tecla pero no genera evento ZENG
 
 Así los dos usuarios deben tener seleccionado el mismo tipo de joystick en menú. Así también como si hay redefinido 
 joystick a Tecla, deben estar iguales en ambos 

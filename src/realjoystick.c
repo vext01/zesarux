@@ -890,7 +890,7 @@ void realjoystick_set_reset_key(int index,int value)
 		debug_printf (VERBOSE_DEBUG,"set key %c",tecla);
 		ascii_to_keyboard_port(tecla);
 		//prueba zeng
-		zeng_send_key_event(tecla,1);
+		//zeng_send_key_event(tecla,1);
 	}
 
 
@@ -899,7 +899,7 @@ void realjoystick_set_reset_key(int index,int value)
 		ascii_to_keyboard_port_set_clear(tecla,0);
 		//reset_keyboard_ports();
 		//prueba zeng
-		zeng_send_key_event(tecla,0);		
+		//zeng_send_key_event(tecla,0);		
 	}
 
 }
@@ -1165,7 +1165,7 @@ void realjoystick_main(void)
 			do {
                         index=realjoystick_find_key(index+1,button,type,value);
                         if (index>=0) {
-                                debug_printf (VERBOSE_DEBUG,"evento encontrado en indice: %d. tecla=%c value:%d",index,realjoystick_keys_array[index].caracter,value);
+                                debug_printf (VERBOSE_DEBUG,"Event found on index: %d. key=%c value:%d",index,realjoystick_keys_array[index].caracter,value);
 
                                 //ver tipo boton normal o axis
 

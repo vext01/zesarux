@@ -5971,13 +5971,7 @@ void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 void convert_numeros_letras_puerto_teclado(z80_byte tecla,int pressrelease)
 {
 
-
-
-	//else {
-	        convert_numeros_letras_puerto_teclado_continue(tecla,pressrelease);
-	//}
-
-
+        convert_numeros_letras_puerto_teclado_continue(tecla,pressrelease);
 }
 
 
