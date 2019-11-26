@@ -767,7 +767,7 @@ void instruccion_ed_76 ()
 void instruccion_ed_77 ()
 {
 //RETI
-	iff1.v=iff2.v;
+	//iff1.v=iff2.v; Reti no hace esto
 	reg_pc=pop_valor();
 }
 
