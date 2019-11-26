@@ -1,5 +1,9 @@
 --------Para próxima versión:
 
+-Debug cpu si cambia tamaño ventana volver a crearla para que se haga efectivo el tamaño final real
+
+-Menú debug cpu extra debug con extended debug, cpu history, code coverage etc
+
 
 -para probar reset permisos carpetas mac:
 tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
