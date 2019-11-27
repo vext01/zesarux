@@ -13966,6 +13966,15 @@ void menu_debug_daad_get_condact_message(void)
 
 }
 
+void menu_debug_registers_zxvision_save_size(zxvision_window *ventana,int *ventana_ancho_antes,int *ventana_alto_antes)
+{
+
+	//Guardar ancho y alto anterior para recrear la ventana si cambia
+	*ventana_ancho_antes=ventana->visible_width;
+	*ventana_alto_antes=ventana->visible_height;
+}
+	
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -14025,10 +14034,35 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 	menu_debug_registers_zxvision_ventana(&ventana);
+
+
+	//Guardar ancho y alto anterior para recrear la ventana si cambia
+	int ventana_ancho_antes;
+	int ventana_alto_antes;
+
+	menu_debug_registers_zxvision_save_size(&ventana,&ventana_ancho_antes,&ventana_alto_antes);
+
 	menu_debug_registers_set_title(&ventana);
 
 
 	do {
+
+		//Ver si ha cambiado tamanyo ventana para recrearla
+		if (ventana.visible_width!=ventana_ancho_antes || ventana.visible_height!=ventana_alto_antes) {
+			debug_printf (VERBOSE_DEBUG,"Window size has changed. Recreate it again");
+
+			//Guardamos la geometria actual
+			util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+
+			zxvision_destroy_window(&ventana);
+
+			//Al crearla, usara la geometria guardada antes
+			menu_debug_registers_zxvision_ventana(&ventana);
+			menu_debug_registers_set_title(&ventana);
+
+			//Guardamos valores en variables para saber si cambia
+			menu_debug_registers_zxvision_save_size(&ventana,&ventana_ancho_antes,&ventana_alto_antes);
+		}
 
 
 		//Si es la vista 8, siempre esta en cpu step mode, y zona de memoria es la mapped
