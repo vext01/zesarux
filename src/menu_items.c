@@ -14048,6 +14048,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	do {
 
 		//Ver si ha cambiado tamanyo ventana para recrearla
+		//Si no gestionamos esto, zxvision redimensiona por su cuenta el tamaño visible pero el tamaño total
+		//requiere logicamente recrearla de nuevo
 		if (ventana.visible_width!=ventana_ancho_antes || ventana.visible_height!=ventana_alto_antes) {
 			debug_printf (VERBOSE_DEBUG,"Window size has changed. Recreate it again");
 
