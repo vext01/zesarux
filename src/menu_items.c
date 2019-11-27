@@ -11660,6 +11660,9 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 	//Conservamos valor original y usamos uno de copia
 	menu_debug_memory_pointer_copia=menu_debug_memory_pointer;
 
+	char buffer_linea[MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH];	
+
+
 
 	//Por defecto
 	menu_debug_registers_print_registers_longitud_opcode=8; //Esto se hace para que en las vistas de solo hexadecimal, se mueva arriba/abajo de 8 en 8
@@ -11873,7 +11876,9 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 
 				z80_int direccion_desensamblar=value_8_to_16(reg_b,reg_c);		
 
-				char buffer_linea[64];	
+
+
+				//char buffer_linea[MAX_LINE_CPU_REGISTERS_LENGTH];	
 
 
 				//Si no esta en zona de parser
@@ -11933,7 +11938,8 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 				//linea++;	
 
-				int columna_registros=20;		
+				//Posicion fija para la columna de watches
+				int columna_watches=20;		
 
 				int terminador=0; //Si se ha llegado a algun terminador de linea						
 
@@ -11941,7 +11947,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 					//Inicializamos linea a mostrar con espacios primero
 					int j; 
-					for (j=0;j<64;j++) buffer_linea[j]=32;
+					for (j=0;j<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH;j++) buffer_linea[j]=32;
 
 						//Si esta en zona de parser
 						if (util_daad_is_in_parser() || util_paws_is_in_parser() ) {
@@ -11982,8 +11988,12 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 							}
 
 						}
+						
 
-						menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,0);
+
+						//printf ("primero menu_debug_registros_parte_derecha. columna_registros=%d\n",columna_registros);
+						menu_debug_registros_parte_derecha(i,buffer_linea,columna_watches,0);
+						//printf ("despues\n");
 
 						//printf ("linea: %s\n",buffer_linea);
 
@@ -12000,15 +12010,32 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 		}		
 
-                if (menu_debug_registers_current_view==1) {
+        if (menu_debug_registers_current_view==1) {
 
 
                     size_t longitud_op;
                     int limite=get_menu_debug_num_lineas_full(w);
 
 
-				int columna_registros=19;
-				if (CPU_IS_MOTOROLA) columna_registros=20;
+				//printf ("%d\n",w->visible_width);
+
+
+				//A partir de que columna aparecen los registros a la derecha
+				//dependera del tamaño de la ventana
+				int columna_registros;
+
+				//columna_registros=19;   //32-13
+				//if (CPU_IS_MOTOROLA) columna_registros=20; //32-12
+
+				columna_registros=w->visible_width-13;   //32-13
+				if (CPU_IS_MOTOROLA) columna_registros=w->visible_width-12; //32-12
+
+
+				//Revisar un minimo y maximo
+				if (columna_registros<19) columna_registros=19;
+
+				//20 caracteres dan mas que de sobra para el texto de registros
+				if (columna_registros>MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-20) columna_registros=MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-20;
 
 
 
@@ -12026,7 +12053,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
         menu_escribe_linea_startx=0;
 					
-				char buffer_linea[64];
+				//char buffer_linea[MAX_LINE_CPU_REGISTERS_LENGTH];
                 for (i=0;i<limite;i++) {
 
 					//Por si acaso
@@ -12035,7 +12062,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 					//Inicializamos linea a mostrar primero con espacios
 					
 					int j; 
-					for (j=0;j<64;j++) buffer_linea[j]=32;
+					for (j=0;j<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH;j++) buffer_linea[j]=32;
 
 					int opcion_actual=-1;
 
@@ -12094,14 +12121,23 @@ int menu_debug_registers_subview_type=0;
 					//menu_debug_lines_addresses[i]=puntero_dir;
 
 
+					//printf ("segundo menu_debug_registros_parte_derecha. i=%d columna=%d buffer_linea: [%s]\n",i,columna_registros,buffer_linea);
 					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1);
+					//printf ("despues\n");
+
+					//printf ("buffer_linea: [%s]\n",buffer_linea);
 
 
 					//zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
 
 					//De los pocos usos de menu_escribe_linea_opcion_zxvision,
 					//solo se usa en menus y aqui: para poder mostrar linea activada o en rojo
+
 					menu_escribe_linea_opcion_zxvision(w,linea,opcion_actual,opcion_activada,buffer_linea);
+
+					//menu_escribe_linea_opcion_zxvision(w,linea,opcion_actual,opcion_activada,"0123456789001234567890012345678900123456789001234567890");
+
+					//printf ("despues menu_escribe_linea_opcion_zxvision. i=%d\n",i);
 
 										linea++;
 
@@ -12110,7 +12146,7 @@ int menu_debug_registers_subview_type=0;
 
                                         //Almacenar longitud del primer opcode mostrado
                                         if (i==0) menu_debug_registers_print_registers_longitud_opcode=longitud_op;
-                                }
+                }
 
 
                                  menu_debug_memory_pointer_last=menu_debug_memory_pointer_copia;
@@ -12120,9 +12156,12 @@ int menu_debug_registers_subview_type=0;
 					//Esto sucede por ejemplo en tbblue, pues tiene 8 segmentos de memoria
                                         //Inicializamos a espacios
                                         int j;
-                                        for (j=0;j<64;j++) buffer_linea[j]=32;
+                                        for (j=0;j<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH;j++) buffer_linea[j]=32;
 
+
+										//printf ("tercero menu_debug_registros_parte_derecha\n");
                                         menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1);
+										//printf ("despues\n");
 
 										//primero borramos esa linea, por si cambiamos de subvista con M y hay "restos" ahi
 										zxvision_print_string_defaults_fillspc(w,1,linea,"");
@@ -14051,7 +14090,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		//Si no gestionamos esto, zxvision redimensiona por su cuenta el tamaño visible pero el tamaño total
 		//requiere logicamente recrearla de nuevo
 		if (ventana.visible_width!=ventana_ancho_antes || ventana.visible_height!=ventana_alto_antes) {
-			debug_printf (VERBOSE_DEBUG,"Window size has changed. Recreate it again");
+			debug_printf (VERBOSE_DEBUG,"Debug CPU window size has changed. Recreate it again");
 
 			//Guardamos la geometria actual
 			util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
