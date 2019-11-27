@@ -14413,7 +14413,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 					//si lento, avisar
 					if (menu_debug_continuous_speed<=1) {
-						zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Note: Do long key presses");
+						zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Note: Make long key presses");
 					}
 					else {
 						zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"                         ");
