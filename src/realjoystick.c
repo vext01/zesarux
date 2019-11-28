@@ -397,6 +397,13 @@ int simulador_joystick_forzado=0;
 //desde '0','1'.. hasta '9'.. y otras adicionales, como espacio
 z80_byte realjoystick_numselect='1';
 
+
+
+//Que funcion gestiona el inicio
+int (*realjoystick_init)(void);
+
+void (*realjoystick_main)(void);
+
 int realjoystick_hit()
 {
 
@@ -627,9 +634,21 @@ Aux2: desasignado
 
 }
 
+
+int realjoystick_null_init(void)
+{
+	//No inicializa nada. Salir y decir que no hay joystick
+	return 1;
+}
+
+void realjoystick_null_main(void)
+{
+
+}
+
 //retorna 0 si ok
 //retorna 1 is no existe o error
-int realjoystick_init(void)
+int realjoystick_linux_init(void)
 {
 
 	debug_printf(VERBOSE_INFO,"Initializing real joystick");
@@ -1076,7 +1095,7 @@ void realjoystick_set_reset_action(int index,int value)
 int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
 
 //lectura de evento de joystick y conversion a movimiento de joystick spectrum
-void realjoystick_main(void)
+void realjoystick_linux_main(void)
 {
 
 

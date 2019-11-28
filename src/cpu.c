@@ -7456,6 +7456,8 @@ tooltip_enabled.v=1;
 	lee_puerto=lee_puerto_vacio;
 	out_port=out_port_vacio;	
 	fetch_opcode=fetch_opcode_vacio;
+	realjoystick_init=realjoystick_null_init;
+	realjoystick_main=realjoystick_null_main;
 
 	//Inicializo tambien la de push
 	push_valor=push_valor_default;
@@ -7703,6 +7705,12 @@ init_randomize_noise_value();
 	
 	mid_reset_export_buffers();
 
+
+	//Si estamos en Linux , el driver de joystick es el nativo
+#ifdef USE_LINUXREALJOYSTICK
+	realjoystick_init=realjoystick_linux_init;
+	realjoystick_main=realjoystick_linux_main;
+#endif	
 
 
 	if (realjoystick_present.v==1) {
