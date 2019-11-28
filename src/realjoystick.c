@@ -1227,10 +1227,10 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 
 	menu_espera_no_tecla();
 
-        //leemos boton
-        int button,type,value;
+	//leemos boton
+	int button,type,value;
 
-	debug_printf (VERBOSE_DEBUG,"redefine action: %d",indice);
+	debug_printf (VERBOSE_DEBUG,"Redefine action: %d",indice);
 
 	simulador_joystick_forzado=1;
 
