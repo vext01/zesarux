@@ -401,15 +401,18 @@ z80_byte realjoystick_numselect='1';
 
 //Que funcion gestiona el inicio
 int (*realjoystick_init)(void);
-
+//Funcion de poll
 void (*realjoystick_main)(void);
 
-int realjoystick_hit()
+//Funcion que dice si se ha pulsado algo en el joystick
+int (*realjoystick_hit)(void);
+
+
+int realjoystick_linux_hit(void)
 {
 
-
     if (simulador_joystick==1) {
-                if (simulador_joystick_forzado==1) {
+        if (simulador_joystick_forzado==1) {
 			//simulador_joystick_forzado=0;
 			return 1;
 		}
@@ -644,6 +647,11 @@ int realjoystick_null_init(void)
 void realjoystick_null_main(void)
 {
 
+}
+
+int realjoystick_null_hit(void)
+{
+	return 0;
 }
 
 //retorna 0 si ok
