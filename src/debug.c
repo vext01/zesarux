@@ -2141,7 +2141,9 @@ z80_byte cpu_core_loop_code_coverage(z80_int dir GCC_UNUSED, z80_byte value GCC_
 
 
 
-void set_cpu_core_code_coverage(void)
+//punto de entrada alternativo que lo activa sin borrar datos
+//util si se llama desde cambio velocidad cpu
+void set_cpu_core_code_coverage_enable(void)
 {
     debug_printf(VERBOSE_INFO,"Enabling Cpu code coverage");
 
@@ -2155,10 +2157,19 @@ void set_cpu_core_code_coverage(void)
 
 
 	cpu_code_coverage_enabled.v=1;
-	cpu_code_coverage_clear();
+	
 																
 
 }
+
+void set_cpu_core_code_coverage(void)
+{
+
+  set_cpu_core_code_coverage_enable();
+  cpu_code_coverage_clear();
+
+}
+
 
 void reset_cpu_core_code_coverage(void)
 {

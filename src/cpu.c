@@ -731,7 +731,7 @@ void cpu_set_turbo_speed(void)
 	
 	
 	
-	if (antes_cpu_code_coverage_enabled.v) set_cpu_core_code_coverage();
+	if (antes_cpu_code_coverage_enabled.v) set_cpu_core_code_coverage_enabled();
 	
 	
 	if (antes_cpu_history_enabled.v) set_cpu_core_history();
