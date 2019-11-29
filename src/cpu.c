@@ -731,10 +731,10 @@ void cpu_set_turbo_speed(void)
 	
 	
 	
-	if (antes_cpu_code_coverage_enabled.v) set_cpu_core_code_coverage_enabled();
+	if (antes_cpu_code_coverage_enabled.v) set_cpu_core_code_coverage_enable();
 	
 	
-	if (antes_cpu_history_enabled.v) set_cpu_core_history();
+	if (antes_cpu_history_enabled.v) set_cpu_core_history_enable();
 	
 	
 	if (antes_extended_stack_enabled.v) set_extended_stack();

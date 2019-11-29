@@ -2595,8 +2595,9 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 }
 
 
-
-void set_cpu_core_history(void)
+//Punto de entrada alternativo util desde cambio velocidad cpu
+//para reactivarlo sin perder los datos
+void set_cpu_core_history_enable(void)
 {
     debug_printf(VERBOSE_INFO,"Enabling Cpu history");
 
@@ -2605,12 +2606,22 @@ void set_cpu_core_history(void)
 		return;
 	}
 
-	cpu_history_init_buffer();
+	
 
 	cpu_history_nested_id_core=debug_nested_core_add(cpu_core_loop_history,"CPU history Core");
 
 	cpu_history_enabled.v=1;
+	
+	
 																
+
+}
+
+void set_cpu_core_history(void)
+{
+
+  set_cpu_core_history_enable();
+  cpu_history_init_buffer();
 
 }
 
