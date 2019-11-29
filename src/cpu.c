@@ -655,6 +655,19 @@ void cpu_set_turbo_speed(void)
 
 	z80_bit antes_mutiface_enabled;
 	antes_mutiface_enabled.v=multiface_enabled.v;
+	
+	z80_bit antes_cpu_code_coverage_enabled;
+	antes_cpu_code_coverage_enabled.v=cpu_code_coverage_enabled.v;
+	
+	z80_bit antes_cpu_history_enabled;
+	antes_cpu_history_enabled.v=cpu_history_enabled.v;
+	
+	z80_bit antes_extended_stack_enabled;
+	antes_extended_stack_enabled.v=antes_extended_stack_enabled.v;
+	
+	
+	
+	
 
 	if (cpu_turbo_speed>MAX_CPU_TURBO_SPEED) {
 		debug_printf (VERBOSE_INFO,"Turbo mode higher than maximum. Setting to %d",MAX_CPU_TURBO_SPEED);
