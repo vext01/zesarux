@@ -663,7 +663,7 @@ void cpu_set_turbo_speed(void)
 	antes_cpu_history_enabled.v=cpu_history_enabled.v;
 	
 	z80_bit antes_extended_stack_enabled;
-	antes_extended_stack_enabled.v=antes_extended_stack_enabled.v;
+	antes_extended_stack_enabled.v=extended_stack_enabled.v;
 	
 	
 	
@@ -728,6 +728,18 @@ void cpu_set_turbo_speed(void)
 	if (antes_betadisk_enabled.v) betadisk_enable();
 
 	if (antes_mutiface_enabled.v) multiface_enable();
+	
+	
+	
+	if (antes_cpu_code_coverage_enabled.v) set_cpu_core_code_coverage();
+	
+	
+	if (antes_cpu_history_enabled.v) set_cpu_core_history();
+	
+	
+	if (antes_extended_stack_enabled.v) set_extended_stack();
+	
+	
 
 	cpu_turbo_speed_antes=cpu_turbo_speed;
 
