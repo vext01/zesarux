@@ -12,10 +12,20 @@ Done * Separar funciones hardware joystick linux a diferente archivo (realjoysti
 
 
 * Dar soporte a driver sdl (sdl1 de momento). Al iniciar driver de video debe sobreescribir funcion init, main y hit
+->Falta hit
+
+FALTA * realjoystick_redefine_event_key
 
 Done * Si arranca en linux, siempre sobreescribira funciones para que use las nativas de sistema y no la SDL si la hubiera. 
 Esto ya lo hace en cpu.c, ver #ifdef USE_LINUXREALJOYSTICK ...
 * Simulador de joystick deberia ser siempre accesible tanto si hay como si no soporte joystick 
+
+* valor reposo de axis sdl. Windows da -257, linux con tablet vmware da otro valor
+(NOTA: SDL_JoystickGetAxis returns the current state of the given axis on the given joystick.
+
+On most modern joysticks the X axis is usually represented by axis 0 and the Y axis by axis 1. The value returned by SDL_JoystickGetAxis is a signed integer (-32768 to 32767) representing the current position of the axis, it may be necessary to impose certain tolerances on these values to account for jitter.
+
+Note: Some joysticks use axes 2 and 3 for extra buttons.)
 
 
 SDL_API - SDL Documentation Wiki
@@ -42,6 +52,8 @@ Si es en Linux y driver sdl, no activar los dos
 Quizá sdl joystick solo en windows?
 
 Tipo axis , botón etc crear tipos nuevos para realjoystick.c
+
+* meterlo en features , documentacion, etc
 
 -Fin joystick en windows
 

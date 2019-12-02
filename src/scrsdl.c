@@ -1716,7 +1716,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 #ifdef MINGW
                 //No se exactamente porque pasa esto. Windows mete valor -257 cuando esta en reposo
                 //TODO: operacion de calibrado o parametro por linea de comandos de este -257
-                if (pruebaaxes==-257) pruebaaxes=0;
+                if (pruebaaxes>-300 && pruebaaxes<300) pruebaaxes=0;
 #endif
 
                 if (pruebaaxes!=sdl_states_joy_axes[i]) {
