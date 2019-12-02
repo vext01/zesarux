@@ -1508,13 +1508,30 @@ int realjoystick_sdl_init(void)
 	
         printf ("realjoystick SDL init\n");
 
+        SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+
 
         realjoystick_sdl_total_joysticks=SDL_NumJoysticks();
 
         printf ("Total joysticks: %d\n",realjoystick_sdl_total_joysticks);
 
         if (realjoystick_sdl_total_joysticks<1) {
-                return 1;
+                return 1; //error
+        }
+
+        else {
+                if (SDL_JoystickOpen(0)) {
+                        printf("Opened Joystick 0\n");
+    printf("Name: %s\n", SDL_JoystickName(0));
+    printf("Number of Axes: %d\n", SDL_JoystickNumAxes(joy));
+    printf("Number of Buttons: %d\n", SDL_JoystickNumButtons(joy));
+    printf("Number of Balls: %d\n", SDL_JoystickNumBalls(joy));
+
+                }
+
+                else {
+                        return 1; //error
+                }
         }
 
 
