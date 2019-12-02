@@ -362,3 +362,192 @@ EOF
 #include "compileoptions.h"
 
 
+
+
+int realjoystick_linux_hit(void)
+{
+
+    if (simulador_joystick==1) {
+        if (simulador_joystick_forzado==1) {
+			//simulador_joystick_forzado=0;
+			return 1;
+		}
+		else return 0;
+    }
+
+#ifndef MINGW
+	struct timeval tv = { 0L, 0L };
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(ptr_realjoystick, &fds);
+	return select(ptr_realjoystick+1, &fds, NULL, NULL, &tv);
+#else
+	//Para windows retornar siempre 0
+	//aunque aqui no llegara, solo para que no se queje el compilador
+	return 0;
+#endif
+}
+
+
+
+//retorna 0 si ok
+//retorna 1 is no existe o error
+int realjoystick_linux_init(void)
+{
+
+	debug_printf(VERBOSE_INFO,"Initializing real joystick");
+
+	if (simulador_joystick==1) {
+		printf ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+		        "WARNING: using joystick simulator. Don't enable it on production version. Use F7 key to simulate joystick event\n"
+			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		sleep(4);
+		return 0;
+	}
+
+#ifndef USE_LINUXREALJOYSTICK
+	debug_printf(VERBOSE_INFO,"Linux real joystick support disabled on compilation");
+	return 1;
+#endif
+
+
+#ifndef MINGW
+	ptr_realjoystick=open(string_dev_joystick,O_RDONLY|O_NONBLOCK);
+	if (ptr_realjoystick==-1) {
+		debug_printf(VERBOSE_INFO,"Unable to open joystick %s : %s",string_dev_joystick,strerror(errno));
+                return 1;
+        }
+
+
+
+	int flags;
+	if((flags=fcntl(ptr_realjoystick,F_GETFL))==-1)
+	  {
+		  debug_printf(VERBOSE_ERR,"couldn't get flags from joystick device: %s",strerror(errno));
+		  return 1;
+	  }
+	flags &= ~O_NONBLOCK;
+	if(fcntl(ptr_realjoystick,F_SETFL,flags)==-1)
+	  {
+		  debug_printf(VERBOSE_ERR,"couldn't set joystick device non-blocking: %s",strerror(errno));
+		  return 1;
+	  }
+
+
+	/*if (fcntl(ptr_realjoystick, F_SETFL, O_NONBLOCK)==-1)
+          {
+                  debug_printf(VERBOSE_ERR,"couldn't set joystick device non-blocking: %s",strerror(errno));
+                  return 1;
+          }
+	*/
+
+
+	realjoystick_present.v=1;
+
+	return 0;
+#endif
+
+}
+
+//lectura de evento de joystick y conversion a movimiento de joystick spectrum
+void realjoystick_linux_main(void)
+{
+
+
+	if (realjoystick_present.v==0) return;
+
+	int button,type,value;
+
+	while (realjoystick_read_event(&button,&type,&value) ==1 && realjoystick_present.v) {
+		//eventos de init no hacerles caso, de momento
+		if ( (type&JS_EVENT_INIT)!=JS_EVENT_INIT) {
+
+			realjoystick_last_button=button;
+			realjoystick_last_type=type;
+			realjoystick_last_value=value;
+			
+
+			//buscamos el evento
+			int index=-1;
+			do {
+			index=realjoystick_find_event(index+1,button,type,value);
+			//realjoystick_last_index=index;
+			//printf ("last index: %d\n",realjoystick_last_index);
+			if (index>=0) {
+				debug_printf (VERBOSE_DEBUG,"Event found on index: %d",index);
+
+				realjoystick_last_index=index;
+
+				//ver tipo boton normal
+
+				if (type==JS_EVENT_BUTTON) {
+					realjoystick_set_reset_action(index,value);
+				}
+
+
+				//ver tipo axis
+				if (type==JS_EVENT_AXIS) {
+					switch (index) {
+						case REALJOYSTICK_EVENT_UP:
+							//reset abajo
+							joystick_release_down(1);
+							realjoystick_set_reset_action(index,value);
+						break;
+
+						case REALJOYSTICK_EVENT_DOWN:
+								//reset arriba
+								joystick_release_up(1);
+								realjoystick_set_reset_action(index,value);
+						break;
+
+						case REALJOYSTICK_EVENT_LEFT:
+								//reset derecha
+								joystick_release_right(1);
+								realjoystick_set_reset_action(index,value);
+						break;
+
+						case REALJOYSTICK_EVENT_RIGHT:
+								//reset izquierda
+								joystick_release_left(1);
+								realjoystick_set_reset_action(index,value);
+						break;
+
+
+
+						default:
+							//acciones que no son de axis
+							realjoystick_set_reset_action(index,value);
+						break;
+					}
+				}
+
+					//gestionar si es 0, poner 0 en izquierda y derecha por ejemplo (solo para acciones de left/right/up/down)
+
+					//si es >0, hacer que la accion de -1 se resetee (solo para acciones de left/right/up/down)
+					//si es <0, hacer que la accion de +1 se resetee (solo para acciones de left/right/up/down)
+			}
+			} while (index>=0);
+
+			//despues de evento, buscar boton a tecla
+			//buscamos el evento
+			index=-1;
+			do {
+                        index=realjoystick_find_key(index+1,button,type,value);
+                        if (index>=0) {
+                                debug_printf (VERBOSE_DEBUG,"Event found on index: %d. key=%c value:%d",index,realjoystick_keys_array[index].caracter,value);
+
+                                //ver tipo boton normal o axis
+
+                                if (type==JS_EVENT_BUTTON || type==JS_EVENT_AXIS) {
+                                        realjoystick_set_reset_key(index,value);
+                                }
+			}
+			} while (index>=0);
+
+
+
+		}
+
+	}
+
+}
