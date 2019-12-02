@@ -477,6 +477,62 @@ int realjoystick_linux_event_to_common(int event)
 }
 
 
+//lectura de evento de joystick
+//devuelve 0 si no hay nada
+int realjoystick_linux_read_event(int *button,int *type,int *value)
+{
+	//debug_printf(VERBOSE_INFO,"Reading joystick event");
+
+	struct js_event e;
+
+	if (!realjoystick_hit()) return 0;
+
+	if (simulador_joystick==1) {
+		read_simulador_joystick(ptr_realjoystick, &e, sizeof(e));
+	}
+
+	else {
+		int leidos=read(ptr_realjoystick, &e, sizeof(e));
+		if (leidos<0) {
+			debug_printf (VERBOSE_ERR,"Error reading real joystick. Disabling it");
+			realjoystick_present.v=0;
+		}
+	}
+
+	debug_printf (VERBOSE_DEBUG,"event: time: %d value: %d type: %d number: %d",e.time,e.value,e.type,e.number);
+
+	*button=e.number;
+	*type=e.type;
+	*value=e.value;
+
+
+	int t=e.type;
+
+	if ( (t&JS_EVENT_INIT)==JS_EVENT_INIT) {
+		debug_printf (VERBOSE_DEBUG,"JS_EVENT_INIT");
+		t=t&127;
+	}
+
+	if (t==JS_EVENT_BUTTON) debug_printf (VERBOSE_DEBUG,"JS_EVENT_BUTTON");
+
+	if (t==JS_EVENT_AXIS) debug_printf (VERBOSE_DEBUG,"JS_EVENT_AXIS");
+
+	/*
+	Movimientos sobre mismo eje son asi:
+	-boton 0: axis x. en negativo, hacia izquierda. en positivo, hacia derecha
+	-boton 1: axis y. en negativo, hacia arriba. en positivo, hacia abajo
+
+	Con botones normales, no ejes:
+	-valor 1: indica boton pulsado
+	-valor 0: indica boton liberado
+
+	*/
+
+	return 1;
+
+}
+
+
 
 //lectura de evento de joystick y conversion a movimiento de joystick spectrum
 void realjoystick_linux_main(void)
@@ -487,7 +543,7 @@ void realjoystick_linux_main(void)
 
 	int button,type,value;
 
-	while (realjoystick_read_event(&button,&type,&value) ==1 && realjoystick_present.v) {
+	while (realjoystick_linux_read_event(&button,&type,&value) ==1 && realjoystick_present.v) {
 		//eventos de init no hacerles caso, de momento
 		if ( (type&JS_EVENT_INIT)!=JS_EVENT_INIT) {
 

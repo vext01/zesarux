@@ -336,60 +336,7 @@ void read_simulador_joystick(int fd,struct js_event *e,int bytes)
 }
 
 
-//lectura de evento de joystick
-//devuelve 0 si no hay nada
-int realjoystick_read_event(int *button,int *type,int *value)
-{
-	//debug_printf(VERBOSE_INFO,"Reading joystick event");
 
-	struct js_event e;
-
-	if (!realjoystick_hit()) return 0;
-
-	if (simulador_joystick==1) {
-		read_simulador_joystick(ptr_realjoystick, &e, sizeof(e));
-	}
-
-	else {
-		int leidos=read (ptr_realjoystick, &e, sizeof(e));
-		if (leidos<0) {
-			debug_printf (VERBOSE_ERR,"Error reading real joystick. Disabling it");
-			realjoystick_present.v=0;
-		}
-	}
-
-	debug_printf (VERBOSE_DEBUG,"event: time: %d value: %d type: %d number: %d",e.time,e.value,e.type,e.number);
-
-	*button=e.number;
-	*type=e.type;
-	*value=e.value;
-
-
-	int t=e.type;
-
-	if ( (t&REALJOYSTICK_EVENT_INIT)==REALJOYSTICK_EVENT_INIT) {
-		debug_printf (VERBOSE_DEBUG,"REALJOYSTICK_EVENT_INIT");
-		t=t&127;
-	}
-
-	if (t==REALJOYSTICK_EVENT_BUTTON) debug_printf (VERBOSE_DEBUG,"REALJOYSTICK_EVENT_BUTTON");
-
-	if (t==REALJOYSTICK_EVENT_AXIS) debug_printf (VERBOSE_DEBUG,"REALJOYSTICK_EVENT_AXIS");
-
-	/*
-	Movimientos sobre mismo eje son asi:
-	-boton 0: axis x. en negativo, hacia izquierda. en positivo, hacia derecha
-	-boton 1: axis y. en negativo, hacia arriba. en positivo, hacia abajo
-
-	Con botones normales, no ejes:
-	-valor 1: indica boton pulsado
-	-valor 0: indica boton liberado
-
-	*/
-
-	return 1;
-
-}
 
 //Retorna indice o -1 si no encontrado
 int realjoystick_find_event_or_key(int indice_inicial,realjoystick_events_keys_function *tabla,int maximo,int button,int type,int value)
@@ -750,8 +697,10 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 	debug_printf (VERBOSE_DEBUG,"Pressed joystick");
 
 
-        //while (realjoystick_read_event(&button,&type,&value) ==1 ) {
-	if (realjoystick_read_event(&button,&type,&value) ==1 ) {
+	printf ("TODO\n");
+
+	if (0) {
+	//if (realjoystick_read_event(&button,&type,&value) ==1 ) {
 		debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);
                 //eventos de init no hacerles caso, de momento
                 if ( (type&REALJOYSTICK_EVENT_INIT)!=REALJOYSTICK_EVENT_INIT) {
