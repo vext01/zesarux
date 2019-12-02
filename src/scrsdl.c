@@ -1656,7 +1656,7 @@ void realjoystick_sdl_set_event(int button,int type,int value)
 
                                 //ver tipo boton normal o axis
 
-                                if (type==REALJOYSTICK_EVENT_BUTTON || type==REALJOYSTICK_EVENT_AXIS) {
+                                if (type==REALJOYSTICK_EVENT_INPUT_BUTTON || type==REALJOYSTICK_EVENT_INPUT_AXIS) {
                                         realjoystick_set_reset_key(index,value);
                                 }
 			}
