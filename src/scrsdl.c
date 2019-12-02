@@ -1502,6 +1502,7 @@ int scrsdl_driver_can_ext_desktop (void)
 
 
 int realjoystick_sdl_total_joysticks=0;
+                SDL_Joystick *joy;
 
 int realjoystick_sdl_init(void)
 {
@@ -1520,7 +1521,10 @@ int realjoystick_sdl_init(void)
         }
 
         else {
-                if (SDL_JoystickOpen(0)) {
+
+
+                joy=SDL_JoystickOpen(0);
+                if (joy) {
                         printf("Opened Joystick 0\n");
     printf("Name: %s\n", SDL_JoystickName(0));
     printf("Number of Axes: %d\n", SDL_JoystickNumAxes(joy));
