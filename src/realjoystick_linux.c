@@ -488,11 +488,11 @@ int realjoystick_linux_read_event(int *button,int *type,int *value)
 	if (!realjoystick_hit()) return 0;
 
 	if (simulador_joystick==1) {
-		read_simulador_joystick(ptr_realjoystick, &e, sizeof(e));
+		read_simulador_joystick(ptr_realjoystick_linux, &e, sizeof(e));
 	}
 
 	else {
-		int leidos=read(ptr_realjoystick, &e, sizeof(e));
+		int leidos=read(ptr_realjoystick_linux, &e, sizeof(e));
 		if (leidos<0) {
 			debug_printf (VERBOSE_ERR,"Error reading real joystick. Disabling it");
 			realjoystick_present.v=0;
