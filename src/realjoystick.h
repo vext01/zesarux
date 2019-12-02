@@ -64,9 +64,9 @@ typedef unsigned char __u8;
         //#define JS_EVENT_AXIS           0x02    /* joystick moved */
         //#define JS_EVENT_INIT           0x80    /* initial state of device */
 
-#define REALJOYSTICK_EVENT_BUTTON         0x04    /* button pressed/released */
-#define REALJOYSTICK_EVENT_AXIS           0x08    /* joystick moved */
-#define REALJOYSTICK_EVENT_INIT           0x40    /* initial state of device */
+#define REALJOYSTICK_INPUT_EVENT_BUTTON         0x04    /* button pressed/released */
+#define REALJOYSTICK_INPUT_EVENT_AXIS           0x08    /* joystick moved */
+#define REALJOYSTICK_INPUT_EVENT_INIT           0x40    /* initial state of device */
 
 
 extern int (*realjoystick_init)(void);

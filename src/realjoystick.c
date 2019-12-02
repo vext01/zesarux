@@ -316,7 +316,7 @@ void read_simulador_joystick(int fd,struct js_event *e,int bytes)
 	printf ("button number: ");
 	scanf ("%d",&number);
 
-        printf ("button type: (%d=button, %d=axis)",REALJOYSTICK_EVENT_BUTTON,REALJOYSTICK_EVENT_AXIS);
+        printf ("button type: (%d=button, %d=axis)",REALJOYSTICK_INPUT_EVENT_BUTTON,REALJOYSTICK_INPUT_EVENT_AXIS);
         scanf ("%d",&type);
 
         printf ("button value: ");
@@ -347,10 +347,10 @@ int realjoystick_find_event_or_key(int indice_inicial,realjoystick_events_keys_f
 			if (tabla[i].button==button) {
 
 				//boton normal. no axis
-				if (type==REALJOYSTICK_EVENT_BUTTON && tabla[i].button_type==0) return i;
+				if (type==REALJOYSTICK_INPUT_EVENT_BUTTON && tabla[i].button_type==0) return i;
 
 
-				if (type==REALJOYSTICK_EVENT_AXIS) {
+				if (type==REALJOYSTICK_INPUT_EVENT_AXIS) {
 
 					//ver si coindice el axis
 					if (tabla[i].button_type==+1) {
@@ -703,18 +703,18 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 	//if (realjoystick_read_event(&button,&type,&value) ==1 ) {
 		debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);
                 //eventos de init no hacerles caso, de momento
-                if ( (type&REALJOYSTICK_EVENT_INIT)!=REALJOYSTICK_EVENT_INIT) {
+                if ( (type&REALJOYSTICK_INPUT_EVENT_INIT)!=REALJOYSTICK_INPUT_EVENT_INIT) {
 			debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);
 
 			int button_type=0;
 
 
-                        if (type==REALJOYSTICK_EVENT_BUTTON) {
+                        if (type==REALJOYSTICK_INPUT_EVENT_BUTTON) {
                                 //tabla[indice].button_type=0;
 				button_type=0;
                         }
 
-                        if (type==REALJOYSTICK_EVENT_AXIS) {
+                        if (type==REALJOYSTICK_INPUT_EVENT_AXIS) {
                                 //if (value<0) tabla[indice].button_type=-1;
                                 //else tabla[indice].button_type=+1;
                                 if (value<0) button_type=-1;

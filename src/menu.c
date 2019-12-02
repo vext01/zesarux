@@ -13595,10 +13595,10 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 #define LONGITUD_BARRAS 6
 				char fill_bars[(LONGITUD_BARRAS*2)+2];
 				fill_bars[0]=0;
-				if (realjoystick_last_type==REALJOYSTICK_EVENT_BUTTON) {
+				if (realjoystick_last_type==REALJOYSTICK_INPUT_EVENT_BUTTON) {
 					strcpy(buffer_type,"Button");
 				}
-				else if (realjoystick_last_type==REALJOYSTICK_EVENT_AXIS) {
+				else if (realjoystick_last_type==REALJOYSTICK_INPUT_EVENT_AXIS) {
 					strcpy(buffer_type,"Axis");
 					menu_hardware_realjoystick_test_fill_bars(realjoystick_last_value,fill_bars,LONGITUD_BARRAS);
 				}

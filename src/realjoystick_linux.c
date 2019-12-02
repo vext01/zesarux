@@ -456,7 +456,7 @@ int realjoystick_linux_event_to_common(int event)
 	//Convierte valor de evento JS de Linux en común
 	switch (event) {
 		case JS_EVENT_BUTTON:
-			return REALJOYSTICK_EVENT_BUTTON;
+			return REALJOYSTICK_INPUT_EVENT_BUTTON;
 		break;
 
 		case JS_EVENT_AXIS:
