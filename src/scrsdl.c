@@ -1555,6 +1555,9 @@ void realjoystick_sdl_main(void)
 {
 
         //printf ("realjoystick SDL main\n");
+        //SDL_JoystickGetButton(SDL_Joystick *joystick, int button);
+        int pruebaboton=SDL_JoystickGetButton(sdl_joy, 0);
+        printf ("boton: %d\n",pruebaboton);
 
 }
 
