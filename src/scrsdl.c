@@ -1598,13 +1598,13 @@ void realjoystick_sdl_set_event(int button,int type,int value)
 
 					//ver tipo boton normal
 
-					if (type==REALJOYSTICK_EVENT_BUTTON) {
+					if (type==REALJOYSTICK_INPUT_EVENT_BUTTON) {
 						realjoystick_set_reset_action(index,value);
 					}
 
 
 					//ver tipo axis
-					if (type==REALJOYSTICK_EVENT_AXIS) {
+					if (type==REALJOYSTICK_INPUT_EVENT_AXIS) {
 						switch (index) {
 							case REALJOYSTICK_EVENT_UP:
 								//reset abajo
