@@ -1509,7 +1509,7 @@ int realjoystick_sdl_init(void)
         printf ("realjoystick SDL init\n");
 
 
-        realjoystick_sdl_total_joysticks=SDL_NumJoysticks(void);
+        realjoystick_sdl_total_joysticks=SDL_NumJoysticks();
 
         printf ("Total joysticks: %d\n",realjoystick_sdl_total_joysticks);
 
