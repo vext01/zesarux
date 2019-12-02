@@ -1507,6 +1507,14 @@ SDL_Joystick *sdl_joy;
 int sdl_num_axes=0;
 int sdl_num_buttons=0;
 
+
+#define SDL_JOY_MAX_BOTONS 128
+#define SDL_JOY_MAX_AXES 16
+
+int sdl_states_joy_buttons[SDL_JOY_MAX_BOTONS];
+int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
+
+
 int realjoystick_sdl_init(void)
 {
 	
@@ -1547,24 +1555,170 @@ int realjoystick_sdl_init(void)
                 }
         }
 
+ 
+        //Inicializar estados a 0
+        int i;
+        for (i=0;i<SDL_JOY_MAX_BOTONS;i++) sdl_states_joy_buttons[i]=0;
+        for (i=0;i<SDL_JOY_MAX_AXES;i++) sdl_states_joy_axes[i]=0;
+
 
 	return 0; //OK
 }
 
+//Esta funcion acabara siendo comun en realjoystick.c
+void realjoystick_sdl_set_event(int button,int type,int value)
+{
+
+
+	//if (realjoystick_present.v==0) return;
+
+	//int button,type,value;
+
+	//while (realjoystick_linux_read_event(&button,&type,&value) ==1 && realjoystick_present.v) {
+		//eventos de init no hacerles caso, de momento
+		if ( (type&REALJOYSTICK_EVENT_INIT)!=REALJOYSTICK_EVENT_INIT) {
+
+			realjoystick_last_button=button;
+
+			realjoystick_last_type=realjoystick_linux_event_to_common(type);
+			realjoystick_last_value=value;
+			
+
+			//buscamos el evento
+			int index=-1;
+			do  {
+
+				index=realjoystick_find_event(index+1,button,realjoystick_linux_event_to_common(type),value);
+				//realjoystick_last_index=index;
+				//printf ("last index: %d\n",realjoystick_last_index);
+				if (index>=0) {
+					debug_printf (VERBOSE_DEBUG,"Event found on index: %d",index);
+
+					realjoystick_last_index=index;
+
+					//ver tipo boton normal
+
+					if (type==REALJOYSTICK_EVENT_BUTTON) {
+						realjoystick_set_reset_action(index,value);
+					}
+
+
+					//ver tipo axis
+					if (type==REALJOYSTICK_EVENT_AXIS) {
+						switch (index) {
+							case REALJOYSTICK_EVENT_UP:
+								//reset abajo
+								joystick_release_down(1);
+								realjoystick_set_reset_action(index,value);
+							break;
+
+							case REALJOYSTICK_EVENT_DOWN:
+									//reset arriba
+									joystick_release_up(1);
+									realjoystick_set_reset_action(index,value);
+							break;
+
+							case REALJOYSTICK_EVENT_LEFT:
+									//reset derecha
+									joystick_release_right(1);
+									realjoystick_set_reset_action(index,value);
+							break;
+
+							case REALJOYSTICK_EVENT_RIGHT:
+									//reset izquierda
+									joystick_release_left(1);
+									realjoystick_set_reset_action(index,value);
+							break;
+
+
+
+							default:
+								//acciones que no son de axis
+								realjoystick_set_reset_action(index,value);
+							break;
+						}
+					}
+
+					//gestionar si es 0, poner 0 en izquierda y derecha por ejemplo (solo para acciones de left/right/up/down)
+
+					//si es >0, hacer que la accion de -1 se resetee (solo para acciones de left/right/up/down)
+					//si es <0, hacer que la accion de +1 se resetee (solo para acciones de left/right/up/down)
+				}
+			} while (index>=0);
+
+			//despues de evento, buscar boton a tecla
+			//buscamos el evento
+			index=-1;
+			do {
+                        index=realjoystick_find_key(index+1,button,realjoystick_linux_event_to_common(type),value);
+                        if (index>=0) {
+                                debug_printf (VERBOSE_DEBUG,"Event found on index: %d. key=%c value:%d",index,realjoystick_keys_array[index].caracter,value);
+
+                                //ver tipo boton normal o axis
+
+                                if (type==REALJOYSTICK_EVENT_BUTTON || type==REALJOYSTICK_EVENT_AXIS) {
+                                        realjoystick_set_reset_key(index,value);
+                                }
+			}
+			} while (index>=0);
+
+
+
+		}
+
+	//}
+
+}
+
+
+
+
+//TODO: Guardar estado anterior y enviar cambios
 void realjoystick_sdl_main(void)
 {
+
+/*
+#define SDL_JOY_MAX_BOTONS 128
+#define SDL_JOY_MAX_AXES 16
+
+int sdl_states_joy_buttons[SDL_JOY_MAX_BOTONS];
+int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
+*/
 
         //printf ("realjoystick SDL main\n");
         //SDL_JoystickGetButton(SDL_Joystick *joystick, int button);
         int i;
-        for (i=0;i<sdl_num_buttons;i++) {
+        int total_botones=sdl_num_buttons;
+
+        if (total_botones>SDL_JOY_MAX_BOTONS) total_botones=SDL_JOY_MAX_BOTONS;
+
+        int total_axes=sdl_num_axes;
+
+        if (total_axes>SDL_JOY_MAX_AXES) total_axes=SDL_JOY_MAX_AXES;
+ 
+        for (i=0;i<total_botones;i++) {
                 int pruebaboton=SDL_JoystickGetButton(sdl_joy, i);
                 printf ("boton %d: %d\n",i,pruebaboton);
+
+                //Si cambia estado anterior
+                if (pruebaboton!=sdl_states_joy_buttons[i]) {
+                        printf ("Enviar cambio estado boton %d : %d\n",i,pruebaboton);
+                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,pruebaboton);
+                }
+
+                sdl_states_joy_buttons[i]=pruebaboton;
+
         }
 
-        for (i=0;i<sdl_num_axes;i++) {
+        for (i=0;i<total_axes;i++) {
                 int pruebaaxes=SDL_JoystickGetAxis(sdl_joy, i);
                 printf ("axes %d: %d\n",i,pruebaaxes);
+                if (pruebaaxes!=sdl_states_joy_axes[i]) {
+                        printf ("Enviar cambio estado axis %d : %d\n",i,pruebaaxes);
+                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,pruebaaxes);
+                }
+
+                sdl_states_joy_axes[i]=pruebaaxes;
         }
 
 
@@ -1573,7 +1727,7 @@ void realjoystick_sdl_main(void)
 int realjoystick_sdl_hit(void)
 {
 
-        //printf ("realjoystick SDL hit\n");
+        printf ("realjoystick SDL hit. TODO!!\n");
 	return 0;
 }
 
