@@ -1530,6 +1530,7 @@ int realjoystick_sdl_init(void)
     printf("Number of Axes: %d\n", SDL_JoystickNumAxes(joy));
     printf("Number of Buttons: %d\n", SDL_JoystickNumButtons(joy));
     printf("Number of Balls: %d\n", SDL_JoystickNumBalls(joy));
+    printf("Number of Hats: %d\n",SDL_JoystickNumHats(joy));
 
                 }
 
