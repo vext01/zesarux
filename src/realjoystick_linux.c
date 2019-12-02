@@ -477,15 +477,6 @@ int realjoystick_linux_event_to_common(int event)
 }
 
 
-		        //#define JS_EVENT_AXIS           0x02    /* joystick moved */
-        //#define JS_EVENT_INIT           0x80    /* initial state of device */
-
-
-		#define          0x04    /* button pressed/released */
-#define REALJOYSTICK_EVENT_AXIS           0x08    /* joystick moved */
-#define REALJOYSTICK_EVENT_INIT           0x40    /* initial state of device */
-	}
-}
 
 //lectura de evento de joystick y conversion a movimiento de joystick spectrum
 void realjoystick_linux_main(void)
