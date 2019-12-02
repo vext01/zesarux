@@ -1562,6 +1562,12 @@ void realjoystick_sdl_main(void)
                 printf ("boton %d: %d\n",i,pruebaboton);
         }
 
+        for (i=0;i<sdl_num_axes;i++) {
+                int pruebaaxes=SDL_JoystickGetAxis(sdl_joy, i);
+                printf ("axes %d: %d\n",i,pruebaaxes);
+        }
+
+
 }
 
 int realjoystick_sdl_hit(void)
