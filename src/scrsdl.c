@@ -1524,14 +1524,14 @@ int realjoystick_sdl_init(void)
 void realjoystick_sdl_main(void)
 {
 
-        printf ("realjoystick SDL main\n");
+        //printf ("realjoystick SDL main\n");
 
 }
 
 int realjoystick_sdl_hit(void)
 {
 
-        printf ("realjoystick SDL hit\n");
+        //printf ("realjoystick SDL hit\n");
 	return 0;
 }
 
