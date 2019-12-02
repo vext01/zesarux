@@ -499,63 +499,64 @@ void realjoystick_linux_main(void)
 
 			//buscamos el evento
 			int index=-1;
-			do {
-			index=realjoystick_find_event(index+1,button,type,value);
-			//realjoystick_last_index=index;
-			//printf ("last index: %d\n",realjoystick_last_index);
-			if (index>=0) {
-				debug_printf (VERBOSE_DEBUG,"Event found on index: %d",index);
+			do  {
 
-				realjoystick_last_index=index;
+				index=realjoystick_find_event(index+1,button,type,value);
+				//realjoystick_last_index=index;
+				//printf ("last index: %d\n",realjoystick_last_index);
+				if (index>=0) {
+					debug_printf (VERBOSE_DEBUG,"Event found on index: %d",index);
 
-				//ver tipo boton normal
+					realjoystick_last_index=index;
 
-				if (type==JS_EVENT_BUTTON) {
-					realjoystick_set_reset_action(index,value);
-				}
+					//ver tipo boton normal
 
-
-				//ver tipo axis
-				if (type==JS_EVENT_AXIS) {
-					switch (index) {
-						case REALJOYSTICK_EVENT_UP:
-							//reset abajo
-							joystick_release_down(1);
-							realjoystick_set_reset_action(index,value);
-						break;
-
-						case REALJOYSTICK_EVENT_DOWN:
-								//reset arriba
-								joystick_release_up(1);
-								realjoystick_set_reset_action(index,value);
-						break;
-
-						case REALJOYSTICK_EVENT_LEFT:
-								//reset derecha
-								joystick_release_right(1);
-								realjoystick_set_reset_action(index,value);
-						break;
-
-						case REALJOYSTICK_EVENT_RIGHT:
-								//reset izquierda
-								joystick_release_left(1);
-								realjoystick_set_reset_action(index,value);
-						break;
-
-
-
-						default:
-							//acciones que no son de axis
-							realjoystick_set_reset_action(index,value);
-						break;
+					if (type==JS_EVENT_BUTTON) {
+						realjoystick_set_reset_action(index,value);
 					}
-				}
+
+
+					//ver tipo axis
+					if (type==JS_EVENT_AXIS) {
+						switch (index) {
+							case REALJOYSTICK_EVENT_UP:
+								//reset abajo
+								joystick_release_down(1);
+								realjoystick_set_reset_action(index,value);
+							break;
+
+							case REALJOYSTICK_EVENT_DOWN:
+									//reset arriba
+									joystick_release_up(1);
+									realjoystick_set_reset_action(index,value);
+							break;
+
+							case REALJOYSTICK_EVENT_LEFT:
+									//reset derecha
+									joystick_release_right(1);
+									realjoystick_set_reset_action(index,value);
+							break;
+
+							case REALJOYSTICK_EVENT_RIGHT:
+									//reset izquierda
+									joystick_release_left(1);
+									realjoystick_set_reset_action(index,value);
+							break;
+
+
+
+							default:
+								//acciones que no son de axis
+								realjoystick_set_reset_action(index,value);
+							break;
+						}
+					}
 
 					//gestionar si es 0, poner 0 en izquierda y derecha por ejemplo (solo para acciones de left/right/up/down)
 
 					//si es >0, hacer que la accion de -1 se resetee (solo para acciones de left/right/up/down)
 					//si es <0, hacer que la accion de +1 se resetee (solo para acciones de left/right/up/down)
-			}
+				}
 			} while (index>=0);
 
 			//despues de evento, buscar boton a tecla
