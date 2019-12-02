@@ -1501,10 +1501,21 @@ int scrsdl_driver_can_ext_desktop (void)
 }
 
 
+int realjoystick_sdl_total_joysticks=0;
+
 int realjoystick_sdl_init(void)
 {
-	//No inicializa nada. Salir y decir que no hay joystick
+	
         printf ("realjoystick SDL init\n");
+
+
+        realjoystick_sdl_total_joysticks=SDL_NumJoysticks(void);
+
+        printf ("Total joysticks: %d\n",realjoystick_sdl_total_joysticks);
+
+        if (realjoystick_sdl_total_joysticks<1) {
+                return 1;
+        }
 
 
 	return 0; //OK

@@ -19,6 +19,7 @@ Esto ya lo hace en cpu.c, ver #ifdef USE_LINUXREALJOYSTICK ...
 
 
 SDL_API - SDL Documentation Wiki
+http://sdl.beuc.net/sdl.wiki/SDL_API
 
 Parece que axis, hat, buttons etc cada uno se numera de 0 hasta X
 
