@@ -59,11 +59,14 @@ typedef unsigned char __u8;
 #endif
 
 
+//Los hacemos diferentes de JS_EVENT_* de Linux para asegurarnos que el codigo es portable en otras plataformas
+        //#define JS_EVENT_BUTTON         0x01    /* button pressed/released */
+        //#define JS_EVENT_AXIS           0x02    /* joystick moved */
+        //#define JS_EVENT_INIT           0x80    /* initial state of device */
 
-
-#define REALJOYSTICK_EVENT_BUTTON         0x01    /* button pressed/released */
-#define REALJOYSTICK_EVENT_AXIS           0x02    /* joystick moved */
-#define REALJOYSTICK_EVENT_INIT           0x80    /* initial state of device */
+#define REALJOYSTICK_EVENT_BUTTON         0x04    /* button pressed/released */
+#define REALJOYSTICK_EVENT_AXIS           0x08    /* joystick moved */
+#define REALJOYSTICK_EVENT_INIT           0x40    /* initial state of device */
 
 
 extern int (*realjoystick_init)(void);

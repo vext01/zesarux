@@ -450,6 +450,43 @@ int realjoystick_linux_init(void)
 
 }
 
+
+int realjoystick_linux_event_to_common(int event)
+{
+	//Convierte valor de evento JS de Linux en común
+	switch (event) {
+		case JS_EVENT_BUTTON:
+			return REALJOYSTICK_EVENT_BUTTON;
+		break;
+
+		case JS_EVENT_AXIS:
+			return REALJOYSTICK_EVENT_AXIS;
+		break;
+
+		case JS_EVENT_INIT:
+			return REALJOYSTICK_EVENT_INIT;
+		break;
+
+	}
+
+
+	//Desconocido
+	return 0;
+
+
+}
+
+
+		        //#define JS_EVENT_AXIS           0x02    /* joystick moved */
+        //#define JS_EVENT_INIT           0x80    /* initial state of device */
+
+
+		#define          0x04    /* button pressed/released */
+#define REALJOYSTICK_EVENT_AXIS           0x08    /* joystick moved */
+#define REALJOYSTICK_EVENT_INIT           0x40    /* initial state of device */
+	}
+}
+
 //lectura de evento de joystick y conversion a movimiento de joystick spectrum
 void realjoystick_linux_main(void)
 {
@@ -464,7 +501,8 @@ void realjoystick_linux_main(void)
 		if ( (type&JS_EVENT_INIT)!=JS_EVENT_INIT) {
 
 			realjoystick_last_button=button;
-			realjoystick_last_type=type;
+
+			realjoystick_last_type=realjoystick_linux_event_to_common(type);
 			realjoystick_last_value=value;
 			
 
