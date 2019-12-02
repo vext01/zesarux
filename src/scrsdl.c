@@ -46,6 +46,7 @@
 #include "sam.h"
 #include "ql.h"
 #include "settings.h"
+#include "realjoystick.h"
 
 
 
