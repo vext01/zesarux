@@ -557,7 +557,7 @@ void realjoystick_linux_main(void)
 			int index=-1;
 			do  {
 
-				index=realjoystick_find_event(index+1,button,type,value);
+				index=realjoystick_find_event(index+1,button,realjoystick_linux_event_to_common(type),value);
 				//realjoystick_last_index=index;
 				//printf ("last index: %d\n",realjoystick_last_index);
 				if (index>=0) {
@@ -619,7 +619,7 @@ void realjoystick_linux_main(void)
 			//buscamos el evento
 			index=-1;
 			do {
-                        index=realjoystick_find_key(index+1,button,type,value);
+                        index=realjoystick_find_key(index+1,button,realjoystick_linux_event_to_common(type),value);
                         if (index>=0) {
                                 debug_printf (VERBOSE_DEBUG,"Event found on index: %d. key=%c value:%d",index,realjoystick_keys_array[index].caracter,value);
 
