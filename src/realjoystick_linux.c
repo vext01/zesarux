@@ -413,8 +413,8 @@ int realjoystick_linux_init(void)
 
 
 #ifndef MINGW
-	ptr_realjoystick=open(string_dev_joystick,O_RDONLY|O_NONBLOCK);
-	if (ptr_realjoystick==-1) {
+	ptr_realjoystick_linux=open(string_dev_joystick,O_RDONLY|O_NONBLOCK);
+	if (ptr_realjoystick_linux==-1) {
 		debug_printf(VERBOSE_INFO,"Unable to open joystick %s : %s",string_dev_joystick,strerror(errno));
                 return 1;
         }
@@ -422,13 +422,13 @@ int realjoystick_linux_init(void)
 
 
 	int flags;
-	if((flags=fcntl(ptr_realjoystick,F_GETFL))==-1)
+	if((flags=fcntl(ptr_realjoystick_linux,F_GETFL))==-1)
 	  {
 		  debug_printf(VERBOSE_ERR,"couldn't get flags from joystick device: %s",strerror(errno));
 		  return 1;
 	  }
 	flags &= ~O_NONBLOCK;
-	if(fcntl(ptr_realjoystick,F_SETFL,flags)==-1)
+	if(fcntl(ptr_realjoystick_linux,F_SETFL,flags)==-1)
 	  {
 		  debug_printf(VERBOSE_ERR,"couldn't set joystick device non-blocking: %s",strerror(errno));
 		  return 1;
