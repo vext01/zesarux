@@ -1576,7 +1576,7 @@ void realjoystick_sdl_set_event(int button,int type,int value)
 
 	//while (realjoystick_linux_read_event(&button,&type,&value) ==1 && realjoystick_present.v) {
 		//eventos de init no hacerles caso, de momento
-		if ( (type&REALJOYSTICK_EVENT_INIT)!=REALJOYSTICK_EVENT_INIT) {
+		if ( (type&REALJOYSTICK_INPUT_EVENT_INIT)!=REALJOYSTICK_INPUT_EVENT_INIT) {
 
 			realjoystick_last_button=button;
 
