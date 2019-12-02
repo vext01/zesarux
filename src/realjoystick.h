@@ -39,9 +39,9 @@
         //Luego en el init detectamos esto y devuelve que no hay soporte joystick
 
 
-        #define JS_EVENT_BUTTON         0x01    /* button pressed/released */
-        #define JS_EVENT_AXIS           0x02    /* joystick moved */
-        #define JS_EVENT_INIT           0x80    /* initial state of device */
+        //#define JS_EVENT_BUTTON         0x01    /* button pressed/released */
+        //#define JS_EVENT_AXIS           0x02    /* joystick moved */
+        //#define JS_EVENT_INIT           0x80    /* initial state of device */
 
 
 typedef unsigned int __u32;
@@ -57,6 +57,13 @@ typedef unsigned char __u8;
 
 
 #endif
+
+
+
+
+#define REALJOYSTICK_EVENT_BUTTON         0x01    /* button pressed/released */
+#define REALJOYSTICK_EVENT_AXIS           0x02    /* joystick moved */
+#define REALJOYSTICK_EVENT_INIT           0x80    /* initial state of device */
 
 
 extern int (*realjoystick_init)(void);
