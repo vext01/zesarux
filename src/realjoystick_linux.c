@@ -363,6 +363,7 @@ EOF
 
 
 
+int ptr_realjoystick_linux;
 
 int realjoystick_linux_hit(void)
 {
@@ -379,8 +380,8 @@ int realjoystick_linux_hit(void)
 	struct timeval tv = { 0L, 0L };
 	fd_set fds;
 	FD_ZERO(&fds);
-	FD_SET(ptr_realjoystick, &fds);
-	return select(ptr_realjoystick+1, &fds, NULL, NULL, &tv);
+	FD_SET(ptr_realjoystick_linux, &fds);
+	return select(ptr_realjoystick_linux+1, &fds, NULL, NULL, &tv);
 #else
 	//Para windows retornar siempre 0
 	//aunque aqui no llegara, solo para que no se queje el compilador
