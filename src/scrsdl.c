@@ -1713,6 +1713,12 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
         for (i=0;i<total_axes;i++) {
                 int pruebaaxes=SDL_JoystickGetAxis(sdl_joy, i);
                 printf ("axes %d: %d\n",i,pruebaaxes);
+#ifdef MINGW
+                //No se exactamente porque pasa esto. Windows mete valor -257 cuando esta en reposo
+                //TODO: operacion de calibrado o parametro por linea de comandos de este -257
+                if (pruebaaxes==-257) pruebaaxes=0;
+#endif
+
                 if (pruebaaxes!=sdl_states_joy_axes[i]) {
                         printf ("Enviar cambio estado axis %d : %d\n",i,pruebaaxes);
                         realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,pruebaaxes);
