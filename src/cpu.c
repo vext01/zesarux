@@ -7732,11 +7732,25 @@ init_randomize_noise_value();
 	mid_reset_export_buffers();
 
 
-	//Si estamos en Linux , el driver de joystick es el nativo
+	//Si estamos en Linux , el driver de joystick es el nativo, siempre que no tengamos driver SDL(1)
 #ifdef USE_LINUXREALJOYSTICK
-	realjoystick_init=realjoystick_linux_init;
-	realjoystick_main=realjoystick_linux_main;
-	realjoystick_hit=realjoystick_linux_hit;
+	int cambiar_a_realjoystick_linux=1;
+
+	#ifdef COMPILE_SDL
+	#ifndef COMPILE_SDL2
+
+		if (!strcmp(scr_driver_name,"sdl")) {
+			cambiar_a_realjoystick_linux=0;
+		}
+
+	#endif
+	#endif
+
+	if (cambiar_a_realjoystick_linux) {
+		realjoystick_init=realjoystick_linux_init;
+		realjoystick_main=realjoystick_linux_main;
+		realjoystick_hit=realjoystick_linux_hit;
+	}
 #endif	
 
 

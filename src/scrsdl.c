@@ -1500,6 +1500,31 @@ int scrsdl_driver_can_ext_desktop (void)
 }
 
 
+int realjoystick_sdl_init(void)
+{
+	//No inicializa nada. Salir y decir que no hay joystick
+        printf ("realjoystick SDL init\n");
+
+
+	return 0; //OK
+}
+
+void realjoystick_sdl_main(void)
+{
+
+        printf ("realjoystick SDL main\n");
+
+}
+
+int realjoystick_sdl_hit(void)
+{
+
+        printf ("realjoystick SDL hit\n");
+	return 0;
+}
+
+
+
 
 int scrsdl_init (void) {
 
@@ -1527,6 +1552,12 @@ int scrsdl_init (void) {
 	scr_detectedchar_print=scrsdl_detectedchar_print;
         scr_tiene_colores=1;
         screen_refresh_menu=1;
+
+
+
+	realjoystick_init=realjoystick_sdl_init;
+	realjoystick_main=realjoystick_sdl_main;
+	realjoystick_hit=realjoystick_sdl_hit;        
 
 
 

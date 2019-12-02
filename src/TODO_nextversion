@@ -7,7 +7,7 @@
 -Joystick en windows (SDL). Fases
 Done * Paso de funciones de init, poll, hit a funcion
 
-* Separar funciones hardware joystick linux a diferente archivo (realjoystick_linux.c,.h). 
+Done * Separar funciones hardware joystick linux a diferente archivo (realjoystick_linux.c,.h). 
 * Generar funciones comunes en realjoystick.c que se puedan llamar desde linux y desde sdl y cualquier otro joystick futuro (Mac ?)
 
 
