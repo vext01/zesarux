@@ -460,11 +460,11 @@ int realjoystick_linux_event_to_common(int event)
 		break;
 
 		case JS_EVENT_AXIS:
-			return REALJOYSTICK_EVENT_AXIS;
+			return REALJOYSTICK_INPUT_EVENT_AXIS;
 		break;
 
 		case JS_EVENT_INIT:
-			return REALJOYSTICK_EVENT_INIT;
+			return REALJOYSTICK_INPUT_EVENT_INIT;
 		break;
 
 	}
