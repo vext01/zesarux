@@ -8135,6 +8135,9 @@ void menu_espera_tecla(void)
 
 void menu_espera_tecla_o_joystick(void)
 {
+
+		realjoystick_hit=0;
+
         //Esperar a pulsar una tecla o joystick
         z80_byte acumulado;
 
@@ -8146,7 +8149,7 @@ void menu_espera_tecla_o_joystick(void)
 
 		//printf ("menu_espera_tecla_o_joystick acumulado: %d\n",acumulado);
 
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && !realjoystick_hit() );
+        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && !realjoystick_hit );
 
 }
 
@@ -13195,16 +13198,7 @@ int menu_hardware_autofire_cond(void)
 void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
 {
 
-	//temp
-	/*int i;
-	int hit=0;
-	//for (i=0;i<10*50 && !hit;i++) {
-	for (i=0;!hit;i++) {
-		hit=realjoystick_hit();
-		//printf  ("\n\nhit: %d\n\n",realjoystick_hit());
-		//usleep(20000);
-	}
-	return;*/
+
 
     menu_simple_ventana("Redefine event","Please press the button/axis");
 	menu_refresca_pantalla();

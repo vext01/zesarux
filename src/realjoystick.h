@@ -71,7 +71,9 @@ typedef unsigned char __u8;
 
 extern int (*realjoystick_init)(void);
 extern void (*realjoystick_main)(void);
-extern int (*realjoystick_hit)(void);
+//extern int (*realjoystick_hit)(void);
+
+extern int realjoystick_hit;
 
 extern int realjoystick_null_init(void);
 extern void realjoystick_null_main(void);

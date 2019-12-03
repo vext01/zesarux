@@ -85,7 +85,9 @@ int (*realjoystick_init)(void);
 void (*realjoystick_main)(void);
 
 //Funcion que dice si se ha pulsado algo en el joystick
-int (*realjoystick_hit)(void);
+//int (*realjoystick_hit)(void);
+
+int realjoystick_hit=0;
 
 
 //Parametro de "autocalibrado". Valores de axis entre -VALOR y +VALOR, se consideran 0
@@ -675,6 +677,8 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 
 	menu_espera_no_tecla();
 
+	realjoystick_hit=0;
+
 	//leemos boton
 	int button,type,value;
 
@@ -686,18 +690,12 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 
 	menu_espera_tecla_o_joystick();
 
-	/*
-	while (!realjoystick_hit()) {
-		//sleep(1);
-		menu_espera_tecla();
-		//si se pulsa
-	}
-	*/
+
 
 	simulador_joystick_forzado=1;
 
 	//si no se ha pulsado joystick, pues se habra pulsado tecla
-	if (!realjoystick_hit() ) {
+	if (!realjoystick_hit ) {
 		debug_printf (VERBOSE_DEBUG,"Pressed key, not joystick");
 		printf ("Pressed key, not joystick\n");
 		return 0;

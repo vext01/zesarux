@@ -7491,7 +7491,7 @@ tooltip_enabled.v=1;
 	fetch_opcode=fetch_opcode_vacio;
 	realjoystick_init=realjoystick_null_init;
 	realjoystick_main=realjoystick_null_main;
-	realjoystick_hit=realjoystick_null_hit;
+	//realjoystick_hit=realjoystick_null_hit;
 
 	//Inicializo tambien la de push
 	push_valor=push_valor_default;
@@ -7746,7 +7746,7 @@ init_randomize_noise_value();
 	if (no_native_linux_realjoystick.v==0) {
 		realjoystick_init=realjoystick_linux_init;
 		realjoystick_main=realjoystick_linux_main;
-		realjoystick_hit=realjoystick_linux_hit;
+		//realjoystick_hit=realjoystick_linux_hit;
 	}
 #endif	
 
