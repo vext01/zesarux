@@ -13198,7 +13198,7 @@ void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
 	//temp
 	int i;
 	for (i=0;i<10;i++) {
-		printf  ("%d\n",realjoystick_hit());
+		printf  ("\n\nhit: %d\n\n",realjoystick_hit());
 		sleep(1);
 	}
 	return;

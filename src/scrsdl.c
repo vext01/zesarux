@@ -1643,7 +1643,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 int realjoystick_sdl_hit(void)
 {
 
-        printf ("realjoystick SDL hit. TODO!!\n");
+        
 
         if (realjoystick_present.v==0) return 0;
 
