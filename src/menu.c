@@ -13197,13 +13197,13 @@ void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
 
 	//temp
 	int i;
-	for (i=0;i<10;i++) {
+	for (i=0;i<10*50;i++) {
 		printf  ("\n\nhit: %d\n\n",realjoystick_hit());
-		sleep(1);
+		usleep(20000);
 	}
 	return;
 
-        menu_simple_ventana("Redefine event","Please press the button/axis");
+    menu_simple_ventana("Redefine event","Please press the button/axis");
 	menu_refresca_pantalla();
 
 	//Para xwindows hace falta esto, sino no refresca
