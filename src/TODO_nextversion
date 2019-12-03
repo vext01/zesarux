@@ -16,19 +16,10 @@ Done * Separar funciones hardware joystick linux a diferente archivo (realjoysti
 
 FALTA * realjoystick_redefine_event_key
 
-Done * Si arranca en linux, siempre sobreescribira funciones para que use las nativas de sistema y no la SDL si la hubiera. 
-Esto ya lo hace en cpu.c, ver #ifdef USE_LINUXREALJOYSTICK ...
 * Simulador de joystick deberia ser siempre accesible tanto si hay como si no soporte joystick 
 
-* Opción desactivar joystick real se tiene que llamar así. Si hay una antigua de Linux joystick, hacer que la lea pero al guardar config ponga la otra. Y que no salga la antigua en ayuda 
 
-
-* En Linux por defecto usar driver joystick nativo
-Con un setting poder deshabilitar nativo
-
-* Parámetro tolerancia joystick para axis en todos drivers 
-Hasta -8700 da con Windows
-Quizá -16383?
+Falta en todos drivers * Parámetro tolerancia joystick para axis en todos drivers 
 
 
 http://brightrain.aerifal.cx/~niklata/files/unix/fceu-sdlusbjoy.patch
@@ -38,53 +29,13 @@ Leer nombre en Linux:
 https://www.kernel.org/doc/Documentation/input/joystick-api.txt
 
 
-Info calibration sdl
-
-Linux joystick seems mis-calibrated in an SDL game (Freespace 2 Open) - Super User
-
-Calibración debería ir en cada axis valor distinto. O bien uno para todos 
-
-Ubuntu Manpage: jscal - joystick calibration and remapping program
-
-Calibración para todos drivers, no solo sdl?
-
-
-
-
-* valor reposo de axis sdl. Windows da -257, linux con tablet vmware da otro valor
-(NOTA: SDL_JoystickGetAxis returns the current state of the given axis on the given joystick.
-
-On most modern joysticks the X axis is usually represented by axis 0 and the Y axis by axis 1. The value returned by SDL_JoystickGetAxis is a signed integer (-32768 to 32767) representing the current position of the axis, it may be necessary to impose certain tolerances on these values to account for jitter.
-
-Note: Some joysticks use axes 2 and 3 for extra buttons.)
-
 
 
 
 SDL_API - SDL Documentation Wiki
 http://sdl.beuc.net/sdl.wiki/SDL_API
 
-Parece que axis, hat, buttons etc cada uno se numera de 0 hasta X
 
-
-Quizá para hacerlo compatible con lo que hay hasta ahora, sacar el total de cada uno y numerarlos así:
-
-Axis 0 hasta total de axis-1
-Hat. Total de axis hasta total de axis+hats
-Button. Valor anterior + 1 hasta valor anterior+1+total buttons -1
-
-Ejemplo:
-3 axis. 5 hats y 6 buttons:
-
-0..2 axis
-3..7 hats
-8..13 buttons
-
-Si es en Linux y driver sdl, no activar los dos
-
-Quizá sdl joystick solo en windows?
-
-Tipo axis , botón etc crear tipos nuevos para realjoystick.c
 
 * meterlo en features , documentacion, etc
 

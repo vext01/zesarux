@@ -539,7 +539,7 @@ int realjoystick_linux_read_event(int *button,int *type,int *value)
 
 
 //lectura de evento de joystick y conversion a movimiento de joystick spectrum
-void realjoystick_linux_main(void)
+void old_realjoystick_linux_main(void)
 {
 
 
@@ -634,6 +634,43 @@ void realjoystick_linux_main(void)
                                 }
 			}
 			} while (index>=0);
+
+
+
+		}
+
+	}
+
+}
+
+
+
+
+
+//lectura de evento de joystick y conversion a movimiento de joystick spectrum
+void realjoystick_linux_main(void)
+{
+
+
+	if (realjoystick_present.v==0) return;
+
+	int button,type,value;
+
+	while (realjoystick_linux_read_event(&button,&type,&value)==1) {
+		//eventos de init no hacerles caso, de momento
+		if ( (type&JS_EVENT_INIT)!=JS_EVENT_INIT) {
+
+
+
+			//realjoystick_last_button=button;
+
+			//realjoystick_last_type=realjoystick_linux_event_to_common(type);
+			//realjoystick_last_value=value;
+			
+
+			realjoystick_common_set_event(button,realjoystick_linux_event_to_common(type),value);
+
+			
 
 
 

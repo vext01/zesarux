@@ -1567,7 +1567,7 @@ int realjoystick_sdl_init(void)
 }
 
 //Esta funcion acabara siendo comun en realjoystick.c
-void realjoystick_sdl_set_event(int button,int type,int value)
+void old_realjoystick_sdl_set_event(int button,int type,int value)
 {
 
 
@@ -1672,9 +1672,9 @@ void realjoystick_sdl_set_event(int button,int type,int value)
 }
 
 
+//SDL_API - SDL Documentation Wiki
+//http://sdl.beuc.net/sdl.wiki/SDL_API
 
-
-//TODO: Guardar estado anterior y enviar cambios
 void realjoystick_sdl_main(void)
 {
 
@@ -1706,7 +1706,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
                 //Si cambia estado anterior
                 if (valorboton!=sdl_states_joy_buttons[i]) {
                         printf ("Enviar cambio estado boton %d : %d\n",i,valorboton);
-                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,valorboton);
+                        realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,valorboton);
                 }
 
                 sdl_states_joy_buttons[i]=valorboton;
@@ -1727,7 +1727,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 
                 if (valorfinalaxis!=sdl_states_joy_axes[i]) {
                         printf ("Enviar cambio estado axis %d : %d\n",i,valorfinalaxis);
-                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valorfinalaxis);
+                        realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valorfinalaxis);
                 }
 
                 sdl_states_joy_axes[i]=valorfinalaxis;
