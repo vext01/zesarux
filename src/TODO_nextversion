@@ -7,14 +7,12 @@
 -Joystick en windows (SDL). Fases
 Done * Paso de funciones de init, poll, hit a funcion
 
-Done * Separar funciones hardware joystick linux a diferente archivo (realjoystick_linux.c,.h). 
-* Generar funciones comunes en realjoystick.c que se puedan llamar desde linux y desde sdl y cualquier otro joystick futuro (Mac ?)
 
+*parametro de calibrado tambien en linux nativo
 
-* Dar soporte a driver sdl (sdl1 de momento). Al iniciar driver de video debe sobreescribir funcion init, main y hit
-->Falta hit
+*test de joystick que muestre incrementos en raw en sdl tambien
+->para ello, hay que tener funcion especial de hit, que no considere parametro de umbral de autocalibrado (realjoystick_autocalibrate_value)
 
-FALTA * realjoystick_redefine_event_key
 
 * Simulador de joystick deberia ser siempre accesible tanto si hay como si no soporte joystick 
 
