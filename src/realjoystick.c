@@ -88,6 +88,8 @@ void (*realjoystick_main)(void);
 int (*realjoystick_hit)(void);
 
 
+//Parametro de "autocalibrado". Valores de axis entre -VALOR y +VALOR, se consideran 0
+int realjoystick_autocalibrate_value=16383;
 
 //asignacion de botones de joystick a funciones
 //posicion 0 del array es para REALJOYSTICK_EVENT_UP

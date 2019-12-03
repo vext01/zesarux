@@ -376,6 +376,8 @@ int realjoystick_linux_hit(void)
 		else return 0;
     }
 
+	if (realjoystick_present.v==0) return 0;
+
 #ifndef MINGW
 	struct timeval tv = { 0L, 0L };
 	fd_set fds;
@@ -405,6 +407,8 @@ int realjoystick_linux_init(void)
 		sleep(4);
 		return 0;
 	}
+
+	
 
 #ifndef USE_LINUXREALJOYSTICK
 	debug_printf(VERBOSE_INFO,"Linux real joystick support disabled on compilation");

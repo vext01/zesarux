@@ -1517,7 +1517,8 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 
 int realjoystick_sdl_init(void)
 {
-	
+
+
         printf ("realjoystick SDL init\n");
 
         SDL_InitSubSystem(SDL_INIT_JOYSTICK);
@@ -1677,6 +1678,8 @@ void realjoystick_sdl_set_event(int button,int type,int value)
 void realjoystick_sdl_main(void)
 {
 
+        if (realjoystick_present.v==0) return;
+
 /*
 #define SDL_JOY_MAX_BOTONS 128
 #define SDL_JOY_MAX_AXES 16
@@ -1697,34 +1700,34 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
         if (total_axes>SDL_JOY_MAX_AXES) total_axes=SDL_JOY_MAX_AXES;
  
         for (i=0;i<total_botones;i++) {
-                int pruebaboton=SDL_JoystickGetButton(sdl_joy, i);
-                printf ("boton %d: %d\n",i,pruebaboton);
+                int valorboton=SDL_JoystickGetButton(sdl_joy, i);
+                printf ("boton %d: %d\n",i,valorboton);
 
                 //Si cambia estado anterior
-                if (pruebaboton!=sdl_states_joy_buttons[i]) {
-                        printf ("Enviar cambio estado boton %d : %d\n",i,pruebaboton);
-                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,pruebaboton);
+                if (valorboton!=sdl_states_joy_buttons[i]) {
+                        printf ("Enviar cambio estado boton %d : %d\n",i,valorboton);
+                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,valorboton);
                 }
 
-                sdl_states_joy_buttons[i]=pruebaboton;
+                sdl_states_joy_buttons[i]=valorboton;
 
         }
 
         for (i=0;i<total_axes;i++) {
-                int pruebaaxes=SDL_JoystickGetAxis(sdl_joy, i);
-                printf ("axes %d: %d\n",i,pruebaaxes);
-#ifdef MINGW
-                //No se exactamente porque pasa esto. Windows mete valor -257 cuando esta en reposo
-                //TODO: operacion de calibrado o parametro por linea de comandos de este -257
-                if (pruebaaxes>-300 && pruebaaxes<300) pruebaaxes=0;
-#endif
+                int valoraxis=SDL_JoystickGetAxis(sdl_joy, i);
+                printf ("axes %d: %d\n",i,valoraxis);
 
-                if (pruebaaxes!=sdl_states_joy_axes[i]) {
-                        printf ("Enviar cambio estado axis %d : %d\n",i,pruebaaxes);
-                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,pruebaaxes);
+                //Parametro de autocalibrado para valores 0
+                if (valoraxis>-realjoystick_autocalibrate_value && valoraxis<realjoystick_autocalibrate_value) valoraxis=0;
+                else valoraxis=1;
+
+
+                if (valoraxis!=sdl_states_joy_axes[i]) {
+                        printf ("Enviar cambio estado axis %d : %d\n",i,valoraxis);
+                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valoraxis);
                 }
 
-                sdl_states_joy_axes[i]=pruebaaxes;
+                sdl_states_joy_axes[i]=valoraxis;
         }
 
 
@@ -1734,6 +1737,9 @@ int realjoystick_sdl_hit(void)
 {
 
         printf ("realjoystick SDL hit. TODO!!\n");
+
+        if (realjoystick_present.v==0) return 0;
+
 	return 0;
 }
 
