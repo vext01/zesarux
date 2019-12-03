@@ -13579,7 +13579,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
         if ( ((contador_segundo%100) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0 || salir_por_boton) {
                                                                         valor_contador_segundo_anterior=contador_segundo;
-                                                                        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+                                                                        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
                        if (menu_multitarea==0) menu_refresca_pantalla();
 
 
