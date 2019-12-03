@@ -491,6 +491,8 @@ int realjoystick_linux_read_event(int *button,int *type,int *value)
 
 	if (!realjoystick_linux_hit()) return 0;
 
+	realjoystick_hit=1;
+
 	if (simulador_joystick==1) {
 		read_simulador_joystick(ptr_realjoystick_linux, &e, sizeof(e));
 	}
