@@ -5,8 +5,6 @@
 -Menú debug cpu extra debug con extended debug, cpu history, code coverage etc
 
 -Joystick en windows (SDL). Fases
-Done * Paso de funciones de init, poll, hit a funcion
-
 
 *parametro de calibrado tambien en linux nativo
 
@@ -15,7 +13,6 @@ Done * Paso de funciones de init, poll, hit a funcion
 
 
 * Simulador de joystick deberia ser siempre accesible tanto si hay como si no soporte joystick 
-
 
 
 http://brightrain.aerifal.cx/~niklata/files/unix/fceu-sdlusbjoy.patch
@@ -33,7 +30,7 @@ http://sdl.beuc.net/sdl.wiki/SDL_API
 
 
 
-* meterlo en features , documentacion, etc
+* meterlo en documentacion, etc
 
 -Fin joystick en windows
 
