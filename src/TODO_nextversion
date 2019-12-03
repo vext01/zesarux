@@ -19,8 +19,6 @@ FALTA * realjoystick_redefine_event_key
 * Simulador de joystick deberia ser siempre accesible tanto si hay como si no soporte joystick 
 
 
-Falta en todos drivers * Parámetro tolerancia joystick para axis en todos drivers 
-
 
 http://brightrain.aerifal.cx/~niklata/files/unix/fceu-sdlusbjoy.patch
 

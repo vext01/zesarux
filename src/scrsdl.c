@@ -1572,6 +1572,8 @@ int realjoystick_sdl_init(void)
 //SDL_API - SDL Documentation Wiki
 //http://sdl.beuc.net/sdl.wiki/SDL_API
 
+
+
 void realjoystick_sdl_main(void)
 {
 
@@ -1604,6 +1606,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
                 if (valorboton!=sdl_states_joy_buttons[i]) {
                         printf ("Enviar cambio estado boton %d : %d\n",i,valorboton);
                         realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,valorboton);
+                        realjoystick_sdl_main_hit=1;
                 }
 
                 sdl_states_joy_buttons[i]=valorboton;
@@ -1625,6 +1628,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
                 if (valorfinalaxis!=sdl_states_joy_axes[i]) {
                         printf ("Enviar cambio estado axis %d : %d\n",i,valorfinalaxis);
                         realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valorfinalaxis);
+                        realjoystick_sdl_main_hit=1;
                 }
 
                 sdl_states_joy_axes[i]=valorfinalaxis;
@@ -1633,6 +1637,9 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 
 }
 
+//Para leer si ha habido un hit
+int realjoystick_sdl_main_hit=0;
+
 int realjoystick_sdl_hit(void)
 {
 
@@ -1640,7 +1647,13 @@ int realjoystick_sdl_hit(void)
 
         if (realjoystick_present.v==0) return 0;
 
-	return 0;
+        //Suponemos que no ha habido hit
+        realjoystick_sdl_main_hit=0;
+
+        //Y llamamos a main
+        realjoystick_sdl_main();
+
+	return realjoystick_sdl_main_hit;
 }
 
 

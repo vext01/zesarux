@@ -13194,6 +13194,11 @@ int menu_hardware_autofire_cond(void)
 
 void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
 {
+
+	//temp
+	printf  ("%d\n",realjoystick_hit());
+	return;
+
         menu_simple_ventana("Redefine event","Please press the button/axis");
 	menu_refresca_pantalla();
 
