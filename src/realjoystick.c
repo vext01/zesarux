@@ -916,7 +916,7 @@ int realjoystick_set_event_key(char *text_event,char *text_key)
 
 
 
-//Esta funcion acabara siendo comun en realjoystick.c
+//lectura de evento de joystick y conversion a movimiento de joystick spectrum
 void realjoystick_common_set_event(int button,int type,int value)
 {
 
