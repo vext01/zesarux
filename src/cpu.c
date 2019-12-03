@@ -1920,10 +1920,13 @@ printf (
 		printf ("  Note: if a joystick type has spaces in its name, you must write it between \"\"\n");
 
 
-	printf(""
+	printf(
 		"--disablerealjoystick      Disable real joystick emulation\n"
 		"--realjoystickpath f       Change default real joystick device path\n"
 
+#ifdef USE_LINUXREALJOYSTICK
+		"--no-native-linux-realjoy  Do not use native linux real joystick support. Instead use the video driver joystick support (currently only SDL)\n"
+#endif		
                 "--joystickevent but evt    Set a joystick button or axis to an event (changes joystick to event table)\n"
                 "                           If it's a button (not axis), must be specified with its number, without sign, for example: 2\n"
                 "                           If it's axis, must be specified with its number and sign, for example: +2 or -2\n"
@@ -6897,6 +6900,11 @@ int parse_cmdline_options(void) {
 				realjoystick_present.v=0;
 				realjoystick_disabled.v=1;
 			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--no-native-linux-realjoy")) {
+				no_native_linux_realjoystick.v=1;
+			}
 			
 			else if (!strcmp(argv[puntero_parametro],"--realjoystickpath")) {
 				siguiente_parametro_argumento();
@@ -7732,21 +7740,10 @@ init_randomize_noise_value();
 	mid_reset_export_buffers();
 
 
-	//Si estamos en Linux , el driver de joystick es el nativo, siempre que no tengamos driver SDL(1)
+	//Si estamos en Linux , el driver de joystick es el nativo, a no ser que se especifique lo contrario
 #ifdef USE_LINUXREALJOYSTICK
-	int cambiar_a_realjoystick_linux=1;
 
-	#ifdef COMPILE_SDL
-	#ifndef COMPILE_SDL2
-
-		if (!strcmp(scr_driver_name,"sdl")) {
-			cambiar_a_realjoystick_linux=0;
-		}
-
-	#endif
-	#endif
-
-	if (cambiar_a_realjoystick_linux) {
+	if (no_native_linux_realjoystick.v==0) {
 		realjoystick_init=realjoystick_linux_init;
 		realjoystick_main=realjoystick_linux_main;
 		realjoystick_hit=realjoystick_linux_hit;

@@ -91,6 +91,11 @@ int (*realjoystick_hit)(void);
 //Parametro de "autocalibrado". Valores de axis entre -VALOR y +VALOR, se consideran 0
 int realjoystick_autocalibrate_value=16383;
 
+
+//No usar soporte nativo de real joystick de linux y dejar que use el del driver de video (actualmente solo SDL)
+//Ponemos esto aqui como variable global y no dentro de realjoystick_linux
+z80_bit no_native_linux_realjoystick={0};
+
 //asignacion de botones de joystick a funciones
 //posicion 0 del array es para REALJOYSTICK_EVENT_UP
 //posicion 1 del array es para REALJOYSTICK_EVENT_DOWN

@@ -1519,7 +1519,7 @@ int realjoystick_sdl_init(void)
 {
 
 
-        printf ("realjoystick SDL init\n");
+        printf("Initializing real joystick. Using SDL support\n");
 
         SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
