@@ -1717,17 +1717,20 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
                 int valoraxis=SDL_JoystickGetAxis(sdl_joy, i);
                 printf ("axes %d: %d\n",i,valoraxis);
 
+                int valorfinalaxis;
+
                 //Parametro de autocalibrado para valores 0
-                if (valoraxis>-realjoystick_autocalibrate_value && valoraxis<realjoystick_autocalibrate_value) valoraxis=0;
-                else valoraxis=1;
+                if (valoraxis>-realjoystick_autocalibrate_value && valoraxis<realjoystick_autocalibrate_value) valorfinalaxis=0;
+                else if (valoraxis<=-realjoystick_autocalibrate_value) valorfinalaxis=-1;
+                else valorfinalaxis=+1;
 
 
-                if (valoraxis!=sdl_states_joy_axes[i]) {
-                        printf ("Enviar cambio estado axis %d : %d\n",i,valoraxis);
-                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valoraxis);
+                if (valorfinalaxis!=sdl_states_joy_axes[i]) {
+                        printf ("Enviar cambio estado axis %d : %d\n",i,valorfinalaxis);
+                        realjoystick_sdl_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valorfinalaxis);
                 }
 
-                sdl_states_joy_axes[i]=valoraxis;
+                sdl_states_joy_axes[i]=valorfinalaxis;
         }
 
 
