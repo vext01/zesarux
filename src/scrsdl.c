@@ -1619,6 +1619,8 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 
                 int valorfinalaxis;
 
+ 
+
                 //Parametro de autocalibrado para valores 0
                 if (valoraxis>-realjoystick_autocalibrate_value && valoraxis<realjoystick_autocalibrate_value) valorfinalaxis=0;
                 else if (valoraxis<=-realjoystick_autocalibrate_value) valorfinalaxis=-1;
