@@ -680,6 +680,8 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 
 	debug_printf (VERBOSE_DEBUG,"Redefine action: %d",indice);
 
+	printf ("Redefine action: %d\n",indice);
+
 	simulador_joystick_forzado=1;
 
 	menu_espera_tecla_o_joystick();
@@ -697,6 +699,7 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 	//si no se ha pulsado joystick, pues se habra pulsado tecla
 	if (!realjoystick_hit() ) {
 		debug_printf (VERBOSE_DEBUG,"Pressed key, not joystick");
+		printf ("Pressed key, not joystick\n");
 		return 0;
 	}
 
