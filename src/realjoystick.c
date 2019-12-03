@@ -310,11 +310,12 @@ void realjoystick_null_main(void)
 
 }
 
+/*
 int realjoystick_null_hit(void)
 {
 	return 0;
 }
-
+*/
 
 
 void read_simulador_joystick(int fd,struct js_event *e,int bytes)

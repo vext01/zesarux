@@ -1639,7 +1639,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 }
 
 
-
+/*
 int realjoystick_sdl_hit(void)
 {
 
@@ -1654,7 +1654,7 @@ int realjoystick_sdl_hit(void)
         realjoystick_sdl_main();
 
 	return realjoystick_sdl_main_hit;
-}
+}*/
 
 
 
