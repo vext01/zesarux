@@ -13198,7 +13198,8 @@ void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
 	//temp
 	int i;
 	int hit=0;
-	for (i=0;i<10*50 && !hit;i++) {
+	//for (i=0;i<10*50 && !hit;i++) {
+	for (i=0;!hit;i++) {
 		hit=realjoystick_hit();
 		//printf  ("\n\nhit: %d\n\n",realjoystick_hit());
 		usleep(20000);
