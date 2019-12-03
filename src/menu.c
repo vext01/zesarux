@@ -13484,7 +13484,11 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
 
 void menu_hardware_realjoystick_test_reset_last_values(void)
 {
-	realjoystick_last_button=realjoystick_last_type=realjoystick_last_value=realjoystick_last_index=realjoystick_last_raw_value-1;
+	realjoystick_last_button=-1;
+	realjoystick_last_type=-1;
+	realjoystick_last_value=-1;
+	realjoystick_last_index=-1;
+	realjoystick_last_raw_value=-1;
 }
 
 
