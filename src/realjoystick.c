@@ -652,7 +652,11 @@ void realjoystick_set_reset_action(int index,int value)
 
 
 //Variables leidas desde menu para el comprobador de joystick
-int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index,realjoystick_last_raw_value;
+int realjoystick_last_button;
+int realjoystick_last_type;
+int realjoystick_last_value;
+int realjoystick_last_index;
+int realjoystick_last_raw_value;
 
 
 
