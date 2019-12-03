@@ -1572,7 +1572,8 @@ int realjoystick_sdl_init(void)
 //SDL_API - SDL Documentation Wiki
 //http://sdl.beuc.net/sdl.wiki/SDL_API
 
-
+//Para leer si ha habido un hit
+int realjoystick_sdl_main_hit=0;
 
 void realjoystick_sdl_main(void)
 {
@@ -1637,8 +1638,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 
 }
 
-//Para leer si ha habido un hit
-int realjoystick_sdl_main_hit=0;
+
 
 int realjoystick_sdl_hit(void)
 {
