@@ -704,9 +704,12 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 	debug_printf (VERBOSE_DEBUG,"Pressed joystick");
 
 
-	printf ("TODO\n");
+			button=realjoystick_last_button;
 
-	if (0) {
+			type=realjoystick_last_type;
+			value=realjoystick_last_value;
+
+	if (1) {
 	//if (realjoystick_read_event(&button,&type,&value) ==1 ) {
 		debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);
                 //eventos de init no hacerles caso, de momento
