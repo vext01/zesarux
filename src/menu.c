@@ -13631,7 +13631,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 				}
 
 	
-				sprintf (buffer_texto_medio,"Value: %6d %s",realjoystick_last_value,fill_bars);
+				sprintf (buffer_texto_medio,"Value: %6d %s",realjoystick_last_raw_value,fill_bars);
 				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
