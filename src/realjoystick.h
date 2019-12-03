@@ -83,6 +83,7 @@ extern int realjoystick_linux_init(void);
 extern int realjoystick_linux_hit(void);
 
 extern z80_bit no_native_linux_realjoystick;
+extern int realjoystick_autocalibrate_value;
 
 
 extern int realjoystick_read_event(int *button,int *type,int *value);
