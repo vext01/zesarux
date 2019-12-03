@@ -1592,11 +1592,9 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
         //SDL_JoystickGetButton(SDL_Joystick *joystick, int button);
         int i;
         int total_botones=sdl_num_buttons;
-
         if (total_botones>SDL_JOY_MAX_BOTONS) total_botones=SDL_JOY_MAX_BOTONS;
 
         int total_axes=sdl_num_axes;
-
         if (total_axes>SDL_JOY_MAX_AXES) total_axes=SDL_JOY_MAX_AXES;
  
         for (i=0;i<total_botones;i++) {
