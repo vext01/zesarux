@@ -931,10 +931,10 @@ void realjoystick_common_set_event(int button,int type,int value)
 		if ( (type&REALJOYSTICK_INPUT_EVENT_INIT)!=REALJOYSTICK_INPUT_EVENT_INIT) {
 
 
-			if (button>20) {
+			/*if (button>20) {
 				printf ("!!!!!!!Boton %d\n",button);
 				sleep(5);
-			}
+			}*/
 
 			realjoystick_last_button=button;
 

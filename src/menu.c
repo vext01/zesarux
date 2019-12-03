@@ -13610,6 +13610,11 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 				}
 				else strcpy(buffer_type,"Unknown");
 
+				if (realjoystick_last_button>20) {
+					printf ("!!!!!boton %d\n",realjoystick_last_button);
+					sleep(5);
+				}
+
 				sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
 				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
