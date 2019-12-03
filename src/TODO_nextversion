@@ -28,7 +28,7 @@ https://www.kernel.org/doc/Documentation/input/joystick-api.txt
 SDL_API - SDL Documentation Wiki
 http://sdl.beuc.net/sdl.wiki/SDL_API
 
-
+* revisar TODO de realjoystick y de realjoystick_sdl
 
 * meterlo en documentacion, etc
 
