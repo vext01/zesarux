@@ -712,6 +712,7 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 	if (1) {
 	//if (realjoystick_read_event(&button,&type,&value) ==1 ) {
 		debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);
+		printf ("redefine for button: %d type: %d value: %d\n",button,type,value);
                 //eventos de init no hacerles caso, de momento
                 if ( (type&REALJOYSTICK_INPUT_EVENT_INIT)!=REALJOYSTICK_INPUT_EVENT_INIT) {
 			debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);

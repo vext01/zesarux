@@ -1601,7 +1601,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
  
         for (i=0;i<total_botones;i++) {
                 int valorboton=SDL_JoystickGetButton(sdl_joy, i);
-                printf ("boton %d: %d\n",i,valorboton);
+                //printf ("boton %d: %d\n",i,valorboton);
 
                 //Si cambia estado anterior
                 if (valorboton!=sdl_states_joy_buttons[i]) {
