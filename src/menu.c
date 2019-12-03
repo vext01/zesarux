@@ -13202,7 +13202,7 @@ void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
 	for (i=0;!hit;i++) {
 		hit=realjoystick_hit();
 		//printf  ("\n\nhit: %d\n\n",realjoystick_hit());
-		usleep(20000);
+		//usleep(20000);
 	}
 	return;
 
