@@ -455,6 +455,11 @@ int realjoystick_linux_init(void)
 	ioctl (ptr_realjoystick_linux, JSIOCGBUTTONS, &number_of_buttons);
 	printf ("Number of buttons: %d\n",number_of_buttons);
 
+	char name[128];
+	if (ioctl(ptr_realjoystick_linux, JSIOCGNAME(sizeof(name)), name) < 0)
+		strncpy(name, "Unknown", sizeof(name));
+	printf("Name: %s\n", name);	
+
 
 /*
 4. IOCTLs
