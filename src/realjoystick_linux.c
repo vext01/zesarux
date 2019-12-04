@@ -446,7 +446,7 @@ int realjoystick_linux_init(void)
           }
 	*/
 
-	char name[128];
+
 	if (ioctl(ptr_realjoystick_linux, JSIOCGNAME(REALJOYSTICK_MAX_NAME), realjoystick_joy_name) < 0)
 		strcpy(realjoystick_joy_name,"Unknown");
 	printf("Name: %s\n", realjoystick_joy_name);	
