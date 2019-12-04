@@ -13533,7 +13533,7 @@ void menu_hardware_realjoystick_test_fill_bars(int valor,char *string,int limite
 
 
 #define REALJOYSTICK_TEST_ANCHO 30
-#define REALJOYSTICK_TEST_ALTO 13
+#define REALJOYSTICK_TEST_ALTO 14
 
 void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
@@ -13640,7 +13640,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
-
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");	
 
 			sprintf (buffer_texto_medio,"Joystick name:");
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);	
