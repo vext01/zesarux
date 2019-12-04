@@ -11468,7 +11468,8 @@ void enable_interlace(void)
         video_interlaced_mode.v=1;
 
         if (reinicia_ventana) {
-					screen_init_pantalla_and_others();			
+					screen_init_pantalla_and_others();		
+					realjoystick_reopen_driver();	
 				}
 
         set_putpixel_zoom();
@@ -13790,6 +13791,7 @@ void screen_set_window_zoom(int z)
 	modificado_border.v=1;
 
 	screen_init_pantalla_and_others();
+	realjoystick_reopen_driver();
 	set_putpixel_zoom();
 
 

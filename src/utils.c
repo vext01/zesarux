@@ -9052,6 +9052,7 @@ void parse_customfile_options(void)
 			
 			disable_border();
 			screen_init_pantalla_and_others();
+                        realjoystick_reopen_driver();
                         screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 			debug_printf(VERBOSE_INFO,"Creating Screen");
 		}
@@ -9068,6 +9069,7 @@ void parse_customfile_options(void)
                         
                         enable_border();
 			screen_init_pantalla_and_others();
+                        realjoystick_reopen_driver();
                         screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
                         debug_printf(VERBOSE_INFO,"Creating Screen");
                 }

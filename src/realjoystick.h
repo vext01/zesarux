@@ -187,5 +187,9 @@ extern int simulador_joystick_forzado;
 //extern int realjoystick_find_event(int indice_inicial,int button,int type,int value);
 extern int realjoystick_buscar_evento_en_tabla(int button, int button_type);
 
+extern void realjoystick_reopen_driver(void);
+extern int realjoystick_is_linux_native(void);
+extern void realjoystick_start_driver(void);
+
 
 #endif

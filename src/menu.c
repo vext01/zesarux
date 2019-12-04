@@ -13640,7 +13640,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
-			if (no_native_linux_realjoystick.v) {
+			if (!realjoystick_is_linux_native() ) {
 				sprintf (buffer_texto_medio,"Autocalibrate value: %d",realjoystick_autocalibrate_value);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);			
 			}
@@ -13742,7 +13742,7 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Test joystick buttons");
 		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Test joystick buttons");
 
-		if (no_native_linux_realjoystick.v) {
+		if (!realjoystick_is_linux_native() ) {
 			menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_autocalibrate,NULL,"[%d] Auto~~calibrate",realjoystick_autocalibrate_value);
 			menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'c');
 			menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Autocalibrate value");
@@ -23512,6 +23512,7 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 	//printf ("--antes de init pantalla\n");
 
 	screen_init_pantalla_and_others();
+	realjoystick_reopen_driver();
 
 	//printf ("--despues de init pantalla\n");
 
@@ -23542,6 +23543,7 @@ void menu_interface_hidemouse(MENU_ITEM_PARAMETERS)
 	mouse_pointer_shown.v ^=1;
 
 	screen_init_pantalla_and_others();
+	realjoystick_reopen_driver();
 
     debug_printf(VERBOSE_INFO,"Creating Screen");
 
@@ -23898,6 +23900,7 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
         debug_printf(VERBOSE_INFO,"Creating Screen");
         //scr_init_pantalla();
 	screen_init_pantalla_and_others();
+	realjoystick_reopen_driver();
 
 
 	if (menu_footer) menu_init_footer();

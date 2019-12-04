@@ -1037,6 +1037,8 @@ void realjoystick_common_set_event(int button,int type,int value)
 }
 
 
+
+
 void realjoystick_start_driver(void)
 {
 
@@ -1057,4 +1059,25 @@ void realjoystick_start_driver(void)
 				realjoystick_present.v=0;
 			}
 	}
+}
+
+
+int realjoystick_is_linux_native(void)
+{
+#ifdef USE_LINUXREALJOYSTICK
+
+	if (no_native_linux_realjoystick.v==0) return 1;
+
+#endif
+
+	return 0;
+}
+
+//Solo en caso si no es nativo, pues se reabre al cerrar driver video
+void realjoystick_reopen_driver(void)
+{
+	if (realjoystick_is_linux_native() ) return;
+
+
+	realjoystick_start_driver();
 }
