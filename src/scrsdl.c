@@ -1575,6 +1575,8 @@ int realjoystick_sdl_init(void)
 //Para leer si ha habido un hit
 int realjoystick_sdl_main_hit=0;
 
+int realjoystick_ultimo_axis=-1;
+
 void realjoystick_sdl_main(void)
 {
 
@@ -1632,7 +1634,7 @@ El funcionamiento será que se verá actualizado continuamente en test joystick 
 A partir de entonces se verá continuo hasta que se pulse otro axis. Y vuelta a empezar 
 */
 
-                if (realjoystick_last_button==i) {
+                if (realjoystick_ultimo_axis==i) {
                      realjoystick_last_raw_value=valoraxis;   
                 }
 
@@ -1641,6 +1643,7 @@ A partir de entonces se verá continuo hasta que se pulse otro axis. Y vuelta a 
                         realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valorfinalaxis);
                         realjoystick_hit=1;
                         realjoystick_last_raw_value=valoraxis;
+                        realjoystick_ultimo_axis=i;
                 }
 
                 sdl_states_joy_axes[i]=valorfinalaxis;
