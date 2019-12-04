@@ -378,9 +378,11 @@ void scrsdl_end(void)
 {
 	debug_printf (VERBOSE_INFO,"Closing SDL video driver");
 
-        //Poner soporte de joystick a null
-	realjoystick_init=realjoystick_null_init;
-	realjoystick_main=realjoystick_null_main;
+        //Poner soporte de joystick a null si no teniamos soporte nativo
+        if (!realjoystick_is_linux_native()) {
+	        realjoystick_init=realjoystick_null_init;
+	        realjoystick_main=realjoystick_null_main;
+        }
 
 	scrsdl_inicializado.v=0;
 	commonsdl_end();
