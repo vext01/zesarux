@@ -13577,88 +13577,79 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			salir_por_boton=1;
 		}
 
-        if ( ((contador_segundo%100) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0 || salir_por_boton) {
-                                                                        valor_contador_segundo_anterior=contador_segundo;
-                                                                        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) menu_refresca_pantalla();
+        if ( ((contador_segundo%50) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0 || salir_por_boton) {
+            valor_contador_segundo_anterior=contador_segundo;
+			printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+			if (menu_multitarea==0) menu_refresca_pantalla();
 
 
-
-
-
-
-                        char buffer_texto_medio[40];
+			char buffer_texto_medio[40];
 
 			int linea=0;
 			//int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
-				//menu_escribe_linea_opcion(linea++,-1,1,"Last joystick button/axis:");
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Last joystick button/axis:");
-				linea++;
+			//menu_escribe_linea_opcion(linea++,-1,1,"Last joystick button/axis:");
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Last joystick button/axis:");
+			linea++;
 
+		
 
+			printf ("nuevo evento test joystick\n");
 
-
-
-			//if (realjoystick_last_button>=0) {
-			if (1) {
-
-				printf ("nuevo evento test joystick\n");
-
-				char buffer_type[40];
+			char buffer_type[40];
 #define LONGITUD_BARRAS 6
-				char fill_bars[(LONGITUD_BARRAS*2)+2];
-				fill_bars[0]=0;
-				if (realjoystick_last_type==REALJOYSTICK_INPUT_EVENT_BUTTON) {
-					strcpy(buffer_type,"Button");
-				}
-				else if (realjoystick_last_type==REALJOYSTICK_INPUT_EVENT_AXIS) {
-					strcpy(buffer_type,"Axis");
-					menu_hardware_realjoystick_test_fill_bars(realjoystick_last_raw_value,fill_bars,LONGITUD_BARRAS);
-				}
-				else strcpy(buffer_type,"Unknown");
-
-				/*if (realjoystick_last_button>20) {
-					printf ("!!!!!boton %d\n",realjoystick_last_button);
-					sleep(5);
-				}*/
-
-				sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
-				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
-
-				sprintf (buffer_texto_medio,"Type: %d (%s)",realjoystick_last_type,buffer_type);
-				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
-
-
-				//type JS_EVENT_BUTTON, JS_EVENT_AXIS
-
-
-				char buffer_event[40];
-				if (realjoystick_last_index>=0 && realjoystick_last_index<MAX_EVENTS_JOYSTICK) {
-					strcpy(buffer_event,realjoystick_event_names[realjoystick_last_index]);
-				}
-				else {
-					strcpy(buffer_event,"None");
-				}
-
-	
-				sprintf (buffer_texto_medio,"Value: %6d %s",realjoystick_last_raw_value,fill_bars);
-				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
-
-				sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
-				//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
-
-
-				//realjoystick_ultimo_indice=-1;
-				//menu_hardware_realjoystick_test_reset_last_values();
-
-				zxvision_draw_window_contents(&ventana);
-
-
+			char fill_bars[(LONGITUD_BARRAS*2)+2];
+			fill_bars[0]=0;
+			if (realjoystick_last_type==REALJOYSTICK_INPUT_EVENT_BUTTON) {
+				strcpy(buffer_type,"Button");
 			}
+			else if (realjoystick_last_type==REALJOYSTICK_INPUT_EVENT_AXIS) {
+				strcpy(buffer_type,"Axis");
+				menu_hardware_realjoystick_test_fill_bars(realjoystick_last_raw_value,fill_bars,LONGITUD_BARRAS);
+			}
+			else strcpy(buffer_type,"Unknown");
+
+			/*if (realjoystick_last_button>20) {
+				printf ("!!!!!boton %d\n",realjoystick_last_button);
+				sleep(5);
+			}*/
+
+			sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
+			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
+
+			sprintf (buffer_texto_medio,"Type: %d (%s)",realjoystick_last_type,buffer_type);
+			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
+
+
+			//type JS_EVENT_BUTTON, JS_EVENT_AXIS
+
+
+			char buffer_event[40];
+			if (realjoystick_last_index>=0 && realjoystick_last_index<MAX_EVENTS_JOYSTICK) {
+				strcpy(buffer_event,realjoystick_event_names[realjoystick_last_index]);
+			}
+			else {
+				strcpy(buffer_event,"None");
+			}
+
+
+			sprintf (buffer_texto_medio,"Value: %6d %s",realjoystick_last_raw_value,fill_bars);
+			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
+
+			sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
+			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
+
+
+			//realjoystick_ultimo_indice=-1;
+			//menu_hardware_realjoystick_test_reset_last_values();
+
+			zxvision_draw_window_contents(&ventana);
+
+
+			
         }
 
 		
