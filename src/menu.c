@@ -13692,49 +13692,52 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_hardware_realjoystick;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+	menu_item *array_menu_hardware_realjoystick;
+	menu_item item_seleccionado;
+	int retorno_menu;
+	do {
 
-                menu_add_item_menu_inicial_format(&array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_event,NULL,"Joystick to events");
-
-                menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Define which events generate every button/movement of the joystick");
-                menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which events generate every button/movement of the joystick");
-
-
-
-		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_keys,NULL,"Joystick to keys");
-
-                menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
-                menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
+		menu_add_item_menu_inicial_format(&array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_event,NULL,"Joystick to ~~events");
+		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'e');
+		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Define which events generate every button/movement of the joystick");
+		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which events generate every button/movement of the joystick");
 
 
-		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_test,NULL,"Test joystick");
+
+		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_keys,NULL,"Joystick to ~~keys");
+		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'k');
+		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
+		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
+
+
+		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_test,NULL,"~~Test joystick");
+		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'t');
 		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Test joystick buttons");
 		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Test joystick buttons");
 
+		
 
 
 
-                menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_hardware_realjoystick,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_hardware_realjoystick);
 
-                retorno_menu=menu_dibuja_menu(&hardware_realjoystick_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick,"Real joystick emulation" );
+		menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		//menu_add_item_menu(array_menu_hardware_realjoystick,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_hardware_realjoystick);
 
-                
+		retorno_menu=menu_dibuja_menu(&hardware_realjoystick_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick,"Real joystick emulation" );
 
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
+			
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+				//llamamos por valor de funcion
+				if (item_seleccionado.menu_funcion!=NULL) {
+						//printf ("actuamos por funcion\n");
+						item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+						
+				}
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
 void menu_hardware_joystick(MENU_ITEM_PARAMETERS)
