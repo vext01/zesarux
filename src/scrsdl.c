@@ -384,6 +384,7 @@ void scrsdl_end(void)
 
 	scrsdl_inicializado.v=0;
 	commonsdl_end();
+        printf ("After close sdl driver\n");
 }
 
 z80_byte scrsdl_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
