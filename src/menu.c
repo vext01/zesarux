@@ -13693,6 +13693,30 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_hardware_realjoystick_autocalibrate(MENU_ITEM_PARAMETERS)
+{
+    char string_calibrate[6];
+	int valor;
+
+
+    sprintf (string_calibrate,"%d",realjoystick_autocalibrate_value);
+
+	menu_ventana_scanf("Autocalibrate value",string_calibrate,6);
+
+	valor=parse_string_to_number(string_calibrate);
+
+	
+	if (valor<0 || valor>32000) {
+		debug_printf (VERBOSE_ERR,"Value out of range. Minimum: 0 Maximum: 32000");
+        return;
+    }
+
+	realjoystick_autocalibrate_value=valor;
+
+
+}
+
+
 void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 {
 	menu_item *array_menu_hardware_realjoystick;
@@ -13718,9 +13742,14 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Test joystick buttons");
 		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Test joystick buttons");
 
-		
-
-
+		if (no_native_linux_realjoystick.v) {
+			menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_autocalibrate,NULL,"[%d] Auto~~calibrate",realjoystick_autocalibrate_value);
+			menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'c');
+			menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Autocalibrate value");
+			menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Parameter to autocalibrate joystick axis. "
+										"Axis values read from joystick less than n and greater than -n are considered as 0. "
+										" Default: 16384. Not used on native linux real joystick");
+		}
 
 
 		menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);

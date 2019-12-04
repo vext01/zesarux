@@ -1923,7 +1923,7 @@ printf (
 	printf(
 		"--disablerealjoystick      Disable real joystick emulation\n"
 		"--realjoystickpath f       Change default real joystick device path\n"
-		"--realjoystick-calibrate n Parameter to autocalibrate joystick axis. Values less than n and greater than -n are considered as 0. Default: 16384. Not used on native linux real joystick\n"
+		"--realjoystick-calibrate n Parameter to autocalibrate joystick axis. Axis values read from joystick less than n and greater than -n are considered as 0. Default: 16384. Not used on native linux real joystick\n"
 
 #ifdef USE_LINUXREALJOYSTICK
 		"--no-native-linux-realjoy  Do not use native linux real joystick support. Instead use the video driver joystick support (currently only SDL)\n"
