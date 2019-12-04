@@ -91,6 +91,8 @@ int realjoystick_hit=0;
 
 
 //Parametro de "autocalibrado". Valores de axis entre -VALOR y +VALOR, se consideran 0
+//v>-realjoystick_autocalibrate_value && v<realjoystick_autocalibrate_value ->0
+//De momento solo se usa en driver SDL. En nativo linux no usarlo: hasta ahora nunca ha hecho falta, mejor no meterlo
 int realjoystick_autocalibrate_value=16383;
 
 

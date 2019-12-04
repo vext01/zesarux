@@ -3683,6 +3683,9 @@ int util_write_configfile(void)
                   
                           ADD_STRING_CONFIG,"--realjoystickpath %s",string_dev_joystick);
 
+                        ADD_STRING_CONFIG,"--realjoystick-calibrate %d",realjoystick_autocalibrate_value);
+
+
 
   //real joystick buttons to events
   for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {

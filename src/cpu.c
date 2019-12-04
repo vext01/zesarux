@@ -1923,6 +1923,7 @@ printf (
 	printf(
 		"--disablerealjoystick      Disable real joystick emulation\n"
 		"--realjoystickpath f       Change default real joystick device path\n"
+		"--realjoystick-calibrate n Parameter to autocalibrate joystick axis. Values less than n and greater than -n are considered as 0. Default: 16384. Not used on native linux real joystick\n"
 
 #ifdef USE_LINUXREALJOYSTICK
 		"--no-native-linux-realjoy  Do not use native linux real joystick support. Instead use the video driver joystick support (currently only SDL)\n"
@@ -6911,7 +6912,17 @@ int parse_cmdline_options(void) {
 				strcpy(string_dev_joystick,argv[puntero_parametro]);
 				
 			}
-			
+
+			else if (!strcmp(argv[puntero_parametro],"--realjoystick-calibrate")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<0 || valor>32000) {
+					printf ("Invalid value %d for setting --realjoystick-calibrate\n",valor);
+                    exit(1);				
+				}
+				realjoystick_autocalibrate_value=valor;
+			}
+
 
 			else if (!strcmp(argv[puntero_parametro],"--joystickevent")) {
 				char *text_button;
