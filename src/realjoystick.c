@@ -90,6 +90,11 @@ void (*realjoystick_main)(void);
 int realjoystick_hit=0;
 
 
+int realjoystick_total_buttons=0;
+int realjoystick_total_axes=0;
+char realjoystick_joy_name[REALJOYSTICK_MAX_NAME+1]=""; //+1 por si acaso no me acuerdo del 0 final...
+
+
 //Parametro de "autocalibrado". Valores de axis entre -VALOR y +VALOR, se consideran 0
 //v>-realjoystick_autocalibrate_value && v<realjoystick_autocalibrate_value ->0
 //De momento solo se usa en driver SDL. En nativo linux no usarlo: hasta ahora nunca ha hecho falta, mejor no meterlo

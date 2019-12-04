@@ -446,19 +446,23 @@ int realjoystick_linux_init(void)
           }
 	*/
 
+	char name[128];
+	if (ioctl(ptr_realjoystick_linux, JSIOCGNAME(REALJOYSTICK_MAX_NAME), realjoystick_joy_name) < 0)
+		strcpy(realjoystick_joy_name,"Unknown");
+	printf("Name: %s\n", realjoystick_joy_name);	
+
 
 	char number_of_axes;
 	ioctl (ptr_realjoystick_linux, JSIOCGAXES, &number_of_axes);
 	printf ("Number of axes: %d\n",number_of_axes);
+	realjoystick_total_axes=number_of_axes;
+	
 
 	char number_of_buttons;
 	ioctl (ptr_realjoystick_linux, JSIOCGBUTTONS, &number_of_buttons);
 	printf ("Number of buttons: %d\n",number_of_buttons);
+	realjoystick_total_buttons=number_of_buttons;
 
-	char name[128];
-	if (ioctl(ptr_realjoystick_linux, JSIOCGNAME(sizeof(name)), name) < 0)
-		strncpy(name, "Unknown", sizeof(name));
-	printf("Name: %s\n", name);	
 
 
 /*

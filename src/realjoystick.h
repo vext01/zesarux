@@ -191,5 +191,11 @@ extern void realjoystick_reopen_driver(void);
 extern int realjoystick_is_linux_native(void);
 extern void realjoystick_start_driver(void);
 
+extern int realjoystick_total_buttons;
+extern int realjoystick_total_axes;
+#define REALJOYSTICK_MAX_NAME 32
+
+extern char realjoystick_joy_name[];
+
 
 #endif

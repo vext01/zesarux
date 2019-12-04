@@ -13533,7 +13533,7 @@ void menu_hardware_realjoystick_test_fill_bars(int valor,char *string,int limite
 
 
 #define REALJOYSTICK_TEST_ANCHO 30
-#define REALJOYSTICK_TEST_ALTO 9
+#define REALJOYSTICK_TEST_ALTO 13
 
 void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
@@ -13644,6 +13644,19 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 				sprintf (buffer_texto_medio,"Autocalibrate value: %d",realjoystick_autocalibrate_value);
 				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);			
 			}
+
+
+			sprintf (buffer_texto_medio,"Joystick name:");
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);	
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,realjoystick_joy_name);	
+
+			sprintf (buffer_texto_medio,"Total buttons: %d",realjoystick_total_buttons);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);	
+
+			sprintf (buffer_texto_medio,"Total axis: %d",realjoystick_total_axes);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);	
+
+ 
 
 
 			//realjoystick_ultimo_indice=-1;

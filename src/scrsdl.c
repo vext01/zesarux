@@ -1557,6 +1557,18 @@ int realjoystick_sdl_init(void)
     printf("Number of Hats: %d\n",SDL_JoystickNumHats(sdl_joy));
 
 
+        //Por si acaso el nombre lo truncamos
+        menu_tape_settings_trunc_name(SDL_JoystickName(0),realjoystick_joy_name,REALJOYSTICK_MAX_NAME);
+
+	realjoystick_total_axes=sdl_num_axes;
+	realjoystick_total_buttons=sdl_num_buttons;
+
+
+
+
+
+
+
                 }
 
                 else {
