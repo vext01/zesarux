@@ -946,7 +946,7 @@ void realjoystick_common_set_event(int button,int type,int value)
 
 			realjoystick_last_type=type;
 			realjoystick_last_value=value;
-			
+
 			realjoystick_last_index=-1; //de momento suponemos ningun evento
 			
 
@@ -1034,4 +1034,27 @@ void realjoystick_common_set_event(int button,int type,int value)
 
 	//}
 
+}
+
+
+void realjoystick_start_driver(void)
+{
+
+
+	//Si estamos en Linux , el driver de joystick es el nativo, a no ser que se especifique lo contrario
+#ifdef USE_LINUXREALJOYSTICK
+
+	if (no_native_linux_realjoystick.v==0) {
+		realjoystick_init=realjoystick_linux_init;
+		realjoystick_main=realjoystick_linux_main;
+		//realjoystick_hit=realjoystick_linux_hit;
+	}
+#endif	
+
+
+	if (realjoystick_present.v==1) {
+			if (realjoystick_init()) {
+				realjoystick_present.v=0;
+			}
+	}
 }

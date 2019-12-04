@@ -7750,23 +7750,8 @@ init_randomize_noise_value();
 	
 	mid_reset_export_buffers();
 
+	realjoystick_start_driver();
 
-	//Si estamos en Linux , el driver de joystick es el nativo, a no ser que se especifique lo contrario
-#ifdef USE_LINUXREALJOYSTICK
-
-	if (no_native_linux_realjoystick.v==0) {
-		realjoystick_init=realjoystick_linux_init;
-		realjoystick_main=realjoystick_linux_main;
-		//realjoystick_hit=realjoystick_linux_hit;
-	}
-#endif	
-
-
-	if (realjoystick_present.v==1) {
-			if (realjoystick_init()) {
-				realjoystick_present.v=0;
-			}
-	}
 
 	if (aofilename!=NULL) {
 			init_aofile();
