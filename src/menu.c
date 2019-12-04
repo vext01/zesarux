@@ -13724,25 +13724,26 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
 	do {
 
-		menu_add_item_menu_inicial_format(&array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_event,NULL,"        Joystick to ~~events");
+		menu_add_item_menu_inicial_format(&array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_event,NULL,"Joystick to ~~events");
 		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'e');
 		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Define which events generate every button/movement of the joystick");
 		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which events generate every button/movement of the joystick");
 
 
 
-		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_keys,NULL,"        Joystick to ~~keys");
+		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_keys,NULL,"Joystick to ~~keys");
 		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'k');
 		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
 		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
 
 
-		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_test,NULL,"        ~~Test joystick");
+		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_test,NULL,"~~Test joystick");
 		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'t');
 		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Test joystick buttons");
 		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Test joystick buttons");
 
 		if (!realjoystick_is_linux_native() ) {
+			menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 			menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_autocalibrate,NULL,"[%5d] Auto~~calibrate value",realjoystick_autocalibrate_value);
 			menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'c');
 			menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Autocalibrate value");
