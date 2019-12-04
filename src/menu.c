@@ -13640,10 +13640,6 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
-			if (!realjoystick_is_linux_native() ) {
-				sprintf (buffer_texto_medio,"Autocalibrate value: %d",realjoystick_autocalibrate_value);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);			
-			}
 
 
 			sprintf (buffer_texto_medio,"Joystick name:");
@@ -13656,7 +13652,11 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			sprintf (buffer_texto_medio,"Total axis: %d",realjoystick_total_axes);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);	
 
- 
+ 			if (!realjoystick_is_linux_native() ) {
+				sprintf (buffer_texto_medio,"Autocalibrate value: %d",realjoystick_autocalibrate_value);
+				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);			
+			}
+
 
 
 			//realjoystick_ultimo_indice=-1;
