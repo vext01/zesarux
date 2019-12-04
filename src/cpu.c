@@ -7739,6 +7739,9 @@ init_randomize_noise_value();
 
 	//realjoystick_initialize_joystick();
 	//realjoystick_start_driver();
+	if (realjoystick_is_linux_native()) {
+		realjoystick_initialize_joystick();
+	}
 
 
 	if (aofilename!=NULL) {
