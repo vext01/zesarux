@@ -377,6 +377,11 @@ void scrsdl_refresca_pantalla(void)
 void scrsdl_end(void)
 {
 	debug_printf (VERBOSE_INFO,"Closing SDL video driver");
+
+        //Poner soporte de joystick a null
+	realjoystick_init=realjoystick_null_init;
+	realjoystick_main=realjoystick_null_main;
+
 	scrsdl_inicializado.v=0;
 	commonsdl_end();
 }
