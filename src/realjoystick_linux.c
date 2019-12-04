@@ -451,6 +451,10 @@ int realjoystick_linux_init(void)
 	ioctl (ptr_realjoystick_linux, JSIOCGAXES, &number_of_axes);
 	printf ("Number of axes: %d\n",number_of_axes);
 
+	char number_of_buttons;
+	ioctl (ptr_realjoystick_linux, JSIOCGBUTTONS, &number_of_buttons);
+	printf ("Number of buttons: %d\n",number_of_buttons);
+
 
 /*
 4. IOCTLs
