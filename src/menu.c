@@ -13533,7 +13533,7 @@ void menu_hardware_realjoystick_test_fill_bars(int valor,char *string,int limite
 
 
 #define REALJOYSTICK_TEST_ANCHO 30
-#define REALJOYSTICK_TEST_ALTO 9
+#define REALJOYSTICK_TEST_ALTO 8
 
 void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
