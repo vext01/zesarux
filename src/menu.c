@@ -13476,10 +13476,7 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
 }
 
 
-#define REALJOYSTICK_TEST_X 1
-#define REALJOYSTICK_TEST_Y 8
-#define REALJOYSTICK_TEST_ANCHO 30
-#define REALJOYSTICK_TEST_ALTO 6
+
 
 
 void menu_hardware_realjoystick_test_reset_last_values(void)
@@ -13533,6 +13530,11 @@ void menu_hardware_realjoystick_test_fill_bars(int valor,char *string,int limite
 
 }
 
+
+
+#define REALJOYSTICK_TEST_ANCHO 30
+#define REALJOYSTICK_TEST_ALTO 9
+
 void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
 
@@ -13541,10 +13543,14 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,
-							REALJOYSTICK_TEST_ANCHO-1,REALJOYSTICK_TEST_ALTO+3-2,"Joystick test");
-	zxvision_draw_window(&ventana);			
+	int alto_ventana=REALJOYSTICK_TEST_ALTO;
+	int ancho_ventana=REALJOYSTICK_TEST_ANCHO;	
+	int x_ventana=menu_center_x()-ancho_ventana/2; 
+	int y_ventana=menu_center_y()-alto_ventana/2; 	
 
+	zxvision_new_window(&ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"Joystick test");
+	zxvision_draw_window(&ventana);			
 
 
 	z80_byte acumulado;

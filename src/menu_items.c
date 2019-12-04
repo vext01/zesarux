@@ -2283,8 +2283,8 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 	int alto_ventana=9;
 	int ancho_ventana=32;
 
-	int x_ventana=menu_center_x()-ancho_ventana/2; //0;
-	int y_ventana=menu_center_y()-alto_ventana/2; //7;
+	int x_ventana=menu_center_x()-ancho_ventana/2; 
+	int y_ventana=menu_center_y()-alto_ventana/2; 
 
 
 	zxvision_new_window(&ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
