@@ -1637,7 +1637,7 @@ A partir de entonces se verá continuo hasta que se pulse otro axis. Y vuelta a 
 
 
                 if (realjoystick_ultimo_axis==i) {
-                        printf ("envio axis boton %d valor %d\n",i,valoraxis);
+                        //printf ("guardar para test joystick axis boton %d valor %d\n",i,valoraxis);
                         realjoystick_last_raw_value=valoraxis;   
                 }
 
