@@ -1625,7 +1625,16 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
                 if (valoraxis>-realjoystick_autocalibrate_value && valoraxis<realjoystick_autocalibrate_value) valorfinalaxis=0;
                 else if (valoraxis<=-realjoystick_autocalibrate_value) valorfinalaxis=-1;
                 else valorfinalaxis=+1;
+/*
+*en test joystick, sdl hará que last raw value se actualice al leer siempre que axis coincida con último last axis leído
+Dicho valor de axis se sobreescribira si se pulsa otro axis
+El funcionamiento será que se verá actualizado continuamente en test joystick cuando pase el umbral de calibrado. 
+A partir de entonces se verá continuo hasta que se pulse otro axis. Y vuelta a empezar 
+*/
 
+                if (realjoystick_last_button==i) {
+                     realjoystick_last_raw_value=valoraxis;   
+                }
 
                 if (valorfinalaxis!=sdl_states_joy_axes[i]) {
                         printf ("Enviar cambio estado axis %d : %d\n",i,valorfinalaxis);

@@ -4,13 +4,31 @@
 
 -Menú debug cpu extra debug con extended debug, cpu history, code coverage etc
 
--Joystick en windows (SDL). Fases
+
+
+-Joystick SDL:
 
 *parametro de calibrado tambien en linux nativo
 
 *test de joystick que muestre incrementos en raw en sdl tambien
 ->para ello, hay que tener funcion especial de hit, que no considere parametro de umbral de autocalibrado (realjoystick_autocalibrate_value)
 
+*Variables de último evento del test joystick renombrarlas para que se indique que son solo de ese test
+
+*Al cambiar video driver, cambiar driver joystick al null (excepto cuando se está usando el driver de joystick de Linux nativo). Eso hacerlo al cerrar el anterior driver y antes de iniciar el nuevo
+Quizá luego inicializar joystick?
+
+*Quizá en test joystick, sdl hará que last raw value se actualice al leer siempre que botón coincida con último last button leído
+Dicho valor de botón se sobreescribira si se pulsa otro botón
+El funcionamiento será que se verá actualizado continuamente en test joystick cuando pase el umbral de calibrado. 
+A partir de entonces se verá continuo hasta que se pulse otro botón. Y vuelta a empezar 
+
+Luego realmente se usa el valor no raw? Quizá en redefinición de Tecla?
+
+* Soporte joystick SDL2
+
+* Parámetro tolerancia joystick para axis en todos drivers. quiza para linux nativo de momento no,
+hasta ahora ha funcionado siempre...
 
 * Simulador de joystick deberia ser siempre accesible tanto si hay como si no soporte joystick 
 
@@ -32,7 +50,7 @@ http://sdl.beuc.net/sdl.wiki/SDL_API
 
 * meterlo en documentacion, etc
 
--Fin joystick en windows
+-Fin joystick en SDL
 
 
 -First aid de ZRCP no tiene que decir lo de Windows Thread
