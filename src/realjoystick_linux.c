@@ -398,7 +398,7 @@ int realjoystick_linux_hit(void)
 int realjoystick_linux_init(void)
 {
 
-	debug_printf(VERBOSE_INFO,"Initializing real joystick. Using native linux support");
+	
 
 	if (simulador_joystick==1) {
 		printf ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
@@ -408,7 +408,7 @@ int realjoystick_linux_init(void)
 		return 0;
 	}
 
-	
+	printf("Initializing real joystick. Using native linux support. Using device %s\n",string_dev_joystick);
 
 #ifndef USE_LINUXREALJOYSTICK
 	debug_printf(VERBOSE_INFO,"Linux real joystick support disabled on compilation");
