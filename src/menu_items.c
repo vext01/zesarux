@@ -9119,8 +9119,8 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
 
         
 
-	screen_init_pantalla_and_others();
-	realjoystick_reopen_driver();
+	screen_init_pantalla_and_others_and_realjoystick();
+
 
     debug_printf(VERBOSE_INFO,"Creating Screen");
 
@@ -9165,8 +9165,7 @@ void menu_ext_desk_settings_custom_width(MENU_ITEM_PARAMETERS)
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
        
 
-	screen_init_pantalla_and_others();
-	realjoystick_reopen_driver();
+	screen_init_pantalla_and_others_and_realjoystick();
 
     debug_printf(VERBOSE_INFO,"Creating Screen");
 
@@ -9205,8 +9204,7 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 	else screen_ext_desktop_width +=128;
         
 
-	screen_init_pantalla_and_others();
-	realjoystick_reopen_driver();
+	screen_init_pantalla_and_others_and_realjoystick();
 
     debug_printf(VERBOSE_INFO,"Creating Screen");
 

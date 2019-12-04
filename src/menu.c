@@ -23512,8 +23512,7 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 
 	//printf ("--antes de init pantalla\n");
 
-	screen_init_pantalla_and_others();
-	realjoystick_reopen_driver();
+	screen_init_pantalla_and_others_and_realjoystick();
 
 	//printf ("--despues de init pantalla\n");
 
@@ -23543,8 +23542,7 @@ void menu_interface_hidemouse(MENU_ITEM_PARAMETERS)
 
 	mouse_pointer_shown.v ^=1;
 
-	screen_init_pantalla_and_others();
-	realjoystick_reopen_driver();
+	screen_init_pantalla_and_others_and_realjoystick();
 
     debug_printf(VERBOSE_INFO,"Creating Screen");
 
@@ -23900,8 +23898,7 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
         modificado_border.v=1;
         debug_printf(VERBOSE_INFO,"Creating Screen");
         //scr_init_pantalla();
-	screen_init_pantalla_and_others();
-	realjoystick_reopen_driver();
+	screen_init_pantalla_and_others_and_realjoystick();
 
 
 	if (menu_footer) menu_init_footer();

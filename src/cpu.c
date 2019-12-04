@@ -3762,8 +3762,8 @@ void post_set_mach_reopen_screen(void)
 				debug_printf(VERBOSE_INFO,"End Screen");
 			scr_end_pantalla();
 			debug_printf(VERBOSE_INFO,"Creating Screen");
-			screen_init_pantalla_and_others();
-			realjoystick_reopen_driver();
+			screen_init_pantalla_and_others_and_realjoystick();
+
 			//scr_init_pantalla();
 }
 

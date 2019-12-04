@@ -11468,8 +11468,7 @@ void enable_interlace(void)
         video_interlaced_mode.v=1;
 
         if (reinicia_ventana) {
-					screen_init_pantalla_and_others();		
-					realjoystick_reopen_driver();	
+					screen_init_pantalla_and_others_and_realjoystick();
 				}
 
         set_putpixel_zoom();
@@ -13790,8 +13789,7 @@ void screen_set_window_zoom(int z)
 	zoom_x=zoom_y=z;
 	modificado_border.v=1;
 
-	screen_init_pantalla_and_others();
-	realjoystick_reopen_driver();
+	screen_init_pantalla_and_others_and_realjoystick();
 	set_putpixel_zoom();
 
 
@@ -14553,6 +14551,21 @@ int screen_init_pantalla_and_others(void)
 	//menu_init_footer();
 
 	return retorno;
+}
+
+
+int screen_init_pantalla_and_others_and_realjoystick(void)
+{
+
+	/*
+	Al iniciar driver video, en el caso de SDL por ejemplo, apunta a las funciones de realjoystick sdl. Si no inicializamos dicho joystick,
+	sucedera que al hacer el poll de joystick, usara un joystick no inicializado y petara 
+
+	TODO: hacer que el init de sdl de video, tambien inicialice el joystick (en el caso que no usemos driver linux nativo)
+	*/
+
+	screen_init_pantalla_and_others();
+    realjoystick_reopen_driver();
 }
 
 
