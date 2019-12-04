@@ -447,6 +447,61 @@ int realjoystick_linux_init(void)
 	*/
 
 
+	char number_of_axes;
+	ioctl (ptr_realjoystick_linux, JSIOCGAXES, &number_of_axes);
+	printf ("Number of axes: %d\n",number_of_axes);
+
+
+/*
+4. IOCTLs
+~~~~~~~~~
+
+The joystick driver defines the following ioctl(2) operations.
+
+				 function			3rd arg  
+	#define JSIOCGAXES	 get number of axes		char	 
+	#define JSIOCGBUTTONS	 get number of buttons	char	 
+	#define JSIOCGVERSION	get driver version		int	 
+	#define JSIOCGNAME(len)  get identifier string	char	 
+	#define JSIOCSCORR	 set correction values	&js_corr 
+	#define JSIOCGCORR	 get correction values	&js_corr 
+
+For example, to read the number of axes
+
+	char number_of_axes;
+	ioctl (fd, JSIOCGAXES, &number_of_axes);
+
+
+4.1 JSIOGCVERSION
+~~~~~~~~~~~~~~~~~
+
+JSIOGCVERSION is a good way to check in run-time whether the running
+driver is 1.0+ and supports the event interface. If it is not, the
+IOCTL will fail. For a compile-time decision, you can test the
+JS_VERSION symbol
+
+	#ifdef JS_VERSION
+	#if JS_VERSION > 0xsomething
+
+
+4.2 JSIOCGNAME
+~~~~~~~~~~~~~~
+
+JSIOCGNAME(len) allows you to get the name string of the joystick - the same
+as is being printed at boot time. The 'len' argument is the length of the
+buffer provided by the application asking for the name. It is used to avoid
+possible overrun should the name be too long.
+
+	char name[128];
+	if (ioctl(fd, JSIOCGNAME(sizeof(name)), name) < 0)
+		strncpy(name, "Unknown", sizeof(name));
+	printf("Name: %s\n", name);
+
+*/
+
+
+
+
 	realjoystick_present.v=1;
 
 	return 0;
