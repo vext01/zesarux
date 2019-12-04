@@ -1743,6 +1743,8 @@ int scrsdl_init (void) {
 
 	scr_z88_cpc_load_keymap();
 
+        printf ("Ending initializing SDL driver\n");
+
         return 0;
 
 }
