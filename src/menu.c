@@ -13536,7 +13536,7 @@ void menu_hardware_realjoystick_test_fill_bars(int valor,char *string,int limite
 void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
 
-        menu_espera_no_tecla();
+	menu_espera_no_tecla();
     
 
 	zxvision_window ventana;
@@ -13547,20 +13547,20 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 
 
-        z80_byte acumulado;
+	z80_byte acumulado;
 
 
 
-                               int valor_contador_segundo_anterior;
+	int valor_contador_segundo_anterior;
 
-                                valor_contador_segundo_anterior=contador_segundo;
+	valor_contador_segundo_anterior=contador_segundo;
 
 	menu_hardware_realjoystick_test_reset_last_values();
 
 	int salir_por_boton=0;
 
 
-        do {
+	do {
 
 		menu_cpu_core_loop();
                 acumulado=menu_da_todas_teclas();
@@ -13608,21 +13608,15 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			}
 			else strcpy(buffer_type,"Unknown");
 
-			/*if (realjoystick_last_button>20) {
-				printf ("!!!!!boton %d\n",realjoystick_last_button);
-				sleep(5);
-			}*/
-
-			sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
-			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+		
+			if (realjoystick_last_button<0) strcpy(buffer_texto_medio,"Button: None");
+			else sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
-			sprintf (buffer_texto_medio,"Type: %d (%s)",realjoystick_last_type,buffer_type);
-			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+			if (realjoystick_last_type<0) strcpy(buffer_texto_medio,"Type: None");
+			else sprintf (buffer_texto_medio,"Type: %d (%s)",realjoystick_last_type,buffer_type);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
-
-			//type JS_EVENT_BUTTON, JS_EVENT_AXIS
 
 
 			char buffer_event[40];
@@ -13635,11 +13629,9 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 
 			sprintf (buffer_texto_medio,"Value: %6d %s",realjoystick_last_raw_value,fill_bars);
-			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
 			sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
-			//menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);
 
 
