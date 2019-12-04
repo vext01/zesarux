@@ -1634,8 +1634,11 @@ El funcionamiento será que se verá actualizado continuamente en test joystick 
 A partir de entonces se verá continuo hasta que se pulse otro axis. Y vuelta a empezar 
 */
 
+
+
                 if (realjoystick_ultimo_axis==i) {
-                     realjoystick_last_raw_value=valoraxis;   
+                        printf ("envio axis boton %d valor %d\n",i,valoraxis);
+                        realjoystick_last_raw_value=valoraxis;   
                 }
 
                 if (valorfinalaxis!=sdl_states_joy_axes[i]) {

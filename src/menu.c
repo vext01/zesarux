@@ -13599,7 +13599,10 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 
 
-			if (realjoystick_last_button>=0) {
+			//if (realjoystick_last_button>=0) {
+			if (1) {
+
+				printf ("nuevo evento test joystick\n");
 
 				char buffer_type[40];
 #define LONGITUD_BARRAS 6
