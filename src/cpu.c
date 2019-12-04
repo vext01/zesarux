@@ -7644,6 +7644,19 @@ init_randomize_noise_value();
 	menu_debug_daad_init_flagobject();
 
 
+
+#ifdef USE_LINUXREALJOYSTICK
+
+	//Soporte nativo de linux joystick
+	if (no_native_linux_realjoystick.v==0) {
+		realjoystick_init=realjoystick_linux_init;
+		realjoystick_main=realjoystick_linux_main;
+	}
+#endif	
+
+
+
+
 	debug_printf (VERBOSE_INFO,"Starting emulator");
 
 
@@ -7723,7 +7736,9 @@ init_randomize_noise_value();
 	
 	mid_reset_export_buffers();
 
-	realjoystick_start_driver();
+
+	realjoystick_initialize_joystick();
+	//realjoystick_start_driver();
 
 
 	if (aofilename!=NULL) {

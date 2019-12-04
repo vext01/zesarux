@@ -14557,6 +14557,10 @@ int screen_init_pantalla_and_others(void)
 int screen_init_pantalla_and_others_and_realjoystick(void)
 {
 
+
+
+	screen_init_pantalla_and_others();
+
 	/*
 	Al iniciar driver video, en el caso de SDL por ejemplo, apunta a las funciones de realjoystick sdl. Si no inicializamos dicho joystick,
 	sucedera que al hacer el poll de joystick, usara un joystick no inicializado y petara 
@@ -14564,8 +14568,9 @@ int screen_init_pantalla_and_others_and_realjoystick(void)
 	TODO: hacer que el init de sdl de video, tambien inicialice el joystick (en el caso que no usemos driver linux nativo)
 	*/
 
-	screen_init_pantalla_and_others();
-    realjoystick_reopen_driver();
+	//Ya no hace falta
+
+    //realjoystick_reopen_driver();
 }
 
 

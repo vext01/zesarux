@@ -1710,10 +1710,15 @@ int scrsdl_init (void) {
         screen_refresh_menu=1;
 
 
+        if (!realjoystick_is_linux_native()) {
+                
 
-	realjoystick_init=realjoystick_sdl_init;
-	realjoystick_main=realjoystick_sdl_main;
-	//realjoystick_hit=realjoystick_sdl_hit;        
+	        realjoystick_init=realjoystick_sdl_init;
+	        realjoystick_main=realjoystick_sdl_main;
+	        //realjoystick_hit=realjoystick_sdl_hit; 
+
+                realjoystick_initialize_joystick();  
+        }     
 
 
 
