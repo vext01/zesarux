@@ -947,6 +947,8 @@ void realjoystick_common_set_event(int button,int type,int value)
 			realjoystick_last_type=type;
 			realjoystick_last_value=value;
 			
+			realjoystick_last_index=-1; //de momento suponemos ningun evento
+			
 
 			//buscamos el evento
 			int index=-1;
