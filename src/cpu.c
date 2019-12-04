@@ -7737,7 +7737,7 @@ init_randomize_noise_value();
 	mid_reset_export_buffers();
 
 
-	realjoystick_initialize_joystick();
+	//realjoystick_initialize_joystick();
 	//realjoystick_start_driver();
 
 
