@@ -13653,7 +13653,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 
 				//realjoystick_ultimo_indice=-1;
-				menu_hardware_realjoystick_test_reset_last_values();
+				//menu_hardware_realjoystick_test_reset_last_values();
 
 				zxvision_draw_window_contents(&ventana);
 
