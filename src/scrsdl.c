@@ -1628,7 +1628,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
                         printf ("Enviar cambio estado boton %d : %d\n",i,valorboton);
                         realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,valorboton);
                         realjoystick_hit=1;
-                        realjoystick_last_raw_value=valorboton;
+                        menu_info_joystick_last_raw_value=valorboton;
                 }
 
                 sdl_states_joy_buttons[i]=valorboton;
@@ -1658,14 +1658,14 @@ A partir de entonces se verá continuo hasta que se pulse otro axis. Y vuelta a 
 
                 if (realjoystick_ultimo_axis==i) {
                         //printf ("guardar para test joystick axis boton %d valor %d\n",i,valoraxis);
-                        realjoystick_last_raw_value=valoraxis;   
+                        menu_info_joystick_last_raw_value=valoraxis;   
                 }
 
                 if (valorfinalaxis!=sdl_states_joy_axes[i]) {
                         printf ("Enviar cambio estado axis %d : %d\n",i,valorfinalaxis);
                         realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valorfinalaxis);
                         realjoystick_hit=1;
-                        realjoystick_last_raw_value=valoraxis;
+                        menu_info_joystick_last_raw_value=valoraxis;
                         realjoystick_ultimo_axis=i;
                 }
 
@@ -1724,7 +1724,7 @@ int scrsdl_init (void) {
         screen_refresh_menu=1;
 
 
-        if (!realjoystick_is_linux_native()) {
+        if (!realjoystick_is_linux_native() ) {
                 
 
 	        realjoystick_init=realjoystick_sdl_init;

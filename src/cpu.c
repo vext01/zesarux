@@ -6871,7 +6871,7 @@ int parse_cmdline_options(void) {
 
 
 			else if (!strcmp(argv[puntero_parametro],"--disablerealjoystick")) {
-				realjoystick_present.v=0;
+				//realjoystick_present.v=0;
 				realjoystick_disabled.v=1;
 			}
 
@@ -7739,6 +7739,8 @@ init_randomize_noise_value();
 
 	//realjoystick_initialize_joystick();
 	//realjoystick_start_driver();
+
+	//Inicializar joystick en caso de linux native
 	if (realjoystick_is_linux_native()) {
 		realjoystick_initialize_joystick();
 	}

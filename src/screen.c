@@ -14554,7 +14554,7 @@ int screen_init_pantalla_and_others(void)
 }
 
 
-int screen_init_pantalla_and_others_and_realjoystick(void)
+void screen_init_pantalla_and_others_and_realjoystick(void)
 {
 
 
