@@ -10,15 +10,7 @@
 
 
 
-
-
-
-Luego realmente se usa el valor no raw? Quizá en redefinición de Tecla?
-
 * Soporte joystick SDL2
-
-
-* Simulador de joystick deberia ser siempre accesible tanto si hay como si no soporte joystick 
 
 
 

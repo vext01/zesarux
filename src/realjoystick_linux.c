@@ -401,13 +401,6 @@ int realjoystick_linux_init(void)
 
 	
 
-	if (simulador_joystick==1) {
-		printf ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
-		        "WARNING: using joystick simulator. Don't enable it on production version. Use F7 key to simulate joystick event\n"
-			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-		sleep(4);
-		return 0;
-	}
 
 	printf("Initializing real joystick. Using native linux support. Using device %s\n",string_dev_joystick);
 
@@ -562,17 +555,15 @@ int realjoystick_linux_read_event(int *button,int *type,int *value)
 
 	realjoystick_hit=1;
 
-	if (simulador_joystick==1) {
-		read_simulador_joystick(ptr_realjoystick_linux, &e, sizeof(e));
-	}
 
-	else {
+
+	
 		int leidos=read(ptr_realjoystick_linux, &e, sizeof(e));
 		if (leidos<0) {
 			debug_printf (VERBOSE_ERR,"Error reading real joystick. Disabling it");
 			realjoystick_present.v=0;
 		}
-	}
+	
 
 	debug_printf (VERBOSE_DEBUG,"event: time: %d value: %d type: %d number: %d",e.time,e.value,e.type,e.number);
 
@@ -635,8 +626,6 @@ void realjoystick_linux_main(void)
 			menu_info_joystick_last_raw_value=value;
 
 			realjoystick_common_set_event(button,realjoystick_linux_event_to_common(type),value);
-
-			
 
 
 

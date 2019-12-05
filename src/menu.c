@@ -13554,7 +13554,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 	int y_ventana=menu_center_y()-alto_ventana/2; 	
 
 	zxvision_new_window(&ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,alto_ventana-2,"Joystick test");
+							ancho_ventana-1,alto_ventana-2,"Joystick Information");
 	zxvision_draw_window(&ventana);			
 
 

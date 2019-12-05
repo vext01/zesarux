@@ -7737,11 +7737,9 @@ init_randomize_noise_value();
 	mid_reset_export_buffers();
 
 
-	//realjoystick_initialize_joystick();
-	//realjoystick_start_driver();
 
-	//Inicializar joystick en caso de linux native
-	if (realjoystick_is_linux_native()) {
+	//Inicializar joystick en caso de linux native o simulador
+	if (realjoystick_is_linux_native() || simulador_joystick) {
 		realjoystick_initialize_joystick();
 	}
 

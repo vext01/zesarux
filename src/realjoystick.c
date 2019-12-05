@@ -319,22 +319,75 @@ void realjoystick_null_main(void)
 	printf ("realjoystick_null_main\n");
 
 
-	//Si tenemos simulador joystick
-	if (simulador_joystick) {
+
+	//El null al final le hacemos que desactive el joystick, para que no aparezca joystick en menu
+	//El tema es que se podria hacer cuando se llama a null_init, pero no se llama a realjoystick_null_init
+	//dado que el init del joystick lo tiene que hacer el driver de video (caso de sdl ejemplo), o el linux joystick nativo
+	//en caso del null no llama nadie al init
+	printf ("Disabling joystick support as we are using the default null driver\n");
+	realjoystick_present.v=0;
 
 
-	}
+}
 
-	else {
-		//Sin simulador joystick. no hacemos nada
+
+int realjoystick_simulador_init(void)
+{
+	printf ("realjoystick_simulador_init\n");
+
+
+
+		printf ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+		        "WARNING: using joystick simulator. Don't enable it on production version. Use F7 key to simulate joystick event\n"
+			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		sleep(4);
 	
 
-		//El null al final le hacemos que desactive el joystick, para que no aparezca joystick en menu
-		//El tema es que se podria hacer cuando se llama a null_init, pero no se llama a realjoystick_null_init
-		//dado que el init del joystick lo tiene que hacer el driver de video (caso de sdl ejemplo), o el linux joystick nativo
-		//en caso del null no llama nadie al init
-		printf ("Disabling joystick support as we are using the default null driver\n");
-		realjoystick_present.v=0;
+
+	strcpy(realjoystick_joy_name,"Joystick simulator");
+	realjoystick_total_axes=255;
+	realjoystick_total_buttons=255;
+	return 0;
+}
+
+
+void read_simulador_joystick(void)
+{
+
+	int value,type,button;
+
+	printf ("button number: ");
+	scanf ("%d",&button);
+
+        printf ("button type: (%d=button, %d=axis)",REALJOYSTICK_INPUT_EVENT_BUTTON,REALJOYSTICK_INPUT_EVENT_AXIS);
+        scanf ("%d",&type);
+
+        printf ("button value: ");
+        scanf ("%d",&value);
+
+
+
+
+	menu_info_joystick_last_raw_value=value;
+
+	realjoystick_common_set_event(button,type,value);
+
+	simulador_joystick_forzado=0;
+
+
+
+
+}
+
+
+//Null se encarga de driver de joystick cuando no hay joystick pero tambien de gestionar el simulador de joystick
+void realjoystick_simulador_main(void)
+{
+	if (realjoystick_present.v==0) return;
+	printf ("realjoystick_simulador_main\n");
+
+	if (simulador_joystick_forzado) {
+		read_simulador_joystick();
 	}
 
 }
@@ -347,32 +400,7 @@ int realjoystick_null_hit(void)
 */
 
 
-void read_simulador_joystick(int fd,struct js_event *e,int bytes)
-{
 
-	int value,type,number;
-
-	printf ("button number: ");
-	scanf ("%d",&number);
-
-        printf ("button type: (%d=button, %d=axis)",REALJOYSTICK_INPUT_EVENT_BUTTON,REALJOYSTICK_INPUT_EVENT_AXIS);
-        scanf ("%d",&type);
-
-        printf ("button value: ");
-        scanf ("%d",&value);
-
-	e->number=number;
-	e->type=type;
-	e->value=value;
-
-	simulador_joystick_forzado=0;
-
-	//para que no salte warning de no usado
-	fd++;
-	bytes++;
-
-
-}
 
 
 
@@ -1086,10 +1114,20 @@ void realjoystick_common_set_event(int button,int type,int value)
 void realjoystick_initialize_joystick(void)
 {
 
+
+
 	//Si viene desactivado por config, decir que no esta
 	if (realjoystick_disabled.v) realjoystick_present.v=0;
 
 	else {
+
+		//Si tenemos el simulador de joystick, decir que esta presente y usar funciones del simulador
+		if (simulador_joystick) {
+			realjoystick_init=realjoystick_simulador_init;
+			realjoystick_main=realjoystick_simulador_main;
+		}
+
+
 			if (realjoystick_init()) {
 				realjoystick_present.v=0;
 			}
