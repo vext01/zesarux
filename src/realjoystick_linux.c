@@ -345,9 +345,9 @@ EOF
 #include <unistd.h>
 #include <fcntl.h>
 
-#ifndef MINGW
+
 #include <sys/ioctl.h>
-#endif
+
 
 #include <stdlib.h>
 #include <errno.h>
@@ -379,17 +379,13 @@ int realjoystick_linux_hit(void)
 
 	if (realjoystick_present.v==0) return 0;
 
-#ifndef MINGW
+
 	struct timeval tv = { 0L, 0L };
 	fd_set fds;
 	FD_ZERO(&fds);
 	FD_SET(ptr_realjoystick_linux, &fds);
 	return select(ptr_realjoystick_linux+1, &fds, NULL, NULL, &tv);
-#else
-	//Para windows retornar siempre 0
-	//aunque aqui no llegara, solo para que no se queje el compilador
-	return 0;
-#endif
+
 }
 
 
@@ -404,13 +400,8 @@ int realjoystick_linux_init(void)
 
 	printf("Initializing real joystick. Using native linux support. Using device %s\n",string_dev_joystick);
 
-#ifndef USE_LINUXREALJOYSTICK
-	debug_printf(VERBOSE_INFO,"Linux real joystick support disabled on compilation");
-	return 1;
-#endif
 
 
-#ifndef MINGW
 	ptr_realjoystick_linux=open(string_dev_joystick,O_RDONLY|O_NONBLOCK);
 	if (ptr_realjoystick_linux==-1) {
 		debug_printf(VERBOSE_INFO,"Unable to open joystick %s : %s",string_dev_joystick,strerror(errno));
@@ -512,7 +503,7 @@ possible overrun should the name be too long.
 	realjoystick_present.v=1;
 
 	return 0;
-#endif
+
 
 }
 
@@ -597,10 +588,6 @@ int realjoystick_linux_read_event(int *button,int *type,int *value)
 	return 1;
 
 }
-
-
-
-
 
 
 

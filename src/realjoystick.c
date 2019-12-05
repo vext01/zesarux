@@ -354,6 +354,8 @@ int realjoystick_simulador_init(void)
 void read_simulador_joystick(void)
 {
 
+	realjoystick_hit=1;
+
 	int value,type,button;
 
 	printf ("button number: ");
@@ -391,15 +393,6 @@ void realjoystick_simulador_main(void)
 	}
 
 }
-
-/*
-int realjoystick_null_hit(void)
-{
-	return 0;
-}
-*/
-
-
 
 
 
@@ -542,24 +535,7 @@ void realjoystick_send_f_function(int accion)
       menu_button_f_function.v=1;
       menu_button_f_function_action=accion;
       menu_abierto=1;
-	  /*
 
-		//Entrada
-		//menu_espera_no_tecla();
-		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
-
-		//Procesar comandos F
-
-		//menu_button_f_function.v=1;
-      	//menu_button_f_function_index=F_FUNCION_QUICKSAVE;
-      	menu_abierto=1;
-		menu_process_f_functions_by_action(accion);
-
-		menu_muestra_pending_error_message(); //Si se genera un error derivado de funcion F
-		cls_menu_overlay();
-
-		menu_abierto=0;
-	*/
 }
 
 //si value=0, es reset
@@ -813,7 +789,7 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 	return 1;
 }
 
-//redefinir evento
+
 //redefinir evento
 //Devuelve 1 si ok
 //0 si salimos con ESC
@@ -885,22 +861,22 @@ int realjoystick_set_button_event(char *text_button, char *text_event)
 
 //--joystickevent but evt    Set a joystick button or axis to an event (changes joystick to event table)
 
-                                //obtener boton
-                                int button,button_type;
-                                realjoystick_get_button_string(text_button,&button,&button_type);
+				//obtener boton
+				int button,button_type;
+				realjoystick_get_button_string(text_button,&button,&button_type);
 
-                                //obtener evento
-                                int evento=realjoystick_get_event_string(text_event);
-                                if (evento==-1) {
+				//obtener evento
+				int evento=realjoystick_get_event_string(text_event);
+				if (evento==-1) {
 					debug_printf (VERBOSE_ERR,"Unknown event %s",text_event);
 					return 1;
-                                }
+				}
 
 
-                                //Y definir el evento
-                                realjoystick_events_array[evento].asignado.v=1;
-                                realjoystick_events_array[evento].button=button;
-                                realjoystick_events_array[evento].button_type=button_type;
+				//Y definir el evento
+				realjoystick_events_array[evento].asignado.v=1;
+				realjoystick_events_array[evento].button=button;
+				realjoystick_events_array[evento].button_type=button_type;
 
 	return 0;
 }
@@ -987,10 +963,7 @@ void realjoystick_common_set_event(int button,int type,int value)
 		if ( (type&REALJOYSTICK_INPUT_EVENT_INIT)!=REALJOYSTICK_INPUT_EVENT_INIT) {
 
 
-			/*if (button>20) {
-				printf ("!!!!!!!Boton %d\n",button);
-				sleep(5);
-			}*/
+	
 
 			menu_info_joystick_last_button=button;
 
@@ -1082,34 +1055,13 @@ void realjoystick_common_set_event(int button,int type,int value)
 
 		}
 
-	//}
+
 
 }
 
 
 
 
-/*void old_realjoystick_start_driver(void)
-{
-
-
-	//Si estamos en Linux , el driver de joystick es el nativo, a no ser que se especifique lo contrario
-#ifdef USE_LINUXREALJOYSTICK
-
-	if (no_native_linux_realjoystick.v==0) {
-		realjoystick_init=realjoystick_linux_init;
-		realjoystick_main=realjoystick_linux_main;
-		//realjoystick_hit=realjoystick_linux_hit;
-	}
-#endif	
-
-
-	if (realjoystick_present.v==1) {
-			if (realjoystick_init()) {
-				realjoystick_present.v=0;
-			}
-	}
-}*/
 
 void realjoystick_initialize_joystick(void)
 {
@@ -1146,11 +1098,3 @@ int realjoystick_is_linux_native(void)
 	return 0;
 }
 
-//Solo en caso si no es nativo, pues se reabre al cerrar driver video
-/*void old_realjoystick_reopen_driver(void)
-{
-	if (realjoystick_is_linux_native() ) return;
-
-
-	realjoystick_start_driver();
-}*/
