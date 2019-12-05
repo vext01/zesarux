@@ -10,14 +10,8 @@
 
 
 
-*Variables de último evento del test joystick renombrarlas para que se indique que son solo de ese test
 
 
-
-*Quizá en test joystick, sdl hará que last raw value se actualice al leer siempre que botón coincida con último last button leído
-Dicho valor de botón se sobreescribira si se pulsa otro botón
-El funcionamiento será que se verá actualizado continuamente en test joystick cuando pase el umbral de calibrado. 
-A partir de entonces se verá continuo hasta que se pulse otro botón. Y vuelta a empezar 
 
 Luego realmente se usa el valor no raw? Quizá en redefinición de Tecla?
 

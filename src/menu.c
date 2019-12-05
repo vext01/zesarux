@@ -13755,10 +13755,10 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
 
 
-		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_test,NULL,"~~Test joystick");
-		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'t');
-		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Test joystick buttons");
-		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Test joystick buttons");
+		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_test,NULL,"Joystick ~~information");
+		menu_add_item_menu_shortcut(array_menu_hardware_realjoystick,'i');
+		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Joystick information");
+		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Joystick information and test tool");
 
 		if (!realjoystick_is_linux_native() ) {
 			menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);
