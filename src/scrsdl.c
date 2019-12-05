@@ -73,7 +73,7 @@ int scrsdl_crea_ventana(void)
         flags=SDL_SWSURFACE | SDL_RESIZABLE;
 
         if (ventana_fullscreen) {
-		flags |=SDL_FULLSCREEN;
+		flags |=SDL_FULLSCREEN; 
 	}
 
         int ancho=screen_get_window_size_width_zoom_border_en();
