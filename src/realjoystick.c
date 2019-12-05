@@ -312,17 +312,30 @@ int realjoystick_null_init(void)
 	return 1;
 }
 
+//Null se encarga de driver de joystick cuando no hay joystick pero tambien de gestionar el simulador de joystick
 void realjoystick_null_main(void)
 {
 	if (realjoystick_present.v==0) return;
 	printf ("realjoystick_null_main\n");
 
-	//Caso especial. El null al final le hacemos que desactive el joystick, para que no aparezca joystick en menu
-	//El tema es que se podria hacer cuando se llama a null_init, pero no se llama a realjoystick_null_init
-	//dado que el init del joystick lo tiene que hacer el driver de video (caso de sdl ejemplo), o el linux joystick nativo
-	//en caso del null no llama nadie al init
-	printf ("Disabling joystick support as we are using the default null driver\n");
-	realjoystick_present.v=0;
+
+	//Si tenemos simulador joystick
+	if (simulador_joystick) {
+
+
+	}
+
+	else {
+		//Sin simulador joystick. no hacemos nada
+	
+
+		//El null al final le hacemos que desactive el joystick, para que no aparezca joystick en menu
+		//El tema es que se podria hacer cuando se llama a null_init, pero no se llama a realjoystick_null_init
+		//dado que el init del joystick lo tiene que hacer el driver de video (caso de sdl ejemplo), o el linux joystick nativo
+		//en caso del null no llama nadie al init
+		printf ("Disabling joystick support as we are using the default null driver\n");
+		realjoystick_present.v=0;
+	}
 
 }
 
