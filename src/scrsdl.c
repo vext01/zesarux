@@ -1732,7 +1732,6 @@ int scrsdl_init (void) {
 
 	        realjoystick_init=realjoystick_sdl_init;
 	        realjoystick_main=realjoystick_sdl_main;
-	        //realjoystick_hit=realjoystick_sdl_hit; 
 
                 realjoystick_initialize_joystick();  
         }     
