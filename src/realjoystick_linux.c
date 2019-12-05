@@ -360,6 +360,7 @@ EOF
 #include "debug.h"
 #include "joystick.h"
 #include "compileoptions.h"
+#include "menu.h"
 
 
 
