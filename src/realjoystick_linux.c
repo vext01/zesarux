@@ -449,6 +449,8 @@ int realjoystick_linux_init(void)
 	realjoystick_total_buttons=number_of_buttons;
 
 
+	strcpy(realjoystick_driver_name,"Linux Native");
+
 
 /*
 4. IOCTLs

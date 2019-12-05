@@ -93,6 +93,7 @@ int realjoystick_hit=0;
 int realjoystick_total_buttons=0;
 int realjoystick_total_axes=0;
 char realjoystick_joy_name[REALJOYSTICK_MAX_NAME+1]=""; //+1 por si acaso no me acuerdo del 0 final...
+char realjoystick_driver_name[REALJOYSTICK_MAX_DRIVER_NAME+1]="";
 
 
 //Parametro de "autocalibrado". Valores de axis entre -VALOR y +VALOR, se consideran 0
@@ -347,6 +348,7 @@ int realjoystick_simulador_init(void)
 	strcpy(realjoystick_joy_name,"Joystick simulator");
 	realjoystick_total_axes=255;
 	realjoystick_total_buttons=255;
+	strcpy(realjoystick_driver_name,"Simulator");
 	return 0;
 }
 

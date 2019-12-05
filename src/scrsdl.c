@@ -1563,7 +1563,7 @@ int realjoystick_sdl_init(void)
 	realjoystick_total_axes=sdl_num_axes;
 	realjoystick_total_buttons=sdl_num_buttons;
 
-
+        strcpy(realjoystick_driver_name,"SDL");
 
 
 

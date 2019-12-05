@@ -195,5 +195,9 @@ extern int realjoystick_total_axes;
 
 extern char realjoystick_joy_name[];
 
+#define REALJOYSTICK_MAX_DRIVER_NAME 40
+
+extern char realjoystick_driver_name[];
+
 
 #endif
