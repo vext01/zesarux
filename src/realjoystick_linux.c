@@ -598,11 +598,11 @@ int realjoystick_linux_read_event(int *button,int *type,int *value)
 void realjoystick_linux_main(void)
 {
 
-	printf ("on realjoystick_linux_main\n");
+	//printf ("on realjoystick_linux_main\n");
 
 	if (realjoystick_present.v==0) return;
 
-	printf ("on realjoystick_linux_main. joystick is present\n");
+	//printf ("on realjoystick_linux_main. joystick is present\n");
 
 
 	int button,type,value;
