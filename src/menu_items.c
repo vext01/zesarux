@@ -3825,7 +3825,7 @@ void menu_audio_draw_sound_wave(void)
 
 	//workaround_pentagon_clear_putpixel_cache();
 
-				char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
+	char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
@@ -3865,7 +3865,7 @@ void menu_audio_draw_sound_wave(void)
 
 
 	int ancho;
-	//ancho=(SOUND_WAVE_ANCHO-2);
+	
 
 	//Ancho de zona waveform variable segun el tamanyo de ventana
 	ancho=menu_audio_draw_sound_wave_window->visible_width-2;
@@ -3882,15 +3882,13 @@ void menu_audio_draw_sound_wave(void)
 	//Por si acaso, no vayamos a provocar alguna division por cero
 	if (alto<1) alto=1;
 
-	//int xorigen=(SOUND_WAVE_X+1);
-	//int yorigen=(SOUND_WAVE_Y+4);
+
 
 	int xorigen=1;
 	int yorigen;
 
-	//yorigen=lineas_cabecera+alto/2;
 
-	//if (yorigen<lineas_cabecera) yorigen=lineas_cabecera;
+
 	yorigen=lineas_cabecera;
 
 
@@ -3902,7 +3900,7 @@ void menu_audio_draw_sound_wave(void)
 	}
 
 
-	//int ycentro=yorigen+alto/2;
+
 	menu_audio_draw_sound_wave_ycentro=yorigen+alto/2;
 
 	int x,y,lasty;
@@ -3913,11 +3911,7 @@ void menu_audio_draw_sound_wave(void)
 	if (!si_complete_video_driver() ) {
 	        for (x=xorigen;x<xorigen+ancho;x++) {
         	        for (y=yorigen;y<yorigen+alto;y++) {
-				//putchar_menu_overlay(x,y,' ',0,7);
-				//putchar_menu_overlay(x,y,' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-				//putchar_menu_overlay(x,y,' ',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
-
-				zxvision_print_char_simple(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
+						zxvision_print_char_simple(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
 	                }
         	}
 	}
@@ -3937,10 +3931,10 @@ void menu_audio_draw_sound_wave(void)
 
 	int audiomedio=audiostats.medio;
 	menu_audio_draw_sound_wave_valor_medio=audiomedio;
-        audiomedio=audiomedio*alto/256;
+	audiomedio=audiomedio*alto/256;
 
-        //Lo situamos en el centro. Negativo hacia abajo (Y positiva)
-        audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
+	//Lo situamos en el centro. Negativo hacia abajo (Y positiva)
+	audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
 
 	int puntero_audio=0;
 	char valor_audio;
@@ -4030,7 +4024,7 @@ void menu_audio_draw_sound_wave(void)
                                                                 //"Volume C: %s"
 
 	sprintf (buffer_texto_medio,"Volume: %3d %s",menu_audio_draw_sound_wave_volumen,texto_volumen);
-	//menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
+
 	zxvision_print_string_defaults_fillspc(menu_audio_draw_sound_wave_window,1,2,buffer_texto_medio);
 
 
@@ -4076,39 +4070,39 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	menu_audio_draw_sound_wave_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 	menu_item *array_menu_audio_new_waveform;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+	menu_item item_seleccionado;
+	int retorno_menu;
+	do {
 
 
 		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] Wave ~~Shape",
 				(menu_sound_wave_llena ? "Fill" : "Line") );
-        menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
+		menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
 
-        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
-        //menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
-        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
+		//Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+		//menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
+		menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
 						
 		menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
 
 
 		//Nombre de ventana solo aparece en el caso de stdout
-    	retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
+		retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
 
 
 		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 		cls_menu_overlay();
-        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-        	//llamamos por valor de funcion
-            if (item_seleccionado.menu_funcion!=NULL) {
-                //printf ("actuamos por funcion\n");
-                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
-                
-            }
-        }
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+			//llamamos por valor de funcion
+			if (item_seleccionado.menu_funcion!=NULL) {
+				//printf ("actuamos por funcion\n");
+				item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+				
+			}
+		}
 
-    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 	//restauramos modo normal de texto de menu
