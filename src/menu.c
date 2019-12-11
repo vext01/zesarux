@@ -24508,6 +24508,11 @@ void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
 	screen_bw_no_multitask_menu.v ^=1;
 }*/
 
+void menu_interface_force_confirm_yes(MENU_ITEM_PARAMETERS)
+{
+	force_confirm_yes.v ^=1;
+}
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -24565,8 +24570,13 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
-                menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
-                menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_confirm_yes,NULL,"[%c] Force confirm yes",(force_confirm_yes.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
+
 
 		int fps;
 		int divisor=frameskip+1;
