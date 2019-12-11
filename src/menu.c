@@ -30026,10 +30026,10 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                 char *opciones[]={
 					"PZX to TAP",
                         "PZX to RWA",
-			"PZX to WAV",
+						"PZX to WAV",
                         NULL};
 
-                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+        int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
 		if (opcion<0) {
 			//Salido con ESC
 			return;
@@ -30049,6 +30049,27 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                                 sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
                                 convert_any_to_wav(fullpath,archivo_destino);
                         break;
+ 
+                }
+        }		
+
+
+		else if (!util_compare_file_extension(archivo,"scr")) {
+                char *opciones[]={
+					"SCR to TAP",
+                        NULL};
+
+        int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
+								convert_scr_to_tap(fullpath,archivo_destino,archivo_destino);
+                        break;
+
  
                 }
         }		

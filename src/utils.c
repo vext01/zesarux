@@ -8857,6 +8857,121 @@ int convert_hdf_to_raw(char *origen, char *destino)
 }
 
 
+
+int convert_scr_to_tap(char *origen, char *destino)
+{
+
+	int leidos;
+
+        int tamanyo_origen=get_file_size(origen);
+
+        if (tamanyo_origen<0) {
+                debug_printf (VERBOSE_ERR,"Error getting size for %s",origen);
+                return 1;
+        }                
+        
+        z80_byte *buffer_lectura;
+        buffer_lectura=malloc(tamanyo_origen);
+
+        if (buffer_lectura==NULL) cpu_panic("Cannot allocate memory for file read");
+
+
+
+
+
+	//unsigned char buffer_lectura[1024];
+
+        FILE *ptr_inputfile;
+        ptr_inputfile=fopen(origen,"rb");
+
+        if (ptr_inputfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error opening %s",origen);
+                return 1;
+        }
+
+
+        leidos=fread(buffer_lectura,1,tamanyo_origen,ptr_inputfile);
+
+        if (tamanyo_origen!=leidos) {
+              debug_printf (VERBOSE_ERR,"Error reading %s",origen);
+                return 1;  
+        }
+
+
+        fclose (ptr_inputfile);
+
+
+
+	FILE *ptr_outputfile;
+	ptr_outputfile=fopen(destino,"wb");
+
+        if (ptr_outputfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error opening %s",destino);
+                return 1;
+        }
+
+        //Metemos bloque cabecera
+        //Primero indicar longitud bloque que viene
+        z80_byte buf_tap_cab[2];
+        buf_tap_cab[0]=19;
+        buf_tap_cab[1]=0;
+
+        //Escribir esto
+        fwrite(buf_tap_cab,1,2,ptr_outputfile);
+
+        //Cabecera spectrum
+        z80_byte bloque_cabecera[19]={
+                0, //flag 0,
+                3, //bloque bytes,
+                'S','C','R','E','E','N',' ',' ',' ',' ', //nombre
+                //'1','2','3','4','5','6','7','8','9','0', //temp
+                0x00,0x1b, //longitud 6912
+                0x00,0x40, //inicio 16384
+                0x00,0x80, //unused
+                00  //checksum. meter despues
+        };
+
+        z80_byte crc=get_memory_checksum_spectrum(0,bloque_cabecera,18);
+
+        bloque_cabecera[18]=crc;
+
+        //Escribir esto
+        fwrite(bloque_cabecera,1,19,ptr_outputfile);
+
+
+	//Escribir bloque de datos propiamente
+
+        //indicar longitud bloque que viene. 6912+2  (+2 del flag y crc)
+        buf_tap_cab[0]=0x02;
+        buf_tap_cab[1]=0x1b;
+
+        //Escribir esto
+        fwrite(buf_tap_cab,1,2,ptr_outputfile);
+
+        //flag 255
+        z80_byte byte_flag=255;
+        //Escribir esto
+        fwrite(&byte_flag,1,1,ptr_outputfile);      
+
+        //Los datos propiamente
+        fwrite(buffer_lectura,1,6912,ptr_outputfile);
+
+        //Y meter crc. Calculamos. Tenemos que byte inicial es el de flag
+        crc=get_memory_checksum_spectrum(byte_flag,buffer_lectura,6912);
+ 
+        //Escribir esto
+        fwrite(&crc,1,1,ptr_outputfile);           
+	
+
+        fclose(ptr_outputfile);
+
+        free(buffer_lectura);
+
+
+        return 0;
+}
+
+
 //Crea carpeta temporal y asigna nombre para archivo temporal rwa
 void convert_to_rwa_common_tmp(char *origen, char *destino)
 {
@@ -16864,4 +16979,20 @@ char util_return_valid_ascii_char(char c)
 {
         if (c>=32 && c<=126) return c;
         else return '?';
+}
+
+
+//Retorna checksum de bloque igual que hace spectrum. Podemos indicar valor inicial distinto de 0 para empezar a calcular ya 
+//con byte de flag calculado
+z80_byte get_memory_checksum_spectrum(z80_byte crc,z80_byte *origen,int longitud)
+{
+        //z80_byte crc=0;
+
+        while (longitud>0) {
+                crc ^=*origen;
+                origen++;
+                longitud--;
+        }
+
+        return crc;
 }

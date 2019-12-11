@@ -33,6 +33,7 @@ Added ZRCP commands:
 -write-port: write value to a port
 
 Added internal zip decompressor: no more need to use external unzip program
+Added scr to tap file converter
 Added setting to reset configuration file to default values
 Added setting to choose cpu type
 
