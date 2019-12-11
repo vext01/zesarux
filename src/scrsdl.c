@@ -1599,11 +1599,11 @@ int realjoystick_ultimo_axis=-1;
 
 void realjoystick_sdl_main(void)
 {
-        printf ("calling joy sdl main\n");
+        //printf ("calling joy sdl main\n");
 
         if (realjoystick_present.v==0) return;
 
-        printf ("calling joy sdl main. joy is present\n");
+        //printf ("calling joy sdl main. joy is present\n");
 
 /*
 #define SDL_JOY_MAX_BOTONS 128
