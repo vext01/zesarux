@@ -3799,7 +3799,9 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 #define SOUND_WAVE_ANCHO 30
 #define SOUND_WAVE_ALTO 15
 
-int menu_sound_wave_llena=1;
+
+//Tipo soundwave: 0=vacia, 1=llena, 2=scroll
+int menu_sound_wave_llena=0;
 int menu_audio_draw_sound_wave_ycentro;
 
 char menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_max,menu_audio_draw_sound_wave_valor_min;
@@ -3814,7 +3816,15 @@ int menu_waveform_valor_contador_segundo_anterior;
 
 int menu_waveform_previous_volume=0;
 
+//#define MAX_ALTO_WAVEFORM_PIXEL_ARRAY 512
+//#define MAX_ANCHO_WAVEFORM_PIXEL_ARRAY 1024
 
+//temp
+#define MAX_ALTO_WAVEFORM_PIXEL_ARRAY 512
+#define MAX_ANCHO_WAVEFORM_PIXEL_ARRAY 1024
+
+
+int *menu_waveform_pixel_array=NULL;
 
 zxvision_window *menu_audio_draw_sound_wave_window;
 
@@ -3827,6 +3837,23 @@ void menu_audio_draw_sound_wave(void)
 	char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+
+	//Inicializar array waveform
+	if (menu_waveform_pixel_array==NULL) {
+		menu_waveform_pixel_array=malloc(sizeof(int)*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY*MAX_ALTO_WAVEFORM_PIXEL_ARRAY);
+		if (menu_waveform_pixel_array==NULL) cpu_panic("Cannot allocate memory for waveform");
+
+		//Establecer array a 0
+		int total;
+		total=MAX_ANCHO_WAVEFORM_PIXEL_ARRAY*MAX_ALTO_WAVEFORM_PIXEL_ARRAY;
+		 
+		int i;
+		for (i=0;i<total;i++) menu_waveform_pixel_array[i]=ESTILO_GUI_PAPEL_NORMAL;
+	}
+
+
+
 
 	//esto hara ejecutar esto 2 veces por segundo
 	if ( ((contador_segundo%500) == 0 && menu_waveform_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
@@ -3934,8 +3961,45 @@ void menu_audio_draw_sound_wave(void)
 	//Lo situamos en el centro. Negativo hacia abajo (Y positiva)
 	audiomedio=menu_audio_draw_sound_wave_ycentro-audiomedio;
 
+
+
+	//Scroll izquierda de array waveform
+	if (menu_sound_wave_llena==2) {
+		int scroll_x,scroll_y;
+		for (scroll_y=0;scroll_y<MAX_ALTO_WAVEFORM_PIXEL_ARRAY;scroll_y++) {
+			for (scroll_x=0;scroll_x<MAX_ANCHO_WAVEFORM_PIXEL_ARRAY-1;scroll_x++) {
+
+				int offset_dest=scroll_y*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+scroll_x;
+				int offset_orig=offset_dest+1;
+				menu_waveform_pixel_array[offset_dest]=menu_waveform_pixel_array[offset_orig];
+			}
+			//Llenar el ultimo en blanco
+			int offset_dest=scroll_y*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+scroll_x;
+			menu_waveform_pixel_array[offset_dest]=ESTILO_GUI_PAPEL_NORMAL;
+		}
+	
+
+	
+		//Meter valor para array waveform, siempre que no salga de rango
+		int ydestino=(menu_audio_draw_sound_wave_valor_medio*alto)/256;
+		//ydestino=menu_audio_draw_sound_wave_ycentro-ydestino;
+		//ydestino=alto/2-ydestino;
+
+		ydestino=alto/2-audiostats.medio*alto/256;
+		//printf ("y destino: %d\n",ydestino);
+		if (ydestino>=0 && ydestino<MAX_ALTO_WAVEFORM_PIXEL_ARRAY && ancho>=0 && ancho<MAX_ANCHO_WAVEFORM_PIXEL_ARRAY) {
+			int offset_destino=ydestino*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+ancho-1;
+			menu_waveform_pixel_array[offset_destino]=ESTILO_GUI_COLOR_WAVEFORM;
+		}
+	}
+
+
 	int puntero_audio=0;
 	char valor_audio;
+
+
+	if (menu_sound_wave_llena<2) {
+
 	for (x=xorigen;x<xorigen+ancho;x++) {
 
 		//Obtenemos valor medio de audio
@@ -3967,8 +4031,6 @@ void menu_audio_draw_sound_wave(void)
 		valor_medio=valor_medio/max_valores;
 
 
-		//temp
-		//valor_medio=menu_audio_draw_sound_wave_valor_medio;
 
 
 
@@ -3976,14 +4038,14 @@ void menu_audio_draw_sound_wave(void)
 
 		//Lo escalamos a maximo alto
 
-		y=valor_audio;
+		//y=valor_audio;
 		y=valor_audio*alto/256;
 
 		//Lo situamos en el centro. Negativo hacia abajo (Y positiva)
 		y=menu_audio_draw_sound_wave_ycentro-y;
 
 
-		//unimos valor anterior con actual con una linea vertical
+		//unimos valor anterior con actual con una linea vertical	
 		if (x!=xorigen) {
 			if (si_complete_video_driver() ) {
 
@@ -4011,10 +4073,38 @@ void menu_audio_draw_sound_wave(void)
 		else {
 			//putchar_menu_overlay(SOUND_WAVE_X+x,SOUND_WAVE_Y+y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
 			zxvision_print_char_simple(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
-		}
-
+		}		
 
 	}
+
+	}
+
+
+	//Dibujar todo array de waveform en pantalla
+	//Scroll izquierda de array waveform
+
+	if (menu_sound_wave_llena==2) {
+
+		for (y=0;y<alto;y++) {
+			for (x=0;x<ancho;x++) {
+
+				//Y siempre que estemos en rango
+				if (x<MAX_ANCHO_WAVEFORM_PIXEL_ARRAY && y<MAX_ALTO_WAVEFORM_PIXEL_ARRAY) {
+
+					int offset_destino=y*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+x;
+					int valor=menu_waveform_pixel_array[offset_destino];
+					zxvision_putpixel(menu_audio_draw_sound_wave_window,x+xorigen,y+yorigen,valor);
+				}
+				else {
+					//Si no, rellenar con color distinto. Rojo para avisar
+					zxvision_putpixel(menu_audio_draw_sound_wave_window,x+xorigen,y+yorigen,ESTILO_GUI_TINTA_NO_DISPONIBLE);
+				}
+				
+			}
+		}
+	}
+
+
 
 	//printf ("%d ",puntero_audio);
 
@@ -4041,7 +4131,13 @@ void menu_audio_draw_sound_wave(void)
 
 void menu_audio_new_waveform_shape(MENU_ITEM_PARAMETERS)
 {
-	menu_sound_wave_llena ^=1;
+	//menu_sound_wave_llena ^=1;
+
+	menu_sound_wave_llena++;
+	if (menu_sound_wave_llena==3) menu_sound_wave_llena=0;
+
+	//Modo scroll no se permite si no hay video driver completo
+	if (!si_complete_video_driver() && menu_sound_wave_llena==2) menu_sound_wave_llena=0;
 }
 
 
@@ -4078,9 +4174,11 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
 	do {
 
+		char *tipos_soundwave[3]={"Line","Fill","Scroll"};
 
-		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] Wave ~~Shape",
-				(menu_sound_wave_llena ? "Fill" : "Line") );
+		//Agrego dos espacios al final para borrar restos de "Scroll" pues ocupa 2 caracteres mas que "Line" y "Fill"
+		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] Wave ~~Shape  ",
+				(tipos_soundwave[menu_sound_wave_llena]) );
 		menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
 
 		//Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay

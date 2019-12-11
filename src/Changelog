@@ -64,6 +64,7 @@ Improved accesibility:
 
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
+Improved Waveform: new scroll type
 Improved file selector: when asking for a directory, only shows directories, not files
 Improved curses driver: symbol @ simulates ESC on menu
 Improved snapshot loading: now setting "--sna-no-change-machine" becomes "--snap-no-change-machine" and applies to .sna and .z80
