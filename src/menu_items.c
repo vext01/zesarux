@@ -3987,6 +3987,8 @@ void menu_audio_draw_sound_wave(void)
 
 		ydestino=alto/2-audiostats.medio*alto/256;
 		//printf ("y destino: %d\n",ydestino);
+
+		//Siempre que estemos en el rango
 		if (ydestino>=0 && ydestino<MAX_ALTO_WAVEFORM_PIXEL_ARRAY && ancho>=0 && ancho<MAX_ANCHO_WAVEFORM_PIXEL_ARRAY) {
 			int offset_destino=ydestino*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+ancho-1;
 			menu_waveform_pixel_array[offset_destino]=ESTILO_GUI_COLOR_WAVEFORM;
@@ -4000,82 +4002,82 @@ void menu_audio_draw_sound_wave(void)
 
 	if (menu_sound_wave_llena<2) {
 
-	for (x=xorigen;x<xorigen+ancho;x++) {
+		for (x=xorigen;x<xorigen+ancho;x++) {
 
-		//Obtenemos valor medio de audio
-		int valor_medio=0;
+			//Obtenemos valor medio de audio
+			int valor_medio=0;
 
-		//Calcular cuantos valores representa un pixel, teniendo en cuenta maximo buffer
-		const int max_valores=AUDIO_BUFFER_SIZE/ancho;
+			//Calcular cuantos valores representa un pixel, teniendo en cuenta maximo buffer
+			const int max_valores=AUDIO_BUFFER_SIZE/ancho;
 
-		int valores=max_valores;
-		for (;valores>0;valores--,puntero_audio++) {
-			if (puntero_audio>=AUDIO_BUFFER_SIZE) {
-				//por si el calculo no es correcto, salir.
-				//esto no deberia suceder ya que el calculo de max_valores se hace en base al maximo
-				cpu_panic("menu_audio_draw_sound_wave: pointer beyond AUDIO_BUFFER_SIZE");
+			int valores=max_valores;
+			for (;valores>0;valores--,puntero_audio++) {
+				if (puntero_audio>=AUDIO_BUFFER_SIZE) {
+					//por si el calculo no es correcto, salir.
+					//esto no deberia suceder ya que el calculo de max_valores se hace en base al maximo
+					cpu_panic("menu_audio_draw_sound_wave: pointer beyond AUDIO_BUFFER_SIZE");
+				}
+
+				//stereo 
+				//if (audio_driver_accepts_stereo.v) {
+					int suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
+					suma_canales /=2;
+					valor_medio=valor_medio+suma_canales;
+				//}
+
+				//else valor_medio=valor_medio+audio_buffer[puntero_audio];
+
+
 			}
 
-			//stereo 
-			//if (audio_driver_accepts_stereo.v) {
-				int suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
-				suma_canales /=2;
-				valor_medio=valor_medio+suma_canales;
-			//}
-
-			//else valor_medio=valor_medio+audio_buffer[puntero_audio];
-
-
-		}
-
-		valor_medio=valor_medio/max_valores;
+			valor_medio=valor_medio/max_valores;
 
 
 
 
 
-		valor_audio=valor_medio;
+			valor_audio=valor_medio;
 
-		//Lo escalamos a maximo alto
+			//Lo escalamos a maximo alto
 
-		//y=valor_audio;
-		y=valor_audio*alto/256;
+			//y=valor_audio;
+			y=valor_audio*alto/256;
 
-		//Lo situamos en el centro. Negativo hacia abajo (Y positiva)
-		y=menu_audio_draw_sound_wave_ycentro-y;
+			//Lo situamos en el centro. Negativo hacia abajo (Y positiva)
+			y=menu_audio_draw_sound_wave_ycentro-y;
 
 
-		//unimos valor anterior con actual con una linea vertical	
-		if (x!=xorigen) {
+			//unimos valor anterior con actual con una linea vertical	
+			if (x!=xorigen) {
+				if (si_complete_video_driver() ) {
+
+					//Onda no llena
+					if (!menu_sound_wave_llena) menu_linea_zxvision(menu_audio_draw_sound_wave_window,x,lasty,y,ESTILO_GUI_COLOR_WAVEFORM);
+
+						//dibujar la onda "llena", es decir, siempre contar desde centro
+						//el centro de la y de la onda es variable... se saca valor medio de todos los valores mostrados en pantalla
+
+					//Onda llena
+					else menu_linea_zxvision(menu_audio_draw_sound_wave_window,x,audiomedio,y,ESTILO_GUI_COLOR_WAVEFORM);
+
+
+
+				}
+			}
+
+			lasty=y;
+
+			//dibujamos valor actual
 			if (si_complete_video_driver() ) {
-
-				//Onda no llena
-				if (!menu_sound_wave_llena) menu_linea_zxvision(menu_audio_draw_sound_wave_window,x,lasty,y,ESTILO_GUI_COLOR_WAVEFORM);
-
-        			//dibujar la onda "llena", es decir, siempre contar desde centro
-			        //el centro de la y de la onda es variable... se saca valor medio de todos los valores mostrados en pantalla
-
-				//Onda llena
-				else menu_linea_zxvision(menu_audio_draw_sound_wave_window,x,audiomedio,y,ESTILO_GUI_COLOR_WAVEFORM);
-
-
-
+				zxvision_putpixel(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_COLOR_WAVEFORM);
 			}
+
+			else {
+				//putchar_menu_overlay(SOUND_WAVE_X+x,SOUND_WAVE_Y+y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
+				zxvision_print_char_simple(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
+			}		
+
 		}
-
-		lasty=y;
-
-		//dibujamos valor actual
-		if (si_complete_video_driver() ) {
-			zxvision_putpixel(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_COLOR_WAVEFORM);
-		}
-
-		else {
-			//putchar_menu_overlay(SOUND_WAVE_X+x,SOUND_WAVE_Y+y,'#',ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL);
-			zxvision_print_char_simple(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
-		}		
-
-	}
 
 	}
 
