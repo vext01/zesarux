@@ -3966,8 +3966,18 @@ void menu_audio_draw_sound_wave(void)
 	//Scroll izquierda de array waveform
 	if (menu_sound_wave_llena==2) {
 		int scroll_x,scroll_y;
-		for (scroll_y=0;scroll_y<MAX_ALTO_WAVEFORM_PIXEL_ARRAY;scroll_y++) {
-			for (scroll_x=0;scroll_x<MAX_ANCHO_WAVEFORM_PIXEL_ARRAY-1;scroll_x++) {
+
+		int max_x=MAX_ANCHO_WAVEFORM_PIXEL_ARRAY;
+		int max_y=MAX_ALTO_WAVEFORM_PIXEL_ARRAY;
+
+		//Solo hacemos scroll de lo que se vera
+		if (ancho<max_x) max_x=ancho;
+		if (alto<max_y) max_y=alto;
+
+		//printf ("max scroll %d %d\n",max_x,max_y);
+
+		for (scroll_y=0;scroll_y<max_y;scroll_y++) {
+			for (scroll_x=0;scroll_x<max_x-1;scroll_x++) {
 
 				int offset_dest=scroll_y*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+scroll_x;
 				int offset_orig=offset_dest+1;
