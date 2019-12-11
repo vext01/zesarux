@@ -710,8 +710,14 @@ int menu_first_aid_startup=0;
 
 int menu_first_aid_must_show_startup=0;
 
+
+
+
 //El texto a disparar al startup
 char *string_config_key_aid_startup;
+
+
+int realjoystick_detected_startup=0;
 
 
 //Si se refresca en color gris cuando menu abierto y multitask es off
@@ -13650,7 +13656,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			sprintf (buffer_texto_medio,"Driver: %s",realjoystick_driver_name);
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_texto_medio);	
 
-			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Joystick name:");	
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Name:");	
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,realjoystick_joy_name);	
 
 			sprintf (buffer_texto_medio,"Total buttons: %d",realjoystick_total_buttons);
@@ -13736,6 +13742,14 @@ void menu_hardware_realjoystick_autocalibrate(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_hardware_realjoystick_set_defaults(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno_texto("Set to defaults","Sure?")==1) {
+        realjoystick_new_set_default_functions();
+		menu_generic_message("Set to defaults","OK. Events and keys tables set to default values");
+    }
+}
+
 
 void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 {
@@ -13774,10 +13788,17 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 
 
 		menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_set_defaults,NULL,"Set events&keys to default");
+		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Reset events & keys table to default values");
+		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Reset events & keys table to default values");
+
+
+		menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 		//menu_add_item_menu(array_menu_hardware_realjoystick,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_hardware_realjoystick);
 
-		retorno_menu=menu_dibuja_menu(&hardware_realjoystick_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick,"Real joystick emulation" );
+		retorno_menu=menu_dibuja_menu(&hardware_realjoystick_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick,"Real joystick support" );
 
 			
 
@@ -17150,7 +17171,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 	if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_SAM) {
 	
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_realjoystick,menu_hardware_realjoystick_cond,"~~Real joystick emulation");
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_realjoystick,menu_hardware_realjoystick_cond,"~~Real joystick support");
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'r');
 			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Settings for the real joystick");
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Settings for the real joystick");
@@ -28917,6 +28938,12 @@ void menu_inicio(void)
 		//No mostrara nada mas que esto y luego volvera del menu
 	}	
 
+    //Si detectado joystick real y
+    if (realjoystick_detected_startup) {
+        realjoystick_detected_startup=0;          
+        menu_first_aid_title("realjoystick_detected","Joystick detected");
+    }
+
 
 	if (menu_button_osdkeyboard.v) {
 		//menu_espera_no_tecla();
@@ -29494,6 +29521,17 @@ void reset_splash_text(void)
 			//Para que aparezca el mensaje del dia, tiene que estar habilitado el setting de welcome message
 			//Si no, no llegara aqui nunca
 			if (menu_first_aid_startup) menu_first_aid_random_startup();
+
+
+			//Si detectado real joystick
+			//Si detectado joystick real y si hay autoguardado de config
+			if (save_configuration_file_on_exit.v) {
+					if (realjoystick_present.v) {
+							menu_set_menu_abierto(1);
+							//printf ("decir menu abierto\n");
+							realjoystick_detected_startup=1;
+					}
+			}			
 		}
 
 		else {
@@ -30067,11 +30105,11 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                 switch (opcion) {
                         case 0:
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
-								convert_scr_to_tap(fullpath,archivo_destino,archivo_destino);
+								convert_scr_to_tap(fullpath,archivo_destino);
                         break;
 
  
-                }
+                } 
         }		
 
 
@@ -30083,7 +30121,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
 		if (opcion<0) {
-			//Salido con ESC
+			//Salido con ESC 
 			return;
 		}				
                 switch (opcion) {
@@ -31291,6 +31329,11 @@ char *first_aid_string_spaceexpand="Do you know you can navigate inside files, l
 	"Use the fileselector and press space over that kind of file.\n"
 	"Remember to change fileselector filter to show all contents";
 
+
+int first_aid_no_realjoystick_detected=0;
+char *first_aid_string_realjoystick_detected="A real joystick has been detected\n"
+							"You can go to menu Settings->Hardware->Real joystick support and set your buttons configuration";	
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
@@ -31301,6 +31344,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("smartload",&first_aid_no_smartload,first_aid_string_smartload,0);
 	menu_first_aid_add("initial_menu",&first_aid_no_initial_menu,first_aid_string_initial_menu,0);
 	menu_first_aid_add("no_ssl_wos",&first_aid_no_ssl_wos,first_aid_string_no_ssl_wos,0);
+	menu_first_aid_add("realjoystick_detected",&first_aid_no_realjoystick_detected,first_aid_string_realjoystick_detected,0);
 
 	//Items que se disparan en startup
 	menu_first_aid_add("startup_aid",&first_aid_no_startup_aid,first_aid_string_startup_aid,1);

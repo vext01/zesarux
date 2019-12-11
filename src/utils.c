@@ -3687,7 +3687,7 @@ int util_write_configfile(void)
 
 
 
-  //real joystick buttons to events
+  //real joystick buttons to events. Siempre este antes que el de events/buttons to keys
   for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
   	if (realjoystick_events_array[i].asignado.v) {
   		char texto_button[20];
@@ -3700,16 +3700,7 @@ int util_write_configfile(void)
   	}
   }
 
-  //text osd keyboard
-  for (i=0;i<osd_adv_kbd_defined;i++) {
-          //Truco para poder poner " en el texto. Con barra invertida
-          if (!strcmp(osd_adv_kbd_list[i],"\"")) ADD_STRING_CONFIG,"--text-keyboard-add \\");
-	else ADD_STRING_CONFIG,"--text-keyboard-add \"%s\"",osd_adv_kbd_list[i]);
-  }
 
-                                        ADD_STRING_CONFIG,"--text-keyboard-length %d",adventure_keyboard_key_length);
-
-     if (adventure_keyboard_send_final_spc) ADD_STRING_CONFIG,"--text-keyboard-finalspc");
 		
 
 
@@ -3728,8 +3719,26 @@ int util_write_configfile(void)
   	}
   }
 
+
+
+
   //joystickkeyev no lo estoy autoguardando, esto es mas indicado para archivos .config
   if (realjoystick_clear_keys_on_smartload.v) ADD_STRING_CONFIG,"--clearkeylistonsmart");
+
+
+
+  //text osd keyboard
+  for (i=0;i<osd_adv_kbd_defined;i++) {
+          //Truco para poder poner " en el texto. Con barra invertida
+          if (!strcmp(osd_adv_kbd_list[i],"\"")) ADD_STRING_CONFIG,"--text-keyboard-add \\");
+	else ADD_STRING_CONFIG,"--text-keyboard-add \"%s\"",osd_adv_kbd_list[i]);
+  }
+
+                                        ADD_STRING_CONFIG,"--text-keyboard-length %d",adventure_keyboard_key_length);
+
+     if (adventure_keyboard_send_final_spc) ADD_STRING_CONFIG,"--text-keyboard-finalspc");
+
+
   if (quickexit.v)                            ADD_STRING_CONFIG,"--quickexit");
 
   //Guardar si hay algo que Guardar
@@ -8887,7 +8896,7 @@ int convert_scr_to_tap(char *origen, char *destino)
         if (ptr_inputfile==NULL) {
                 debug_printf (VERBOSE_ERR,"Error opening %s",origen);
                 return 1;
-        }
+        } 
 
 
         leidos=fread(buffer_lectura,1,tamanyo_origen,ptr_inputfile);
@@ -8924,7 +8933,6 @@ int convert_scr_to_tap(char *origen, char *destino)
                 0, //flag 0,
                 3, //bloque bytes,
                 'S','C','R','E','E','N',' ',' ',' ',' ', //nombre
-                //'1','2','3','4','5','6','7','8','9','0', //temp
                 0x00,0x1b, //longitud 6912
                 0x00,0x40, //inicio 16384
                 0x00,0x80, //unused
@@ -14300,7 +14308,7 @@ void util_save_game_config(char *filename)
 						ADD_STRING_CONFIG,"--joystickemulated \"%s\"",joystick_texto[joystick_emulation]);
 
 
-  //real joystick buttons to events
+  //real joystick buttons to events. Siempre este antes que el de events/buttons to keys
   for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
         if (realjoystick_events_array[i].asignado.v) {
                 char texto_button[20];

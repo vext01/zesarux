@@ -212,15 +212,21 @@ void realjoystick_clear_events_array(void)
 
 }
 
-
-void realjoystick_set_default_functions(void)
+void realjoystick_init_events_keys_tables(void)
 {
-	//primero desasignamos todos
 	//eventos
 	realjoystick_clear_events_array();
 
 	//y teclas
-	realjoystick_clear_keys_array();
+	realjoystick_clear_keys_array();	
+}
+
+
+void realjoystick_new_set_default_functions(void)
+{
+	//primero desasignamos todos
+	//eventos
+	realjoystick_init_events_keys_tables();
 
 
 	//y luego asignamos algunos por defecto
@@ -388,7 +394,7 @@ void read_simulador_joystick(void)
 void realjoystick_simulador_main(void)
 {
 	if (realjoystick_present.v==0) return;
-	printf ("realjoystick_simulador_main\n");
+	//printf ("realjoystick_simulador_main\n");
 
 	if (simulador_joystick_forzado) {
 		read_simulador_joystick();

@@ -90,7 +90,7 @@ extern int realjoystick_autocalibrate_value;
 
 extern int realjoystick_read_event(int *button,int *type,int *value);
 
-extern void realjoystick_set_default_functions(void);
+//extern void realjoystick_set_default_functions(void);
 
 extern char string_dev_joystick[];
 

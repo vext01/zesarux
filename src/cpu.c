@@ -7510,7 +7510,11 @@ tooltip_enabled.v=1;
                 sprintf (external_tool_gunzip,"/usr/bin/gunzip");
 #endif
 
-	realjoystick_set_default_functions();
+	//antiguo
+	//realjoystick_new_set_default_functions();
+
+	//nuevo:
+	realjoystick_init_events_keys_tables();
 
 
 		//por si lanzamos un cpu_panic antes de inicializar video, que esto este a NULL y podamos detectarlo para no ejecutarlo

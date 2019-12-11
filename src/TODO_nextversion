@@ -2,6 +2,21 @@
 
 -Quiza darle mas buffer a disassemble en debug cpu: motorola tiene opcodes muy largos a veces. ir por ejemplo a direccion F0H
 
+
+-Luego no se si tiene sentido el setting:
+
+
+cleareventlist
+
+Quizá solo tiene sentido en juegos con auto config file. O no , en juegos de debería usar joystick to key, 
+y no alterar tabla de eventos
+
+
+
+
+
+
+
 -Menú debug cpu extra debug con extended debug, cpu history, code coverage etc
 
 -ZENG: -Que sucede con asignacion de joystick a teclas? Se envia como tecla?  probar
