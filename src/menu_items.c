@@ -3823,7 +3823,6 @@ void menu_audio_draw_sound_wave(void)
 
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
-	//workaround_pentagon_clear_putpixel_cache();
 
 	char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
 
@@ -3850,17 +3849,16 @@ void menu_audio_draw_sound_wave(void)
 	
 
 			//Hacer decaer el volumen
-			//if (menu_waveform_previous_volume>menu_audio_draw_sound_wave_volumen_escalado) menu_waveform_previous_volume--;
 			menu_waveform_previous_volume=menu_decae_dec_valor_volumen(menu_waveform_previous_volume,menu_audio_draw_sound_wave_volumen_escalado);
 
 
 			//Frecuency
 			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
-				menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
-			//menu_escribe_linea_opcion(3,-1,1,buffer_texto_medio);
+			menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
+			
 			zxvision_print_string_defaults_fillspc(menu_audio_draw_sound_wave_window,1,3,buffer_texto_medio);
 
-			//printf ("menu_speech_tecla_pulsada: %d\n",menu_speech_tecla_pulsada);
+			
 	}
 
 
@@ -3967,6 +3965,12 @@ void menu_audio_draw_sound_wave(void)
 		}
 
 		valor_medio=valor_medio/max_valores;
+
+
+		//temp
+		//valor_medio=menu_audio_draw_sound_wave_valor_medio;
+
+
 
 		valor_audio=valor_medio;
 
