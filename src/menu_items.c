@@ -4101,7 +4101,11 @@ void menu_audio_draw_sound_wave(void)
 
 					int offset_destino=y*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+x;
 					int valor=menu_waveform_pixel_array[offset_destino];
-					zxvision_putpixel(menu_audio_draw_sound_wave_window,x+xorigen,y+yorigen,valor);
+					//Dibujar pixel solo si no es blanco
+					//Dado que esto es overlay de pixeles, continuamente se resetea a blanco al refrescar pantalla
+					if (valor!=ESTILO_GUI_PAPEL_NORMAL) {
+						zxvision_putpixel(menu_audio_draw_sound_wave_window,x+xorigen,y+yorigen,valor);
+					}
 				}
 				else {
 					//Si no, rellenar con color distinto. Rojo para avisar
@@ -4182,10 +4186,10 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
 	do {
 
-		char *tipos_soundwave[3]={"Line","Fill","Scroll"};
-
 		//Agrego dos espacios al final para borrar restos de "Scroll" pues ocupa 2 caracteres mas que "Line" y "Fill"
-		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] Wave ~~Shape  ",
+		char *tipos_soundwave[3]={"Line  ","Fill  ","Scroll"};
+	
+		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] Wave ~~Shape",
 				(tipos_soundwave[menu_sound_wave_llena]) );
 		menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
 
