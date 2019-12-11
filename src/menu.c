@@ -601,7 +601,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		1,7,7,1, 	//Colores para opcion no disponible
 		7+8,0,        	//Colores para el titulo y linea recuadro ventana
 		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
-		1,		//Color waveform
+		4,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
