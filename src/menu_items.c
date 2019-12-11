@@ -4101,8 +4101,10 @@ void menu_audio_draw_sound_wave(void)
 
 					int offset_destino=y*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+x;
 					int valor=menu_waveform_pixel_array[offset_destino];
+
 					//Dibujar pixel solo si no es blanco
-					//Dado que esto es overlay de pixeles, continuamente se resetea a blanco al refrescar pantalla
+					//Dado que esto es overlay de pixeles, continuamente se resetea a blanco al refrescar pantalla,
+					//no hace falta dibujar esos pixeles que ya son blancos
 					if (valor!=ESTILO_GUI_PAPEL_NORMAL) {
 						zxvision_putpixel(menu_audio_draw_sound_wave_window,x+xorigen,y+yorigen,valor);
 					}
