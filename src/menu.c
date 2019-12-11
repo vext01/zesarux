@@ -13751,6 +13751,12 @@ void menu_hardware_realjoystick_set_defaults(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_hardware_realjoystick_native(MENU_ITEM_PARAMETERS)
+{
+	no_native_linux_realjoystick.v ^=1;
+	menu_generic_message("Linux native driver","OK. You must reopen ZEsarUX to apply this setting");
+}
+
 void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 {
 	menu_item *array_menu_hardware_realjoystick;
@@ -13785,6 +13791,17 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 										"Axis values read from joystick less than n and greater than -n are considered as 0. "
 										" Default: 16384. Not used on native linux real joystick");
 		}
+
+
+		//En linux, poder decir si usamos driver nativo o no
+
+#ifdef USE_LINUXREALJOYSTICK
+
+	menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_native,NULL,"[%c] Linux native driver",(no_native_linux_realjoystick.v ? ' ' : 'X'));
+	menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Use or not the native linux real joystick support. Instead use the video driver joystick support (currently only SDL)");
+	menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Use or not the native linux real joystick support. Instead use the video driver joystick support (currently only SDL)");
+
+#endif		
 
 
 		menu_add_item_menu(array_menu_hardware_realjoystick,"",MENU_OPCION_SEPARADOR,NULL,NULL);
