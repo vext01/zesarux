@@ -3816,10 +3816,6 @@ int menu_waveform_valor_contador_segundo_anterior;
 
 int menu_waveform_previous_volume=0;
 
-//#define MAX_ALTO_WAVEFORM_PIXEL_ARRAY 512
-//#define MAX_ANCHO_WAVEFORM_PIXEL_ARRAY 1024
-
-//temp
 #define MAX_ALTO_WAVEFORM_PIXEL_ARRAY 512
 #define MAX_ANCHO_WAVEFORM_PIXEL_ARRAY 1024
 
