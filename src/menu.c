@@ -13306,7 +13306,8 @@ void menu_hardware_realjoystick_keys_button(MENU_ITEM_PARAMETERS)
 
 	if (tipo==1) { //Definir por boton
 
-
+			//Uso una simple ventana dado que por zxvision_window no puedo dejarla ahi de fondo y leer el joystick
+			//TODO: probar esto porque quiza si se puede...
         	menu_simple_ventana("Redefine key","Please press the button/axis");
         	menu_refresca_pantalla();
 
@@ -13330,6 +13331,8 @@ void menu_hardware_realjoystick_keys_button(MENU_ITEM_PARAMETERS)
         }
 
 
+	//Ya que estamos usando una simple_ventana en vez de zxwindow_vision
+	cls_menu_overlay();
 
 }
 

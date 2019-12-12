@@ -28,10 +28,6 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 
 
-
--First aid de ZRCP no tiene que decir lo de Windows Thread
-Ya que todas las versiones Windows serán con pthreads 
-
 -Extended stack inicializado con ceros
 
 
