@@ -309,14 +309,14 @@ char *zeng_send_snapshot_mem_hexa=NULL; //zeng_send_snapshot_mem_hexa
 int zeng_send_snapshot(int socket)
 {
 	//Enviar snapshot cada 20*250=5000 ms->5 segundos
-		printf ("Enviando snapshot\n");
+		debug_printf (VERBOSE_DEBUG,"ZENG: Sending snapshot");
 
 		int posicion_command;
 		int escritos,leidos;
 
 				
 			
-				printf ("Sending put-snapshot\n");
+				//printf ("Sending put-snapshot\n");
 				escritos=z_sock_write_string(socket,"put-snapshot ");
 				if (escritos<0) return escritos;
 			
@@ -449,7 +449,7 @@ Poder enviar mensajes a otros jugadores
 		//Si hay tecla pendiente de enviar
 		zeng_key_presses elemento;
 		while (!zeng_fifo_read_element(&elemento) && !error_desconectar) {
-			printf ("leido evento de la zeng fifo tecla %d pressrelease %d\n",elemento.tecla,elemento.pressrelease);
+			debug_printf (VERBOSE_DEBUG,"ZENG: Read event from zeng fifo and sending it to remote: key %d pressrelease %d",elemento.tecla,elemento.pressrelease);
 
 			//command> help send-keys-event
 			//Syntax: send-keys-event key event
@@ -540,7 +540,7 @@ void zeng_send_snapshot_if_needed(void)
 					//metemos salto de linea y 0 al final
 					strcpy (&zeng_send_snapshot_mem_hexa[char_destino],"\n");
 
-					printf ("Poniendo en cola snapshot para enviar snapshot longitud %d\n",longitud);
+					debug_printf (VERBOSE_DEBUG,"ZENG: Queuing snapshot to send, length: %d",longitud);
 
 
 					//Liberar memoria que ya no se usa

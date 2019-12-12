@@ -13333,6 +13333,7 @@ void menu_hardware_realjoystick_keys_button(MENU_ITEM_PARAMETERS)
 
 	//Ya que estamos usando una simple_ventana en vez de zxwindow_vision
 	cls_menu_overlay();
+	menu_refresca_pantalla();
 
 }
 

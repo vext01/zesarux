@@ -18,23 +18,8 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 -Menú debug cpu extra debug con extended debug, cpu history, code coverage etc
 
--ZENG: -Que sucede con asignacion de joystick a teclas? Se envia como tecla?  probar
-
-
-* joystick: testeo:
--2 joysticks
--nativo y sdl
-->4 posibles combinaciones de estos 2x2
-
-
 
 -Extended stack inicializado con ceros
-
-
--para probar reset permisos carpetas mac:
-tccutil reset SystemPolicyDocumentsFolder com.cesarhernandez.zesarux
-tccutil reset SystemPolicyDownloadsFolder com.cesarhernandez.zesarux
-tccutil reset SystemPolicyDesktopFolder com.cesarhernandez.zesarux
 
 
 -ZENG: eliminar debug de zeng y zrcp al pulsar teclas, joystick, envio snapshot

@@ -378,7 +378,7 @@ void read_simulador_joystick(void)
 	printf ("Button value: ");
 	scanf ("%d",&value);
 
-	if (value<-32768 || value>32767) {
+	if (value<-32767 || value>32767) {
 		printf ("Invalid value\n");
 		return;
 	}	

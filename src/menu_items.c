@@ -18121,7 +18121,7 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			  "-every two seconds a snapshot will be sent from the master to the slave node\n\n"
 			  "Note about using joystick: real joystick (and cursors on keyboard) are sent to the other node as "
 			  "the direction/button (left,right,up,down or fire) but not the type of joystick emulated (kempston, fuller, etc). "
-			  "So you must configure same joystick emulation on both nodes. Also, real joystick to key configuration is not sent by ZENG"
+			  "So you must configure same joystick emulation on both nodes. Also, real joystick to keys events are not sent by ZENG, just the joystick event"
 			);
 
                      
