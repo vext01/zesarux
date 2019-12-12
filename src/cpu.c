@@ -7235,7 +7235,8 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 
 	if (main_argc>1) {
 		if (!strcmp(main_argv[1],"--version")) {
-			printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n");
+		//	printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n");
+			printf ("ZEsarUX V." EMULATOR_VERSION " - " EMULATOR_EDITION_NAME ". " EMULATOR_DATE  "\n");
 			exit(0);
 		}
 	}
@@ -7311,7 +7312,8 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
 		
 
-			printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
+		  //printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
+			printf ("ZEsarUX V." EMULATOR_VERSION " - " EMULATOR_EDITION_NAME ". " EMULATOR_DATE  "\n"
 			
 					"\n");
 
