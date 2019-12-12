@@ -695,7 +695,7 @@ void zeng_add_pending_send_message_footer(char *mensaje)
 	if (!pending_zeng_send_message_footer) {
 		sprintf(zeng_send_message_footer,"print-footer %s\n",mensaje);
 		pending_zeng_send_message_footer=1;
-		printf ("Poniendo en cola enviar mensaje a remoto: %s\n",mensaje);
+		debug_printf (VERBOSE_DEBUG,"Queuing sending message to remote: %s",mensaje);
 	}
 
 }
