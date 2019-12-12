@@ -714,7 +714,7 @@ int menu_first_aid_must_show_startup=0;
 
 
 //El texto a disparar al startup
-char *string_config_key_aid_startup;
+char *string_config_key_aid_startup=NULL;
 
 
 int realjoystick_detected_startup=0;
@@ -31426,7 +31426,7 @@ void menu_first_aid_random_startup(void)
 		}
 	}	
 
-	debug_printf (VERBOSE_DEBUG,"Set first aid of the day to: %s",string_config_key_aid_startup);
+	if (string_config_key_aid_startup!=NULL) debug_printf (VERBOSE_DEBUG,"Set first aid of the day to: %s",string_config_key_aid_startup);
 
 }
 
