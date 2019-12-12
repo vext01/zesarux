@@ -31315,8 +31315,8 @@ char *first_aid_string_documentation="You can find a lot of info, videos, docume
 int first_aid_no_zrcp=0;
 char *first_aid_string_zrcp="You can connect to ZEsarUX by using a telnet client using the ZEsarUX Remote Control Protocol (ZRCP). "
 	"This protocol allows you to interact, debug and do a lot of internal actions to ZEsarUX. "
-	"Just enable it on Settings-> Debug and use a telnet client to port 10000. "
-	"Note: Windows users must use the pthreads version of ZEsarUX";
+	"Just enable it on Settings-> Debug and use a telnet client to connect to port 10000. ";
+	
 
 int first_aid_no_votext=0;
 char *first_aid_string_votext="Do you know you can run ZEsarUX using a Text mode video driver? There are ncurses, aalib, cacalib, "

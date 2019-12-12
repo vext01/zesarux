@@ -92,6 +92,11 @@ extern int realjoystick_read_event(int *button,int *type,int *value);
 
 //extern void realjoystick_set_default_functions(void);
 
+extern void realjoystick_new_set_default_functions(void);
+
+extern void realjoystick_init_events_keys_tables(void);
+extern void realjoystick_initialize_joystick(void);
+
 extern char string_dev_joystick[];
 
 extern z80_bit realjoystick_present;

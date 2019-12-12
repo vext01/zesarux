@@ -20,29 +20,13 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 -ZENG: -Que sucede con asignacion de joystick a teclas? Se envia como tecla?  probar
 
--Joystick SDL:
 
-
-
-* Soporte joystick SDL2
-
-
-Joystick simulation que se pueda lanzar por ZRCP también (y sin tener que activar —realjoystick-simulator). O quizá sí que necesita el setting, dado que necesita que real Joystick este activado 
-
-
-SDL_API - SDL Documentation Wiki
-http://sdl.beuc.net/sdl.wiki/SDL_API
-
-* revisar TODO de realjoystick y de realjoystick_sdl
-
-* testeo:
+* joystick: testeo:
 -2 joysticks
 -nativo y sdl
 ->4 posibles combinaciones de estos 2x2
 
-* meterlo en documentacion, etc
 
--Fin joystick en SDL
 
 
 -First aid de ZRCP no tiene que decir lo de Windows Thread
