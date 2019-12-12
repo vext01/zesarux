@@ -27504,7 +27504,7 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 	else {
 		//mensaje con n en vez de enye
 		letra_enye='n';
-	}
+	} 
 
 	sprintf (mensaje_about,"ZEsarUX V." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")\n"
                         " - " EMULATOR_EDITION_NAME " - \n"
