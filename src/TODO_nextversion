@@ -9,7 +9,7 @@ Quizá solo tiene sentido en juegos con auto config file. O no , en juegos de de
 y no alterar tabla de eventos
 
 
-
+-Waveform que vaya haciendo fade out (sin scroll) de píxeles anteriores. Para esto require tener varios niveles de color de un pixel
 
 -Mejora para first aid:
 Un tercer botón que diga “take me there” para cuando sugiere menús, que te lleve al menú en cuestión 

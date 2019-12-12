@@ -340,7 +340,7 @@ void realjoystick_null_main(void)
 
 int realjoystick_simulador_init(void)
 {
-	printf ("realjoystick_simulador_init\n");
+	debug_printf (VERBOSE_DEBUG,"realjoystick_simulador_init");
 
 
 
@@ -361,28 +361,37 @@ int realjoystick_simulador_init(void)
 
 void read_simulador_joystick(void)
 {
-
-	realjoystick_hit=1;
+	simulador_joystick_forzado=0;
 
 	int value,type,button;
 
-	printf ("button number: ");
+	printf ("Button number: ");
 	scanf ("%d",&button);
+	if (button<0 || button>255) {
+		printf ("Invalid button number\n");
+		return;
+	}
 
-        printf ("button type: (%d=button, %d=axis)",REALJOYSTICK_INPUT_EVENT_BUTTON,REALJOYSTICK_INPUT_EVENT_AXIS);
-        scanf ("%d",&type);
+	printf ("Button type: (%d=button, %d=axis)",REALJOYSTICK_INPUT_EVENT_BUTTON,REALJOYSTICK_INPUT_EVENT_AXIS);
+	scanf ("%d",&type);
 
-        printf ("button value: ");
-        scanf ("%d",&value);
+	printf ("Button value: ");
+	scanf ("%d",&value);
 
+	if (value<-32768 || value>32767) {
+		printf ("Invalid value\n");
+		return;
+	}	
 
+	printf ("OK simulating joystick button/axis: button: %d type: %d value: %d\n",button,type,value);
 
+	realjoystick_hit=1;
 
 	menu_info_joystick_last_raw_value=value;
 
 	realjoystick_common_set_event(button,type,value);
 
-	simulador_joystick_forzado=0;
+
 
 
 
