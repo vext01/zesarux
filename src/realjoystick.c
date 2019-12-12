@@ -155,10 +155,10 @@ int realjoystick_get_event_string(char *texto)
         int i;
 
         for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
-		if (!strcasecmp(texto,realjoystick_event_names[i])) {
-			debug_printf (VERBOSE_DEBUG,"Event %s has event number: %d",texto,i);
-			return i;
-		}
+			if (!strcasecmp(texto,realjoystick_event_names[i])) {
+				debug_printf (VERBOSE_DEBUG,"Event %s has event number: %d",texto,i);
+				return i;
+			}
         }
 
 
@@ -323,7 +323,7 @@ int realjoystick_null_init(void)
 void realjoystick_null_main(void)
 {
 	if (realjoystick_present.v==0) return;
-	printf ("realjoystick_null_main\n");
+	//printf ("realjoystick_null_main\n");
 
 
 
@@ -331,7 +331,7 @@ void realjoystick_null_main(void)
 	//El tema es que se podria hacer cuando se llama a null_init, pero no se llama a realjoystick_null_init
 	//dado que el init del joystick lo tiene que hacer el driver de video (caso de sdl ejemplo), o el linux joystick nativo
 	//en caso del null no llama nadie al init
-	printf ("Disabling joystick support as we are using the default null driver\n");
+	debug_printf (VERBOSE_DEBUG,"Disabling joystick support as we are using the default null driver");
 	realjoystick_present.v=0;
 
 
@@ -734,7 +734,7 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 
 	debug_printf (VERBOSE_DEBUG,"Redefine action: %d",indice);
 
-	printf ("Redefine action: %d\n",indice);
+	//printf ("Redefine action: %d\n",indice);
 
 	simulador_joystick_forzado=1;
 
@@ -747,7 +747,7 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 	//si no se ha pulsado joystick, pues se habra pulsado tecla
 	if (!realjoystick_hit ) {
 		debug_printf (VERBOSE_DEBUG,"Pressed key, not joystick");
-		printf ("Pressed key, not joystick\n");
+		//printf ("Pressed key, not joystick\n");
 		return 0;
 	}
 
@@ -760,12 +760,12 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 			type=menu_info_joystick_last_type;
 			value=menu_info_joystick_last_value;
 
-	if (1) {
+	//if (1) {
 	//if (realjoystick_read_event(&button,&type,&value) ==1 ) {
 		debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);
-		printf ("redefine for button: %d type: %d value: %d\n",button,type,value);
+		//printf ("redefine for button: %d type: %d value: %d\n",button,type,value);
                 //eventos de init no hacerles caso, de momento
-                if ( (type&REALJOYSTICK_INPUT_EVENT_INIT)!=REALJOYSTICK_INPUT_EVENT_INIT) {
+		if ( (type&REALJOYSTICK_INPUT_EVENT_INIT)!=REALJOYSTICK_INPUT_EVENT_INIT) {
 			debug_printf (VERBOSE_DEBUG,"redefine for button: %d type: %d value: %d",button,type,value);
 
 			int button_type=0;
@@ -794,14 +794,14 @@ int realjoystick_redefine_event_key(realjoystick_events_keys_function *tabla,int
 				return 0;
 			}
 
-                        tabla[indice].asignado.v=1;
+			tabla[indice].asignado.v=1;
 			tabla[indice].button=button;
 			tabla[indice].button_type=button_type;
 
-                }
+			}
 
 
-        }
+    //}
 
 	return 1;
 }

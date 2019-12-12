@@ -398,7 +398,7 @@ int realjoystick_linux_init(void)
 	
 
 
-	printf("Initializing real joystick. Using native linux support. Using device %s\n",string_dev_joystick);
+	debug_printf(VERBOSE_DEBUG,"Initializing real joystick. Using native linux support. Using device %s",string_dev_joystick);
 
 
 
@@ -432,20 +432,22 @@ int realjoystick_linux_init(void)
 	*/
 
 
-	if (ioctl(ptr_realjoystick_linux, JSIOCGNAME(REALJOYSTICK_MAX_NAME), realjoystick_joy_name) < 0)
+	if (ioctl(ptr_realjoystick_linux, JSIOCGNAME(REALJOYSTICK_MAX_NAME), realjoystick_joy_name) < 0) {
 		strcpy(realjoystick_joy_name,"Unknown");
-	printf("Name: %s\n", realjoystick_joy_name);	
+	}
+
+	debug_printf(VERBOSE_DEBUG,"Name: %s", realjoystick_joy_name);	
 
 
 	char number_of_axes;
 	ioctl (ptr_realjoystick_linux, JSIOCGAXES, &number_of_axes);
-	printf ("Number of axes: %d\n",number_of_axes);
+	debug_printf(VERBOSE_DEBUG,"Number of axes: %d",number_of_axes);
 	realjoystick_total_axes=number_of_axes;
 	
 
 	char number_of_buttons;
 	ioctl (ptr_realjoystick_linux, JSIOCGBUTTONS, &number_of_buttons);
-	printf ("Number of buttons: %d\n",number_of_buttons);
+	debug_printf(VERBOSE_DEBUG,"Number of buttons: %d",number_of_buttons);
 	realjoystick_total_buttons=number_of_buttons;
 
 

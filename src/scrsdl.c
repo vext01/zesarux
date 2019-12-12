@@ -1274,7 +1274,7 @@ void scrsdl_resize(int width,int height)
 
         debug_printf (VERBOSE_INFO,"width: %d get_window_width: %d height: %d get_window_height: %d",width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
 
-        //printf ("allocate layers menu\n");
+
         scr_reallocate_layers_menu(width,height);    
 
 
@@ -1527,14 +1527,14 @@ int realjoystick_sdl_init(void)
 {
 
 
-        printf("Initializing real joystick. Using SDL support\n");
+        debug_printf(VERBOSE_DEBUG,"Initializing real joystick. Using SDL support");
 
         SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
 
         realjoystick_sdl_total_joysticks=SDL_NumJoysticks();
 
-        printf ("Total joysticks: %d\n",realjoystick_sdl_total_joysticks);
+        debug_printf(VERBOSE_DEBUG,"Total joysticks: %d",realjoystick_sdl_total_joysticks);
 
         if (realjoystick_sdl_total_joysticks<1) {
                 return 1; //error
@@ -1545,28 +1545,25 @@ int realjoystick_sdl_init(void)
 
                 sdl_joy=SDL_JoystickOpen(0);
                 if (sdl_joy) {
-                        printf("Opened Joystick 0\n");
+                        debug_printf(VERBOSE_DEBUG,"Opened Joystick 0");
 
-                      sdl_num_axes=SDL_JoystickNumAxes(sdl_joy);
-                      sdl_num_buttons=SDL_JoystickNumButtons(sdl_joy);
+                        sdl_num_axes=SDL_JoystickNumAxes(sdl_joy);
+                        sdl_num_buttons=SDL_JoystickNumButtons(sdl_joy);
 
-    printf("Name: %s\n", SDL_JoystickName(0));
-    printf("Number of Axes: %d\n", sdl_num_axes);
-    printf("Number of Buttons: %d\n", sdl_num_buttons);
-    //printf("Number of Balls: %d\n", SDL_JoystickNumBalls(sdl_joy));
-    //printf("Number of Hats: %d\n",SDL_JoystickNumHats(sdl_joy));
-
-
-        //Por si acaso el nombre lo truncamos
-        menu_tape_settings_trunc_name(SDL_JoystickName(0),realjoystick_joy_name,REALJOYSTICK_MAX_NAME);
-
-	realjoystick_total_axes=sdl_num_axes;
-	realjoystick_total_buttons=sdl_num_buttons;
-
-        strcpy(realjoystick_driver_name,"SDL");
+                        debug_printf(VERBOSE_DEBUG,"Name: %s", SDL_JoystickName(0));
+                        debug_printf(VERBOSE_DEBUG,"Number of Axes: %d", sdl_num_axes);
+                        debug_printf(VERBOSE_DEBUG,"Number of Buttons: %d", sdl_num_buttons);
+                        //printf("Number of Balls: %d\n", SDL_JoystickNumBalls(sdl_joy));
+                        //printf("Number of Hats: %d\n",SDL_JoystickNumHats(sdl_joy));
 
 
+                        //Por si acaso el nombre lo truncamos
+                        menu_tape_settings_trunc_name(SDL_JoystickName(0),realjoystick_joy_name,REALJOYSTICK_MAX_NAME);
 
+                        realjoystick_total_axes=sdl_num_axes;
+                        realjoystick_total_buttons=sdl_num_buttons;
+
+                        strcpy(realjoystick_driver_name,"SDL");
 
 
                 }
@@ -1628,7 +1625,7 @@ int sdl_states_joy_axes[SDL_JOY_MAX_AXES];
 
                 //Si cambia estado anterior
                 if (valorboton!=sdl_states_joy_buttons[i]) {
-                        //printf ("Enviar cambio estado boton %d : %d\n",i,valorboton);
+                        debug_printf (VERBOSE_DEBUG,"SDL Joystick: Sending state change, button: %d value: %d",i,valorboton);
                         realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_BUTTON,valorboton);
                         realjoystick_hit=1;
                         menu_info_joystick_last_raw_value=valorboton;
@@ -1666,6 +1663,7 @@ A partir de entonces se verá continuo hasta que se pulse otro axis. Y vuelta a 
 
                 if (valorfinalaxis!=sdl_states_joy_axes[i]) {
                         //printf ("Enviar cambio estado axis %d : %d\n",i,valorfinalaxis);
+                        debug_printf (VERBOSE_DEBUG,"SDL Joystick: Sending state change, axis: %d value: %d",i,valorfinalaxis);
                         realjoystick_common_set_event(i,REALJOYSTICK_INPUT_EVENT_AXIS,valorfinalaxis);
                         realjoystick_hit=1;
                         menu_info_joystick_last_raw_value=valoraxis;
@@ -1759,7 +1757,7 @@ int scrsdl_init (void) {
 
 	scr_z88_cpc_load_keymap();
 
-        printf ("Ending initializing SDL driver\n");
+        //printf ("Ending initializing SDL driver\n");
 
         return 0;
 
