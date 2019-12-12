@@ -240,7 +240,7 @@ int zeng_connect_remote(void)
 
 		//zsock_wait_until_command_prompt(indice_socket);
 
-		printf("Sending get-version\n");
+		debug_printf(VERBOSE_DEBUG,"ZENG: Sending get-version");
 
 		//Enviar un get-version
 		int escritos=z_sock_write_string(indice_socket,"get-version\n");
@@ -255,7 +255,7 @@ int zeng_connect_remote(void)
 		leidos=zsock_read_all_until_command(indice_socket,(z80_byte *)buffer,ZENG_BUFFER_INITIAL_CONNECT,&posicion_command);
 		if (leidos>0) {
 			buffer[leidos]=0; //fin de texto
-			printf("Received text for get-version (length %d): \n[\n%s\n]\n",leidos,buffer);
+			debug_printf(VERBOSE_DEBUG,"ZENG: Received text for get-version (length %d): \n[\n%s\n]",leidos,buffer);
 		}	
 
 		if (leidos<0) {
@@ -266,7 +266,7 @@ int zeng_connect_remote(void)
 		//1 mas para eliminar el salto de linea anterior a "command>"
 		if (posicion_command>=1) {
 			buffer[posicion_command-1]=0;
-			printf ("Recibida version: %s\n",buffer);
+			debug_printf(VERBOSE_DEBUG,"ZENG: Receiver version: %s",buffer);
 		}
 		else {
 			debug_printf (VERBOSE_ERR,"Error receiving ZEsarUX remote version");
