@@ -27506,7 +27506,7 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 		letra_enye='n';
 	} 
 
-	sprintf (mensaje_about,"ZEsarUX V." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")\n"
+	sprintf (mensaje_about,"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")\n"
                         " - " EMULATOR_EDITION_NAME " - \n"
 
 #ifdef SNAPSHOT_VERSION
