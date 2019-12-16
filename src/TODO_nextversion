@@ -44,7 +44,7 @@ Pero eso debe coincidir con version.h de código
 -Compilar windows con:
 export CFLAGS "-I/c/openssl-1.1.1d-win32-mingw/include"
 export LDFLAGS "-L/c/openssl-1.1.1d-win32-mingw/lib"
-./configure --enable-ssl --enable-memptr --enable-visualmem --enable-cpustats
+./configure --enable-ssl --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl
 
 -probar ssl en windows. Descargando prebuilds de ssl para mingw
 https://wiki.openssl.org/index.php/Binaries
