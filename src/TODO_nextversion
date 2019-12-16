@@ -8,7 +8,7 @@ cleareventlist
 Quizá solo tiene sentido en juegos con auto config file. O no , en juegos de debería usar joystick to key, 
 y no alterar tabla de eventos
 
-
+ 
 -Waveform que vaya haciendo fade out (sin scroll) de píxeles anteriores. Para esto require tener varios niveles de color de un pixel
 
 -Mejora para first aid:
