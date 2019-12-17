@@ -1,20 +1,9 @@
 --------Para ESTA versión 8.1:
 
-
-
--Joystick  
-
-Cómo estará la tabla para un usuario que instale ahora ZEsarUX y conecte un joystick? En principio vacía 
-
 -Extended stack inicializado con ceros
-
-
--ZENG: eliminar debug de zeng y zrcp al pulsar teclas, joystick, envio snapshot
-
 
 -Siguiente versión beta hay que decir en servidor versión.txt que es 8.1-B2
 Pero eso debe coincidir con version.h de código 
-
 
 -seguir probando speech menu con stdout y con drivers no-stdout
 
@@ -23,14 +12,12 @@ Pero eso debe coincidir con version.h de código
 
 -Revisar al expulsar cinta si Windows lo libera 
 
-
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
 -Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
 Quizá mostrar C en caso de 127
 
 -Opción para formato de grabación de autosave snap
-
 
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?
@@ -78,9 +65,7 @@ la velocidad de la cpu en nextos
 
 ---Fin cosas Next
 
-
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu?
-
 
 -Semáforo en debug print tiene sentido??
 Quiza por el sprintf (pending_error_message
@@ -89,17 +74,12 @@ Quiza por el sprintf (pending_error_message
 -semáforos en Windows. Como? De momento no hace bloqueo si es Windows 
 
 
--Quizá problema de sonido y threads en Windows no es cosa del threads en audio, sino threads en timer?
-Desactivar threads en uno u otro caso según lo que corrija el sonido 
-->aplicado en timer.c no usar threads en windows solo en caso de timer.c
-
 
 -emular este bit de eff7 en pentagon:
 port EFF7: (adressation 1110xxxx xxxx0xxx )
 D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 -preguntar si incluir algunas demos de 16C
-
 
 
 
@@ -130,8 +110,6 @@ https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 --ZENG:
 
--probar doom mania (juego a dobles al doom)
-
 
 *en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc
 Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZRCP_GET_PUT_SNAPSHOT_MEM
@@ -140,8 +118,6 @@ Ademas habria que hacer que MAX_LENGTH_PROTOCOL_COMMAND sea un poco mayor que ZR
 Quizá sigpipe se puede gestionar diferente para cada thread?
 *funciones de envio snapshot, teclas y mensajes, deberian ver si reciben remote prompt? al llamar a zsock_read_all_until_command
 
-:mirando estado local y remoto. Avisar si el estado no es 1 master y 1 slave. comando nuevo ZRCP para esto
-:quiza se puede permitir ningun master, pero lo que no deberia ser es dos master. Al menos avisar de esto y que el usuario ya decida
 
 Ampliar buffer de recepción y el de copia. Y asignarlos por malloc 
 
