@@ -6,6 +6,12 @@ cleareventlist
 Quizá solo tiene sentido en juegos con auto config file. O no , en juegos de debería usar joystick to key, 
 y no alterar tabla de eventos
 
+-Joystick  
+ No se debe establecer tabla de eventos a botones de manera automática en ningún caso. Solo en menú de set to defaults
+Tampoco cambiar la tabla en archivos .config míos de ejemplo. Pero si
+Opciones para hacerlo por el usuario en .config
+
+Cómo estará la tabla para un usuario que instale ahora ZEsarUX y conecte un joystick? En principio vacía 
 
 -Extended stack inicializado con ceros
 

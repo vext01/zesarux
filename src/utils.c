@@ -14302,7 +14302,13 @@ void util_save_game_config(char *filename)
 */
 
 					ADD_STRING_CONFIG,"--clearredefinekey");
-					ADD_STRING_CONFIG,"--cleareventlist");
+
+                                        //Esto conviene meterlo en el .config, asi el usuario
+                                        //sabe que sus botones a eventos se inicializan en el juego
+                                        //y se establecen un poco mas abajo
+                                        //en caso que no quisiera, que lo quite
+
+					ADD_STRING_CONFIG,"--cleareventlist"); 
 
 
 						ADD_STRING_CONFIG,"--joystickemulated \"%s\"",joystick_texto[joystick_emulation]);

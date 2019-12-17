@@ -21025,10 +21025,10 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 	}
 
 	else if (MACHINE_IS_SPECTRUM_16_48) {
-		filtros[0]="zx";
-		filtros[1]="z80";
-		filtros[2]="sp";
-		filtros[3]="zsf";
+		filtros[0]="zsf";
+		filtros[1]="zx";
+		filtros[2]="z80";
+		filtros[3]="sp";
 		filtros[4]="sna";
 		filtros[5]=0;
 	}
@@ -21048,9 +21048,9 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 
 
 	else {
-		filtros[0]="zx";
-		filtros[1]="z80";
-		filtros[2]="zsf";
+		filtros[0]="zsf";
+		filtros[1]="zx";
+		filtros[2]="z80";
 		filtros[3]="sna";
 		filtros[4]=0;
 	}
