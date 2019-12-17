@@ -13404,7 +13404,7 @@ void menu_hardware_realjoystick_keys(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_hardware_realjoystick_keys,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_hardware_realjoystick_keys);
 
-                retorno_menu=menu_dibuja_menu(&hardware_realjoystick_keys_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_keys,"Joystick to key" );
+                retorno_menu=menu_dibuja_menu(&hardware_realjoystick_keys_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_keys,"Joystick to keys" );
 
                 
 
@@ -13469,7 +13469,7 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_hardware_realjoystick_event,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_hardware_realjoystick_event);
 
-                retorno_menu=menu_dibuja_menu(&hardware_realjoystick_event_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_event,"Joystick to event" );
+                retorno_menu=menu_dibuja_menu(&hardware_realjoystick_event_opcion_seleccionada,&item_seleccionado,array_menu_hardware_realjoystick_event,"Joystick to events" );
 
                 
 
