@@ -4724,7 +4724,11 @@ void zxvision_speech_read_current_window(void)
 	menu_speech_tecla_pulsada=0;
 	//Y simplemente dibujamos la ventana y su contenido, y eso hará releerla
 	menu_textspeech_send_text("Reading the window contents");
+
+	menu_speech_tecla_pulsada=0;
 	zxvision_draw_window(zxvision_current_window);
+
+	menu_speech_tecla_pulsada=0;
 	zxvision_draw_window_contents(zxvision_current_window);
 }
 

@@ -9,6 +9,7 @@ En el faq en el ejemplo lo tienes en 100
 
 --Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
 
+-Parece que F4 en algunas ventanas no siempre lee todo: ejemplos AY registers, Waveform. Quiza son las que tienen overlay?
 
 -Extended stack inicializado con ceros
 
