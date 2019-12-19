@@ -4720,16 +4720,34 @@ void zxvision_speech_read_current_window(void)
 	//Esto no deberia pasar, pero por si acaso
 	if (zxvision_current_window==NULL) return;
 
+	menu_espera_no_tecla();
+
 	//Decir que no hay tecla forzada, para releer el menu
 	menu_speech_tecla_pulsada=0;
 	//Y simplemente dibujamos la ventana y su contenido, y eso hará releerla
 	menu_textspeech_send_text("Reading the window contents");
+
+	//Guardamos valor overlay anterior. Ventanas que cambian overlay, como AY Registers, dicen que hay tecla
+	//pulsada y no salte el speech, sino estarian enviando a cada refresco de pantalla
+	//Nos aseguramos que esto no se hace temporalmente y asi se redibuja y se lee la ventana
+
+	void (*previous_function)(void);
+
+	previous_function=menu_overlay_function;
+
+	//restauramos modo normal de texto de menu
+	set_menu_overlay_function(normal_overlay_texto_menu);
+
 
 	menu_speech_tecla_pulsada=0;
 	zxvision_draw_window(zxvision_current_window);
 
 	menu_speech_tecla_pulsada=0;
 	zxvision_draw_window_contents(zxvision_current_window);
+
+
+	//Restauramos funcion anterior de overlay
+	set_menu_overlay_function(previous_function);	
 }
 
 
