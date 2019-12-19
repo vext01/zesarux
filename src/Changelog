@@ -58,6 +58,7 @@ Improved menu:
 
 
 Improved accesibility: 
+-pressing F4 key on a window menu, it will read that window again
 -say when a selected menu item is not available
 -Mac OS speech filter doesn't fail anymore when message has "-"
 -selected item menu is called now "Selected item" (was called "Active item" before)

@@ -6951,17 +6951,17 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 }
                         break;
 
-			                    //F4 pulsado. Volcar pantalla a speech
-			                       case UTIL_KEY_F4:
-				                         if (pressrelease) {
-                                   textspeech_enviar_speech_pantalla();
+			//F4 pulsado. Volcar pantalla a speech si el menu esta cerrado
+			case UTIL_KEY_F4:
+			if (pressrelease) {
+                                   if (!menu_abierto) textspeech_enviar_speech_pantalla();
                                    ql_keyboard_table[0] &= (255-1);
                                  }
 
                                  else {
                                    ql_keyboard_table[0] |= 1;
                                  }
-			                      break;
+		        break;
 
                         //F5 pulsado
                         case UTIL_KEY_F5:

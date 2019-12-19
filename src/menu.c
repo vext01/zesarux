@@ -4715,6 +4715,19 @@ void zxvision_destroy_window(zxvision_window *w)
 
 }
 
+void zxvision_speech_read_current_window(void)
+{
+	//Esto no deberia pasar, pero por si acaso
+	if (zxvision_current_window==NULL) return;
+
+	//Decir que no hay tecla forzada, para releer el menu
+	menu_speech_tecla_pulsada=0;
+	//Y simplemente dibujamos la ventana y su contenido, y eso hará releerla
+	menu_textspeech_send_text("Reading the window again");
+	zxvision_draw_window(zxvision_current_window);
+	zxvision_draw_window_contents(zxvision_current_window);
+}
+
 
 z80_byte zxvision_read_keyboard(void)
 {
@@ -4738,6 +4751,13 @@ z80_byte zxvision_read_keyboard(void)
 		//printf ("Retornamos ESC pues se ha pulsado boton de cerrar ventana\n");
 		//mouse_pressed_close_window=0;
 		return 2;
+	}
+
+	//Si se ha pulsado F4, leer ventana
+	//z80_byte puerto_especial2=255; //   F5 F4 F3 F2 F1
+	if ((puerto_especial2 & 8)==0) {
+		//printf ("leer ventana de menu\n");
+		zxvision_speech_read_current_window();
 	}
 
 	return tecla;
@@ -27615,7 +27635,8 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"CTRL/ALT: Symbol shift\n"
 			"TAB: Extended mode (symbol shift + caps shift)\n"
 			"\n"
-			"F4: Send display content to speech program, including only known characters (unknown characters are shown as a space)\n"
+			"F4: When menu is closed, send Spectrum display content to speech program, including only known characters (unknown characters are shown as a space). "
+			"When menu is opened, it will read the window contents and send it to speech program, even if it has already been read again\n"
 			"F5: Open menu\n"
 			"F8: Open On Screen Keyboard (only on Spectrum & ZX80/81)\n"
 			"F9: Open Smart Load window\n"
