@@ -76,6 +76,14 @@ Q: Is there any Spanish quick guide to know how to enable Accesibility on ZEsarU
 A: Yes, see file extras/docs/accesibilidad_instrucciones.txt 
 
 
+Q: Can I read the Spectrum display?
+A: Pressing key F4 you run some kind of OCR function which tries to read the Spectrum display. It will succeed in the following two cases:
+1) The text is written in standard rom font
+2) The text is not written in standard rom font but the spectrum system font pointer is set accordingly to the used font
+(which may happen in some cases)
+
+
+
 ----------------------------------------------------------------------------
 
 
