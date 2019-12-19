@@ -2,15 +2,12 @@
 
 -Accesibilidad
 
-El ítem seleccionado se repite unas cuantas veces, y no sé qué estoy seleccionando. 
+--El ítem seleccionado se repite unas cuantas veces, y no sé qué estoy seleccionando. 
 
-Una sugerencia sobre el menú (en cosas como enabled, selected, etc.) es que quites puntuación 
-porque así se lee más rápido, o que cambies los puntos por comas porque así la pausa se hará más corta.
-
-Ancho de línea de speech. En menú está limitado a dos dígitos 
+--Ancho de línea de speech. En menú está limitado a dos dígitos 
 En el faq en el ejemplo lo tienes en 100
 
-Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
+--Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
 
 
 -Extended stack inicializado con ceros
