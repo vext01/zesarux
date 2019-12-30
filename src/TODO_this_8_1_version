@@ -66,6 +66,7 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 -Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar 
 la velocidad de la cpu en nextos
+-copper transferencias de 16 bits 
 
 
 ---Fin cosas Next
