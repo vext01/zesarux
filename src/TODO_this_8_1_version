@@ -10,9 +10,8 @@
 
 -Parece que F4 en algunas ventanas no siempre lee todo: ejemplos AY registers, Waveform. Quiza son las que tienen overlay?
 
--Menú ventana scanf: controlar maximo longitud 
+-Menú ventana scanf en stdout: controlar maximo longitud 
 
--que diga "too long" en speech cuando llega al maximo de longitud en scanf
 
 -Extended stack inicializado con ceros
 

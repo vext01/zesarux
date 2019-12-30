@@ -4965,6 +4965,14 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				//printf ("offset_string %d pos_cursor %d\n",offset_string,pos_cursor_x);
 
 			}
+
+			else {
+				//printf ("llegado al maximo\n");
+				//-que diga "too long" en speech cuando llega al maximo de longitud en scanf
+				menu_speech_tecla_pulsada=0;
+        		menu_textspeech_send_text("Too long");				
+
+			}
 		}
 
 		//tecla derecha
