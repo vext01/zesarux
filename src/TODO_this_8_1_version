@@ -1,7 +1,6 @@
 --------Para ESTA versión 8.1:
 
 -Accesibilidad:
---El ítem seleccionado se repite unas cuantas veces, y no sé qué estoy seleccionando. 
 --Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
 
 
