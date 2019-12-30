@@ -94,6 +94,10 @@ Fixed bug on return flags from tape load trap. It only affected Rocman game and 
 Fixed setting a configured memory breakpoint like this "--set-mem-breakpoint 0000H 2" which was fired on startup
 Fixed opening the menu on stdout driver on the first start of ZEsarUX
 
+Fixed tbblue emulation:
+-fixed clipping in 80x32 mode
+-fix error when paging rom in ram, on case pages 0,1,2,3
+
 Fixed Accessibility bugs: 
 -now menu settings (anything between square brackets []) are played at the end of the menu line
 -now menu settings ([ ] and [X]) are played as "enabled"/"disabled"
