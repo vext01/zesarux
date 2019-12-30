@@ -7,10 +7,10 @@ Accessibility
 Q: How can I run the emulator with text to speech facilities?
 A: Run the emulator specifying a text to speech program (with path) like the festival scripts or mac os say script, for example:
 
-./zesarux BSLEEZE1.TAP --enableprintchartrap --textspeechprogram speech_filters/festival_filter.sh --linewidth 100 --linewidthwaitspace 
+./zesarux BSLEEZE1.TAP --enableprintchartrap --textspeechprogram speech_filters/festival_filter.sh --linewidth 99 --linewidthwaitspace 
 
 Or, in Windows:
-zesarux BSLEEZE1.TAP --enableprintchartrap --textspeechprogram speech_filters\win_balabolka.bat --linewidth 100 --linewidthwaitspace
+zesarux BSLEEZE1.TAP --enableprintchartrap --textspeechprogram speech_filters\win_balabolka.bat --linewidth 99 --linewidthwaitspace
 
 Note: In Windows version, when you specify command line settings, the text console remains open. So speech programs start very fast.
 If you don't set command line settings, speech programs start slower.
