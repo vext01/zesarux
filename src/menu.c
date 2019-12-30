@@ -27228,11 +27228,25 @@ int menu_confirm_yesno(char *texto_ventana)
 void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 {
 
-        //En caso de stdout, es mas simple, mostrar texto y esperar texto
-        if (!strcmp(scr_driver_name,"stdout")) {
+    //En caso de stdout, es mas simple, mostrar texto y esperar texto
+	if (!strcmp(scr_driver_name,"stdout")) {
 		printf ("%s\n",titulo);
 		scrstdout_menu_print_speech_macro(titulo);
-		scanf("%s",texto);
+
+		//Controlar maximo en cadena de texto aparte
+		char buffer_temporal[1024];
+		scanf("%s",buffer_temporal);
+		int l=strlen(buffer_temporal);
+		if (l>max_length-1) {
+			printf ("Too long\n");
+			scrstdout_menu_print_speech_macro("Too long");
+			return;
+		}
+
+
+		strcpy(texto,buffer_temporal);
+
+		//scanf("%s",texto);
 
 		return;
 	}
