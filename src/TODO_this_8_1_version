@@ -4,8 +4,7 @@
 
 --El ítem seleccionado se repite unas cuantas veces, y no sé qué estoy seleccionando. 
 
---Ancho de línea de speech. En menú está limitado a dos dígitos 
-En el faq en el ejemplo lo tienes en 100
+
 
 --Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
 
