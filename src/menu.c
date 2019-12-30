@@ -4336,7 +4336,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 
 	//Para draw below windows, no mostrar error pendiente cuando esta dibujando ventanas de debajo
 	if (!no_dibuja_ventana_muestra_pending_error_message) menu_muestra_pending_error_message();
-
+	
 	//En el caso de stdout, solo escribimos el texto
         if (!strcmp(scr_driver_name,"stdout")) {
                 printf ("%s\n",titulo);
@@ -5221,7 +5221,6 @@ int menu_ask_file_to_save(char *titulo_ventana,char *filtro,char *file_save)
 //por lo que agrega cierta altura a la ventana. Se agregan tantas lineas como diga el parametro return_after_print_text
 void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...)
 {
-
 	//Buffer de entrada
 
         char texto[MAX_TEXTO_GENERIC_MESSAGE];
@@ -5240,7 +5239,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	//int linea_cursor=0;
 
 	//En caso de stdout, es mas simple, mostrar texto y esperar tecla
-        if (!strcmp(scr_driver_name,"stdout")) {
+    if (!strcmp(scr_driver_name,"stdout")) {
 		//printf ("%d\n",strlen(texto));
 
 
@@ -5255,7 +5254,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 		menu_espera_tecla();
 
 		return;
-        }
+    }
 
 	//En caso de simpletext, solo mostrar texto sin esperar tecla
 	if (!strcmp(scr_driver_name,"simpletext")) {
@@ -8988,14 +8987,21 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Primera vez decir selected item. Luego solo el nombre del item
 	menu_active_item_primera_vez=1;
 
-        if (!strcmp(scr_driver_name,"stdout") ) {
+    if (!strcmp(scr_driver_name,"stdout") ) {
+
+		//Para que se envie a speech
+		//TODO: el texto se muestra dos veces en consola: 
+		//1- pues es un error y todos se ven en consola. 
+		//2- pues es una ventana de stdout y se "dibuja" tal cual en consola
+		menu_muestra_pending_error_message();
+
                 //se abre menu con driver stdout. Llamar a menu alternativo
 
 		//si hay menu tabulado, agregamos ESC (pues no se incluye nunca)
 		if (m->es_menu_tabulado) menu_add_ESC_item(m);
 
                 return menu_dibuja_menu_stdout(opcion_inicial,item_seleccionado,m,titulo);
-        }
+    }
 /*
         if (if_pending_error_message) {
                 if_pending_error_message=0;

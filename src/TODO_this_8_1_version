@@ -1,14 +1,9 @@
 --------Para ESTA versión 8.1:
 
--Accesibilidad
-
+-Accesibilidad:
 --El ítem seleccionado se repite unas cuantas veces, y no sé qué estoy seleccionando. 
-
-
-
 --Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
 
--Parece que F4 en algunas ventanas no siempre lee todo: ejemplos AY registers, Waveform. Quiza son las que tienen overlay?
 
 -Menú ventana scanf en stdout: controlar maximo longitud 
 
