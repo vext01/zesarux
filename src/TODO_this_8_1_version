@@ -5,8 +5,6 @@
 --Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
 
 
--Menú ventana scanf en stdout: controlar maximo longitud 
-
 
 -Extended stack inicializado con ceros
 
