@@ -936,13 +936,15 @@ void tbsprite_pattern_put_value_index(z80_byte sprite,z80_byte index_in_sprite,z
 [1] 2nd: Y position (0-255).
 [2] 3rd: bits 7-4 is palette offset, bit 3 is X MSB, bit 2 is X mirror, bit 1 is Y mirror and bit 0 is visible flag.
 [3] 4th: bits 7-6 is reserved, bits 5-0 is Name (pattern index, 0-63).
+[4] 5th: TODO!!!
 */
-z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
+z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 
 //Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
 z80_byte tbsprite_index_palette;
 z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
 z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
+z80_byte tbsprite_nr_index_sprite;
 
 /*
 Port 0x303B, if read, returns some information:
@@ -955,6 +957,19 @@ Port 0x303B, if written, defines the sprite slot to be configured by ports 0x55 
 */
 
 z80_byte tbblue_port_303b;
+
+int tbsprite_is_lockstep()
+{
+	return (tbblue_registers[9]&0x10);
+}
+
+
+void tbsprite_increment_index_303b() {	// increment the "port" index
+	tbsprite_index_sprite_subindex=0;
+	tbsprite_index_sprite++;
+	tbsprite_index_sprite %= TBBLUE_MAX_SPRITES;
+}
+
 
 
 /* Informacion relacionada con Layer2. Puede cambiar en el futuro, hay que ir revisando info en web de Next
@@ -1134,14 +1149,17 @@ void tbblue_reset_sprites(void)
 
 	//Poner toda info de sprites a 0. Seria quiza suficiente con poner bit de visible a 0
 	for (i=0;i<TBBLUE_MAX_SPRITES;i++) {
-		tbsprite_sprites[i][0]=0;
-		tbsprite_sprites[i][1]=0;
-		tbsprite_sprites[i][2]=0;
-		tbsprite_sprites[i][3]=0;
+		int j;
+		for (j=0;j<TBBLUE_SPRITE_ATTRIBUTE_SIZE;j++) {
+			tbsprite_sprites[i][j]=0;
+		}
 	}
 
 
-	tbsprite_index_palette=tbsprite_index_pattern=tbsprite_index_sprite=0;
+	//tbsprite_index_palette=tbsprite_index_pattern=tbsprite_index_sprite=0;
+	tbsprite_index_pattern=tbsprite_index_pattern_subindex=0;
+	tbsprite_index_sprite=tbsprite_index_sprite_subindex=0;
+	tbsprite_nr_index_sprite=0;	
 
 	tbblue_port_303b=0;
 
@@ -1245,12 +1263,22 @@ done < /tmp/archivo_lista.txt
 }
 
 
-void tbblue_out_port_sprite_index(z80_byte value)
+/*void tbblue_out_port_sprite_index(z80_byte value)
 {
 	//printf ("Out tbblue_out_port_sprite_index %02XH\n",value);
 	tbsprite_index_palette=tbsprite_index_pattern=tbsprite_index_sprite=value;
 
 	tbsprite_index_pattern_subindex=tbsprite_index_sprite_subindex=0;
+}*/
+
+
+void tbblue_out_port_sprite_index(z80_byte value)
+{
+	//printf ("Out tbblue_out_port_sprite_index %02XH\n",value);
+	tbsprite_index_pattern=value%TBBLUE_MAX_PATTERNS;
+	tbsprite_index_pattern_subindex=value&0x80;
+	tbsprite_index_sprite=value%TBBLUE_MAX_SPRITES;
+	tbsprite_index_sprite_subindex=0;
 }
 
 /*void tbblue_out_sprite_palette(z80_byte value)
@@ -1444,7 +1472,7 @@ void tbblue_out_sprite_pattern(z80_byte value)
 
 }
 
-void tbblue_out_sprite_sprite(z80_byte value)
+/*void tbblue_out_sprite_sprite(z80_byte value)
 {
 	//printf ("Out tbblue_out_sprite_sprite. Index: %d subindex: %d %02XH\n",tbsprite_index_sprite,tbsprite_index_sprite_subindex,value);
 
@@ -1462,6 +1490,25 @@ void tbblue_out_sprite_sprite(z80_byte value)
 	}
 
 	else tbsprite_index_sprite_subindex++;
+}*/
+
+
+void tbblue_out_sprite_sprite(z80_byte value)
+{
+	//printf ("Out tbblue_out_sprite_sprite. Index: %d subindex: %d %02XH\n",tbsprite_index_sprite,tbsprite_index_sprite_subindex,value);
+
+
+
+	//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
+	//z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
+
+	tbsprite_sprites[tbsprite_index_sprite][tbsprite_index_sprite_subindex]=value;
+	if (3 == tbsprite_index_sprite_subindex && 0 == (value&0x40)) {			// 4-byte type, add 0 as fifth
+		tbsprite_sprites[tbsprite_index_sprite][++tbsprite_index_sprite_subindex]=0;
+	}
+	if (++tbsprite_index_sprite_subindex == TBBLUE_SPRITE_ATTRIBUTE_SIZE) {
+		tbsprite_increment_index_303b();
+	}
 }
 
 
@@ -3410,6 +3457,35 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 		break;
 
+
+		case 52:	//0x34 - sprite index
+			if (tbsprite_is_lockstep()) {
+				tbblue_out_port_sprite_index(value);
+			} else {
+				tbsprite_nr_index_sprite=value%TBBLUE_MAX_SPRITES;
+			}
+		break;
+
+		// sprite attribute registers
+		case 53:	case 54:	case 55:	case 56:	case 57:	//0x35, 0x36, 0x37, 0x38, 0x39
+		case 117:	case 118:	case 119:	case 120:	case 121:	//0x75, 0x76, 0x77, 0x78, 0x79
+		{
+			int attribute_id = (index_position-0x35)&7;				//0..4
+			int sprite_id = tbsprite_is_lockstep() ? tbsprite_index_sprite : tbsprite_nr_index_sprite;
+			tbsprite_sprites[sprite_id][attribute_id] = value;
+			if (index_position < 0x70) break;	//0x35, 0x36, 0x37, 0x38, 0x39 = done
+			//0x75, 0x76, 0x77, 0x78, 0x79 = increment sprite id
+			if (tbsprite_is_lockstep()) {
+				tbsprite_increment_index_303b();
+			} else {
+				++tbsprite_nr_index_sprite;
+				tbsprite_nr_index_sprite%=TBBLUE_MAX_SPRITES;
+			}
+		}
+		break;
+
+
+
 		case 64:
 			//palette index
 			tbblue_reset_palette_write_state();
@@ -3534,6 +3610,103 @@ Bit	Function
 		tbblue_sync_display1_reg_to_others(value);
 
 		break;	
+
+
+		default:
+			/*if 
+			(
+			(index_position>=0x35 && index_position<=0x39)  ||
+			(index_position>=0x75 && index_position<=0x79)
+			) 
+			{
+				printf ("debug tbblue register %02XH (%d decimal) sending value %02XH\n",index_position,index_position,value);
+			}*/
+		break;
+
+/*
+Juego Santa envia:
+
+debug tbblue register 14H (20 decimal) sending value E3H - Pending?
+debug tbblue register 12H (18 decimal) sending value 09H -OK
+debug tbblue register 13H (19 decimal) sending value 09H -OK
+debug tbblue register 32H (50 decimal) sending value 00H -OK
+debug tbblue register 33H (51 decimal) sending value 00H -OK
+debug tbblue register 16H (22 decimal) sending value 00H -OK
+debug tbblue register 17H (23 decimal) sending value 00H -OK
+debug tbblue register 2FH (47 decimal) sending value 00H -OK
+debug tbblue register 30H (48 decimal) sending value 00H -OK
+debug tbblue register 31H (49 decimal) sending value 00H -OK
+debug tbblue register 68H (104 decimal) sending value 00H -OK
+debug tbblue register 6BH (107 decimal) sending value 00H -OK
+debug tbblue register 14H (20 decimal) sending value E3H - Pending?
+debug tbblue register 4BH (75 decimal) sending value E3H -OK
+debug tbblue register 4AH (74 decimal) sending value 00H -OK
+debug tbblue register 4CH (76 decimal) sending value 0FH -OK
+debug tbblue register 12H (18 decimal) sending value 09H -OK
+debug tbblue register 13H (19 decimal) sending value 0CH -OK
+debug tbblue register 14H (20 decimal) sending value E3H -OK
+debug tbblue register 16H (22 decimal) sending value 00H -OK
+debug tbblue register 17H (23 decimal) sending value 00H -OK
+debug tbblue register 32H (50 decimal) sending value 00H -OK
+debug tbblue register 33H (51 decimal) sending value 00H -OK
+debug tbblue register 4AH (74 decimal) sending value 00H -OK
+debug tbblue register 4BH (75 decimal) sending value E3H -OK
+debug tbblue register 4AH (74 decimal) sending value 00H -OK
+debug tbblue register 14H (20 decimal) sending value E3H - Pending?
+debug tbblue register 68H (104 decimal) sending value 80H -OK
+debug tbblue register 12H (18 decimal) sending value 09H -OK
+
+--hasta aqui splash inicial
+--a partir de aqui aparece menu
+
+
+
+debug tbblue register 6BH (107 decimal) sending value 00H -OK
+debug tbblue register 4CH (76 decimal) sending value 00H -OK
+debug tbblue register 6EH (110 decimal) sending value 6CH -OK
+debug tbblue register 6FH (111 decimal) sending value 40H -OK
+debug tbblue register 12H (18 decimal) sending value 09H -OK
+debug tbblue register 6BH (107 decimal) sending value 81H -OK
+debug tbblue register 31H (49 decimal) sending value 00H -OK
+
+
+
+Warhawk envia:
+debug tbblue register 78H (120 decimal) sending value 00H
+debug tbblue register 78H (120 decimal) sending value 00H
+debug tbblue register 78H (120 decimal) sending value 00H
+debug tbblue register 78H (120 decimal) sending value 00H
+debug tbblue register 78H (120 decimal) sending value 00H
+debug tbblue register 78H (120 decimal) sending value 00H
+debug tbblue register 38H (56 decimal) sending value 8AH
+debug tbblue register 35H (53 decimal) sending value 60H
+debug tbblue register 36H (54 decimal) sending value FEH
+debug tbblue register 77H (119 decimal) sending value 00H
+debug tbblue register 38H (56 decimal) sending value 8BH
+debug tbblue register 35H (53 decimal) sending value 70H
+debug tbblue register 36H (54 decimal) sending value FEH
+debug tbblue register 77H (119 decimal) sending value 00H
+debug tbblue register 38H (56 decimal) sending value 8CH
+debug tbblue register 35H (53 decimal) sending value 80H
+debug tbblue register 36H (54 decimal) sending value FEH
+debug tbblue register 77H (119 decimal) sending value 00H
+debug tbblue register 38H (56 decimal) sending value 8DH
+debug tbblue register 35H (53 decimal) sending value 90H
+debug tbblue register 36H (54 decimal) sending value FEH
+debug tbblue register 77H (119 decimal) sending value 00H
+debug tbblue register 38H (56 decimal) sending value 94H
+debug tbblue register 35H (53 decimal) sending value 50H
+debug tbblue register 36H (54 decimal) sending value FEH
+debug tbblue register 77H (119 decimal) sending value 00H
+debug tbblue register 38H (56 decimal) sending value 95H
+debug tbblue register 35H (53 decimal) sending value 60H
+debug tbblue register 36H (54 decimal) sending value FEH
+
+
+
+
+
+*/		
 
 
 	}
