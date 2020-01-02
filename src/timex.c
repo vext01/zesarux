@@ -33,6 +33,7 @@
 #include "chloe.h"
 #include "prism.h"
 #include "zxuno.h" 
+#include "tbblue.h"
 
 
 
@@ -475,6 +476,24 @@ void set_timex_port_ff(z80_byte value)
 		if (MACHINE_IS_PRISM) prism_set_memory_pages();
 		if (MACHINE_IS_TIMEX_TS2068) timex_set_memory_pages();
 		if (is_zxuno_chloe_mmu() ) zxuno_set_memory_pages();
+		if (MACHINE_IS_TBBLUE) {
+			//Sincronizar los 5 bits bajos a registro tbblue			
+
+			/*
+			(W) 0x69 (105) => DISPLAY CONTROL 1 REGISTER
+
+			Bit	Function
+			7	Enable the Layer 2 (alias for Layer 2 Access Port ($123B) bit 1)
+			6	Enable ULA shadow (bank 7) display (alias for Memory Paging Control ($7FFD) bit 3)
+			5-0	alias for Timex Sinclair Video Mode Control ($xxFF) bits 5:0
+
+			*/
+			tbblue_registers[105] &= (128+64);
+			tbblue_registers[105] |= (value&63);
+
+
+
+		}
 
 	}
 

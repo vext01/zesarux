@@ -1863,6 +1863,21 @@ z80_byte tbblue_get_port_layer2_value(void)
 void tbblue_out_port_layer2_value(z80_byte value)
 {
 	tbblue_port_123b=value;
+
+	//Sincronizar bit layer2
+		
+
+			/*
+			(W) 0x69 (105) => DISPLAY CONTROL 1 REGISTER
+
+			Bit	Function
+			7	Enable the Layer 2 (alias for Layer 2 Access Port ($123B) bit 1)
+			6	Enable ULA shadow (bank 7) display (alias for Memory Paging Control ($7FFD) bit 3)
+			5-0	alias for Timex Sinclair Video Mode Control ($xxFF) bits 5:0
+
+			*/
+			tbblue_registers[105] &= (255-128);
+			if (value&2) tbblue_registers[105]|=128;
 }
 
 
@@ -3101,6 +3116,38 @@ void tbblue_splash_palette_format(void)
 
 }
 
+//Sincronizar los bits de registro 0x69/105 hacia layer2, ula shadow bank, puerto ff timex
+void tbblue_sync_display1_reg_to_others(z80_byte value)
+{
+/*
+(W) 0x69 (105) => DISPLAY CONTROL 1 REGISTER
+
+Bit	Function
+7	Enable the Layer 2 (alias for Layer 2 Access Port ($123B) bit 1)
+6	Enable ULA shadow (bank 7) display (alias for Memory Paging Control ($7FFD) bit 3)
+5-0	alias for Timex Sinclair Video Mode Control ($xxFF) bits 5:0
+
+*/
+
+
+	//123B bit 1 = Layer2 ON or OFF set=ON,
+	tbblue_port_123b &=(255-2);
+	if (value & 128) tbblue_port_123b |=2;
+
+	//Bit shadow
+	puerto_32765 &= (255-8);
+	if (value&64) puerto_32765|=8;
+
+	//Puerto timex
+	z80_byte temp_timex_ff=timex_port_ff;
+	temp_timex_ff &= (128+64); //Solo conservar bits altos
+	temp_timex_ff |= (value&63); //Y del valor de entrada enviar los 6 bits bajos
+	timex_port_ff=temp_timex_ff;
+	//TODO: esto no genera splash de cambio de modo. Se podria llamar a set_timex_port_ff, donde este si que hace los splash,
+	//pero al final sincroniza valor de timex hacia registro 105 (lo inverso de aqui), que aunque no pasaria nada, es
+	//redundante
+}
+
 	
 //tbblue_last_register
 //void tbblue_set_value_port(z80_byte value)
@@ -3469,6 +3516,25 @@ After a write to an odd address, the entire 16-bits are written to Copper memory
 		tbblue_copper_write_data_16b(last_register_99,value);
 
 		break;		
+
+
+		case 105:
+/*
+(W) 0x69 (105) => DISPLAY CONTROL 1 REGISTER
+
+Bit	Function
+7	Enable the Layer 2 (alias for Layer 2 Access Port ($123B) bit 1)
+6	Enable ULA shadow (bank 7) display (alias for Memory Paging Control ($7FFD) bit 3)
+5-0	alias for Timex Sinclair Video Mode Control ($xxFF) bits 5:0
+
+*/
+		//printf ("Registro 105 valor %02XH\n",value);
+
+
+		tbblue_sync_display1_reg_to_others(value);
+
+		break;	
+
 
 	}
 
@@ -5581,6 +5647,22 @@ void tbblue_out_port_32765(z80_byte value)
 				tbblue_registers[81]=255;
 
                 tbblue_set_memory_pages();
+
+			//Sincronizar bit shadow
+
+
+			/*
+			(W) 0x69 (105) => DISPLAY CONTROL 1 REGISTER
+
+			Bit	Function
+			7	Enable the Layer 2 (alias for Layer 2 Access Port ($123B) bit 1)
+			6	Enable ULA shadow (bank 7) display (alias for Memory Paging Control ($7FFD) bit 3)
+			5-0	alias for Timex Sinclair Video Mode Control ($xxFF) bits 5:0
+
+			*/
+			tbblue_registers[105] &= (255-64);
+			if (value&8) tbblue_registers[105]|=64;
+
 }
 
 
