@@ -106,6 +106,8 @@ Fixed Accessibility bugs:
 -now menu settings (anything between square brackets []) are played at the end of the menu line
 -now menu settings ([ ] and [X]) are played as "enabled"/"disabled"
 
+Fixed menu generic message splash: wait until key is released (if any pressed)
+
 Some other minor bugfixes and improvements
 
 
