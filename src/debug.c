@@ -2603,17 +2603,24 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 			}
 		}
 
+		int ignorar=0;
+
 		//Si era halt los dos ultimos y hay que ignorarlo
 		if (cpu_trans_log_ignore_repeated_halt.v && cpu_trans_log_last_was_halt>1) {
 			//no hacer log
 			//printf ("Ignorando repetido halt en pc=%04XH\n",reg_pc);
+			ignorar=1;
 		}
 
-		else {		
 
+		if (!ignorar) {
 		
 		cpu_history_add_element();
 
+		}
+
+		else {
+			//printf ("Ignorando instruccion repetida en pc=%04XH\n",reg_pc);
 		}
 
 		//printf ("\n");
