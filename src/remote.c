@@ -635,6 +635,7 @@ struct s_items_ayuda items_ayuda[]={
 	"get-pc        start items: Return PC register from position start, being 0 the most recent item, total items. Goes backwards\n"
 	"get-size                   Return total elements in history\n"
 	"ignrephalt    yes|no:      Ignore repeated opcode HALT. Disabled by default. Parameter shared with cpu-transaction-log\n"
+	"ignrepldxr    yes|no:      Ignore repeated opcode LDIR or LDDR. Disabled by default\n"
 	"is-enabled                 Tells if the cpu history is enabled or not\n"
 	"is-started                 Tells if the cpu history is started or not\n"
 	"started       yes|no:      Start recording cpu history. Requires it to be enabled first\n"
@@ -1612,6 +1613,10 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 
 	else if (!strcasecmp(parameter,"ignrephalt")) {
 		cpu_trans_log_ignore_repeated_halt.v=remote_eval_yes_no(value);
+	}			
+
+	else if (!strcasecmp(parameter,"ignrepldxr")) {
+		cpu_trans_log_ignore_repeated_ldxr.v=remote_eval_yes_no(value);
 	}			
 
 	else if (!strcasecmp(parameter,"is-enabled")) {

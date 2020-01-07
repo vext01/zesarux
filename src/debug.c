@@ -1712,7 +1712,13 @@ int memory_zone_by_file_size=0;
 //Usados en cpu transaction log y cpu-history 
 int cpu_trans_log_last_was_halt=0;
 
+//Si ultima instruccion era LDIR o LDDR. Para ignorar hasta lo que no sea LDIR o LDDR. Contar al menos 1
+int cpu_trans_log_last_was_ldxr=0;
+
+//Para halt
 z80_bit cpu_trans_log_ignore_repeated_halt={0};
+//Para ldir,lddr
+z80_bit cpu_trans_log_ignore_repeated_ldxr={0};
 
 
 
@@ -2603,14 +2609,38 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 			}
 		}
 
+		//Si es ldir o lddr lo ultimo
+		if (cpu_trans_log_ignore_repeated_ldxr.v) {
+			if (CPU_IS_Z80) {
+					z80_byte op_preffix=peek_byte_no_time(reg_pc);
+					z80_byte opcode=peek_byte_no_time(reg_pc+1);
+					if (op_preffix==237 && (opcode==176 || opcode==184)) {
+							if (cpu_trans_log_last_was_ldxr<2) cpu_trans_log_last_was_ldxr++;
+					}
+					else {
+							cpu_trans_log_last_was_ldxr=0;
+					}
+
+			}
+			else {
+					cpu_trans_log_last_was_ldxr=0;
+			}
+		}		
+
 		int ignorar=0;
 
 		//Si era halt los dos ultimos y hay que ignorarlo
 		if (cpu_trans_log_ignore_repeated_halt.v && cpu_trans_log_last_was_halt>1) {
 			//no hacer log
-			//printf ("Ignorando repetido halt en pc=%04XH\n",reg_pc);
 			ignorar=1;
 		}
+
+
+		//Si era ldir/lddr los dos ultimos y hay que ignorarlo
+		if (cpu_trans_log_ignore_repeated_ldxr.v && cpu_trans_log_last_was_ldxr>1) {
+			//no hacer log
+			ignorar=1;
+		}		
 
 
 		if (!ignorar) {
