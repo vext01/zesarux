@@ -1709,6 +1709,7 @@ z80_byte *memory_zone_by_file_pointer;
 int memory_zone_by_file_size=0;
 
 //Si ultima instruccion era HALT. Para ignorar hasta lo que no sea HALT. Contar al menos 1
+//Usados en cpu transaction log y cpu-history 
 int cpu_trans_log_last_was_halt=0;
 
 z80_bit cpu_trans_log_ignore_repeated_halt={0};
@@ -2581,8 +2582,39 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 		*/
 
 
+		//Ver si hay que ignorar repetidos
+
+		//Si es halt lo ultimo
+		if (cpu_trans_log_ignore_repeated_halt.v) {
+			if (CPU_IS_Z80) {
+					z80_byte opcode=peek_byte_no_time(reg_pc);
+					if (opcode==118) {
+							if (cpu_trans_log_last_was_halt<2) cpu_trans_log_last_was_halt++;
+							//printf ("halts %d\n",cpu_trans_log_last_was_halt);
+
+					}
+					else {
+							cpu_trans_log_last_was_halt=0;
+					}
+
+			}
+			else {
+					cpu_trans_log_last_was_halt=0;
+			}
+		}
+
+		//Si era halt los dos ultimos y hay que ignorarlo
+		if (cpu_trans_log_ignore_repeated_halt.v && cpu_trans_log_last_was_halt>1) {
+			//no hacer log
+			//printf ("Ignorando repetido halt en pc=%04XH\n",reg_pc);
+		}
+
+		else {		
+
 		
 		cpu_history_add_element();
+
+		}
 
 		//printf ("\n");
 	}
