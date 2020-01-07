@@ -2650,7 +2650,7 @@ z80_byte cpu_core_loop_history(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED
 		}
 
 		else {
-			//printf ("Ignorando instruccion repetida en pc=%04XH\n",reg_pc);
+			//printf ("Ignorando instruccion repetida en pc=%04XH %02X%02X\n",reg_pc,peek_byte_no_time(reg_pc),peek_byte_no_time(reg_pc+1));
 		}
 
 		//printf ("\n");
