@@ -5464,7 +5464,11 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 			int tbblue_lores=tbblue_registers[0x15] & 128;
 			if (tbblue_lores) tbblue_do_ula_lores_overlay();
-		  	else tbblue_do_ula_standard_overlay();
+		  	else {
+				if (tbblue_if_ula_is_enabled() ) {
+				  tbblue_do_ula_standard_overlay();
+				}
+			}
 
 		//Overlay de layer2
 							//Capa layer2
