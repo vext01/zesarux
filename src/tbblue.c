@@ -181,6 +181,12 @@ z80_byte tbblue_copper_get_byte(z80_int posicion)
 	return tbblue_copper_memory[posicion];
 }
 
+//Devuelve el valor de copper
+z80_int tbblue_copper_get_pc(void)
+{
+	return tbblue_copper_pc & (TBBLUE_COPPER_MEMORY-1);
+}
+
 //Devuelve el byte donde apunta pc
 z80_byte tbblue_copper_get_byte_pc(void)
 {
@@ -250,20 +256,49 @@ void tbblue_copper_next_opcode(void)
 
 }
 
+
+z80_bit tbblue_copper_ejecutando_halt={0};
+
 //Ejecuta opcodes del copper // hasta que se encuentra un wait
 void tbblue_copper_run_opcodes(void)
 {
-	z80_byte byte_leido=0;
 
-		byte_leido=tbblue_copper_get_byte_pc();
+	z80_byte byte_leido=tbblue_copper_get_byte_pc();
+	z80_byte byte_leido2=tbblue_copper_get_byte(tbblue_copper_pc+1);
+
+	//Asumimos que no
+	tbblue_copper_ejecutando_halt.v=0;
+
+	//if (tbblue_copper_get_pc()==0x24) printf ("%02XH %02XH\n",byte_leido,byte_leido2);
+
+    //Special case of "value 0 to port 0" works as "no operation" (duration 1 CLOCK)
+    if (byte_leido==0 && byte_leido2==0) {
+      //printf("NOOP at %04XH\n",tbblue_copper_pc);
+	  tbblue_copper_next_opcode();
+      return;
+    }
+
+    //Special case of "WAIT 63,511" works as "halt" instruction
+    if (byte_leido==255 && byte_leido2==255) {
+	  //printf("HALT at %04XH\n",tbblue_copper_pc);
+	  tbblue_copper_ejecutando_halt.v=1;
+
+	  //temp
+	  /*if (t_scanline>300) {
+		  printf ("Seguir halt\n");
+		  tbblue_copper_next_opcode();
+	  }*/
+      return;
+    }
+
 		if ( (byte_leido&128)==0) {
 			//Es un move
 			z80_byte indice_registro=byte_leido&127;
 			//tbblue_copper_pc++;
-			z80_byte valor_registro=tbblue_copper_get_byte(tbblue_copper_pc+1);
+			
 			//tbblue_copper_pc++;
 			//printf ("Executing MOVE register %02XH value %02XH\n",indice_registro,valor_registro);
-			tbblue_set_value_port_position(indice_registro,valor_registro);
+			tbblue_set_value_port_position(indice_registro,byte_leido2);
 
 			tbblue_copper_next_opcode();
 
@@ -322,7 +357,9 @@ int tbblue_copper_wait_cond_fired(void)
 
 	int current_raster=tbblue_get_current_raster_position();
 
-	//printf ("Waiting until raster %d horiz %d. current %d\n",linea,horiz,current_raster);
+	//511, 63
+	//if (tbblue_copper_get_pc()==0x24) 
+	// printf ("Waiting until raster %d horiz %d. current %d on copper_pc=%04X\n",linea,horiz,current_raster,tbblue_copper_get_pc() );
 
 	//comparar vertical
 	if (current_raster==linea) {
@@ -351,6 +388,22 @@ void tbblue_copper_handle_next_opcode(void)
 	}
 }                                           
 
+
+void tbblue_if_copper_halt(void)
+{
+	//Si esta activo copper
+    z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+    if (copper_control_bits != TBBLUE_RCCH_COPPER_STOP) {
+        //printf ("running copper %d\n",tbblue_copper_pc);
+		if (tbblue_copper_ejecutando_halt.v) {
+			//liberar el halt
+			//printf ("copper was on halt (copper_pc=%04XH). Go to next opcode\n",tbblue_copper_get_pc() );
+			tbblue_copper_next_opcode();
+			//printf ("copper was on halt (copper_pc after=%04XH)\n",tbblue_copper_get_pc() );
+		}
+	}	
+}
+						
  
 
 void tbblue_copper_handle_vsync(void)
