@@ -3,8 +3,6 @@
 -Accesibilidad:
 --Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
 
--Al aparecer un mensaje con franjas que desaparecen (ejemplo reload mmc file) no espera a liberar tecla
-
 
 -Extended stack inicializado con ceros
 
