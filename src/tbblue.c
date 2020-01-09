@@ -2949,6 +2949,15 @@ void tbblue_hard_reset(void)
 
 	if (tbblue_fast_boot_mode.v) {
 		tbblue_registers[3]=3;
+
+		tbblue_registers[8]=2+8; //turbosound 3 chips, specdrum
+
+		set_total_ay_chips(3);
+
+		audiodac_enabled.v=1;
+		audiodac_selected_type=0;
+
+
 		tbblue_registers[80]=0xff;
 		tbblue_registers[81]=0xff;
 		tbblue_set_memory_pages();

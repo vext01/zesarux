@@ -105,6 +105,7 @@ Fixed tbblue emulation:
 -fixed clipping in 80x32 mode
 -fix error when paging rom in ram, on case pages 0,1,2,3
 -fixed "bit 7 = Disable ULA output (soft reset = 0)" on register 0x68
+-fix turbosound and dac activation when tbblue fast boot mode
 
 Fixed Accessibility bugs: 
 -now menu settings (anything between square brackets []) are played at the end of the menu line
