@@ -61,6 +61,8 @@ Tilemap Control Register - SpecNext official Wiki
 -Puerto dffd next
 https://specnext.dev/wiki/Next_Memory_Bank_Select
 
+-tools/tile editor: no se ve bien?
+
 -Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar 
 la velocidad de la cpu en nextos
 
