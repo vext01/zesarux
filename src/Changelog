@@ -52,6 +52,8 @@ Improved TBBlue emulation:
 -added tbblue register 69H: display control 1 register
 -added tbblue registers 0x35-0x39, 0x75-0x79
 -added copper opcodes NOOP, HALT
+-increased tbblue.mmc MMC image size to 64 MB
+-updated to the last tbblue SD distribution. Now it holds the entire distribution
 
 Improved Hex editor: can now copy to a different memory zone
 Improved menu: 
