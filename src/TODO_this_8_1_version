@@ -57,7 +57,6 @@ but the top 7 bits are extended palette offset. The transparency is then checked
  -menu info video tbblue cuando son inks y papers no cabe entero. probar con angry floaters por ejemplo
 
 Tilemap Control Register - SpecNext official Wiki
--tbblue modo turbo 28 MHz
 -Mantener archivo de especificaciones de next (la lista completa de los registros internos) tal cual como los emulo. Así es más fácil saber cuando agregan o modifican algo nuevo 
 -Ensamblador opcodes extendidos next
 -Puerto dffd next

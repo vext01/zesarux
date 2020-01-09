@@ -2679,12 +2679,15 @@ void tbblue_set_emulator_setting_turbo(void)
 {
 	/*
 	(R/W)	07 => Turbo mode
-	bit 1-0 = Turbo (00 = 3.5MHz, 01 = 7MHz, 10 = 14MHz)
-	  (00 after a PoR or Hard-reset)
+	bit 1-0 = Set CPU speed (soft reset = %00)
 
-	Si se establece a 11, hara 14 mhz tambien
+%00 = 3.5MHz
+%01 = 7MHz
+%10 = 14MHz
+%11 = 28MHz (works since core 3.0	  
 
-				*/
+
+	*/
 
 	z80_byte t=tbblue_registers[7] & 3;
 
@@ -2698,9 +2701,9 @@ void tbblue_set_emulator_setting_turbo(void)
 
 	if (t==0) cpu_turbo_speed=1;
 	else if (t==1) cpu_turbo_speed=2;
-	else if (t==2 || t==3) cpu_turbo_speed=4;
+	else if (t==2) cpu_turbo_speed=4;
+	else if (t==3) cpu_turbo_speed=8;
 
-	
 
 	cpu_set_turbo_speed();
 }
@@ -3432,7 +3435,6 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 		case 7:
 		/*
 		(R/W)	07 => Turbo mode
-					bit 0 = Turbo (0 = 3.5MHz, 1 = 7MHz)
 					*/
 					if ( last_register_7 != value ) tbblue_set_emulator_setting_turbo();
 		break;
