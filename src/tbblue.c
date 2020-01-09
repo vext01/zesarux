@@ -257,7 +257,7 @@ void tbblue_copper_next_opcode(void)
 }
 
 
-z80_bit tbblue_copper_ejecutando_halt={0};
+//z80_bit tbblue_copper_ejecutando_halt={0};
 
 //Ejecuta opcodes del copper // hasta que se encuentra un wait
 void tbblue_copper_run_opcodes(void)
@@ -267,29 +267,29 @@ void tbblue_copper_run_opcodes(void)
 	z80_byte byte_leido2=tbblue_copper_get_byte(tbblue_copper_pc+1);
 
 	//Asumimos que no
-	tbblue_copper_ejecutando_halt.v=0;
+	//tbblue_copper_ejecutando_halt.v=0;
 
 	//if (tbblue_copper_get_pc()==0x24) printf ("%02XH %02XH\n",byte_leido,byte_leido2);
 
     //Special case of "value 0 to port 0" works as "no operation" (duration 1 CLOCK)
+	/*
+	Dado que el registro 0 es de solo lectura, no pasa nada si escribe en el: al leerlo se obtiene un valor calculado y no el del array
     if (byte_leido==0 && byte_leido2==0) {
       //printf("NOOP at %04XH\n",tbblue_copper_pc);
 	  tbblue_copper_next_opcode();
       return;
     }
+	*/
 
     //Special case of "WAIT 63,511" works as "halt" instruction
+	/*
     if (byte_leido==255 && byte_leido2==255) {
 	  //printf("HALT at %04XH\n",tbblue_copper_pc);
 	  tbblue_copper_ejecutando_halt.v=1;
 
-	  //temp
-	  /*if (t_scanline>300) {
-		  printf ("Seguir halt\n");
-		  tbblue_copper_next_opcode();
-	  }*/
       return;
     }
+	*/
 
 		if ( (byte_leido&128)==0) {
 			//Es un move
@@ -389,6 +389,7 @@ void tbblue_copper_handle_next_opcode(void)
 }                                           
 
 
+/*
 void tbblue_if_copper_halt(void)
 {
 	//Si esta activo copper
@@ -403,7 +404,7 @@ void tbblue_if_copper_halt(void)
 		}
 	}	
 }
-						
+*/					
  
 
 void tbblue_copper_handle_vsync(void)
@@ -3254,6 +3255,11 @@ Bit	Function
 void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 {
 
+	//Nota: algunos registros como el 0 y el 1, que son read only, deja escribirlos en el array,
+	//pero luego cuando se van a leer, mediante la funcion tbblue_get_value_port_register, se obtienen de otro sitio, no del array
+	//por lo que todo ok
+
+
 
 	//printf ("register port %02XH value %02XH\n",tbblue_last_register,value);
 
@@ -3800,7 +3806,8 @@ z80_byte tbblue_get_value_port_register(z80_byte registro)
 
 	int linea_raster;
 
-	//Casos especiales
+	//Casos especiales. Registros que no se obtienen leyendo del array de registros. En principio todos estos están marcados
+	//como read-only en la documentacion de tbblue
 	/*
 	(R) 0x00 (00) => Machine ID
 
