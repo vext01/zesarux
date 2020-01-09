@@ -106,7 +106,8 @@ Fixed tbblue emulation:
 -fixed error when paging rom in ram, on case pages 0,1,2,3
 -fixed "bit 7 = Disable ULA output (soft reset = 0)" on register 0x68
 -fixed turbosound and dac activation when tbblue fast boot mode
--added turbo mode x8 (28 MHz)
+-added turbo mode x8 (28 MHz
+-fixed reading register 7
 
 Fixed Accessibility bugs: 
 -now menu settings (anything between square brackets []) are played at the end of the menu line

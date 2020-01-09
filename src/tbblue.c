@@ -3867,6 +3867,23 @@ hardware numbers
 			return (TBBLUE_CORE_VERSION_MAJOR<<4 | TBBLUE_CORE_VERSION_MINOR);
 		break;
 
+
+		case 7:
+		/*
+		Read:
+
+Bit	Function
+7-6	Reserved
+5-4	Current actual CPU speed
+3-2	Reserved
+1-0	Programmed CPU speed
+
+		*/
+			return ( (tbblue_registers[7] &3) | ((tbblue_registers[7] &3)<<4) );
+
+
+		break;
+
 		case 0xE:
 			return TBBLUE_CORE_VERSION_SUBMINOR;
 		break;		
