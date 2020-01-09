@@ -296,7 +296,10 @@ Modo 384 x 304 ?
 
 --- TBBlue ---
 
--Activar el kempston mouse entra en conflicto con el editor de basic. Al mover raton hace cosas raras. Quizá era por los bits wheel. Ya corregido?
+-Activar el kempston mouse entra en conflicto con el editor de basic. 
+Al mover raton hace cosas raras. Quizá era por los bits wheel. Ya corregido?
+
+-tools/tile editor: no se ve bien?
 
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
