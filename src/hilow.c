@@ -174,7 +174,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	//Si no estaba mapeada
 	if (hilow_mapped_rom.v==0) {
 		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
-			printf ("Mapeando rom en %04XH\n",dir);
+			//printf ("Mapeando rom en %04XH\n",dir);
 			hilow_mapped_rom.v=1;
 		}
 	}
@@ -184,7 +184,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_rom.v==1) {
 		if (dir==0x0052) {
 			hilow_mapped_rom.v=0;
-			printf ("Desmapeando rom en %04XH\n",dir);
+			//printf ("Desmapeando rom en %04XH\n",dir);
 		}
 	}	
 
@@ -196,7 +196,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_ram.v==0) {
 		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
 			hilow_mapped_ram.v=1;
-			printf ("Mapeando ram en %04XH\n",dir);
+			//printf ("Mapeando ram en %04XH\n",dir);
 		}
 	}
 
@@ -205,7 +205,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_ram.v==1) {
 		if (dir==0x0052) {
 			hilow_mapped_ram.v=0;
-			printf ("Desmapeando ram en %04XH\n",dir);
+			//printf ("Desmapeando ram en %04XH\n",dir);
 		}
 	}	
 
@@ -361,4 +361,32 @@ void hilow_press_button(void)
 	reset_cpu();
 
 
+}
+
+
+void hilow_write_port_ff(z80_byte value)
+{
+	printf ("Writing hilow port ff value %02XH\n",value);
+}
+
+
+z80_byte hilow_read_port_ff(void)
+{
+	/*
+	INSERT_TAPE
+	                IN      A,(HLWPORT)
+                RRA
+                RRA
+                RRA
+                RET
+
+
+
+	Tiene que estar bit 2 a 1 para indicar que hay cinta
+
+	*/
+	printf ("Reading hilow port ff value\n");
+
+
+	return 4; //Hay cinta insertada
 }
