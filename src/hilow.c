@@ -366,11 +366,11 @@ void hilow_press_button(void)
 
 void hilow_write_port_ff(z80_byte value)
 {
-	printf ("Writing hilow port ff value %02XH\n",value);
+	printf ("Writing hilow port ff value %02XH from PC=%04XH\n",value,reg_pc);
 }
 
 
-z80_byte hilow_read_port_ff(void)
+z80_byte hilow_read_port_ff(z80_int puerto)
 {
 	/*
 	INSERT_TAPE
@@ -385,8 +385,16 @@ z80_byte hilow_read_port_ff(void)
 	Tiene que estar bit 2 a 1 para indicar que hay cinta
 
 	*/
-	printf ("Reading hilow port ff value\n");
+	printf ("Reading hilow port ff value from PC=%04XH\n",reg_pc);
+
+	//Parche absurdo. Y digo absurdo porque hilow solo mira los 8 bits inferiores
+	//pero de momento parece que la rom, cuando va a mirar si hay cinta insertada, lo hace con puerto 00FF
+	//En otros casos no se como actua
+	if (puerto==0xFF) return 4; //Hay cinta insertada
 
 
-	return 4; //Hay cinta insertada
+
+	//Random basicamente
+	else return idle_bus_port(puerto);
+
 }

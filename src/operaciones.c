@@ -6213,8 +6213,8 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 
         //Puerto Hilow
-        if (hilow_enabled.v && puerto==0xFF) {
-		return hilow_read_port_ff();
+        if (hilow_enabled.v && puerto_l==0xFF) {
+		return hilow_read_port_ff(puerto);
         }
 
 
@@ -7685,7 +7685,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 
 	//Puerto Hilow
-	if (hilow_enabled.v && puerto==0xFF) {
+	if (hilow_enabled.v && puerto_l==0xFF) {
 		hilow_write_port_ff(value);
 	}
 

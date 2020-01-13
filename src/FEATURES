@@ -104,7 +104,7 @@
 
 * Emulates Kartusho,iFrom interfaces by Antonio Villena
 
-* Emulates DataDrive HiLow 
+* Emulates DataDrive HiLow (beta)
 
 * Handles RAM, EPROM, Intel Flash and Hybrid (RAM+EPROM) cards on Z88
 
