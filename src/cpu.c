@@ -1139,6 +1139,10 @@ util_stats_init();
 		esxdos_handler_reset();
 	}
 
+	if (hilow_enabled.v) {
+		hilow_reset();
+	}
+
 
 	//Inicializar zona memoria de debug
 	debug_memory_zone_debug_reset();

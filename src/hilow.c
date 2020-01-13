@@ -328,7 +328,7 @@ void hilow_enable(void)
 
 	hilow_enabled.v=1;
 
-	hilow_press_button();
+	hilow_reset();
 
 
 
@@ -347,18 +347,17 @@ void hilow_disable(void)
 }
 
 
-void hilow_press_button(void)
+
+void hilow_reset(void)
 {
 
         if (hilow_enabled.v==0) {
-                debug_printf (VERBOSE_ERR,"Trying to press Hilow button when it is disabled");
                 return;
         }
 
 	hilow_mapped_rom.v=0;
 	hilow_mapped_ram.v=0;
 
-	reset_cpu();
 
 
 }

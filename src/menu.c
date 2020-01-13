@@ -14655,13 +14655,14 @@ void menu_ifrom(MENU_ITEM_PARAMETERS)
 }
 
 
+/*
 void menu_storage_hilow_press_button(MENU_ITEM_PARAMETERS)
 {
 	hilow_press_button();
 	//Y salimos de todos los menus
 	salir_todos_menus=1;
 
-}
+}*/
 
 int menu_storage_hilow_press_button_cond(void)
 {
@@ -14688,11 +14689,12 @@ void menu_hilow(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_hilow,"Enable hilow");
                         menu_add_item_menu_ayuda(array_menu_hilow,"Enable hilow");
 
-
+/*
 			menu_add_item_menu_format(array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_press_button,menu_storage_hilow_press_button_cond,"~~Press button");
 			menu_add_item_menu_shortcut(array_menu_hilow,'p');
                         menu_add_item_menu_tooltip(array_menu_hilow,"Press button");
                         menu_add_item_menu_ayuda(array_menu_hilow,"Press button");
+*/
 
 
                                 menu_add_item_menu(array_menu_hilow,"",MENU_OPCION_SEPARADOR,NULL,NULL);

@@ -34,10 +34,14 @@
 //8 KB rom, 2 kb ram
 #define HILOW_MEM_SIZE (HILOW_ROM_SIZE+HILOW_RAM_SIZE)
 
-
-extern void hilow_press_button(void);
+ 
+//extern void hilow_press_button(void);
+extern void hilow_reset(void);
 
 extern z80_bit hilow_enabled;
+
+extern z80_bit hilow_mapped_rom;
+extern z80_bit hilow_mapped_ram;
 
 
 #endif
