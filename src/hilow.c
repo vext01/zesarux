@@ -157,11 +157,13 @@ z80_byte hilow_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 void hilow_automap_unmap_memory(z80_int dir)
 {
 	//Si hay que mapear/desmapear memorias
+	//printf ("test dir %04XH\n",dir); 
 
 	//Puntos de mapeo rom
 	//Si no estaba mapeada
 	if (hilow_mapped_rom.v==0) {
 		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
+			printf ("Mapeando rom\n");
 			hilow_mapped_rom.v=1;
 		}
 	}
@@ -171,6 +173,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_rom.v==1) {
 		if (dir==0x0052) {
 			hilow_mapped_rom.v=0;
+			printf ("Desmapeando rom\n");
 		}
 	}	
 
@@ -182,6 +185,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_ram.v==0) {
 		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
 			hilow_mapped_ram.v=1;
+			printf ("Mapeando ram\n");
 		}
 	}
 
@@ -190,21 +194,20 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_ram.v==1) {
 		if (dir==0x0052) {
 			hilow_mapped_ram.v=0;
+			printf ("Desmapeando ram\n");
 		}
 	}	
 
 }
 
-z80_byte cpu_core_loop_spectrum_hilow(z80_int dir, z80_byte value GCC_UNUSED)
+z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
 
         //Llamar a anterior
         debug_nested_core_call_previous(hilow_nested_id_core);
 
 
-		hilow_automap_unmap_memory(dir);
-
-
+		hilow_automap_unmap_memory(reg_pc);
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
