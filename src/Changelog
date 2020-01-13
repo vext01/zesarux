@@ -17,6 +17,7 @@ Added sending anonymous statistics use
 Added setting --disablemenuandexit: it closes the emulator when the menu is going to be opened. 
  It's the same behaviour as previous --disablemenu. Now --disablemenu only disables the menu but does not close the emulator
 Added setting to disable looking for alternate character sets from sysvar 23606/7 on ocr functions
+Added DataDrive HiLow emulation
  
 Added Borland Gui Style
 
