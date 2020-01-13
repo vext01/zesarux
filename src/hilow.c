@@ -211,14 +211,14 @@ int hilow_load_rom(void)
 
         if (ptr_hilow_romfile!=NULL) {
 
-                leidos=fread(hilow_memory_pointer,1,HILOW_MEM_SIZE,ptr_hilow_romfile);
+                leidos=fread(hilow_memory_pointer,1,HILOW_ROM_SIZE,ptr_hilow_romfile);
                 fclose(ptr_hilow_romfile);
 
         }
 
 
 
-        if (leidos!=HILOW_MEM_SIZE || ptr_hilow_romfile==NULL) {
+        if (leidos!=HILOW_ROM_SIZE || ptr_hilow_romfile==NULL) {
                 debug_printf (VERBOSE_ERR,"Error reading hilow rom");
                 return 1;
         }

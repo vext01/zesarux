@@ -22,14 +22,22 @@
 #ifndef HILOW_H
 #define HILOW_H
 
-//#include "cpu.h"
+#include "cpu.h"
 
 #define HILOW_ROM_FILE_NAME "hilow.rom"
 
+
+#define HILOW_ROM_SIZE 8192
+
+#define HILOW_RAM_SIZE 2048
+
 //8 KB rom, 2 kb ram
-#define HILOW_MEM_SIZE (8192+2048)
+#define HILOW_MEM_SIZE (HILOW_ROM_SIZE+HILOW_RAM_SIZE)
+
 
 extern void hilow_press_button(void);
+
+extern z80_bit hilow_enabled;
 
 
 #endif
