@@ -111,6 +111,7 @@
 #include "network.h"
 #include "stats.h"
 #include "zeng.h"
+#include "hilow.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -2824,6 +2825,7 @@ void set_machine_params(void)
 		kartusho_enabled.v=0;
 		ifrom_enabled.v=0;
 		betadisk_enabled.v=0;
+		hilow_enabled.v=0;
 
 		plus3dos_traps.v=0;
 		pd765_enabled.v=0;

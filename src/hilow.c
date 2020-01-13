@@ -49,6 +49,7 @@ int hilow_nested_id_poke_byte;
 int hilow_nested_id_poke_byte_no_time;
 int hilow_nested_id_peek_byte;
 int hilow_nested_id_peek_byte_no_time;
+int hilow_nested_id_core;
 
 z80_bit hilow_mapped_rom={0};
 z80_bit hilow_mapped_ram={0};
@@ -153,6 +154,63 @@ z80_byte hilow_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 	return valor_leido;
 }
 
+void hilow_automap_unmap_memory(z80_int dir)
+{
+	//Si hay que mapear/desmapear memorias
+
+	//Puntos de mapeo rom
+	//Si no estaba mapeada
+	if (hilow_mapped_rom.v==0) {
+		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
+			hilow_mapped_rom.v=1;
+		}
+	}
+
+	//Puntos de desmapeo rom
+	//Si estaba mapeada
+	if (hilow_mapped_rom.v==1) {
+		if (dir==0x0052) {
+			hilow_mapped_rom.v=0;
+		}
+	}	
+
+
+	//Mapeo de ram de momento identico que rom
+	//TODO: si realmente es identico, meter este codigo arriba
+	//Puntos de mapeo ram
+	//Si no estaba mapeada
+	if (hilow_mapped_ram.v==0) {
+		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
+			hilow_mapped_ram.v=1;
+		}
+	}
+
+	//Puntos de desmapeo ram
+	//Si estaba mapeada
+	if (hilow_mapped_ram.v==1) {
+		if (dir==0x0052) {
+			hilow_mapped_ram.v=0;
+		}
+	}	
+
+}
+
+z80_byte cpu_core_loop_spectrum_hilow(z80_int dir, z80_byte value GCC_UNUSED)
+{
+
+        //Llamar a anterior
+        debug_nested_core_call_previous(hilow_nested_id_core);
+
+
+		hilow_automap_unmap_memory(dir);
+
+
+
+        //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+        return 0;
+
+}
+
 
 
 //Establecer rutinas propias
@@ -166,6 +224,10 @@ void hilow_set_peek_poke_functions(void)
 	hilow_nested_id_peek_byte=debug_nested_peek_byte_add(hilow_peek_byte,"Hilow peek_byte");
 	hilow_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(hilow_peek_byte_no_time,"Hilow peek_byte_no_time");
 
+
+	hilow_nested_id_core=debug_nested_core_add(cpu_core_loop_spectrum_hilow,"Hilow Spectrum core");
+
+
 }
 
 //Restaurar rutinas de hilow
@@ -178,6 +240,9 @@ void hilow_restore_peek_poke_functions(void)
 	debug_nested_poke_byte_no_time_del(hilow_nested_id_poke_byte_no_time);
 	debug_nested_peek_byte_del(hilow_nested_id_peek_byte);
 	debug_nested_peek_byte_no_time_del(hilow_nested_id_peek_byte_no_time);
+
+
+	debug_nested_core_del(hilow_nested_id_core);
 }
 
 
