@@ -93,7 +93,7 @@ void hilow_poke_ram(z80_int dir,z80_byte value)
 {
 
 	if (hilow_check_if_ram_area(dir) ) {
-		printf ("Poke ram byte from %04XH with value %02XH\n",dir,value);
+		//printf ("Poke ram byte to %04XH with value %02XH\n",dir,value);
 		dir &= 2047; 
 		//La RAM esta despues de los 8kb de rom
 		hilow_memory_pointer[8192+dir]=value;	
