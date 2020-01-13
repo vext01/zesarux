@@ -73,6 +73,7 @@ int hilow_check_if_ram_area(z80_int dir)
 
 z80_byte hilow_read_rom_byte(z80_int dir)
 {
+	//printf ("Read rom byte from %04XH\n",dir);
 	return hilow_memory_pointer[dir];
 }
 
@@ -80,6 +81,7 @@ z80_byte hilow_read_rom_byte(z80_int dir)
 z80_byte hilow_read_ram_byte(z80_int dir)
 {
 
+	//printf ("Read ram byte from %04XH\n",dir);
 	dir &= 2047; 
 
 
@@ -91,6 +93,7 @@ void hilow_poke_ram(z80_int dir,z80_byte value)
 {
 
 	if (hilow_check_if_ram_area(dir) ) {
+		printf ("Poke ram byte from %04XH with value %02XH\n",dir,value);
 		dir &= 2047; 
 		//La RAM esta despues de los 8kb de rom
 		hilow_memory_pointer[8192+dir]=value;	
@@ -138,6 +141,10 @@ z80_byte hilow_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 		return hilow_read_rom_byte(dir);
 	}
 
+	if (hilow_check_if_ram_area(dir)) {
+		return hilow_read_ram_byte(dir);
+	}	
+
 	return valor_leido;
 }
 
@@ -151,6 +158,10 @@ z80_byte hilow_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
                 return hilow_read_rom_byte(dir);
         }
 
+	if (hilow_check_if_ram_area(dir)) {
+		return hilow_read_ram_byte(dir);
+	}			
+
 	return valor_leido;
 }
 
@@ -163,7 +174,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	//Si no estaba mapeada
 	if (hilow_mapped_rom.v==0) {
 		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
-			printf ("Mapeando rom\n");
+			printf ("Mapeando rom en %04XH\n",dir);
 			hilow_mapped_rom.v=1;
 		}
 	}
@@ -173,7 +184,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_rom.v==1) {
 		if (dir==0x0052) {
 			hilow_mapped_rom.v=0;
-			printf ("Desmapeando rom\n");
+			printf ("Desmapeando rom en %04XH\n",dir);
 		}
 	}	
 
@@ -185,7 +196,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_ram.v==0) {
 		if (dir==0x04C2 || dir==0x0556 || dir==0x0976) {
 			hilow_mapped_ram.v=1;
-			printf ("Mapeando ram\n");
+			printf ("Mapeando ram en %04XH\n",dir);
 		}
 	}
 
@@ -194,7 +205,7 @@ void hilow_automap_unmap_memory(z80_int dir)
 	if (hilow_mapped_ram.v==1) {
 		if (dir==0x0052) {
 			hilow_mapped_ram.v=0;
-			printf ("Desmapeando ram\n");
+			printf ("Desmapeando ram en %04XH\n",dir);
 		}
 	}	
 
