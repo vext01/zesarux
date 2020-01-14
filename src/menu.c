@@ -27534,7 +27534,7 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 
 	menu_generic_message_format("Statistics",
 		"Source code lines: %d\n"
-		"Total time invested on programming ZEsarUX: ^^%d^^ hours (and growing)\n\n"
+		"Total time used on coding ZEsarUX: ^^%d^^ hours (and growing)\n\n"
 		"Edited with VSCode, Working Copy and vim\n"
 		"Developed on macOS Catalina, Debian 9, Raspbian, and MinGW environment on Windows\n"
 		,LINES_SOURCE,tiempo_trabajado_en_zesarux);

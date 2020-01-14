@@ -36,6 +36,8 @@
 
  
 //extern void hilow_press_button(void);
+extern void hilow_enable(void);
+extern void hilow_disable(void);
 extern void hilow_reset(void);
 
 extern z80_bit hilow_enabled;
