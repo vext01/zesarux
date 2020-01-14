@@ -39,7 +39,7 @@ z80_bit ds1307_last_data_bit={0};
 
 
 //numero de bit enviando a una operacion de lectura
-z80_byte ds13072_bitnumber_read=128;
+//z80_byte ds13072_bitnumber_read=128;
 
 
 z80_byte ds1307_registers[64];
@@ -68,7 +68,7 @@ void ds1307_reset(void)
 
 
 	//numero de bit enviando a una operacion de lectura
-	ds13072_bitnumber_read=128;
+	//ds13072_bitnumber_read=128;
 
 
 	ds1307_sending_data_from_speccy=1;
@@ -148,7 +148,7 @@ ds1307_registers[6]=ds1307_decimal_to_bcd(tm.tm_year+1900-2000); //año
 
 	}
 
-	//printf ("Getting RTC index %d reg_e: %d\n",index,reg_e);
+	printf ("Getting RTC index %d reg_e: %d\n",index,reg_e);
 
 	//Signatura para Next
 	if (MACHINE_IS_TBBLUE) {
@@ -179,6 +179,8 @@ z80_byte ds1307_get_port_data(void)
 
 		//if (ds1307_last_command_read_mask==128) printf ("Returning first bit of register %d value %02XH",ds1307_last_register_received&63,ds1307_registers[ds1307_last_register_received&63]);
 
+		printf ("Returning %d bit of register %d value %02XH\n",ds1307_last_command_read_mask,ds1307_last_register_received,value);
+
 		ds1307_last_command_read_mask=ds1307_last_command_read_mask>>1;
 
 		//Siguiente byte
@@ -199,6 +201,7 @@ void ds1307_write_port_data(z80_byte value)
 	if (ds1307_last_clock_bit.v) {
 		if (ds1307_last_data_bit.v==1 && (value&1)==0) {
       debug_printf (VERBOSE_DEBUG,"DS1307 RTC. Received START sequence");
+	  printf ("DS1307 RTC. Received START sequence\n");
 			ds1307_sending_data_from_speccy=1;
 			ds1307_sending_data_status=0;
 			ds1307_sending_data_num_bits=0;
@@ -208,6 +211,7 @@ void ds1307_write_port_data(z80_byte value)
 
 		if (ds1307_last_data_bit.v==0 && (value&1)==1) {
 			debug_printf (VERBOSE_DEBUG,"DS1307 RTC. Received STOP sequence");
+			printf ("DS1307 RTC. Received STOP sequence\n");
 			ds1307_sending_data_from_speccy=1;
 			ds1307_sending_data_status=0;
 			ds1307_sending_data_num_bits=0;
@@ -251,20 +255,24 @@ void ds1307_write_port_data(z80_byte value)
 
 		//Recibiendo registro
 		else if (ds1307_sending_data_status==1) {
-			//printf ("Receiving data register\n");
+			printf ("Receiving data register. ds1307_sending_data_num_bits %d ds1307_last_register_received %d\n",ds1307_sending_data_num_bits,ds1307_last_register_received);
 			ds1307_sending_data_num_bits++;
 			if (ds1307_sending_data_num_bits<=8) {
 				ds1307_last_register_received=ds1307_last_register_received<<1;
 				ds1307_last_register_received &=(255-1);
 				ds1307_last_register_received|=value&1;
+
+				
 			}
 
 			//Es ack. ignorar y cambiar estado
 			if (ds1307_sending_data_num_bits==9) {
-				//printf ("Received ACK\n");
-				//printf ("Register received: %02XH\n",ds1307_last_register_received);
+				printf ("Received ACK\n");
+				printf ("Register received: %02XH\n",ds1307_last_register_received);
 				ds1307_sending_data_status++;
 				ds1307_sending_data_num_bits=0;
+
+				ds1307_last_command_read_mask=128;
 			}
 
 		}
