@@ -56,9 +56,30 @@ int ds1307_sending_data_status=0;
 
 int ds1307_sending_data_num_bits; //Entre 0 y 7 para bits y 8 para ack
 z80_byte ds1307_last_command_received;//Normalmente D0 o D1
-z80_byte ds1307_last_register_received; //Normalmente entre 0 y 63
+z80_byte ds1307_last_register_received=0; //Normalmente entre 0 y 63
 
 z80_byte ds1307_last_command_read_mask=128;
+
+
+void ds1307_reset(void)
+{
+	ds1307_last_clock_bit.v=0;
+	ds1307_last_data_bit.v=0;
+
+
+	//numero de bit enviando a una operacion de lectura
+	ds13072_bitnumber_read=128;
+
+
+	ds1307_sending_data_from_speccy=1;
+
+	ds1307_sending_data_status=0;
+
+	ds1307_last_command_read_mask=128;
+
+	ds1307_last_register_received=0;
+}
+
 
 z80_byte ds1307_decimal_to_bcd(z80_byte valor_decimal)
 {
@@ -125,6 +146,17 @@ ds1307_registers[6]=ds1307_decimal_to_bcd(tm.tm_year+1900-2000); //año
 							ds1307_registers[5]=0x09;
 							ds1307_registers[6]=0x17;*/
 
+	}
+
+	//printf ("Getting RTC index %d reg_e: %d\n",index,reg_e);
+
+	//Signatura para Next
+	if (MACHINE_IS_TBBLUE) {
+		if (index==62 || index==63) {
+			//printf ("Setting RTC index 62 and 63 (index=%d)\n",index);
+			ds1307_registers[62]='Z';
+			ds1307_registers[63]='X';
+		}
 	}
 
 	return ds1307_registers[index];

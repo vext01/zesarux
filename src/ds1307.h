@@ -31,6 +31,6 @@ extern z80_byte ds1307_get_port_clock(void);
 extern z80_byte ds1307_get_port_data(void);
 extern void ds1307_write_port_data(z80_byte value);
 extern void ds1307_write_port_clock(z80_byte value);
-
+extern void ds1307_reset(void);
 
 #endif

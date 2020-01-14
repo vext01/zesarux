@@ -1086,6 +1086,7 @@ util_stats_init();
 		//porque antes estaba el tbblue_reset aqui despues de set_memory_pages???
 
 		//tbblue_read_port_24d5_index=0;
+		ds1307_reset();
 	}
 
 	if (MACHINE_IS_TIMEX_TS2068) timex_set_memory_pages();

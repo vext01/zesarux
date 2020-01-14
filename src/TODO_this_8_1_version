@@ -7,8 +7,6 @@
 
 -Extended stack inicializado con ceros
 
--Siguiente versión beta hay que decir en servidor versión.txt que es 8.1-B2
-Pero eso debe coincidir con version.h de código 
 
 -seguir probando speech menu con stdout y con drivers no-stdout
 

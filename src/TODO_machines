@@ -364,6 +364,8 @@ El parchecillo va en core_spectrum.c , aqui:
 +					//for (i=0;i<AUDIO_BUFFER_SIZE*2;i++) audio_buffer[i]=0;
 +				}
 
+-parece que no aparece correctamente el salvapantallas de NextOS
+
 -volver de multiface nmi desde la rom, no retorna bien ni modo de video y ademas se cuelga
 
 -tbblue extended opcodes
