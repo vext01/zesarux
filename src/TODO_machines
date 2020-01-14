@@ -339,9 +339,30 @@ TBBLUE:
 -soporte mas botones joystick/mas joystick de tbblue
 https://www.specnext.com/forum/viewtopic.php?f=6&t=1142
 
--buffer de real beeper + cambios de cpu speed en next se oye beeper repetido, porque esta usando un buffer que depende del total de testados en linea,
-y eso lo altera continuamente. Se nota al bajar el cursor abajo del todo en tbblue browser y luego pulsar continuamente. sin real beeper no pasa
-->el por que lo sigue haciendo en next aunque hayas soltado la tecla de cursor abajo es un miesterio
+-sonido repetitivo en el browser de next al llevar el cursos mas abajo de lo normal: parece que es culpa de el driver de audio,
+la cpu se satura y (puede) que el buffer de audio se envie varias veces. Sucede cuando hay saturación en la cpu
+Sucede tambien si por ejemplo iniciamos la scrollnuter compilando sin O2
+* pruebo a meter un vaciado de buffer de audio cuando fps esta bajo: no da buen resultado, también se producen clicks
+-> es casi peor porque produce clicks en momentos que no hay audio. incluso inicializando array mediante memset, tambien se produce
+
+El parchecillo va en core_spectrum.c , aqui:
+
+        int linea_estados=t_estados/screen_testados_linea;
+
+                while (linea_estados<312) {
+					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
+					//audio_send_mono_sample(audio_valor_enviar_sonido_izquierdo);
+                                        linea_estados++;
+                }
+
++				//Si fps bajo
++				printf ("Ultimo fps: %d\n",ultimo_fps);
++				if (ultimo_fps<15) {
++					printf ("Cleaning audio buffer\n");
++					memset(audio_buffer,0,AUDIO_BUFFER_SIZE*2);
++					//int i;
++					//for (i=0;i<AUDIO_BUFFER_SIZE*2;i++) audio_buffer[i]=0;
++				}
 
 -volver de multiface nmi desde la rom, no retorna bien ni modo de video y ademas se cuelga
 
