@@ -165,6 +165,82 @@ ds1307_registers[6]=ds1307_decimal_to_bcd(tm.tm_year+1900-2000); //año
 						//}
 }
 
+
+void tbblue_trap_return_rtc(void)
+{
+	
+
+//fecha grabacion
+time_t tiempo = time(NULL);
+struct tm tm = *localtime(&tiempo);
+
+int segundos=tm.tm_sec; // segundos
+int minutos=tm.tm_min; //56 minutos
+int horas=tm.tm_hour; //09 horas
+
+//dia semana, dia, mes, anyo
+//Prueba 18/09/2017
+int diasemana=0x01; //temp dia de la semana 1
+int dia=tm.tm_mday; //dia
+int mes=tm.tm_mon+1; //mes
+int anyo=tm.tm_year+1900; //año
+
+/*
+
+; OUTPUT
+; reg BC is Date 
+;	year - 1980 (7 bits) + month (4 bits) + day (5 bits). EJ= BC=3200H -> 2005
+
+;   
+
+;	note that DS1307 only supports 2000-2099.
+;
+; reg DE is Time
+;	hours (5 bits) + minutes (6 bits) + seconds/2 (5 bits) EJ DE=9000H -> 18:00:00
+;
+; Carry set if no valid signature in 0x3e and 0x3f i.e. letters 'ZX'  (HL=585A)
+; this is used to detect no RTC or unset date / time.
+
+
+
+Codigo de esxdos (RTC.SYS) que obtiene la fecha, usado en NextOS para ponerla en los menus
+Ver rtcesx.asm (aunque el codigo que veo ahi no es el mismo desensamblado, pero sirve de referencia)
+
+  279B PUSH BC
+  279C CALL 27BD
+  279F POP BC
+  27A0 ADD A,14
+  27A2 SLA A
+  27A4 OR B
+  27A5 LD B,A
+
+  27A6 2A3C28 LD HL,(283C)
+  27A9 C9     RET
+  27AA 37     SCF
+  27AB C9     RET
+
+
+  27AC EI
+  27AD RET
+  27AE XOR A
+
+
+
+*/
+
+
+
+	HL=0x585a;
+	BC= ((anyo-1980)<<9) | (mes<<5) | dia;
+	DE= (horas<<11) | (minutos<<5) | (segundos/2);
+
+	Z80_FLAGS=0; //dejamos todos los flags a 0. Interesa realmente solo el C
+	//permitimos el trap entrando desde 27a9 y a7aa. Si es el segundo caso, quitariamos el flag C y todos felices
+
+	printf ("RTC trap\n");
+
+}
+
 z80_byte ds1307_get_port_clock(void)
 {
 	return 0;

@@ -56,6 +56,8 @@ z80_byte *tbblue_ram_memory_pages[TBBLUE_MAX_SRAM_8KB_BLOCKS];
 
 z80_byte tbblue_extra_512kb_blocks=3;
 
+int tbblue_use_rtc_traps=1;
+
 z80_byte tbblue_return_max_extra_blocks(void)
 {
 	return 32+tbblue_extra_512kb_blocks*64;

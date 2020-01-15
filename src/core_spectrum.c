@@ -798,10 +798,31 @@ void core_spectrum_ciclo_fetch(void)
 				//Soporte Datagear/TBBlue DMA
 				if (datagear_dma_emulation.v && datagear_dma_is_disabled.v==0) datagear_handle_dma(); 
 
-				//Soporte TBBlue copper
+				//Soporte TBBlue copper y otras...
 				if (MACHINE_IS_TBBLUE) {
 					//Si esta activo copper
 					tbblue_copper_handle_next_opcode();
+
+
+					if (tbblue_use_rtc_traps) {
+						//Reloj RTC
+						if (reg_pc==0x27a9 || reg_pc==0x27aa) {
+						/*
+							27A9 C9     RET
+							27AA 37     SCF
+							27AB C9     RET
+						*/						
+							if (
+								peek_byte_no_time(reg_pc)==0xC9 &&
+								peek_byte_no_time(reg_pc+1)==0x37 &&
+								peek_byte_no_time(reg_pc+2)==0xC9 
+							)
+							tbblue_trap_return_rtc();
+						}
+
+					}
+
+				
 				}
 
 }
