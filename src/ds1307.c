@@ -148,7 +148,7 @@ ds1307_registers[6]=ds1307_decimal_to_bcd(tm.tm_year+1900-2000); //año
 
 	}
 
-	printf ("Getting RTC index %d reg_e: %d\n",index,reg_e);
+	//printf ("Getting RTC index %d reg_e: %d\n",index,reg_e);
 
 	//Signatura para Next
 	if (MACHINE_IS_TBBLUE) {
@@ -179,7 +179,7 @@ z80_byte ds1307_get_port_data(void)
 
 		//if (ds1307_last_command_read_mask==128) printf ("Returning first bit of register %d value %02XH",ds1307_last_register_received&63,ds1307_registers[ds1307_last_register_received&63]);
 
-		printf ("Returning %d bit of register %d value %02XH\n",ds1307_last_command_read_mask,ds1307_last_register_received,value);
+		//printf ("Returning %d bit of register %d value %02XH\n",ds1307_last_command_read_mask,ds1307_last_register_received,value);
 
 		ds1307_last_command_read_mask=ds1307_last_command_read_mask>>1;
 
@@ -193,15 +193,30 @@ z80_byte ds1307_get_port_data(void)
 	return value;
 }
 
+
 void ds1307_write_port_data(z80_byte value)
 {
-	//printf ("%d Write ds1307 data port value:  %d bit 0: %d\n",temp_conta++,value,value&1);
+	//printf ("%d Write ds1307 data port value:  %d bit 0: %d\n",temp_conta_ds++,value,value&1);
 
 
 	if (ds1307_last_clock_bit.v) {
 		if (ds1307_last_data_bit.v==1 && (value&1)==0) {
-      debug_printf (VERBOSE_DEBUG,"DS1307 RTC. Received START sequence");
-	  printf ("DS1307 RTC. Received START sequence\n");
+			debug_printf (VERBOSE_DEBUG,"DS1307 RTC. Received START sequence");
+
+
+
+
+			ds1307_sending_data_from_speccy=1;
+			ds1307_sending_data_status=0;
+			ds1307_sending_data_num_bits=0;
+
+			ds1307_last_command_read_mask=128;
+
+		}
+
+		if (ds1307_last_data_bit.v==0 && (value&1)==1) {
+			debug_printf (VERBOSE_DEBUG,"DS1307 RTC. Received STOP sequence");
+
 			ds1307_sending_data_from_speccy=1;
 			ds1307_sending_data_status=0;
 			ds1307_sending_data_num_bits=0;
@@ -209,16 +224,7 @@ void ds1307_write_port_data(z80_byte value)
 
 		}
 
-		if (ds1307_last_data_bit.v==0 && (value&1)==1) {
-			debug_printf (VERBOSE_DEBUG,"DS1307 RTC. Received STOP sequence");
-			printf ("DS1307 RTC. Received STOP sequence\n");
-			ds1307_sending_data_from_speccy=1;
-			ds1307_sending_data_status=0;
-			ds1307_sending_data_num_bits=0;
-			ds1307_last_command_read_mask=128;
-
-    }
-
+		//printf ("Setting ds1307_last_data_bit\n");
 		ds1307_last_data_bit.v=value&1;
 		return;
 	}
@@ -255,7 +261,7 @@ void ds1307_write_port_data(z80_byte value)
 
 		//Recibiendo registro
 		else if (ds1307_sending_data_status==1) {
-			printf ("Receiving data register. ds1307_sending_data_num_bits %d ds1307_last_register_received %d\n",ds1307_sending_data_num_bits,ds1307_last_register_received);
+			//printf ("Receiving data register. ds1307_sending_data_num_bits %d ds1307_last_register_received %d\n",ds1307_sending_data_num_bits,ds1307_last_register_received);
 			ds1307_sending_data_num_bits++;
 			if (ds1307_sending_data_num_bits<=8) {
 				ds1307_last_register_received=ds1307_last_register_received<<1;
@@ -267,12 +273,10 @@ void ds1307_write_port_data(z80_byte value)
 
 			//Es ack. ignorar y cambiar estado
 			if (ds1307_sending_data_num_bits==9) {
-				printf ("Received ACK\n");
-				printf ("Register received: %02XH\n",ds1307_last_register_received);
+				//printf ("Received ACK\n");
+				//printf ("Register received: %02XH\n",ds1307_last_register_received);
 				ds1307_sending_data_status++;
 				ds1307_sending_data_num_bits=0;
-
-				ds1307_last_command_read_mask=128;
 			}
 
 		}
