@@ -237,7 +237,7 @@ Ver rtcesx.asm (aunque el codigo que veo ahi no es el mismo desensamblado, pero 
 	Z80_FLAGS=0; //dejamos todos los flags a 0. Interesa realmente solo el C
 	//permitimos el trap entrando desde 27a9 y a7aa. Si es el segundo caso, quitariamos el flag C y todos felices
 
-	printf ("RTC trap\n");
+	//printf ("RTC trap\n");
 
 }
 

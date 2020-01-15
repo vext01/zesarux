@@ -17219,6 +17219,11 @@ void menu_tbblue_fast_boot_mode(MENU_ITEM_PARAMETERS)
 	tbblue_fast_boot_mode.v ^=1;
 }
 
+void menu_tbblue_rtc_traps(MENU_ITEM_PARAMETERS)
+{
+	tbblue_use_rtc_traps ^=1;
+}
+
 //menu hardware settings
 void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 {
@@ -17301,6 +17306,11 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
 
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_tbblue_machine_id,NULL,"[%d] TBBlue machine id",tbblue_machine_id); 
+
+
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_tbblue_rtc_traps,NULL,"[%c] TBBlue RTC traps",(tbblue_use_rtc_traps ? 'X' : ' ') );
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Allows RTC trap for NextOS ROM");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Allows RTC trap for NextOS ROM and any program that uses RTC.SYS");
 
 		}
 
