@@ -2203,7 +2203,7 @@ void tbblue_mem_page_ram_rom(void)
 
 	switch (page_type) {
 		case 0:
-			debug_printf (VERBOSE_DEBUG,"Pages 0,1,2,3");
+			//debug_printf (VERBOSE_DEBUG,"Pages 0,1,2,3");
 			tbblue_registers[80]=0*2;
 			tbblue_registers[81]=0*2+1;
 			tbblue_registers[82]=1*2;
@@ -2233,7 +2233,7 @@ void tbblue_mem_page_ram_rom(void)
 			break;
 
 		case 1:
-			debug_printf (VERBOSE_DEBUG,"Pages 4,5,6,7");
+			//debug_printf (VERBOSE_DEBUG,"Pages 4,5,6,7");
 
 			tbblue_registers[80]=4*2;
 			tbblue_registers[81]=4*2+1;
@@ -2266,7 +2266,7 @@ void tbblue_mem_page_ram_rom(void)
 			break;
 
 		case 2:
-			debug_printf (VERBOSE_DEBUG,"Pages 4,5,6,3");
+			//debug_printf (VERBOSE_DEBUG,"Pages 4,5,6,3");
 
 			tbblue_registers[80]=4*2;
 			tbblue_registers[81]=4*2+1;
@@ -2297,7 +2297,7 @@ void tbblue_mem_page_ram_rom(void)
 			break;
 
 		case 3:
-			debug_printf (VERBOSE_DEBUG,"Pages 4,7,6,3");
+			//debug_printf (VERBOSE_DEBUG,"Pages 4,7,6,3");
 
 			tbblue_registers[80]=4*2;
 			tbblue_registers[81]=4*2+1;
