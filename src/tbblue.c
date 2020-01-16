@@ -58,6 +58,10 @@ z80_byte tbblue_extra_512kb_blocks=3;
 
 int tbblue_use_rtc_traps=1;
 
+
+//Autoactivar real video solo la primera vez que se entra en set_machine con maquina tbblue
+int tbblue_already_autoenabled_rainbow=0;
+
 z80_byte tbblue_return_max_extra_blocks(void)
 {
 	return 32+tbblue_extra_512kb_blocks*64;
