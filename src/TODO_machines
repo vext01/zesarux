@@ -368,6 +368,8 @@ El parchecillo va en core_spectrum.c , aqui:
 
 -volver de multiface nmi desde la rom, no retorna bien ni modo de video y ademas se cuelga
 
+-terminfo de CP/M muestra algunos caracteres raros en algunas paginas
+
 -registro paleta tiles. no hacemos las combinaciones de Tilemap
 0x43 (67) => Palette Control
 (R/W)
