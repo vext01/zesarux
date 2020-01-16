@@ -368,6 +368,22 @@ El parchecillo va en core_spectrum.c , aqui:
 
 -volver de multiface nmi desde la rom, no retorna bien ni modo de video y ademas se cuelga
 
+-registro paleta tiles. no hacemos las combinaciones de Tilemap
+0x43 (67) => Palette Control
+(R/W)
+  bit 7 = Disable palette write auto-increment (soft reset = 0)
+  bits 6-4 = Select palette for reading or writing (soft reset = 000)
+    000 = ULA first palette
+    100 = ULA second palette
+    001 = Layer 2 first palette
+    101 = Layer 2 second palette
+    010 = Sprites first palette 
+    110 = Sprites second palette
+    011 = Tilemap first palette
+    111 = Tilemap second palette
+
+
+
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 

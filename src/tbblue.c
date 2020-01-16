@@ -4381,13 +4381,16 @@ Bit	Function
 
 Bits 7 & 6 enable the tilemap and select resolution.
 
-Bit 5 changes the structure of the tilemap so that it contains only 8-bit tilemap-id entries instead of 16-bit tilemap-id and tile-attribute entries.
+Bit 5 changes the structure of the tilemap so that it contains only 8-bit tilemap-id 
+entries instead of 16-bit tilemap-id and tile-attribute entries.
 
-If 8-bit tilemap is selected, the tilemap contains only tile numbers and the attributes are taken from Default Tilemap Attribute Register ($6C).
+If 8-bit tilemap is selected, the tilemap contains only tile numbers and the attributes are taken 
+from Default Tilemap Attribute Register ($6C).
 
 Bit 4 selects one of two tilemap palettes used for final colour lookup.
 
-Bit 1 enables the 512-tile-mode when the tile attribute (either global in $6C or per tile in map data) contains ninth bit of tile-id value. 
+Bit 1 enables the 512-tile-mode when the tile attribute (either global in $6C or per tile in map data) 
+contains ninth bit of tile-id value. 
 In this mode the tiles are drawn under ULA pixels, unless bit 0 is used to force whole tilemap over ULA.
 
 Bit 0 can enforce tilemap over ULA either in 512-tile-mode, or even override the per-tile bit selector from tile attributes. 
@@ -4691,6 +4694,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 		if (tbblue_tiles_are_monocrome()) {
 			offset_tiledef=tnum*TBBLUE_TILE_HEIGHT;
+
+			//TODO: asumo que aqui no se usa rotacion. Pues si no, las letras en CP/M, en programa TERMINFO, salen rotadas
+			//Es esta suposicion correcta?
+			rotate=0;
 		}
 		else {
 			//4 bpp. cada tiledef ocupa 4 bytes * 8 = 32
@@ -4783,8 +4790,6 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 				*/
 
-
-
 			
 		if (rotate) {
 			z80_byte sy_old=sy;
@@ -4793,6 +4798,7 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 			incy=-incx;
 			incx=0;
+			//printf ("Tiles con rotacion size %d\n",tbblue_bytes_per_tile);
 		}
 
 
