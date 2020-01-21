@@ -631,6 +631,12 @@ int total_minutes_use=0;
 
 void cpu_set_turbo_speed(void)
 {
+	struct timeval antes,despues;
+
+
+	timer_stats_current_time(&antes);
+
+
 
 	debug_printf (VERBOSE_INFO,"Changing turbo mode from %dX to %dX",cpu_turbo_speed_antes,cpu_turbo_speed);
 
@@ -743,6 +749,31 @@ void cpu_set_turbo_speed(void)
 	
 
 	cpu_turbo_speed_antes=cpu_turbo_speed;
+
+	//timer_stats_current_time(&despues);
+
+	long tiempo=timer_stats_diference_time(&antes,&despues); 
+	//Siguiente tiempo
+
+	printf ("cpu: X%02d tiempo: %ld us\n",cpu_turbo_speed,tiempo);
+
+	/*
+	Con O0:
+cpu: X08 tiempo: 4117 us
+
+	Con O2:
+cpu: X08 tiempo: 1031 us	
+
+
+	--Con rutina contend con memset:
+	Con O0:
+cpu: X08 tiempo: 863 us	
+
+	Con O2:
+cpu: X08 tiempo: 539 us	
+
+	*/
+
 
 }
 

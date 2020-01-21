@@ -1072,10 +1072,15 @@ void inicializa_tabla_contend(void)
 
 	//no hacer tabla contend si hay velocidad turbo
 	if (cpu_turbo_speed!=1) {
+                /*
 		for (i=0;i<MAX_CONTEND_TABLE;i++) {
                         contend_table_no_mreq[i]=0;
                         contend_table[i]=0;
 		}
+                */
+
+                memset(contend_table_no_mreq,0,MAX_CONTEND_TABLE);
+                memset(contend_table,0,MAX_CONTEND_TABLE);
 		return;
 	}
 
