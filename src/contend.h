@@ -45,6 +45,8 @@ extern z80_byte contend_pages_actual[4];
 
 
 extern void inicializa_tabla_contend(void);
+extern void inicializa_tabla_contend_cached_change_cpu_speed(void);
+extern void inicializa_tabla_contend_speed_higher(void);
 
 
 extern void (*contend_read)(z80_int direccion,int time);

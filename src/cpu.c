@@ -112,6 +112,7 @@
 #include "stats.h"
 #include "zeng.h"
 #include "hilow.h"
+#include "ds1307.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
