@@ -632,10 +632,10 @@ int total_minutes_use=0;
 //Aqui solo se llama posteriormente a haber inicializado la maquina, nunca antes
 void cpu_set_turbo_speed(void)
 {
-	struct timeval antes,despues;
+	//struct timeval antes,despues;
 
 
-	timer_stats_current_time(&antes);
+	//timer_stats_current_time(&antes);
 
 
 
@@ -753,17 +753,22 @@ void cpu_set_turbo_speed(void)
 
 	//timer_stats_current_time(&despues);
 
-	long tiempo=timer_stats_diference_time(&antes,&despues); 
+	//long tiempo=timer_stats_diference_time(&antes,&despues); 
 	//Siguiente tiempo
 
-	printf ("cpu: X%02d tiempo: %ld us\n",cpu_turbo_speed,tiempo);
+	//printf ("cpu: X%02d tiempo: %ld us\n",cpu_turbo_speed,tiempo);
 
 	/*
+--Metodo clasico de obtener tablas contend:
+
 	Con O0:
+cpu: X01 tiempo: 1611 us	
 cpu: X08 tiempo: 4117 us
 
 	Con O2:
+cpu: X01 tiempo: 880 us	
 cpu: X08 tiempo: 1031 us	
+
 
 
 	--Con rutina contend con memset:
@@ -775,11 +780,12 @@ cpu: X08 tiempo: 539 us
 
 	-- Con tabla cacheada al cambiar speed:
 	Con O0:
-cpu: X01 tiempo: 465 us
-cpu: X08 tiempo: 234 us
+cpu: X01 tiempo: 964 us
+cpu: X08 tiempo: 883 us
 
 	Con O2:
-
+cpu: X01 tiempo: 547 us
+cpu: X08 tiempo: 438 us
 	*/
 
 
