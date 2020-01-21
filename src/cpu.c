@@ -773,6 +773,13 @@ cpu: X08 tiempo: 863 us
 	Con O2:
 cpu: X08 tiempo: 539 us	
 
+	-- Con tabla cacheada al cambiar speed:
+	Con O0:
+cpu: X01 tiempo: 465 us
+cpu: X08 tiempo: 234 us
+
+	Con O2:
+
 	*/
 
 

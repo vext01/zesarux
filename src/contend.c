@@ -1367,5 +1367,19 @@ z80_byte *contend_table_no_mreq;
 //Punto de entrada de cambio de cpu speed, se retornan tablas cacheadas
 void inicializa_tabla_contend_cached_change_cpu_speed(void)
 {
-        inicializa_tabla_contend();
+
+	//no hacer tabla contend si hay velocidad turbo
+	if (cpu_turbo_speed!=1) {
+                //Punteros a tablas con ceros
+                contend_table=contend_table_speed_higher;
+                contend_table_no_mreq=contend_table_no_mreq_speed_higher;
+                printf ("Setting zero-tables for cpu speed > 1X\n");
+		return;
+	}
+
+        //Punteros a tablas con cpu speed X1
+        contend_table=contend_table_speed_one;
+        contend_table_no_mreq=contend_table_no_mreq_speed_one;
+        printf ("Setting contend tables for 1X and not recalculating it\n");
+
 }
