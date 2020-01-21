@@ -20,6 +20,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 
 
 #include "contend.h"
@@ -1077,7 +1078,7 @@ z80_byte retorna_contend_time( int time, int *timings , int offset_time, int off
 void inicializa_tabla_contend_speed_higher(void)
 {
 
-        printf ("Initializing contend-zero tables for cpu speed > 1X\n");
+        debug_printf (VERBOSE_DEBUG,"Initializing contend-zero tables for cpu speed > 1X");
 
         memset(contend_table_speed_higher,0,MAX_CONTEND_TABLE);
         memset(contend_table_no_mreq_speed_higher,0,MAX_CONTEND_TABLE);
@@ -1116,11 +1117,11 @@ z80_byte *contend_table_no_mreq;
                 //Punteros a tablas con ceros
                 contend_table=contend_table_speed_higher;
                 contend_table_no_mreq=contend_table_no_mreq_speed_higher;
-                printf ("Setting zero-tables for cpu speed > 1X and not recalculating them\n");
+                debug_printf (VERBOSE_DEBUG,"Setting contend-zero tables for cpu speed > 1X and not recalculating them");
 		return;
 	}
 
-        printf ("Setting contend tables for 1X and recalculating them\n");
+        debug_printf (VERBOSE_DEBUG,"Setting contend tables for 1X and recalculating them");
 
         //Punteros a tablas con cpu speed X1
         contend_table=contend_table_speed_one;
@@ -1375,13 +1376,16 @@ void inicializa_tabla_contend_cached_change_cpu_speed(void)
                 //Punteros a tablas con ceros
                 contend_table=contend_table_speed_higher;
                 contend_table_no_mreq=contend_table_no_mreq_speed_higher;
-                printf ("Setting zero-tables for cpu speed > 1X and not recalculating them\n");
+                debug_printf (VERBOSE_DEBUG,"Setting contend-zero tables for cpu speed > 1X and not recalculating them");
 		return;
 	}
 
         //Punteros a tablas con cpu speed X1
         contend_table=contend_table_speed_one;
         contend_table_no_mreq=contend_table_no_mreq_speed_one;
-        printf ("Setting contend tables for 1X and not recalculating them\n");
+        debug_printf (VERBOSE_DEBUG,"Setting contend tables for 1X and not recalculating them");
 
 }
+
+  
+        
