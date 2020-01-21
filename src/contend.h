@@ -29,8 +29,12 @@ extern int contend_patron_65432100[];
 
 extern int contend_patron_76543210[];
 
-extern z80_byte contend_table[];
-extern z80_byte contend_table_no_mreq[];
+//extern z80_byte contend_table[];
+//extern z80_byte contend_table_no_mreq[];
+
+extern z80_byte *contend_table;
+extern z80_byte *contend_table_no_mreq;
+
 
 extern z80_byte *contend_pages_128k_p2a;
 
@@ -149,7 +153,9 @@ extern z80_bit contend_enabled;
 
 //Seria 72000 mas o menos, pero le damos mas para poder jugar con los settings en advanced hardware settings
 //Y multiplicamos por el maximo de cpu turbo
-#define MAX_CONTEND_TABLE (100000*MAX_CPU_TURBO_SPEED)
+#define CONTEND_TABLE_SIZE_ONE_SPEED 100000
+
+#define MAX_CONTEND_TABLE (CONTEND_TABLE_SIZE_ONE_SPEED*MAX_CPU_TURBO_SPEED)
 
 
 #endif

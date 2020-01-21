@@ -629,6 +629,7 @@ char parameter_disablebetawarning[100]="";
 int total_minutes_use=0;
 
 
+//Aqui solo se llama posteriormente a haber inicializado la maquina, nunca antes
 void cpu_set_turbo_speed(void)
 {
 	struct timeval antes,despues;
@@ -697,7 +698,7 @@ void cpu_set_turbo_speed(void)
 
 	screen_testados_linea *=cpu_turbo_speed;
         screen_set_video_params_indices();
-        inicializa_tabla_contend();
+        inicializa_tabla_contend_cached_change_cpu_speed();
 
         //Recalcular algunos valores cacheados
         recalcular_get_total_ancho_rainbow();
@@ -7692,6 +7693,8 @@ init_randomize_noise_value();
 #endif
 
 	menu_debug_daad_init_flagobject();
+
+	inicializa_tabla_contend_speed_higher();
 
 
 
