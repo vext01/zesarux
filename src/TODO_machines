@@ -394,6 +394,23 @@ https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9
 --en menu.c, no permitido en gui settings
 
 
+
+-27 noviembre 2019:
+The tilemap and sprites can extend into the border area.  In the future, layer 2 will as well.
+
+Because there can be so many sprites on screen (128 without any multiplexing), people have used sprites 
+to generate background in the border.  You need 96 to cover the 32 pixels on the left and right sides of 
+the screen.  If you multiplex, you can get away with less.
+
+The tilemap now has two modes.  One is 4-bits per pixel for 16 colours but this is further indexed by a 
+palette offset in the top four bits so you still have 8-bit colour but in a more restricted manner.  
+The other mode ia 1-bit per pixel (like UDGs) but with a 7-bit palette offset.
+
+The 320 pixel size in the x direction is reaching into the overscan area of displays.  
+hdmi cannot display all of it.  vga 60 it fill the entire space and vga 50 there may be a thin border.  Some displays may crop it further. 
+
+
+
 -mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
 
 -mas patterns de sprites:
