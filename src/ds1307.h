@@ -33,4 +33,6 @@ extern void ds1307_write_port_data(z80_byte value);
 extern void ds1307_write_port_clock(z80_byte value);
 extern void ds1307_reset(void);
 
+extern void tbblue_trap_return_rtc(void);
+
 #endif

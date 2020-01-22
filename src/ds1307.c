@@ -180,7 +180,7 @@ int horas=tm.tm_hour; //09 horas
 
 //dia semana, dia, mes, anyo
 //Prueba 18/09/2017
-int diasemana=0x01; //temp dia de la semana 1
+//int diasemana=0x01; //temp dia de la semana 1
 int dia=tm.tm_mday; //dia
 int mes=tm.tm_mon+1; //mes
 int anyo=tm.tm_year+1900; //año
