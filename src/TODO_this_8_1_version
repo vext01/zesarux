@@ -5,8 +5,6 @@
 
 -probar tbblue CP/M
 
--Extended stack inicializado con ceros
-
 
 -seguir probando speech menu con stdout y con drivers no-stdout
 

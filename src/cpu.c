@@ -7552,6 +7552,7 @@ tooltip_enabled.v=1;
 	init_breakpoints_table();
 	init_watches_table();
 
+	extended_stack_clear();
 
 	last_filesused_clear();
 	menu_first_aid_init();
