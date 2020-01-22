@@ -633,11 +633,6 @@ int total_minutes_use=0;
 //Aqui solo se llama posteriormente a haber inicializado la maquina, nunca antes
 void cpu_set_turbo_speed(void)
 {
-	//struct timeval antes,despues;
-
-
-	//timer_stats_current_time(&antes);
-
 
 
 	debug_printf (VERBOSE_INFO,"Changing turbo mode from %dX to %dX",cpu_turbo_speed_antes,cpu_turbo_speed);
@@ -752,14 +747,10 @@ void cpu_set_turbo_speed(void)
 
 	cpu_turbo_speed_antes=cpu_turbo_speed;
 
-	//timer_stats_current_time(&despues);
 
-	//long tiempo=timer_stats_diference_time(&antes,&despues); 
-	//Siguiente tiempo
-
-	//printf ("cpu: X%02d tiempo: %ld us\n",cpu_turbo_speed,tiempo);
 
 	/*
+	Calculos de tiempo en ejecutar esta funcion de cambio de velocidad de cpu, desde metodo antiguo hasta optimizado actual:
 --Metodo clasico de obtener tablas contend:
 
 	Con O0:
