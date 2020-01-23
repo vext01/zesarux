@@ -1,7 +1,6 @@
 --------Para ESTA versión 8.1:
 
--Accesibilidad:
---Al llamar a speech en Windows se pierde el foco de ventana. Ver si ocurre cuando hay consola de Windows abierta o no
+
 
 -probar tbblue CP/M
 
@@ -17,6 +16,7 @@
 
 -Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
 Quizá mostrar C en caso de 127
+->Hecho de momento en chardetect y speech
 
 -Opción para formato de grabación de autosave snap
 
