@@ -386,7 +386,7 @@ char buffer;
 int iResult;
 u_long iMode = 1; //no bloquear
 
-iResult = ioctlsocket(m_socket, FIONBIO, &iMode);
+iResult = ioctlsocket(socket, FIONBIO, &iMode);
 if (iResult != NO_ERROR) {
   //printf("ioctlsocket failed with error: %ld\n", iResult);
 }
@@ -395,9 +395,9 @@ if (iResult != NO_ERROR) {
 
 int leidos=recv(socket,&buffer,longitud_leer,0);
 
-u_long iMode = 0; //bloquear, como por defecto
+iMode = 0; //bloquear, como por defecto
 
-iResult = ioctlsocket(m_socket, FIONBIO, &iMode);
+iResult = ioctlsocket(socket, FIONBIO, &iMode);
 if (iResult != NO_ERROR) {
   //printf("ioctlsocket failed with error: %ld\n", iResult);
 }
