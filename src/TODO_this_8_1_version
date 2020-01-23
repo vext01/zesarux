@@ -2,6 +2,9 @@
 
 -probar tbblue CP/M
 
+-windows: si hay error al enviar a socket, se queda en bucle continuamente esto:
+debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling ZENG");
+
 
 -seguir probando speech menu con stdout y con drivers no-stdout
 

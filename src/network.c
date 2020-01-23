@@ -373,7 +373,9 @@ int zsock_available_data(int socket)
 
 //-En Windows para saber si un socket tiene datos para leer, 
 //metemos primero el socket en modo no bloqueante,
-//luego usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer			
+//luego usar llamada a read con 0 bytes y devolverá error si no hay bytes para leer	
+//Es la mejor manera esta? No estoy seguro, pero funciona
+
 #ifdef MINGW
 //En Windows
 int longitud_leer=0;
@@ -385,7 +387,7 @@ int iResult;
 u_long iMode = 1; //no bloquear
 
 iResult = ioctlsocket(m_socket, FIONBIO, &iMode);
-if (iResult != NO_ERROR)
+if (iResult != NO_ERROR) {
   //printf("ioctlsocket failed with error: %ld\n", iResult);
 }
 
@@ -396,7 +398,7 @@ int leidos=recv(socket,&buffer,longitud_leer,0);
 u_long iMode = 0; //bloquear, como por defecto
 
 iResult = ioctlsocket(m_socket, FIONBIO, &iMode);
-if (iResult != NO_ERROR)
+if (iResult != NO_ERROR) {
   //printf("ioctlsocket failed with error: %ld\n", iResult);
 }
 
