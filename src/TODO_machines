@@ -291,6 +291,9 @@ https://cs.wikipedia.org/wiki/Pentagon_1024SL
 
 Modo 384 x 304 ?
 
+-emular este bit de eff7 en pentagon:
+port EFF7: (adressation 1110xxxx xxxx0xxx )
+D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
 -------------
 
@@ -369,6 +372,9 @@ El parchecillo va en core_spectrum.c , aqui:
 -volver de multiface nmi desde la rom, no retorna bien ni modo de video y ademas se cuelga
 
 -terminfo de CP/M muestra algunos caracteres raros en algunas paginas
+
+-Agregar turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar 
+la velocidad de la cpu en nextos
 
 -registro paleta tiles. no hacemos las combinaciones de Tilemap
 0x43 (67) => Palette Control

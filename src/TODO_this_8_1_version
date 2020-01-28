@@ -2,6 +2,8 @@
 
 -probar tbblue CP/M
 
+-bruce lee tsconf lee puerto BF7E
+
 -seguir probando speech menu con stdout y con drivers no-stdout
 
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
@@ -11,15 +13,15 @@
 
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
--Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
-Quizá mostrar C en caso de 127
-->Hecho de momento en chardetect y speech
+
 
 -Opción para formato de grabación de autosave snap
 
+---Mac SSL
 -decir que ssl mac requiere "brew install openssl"
 Habra otra libssl de sistema?
 -como incluir libreria ssl en mac? hace falta /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+-quiza otro binario y que el usuario pueda copiarlo a mano, incluido la libssl?
 
 -el compilado final de mac hay que hacerlo sin ssl? O ver si enlaza con la ssl del sistema operativo. Si no, igual se puede incluir la de homebrew de manera estática
 Parece que depende del de brew:
@@ -28,8 +30,7 @@ dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
   Referenced from: /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/./zesarux
   Reason: image not found
 Abort trap: 6
-
--Alternativa para Mac con ssl: que copien la librería a mano. Que esté incluida y la tengan que copiar 
+---Fin Mac SSL
 
 
 -vertificar roms ifrom, lista que sea valida de distribucion
@@ -38,7 +39,7 @@ Abort trap: 6
 -otros cambios registros: ejemplo 0x68 , bits 5-1
 -autoload ahora esta en menu aparte de la rom, en more...
 
--tbblue mmc no puede incluir archivos de cpm que hay que descargarse
+-tbblue mmc no debe incluir archivos de cpm que hay que descargarse
 -tbblue. registro 6b bit 1: 1	1 to activate 512 tile mode (bit 0 of tile attribute is ninth bit of tile-id)
 -tbblue:NEW in core 3.0:
 Bit 3 enables "text mode" where the tile-graphic is defined as 1-bit B&W bitmap 
@@ -56,11 +57,6 @@ Tilemap Control Register - SpecNext official Wiki
 https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 
-
--Turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar 
-la velocidad de la cpu en nextos
-
-
 ---Fin cosas Next
 
 -pulsar ESC en item que se esta escuchando en el menu, cierra el menu?
@@ -73,12 +69,9 @@ Quiza por el sprintf (pending_error_message
 
 
 
--emular este bit de eff7 en pentagon:
-port EFF7: (adressation 1110xxxx xxxx0xxx )
-D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
-
--preguntar si incluir algunas demos de 16C
-
+-preguntar si incluir algunas demos de 16C: Pang y Ball Quest. Falta git add 
+git add extras/media/spectrum/pentagon/16C/*
+->ya preguntado a Alone Coder / Dmitry Bystrov
 
 
 --RED:
@@ -90,10 +83,6 @@ D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 -rutinas zsock_read_all: deberia reintentar un par o dos de veces si no se ha alcanzado la longitud deseada
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
-
-
-Prueba en windows:
--http browser y juegos funciona
 
 
 --Fin RED
@@ -121,7 +110,8 @@ habria que hacer que leyera el primer prompt correcto
 --Fin ZENG
 
 
--Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? Con printf verbose error?
+-Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? 
+Con printf verbose error?
 
 -Incluir sonic y otros en juegos TSConf. Pedir permiso a autores 
 

@@ -65,3 +65,7 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 
 -ZENG: Desde Mac (Master) a Windows (slave). Si abro ventana de enviar mensaje desde windows, al cabo de un rato parece 
 desincronizarse y hasta acaba petando la instancia de Windows
+
+-Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
+Quizá mostrar C en caso de 127
+->Hecho de momento en chardetect y speech
