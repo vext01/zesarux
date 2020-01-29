@@ -5746,7 +5746,6 @@ z80_byte betadisk_temp_puerto_7f=0;
 
 z80_byte temp_tsconf_first_sd_0=1;
 
-z80_byte temp_tsconf_port_7e=0;
 
 //Devuelve valor puerto para maquinas Spectrum
 z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
@@ -6294,17 +6293,9 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		//#7E/126      xxxxxxxx01111110 xxxxxxxx0xx11xx0 Key(C)    
 		//TODO: no se como funciona  
 		
-		if (puerto_l==0x7e) {
-			//printf ("7e\n");
-			//return lee_puerto_spectrum_ula(puerto_h);
-			//return 255;
-			//return reg_r;
-
-			//temp_tsconf_port_7e++;
-			//return temp_tsconf_port_7e >> 3;
-			//return 0xDD;
-			return 0xDC;
-		}
+		//if (puerto_l==0x7e) {
+		//	return 0xDC;
+		//}
 
 
 		//Otros puertos
