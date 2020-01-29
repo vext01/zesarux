@@ -6200,7 +6200,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
         //Puerto ULA, cualquier puerto par. En un Spectrum normal, esto va al final
 	//En un Inves, deberia ir al principio, pues el inves hace un AND con el valor de los perifericos que retornan valor en el puerto leido
-        if ( (puerto_l & 1)==0 && !(MACHINE_IS_CHLOE) && !(MACHINE_IS_TIMEX_TS2068) && !(MACHINE_IS_PRISM) && !(MACHINE_IS_TSCONF) ) {
+        if ( (puerto_l & 1)==0 && !(MACHINE_IS_CHLOE) && !(MACHINE_IS_TIMEX_TS2068) && !(MACHINE_IS_PRISM) ) {
 
 		return lee_puerto_spectrum_ula(puerto_h);
 
@@ -6287,16 +6287,6 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 
 		//Puerto desconocido pero que usa la demo zifi. Tambien lo usa en escritura pero no se como va
 		if (puerto==0x57) return tsconf_read_port_57();
-
-		//Puerto que usa Bruce lee remake. Puerto XX7E
-		//Referencia en https://github.com/tslabs/zx-evo/blob/master/pentevo/docs/ZX/zx-ports-full-table.txt
-		//#7E/126      xxxxxxxx01111110 xxxxxxxx0xx11xx0 Key(C)    
-		//TODO: no se como funciona  
-		
-		//if (puerto_l==0x7e) {
-		//	return 0xDC;
-		//}
-
 
 		//Otros puertos
 		//printf ("Leyendo puerto %04XH\n",puerto);
