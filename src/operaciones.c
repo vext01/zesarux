@@ -4552,7 +4552,7 @@ z80_byte envia_jload_pp_spectrum(z80_byte puerto_h)
 			}
 
 			if (autoload_spectrum_loadpp_mode==3) {
-				//Cursor arriba dos veces y enter para NextOS
+				//Cursor arriba una vez y enter dos veces para NextOS
 				return envia_load_spectrum_nextos(puerto_h);
 
 			}			
@@ -4710,7 +4710,7 @@ z80_byte envia_load_pp_spectrum(z80_byte puerto_h)
 
 
 
-//Enviar Espacio, cursor arriba dos veces y enter para nextos
+//Enviar Espacio, cursor arriba una vez, enter dos veces para nextos
 z80_byte envia_load_spectrum_nextos(z80_byte puerto_h)
 {
 
@@ -4720,15 +4720,15 @@ z80_byte envia_load_spectrum_nextos(z80_byte puerto_h)
 #define SEQUENCE3_SPACE_MIN DURA3_SILENCIO
 #define SEQUENCE3_SPACE_MAX SEQUENCE3_SPACE_MIN+DURA3_TECLA*14
 
-#define SEQUENCE3_CURSOR1_MIN SEQUENCE3_SPACE_MAX+DURA3_SILENCIO*5
-#define SEQUENCE3_CURSOR1_MAX SEQUENCE3_CURSOR1_MIN+DURA3_TECLA
+#define SEQUENCE3_CURSOR_MIN SEQUENCE3_SPACE_MAX+DURA3_SILENCIO*5
+#define SEQUENCE3_CURSOR_MAX SEQUENCE3_CURSOR_MIN+DURA3_TECLA
+
+#define SEQUENCE3_ENTER1_MIN SEQUENCE3_CURSOR_MAX+DURA3_SILENCIO
+#define SEQUENCE3_ENTER1_MAX SEQUENCE3_ENTER1_MIN+DURA3_TECLA
 
 //Dado que es la misma tecla dos veces, hay que dar mas pausa (*3) para que detecte dos teclas separadas, y no la misma pulsada
-#define SEQUENCE3_CURSOR2_MIN SEQUENCE3_CURSOR1_MAX+DURA3_SILENCIO*3
-#define SEQUENCE3_CURSOR2_MAX SEQUENCE3_CURSOR2_MIN+DURA3_TECLA
-
-#define SEQUENCE3_ENTER_MIN SEQUENCE3_CURSOR2_MAX+DURA3_SILENCIO
-#define SEQUENCE3_ENTER_MAX SEQUENCE3_ENTER_MIN+DURA3_TECLA
+#define SEQUENCE3_ENTER2_MIN SEQUENCE3_ENTER1_MAX+DURA3_SILENCIO*3
+#define SEQUENCE3_ENTER2_MAX SEQUENCE3_ENTER2_MIN+DURA3_TECLA
 
                         if (initial_tap_sequence>SEQUENCE3_SPACE_MIN && initial_tap_sequence<SEQUENCE3_SPACE_MAX && puerto_h==127)  {
 				//printf ("Enviando espacio\n");
@@ -4736,23 +4736,24 @@ z80_byte envia_load_spectrum_nextos(z80_byte puerto_h)
                         }
 
 
-                        if (initial_tap_sequence>SEQUENCE3_CURSOR1_MIN && initial_tap_sequence<SEQUENCE3_CURSOR1_MAX && puerto_h==239)  {
+                        if (initial_tap_sequence>SEQUENCE3_CURSOR_MIN && initial_tap_sequence<SEQUENCE3_CURSOR_MAX && puerto_h==239)  {
 				//printf ("Enviando cursor arriba\n");
                                 return 255-8; //Cursor arriba
                         }
 
 
-                        if (initial_tap_sequence>SEQUENCE3_CURSOR2_MIN && initial_tap_sequence<SEQUENCE3_CURSOR2_MAX && puerto_h==239)  {
-                                return 255-8; //Cursor arriba
-                        }			
 
-
-                        if (initial_tap_sequence>SEQUENCE3_ENTER_MIN && initial_tap_sequence<SEQUENCE3_ENTER_MAX && puerto_h==191)  {
+                        if (initial_tap_sequence>SEQUENCE3_ENTER1_MIN && initial_tap_sequence<SEQUENCE3_ENTER1_MAX && puerto_h==191)  {
                                 return 255-1; //ENTER
                         }
 
 
-                        if (initial_tap_sequence<SEQUENCE3_ENTER_MAX) initial_tap_sequence++;
+                        if (initial_tap_sequence>SEQUENCE3_ENTER2_MIN && initial_tap_sequence<SEQUENCE3_ENTER2_MAX && puerto_h==191)  {
+                                return 255-1; //ENTER
+                        }						
+
+
+                        if (initial_tap_sequence<SEQUENCE3_ENTER2_MAX) initial_tap_sequence++;
                         else envia_jload_desactivar();
 
                         return 255;
