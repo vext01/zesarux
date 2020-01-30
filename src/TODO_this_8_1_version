@@ -31,28 +31,11 @@ meter una mmc limpia pero pasada la pantalla de seleccion de modo de video, con 
 
 
 
-
-
--Semáforo en debug print tiene sentido??
-Quiza por el sprintf (pending_error_message
- para que no se pudiera escribir desde dos sitios?
-
--semáforos en Windows. Como? De momento no hace bloqueo si es Windows 
-
-
 --RED:
-
--Query zsock http que detecte si query es mayor que 1024 y de error
 
 -zsock http request: Buffer response en z80_byte y no char
 
--rutinas zsock_read_all: deberia reintentar un par o dos de veces si no se ha alcanzado la longitud deseada
-o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
-o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
-
-
 --Fin RED
-
 
 
 --ZENG:
@@ -79,14 +62,6 @@ habria que hacer que leyera el primer prompt correcto
 -Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? 
 Con printf verbose error?
 
-
--para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
--quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
-
--file browser no muestra dispositivos. importante para uart
-Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
-o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
-arriba)
 
 
 
