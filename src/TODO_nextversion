@@ -69,3 +69,10 @@ desincronizarse y hasta acaba petando la instancia de Windows
 -Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
 Quizá mostrar C en caso de 127
 ->Hecho de momento en chardetect y speech
+
+
+
+
+-uso de settings.c y settings.h. revisar que tiene que ir ahi ?
+
+-stdout algunos menus que no van bien. Como display->view colour palette

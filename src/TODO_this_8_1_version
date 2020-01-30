@@ -2,8 +2,6 @@
 
 -probar tbblue CP/M
 
--seguir probando speech menu con stdout y con drivers no-stdout
-
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
@@ -87,8 +85,6 @@ habria que hacer que leyera el primer prompt correcto
 -Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? 
 Con printf verbose error?
 
--Incluir sonic y otros en juegos TSConf. Pedir permiso a autores 
-
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
 -quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
@@ -97,10 +93,6 @@ Con printf verbose error?
 Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
 o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
 arriba)
-
-
--uso de settings.c y settings.h. revisar que tiene que ir ahi ?
-
 
 
 -quiza version mac debe tener dos versiones: una compilada con O2, otra sin
