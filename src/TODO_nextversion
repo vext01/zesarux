@@ -76,3 +76,9 @@ Quizá mostrar C en caso de 127
 -uso de settings.c y settings.h. revisar que tiene que ir ahi ?
 
 -stdout algunos menus que no van bien. Como display->view colour palette
+
+-Revisar al expulsar cinta si Windows lo libera 
+
+-En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
+
+-Opción para formato de grabación de autosave snap

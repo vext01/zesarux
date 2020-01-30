@@ -1,16 +1,9 @@
 --------Para ESTA versión 8.1:
 
--probar tbblue CP/M
-
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
--Revisar al expulsar cinta si Windows lo libera 
 
--En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
-
-
--Opción para formato de grabación de autosave snap
 
 ---Mac SSL
 -decir que ssl mac requiere "brew install openssl"
@@ -28,22 +21,23 @@ Abort trap: 6
 ---Fin Mac SSL
 
 
--vertificar roms ifrom, lista que sea valida de distribucion
+-vertificar roms ifrom, lista que sea valida de distribucion. solicitada
 
 ---Cosas Next
 -tbblue mmc no debe incluir archivos de cpm que hay que descargarse
+meter una mmc limpia pero pasada la pantalla de seleccion de modo de video, con este setting guardado
 ---Fin cosas Next
 
 
 
--pulsar ESC en item que se esta escuchando en el menu, cierra el menu?
+
+
 
 -Semáforo en debug print tiene sentido??
 Quiza por el sprintf (pending_error_message
  para que no se pudiera escribir desde dos sitios?
 
 -semáforos en Windows. Como? De momento no hace bloqueo si es Windows 
-
 
 
 --RED:
@@ -94,8 +88,5 @@ Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiz
 o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
 arriba)
 
-
--quiza version mac debe tener dos versiones: una compilada con O2, otra sin
-Que hacemos con cocoa no opengl?
 
 
