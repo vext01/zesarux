@@ -9702,6 +9702,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	strcpy(item_seleccionado->texto_misc,menu_sel->texto_misc);
 
 	//printf ("misc selected: %s %s\n",item_seleccionado->texto_misc,menu_sel->texto_misc);
+	
+	//guardamos antes si el tipo es tabulado antes de
+	liberar el item de menu
+	int es_tabulado=m->es_menu_tabulado;
 
 
 	//Liberar memoria del menu
@@ -9721,7 +9725,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 	//En caso de menus tabulados, es responsabilidad de este de borrar con cls y liberar ventana 
-	if (m->es_menu_tabulado==0) {
+	if (es_tabulado==0) {
 		cls_menu_overlay();
 		zxvision_destroy_window(ventana);
 	}
