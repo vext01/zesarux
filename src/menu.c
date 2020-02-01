@@ -5397,6 +5397,10 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	}
 
 	zxvision_window *ventana;
+	
+	//Se puede usar en el bloque else siguiente
+	//Definirla aqui a nivel de funcion y no en el bloque else o seria un error
+	zxvision_window mi_ventana;
 
 	if (return_after_print_text) {
 		//Dado que vamos a volver con la ventana activa que se crea aquí, hay que asignar la estructura en memoria global
@@ -5406,7 +5410,6 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	}
 
 	else {
-		zxvision_window mi_ventana;
 		ventana=&mi_ventana;
 	}
 	//printf ("antes de zxvision_new_window\n");		
