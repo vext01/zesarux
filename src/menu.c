@@ -9704,7 +9704,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//printf ("misc selected: %s %s\n",item_seleccionado->texto_misc,menu_sel->texto_misc);
 	
 	//guardamos antes si el tipo es tabulado antes de
-	liberar el item de menu
+	//liberar el item de menu
 	int es_tabulado=m->es_menu_tabulado;
 
 
