@@ -149,3 +149,31 @@ habria que hacer que leyera el primer prompt correcto
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
+-no se ven enlaces simbólicos en navegador de archivos. Como mínimo de Mac no se ven. Y en Linux?
+
+
+
+----Mac SSL
+
+
+-como incluir libreria ssl en mac? hace falta /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+-quiza otro binario y que el usuario pueda copiarlo a mano, incluido la libssl?
+
+-el compilado final de mac hay que hacerlo sin ssl? O ver si enlaza con la ssl del sistema operativo. Si no, igual se puede incluir la de homebrew de manera estática
+Parece que depende del de brew:
+~iMac-de-Cesar:src cesarhernandez$ ./zesarux --noconfigfile --ao null
+dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+  Referenced from: /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/./zesarux
+  Reason: image not found
+Abort trap: 6
+
+-quiza meter la libreria ssl y el binario compilado en carpeta extras
+
+
+otool -L zesarux|grep ssl
+
+Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
+
+
+----Fin Mac SSL
+
