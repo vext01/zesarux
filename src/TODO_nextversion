@@ -109,3 +109,11 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
 o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
 arriba)
+
+-condiciones breakpoint para paginas memoria Next (SEG0, SEG1, .... SEG7)
+
+--Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? 
+Con printf verbose error?
+
+
+ 

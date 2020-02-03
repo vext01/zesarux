@@ -21,7 +21,7 @@ Abort trap: 6
 ---Fin Mac SSL
 
 
--vertificar roms ifrom, lista que sea valida de distribucion. solicitada
+-vertificar roms ifrom, lista que sea valida de distribucion. pendiente de rom válida
 
 ---Cosas Next
 -tbblue mmc no debe incluir archivos de cpm que hay que descargarse
@@ -59,9 +59,5 @@ habria que hacer que leyera el primer prompt correcto
 --Fin ZENG
 
 
--Enter cpu step en ZRCP con drivers null stdout y simpletext. Se puede abrir menú con drivers null y simpletext? 
-Con printf verbose error?
 
-
- 
 
