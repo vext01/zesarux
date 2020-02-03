@@ -200,6 +200,7 @@ make macapp
 make extra_files
 Y subir el zip a github
 Nota: Los extra_files generarlos despues de las versiones de Mac pues se incluyen los extras para zesarux con SSL
+Nota2: Tener en cuenta que la carpeta extras este visible, sea como enlace o como submodulo
 
 
 
