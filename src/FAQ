@@ -619,6 +619,11 @@ Q: I'm using cacalib or curses driver and the position of the kempston mouse is 
 A: Mouse position on text mode drivers (cacalib and curses) is only read when you push a button, and not when you move the mouse.
 
 
+Q: Where is now located the extra folder in the source file?
+A: It has been moved to another repository. See:
+https://github.com/chernandezba/zesarux-extras
+
+
 Q: How is pronounced the name of the emulator?
 A: Phonetically: ZEsarUX is pronounced: θesar´uks
 One by one, every letter:

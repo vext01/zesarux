@@ -21,6 +21,8 @@ Abort trap: 6
 
 otool -L zesarux|grep ssl
 
+Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
+
 
 * Generar versión con optimizaciones Mac
 

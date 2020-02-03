@@ -64,6 +64,8 @@ Improved menu:
 -added more cyrillic characters support
 -disabled menu items (the ones in red) are now called as "unavailable" instead of "disabled"
 
+-Improved source code repository: now extras folder has been moved to another repository. See:
+https://github.com/chernandezba/zesarux-extras
 
 Improved accesibility: 
 -pressing F4 key on a window menu, it will read that window again

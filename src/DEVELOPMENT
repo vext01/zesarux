@@ -179,18 +179,18 @@ make macapp
 
 
 
-Versión con optimizaciones, CON SSL:
-
-export CFLAGS=-O2
-export LDFLAGS=-O2
-
-./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
-(Habilita SSL, drivers video: cocoa(GL), stdout, simpletext y drivers audio: coreaudio. )
-make clean
-make
-
-cp -f /usr/local/opt/openssl/lib/libssl.1.0.0.dylib /usr/local/opt/openssl/lib/libcrypto.1.0.0.dylib extras/macos_ssl/
-cp zesarux extras/macos_ssl/zesarux.ssl
+## NO Versión con optimizaciones, CON SSL:
+#
+#export CFLAGS=-O2
+#export LDFLAGS=-O2
+#
+#./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
+#(Habilita SSL, drivers video: cocoa(GL), stdout, simpletext y drivers audio: coreaudio. )
+#make clean
+#make
+#
+#cp -f /usr/local/opt/openssl/lib/libssl.1.0.0.dylib /usr/local/opt/openssl/lib/libcrypto.1.0.0.dylib extras/macos_ssl/
+#cp zesarux extras/macos_ssl/zesarux.ssl
 
 
 
