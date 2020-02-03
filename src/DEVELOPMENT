@@ -94,11 +94,7 @@ con contenido numero de version, ejemplo:
 "8.1"
 
 
-** Extra files
 
-make extra_files
-Y subir el zip a github
-Y
 
 ** Linux 
 Generar estos dos binarios de Linux:
@@ -155,7 +151,7 @@ Generar versión opengl por defecto con optimización
 Generar dos binarios de Mac:
 ZEsarUX_macos_legacy-version.dmg.gz 
 con comandos:
-Versión sin optimizaciones:
+Versión sin optimizaciones, sin SSL:
 
 export CFLAGS=
 export LDFLAGS=
@@ -170,7 +166,7 @@ Y
 
 ZEsarUX_macos_version.dmg.gz
 con comandos:
-Versión con optimizaciones:
+Versión con optimizaciones, sin SSL:
 
 export CFLAGS=-O2
 export LDFLAGS=-O2
@@ -180,6 +176,30 @@ export LDFLAGS=-O2
 make clean
 make
 make macapp
+
+
+
+Versión con optimizaciones, CON SSL:
+
+export CFLAGS=-O2
+export LDFLAGS=-O2
+
+./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
+(Habilita SSL, drivers video: cocoa(GL), stdout, simpletext y drivers audio: coreaudio. )
+make clean
+make
+
+cp -f /usr/local/opt/openssl/lib/libssl.1.0.0.dylib /usr/local/opt/openssl/lib/libcrypto.1.0.0.dylib extras/macos_ssl/
+cp zesarux extras/macos_ssl/zesarux.ssl
+
+
+
+
+** Extra files
+
+make extra_files
+Y subir el zip a github
+Nota: Los extra_files generarlos despues de las versiones de Mac pues se incluyen los extras para zesarux con SSL
 
 
 
