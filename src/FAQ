@@ -87,6 +87,11 @@ Q: Can I read a menu window, which has already been read?
 A: Just press F4 when menu is open. In this case, the window will be read again
 
 
+Q: Why some menus are not read?
+A: There are some menus, like AY Registers, that they are not read when they are created, for some reasons (in this case because the AY registers window refreshes continuosly).
+But you can read them anytime you want by pressing F4
+
+
 ----------------------------------------------------------------------------
 
 
