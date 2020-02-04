@@ -5821,7 +5821,22 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 				//char 
-				sprintf (buffer_linea,"%smemptr C%sopy",string_atajos,string_atajos);
+				//menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
+
+				//Si esta editando, mostrar puntero en leyenda de memptr
+				char buffer_puntero[32];
+				if (menu_hexdump_edit_mode) {
+					menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
+					char buf_temp_pointer[32];
+
+					menu_debug_print_address_memory_zone(buf_temp_pointer,direccion_cursor);
+					sprintf(buffer_puntero," (%s)",buf_temp_pointer);
+				}
+				else {
+					buffer_puntero[0]=0;
+				}
+
+				sprintf (buffer_linea,"%smemptr%s C%sopy",string_atajos,buffer_puntero,string_atajos);
 
 
 				//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
@@ -6054,30 +6069,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 				if (editar_byte) {
 						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
-
-						/*
-						//Obtener direccion puntero
-						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
-
-						//int si_zona_hexa=0; //en zona hexa o ascii
-						//if (menu_hexdump_edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
-
-
-						if (!menu_debug_hexdump_cursor_en_zona_ascii) {
-							//Sumar x (cada dos, una posicion)
-							direccion_cursor +=menu_hexdump_edit_position_x/2;
-						}
-						else {
-							int indice_hasta_ascii=menu_hexdump_bytes_por_linea*2+1; //el hexa y el espacio
-							direccion_cursor +=menu_hexdump_edit_position_x-indice_hasta_ascii;
-						}
-
-						//Sumar y. 
-						direccion_cursor +=menu_hexdump_edit_position_y*menu_hexdump_bytes_por_linea;
-
-						//Ajustar direccion a zona memoria
-						direccion_cursor=adjust_address_memory_size(direccion_cursor);
-						*/
+				
 
 						//TODO: ver si se sale de tamanyo zona memoria
 
