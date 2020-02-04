@@ -115,6 +115,7 @@ Probar delete, rename, etc y resto de acciones con CMDR, con archivos en minuscu
 -probar dandanator: spectrum y CPC
 -probar superupgrade. Básico, programa de modificación de rom. Programa en basic extras/media/spectrum/tests/superupgrade-test.tap y usando 512kb de rom que sean siempre la misma rom de spectrum 48k. Probar con rman.tap
 -probar kartusho
+-probar ifrom
 -probar betadisk
 -probar discos +3
 -probar file browser
