@@ -5809,99 +5809,97 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		if (editando_en_zona_ascii) string_atajos[0]=0;
 
-				if (menu_debug_hexdump_with_ascii_modo_ascii==0) {
-					sprintf (buffer_char_type,"ASCII");
-				}
+		if (menu_debug_hexdump_with_ascii_modo_ascii==0) {
+			sprintf (buffer_char_type,"ASCII");
+		}
 
-				else if (menu_debug_hexdump_with_ascii_modo_ascii==1) {
-                	sprintf (buffer_char_type,"ZX80");
-                }
+		else if (menu_debug_hexdump_with_ascii_modo_ascii==1) {
+			sprintf (buffer_char_type,"ZX80");
+		}
 
-				else sprintf (buffer_char_type,"ZX81");
-
-
-				//char 
-				//menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
-
-				//Si esta editando, mostrar puntero en leyenda de memptr
-				char buffer_puntero[32];
-				if (menu_hexdump_edit_mode) {
-					menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
-					char buf_temp_pointer[32];
-
-					menu_debug_print_address_memory_zone(buf_temp_pointer,direccion_cursor);
-					sprintf(buffer_puntero," (%s)",buf_temp_pointer);
-				}
-				else {
-					buffer_puntero[0]=0;
-				}
-
-				sprintf (buffer_linea,"%smemptr%s C%sopy",string_atajos,buffer_puntero,string_atajos);
+		else sprintf (buffer_char_type,"ZX81");
 
 
-				//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-				sprintf (buffer_linea,"[%c] %sinvert [%c] Edi%st C%shar:%s",
-					(valor_xor==0 ? ' ' : 'X'), 
-					string_atajos,
-					
-					(menu_hexdump_edit_mode==0 ? ' ' : 'X' ),
-					string_atajos,
-					
-					string_atajos,
-					buffer_char_type
-					);
-				//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+		//Si esta editando, mostrar puntero en leyenda de memptr
+		char buffer_puntero[32];
+		if (menu_hexdump_edit_mode) {
+			menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
+			char buf_temp_pointer[32];
 
+			menu_debug_print_address_memory_zone(buf_temp_pointer,direccion_cursor);
+			sprintf(buffer_puntero," (%s)",buf_temp_pointer);
+		}
+		else {
+			buffer_puntero[0]=0;
+		}
 
-				char memory_zone_text[64]; //espacio temporal mas grande por si acaso
-				if (menu_debug_show_memory_zones==0) {
-					sprintf (memory_zone_text,"Mem %szone (mapped memory)",string_atajos);
-				}
-				else {
-					//printf ("Info zona %d\n",menu_debug_memory_zone);
-					char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
-					//int readwrite;
-					machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
-					sprintf (memory_zone_text,"Mem %szone (%d %s)",string_atajos,menu_debug_memory_zone,buffer_name);
-					//printf ("size: %X\n",menu_debug_memory_zone_size);
-					//printf ("Despues zona %d\n",menu_debug_memory_zone);
-				}
-
-				//truncar texto a 32 por si acaso
-				memory_zone_text[32]=0;
-				//menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,memory_zone_text);
-
-				sprintf (textoshow," Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
-				//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-				zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
-
-		
-				char subzone_info[33];
-				machine_get_memory_subzone_name(menu_debug_memory_zone,current_machine_type, menu_debug_hexdump_direccion, subzone_info);
-				if (subzone_info[0]!=0) {
-					sprintf(buffer_linea," S~~ubzone info: %s",subzone_info);
-					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
-				}
-				else {
-					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
-				}
+		sprintf (buffer_linea,"%smemptr%s C%sopy",string_atajos,buffer_puntero,string_atajos);
 
 
-//Restaurar comportamiento atajos
-menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-			zxvision_draw_window_contents(&ventana);
-			//NOTA: este menu no acostumbra a refrescar rapido la ventana cuando la redimensionamos con el raton
-			//es una razon facil: el volcado de hexa usa relativamente mucha cpu,
-			//cada vez que redimensionamos ventana, se llama al bucle continuamente, usando mucha cpu y si esta el autoframeskip,
-			//hace saltar frames
+		sprintf (buffer_linea,"[%c] %sinvert [%c] Edi%st C%shar:%s",
+			(valor_xor==0 ? ' ' : 'X'), 
+			string_atajos,
 			
+			(menu_hexdump_edit_mode==0 ? ' ' : 'X' ),
+			string_atajos,
+			
+			string_atajos,
+			buffer_char_type
+			);
+		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
-			tecla=zxvision_common_getkey_refresh();		
+
+		char memory_zone_text[64]; //espacio temporal mas grande por si acaso
+		if (menu_debug_show_memory_zones==0) {
+			sprintf (memory_zone_text,"Mem %szone (mapped memory)",string_atajos);
+		}
+		else {
+			//printf ("Info zona %d\n",menu_debug_memory_zone);
+			char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
+			//int readwrite;
+			machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
+			sprintf (memory_zone_text,"Mem %szone (%d %s)",string_atajos,menu_debug_memory_zone,buffer_name);
+			//printf ("size: %X\n",menu_debug_memory_zone_size);
+			//printf ("Despues zona %d\n",menu_debug_memory_zone);
+		}
+
+		//truncar texto a 32 por si acaso
+		memory_zone_text[32]=0;
+		//menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,memory_zone_text);
+
+		sprintf (textoshow," Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
+		//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
+
+
+		char subzone_info[33];
+		machine_get_memory_subzone_name(menu_debug_memory_zone,current_machine_type, menu_debug_hexdump_direccion, subzone_info);
+		if (subzone_info[0]!=0) {
+			sprintf(buffer_linea," S~~ubzone info: %s",subzone_info);
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+		}
+		else {
+			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+		}
+
+
+		//Restaurar comportamiento atajos
+		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+		zxvision_draw_window_contents(&ventana);
+		//NOTA: este menu no acostumbra a refrescar rapido la ventana cuando la redimensionamos con el raton
+		//es una razon facil: el volcado de hexa usa relativamente mucha cpu,
+		//cada vez que redimensionamos ventana, se llama al bucle continuamente, usando mucha cpu y si esta el autoframeskip,
+		//hace saltar frames
+		
+
+		tecla=zxvision_common_getkey_refresh();		
 
 
 				//Aviso: hay que conseguir que las letras de accion no esten entre la a-f, porque asi,
