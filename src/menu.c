@@ -27820,41 +27820,38 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
             menu_add_item_menu(array_menu_common,"~~ZEsarUX",MENU_OPCION_NORMAL,menu_about_license,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'z');
 
+			menu_add_item_menu(array_menu_common,"~~Atomlite (from simcoupe)",MENU_OPCION_NORMAL,menu_about_license_atomlite,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'a');	
+
+			menu_add_item_menu(array_menu_common,"~~Fuse disassembler",MENU_OPCION_NORMAL,menu_about_license_fuse,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'f');	
+
+			menu_add_item_menu(array_menu_common,"m~~dvtool",MENU_OPCION_NORMAL,menu_about_license_mdvtool,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'d');	
+
 			menu_add_item_menu(array_menu_common,"~~Motorola Core",MENU_OPCION_NORMAL,menu_about_license_motorola_core,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'m');
+
+			menu_add_item_menu(array_menu_common,"s~~cl2trd",MENU_OPCION_NORMAL,menu_about_license_scl2trd,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'c');			
 
 			menu_add_item_menu(array_menu_common,"~~SCMP Core",MENU_OPCION_NORMAL,menu_about_license_scmp_core,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'s');
 
-			menu_add_item_menu(array_menu_common,"s~~cl2trd",MENU_OPCION_NORMAL,menu_about_license_scl2trd,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'c');
-
-			menu_add_item_menu(array_menu_common,"~~Fuse disassembler",MENU_OPCION_NORMAL,menu_about_license_fuse,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'f');			
-
-
-			menu_add_item_menu(array_menu_common,"~~Atomlite (from simcoupe)",MENU_OPCION_NORMAL,menu_about_license_atomlite,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'a');	
-
 			menu_add_item_menu(array_menu_common,"S~~PG loader (from unrealspeccy)",MENU_OPCION_NORMAL,menu_about_license_unrealspeccy,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'p');				
 
-			menu_add_item_menu(array_menu_common,"m~~dvtool",MENU_OPCION_NORMAL,menu_about_license_mdvtool,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'d');						
-
-			menu_add_item_menu(array_menu_common,"z~~ip",MENU_OPCION_NORMAL,menu_about_license_zip,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'i');	
-			
-				
-	menu_add_item_menu(array_menu_common,"unpa~~ws/unquill",MENU_OPCION_NORMAL,menu_about_license_unpaws,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'w');		
-			
-			
 			menu_add_item_menu(array_menu_common,"~~undaad",MENU_OPCION_NORMAL,menu_about_license_undaad,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'u');		
 			
 			menu_add_item_menu(array_menu_common,"un~~gac",MENU_OPCION_NORMAL,menu_about_license_grackle,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'g');	
+			menu_add_item_menu_shortcut(array_menu_common,'g');
+
+			menu_add_item_menu(array_menu_common,"unpa~~ws/unquill",MENU_OPCION_NORMAL,menu_about_license_unpaws,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'w');						
+
+			menu_add_item_menu(array_menu_common,"z~~ip",MENU_OPCION_NORMAL,menu_about_license_zip,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'i');				
 					
 
             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
