@@ -5356,6 +5356,8 @@ const int menu_hexdump_bytes_por_linea=8;
 void menu_debug_hexdump_cursor_abajo(void);
 void menu_debug_hexdump_cursor_arriba(void);
 
+int menu_debug_hexdump_cursor_en_zona_ascii=0;
+
 
 
 void menu_debug_hexdump_print_editcursor(zxvision_window *ventana,int x,int y,char caracter)
@@ -5595,6 +5597,34 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 
 }
 
+menu_z80_moto_int menu_debug_hexdump_get_cursor_pointer(void)
+{
+							//Obtener direccion puntero
+						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
+
+						//int si_zona_hexa=0; //en zona hexa o ascii
+						//if (menu_hexdump_edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
+
+
+						if (!menu_debug_hexdump_cursor_en_zona_ascii) {
+							//Sumar x (cada dos, una posicion)
+							direccion_cursor +=menu_hexdump_edit_position_x/2;
+						}
+						else {
+							int indice_hasta_ascii=menu_hexdump_bytes_por_linea*2+1; //el hexa y el espacio
+							direccion_cursor +=menu_hexdump_edit_position_x-indice_hasta_ascii;
+						}
+
+						//Sumar y. 
+						direccion_cursor +=menu_hexdump_edit_position_y*menu_hexdump_bytes_por_linea;
+
+						//Ajustar direccion a zona memoria
+						direccion_cursor=adjust_address_memory_size(direccion_cursor);
+
+
+						return direccion_cursor;
+}
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
@@ -5658,7 +5688,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 			if (menu_hexdump_lineas_total<3) menu_hexdump_lineas_total=3;
 
-			int cursor_en_zona_ascii=0;
+			
+			menu_debug_hexdump_cursor_en_zona_ascii=0;
 			int editando_en_zona_ascii=0;
 
 
@@ -5702,10 +5733,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		int menu_hexdump_edit_position_x_nibble=menu_hexdump_edit_position_x^1;
 
 		
-		if (menu_hexdump_edit_position_x>menu_hexdump_bytes_por_linea*2) cursor_en_zona_ascii=1;
+		if (menu_hexdump_edit_position_x>menu_hexdump_bytes_por_linea*2) menu_debug_hexdump_cursor_en_zona_ascii=1;
 
 
-		if (menu_hexdump_edit_mode && cursor_en_zona_ascii) editando_en_zona_ascii=1;		
+		if (menu_hexdump_edit_mode && menu_debug_hexdump_cursor_en_zona_ascii) editando_en_zona_ascii=1;		
 
 		char nibble_char='X';	
 		char nibble_char_cursor='X';	
@@ -5789,7 +5820,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				else sprintf (buffer_char_type,"ZX81");
 
 
-
+				//char 
 				sprintf (buffer_linea,"%smemptr C%sopy",string_atajos,string_atajos);
 
 
@@ -5980,11 +6011,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				int editar_byte=0;
 				if (menu_hexdump_edit_mode) {
 					//Para la zona ascii
-					if (cursor_en_zona_ascii && tecla>=32 && tecla<=126) editar_byte=1; 
+					if (menu_debug_hexdump_cursor_en_zona_ascii && tecla>=32 && tecla<=126) editar_byte=1; 
 
 					//Para la zona hexa
 					if (
-						!cursor_en_zona_ascii && 
+						!menu_debug_hexdump_cursor_en_zona_ascii && 
 						( (tecla>='0' && tecla<='9') || (tecla>='a' && tecla<='f') )
 						) {
 						editar_byte=1; 
@@ -6022,6 +6053,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 				//asked_about_writing_rom
 
 				if (editar_byte) {
+						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
+
+						/*
 						//Obtener direccion puntero
 						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
 
@@ -6029,7 +6063,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						//if (menu_hexdump_edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
 
 
-						if (!cursor_en_zona_ascii) {
+						if (!menu_debug_hexdump_cursor_en_zona_ascii) {
 							//Sumar x (cada dos, una posicion)
 							direccion_cursor +=menu_hexdump_edit_position_x/2;
 						}
@@ -6043,6 +6077,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 						//Ajustar direccion a zona memoria
 						direccion_cursor=adjust_address_memory_size(direccion_cursor);
+						*/
 
 						//TODO: ver si se sale de tamanyo zona memoria
 
@@ -6054,7 +6089,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 						//Estamos en zona hexa o ascii
 
-						if (!cursor_en_zona_ascii) {
+						if (!menu_debug_hexdump_cursor_en_zona_ascii) {
 							//printf ("Zona hexa\n");
 							//Zona hexa
 
