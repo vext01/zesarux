@@ -2332,9 +2332,9 @@ void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 
 }
 
-int mostrado_trace=0;
+//int mostrado_trace=0;
 
-extern int running_realloc;
+//extern int running_realloc;
 
 void scrcocoa_putpixel(int x,int y,unsigned int color)
 {

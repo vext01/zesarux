@@ -2284,16 +2284,18 @@ void cls_menu_overlay(void)
 	//copy_second_first_overlay();
 
 
-	//Si en Z88 y driver grafico, redibujamos la zona inferior
-	if (MACHINE_IS_Z88) {
-		screen_z88_draw_lower_screen();
-	}
+
 
 	//Si es CPC, entonces aqui el border es variable y por tanto tenemos que redibujarlo, pues quiza el menu esta dentro de zona de border
 	modificado_border.v=1;
 
 	scr_clear_layer_menu();
 
+	//Si en Z88 y driver grafico, redibujamos la zona inferior
+	//Despues de scr_clear_layer_menu
+	if (MACHINE_IS_Z88) {
+		screen_z88_draw_lower_screen();
+	}
 
 	menu_draw_ext_desktop();
 

@@ -110,6 +110,7 @@ Fixed setting a configured memory breakpoint like this "--set-mem-breakpoint 000
 Fixed menu issues:
 -fixed generic message splash: wait until key is released (if any pressed)
 -fixed opening the menu on stdout driver on the first start of ZEsarUX
+-fixed bug closing menu on Z88 machine and Real Video disabled
 
 Fixed tbblue emulation:
 -fixed clipping in 80x32 mode
