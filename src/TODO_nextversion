@@ -183,3 +183,5 @@ Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
 
 
 -Setting de guardado tamanyo memoria RAM de divmmc/divide (probablemente variable diviface_current_ram_memory_bits)
+
+-Soporte Z88 en snapshots zsf
