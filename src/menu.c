@@ -2292,7 +2292,13 @@ void cls_menu_overlay(void)
 	scr_clear_layer_menu();
 
 	//Si en Z88 y driver grafico, redibujamos la zona inferior
-	//Despues de scr_clear_layer_menu
+	//Despues de scr_clear_layer_menu, porque si lo hacemos antes, se habria dibujado en layer menu,
+	//se borra layer menu y entonces los pixeles que hemos dibujado antes se perderian...
+	//Bueno esto es mas o menos lo que he deducido aunque no tiene porque ser 100% asi. Lo que si que es cierto
+	//es que si esto se pone antes de scr_clear_layer_menu, teniendo real video off y maquina z88, no borra los menus
+	//Tiene que ver tambien con que este screen_z88_draw_lower_screen esta usando putpixel normal de maquina,
+	//pero deberia usar scr_putpixel_layer_menu/scr_putpixel_gui_zoom
+
 	if (MACHINE_IS_Z88) {
 		screen_z88_draw_lower_screen();
 	}
