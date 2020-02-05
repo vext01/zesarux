@@ -1354,8 +1354,8 @@ void codetests_main(int main_argc,char *main_argv[])
 	verbose_level=VERBOSE_PARANOID;
 	scr_driver_name="";	
 
-	//printf ("\nRunning expression parser tests\n");
-	//codetests_expression_parser();
+	printf ("\nRunning expression parser tests\n");
+	codetests_expression_parser();
 
 
 	//printf ("\nRunning mid tests\n");
@@ -1371,20 +1371,20 @@ void codetests_main(int main_argc,char *main_argv[])
 	printf ("Note: %d\n",get_mid_number_note("KK"));
 	printf ("Note: %d\n",get_mid_number_note(""));*/
 
-	//printf ("\nRunning assembler tests\n");
-	//codetests_assembler();
+	printf ("\nRunning assembler tests\n");
+	codetests_assembler();
 
-	//printf ("\nRunning zeng tests\n");
-	//init_network_tables();
-	//codetests_zeng();
+	printf ("\nRunning zeng tests\n");
+	init_network_tables();
+	codetests_zeng();
 	
 	//printf ("error: %s\n",z_sock_get_error(Z_ERR_NUM_READ_SOCKET));
 
 	//codetests_open_sockets_infinite();
 	
-	//printf ("\nRunning zsock http tests\n");
-	//init_network_tables();
-	//codetests_http();
+	printf ("\nRunning zsock http tests\n");
+	init_network_tables();
+	codetests_http();
 
 	//printf ("\nRunning zsock https tests\n");
 	//init_network_tables();
@@ -1406,17 +1406,17 @@ void codetests_main(int main_argc,char *main_argv[])
 //	codetests_network_atomic();
 //#endif
 
-	//printf ("\nRunning tbblue layers strings\n");
-	//codetests_tbblue_layers();
+	printf ("\nRunning tbblue layers strings\n");
+	codetests_tbblue_layers();
 
-	//printf ("\nRunning repetitions code\n");
-	//codetests_repetitions();
+	printf ("\nRunning repetitions code\n");
+	codetests_repetitions();
 
-	//printf ("\nRunning compress repetitions code\n");
-	//coretests_compress_repetitions();
+	printf ("\nRunning compress repetitions code\n");
+	coretests_compress_repetitions();
 
-	//printf ("\nRunning get raster tbblue horizontal\n");
-	//codetests_tbblue_get_horizontal_raster();
+	printf ("\nRunning get raster tbblue horizontal\n");
+	codetests_tbblue_get_horizontal_raster();
 
 	exit(0);
 }
