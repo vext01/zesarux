@@ -5151,7 +5151,7 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 				int pagina;
 				segmentos_totales=4;
 				for (pagina=0;pagina<4;pagina++) {
-	  				sprintf (segmentos[pagina].shortname,"BANK%02X",blink_mapped_memory_banks[pagina]);
+	  				sprintf (segmentos[pagina].shortname,"B%02X",blink_mapped_memory_banks[pagina]);
 	  				sprintf (segmentos[pagina].longname,"BANK %02X",blink_mapped_memory_banks[pagina]);
 	                                segmentos[pagina].length=16384;
 	                                segmentos[pagina].start=16384*pagina;

@@ -112,6 +112,8 @@ Fixed menu issues:
 -fixed opening the menu on stdout driver on the first start of ZEsarUX
 -fixed bug closing menu on Z88 machine and Real Video disabled
 
+Fixed showing memory banks on debug cpu for Z88 machine
+
 Fixed tbblue emulation:
 -fixed clipping in 80x32 mode
 -fixed error when paging rom in ram, on case pages 0,1,2,3
