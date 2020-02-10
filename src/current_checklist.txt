@@ -144,7 +144,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar desactivando cpustats
 -probar desactivando visualmem
 -probar waveform, tambien en drivers no graficos como curses, aa, etc
--probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
 -probar menu aysheet
 -probar midi output to real device
 -probar export to .mid

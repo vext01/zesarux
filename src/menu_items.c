@@ -7989,6 +7989,12 @@ void menu_cpu_type(MENU_ITEM_PARAMETERS)
 	if (z80_cpu_current_type>=TOTAL_Z80_CPU_TYPES) z80_cpu_current_type=0;
 }
 
+
+void menu_cpu_ldir_hack(MENU_ITEM_PARAMETERS)
+{
+	cpu_ldir_hack_optimized.v ^=1;
+}
+
 //menu cpu settings
 void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 {
@@ -8058,6 +8064,11 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_cpu_type,NULL,"Z80 CPU Type [%s]",z80_cpu_types_strings[z80_cpu_current_type]);
 			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Chooses the cpu type");
 			menu_add_item_menu_ayuda(array_menu_cpu_settings,"CPU type modifies the way the CPU fires an IM0 interrupt, or the behaviour of opcode OUT (C),0, for example");
+
+
+			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_cpu_ldir_hack,NULL,"[%c] Z80 LDIR Hack",(cpu_ldir_hack_optimized.v ? 'X' : ' ') );
+			menu_add_item_menu_tooltip(array_menu_cpu_settings,"EXPERIMENTAL feature! It makes a fast data transference without taking care of timings. Speeds up cpu core");
+			menu_add_item_menu_tooltip(array_menu_cpu_settings,"EXPERIMENTAL feature! It makes a fast data transference without taking care of timings. Speeds up cpu core");
 		}		
 
 		if (MACHINE_IS_SPECTRUM) {

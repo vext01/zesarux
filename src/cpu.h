@@ -428,6 +428,8 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 extern int machine_emulate_memory_refresh;
 extern int machine_emulate_memory_refresh_counter;
 
+extern z80_bit cpu_ldir_hack_optimized;
+
 extern z80_byte last_inves_low_ram_poke_menu;
 
 extern void random_ram_inves(z80_byte *puntero,int longitud);

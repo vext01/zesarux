@@ -469,6 +469,9 @@ z80_int memptr;
 int machine_emulate_memory_refresh=0;
 int machine_emulate_memory_refresh_counter=0;
 
+//Optimizacion de velocidad de LDIR:
+z80_bit cpu_ldir_hack_optimized={0};
+
 //A 0 si interrupts disabled
 //A 1 si interrupts enabled
 //z80_bit interrupts;
