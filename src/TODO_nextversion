@@ -178,6 +178,7 @@ Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
 ----Fin Mac SSL
 
 
+-Habilitar modos timex al seleccionar next. Importante para player nextdaw por ejemplo 
 
 -Funciones deprecated mac corregir 
 
