@@ -5146,11 +5146,18 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	int ancho_ventana=32;
-	int alto_ventana=20;
+	int xventana,yventana,ancho_ventana,alto_ventana;
 
-	int xventana=menu_center_x()-ancho_ventana/2;
-	int yventana=menu_center_y()-alto_ventana/2; 
+
+	if (!util_find_window_geometry("ayplayer",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+		ancho_ventana=32;
+		alto_ventana=20;	 
+
+		xventana=menu_center_x()-ancho_ventana/2;
+		yventana=menu_center_y()-alto_ventana/2; 
+	}	
+
+
 
 
 	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
@@ -5294,6 +5301,8 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
         cls_menu_overlay();
+
+	util_add_window_geometry_compact("ayplayer",&ventana);
 
 	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
 	zxvision_destroy_window(&ventana);				
