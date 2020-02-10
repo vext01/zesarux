@@ -5146,10 +5146,15 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	int xventana=menu_origin_x();
+	int ancho_ventana=32;
+	int alto_ventana=20;
 
-	zxvision_new_window(&ventana,xventana,1,32,20,
-							32-1,20-2,"AY Player");
+	int xventana=menu_center_x()-ancho_ventana/2;
+	int yventana=menu_center_y()-alto_ventana/2; 
+
+
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"AY Player");
 	zxvision_draw_window(&ventana);			
 
 
