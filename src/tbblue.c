@@ -92,6 +92,10 @@ z80_bit tbblue_deny_turbo_rom={0};
 //Inicio Variables, memoria etc de estado de la máquina. Se suelen guardar/cargar en snapshot ZSF
 //
 
+
+//'bootrom' takes '1' on hard-reset and takes '0' if there is any writing on the i/o port 'config1'. It can not be read.
+z80_bit tbblue_bootrom={1};
+
 //Copper
 z80_byte tbblue_copper_memory[TBBLUE_COPPER_MEMORY];
 
@@ -128,29 +132,8 @@ z80_int tbblue_palette_tilemap_first[256];
 z80_int tbblue_palette_tilemap_second[256];
 
 
-//Diferentes layers a componer la imagen final
-/*
-(R/W) 0x15 (21) => Sprite and Layers system
-  bit 7 - LoRes mode, 128 x 96 x 256 colours (1 = enabled)
-  bits 6-5 = Reserved, must be 0
-  bits 4-2 = set layers priorities:
-     Reset default is 000, sprites over the Layer 2, over the ULA graphics
-     000 - S L U
-     001 - L S U
-     010 - S U L
-     011 - L U S
-     100 - U S L
-     101 - U L S
- */
-
-//Si en zona pantalla y todo es transparente, se pone un 0
-//Layers con el indice al olor final en la paleta RGB9 (0..511)
 
 
-
-z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
-z80_int tbblue_layer_layer2[TBBLUE_LAYERS_PIXEL_WIDTH];
-z80_int tbblue_layer_sprites[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 //64 patterns de Sprites
 /*
@@ -197,6 +180,31 @@ z80_byte tbblue_last_register;
 //
 //FIN Variables, memoria etc de estado de la máquina. Se suelen guardar/cargar en snapshot ZSF
 //
+
+
+//Diferentes layers a componer la imagen final
+/*
+(R/W) 0x15 (21) => Sprite and Layers system
+  bit 7 - LoRes mode, 128 x 96 x 256 colours (1 = enabled)
+  bits 6-5 = Reserved, must be 0
+  bits 4-2 = set layers priorities:
+     Reset default is 000, sprites over the Layer 2, over the ULA graphics
+     000 - S L U
+     001 - L S U
+     010 - S U L
+     011 - L U S
+     100 - U S L
+     101 - U L S
+ */
+
+//Si en zona pantalla y todo es transparente, se pone un 0
+
+
+//Layers con el indice al color final en la paleta RGB9 (0..511)
+z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
+z80_int tbblue_layer_layer2[TBBLUE_LAYERS_PIXEL_WIDTH];
+z80_int tbblue_layer_sprites[TBBLUE_LAYERS_PIXEL_WIDTH];
+
 
 //Indice a la posicion de 16 bits a escribir
 //z80_int tbblue_copper_index_write=0;
@@ -2030,8 +2038,7 @@ Bit 0: Collision flag.
 
 
 
-//'bootrom' takes '1' on hard-reset and takes '0' if there is any writing on the i/o port 'config1'. It can not be read.
-z80_bit tbblue_bootrom={1};
+
 
 //Puerto tbblue de maquina/mapeo
 /*

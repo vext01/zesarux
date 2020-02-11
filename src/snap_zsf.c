@@ -992,6 +992,11 @@ void load_zsf_tbblue_conf(z80_byte *header)
 {
 /*
 -Block ID 21: ZSF_TBBLUE_CONF
+0: tbblue_last_register
+1-256: 256 internal TBBLUE registers
+257: 16KB with the sprite patterns
+16641: tbblue_bootrom_flag
+16642
 ....
 */
 
@@ -999,10 +1004,35 @@ void load_zsf_tbblue_conf(z80_byte *header)
   int i;
   for (i=0;i<256;i++) tbblue_registers[i]=header[1+i];
 
+  //Patterns de sprites
+  //z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
+
+  for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
+    tbsprite_new_patterns[i]=header[257+i];
+  }
+
+  tbblue_bootrom.v=header[16641];
  
 
-  tbblue_set_memory_pages();    
+  
 
+
+
+  
+ 
+  
+  tbblue_set_emulator_setting_timing();
+
+   tbblue_set_emulator_setting_reg_8();
+
+
+  tbblue_set_memory_pages();   
+
+  //turbo despues de tbblue_set_emulator_setting_timing pues cambia timing
+  tbblue_set_emulator_setting_turbo();
+
+
+  tbblue_set_emulator_setting_divmmc();
 
 
 
@@ -1818,22 +1848,35 @@ Byte Fields:
 
 if (MACHINE_IS_TBBLUE) {
 
-    z80_byte tbblueconfblock[274];
+#define TBBLUECONFBLOCKSIZE (1+256+16384+1)
+    z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
 
 /*
 -Block ID 21: ZSF_TBBLUE_CONF
+0: tbblue_last_register
+1-256: 256 internal TBBLUE registers
+257: 16KB with the sprite patterns
+16641: tbblue_bootrom_flag
+16642
 ....
 */    
-
-    int longitud_bloque=1+256;
 
     tbblueconfblock[0]=tbblue_last_register;
     int i;
     for (i=0;i<256;i++) tbblueconfblock[1+i]=tbblue_registers[i];
 
+    for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
+      tbblueconfblock[257+i]=tbsprite_new_patterns[i];
+    }
+
+    tbblueconfblock[16641]=tbblue_bootrom.v;
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, TBBLUECONFBLOCKSIZE);
 
 
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, longitud_bloque);
+
+
+
 
 
 
@@ -2079,9 +2122,9 @@ Byte fields:
   }
 
  //DIVMMC/DIVIDE config
- //Solo si diviface esta habilitado
+ //Solo si diviface esta habilitado (o si maquina TBBLUE)
  //Esta parte tiene que estar despues de definir y cargar memoria de maquinas, sobre el final del archivo ZSF
- if (diviface_enabled.v==1) {
+ if (diviface_enabled.v==1 || MACHINE_IS_TBBLUE) {
 
 /*-Block ID 16: ZSF_DIVIFACE_CONF
 Divmmc/divide common settings (diviface), in case it's enabled

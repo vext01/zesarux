@@ -1,0 +1,54 @@
+-ZSF tbblue:
+
+*no deberia guardar la rom fpga??
+
+*no carga snapshot cuando esta en nextbasic
+
+*falta:
+
+
+//Copper
+z80_byte tbblue_copper_memory[TBBLUE_COPPER_MEMORY];
+
+
+//Indice al opcode copper a ejecutar
+z80_int tbblue_copper_pc=0;
+
+
+z80_int tbblue_palette_ula_first[256];
+z80_int tbblue_palette_ula_second[256];
+z80_int tbblue_palette_layer2_first[256];
+z80_int tbblue_palette_layer2_second[256];
+z80_int tbblue_palette_sprite_first[256];
+z80_int tbblue_palette_sprite_second[256];
+z80_int tbblue_palette_tilemap_first[256];
+z80_int tbblue_palette_tilemap_second[256];
+
+
+
+
+//Si en zona pantalla y todo es transparente, se pone un 0
+
+
+
+
+z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
+
+//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
+z80_byte tbsprite_index_palette;
+z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
+z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
+z80_byte tbsprite_nr_index_sprite;
+
+/*
+Port 0x303B, if read, returns some information:
+
+Bits 7-2: Reserved, must be 0.
+Bit 1: max sprites per line flag.
+Bit 0: Collision flag.
+Port 0x303B, if written, defines the sprite slot to be configured by ports 0x55 and 0x57, and also initializes the address of the palette.
+
+*/
+
+z80_byte tbblue_port_303b;
+

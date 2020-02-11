@@ -56,6 +56,7 @@ Improved TBBlue emulation:
 -increased tbblue.mmc MMC image size to 64 MB
 -updated to the last tbblue SD distribution. Now it holds the entire distribution
 -enable real video by default
+-added zsf snapshot support
 
 Improved Hex editor: 
 -can now copy to a different memory zone
