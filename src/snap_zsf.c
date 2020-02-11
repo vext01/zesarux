@@ -1001,7 +1001,7 @@ void load_zsf_tbblue_conf(z80_byte *header)
 
  
 
-  //zxuno_set_memory_pages();    
+  tbblue_set_memory_pages();    
 
 
 

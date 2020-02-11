@@ -330,40 +330,40 @@ void tbblue_copper_next_opcode(void)
 	tbblue_copper_pc +=2;
 
   /*
-                                                        modos
-                                                               01 = Copper start, execute the list, then stop at last adress
+		modos
+		01 = Copper start, execute the list, then stop at last adress
        10 = Copper start, execute the list, then loop the list from start
        11 = Copper start, execute the list and restart the list at each frame
-                                                        */
+	*/
 
-                                                   //Si ha ido a posicion 0
-                                                   if (tbblue_copper_pc==TBBLUE_COPPER_MEMORY) {
-													   z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-                                                           switch (copper_control_bits) {
-                                                                        case TBBLUE_RCCH_COPPER_STOP:
-																			//Se supone que nunca se estara ejecutando cuando el mode sea stop
-                                                                           tbblue_copper_set_stop();
-                                                                        break;
+	//Si ha ido a posicion 0
+	if (tbblue_copper_pc==TBBLUE_COPPER_MEMORY) {
+		z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+			switch (copper_control_bits) {
+						case TBBLUE_RCCH_COPPER_STOP:
+							//Se supone que nunca se estara ejecutando cuando el mode sea stop
+							tbblue_copper_set_stop();
+						break;
 
-                                                                        case TBBLUE_RCCH_COPPER_RUN_LOOP:
-                                                                                //loop
-                                                                                tbblue_copper_pc=0;
-                                                                                //printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP\n");
-                                                                        break;
+						case TBBLUE_RCCH_COPPER_RUN_LOOP:
+								//loop
+								tbblue_copper_pc=0;
+								//printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP\n");
+						break;
 
-																		case TBBLUE_RCCH_COPPER_RUN_LOOP_RESET:
-                                                                                //loop
-                                                                                tbblue_copper_pc=0;
-                                                                                //printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP_RESET\n");
-                                                                        break;
+						case TBBLUE_RCCH_COPPER_RUN_LOOP_RESET:
+								//loop
+								tbblue_copper_pc=0;
+								//printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP_RESET\n");
+						break;
 
-                                                                        case TBBLUE_RCCH_COPPER_RUN_VBI:
-                                                                                //loop??
-                                                                                tbblue_copper_pc=0;
-                                                                                //printf ("Reset copper on mode RUN_VBI\n");
-                                                                        break;
-                                                           }
-												   }
+						case TBBLUE_RCCH_COPPER_RUN_VBI:
+								//loop??
+								tbblue_copper_pc=0;
+								//printf ("Reset copper on mode RUN_VBI\n");
+						break;
+			}
+	}
 
 }
 
