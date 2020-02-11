@@ -1,5 +1,8 @@
 -ZSF tbblue:
 
+* quiza divmmc paging tiene que estar desactivado inicialmente
+*quiza ZSF_TBBLUE_CONF tiene que ir despues de ZSF_DIVMMC_.... por temas de activado de divmmc
+
 *no deberia guardar la rom fpga??
 
 *no carga snapshot cuando esta en nextbasic
