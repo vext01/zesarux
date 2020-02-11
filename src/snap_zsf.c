@@ -98,6 +98,7 @@
 #define ZSF_CPC_CONF 19
 #define ZSF_PENTAGON_CONF 20
 #define ZSF_TBBLUE_RAMBLOCK 21
+#define ZSF_TBBLUE_CONF 22
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -304,6 +305,15 @@ Byte Fields:
 6 and next bytes: data bytes
 
 
+
+-Block ID 22 ZSF_TBBLUE_CONF
+Ports and internal registers of TBBLUE machine
+Byte fields:
+0: tbblue_last_register
+1-256: 256 internal TBBLUE registers
+
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -316,7 +326,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 22
+#define MAX_ZSF_BLOCK_ID_NAMES 23
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -340,7 +350,8 @@ char *zsf_block_id_names[]={
   "ZSF_CPC_RAMBLOCK",
   "ZSF_CPC_CONF",
   "ZSF_PENTAGON_CONF",
-  "ZSF_TBBLUE_RAMBLOCK"
+  "ZSF_TBBLUE_RAMBLOCK",
+  "ZSF_TBBLUE_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -606,6 +617,38 @@ void load_zsf_zxuno_snapshot_block_data(z80_byte *block_data,int longitud_origin
 
 
   load_zsf_snapshot_block_data_addr(&block_data[i],zxuno_sram_mem_table_new[ram_page],block_lenght,longitud_original,block_flags&1);
+
+}
+
+
+void load_zsf_tbblue_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+
+  i++;
+  z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
+  i +=2;
+  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  i+=2;
+
+  z80_byte ram_page=block_data[i];
+  i++;
+
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=6;
+
+  int offset_memoria=16384*ram_page;
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[offset_memoria],block_lenght,longitud_original,block_flags&1);
 
 }
 
@@ -943,6 +986,35 @@ Byte fields:
   ulaplus_set_extended_mode(zxuno_ports[0x40]);
 }
 
+
+
+void load_zsf_tbblue_conf(z80_byte *header)
+{
+/*
+-Block ID 21: ZSF_TBBLUE_CONF
+....
+*/
+
+  tbblue_last_register=header[0];
+  int i;
+  for (i=0;i<256;i++) tbblue_registers[i]=header[1+i];
+
+ 
+
+  //zxuno_set_memory_pages();    
+
+
+
+
+  //Sincronizar settings de emulador con los valores de puertos de zxuno
+  //zxuno_set_emulador_settings();
+
+
+
+  //ulaplus_set_extended_mode(zxuno_ports[0x40]);
+}
+
+
 void load_zsf_cpc_conf(z80_byte *header)
 {
 /*
@@ -1246,6 +1318,14 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_PENTAGON_CONF:
         load_zsf_pentagon_conf(block_data);
+      break;        
+
+      case ZSF_TBBLUE_RAMBLOCK:
+        load_zsf_tbblue_snapshot_block_data(block_data,block_lenght);
+      break;    
+
+      case ZSF_TBBLUE_CONF:
+        load_zsf_tbblue_conf(block_data);
       break;         
 
       default:
@@ -1737,6 +1817,26 @@ Byte Fields:
 
 
 if (MACHINE_IS_TBBLUE) {
+
+    z80_byte tbblueconfblock[274];
+
+/*
+-Block ID 21: ZSF_TBBLUE_CONF
+....
+*/    
+
+    int longitud_bloque=1+256;
+
+    tbblueconfblock[0]=tbblue_last_register;
+    int i;
+    for (i=0;i<256;i++) tbblueconfblock[1+i]=tbblue_registers[i];
+
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, longitud_bloque);
+
+
+
 
    int longitud_ram=16384;
 
