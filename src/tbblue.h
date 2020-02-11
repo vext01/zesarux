@@ -32,7 +32,13 @@
 //borde izquierdo + pantalla + borde derecho, multiplicado por 2
 #define TBBLUE_LAYERS_PIXEL_WIDTH ((48+256+48)*2)
 
+//De momento esto solo se usa en carga/grabacion snapshots zsf
+#define TBBLUE_TOTAL_RAM_SIZE 2048
 
+#define TBBLUE_FPGA_ROM_SIZE 8
+
+//Los 8kb de rom del final estan repetidos
+#define TBBLUE_TOTAL_MEMORY_USED (TBBLUE_TOTAL_RAM_SIZE+TBBLUE_FPGA_ROM_SIZE*2)
 
 extern z80_byte *tbblue_ram_memory_pages[];
 

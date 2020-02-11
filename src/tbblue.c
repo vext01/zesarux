@@ -2089,39 +2089,6 @@ void tbblue_init_memory_tables(void)
 {
 /*
 
-Primer bloque de ram: memoria interna de tbblue en principio no accesible por el spectrum:
-
-Mapeo viejo
-
-0x000000 – 0x01FFFF (128K) => DivMMC RAM
-0x020000 – 0x03FFFF (128K) => Layer2 RAM
-0x040000 – 0x05FFFF (128K) => ??????????
-0x060000 – 0x06FFFF (64K) => ESXDOS and Multiface RAM
-0x060000 – 0x063FFF (16K) => ESXDOS ROM
-0x064000 – 0x067FFF (16K) => Multiface ROM
-0x068000 – 0x06BFFF (16K) => Multiface extra ROM
-0x06c000 – 0x06FFFF (16K) => Multiface RAM
-0x070000 – 0x07FFFF (64K) => ZX Spectrum ROM
-
-Segundo bloque de ram: 512K, todo accesible para Spectrum. Se mapean 256 o 512 mediante bit 6 y 7 de puerto 32765
-0x080000 - 0x0FFFFF (512K) => Speccy RAM
-
-Luego 8 KB de rom de la fpga
-0x100000 - 0x101FFF
-
-Nuevo:
-
-0x000000 – 0x00FFFF (64K) => ZX Spectrum ROM
-0x010000 – 0x013FFF (16K) => ESXDOS ROM
-0x014000 – 0x017FFF (16K) => Multiface ROM
-0x018000 – 0x01BFFF (16K) => Multiface extra ROM
-0x01c000 – 0x01FFFF (16K) => Multiface RAM
-0x020000 – 0x05FFFF (256K) => divMMC RAM
-0x060000 – 0x07FFFF (128K) => ZX Spectrum RAM
-0x080000 – 0x0FFFFF (512K) => Extra RAM
-
-
-Nuevo oct 2017:
 
     0x000000 – 0x00FFFF (64K) => ZX Spectrum ROM
     0x010000 – 0x013FFF (16K) => ESXDOS ROM
@@ -2129,6 +2096,8 @@ Nuevo oct 2017:
     0x018000 – 0x01BFFF (16K) => Multiface extra ROM
     0x01c000 – 0x01FFFF (16K) => Multiface RAM
     0x020000 – 0x03FFFF (128K) => divMMC RAM
+
+
     0x040000 – 0x05FFFF (128K) => ZX Spectrum RAM			(16 paginas) 
     0x060000 – 0x07FFFF (128K) => Extra RAM				(16 paginas)
 
@@ -2156,7 +2125,7 @@ Nuevo oct 2017:
 		tbblue_ram_memory_pages[i]=&memoria_spectrum[indice];
 	}
 
-	//4 Paginas ROM
+	//4 Paginas ROM de 16kb (8 paginas de 8kb)
 	for (i=0;i<8;i++) {
 		indice=0+8192*i;
 		tbblue_rom_memory_pages[i]=&memoria_spectrum[indice];

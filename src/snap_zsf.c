@@ -67,6 +67,7 @@
 #include "zxevo.h"
 #include "tsconf.h"
 #include "baseconf.h"
+#include "tbblue.h"
 
 
 #include "autoselectoptions.h"
@@ -96,6 +97,7 @@
 #define ZSF_CPC_RAMBLOCK 18
 #define ZSF_CPC_CONF 19
 #define ZSF_PENTAGON_CONF 20
+#define ZSF_TBBLUE_RAMBLOCK 21
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -291,10 +293,22 @@ Byte fields:
 0: Port EFF7
 
 
+-Block ID 21: ZSF_TBBLUE_RAMBLOCK
+A ram binary block for a tbblue. We store all the 2048 MB + 8*2 kB fpga rom (memoria_spectrum pointer). Total pages: 129
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: ram block id (in blocks of 16kb)
+6 and next bytes: data bytes
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
+->NOTA: esto parece que no lo he tenido en cuenta pues ya estoy usando bloques diferentes para tsconf, zxuno, tbblue etc
+Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloques son en el snapshot
 
 */
 
@@ -302,7 +316,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 21
+#define MAX_ZSF_BLOCK_ID_NAMES 22
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -326,6 +340,7 @@ char *zsf_block_id_names[]={
   "ZSF_CPC_RAMBLOCK",
   "ZSF_CPC_CONF",
   "ZSF_PENTAGON_CONF",
+  "ZSF_TBBLUE_RAMBLOCK"
 
   "Unknown"  //Este siempre al final
 };
@@ -1719,6 +1734,63 @@ Byte Fields:
 
 
   }
+
+
+if (MACHINE_IS_TBBLUE) {
+
+   int longitud_ram=16384;
+
+   //Grabamos 
+
+  
+   //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+  /*
+
+-Block ID 21: ZSF_TBBLUE_RAMBLOCK
+A ram binary block for a tbblue. We store all the 2048 MB + 8*2 kB fpga rom (memoria_spectrum pointer). Total pages: 129
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: ram block id (in blocks of 16kb)
+6 and next bytes: data bytes
+  */
+
+  int paginas=(TBBLUE_TOTAL_MEMORY_USED/16); //paginas de 16kb
+  z80_byte ram_page;
+
+  for (ram_page=0;ram_page<paginas;ram_page++) {
+
+    compressed_ramblock[0]=0;
+    compressed_ramblock[1]=value_16_to_8l(16384);
+    compressed_ramblock[2]=value_16_to_8h(16384);
+    compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+    compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+    compressed_ramblock[5]=ram_page;
+
+    int si_comprimido;
+    int offset_pagina=16384*ram_page;
+    int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset_pagina],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+    if (si_comprimido) compressed_ramblock[0]|=1;
+
+    debug_printf(VERBOSE_DEBUG,"Saving ZSF_TBBLUE_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
+
+    //Store block to file
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_TBBLUE_RAMBLOCK, longitud_bloque+6);
+
+  }
+
+  free(compressed_ramblock);
+
+
+  }  
 
 if (MACHINE_IS_CPC) {
   //Configuracion
