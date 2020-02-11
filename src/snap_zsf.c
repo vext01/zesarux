@@ -996,7 +996,13 @@ void load_zsf_tbblue_conf(z80_byte *header)
 1-256: 256 internal TBBLUE registers
 257: 16KB with the sprite patterns
 16641: tbblue_bootrom_flag
-16642
+16642: z80_byte divifaceblock[3];
+
+  divifaceblock[0]=diviface_current_ram_memory_bits;
+  divifaceblock[1]=diviface_control_register;
+  divifaceblock[2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+
+  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, divifaceblock,ZSF_DIVIFACE_CONF, 3);
 ....
 */
 
@@ -1013,7 +1019,7 @@ void load_zsf_tbblue_conf(z80_byte *header)
 
   tbblue_bootrom.v=header[16641];
  
-
+load_zsf_diviface_conf(&header[16642]);
   
 
 
@@ -1848,7 +1854,7 @@ Byte Fields:
 
 if (MACHINE_IS_TBBLUE) {
 
-#define TBBLUECONFBLOCKSIZE (1+256+16384+1)
+#define TBBLUECONFBLOCKSIZE (1+256+16384+1+3)
     z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
 
 /*
@@ -1857,7 +1863,16 @@ if (MACHINE_IS_TBBLUE) {
 1-256: 256 internal TBBLUE registers
 257: 16KB with the sprite patterns
 16641: tbblue_bootrom_flag
-16642
+16642: z80_byte divifaceblock[3];
+
+  divifaceblock[0]=diviface_current_ram_memory_bits;
+  divifaceblock[1]=diviface_control_register;
+  divifaceblock[2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+
+  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, divifaceblock,ZSF_DIVIFACE_CONF, 3);
+
+
+
 ....
 */    
 
@@ -1870,6 +1885,12 @@ if (MACHINE_IS_TBBLUE) {
     }
 
     tbblueconfblock[16641]=tbblue_bootrom.v;
+
+  tbblueconfblock[16642+0]=diviface_current_ram_memory_bits;
+  tbblueconfblock[16642+1]=diviface_control_register;
+  tbblueconfblock[16642+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+
+
 
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, TBBLUECONFBLOCKSIZE);
 
@@ -2122,9 +2143,12 @@ Byte fields:
   }
 
  //DIVMMC/DIVIDE config
- //Solo si diviface esta habilitado (o si maquina TBBLUE)
+ //Solo si diviface esta habilitado 
  //Esta parte tiene que estar despues de definir y cargar memoria de maquinas, sobre el final del archivo ZSF
- if (diviface_enabled.v==1 || MACHINE_IS_TBBLUE) {
+
+ //TODO: no estoy seguro que esto no haga falta para tbblue . probablemente tendra que ver con la manera peculiar de paginar tbblue
+ //o esto o bien poner este bloque se se cargue antes de ZSF_TBBLUE_CONF (quiza insertarlo ahi mismo dentro de ZSF_TBBLUE_CONF)
+ if (diviface_enabled.v==1 && !MACHINE_IS_TBBLUE) {
 
 /*-Block ID 16: ZSF_DIVIFACE_CONF
 Divmmc/divide common settings (diviface), in case it's enabled
