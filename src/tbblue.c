@@ -88,14 +88,119 @@ z80_bit tbblue_fast_boot_mode={0};
 z80_bit tbblue_deny_turbo_rom={0};
 
 
+//
+//Inicio Variables, memoria etc de estado de la máquina. Se suelen guardar/cargar en snapshot ZSF
+//
+
 //Copper
 z80_byte tbblue_copper_memory[TBBLUE_COPPER_MEMORY];
+
+
+//Indice al opcode copper a ejecutar
+z80_int tbblue_copper_pc=0;
+
+//Sprites
+
+//Paleta de 256 colores formato RGB9 RRRGGGBBB
+//Valores son de 9 bits por tanto lo definimos con z80_int que es de 16 bits
+//z80_int tbsprite_palette[256];
+
+
+//Diferentes paletas
+//Total:
+//     000 = ULA first palette
+//     100 = ULA secondary palette
+//     001 = Layer 2 first palette
+//    101 = Layer 2 secondary palette
+//     010 = Sprites first palette 
+//     110 = Sprites secondary palette
+//     011 = Tilemap first palette
+//     111 = Tilemap second palette
+//Paletas de 256 colores formato RGB9 RRRGGGBBB
+//Valores son de 9 bits por tanto lo definimos con z80_int que es de 16 bits
+z80_int tbblue_palette_ula_first[256];
+z80_int tbblue_palette_ula_second[256];
+z80_int tbblue_palette_layer2_first[256];
+z80_int tbblue_palette_layer2_second[256];
+z80_int tbblue_palette_sprite_first[256];
+z80_int tbblue_palette_sprite_second[256];
+z80_int tbblue_palette_tilemap_first[256];
+z80_int tbblue_palette_tilemap_second[256];
+
+
+//Diferentes layers a componer la imagen final
+/*
+(R/W) 0x15 (21) => Sprite and Layers system
+  bit 7 - LoRes mode, 128 x 96 x 256 colours (1 = enabled)
+  bits 6-5 = Reserved, must be 0
+  bits 4-2 = set layers priorities:
+     Reset default is 000, sprites over the Layer 2, over the ULA graphics
+     000 - S L U
+     001 - L S U
+     010 - S U L
+     011 - L U S
+     100 - U S L
+     101 - U L S
+ */
+
+//Si en zona pantalla y todo es transparente, se pone un 0
+//Layers con el indice al olor final en la paleta RGB9 (0..511)
+
+
+
+z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
+z80_int tbblue_layer_layer2[TBBLUE_LAYERS_PIXEL_WIDTH];
+z80_int tbblue_layer_sprites[TBBLUE_LAYERS_PIXEL_WIDTH];
+
+//64 patterns de Sprites
+/*
+In the palette each byte represents the colors in the RRRGGGBB format, and the pink color, defined by standard 1110011, is reserved for the transparent color.
+*/
+//z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][TBBLUE_SPRITE_SIZE];
+z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
+
+
+/*
+[0] 1st: X position (bits 7-0).
+[1] 2nd: Y position (0-255).
+[2] 3rd: bits 7-4 is palette offset, bit 3 is X MSB, bit 2 is X mirror, bit 1 is Y mirror and bit 0 is visible flag.
+[3] 4th: bits 7-6 is reserved, bits 5-0 is Name (pattern index, 0-63).
+[4] 5th: TODO!!!
+*/
+z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
+
+//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
+z80_byte tbsprite_index_palette;
+z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
+z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
+z80_byte tbsprite_nr_index_sprite;
+
+/*
+Port 0x303B, if read, returns some information:
+
+Bits 7-2: Reserved, must be 0.
+Bit 1: max sprites per line flag.
+Bit 0: Collision flag.
+Port 0x303B, if written, defines the sprite slot to be configured by ports 0x55 and 0x57, and also initializes the address of the palette.
+
+*/
+
+z80_byte tbblue_port_303b;
+
+
+//Asumimos 256 registros
+z80_byte tbblue_registers[256];
+
+//Ultimo registro seleccionado
+z80_byte tbblue_last_register;
+
+//
+//FIN Variables, memoria etc de estado de la máquina. Se suelen guardar/cargar en snapshot ZSF
+//
 
 //Indice a la posicion de 16 bits a escribir
 //z80_int tbblue_copper_index_write=0;
 
-//Indice al opcode copper a ejecutar
-z80_int tbblue_copper_pc=0;
 
 z80_byte tbblue_machine_id=8;
 
@@ -634,59 +739,6 @@ int tbblue_get_current_raster_horiz_position(void)
 }
 
 
-//Sprites
-
-//Paleta de 256 colores formato RGB9 RRRGGGBBB
-//Valores son de 9 bits por tanto lo definimos con z80_int que es de 16 bits
-//z80_int tbsprite_palette[256];
-
-
-//Diferentes paletas
-//Total:
-//     000 = ULA first palette
-//     100 = ULA secondary palette
-//     001 = Layer 2 first palette
-//    101 = Layer 2 secondary palette
-//     010 = Sprites first palette 
-//     110 = Sprites secondary palette
-//     011 = Tilemap first palette
-//     111 = Tilemap second palette
-//Paletas de 256 colores formato RGB9 RRRGGGBBB
-//Valores son de 9 bits por tanto lo definimos con z80_int que es de 16 bits
-z80_int tbblue_palette_ula_first[256];
-z80_int tbblue_palette_ula_second[256];
-z80_int tbblue_palette_layer2_first[256];
-z80_int tbblue_palette_layer2_second[256];
-z80_int tbblue_palette_sprite_first[256];
-z80_int tbblue_palette_sprite_second[256];
-z80_int tbblue_palette_tilemap_first[256];
-z80_int tbblue_palette_tilemap_second[256];
-
-
-//Diferentes layers a componer la imagen final
-/*
-(R/W) 0x15 (21) => Sprite and Layers system
-  bit 7 - LoRes mode, 128 x 96 x 256 colours (1 = enabled)
-  bits 6-5 = Reserved, must be 0
-  bits 4-2 = set layers priorities:
-     Reset default is 000, sprites over the Layer 2, over the ULA graphics
-     000 - S L U
-     001 - L S U
-     010 - S U L
-     011 - L U S
-     100 - U S L
-     101 - U L S
- */
-
-//Si en zona pantalla y todo es transparente, se pone un 0
-//Layers con el indice al olor final en la paleta RGB9 (0..511)
-
-//borde izquierdo + pantalla + borde derecho, multiplicado por 2
-#define TBBLUE_LAYERS_PIXEL_WIDTH ((48+256+48)*2)
-
-z80_int tbblue_layer_ula[TBBLUE_LAYERS_PIXEL_WIDTH];
-z80_int tbblue_layer_layer2[TBBLUE_LAYERS_PIXEL_WIDTH];
-z80_int tbblue_layer_sprites[TBBLUE_LAYERS_PIXEL_WIDTH];
 
 /* 
 Clip window registers
@@ -968,12 +1020,7 @@ Bit	Function
 }
 
 
-//64 patterns de Sprites
-/*
-In the palette each byte represents the colors in the RRRGGGBB format, and the pink color, defined by standard 1110011, is reserved for the transparent color.
-*/
-//z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][TBBLUE_SPRITE_SIZE];
-z80_byte tbsprite_new_patterns[TBBLUE_MAX_PATTERNS*TBBLUE_SPRITE_SIZE];
+
 
 int tbsprite_pattern_get_offset_index(z80_byte sprite,z80_byte index_in_sprite)
 {
@@ -991,32 +1038,7 @@ void tbsprite_pattern_put_value_index(z80_byte sprite,z80_byte index_in_sprite,z
 }
 
 
-/*
-[0] 1st: X position (bits 7-0).
-[1] 2nd: Y position (0-255).
-[2] 3rd: bits 7-4 is palette offset, bit 3 is X MSB, bit 2 is X mirror, bit 1 is Y mirror and bit 0 is visible flag.
-[3] 4th: bits 7-6 is reserved, bits 5-0 is Name (pattern index, 0-63).
-[4] 5th: TODO!!!
-*/
-z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 
-//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
-z80_byte tbsprite_index_palette;
-z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
-z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
-z80_byte tbsprite_nr_index_sprite;
-
-/*
-Port 0x303B, if read, returns some information:
-
-Bits 7-2: Reserved, must be 0.
-Bit 1: max sprites per line flag.
-Bit 0: Collision flag.
-Port 0x303B, if written, defines the sprite slot to be configured by ports 0x55 and 0x57, and also initializes the address of the palette.
-
-*/
-
-z80_byte tbblue_port_303b;
 
 int tbsprite_is_lockstep()
 {
@@ -2060,11 +2082,7 @@ z80_bit tbblue_low_segment_writable={0};
 //z80_byte tbblue_port_24df;
 
 
-//Asumimos 256 registros
-z80_byte tbblue_registers[256];
 
-//Ultimo registro seleccionado
-z80_byte tbblue_last_register;
 
 
 void tbblue_init_memory_tables(void)

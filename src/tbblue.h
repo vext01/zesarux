@@ -29,6 +29,11 @@
 #define TBBLUE_CORE_VERSION_MINOR     0
 #define TBBLUE_CORE_VERSION_SUBMINOR  0
 
+//borde izquierdo + pantalla + borde derecho, multiplicado por 2
+#define TBBLUE_LAYERS_PIXEL_WIDTH ((48+256+48)*2)
+
+
+
 extern z80_byte *tbblue_ram_memory_pages[];
 
 extern z80_byte *tbblue_rom_memory_pages[];
@@ -129,6 +134,8 @@ extern void tbsprite_do_overlay(void);
 
 #define TBBLUE_MAX_PATTERNS 64
 #define TBBLUE_SPRITE_SIZE 256
+
+#define TBBLUE_SPRITE_ARRAY_PATTERN_SIZE (TBBLUE_MAX_PATTERNS*TBBLUE_SPRITE_SIZE)
 
 #define TBBLUE_MAX_SPRITES 128
 //#define TBBLUE_TRANSPARENT_COLOR_INDEX 0xE3
