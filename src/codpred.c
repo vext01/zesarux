@@ -2095,7 +2095,7 @@ void instruccion_ed_176 ()
 
 //LDIR
 
-        if (cpu_ldir_hack_optimized.v) {
+        if (cpu_ldir_lddr_hack_optimized.v) {
                 
                 instruccion_ed_176_optimized();
                
@@ -2340,9 +2340,43 @@ void instruccion_ed_183 ()
 }
 
 
+void instruccion_ed_184_optimized ()
+{
+
+//LDDR optimized
+//printf ("LDDR optimized origen %d destino %d long %d\n",HL,DE,BC);
+      
+
+        z80_byte byte_leido;
+
+        do {
+
+                byte_leido=peek_byte_no_time(HL);
+                poke_byte_no_time(DE,byte_leido);
+
+                HL--; DE--;
+                BC--;
+        } while (BC!=0);
+
+     
+
+        Z80_FLAGS &=(255-FLAG_H-FLAG_N-FLAG_PV-FLAG_3-FLAG_5);
+
+}
+
+
+
+
 void instruccion_ed_184 ()
 {
 //LDDR
+
+        if (cpu_ldir_lddr_hack_optimized.v) {
+                
+                instruccion_ed_184_optimized();
+               
+                return;
+        }
 #ifdef EMULATE_MEMPTR
         if (reg_b!=0 || reg_c!=1) set_memptr(reg_pc-1);
 #endif
