@@ -2,13 +2,17 @@
 
 * quiza divmmc paging tiene que estar desactivado inicialmente
 *quiza ZSF_TBBLUE_CONF tiene que ir despues de ZSF_DIVMMC_.... por temas de activado de divmmc
+--revisar esto y meter comentarios
+--Quizá lo de divmmc en tbblue “simplemente” hacer que se cargue antes o después en función de su máquina es tbblue
+
+--O bien dejarlo ahora como está así. Y documentar bien la función para que se sepa que desde tbblue se puede llamar ahí también. 
 
 *no deberia guardar la rom fpga??
 
-*no carga snapshot cuando esta en nextbasic
 
 *falta:
 
+//puerto ff timex??
 
 //Copper
 z80_byte tbblue_copper_memory[TBBLUE_COPPER_MEMORY];
