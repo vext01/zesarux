@@ -99,6 +99,7 @@
 #define ZSF_PENTAGON_CONF 20
 #define ZSF_TBBLUE_RAMBLOCK 21
 #define ZSF_TBBLUE_CONF 22
+#define ZSF_TBBLUE_PALETTES 23
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -306,11 +307,39 @@ Byte Fields:
 
 
 
--Block ID 22 ZSF_TBBLUE_CONF
-Ports and internal registers of TBBLUE machine
-Byte fields:
+-Block ID 22: ZSF_TBBLUE_CONF
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
+257: 16KB with the sprite patterns
+16641: tbblue_bootrom_flag
+16642: Same 3 bytes as ZSF_DIVIFACE_CONF:
+
+  0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
+  1: Diviface control register
+  2: Status bits:
+    Bit 0=If entered automatic divmmc paging.
+    Bit 1=If divmmc interface is enabled
+    Bit 2=If divmmc ports are enabled
+    Bit 3=If divide interface is enabled
+    Bit 4=If divide ports are enabled
+    Bits 5-7: unused by now
+
+16645: Word: Copper PC
+16647: Byte: Copper memory (currently 2048 bytes)
+18695:
+
+
+-Block ID 23 ZSF_TBBLUE_PALETTES
+Colour palettes of TBBLUE machine
+Byte fields:
+0   -511 z80_int tbblue_palette_ula_first[256];
+512 -1023 z80_int tbblue_palette_ula_second[256];
+1024-1535 z80_int tbblue_palette_layer2_first[256];
+1536-2047 z80_int tbblue_palette_layer2_second[256];
+2048-2559 z80_int tbblue_palette_sprite_first[256];
+2560-3071 z80_int tbblue_palette_sprite_second[256];
+3072-3583 z80_int tbblue_palette_tilemap_first[256];
+3584-4095 z80_int tbblue_palette_tilemap_second[256];
 
 
 
@@ -326,7 +355,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 23
+#define MAX_ZSF_BLOCK_ID_NAMES 24
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -352,6 +381,7 @@ char *zsf_block_id_names[]={
   "ZSF_PENTAGON_CONF",
   "ZSF_TBBLUE_RAMBLOCK",
   "ZSF_TBBLUE_CONF",
+  "ZSF_TBBLUE_PALETTES",
 
   "Unknown"  //Este siempre al final
 };
@@ -993,7 +1023,7 @@ Byte fields:
 void load_zsf_tbblue_conf(z80_byte *header)
 {
 /*
--Block ID 21: ZSF_TBBLUE_CONF
+-Block ID 22: ZSF_TBBLUE_CONF
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
 257: 16KB with the sprite patterns
@@ -1063,6 +1093,48 @@ void load_zsf_tbblue_conf(z80_byte *header)
 
 
   //ulaplus_set_extended_mode(zxuno_ports[0x40]);
+}
+
+
+
+void load_zsf_tbblue_palettes(z80_byte *header)
+{
+/*
+-Block ID 23 ZSF_TBBLUE_PALETTES
+Colour palettes of TBBLUE machine
+Byte fields:
+0   -511 z80_int tbblue_palette_ula_first[256];
+512 -1023 z80_int tbblue_palette_ula_second[256];
+1024-1535 z80_int tbblue_palette_layer2_first[256];
+1536-2047 z80_int tbblue_palette_layer2_second[256];
+2048-2559 z80_int tbblue_palette_sprite_first[256];
+2560-3071 z80_int tbblue_palette_sprite_second[256];
+3072-3583 z80_int tbblue_palette_tilemap_first[256];
+3584-4095 z80_int tbblue_palette_tilemap_second[256];
+*/
+
+  int i;
+
+  for (i=0;i<256;i++) {
+
+    int offs=i*2;
+
+    tbblue_palette_ula_first[i]=util_get_value_little_endian(&header[offs]);
+    tbblue_palette_ula_second[i]=util_get_value_little_endian(&header[512+offs]);
+
+    tbblue_palette_layer2_first[i]=util_get_value_little_endian(&header[1024+offs]);
+    tbblue_palette_layer2_second[i]=util_get_value_little_endian(&header[1536+offs]);    
+
+    tbblue_palette_sprite_first[i]=util_get_value_little_endian(&header[2048+offs]);
+    tbblue_palette_sprite_second[i]=util_get_value_little_endian(&header[2560+offs]);    
+
+    tbblue_palette_tilemap_first[i]=util_get_value_little_endian(&header[3072+offs]);
+    tbblue_palette_tilemap_second[i]=util_get_value_little_endian(&header[3584+offs]);      
+          
+  }
+
+  
+
 }
 
 
@@ -1378,6 +1450,10 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
       case ZSF_TBBLUE_CONF:
         load_zsf_tbblue_conf(block_data);
       break;         
+
+      case ZSF_TBBLUE_PALETTES:
+        load_zsf_tbblue_palettes(block_data);
+      break;           
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1869,7 +1945,7 @@ Byte Fields:
 
 if (MACHINE_IS_TBBLUE) {
 
-#define TBBLUECONFBLOCKSIZE (1+256+16384+1+3+2+2048)
+  #define TBBLUECONFBLOCKSIZE (1+256+16384+1+3+2+2048)
     //z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
 
     z80_byte *tbblueconfblock;
@@ -1881,7 +1957,7 @@ if (MACHINE_IS_TBBLUE) {
     }
 
 /*
--Block ID 21: ZSF_TBBLUE_CONF
+-Block ID 22: ZSF_TBBLUE_CONF
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
 257: 16KB with the sprite patterns
@@ -1932,10 +2008,61 @@ if (MACHINE_IS_TBBLUE) {
 
 
 
+  //
+  //Paletas de color
+  //
+/*
+-Block ID 23 ZSF_TBBLUE_PALETTES
+Colour palettes of TBBLUE machine
+Byte fields:
+0   -511 z80_int tbblue_palette_ula_first[256];
+512 -1023 z80_int tbblue_palette_ula_second[256];
+
+1024-1535 z80_int tbblue_palette_layer2_first[256];
+1536-2047 z80_int tbblue_palette_layer2_second[256];
+
+2048-2559 z80_int tbblue_palette_sprite_first[256];
+2560-3071 z80_int tbblue_palette_sprite_second[256];
+
+3072-3583 z80_int tbblue_palette_tilemap_first[256];
+3584-4095 z80_int tbblue_palette_tilemap_second[256];
+*/
+  #define TBBLUEPALETTESBLOCKSIZE 4096
+
+    z80_byte *tbbluepalettesblock;
+
+    tbbluepalettesblock=malloc(TBBLUEPALETTESBLOCKSIZE);
+
+    if (tbbluepalettesblock==NULL) {
+      cpu_panic("Cannot allocate memory for tbblue zsf saving");
+    }
+
+  for (i=0;i<256;i++) {
+
+    int offs=i*2;
+    util_store_value_little_endian(&tbbluepalettesblock[offs],tbblue_palette_ula_first[i]);
+    util_store_value_little_endian(&tbbluepalettesblock[512+offs],tbblue_palette_ula_second[i]);
+
+    util_store_value_little_endian(&tbbluepalettesblock[1024+offs],tbblue_palette_layer2_first[i]);
+    util_store_value_little_endian(&tbbluepalettesblock[1536+offs],tbblue_palette_layer2_second[i]);    
+
+    util_store_value_little_endian(&tbbluepalettesblock[2048+offs],tbblue_palette_sprite_first[i]);
+    util_store_value_little_endian(&tbbluepalettesblock[2560+offs],tbblue_palette_sprite_second[i]);       
+
+    util_store_value_little_endian(&tbbluepalettesblock[3072+offs],tbblue_palette_tilemap_first[i]);
+    util_store_value_little_endian(&tbbluepalettesblock[3584+offs],tbblue_palette_tilemap_second[i]);        
+  }
+
+
+  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbbluepalettesblock,ZSF_TBBLUE_PALETTES, TBBLUEPALETTESBLOCKSIZE);
+  free(tbbluepalettesblock);
 
 
 
 
+  //
+  //Bloques de RAM
+  //
 
    int longitud_ram=16384;
 

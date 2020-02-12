@@ -17010,3 +17010,17 @@ z80_byte get_memory_checksum_spectrum(z80_byte crc,z80_byte *origen,int longitud
 
         return crc;
 }
+
+//Guardar valor de 16 bits en direccion de memoria 
+void util_store_value_little_endian(z80_byte *destination,z80_int value)
+{
+        destination[0]=value_16_to_8l(value);
+        destination[1]=value_16_to_8h(value);
+}
+
+
+//Recuperar valor de 16 bits de direccion de memoria 
+z80_int util_get_value_little_endian(z80_byte *origin)
+{
+        return value_8_to_16(origin[1],origin[0]);
+}

@@ -871,4 +871,8 @@ extern int convert_scr_to_tap(char *origen, char *destino);
 
 extern z80_byte get_memory_checksum_spectrum(z80_byte crc,z80_byte *origen,int longitud);
 
+extern void util_store_value_little_endian(z80_byte *destination,z80_int value);
+
+extern z80_int util_get_value_little_endian(z80_byte *origin);
+
 #endif
