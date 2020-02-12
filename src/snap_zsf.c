@@ -100,6 +100,7 @@
 #define ZSF_TBBLUE_RAMBLOCK 21
 #define ZSF_TBBLUE_CONF 22
 #define ZSF_TBBLUE_PALETTES 23
+#define ZSF_TBBLUE_SPRITES 24
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -310,9 +311,8 @@ Byte Fields:
 -Block ID 22: ZSF_TBBLUE_CONF
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
-257: 16KB with the sprite patterns
-16641: tbblue_bootrom_flag
-16642: Same 3 bytes as ZSF_DIVIFACE_CONF:
+257: tbblue_bootrom_flag
+258: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
   0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
   1: Diviface control register
@@ -324,9 +324,10 @@ Byte Fields:
     Bit 4=If divide ports are enabled
     Bits 5-7: unused by now
 
-16645: Word: Copper PC
-16647: Byte: Copper memory (currently 2048 bytes)
-18695:
+261: Word: Copper PC
+263: Byte: Copper memory (currently 2048 bytes)
+2311:
+....
 
 
 -Block ID 23 ZSF_TBBLUE_PALETTES
@@ -342,6 +343,11 @@ Byte fields:
 3584-4095 z80_int tbblue_palette_tilemap_second[256];
 
 
+-Block ID 24: ZSF_TBBLUE_SPRITES
+0: 16KB with the sprite patterns
+
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -355,7 +361,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 24
+#define MAX_ZSF_BLOCK_ID_NAMES 25
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -382,6 +388,7 @@ char *zsf_block_id_names[]={
   "ZSF_TBBLUE_RAMBLOCK",
   "ZSF_TBBLUE_CONF",
   "ZSF_TBBLUE_PALETTES",
+  "ZSF_TBBLUE_SPRITES",
 
   "Unknown"  //Este siempre al final
 };
@@ -1026,9 +1033,8 @@ void load_zsf_tbblue_conf(z80_byte *header)
 -Block ID 22: ZSF_TBBLUE_CONF
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
-257: 16KB with the sprite patterns
-16641: tbblue_bootrom_flag
-16642: Same 3 bytes as ZSF_DIVIFACE_CONF:
+257: tbblue_bootrom_flag
+258: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
   0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
   1: Diviface control register
@@ -1040,9 +1046,9 @@ void load_zsf_tbblue_conf(z80_byte *header)
     Bit 4=If divide ports are enabled
     Bits 5-7: unused by now
 
-16645: Word: Copper PC
-16647: Byte: Copper memory (currently 2048 bytes)
-18695:
+261: Word: Copper PC
+263: Byte: Copper memory (currently 2048 bytes)
+2311:
 ....
 */
 
@@ -1050,20 +1056,13 @@ void load_zsf_tbblue_conf(z80_byte *header)
   int i;
   for (i=0;i<256;i++) tbblue_registers[i]=header[1+i];
 
-  //Patterns de sprites
-  //z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
-
-  for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
-    tbsprite_new_patterns[i]=header[257+i];
-  }
-
-  tbblue_bootrom.v=header[16641];
+   tbblue_bootrom.v=header[257];
  
-  load_zsf_diviface_conf(&header[16642]);
+  load_zsf_diviface_conf(&header[258]);
 
-  tbblue_copper_pc=value_8_to_16(header[16646],header[16645]);
+  tbblue_copper_pc=value_8_to_16(header[262],header[261]);
   for (i=0;i<2048;i++) {
-    tbblue_copper_memory[i]=header[16647+i];
+    tbblue_copper_memory[i]=header[263+i];
   }
   
 
@@ -1085,14 +1084,28 @@ void load_zsf_tbblue_conf(z80_byte *header)
 
   tbblue_set_emulator_setting_divmmc();
 
-
-
-  //Sincronizar settings de emulador con los valores de puertos de zxuno
-  //zxuno_set_emulador_settings();
+}
 
 
 
-  //ulaplus_set_extended_mode(zxuno_ports[0x40]);
+void load_zsf_tbblue_sprites(z80_byte *header)
+{
+/*
+-Block ID 24: ZSF_TBBLUE_SPRITES
+0: 16KB with the sprite patterns
+*/
+
+
+  //Patterns de sprites
+  //z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
+
+  int i;
+
+  for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
+    tbsprite_new_patterns[i]=header[i];
+  }
+
+
 }
 
 
@@ -1453,7 +1466,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_TBBLUE_PALETTES:
         load_zsf_tbblue_palettes(block_data);
-      break;           
+      break;      
+
+      case ZSF_TBBLUE_SPRITES:
+        load_zsf_tbblue_sprites(block_data);
+      break;              
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1945,7 +1962,7 @@ Byte Fields:
 
 if (MACHINE_IS_TBBLUE) {
 
-  #define TBBLUECONFBLOCKSIZE (1+256+16384+1+3+2+2048)
+  #define TBBLUECONFBLOCKSIZE (1+256+1+3+2+2048)
     //z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
 
     z80_byte *tbblueconfblock;
@@ -1960,9 +1977,8 @@ if (MACHINE_IS_TBBLUE) {
 -Block ID 22: ZSF_TBBLUE_CONF
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
-257: 16KB with the sprite patterns
-16641: tbblue_bootrom_flag
-16642: Same 3 bytes as ZSF_DIVIFACE_CONF:
+257: tbblue_bootrom_flag
+258: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
   0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
   1: Diviface control register
@@ -1974,9 +1990,10 @@ if (MACHINE_IS_TBBLUE) {
     Bit 4=If divide ports are enabled
     Bits 5-7: unused by now
 
-16645: Word: Copper PC
-16647: Byte: Copper memory (currently 2048 bytes)
-18695:
+261: Word: Copper PC
+263: Byte: Copper memory (currently 2048 bytes)
+2311:
+....
 
 
 ....
@@ -1986,25 +2003,66 @@ if (MACHINE_IS_TBBLUE) {
   int i;
   for (i=0;i<256;i++) tbblueconfblock[1+i]=tbblue_registers[i];
 
-  for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
-    tbblueconfblock[257+i]=tbsprite_new_patterns[i];
-  }
+  tbblueconfblock[257]=tbblue_bootrom.v;
 
-  tbblueconfblock[16641]=tbblue_bootrom.v;
+  tbblueconfblock[258+0]=diviface_current_ram_memory_bits;
+  tbblueconfblock[258+1]=diviface_control_register;
+  tbblueconfblock[258+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
 
-  tbblueconfblock[16642+0]=diviface_current_ram_memory_bits;
-  tbblueconfblock[16642+1]=diviface_control_register;
-  tbblueconfblock[16642+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
-
-  tbblueconfblock[16645]=value_16_to_8l(tbblue_copper_pc);
-  tbblueconfblock[16645+1]=value_16_to_8h(tbblue_copper_pc);
+  tbblueconfblock[261]=value_16_to_8l(tbblue_copper_pc);
+  tbblueconfblock[261+1]=value_16_to_8h(tbblue_copper_pc);
 
   for (i=0;i<2048;i++) {
-    tbblueconfblock[16647+i]=tbblue_copper_memory[i];
+    tbblueconfblock[263+i]=tbblue_copper_memory[i];
   }
 
   zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, TBBLUECONFBLOCKSIZE);
   free(tbblueconfblock);
+
+
+  //
+  // Sprites
+  //
+
+  /*
+  ZSF_TBBLUE_SPRITES
+  */
+
+
+
+/*
+-Block ID 24: ZSF_TBBLUE_SPRITES
+0: 16KB with the sprite patterns
+*/
+
+
+ #define TBBLUESPRITEBLOCKSIZE (16384)
+
+    z80_byte *tbbluespriteblock;
+
+    tbbluespriteblock=malloc(TBBLUESPRITEBLOCKSIZE);
+
+    if (tbbluespriteblock==NULL) {
+      cpu_panic("Cannot allocate memory for tbblue zsf saving");
+    }
+
+
+  //Patterns de sprites
+  //z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
+
+
+
+  for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
+    tbbluespriteblock[i]=tbsprite_new_patterns[i];
+  }
+
+  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbbluespriteblock,ZSF_TBBLUE_SPRITES, TBBLUESPRITEBLOCKSIZE);
+  free(tbbluespriteblock);
+
+
+
+
+
 
 
 
