@@ -312,7 +312,8 @@ Byte Fields:
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
 257: tbblue_bootrom_flag
-258: Same 3 bytes as ZSF_DIVIFACE_CONF:
+258: tbblue_port_123b
+259: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
   0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
   1: Diviface control register
@@ -324,9 +325,9 @@ Byte Fields:
     Bit 4=If divide ports are enabled
     Bits 5-7: unused by now
 
-261: Word: Copper PC
-263: Byte: Copper memory (currently 2048 bytes)
-2311:
+262: Word: Copper PC
+264: Byte: Copper memory (currently 2048 bytes)
+2312:
 ....
 
 
@@ -1035,7 +1036,8 @@ void load_zsf_tbblue_conf(z80_byte *header)
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
 257: tbblue_bootrom_flag
-258: Same 3 bytes as ZSF_DIVIFACE_CONF:
+258: tbblue_port_123b
+259: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
   0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
   1: Diviface control register
@@ -1047,9 +1049,9 @@ void load_zsf_tbblue_conf(z80_byte *header)
     Bit 4=If divide ports are enabled
     Bits 5-7: unused by now
 
-261: Word: Copper PC
-263: Byte: Copper memory (currently 2048 bytes)
-2311:
+262: Word: Copper PC
+264: Byte: Copper memory (currently 2048 bytes)
+2312:
 ....
 */
 
@@ -1058,12 +1060,13 @@ void load_zsf_tbblue_conf(z80_byte *header)
   for (i=0;i<256;i++) tbblue_registers[i]=header[1+i];
 
    tbblue_bootrom.v=header[257];
+  tbblue_port_123b=header[258];
  
-  load_zsf_diviface_conf(&header[258]);
+  load_zsf_diviface_conf(&header[259]);
 
-  tbblue_copper_pc=value_8_to_16(header[262],header[261]);
+  tbblue_copper_pc=value_8_to_16(header[263],header[262]);
   for (i=0;i<2048;i++) {
-    tbblue_copper_memory[i]=header[263+i];
+    tbblue_copper_memory[i]=header[264+i];
   }
   
 
@@ -1974,7 +1977,7 @@ Byte Fields:
 
 if (MACHINE_IS_TBBLUE) {
 
-  #define TBBLUECONFBLOCKSIZE (1+256+1+3+2+2048)
+  #define TBBLUECONFBLOCKSIZE (1+256+1+1+3+2+2048)
     //z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
 
     z80_byte *tbblueconfblock;
@@ -1990,7 +1993,8 @@ if (MACHINE_IS_TBBLUE) {
 0: tbblue_last_register
 1-256: 256 internal TBBLUE registers
 257: tbblue_bootrom_flag
-258: Same 3 bytes as ZSF_DIVIFACE_CONF:
+258: tbblue_port_123b
+259: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
   0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
   1: Diviface control register
@@ -2002,9 +2006,9 @@ if (MACHINE_IS_TBBLUE) {
     Bit 4=If divide ports are enabled
     Bits 5-7: unused by now
 
-261: Word: Copper PC
-263: Byte: Copper memory (currently 2048 bytes)
-2311:
+262: Word: Copper PC
+264: Byte: Copper memory (currently 2048 bytes)
+2312:
 ....
 
 
@@ -2016,16 +2020,17 @@ if (MACHINE_IS_TBBLUE) {
   for (i=0;i<256;i++) tbblueconfblock[1+i]=tbblue_registers[i];
 
   tbblueconfblock[257]=tbblue_bootrom.v;
+  tbblueconfblock[258]=tbblue_port_123b;
 
-  tbblueconfblock[258+0]=diviface_current_ram_memory_bits;
-  tbblueconfblock[258+1]=diviface_control_register;
-  tbblueconfblock[258+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+  tbblueconfblock[259+0]=diviface_current_ram_memory_bits;
+  tbblueconfblock[259+1]=diviface_control_register;
+  tbblueconfblock[259+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
 
-  tbblueconfblock[261]=value_16_to_8l(tbblue_copper_pc);
-  tbblueconfblock[261+1]=value_16_to_8h(tbblue_copper_pc);
+  tbblueconfblock[262]=value_16_to_8l(tbblue_copper_pc);
+  tbblueconfblock[262+1]=value_16_to_8h(tbblue_copper_pc);
 
   for (i=0;i<2048;i++) {
-    tbblueconfblock[263+i]=tbblue_copper_memory[i];
+    tbblueconfblock[264+i]=tbblue_copper_memory[i];
   }
 
   zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, TBBLUECONFBLOCKSIZE);
