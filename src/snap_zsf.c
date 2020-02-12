@@ -1683,7 +1683,7 @@ void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int 
     timexblock[0]=timex_port_f4;
     timexblock[1]=timex_port_ff;
 
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, ulablock,ZSF_TIMEX, 2);
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, timexblock,ZSF_TIMEX, 2);
     
 
   }
