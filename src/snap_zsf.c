@@ -345,6 +345,7 @@ Byte fields:
 
 -Block ID 24: ZSF_TBBLUE_SPRITES
 0: 16KB with the sprite patterns
+16384: z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 
 
 
@@ -1093,6 +1094,7 @@ void load_zsf_tbblue_sprites(z80_byte *header)
 /*
 -Block ID 24: ZSF_TBBLUE_SPRITES
 0: 16KB with the sprite patterns
+16384: z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 */
 
 
@@ -1103,6 +1105,16 @@ void load_zsf_tbblue_sprites(z80_byte *header)
 
   for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
     tbsprite_new_patterns[i]=header[i];
+  }
+
+  int spr,attr;
+  int indice=16384;
+  for (spr=0;spr<TBBLUE_MAX_SPRITES;spr++) {
+    for (attr=0;attr<TBBLUE_SPRITE_ATTRIBUTE_SIZE;attr++) {
+      tbsprite_sprites[spr][attr]=header[indice];
+
+      indice++;
+    }
   }
 
 
@@ -2033,10 +2045,11 @@ if (MACHINE_IS_TBBLUE) {
 /*
 -Block ID 24: ZSF_TBBLUE_SPRITES
 0: 16KB with the sprite patterns
+16384: z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 */
 
 
- #define TBBLUESPRITEBLOCKSIZE (16384)
+ #define TBBLUESPRITEBLOCKSIZE (16384+TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_ATTRIBUTE_SIZE)
 
     z80_byte *tbbluespriteblock;
 
@@ -2055,6 +2068,19 @@ if (MACHINE_IS_TBBLUE) {
   for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
     tbbluespriteblock[i]=tbsprite_new_patterns[i];
   }
+
+
+  int spr,attr;
+  int indice=16384;
+  for (spr=0;spr<TBBLUE_MAX_SPRITES;spr++) {
+    for (attr=0;attr<TBBLUE_SPRITE_ATTRIBUTE_SIZE;attr++) {
+      tbbluespriteblock[indice]=tbsprite_sprites[spr][attr];
+
+      indice++;
+    }
+  }
+
+
 
   zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbbluespriteblock,ZSF_TBBLUE_SPRITES, TBBLUESPRITEBLOCKSIZE);
   free(tbbluespriteblock);
