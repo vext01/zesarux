@@ -101,6 +101,7 @@
 #define ZSF_TBBLUE_CONF 22
 #define ZSF_TBBLUE_PALETTES 23
 #define ZSF_TBBLUE_SPRITES 24
+#define ZSF_TIMEX 25
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -171,9 +172,7 @@ Byte fields:
 -Block ID 8: ZSF_ULA
 Byte fields:
 0: Border color (Last out to port 254 AND 7)
-1: timex_port_f4
-2: timex_port_ff
-Note: timex values probably breaks compatibility with previous ZSF file formats. sorry!
+
 
 
 -Block ID 9: ZSF_ULAPLUS
@@ -353,6 +352,14 @@ Byte fields:
 
 
 
+-Block ID 25: ZSF_TIMEX
+Byte fields:
+0: timex_port_f4
+1: timex_port_ff
+
+
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -366,7 +373,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 25
+#define MAX_ZSF_BLOCK_ID_NAMES 26
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -394,6 +401,7 @@ char *zsf_block_id_names[]={
   "ZSF_TBBLUE_CONF",
   "ZSF_TBBLUE_PALETTES",
   "ZSF_TBBLUE_SPRITES",
+  "ZSF_TIMEX",
 
   "Unknown"  //Este siempre al final
 };
@@ -838,9 +846,15 @@ void load_zsf_ula(z80_byte *header)
   //printf ("border: %d\n",out_254);
   modificado_border.v=1;
 
-  timex_port_f4=header[1];
-  timex_port_ff=header[2];
 }
+
+
+void load_zsf_timex(z80_byte *header)
+{
+  timex_port_f4=header[0];
+  timex_port_ff=header[1];
+}
+
 
 
 void load_zsf_ulaplus(z80_byte *header)
@@ -1491,7 +1505,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_TBBLUE_SPRITES:
         load_zsf_tbblue_sprites(block_data);
-      break;              
+      break; 
+      
+      case ZSF_TIMEX:
+        load_zsf_timex(block_data);
+      break;            
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1649,15 +1667,24 @@ void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int 
 
 
 
- //Ula block. En caso de Spectrum
+ //Ula block y timex. En caso de Spectrum
   if (MACHINE_IS_SPECTRUM) {
-    z80_byte ulablock[3];
+    z80_byte ulablock[1];
 
     ulablock[0]=out_254 & 7;
-    ulablock[1]=timex_port_f4;
-    ulablock[2]=timex_port_ff;
 
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, ulablock,ZSF_ULA, 3);
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, ulablock,ZSF_ULA, 1);
+    
+    
+    
+    
+    z80_byte timexblock[2];
+
+    timexblock[0]=timex_port_f4;
+    timexblock[1]=timex_port_ff;
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, ulablock,ZSF_TIMEX, 2);
+    
 
   }
 
