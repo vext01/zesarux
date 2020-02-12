@@ -171,6 +171,9 @@ Byte fields:
 -Block ID 8: ZSF_ULA
 Byte fields:
 0: Border color (Last out to port 254 AND 7)
+1: timex_port_f4
+2: timex_port_ff
+Note: timex values probably breaks compatibility with previous ZSF file formats. sorry!
 
 
 -Block ID 9: ZSF_ULAPLUS
@@ -834,6 +837,9 @@ void load_zsf_ula(z80_byte *header)
 
   //printf ("border: %d\n",out_254);
   modificado_border.v=1;
+
+  timex_port_f4=header[1];
+  timex_port_ff=header[2];
 }
 
 
@@ -1645,11 +1651,13 @@ void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int 
 
  //Ula block. En caso de Spectrum
   if (MACHINE_IS_SPECTRUM) {
-    z80_byte ulablock[1];
+    z80_byte ulablock[3];
 
     ulablock[0]=out_254 & 7;
+    ulablock[1]=timex_port_f4;
+    ulablock[2]=timex_port_ff;
 
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, ulablock,ZSF_ULA, 1);
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, ulablock,ZSF_ULA, 3);
 
   }
 
