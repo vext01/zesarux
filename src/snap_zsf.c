@@ -827,6 +827,8 @@ Byte fields:
         for (i=0;i<64;i++) ulaplus_palette_table[i]=header[3+i];
 }
 
+
+//NOTA: esta funcion se usa tanto en bloque ZSF_DIVIFACE_CONF como cargado desde dentro de ZSF_TBBLUE_CONF
 void load_zsf_diviface_conf(z80_byte *header)
 {
 /*
@@ -996,13 +998,21 @@ void load_zsf_tbblue_conf(z80_byte *header)
 1-256: 256 internal TBBLUE registers
 257: 16KB with the sprite patterns
 16641: tbblue_bootrom_flag
-16642: z80_byte divifaceblock[3];
+16642: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
-  divifaceblock[0]=diviface_current_ram_memory_bits;
-  divifaceblock[1]=diviface_control_register;
-  divifaceblock[2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+  0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
+  1: Diviface control register
+  2: Status bits:
+    Bit 0=If entered automatic divmmc paging.
+    Bit 1=If divmmc interface is enabled
+    Bit 2=If divmmc ports are enabled
+    Bit 3=If divide interface is enabled
+    Bit 4=If divide ports are enabled
+    Bits 5-7: unused by now
 
-  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, divifaceblock,ZSF_DIVIFACE_CONF, 3);
+16645: Word: Copper PC
+16647: Byte: Copper memory (currently 2048 bytes)
+18695:
 ....
 */
 
@@ -1019,14 +1029,19 @@ void load_zsf_tbblue_conf(z80_byte *header)
 
   tbblue_bootrom.v=header[16641];
  
-load_zsf_diviface_conf(&header[16642]);
+  load_zsf_diviface_conf(&header[16642]);
+
+  tbblue_copper_pc=value_8_to_16(header[16646],header[16645]);
+  for (i=0;i<2048;i++) {
+    tbblue_copper_memory[i]=header[16647+i];
+  }
   
 
 
 
   
  
-  
+  //Final settings
   tbblue_set_emulator_setting_timing();
 
    tbblue_set_emulator_setting_reg_8();
@@ -1854,8 +1869,16 @@ Byte Fields:
 
 if (MACHINE_IS_TBBLUE) {
 
-#define TBBLUECONFBLOCKSIZE (1+256+16384+1+3)
-    z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
+#define TBBLUECONFBLOCKSIZE (1+256+16384+1+3+2+2048)
+    //z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
+
+    z80_byte *tbblueconfblock;
+
+    tbblueconfblock=malloc(TBBLUECONFBLOCKSIZE);
+
+    if (tbblueconfblock==NULL) {
+      cpu_panic("Cannot allocate memory for tbblue zsf saving");
+    }
 
 /*
 -Block ID 21: ZSF_TBBLUE_CONF
@@ -1863,37 +1886,49 @@ if (MACHINE_IS_TBBLUE) {
 1-256: 256 internal TBBLUE registers
 257: 16KB with the sprite patterns
 16641: tbblue_bootrom_flag
-16642: z80_byte divifaceblock[3];
+16642: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
-  divifaceblock[0]=diviface_current_ram_memory_bits;
-  divifaceblock[1]=diviface_control_register;
-  divifaceblock[2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+  0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
+  1: Diviface control register
+  2: Status bits:
+    Bit 0=If entered automatic divmmc paging.
+    Bit 1=If divmmc interface is enabled
+    Bit 2=If divmmc ports are enabled
+    Bit 3=If divide interface is enabled
+    Bit 4=If divide ports are enabled
+    Bits 5-7: unused by now
 
-  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, divifaceblock,ZSF_DIVIFACE_CONF, 3);
-
+16645: Word: Copper PC
+16647: Byte: Copper memory (currently 2048 bytes)
+18695:
 
 
 ....
 */    
 
-    tbblueconfblock[0]=tbblue_last_register;
-    int i;
-    for (i=0;i<256;i++) tbblueconfblock[1+i]=tbblue_registers[i];
+  tbblueconfblock[0]=tbblue_last_register;
+  int i;
+  for (i=0;i<256;i++) tbblueconfblock[1+i]=tbblue_registers[i];
 
-    for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
-      tbblueconfblock[257+i]=tbsprite_new_patterns[i];
-    }
+  for (i=0;i<TBBLUE_SPRITE_ARRAY_PATTERN_SIZE;i++) {
+    tbblueconfblock[257+i]=tbsprite_new_patterns[i];
+  }
 
-    tbblueconfblock[16641]=tbblue_bootrom.v;
+  tbblueconfblock[16641]=tbblue_bootrom.v;
 
   tbblueconfblock[16642+0]=diviface_current_ram_memory_bits;
   tbblueconfblock[16642+1]=diviface_control_register;
   tbblueconfblock[16642+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
 
+  tbblueconfblock[16645]=value_16_to_8l(tbblue_copper_pc);
+  tbblueconfblock[16645+1]=value_16_to_8h(tbblue_copper_pc);
 
+  for (i=0;i<2048;i++) {
+    tbblueconfblock[16647+i]=tbblue_copper_memory[i];
+  }
 
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, TBBLUECONFBLOCKSIZE);
-
+  zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, TBBLUECONFBLOCKSIZE);
+  free(tbblueconfblock);
 
 
 
