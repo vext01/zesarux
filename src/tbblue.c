@@ -177,10 +177,86 @@ z80_byte tbblue_registers[256];
 //Ultimo registro seleccionado
 z80_byte tbblue_last_register;
 
+
+
+/* Informacion relacionada con Layer2. Puede cambiar en el futuro, hay que ir revisando info en web de Next
+
+Registros internos implicados:
+
+(R/W) 0x12 (18) => Layer 2 RAM page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 8 after a Reset)
+
+(R/W) 0x13 (19) => Layer 2 RAM shadow page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 11 after a Reset)
+
+(R/W) 0x14 (20) => Global transparency color
+  bits 7-0 = Transparency color value (Reset to 0xE3, after a reset)
+  (Note this value is 8-bit only, so the transparency is compared only by the MSB bits of the final colour)
+
+
+
+(R/W) 0x16 (22) => Layer2 Offset X
+  bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
+
+(R/W) 0x17 (23) => Layer2 Offset Y
+  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+
+
+
+
+Posiblemente registro 20 aplica a cuando el layer2 esta por detras de pantalla de spectrum, y dice el color de pantalla de spectrum
+que actua como transparente
+Cuando layer2 esta encima de pantalla spectrum, el color transparente parece que es el mismo que sprites: TBBLUE_TRANSPARENT_COLOR 0xE3
+
+Formato layer2: 256x192, linear, 8bpp, RRRGGGBB (mismos colores que sprites), ocupa 48kb
+
+Se accede en modo escritura en 0000-3fffh mediante puerto:
+
+Banking in Layer2 is out 4667 ($123B)
+bit 0 = write enable, which changes writes from 0-3fff to write to layer2,
+bit 1 = Layer2 ON or OFF set=ON,
+bit 2 = ????
+bit 3 = Use register 19 instead of 18 to tell sram page
+bit 4 puts layer 2 behind the normal spectrum screen
+bit 6 and 7 are to say which 16K section is paged in,
+$03 = 00000011b Layer2 on and writable and top third paged in at $0000,
+$43 = 01000011b Layer2 on and writable and middle third paged in at $0000,
+$C3 = 11000011b Layer2 on and writable and bottom third paged in at $0000,  ?? sera 100000011b??? TODO
+$02 = 00000010b Layer2 on and nothing paged in. etc
+
+Parece que se mapea la pagina de sram indicada en registro 19
+
+*/
+
+
+/*
+
+IMPORTANT!!
+
+Trying some old layer2 demos that doesn't set register 19 is dangerous.
+To avoid problems, first do:
+out 9275, 19
+out 9531,32
+To set layer2 to the extra ram:
+0x080000 – 0x0FFFFF (512K) => Extra RAM
+
+Then load the demo program and will work
+
+*/
+
+z80_byte tbblue_port_123b;
+
+
+
+
 //
 //FIN Variables, memoria etc de estado de la máquina. Se suelen guardar/cargar en snapshot ZSF
 //
 
+//valor inicial para tbblue_port_123b en caso de fast boot mode
+int tbblue_initial_123b_port=-1;
 
 //Diferentes layers a componer la imagen final
 /*
@@ -1062,78 +1138,9 @@ void tbsprite_increment_index_303b() {	// increment the "port" index
 
 
 
-/* Informacion relacionada con Layer2. Puede cambiar en el futuro, hay que ir revisando info en web de Next
-
-Registros internos implicados:
-
-(R/W) 0x12 (18) => Layer 2 RAM page
- bits 7-6 = Reserved, must be 0
- bits 5-0 = SRAM page (point to page 8 after a Reset)
-
-(R/W) 0x13 (19) => Layer 2 RAM shadow page
- bits 7-6 = Reserved, must be 0
- bits 5-0 = SRAM page (point to page 11 after a Reset)
-
-(R/W) 0x14 (20) => Global transparency color
-  bits 7-0 = Transparency color value (Reset to 0xE3, after a reset)
-  (Note this value is 8-bit only, so the transparency is compared only by the MSB bits of the final colour)
 
 
 
-(R/W) 0x16 (22) => Layer2 Offset X
-  bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
-
-(R/W) 0x17 (23) => Layer2 Offset Y
-  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
-
-
-
-
-Posiblemente registro 20 aplica a cuando el layer2 esta por detras de pantalla de spectrum, y dice el color de pantalla de spectrum
-que actua como transparente
-Cuando layer2 esta encima de pantalla spectrum, el color transparente parece que es el mismo que sprites: TBBLUE_TRANSPARENT_COLOR 0xE3
-
-Formato layer2: 256x192, linear, 8bpp, RRRGGGBB (mismos colores que sprites), ocupa 48kb
-
-Se accede en modo escritura en 0000-3fffh mediante puerto:
-
-Banking in Layer2 is out 4667 ($123B)
-bit 0 = write enable, which changes writes from 0-3fff to write to layer2,
-bit 1 = Layer2 ON or OFF set=ON,
-bit 2 = ????
-bit 3 = Use register 19 instead of 18 to tell sram page
-bit 4 puts layer 2 behind the normal spectrum screen
-bit 6 and 7 are to say which 16K section is paged in,
-$03 = 00000011b Layer2 on and writable and top third paged in at $0000,
-$43 = 01000011b Layer2 on and writable and middle third paged in at $0000,
-$C3 = 11000011b Layer2 on and writable and bottom third paged in at $0000,  ?? sera 100000011b??? TODO
-$02 = 00000010b Layer2 on and nothing paged in. etc
-
-Parece que se mapea la pagina de sram indicada en registro 19
-
-*/
-
-
-/*
-
-IMPORTANT!!
-
-Trying some old layer2 demos that doesn't set register 19 is dangerous.
-To avoid problems, first do:
-out 9275, 19
-out 9531,32
-To set layer2 to the extra ram:
-0x080000 – 0x0FFFFF (512K) => Extra RAM
-
-Then load the demo program and will work
-
-*/
-
-z80_byte tbblue_port_123b;
-
-
-//valor inicial para tbblue_port_123b en caso de fast boot mode
-int tbblue_initial_123b_port=-1;
 
 int tbblue_write_on_layer2(void)
 {
