@@ -3,28 +3,7 @@
 *falta:
 
 
-* TODO: estado dma
+* TODO: estado dma (esto no solo afecta a tbblue sino a todos. tener en cuenta grabar tambien valor datagear_dma_tbblue_prescaler)
 
 
-
-//puerto ff timex??
-
-
-//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
-z80_byte tbsprite_index_palette;
-z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
-z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
-z80_byte tbsprite_nr_index_sprite;
-
-/*
-Port 0x303B, if read, returns some information:
-
-Bits 7-2: Reserved, must be 0.
-Bit 1: max sprites per line flag.
-Bit 0: Collision flag.
-Port 0x303B, if written, defines the sprite slot to be configured by ports 0x55 and 0x57, and also initializes the address of the palette.
-
-*/
-
-z80_byte tbblue_port_303b;
 
