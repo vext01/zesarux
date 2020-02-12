@@ -297,7 +297,7 @@ Byte fields:
 
 
 -Block ID 21: ZSF_TBBLUE_RAMBLOCK
-A ram binary block for a tbblue. We store all the 2048 MB + 8*2 kB fpga rom (memoria_spectrum pointer). Total pages: 129
+A ram binary block for a tbblue. We store all the 2048 MB (memoria_spectrum pointer). Total pages: 128
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -2168,7 +2168,7 @@ Byte fields:
   /*
 
 -Block ID 21: ZSF_TBBLUE_RAMBLOCK
-A ram binary block for a tbblue. We store all the 2048 MB + 8*2 kB fpga rom (memoria_spectrum pointer). Total pages: 129
+A ram binary block for a tbblue. We store all the 2048 MB  (memoria_spectrum pointer). Total pages: 128
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -2178,7 +2178,7 @@ Byte Fields:
 6 and next bytes: data bytes
   */
 
-  int paginas=(TBBLUE_TOTAL_MEMORY_USED/16); //paginas de 16kb
+  int paginas=(TBBLUE_TOTAL_RAM_SIZE/16); //paginas de 16kb
   z80_byte ram_page;
 
   for (ram_page=0;ram_page<paginas;ram_page++) {
