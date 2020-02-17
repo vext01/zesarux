@@ -182,7 +182,49 @@ Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
 
 -Funciones deprecated mac corregir 
 
+-4 puertos Dac de Next
+
 
 -Setting de guardado tamanyo memoria RAM de divmmc/divide (probablemente variable diviface_current_ram_memory_bits)
 
 -Soporte Z88 en snapshots zsf
+
+-Función que usando misma rutina de imprimir Unicode diga la longitud en bytes que ocupa el carácter. 
+Así sabremos la longitud de aquellos caracteres que si que imprimimos
+
+Los que no, será 1 y interrogante 
+
+-Idea de animación para logo
+
+ZEsarUX con letras de colores rojo amarillo verde azul. Se comprime el texto y la Z va pillando los colores de las letras 
+
+-cambiar de maquina no tbblue a tbblue provoca que no funcione divmmc
+
+porque?
+
+--ZSF tbblue:
+
+* estado dma (esto no solo afecta a tbblue sino a todos. tener en cuenta grabar tambien valor datagear_dma_tbblue_prescaler)
+
+
+
+
+-Tbblue: al cargar juegos .tap de 48k por ejemplo, cuando pide en que modo cargar, usa un nuevo registro en que cambia la rom:
+
+
+-There was a major change in the hardware to support better compatibility with the 48k and 128k. Now when you load 48k or 128k programs, the original roms are put in place as well. This is done using a new hardware feature the alternate rom:
+0x8C (140) => Alternate ROM 
+(R/W) (hard reset = 0)
+IMMEDIATE
+bit 7 = 1 to enable alt rom
+bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+bit 5 = 1 to lock ROM1 (48K rom)
+bit 4 = 1 to lock ROM0 (128K rom)
+AFTER SOFT RESET (copied into bits 7-4)
+bit 3 = 1 to enable alt rom
+bit 2 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+bit 1 = 1 to lock ROM1 (48K rom)
+bit 0 = 1 to lock ROM0 (128K rom)
+The locking mechanism also applies if the alt rom is not enabled. For the +3 and zx next, if the two lock bits are not
+zero, then the corresponding rom page is locked in place. Other models use the bits to preferentially lock the corresponding
+48K rom or the 128K rom.
