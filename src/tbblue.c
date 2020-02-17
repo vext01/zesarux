@@ -298,6 +298,7 @@ struct s_tbblue_machine_id_definition tbblue_machine_id_list[]=
 	{8,               "Emulators"},
 	{10,              "ZX Spectrum Next"},
 	{11,              "Multicore"},
+	{0xea,            "ZX DOS"},
 	{250,             "ZX Spectrum Next Antibrick"},
 
  	{255,""}
