@@ -15182,7 +15182,7 @@ void menu_storage_mmc_browser(MENU_ITEM_PARAMETERS)
 }
 
 
-#ifdef COMPILE_PTHREADS
+
 
 void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 {
@@ -15236,7 +15236,7 @@ int ret=menu_download_wos(host_final,url,archivo_temp,ssl_use);
 
 }
 
-#endif
+
 
 
 //menu MMC/Divmmc
@@ -15258,7 +15258,7 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Emulation file");
 
 
-#ifdef COMPILE_PTHREADS
+#ifdef USE_PTHREADS
   if (MACHINE_IS_TBBLUE) {
   
   menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_download_official_tbblue,NULL,"Download official TBBLUE SD");
