@@ -68,5 +68,7 @@ extern int adventure_keyboard_send_final_spc;
 
 extern z80_bit use_scrcursesw;
 
+extern z80_bit tbblue_download_sd_asked;
+
 #endif
 
