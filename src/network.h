@@ -72,7 +72,7 @@ extern int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud);
 extern int z_sock_write_string(int indice_tabla, char *buffer);
 extern int zsock_wait_until_command_prompt(int indice_tabla);
 extern int zsock_read_all_until_command(int indice_tabla,z80_byte *buffer,int max_buffer,int *posicion_command);
-extern int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url,int parm_max_trozos);
+extern int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url,int estimated_max_size);
 extern char *z_sock_get_error(int error);
 extern int z_sock_assign_socket(void);
 

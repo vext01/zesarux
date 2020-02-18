@@ -875,4 +875,6 @@ extern void util_store_value_little_endian(z80_byte *destination,z80_int value);
 
 extern z80_int util_get_value_little_endian(z80_byte *origin);
 
+extern void util_get_home_dir(char *homedir);
+
 #endif

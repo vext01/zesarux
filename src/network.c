@@ -1023,7 +1023,7 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *re
 }
 
 
-int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url,int parm_max_trozos)
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url,int estimated_maximum_size)
 {
 
 	*mem=NULL;
@@ -1110,14 +1110,21 @@ If no Accept-Encoding field is present in a request, the server MAY
 
 	int max_reintentos=ZSOCK_HTTP_DEFAULT_MINIMUM_SEGMENTS; //500;
 
-	if (parm_max_trozos!=0) max_reintentos=parm_max_trozos;
+	if (estimated_maximum_size>0) {
+        //Calculamos estimacion de segmentos en base a estimated_maximum_size
+        //calculo muy pesimista de 1024 bytes por bloque
+        max_reintentos=estimated_maximum_size/1024;
+
+        //Y no bajar del minimo por default
+        if (max_reintentos<ZSOCK_HTTP_DEFAULT_MINIMUM_SEGMENTS) max_reintentos=ZSOCK_HTTP_DEFAULT_MINIMUM_SEGMENTS;
+	}
 
 	do {
 		do {
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
-				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d loop count: %d (max %d)",leidos,reintentos,max_reintentos);
+				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d (total %d) loop count: %d (max %d)",leidos,total_leidos,reintentos,max_reintentos);
 				if (leidos<0) salir=1;
 				else if (leidos==0) {
 					salir=1; //si lee 0, ha llegado al final

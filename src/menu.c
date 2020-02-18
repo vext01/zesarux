@@ -14230,6 +14230,30 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
 			if (size>1073741824L) {
 				menu_warn_message("Using MMC bigger than 1 GB can be very slow");
                         }
+
+
+			//Y pedir si configurar automaticamente en caso de TBBLUE
+			if (MACHINE_IS_TBBLUE) {
+				if (menu_confirm_yesno("Configure automatically?")) {
+
+					//Repetir sentencia de usuario:
+					//1) Habilitar MMC
+					//2) Desactivar DIVMMC paging
+					//3) Habilitar divmmc ports
+					//4) Hard reset
+					
+					//Sabemos que esto estara desactivado pero bueno, mejor lo chequeamos para que no conmute en caso que ya estuviera
+					if (mmc_enabled.v==0) menu_storage_mmc_emulation(0);
+
+					if (divmmc_diviface_enabled.v) menu_storage_divmmc_diviface(0);
+
+					if (divmmc_mmc_ports_enabled.v==0) menu_storage_divmmc_mmc_ports_emulation(0);
+
+					hard_reset_cpu();
+
+					salir_todos_menus=1;
+				}
+			}
 		}
 
 
@@ -15215,39 +15239,82 @@ void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 {
 
 
-//http://www.zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
+	//http://www.zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
 
-char *host_final="www.zxspectrumnext.online";
+	char *host_final="www.zxspectrumnext.online";
 
-char *url="/cspect/tbbluemmc-32mb.zip";
+	//char *url="/cspect/tbbluemmc-32mb.zip";
 
-
-char *archivo_temp="/tmp/tbbluemmc-32mb.zip";
-
-
-int ssl_use=0;
+	char url[NETWORK_MAX_URL];
 
 
-int ret=menu_download_wos(host_final,url,archivo_temp,ssl_use,64*1024*1024);  //de momento 64 MB 
+	int tamanyo_imagen=menu_simple_three_choices("Image type","Which size?","Small 32 MB","Medium 128MB","Large 2 GB");
 
-			if (ret==200) {                    
-				//y abrimos menu de smartload
-				strcpy(quickload_file,archivo_temp);
+	switch (tamanyo_imagen) {
+		case 1:
+			strcpy(url,"/cspect/tbbluemmc-32mb.zip");
+		break;
+
+		case 2:
+			strcpy(url,"/cspect/tbbluemmc-128mb.zip");
+		break;
+
+		case 3:
+			strcpy(url,"/cspect/cspect-next-2gb.zip");
+		break;
+
+
+		default:
+			return;
+		break;
+	}
+
+
+	debug_printf(VERBOSE_DEBUG,"Selected url %s",url);
+
+	char archivo_zip[PATH_MAX];
+
+	//Ruta destino en el home
+	char dest_dir[PATH_MAX];
+	util_get_home_dir(dest_dir);
+
+
+	char zipfilename[PATH_MAX];
+	util_get_file_no_directory(url,zipfilename);
+
+	//sprintf(archivo_zip,"%s%s",dest_dir,"tbbluemmc-32mb.zip");
+	sprintf(archivo_zip,"%s%s",dest_dir,zipfilename);
+
+	int ssl_use=0;
+
+
+	int ret=menu_download_wos(host_final,url,archivo_zip,ssl_use,64*1024*1024);  //de momento 64 MB 
+
+	if (ret==200) {       
+		//descomprimimos zip
+		char final_mmc_dir[PATH_MAX];
+		sprintf(final_mmc_dir,"%s.mmc",archivo_zip);
+		util_extract_zip(archivo_zip,final_mmc_dir);
+
+		//y abrimos menu de mmc. Deducimos archivo final "tbblue.mmc"
+		//char guessed_mmc_file[PATH_MAX];
+		sprintf(mmc_file_name,"%s/tbblue.mmc",final_mmc_dir);
 	
-				quickfile=quickload_file;
-				menu_quickload(0);
-		
-				return;
-			}
-			else {
-				if (ret<0) {	
-					menu_network_error(ret);
-				}
-				else {
-					debug_printf(VERBOSE_ERR,"Error downloading software. Return code: %d",ret);
-				}
+		//strcpy(mmc_file_name,guessed_mmc_file);
 
-			}
+		menu_storage_mmc_file(0);
+
+		return;
+	}
+	else {
+		if (ret<0) {	
+			menu_network_error(ret);
+		}
+		else {
+			debug_printf(VERBOSE_ERR,"Error downloading software. Return code: %d",ret);
+		}
+
+	}
 
 
 
@@ -27179,6 +27246,59 @@ int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcio
 
 
 }
+
+
+//retorna 1 si opcion 1
+//retorna 2 si opcion 2
+//retorna 3 si opcion 3
+//retorna 0 si ESC
+int menu_simple_three_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2,char *opcion3)
+{
+
+        cls_menu_overlay();
+
+        menu_espera_no_tecla();
+
+
+	menu_item *array_menu_simple_three_choices;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+	//Siempre indicamos la primera opcion
+	int simple_three_choices_opcion_seleccionada=1;
+        do {
+
+		menu_add_item_menu_inicial_format(&array_menu_simple_three_choices,MENU_OPCION_SEPARADOR,NULL,NULL,texto_interior);
+
+                menu_add_item_menu_format(array_menu_simple_three_choices,MENU_OPCION_NORMAL,NULL,NULL,opcion1);
+
+                menu_add_item_menu_format(array_menu_simple_three_choices,MENU_OPCION_NORMAL,NULL,NULL,opcion2);
+
+				menu_add_item_menu_format(array_menu_simple_three_choices,MENU_OPCION_NORMAL,NULL,NULL,opcion3);
+
+                //separador adicional para que quede mas grande la ventana y mas mono
+                menu_add_item_menu_format(array_menu_simple_three_choices,MENU_OPCION_SEPARADOR,NULL,NULL," ");
+
+
+
+                retorno_menu=menu_dibuja_menu(&simple_three_choices_opcion_seleccionada,&item_seleccionado,array_menu_simple_three_choices,texto_ventana);
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        return simple_three_choices_opcion_seleccionada;
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+	return 0;
+
+
+}
+
+
+
 
 //Retorna 0=Cancel, 1=Append, 2=Truncate
 int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)

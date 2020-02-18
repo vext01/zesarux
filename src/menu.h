@@ -535,6 +535,7 @@ extern int menu_confirm_yesno(char *texto_ventana);
 extern int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior);
 extern int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior);
 extern int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2);
+extern int menu_simple_three_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2,char *opcion3);
 
 extern void menu_refresca_pantalla(void);
 

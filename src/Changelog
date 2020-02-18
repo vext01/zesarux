@@ -46,6 +46,8 @@ Improved Debugging:
 -debug CPU window: show interrupt routine pointer on im2 mode
 
 Improved TBBlue emulation:
+-added automatic configure of tbblue machine SD image 
+-added feature to download official tbblue SD images
 -added scroll x,y on ula layer
 -optimized ula,lores render routines: 2% less cpu on my computer
 -added 1-bit tile mode
@@ -57,6 +59,7 @@ Improved TBBlue emulation:
 -updated to the last tbblue SD distribution. Now it holds the entire distribution
 -enable real video by default
 -added zsf snapshot support
+-supports setting Core ID to ZX Dos
 
 Improved Hex editor: 
 -can now copy to a different memory zone

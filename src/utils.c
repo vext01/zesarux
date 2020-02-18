@@ -16780,14 +16780,9 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int es
 	int retorno;
         char redirect_url[NETWORK_MAX_URL];
 
-        //Calculamos estimacion de segmentos en base a estimated_maximum_size
-        //calculo muy pesimista de 1024 bytes por bloque
-        int segmentos=estimated_maximum_size/1024;
 
-        //Y no bajar del minimo por default
-        if (segmentos<ZSOCK_HTTP_DEFAULT_MINIMUM_SEGMENTS) segmentos=0; //0 lo deja en default
 
-        retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url,segmentos);
+        retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url,estimated_maximum_size);
 
         
         if (http_code==302 && redirect_url[0]!=0) {
@@ -17031,4 +17026,40 @@ void util_store_value_little_endian(z80_byte *destination,z80_int value)
 z80_int util_get_value_little_endian(z80_byte *origin)
 {
         return value_8_to_16(origin[1],origin[0]);
+}
+
+
+
+void util_get_home_dir(char *homedir)
+{
+
+        //asumimos vacio
+        homedir[0]=0;
+
+  #ifndef MINGW
+        char *directorio_home;
+        directorio_home=getenv("HOME");
+        if ( directorio_home==NULL) {
+                  //printf("Unable to find $HOME environment variable to open configuration file\n");
+                return;
+        }
+
+        sprintf(homedir,"%s/",directorio_home);
+
+  #else
+        char *homedrive;
+        char *homepath;
+        homedrive=getenv("HOMEDRIVE");
+        homepath=getenv("HOMEPATH");
+
+        if (homedrive==NULL || homepath==NULL) {
+                //printf("Unable to find HOMEDRIVE or HOMEPATH environment variables to open configuration file\n");
+                  return;
+          }
+
+        sprintf(homedir,"%s\\%s\\",homedrive,homepath);
+
+  #endif
+
+
 }
