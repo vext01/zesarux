@@ -1088,7 +1088,11 @@ If no Accept-Encoding field is present in a request, the server MAY
 	
 	//todo buffer asignar
 	char *response;
-	int max_buffer=MAX_ZSOCK_HTTP_BUFFER; //1024*1024; //1 mb max
+	int max_buffer=MAX_ZSOCK_HTTP_BUFFER; //1024*1024; //1 mb max por defecto
+	
+	if (estimated_maximum_size>max_buffer) max_buffer=estimated_maximum_size;
+	
+	
 	
 	response=malloc(max_buffer);
 	if (response==NULL) cpu_panic ("Can not allocate memory for http response");
