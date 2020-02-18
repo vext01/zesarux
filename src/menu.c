@@ -15181,6 +15181,64 @@ void menu_storage_mmc_browser(MENU_ITEM_PARAMETERS)
 	menu_file_viewer_read_file("MMC file browser",mmc_file_name);
 }
 
+
+#ifdef COMPILE_PTHREADS
+
+void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
+{
+
+
+//http://www.zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
+
+char *host_final="www.zxspectrumnext.online";
+
+char *url="/cspect/tbbluemmc-32mb.zip";
+
+
+char *archivo_temp="/tmp/tbbluemmc-32mb.zip";
+
+
+int ssl_use=0;
+
+
+int ret=menu_download_wos(host_final,url,archivo_temp,ssl_use); 
+
+			if (ret==200) {                    
+				//y abrimos menu de smartload
+				strcpy(quickload_file,archivo_temp);
+	
+				quickfile=quickload_file;
+				menu_quickload(0);
+		
+				return;
+			}
+			else {
+				if (ret<0) {	
+					menu_network_error(ret);
+				}
+				else {
+					debug_printf(VERBOSE_ERR,"Error downloading software. Return code: %d",ret);
+				}
+
+			}
+
+
+
+
+//http://www.zxspectrumnext.online/cspect/cspect-next-2gb.zip
+
+
+
+
+
+
+
+
+}
+
+#endif
+
+
 //menu MMC/Divmmc
 void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 {
@@ -15198,6 +15256,15 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'m');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"MMC Emulation file");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Emulation file");
+
+
+#ifdef COMPILE_PTHREADS
+  if (MACHINE_IS_TBBLUE) {
+  
+  menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_download_official_tbblue,NULL,"Download official TBBLUE SD");
+  
+  }
+#endif
 
 
                         menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_emulation,menu_storage_mmc_emulation_cond,"[%c] MMC ~~Emulation", (mmc_enabled.v ? 'X' : ' '));
