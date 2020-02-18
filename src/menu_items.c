@@ -17272,7 +17272,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		char *mem_after_headers;
 		int total_leidos;
 		char redirect_url[NETWORK_MAX_URL];
-		//int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
+		
 
 		int retorno=menu_zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
 		orig_mem=mem;
@@ -17292,9 +17292,9 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 					//sprintf (archivo_temp,"/tmp/%s",juego);
 					sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
 		
-                	//int ret=util_download_file("www.zx81.nl",url_juego,archivo_temp,0);
+                	
 					//usamos misma funcion thread de download wos
-					int ret=menu_download_wos("www.zx81.nl",url_juego,archivo_temp,0); 
+					int ret=menu_download_wos("www.zx81.nl",url_juego,archivo_temp,0,1024*1024);  //1 MB mas que suficiente
 
 					if (ret==200) {
                                 
@@ -17407,7 +17407,8 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 								((struct menu_zsock_http_struct *)entrada)->skip_headers,
 								((struct menu_zsock_http_struct *)entrada)->add_headers,
 								((struct menu_zsock_http_struct *)entrada)->use_ssl,
-								((struct menu_zsock_http_struct *)entrada)->redirect_url
+								((struct menu_zsock_http_struct *)entrada)->redirect_url,
+								0
 							); 
 
 
@@ -17428,7 +17429,7 @@ pthread_t menu_zsock_http_thread;
 int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
 {
 	
-	//int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
+	 
 	//Lanzar el thread de descarga
 	struct menu_zsock_http_struct parametros;
 
@@ -17494,6 +17495,7 @@ struct download_wos_struct
 	char *archivo_temp;
 	int ssl_use;
 	int return_code;
+	int estimated_maximum_size;
 };
 
 int download_wos_thread_running=0;
@@ -17519,7 +17521,8 @@ void *menu_download_wos_thread_function(void *entrada)
 	((struct download_wos_struct *)entrada)->return_code=util_download_file( ((struct download_wos_struct *)entrada)->host,
 								((struct download_wos_struct *)entrada)->url,
 								((struct download_wos_struct *)entrada)->archivo_temp,
-								((struct download_wos_struct *)entrada)->ssl_use); 
+								((struct download_wos_struct *)entrada)->ssl_use,
+								((struct download_wos_struct *)entrada)->estimated_maximum_size);
 
 	debug_printf (VERBOSE_DEBUG,"Finishing download content thread");
 
@@ -17539,10 +17542,10 @@ pthread_t download_wos_thread;
 
 
 
-int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
+int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use,int estimated_maximum_size)
 {
 	
-	//int ret=util_download_file(host_final,url_juego_final,archivo_temp,ssl_use); 
+	
 	//Lanzar el thread de descarga
 	struct download_wos_struct parametros;
 
@@ -17550,6 +17553,7 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use)
 	parametros.url=url;
 	parametros.archivo_temp=archivo_temp;
 	parametros.ssl_use=ssl_use;
+	parametros.estimated_maximum_size=estimated_maximum_size;
 
 	//de momento not found
 	parametros.return_code=404;
@@ -17615,7 +17619,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 		
 		char redirect_url[NETWORK_MAX_URL];
-		//int retorno=zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
+		
 		
 		int retorno=menu_zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
 
@@ -18019,7 +18023,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 
 			debug_printf (VERBOSE_DEBUG,"Downloading file from host %s (SSL=%d) url %s",host_final,ssl_use,url_juego_final);
 
-			int ret=menu_download_wos(host_final,url_juego_final,archivo_temp,ssl_use); 
+			int ret=menu_download_wos(host_final,url_juego_final,archivo_temp,ssl_use,1024*1024);  //1 MB mas que suficiente
 
 			if (ret==200) {                    
 				//y habrimos menu de smartload
@@ -18089,7 +18093,7 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 	use_ssl=parse_string_to_number(s_use_ssl);
 #endif
 
-	//int retorno=zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,0,redirect_url);
+	
 
 	char *mem_mensaje;
 

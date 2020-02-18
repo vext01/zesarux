@@ -1022,7 +1022,8 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *re
 	return mem;
 }
 
-int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
+
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url,int parm_max_trozos)
 {
 
 	*mem=NULL;
@@ -1106,12 +1107,17 @@ If no Accept-Encoding field is present in a request, the server MAY
 	//todo usar funcion parecida a zsock_read_all_until_command pero con condicion redefinible
 	//todo ver si el socket se ha cerrado
 	int reintentos=0;
+
+	int max_reintentos=ZSOCK_HTTP_DEFAULT_MINIMUM_SEGMENTS; //500;
+
+	if (parm_max_trozos!=0) max_reintentos=parm_max_trozos;
+
 	do {
 		do {
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
-				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d",leidos);
+				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d loop count: %d (max %d)",leidos,reintentos,max_reintentos);
 				if (leidos<0) salir=1;
 				else if (leidos==0) {
 					salir=1; //si lee 0, ha llegado al final
@@ -1130,12 +1136,13 @@ If no Accept-Encoding field is present in a request, the server MAY
 		//int leidos=z_sock_read(indice_socket,&response[pos_destino],65535);
 		
 		if (!salir) {
-			usleep(10000); //10 ms
+			usleep(10000); //10 ms. Suponiendo max_reintentos=500 y 10 ms de pausa, esto nos lleva 5 segundos continuos de pausa
 			reintentos++;
 		}
 
 		//controlar maximo reintentos
-	} while (reintentos<500 && !salir);
+		//TODO: realmente hace falta? Realmente estos reintentos son, mas bien, trozos en que se divide la descarga (o sea, veces que lanzamos la peticion http)
+	} while (reintentos<max_reintentos && !salir);
 	
 	debug_printf (VERBOSE_PARANOID,"zsock_http: Retries: %d",reintentos);
 		

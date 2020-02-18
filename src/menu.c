@@ -14156,7 +14156,34 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
         filtros[3]=0;
 
 
-        if (menu_filesel("Select MMC File",filtros,mmc_file_name)==1) {
+	   //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+              //Obtenemos directorio de trd
+        //si no hay directorio, vamos a rutas predefinidas
+        if (mmc_file_name[0]==0) menu_chdir_sharedfiles();
+
+        else {
+                char directorio[PATH_MAX];
+                util_get_dir(mmc_file_name,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        menu_filesel_chdir(directorio);
+                }
+        }
+
+
+        
+		int ret=menu_filesel("Select MMC File",filtros,mmc_file_name);
+		//volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
+
+        if (ret==1) {
 		if (!si_existe_archivo(mmc_file_name)) {
 			if (menu_confirm_yesno_texto("File does not exist","Create?")==0) {
                                 mmc_file_name[0]=0;
@@ -15201,7 +15228,7 @@ char *archivo_temp="/tmp/tbbluemmc-32mb.zip";
 int ssl_use=0;
 
 
-int ret=menu_download_wos(host_final,url,archivo_temp,ssl_use); 
+int ret=menu_download_wos(host_final,url,archivo_temp,ssl_use,64*1024*1024);  //de momento 64 MB 
 
 			if (ret==200) {                    
 				//y abrimos menu de smartload

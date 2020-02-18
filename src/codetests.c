@@ -1059,7 +1059,7 @@ void codetests_https()
 	char redirect_url[NETWORK_MAX_URL];
 
 	int retorno=zsock_http("archive.org","/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/games/m/Mandroid.tzx.zip",
-				&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1,redirect_url);
+				&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1,redirect_url,0);
 
 	if (retorno<0) {
 		printf ("Error zsock_http\n");
@@ -1127,7 +1127,7 @@ void codetests_http()
 	char *mem_after_headers;
 	int total_leidos;
 	char redirect_url[NETWORK_MAX_URL];
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",0,redirect_url);
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",0,redirect_url,0);
 	orig_mem=mem;
 	
 	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
@@ -1173,7 +1173,7 @@ void codetests_http()
 	//peticion saltando cabeceras
 	printf ("Request skipping headers\n");
 
-	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
+	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url,0);
 	if (mem_after_headers!=NULL) printf ("Answer after headers:\n%s\n",mem_after_headers);
 	
 	if (mem!=NULL) free (mem);
