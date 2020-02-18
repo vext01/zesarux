@@ -14148,12 +14148,14 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
 
 	mmc_disable();
 
-        char *filtros[4];
+        char *filtros[5];
 
         filtros[0]="mmc";
 		filtros[1]="mmcide";
 		filtros[2]="hdf";
-        filtros[3]=0;
+		filtros[3]="img";
+		
+        filtros[4]=0;
 
 
 	   //guardamos directorio actual
@@ -15298,7 +15300,7 @@ void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 	if (ret==200) {       
 		//descomprimimos zip
 		char final_mmc_dir[PATH_MAX];
-		sprintf(final_mmc_dir,"%s.mmc",archivo_zip);
+		sprintf(final_mmc_dir,"%s.dir",archivo_zip);
 		util_extract_zip(archivo_zip,final_mmc_dir);
 
 		//y abrimos menu de mmc. Deducimos archivo final "tbblue.mmc"
