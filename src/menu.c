@@ -15248,19 +15248,24 @@ void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 	char url[NETWORK_MAX_URL];
 
 
-	int tamanyo_imagen=menu_simple_three_choices("Image type","Which size?","Small 32 MB","Medium 128MB","Large 2 GB");
+	int opcion_tamanyo_imagen=menu_simple_three_choices("Image type","Which size?","Small 32 MB","Medium 128MB","Large 2 GB");
 
-	switch (tamanyo_imagen) {
+	int estimated_size=64*1024*1024;
+
+	switch (opcion_tamanyo_imagen) {
 		case 1:
 			strcpy(url,"/cspect/tbbluemmc-32mb.zip");
+			estimated_size=64*1024*1024;
 		break;
 
 		case 2:
 			strcpy(url,"/cspect/tbbluemmc-128mb.zip");
+			estimated_size=128*1024*1024;
 		break;
 
 		case 3:
 			strcpy(url,"/cspect/cspect-next-2gb.zip");
+			estimated_size=512*1024*1024; //Pensamos que esa SD esta comprimida de 2 GB a 512 MB
 		break;
 
 
@@ -15288,7 +15293,7 @@ void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 	int ssl_use=0;
 
 
-	int ret=menu_download_wos(host_final,url,archivo_zip,ssl_use,64*1024*1024);  //de momento 64 MB 
+	int ret=menu_download_wos(host_final,url,archivo_zip,ssl_use,estimated_size);  
 
 	if (ret==200) {       
 		//descomprimimos zip
