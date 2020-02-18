@@ -1093,6 +1093,8 @@ If no Accept-Encoding field is present in a request, the server MAY
 	if (estimated_maximum_size>max_buffer) max_buffer=estimated_maximum_size;
 	
 	
+	printf ("using max size: %d\n",max_buffer);
+	
 	
 	response=malloc(max_buffer);
 	if (response==NULL) cpu_panic ("Can not allocate memory for http response");
