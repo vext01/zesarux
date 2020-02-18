@@ -47,6 +47,10 @@
 //Maxima longitud de una url (valor inventado por mi)
 #define NETWORK_MAX_URL 1024
 
+
+//mas que suficiente para descargas de imagenes sd de 128mb
+#define MAX_ZSOCK_HTTP_BUFFER 200*1024*1024
+
 extern int enviar_cr;
 
 extern int crear_socket_TCP(void);
