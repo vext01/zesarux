@@ -163,6 +163,8 @@ void *send_stats_server_pthread(void *nada)
 
 	debug_printf(VERBOSE_INFO,"Finishing sending statistics pthread");
 
+	if (mem!=NULL) free(mem);
+
 	return NULL;
 }
 
