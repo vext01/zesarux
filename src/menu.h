@@ -888,6 +888,8 @@ extern int menu_hardware_autofire_cond(void);
 
 extern void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension,int longitud);
 
+extern void menu_file_viewer_read_file(char *title,char *file_name);
+
 extern void menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int bloque,int *offset1,int *offset2);
 
 extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_dsk);
@@ -937,6 +939,7 @@ extern z80_bit no_close_menu_after_smartload;
 
 extern void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
 extern void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
+extern void menu_uncompress_zip_progress(char *zip_file,char *dest_dir);
 
 //"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 
