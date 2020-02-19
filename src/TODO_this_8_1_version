@@ -1,15 +1,1 @@
-Todo:
-
-Buffer de descarga http que fuese Dinamico. No siempre a 200mb. Si fuese así siempre tiene que hacer malloc de nuevo 
-
-Quizá para sd comprimidas con 100 mb me vale para una de 128mb
-
-Ver si memoria libera y/o Reusa en vez de hacer malloc siempre 
-
-Para la sd completa cuanto hace falta? Cuanto ocupa?
-
-
-O que se pueda pasar un estimado de tamaño a función de util_download
-
--filtro de seleccion mmc al descargar image full de 2GB
 
