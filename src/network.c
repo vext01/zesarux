@@ -1093,7 +1093,7 @@ If no Accept-Encoding field is present in a request, the server MAY
 	if (estimated_maximum_size>max_buffer) max_buffer=estimated_maximum_size;
 	
 	
-	printf ("Allocating max block for download: %d\n",max_buffer);
+	debug_printf (VERBOSE_DEBUG,"Allocating max block for download: %d",max_buffer);
 	
 	
 	response=malloc(max_buffer);

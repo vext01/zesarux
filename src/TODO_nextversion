@@ -280,3 +280,5 @@ Allen Albright I see on the vhdl sources the new memory map with the alt roms
    -- 0x080000 - 0x0FFFFF (512K) => 1st Extra IC RAM (if present)
    -- 0x100000 - 0x17FFFF (512K) => 2nd Extra IC RAM (if present)
    -- 0x180000 - 0x1FFFFF (512K) => 3rd Extra IC RAM (if present)
+
+-Windows no es capaz de usar imagen mmc de 2 GB. Quiza porque es un compilado para 32 bits?

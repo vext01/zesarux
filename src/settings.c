@@ -213,5 +213,5 @@ int adventure_keyboard_key_length=DEFAULT_ADV_KEYBOARD_KEY_LENGTH;
 z80_bit use_scrcursesw={0};
 
 
-
+//Si se ha preguntado ya para descargar la imagen SD al seleccionar maquina tbblue
 z80_bit tbblue_download_sd_asked={0};

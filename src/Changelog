@@ -46,7 +46,7 @@ Improved Debugging:
 -debug CPU window: show interrupt routine pointer on im2 mode
 
 Improved TBBlue emulation:
--New Wizard to automatic download and configure SD image
+-New Wizard to automatic download and configure TBBlue official SD image
 -added automatic configure of tbblue machine SD image 
 -added feature to download official tbblue SD images
 -added scroll x,y on ula layer

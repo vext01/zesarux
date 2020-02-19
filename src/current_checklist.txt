@@ -13,6 +13,12 @@ echo "Porcentaje=$PERCCOMPLETADO %"
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
 ->probado Mac OS X
 
+
+-Funciones de Red:
+Windows: Probado ZENG, Speccy browser, ZX81 browser, Download TBLLUE
+Mac: Probado ZENG, Speccy browser, ZX81 browser, Download TBLLUE
+Linux: Probado ZENG, Speccy browser, ZX81 browser, Download TBLLUE. 
+
 Drivers video:
 -probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
 *por cada driver (incluido null) y con y sin pthreads:
