@@ -16835,7 +16835,7 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int es
                 ptr_destino=fopen(archivo,"wb");
 
                 if (ptr_destino==NULL) {
-                        debug_printf (VERBOSE_ERR,"Error writing game file");
+                        debug_printf (VERBOSE_ERR,"Error writing output file");
                         return -1;
                 }
 
