@@ -15236,6 +15236,65 @@ void menu_storage_mmc_browser(MENU_ITEM_PARAMETERS)
 
 
 
+#ifdef USE_PTHREADS
+
+
+// Para el thread de descompresion de zip
+int menu_down_off_tbblue_thread_running=0;
+pthread_t menu_down_off_tbblue_thread;
+int contador_menu_down_off_tbblue_print=0;
+
+
+int menu_down_off_tbblue_cond(zxvision_window *w GCC_UNUSED)
+{
+        return !menu_down_off_tbblue_thread_running;
+}
+
+
+struct menu_down_off_tbblue_struct {
+	char *archivo_zip;
+	char *directorio_destino;
+};
+
+void *menu_down_off_tbblue_thread_function(void *entrada)
+{
+	debug_printf (VERBOSE_DEBUG,"Starting menu_down_off_tbblue_thread");
+
+	//temporal para que dure mas
+	sleep(5);
+
+	util_extract_zip(
+					((struct menu_down_off_tbblue_struct *)entrada)->archivo_zip,
+					((struct menu_down_off_tbblue_struct *)entrada)->directorio_destino
+					);
+	
+	debug_printf (VERBOSE_DEBUG,"Finishing menu_down_off_tbblue_thread");
+	menu_down_off_tbblue_thread_running=0;
+
+	return 0;
+
+}
+
+
+void menu_down_off_tbblue_print(zxvision_window *w)
+{
+        char *mensaje="|/-\\";
+
+        int max=strlen(mensaje);
+        char mensaje_dest[32];
+
+        int pos=contador_menu_down_off_tbblue_print % max;
+
+        sprintf(mensaje_dest,"Uncompressing %c",mensaje[pos]);
+
+        zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);
+        zxvision_draw_window_contents(w);
+
+        contador_menu_down_off_tbblue_print++;
+
+}
+
+// Fin el thread de descompresion de zip
 
 void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 {
@@ -15301,9 +15360,42 @@ void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 		//descomprimimos zip
 		char final_mmc_dir[PATH_MAX];
 		sprintf(final_mmc_dir,"%s.dir",archivo_zip);
-		util_extract_zip(archivo_zip,final_mmc_dir);
 
-		//y abrimos menu de mmc. Deducimos archivo final "tbblue.mmc"
+
+
+		//Thread aparte para descomprimir. Necesario en caso de imagen de 2 gb que tarda mucho
+		//Inicializar thread
+        debug_printf (VERBOSE_DEBUG,"Initializing thread menu_down_off_tbblue_thread");
+
+
+		//Lanzar el thread de descarga
+        struct menu_down_off_tbblue_struct parametros;
+
+		parametros.archivo_zip=archivo_zip;
+		parametros.directorio_destino=final_mmc_dir;
+
+
+        //Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
+        menu_down_off_tbblue_thread_running=1;
+
+        if (pthread_create( &menu_down_off_tbblue_thread, NULL, &menu_down_off_tbblue_thread_function, (void *)&parametros) ) {
+                debug_printf(VERBOSE_ERR,"Can not create menu_down_off_tbblue_thread thread");
+                return;
+        }
+
+		contador_menu_down_off_tbblue_print=0;
+        zxvision_simple_progress_window("Uncompressing", menu_down_off_tbblue_cond,menu_down_off_tbblue_print );
+
+        if (menu_down_off_tbblue_thread_running) menu_warn_message("Uncompression has not ended yet");
+
+
+
+		//util_extract_zip(archivo_zip,final_mmc_dir);
+
+
+
+
+		//y abrimos menu de mmc. Deducimos archivo final "tbblue.mmc". TODO: en el caso de imagen 2gb de cspect esto no es asi
 		//char guessed_mmc_file[PATH_MAX];
 		sprintf(mmc_file_name,"%s/tbblue.mmc",final_mmc_dir);
 	
@@ -15326,18 +15418,12 @@ void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 
 
 
-//http://www.zxspectrumnext.online/cspect/cspect-next-2gb.zip
-
-
-
-
-
-
 
 
 }
 
 
+#endif
 
 
 //menu MMC/Divmmc
