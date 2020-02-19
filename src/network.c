@@ -1093,7 +1093,7 @@ If no Accept-Encoding field is present in a request, the server MAY
 	if (estimated_maximum_size>max_buffer) max_buffer=estimated_maximum_size;
 	
 	
-	printf ("using max size: %d\n",max_buffer);
+	printf ("Allocating max block for download: %d\n",max_buffer);
 	
 	
 	response=malloc(max_buffer);
@@ -1130,7 +1130,22 @@ If no Accept-Encoding field is present in a request, the server MAY
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
 				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
-				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d (total %d) loop count: %d (max %d)",leidos,total_leidos,reintentos,max_reintentos);
+
+				//Print un poco mas inteligente
+				int print_total_leidos_mb=0;
+				if (total_leidos>1024*1024) print_total_leidos_mb=1;
+
+				int print_estimated_maximum_size_mb=0;
+				if (estimated_maximum_size>1024*1024) print_estimated_maximum_size_mb=1;				
+
+				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d (total %d%s estimated max %d%s) chunk count: %d (max %d)",leidos,
+											(print_total_leidos_mb ? total_leidos/1024/1024: total_leidos),
+											(print_total_leidos_mb ? "MB": "B"),
+
+											(print_estimated_maximum_size_mb ? estimated_maximum_size/1024/1024: estimated_maximum_size),
+											(print_estimated_maximum_size_mb ? "MB": "B"),
+
+											reintentos,max_reintentos);
 				if (leidos<0) salir=1;
 				else if (leidos==0) {
 					salir=1; //si lee 0, ha llegado al final
