@@ -8071,7 +8071,7 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_cpu_ldir_hack,NULL,"[%c] Z80 LDIR/LDDR Hack",(cpu_ldir_lddr_hack_optimized.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_cpu_settings,"EXPERIMENTAL feature! It makes a fast data transference without taking care of timings. Speeds up cpu core");
-			menu_add_item_menu_tooltip(array_menu_cpu_settings,"EXPERIMENTAL feature! It makes a fast data transference without taking care of timings. Speeds up cpu core");
+			menu_add_item_menu_ayuda(array_menu_cpu_settings,"EXPERIMENTAL feature! It makes a fast data transference without taking care of timings. Speeds up cpu core");
 		}		
 
 		if (MACHINE_IS_SPECTRUM) {
