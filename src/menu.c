@@ -15035,13 +15035,16 @@ void *menu_uncompress_zip_progress_thread_function(void *entrada)
 {
 	debug_printf (VERBOSE_DEBUG,"Starting menu_uncompress_zip_progress_thread");
 
-	//temporal para que dure mas
-	sleep(10);
+	char *archivo_zip;
+	char *directorio_destino;
 
-	util_extract_zip(
-					((struct menu_uncompress_zip_progress_struct *)entrada)->archivo_zip,
-					((struct menu_uncompress_zip_progress_struct *)entrada)->directorio_destino
-					);
+
+	archivo_zip=((struct menu_uncompress_zip_progress_struct *)entrada)->archivo_zip;
+	directorio_destino=((struct menu_uncompress_zip_progress_struct *)entrada)->directorio_destino;
+
+	debug_printf (VERBOSE_DEBUG,"Uncompressing %s to %s directory",archivo_zip,directorio_destino);
+
+	util_extract_zip(archivo_zip,directorio_destino);
 
 	debug_printf (VERBOSE_DEBUG,"Finishing menu_uncompress_zip_progress_thread");
 	menu_uncompress_zip_progress_thread_running=0;

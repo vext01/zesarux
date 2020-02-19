@@ -1138,7 +1138,7 @@ If no Accept-Encoding field is present in a request, the server MAY
 				int print_estimated_maximum_size_mb=0;
 				if (estimated_maximum_size>1024*1024) print_estimated_maximum_size_mb=1;				
 
-				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d (total %d%s estimated max %d%s) chunk count: %d (max %d)",leidos,
+				debug_printf (VERBOSE_DEBUG,"Read data on zsock_http (z_sock_read): %d (current %d%s estimated max %d%s) chunk count: %d (max %d)",leidos,
 											(print_total_leidos_mb ? total_leidos/1024/1024: total_leidos),
 											(print_total_leidos_mb ? "MB": "B"),
 

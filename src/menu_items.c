@@ -18597,7 +18597,17 @@ void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
 
 	//Ruta destino en el home
 	char dest_dir[PATH_MAX];
+
+
+
+//Aunque en Windows no le acaba de gustar, por alguna razón, la ruta al unzip. En Windows lo metemos en la ruta actual
+#ifdef MINGW
+	dest_dir[0]=0; //Cadena vacia -> carpeta actual
+#else
 	util_get_home_dir(dest_dir);
+#endif
+
+	
 
 
 	char zipfilename[PATH_MAX];
