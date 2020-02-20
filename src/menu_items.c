@@ -18572,7 +18572,10 @@ void menu_storage_mmc_download_tbblue(void)
 	char url[NETWORK_MAX_URL];
 
 
-	int opcion_tamanyo_imagen=menu_simple_three_choices("Image type","Which size?","Small 32 MB","Medium 128MB","Large 2 GB");
+	int opcion_tamanyo_imagen=menu_simple_three_choices("Image type","Which size?",
+														"Small   32 MB",	
+														"Medium 128 MB",
+														"Large    2 GB");
 
 	int estimated_size=64*1024*1024;
 
@@ -18694,7 +18697,7 @@ void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS)
 #ifndef USE_PTHREADS
 	tipo_imagen=1;
 #else
-	tipo_imagen=menu_simple_two_choices("SD Image type","Download or local?","Use included in ZEsarUX","Download from official repo");
+	tipo_imagen=menu_simple_two_choices("SD Image type","Included or download?","Use included in ZEsarUX","Download from official repo");
 #endif
 	
 	switch(tipo_imagen) {
