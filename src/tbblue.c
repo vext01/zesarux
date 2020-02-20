@@ -2936,7 +2936,7 @@ void tbblue_reset(void)
   bit 0 = (R/W) Reading 1 indicates a Soft-reset. If written 1 causes a Soft Reset.
 	*/
 	tbblue_registers[2]=1;
-	
+ 
 
 	tbblue_reset_common();
 

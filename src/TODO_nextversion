@@ -243,11 +243,23 @@ Registro nuevo bloqueo rom
 nr_8c_altrom_lock
 
 
-There are two 16k blocks of memory set aside to hold alternate roms.  These exist at the same level as the usual roms and can substitute for them.
+//8c: 
+		/*
+		Registro nuevo bloqueo rom
 
-Only bits 7:4 of nextreg 0x8c apply to the current state of the machine.  bits 3:0 are copied into bits 7:4 on a soft reset.
+nr_8c_altrom_lock
 
-The altrom replaces the rom in the bottom 16k if nextreg 0x8c bit 7 is set (altrom_en) and either the cpu is writing with nextreg 0x8c bit 6 is 1 or the cpu is reading and nextreg 0x8c bit 6 is 0.  The intention here is the altrom can be put in write-only mode so that the regular rom is still present for reading but the altroms can be written.  Remember mmu can still cover it because the altrom is at the same level as normal rom.
+
+There are two 16k blocks of memory set aside to hold alternate roms.  
+These exist at the same level as the usual roms and can substitute for them.
+
+Only bits 7:4 of nextreg 0x8c apply to the current state of the machine.  
+bits 3:0 are copied into bits 7:4 on a soft reset.
+
+The altrom replaces the rom in the bottom 16k if nextreg 0x8c bit 7 is set (altrom_en) 
+and either the cpu is writing with nextreg 0x8c bit 6 is 1 or the cpu is reading and nextreg 0x8c bit 6 is 0.  
+The intention here is the altrom can be put in write-only mode so that the regular rom is still present for 
+reading but the altroms can be written.  Remember mmu can still cover it because the altrom is at the same level as normal rom.
 
 Which of the two altroms is seen?  This depends on the machine type but for a zx next the type is +3.  For a +3 machine:
 
@@ -261,9 +273,28 @@ Which of the two altroms is seen?  This depends on the machine type but for a zx
 
 sram_alt_128 is either 0 or 1 choosing one of the altroms.
 
-sram_active_rom is the rom selection 0-3 used when the altrom is not active.  port_1ffd_rom is two bits with the usual port_1ffd rom bit as most significant bit and the port_7ffd rom bit as the least significant.
+sram_active_rom is the rom selection 0-3 used when the altrom is not active.  
+port_1ffd_rom is two bits with the usual port_1ffd rom bit as most significant bit and 
+the port_7ffd rom bit as the least significant.
 
 I think that covers the details.
+
+
+0x8C (140) => Alternate ROM
+(R/W) (hard reset = 0)
+IMMEDIATE
+  bit 7 = 1 to enable alt rom
+  bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+  bit 5 = 1 to lock ROM1 (48K rom)
+  bit 4 = 1 to lock ROM0 (128K rom)
+AFTER SOFT RESET (copied into bits 7-4)
+  bit 3 = 1 to enable alt rom
+  bit 2 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+  bit 1 = 1 to lock ROM1 (48K rom)
+  bit 0 = 1 to lock ROM0 (128K rom)
+The locking mechanism also applies if the alt rom is not enabled. For the +3 and zx next, if the two lock bits are not
+zero, then the corresponding rom page is locked in place. Other models use the bits to preferentially lock the corresponding
+48K rom or the 128K rom.
 
 
 Allen Albright I see on the vhdl sources the new memory map with the alt roms
@@ -280,5 +311,9 @@ Allen Albright I see on the vhdl sources the new memory map with the alt roms
    -- 0x080000 - 0x0FFFFF (512K) => 1st Extra IC RAM (if present)
    -- 0x100000 - 0x17FFFF (512K) => 2nd Extra IC RAM (if present)
    -- 0x180000 - 0x1FFFFF (512K) => 3rd Extra IC RAM (if present)
+
+	-> Soft reset can be the button or via nextreg 2
+
+-> Ver patch_tbblue_add_alt_rom.diff
 
 -Windows no es capaz de usar imagen mmc de 2 GB. Quiza porque es un compilado para 32 bits?
