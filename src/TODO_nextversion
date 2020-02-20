@@ -238,6 +238,7 @@ En ZENG queda bien pero en descargas no
 
 
 
+--ALTROM
 Registro nuevo bloqueo rom
 
 nr_8c_altrom_lock
@@ -315,5 +316,8 @@ Allen Albright I see on the vhdl sources the new memory map with the alt roms
 	-> Soft reset can be the button or via nextreg 2
 
 -> Ver patch_tbblue_add_alt_rom.diff
+
+
+--Fin ALTROM
 
 -Windows no es capaz de usar imagen mmc de 2 GB. Quiza porque es un compilado para 32 bits?
