@@ -18419,6 +18419,31 @@ void menu_storage_divmmc_diviface(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_storage_mmc_file_after_select_ask_configure_tbblue(void)
+{
+		if (MACHINE_IS_TBBLUE) {
+				if (menu_confirm_yesno("Configure MMC settings?")) {
+
+					//Repetir sentencia de usuario:
+					//1) Habilitar MMC
+					//2) Desactivar DIVMMC paging
+					//3) Habilitar divmmc ports
+					//4) Hard reset
+					
+					//Sabemos que esto estara desactivado pero bueno, mejor lo chequeamos para que no conmute en caso que ya estuviera
+					if (mmc_enabled.v==0) menu_storage_mmc_emulation(0);
+
+					if (divmmc_diviface_enabled.v) menu_storage_divmmc_diviface(0);
+
+					if (divmmc_mmc_ports_enabled.v==0) menu_storage_divmmc_mmc_ports_emulation(0);
+
+					hard_reset_cpu();
+
+					salir_todos_menus=1;
+				}
+			}
+}
+
 void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
 {
 
@@ -18507,31 +18532,12 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
 			long int size=get_file_size(mmc_file_name);
 			if (size>1073741824L) {
 				menu_warn_message("Using MMC bigger than 1 GB can be very slow");
-                        }
+            }
 
 
 			//Y pedir si configurar automaticamente en caso de TBBLUE
-			if (MACHINE_IS_TBBLUE) {
-				if (menu_confirm_yesno("Configure automatically?")) {
-
-					//Repetir sentencia de usuario:
-					//1) Habilitar MMC
-					//2) Desactivar DIVMMC paging
-					//3) Habilitar divmmc ports
-					//4) Hard reset
-					
-					//Sabemos que esto estara desactivado pero bueno, mejor lo chequeamos para que no conmute en caso que ya estuviera
-					if (mmc_enabled.v==0) menu_storage_mmc_emulation(0);
-
-					if (divmmc_diviface_enabled.v) menu_storage_divmmc_diviface(0);
-
-					if (divmmc_mmc_ports_enabled.v==0) menu_storage_divmmc_mmc_ports_emulation(0);
-
-					hard_reset_cpu();
-
-					salir_todos_menus=1;
-				}
-			}
+			menu_storage_mmc_file_after_select_ask_configure_tbblue();
+			
 		}
 
 
@@ -18551,7 +18557,9 @@ void menu_storage_divmmc_diviface_total_ram(MENU_ITEM_PARAMETERS)
 	if (diviface_current_ram_memory_bits==7) diviface_current_ram_memory_bits=2;
 }
 
-void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS)
+
+//Descargar imagen MMC oficial de tbblue
+void menu_storage_mmc_download_tbblue(void)
 {
 
 
@@ -18653,6 +18661,53 @@ void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS)
 
 
 
+
+}
+
+void menu_storage_mmc_use_local_tbblue(void)
+{
+	char buffer_nombre[PATH_MAX];
+
+	if (find_sharedfile("tbblue.mmc",buffer_nombre)) {
+		//Asignar la MMC
+		//TODO: esto mete ruta relativa (en caso de . o ../Resources). Se podria meter ruta absoluta
+		strcpy(mmc_file_name,buffer_nombre);
+
+
+		//Luego preguntar si aplicar divmmc etc
+		menu_storage_mmc_file_after_select_ask_configure_tbblue();
+	}
+
+	else {
+		menu_error_message("tbblue.mmc image not found");
+	}
+
+}
+
+
+void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS)
+{
+
+	int tipo_imagen;
+	
+//Si no hay phreads, solo se puede usar la opcion local
+#ifndef USE_PTHREADS
+	tipo_imagen=1;
+#else
+	tipo_imagen=menu_simple_two_choices("SD Image type","Download or local?","Use included in ZEsarUX","Download from official repo");
+#endif
+	
+	switch(tipo_imagen) {
+		case 1:
+			//Usar imagen local
+			menu_storage_mmc_use_local_tbblue();
+		break;
+
+		case 2:
+			//Usar repo remoto
+			menu_storage_mmc_download_tbblue();
+		break;
+	}
 
 }
 
