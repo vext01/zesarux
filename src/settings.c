@@ -214,4 +214,4 @@ z80_bit use_scrcursesw={0};
 
 
 //Si se ha preguntado ya para descargar la imagen SD al seleccionar maquina tbblue
-z80_bit tbblue_download_sd_asked={0};
+z80_bit tbblue_autoconfigure_sd_asked={0};

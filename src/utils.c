@@ -3623,7 +3623,7 @@ int util_write_configfile(void)
   if (stats_asked.v)                          ADD_STRING_CONFIG,"--stats-send-already-asked");
   if (stats_enabled.v)                        ADD_STRING_CONFIG,"--stats-send-enabled");
 
-  if (tbblue_download_sd_asked.v)             ADD_STRING_CONFIG,"--tbblue-download-sd-already-asked");
+  if (tbblue_autoconfigure_sd_asked.v)             ADD_STRING_CONFIG,"--tbblue-download-sd-already-asked");
 
           
 

@@ -84,7 +84,7 @@ extern void menu_zeng_send_message(MENU_ITEM_PARAMETERS);
 
 extern void menu_mmc_divmmc(MENU_ITEM_PARAMETERS);
 extern void menu_storage_diviface_eprom_write_jumper(MENU_ITEM_PARAMETERS);
-extern void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS);
+extern void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS);
 
 extern void menu_ide_divide(MENU_ITEM_PARAMETERS);
 

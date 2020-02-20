@@ -25813,20 +25813,19 @@ void menu_machine_selection_for_manufacturer(int fabricante)
                                         salir_todos_menus=1;
 
 
-										#ifdef USE_PTHREADS
+										
 										if (MACHINE_IS_TBBLUE) {
-												//Si descargar stats
-												//Si se pregunta si se quiere descargar SD, solo si esta el grabado de configuracion, e interfaz permite menu (no stdout ni simpletext ni null)
-												if (save_configuration_file_on_exit.v && tbblue_download_sd_asked.v==0 && si_normal_menu_video_driver()) {
-													if (menu_confirm_yesno_texto("Download Initial SD","Sure?")) {
-														menu_storage_mmc_download_official_tbblue(0);
+												//Si se pregunta si se quiere autoconfigurar SD, solo si esta el grabado de configuracion, e interfaz permite menu (no stdout ni simpletext ni null)
+												if (save_configuration_file_on_exit.v && tbblue_autoconfigure_sd_asked.v==0 && si_normal_menu_video_driver()) {
+													if (menu_confirm_yesno_texto("Autoconfigure Initial SD","Sure?")) {
+														menu_storage_mmc_autoconfigure_tbblue(0);
 													}
 
-													tbblue_download_sd_asked.v=1;
+													tbblue_autoconfigure_sd_asked.v=1;
 												}
 
 										}
-										#endif
+										
 
 
                               }

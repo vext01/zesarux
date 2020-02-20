@@ -2068,7 +2068,7 @@ printf (
 		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
 		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
 		"--clear-all-windowgeometry Clear all windows geometry thay may be loaded from the configuration file\n"
-		"--tbblue-download-sd-already-asked     Do not ask to download initial SD image\n"
+		"--tbblue-autoconfigure-sd-already-asked     Do not ask to autoconfigure tbblue initial SD image\n"
 		
 		//Esto no hace falta que lo vea un usuario, solo lo uso yo para probar partes del emulador 
 		//"--codetests                Run develoment code tests\n"
@@ -7089,8 +7089,8 @@ int parse_cmdline_options(void) {
 				stats_asked.v=1;
 			}
 
-			else if (!strcmp(argv[puntero_parametro],"--tbblue-download-sd-already-asked")) {
-				tbblue_download_sd_asked.v=1;
+			else if (!strcmp(argv[puntero_parametro],"--tbblue-autoconfigure-sd-already-asked")) {
+				tbblue_autoconfigure_sd_asked.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--stats-send-enabled")) {

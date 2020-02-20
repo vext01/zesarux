@@ -18551,7 +18551,7 @@ void menu_storage_divmmc_diviface_total_ram(MENU_ITEM_PARAMETERS)
 	if (diviface_current_ram_memory_bits==7) diviface_current_ram_memory_bits=2;
 }
 
-void menu_storage_mmc_download_official_tbblue(MENU_ITEM_PARAMETERS)
+void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS)
 {
 
 
@@ -18676,13 +18676,12 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Emulation file");
 
 
-#ifdef USE_PTHREADS
   if (MACHINE_IS_TBBLUE) {
   
-  menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_download_official_tbblue,NULL,"Download official TBBLUE SD");
+  menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_autoconfigure_tbblue,NULL,"Autoconfigure TBBLUE SD");
   
   }
-#endif
+
 
 
                         menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_emulation,menu_storage_mmc_emulation_cond,"[%c] MMC ~~Emulation", (mmc_enabled.v ? 'X' : ' '));
