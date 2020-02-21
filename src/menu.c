@@ -16715,6 +16715,49 @@ void menu_tbblue_rtc_traps(MENU_ITEM_PARAMETERS)
 	tbblue_use_rtc_traps ^=1;
 }
 
+void menu_hardware_tbblue_core_version(MENU_ITEM_PARAMETERS)
+{
+	char string_value[4];
+
+	int valor;
+
+	sprintf (string_value,"%d",tbblue_core_current_version_major);
+	//Entre 0 y 255
+	menu_ventana_scanf("Major",string_value,4);
+	valor=parse_string_to_number(string_value);
+	if (valor<0 || valor>255) {
+		debug_printf (VERBOSE_ERR,"Invalid value");
+		return;
+	}
+
+	tbblue_core_current_version_major=valor;
+
+
+	sprintf (string_value,"%d",tbblue_core_current_version_minor);
+	//Entre 0 y 15
+	menu_ventana_scanf("Minor",string_value,3);
+	valor=parse_string_to_number(string_value);
+	if (valor<0 || valor>15) {
+		debug_printf (VERBOSE_ERR,"Invalid value");
+		return;
+	}
+
+	tbblue_core_current_version_minor=valor;
+
+	sprintf (string_value,"%d",tbblue_core_current_version_subminor);
+	//Entre 0 y 15
+	menu_ventana_scanf("Subminor",string_value,3);
+	valor=parse_string_to_number(string_value);
+	if (valor<0 || valor>15) {
+		debug_printf (VERBOSE_ERR,"Invalid value");
+		return;
+	}
+	
+	tbblue_core_current_version_subminor=valor;	
+
+
+}
+
 //menu hardware settings
 void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 {
@@ -16797,6 +16840,10 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)");
 
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_tbblue_machine_id,NULL,"[%d] TBBlue machine id",tbblue_machine_id); 
+
+			//menu_hardware_tbblue_core_version
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_tbblue_core_version,NULL,"[%d.%d.%d] TBBlue core version",
+									tbblue_core_current_version_major,tbblue_core_current_version_minor,tbblue_core_current_version_subminor);
 
 
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_tbblue_rtc_traps,NULL,"[%c] TBBlue RTC traps",(tbblue_use_rtc_traps ? 'X' : ' ') );

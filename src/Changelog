@@ -4,13 +4,16 @@ Version 8.1 - The Great Escape edition. 8 January 2020
 Added ZEsarUX Network Gaming protocol (ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, 
 located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
 
+Added Spectrum and ZX81 online game browser. You can search & play almost any game for these machines!
+Added real joystick support on Windows
 Added Pentagon 16C colour mode emulation
 Added 1024 KB RAM emulation for Spectrum & Pentagon
-Added support for .scl files: can be converted from file selector menu pressing space
-Added real joystick support on Windows
+Added ZIP files support: no more need to use external unzip program
+Added SCL files support: can be converted from file selector menu pressing space
 Added SNA saving support
 Added PZX tape file support
-Added ZX81 and Spectrum online game browser. You can search & play almost any game for these machines!
+Added SCR to TAP file converter
+
 Added total run time statistics 
 Added checking for updates
 Added sending anonymous statistics use
@@ -18,8 +21,9 @@ Added setting --disablemenuandexit: it closes the emulator when the menu is goin
  It's the same behaviour as previous --disablemenu. Now --disablemenu only disables the menu but does not close the emulator
 Added setting to disable looking for alternate character sets from sysvar 23606/7 on ocr functions
 Added DataDrive HiLow emulation (beta)
- 
 Added Borland Gui Style
+Added setting to reset configuration file to default values
+Added setting to choose cpu type
 
 Added ZRCP commands:
 -cpu-code-coverage: working with code coverage
@@ -33,10 +37,21 @@ Added ZRCP commands:
 -set-ui-io-ports: to change keyboard state and joystick
 -write-port: write value to a port
 
-Added internal zip decompressor: no more need to use external unzip program
-Added scr to tap file converter
-Added setting to reset configuration file to default values
-Added setting to choose cpu type
+Improved TBBlue emulation:
+-New Wizard to automatically download and configure TBBlue official SD images
+-optimized ula,lores render routines: 2% less cpu
+-added scroll x,y on ula layer
+-added 1-bit tile mode
+-added tbblue register 63H: copper 16 bit write 
+-added tbblue register 69H: display control 1 register
+-added tbblue registers 0x35-0x39, 0x75-0x79
+-added copper opcodes NOOP, HALT
+-increased tbblue.mmc MMC bundled image size to 64 MB
+-updated to the latest tbblue SD distribution. 
+-enable real video by default
+-added zsf snapshot support
+-supports setting Core ID to ZX Dos
+-supports changing Core version
 
 Improved Debugging: 
 -added setting to dump .zsf snapshot when a cpu panic is fired
@@ -45,42 +60,18 @@ Improved Debugging:
 -added key 'n' for "run" on debug cpu. Does the same as closing all menus and returning back to emulation
 -debug CPU window: show interrupt routine pointer on im2 mode
 
-Improved TBBlue emulation:
--New Wizard to automatic download and configure TBBlue official SD image
--added automatic configure of tbblue machine SD image 
--added feature to download official tbblue SD images
--added scroll x,y on ula layer
--optimized ula,lores render routines: 2% less cpu on my computer
--added 1-bit tile mode
--added tbblue register 63H: copper 16 bit write 
--added tbblue register 69H: display control 1 register
--added tbblue registers 0x35-0x39, 0x75-0x79
--added copper opcodes NOOP, HALT
--increased tbblue.mmc MMC image size to 64 MB
--updated to the last tbblue SD distribution. Now it holds the entire distribution
--enable real video by default
--added zsf snapshot support
--supports setting Core ID to ZX Dos
-
 Improved Hex editor: 
 -can now copy to a different memory zone
 -shows the memory pointer when editing memory
 
 Improved menu: 
+-added more cyrillic characters support
 -can now use PgUp,PgDn to jump menu pages
 -added setting to disable File Utilities menu
--added more cyrillic characters support
--disabled menu items (the ones in red) are now called as "unavailable" instead of "disabled"
 
--Improved source code repository: now extras folder has been moved to another repository. See:
+-Splitted source code repository: now extras folder has been moved to another repository. See:
 https://github.com/chernandezba/zesarux-extras
 
-Improved accesibility: 
--pressing F4 key on a window menu, it will read that window again
--say when a selected menu item is not available
--Mac OS speech filter doesn't fail anymore when message has "-"
--selected item menu is called now "Selected item" (was called "Active item" before)
--when an error is generated on stdout driver, the message is send to text-to-speech
 
 Improved assembler: added defs command
 Improved AY Sheet: now you can select which AY Chip to show
@@ -93,12 +84,20 @@ Improved accurate Z80 timing: IM mode 0 is 1 t-state shorter than IM mode 1
 Improved real tape loading: acceleration is disabled by default, added setting to save configuration
 Improved cpu speed change: now it's a lot faster
 
-Fixed error when trying to open user files on MacOS Catalina
+Improved accesibility: 
+-disabled menu items (the ones in red) are now called as "unavailable" instead of "disabled"
+-selected item menu is called now "Selected item" (was called "Active item" before)
+-say when a selected menu item is not available
+-pressing F4 key on a window menu, it will read that window again
+-Mac OS speech filter doesn't fail anymore when message has "-"
+-when an error is generated on stdout driver, the message is sent to text-to-speech
+
+
 Fixed Pentagon border: now ukflag demo is perfect
 Fixed Spectrum 128k machines border: now ula128, scroll2017 demos are perfect
-Fixed f_seek call on esxdos handler
 Fixed segfault error when using breakpoints like peek/opcode in config file
-Fixed segfault error when failing to open a directory
+Fixed segfault error when trying to open a directory with no permissions
+Fixed error when trying to open user files on MacOS Catalina
 Fixed bug on zxuno changing video ram 5/7 when paging was disabled by bit DI7FFD
 Fixed average cpu statistics when footer is not enabled
 Fixed kempston mouse emulation on Next machine: wheel bits always return 0
@@ -111,13 +110,13 @@ Fixed placing menu windows when using zx desktop and machines TSConf, TBBlue, CP
 Fixed bug loading .sna files when rom 1 paged in
 Fixed bug on return flags from tape load trap. It only affected Rocman game and enabling "any flag loading" setting
 Fixed setting a configured memory breakpoint like this "--set-mem-breakpoint 0000H 2" which was fired on startup
+Fixed f_seek call on esxdos handler
+Fixed showing memory banks on debug cpu for Z88 machine
 
 Fixed menu issues:
 -fixed generic message splash: wait until key is released (if any pressed)
 -fixed opening the menu on stdout driver on the first start of ZEsarUX
 -fixed bug closing menu on Z88 machine and Real Video disabled
-
-Fixed showing memory banks on debug cpu for Z88 machine
 
 Fixed tbblue emulation:
 -fixed clipping in 80x32 mode
@@ -132,7 +131,6 @@ Fixed tbblue emulation:
 Fixed Accessibility bugs: 
 -now menu settings (anything between square brackets []) are played at the end of the menu line
 -now menu settings ([ ] and [X]) are played as "enabled"/"disabled"
-
 
 Some other minor bugfixes and improvements
 

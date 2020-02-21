@@ -25,9 +25,9 @@
 #include "cpu.h"
 
 
-#define TBBLUE_CORE_VERSION_MAJOR     3
-#define TBBLUE_CORE_VERSION_MINOR     1
-#define TBBLUE_CORE_VERSION_SUBMINOR  1
+#define TBBLUE_CORE_DEFAULT_VERSION_MAJOR     3
+#define TBBLUE_CORE_DEFAULT_VERSION_MINOR     1
+#define TBBLUE_CORE_DEFAULT_VERSION_SUBMINOR  1
 
 //borde izquierdo + pantalla + borde derecho, multiplicado por 2
 #define TBBLUE_LAYERS_PIXEL_WIDTH ((48+256+48)*2)
@@ -55,6 +55,10 @@ extern int tbblue_use_rtc_traps;
 extern int tbblue_already_autoenabled_rainbow;
 
 extern void tbblue_out_port(z80_int port,z80_byte value);
+
+extern z80_byte tbblue_core_current_version_major;
+extern z80_byte tbblue_core_current_version_minor;
+extern z80_byte tbblue_core_current_version_subminor;
 
 extern void tbblue_set_memory_pages(void);
 

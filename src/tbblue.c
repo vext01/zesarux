@@ -304,6 +304,13 @@ struct s_tbblue_machine_id_definition tbblue_machine_id_list[]=
  	{255,""}
 };
 
+
+z80_byte tbblue_core_current_version_major=TBBLUE_CORE_DEFAULT_VERSION_MAJOR;
+z80_byte tbblue_core_current_version_minor=TBBLUE_CORE_DEFAULT_VERSION_MINOR;
+z80_byte tbblue_core_current_version_subminor=TBBLUE_CORE_DEFAULT_VERSION_SUBMINOR;
+
+////return (TBBLUE_CORE_VERSION_MAJOR<<4 | TBBLUE_CORE_VERSION_MINOR);
+
 //Obtiene posicion de escritura del copper
 z80_int tbblue_copper_get_write_position(void)
 {
@@ -3889,7 +3896,8 @@ hardware numbers
 
   */
 		case 1:
-			return (TBBLUE_CORE_VERSION_MAJOR<<4 | TBBLUE_CORE_VERSION_MINOR);
+			//return (TBBLUE_CORE_VERSION_MAJOR<<4 | TBBLUE_CORE_VERSION_MINOR);
+			return (tbblue_core_current_version_major<<4 | tbblue_core_current_version_minor);
 		break;
 
 
@@ -3910,7 +3918,8 @@ Bit	Function
 		break;
 
 		case 0xE:
-			return TBBLUE_CORE_VERSION_SUBMINOR;
+			//return TBBLUE_CORE_VERSION_SUBMINOR;
+			return tbblue_core_current_version_subminor;
 		break;		
 
 		case 24:

@@ -79,6 +79,8 @@ Quizá mostrar C en caso de 127
 
 -Revisar al expulsar cinta si Windows lo libera 
 
+
+
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
 -Opción para formato de grabación de autosave snap
@@ -89,6 +91,12 @@ Quiza por el sprintf (pending_error_message
 
 -semáforos en Windows. Como? De momento no hace bloqueo si es Windows 
 
+-Cuando haya fat driver, poder descargar cp/m dentro de la imagen mmc de TBBlue 
+
+-Soporte ulaplus en Next
+
+-Para próxima versión zx81/zx80 con utf blocky en curses 
+
 
 --RED:
 
@@ -97,6 +105,8 @@ Quiza por el sprintf (pending_error_message
 -rutinas zsock_read_all: deberia reintentar un par o dos de veces si no se ha alcanzado la longitud deseada
 o bien, que quien llame ahi, que mire si se ha llegado al final de lo esperado
 o bien que al principio se diga la longitud de lo que se envia-> util para get-snapshot
+
+-Quizá Windows falla a aveces porque la lectura de datos del socket no viene toda de una vez?
 
 
 --Fin RED
@@ -317,6 +327,24 @@ Allen Albright I see on the vhdl sources the new memory map with the alt roms
 
 -> Ver patch_tbblue_add_alt_rom.diff
 
+When altrom is off (bit 7), the locking mechanism applies to the normal roms.  
+A few posts up I gave you an excerpt from the vhdl where you can see the lock bits are checked to 
+determine which normal rom (sram_active_rom) and which altrom (sram_alt_128) will be selected in 
+the bottom 16k (later on the choice between normal and alt rom is made depending on whether the alt 
+rom is enabled and whether it's a read or write).
+
+That applies to the +3 machine type (the next).  I'm not sure how far you are going with the emulation.  
+If you are doing the machine types (you boot into the 48k personality with a machine type of 48k instead of +3) 
+then normal rom selection has more cases.  
+See https://gitlab.com/SpectrumNext/ZX_Spectrum_Next_FPGA/-/blob/master/cores/zxnext/src/zxnext.vhd#L2299 .  
+The machine type is coming from nextreg 3 
+ https://gitlab.com/SpectrumNext/ZX_Spectrum_Next_FPGA/-/blob/master/cores/zxnext/src/zxnext.vhd#L4586
+
+The machine type does affect a few things like which ports are used for the multiface (multiface 1, multiface 128, multiface +3), whether certain configuration bits in the nextreg can be changed and some port decoding on ports 7ffd, eg, (although that is going to be changed to depend on video timing instead soon).
+
+-Quizá falte alguna instrucción de z80n para lo del altrom?
+
+-Soft reset can be the button or via nextreg 2: que cuando haga ese reset, copie bits bajos a altos de registro 8c
 
 --Fin ALTROM
 
