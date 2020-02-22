@@ -74,7 +74,7 @@ Drivers audio:
 -probar realvideo z88
 -probar snoweffect de 48k, 128k, con juegos y con extras/media/spectrum/tests/snow_effect.tap. Las que son de pentagon, hacer hotswap a 128 y activar contended memory
 -probar simular pantalla zx81 en spectrum
--probar desactivar colores pantalla spectrum
+
 -probar modos hi-res zx81: hrg, chr$128, udg, wrx, otros hi-res. probar xtricator, pacman 
 -probar autodetect WRX mode on ZX80/81
 -probar chip sonido AY, en spectrum (ay y fuller) y zx81 (quicksilva(asteroids, defenda zx80)  y bi-pak (aydemo, pink panther...))
@@ -145,8 +145,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 
 -probar desactivando memptr i pasar z80tests.tap de spectrum. probar activando memptr i pasar z80tests.tap
 
--probar desactivando cpustats
--probar desactivando visualmem
 -probar waveform, tambien en drivers no graficos como curses, aa, etc
 
 -probar midi output to real device
@@ -155,8 +153,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -ver paletas de colores
 -probar expansiones de ram de zx80/81
 
--probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
--probar shortcuts en menu
 -probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
 -probar opcion desactivar contended memory en menu
 -probar fuller audio box emulation
@@ -169,19 +165,15 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
 -probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
--probar buscador vidas infinitas. 
 
-tambien con cpu top speed
 -probar debug i/o ports: spectrum zx80/81, z88, zx-uno, etc
 
 -probar zxi ports con extras/media/spectrum/tests/zesarux-zxi-ports.tap , extras/media/spectrum/tests/hardwaredebugport.tap
 -probar rzx files con extras/media/spectrum/rzx
--probar quicksave, autosave at interval
-Ok -probar todas opciones de menu en general, menus con mas opciones verticalmente de las visibles -> audio settings
+-probar , autosave at interval
 -probar fallback de drivers graficos y de sonido
 -probar impresora: en zx spectrum, zx81
 -probar COPY to printer
--probar --verbose 0 y que no aparezca ningun mensaje por consola...
 
 -probar custom configuration file, con snap_tests/test_autoconfig.tap  (y hay snap_tests/test_autoconfig.tap.config) y snap_tests/test_autoconfig.p (y hay snap_tests/test_autoconfig.p.config)
 -probar footer cuando se carga cinta/snap detectado por autoselectoptions o custom configuration file:
@@ -197,20 +189,15 @@ Ok -probar todas opciones de menu en general, menus con mas opciones verticalmen
 ** FSCAPES.P, que no da tiempo a mostrar todo el segundo mensaje porque carga partes
 * Con y sin border enabled
 
--probar recent files, drive
-
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, full
 -probar on screen keyboard, con F8 y con joystick
 -probar asignar teclas f a funciones
--probar --limitopenmenu
--probar idle bus. con Arkanoid por ejemplo
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick. Probar joystick sdl, joystick nativo linux, joystick simulator, disable joystick. En todos casos probar quitar y poner border (porque reinicializa drivers)
 -probar cambio driver audio desde menu
 -probar desactivar putpixel cache en compilacion
 -probar Setting putpixel functions to zoom 1, variable, interlace
 
 -probar easter eggs
--probar repeticion de teclas en selector de archivos, ayuda, etc (en opciones de menu no hace repeticion)
 -probar ghosting
 -probar teclas en menu: normal, mayus, minus, -+ ,. TAB BACKSPACE, en mk14, zx8081, spectrum,  , ql, cpc, z88  ( ',' y "." en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB). en driver xwindow y curses, para cada maquina (total: 6 pruebas)
 -probar rutinas autodeteccion caracteres: algunos de sslfunctions, otro no listado (como Spiderman o masters of the universe), hobbit (usa dos rutinas de caracteres). probar con stdout y xwindows, sdl, etc. probar --enableprintchartrap y --disableprintchartrap en stdout y xwindows
@@ -227,9 +214,7 @@ Ok -probar todas opciones de menu en general, menus con mas opciones verticalmen
 -probar modo interlaced, scanlines y tapes/spectrum/tests/interlace-test.tap. interlaced zx81 con ilena. probar interlace y abrir menu visualmem y view sprites (debe desactivar interlace momentaneamente)
 -probar modo gigascreen. demos e imagenes
 -probar modos ULA Plus: rgb estandard, modo 3 radastan, modos ZEsarUX. modos ham (cambio rapido de paleta por interrupciones) multicolor demo, etc. hardware scroll radastan+zxuno
--
 -probar mantransferv3
-
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
 
@@ -245,7 +230,6 @@ Ok -probar todas opciones de menu en general, menus con mas opciones verticalmen
 -Probar Baseconf
 -Probar Chrome
 -Probar MK14
-
 
 -probar en general mayoria de cintas, snaps y eproms incluidas
 
