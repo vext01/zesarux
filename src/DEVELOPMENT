@@ -103,7 +103,7 @@ ZEsarUX_linux-version-debian10_x64.tar.gz
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
-./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-caca --disable-aa --prefix /usr
+./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --prefix /usr
 (Habilita drivers video: xwindows, sdl, fbdev, curses, stdout, simpletext y drivers audio: pulse, alsa, sdl, dsp. )
 make clean
 make
