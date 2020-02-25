@@ -12,6 +12,7 @@ echo "Porcentaje=$PERCCOMPLETADO %"
 
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
 ->probado Mac OS X
+->probado Linux
 
 
 -Funciones de Red:
@@ -51,6 +52,10 @@ Drivers audio:
 **aumentar/bajar velocidad cpu
 ***usar testsound.sh
 ***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
+
+ok coreaudio, null
+ok sdl,null (con pthreads)
+ok sdl,null (sin pthreads)
 
 -probar targets:
 * linux 32 bits

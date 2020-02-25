@@ -349,3 +349,9 @@ The machine type does affect a few things like which ports are used for the mult
 --Fin ALTROM
 
 -Windows no es capaz de usar imagen mmc de 2 GB. Quiza porque es un compilado para 32 bits?
+
+-Mkdir en esxdos handler?. running from RAM, not dot commands, IX points to the ASCIIZ filename. The call is f_mkdir equ fsys_base + 18;			// $aa
+
+-Eliminar función realtime
+
+-feature request. Could the Chloe support CPU speed setting via the Uno register?
