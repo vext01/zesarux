@@ -355,3 +355,6 @@ The machine type does affect a few things like which ports are used for the mult
 -Eliminar función realtime
 
 -feature request. Could the Chloe support CPU speed setting via the Uno register?
+
+
+-compilar raspberry tambien con ssl?
