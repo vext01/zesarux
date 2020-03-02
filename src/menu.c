@@ -27158,7 +27158,6 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 }
 
 
-
 void menu_about_running_info(MENU_ITEM_PARAMETERS)
 {
 
@@ -27231,6 +27230,11 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 	menu_generic_message_format("Running info",
 		"Video Driver: %s\nAvailable video drivers: %s\n\nAudio Driver: %s\nAvailable audio drivers: %s\n\n"
 		"Current directory: %s\n\n"
+
+#if defined(__APPLE__)
+		"Executable path: %s\n\n"
+#endif
+
 		"Configuration file: %s\n\n"
 		"Start time: %s\n"
 		"Uptime %d secs (%d mins)\n"
@@ -27239,6 +27243,11 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 		,
 		scr_driver_name,string_video_drivers,audio_driver_name,string_audio_drivers,
 		directorio_actual,
+
+#if defined(__APPLE__)
+		macos_path_to_executable,
+#endif
+
 		configfile,hora_inicio,
 		uptime_seconds,uptime_seconds/60,mensaje_total_uptime,mensaje_cpu_usage);
 

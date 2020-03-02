@@ -7295,7 +7295,7 @@ void print_funny_message(void)
 
 
 
-
+char macos_path_to_executable[PATH_MAX];
 
 //Proceso inicial
 int zesarux_main (int main_argc,char *main_argv[]) {
@@ -7327,21 +7327,18 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	//de MacOS Catalina
 
 	//Cambiar a la carpeta donde estamos ejecutando el binario
-	
-	//Algunas comprobaciones, por si acaso
-	char path_to_executable[PATH_MAX];
 
 	//por si acaso, por defecto a cadena vacia
-	path_to_executable[0]=0;
+	macos_path_to_executable[0]=0;
 
 	uint32_t bufsize=PATH_MAX;
 
-	_NSGetExecutablePath(path_to_executable, &bufsize);
+	_NSGetExecutablePath(macos_path_to_executable, &bufsize);
 
-	if (path_to_executable[0]!=0) { 
+	if (macos_path_to_executable[0]!=0) { 
 
 			char dir[PATH_MAX];
-			util_get_dir(path_to_executable,dir);
+			util_get_dir(macos_path_to_executable,dir);
 
 			printf ("Changing to Mac App bundle directory: %s\n",dir);
 			chdir(dir);
