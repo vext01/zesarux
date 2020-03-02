@@ -598,6 +598,7 @@ Esto se usa en NextDaw, es open+truncate
 	if (free_handle==-1) {
 		esxdos_handler_error_carry(ESXDOS_ERROR_ENFILE);
 		esxdos_handler_old_return_call();
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: no free handles");
 		return;
 	}
 
@@ -721,7 +722,7 @@ Esto se usa en NextDaw, es open+truncate
 
 		reg_a=free_handle;
 		esxdos_handler_no_error_uncarry();
-		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Successfully esxdos_handler_call_f_open file: %s",fullpath);
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Successfully esxdos_handler_call_f_open handle: %d file: %s",free_handle,fullpath);
 
 
 		if (stat(fullpath, &esxdos_fopen_files[free_handle].last_file_buf_stat)!=0) {
@@ -768,6 +769,8 @@ void esxdos_handler_call_f_read(void)
 		z80_int total_leidos=0;
 		z80_int bytes_a_leer=reg_bc;
 		int leidos=1;
+
+		debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Unix file handle: %p",esxdos_fopen_files[file_handler].esxdos_last_open_file_handler_unix);
 
 		while (bytes_a_leer && leidos) {
 			z80_byte byte_read;
@@ -1192,6 +1195,7 @@ int free_handle=esxdos_find_free_fopen();
 if (free_handle==-1) {
 	esxdos_handler_error_carry(ESXDOS_ERROR_ENFILE);
 	esxdos_handler_old_return_call();
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: no free handles");
 	return;
 }
 

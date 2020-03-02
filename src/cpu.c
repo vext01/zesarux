@@ -4204,8 +4204,12 @@ void rom_load(char *romfilename)
 		open_sharedfile(romfilename,&ptr_romfile);
                 if (!ptr_romfile)
                 {
-                        debug_printf(VERBOSE_ERR,"Unable to open rom file %s",romfilename);
-			cpu_panic("Unable to open rom file");
+                    debug_printf(VERBOSE_ERR,"Unable to open rom file %s",romfilename);
+
+					//No hacemos mas un panic por esto. Ayuda a debugar posibles problemas con el path de inicio
+					//cpu_panic("Unable to open rom file");
+
+					return;
                 }
 
 		//Caso Inves. ROM esta en el final de la memoria asignada

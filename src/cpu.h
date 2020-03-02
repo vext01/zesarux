@@ -41,7 +41,7 @@ Examples
 
 */
 
-#define EMULATOR_VERSION "8.1"
+#define EMULATOR_VERSION "8.1.1"
 
 //#define EMULATOR_VERSION "8.1-B3"
 //#define EMULATOR_VERSION "8.-RC"
