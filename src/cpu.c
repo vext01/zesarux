@@ -39,6 +39,11 @@
 #endif
 
 
+#if defined(__APPLE__)
+	//Para _NSGetExecutablePath
+	#include <mach-o/dyld.h>
+#endif
+
 
 #include "cpu.h"
 #include "scrnull.h"
@@ -7324,15 +7329,23 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	//Cambiar a la carpeta donde estamos ejecutando el binario
 	
 	//Algunas comprobaciones, por si acaso
-	if (main_argv[0]!=NULL) { 
-		if (main_argv[0][0]!=0) {
+	char path_to_executable[PATH_MAX];
+
+	//por si acaso, por defecto a cadena vacia
+	path_to_executable[0]=0;
+
+	uint32_t bufsize=PATH_MAX;
+
+	_NSGetExecutablePath(path_to_executable, &bufsize);
+
+	if (path_to_executable[0]!=0) { 
 
 			char dir[PATH_MAX];
-			util_get_dir(main_argv[0],dir);
+			util_get_dir(path_to_executable,dir);
 
 			printf ("Changing to Mac App bundle directory: %s\n",dir);
 			chdir(dir);
-		}
+		
 	}
 	/*
 	Para testeo, para eliminar permisos de acceso en Catalina, ejecutar:
