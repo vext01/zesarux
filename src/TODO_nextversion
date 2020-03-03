@@ -365,3 +365,6 @@ The machine type does affect a few things like which ports are used for the mult
 
 -cursor draw: cerrar el file dir handle cada vez que se haya usado. Si no, acaba haciendo cpu panic del esxdos handler.
 Es porque intenta usar un handle que se ha usado antes (valor random) como directorio
+
+
+-chdir en esxdos handler acaba cambiando directorio realmente para emulador
