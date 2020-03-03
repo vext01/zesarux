@@ -368,3 +368,9 @@ Es porque intenta usar un handle que se ha usado antes (valor random) como direc
 
 
 -chdir en esxdos handler acaba cambiando directorio realmente para emulador
+
+-impresion seikosha gp-100a
+
+-write name en cursor draw tiene que ser "escribe nombre"
+
+-si no hay esxdos, vuelve con error sin borrar linea inferior ni restaurar pantalla
