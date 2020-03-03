@@ -189,6 +189,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"ReinsertTape",F_FUNCION_REINSERTTAPE},
 	{"DebugCPU",F_FUNCION_DEBUGCPU},
 	{"Pause",F_FUNCION_PAUSE},
+	{"TopSpeed",F_FUNCION_TOPSPEED},
 	{"ExitEmulator",F_FUNCION_EXITEMULATOR}
 };
 
@@ -2824,6 +2825,13 @@ void menu_draw_cpu_use_last(void)
 
 void menu_draw_cpu_use(void)
 {
+
+
+	if (top_speed_timer.v) {
+		debug_printf (VERBOSE_DEBUG,"Refreshing footer cpu topspeed");
+		menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_CPU_USE,WINDOW_FOOTER_ELEMENT_Y_CPU_USE,"TOPSPEED",ESTILO_GUI_COLOR_AVISO,WINDOW_FOOTER_PAPER);
+		return;
+	}
 
         //solo redibujarla de vez en cuando
         if (draw_cpu_use!=0) {
@@ -28474,6 +28482,20 @@ void menu_process_f_function_pause(void)
 	menu_multitarea=antes_multitarea;
 }
 
+void menu_process_f_function_topspeed(void)
+{
+	timer_toggle_top_speed_timer();
+
+	if (top_speed_timer.v) {
+		//Parece que ni footer ni splash aparece pues el menu esta medio abierto
+		//En vez de esto meteremos el texto TOPSPEED cuando se actualiza footer
+		//generic_footertext_print_operating("TSPEED");
+	}
+	else {
+		//screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling CPU Top speed");
+	}
+}
+
 void menu_process_f_functions_by_action(int accion)
 {
 
@@ -28562,6 +28584,10 @@ void menu_process_f_functions_by_action(int accion)
 		case F_FUNCION_PAUSE:
 			menu_process_f_function_pause();
 		break;
+
+		case F_FUNCION_TOPSPEED:
+			menu_process_f_function_topspeed();
+		break;		
 
 		case F_FUNCION_EXITEMULATOR:
 			end_emulator();

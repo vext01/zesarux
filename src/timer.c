@@ -834,3 +834,9 @@ int timer_get_worked_time(void)
 	return total_tiempo_invertido;
 
 }
+
+void timer_toggle_top_speed_timer(void)
+{
+	top_speed_timer.v ^=1;
+}
+

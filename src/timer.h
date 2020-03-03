@@ -73,5 +73,6 @@ extern long core_cpu_timer_each_frame_media;
 extern int timer_on_screen_key;
 extern int timer_on_screen_adv_key;
 
+extern void timer_toggle_top_speed_timer(void);
 
 #endif

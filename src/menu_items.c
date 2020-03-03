@@ -7970,7 +7970,7 @@ void menu_tbblue_deny_turbo_rom(MENU_ITEM_PARAMETERS)
 
 void menu_hardware_top_speed(MENU_ITEM_PARAMETERS)
 {
-	top_speed_timer.v ^=1;
+	timer_toggle_top_speed_timer();
 }
 
 void menu_turbo_mode(MENU_ITEM_PARAMETERS)
