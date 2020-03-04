@@ -374,3 +374,10 @@ Es porque intenta usar un handle que se ha usado antes (valor random) como direc
 -write name en cursor draw tiene que ser "escribe nombre"
 
 -si no hay esxdos, vuelve con error sin borrar linea inferior ni restaurar pantalla
+
+-Compilacion para MAC OS antiguos:
+export CFLAGS="-O2 -mmacosx-version-min=10.13"
+export LDFLAGS="-O2 -mmacosx-version-min=10.13"
+
+Al menos poner un 10.x dos versiones inferior al que yo tenga, suponiendo que funcione bien...
+-Use otool -l /path/to/binary and inspect the LC_VERSION_MIN_MACOSX load command; 
