@@ -518,6 +518,15 @@ so you can use the SD card images. Just some things to take into account:
 -It seems the CSpect 2 GB image file is a bit smaller than 2gb, so it can be used even on Mac and write changes to it.
 -Using mmc files bigger than 1 gb may be slow. So be patient when opening the image or writing changes.
 
+
+Q: The performance when starting NexOS is very low, 2 FPS or less and the menu is laggy. Is there any setting I can change?
+A: You can change the following settings:
+-Settings->CPU. Set the setting "deny turbo on ROM". And set the cpu speed to x1. That will set maximum cpu speed to x1 but only on the NexOS,
+games and programs can change the cpu speed.
+-Settings->Display. Disable real video. This will disable viewing of sprites, layer 2, etc (anything that extends the Next).
+
+The first setting will make the nextos less laggy. The second one will also improve performance, but you should enable it when running Next games
+
 ----------------------------------------------------------------------------
 
 
