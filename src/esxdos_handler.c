@@ -195,6 +195,16 @@ void esxdos_handler_new_return_call(void)
 	reg_pc++;
 }
 
+//TODO: esta funcion hace las primeras lineas de esxdos_handler_pre_fileopen. Cambiar esxdos_handler_pre_fileopen para que llame aqui
+void esxdos_handler_get_fullpath(char *nombre_inicial,char *fullpath)
+{
+	//Si nombre archivo empieza por /, olvidar cwd
+	if (nombre_inicial[0]=='/' || nombre_inicial[0]=='\\') sprintf (fullpath,"%s%s",esxdos_handler_root_dir,nombre_inicial);
+
+	//TODO: habria que proteger que en el nombre indicado no se use ../.. para ir a ruta raiz inferior a esxdos_handler_root_dir
+	else sprintf (fullpath,"%s/%s/%s",esxdos_handler_root_dir,esxdos_handler_cwd,nombre_inicial);	
+}
+
 //rellena fullpath con ruta completa
 //funcion similar a zxpand_fileopen
 void esxdos_handler_pre_fileopen(char *nombre_inicial,char *fullpath)
@@ -1184,6 +1194,26 @@ void esxdos_handler_call_f_chdir(void)
 	esxdos_handler_old_return_call();
 }
 
+
+void esxdos_handler_call_f_mkdir(void)
+{
+
+	char nombre_archivo[PATH_MAX];
+	char fullpath[PATH_MAX];
+	esxdos_handler_copy_hl_to_string(nombre_archivo);
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Mkdir %s",nombre_archivo);
+	esxdos_handler_get_fullpath(nombre_archivo,fullpath);
+
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: mkdir: fullpath: %s",fullpath);
+
+	menu_filesel_mkdir(fullpath);
+
+	esxdos_handler_no_error_uncarry();
+
+
+}
+
 void esxdos_handler_copy_string_to_hl(char *s)
 {
 	z80_int p=0;
@@ -2047,6 +2077,14 @@ void esxdos_handler_begin_handling_commands(void)
 			esxdos_handler_call_f_chdir();
 			esxdos_handler_new_return_call();
 		break;
+
+
+		case ESXDOS_RST8_F_MKDIR:
+			esxdos_handler_copy_hl_to_string(buffer_fichero);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_MKDIR: %s",buffer_fichero);
+			esxdos_handler_call_f_mkdir();
+			esxdos_handler_new_return_call();
+		break;		
 
 		case ESXDOS_RST8_F_STAT:
 			esxdos_handler_copy_hl_to_string(buffer_fichero);
