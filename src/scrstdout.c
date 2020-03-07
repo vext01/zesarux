@@ -654,6 +654,7 @@ void scrstdout_repinta_pantalla(void)
 	}
 	
 	
+	
 	else {
 		//Refresco en Spectrum
 		screen_text_repinta_pantalla_spectrum();
