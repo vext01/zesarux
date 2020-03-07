@@ -161,6 +161,8 @@ int umbral_arttext=4;
 
 //si el refresco de pantalla para drivers de texto, con rainbow, siempre convierte todo de pixel a ascii art
 z80_bit screen_text_all_refresh_pixel={0};
+
+int screen_text_all_refresh_pixel_scale=10;
           
 
 

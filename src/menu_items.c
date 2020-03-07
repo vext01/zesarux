@@ -8643,6 +8643,24 @@ void menu_display_text_all_refresh_pixel(MENU_ITEM_PARAMETERS)
 screen_text_all_refresh_pixel.v ^=1;
 
 }
+
+
+void menu_display_text_all_refresh_pixel_scale(MENU_ITEM_PARAMETERS)
+{
+// screen_text_all_refresh_pixel_scale
+char string_bri[3];
+
+        sprintf (string_bri,"%d",screen_text_all_refresh_pixel_scale);
+
+        menu_ventana_scanf("Scale? (2-99)",string_bri,3);
+
+	int valor=parse_string_to_number(string_bri);
+	if (valor<2 || valor>99) debug_printf (VERBOSE_ERR,"Invalid scale value %d",valor);
+
+	else screen_text_all_refresh_pixel_scale=valor;
+	
+}
+
           
 
 
@@ -8728,6 +8746,12 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                                 menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
                                 
                                 menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel,NULL,"[%c] All pixel to text",(screen_text_all_refresh_pixel.v ? 'X' : ' ' ));
+                                
+                                if (screen_text_all_refresh_pixel.v) {
+                                
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_scale,NULL,"[1:%d] Scale",screen_text_all_refresh_pixel_scale );
+                                
+                                }
                                 
                                 
                                 
