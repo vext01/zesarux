@@ -153,6 +153,8 @@ extern char *scr_driver_name;
 extern z80_bit texto_artistico;
 extern int umbral_arttext;
 
+extern z80_bit screen_text_all_refresh_pixel;
+
 extern int screen_refresh_menu;
 
 extern int screen_stdout_driver;

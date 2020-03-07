@@ -8637,6 +8637,14 @@ ocr_settings_not_look_23606.v ^=1;
 
 }
 
+void menu_display_text_all_refresh_pixel(MENU_ITEM_PARAMETERS)
+{
+
+screen_text_all_refresh_pixel.v ^=1;
+
+}
+          
+
 
 
 #ifdef COMPILE_CURSESW
@@ -8718,7 +8726,21 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                                 menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"[%3d] Text brightness",screen_text_brightness);
                                 menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
                                 menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
+                                
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel,NULL,"[%c] All pixel to text",(screen_text_all_refresh_pixel.v ? 'X' : ' ' ));
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
                         }
+                        
+                        
+                        
+                        
 
                 }
 

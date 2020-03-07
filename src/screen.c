@@ -159,6 +159,11 @@ z80_bit texto_artistico;
 int umbral_arttext=4;
 
 
+//si el refresco de pantalla para drivers de texto, con rainbow, siempre convierte todo de pixel a ascii art
+z80_bit screen_text_all_refresh_pixel={0};
+          
+
+
 //Para frameskip manual
 //valor indicado en menu para frameskip
 int frameskip=0;

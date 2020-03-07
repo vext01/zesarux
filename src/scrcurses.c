@@ -1095,9 +1095,16 @@ void scrcurses_refresca_pantalla(void)
         }
 
         sem_screen_refresh_reallocate_layers=1;
+        
+     //si todo de pixel a ascii art
+     if (rainbow_enabled.v && screen_text_all_refresh_pixel.v) {
+     
+     scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,9);  //23 seria 720x576 -> 31x25
+     
+     }
 
 
-	if (MACHINE_IS_ZX8081) {
+	else if (MACHINE_IS_ZX8081) {
 
                 if (rainbow_enabled.v==0) {
 			//modo clasico. sin rainbow
