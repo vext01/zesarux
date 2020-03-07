@@ -164,6 +164,7 @@ z80_bit screen_text_all_refresh_pixel={0};
 
 int screen_text_all_refresh_pixel_scale=10;
           
+z80_bit screen_text_all_refresh_pixel_invert={0};
 
 
 //Para frameskip manual
@@ -14171,9 +14172,17 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 	//int bw_final;
 
 	int brillo=100-screen_text_brightness;
+	
+	int valor_uno=1;
+	int valor_cero=0;
+	
+	if (screen_text_all_refresh_pixel_invert.v) {
+	valor_uno=0;
+	valor_cero=1;
+	}
 
-	if (porc_gris>=brillo) return 1;
-	else return 0;
+	if (porc_gris>=brillo) return valor_uno;
+	else return valor_cero;
 
 
 }

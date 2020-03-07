@@ -8644,6 +8644,13 @@ screen_text_all_refresh_pixel.v ^=1;
 
 }
 
+void menu_display_text_all_refresh_pixel_invert(MENU_ITEM_PARAMETERS)
+{
+
+screen_text_all_refresh_pixel_invert.v ^=1;
+
+}
+
 
 void menu_display_text_all_refresh_pixel_scale(MENU_ITEM_PARAMETERS)
 {
@@ -8750,6 +8757,10 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                                 if (screen_text_all_refresh_pixel.v) {
                                 
                                 menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_scale,NULL,"[1:%d] Scale",screen_text_all_refresh_pixel_scale );
+                                
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_invert,NULL,"[%c] Invert text",(screen_text_all_refresh_pixel_invert.v ? 'X' : ' ' ));
+                                
+                                
                                 
                                 }
                                 
