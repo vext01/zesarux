@@ -1204,7 +1204,7 @@ void scrcurses_refresca_pantalla(void)
 
 			}
 
-
+ 
 
           }
 
