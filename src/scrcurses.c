@@ -1064,7 +1064,7 @@ char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 int valor_get_pixel;
 
-for (valor_get_pixel;valor_get_pixel<16;valor_get_pixel++) {
+for (valor_get_pixel=0;valor_get_pixel<16;valor_get_pixel++) {
   if (caracter==caracteres_artisticos[valor_get_pixel]) break;
 }
 
