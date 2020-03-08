@@ -520,12 +520,16 @@ so you can use the SD card images. Just some things to take into account:
 
 
 Q: The performance when starting NexOS is very low, 2 FPS or less and the menu is laggy. Is there any setting I can change?
-A: You can change the following settings:
+A: Please think that emulation has a cost, mostly cpu use. Also, the NextOS runs at 28 MHz,
+comparing with a normal Speccy, it's 8 times faster. So, it will need, at least, 8 times more real cpu than emulating a real speccy (and I'm not considering here all the extra video modes, Sprites, copper etc). So you can't compare a Spectrum emulator with ZEsarUX emulating the tbblue/Spectrum Next. Emulating all the tbblue core needs a lot of cpu power.
+However, there are some settings that you can tune to reduce the cpu needed.
+You can change the following settings:
 -Settings->CPU. Set the setting "deny turbo on ROM". And set the cpu speed to x1. That will set maximum cpu speed to x1 but only on the NexOS,
 games and programs can change the cpu speed.
 -Settings->Display. Disable real video. This will disable viewing of sprites, layer 2, etc (anything that extends the Next).
 
-The first setting will make the nextos less laggy. The second one will also improve performance, but you should enable it when running Next games
+The first setting will make the nextos less laggy. The second one will also improve performance, but you should enable it when running Next games.
+
 
 ----------------------------------------------------------------------------
 
