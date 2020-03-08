@@ -1041,9 +1041,53 @@ void scrcurses_refresca_pantalla_cpc_fun_caracter(int x,int y,int brillo, unsign
 void scrcurses_refresca_pantalla_common_fun_caracter(int x,int y,int brillo, unsigned char inv,z80_byte caracter )
 {
                        move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+                       
+                       
+                       
+                          //addch('~'|brillo);
 
-                                if (inv) addch(caracter | WA_REVERSE | brillo );
-                                else addch(caracter|brillo);
+								int going_to_use_cursesw=0;
+#ifdef COMPILE_CURSESW
+	//Solo usarlo si esta compilado y el setting esta activo
+								if (use_scrcursesw.v) going_to_use_cursesw=1;
+#endif
+
+
+								if (going_to_use_cursesw) {
+#ifdef COMPILE_CURSESW
+
+//parche horrible para sacar valor_get_pixel desde el caracter ascii
+//lo normal seria que el valor viniera aqui desde la funcion que llama aqui
+
+
+char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
+int valor_get_pixel;
+
+for (valor_get_pixel;valor_get_pixel<16;valor_get_pixel++) {
+  if (caracter==caracteres_artisticos[valor_get_pixel]) break;
+}
+
+if (valor_get_pixel>15) valor_get_pixel=15;
+									
+									
+									
+									
+									
+									cursesw_ext_print_pixel(valor_get_pixel);
+#endif
+								}
+
+								else {
+                                	if (inv) addch(caracter | WA_REVERSE | brillo );
+                                	else addch(caracter|brillo);
+								}
+
+                        
+                       
+                       
+                       
+                   
 
 }
 
