@@ -601,7 +601,7 @@ void scrstdout_repinta_pantalla(void)
 	 //si todo de pixel a ascii art
      if (rainbow_enabled.v && screen_text_all_refresh_pixel.v) {
      
-scr_refresca_pantalla_tsconf_text(stdout_common_fun_color,stdout_common_fun_caracter,stdout_common_fun_saltolinea,screen_text_all_refresh_pixel_scale));
+scr_refresca_pantalla_tsconf_text(stdout_common_fun_color,stdout_common_fun_caracter,stdout_common_fun_saltolinea,screen_text_all_refresh_pixel_scale);
      
      }
 	
