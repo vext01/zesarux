@@ -597,7 +597,15 @@ void scrstdout_repinta_pantalla(void)
 	//enviar Ansi inicio pantalla
 	screen_text_send_ansi_go_home();
 	
-	if (MACHINE_IS_ZX8081) {
+	
+	 //si todo de pixel a ascii art
+     if (rainbow_enabled.v && screen_text_all_refresh_pixel.v) {
+     
+scr_refresca_pantalla_tsconf_text(stdout_common_fun_color,stdout_common_fun_caracter,stdout_common_fun_saltolinea,screen_text_all_refresh_pixel_scale));
+     
+     }
+	
+	else if (MACHINE_IS_ZX8081) {
 		screen_text_repinta_pantalla_zx81();
 	}
 	
