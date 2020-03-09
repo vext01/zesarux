@@ -20,7 +20,6 @@ Esto es un nuevo tipo de campo en ZSF
 Como se pide? Al guardar un snapshot o desde menú snapshot? Quizá desde menú y con un first aid que lo explique
 
 
--separar los extras en otro repo? Reinicializar repositorio de ZEsarUX?
 
 -Mostrar info en menu network de descargas, commits etc
 
@@ -95,7 +94,6 @@ Quiza por el sprintf (pending_error_message
 
 -Soporte ulaplus en Next
 
--Para próxima versión zx81/zx80 con utf blocky en curses 
 
 
 --RED:
@@ -350,8 +348,6 @@ The machine type does affect a few things like which ports are used for the mult
 
 -Windows no es capaz de usar imagen mmc de 2 GB. Quiza porque es un compilado para 32 bits?
 
--Mkdir en esxdos handler?. running from RAM, not dot commands, IX points to the ASCIIZ filename. 
-The call is f_mkdir equ fsys_base + 18;			// $aa
 
 -Eliminar función realtime
 
@@ -360,28 +356,15 @@ The call is f_mkdir equ fsys_base + 18;			// $aa
 
 -compilar raspberry tambien con ssl?
 
--hotkey para top speed
+
 
 -browser para autosnapshots. poder consultar los automaticos de manera facil
 
--cursor draw: cerrar el file dir handle cada vez que se haya usado. Si no, acaba haciendo cpu panic del esxdos handler.
-Es porque intenta usar un handle que se ha usado antes (valor random) como directorio
 
 
 -chdir en esxdos handler acaba cambiando directorio realmente para emulador
 
 -impresion seikosha gp-100a
-
--write name en cursor draw tiene que ser "escribe nombre"
-
--si no hay esxdos, vuelve con error sin borrar linea inferior ni restaurar pantalla
-
--Compilacion para MAC OS antiguos:
-export CFLAGS="-O2 -mmacosx-version-min=10.13"
-export LDFLAGS="-O2 -mmacosx-version-min=10.13"
-
-Al menos poner un 10.x dos versiones inferior al que yo tenga, suponiendo que funcione bien...
--Use otool -l /path/to/binary and inspect the LC_VERSION_MIN_MACOSX load command; 
 
 
 -Con carga top speed salen dos footer ? El nuevo de rojo también...  Quizá el Rojo debería ser el Tspeed que ya sale en la carga...
