@@ -413,7 +413,7 @@ void scrsimpletext_repinta_pantalla(void)
 		 //si todo de pixel a ascii art
      if (rainbow_enabled.v && screen_text_all_refresh_pixel.v) {
      
-scr_refresca_pantalla_tsconf_text(simpletext_common_fun_color,simpletext_common_fun_caracter,simpletext_common_fun_saltolinea,screen_text_all_refresh_pixel_scale);
+scr_refresca_pantalla_tsconf_text(scr_simpletext_common_fun_color,scr_simpletext_common_fun_caracter,scr_simpletext_common_fun_saltolinea,screen_text_all_refresh_pixel_scale);
      
      }
 	
