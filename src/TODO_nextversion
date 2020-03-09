@@ -367,7 +367,9 @@ The machine type does affect a few things like which ports are used for the mult
 -impresion seikosha gp-100a
 
 
--Con carga top speed salen dos footer ? El nuevo de rojo también...  Quizá el Rojo debería ser el Tspeed que ya sale en la carga...
+-Con carga top speed salen dos footer ? El nuevo de rojo también...  
+Quizá el Rojo debería ser el Tspeed que ya sale en la carga...
+Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el footer
 
 -En sped poder agregar texto changelog en cada fuente al grabar. Quizá bloque adicional de bytes para ello
 
