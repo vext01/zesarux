@@ -389,3 +389,7 @@ Al menos poner un 10.x dos versiones inferior al que yo tenga, suponiendo que fu
 -En sped poder agregar texto changelog en cada fuente al grabar. Quizá bloque adicional de bytes para ello
 
 -En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
+
+-Comando ZRCP para guardar pantalla en scr y pnm
+Puede servir para versión online simple. Salida pnm y entrada de texto
+
