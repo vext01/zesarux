@@ -378,4 +378,3 @@ Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el 
 -Comando ZRCP para guardar pantalla en scr y pnm
 Puede servir para versión online simple. Salida pnm y entrada de texto
 
--En hexeditor, al cambiar memptr, debe meter cursor arriba del todo

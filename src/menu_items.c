@@ -5967,6 +5967,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 							menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
 							//menu_debug_hexdump_ventana();
 							zxvision_draw_window(&ventana);
+							//Y resetear cursor edicion
+							menu_hexdump_edit_position_x=0;
+							menu_hexdump_edit_position_y=0;
 						}
 					break;
 
