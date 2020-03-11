@@ -1619,6 +1619,11 @@ printf (
 		"--videofastblack           Emulate black screen on fast mode on ZX80/ZX81\n"
 		"--no-ocr-alternatechars    Disable looking for an alternate character set other than the ROM default on OCR functions\n"
 		"--scr file                 Load Screen File at startup\n"
+	    "--arttextthresold n        Pixel threshold for artistic emulation for curses & stdout & simpletext (1..16. 4=normal)\n"
+	    "--disablearttext           Disable artistic emulation for curses & stdout & simpletext\n"
+		"--allpixeltotext           Enable all pixel to text mode\n"
+		"--allpixeltotext-scale n   All pixel to text mode scale\n"
+		"--allpixeltotext-invert    All pixel to text mode invert mode\n"		
 
 
 
@@ -1640,8 +1645,7 @@ printf (
                 "--aaslow                   Use slow rendering on aalib\n"
 #endif
 
-	    "--arttextthresold n        Pixel threshold for artistic emulation for curses & stdout & simpletext (1..16. 4=normal)\n"
-	    "--disablearttext           Disable artistic emulation for curses & stdout & simpletext\n"
+
 
 #ifdef COMPILE_CURSESW
 		"--curses-ext-utf           Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers\n"
@@ -5430,6 +5434,25 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--no-ocr-alternatechars")) {
 				ocr_settings_not_look_23606.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext")) {
+				screen_text_all_refresh_pixel.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-scale")) {
+					siguiente_parametro_argumento();
+					int valor=parse_string_to_number(argv[puntero_parametro]);
+					if (valor<2 || valor>99) {
+									printf ("Invalid --allpixeltotext-scale value\n");
+									exit(1);
+							}
+					screen_text_all_refresh_pixel_scale=valor;
+			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-invert")) {
+				screen_text_all_refresh_pixel_invert.v=1;
+			}			
 
 
 

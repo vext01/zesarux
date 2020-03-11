@@ -3242,6 +3242,12 @@ int util_write_configfile(void)
   if (ocr_settings_not_look_23606.v)          ADD_STRING_CONFIG,"--no-ocr-alternatechars");
 
 
+  if (screen_text_all_refresh_pixel.v)        ADD_STRING_CONFIG,"--allpixeltotext");
+                                              
+                                              ADD_STRING_CONFIG,"--allpixeltotext-scale %d",screen_text_all_refresh_pixel_scale);
+
+  if (screen_text_all_refresh_pixel_invert.v) ADD_STRING_CONFIG,"--allpixeltotext-invert");
+
   if (zx8081_vsync_sound.v)                   ADD_STRING_CONFIG,"--zx8081vsyncsound");
   if (ram_in_8192.v)                          ADD_STRING_CONFIG,"--zx8081ram8K2000");
   if (ram_in_32768.v)                         ADD_STRING_CONFIG,"--zx8081ram16K8000");
