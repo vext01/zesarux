@@ -359,6 +359,8 @@ The machine type does affect a few things like which ports are used for the mult
 
 
 -browser para autosnapshots. poder consultar los automaticos de manera facil
+Quiza mismo menu filesel, que solo muestre autosnap (o el que sea el prefijo)*.zsf
+--faltara poder poner un filtro tipo prefijo *. Para eso hay que cambiar, minimo, menu_file_filter y menu_file_filter_dir
 
 
 
