@@ -117,6 +117,7 @@ procedente de la impresora puede ser leido en el bit 0 de la direccion OFFDh (40
 #include "audio.h"
 #include "debug.h"
 #include "joystick.h"
+#include "compileoptions.h"
 
 //Indica si esta presente el chip o no
 z80_bit ay_chip_present;
@@ -1034,7 +1035,11 @@ void ay3_mid_handle(z80_byte value)
 
 		}
 		printf ("Enviar mid: %d (%02XH)\n",acumulado,acumulado);
+		
+#ifdef COMPILE_COREAUDIO
 		coreaudio_mid_raw_send(acumulado);
+		
+#endif
 
 		ay3_buffer_rs232_index=0;
 	}
