@@ -870,6 +870,32 @@ int alsa_mid_unsubscribe_midi_port(void)
 }
 
 
+
+//enviar nota midi raw inmediatamente 
+int alsa_midi_raw(z80_byte value)
+{
+
+	//debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
+
+	snd_seq_event_t ev;
+
+	snd_seq_ev_clear(&ev);
+
+	snd_seq_ev_set_source(&ev, zesarux_mid_alsa_audio_info.port);
+	snd_seq_ev_set_subs(&ev);
+
+	snd_seq_ev_set_direct(&ev);
+	//snd_seq_ev_set_noteon(&ev, channel, note, velocity);
+	ev.data.raw8=value;
+	return (snd_seq_event_output(zesarux_mid_alsa_audio_info.handle, &ev));
+
+}
+
+
+
+
+
+
 //Hacer note on de una nota inmediatamente
 int alsa_note_on(unsigned char channel, unsigned char note,unsigned char velocity)
 {

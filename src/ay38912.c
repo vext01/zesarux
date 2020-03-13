@@ -1041,6 +1041,10 @@ void ay3_mid_handle(z80_byte value)
 		
 #endif
 
+#ifdef COMPILE_ALSA
+alsa_midi_raw(acumulado);
+#endif
+
 		ay3_buffer_rs232_index=0;
 	}
 }
