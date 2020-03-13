@@ -2748,6 +2748,20 @@ void midi_output_frame_event(void)
 }
 
 
+void audio_midi_output_raw(z80_byte value)
+{
+
+#ifdef COMPILE_COREAUDIO
+		coreaudio_mid_raw_send(value);
+		
+#endif
+
+#ifdef COMPILE_ALSA
+alsa_midi_raw(value);
+#endif
+
+
+}
 
 int audio_midi_output_note_on(unsigned char channel, unsigned char note)
 {
