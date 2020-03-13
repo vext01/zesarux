@@ -886,7 +886,7 @@ int alsa_midi_raw(z80_byte value)
 
 	snd_seq_ev_set_direct(&ev);
 	//snd_seq_ev_set_noteon(&ev, channel, note, velocity);
-	ev.raw8=value;
+	ev.data.raw8.d[0]=value;
 	return (snd_seq_event_output(zesarux_mid_alsa_audio_info.handle, &ev));
 
 }
