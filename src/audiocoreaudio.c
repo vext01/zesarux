@@ -540,6 +540,13 @@ void coreaudio_mid_add_note(z80_byte *note,int messagesize)
     }
 }
 
+void coreaudio_mid_raw_send(z80_byte value)
+{
+    z80_byte rawpacket[] = {value}; 
+
+  coreaudio_mid_add_note(rawpacket,1);
+}
+
 void coreaudio_mid_initialize_queue(void)
 {
    coreaudio_midi_packetlist = (MIDIPacketList*)coreaudio_midi_buffer;

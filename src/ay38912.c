@@ -897,7 +897,7 @@ void ay_chip_siguiente_ciclo(void)
 
 }
 
-int temp_gunstick_electron=1;
+//int temp_gunstick_electron=1;
 //leer puerto
 z80_byte in_port_ay(z80_byte puerto_h)
 {
@@ -1004,6 +1004,42 @@ void establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 
 }
 
+z80_byte ay3_buffer_rs232[255];
+int ay3_buffer_rs232_index=0;
+
+void ay3_mid_handle(z80_byte value)
+{
+	//Si envia 255, resetear
+	if (value==255) {
+		printf("Reset RS\n");
+		ay3_buffer_rs232_index=0;
+		return;
+	}
+
+	//Meter valor en posicion
+	ay3_buffer_rs232[ay3_buffer_rs232_index++]=value;
+
+	//Ver si es final
+	if (ay3_buffer_rs232_index==10) {
+		//Enviar
+		//Convertir desde 1 hasta 8 hasta mensaje midi
+		int i;
+		z80_byte acumulado=0;
+		for (i=0;i<8;i++) {
+			acumulado = acumulado >> 1;
+			//250 es 0, 254 es 1
+			int mibit=ay3_buffer_rs232[i+1] & 4;
+			if (mibit) acumulado |=128;
+
+
+		}
+		printf ("Enviar mid: %d (%02XH)\n",acumulado,acumulado);
+		coreaudio_mid_raw_send(acumulado);
+
+		ay3_buffer_rs232_index=0;
+	}
+}
+
 
 //Enviar valor a puerto
 void out_port_ay(z80_int puerto,z80_byte value)
@@ -1014,6 +1050,14 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 
 	//printf ("Out port ay chip. Puerto: %d Valor: %d\n",puerto,value);
+
+	if (puerto==49149 && ay_3_8912_registro_sel[ay_chip_selected]==14) {
+		printf ("Out midi valor: %d\n",value);
+		ay3_mid_handle(value);
+	}
+	//if (puerto==65533 && value>=14) printf("Out seleccion registro valor: %d\n",value);
+
+
 	if (puerto==65533) {
 		//Ver si seleccion de chip turbosound o 3 canales AY
 

@@ -1,4 +1,4 @@
---------Para próxima versión:
+--------Para esta versión 8.2:
 
 
 -Error unpaws????
@@ -380,3 +380,106 @@ Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el 
 -Comando ZRCP para guardar pantalla en scr y pnm
 Puede servir para versión online simple. Salida pnm y entrada de texto
 
+
+
+-midi:
+-pendiente midi raw para alsa y windows
+
+envio Z0:
+
+0 Out midi valor: 250
+1 Out midi valor: 250
+2 Out midi valor: 250
+3 Out midi valor: 250
+4 Out midi valor: 250
+5 Out midi valor: 250
+6 Out midi valor: 250
+7 Out midi valor: 250
+8 Out midi valor: 250
+9 Out midi valor: 254
+
+
+
+envio Z1:
+0 Out midi valor: 250
+1 Out midi valor: 254  *
+2 Out midi valor: 250
+3 Out midi valor: 250
+4 Out midi valor: 250
+5 Out midi valor: 250
+6 Out midi valor: 250
+7 Out midi valor: 250
+8 Out midi valor: 250
+9 Out midi valor: 254
+
+envio Z2:
+
+
+0 Out midi valor: 250
+1 Out midi valor: 250
+2 Out midi valor: 254 *
+3 Out midi valor: 250
+4 Out midi valor: 250
+5 Out midi valor: 250
+6 Out midi valor: 250
+7 Out midi valor: 250
+8 Out midi valor: 250
+9 Out midi valor: 254
+
+
+envio Z128:
+
+0 Out midi valor: 250
+1 Out midi valor: 250
+2 Out midi valor: 250
+3 Out midi valor: 250
+4 Out midi valor: 250
+5 Out midi valor: 250
+6 Out midi valor: 250
+7 Out midi valor: 250
+8 Out midi valor: 254  *
+9 Out midi valor: 254
+
+
+1: First data bit
+8: Last data bit
+
+
+envio Z1Z2:
+
+
+0 Out midi valor: 250
+1 Out midi valor: 254 *
+2 Out midi valor: 250
+3 Out midi valor: 250
+4 Out midi valor: 250
+5 Out midi valor: 250
+6 Out midi valor: 250
+7 Out midi valor: 250
+8 Out midi valor: 250
+9 Out midi valor: 254
+
+0 Out midi valor: 250
+1 Out midi valor: 250
+2 Out midi valor: 254 *
+3 Out midi valor: 250
+4 Out midi valor: 250
+5 Out midi valor: 250
+6 Out midi valor: 250
+7 Out midi valor: 250
+8 Out midi valor: 250
+9 Out midi valor: 254
+
+
+sin hacer nada en el basic, veo continuamente:
+
+Out midi valor: 254
+Out midi valor: 255
+
+Quiza 255 es un "reset"
+
+Primer envio descartar
+
+leer 8 bits
+y descartar el stop bit
+ y enviar
