@@ -2761,6 +2761,10 @@ alsa_midi_raw(value);
 #endif
 
 
+#ifdef MINGW
+windows_midi_raw(value);
+#endif
+
 }
 
 int audio_midi_output_note_on(unsigned char channel, unsigned char note)
@@ -3217,6 +3221,24 @@ void windows_mid_finish_all(void)
 
    // Remove any data in MIDI device and close the MIDI Output port
    midiOutClose(windows_midi_device);	
+}
+
+void windows_midi_raw(z80_byte value)
+{
+
+
+
+  windows_midi_message mensaje;
+
+  mensaje.data[0]=value;
+  mensaje.data[1]=0;
+  mensaje.data[2]=0;
+  mensaje.data[3]=0;
+
+
+  windows_mid_add_note(mensaje);
+
+  return 0;
 }
 
 
