@@ -895,6 +895,8 @@ int alsa_midi_raw(z80_byte value)
 	return (snd_seq_event_output(zesarux_mid_alsa_audio_info.handle, &ev));
 	*/
 
+	return 0;
+
 }
 
 
@@ -950,7 +952,8 @@ int alsa_mid_initialize_audio_raw(void)
 
 		int err = snd_rawmidi_open(NULL,&alsa_raw_handle_out,alsa_mid_device_out,0);
         if (err) {
-            debug_printf (VERBOSE_ERR,"snd_rawmidi_open %s failed",alsa_mid_device_out);
+            debug_printf (VERBOSE_ERR,"snd_rawmidi_open %s failed: %d",alsa_mid_device_out,err);
+			return 1;
         }
 
 	return 0;
