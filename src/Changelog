@@ -1,6 +1,7 @@
 Version 8.2 - xxx edition. 16 March 2020
 
 Added F key to toggle top cpu speed
+Added emulation of AY chip midi registers 14 & 15
 Fixed esxdos handler segfaults when using a file handler that was a directory
 Esxdos handler: add f_mkdir function 
 Fixed rom loading: no more cpu panic when the rom is not found 

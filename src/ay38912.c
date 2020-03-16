@@ -1082,7 +1082,7 @@ void procesar_aymidi_rs232_dato_midi(z80_byte value)
 	//Si lo tenemos habilitado
 	if (aymidi_rs232_enabled.v==0) return;
 
-	printf("Sending MIDI command: %02XH\n",value);
+	printf("Sending MIDI data: %02XH\n",value);
 	audio_midi_output_raw(value);	
 }
 
@@ -1196,7 +1196,7 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 	//printf ("Out port ay chip. Puerto: %d Valor: %d\n",puerto,value);
 
-	if (puerto==49149 && ay_3_8912_registro_sel[ay_chip_selected]==14) {
+	if (puerto==49149 && (ay_3_8912_registro_sel[ay_chip_selected]==14 || ay_3_8912_registro_sel[ay_chip_selected]==15) ) {
 		//printf ("Out midi valor: %d\n",value);
 		//old_ay3_mid_handle(value);
 		nuevo_aymidi_rs232_handle(value);
