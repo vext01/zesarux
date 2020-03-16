@@ -194,9 +194,9 @@ __FEATURES__
 
 * Handles RAM, EPROM, Intel Flash and Hybrid (RAM+EPROM) cards on Z88
 
-* Handles compressed formats zip, tar, rar, gz through external utilities
+* Handles compressed formats zip (with internal decompressor), and tar, rar, gz through external utilities
 
-* Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
+* Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
 
 * Real time playback from AY Chip sound to external MIDI device 
 
