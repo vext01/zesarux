@@ -104,6 +104,7 @@ ULA, Y est~ accesible en el bit 4 dc la direc~.i~n 1FFDh (8189). El estado de la
 procedente de la impresora puede ser leido en el bit 0 de la direccion OFFDh (4093).
 310
 
+RE, RF: Registros de AY-RS232 para midi externo
 
 
 */
@@ -1008,7 +1009,7 @@ void establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 z80_byte ay3_buffer_rs232[255];
 int ay3_buffer_rs232_index=0;
 
-void ay3_mid_handle(z80_byte value)
+void old_ay3_mid_handle(z80_byte value)
 {
 	//Si envia 255, resetear
 	if (value==255) {
@@ -1046,6 +1047,123 @@ audio_midi_output_raw(acumulado);
 }
 
 
+
+
+// Emulación y gestión de los dos registros de conexión con el chip AY mediante protocolo serie
+// Gracias a Miguel Angel Rodriguez Jodar por este código
+
+// Nota: toda variable usada en esta emulación tiene prefijo aymidi_rs232_
+// para distinguirla de la parte que envia a midi, o del exportador a archivos .mid
+
+// estados de mi FSM
+enum AYMIDI_RS232_ESTADOS {ESPERA_START, LEE_BIT, ESPERA_STOP};
+
+// esta variable es para medir diferencias de tiempo entre dos
+// escrituras al AY. Guarda el T-estado de la anterior escritura
+static unsigned aymidi_rs232_tbefore = 0;
+
+// esta variable es el estado de la pequeÒa FSM que vamos a usar
+enum AYMIDI_RS232_ESTADOS aymidi_rs232_midi_state = ESPERA_START;
+
+// diferencia de tiempo entre dos escrituras al puerto MIDI
+int aymidi_rs232_diftime;
+
+// aqui se ir· ensamblando el byte emitido por MIDI
+static unsigned char aymidi_rs232_dato_midi;
+
+// contador de aymidi_rs232_bits
+static int aymidi_rs232_bits;
+
+
+void procesar_aymidi_rs232_dato_midi(z80_byte value)
+{
+	audio_midi_output_raw(value);	
+}
+
+
+void aymidi_rs232_miguel(int output_bit)
+{
+
+// Uso variable de t estados parcial para esto. Nota: esta variable no se incrementa en el core_reduced
+aymidi_rs232_diftime = (debug_t_estados_parcial+ - aymidi_rs232_tbefore)/cpu_turbo_speed;
+aymidi_rs232_tbefore = debug_t_estados_parcial;
+
+switch (aymidi_rs232_midi_state)
+{
+  case ESPERA_START:
+    if (output_bit == 0) // seÒal de START v·lida!
+    {
+      aymidi_rs232_midi_state = LEE_BIT;
+      aymidi_rs232_dato_midi = 0;
+      aymidi_rs232_bits = 0;
+      break;
+    }  // en otro caso, seguimos esperando una seÒal v·lida...
+  case LEE_BIT:
+    if (100<=aymidi_rs232_diftime && aymidi_rs232_diftime<=120)  // si llegÛ a tiempo...
+    {
+      aymidi_rs232_dato_midi >>= 1;  // desplazamos a la derecha
+      aymidi_rs232_dato_midi |= (output_bit << 7); // y plantamos el bit leido de MIDI en el bit 7
+      aymidi_rs232_bits++;                // asÌ vamos leyendo desde el LSb hasta el MSb
+      if (aymidi_rs232_bits == 8)
+        aymidi_rs232_midi_state = ESPERA_STOP;
+    }
+    else  // ha llegado una escritura, pero fuera de tiempo
+    {
+      if (output_bit == 1)  // si es estado inactivo, volvemos al principio
+        aymidi_rs232_midi_state = ESPERA_START;
+      else
+      {  // si no, lo consideramos una nueva seÒal de START. Empezamos otra vez a leer aymidi_rs232_bits
+        aymidi_rs232_dato_midi = 0;
+        aymidi_rs232_bits = 0;
+      }
+    }
+    break;
+  case ESPERA_STOP:
+    if (100<=aymidi_rs232_diftime && aymidi_rs232_diftime<=120)  // si llegÛ a tiempo...
+    {
+      if (output_bit == 1) // seÒal de STOP v·lida!
+      {
+        procesar_aymidi_rs232_dato_midi(aymidi_rs232_dato_midi); // hacemos lo que sea con el dato recibido
+        aymidi_rs232_midi_state = ESPERA_START;
+      }
+      else
+        aymidi_rs232_midi_state = ESPERA_START; // seÒal de STOP no v·lida. Se descarta el dato
+    }
+    else  // no llegÛ a tiempo
+    {
+      if (output_bit == 1)
+        aymidi_rs232_midi_state = ESPERA_START;
+      else
+      {  // lo consideramos una nueva seÒal de START
+        aymidi_rs232_midi_state = LEE_BIT;
+        aymidi_rs232_dato_midi = 0;
+        aymidi_rs232_bits = 0;
+      }
+    }
+    break;
+  default:
+    aymidi_rs232_midi_state = ESPERA_START;
+    break;
+}
+
+}
+
+// Fin emulación y gestión de los dos registros de conexión con el chip AY mediante protocolo serie
+
+
+
+
+void nuevo_aymidi_rs232_handle(z80_byte value)
+{
+	//Leo bit 2 y envio
+	int mibit;
+	if (value & 4) mibit=1;
+	else mibit=0;
+
+	aymidi_rs232_miguel(mibit);
+}
+
+
 //Enviar valor a puerto
 void out_port_ay(z80_int puerto,z80_byte value)
 {
@@ -1058,7 +1176,8 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 	if (puerto==49149 && ay_3_8912_registro_sel[ay_chip_selected]==14) {
 		printf ("Out midi valor: %d\n",value);
-		ay3_mid_handle(value);
+		//old_ay3_mid_handle(value);
+		nuevo_aymidi_rs232_handle(value);
 	}
 	//if (puerto==65533 && value>=14) printf("Out seleccion registro valor: %d\n",value);
 
