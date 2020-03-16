@@ -870,13 +870,17 @@ int alsa_mid_unsubscribe_midi_port(void)
 }
 
 
+ snd_rawmidi_t *alsa_raw_handle_out = 0;
+
+char alsa_mid_device_out="/dev/midi1";
+
 
 //enviar nota midi raw inmediatamente 
 int alsa_midi_raw(z80_byte value)
 {
-
+	snd_rawmidi_write(alsa_raw_handle_out,value,1);
 	//debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
-
+/*
 	snd_seq_event_t ev;
 
 	snd_seq_ev_clear(&ev);
@@ -889,6 +893,7 @@ int alsa_midi_raw(z80_byte value)
 	ev.type=value;
 	//ev.data.raw8.d[0]=value;
 	return (snd_seq_event_output(zesarux_mid_alsa_audio_info.handle, &ev));
+	*/
 
 }
 
@@ -935,6 +940,22 @@ int alsa_note_off(unsigned char channel, unsigned char note,unsigned char veloci
 	return (snd_seq_event_output(zesarux_mid_alsa_audio_info.handle, &ev));
 
 }
+
+
+
+
+//Inicializar el sistema ALSA en modo raw
+int alsa_mid_initialize_audio_raw(void)
+{
+
+		int err = snd_rawmidi_open(NULL,&alsa_raw_handle_out,alsa_mid_device_out,0);
+        if (err) {
+            debug_printf (VERBOSE_ERR,"snd_rawmidi_open %s failed",alsa_mid_device_out);
+        }
+
+	return 0;
+}
+
 
 
 
@@ -1072,7 +1093,7 @@ int alsa_mid_initialize_all(void)
 
 	alsa_mid_initialize_volume();
 
-
+	if (alsa_mid_initialize_audio_raw() ) return 1;
 
 	return 0;
 
