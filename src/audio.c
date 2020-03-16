@@ -3231,7 +3231,7 @@ void windows_midi_raw(z80_byte value)
 
 
 
-  windows_midi_message mensaje;
+  /*windows_midi_message mensaje;
 
   mensaje.data[0]=value;
   mensaje.data[1]=0;
@@ -3241,7 +3241,11 @@ void windows_midi_raw(z80_byte value)
 
   windows_mid_add_note(mensaje);
 
-  return 0;
+  return ;*/
+
+  //midiStreamOut(hms,pmh,1)
+
+
 }
 
 
