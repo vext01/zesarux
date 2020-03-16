@@ -1,4 +1,4 @@
-Version 8.2 - xxx edition. 2 March 2020
+Version 8.2 - xxx edition. 16 March 2020
 
 Added F key to toggle top cpu speed
 Fixed esxdos handler segfaults when using a file handler that was a directory
