@@ -1074,9 +1074,14 @@ static unsigned char aymidi_rs232_dato_midi;
 // contador de aymidi_rs232_bits
 static int aymidi_rs232_bits;
 
+//Si esta habilitado el envio de valores de registros midi 
+z80_bit aymidi_rs232_enabled={1};
 
 void procesar_aymidi_rs232_dato_midi(z80_byte value)
 {
+	//Si lo tenemos habilitado
+	if (aymidi_rs232_enabled.v==0) return;
+
 	printf("Sending MIDI command: %02XH\n",value);
 	audio_midi_output_raw(value);	
 }

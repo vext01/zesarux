@@ -2751,6 +2751,9 @@ void midi_output_frame_event(void)
 void audio_midi_output_raw(z80_byte value)
 {
 
+
+	if (audio_midi_output_initialized==0) return;
+
 #ifdef COMPILE_COREAUDIO
 		coreaudio_mid_raw_send(value);
 		
