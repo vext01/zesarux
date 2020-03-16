@@ -872,7 +872,7 @@ int alsa_mid_unsubscribe_midi_port(void)
 
  snd_rawmidi_t *alsa_raw_handle_out = 0;
 
-char *alsa_mid_device_out="hw0,0";
+char *alsa_mid_device_out="hw:0,0";
 
 
 //enviar nota midi raw inmediatamente 
@@ -950,7 +950,7 @@ int alsa_note_off(unsigned char channel, unsigned char note,unsigned char veloci
 int alsa_mid_initialize_audio_raw(void)
 {
 
-		int err = snd_rawmidi_open(NULL,&alsa_raw_handle_out,alsa_mid_device_out,0);
+		int err = snd_rawmidi_open(NULL,&alsa_raw_handle_out,alsa_mid_device_out,SND_RAWMIDI_NONBLOCK);
         if (err) {
             debug_printf (VERBOSE_ERR,"snd_rawmidi_open %s failed: %d",alsa_mid_device_out,err);
 			return 1;
