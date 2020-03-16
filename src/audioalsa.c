@@ -879,26 +879,39 @@ char *alsa_mid_device_out="hw:0,0";
 int alsa_midi_raw(z80_byte value)
 {
 	snd_rawmidi_write(alsa_raw_handle_out,value,1);
-	//debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
-/*
-	snd_seq_event_t ev;
-
-	snd_seq_ev_clear(&ev);
-
-	snd_seq_ev_set_source(&ev, zesarux_mid_alsa_audio_info.port);
-	snd_seq_ev_set_subs(&ev);
-
-	snd_seq_ev_set_direct(&ev);
-	//snd_seq_ev_set_noteon(&ev, channel, note, velocity);
-	ev.type=value;
-	//ev.data.raw8.d[0]=value;
-	return (snd_seq_event_output(zesarux_mid_alsa_audio_info.handle, &ev));
-	*/
+	
 
 	return 0;
 
 }
 
+
+//Hacer note on de una nota inmediatamente en modo raw
+int alsa_note_on_raw(unsigned char channel, unsigned char note,unsigned char velocity)
+{
+
+  debug_printf (VERBOSE_PARANOID,"noteon event channel %d note %d velocity %d",channel,note,velocity);
+
+  z80_byte noteon[] = {0x90, note, velocity}; 
+
+  snd_rawmidi_write(alsa_raw_handle_out,noteon,3);
+  
+
+  return 0;
+}
+
+int alsa_note_off_raw(unsigned char channel, unsigned char note,unsigned char velocity)
+{
+
+  debug_printf (VERBOSE_PARANOID,"noteoff event channel %d note %d velocity %d",channel,note,velocity);
+
+  z80_byte noteoff[] = {0x80, note, velocity}; 
+
+  snd_rawmidi_write(alsa_raw_handle_out,noteoff,3);
+
+
+  return 0;  
+}
 
 
 
