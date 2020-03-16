@@ -872,7 +872,7 @@ int alsa_mid_unsubscribe_midi_port(void)
 
  snd_rawmidi_t *alsa_raw_handle_out = 0;
 
-char *alsa_mid_device_out="/dev/midi1";
+char *alsa_mid_device_out="hw0,0";
 
 
 //enviar nota midi raw inmediatamente 
