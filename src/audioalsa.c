@@ -1173,7 +1173,15 @@ void alsa_mid_finish_all_noraw(void)
 
 void alsa_mid_finish_all_raw(void)
 {
-	//alsa_mid_unsubscribe_midi_port();
+
+
+		int err=snd_rawmidi_close(alsa_raw_handle_out);
+
+	if (err<0) {
+		debug_printf (VERBOSE_ERR,"Error closing midi alsa raw port");
+
+	}
+
 }
 
 void alsa_mid_finish_all(void)
