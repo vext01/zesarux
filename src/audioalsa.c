@@ -1173,7 +1173,7 @@ void alsa_mid_finish_all_noraw(void)
 
 void alsa_mid_finish_all_raw(void)
 {
-	alsa_mid_unsubscribe_midi_port();
+	//alsa_mid_unsubscribe_midi_port();
 }
 
 void alsa_mid_finish_all(void)
