@@ -16422,6 +16422,12 @@ void menu_direct_alsa_midi_device_raw(MENU_ITEM_PARAMETERS)
 }
 #endif
 
+
+void menu_midi_output_test(MENU_ITEM_PARAMETERS)
+{
+	audio_midi_output_note_on(0, 60); //60=central DO
+}
+
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_direct_midi_output;
@@ -16473,6 +16479,11 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
 			(audio_midi_output_initialized ? "Yes" : "No" ) );
+
+
+		if (audio_midi_output_initialized) {
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_test,NULL,"Test MIDI");
+		}
 
 		//Parece que no funciona la gestion de volumen
 		//menu_add_item_menu_format(array_menu_direct_alsa_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_volume,NULL,"Volume: %d%%",alsa_midi_volume);
