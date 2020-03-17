@@ -16409,7 +16409,10 @@ void menu_direct_alsa_midi_output_list_devices(MENU_ITEM_PARAMETERS)
 }
 
 
-
+void menu_direct_midi_output_rawmode(MENU_ITEM_PARAMETERS)
+{
+	audio_midi_raw_mode ^=1;
+}
 
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 {
@@ -16426,9 +16429,17 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 #ifdef COMPILE_ALSA
 		//En Alsa Linux
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_list_devices,NULL,"List midi devices");
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_client,menu_midi_output_initialized_cond,"Midi client: %d",audio_midi_client);
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_port,menu_midi_output_initialized_cond,"Midi port: %d",audio_midi_port);
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_rawmode,NULL,"[%c] MIDI Raw mode",(audio_midi_raw_mode ? 'X' : ' ' ))
+
+		if (menu_direct_midi_output_rawmode) {
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Device: %s",alsa_mid_device_out);
+		}
+
+		else {
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_list_devices,NULL,"List midi devices");
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_client,menu_midi_output_initialized_cond,"Midi client: %d",audio_midi_client);
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_port,menu_midi_output_initialized_cond,"Midi port: %d",audio_midi_port);
+		}
 #endif
 
 #ifdef MINGW

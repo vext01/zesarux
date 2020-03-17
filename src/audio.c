@@ -2829,6 +2829,9 @@ int audio_midi_port=0;
 //Client solo es usado por alsa
 //Port lo utilizan alsa y windows 
 
+//de momento usado en Linux
+int audio_midi_raw_mode=1;
+
 
 void audio_midi_output_finish(void)
 {

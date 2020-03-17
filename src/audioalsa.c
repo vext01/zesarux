@@ -874,14 +874,16 @@ int alsa_mid_unsubscribe_midi_port(void)
 
 char *alsa_mid_device_out="hw:1,0";
 
-int alsa_mid_raw_mode=1;
+
 
 
 //enviar nota midi raw inmediatamente, esto viene de las funciones aymidi_rs232_, solo valido cuando hay modo raw
 int alsa_midi_raw(z80_byte value)
 {
 
-	if (!alsa_mid_raw_mode) return 0;
+	if (!audio_midi_raw_mode) return 0;
+
+	printf ("Sending alsa_midi_raw value %02XH\n",value);
 
 	snd_rawmidi_write(alsa_raw_handle_out,value,1);
 	
@@ -937,7 +939,7 @@ int alsa_note_on_raw(unsigned char channel, unsigned char note,unsigned char vel
 
 int alsa_note_on(unsigned char channel, unsigned char note,unsigned char velocity)
 {
-	if (alsa_mid_raw_mode) alsa_note_on_raw(channel, note, velocity);
+	if (audio_midi_raw_mode) alsa_note_on_raw(channel, note, velocity);
 	else alsa_note_on_noraw(channel, note, velocity);
 }
 
@@ -978,7 +980,7 @@ int alsa_note_off_raw(unsigned char channel, unsigned char note,unsigned char ve
 
 int alsa_note_off(unsigned char channel, unsigned char note,unsigned char velocity)
 {
-	if (alsa_mid_raw_mode) alsa_note_off_raw(channel, note, velocity);
+	if (audio_midi_raw_mode) alsa_note_off_raw(channel, note, velocity);
 	else alsa_note_off_noraw(channel, note, velocity);
 }
 
@@ -1158,7 +1160,7 @@ int alsa_mid_initialize_all_raw(void)
 
 int alsa_mid_initialize_all(void)
 {
-	if (alsa_mid_raw_mode) alsa_mid_initialize_all_raw();
+	if (audio_midi_raw_mode) alsa_mid_initialize_all_raw();
 	else alsa_mid_initialize_all_noraw();
 }
 
@@ -1176,7 +1178,7 @@ void alsa_mid_finish_all_raw(void)
 
 void alsa_mid_finish_all(void)
 {
-	if (alsa_mid_raw_mode) alsa_mid_finish_all_raw();
+	if (audio_midi_raw_mode) alsa_mid_finish_all_raw();
 	else alsa_mid_finish_all_noraw();	
 }
 
@@ -1195,6 +1197,6 @@ void alsa_midi_output_flush_output_raw(void)
 
 void alsa_midi_output_flush_output(void)
 {
-	if (alsa_mid_raw_mode) alsa_midi_output_flush_output_raw();
+	if (audio_midi_raw_mode) alsa_midi_output_flush_output_raw();
 	else alsa_midi_output_flush_output_noraw();	
 }
