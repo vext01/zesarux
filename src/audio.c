@@ -3202,6 +3202,40 @@ void windows_midi_output_flush_output(void)
 }
 
 
+HMIDISTRM lphStream;
+
+void windows_mid_initialize_raw(void)
+{
+	
+	//LPHMIDISTRM lphStream;
+
+
+//LPUINT puDeviceID;
+unsigned int puDeviceID;
+DWORD cMidi=1;
+DWORD_PTR dwCallback=NULL;
+DWORD_PTR dwInstance=NULL;
+DWORD fdwOpen=CALLBACK_NULL;
+
+puDeviceID=audio_midi_port; //que dispositivo???
+
+//open in raw mode
+MMRESULT resultado;
+  resultado=midiStreamOpen(&lphStream,&puDeviceID,cMidi,dwCallback,dwInstance,fdwOpen);
+  if (resultado!=MMSYSERR_NOERROR) {
+char men[100];
+    if (resultado==MMSYSERR_BADDEVICEID) strcpy(men,"BADDEVICEID");
+    else if (resultado==MMSYSERR_INVALPARAM) strcpy(men,"INVALPARAM");
+    else if (resultado==MMSYSERR_NOMEM) strcpy(men,"NOMEM");
+    else sprintf(men,"error number: %d",resultado);
+
+    debug_printf(VERBOSE_ERR,"Error opening MIDI in raw mode. %s",men);
+    //return 1;
+   }
+
+midiStreamRestart(lphStream);
+}
+
 
 int windows_mid_initialize_all(void)
 {
@@ -3212,7 +3246,7 @@ int windows_mid_initialize_all(void)
       return 1;
    }
 
-
+windows_mid_initialize_raw();
 
   return 0;
 }
@@ -3229,7 +3263,16 @@ void windows_mid_finish_all(void)
 void windows_midi_raw(z80_byte value)
 {
 
+MIDIHDR buffer;
+//LPMIDIHDR buffer;
 
+buffer.lpData=&value;
+buffer.dwBufferLength=1;
+buffer.dwFlags=0;
+midiOutPrepareHeader((HMIDIOUT)lphStream,&buffer,sizeof(MIDIHDR));
+
+midiStreamOut(lphStream,&buffer,sizeof(MIDIHDR));
+printf("Enviando windows_midi raw value %02XH\n",value);
 
   /*windows_midi_message mensaje;
 
