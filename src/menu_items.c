@@ -16425,7 +16425,14 @@ void menu_direct_alsa_midi_device_raw(MENU_ITEM_PARAMETERS)
 
 void menu_midi_output_test(MENU_ITEM_PARAMETERS)
 {
-	audio_midi_output_note_on(0, 60); //60=central DO
+	//audio_midi_output_note_on(0, 60); //60=central DO
+
+	// Does it sound familiar? ;)
+	audio_midi_output_note_on(0, 61); //61=C#
+
+	audio_midi_output_note_on(0, 58); //58=A#
+
+	audio_midi_output_note_on(0, 54); //54=F#
 }
 
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
