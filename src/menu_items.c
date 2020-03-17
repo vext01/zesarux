@@ -16428,6 +16428,8 @@ void menu_midi_output_test(MENU_ITEM_PARAMETERS)
 	//audio_midi_output_note_on(0, 60); //60=central DO
 
 	// Does it sound familiar? ;)
+
+	//Por que no suenan exactamente a la vez?
 	audio_midi_output_note_on(0, 61); //61=C#
 
 	audio_midi_output_note_on(0, 58); //58=A#

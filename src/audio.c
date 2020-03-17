@@ -2765,7 +2765,8 @@ alsa_midi_raw(value);
 
 
 #ifdef MINGW
-windows_midi_raw(value);
+//De momento no va
+//windows_midi_raw(value);
 #endif
 
 }
@@ -3252,14 +3253,15 @@ midiStreamRestart(out);
 int windows_mid_initialize_all(void)
 {
 // Open the MIDI output port
-//temp disabled
-   /*int flag = midiOutOpen(&windows_midi_device, audio_midi_port, 0, 0, CALLBACK_NULL);
+
+   int flag = midiOutOpen(&windows_midi_device, audio_midi_port, 0, 0, CALLBACK_NULL);
    if (flag != MMSYSERR_NOERROR) {
       debug_printf(VERBOSE_ERR,"Error opening MIDI Output");
       return 1;
-   }*/
+   }
 
-windows_mid_initialize_raw();
+//De momento nada de RAW en windows
+//windows_mid_initialize_raw();
 
   return 0;
 }
