@@ -1109,7 +1109,7 @@ int alsa_mid_initialize_all(void)
 
 	alsa_mid_initialize_volume();
 
-	if (alsa_mid_initialize_audio_raw() ) return 1;
+	//if (alsa_mid_initialize_audio_raw() ) return 1;
 
 	return 0;
 
