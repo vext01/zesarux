@@ -2821,6 +2821,21 @@ void audio_midi_output_flush_output(void)
 }
 
 
+void audio_midi_output_reset(void)
+{
+	#ifdef COMPILE_ALSA
+	alsa_midi_output_reset();
+	#endif
+
+	#ifdef COMPILE_COREAUDIO
+	coreaudio_midi_output_reset();
+	#endif	
+
+	#ifdef MINGW
+	windows_midi_output_reset();
+	#endif	
+}
+
 //Notas anteriores sonando, 3 canales
 char midi_output_nota_sonando[MAX_AY_CHIPS*3][4];
 
@@ -3264,6 +3279,11 @@ int windows_mid_initialize_all(void)
 //windows_mid_initialize_raw();
 
   return 0;
+}
+
+void windows_midi_output_reset(void)
+{
+	
 }
 
 void windows_mid_finish_all(void)

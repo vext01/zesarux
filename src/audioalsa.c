@@ -877,6 +877,11 @@ int alsa_mid_unsubscribe_midi_port(void)
 char alsa_mid_device_out[MAX_ALSA_MID_DEVICE_OUT]="hw:0,0";
 
 
+void alsa_midi_output_reset(void)
+{
+	
+}
+
 //enviar nota midi raw inmediatamente, esto viene de las funciones aymidi_rs232_, solo valido cuando hay modo raw
 int alsa_midi_raw(z80_byte value)
 {

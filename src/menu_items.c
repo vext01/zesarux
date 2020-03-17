@@ -16435,6 +16435,14 @@ void menu_midi_output_test(MENU_ITEM_PARAMETERS)
 	audio_midi_output_note_on(0, 54); //54=F#
 }
 
+
+void menu_midi_output_reset(MENU_ITEM_PARAMETERS)
+{
+	audio_midi_output_reset();
+
+}
+
+
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_direct_midi_output;
@@ -16484,12 +16492,15 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
 		}
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_SEPARADOR,NULL,NULL,"[X] Initialized",
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_SEPARADOR,NULL,NULL,"[%c] Initialized",
 			(audio_midi_output_initialized ? 'X' : ' ' ) );
 
 
 		if (audio_midi_output_initialized) {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_test,NULL,"Test MIDI");
+
+
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_reset,NULL,"Reset channels");
 		}
 
 		//Parece que no funciona la gestion de volumen

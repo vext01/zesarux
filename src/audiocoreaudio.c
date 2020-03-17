@@ -564,7 +564,10 @@ void coreaudio_midi_output_flush_output(void)
 
 }
 
-
+void coreaudio_midi_output_reset(void)
+{
+  
+}
 
 int coreaudio_mid_initialize_all(void)
 {
