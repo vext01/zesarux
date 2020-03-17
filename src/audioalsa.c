@@ -885,7 +885,7 @@ int alsa_midi_raw(z80_byte value)
 
 	printf ("Sending alsa_midi_raw value %02XH\n",value);
 
-	snd_rawmidi_write(alsa_raw_handle_out,value,1);
+	snd_rawmidi_write(alsa_raw_handle_out,&value,1);
 	
 
 	return 0;
