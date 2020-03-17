@@ -16431,7 +16431,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 		//En Alsa Linux
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_rawmode,menu_midi_output_initialized_cond,"[%c] MIDI Raw mode",(audio_midi_raw_mode ? 'X' : ' ' ));
 
-		if (menu_direct_midi_output_rawmode) {
+		if (audio_midi_raw_mode) {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,menu_midi_output_initialized_cond,"Device: %s",alsa_mid_device_out);
 		}
 
