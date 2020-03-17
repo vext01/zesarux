@@ -3204,7 +3204,7 @@ void windows_midi_output_flush_output(void)
 
 HMIDISTRM lphStream;
 
-void windows_mid_initialize_raw(void)
+void other_windows_mid_initialize_raw(void)
 {
 	
 	//LPHMIDISTRM lphStream;
@@ -3236,15 +3236,25 @@ char men[100];
 midiStreamRestart(lphStream);
 }
 
+HMIDISTRM out;
+
+void windows_mid_initialize_raw(void)
+{
+unsigned int device = 0;
+midiStreamOpen(&out, &device, 1, NULL, 0, CALLBACK_NULL);
+
+midiStreamRestart(out);
+}
 
 int windows_mid_initialize_all(void)
 {
 // Open the MIDI output port
-   int flag = midiOutOpen(&windows_midi_device, audio_midi_port, 0, 0, CALLBACK_NULL);
+//temp disabled
+   /*int flag = midiOutOpen(&windows_midi_device, audio_midi_port, 0, 0, CALLBACK_NULL);
    if (flag != MMSYSERR_NOERROR) {
       debug_printf(VERBOSE_ERR,"Error opening MIDI Output");
       return 1;
-   }
+   }*/
 
 windows_mid_initialize_raw();
 
@@ -3261,6 +3271,17 @@ void windows_mid_finish_all(void)
 }
 
 void windows_midi_raw(z80_byte value)
+{
+
+
+	MIDIHDR mhdr;
+mhdr.lpData = &value;
+mhdr.dwBufferLength = mhdr.dwBytesRecorded = 1;
+mhdr.dwFlags = 0;
+midiOutPrepareHeader((HMIDIOUT)out, &mhdr, sizeof(MIDIHDR));
+}
+
+void other_windows_midi_raw(z80_byte value)
 {
 
 MIDIHDR buffer;
