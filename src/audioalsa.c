@@ -937,8 +937,8 @@ int alsa_note_on_raw(unsigned char channel, unsigned char note,unsigned char vel
 
 int alsa_note_on(unsigned char channel, unsigned char note,unsigned char velocity)
 {
-	if (alsa_mid_raw_mode) alsa_note_on_raw(channel, note, velocity)
-	else alsa_note_on_noraw(channel, note, velocity)
+	if (alsa_mid_raw_mode) alsa_note_on_raw(channel, note, velocity);
+	else alsa_note_on_noraw(channel, note, velocity);
 }
 
 
@@ -978,8 +978,8 @@ int alsa_note_off_raw(unsigned char channel, unsigned char note,unsigned char ve
 
 int alsa_note_off(unsigned char channel, unsigned char note,unsigned char velocity)
 {
-	if (alsa_mid_raw_mode) alsa_note_off_raw(channel, note, velocity)
-	else alsa_note_off_noraw(channel, note, velocity)
+	if (alsa_mid_raw_mode) alsa_note_off_raw(channel, note, velocity);
+	else alsa_note_off_noraw(channel, note, velocity);
 }
 
 
