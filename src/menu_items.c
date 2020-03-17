@@ -16414,6 +16414,14 @@ void menu_direct_midi_output_rawmode(MENU_ITEM_PARAMETERS)
 	audio_midi_raw_mode ^=1;
 }
 
+#ifdef COMPILE_ALSA
+void menu_direct_alsa_midi_device_raw(MENU_ITEM_PARAMETERS)
+{
+    menu_ventana_scanf("MIDI device name",alsa_mid_device_out,MAX_ALSA_MID_DEVICE_OUT);
+
+}
+#endif
+
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_direct_midi_output;
@@ -16430,9 +16438,16 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 #ifdef COMPILE_ALSA
 		//En Alsa Linux
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_rawmode,menu_midi_output_initialized_cond,"[%c] MIDI Raw mode",(audio_midi_raw_mode ? 'X' : ' ' ));
+		menu_add_item_menu_tooltip(array_menu_direct_midi_output,"RAW mode needed to emulate AY MIDI registers");
+		menu_add_item_menu_ayuda(array_menu_direct_midi_output,"RAW mode needed to emulate AY MIDI registers");
 
 		if (audio_midi_raw_mode) {
-			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,menu_midi_output_initialized_cond,"Device: %s",alsa_mid_device_out);
+
+
+                char string_device_shown[10];
+                menu_tape_settings_trunc_name(alsa_mid_device_out,string_device_shown,10);
+
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_device_raw,menu_midi_output_initialized_cond,"Device: %s",string_device_shown);
 		}
 
 		else {
