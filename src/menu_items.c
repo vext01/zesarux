@@ -16428,8 +16428,6 @@ void menu_midi_output_test(MENU_ITEM_PARAMETERS)
 	//audio_midi_output_note_on(0, 60); //60=central DO
 
 	// Does it sound familiar? ;)
-
-	//Por que no suenan exactamente a la vez?
 	audio_midi_output_note_on(0, 61); //61=C#
 
 	audio_midi_output_note_on(0, 58); //58=A#
@@ -16467,17 +16465,17 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 		else {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_output_list_devices,NULL,"List midi devices");
-			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_client,menu_midi_output_initialized_cond,"Midi client: %d",audio_midi_client);
-			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_port,menu_midi_output_initialized_cond,"Midi port: %d",audio_midi_port);
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_client,menu_midi_output_initialized_cond,"[%d] Midi client",audio_midi_client);
+			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_port,menu_midi_output_initialized_cond,"[%d] Midi port",audio_midi_port);
 		}
 #endif
 
 #ifdef MINGW
 		//en Windows
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_port,menu_midi_output_initialized_cond,"Midi port: %d",audio_midi_port);
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_port,menu_midi_output_initialized_cond,"[%d] Midi port",audio_midi_port);
 #endif
 
-
+ 
 	
 		if (audio_midi_output_initialized==0) {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Initialize midi");
@@ -16486,8 +16484,8 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
 		}
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,NULL,NULL,"Initialized: %s",
-			(audio_midi_output_initialized ? "Yes" : "No" ) );
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_SEPARADOR,NULL,NULL,"[X] Initialized",
+			(audio_midi_output_initialized ? 'X' : ' ' ) );
 
 
 		if (audio_midi_output_initialized) {

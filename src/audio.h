@@ -166,6 +166,9 @@ extern void audio_midi_output_frame_event(void);
 
 extern int audio_midi_raw_mode;
 
+extern int audio_midi_output_note_on(unsigned char channel, unsigned char note);
+extern void audio_midi_output_raw(z80_byte value);
+
 //Para cuantas notas da esto aprox?
 #define MAX_MID_EXPORT_BUFFER 1000000
 
