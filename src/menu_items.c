@@ -16485,14 +16485,14 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
  
 	
-		if (audio_midi_output_initialized==0) {
+		/*if (audio_midi_output_initialized==0) {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Initialize midi");
 		}
 		else {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
-		}
+		}*/
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_SEPARADOR,NULL,NULL,"[%c] Initialized",
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_SEPARADOR,menu_midi_output_initialize,NULL,"[%c] Initialized",
 			(audio_midi_output_initialized ? 'X' : ' ' ) );
 
 
