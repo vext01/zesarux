@@ -16492,7 +16492,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"Disable midi");
 		}*/
 
-		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_SEPARADOR,menu_midi_output_initialize,NULL,"[%c] Initialized",
+		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_initialize,NULL,"[%c] Initialized",
 			(audio_midi_output_initialized ? 'X' : ' ' ) );
 
 
