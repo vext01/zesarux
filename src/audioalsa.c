@@ -888,7 +888,7 @@ int alsa_midi_raw(z80_byte value)
 
 	if (!audio_midi_raw_mode) return 0;
 
-	printf ("Sending alsa_midi_raw value %02XH\n",value);
+	//printf ("Sending alsa_midi_raw value %02XH\n",value);
 
 	snd_rawmidi_write(alsa_raw_handle_out,&value,1);
 	

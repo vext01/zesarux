@@ -2826,7 +2826,7 @@ void audio_midi_raw_parse_value(z80_byte value)
 		switch (audio_midi_raw_parse_estado) {
 			//Si estamos en estado desconocido, pasar a MIDI_STATUS_RECEIVING_DATA
 			case MIDI_STATUS_UNKNOWN:
-				printf ("Pasando a MIDI_STATUS_RECEIVING_DATA\n");
+				//printf ("Pasando a MIDI_STATUS_RECEIVING_DATA\n");
 				audio_midi_raw_parse_indice=0;
 				audio_midi_raw_parse_array[audio_midi_raw_parse_indice++]=value;
 
@@ -2835,8 +2835,11 @@ void audio_midi_raw_parse_value(z80_byte value)
 
 			case MIDI_STATUS_RECEIVING_DATA:
 				//Recibimos byte de status mientras recibiamos datos. Finalizar
-				printf ("Received status byte while receiving data. Starting a new command. Previous command lenght: %d\n",audio_midi_raw_parse_indice);
+				//printf ("Received status byte while receiving data. Starting a new command. Previous command lenght: %d\n",audio_midi_raw_parse_indice);
 
+
+				/* 
+				//Todo esto solo es debug
 				char buf_status_mensaje[MAX_MIDI_STATUS_COMMAND_TEXT];
 
 				audio_midi_raw_get_status_name(audio_midi_raw_parse_array[0],buf_status_mensaje);
@@ -2866,8 +2869,8 @@ void audio_midi_raw_parse_value(z80_byte value)
 					}
 				}
 
-				
-
+				//Fin Debug
+				*/
 
 				audio_midi_raw_parse_indice=0;
 				audio_midi_raw_parse_array[audio_midi_raw_parse_indice++]=value;
@@ -2882,23 +2885,23 @@ void audio_midi_raw_parse_value(z80_byte value)
 	}
 
 	else {
-		printf ("audio_midi_raw_parse_value: is a data byte\n");
+		//printf ("audio_midi_raw_parse_value: is a data byte\n");
 
 		switch (audio_midi_raw_parse_estado) {
 			case MIDI_STATUS_UNKNOWN:
-				printf ("Receiving a data byte while in unknown state. Discarding\n");
+				//printf ("Receiving a data byte while in unknown state. Discarding\n");
 			break;
 
 			// Pues seguimos recibiendo datos
 			case MIDI_STATUS_RECEIVING_DATA:
-				printf ("Receiving a data byte while in receiving state. Adding it\n");
+				//printf ("Receiving a data byte while in receiving state. Adding it\n");
 
 				if (audio_midi_raw_parse_indice!=MAX_AUDIO_MIDI_RAW_PARSER_ARRAY) {
 					audio_midi_raw_parse_array[audio_midi_raw_parse_indice++]=value;
 				}
 
 				else {
-					printf ("Reached the end of audio_midi_raw_parse_array. Not adding it!\n");
+					//printf ("Reached the end of audio_midi_raw_parse_array. Not adding it!\n");
 				}
 			break;
 
@@ -3510,7 +3513,7 @@ void windows_midi_raw(z80_byte value)
 
 	//Estado anterior cual es?
 	if (audio_midi_raw_parse_estado==MIDI_STATUS_UNKNOWN) {
-		printf ("windows midi raw: previous state is unknown. Not sending anything\n");
+		//printf ("windows midi raw: previous state is unknown. Not sending anything\n");
 		return;
 	}
 
@@ -3522,7 +3525,7 @@ void windows_midi_raw(z80_byte value)
 	if (windows_midi_raw_multibyte) {
 		if (audio_midi_raw_parse_indice-windows_midi_raw_indice==2) {
 			enviar=1;
-			printf ("Es multibyte y ha dos mas para enviar\n");
+			//printf ("Es multibyte y ha dos mas para enviar\n");
 		}
 	}
 
@@ -3531,7 +3534,7 @@ void windows_midi_raw(z80_byte value)
 		if (audio_midi_raw_parse_indice-windows_midi_raw_indice==3) {
 			windows_midi_raw_multibyte=1;
 			enviar=1;
-			printf ("Son 3 bytes. Activamos multibyte\n");
+			//printf ("Son 3 bytes. Activamos multibyte\n");
 		}
 	}
 
@@ -3539,7 +3542,7 @@ void windows_midi_raw(z80_byte value)
 	if ( (value & 128)) {
 		enviar=1;
 		windows_midi_raw_multibyte=0;
-		printf ("Es byte de status\n");
+		//printf ("Es byte de status\n");
 	}	
 
 	///Enviar si hay al menos 3 bytes por enviar
@@ -3573,10 +3576,10 @@ void windows_midi_raw(z80_byte value)
 		  int i;
 		  int total=audio_midi_raw_parse_indice-windows_midi_raw_indice;
 
-		  printf ("Posible enviar total %d bytes a midi\n",total);
+		  //printf ("Posible enviar total %d bytes a midi\n",total);
 
 		  if (total>0) {
-			printf ("---Enviando total %d bytes a midi\n",total);
+			//printf ("---Enviando total %d bytes a midi\n",total);
 
 			int destino=0;
 			for (i=windows_midi_raw_indice;i<windows_midi_raw_indice+total;i++) {
@@ -3591,7 +3594,7 @@ void windows_midi_raw(z80_byte value)
 	}
 
 	else {
-		printf ("enviar=0\n");
+		//printf ("enviar=0\n");
 	}
 
 	/*else {

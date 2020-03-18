@@ -1042,7 +1042,7 @@ void procesar_aymidi_rs232_dato_midi(z80_byte value)
 	//Si lo tenemos habilitado
 	if (aymidi_rs232_enabled.v==0) return;
 
-	printf("Sending MIDI data: %02XH\n",value);
+	debug_printf (VERBOSE_DEBUG,"Sending MIDI data: %02XH",value);
 	audio_midi_output_raw(value);	
 }
 
