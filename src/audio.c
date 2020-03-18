@@ -2910,10 +2910,7 @@ void audio_midi_raw_parse_value(z80_byte value)
 	}
 }
 
-void audio_midi_raw_parse_value_post(z80_byte value)
-{
 
-}
 
 void audio_midi_output_raw(z80_byte value)
 {
@@ -2935,16 +2932,15 @@ alsa_midi_raw(value);
 
 #ifdef MINGW
 //De momento no va
-
+audio_midi_raw_parse_value(value);
 //Aqui windows solo tiene que enviar los datos del buffer audio_midi_raw_parse_array si el valor que envia
 //es de status (bit 7 alzado) y estado anterior no era unknown
+
 windows_midi_raw(value);
 #endif
 
-	audio_midi_raw_parse_value(value);
+	
 
-	// cambiar estado segun ese byte (pasar a MIDI_STATUS_RECEIVING_DATA si se ha recibido un byte de estado)
-	audio_midi_raw_parse_value_post(value);
 
 }
 
