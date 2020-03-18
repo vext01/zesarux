@@ -384,4 +384,4 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 -comandos reset midi no hace nada??
 
 
--esxdos handler que guarde ruta actual (el cwd de esxdos) en la config?
+-esxdos handler que guarde ruta actual (el cwd de esxdos) en la config? 
