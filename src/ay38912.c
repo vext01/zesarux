@@ -1059,7 +1059,7 @@ switch (aymidi_rs232_midi_state)
   case ESPERA_START:
     if (output_bit == 0) // seÒal de START v·lida!
     {
-	  printf("aymidi_rs232: Valid START signal\n");
+	  debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Valid START signal");
       aymidi_rs232_midi_state = LEE_BIT;
       aymidi_rs232_dato_midi = 0;
       aymidi_rs232_bits = 0;
@@ -1081,13 +1081,13 @@ switch (aymidi_rs232_midi_state)
 
       if (output_bit == 1)  {// si es estado inactivo, volvemos al principio
         aymidi_rs232_midi_state = ESPERA_START;
-		printf("aymidi_rs232: Start receiving from the beginning\n");
+		debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Start receiving from the beginning");
 	  }
       else
       {  // si no, lo consideramos una nueva seÒal de START. Empezamos otra vez a leer aymidi_rs232_bits
         aymidi_rs232_dato_midi = 0;
         aymidi_rs232_bits = 0;
-		printf("aymidi_rs232: Consider is as a START signal\n");
+		debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Consider is as a START signal");
       }
     }
     break;
@@ -1098,11 +1098,11 @@ switch (aymidi_rs232_midi_state)
       {
         procesar_aymidi_rs232_dato_midi(aymidi_rs232_dato_midi); // hacemos lo que sea con el dato recibido
         aymidi_rs232_midi_state = ESPERA_START;
-		printf("aymidi_rs232: Valid STOP signal\n");
+		debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Valid STOP signal");
       }
       else {
         aymidi_rs232_midi_state = ESPERA_START; // seÒal de STOP no v·lida. Se descarta el dato
-		printf("aymidi_rs232: Invalid STOP signal. Discard data\n");
+		debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Invalid STOP signal. Discard data");
 	  }
     }
     else  // no llegÛ a tiempo
@@ -1140,7 +1140,7 @@ void nuevo_aymidi_rs232_handle(z80_byte value)
 	if (value & 4) mibit=1;
 	else mibit=0;
 
-	printf ("Receiving AY-RS232 bit: %d\n",mibit);
+	debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Receiving AY-RS232 bit: %d",mibit);
 
 	aymidi_rs232_miguel(mibit);
 }
