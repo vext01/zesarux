@@ -1077,7 +1077,7 @@ switch (aymidi_rs232_midi_state)
     else  // ha llegado una escritura, pero fuera de tiempo
     {
 
-	  printf("aymidi_rs232: Write arrived late\n");
+	  debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Write arrived late");
 
       if (output_bit == 1)  {// si es estado inactivo, volvemos al principio
         aymidi_rs232_midi_state = ESPERA_START;

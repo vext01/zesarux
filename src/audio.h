@@ -309,7 +309,8 @@ extern int windows_mid_initialize_all(void);
 extern void windows_mid_finish_all(void);
 extern int windows_note_on(unsigned char channel, unsigned char note,unsigned char velocity);
 extern int windows_note_off(unsigned char channel, unsigned char note,unsigned char velocity);
-
+extern void windows_midi_raw(z80_byte value);
+extern void windows_midi_output_reset(void);
 
 
 #endif

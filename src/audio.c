@@ -2820,7 +2820,7 @@ void audio_midi_raw_get_status_name(z80_byte value,char *destination)
 void audio_midi_raw_parse_value(z80_byte value)
 {
 	if (value & 128) {
-		printf ("audio_midi_raw_parse_value: is a status byte\n");
+		//printf ("audio_midi_raw_parse_value: is a status byte\n");
 
 		
 		switch (audio_midi_raw_parse_estado) {
@@ -3506,7 +3506,7 @@ void windows_midi_raw(z80_byte value)
 		return;
 	} */
 
-	printf ("windows_midi_raw_indice %d audio_midi_raw_parse_indice %d\n",windows_midi_raw_indice,audio_midi_raw_parse_indice);
+	//printf ("windows_midi_raw_indice %d audio_midi_raw_parse_indice %d\n",windows_midi_raw_indice,audio_midi_raw_parse_indice);
 
 	//Si es menor indice actual, pasar a 0
 	if (audio_midi_raw_parse_indice<windows_midi_raw_indice) windows_midi_raw_indice=0;
