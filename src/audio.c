@@ -2935,11 +2935,14 @@ alsa_midi_raw(value);
 
 #ifdef MINGW
 //De momento no va
-audio_midi_raw_parse_value(value);
+
 //Aqui windows solo tiene que enviar los datos del buffer audio_midi_raw_parse_array si el valor que envia
 //es de status (bit 7 alzado) y estado anterior no era unknown
 
 windows_midi_raw(value);
+
+
+audio_midi_raw_parse_value(value);
 #endif
 
 	
