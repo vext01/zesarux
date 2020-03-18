@@ -1531,7 +1531,8 @@ printf (
 		"--ayplayer-cpc             Set AY Player to CPC mode (default: Spectrum)\n"
 		"--enable-midi              Enable midi output\n"
 		"--midi-client n            Set midi client value to n. Needed only on Linux with Alsa audio driver\n"
-		"--midi-port n              Set midi port valur to n. Needed on Windows and Linux with Alsa audio driver\n"
+		"--midi-port n              Set midi port value to n. Needed on Windows and Linux with Alsa audio driver\n"
+		"--midi-raw-device s        Set midi raw device to s. Needed on Linux with Alsa audio driver\n"
 		"--midi-allow-tone-noise    Allow tone+noise channels on midi\n"
 
 
@@ -6582,7 +6583,12 @@ int parse_cmdline_options(void) {
 					exit(1);
 				}
 				audio_midi_port=valor;
-			}			
+			}	
+
+			else if (!strcmp(argv[puntero_parametro],"--midi-raw-device")) {
+				siguiente_parametro_argumento();
+				strcpy(audio_raw_midi_device_out,argv[puntero_parametro]);
+			}	
 
 			else if (!strcmp(argv[puntero_parametro],"--midi-allow-tone-noise")) {
 				midi_output_record_noisetone.v=1;

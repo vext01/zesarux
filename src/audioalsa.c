@@ -870,11 +870,11 @@ int alsa_mid_unsubscribe_midi_port(void)
 }
 
 
- snd_rawmidi_t *alsa_raw_handle_out = 0;
+snd_rawmidi_t *alsa_raw_handle_out = 0;
 
 //char *alsa_mid_device_out="hw:1,0";
 
-char alsa_mid_device_out[MAX_ALSA_MID_DEVICE_OUT]="hw:0,0";
+//char alsa_mid_device_out[MAX_ALSA_MID_DEVICE_OUT]="hw:0,0";
 
 
 void alsa_midi_output_reset(void)
@@ -995,9 +995,9 @@ int alsa_note_off(unsigned char channel, unsigned char note,unsigned char veloci
 int alsa_mid_initialize_audio_raw(void)
 {
 
-		int err = snd_rawmidi_open(NULL,&alsa_raw_handle_out,alsa_mid_device_out,SND_RAWMIDI_NONBLOCK);
+		int err = snd_rawmidi_open(NULL,&alsa_raw_handle_out,audio_raw_midi_device_out,SND_RAWMIDI_NONBLOCK);
         if (err) {
-            debug_printf (VERBOSE_ERR,"snd_rawmidi_open %s failed: %d",alsa_mid_device_out,err);
+            debug_printf (VERBOSE_ERR,"snd_rawmidi_open %s failed: %d",audio_raw_midi_device_out,err);
 			return 1;
         }
 

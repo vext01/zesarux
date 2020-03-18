@@ -300,6 +300,10 @@ extern int audio_midi_client;
 extern int audio_midi_port;
 extern int audio_midi_available(void);
 
+extern char audio_raw_midi_device_out[];
+
+#define MAX_AUDIO_RAW_MIDI_DEVICE_OUT 128
+
 
 #ifdef MINGW
 

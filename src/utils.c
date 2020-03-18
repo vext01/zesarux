@@ -3565,6 +3565,10 @@ int util_write_configfile(void)
                                               ADD_STRING_CONFIG,"--midi-client %d",audio_midi_client);
                                               ADD_STRING_CONFIG,"--midi-port %d",audio_midi_port);
 
+                                              ADD_STRING_CONFIG,"--midi-raw-device %s",audio_raw_midi_device_out);
+	
+
+
   if (midi_output_record_noisetone.v)         ADD_STRING_CONFIG,"--midi-allow-tone-noise");			
 
 

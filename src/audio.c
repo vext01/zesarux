@@ -3022,6 +3022,8 @@ int audio_midi_port=0;
 //Client solo es usado por alsa
 //Port lo utilizan alsa y windows 
 
+char audio_raw_midi_device_out[MAX_AUDIO_RAW_MIDI_DEVICE_OUT]="hw:0,0";
+
 //de momento usado en Linux
 int audio_midi_raw_mode=1;
 

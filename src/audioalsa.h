@@ -42,7 +42,7 @@ extern int alsa_mid_initialize_all(void);
 extern void alsa_mid_finish_all(void);
 extern void alsa_mid_initialize_volume(void);
 
-#define MAX_ALSA_MID_DEVICE_OUT 128
+//#define MAX_ALSA_MID_DEVICE_OUT 128
 //extern char *alsa_mid_device_out;
 extern char alsa_mid_device_out[];
 
