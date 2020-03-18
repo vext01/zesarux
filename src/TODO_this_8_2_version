@@ -388,4 +388,4 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 -en alsa meter un setting para usar sequencer (codigo de lo que hay ahora), o raw (para que soporte aymidi)
 Pero con raw hay que cambiar funciones de noteon, etc
 y cualquier cosa que llame a sequencer no debe llamarlo
--en alsa meter cadena de texto con hardware por defecto (hw:0)
+-parametri de config de alsa cadena de texto con midi hardware (ej hw:0,0)

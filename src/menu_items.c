@@ -16459,8 +16459,8 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 #ifdef COMPILE_ALSA
 		//En Alsa Linux
 		menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_midi_output_rawmode,menu_midi_output_initialized_cond,"[%c] MIDI Raw mode",(audio_midi_raw_mode ? 'X' : ' ' ));
-		menu_add_item_menu_tooltip(array_menu_direct_midi_output,"RAW mode needed to emulate AY MIDI registers");
-		menu_add_item_menu_ayuda(array_menu_direct_midi_output,"RAW mode needed to emulate AY MIDI registers");
+		menu_add_item_menu_tooltip(array_menu_direct_midi_output,"RAW mode is needed to emulate AY MIDI registers");
+		menu_add_item_menu_ayuda(array_menu_direct_midi_output,"RAW mode is needed to emulate AY MIDI registers");
 
 		if (audio_midi_raw_mode) {
 
@@ -16691,7 +16691,7 @@ menu_item *array_menu_ay_mixer;
 		menu_add_item_menu_ayuda(array_menu_ay_mixer,"These effects are used, for example, in Chase H.Q.");
 
 
-		menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_aymid_rs232,menu_cond_ay_chip,"[%c] ~~MIDI registers", (aymidi_rs232_enabled.v==1 ? 'X' : ' '));
+		menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_aymid_rs232,menu_cond_ay_chip,"[%c] AY ~~MIDI registers", (aymidi_rs232_enabled.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_ay_mixer,'m');
 		menu_add_item_menu_tooltip(array_menu_ay_mixer,"Enable or disable AY MIDI registers");
 		menu_add_item_menu_ayuda(array_menu_ay_mixer,"It handles values sent to register 14 and 15");
