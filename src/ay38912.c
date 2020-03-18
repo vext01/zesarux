@@ -1015,6 +1015,59 @@ void establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 // Nota: toda variable usada en esta emulación tiene prefijo aymidi_rs232_
 // para distinguirla de la parte que envia a midi, o del exportador a archivos .mid
 
+
+/*
+
+Explicacion del mismo Miguel sobre esto:
+
+MIDI es una transmisión serie a 32.768 kbps. Entre bit y bit pasan 107 T 
+estados (de un reloj de 3.5 MHz) o bien 108 T estados si se usa como base un
+reloj de 3.54 MHz (128K). Las tolerancias pueden ser de entre 100 y 120 T para
+dar por buena una señal MIDI. Aunque aquí yo use siempre 108 como valor nominal
+de tiempo, ten en cuenta que puede variar entre esos dos valores dados (ver código).
+
+El formato de un byte transmitido por MIDI es:
+111111110XXXXXXXX1111111
+         ^      ^
+         LSb    MSb
+
+(cada bit dura 108 T estados idealmente)
+
+La señal MIDI comienza siempre con un estado 1 (inactivo o idle) que puede
+estar indefinidamente. Cuando se quiere comenzar la transmisión se baja a 0
+(activo) durante 108 T y a partir de ahí, se sube o se baja 8 veces para
+transmitir el byte. Después de transmitir el último bit, se queda a 1, y así
+hasta que se quiere transmitir otro byte.
+
+Supondré que en tu emu tienes algún tipo de variable que cuenta estados de
+reloj de un reloj de 3.5 MHz. Si estás en modo turbo (x2, x4, x8) tendrás
+que dividir los tiempos que midas entre el factor turbo (ver código más abajo).
+Pongamos que esa variable que cuenta T-estados se llama "t" y cuenta T-estados
+a la velocidad que tenga la CPU en ese momento.
+
+Si tienes alguna otra variable que cuente tiempo, y que sea independiente
+de la velocidad de la CPU (por ejemplo, un contador de píxeles de la ULA
+o algo similar), pues mejor aún.
+
+Si usas como medida de tiempo los T-estados de la CPU, supondré tambiÈn
+que tienes una variable "turbo" que vale 1, 2, 4 u 8, y
+que indica el factor multiplicador de la frecuencia base de la CPU.
+
+Supondré también que en otra variable está el estado de MIDI OUT (0 o 1)
+Llamaré a esa variable "o"
+
+Por último, supondré que tienes una función que es llamada cada vez que
+se hace una escritura al registro 0Eh del AY. Como bien sabes, el bit 2
+que se escribe a ese registro es nuestro valor de "o".
+
+Entonces, el algoritmo queda más o menos así:
+
+
+[dentro del cuerpo de la funciÛn que es llamada cuando se escribe en el
+registro 0Eh del AY-3-8912, incluir este cÛdigo]
+
+*/
+
 // estados de mi FSM
 enum AYMIDI_RS232_ESTADOS {ESPERA_START, LEE_BIT, ESPERA_STOP};
 

@@ -381,11 +381,3 @@ Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el 
 Puede servir para versión online simple. Salida pnm y entrada de texto
 
 
-
--midi:
--pendiente midi raw para alsa y windows
-
--en alsa meter un setting para usar sequencer (codigo de lo que hay ahora), o raw (para que soporte aymidi)
-Pero con raw hay que cambiar funciones de noteon, etc
-y cualquier cosa que llame a sequencer no debe llamarlo
--parametri de config de alsa cadena de texto con midi hardware (ej hw:0,0)
