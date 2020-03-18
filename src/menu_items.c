@@ -16417,7 +16417,7 @@ void menu_direct_midi_output_rawmode(MENU_ITEM_PARAMETERS)
 #ifdef COMPILE_ALSA
 void menu_direct_alsa_midi_device_raw(MENU_ITEM_PARAMETERS)
 {
-    menu_ventana_scanf("MIDI device name",alsa_mid_device_out,MAX_AUDIO_RAW_MIDI_DEVICE_OUT);
+    menu_ventana_scanf("MIDI device name",audio_raw_midi_device_out,MAX_AUDIO_RAW_MIDI_DEVICE_OUT);
 
 }
 #endif
@@ -16466,7 +16466,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 
                 char string_device_shown[10];
-                menu_tape_settings_trunc_name(alsa_mid_device_out,string_device_shown,10);
+                menu_tape_settings_trunc_name(audio_raw_midi_device_out,string_device_shown,10);
 
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_direct_alsa_midi_device_raw,menu_midi_output_initialized_cond,"Device: %s",string_device_shown);
 		}
