@@ -3456,7 +3456,16 @@ int windows_mid_initialize_all(void)
 
 void windows_midi_output_reset(void)
 {
-	
+  		windows_midi_message mensaje;
+
+  		mensaje.data[0]=0xFF;
+  		mensaje.data[1]=0;
+  		mensaje.data[2]=0;
+  		mensaje.data[3]=0;
+
+
+				//Y envio a midi
+				windows_mid_add_note(mensaje);	
 }
 
 void windows_mid_finish_all(void)

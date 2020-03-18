@@ -567,6 +567,11 @@ void coreaudio_midi_output_flush_output(void)
 void coreaudio_midi_output_reset(void)
 {
 
+
+    z80_byte resetcommand[] = {0xFF};
+     coreaudio_mid_add_note(resetcommand,1);
+/*
+
     int channel;
 
     for (channel=0;channel<16;channel++) {
@@ -590,6 +595,7 @@ void coreaudio_midi_output_reset(void)
   coreaudio_mid_add_note(notesoffcommand,3);
 
     }
+    */
 
 }
 
