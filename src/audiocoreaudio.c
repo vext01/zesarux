@@ -567,9 +567,14 @@ void coreaudio_midi_output_flush_output(void)
 void coreaudio_midi_output_reset(void)
 {
 
+//printf ("reset\n");
 
-    z80_byte resetcommand[] = {0xFF};
-     coreaudio_mid_add_note(resetcommand,1);
+//TODO: Esto no parece hacer nada. El reset de midi solo parece funcionar en windows
+		
+
+
+    z80_byte resetcommand[] = {0xFF,0,0,0};
+     coreaudio_mid_add_note(resetcommand,4);
 /*
 
     int channel;

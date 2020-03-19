@@ -883,6 +883,7 @@ void alsa_midi_output_reset(void)
 	z80_byte reset[] = {0xFF, 0, 0,0}; 
 
 	if (audio_midi_raw_mode) {
+		//TODO: Esto no parece hacer nada. El reset de midi solo parece funcionar en windows
 		snd_rawmidi_write(alsa_raw_handle_out,reset,4);
 	}
 	

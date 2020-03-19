@@ -381,7 +381,10 @@ Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el 
 Puede servir para versión online simple. Salida pnm y entrada de texto
 
 
--comandos reset midi no hace nada??
+-comandos reset midi no hace nada?? Solo van en windows
 
 
 -esxdos handler que guarde ruta actual (el cwd de esxdos) en la config? 
+
+
+-Incluir playmid y algunos mid de ejemplo en la imagen de zxuno mmc: moonlight shadow, ....
