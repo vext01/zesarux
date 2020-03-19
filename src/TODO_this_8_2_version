@@ -364,7 +364,7 @@ Quiza mismo menu filesel, que solo muestre autosnap (o el que sea el prefijo)*.z
 
 
 
--chdir en esxdos handler acaba cambiando directorio realmente para emulador
+-chdir en esxdos handler acaba cambiando directorio realmente para emulador??
 
 -impresion seikosha gp-100a
 
@@ -381,7 +381,7 @@ Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el 
 Puede servir para versión online simple. Salida pnm y entrada de texto
 
 
--comandos reset midi no hace nada?? Solo van en windows
+-comandos reset midi no hace nada?? Solo van en windows. Quiza enviar mejor un noteoff
 
 
 -esxdos handler que guarde ruta actual (el cwd de esxdos) en la config? 
