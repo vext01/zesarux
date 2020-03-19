@@ -1172,8 +1172,8 @@ int alsa_mid_initialize_all_raw(void)
 
 int alsa_mid_initialize_all(void)
 {
-	if (audio_midi_raw_mode) alsa_mid_initialize_all_raw();
-	else alsa_mid_initialize_all_noraw();
+	if (audio_midi_raw_mode) return alsa_mid_initialize_all_raw();
+	else return alsa_mid_initialize_all_noraw();
 }
 
 
