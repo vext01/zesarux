@@ -3472,6 +3472,9 @@ void windows_midi_output_reset(void)
 
 				//Y envio a midi
 				windows_mid_add_note(mensaje);	
+
+
+	midiOutReset(windows_midi_device);				
 }
 
 void windows_mid_finish_all(void)

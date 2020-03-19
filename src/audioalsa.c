@@ -879,6 +879,11 @@ snd_rawmidi_t *alsa_raw_handle_out = 0;
 
 void alsa_midi_output_reset(void)
 {
+	z80_byte value=0xFF;
+
+	if (audio_midi_raw_mode) {
+		snd_rawmidi_write(alsa_raw_handle_out,&value,1);
+	}
 	
 }
 
