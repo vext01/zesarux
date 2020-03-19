@@ -8757,6 +8757,9 @@ void cpu_loop_refresca_pantalla_return(void)
 
         //media de tiempo
         core_cpu_timer_refresca_pantalla_media=(core_cpu_timer_refresca_pantalla_media+core_cpu_timer_refresca_pantalla_difftime)/2;
+
+
+		TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_cpu_timer_refresca_pantalla);
 }
 	
 
@@ -8766,6 +8769,8 @@ void cpu_loop_refresca_pantalla(void)
 	//Calcular tiempo usado en refrescar pantalla
 	timer_stats_current_time(&core_cpu_timer_refresca_pantalla_antes);
 
+	TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_cpu_timer_refresca_pantalla);
+
 	//Para calcular el tiempo entre frames. Idealmente 20 ms
 	//Diferencia tiempo
 	core_cpu_timer_each_frame_difftime=timer_stats_diference_time(&core_cpu_timer_each_frame_antes,&core_cpu_timer_each_frame_despues);
@@ -8773,6 +8778,9 @@ void cpu_loop_refresca_pantalla(void)
 	core_cpu_timer_each_frame_media=(core_cpu_timer_each_frame_media+core_cpu_timer_each_frame_difftime)/2;
 	//Siguiente tiempo
 	timer_stats_current_time(&core_cpu_timer_each_frame_antes);
+
+
+
 
 
 	if (rainbow_enabled.v) screen_add_watermark_rainbow();

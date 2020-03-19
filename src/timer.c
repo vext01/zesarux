@@ -148,6 +148,7 @@ void timer_stats_current_time(struct timeval *tiempo)
 }
 
 
+//Diferencia de dos tiempos pero calculando el tiempo_despues segun tiempo actual
 long timer_stats_diference_time(struct timeval *tiempo_antes, struct timeval *tiempo_despues)
 {
 	timer_stats_current_time(tiempo_despues);

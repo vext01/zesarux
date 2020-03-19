@@ -7765,6 +7765,7 @@ init_randomize_noise_value();
 #endif	
 
 
+	TIMESENSOR_INIT();
 
 
 	debug_printf (VERBOSE_INFO,"Starting emulator");

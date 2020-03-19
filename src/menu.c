@@ -22659,6 +22659,46 @@ void menu_write_message(MENU_ITEM_PARAMETERS)
 }
 
 
+#ifdef TIMESENSORS_ENABLED
+
+void menu_debug_timesensors(MENU_ITEM_PARAMETERS)
+{
+	int i;  
+
+	char timesensors_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+
+	char buf_linea[64];
+
+    int index_buffer=0;
+
+    for (i=0;i<10;i++) {
+		long media=TIMESENSOR_ENTRY_MEDIATIME(i);
+        sprintf (buf_linea,"ID: %02d average: %ld us (%ld ms)\n",i,media,media/1000);
+        sprintf (&timesensors_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+		long max=TIMESENSOR_ENTRY_MAXTIME(i);
+        sprintf (buf_linea,"ID: %02d max: %ld us (%ld ms)\n",i,max,max/1000);
+        sprintf (&timesensors_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		
+	}
+
+	menu_generic_message("Sensors",timesensors_buffer);
+
+
+}
+
+void menu_debug_timesensors_enable(MENU_ITEM_PARAMETERS)
+{
+	timesensors_started ^=1;
+
+}
+
+void menu_debug_timesensors_init(MENU_ITEM_PARAMETERS)
+{
+	TIMESENSOR_INIT();
+}
+
+#endif
+
 
 //menu debug settings
 void menu_debug_settings(MENU_ITEM_PARAMETERS)
@@ -22827,6 +22867,22 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_write_message,NULL,"Write message");
 		menu_add_item_menu_tooltip(array_menu_debug_settings,"Just lets you write text in a window, useful if you want to record the display and you want to say something");
 		menu_add_item_menu_ayuda(array_menu_debug_settings,"Just lets you write text in a window, useful if you want to record the display and you want to say something");
+
+
+#ifdef TIMESENSORS_ENABLED
+
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_timesensors_enable,NULL,"[%c] Timesensors",
+		(timesensors_started ? 'X' : ' ' ));
+
+		if (timesensors_started) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_timesensors,NULL,"    List Timesensors");
+
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_timesensors_init,NULL,"    Init Timesensors");
+		}
+
+#endif
+
+
 
 	/*	menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'e');
