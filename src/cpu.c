@@ -1534,6 +1534,7 @@ printf (
 		"--midi-port n              Set midi port value to n. Needed on Windows and Linux with Alsa audio driver\n"
 		"--midi-raw-device s        Set midi raw device to s. Needed on Linux with Alsa audio driver\n"
 		"--midi-allow-tone-noise    Allow tone+noise channels on midi\n"
+		"--midi-no-raw-mode         Do not use midi in raw mode. Raw mode is required on Linux to emulate AY midi registers\n"
 
 
 		"\n"
@@ -6592,6 +6593,10 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--midi-allow-tone-noise")) {
 				midi_output_record_noisetone.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--midi-no-raw-mode")) {
+				audio_midi_raw_mode=0;
 			}
 
 
