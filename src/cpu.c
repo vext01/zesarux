@@ -1901,6 +1901,7 @@ printf (
 
 		"--enable-esxdos-handler    Enable ESXDOS traps handler. Requires divmmc or divide paging emulation\n"
 		"--esxdos-root-dir p        Set ESXDOS root directory for traps handler. Uses current directory by default.\n"
+                "--esxdos-local-dir p       Set ESXDOS local directory for traps handler. This is the relative directory used inside esxdos.\n"
 
 
 		"--enable-zxpand            Enable ZXpand emulation\n"
@@ -4826,6 +4827,9 @@ char *command_line_load_binary_file=NULL;
 int command_line_load_binary_address;
 int command_line_load_binary_length;
 
+char *command_line_esxdos_local_dir_path;
+z80_bit command_line_esxdos_local_dir={0};
+
 int command_line_chardetect_printchar_enabled=-1;
 
 
@@ -6016,6 +6020,13 @@ int parse_cmdline_options(void) {
 			  else {
 			    sprintf (esxdos_handler_root_dir,"%s",argv[puntero_parametro]);
 			  }
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--esxdos-local-dir")) {
+                          siguiente_parametro_argumento();
+
+			  command_line_esxdos_local_dir_path=argv[puntero_parametro];
+			  command_line_esxdos_local_dir.v=1;
 			}
 
 /*
@@ -8006,7 +8017,16 @@ struct sched_param sparam;
 
 
 
-	if (command_line_esxdos_handler.v) esxdos_handler_enable();
+	if (command_line_esxdos_handler.v) {
+		esxdos_handler_enable();
+
+		// Solo meter el directorio local si esta habilitado esxdos
+        	if (command_line_esxdos_local_dir.v) {
+	                // Esto lo hacemos aqui porque antes en el esxdos_handler_enable se inicializa tambien esxdos y por tanto se borra esxdos_handler_cwd
+        	        strcpy(esxdos_handler_cwd,command_line_esxdos_local_dir_path);
+        	}
+	}
+
 
 	if (command_line_zxpand.v) zxpand_enable();
 
