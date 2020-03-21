@@ -22,6 +22,14 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#if defined(MINGW)
+#include <stdlib.h>
+#define PATH_MAX MAX_PATH
+#define NAME_MAX MAX_PATH
+#elif defined(__OpenBSD__)
+#include <limits.h>
+#endif
+
 #include "cpu.h"
 #include "compileoptions.h"
 #include "menu.h"
@@ -30,12 +38,6 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/stat.h>
-
-#ifdef MINGW
-#include <stdlib.h>
-#define PATH_MAX MAX_PATH
-#define NAME_MAX MAX_PATH
-#endif
 
 
 
