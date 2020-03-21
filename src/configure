@@ -23,6 +23,9 @@ echo
 echo "Configuration script for ZEsarUX"
 echo
 
+if [ "x${CC}" = "x" ]; then
+    CC=gcc
+fi
 
 #show dependencies
 #for i in *.c; do INCLUDES=`cat $i|grep include|grep -v "<"|sed 's/#include "//'|sed 's/"//'` ; echo -n $i|sed 's/\.c/.o: /' ; echo -n "$i "; echo $INCLUDES; done
@@ -367,11 +370,11 @@ if [ "$SISTEMA" == "Msys" ]; then
 	LDFLAGS="$LDFLAGS -lwinmm"
 fi
 
-echo -n "Checking for gcc compiler ... "
+echo -n "Checking for ${CC} compiler ... "
 
-RESULT=`which gcc`
+RESULT=`which ${CC}`
 if [ $? != 0 ]; then
-	echo "No gcc compiler found"
+	echo "No ${CC} compiler found"
 	exit 1
 fi
 
@@ -392,7 +395,7 @@ return 0;
 }
 _EOF
 
-gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 CHARSIZE=`./$TEMPFILE.o`
 rm -f $TEMPFILE $TEMPFILE.o
 echo $CHARSIZE
@@ -413,7 +416,7 @@ return 0;
 }
 _EOF
 
-gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 SHORTSIZE=`./$TEMPFILE.o`
 rm -f $TEMPFILE $TEMPFILE.o
 echo $SHORTSIZE
@@ -434,7 +437,7 @@ return 0;
 }
 _EOF
 
-gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 SHORTSIZE=`./$TEMPFILE.o`
 rm -f $TEMPFILE $TEMPFILE.o
 echo $SHORTSIZE
@@ -474,7 +477,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -502,7 +505,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -534,7 +537,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -561,7 +564,7 @@ return 0;
 }
 _EOF
 
-	gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+	${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	RESULTCODE=$?
 	if [ $RESULTCODE != 0 ]; then
 		echo "not found"
@@ -594,7 +597,7 @@ return 0;
 }
 _EOF
 
-	gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+	${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	RESULTCODE=$?
 	if [ $RESULTCODE != 0 ]; then
 		echo "not found"
@@ -632,7 +635,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -660,7 +663,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -696,7 +699,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -725,7 +728,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -759,7 +762,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -790,7 +793,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found."
@@ -822,7 +825,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -874,7 +877,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -905,7 +908,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -934,7 +937,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -963,7 +966,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -994,7 +997,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -1084,15 +1087,15 @@ return 0;
 _EOF
 
 	if [ "$SISTEMA" == "Darwin" ]; then
-		gcc -c $CFLAGS -I/Library/Frameworks/$LIBSDL.framework/Headers -framework $LIBSDL -F/Library/Frameworks $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+		${CC} -c $CFLAGS -I/Library/Frameworks/$LIBSDL.framework/Headers -framework $LIBSDL -F/Library/Frameworks $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	elif [ "$SISTEMA" == "Msys" ]; then
-		#echo "gcc -c $CFLAGS -Lc:\mingw\${LIBSDL}\lib -Ic:\mingw\${LIBSDL}\include -l$LIBSDL $TEMPFILE -o $TEMPFILE.o"
+		#echo "${CC} -c $CFLAGS -Lc:\mingw\${LIBSDL}\lib -Ic:\mingw\${LIBSDL}\include -l$LIBSDL $TEMPFILE -o $TEMPFILE.o"
 		#echo LIBSDL=${LIBSDL}
 		#temp detectar libsdl1
-		#gcc -c $CFLAGS -Lc:\\mingw\\SDL2\\lib -Ic:\\mingw\\SDL2\\include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
-		gcc -c $CFLAGS -L/c/mingw/$LIBSDL/lib -I/c/mingw/$LIBSDL/include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+		#${CC} -c $CFLAGS -Lc:\\mingw\\SDL2\\lib -Ic:\\mingw\\SDL2\\include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+		${CC} -c $CFLAGS -L/c/mingw/$LIBSDL/lib -I/c/mingw/$LIBSDL/include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	else
-        	gcc -c $CFLAGS -l$LIBSDL $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        	${CC} -c $CFLAGS -l$LIBSDL $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	fi
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
@@ -1147,7 +1150,7 @@ return 0;
 }
 _EOF
 
-        gcc -I/usr/local $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} -I/usr/local $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -1177,7 +1180,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        ${CC} $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -1210,9 +1213,9 @@ echo Final LDFLAGS=$LDFLAGS >>$LOGFILE
 echo "Creating Makefile"
 cat > Makefile << _EOF
 EMULATOR_VERSION=8.2
+CC=$CC
 CFLAGS=$CFLAGS
 LDFLAGS=$LDFLAGS
-CC=gcc
 INSTALLPREFIX=$INSTALLPREFIX
 
 
@@ -1626,8 +1629,8 @@ macapp: all
 	gzip macos/zesarux.dmg
 
 
-#CC32=gcc \$(CFLAGS) -m32
-#CC64=gcc \$(CFLAGS) -m64
+#CC32=${CC} \$(CFLAGS) -m32
+#CC64=${CC} \$(CFLAGS) -m64
 
 #UTILS32=smpatap_x32 sp_z80_x32 tapabin_x32 leezx81_x32
 #UTILS64=smpatap_x64 sp_z80_x64 tapabin_x64 leezx81_x64
